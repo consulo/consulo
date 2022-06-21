@@ -15,8 +15,6 @@
  */
 package consulo.ide.impl.idea.execution.dashboard;
 
-import consulo.annotation.component.TopicBroadcastDirection;
-import consulo.component.messagebus.TopicImpl;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.ide.ServiceManager;
@@ -33,9 +31,6 @@ import java.util.List;
  * @author konstantin.aleev
  */
 public interface RunDashboardManager {
-  TopicImpl<DashboardListener> DASHBOARD_TOPIC =
-    TopicImpl.create("run dashboard", DashboardListener.class, TopicBroadcastDirection.TO_PARENT);
-
   static RunDashboardManager getInstance(Project project) {
     return ServiceManager.getService(project, RunDashboardManager.class);
   }

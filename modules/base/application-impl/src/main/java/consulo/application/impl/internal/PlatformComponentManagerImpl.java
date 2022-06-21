@@ -19,16 +19,14 @@ import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.ApplicationProperties;
 import consulo.application.impl.internal.performance.HeavyProcessLatch;
-import consulo.application.impl.internal.start.StartupUtil;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.component.ComponentManager;
+import consulo.component.bind.InjectingBinding;
 import consulo.component.impl.BaseComponentManager;
 import consulo.component.impl.extension.ExtensionAreaId;
-import consulo.component.internal.ServiceDescriptor;
 import consulo.component.store.impl.internal.IComponentStore;
 import consulo.component.store.impl.internal.StateComponentInfo;
-import consulo.container.plugin.ComponentConfig;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 
@@ -40,7 +38,6 @@ import java.util.function.Supplier;
 public abstract class PlatformComponentManagerImpl extends BaseComponentManager {
   private static final Logger LOG = Logger.getInstance(PlatformComponentManagerImpl.class);
 
-  private boolean myHandlingInitComponentError;
   private AtomicInteger myCreatedNotLazyServicesCount = new AtomicInteger();
 
   protected PlatformComponentManagerImpl(@Nullable ComponentManager parent, @Nonnull String name, @Nullable ExtensionAreaId areaId) {
@@ -138,23 +135,10 @@ public abstract class PlatformComponentManagerImpl extends BaseComponentManager 
   }
 
   @Override
-  protected <T> T runServiceInitialize(@Nonnull ServiceDescriptor descriptor, @Nonnull Supplier<T> runnable) {
+  protected <T> T runServiceInitialize(@Nonnull InjectingBinding descriptor, @Nonnull Supplier<T> runnable) {
     // prevent storages from flushing and blocking FS
-    try (AccessToken ignored = HeavyProcessLatch.INSTANCE.processStarted("Creating component '" + descriptor.getImplementation() + "'")) {
+    try (AccessToken ignored = HeavyProcessLatch.INSTANCE.processStarted("Creating component '" + descriptor.getImplClassName() + "'")) {
       return super.runServiceInitialize(descriptor, runnable);
-    }
-  }
-
-  @Override
-  protected void handleInitComponentError(@Nonnull Throwable ex, @Nullable Class componentClass, @Nullable ComponentConfig config) {
-    if (!myHandlingInitComponentError) {
-      myHandlingInitComponentError = true;
-      try {
-        StartupUtil.handleComponentError(ex, componentClass, config);
-      }
-      finally {
-        myHandlingInitComponentError = false;
-      }
     }
   }
 }

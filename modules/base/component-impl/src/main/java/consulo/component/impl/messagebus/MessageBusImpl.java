@@ -4,9 +4,9 @@ package consulo.component.impl.messagebus;
 import consulo.annotation.component.Topic;
 import consulo.annotation.component.TopicBroadcastDirection;
 import consulo.component.ProcessCanceledException;
+import consulo.component.bind.InjectingBinding;
 import consulo.component.impl.extension.MessageDeliveryListener;
 import consulo.component.messagebus.MessageBus;
-import consulo.container.plugin.PluginListenerDescriptor;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.injecting.InjectingContainerOwner;
@@ -56,7 +56,7 @@ public class MessageBusImpl implements MessageBus, Disposable {
   private final List<MessageBusImpl> myChildBuses = Lists.newLockFreeCopyOnWriteList();
 
   @Nonnull
-  private MultiMap<String, PluginListenerDescriptor> myTopicClassToListenerClass = MultiMap.empty();
+  private MultiMap<Class, InjectingBinding> myTopicClassToListenerClass = MultiMap.empty();
 
   private static final Object NA = new Object();
   private MessageBusImpl myParentBus;
@@ -95,9 +95,8 @@ public class MessageBusImpl implements MessageBus, Disposable {
     myLazyConnection = connect();
   }
 
-  ///@ApiStatus.Internal
-  public void setLazyListeners(@Nonnull MultiMap<String, PluginListenerDescriptor> map) {
-    if (myTopicClassToListenerClass != MultiMap.<String, PluginListenerDescriptor>empty()) {
+  public void setLazyListeners(@Nonnull MultiMap<Class, InjectingBinding> map) {
+    if (myTopicClassToListenerClass != MultiMap.<Class, InjectingBinding>empty()) {
       throw new IllegalStateException("Already set: " + myTopicClassToListenerClass);
     }
     myTopicClassToListenerClass = map;
@@ -196,20 +195,19 @@ public class MessageBusImpl implements MessageBus, Disposable {
   }
 
   @Nonnull
+  @SuppressWarnings("unchecked")
   private <L> L subscribeLazyListeners(@Nonnull Class<L> topic, @Nonnull Class<L> listenerClass) {
-    //noinspection unchecked
     L publisher = (L)myPublishers.get(topic);
     if (publisher != null) {
       return publisher;
     }
 
-    Collection<PluginListenerDescriptor> listenerDescriptors = myTopicClassToListenerClass.remove(listenerClass.getName());
+    Collection<InjectingBinding> listenerDescriptors = myTopicClassToListenerClass.remove(listenerClass);
     if (listenerDescriptors != null) {
       List<Object> listeners = new ArrayList<>(listenerDescriptors.size());
-      for (PluginListenerDescriptor listenerDescriptor : listenerDescriptors) {
+      for (InjectingBinding binding : listenerDescriptors) {
         try {
-          Class<?> listenerImplClass = Class.forName(listenerDescriptor.listenerClassName, false, listenerDescriptor.pluginDescriptor.getPluginClassLoader());
-          Object listenerImpl = myOwner.getInjectingContainer().getUnbindedInstance(listenerImplClass);
+          Object listenerImpl = myOwner.getInjectingContainer().getUnbindedInstance(binding.getImplClass(), binding.getParameterTypes(), binding::create);
           listeners.add(listenerImpl);
         }
         catch (ProcessCanceledException e) {

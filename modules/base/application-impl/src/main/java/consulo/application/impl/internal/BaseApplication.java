@@ -50,7 +50,6 @@ import consulo.component.internal.ServiceDescriptor;
 import consulo.component.store.impl.internal.StateStorageException;
 import consulo.component.store.impl.internal.StoreUtil;
 import consulo.container.boot.ContainerPathManager;
-import consulo.container.plugin.ComponentConfig;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginListenerDescriptor;
@@ -174,7 +173,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   public static final boolean USE_SEPARATE_WRITE_THREAD = Boolean.getBoolean("idea.use.separate.write.thread");
 
   private static final Logger LOG = Logger.getInstance(BaseApplication.class);
-  private static final ExtensionPointId<ServiceDescriptor> APP_SERVICES = ExtensionPointId.of(PluginIds.CONSULO_BASE + ".applicationService");
 
   private static final int ourDumpThreadsOnLongWriteActionWaiting = Integer.getInteger("dump.threads.on.long.write.action.waiting", 0);
 
@@ -248,28 +246,10 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     builder.bind(EncodingRegistry.class).to(EncodingManager::getInstance);
   }
 
-  @Nullable
-  @Override
-  protected ExtensionPointId<ServiceDescriptor> getServiceExtensionPointName() {
-    return APP_SERVICES;
-  }
-
   @Nonnull
   @Override
   public ComponentScope getComponentScope() {
     return ComponentScope.APPLICATION;
-  }
-
-  @Nonnull
-  @Override
-  protected List<ComponentConfig> getComponentConfigs(PluginDescriptor ideaPluginDescriptor) {
-    return ideaPluginDescriptor.getAppComponents();
-  }
-
-  @Nonnull
-  @Override
-  protected List<PluginListenerDescriptor> getPluginListenerDescriptors(PluginDescriptor pluginDescriptor) {
-    return pluginDescriptor.getApplicationListeners();
   }
 
   protected void fireApplicationExiting() {

@@ -106,16 +106,6 @@ public abstract class PluginDescriptorStub implements PluginDescriptor {
   }
 
   @Override
-  public List<ComponentConfig> getAppComponents() {
-    return Collections.emptyList();
-  }
-
-  @Override
-  public List<ComponentConfig> getProjectComponents() {
-    return Collections.emptyList();
-  }
-
-  @Override
   public List<PluginListenerDescriptor> getApplicationListeners() {
     return Collections.emptyList();
   }

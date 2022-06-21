@@ -18,12 +18,7 @@ package consulo.module.impl.internal;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.application.impl.internal.PlatformComponentManagerImpl;
-import consulo.component.extension.ExtensionPointId;
 import consulo.component.impl.extension.ExtensionAreaId;
-import consulo.component.internal.ServiceDescriptor;
-import consulo.container.plugin.PluginDescriptor;
-import consulo.container.plugin.PluginIds;
-import consulo.container.plugin.PluginListenerDescriptor;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
@@ -36,14 +31,11 @@ import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
 
 /**
  * @author max
  */
 public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx {
-  private static final ExtensionPointId<ServiceDescriptor> MODULE_SERVICES = ExtensionPointId.of(PluginIds.CONSULO_BASE + ".moduleService");
-
   @Nonnull
   private String myName;
 
@@ -64,22 +56,10 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
     builder.bind(ModulePathMacroManager.class).to(ModulePathMacroManager.class).forceSingleton();
   }
 
-  @Nullable
-  @Override
-  protected ExtensionPointId<ServiceDescriptor> getServiceExtensionPointName() {
-    return MODULE_SERVICES;
-  }
-
   @Nonnull
   @Override
   public ComponentScope getComponentScope() {
     return ComponentScope.MODULE;
-  }
-
-  @Nonnull
-  @Override
-  protected List<PluginListenerDescriptor> getPluginListenerDescriptors(PluginDescriptor pluginDescriptor) {
-    return pluginDescriptor.getModuleListeners();
   }
 
   @Override

@@ -15,6 +15,7 @@
  */
 package consulo.module.content.layer.event;
 
+import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.Topic;
 
 import java.util.EventListener;
@@ -22,7 +23,7 @@ import java.util.EventListener;
 /**
  * @author dsl
  */
-@Topic
+@Topic(ComponentScope.PROJECT)
 public interface ModuleRootListener extends EventListener {
 
   default void beforeRootsChange(ModuleRootEvent event) {

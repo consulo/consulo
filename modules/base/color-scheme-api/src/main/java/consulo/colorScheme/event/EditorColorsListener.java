@@ -15,12 +15,13 @@
  */
 package consulo.colorScheme.event;
 
+import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.Topic;
 import consulo.colorScheme.EditorColorsScheme;
 
 import java.util.EventListener;
 
-@Topic
+@Topic(ComponentScope.APPLICATION)
 public interface EditorColorsListener extends EventListener {
   void globalSchemeChange(EditorColorsScheme scheme);
 }

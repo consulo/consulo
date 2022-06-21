@@ -15,6 +15,8 @@
  */
 package consulo.language.version;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.language.Language;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -27,6 +29,7 @@ import java.util.Objects;
  * @author VISTALL
  * @since 17:59/30.05.13
  */
+@Extension(ComponentScope.APPLICATION)
 public class LanguageVersion {
   @Nonnull
   public static final Key<LanguageVersion> KEY = Key.create("LANGUAGE_VERSION");

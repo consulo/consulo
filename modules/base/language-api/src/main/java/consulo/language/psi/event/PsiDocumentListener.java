@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.psi.event;
 
+import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.Topic;
 import consulo.document.Document;
 import consulo.language.psi.PsiDocumentManager;
@@ -10,7 +11,7 @@ import consulo.project.Project;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-@Topic
+@Topic(ComponentScope.PROJECT)
 public interface PsiDocumentListener {
 
   /**

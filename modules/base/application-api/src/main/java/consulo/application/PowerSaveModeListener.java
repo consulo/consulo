@@ -15,9 +15,10 @@
  */
 package consulo.application;
 
+import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.Topic;
 
-@Topic
+@Topic(ComponentScope.APPLICATION)
 public interface PowerSaveModeListener {
   void powerSaveStateChanged();
 }

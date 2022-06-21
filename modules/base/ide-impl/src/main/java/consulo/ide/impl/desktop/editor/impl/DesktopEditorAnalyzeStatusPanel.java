@@ -348,7 +348,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
       setVisible(!status.isEmpty());
 
       GridBag gc = new GridBag().nextLine();
-      if (status.size() == 1 && StringUtil.isEmpty(status.get(0).getText())) {
+      if (status.size() == 1 && consulo.util.lang.StringUtil.isEmpty(status.get(0).getText())) {
         add(createStyledLabel(null, status.get(0).getIcon(), SwingConstants.CENTER), gc.next().weightx(1).fillCellHorizontally());
       }
       else if (status.size() > 0) {

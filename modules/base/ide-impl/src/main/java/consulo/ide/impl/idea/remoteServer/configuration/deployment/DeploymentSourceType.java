@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.remoteServer.configuration.deployment;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
@@ -26,8 +28,9 @@ import javax.swing.*;
 /**
  * @author nik
  */
+@Extension(ComponentScope.APPLICATION)
 public abstract class DeploymentSourceType<S extends DeploymentSource> {
-  public static final ExtensionPointName<DeploymentSourceType<?>> EP_NAME = ExtensionPointName.create("consulo.remoteServer.deploymentSource.type");
+  public static final ExtensionPointName<DeploymentSourceType> EP_NAME = ExtensionPointName.create(DeploymentSourceType.class);
   private final String myId;
 
   protected DeploymentSourceType(@Nonnull String id) {

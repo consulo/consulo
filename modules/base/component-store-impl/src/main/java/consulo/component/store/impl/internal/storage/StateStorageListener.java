@@ -15,6 +15,7 @@
  */
 package consulo.component.store.impl.internal.storage;
 
+import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.Topic;
 import consulo.annotation.component.TopicBroadcastDirection;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
@@ -25,7 +26,8 @@ import javax.annotation.Nonnull;
 * @author VISTALL
 * @since 19-Jun-22
 */
-@Topic(direction = TopicBroadcastDirection.NONE)
+// FIXME [VISTALL] looks like it's called in App scope too
+@Topic(value = ComponentScope.PROJECT, direction = TopicBroadcastDirection.NONE)
 public interface StateStorageListener {
   void storageFileChanged(@Nonnull VirtualFileEvent event, @Nonnull StateStorage storage);
 }

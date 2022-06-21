@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.remoteServer.impl.configuration.deployment;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.execution.configuration.ConfigurationType;
 import consulo.component.ComponentManager;
 import consulo.ide.impl.idea.remoteServer.ServerType;
@@ -28,11 +29,18 @@ import java.util.function.Consumer;
  * @author nik
  */
 @Singleton
+@ExtensionImpl
 public class DeployToServerConfigurationTypesRegistrar implements ExtensionExtender<ConfigurationType> {
   @Override
   public void extend(@Nonnull ComponentManager componentManager, @Nonnull Consumer<ConfigurationType> consumer) {
     for (ServerType serverType : ServerType.EP_NAME.getExtensionList()) {
       consumer.accept(new DeployToServerConfigurationType(serverType));
     }
+  }
+
+  @Nonnull
+  @Override
+  public Class<ConfigurationType> getExtensionClass() {
+    return ConfigurationType.class;
   }
 }

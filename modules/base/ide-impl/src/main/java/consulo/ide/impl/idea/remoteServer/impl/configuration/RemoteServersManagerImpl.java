@@ -1,20 +1,20 @@
 package consulo.ide.impl.idea.remoteServer.impl.configuration;
 
 import consulo.application.Application;
+import consulo.component.messagebus.MessageBus;
+import consulo.component.persist.*;
 import consulo.ide.impl.idea.remoteServer.ServerType;
 import consulo.ide.impl.idea.remoteServer.configuration.RemoteServer;
 import consulo.ide.impl.idea.remoteServer.configuration.RemoteServerListener;
 import consulo.ide.impl.idea.remoteServer.configuration.RemoteServersManager;
 import consulo.ide.impl.idea.remoteServer.configuration.ServerConfiguration;
-import consulo.component.messagebus.MessageBus;
-import consulo.component.persist.*;
 import consulo.util.xml.serializer.SkipDefaultValuesSerializationFilters;
 import consulo.util.xml.serializer.XmlSerializer;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-
-import jakarta.inject.Singleton;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -26,8 +26,8 @@ import java.util.List;
 @State(name = "RemoteServers", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/remote-servers.xml")})
 public class RemoteServersManagerImpl extends RemoteServersManager implements PersistentStateComponent<RemoteServersManagerState> {
   public static final SkipDefaultValuesSerializationFilters SERIALIZATION_FILTERS = new SkipDefaultValuesSerializationFilters();
-  private List<RemoteServer<?>> myServers = new ArrayList<RemoteServer<?>>();
-  private List<RemoteServerState> myUnknownServers = new ArrayList<RemoteServerState>();
+  private List<RemoteServer<?>> myServers = new ArrayList<>();
+  private List<RemoteServerState> myUnknownServers = new ArrayList<>();
   private final MessageBus myMessageBus;
 
   @Inject
@@ -42,7 +42,7 @@ public class RemoteServersManagerImpl extends RemoteServersManager implements Pe
 
   @Override
   public <C extends ServerConfiguration> List<RemoteServer<C>> getServers(@Nonnull ServerType<C> type) {
-    List<RemoteServer<C>> servers = new ArrayList<RemoteServer<C>>();
+    List<RemoteServer<C>> servers = new ArrayList<>();
     for (RemoteServer<?> server : myServers) {
       if (server.getType().equals(type)) {
         servers.add((RemoteServer<C>)server);
@@ -51,7 +51,7 @@ public class RemoteServersManagerImpl extends RemoteServersManager implements Pe
     return servers;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public <C extends ServerConfiguration> RemoteServer<C> findByName(@Nonnull String name, @Nonnull ServerType<C> type) {
     for (RemoteServer<?> server : myServers) {
@@ -64,22 +64,22 @@ public class RemoteServersManagerImpl extends RemoteServersManager implements Pe
 
   @Override
   public <C extends ServerConfiguration> RemoteServer<C> createServer(@Nonnull ServerType<C> type, @Nonnull String name) {
-    return new RemoteServerImpl<C>(name, type, type.createDefaultConfiguration());
+    return new RemoteServerImpl<>(name, type, type.createDefaultConfiguration());
   }
 
   @Override
   public void addServer(RemoteServer<?> server) {
     myServers.add(server);
-    myMessageBus.syncPublisher(RemoteServerListener.TOPIC).serverAdded(server);
+    myMessageBus.syncPublisher(RemoteServerListener.class).serverAdded(server);
   }
 
   @Override
   public void removeServer(RemoteServer<?> server) {
     myServers.remove(server);
-    myMessageBus.syncPublisher(RemoteServerListener.TOPIC).serverRemoved(server);
+    myMessageBus.syncPublisher(RemoteServerListener.class).serverRemoved(server);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public RemoteServersManagerState getState() {
     RemoteServersManagerState state = new RemoteServersManagerState();
@@ -113,10 +113,10 @@ public class RemoteServersManagerImpl extends RemoteServersManager implements Pe
     C configuration = type.createDefaultConfiguration();
     PersistentStateComponent<?> serializer = configuration.getSerializer();
     ComponentSerializationUtil.loadComponentState(serializer, server.myConfiguration);
-    return new RemoteServerImpl<C>(server.myName, type, configuration);
+    return new RemoteServerImpl<>(server.myName, type, configuration);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   private static ServerType<?> findServerType(@Nonnull String typeId) {
     for (ServerType serverType : ServerType.EP_NAME.getExtensionList()) {
       if (serverType.getId().equals(typeId)) {

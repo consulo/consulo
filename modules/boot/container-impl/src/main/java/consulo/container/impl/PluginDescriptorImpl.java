@@ -60,12 +60,6 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
   private Map<PluginId, PluginDescriptorImpl> myOptionalDescriptors;
 
   private List<SimpleXmlElement> myActionsElements = Collections.emptyList();
-  private List<ComponentConfig> myAppComponents = Collections.emptyList();
-  private List<ComponentConfig> myProjectComponents = Collections.emptyList();
-
-  private List<PluginListenerDescriptor> myApplicationListeners = Collections.emptyList();
-  private List<PluginListenerDescriptor> myProjectListeners = Collections.emptyList();
-  private List<PluginListenerDescriptor> myModuleListeners = Collections.emptyList();
 
   private Map<PluginPermissionType, PluginPermissionDescriptor> myPermissionDescriptors = Collections.emptyMap();
 
@@ -74,10 +68,6 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
   private ModuleLayer myModuleLayer;
 
   private Collection<HelpSetPath> myHelpSets = Collections.emptyList();
-
-  private SimpleMultiMap<String, ExtensionInfo> myExtensions = SimpleMultiMap.emptyMap();
-
-  private SimpleMultiMap<String, SimpleXmlElement> myExtensionsPoints = SimpleMultiMap.emptyMap();
 
   private Set<String> myTags = Collections.emptySet();
 
@@ -225,53 +215,10 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
         }
       }
     }
-
-    for (PluginListenerDescriptor descriptor : myApplicationListeners) {
-      descriptor.pluginDescriptor = this;
-    }
-
-    for (PluginListenerDescriptor descriptor : myProjectListeners) {
-      descriptor.pluginDescriptor = this;
-    }
-
-    for (PluginListenerDescriptor descriptor : myModuleListeners) {
-      descriptor.pluginDescriptor = this;
-    }
   }
 
   private void extendPlugin(PluginBean pluginBean) {
-    myAppComponents = mergeElements(myAppComponents, pluginBean.applicationComponents);
-    myProjectComponents = mergeElements(myProjectComponents, pluginBean.projectComponents);
     myActionsElements = mergeElements(myActionsElements, pluginBean.actions);
-
-    myApplicationListeners = mergeElements(myApplicationListeners, pluginBean.applicationListeners);
-    myProjectListeners = mergeElements(myProjectListeners, pluginBean.projectListeners);
-    myModuleListeners = mergeElements(myModuleListeners, pluginBean.moduleListeners);
-
-    List<ExtensionInfo> extensions = pluginBean.extensions;
-    if (extensions != null && !extensions.isEmpty()) {
-      initializeExtensions();
-
-      for (ExtensionInfo extension : extensions) {
-        String extId = extension.getPluginId() + "." + extension.getElement().getName();
-        myExtensions.putValue(extId, extension);
-      }
-    }
-
-    List<SimpleXmlElement> extensionPoints = pluginBean.extensionPoints;
-    if (extensionPoints != null && !extensionPoints.isEmpty()) {
-      initializeExtensionPoints();
-
-      for (SimpleXmlElement extensionPoint : extensionPoints) {
-        String areaId = extensionPoint.getAttributeValue("area", "");
-
-        if (areaId.isEmpty()) {
-          areaId = "APPLICATION";
-        }
-
-        myExtensionsPoints.putValue(areaId, extensionPoint);
-      }
-    }
   }
 
 
@@ -292,31 +239,8 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
   }
 
   public void mergeOptionalConfig(final PluginDescriptorImpl descriptor) {
-    initializeExtensions();
-
-    myExtensions.putAll(descriptor.myExtensions);
-
-    initializeExtensionPoints();
-
-    myExtensionsPoints.putAll(descriptor.myExtensionsPoints);
-
     myActionsElements = mergeElements(myActionsElements, descriptor.myActionsElements);
-    myAppComponents = mergeElements(myAppComponents, descriptor.myAppComponents);
-    myProjectComponents = mergeElements(myProjectComponents, descriptor.myProjectComponents);
   }
-
-  private void initializeExtensions() {
-    if (myExtensions.isEmpty()) {
-      myExtensions = SimpleMultiMap.newHashMap();
-    }
-  }
-
-  private void initializeExtensionPoints() {
-    if (myExtensionsPoints.isEmpty()) {
-      myExtensionsPoints = SimpleMultiMap.newHashMap();
-    }
-  }
-
 
   @Override
   public Set<String> getTags() {
@@ -407,17 +331,6 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
     myCategory = category;
   }
 
-
-  public SimpleMultiMap<String, SimpleXmlElement> getExtensionsPoints() {
-    return myExtensionsPoints;
-  }
-
-
-  public SimpleMultiMap<String, ExtensionInfo> getExtensions() {
-    return myExtensions;
-  }
-
-
   public List<File> getClassPath() {
     if (myPath.isDirectory()) {
       final List<File> result = new ArrayList<File>();
@@ -446,21 +359,8 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
   }
 
   @Override
-
   public List<SimpleXmlElement> getActionsDescriptionElements() {
     return myActionsElements;
-  }
-
-  @Override
-
-  public List<ComponentConfig> getAppComponents() {
-    return myAppComponents;
-  }
-
-  @Override
-
-  public List<ComponentConfig> getProjectComponents() {
-    return myProjectComponents;
   }
 
   @Override
@@ -477,25 +377,6 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
   public String getUrl() {
     return url;
   }
-
-
-  @Override
-  public List<PluginListenerDescriptor> getApplicationListeners() {
-    return myApplicationListeners;
-  }
-
-
-  @Override
-  public List<PluginListenerDescriptor> getProjectListeners() {
-    return myProjectListeners;
-  }
-
-
-  @Override
-  public List<PluginListenerDescriptor> getModuleListeners() {
-    return myModuleListeners;
-  }
-
 
   @Override
   public PluginPermissionDescriptor getPermissionDescriptor(PluginPermissionType permissionType) {
@@ -545,17 +426,14 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
   }
 
   @Override
-
   public Collection<HelpSetPath> getHelpSets() {
     return myHelpSets;
   }
-
 
   @Override
   public PluginId getPluginId() {
     return myId;
   }
-
 
   @Override
   public ClassLoader getPluginClassLoader() {

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.copyright.impl;
 
+import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicImpl;
 import consulo.application.Application;
 import consulo.application.impl.internal.IdeaModalityState;
@@ -52,7 +53,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author VISTALL
  * @since 05/03/2021
  */
-@TopicImpl
+@TopicImpl(ComponentScope.APPLICATION)
 public class CopyrightBulkFileListener implements BulkFileListener {
   private final Set<String> myNewFilePaths = ConcurrentHashMap.newKeySet();
 

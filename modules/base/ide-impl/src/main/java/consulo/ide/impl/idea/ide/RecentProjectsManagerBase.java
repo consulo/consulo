@@ -95,7 +95,7 @@ public class RecentProjectsManagerBase extends RecentProjectsManager implements 
 
   protected RecentProjectsManagerBase(@Nonnull Application application) {
     MessageBusConnection connection = application.getMessageBus().connect();
-    connection.subscribe(AppLifecycleListener.TOPIC, new MyAppLifecycleListener());
+    connection.subscribe(AppLifecycleListener.class, new MyAppLifecycleListener());
     if (!application.isHeadlessEnvironment()) {
       connection.subscribe(ProjectManagerListener.class, new MyProjectListener());
     }

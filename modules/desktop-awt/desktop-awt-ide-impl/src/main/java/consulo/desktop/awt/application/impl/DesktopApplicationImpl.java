@@ -403,7 +403,7 @@ public class DesktopApplicationImpl extends BaseApplication {
             return;
           }
 
-          getMessageBus().syncPublisher(AppLifecycleListener.TOPIC).appClosing();
+          getMessageBus().syncPublisher(AppLifecycleListener.class).appClosing();
           myDisposeInProgress = true;
           doExit(allowListenersToCancel, restart);
           myDisposeInProgress = false;

@@ -16,6 +16,7 @@
 package consulo.project.event;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.Topic;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
@@ -26,7 +27,7 @@ import java.util.EventListener;
 /**
  * Listener for Project.
  */
-@Topic
+@Topic(ComponentScope.APPLICATION)
 public interface ProjectManagerListener extends EventListener {
   ProjectManagerListener[] EMPTY_ARRAY = new ProjectManagerListener[0];
 

@@ -25,6 +25,7 @@
 package consulo.ui.ex.action.event;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.Topic;
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.AnAction;
@@ -34,7 +35,7 @@ import consulo.ui.ex.action.AnActionEvent;
  * @author Kirill Kalishev
  * @author Konstantin Bulenkov
  */
-@Topic
+@Topic(ComponentScope.APPLICATION)
 public interface AnActionListener {
   default void beforeActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
   }

@@ -71,10 +71,6 @@ public interface PluginDescriptor {
 
   List<SimpleXmlElement> getActionsDescriptionElements();
 
-  List<ComponentConfig> getAppComponents();
-
-  List<ComponentConfig> getProjectComponents();
-
   String getVendorEmail();
 
   String getVendorUrl();

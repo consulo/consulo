@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.keymap.impl.ui;
 
+import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.Topic;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.QuickList;
 
@@ -22,7 +23,7 @@ import consulo.ide.impl.idea.openapi.actionSystem.ex.QuickList;
  * @author Dmitry Avdeev
  *         Date: 9/20/12
  */
-@Topic
+@Topic(ComponentScope.APPLICATION)
 public interface KeymapListener {
   void quickListRenamed(QuickList oldQuickList, QuickList newQuickList);
 

@@ -15,13 +15,14 @@
  */
 package consulo.ide.impl.idea.ide.todo;
 
+import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.Topic;
 
 /**
  * @author VISTALL
  * @since 20-Jun-22
  */
-@Topic
+@Topic(ComponentScope.APPLICATION)
 public interface TodoConfigurationListener {
   void propertyChanged(String propertyName, Object oldValue, Object newValue);
 }

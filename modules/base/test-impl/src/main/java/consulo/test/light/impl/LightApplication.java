@@ -22,10 +22,10 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.event.ApplicationListener;
 import consulo.application.impl.internal.IdeaModalityState;
+import consulo.component.bind.InjectingBinding;
 import consulo.component.impl.BaseComponentManager;
 import consulo.component.impl.extension.ExtensionAreaId;
 import consulo.component.impl.extension.ExtensionsAreaImpl;
-import consulo.container.plugin.PluginListenerDescriptor;
 import consulo.disposer.Disposable;
 import consulo.injecting.InjectingContainer;
 import consulo.injecting.InjectingContainerBuilder;
@@ -61,7 +61,7 @@ public class LightApplication extends BaseComponentManager implements Applicatio
   }
 
   @Override
-  protected void fillListenerDescriptors(MultiMap<String, PluginListenerDescriptor> mapByTopic) {
+  protected void fillListenerDescriptors(MultiMap<Class, InjectingBinding> mapByTopic) {
   }
 
   @Nonnull

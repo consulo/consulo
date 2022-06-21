@@ -16,11 +16,6 @@
 package consulo.ide.impl.idea.openapi.project.impl;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.ide.impl.idea.ide.startup.StartupManagerEx;
-import consulo.ide.impl.idea.openapi.components.impl.ProjectPathMacroManager;
-import consulo.project.internal.ProjectExListener;
-import consulo.project.ui.wm.FrameTitleBuilder;
-import consulo.ide.impl.idea.util.TimedReference;
 import consulo.application.AccessRule;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAwareRunnable;
@@ -28,17 +23,14 @@ import consulo.application.impl.internal.PlatformComponentManagerImpl;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.component.extension.ExtensionPointId;
 import consulo.component.impl.extension.ExtensionAreaId;
-import consulo.component.internal.ServiceDescriptor;
 import consulo.component.store.impl.internal.StoreUtil;
 import consulo.ide.impl.components.impl.stores.DefaultProjectStoreImpl;
 import consulo.ide.impl.components.impl.stores.IProjectStore;
 import consulo.ide.impl.components.impl.stores.ProjectStoreImpl;
-import consulo.container.plugin.ComponentConfig;
-import consulo.container.plugin.PluginDescriptor;
-import consulo.container.plugin.PluginIds;
-import consulo.container.plugin.PluginListenerDescriptor;
+import consulo.ide.impl.idea.ide.startup.StartupManagerEx;
+import consulo.ide.impl.idea.openapi.components.impl.ProjectPathMacroManager;
+import consulo.ide.impl.idea.util.TimedReference;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.logging.Logger;
 import consulo.module.impl.internal.ModuleManagerImpl;
@@ -47,8 +39,10 @@ import consulo.project.ProjectComponent;
 import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerAdapter;
 import consulo.project.internal.ProjectEx;
+import consulo.project.internal.ProjectExListener;
 import consulo.project.internal.ProjectManagerEx;
 import consulo.project.startup.StartupManager;
+import consulo.project.ui.wm.FrameTitleBuilder;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -71,7 +65,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ProjectImpl extends PlatformComponentManagerImpl implements ProjectEx {
   private static final Logger LOG = Logger.getInstance(ProjectImpl.class);
-  private static final ExtensionPointId<ServiceDescriptor> PROJECT_SERVICES = ExtensionPointId.of(PluginIds.CONSULO_BASE + ".projectService");
 
   public static final String NAME_FILE = ".name";
 
@@ -129,28 +122,10 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     return (Application)myParent;
   }
 
-  @Nullable
-  @Override
-  protected ExtensionPointId<ServiceDescriptor> getServiceExtensionPointName() {
-    return PROJECT_SERVICES;
-  }
-
   @Nonnull
   @Override
   public ComponentScope getComponentScope() {
     return ComponentScope.PROJECT;
-  }
-
-  @Nonnull
-  @Override
-  protected List<ComponentConfig> getComponentConfigs(PluginDescriptor ideaPluginDescriptor) {
-    return ideaPluginDescriptor.getProjectComponents();
-  }
-
-  @Nonnull
-  @Override
-  protected List<PluginListenerDescriptor> getPluginListenerDescriptors(PluginDescriptor pluginDescriptor) {
-    return pluginDescriptor.getProjectListeners();
   }
 
   @Override
@@ -196,11 +171,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   protected void notifyAboutInitialization(float percentOfLoad, Object component) {
     ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
     if (indicator != null) {
-      indicator.setText2(getComponentName(component));
-    }
-
-    if (component instanceof ProjectComponent) {
-      myProjectComponents.add((ProjectComponent)component);
+      indicator.setText2(component.getClass().getName());
     }
   }
 

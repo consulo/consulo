@@ -1,8 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.document.event;
 
+import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.Topic;
-import consulo.component.extension.ExtensionPointName;
 import consulo.document.Document;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -12,7 +12,7 @@ import java.util.EventListener;
 /**
  * @see #TOPIC
  */
-@Topic
+@Topic(ComponentScope.APPLICATION)
 public interface FileDocumentManagerListener extends EventListener {
   /**
    * Fired before processing FileDocumentManager.saveAllDocuments(). Can be used by plugins

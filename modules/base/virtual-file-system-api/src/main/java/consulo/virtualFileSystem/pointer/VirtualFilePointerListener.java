@@ -15,12 +15,12 @@
  */
 package consulo.virtualFileSystem.pointer;
 
+import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.Topic;
-import consulo.component.messagebus.TopicImpl;
 
 import javax.annotation.Nonnull;
 
-@Topic
+@Topic(ComponentScope.APPLICATION)
 public interface VirtualFilePointerListener {
   default void beforeValidityChanged(@Nonnull VirtualFilePointer[] pointers) {
   }

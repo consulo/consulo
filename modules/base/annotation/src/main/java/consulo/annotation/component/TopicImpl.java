@@ -27,5 +27,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface TopicImpl {
+  ComponentScope value();
+
   String[] profiles() default ComponentProfiles.PROD;
 }

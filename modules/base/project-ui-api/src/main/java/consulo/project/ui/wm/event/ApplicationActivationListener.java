@@ -15,13 +15,14 @@
  */
 package consulo.project.ui.wm.event;
 
+import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.Topic;
 import consulo.project.ui.wm.IdeFrame;
 
 /**
  * @author yole
  */
-@Topic
+@Topic(ComponentScope.APPLICATION)
 public interface ApplicationActivationListener {
 
   /**

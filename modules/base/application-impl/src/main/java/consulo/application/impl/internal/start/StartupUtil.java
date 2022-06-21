@@ -23,7 +23,6 @@ import consulo.component.impl.extension.PluginExtensionInitializationException;
 import consulo.container.ExitCodes;
 import consulo.container.StartupError;
 import consulo.container.boot.ContainerPathManager;
-import consulo.container.plugin.ComponentConfig;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
@@ -246,14 +245,14 @@ public class StartupUtil {
   }
 
 
-  public static void handleComponentError(@Nonnull Throwable t, @Nullable Class componentClass, @Nullable ComponentConfig config) {
+  public static void handleComponentError(@Nonnull Throwable t, @Nullable Class componentClass, @Nullable Object config) {
     if (t instanceof StartupAbortedException) {
       throw (StartupAbortedException)t;
     }
 
     PluginId pluginId = null;
     if (config != null) {
-      pluginId = config.getPluginId();
+      pluginId = PluginManager.getPluginId(config.getClass());
     }
     if (pluginId == null || PluginIds.CONSULO_BASE.equals(pluginId)) {
       pluginId = componentClass == null ? null : PluginManager.getPluginId(componentClass);

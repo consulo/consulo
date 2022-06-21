@@ -154,7 +154,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
       }
     };
 
-    application.getMessageBus().connect().subscribe(AppLifecycleListener.TOPIC, new AppLifecycleListener() {
+    application.getMessageBus().connect().subscribe(AppLifecycleListener.class, new AppLifecycleListener() {
       @Override
       public void appClosing() {
         // save full screen window states

@@ -18,9 +18,7 @@ package consulo.component.impl;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.Service;
 import consulo.annotation.component.Topic;
-import consulo.component.BaseComponent;
 import consulo.component.ComponentManager;
-import consulo.component.NamedComponent;
 import consulo.component.bind.InjectingBinding;
 import consulo.component.extension.ExtensionPoint;
 import consulo.component.extension.ExtensionPointId;
@@ -31,11 +29,8 @@ import consulo.component.impl.messagebus.MessageBusFactory;
 import consulo.component.impl.messagebus.MessageBusImpl;
 import consulo.component.internal.InjectingBindingHolder;
 import consulo.component.internal.InjectingBindingLoader;
-import consulo.component.internal.ServiceDescriptor;
 import consulo.component.messagebus.MessageBus;
-import consulo.container.plugin.ComponentConfig;
 import consulo.container.plugin.PluginDescriptor;
-import consulo.container.plugin.PluginListenerDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -48,13 +43,15 @@ import consulo.platform.Platform;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.MultiMap;
 import consulo.util.dataholder.UserDataHolderBase;
-import consulo.util.lang.Comparing;
 import consulo.util.lang.ThreeState;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
@@ -63,80 +60,6 @@ import java.util.function.Supplier;
  * @author mike
  */
 public abstract class BaseComponentManager extends UserDataHolderBase implements ComponentManager, Disposable {
-  protected class ComponentsRegistry {
-    private final List<ComponentConfig> myComponentConfigs = new ArrayList<>();
-    private final Map<Class, ComponentConfig> myComponentClassToConfig = new HashMap<>();
-
-    private void loadClasses(List<Class> notLazyServices, InjectingContainerBuilder builder) {
-      for (ComponentConfig config : myComponentConfigs) {
-        loadClasses(config, notLazyServices, builder);
-      }
-    }
-
-    @SuppressWarnings("unchecked")
-    private void loadClasses(@Nonnull ComponentConfig config, List<Class> notLazyServices, InjectingContainerBuilder builder) {
-      ClassLoader loader = config.getClassLoader();
-
-      try {
-        final Class interfaceClass = Class.forName(config.getInterfaceClass(), false, loader);
-        final Class implementationClass = Comparing.equal(config.getInterfaceClass(), config.getImplementationClass()) ? interfaceClass : Class.forName(config.getImplementationClass(), false, loader);
-
-        InjectingPoint<Object> point = builder.bind(interfaceClass);
-
-        // force singleton
-        point.forceSingleton();
-        // to impl class
-        point.to(implementationClass);
-        // post processor
-        point.injectListener((startTime, componentInstance) -> {
-          if (myChecker.containsKey(interfaceClass)) {
-            throw new IllegalArgumentException("Duplicate init of " + interfaceClass);
-          }
-          myChecker.put(interfaceClass, componentInstance);
-
-          if (componentInstance instanceof Disposable) {
-            Disposer.register(BaseComponentManager.this, (Disposable)componentInstance);
-          }
-
-          boolean isStorableComponent = initializeIfStorableComponent(componentInstance, false, false);
-
-          if (componentInstance instanceof BaseComponent) {
-            try {
-              ((BaseComponent)componentInstance).initComponent();
-
-              if (!isStorableComponent) {
-                LOG.warn("Not storable component implement initComponent() method, which can moved to constructor, component: " + componentInstance.getClass().getName());
-              }
-            }
-            catch (BaseComponent.DefaultImplException ignored) {
-              // skip default impl
-            }
-          }
-
-          long ms = (System.nanoTime() - startTime) / 1000000;
-          if (ms > 10 && logSlowComponents()) {
-            LOG.info(componentInstance.getClass().getName() + " initialized in " + ms + " ms");
-          }
-        });
-
-        myComponentClassToConfig.put(implementationClass, config);
-
-        notLazyServices.add(interfaceClass);
-      }
-      catch (Throwable t) {
-        handleInitComponentError(t, null, config);
-      }
-    }
-
-    private void addConfig(ComponentConfig config) {
-      myComponentConfigs.add(config);
-    }
-
-    public ComponentConfig getConfig(final Class componentImplementation) {
-      return myComponentClassToConfig.get(componentImplementation);
-    }
-  }
-
   private static final Logger LOG = Logger.getInstance(BaseComponentManager.class);
 
   private InjectingContainer myInjectingContainer;
@@ -147,7 +70,6 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
 
   protected final ComponentManager myParent;
 
-  private ComponentsRegistry myComponentsRegistry = new ComponentsRegistry();
   private final BooleanSupplier myDisposedCondition = this::isDisposed;
 
   private boolean myNotLazyStepFinished;
@@ -181,7 +103,7 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
   protected void buildInjectingContainer() {
     myMessageBus = MessageBusFactory.newMessageBus(this, myParent == null ? null : myParent.getMessageBus());
 
-    MultiMap<String, PluginListenerDescriptor> mapByTopic = new MultiMap<>();
+    MultiMap<Class, InjectingBinding> mapByTopic = new MultiMap<>();
 
     fillListenerDescriptors(mapByTopic);
 
@@ -241,43 +163,27 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
     return root;
   }
 
-  protected void fillListenerDescriptors(MultiMap<String, PluginListenerDescriptor> mapByTopic) {
+  protected void fillListenerDescriptors(MultiMap<Class, InjectingBinding> mapByTopic) {
     InjectingBindingHolder holder = InjectingBindingLoader.INSTANCE.getHolder(Topic.class, getComponentScope());
 
-    System.out.println();
+    for (List<InjectingBinding> bindings : holder.getBindings().values()) {
+      for (InjectingBinding binding : bindings) {
+        // TODO [VISTALL] filter by profiles
+
+        mapByTopic.put(binding.getApiClass(), bindings);
+      }
+    }
   }
 
   protected void registerExtensionPointsAndExtensions(ExtensionsAreaImpl area) {
-    //TODO removed PluginExtensionRegistrator.registerExtensionPointsAndExtensions(myExtensionAreaId, area);
+
   }
 
   protected void registerServices(InjectingContainerBuilder builder) {
-    for (PluginDescriptor plugin : PluginManager.getPlugins()) {
-      if (PluginManager.shouldSkipPlugin(plugin)) {
-        continue;
-      }
 
-      List<ComponentConfig> componentConfigs = getComponentConfigs(plugin);
-
-      for (ComponentConfig componentConfig : componentConfigs) {
-        registerComponent(componentConfig, plugin);
-      }
-    }
-
-    //myComponentsRegistry.loadClasses(myNotLazyServices, builder);
   }
 
   protected void bootstrapInjectingContainer(@Nonnull InjectingContainerBuilder builder) {
-  }
-
-  @Nonnull
-  protected List<ComponentConfig> getComponentConfigs(PluginDescriptor ideaPluginDescriptor) {
-    return Collections.emptyList();
-  }
-
-  @Nonnull
-  protected List<PluginListenerDescriptor> getPluginListenerDescriptors(PluginDescriptor pluginDescriptor) {
-    return Collections.emptyList();
   }
 
   private void loadServices(List<Class> notLazyServices, InjectingContainerBuilder builder) {
@@ -287,14 +193,6 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
       // TODO [VISTALL] filter by profiles, and throw if two or more
       InjectingBinding injectingBinding = listOfBindings.get(0);
 
-      ServiceDescriptor descriptor = new ServiceDescriptor();
-      descriptor.serviceInterface = injectingBinding.getApiClassName();
-      descriptor.serviceImplementation = injectingBinding.getImplClassName();
-      descriptor.lazy = injectingBinding.isLazy();
-
-      PluginDescriptor plugin = PluginManager.getPlugin(injectingBinding.getClass());
-      descriptor.setPluginDescriptor(plugin);
-      
       InjectingKey<Object> key = InjectingKey.of(injectingBinding.getApiClass());
       InjectingKey<Object> implKey = InjectingKey.of(injectingBinding.getImplClass());
 
@@ -304,7 +202,7 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
       // require singleton
       point.forceSingleton();
       // remap object initialization
-      point.factory(objectProvider -> runServiceInitialize(descriptor, objectProvider::get));
+      point.factory(objectProvider -> runServiceInitialize(injectingBinding, objectProvider::get));
 
       point.constructorParameterTypes(injectingBinding.getParameterTypes());
       point.constructorFactory(injectingBinding::create);
@@ -328,65 +226,15 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
         notLazyServices.add(key.getTargetClass());
       }
     }
-    //ExtensionPointId<ServiceDescriptor> ep = getServiceExtensionPointName();
-    //if (ep != null) {
-    //  ExtensionPointImpl<ServiceDescriptor> extensionPoint = myExtensionsArea.getExtensionPointImpl(ep);
-    //  // there no injector at that level - build it via hardcode
-    //  List<Pair<ServiceDescriptor, PluginDescriptor>> descriptorList = extensionPoint.buildUnsafe(aClass -> new ServiceDescriptor());
-    //  // and cache it
-    //  extensionPoint.setExtensionCache(descriptorList);
-    //
-    //  for (ServiceDescriptor descriptor : extensionPoint.getExtensionList()) {
-    //    InjectingKey<Object> key = InjectingKey.of(descriptor.getInterface(), getTargetClassLoader(descriptor.getPluginDescriptor()));
-    //    InjectingKey<Object> implKey = InjectingKey.of(descriptor.getImplementation(), getTargetClassLoader(descriptor.getPluginDescriptor()));
-    //
-    //    InjectingPoint<Object> point = builder.bind(key);
-    //    // bind to impl class
-    //    point.to(implKey);
-    //    // require singleton
-    //    point.forceSingleton();
-    //    // remap object initialization
-    //    point.factory(objectProvider -> runServiceInitialize(descriptor, objectProvider::get));
-    //
-    //    point.injectListener((time, instance) -> {
-    //
-    //      if (myChecker.containsKey(key.getTargetClass())) {
-    //        throw new IllegalArgumentException("Duplicate init of " + key.getTargetClass());
-    //      }
-    //      myChecker.put(key.getTargetClass(), instance);
-    //
-    //      if (instance instanceof Disposable) {
-    //        Disposer.register(this, (Disposable)instance);
-    //      }
-    //
-    //      initializeIfStorableComponent(instance, true, descriptor.isLazy());
-    //    });
-    //
-    //    if (!descriptor.isLazy()) {
-    //      // if service is not lazy - add it for init at start
-    //      notLazyServices.add(key.getTargetClass());
-    //    }
-    //  }
-    //}
   }
 
-  @Nonnull
-  private static ClassLoader getTargetClassLoader(PluginDescriptor pluginDescriptor) {
-    return pluginDescriptor != null ? pluginDescriptor.getPluginClassLoader() : BaseComponentManager.class.getClassLoader();
-  }
-
-  protected <T> T runServiceInitialize(@Nonnull ServiceDescriptor descriptor, @Nonnull Supplier<T> runnable) {
-    if (!myNotLazyStepFinished && !descriptor.isLazy() && myCurrentNotLazyServiceClass != null) {
-      if (!Objects.equals(descriptor.getInterface(), myCurrentNotLazyServiceClass.getName()) && InjectingContainer.LOG_INJECTING_PROBLEMS) {
-        LOG.warn(new IllegalAccessException("Initializing not lazy service [" + descriptor.getInterface() + "] from another service [" + myCurrentNotLazyServiceClass.getName() + "]"));
+  protected <T> T runServiceInitialize(@Nonnull InjectingBinding binding, @Nonnull Supplier<T> runnable) {
+    if (!myNotLazyStepFinished && !binding.isLazy() && myCurrentNotLazyServiceClass != null) {
+      if (!Objects.equals(binding.getApiClassName(), myCurrentNotLazyServiceClass.getName()) && InjectingContainer.LOG_INJECTING_PROBLEMS) {
+        LOG.warn(new IllegalAccessException("Initializing not lazy service [" + binding.getApiClassName() + "] from another service [" + myCurrentNotLazyServiceClass.getName() + "]"));
       }
     }
     return runnable.get();
-  }
-
-  @Nullable
-  protected ExtensionPointId<ServiceDescriptor> getServiceExtensionPointName() {
-    return null;
   }
 
   @Nonnull
@@ -396,17 +244,6 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
 
   public boolean initializeIfStorableComponent(@Nonnull Object component, boolean service, boolean lazy) {
     return false;
-  }
-
-  protected void handleInitComponentError(@Nonnull Throwable ex, @Nullable Class componentClass, @Nullable ComponentConfig config) {
-    LOG.error(ex);
-  }
-
-  private void registerComponent(ComponentConfig config, PluginDescriptor pluginDescriptor) {
-    config.prepareClasses();
-
-    config.pluginDescriptor = pluginDescriptor;
-    myComponentsRegistry.addConfig(config);
   }
 
   @Override
@@ -425,8 +262,7 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
 
           checkCanceledAndChangeProgress(progressIndicator, i, myNotLazyServices.size());
 
-          Object component = getComponent(serviceClass);
-          assert component != null;
+          getInstance(serviceClass); // init it
         }
         finally {
           i++;
@@ -520,10 +356,6 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
     temporarilyDisposed = disposed;
   }
 
-  public ComponentConfig getConfig(Class componentImplementation) {
-    return myComponentsRegistry.getConfig(componentImplementation);
-  }
-
   @Override
   @Nonnull
   public BooleanSupplier getDisposed() {
@@ -533,16 +365,6 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
   @Override
   public boolean isDisposed() {
     return myDisposeState == ThreeState.YES;
-  }
-
-  @Nonnull
-  public static String getComponentName(@Nonnull final Object component) {
-    if (component instanceof NamedComponent) {
-      return ((NamedComponent)component).getComponentName();
-    }
-    else {
-      return component.getClass().getName();
-    }
   }
 
   protected boolean logSlowComponents() {
@@ -563,7 +385,6 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
     myInjectingContainer.dispose();
     myInjectingContainer = null;
 
-    myComponentsRegistry = null;
     myNotLazyStepFinished = false;
     myNotLazyServices.clear();
 

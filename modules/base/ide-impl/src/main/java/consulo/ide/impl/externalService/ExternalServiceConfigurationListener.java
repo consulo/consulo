@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.externalService;
 
+import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.Topic;
 
 import javax.annotation.Nonnull;
@@ -23,7 +24,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 11/09/2021
  */
-@Topic
+@Topic(ComponentScope.APPLICATION)
 public interface ExternalServiceConfigurationListener {
   void configurationChanged(@Nonnull ExternalServiceConfiguration configuration);
 }

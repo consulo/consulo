@@ -49,7 +49,7 @@ public class ApplicationStatisticsListeners {
     final MessageBus messageBus = application.getMessageBus();
 
     MessageBusConnection connection = messageBus.connect();
-    connection.subscribe(AppLifecycleListener.TOPIC, new AppLifecycleListener() {
+    connection.subscribe(AppLifecycleListener.class, new AppLifecycleListener() {
       @Override
       public void appClosing() {
         for (Project project : ProjectManager.getInstance().getOpenProjects()) {

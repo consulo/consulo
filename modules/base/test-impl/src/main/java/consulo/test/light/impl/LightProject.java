@@ -17,10 +17,10 @@ package consulo.test.light.impl;
 
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.Application;
+import consulo.component.bind.InjectingBinding;
 import consulo.component.impl.BaseComponentManager;
 import consulo.component.impl.extension.ExtensionAreaId;
 import consulo.component.impl.extension.ExtensionsAreaImpl;
-import consulo.container.plugin.PluginListenerDescriptor;
 import consulo.injecting.InjectingContainer;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.project.Project;
@@ -60,7 +60,7 @@ public class LightProject extends BaseComponentManager implements Project {
   }
 
   @Override
-  protected void fillListenerDescriptors(MultiMap<String, PluginListenerDescriptor> mapByTopic) {
+  protected void fillListenerDescriptors(MultiMap<Class, InjectingBinding> mapByTopic) {
   }
 
   @Nonnull

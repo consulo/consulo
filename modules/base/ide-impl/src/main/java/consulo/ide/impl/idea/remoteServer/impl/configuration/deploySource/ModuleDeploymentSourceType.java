@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.remoteServer.impl.configuration.deploySource;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.util.ModuleUtilCore;
 import consulo.project.Project;
 import consulo.ide.impl.idea.remoteServer.configuration.deployment.DeploymentSourceType;
@@ -26,6 +27,7 @@ import javax.annotation.Nonnull;
 /**
  * @author nik
  */
+@ExtensionImpl
 public class ModuleDeploymentSourceType extends DeploymentSourceType<ModuleDeploymentSource> {
   private static final String NAME_ATTRIBUTE = "name";
 

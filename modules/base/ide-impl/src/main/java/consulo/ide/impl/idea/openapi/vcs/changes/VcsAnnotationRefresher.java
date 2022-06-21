@@ -15,17 +15,17 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
+import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.Topic;
 import consulo.ide.impl.idea.openapi.vcs.VcsKey;
 import consulo.virtualFileSystem.VirtualFile;
 
 /**
- * Created with IntelliJ IDEA.
  * User: Irina.Chernushina
  * Date: 11/19/12
  * Time: 4:30 PM
  */
-@Topic
+@Topic(ComponentScope.PROJECT)
 public interface VcsAnnotationRefresher {
   void dirtyUnder(VirtualFile file);
 

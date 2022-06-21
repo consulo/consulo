@@ -371,7 +371,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
           if (myProject != null && myProject.isOpen()) {
             ProjectUtil.closeAndDispose(myProject);
           }
-          ApplicationManager.getApplication().getMessageBus().syncPublisher(AppLifecycleListener.TOPIC).projectFrameClosed();
+          ApplicationManager.getApplication().getMessageBus().syncPublisher(AppLifecycleListener.class).projectFrameClosed();
           WelcomeFrame.showIfNoProjectOpened();
         }
         else {

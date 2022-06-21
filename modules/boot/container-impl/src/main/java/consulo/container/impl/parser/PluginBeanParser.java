@@ -15,7 +15,6 @@
  */
 package consulo.container.impl.parser;
 
-import consulo.container.plugin.ComponentConfig;
 import consulo.container.plugin.PluginListenerDescriptor;
 import consulo.util.nodep.text.StringUtilRt;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
@@ -172,28 +171,7 @@ public class PluginBeanParser {
       pluginBean.incompatibleWith = incompatibleWith;
     }
 
-    // region deprecated stuff
-    List<ComponentConfig> appComponents = new ArrayList<ComponentConfig>();
-    for (SimpleXmlElement appComponentElements : rootTag.getChildren("application-components")) {
-      parseComponent(appComponentElements, appComponents);
-    }
-
-    if (!appComponents.isEmpty()) {
-      pluginBean.applicationComponents = appComponents;
-    }
-
-    List<ComponentConfig> projectComponents = new ArrayList<ComponentConfig>();
-    for (SimpleXmlElement appComponentElements : rootTag.getChildren("project-components")) {
-      parseComponent(appComponentElements, projectComponents);
-    }
-
-    if (!projectComponents.isEmpty()) {
-      pluginBean.projectComponents = projectComponents;
-    }
-
-    // endregion
-
-    return pluginBean;
+   return pluginBean;
   }
 
   private static List<PluginListenerDescriptor> readListeners(SimpleXmlElement parent, String tagName) {
@@ -241,23 +219,5 @@ public class PluginBeanParser {
     }
 
     return list;
-  }
-
-  private static void parseComponent(SimpleXmlElement componentsParent, List<ComponentConfig> configConsumer) {
-    for (SimpleXmlElement componentElement : componentsParent.getChildren("component")) {
-      ComponentConfig componentConfig = new ComponentConfig();
-      componentConfig.setHeadlessImplementationClass(componentElement.getChildText("headless-implementation-class"));
-      componentConfig.setImplementationClass(componentElement.getChildText("implementation-class"));
-      componentConfig.setInterfaceClass(componentElement.getChildText("interface-class"));
-
-      for (SimpleXmlElement optionElement : componentElement.getChildren("option")) {
-        String name = optionElement.getAttributeValue("name");
-        String value = optionElement.getAttributeValue("value");
-
-        componentConfig.options.put(name, value);
-      }
-
-      configConsumer.add(componentConfig);
-    }
   }
 }

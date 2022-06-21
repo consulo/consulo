@@ -16,9 +16,9 @@
 package consulo.language;
 
 import consulo.annotation.UsedInPlugin;
+import consulo.application.Application;
 import consulo.language.file.LanguageFileType;
 import consulo.language.version.LanguageVersion;
-import consulo.language.version.LanguageVersionDefines;
 import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.MultiMap;
@@ -152,7 +152,7 @@ public abstract class Language extends UserDataHolderBase {
   @Nonnull
   @UsedInPlugin
   public static Collection<Language> findInstancesByMimeType(@Nullable String mimeType) {
-    if(mimeType == null) {
+    if (mimeType == null) {
       return Collections.emptyList();
     }
 
@@ -173,12 +173,14 @@ public abstract class Language extends UserDataHolderBase {
 
   @Nonnull
   protected LanguageVersion[] findVersions() {
-    List<LanguageVersion> languageVersion = LanguageVersionDefines.INSTANCE.allForLanguage(this);
-    if (languageVersion.isEmpty()) {
+    List<LanguageVersion> languageVersions = Application.get().getExtensionPoint(LanguageVersion.class).getExtensionList().stream().filter(it -> it.getLanguage() == this).toList();
+    if (languageVersions.isEmpty()) {
       return new LanguageVersion[]{new LanguageVersion("DEFAULT", "Default", this)};
     }
-    Collections.reverse(languageVersion);
-    return languageVersion.toArray(new LanguageVersion[languageVersion.size()]);
+
+    LanguageVersion[] versions = languageVersions.toArray(new LanguageVersion[languageVersions.size()]);
+    versions = ArrayUtil.reverseArray(versions);
+    return versions;
   }
 
   @Override

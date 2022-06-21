@@ -16,10 +16,7 @@
 package consulo.internal.injecting.binding;
 
 import com.squareup.javapoet.*;
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
-import consulo.annotation.component.Service;
-import consulo.annotation.component.Topic;
+import consulo.annotation.component.*;
 import jakarta.inject.Inject;
 
 import javax.annotation.processing.*;
@@ -116,7 +113,15 @@ public class InjectingBindingProcessor extends AbstractProcessor {
           bindBuilder.addMethod(MethodSpec.methodBuilder("getComponentAnnotationClass").addModifiers(Modifier.PUBLIC).returns(Class.class)
                                         .addCode(CodeBlock.of("return $T.class;", apiInfo.annotation().annotationType())).build());
 
-          ComponentScope scope = getScope(apiInfo.annotation());
+          ComponentScope scope;
+          // use TopicImpl scope
+          if (apiInfo.annotation() instanceof Topic) {
+            TopicImpl topicImpl = typeElement.getAnnotation(TopicImpl.class);
+            scope = topicImpl.value();
+          } else {
+            scope = getScope(apiInfo.annotation());
+          }
+          
           bindBuilder.addMethod(
                   MethodSpec.methodBuilder("getComponentScope").addModifiers(Modifier.PUBLIC).returns(ComponentScope.class).addCode(CodeBlock.of("return $T.$L;", ComponentScope.class, scope.name()))
                           .build());
@@ -343,10 +348,6 @@ public class InjectingBindingProcessor extends AbstractProcessor {
 
     if (annotation instanceof Extension) {
       return ((Extension)annotation).value();
-    }
-
-    if (annotation instanceof Topic) {
-      return ComponentScope.APPLICATION;
     }
 
     throw new UnsupportedOperationException(annotation.getClass().getName());

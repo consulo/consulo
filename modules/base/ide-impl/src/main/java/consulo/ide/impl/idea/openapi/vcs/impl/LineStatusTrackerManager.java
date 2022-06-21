@@ -133,7 +133,7 @@ public class LineStatusTrackerManager implements ProjectComponent, LineStatusTra
     }
 
     MessageBusConnection busConnection = project.getMessageBus().connect();
-    busConnection.subscribe(DocumentBulkUpdateListener.class, new DocumentBulkUpdateListener.Adapter() {
+    busConnection.subscribe(DocumentBulkUpdateListener.class, new DocumentBulkUpdateListener() {
       @Override
       public void updateStarted(@Nonnull final Document doc) {
         final LineStatusTracker tracker = getLineStatusTracker(doc);

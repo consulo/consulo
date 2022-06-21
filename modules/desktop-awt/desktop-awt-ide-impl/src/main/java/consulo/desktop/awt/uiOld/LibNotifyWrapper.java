@@ -65,7 +65,7 @@ class LibNotifyWrapper implements SystemNotificationsImpl.Notifier {
     myIcon = icon != null ? icon : "dialog-information";
 
     MessageBusConnection connection = ApplicationManager.getApplication().getMessageBus().connect();
-    connection.subscribe(AppLifecycleListener.TOPIC, new AppLifecycleListener() {
+    connection.subscribe(AppLifecycleListener.class, new AppLifecycleListener() {
       @Override
       public void appClosing() {
         synchronized (myLock) {

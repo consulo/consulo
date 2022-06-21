@@ -45,7 +45,6 @@ import consulo.language.impl.internal.parser.PsiBuilderFactoryImpl;
 import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.PsiBuilderFactory;
 import consulo.language.psi.LanguageSubstitutors;
-import consulo.language.version.LanguageVersionDefines;
 import consulo.language.version.LanguageVersionResolvers;
 import consulo.test.light.impl.*;
 import consulo.ui.ex.tree.TreeAnchorizer;
@@ -73,7 +72,6 @@ public class LightApplicationBuilder {
       registerExtensionPoint(area, LanguageParserDefinitions.INSTANCE.getExtensionPointName(), LanguageExtensionPoint.class);
       registerExtensionPoint(area, LanguageSubstitutors.INSTANCE.getExtensionPointName(), LanguageExtensionPoint.class);
       registerExtensionPoint(area, LanguageVersionResolvers.INSTANCE.getExtensionPointName(), LanguageExtensionPoint.class);
-      registerExtensionPoint(area, LanguageVersionDefines.INSTANCE.getExtensionPointName(), LanguageExtensionPoint.class);
       registerExtensionPoint(area, LanguageFileViewProviders.INSTANCE.getExtensionPointName(), LanguageExtensionPoint.class);
 
       registerExtensionPoint(area, PathMacroFilter.EP_NAME, PathMacroFilter.class);

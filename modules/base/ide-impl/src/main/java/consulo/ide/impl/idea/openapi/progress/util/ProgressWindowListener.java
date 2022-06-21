@@ -15,11 +15,12 @@
  */
 package consulo.ide.impl.idea.openapi.progress.util;
 
+import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.Topic;
 
 import javax.annotation.Nonnull;
 
-@Topic
+@Topic(ComponentScope.APPLICATION)
 @FunctionalInterface
 public interface ProgressWindowListener {
   void progressWindowCreated(@Nonnull ProgressWindow pw);

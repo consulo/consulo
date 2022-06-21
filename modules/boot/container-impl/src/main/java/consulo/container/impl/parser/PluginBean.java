@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class PluginBean extends ComponentManagerConfig {
+public class PluginBean {
   //@Tag("name")
   public String name;
 

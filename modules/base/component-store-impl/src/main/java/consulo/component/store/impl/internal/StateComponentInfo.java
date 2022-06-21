@@ -16,10 +16,8 @@
 package consulo.component.store.impl.internal;
 
 import consulo.component.ComponentManager;
-import consulo.component.impl.BaseComponentManager;
 import consulo.component.persist.*;
 import consulo.container.PluginException;
-import consulo.container.plugin.ComponentConfig;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
 import consulo.logging.Logger;
@@ -48,34 +46,14 @@ public class StateComponentInfo<T> {
     if (o instanceof PersistentStateComponent) {
       state = getStateSpec(o.getClass());
       stateComponent = (PersistentStateComponent<?>)o;
-
-      if (project != null) {
-        final ComponentConfig config = ((BaseComponentManager)project).getConfig(o.getClass());
-
-        if (config != null && isWorkspace(config.options)) {
-          LOG.warn("Marker 'workspace' is ignored for component: " + o.getClass().getName());
-        }
-      }
     }
     else if (o instanceof JDOMExternalizable) {
       state = getStateSpec(o.getClass());
 
       if (state == null) {
         RoamingType type = o instanceof RoamingTypeDisabled ? RoamingType.DISABLED : RoamingType.DEFAULT;
-        String name = BaseComponentManager.getComponentName(o);
-        String file;
-        if (project == null) {
-          file = StoragePathMacros.DEFAULT_FILE;
-        }
-        else {
-          final ComponentConfig config = ((BaseComponentManager)project).getConfig(o.getClass());
-          assert config != null : "Couldn't find old storage for " + o.getClass().getName();
-
-          final boolean workspace = isWorkspace(config.options);
-          file = workspace ? StoragePathMacros.WORKSPACE_FILE : StoragePathMacros.DEFAULT_FILE;
-        }
-
-        state = new SimpleState(name, file, type);
+        String file = StoragePathMacros.DEFAULT_FILE;
+        state = new SimpleState(o.getClass().getName(), file, type);
       }
 
       stateComponent = new JDOMExternalizableWrapper((JDOMExternalizable)o);

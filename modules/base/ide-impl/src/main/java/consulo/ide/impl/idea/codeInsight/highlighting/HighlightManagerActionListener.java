@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.highlighting;
 
+import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicImpl;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
@@ -31,7 +32,7 @@ import java.util.ServiceLoader;
  * @author VISTALL
  * @since 21-Jun-22
  */
-@TopicImpl
+@TopicImpl(ComponentScope.APPLICATION)
 public class HighlightManagerActionListener implements AnActionListener {
   private final ServiceLoader.Provider<HighlightManager> myHighlightManager;
 

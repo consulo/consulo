@@ -27,5 +27,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface Topic {
+  ComponentScope value();
+
   TopicBroadcastDirection direction() default TopicBroadcastDirection.TO_CHILDREN;
 }

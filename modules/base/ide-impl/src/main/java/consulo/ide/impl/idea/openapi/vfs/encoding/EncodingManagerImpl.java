@@ -93,7 +93,7 @@ public class EncodingManagerImpl extends EncodingManager implements PersistentSt
   private final AtomicBoolean myDisposed = new AtomicBoolean();
 
   public EncodingManagerImpl() {
-    ApplicationManager.getApplication().getMessageBus().connect().subscribe(AppLifecycleListener.TOPIC, new AppLifecycleListener() {
+    ApplicationManager.getApplication().getMessageBus().connect().subscribe(AppLifecycleListener.class, new AppLifecycleListener() {
       @Override
       public void appClosing() {
         // should call before dispose in write action

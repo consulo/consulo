@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.remoteServer.impl.configuration.deploySource;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.project.Project;
 import consulo.compiler.artifact.Artifact;
@@ -31,6 +32,7 @@ import javax.swing.*;
 /**
  * @author nik
  */
+@ExtensionImpl
 public class ArtifactDeploymentSourceType extends DeploymentSourceType<ArtifactDeploymentSource> {
   private static final String NAME_ATTRIBUTE = "name";
 

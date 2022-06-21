@@ -19,6 +19,7 @@
  */
 package consulo.language.impl.internal.psi;
 
+import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.Topic;
 import consulo.annotation.component.TopicBroadcastDirection;
 import consulo.document.Document;
@@ -26,7 +27,7 @@ import consulo.language.psi.PsiFile;
 
 import javax.annotation.Nonnull;
 
-@Topic(direction = TopicBroadcastDirection.TO_PARENT)
+@Topic(value = ComponentScope.PROJECT, direction = TopicBroadcastDirection.TO_PARENT)
 public interface PsiDocumentTransactionListener {
   void transactionStarted(@Nonnull Document document, @Nonnull PsiFile file);
 

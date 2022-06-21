@@ -16,6 +16,8 @@
 
 package consulo.language.psi.include;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.util.function.Processor;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileSystemItem;
@@ -29,6 +31,7 @@ import javax.annotation.Nullable;
 /**
  * @author Dmitry Avdeev
  */
+@Service(ComponentScope.PROJECT)
 public abstract class FileIncludeManager {
 
   public static FileIncludeManager getManager(Project project) {

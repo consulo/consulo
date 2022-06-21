@@ -15,10 +15,11 @@
  */
 package consulo.language.psi;
 
+import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.Topic;
 import consulo.annotation.component.TopicBroadcastDirection;
 
-@Topic(direction = TopicBroadcastDirection.TO_PARENT)
+@Topic(value = ComponentScope.PROJECT, direction = TopicBroadcastDirection.TO_PARENT)
 public interface AnyPsiChangeListener {
   default void beforePsiChanged(boolean isPhysical) {
   }

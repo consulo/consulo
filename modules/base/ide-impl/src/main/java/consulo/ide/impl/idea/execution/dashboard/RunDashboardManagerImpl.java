@@ -121,7 +121,7 @@ public class RunDashboardManagerImpl implements RunDashboardManager, PersistentS
         updateDashboardIfNeeded(env.getRunnerAndConfigurationSettings());
       }
     });
-    connection.subscribe(RunDashboardManager.DASHBOARD_TOPIC, new DashboardListener() {
+    connection.subscribe(DashboardListener.class, new DashboardListener() {
       @Override
       public void contentChanged(boolean withStructure) {
         updateDashboard(withStructure);

@@ -15,6 +15,8 @@
  */
 package consulo.component.extension;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.ComponentManager;
 
 import javax.annotation.Nonnull;
@@ -29,8 +31,12 @@ import java.util.function.Consumer;
  * @since 2019-02-25
  */
 // TODO not work
+@Extension(ComponentScope.APPLICATION)
 public interface ExtensionExtender<T> {
   ExtensionPointName<KeyedLazyInstanceEP<ExtensionExtender>> EP_NAME = ExtensionPointName.create("consulo.extensionExtender");
 
   void extend(@Nonnull ComponentManager componentManager, @Nonnull Consumer<T> consumer);
+
+  @Nonnull
+  Class<T> getExtensionClass();
 }

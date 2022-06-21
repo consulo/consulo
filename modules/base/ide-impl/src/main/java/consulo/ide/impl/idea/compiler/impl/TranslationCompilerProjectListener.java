@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.compiler.impl;
 
+import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicImpl;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.progress.ProgressIndicator;
@@ -44,7 +45,7 @@ import java.util.*;
 * @author VISTALL
 * @since 18-Jun-22
 */
-@TopicImpl
+@TopicImpl(ComponentScope.APPLICATION)
 class TranslationCompilerProjectListener implements ProjectManagerListener {
   private static final Logger LOG = Logger.getInstance(TranslationCompilerProjectListener.class);
 

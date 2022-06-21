@@ -22,7 +22,6 @@ import consulo.component.ProcessCanceledException;
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.UsedInPlugin;
 import consulo.container.classloader.PluginClassLoader;
-import consulo.container.plugin.ComponentConfig;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.logging.Logger;
@@ -114,7 +113,7 @@ public class PluginManager extends PluginManagerCore {
   }
 
   @Deprecated
-  public static void handleComponentError(@Nonnull Throwable t, @Nullable Class componentClass, @Nullable ComponentConfig config) {
+  public static void handleComponentError(@Nonnull Throwable t, @Nullable Class componentClass, @Nullable Object config) {
     StartupUtil.handleComponentError(t, componentClass, config);
   }
 }

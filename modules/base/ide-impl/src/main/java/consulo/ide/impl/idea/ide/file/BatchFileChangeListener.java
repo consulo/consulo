@@ -15,10 +15,10 @@
  */
 package consulo.ide.impl.idea.ide.file;
 
+import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.Topic;
-import consulo.project.Project;
-import consulo.component.messagebus.TopicImpl;
 import consulo.component.messagebus.MessageBus;
+import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -27,13 +27,9 @@ import javax.annotation.Nullable;
  * This listener is notified when some operation performs a massive batch file change, and when this change is completed.
  * <p/>
  * To subscribe to such batch file changes, connect to the Project's {@link MessageBus}
- * via the {@link #TOPIC} defined below.
  */
-@Topic
+@Topic(ComponentScope.APPLICATION)
 public interface BatchFileChangeListener {
-
-  TopicImpl<BatchFileChangeListener> TOPIC = TopicImpl.create("Batch File Update", BatchFileChangeListener.class);
-
   /**
    * @param project      Project where many file changes are expected to happen
    * @param activityName the name of the activity (a noun phrase) causing this file change

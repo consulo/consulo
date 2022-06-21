@@ -18,9 +18,13 @@ package consulo.ide.impl.idea.codeInsight.highlighting;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.markup.*;
 import consulo.colorScheme.TextAttributes;
+import consulo.document.Document;
+import consulo.document.event.DocumentEvent;
+import consulo.document.event.DocumentListener;
 import consulo.document.util.TextRange;
 import consulo.language.editor.highlight.HighlightManager;
 import consulo.language.editor.inject.EditorWindow;
@@ -47,8 +51,33 @@ public class HighlightManagerImpl extends HighlightManager {
   private final Project myProject;
 
   @Inject
-  public HighlightManagerImpl(Project project) {
+  public HighlightManagerImpl(Project project, EditorFactory editorFactory) {
     myProject = project;
+
+    editorFactory.getEventMulticaster().addDocumentListener(new DocumentListener() {
+      @Override
+      public void documentChanged(DocumentEvent event) {
+        Document document = event.getDocument();
+        Editor[] editors = EditorFactory.getInstance().getEditors(document);
+        for (Editor editor : editors) {
+          Map<RangeHighlighter, HighlightManagerImpl.HighlightInfo> map = getHighlightInfoMap(editor, false);
+          if (map == null) return;
+
+          ArrayList<RangeHighlighter> highlightersToRemove = new ArrayList<RangeHighlighter>();
+          for (RangeHighlighter highlighter : map.keySet()) {
+            HighlightManagerImpl.HighlightInfo info = map.get(highlighter);
+            if (!info.editor.getDocument().equals(document)) continue;
+            if ((info.flags & HighlightManager.HIDE_BY_TEXT_CHANGE) != 0) {
+              highlightersToRemove.add(highlighter);
+            }
+          }
+
+          for (RangeHighlighter highlighter : highlightersToRemove) {
+            removeSegmentHighlighter(editor, highlighter);
+          }
+        }
+      }
+    }, myProject);
   }
 
   @Nullable

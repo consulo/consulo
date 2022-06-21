@@ -15,9 +15,10 @@
  */
 package consulo.project.event;
 
+import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.Topic;
 
-@Topic
+@Topic(ComponentScope.PROJECT)
 public interface DumbModeListener {
 
   /**

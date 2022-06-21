@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.fileEditor.impl;
 
+import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.Service;
 import consulo.annotation.component.ServiceImpl;
 import consulo.annotation.component.Topic;
@@ -712,7 +713,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
   /**
    * {@link RecentPlacesListener} listens recently viewed or changed place adding and removing events.
    */
-  @Topic
+  @Topic(ComponentScope.PROJECT)
   public interface RecentPlacesListener {
     /**
      * Fires on a new place info adding into {@link #myChangePlaces} or {@link #myBackPlaces} infos list

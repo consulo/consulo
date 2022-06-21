@@ -15,13 +15,14 @@
  */
 package consulo.language.psi;
 
+import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.Topic;
 import consulo.annotation.component.TopicBroadcastDirection;
 
 /**
  * A listener to be notified on any PSI modification count change (which happens on any physical PSI change).
  */
-@Topic(direction = TopicBroadcastDirection.TO_PARENT)
+@Topic(value = ComponentScope.PROJECT, direction = TopicBroadcastDirection.TO_PARENT)
 public interface PsiModificationTrackerListener {
 
   /**

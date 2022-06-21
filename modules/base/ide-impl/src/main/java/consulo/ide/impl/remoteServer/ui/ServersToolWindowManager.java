@@ -15,14 +15,17 @@
  */
 package consulo.ide.impl.remoteServer.ui;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.ServiceManager;
-import consulo.project.Project;
-import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ide.impl.idea.remoteServer.configuration.RemoteServer;
 import consulo.ide.impl.idea.remoteServer.configuration.RemoteServerListener;
 import consulo.ide.impl.idea.remoteServer.configuration.RemoteServersManager;
 import consulo.ide.impl.idea.remoteServer.impl.runtime.ui.RemoteServersViewContributor;
+import consulo.project.Project;
+import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -33,6 +36,8 @@ import javax.annotation.Nonnull;
  * @since 2020-05-30
  */
 @Singleton
+@Service(ComponentScope.PROJECT)
+@ServiceImpl
 public class ServersToolWindowManager {
   public static ServersToolWindowManager getInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, ServersToolWindowManager.class);
@@ -49,7 +54,7 @@ public class ServersToolWindowManager {
   private final ToolWindowManager myToolWindowManager;
 
   @Inject
-  private ServersToolWindowManager(@Nonnull Project project, @Nonnull RemoteServersManager remoteServersManager, @Nonnull ToolWindowManager toolWindowManager) {
+  ServersToolWindowManager(@Nonnull Project project, @Nonnull RemoteServersManager remoteServersManager, @Nonnull ToolWindowManager toolWindowManager) {
     myProject = project;
     myRemoteServersManager = remoteServersManager;
     myToolWindowManager = toolWindowManager;
@@ -58,7 +63,7 @@ public class ServersToolWindowManager {
       contributor.setupAvailabilityListener(project, () -> updateWindowAvailable(true));
     }
 
-    myProject.getMessageBus().connect().subscribe(RemoteServerListener.TOPIC, new RemoteServerListener() {
+    myProject.getMessageBus().connect().subscribe(RemoteServerListener.class, new RemoteServerListener() {
       @Override
       public void serverAdded(@Nonnull RemoteServer<?> server) {
         updateWindowAvailable(true);

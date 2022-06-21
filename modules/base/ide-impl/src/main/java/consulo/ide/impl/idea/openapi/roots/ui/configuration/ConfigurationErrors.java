@@ -15,21 +15,23 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Topic;
 import consulo.annotation.component.TopicBroadcastDirection;
+import consulo.component.messagebus.MessageBus;
+import consulo.component.messagebus.TopicImpl;
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;
 import consulo.util.lang.function.PairProcessor;
-import consulo.component.messagebus.MessageBus;
-import consulo.component.messagebus.TopicImpl;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 
 /**
 * User: spLeaner
 */
-@consulo.annotation.component.Topic(direction = TopicBroadcastDirection.NONE)
+@Topic(value = ComponentScope.PROJECT, direction = TopicBroadcastDirection.NONE)
 public interface ConfigurationErrors {
   TopicImpl<ConfigurationErrors> TOPIC = TopicImpl.create("Configuration Error", ConfigurationErrors.class, TopicBroadcastDirection.NONE);
 

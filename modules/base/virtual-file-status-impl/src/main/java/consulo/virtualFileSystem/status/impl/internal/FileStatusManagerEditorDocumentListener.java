@@ -19,10 +19,10 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.event.EditorDocumentListener;
 import consulo.document.FileDocumentManager;
 import consulo.document.event.DocumentEvent;
+import consulo.project.Project;
+import consulo.project.ProjectManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatusManager;
-import jakarta.inject.Inject;
-import jakarta.inject.Provider;
 
 /**
  * @author VISTALL
@@ -30,21 +30,17 @@ import jakarta.inject.Provider;
  */
 @ExtensionImpl
 public class FileStatusManagerEditorDocumentListener implements EditorDocumentListener {
-  private final Provider<FileStatusManager> myFileStatusManagerProvider;
-
-  @Inject
-  public FileStatusManagerEditorDocumentListener(Provider<FileStatusManager> fileStatusManagerProvider) {
-    myFileStatusManagerProvider = fileStatusManagerProvider;
-  }
-
   @Override
   public void documentChanged(DocumentEvent event) {
-    FileStatusManagerImpl fileStatusManager = (FileStatusManagerImpl)myFileStatusManagerProvider.get();
-
     if (event.getOldLength() == 0 && event.getNewLength() == 0) return;
     VirtualFile file = FileDocumentManager.getInstance().getFile(event.getDocument());
     if (file != null) {
-      fileStatusManager.refreshFileStatusFromDocument(file, event.getDocument());
+      ProjectManager projectManager = ProjectManager.getInstance();
+      for (Project project : projectManager.getOpenProjects()) {
+        FileStatusManagerImpl fileStatusManager = (FileStatusManagerImpl)FileStatusManager.getInstance(project);
+
+        fileStatusManager.refreshFileStatusFromDocument(file, event.getDocument());
+      }
     }
   }
 }

@@ -15,10 +15,10 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.impl;
 
+import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.Topic;
-import consulo.component.messagebus.TopicImpl;
 
-@Topic
+@Topic(ComponentScope.PROJECT)
 public interface LineStatusTrackerSettingListener {
   void settingsUpdated();
 }

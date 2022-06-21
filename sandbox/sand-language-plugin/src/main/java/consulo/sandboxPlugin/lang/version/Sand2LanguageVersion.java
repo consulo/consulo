@@ -15,6 +15,7 @@
  */
 package consulo.sandboxPlugin.lang.version;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.lexer.Lexer;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -34,6 +35,7 @@ import java.util.List;
  * @author VISTALL
  * @since 19.03.14
  */
+@ExtensionImpl
 public class Sand2LanguageVersion extends BaseSandLanguageVersion {
   public Sand2LanguageVersion() {
     super("SAND2");

@@ -1454,8 +1454,6 @@
                     serviceImplementation="consulo.language.impl.internal.psi.diff.BlockSupportImpl"/>
     
 
-    <projectService serviceInterface="consulo.language.psi.include.FileIncludeManager"
-                    serviceImplementation="consulo.language.impl.internal.psi.include.FileIncludeManagerImpl"/>
 
     <projectService serviceInterface="consulo.module.ProjectLoadingErrorsNotifier"
                     serviceImplementation="consulo.ide.impl.idea.openapi.module.impl.ProjectLoadingErrorsNotifierImpl"/>

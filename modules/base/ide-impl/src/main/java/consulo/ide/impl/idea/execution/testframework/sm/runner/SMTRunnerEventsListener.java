@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.execution.testframework.sm.runner;
 
+import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.Topic;
 
 import javax.annotation.Nonnull;
@@ -25,7 +26,7 @@ import javax.annotation.Nullable;
  * <p>
  * Handles Test Runner events
  */
-@Topic
+@Topic(ComponentScope.PROJECT)
 public interface SMTRunnerEventsListener {
 
   /**

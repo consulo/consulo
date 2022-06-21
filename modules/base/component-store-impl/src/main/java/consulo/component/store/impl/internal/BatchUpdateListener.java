@@ -15,10 +15,11 @@
  */
 package consulo.component.store.impl.internal;
 
+import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.Topic;
-import consulo.component.messagebus.TopicImpl;
 
-@Topic
+// FIXME [VISTALL] this topic for App&Project
+@Topic(ComponentScope.APPLICATION)
 public interface BatchUpdateListener {
   void onBatchUpdateStarted();
 
