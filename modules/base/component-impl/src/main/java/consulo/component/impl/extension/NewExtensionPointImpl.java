@@ -84,22 +84,22 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
     }
   }
 
-  static class CacheValue<K> {
+  private static class CacheValue<K> {
     final List<Pair<K, PluginDescriptor>> myExtensionCache;
     final List<K> myUnwrapExtensionCache;
     final List<ExtensionComponentAdapter<K>> myExtensionAdapters;
 
-    CacheValue(@Nullable List<Pair<K, PluginDescriptor>> extensionCache, @Nullable List<ExtensionComponentAdapter<K>> extensionAdapters) {
+    private CacheValue(@Nullable List<Pair<K, PluginDescriptor>> extensionCache, @Nullable List<ExtensionComponentAdapter<K>> extensionAdapters) {
       myExtensionCache = extensionCache;
       myUnwrapExtensionCache = extensionCache == null ? null : new UnwrapList<K>(extensionCache);
       myExtensionAdapters = extensionAdapters;
     }
   }
 
-  static class UnwrapList<K> extends AbstractList<K> {
+  private static class UnwrapList<K> extends AbstractList<K> {
     private final List<Pair<K, PluginDescriptor>> myResult;
 
-    UnwrapList(List<Pair<K, PluginDescriptor>> result) {
+    private UnwrapList(List<Pair<K, PluginDescriptor>> result) {
       myResult = result;
     }
 
