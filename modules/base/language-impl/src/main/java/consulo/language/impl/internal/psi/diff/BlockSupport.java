@@ -16,6 +16,8 @@
 
 package consulo.language.impl.internal.psi.diff;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.registry.Registry;
 import consulo.document.util.TextRange;
@@ -32,6 +34,7 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 
+@Service(ComponentScope.PROJECT)
 public abstract class BlockSupport {
   public static BlockSupport getInstance(Project project) {
     return project.getInstance(BlockSupport.class);

@@ -24,9 +24,11 @@
  */
 package consulo.ide.impl.idea.codeInsight.completion;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.codeInsight.lookup.CharFilter;
 import consulo.language.editor.completion.lookup.Lookup;
 
+@ExtensionImpl(id = "completion", order = "last")
 public class CompletionCharFilter extends CharFilter {
 
   @Override

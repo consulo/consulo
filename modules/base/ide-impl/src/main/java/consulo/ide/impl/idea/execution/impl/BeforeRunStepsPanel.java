@@ -207,7 +207,7 @@ class BeforeRunStepsPanel {
       return false;
     }
     Set<Key> activeProviderKeys = getActiveProviderKeys();
-    final List<BeforeRunTaskProvider<BeforeRunTask>> providers = BeforeRunTaskProvider.EP_NAME.getExtensionList(myRunConfiguration.getProject());
+    final List<BeforeRunTaskProvider> providers = BeforeRunTaskProvider.EP_NAME.getExtensionList(myRunConfiguration.getProject());
     for (final BeforeRunTaskProvider<BeforeRunTask> provider : providers) {
       if (provider.createTask(myRunConfiguration) != null) {
         if (!checkOnlyAddAction) {
@@ -231,7 +231,7 @@ class BeforeRunStepsPanel {
     }
 
     final JBPopupFactory popupFactory = JBPopupFactory.getInstance();
-    final List<BeforeRunTaskProvider<BeforeRunTask>> providers = BeforeRunTaskProvider.EP_NAME.getExtensionList(myRunConfiguration.getProject());
+    final List<BeforeRunTaskProvider> providers = BeforeRunTaskProvider.EP_NAME.getExtensionList(myRunConfiguration.getProject());
     Set<Key> activeProviderKeys = getActiveProviderKeys();
 
     ActionGroup.Builder actionGroup = ActionGroup.newImmutableBuilder();

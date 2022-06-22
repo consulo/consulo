@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.remoteServer.ui;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.remoteServer.impl.runtime.ui.ServersToolWindowContent;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -33,6 +34,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 2020-05-30
  */
+@ExtensionImpl
 public class ServersToolWindowFactory implements ToolWindowFactory {
   @Nonnull
   @Override

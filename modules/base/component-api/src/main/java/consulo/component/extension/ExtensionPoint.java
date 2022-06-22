@@ -21,6 +21,7 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.logging.Logger;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.dataholder.Key;
 import consulo.util.lang.ControlFlowException;
 
 import javax.annotation.Nonnull;
@@ -29,6 +30,7 @@ import java.lang.reflect.Array;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * @author AKireyev
@@ -70,6 +72,14 @@ public interface ExtensionPoint<T> {
   @Nullable
   default <K extends T> K findExtension(Class<K> extensionClass) {
     return ContainerUtil.findInstance(getExtensionList(), extensionClass);
+  }
+
+  /**
+   * Return cache or build it. This cache will be dropped if extensions reloaded (for example plugin added/removed_
+   */
+  @Nonnull
+  default <K> K getOrBuildCache(@Nonnull Key<K> key, @Nonnull Function<List<T>, K> factory) {
+    return factory.apply(getExtensionList());
   }
 
   @Nonnull

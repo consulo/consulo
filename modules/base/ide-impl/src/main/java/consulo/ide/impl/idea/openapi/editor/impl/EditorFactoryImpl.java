@@ -5,9 +5,6 @@ import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorKind;
-import consulo.codeEditor.action.ActionPlan;
-import consulo.codeEditor.action.TypedActionHandler;
-import consulo.codeEditor.action.TypedActionHandlerEx;
 import consulo.codeEditor.event.EditorEventMulticaster;
 import consulo.codeEditor.event.EditorFactoryEvent;
 import consulo.codeEditor.event.EditorFactoryListener;
@@ -16,7 +13,6 @@ import consulo.codeEditor.internal.RealEditor;
 import consulo.colorScheme.event.EditorColorsListener;
 import consulo.component.extension.ExtensionPointName;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
@@ -204,7 +200,6 @@ public abstract class EditorFactoryImpl extends InternalEditorFactory {
   }
 
 
-
   @Override
   public void releaseEditor(@Nonnull Editor editor) {
     try {
@@ -265,30 +260,5 @@ public abstract class EditorFactoryImpl extends InternalEditorFactory {
   @Nonnull
   public EditorEventMulticaster getEventMulticaster() {
     return myEditorEventMulticaster;
-  }
-
-  public static class MyRawTypedHandler implements TypedActionHandlerEx {
-    private final TypedActionHandler myDelegate;
-
-    @SuppressWarnings("NonDefaultConstructor")
-    public MyRawTypedHandler(TypedActionHandler delegate) {
-      myDelegate = delegate;
-    }
-
-    @Override
-    public void execute(@Nonnull Editor editor, char charTyped, @Nonnull DataContext dataContext) {
-      editor.putUserData(EditorEx.DISABLE_CARET_SHIFT_ON_WHITESPACE_INSERTION, Boolean.TRUE);
-      try {
-        myDelegate.execute(editor, charTyped, dataContext);
-      }
-      finally {
-        editor.putUserData(EditorEx.DISABLE_CARET_SHIFT_ON_WHITESPACE_INSERTION, null);
-      }
-    }
-
-    @Override
-    public void beforeExecute(@Nonnull Editor editor, char c, @Nonnull DataContext context, @Nonnull ActionPlan plan) {
-      if (myDelegate instanceof TypedActionHandlerEx) ((TypedActionHandlerEx)myDelegate).beforeExecute(editor, c, context, plan);
-    }
   }
 }

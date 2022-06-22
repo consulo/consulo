@@ -24,13 +24,16 @@
  */
 package consulo.ide.impl.idea.codeInsight.lookup;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.editor.completion.lookup.Lookup;
 
 import javax.annotation.Nullable;
 
+@Extension(ComponentScope.APPLICATION)
 public abstract class CharFilter {
-  public static final ExtensionPointName<CharFilter> EP_NAME = ExtensionPointName.create("consulo.lookup.charFilter");
+  public static final ExtensionPointName<CharFilter> EP_NAME = ExtensionPointName.create(CharFilter.class);
 
   public static enum Result {
     ADD_TO_PREFIX, SELECT_ITEM_AND_FINISH_LOOKUP, HIDE_LOOKUP

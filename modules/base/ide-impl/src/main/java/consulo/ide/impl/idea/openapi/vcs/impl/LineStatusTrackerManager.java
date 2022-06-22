@@ -22,53 +22,54 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.project.ProjectComponent;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.event.EditorFactoryAdapter;
 import consulo.codeEditor.event.EditorFactoryEvent;
 import consulo.codeEditor.event.EditorFactoryListener;
-import consulo.document.event.DocumentBulkUpdateListener;
-import consulo.document.FileDocumentManager;
-import consulo.fileEditor.FileEditorManager;
-import consulo.project.Project;
-import consulo.project.startup.StartupManager;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.status.FileStatus;
-import consulo.virtualFileSystem.status.FileStatusListener;
-import consulo.virtualFileSystem.status.FileStatusManager;
-import consulo.ide.impl.idea.openapi.vcs.VcsApplicationSettings;
-import consulo.ide.impl.idea.openapi.vcs.ex.LineStatusTracker;
-import consulo.ide.impl.idea.openapi.vcs.history.VcsRevisionNumber;
-import consulo.language.file.light.LightVirtualFile;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.ide.impl.idea.util.concurrency.QueueProcessorRemovePartner;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
+import consulo.document.event.DocumentBulkUpdateListener;
+import consulo.fileEditor.FileEditorManager;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.vcs.VcsApplicationSettings;
+import consulo.ide.impl.idea.openapi.vcs.ex.LineStatusTracker;
+import consulo.ide.impl.idea.openapi.vcs.history.VcsRevisionNumber;
+import consulo.ide.impl.idea.util.Consumer;
+import consulo.ide.impl.idea.util.concurrency.QueueProcessorRemovePartner;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.file.light.LightVirtualFile;
 import consulo.logging.Logger;
+import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.VirtualFileAdapter;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
-import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.VirtualFilePropertyEvent;
+import consulo.virtualFileSystem.status.FileStatus;
+import consulo.virtualFileSystem.status.FileStatusListener;
+import consulo.virtualFileSystem.status.FileStatusManager;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Singleton
-public class LineStatusTrackerManager implements ProjectComponent, LineStatusTrackerManagerI {
+@ServiceImpl
+public class LineStatusTrackerManager implements LineStatusTrackerManagerI {
   private static final Logger LOG = Logger.getInstance(LineStatusTrackerManager.class);
 
   @NonNls protected static final String IGNORE_CHANGEMARKERS_KEY = "idea.ignore.changemarkers";
@@ -100,12 +101,11 @@ public class LineStatusTrackerManager implements ProjectComponent, LineStatusTra
 
   @Inject
   public LineStatusTrackerManager(@Nonnull final Project project,
-                                  @Nonnull final VcsBaseContentProvider statusProvider,
                                   @Nonnull final Application application,
                                   @Nonnull final Provider<FileEditorManager> fileEditorManager) {
     myLoadCounter = 0;
     myProject = project;
-    myStatusProvider = statusProvider;
+    myStatusProvider = project.getInstance(VcsFileStatusProvider.class);
 
     myApplication = application;
     myFileEditorManager = fileEditorManager;
@@ -157,27 +157,19 @@ public class LineStatusTrackerManager implements ProjectComponent, LineStatusTra
         }
       }
     });
-  }
 
-  @Override
-  public void projectOpened() {
-    StartupManager.getInstance(myProject).registerPreStartupActivity(new Runnable() {
-      @Override
-      public void run() {
-        final MyFileStatusListener fileStatusListener = new MyFileStatusListener();
-        final EditorFactoryListener editorFactoryListener = new MyEditorFactoryListener();
-        final MyVirtualFileListener virtualFileListener = new MyVirtualFileListener();
+    final MyFileStatusListener fileStatusListener = new MyFileStatusListener();
+    final EditorFactoryListener editorFactoryListener = new MyEditorFactoryListener();
+    final MyVirtualFileListener virtualFileListener = new MyVirtualFileListener();
 
-        final FileStatusManager fsManager = FileStatusManager.getInstance(myProject);
-        fsManager.addFileStatusListener(fileStatusListener, myDisposable);
+    final FileStatusManager fsManager = FileStatusManager.getInstance(myProject);
+    fsManager.addFileStatusListener(fileStatusListener, myDisposable);
 
-        final EditorFactory editorFactory = EditorFactory.getInstance();
-        editorFactory.addEditorFactoryListener(editorFactoryListener, myDisposable);
+    final EditorFactory editorFactory = EditorFactory.getInstance();
+    editorFactory.addEditorFactoryListener(editorFactoryListener, myDisposable);
 
-        final VirtualFileManager virtualFileManager = VirtualFileManager.getInstance();
-        virtualFileManager.addVirtualFileListener(virtualFileListener, myDisposable);
-      }
-    });
+    final VirtualFileManager virtualFileManager = VirtualFileManager.getInstance();
+    virtualFileManager.addVirtualFileListener(virtualFileListener, myDisposable);
   }
 
   public boolean isDisabled() {
@@ -185,7 +177,7 @@ public class LineStatusTrackerManager implements ProjectComponent, LineStatusTra
   }
 
   @Override
-  @javax.annotation.Nullable
+  @Nullable
   public LineStatusTracker getLineStatusTracker(final Document document) {
     synchronized (myLock) {
       if (isDisabled()) return null;
@@ -231,7 +223,7 @@ public class LineStatusTrackerManager implements ProjectComponent, LineStatusTra
     }
   }
 
-  private void resetTracker(@Nonnull Document document, @Nonnull VirtualFile virtualFile, @javax.annotation.Nullable LineStatusTracker tracker) {
+  private void resetTracker(@Nonnull Document document, @Nonnull VirtualFile virtualFile, @Nullable LineStatusTracker tracker) {
     final boolean editorOpened = myFileEditorManager.get().isFileOpen(virtualFile);
     final boolean shouldBeInstalled = editorOpened && shouldBeInstalled(virtualFile);
 
@@ -248,7 +240,7 @@ public class LineStatusTrackerManager implements ProjectComponent, LineStatusTra
     }
   }
 
-  private boolean shouldBeInstalled(@javax.annotation.Nullable final VirtualFile virtualFile) {
+  private boolean shouldBeInstalled(@Nullable final VirtualFile virtualFile) {
     if (isDisabled()) return false;
 
     if (virtualFile == null || virtualFile instanceof LightVirtualFile) return false;
@@ -460,7 +452,7 @@ public class LineStatusTrackerManager implements ProjectComponent, LineStatusTra
   private static class TrackerData {
     @Nonnull
     public final LineStatusTracker tracker;
-    @javax.annotation.Nullable
+    @Nullable
     private final ContentInfo currentContent;
 
     public TrackerData(@Nonnull LineStatusTracker tracker) {
@@ -499,7 +491,7 @@ public class LineStatusTrackerManager implements ProjectComponent, LineStatusTra
     }
   }
 
-  private static void log(@Nonnull String message, @javax.annotation.Nullable VirtualFile file) {
+  private static void log(@Nonnull String message, @Nullable VirtualFile file) {
     if (LOG.isDebugEnabled()) {
       if (file != null) message += "; file: " + file.getPath();
       LOG.debug(message);

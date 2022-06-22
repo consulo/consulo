@@ -183,9 +183,6 @@
       <with attribute="implementationClass" implements="consulo.codeEditor.action.TypedActionHandler"/>
     </extensionPoint>
 
-    <extensionPoint name="rawEditorTypedHandler" beanClass="consulo.codeEditor.action.EditorTypedHandlerBean">
-      <with attribute="implementationClass" implements="consulo.codeEditor.action.TypedActionHandler"/>
-    </extensionPoint>
 
     <extensionPoint name="customFileDropHandler" area="PROJECT" interface="consulo.ide.impl.idea.openapi.editor.CustomFileDropHandler"/>
 
@@ -993,10 +990,6 @@
     <extensionPoint name="stubElementTypeHolder"
                     beanClass="consulo.language.psi.stub.StubElementTypeHolderEP"/>
 
-    <extensionPoint name="newModuleBuilder" interface="consulo.ide.impl.newProject.NewModuleBuilder"/>
-
-    <extensionPoint name="methodNavigationOffsetProvider"
-                    interface="consulo.ide.impl.idea.codeInsight.navigation.MethodNavigationOffsetProvider"/>
 
     <extensionPoint name="filePasteProvider"
                     interface="consulo.ui.ex.PasteProvider"/>
@@ -1315,7 +1308,6 @@
         implementation="consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.ArtifactsSourceItemsProvider"/>
     <packaging.artifactType implementation="consulo.ide.impl.packaging.impl.artifacts.ZipArtifactType" order="first" id="zip-artifact"/>
     <packaging.artifactType implementation="consulo.ide.impl.idea.packaging.impl.artifacts.PlainArtifactType" order="last"/>
-    <compiler.additionalCompileScopeProvider implementation="consulo.ide.impl.idea.packaging.impl.compiler.ArtifactAdditionalCompileScopeProvider"/>
     <gotoRelatedProvider implementation="consulo.ide.impl.idea.testIntegration.GotoTestRelatedProvider"/>
 
     <daemon.highlightInfoFilter implementation="consulo.ide.impl.idea.codeInsight.daemon.impl.HighlightInfoFilterImpl"/>
@@ -1345,15 +1337,6 @@
     <copyPastePostProcessor implementation="consulo.ide.impl.idea.codeInsight.editorActions.CopyPasteFoldingProcessor"/>
 
 
-    <stepsBeforeRunProvider implementation="consulo.compiler.execution.CompileStepBeforeRun" id="compileBeforeRun"/>
-    <stepsBeforeRunProvider implementation="consulo.compiler.execution.CompileStepBeforeRunNoErrorCheck"
-                            id="compileBeforeRunNoErrorCheck" order="after compileBeforeRun"/>
-    <stepsBeforeRunProvider implementation="consulo.ide.impl.packaging.impl.run.BuildArtifactsBeforeRunTaskProvider"
-                            order="after compileBeforeRunNoErrorCheck"/>
-    <stepsBeforeRunProvider implementation="consulo.ide.impl.idea.execution.impl.RunConfigurationBeforeRunProvider"/>
-
-    <applicationService serviceInterface="consulo.ide.impl.idea.usages.impl.ImportFilteringUsageViewSetting"
-                        serviceImplementation="consulo.ide.impl.idea.usages.impl.ImportFilteringUsageViewSetting"/>
 
 
     <projectService serviceInterface="consulo.ide.impl.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettings"
@@ -1365,8 +1348,6 @@
     <referencesSearch implementation="consulo.ide.impl.psi.impl.search.CachesBasedRefSearcher"/>
     <referencesSearch implementation="consulo.ide.impl.psi.impl.search.NonPhysicalReferenceSearcher"/>
 
-    <applicationService serviceInterface="consulo.language.editor.completion.CompletionService"
-                        serviceImplementation="consulo.ide.impl.idea.codeInsight.completion.impl.CompletionServiceImpl"/>
 
 
 
@@ -1450,8 +1431,7 @@
                     serviceImplementation="consulo.ide.impl.idea.find.replaceInProject.ReplaceInProjectManager"/>
 
     
-    <projectService serviceInterface="consulo.language.impl.internal.psi.diff.BlockSupport"
-                    serviceImplementation="consulo.language.impl.internal.psi.diff.BlockSupportImpl"/>
+
     
 
 
@@ -1525,9 +1505,6 @@
 
     <applicationService serviceInterface="consulo.ide.impl.idea.application.options.codeStyle.CodeStyleSchemesUIConfiguration"
                         serviceImplementation="consulo.ide.impl.idea.application.options.codeStyle.CodeStyleSchemesUIConfiguration"/>
-
-    <!-- Live Templates -->
-    <lookup.actionProvider implementation="consulo.ide.impl.idea.codeInsight.template.impl.LiveTemplateLookupActionProvider"/>
 
     <stepsBeforeRunProvider implementation="consulo.ide.impl.idea.tools.ToolBeforeRunTaskProvider"/>
 
@@ -1712,7 +1689,6 @@
                          implementationClass="consulo.ide.impl.idea.codeInsight.template.impl.editorActions.TemplateLineEndWithSelectionHandler"/>
     <editorActionHandler action="$SelectAll" implementationClass="consulo.ide.impl.idea.codeInsight.template.impl.editorActions.SelectAllHandler"/>
 
-    <rawEditorTypedHandler implementationClass="consulo.ide.impl.idea.openapi.editor.impl.EditorFactoryImpl$MyRawTypedHandler"/>
 
     <!-- HighlightManagerActions -->
     <editorActionHandler action="EditorEscape" implementationClass="consulo.ide.impl.idea.codeInsight.highlighting.EscapeHandler"
@@ -1721,8 +1697,6 @@
                          order="before hide-hints"/>
 
     <editorTypedHandler implementationClass="consulo.ide.impl.idea.codeInsight.lookup.impl.LookupTypedHandler" id="lookup"/>
-
-    <typedHandler implementation="consulo.ide.impl.idea.codeInsight.editorActions.SelectionQuotingTypedHandler" id="selectionQuoting"/>
 
 
     <liveTemplateContext id="OTHER" implementation="consulo.language.editor.template.context.EverywhereContextType" order="last"/>

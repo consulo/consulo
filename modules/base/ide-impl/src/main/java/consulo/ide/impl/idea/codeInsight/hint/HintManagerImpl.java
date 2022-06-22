@@ -976,7 +976,7 @@ public class HintManagerImpl extends HintManager {
   }
 
   private static class EditorHintListenerHolder {
-    private static final EditorHintListener ourEditorHintPublisher = ApplicationManager.getApplication().getMessageBus().syncPublisher(EditorHintListener.TOPIC);
+    private static final EditorHintListener ourEditorHintPublisher = ApplicationManager.getApplication().getMessageBus().syncPublisher(EditorHintListener.class);
 
     private EditorHintListenerHolder() {
     }

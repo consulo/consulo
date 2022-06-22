@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.template.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.CodeInsightSettings;
 import consulo.ide.impl.idea.codeInsight.lookup.CharFilter;
 import consulo.language.editor.completion.lookup.Lookup;
@@ -23,6 +24,7 @@ import consulo.language.editor.completion.lookup.LookupElement;
 /**
  * @author peter
  */
+@ExtensionImpl(id = "liveTemplate", order = "first")
 public class LiveTemplateCharFilter extends CharFilter {
   @Override
   public Result acceptChar(char c, int prefixLength, Lookup lookup) {

@@ -35,7 +35,7 @@ import java.util.Map;
 
 public abstract class RunManagerEx extends RunManager {
   public static RunManagerEx getInstanceEx(final Project project) {
-    return (RunManagerEx)project.getComponent(RunManager.class);
+    return (RunManagerEx)project.getInstance(RunManager.class);
   }
 
   //public abstract boolean isTemporary(@NotNull RunnerAndConfigurationSettings configuration);
@@ -87,13 +87,6 @@ public abstract class RunManagerEx extends RunManager {
   public abstract Collection<RunnerAndConfigurationSettings> getSortedConfigurations();
 
   public abstract void removeConfiguration(@Nullable RunnerAndConfigurationSettings settings);
-
-  /**
-   * @deprecated Use {@link RunManagerListener#TOPIC} instead.
-   */
-  @Deprecated
-  public void addRunManagerListener(RunManagerListener listener) {
-  }
 
   @Nonnull
   public abstract Map<String, List<RunnerAndConfigurationSettings>> getStructure(@Nonnull ConfigurationType type);

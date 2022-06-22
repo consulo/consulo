@@ -1,6 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.editor.completion;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.matcher.PrefixMatcher;
@@ -20,6 +22,7 @@ import java.util.function.Consumer;
  *
  * @author peter
  */
+@Service(ComponentScope.APPLICATION)
 public abstract class CompletionService {
   /**
    * A "weigher" extension key (see {@link Weigher}) to sort completion items by priority and move the heaviest to the top of the Lookup.

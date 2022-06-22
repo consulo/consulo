@@ -1,6 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.completion.impl;
 
+import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.ide.impl.idea.codeInsight.completion.*;
 import consulo.ide.impl.idea.codeInsight.lookup.*;
 import consulo.application.ApplicationManager;
@@ -23,6 +25,7 @@ import consulo.language.Weigher;
 import consulo.language.WeighingService;
 import consulo.language.impl.DebugUtil;
 import consulo.ide.impl.idea.util.ExceptionUtil;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
@@ -35,6 +38,7 @@ import java.util.function.Consumer;
  * @author peter
  */
 @Singleton
+@ServiceImpl
 public final class CompletionServiceImpl extends CompletionService {
   private static final Logger LOG = Logger.getInstance(CompletionServiceImpl.class);
   private static volatile CompletionPhase ourPhase = CompletionPhase.NoCompletion;
@@ -43,8 +47,9 @@ public final class CompletionServiceImpl extends CompletionService {
   @Nullable
   private CompletionProcess myApiCompletionProcess;
 
-  public CompletionServiceImpl() {
-    ApplicationManager.getApplication().getMessageBus().connect().subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
+  @Inject
+  public CompletionServiceImpl(Application application) {
+    application.getMessageBus().connect().subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
       @Override
       public void projectClosing(@Nonnull Project project) {
         CompletionProgressIndicator indicator = getCurrentCompletionProgressIndicator();
@@ -248,7 +253,7 @@ public final class CompletionServiceImpl extends CompletionService {
     boolean wasCompletionRunning = isRunningPhase(oldPhase);
     boolean isCompletionRunning = isRunningPhase(phase);
     if (isCompletionRunning != wasCompletionRunning) {
-      ApplicationManager.getApplication().getMessageBus().syncPublisher(CompletionPhaseListener.TOPIC).completionPhaseChanged(isCompletionRunning);
+      ApplicationManager.getApplication().getMessageBus().syncPublisher(CompletionPhaseListener.class).completionPhaseChanged(isCompletionRunning);
     }
 
     Disposer.dispose(oldPhase);

@@ -32,21 +32,12 @@
   </extensionPoints>
 
   <extensions defaultExtensionNs="consulo">
-    <applicationService serviceInterface="consulo.ide.impl.idea.remoteServer.configuration.RemoteServersManager"
-                        serviceImplementation="consulo.ide.impl.idea.remoteServer.impl.configuration.RemoteServersManagerImpl"/>
-    <applicationService serviceInterface="consulo.ide.impl.idea.remoteServer.runtime.ServerConnectionManager"
-                        serviceImplementation="consulo.ide.impl.idea.remoteServer.impl.runtime.ServerConnectionManagerImpl"/>
-    <applicationService serviceInterface="consulo.ide.impl.idea.remoteServer.agent.RemoteAgentManager"
-                        serviceImplementation="consulo.ide.impl.idea.remoteServer.agent.impl.RemoteAgentManagerImpl"/>
+
+
+    
     <applicationConfigurable parentId="execution" instance="consulo.ide.impl.idea.remoteServer.impl.configuration.RemoteServerListConfigurable"/>
 
     <toolWindow id="Application Servers" icon="consulo.platform.base.PlatformIconGroup@remoteservers.serverstoolwindow" factoryClass="consulo.ide.impl.remoteServer.ui.ServersToolWindowFactory" anchor="bottom" />
-    <projectService serviceImplementation="consulo.ide.impl.remoteServer.ui.ServersToolWindowManager" />
 
-
-    <projectService serviceInterface="consulo.ide.impl.idea.remoteServer.runtime.ui.RemoteServersView"
-                    serviceImplementation="consulo.ide.impl.idea.remoteServer.impl.runtime.ui.RemoteServersViewImpl" />
-
-    <extensionExtender key="com.intellij.configurationType" implementationClass="consulo.ide.impl.idea.remoteServer.impl.configuration.deployment.DeployToServerConfigurationTypesRegistrar" />
   </extensions>
 </consulo-plugin>

@@ -16,6 +16,8 @@
 
 package consulo.ide.impl.idea.ide;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
@@ -26,6 +28,7 @@ import javax.swing.*;
 /**
  * @author yole
  */
+@Service(ComponentScope.APPLICATION)
 public abstract class PsiActionSupportFactory {
   public static PsiActionSupportFactory getInstance() {
     return ServiceManager.getService(PsiActionSupportFactory.class);

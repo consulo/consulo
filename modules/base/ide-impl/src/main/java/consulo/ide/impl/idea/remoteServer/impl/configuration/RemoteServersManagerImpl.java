@@ -1,5 +1,6 @@
 package consulo.ide.impl.idea.remoteServer.impl.configuration;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.persist.*;
@@ -24,6 +25,7 @@ import java.util.List;
  */
 @Singleton
 @State(name = "RemoteServers", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/remote-servers.xml")})
+@ServiceImpl
 public class RemoteServersManagerImpl extends RemoteServersManager implements PersistentStateComponent<RemoteServersManagerState> {
   public static final SkipDefaultValuesSerializationFilters SERIALIZATION_FILTERS = new SkipDefaultValuesSerializationFilters();
   private List<RemoteServer<?>> myServers = new ArrayList<>();

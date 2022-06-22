@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.packaging.impl.run;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.execution.BeforeRunTask;
 import consulo.ide.impl.idea.execution.RunManagerEx;
 import consulo.execution.configuration.RunConfiguration;
@@ -52,6 +53,7 @@ import java.util.List;
  * @author VISTALL
  * @since 15:11/14.06.13
  */
+@ExtensionImpl(order = "after compileBeforeRunNoErrorCheck")
 public class BuildArtifactsBeforeRunTaskProvider extends AbstractArtifactsBeforeRunTaskProvider<BuildArtifactsBeforeRunTask> {
   @NonNls
   public static final String BUILD_ARTIFACTS_ID = "BuildArtifacts";

@@ -15,11 +15,14 @@
  */
 package consulo.ide.impl.idea.vcs.log.ui;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.ide.impl.idea.vcs.log.VcsLogHighlighter;
 import consulo.ide.impl.idea.vcs.log.VcsLogUi;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogData;
 import javax.annotation.Nonnull;
 
+@Extension(ComponentScope.PROJECT)
 public interface VcsLogHighlighterFactory {
   @Nonnull
   VcsLogHighlighter createHighlighter(@Nonnull VcsLogData logDataHolder, @Nonnull VcsLogUi logUi);

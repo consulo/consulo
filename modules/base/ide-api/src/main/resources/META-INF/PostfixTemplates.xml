@@ -22,10 +22,6 @@
   </extensionPoints>
 
   <extensions defaultExtensionNs="consulo">
-    <!-- Postfix templates -->
-    <applicationService id="postfixCompletionSettings" serviceImplementation="consulo.ide.impl.idea.codeInsight.template.postfix.settings.PostfixTemplatesSettings"/>
-    <customLiveTemplate implementation="consulo.ide.impl.idea.codeInsight.template.postfix.templates.PostfixLiveTemplate"/>
-    <lookup.actionProvider implementation="consulo.ide.impl.idea.codeInsight.template.postfix.completion.PostfixTemplateLookupActionProvider"/>
     <applicationConfigurable
         id="editing.postfixCompletion"
         parentId="editor.preferences.completion"

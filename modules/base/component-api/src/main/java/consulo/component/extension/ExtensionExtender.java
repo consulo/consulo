@@ -30,11 +30,8 @@ import java.util.function.Consumer;
  * @author VISTALL
  * @since 2019-02-25
  */
-// TODO not work
 @Extension(ComponentScope.APPLICATION)
 public interface ExtensionExtender<T> {
-  ExtensionPointName<KeyedLazyInstanceEP<ExtensionExtender>> EP_NAME = ExtensionPointName.create("consulo.extensionExtender");
-
   void extend(@Nonnull ComponentManager componentManager, @Nonnull Consumer<T> consumer);
 
   @Nonnull

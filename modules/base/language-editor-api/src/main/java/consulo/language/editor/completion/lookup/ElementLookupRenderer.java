@@ -16,6 +16,8 @@
 
 package consulo.language.editor.completion.lookup;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 
 /**
@@ -23,8 +25,9 @@ import consulo.component.extension.ExtensionPointName;
  * @deprecated use {@link LookupElement#renderElement(LookupElementPresentation)}
  */
 @Deprecated
+@Extension(ComponentScope.APPLICATION)
 public interface ElementLookupRenderer<T> {
-  ExtensionPointName<ElementLookupRenderer> EP_NAME = ExtensionPointName.create("consulo.elementLookupRenderer");
+  ExtensionPointName<ElementLookupRenderer> EP_NAME = ExtensionPointName.create(ElementLookupRenderer.class);
 
   boolean handlesItem(Object element);
 

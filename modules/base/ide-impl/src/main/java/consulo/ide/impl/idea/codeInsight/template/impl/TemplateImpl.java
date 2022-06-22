@@ -16,18 +16,20 @@
 
 package consulo.ide.impl.idea.codeInsight.template.impl;
 
-import consulo.language.editor.template.context.TemplateContextType;
 import consulo.ide.impl.idea.openapi.options.SchemeElement;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.component.extension.Extensions;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.template.Expression;
 import consulo.language.editor.template.Template;
 import consulo.language.editor.template.Variable;
+import consulo.language.editor.template.context.TemplateContextType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class TemplateImpl extends Template implements SchemeElement {
   private String myKey;
@@ -414,7 +416,7 @@ public class TemplateImpl extends Template implements SchemeElement {
 
   public Map<TemplateOptionalProcessor, Boolean> createOptions() {
     Map<TemplateOptionalProcessor, Boolean> context = new LinkedHashMap<>();
-    for (TemplateOptionalProcessor processor : Extensions.getExtensions(TemplateOptionalProcessor.EP_NAME)) {
+    for (TemplateOptionalProcessor processor : TemplateOptionalProcessor.EP_NAME.getExtensionList()) {
       context.put(processor, processor.isEnabled(this));
     }
     return context;
@@ -423,7 +425,7 @@ public class TemplateImpl extends Template implements SchemeElement {
   public Map<TemplateContextType, Boolean> createContext() {
 
     Map<TemplateContextType, Boolean> context = new LinkedHashMap<>();
-    for (TemplateContextType processor : TemplateContextType.EP_NAME.getExtensions()) {
+    for (TemplateContextType processor : TemplateContextType.EP_NAME.getExtensionList()) {
       context.put(processor, getTemplateContext().isEnabled(processor));
     }
     return context;

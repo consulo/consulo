@@ -43,7 +43,6 @@
 
     <postStartupActivity implementation="consulo.ide.impl.idea.vcs.log.impl.VcsProjectLog$InitLogStartupActivity"/>
 
-    <cachesInvalidator implementation="consulo.ide.impl.idea.vcs.log.impl.VcsLogCachesInvalidator" />
   </extensions>
 
   <actions>

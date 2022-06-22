@@ -30,7 +30,6 @@ public class EditorTypedHandlerBean extends AbstractExtensionPointBean {
   private static final Logger LOG = Logger.getInstance(EditorTypedHandlerBean.class);
 
   public static final ExtensionPointName<EditorTypedHandlerBean> EP_NAME = ExtensionPointName.create("consulo.editorTypedHandler");
-  public static final ExtensionPointName<EditorTypedHandlerBean> RAW_EP_NAME = ExtensionPointName.create("consulo.rawEditorTypedHandler");
 
   // these must be public for scrambling compatibility
   @Attribute("implementationClass")

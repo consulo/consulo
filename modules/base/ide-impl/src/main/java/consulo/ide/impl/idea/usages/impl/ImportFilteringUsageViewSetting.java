@@ -15,26 +15,24 @@
  */
 package consulo.ide.impl.idea.usages.impl;
 
-import consulo.component.persist.StoragePathMacros;
-import consulo.ide.ServiceManager;
-import consulo.util.xml.serializer.XmlSerializerUtil;
-
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
+import consulo.component.persist.StoragePathMacros;
+import consulo.ide.ServiceManager;
+import consulo.util.xml.serializer.XmlSerializerUtil;
 import jakarta.inject.Singleton;
 
 /**
  * @author yole
  */
 @Singleton
-@State(
-  name = "ImportFilteringUsageViewSetting",
-  storages = {
-    @Storage(
-      file = StoragePathMacros.APP_CONFIG + "/other.xml"
-    )}
-)
+@State(name = "ImportFilteringUsageViewSetting", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml")})
+@Service(ComponentScope.PROJECT)
+@ServiceImpl
 public class ImportFilteringUsageViewSetting implements PersistentStateComponent<ImportFilteringUsageViewSetting> {
   public static ImportFilteringUsageViewSetting getInstance() {
     return ServiceManager.getService(ImportFilteringUsageViewSetting.class);

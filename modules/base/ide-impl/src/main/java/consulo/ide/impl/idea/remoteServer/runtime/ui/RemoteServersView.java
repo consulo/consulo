@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.remoteServer.runtime.ui;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import consulo.ide.impl.idea.remoteServer.runtime.ServerConnection;
@@ -23,6 +25,7 @@ import javax.annotation.Nonnull;
 /**
  * @author nik
  */
+@Service(ComponentScope.PROJECT)
 public abstract class RemoteServersView {
   @Nonnull
   public static RemoteServersView getInstance(@Nonnull Project project) {

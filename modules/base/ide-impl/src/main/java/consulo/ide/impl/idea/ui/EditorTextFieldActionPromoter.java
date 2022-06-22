@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ui;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.ActionPromoter;
 import consulo.ui.ex.action.AnAction;
 import consulo.dataContext.DataContext;
@@ -29,6 +30,7 @@ import java.util.List;
 /**
  * @author Konstantin Bulenkov
  */
+@ExtensionImpl
 public class EditorTextFieldActionPromoter implements ActionPromoter {
   /**
    * Encapsulates sorting rule that defines what editor actions have precedence to non-editor actions. Current approach is that

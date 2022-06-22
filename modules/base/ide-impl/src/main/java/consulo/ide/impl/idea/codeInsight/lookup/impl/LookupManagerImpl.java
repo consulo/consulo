@@ -51,7 +51,7 @@ public class LookupManagerImpl extends LookupManager {
   public LookupManagerImpl(Project project) {
     myProject = project;
 
-    project.getMessageBus().connect().subscribe(EditorHintListener.TOPIC, new EditorHintListener() {
+    project.getMessageBus().connect().subscribe(EditorHintListener.class, new EditorHintListener() {
       @Override
       public void hintShown(final Project project, @Nonnull final LightweightHint hint, final int flags) {
         if (project == myProject) {

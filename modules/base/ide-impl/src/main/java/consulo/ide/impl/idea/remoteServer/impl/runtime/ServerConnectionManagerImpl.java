@@ -1,5 +1,6 @@
 package consulo.ide.impl.idea.remoteServer.impl.runtime;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.ide.impl.idea.remoteServer.configuration.RemoteServer;
 import consulo.ide.impl.idea.remoteServer.configuration.ServerConfiguration;
@@ -18,6 +19,7 @@ import java.util.Map;
  * @author nik
  */
 @Singleton
+@ServiceImpl
 public class ServerConnectionManagerImpl extends ServerConnectionManager {
   private final Map<RemoteServer<?>, ServerConnection> myConnections = new HashMap<RemoteServer<?>, ServerConnection>();
   private final ServerConnectionEventDispatcher myEventDispatcher = new ServerConnectionEventDispatcher();

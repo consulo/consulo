@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.codeInsight.template.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.completion.lookup.LookupItem;
 import consulo.language.editor.completion.lookup.LookupElementPresentation;
 import consulo.language.editor.completion.lookup.ElementLookupRenderer;
@@ -24,6 +25,7 @@ import consulo.language.editor.template.Template;
 /**
  * @author yole
  */
+@ExtensionImpl
 public class TemplateLookupRenderer implements ElementLookupRenderer<Template> {
   @Override
   public boolean handlesItem(final Object element) {

@@ -1151,7 +1151,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
 
   private static class MyTypedHandler extends TypedActionHandlerBase {
     private MyTypedHandler(final TypedActionHandler originalAction) {
-      super(originalAction);
+      init(originalAction);
     }
 
     @Override

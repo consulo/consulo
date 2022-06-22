@@ -15,6 +15,7 @@
  */
 package consulo.compiler.execution;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.dataContext.DataContext;
 import consulo.execution.BeforeRunTask;
@@ -36,6 +37,7 @@ import javax.annotation.Nonnull;
 /**
  * User: Vassiliy.Kudryashov
  */
+@ExtensionImpl(id = "compileBeforeRunNoErrorCheck", order = "after compileBeforeRun")
 public class CompileStepBeforeRunNoErrorCheck extends BeforeRunTaskProvider<CompileStepBeforeRunNoErrorCheck.MakeBeforeRunTaskNoErrorCheck> {
 
   public static class MakeBeforeRunTaskNoErrorCheck extends BeforeRunTask<MakeBeforeRunTaskNoErrorCheck> {

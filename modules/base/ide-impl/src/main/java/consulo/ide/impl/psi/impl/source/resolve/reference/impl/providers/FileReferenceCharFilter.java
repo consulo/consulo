@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.codeInsight.lookup.CharFilter;
 import consulo.language.editor.completion.lookup.Lookup;
 import consulo.language.editor.completion.lookup.LookupElement;
@@ -25,6 +26,7 @@ import consulo.language.psi.PsiReference;
 /**
  * @author peter
  */
+@ExtensionImpl(id = "fileRef", order = "before completion")
 public class FileReferenceCharFilter extends CharFilter{
   @Override
   public Result acceptChar(char c, int prefixLength, Lookup lookup) {

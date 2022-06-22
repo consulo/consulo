@@ -21,7 +21,6 @@ import consulo.application.progress.ProgressManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.SelectionModel;
 import consulo.codeEditor.internal.RealEditor;
-import consulo.component.extension.Extensions;
 import consulo.container.plugin.PluginIds;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
@@ -200,10 +199,10 @@ public class VariableInplaceRenamer extends InplaceRefactoring {
           }
         }.execute();
       }
-      for (AutomaticRenamerFactory renamerFactory : Extensions.getExtensions(AutomaticRenamerFactory.EP_NAME)) {
-        if (renamerFactory.isApplicable(elementToRename)) {
+      for (AutomaticRenamerFactory factory : AutomaticRenamerFactory.EP_NAME.getExtensionList()) {
+        if (factory.isApplicable(elementToRename)) {
           final List<UsageInfo> usages = new ArrayList<UsageInfo>();
-          final AutomaticRenamer renamer = renamerFactory.createRenamer(elementToRename, newName, new ArrayList<UsageInfo>());
+          final AutomaticRenamer renamer = factory.createRenamer(elementToRename, newName, new ArrayList<UsageInfo>());
           if (renamer.hasAnythingToRename()) {
             if (!ApplicationManager.getApplication().isUnitTestMode()) {
               final AutomaticRenamingDialog renamingDialog = new AutomaticRenamingDialog(myProject, renamer);

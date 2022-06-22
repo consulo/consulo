@@ -271,7 +271,7 @@ public class RenameDialog extends RefactoringDialog {
       myCbSearchTextOccurences.setVisible(false);
     }
 
-    for(AutomaticRenamerFactory factory: Extensions.getExtensions(AutomaticRenamerFactory.EP_NAME)) {
+    for (AutomaticRenamerFactory factory : AutomaticRenamerFactory.EP_NAME.getExtensionList()) {
       if (factory.isApplicable(myPsiElement) && factory.getOptionName() != null) {
         gbConstraints.insets = new Insets(0, 0, 4, 0);
         gbConstraints.gridwidth = myAutomaticRenamers.size() % 2 == 0 ? 1 : GridBagConstraints.REMAINDER;

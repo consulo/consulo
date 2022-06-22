@@ -22,10 +22,12 @@ import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.markup.*;
 import consulo.colorScheme.TextAttributes;
+import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import consulo.document.util.TextRange;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.highlight.HighlightManager;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.language.editor.inject.InjectedEditorManager;
@@ -35,6 +37,9 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;
 import consulo.project.Project;
 import consulo.ui.color.ColorValue;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.event.AnActionListener;
 import consulo.ui.util.ColorValueUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderEx;
@@ -75,9 +80,28 @@ public class HighlightManagerImpl extends HighlightManager {
           for (RangeHighlighter highlighter : highlightersToRemove) {
             removeSegmentHighlighter(editor, highlighter);
           }
-        }
+        }                                                                        
       }
     }, myProject);
+
+    project.getMessageBus().connect().subscribe(AnActionListener.class, new AnActionListener() {
+      @Override
+      public void beforeActionPerformed(AnAction action, final DataContext dataContext, AnActionEvent event) {
+        requestHideHighlights(dataContext);
+      }
+
+      @Override
+      public void beforeEditorTyping(char c, DataContext dataContext) {
+        requestHideHighlights(dataContext);
+      }
+
+      private void requestHideHighlights(final DataContext dataContext) {
+        final Editor editor = dataContext.getData(PlatformDataKeys.EDITOR);
+        if (editor == null) return;
+
+        hideHighlights(editor, HighlightManager.HIDE_BY_ANY_KEY);
+      }
+    });
   }
 
   @Nullable

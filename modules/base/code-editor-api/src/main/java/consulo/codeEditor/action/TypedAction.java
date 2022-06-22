@@ -7,6 +7,8 @@ import consulo.application.Application;
 import consulo.application.util.FreezeLogger;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorBundle;
+import consulo.codeEditor.internal.ExtensionTypedActionHandler;
+import consulo.codeEditor.internal.RawTypedActionHandler;
 import consulo.codeEditor.util.EditorModificationUtil;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
@@ -30,22 +32,30 @@ public abstract class TypedAction {
   private TypedActionHandler myHandler;
   private boolean myHandlersLoaded;
 
-  public TypedAction() {
+  private final Application myApplication;
+
+  public TypedAction(Application application) {
+    myApplication = application;
     myHandler = new Handler();
   }
 
   private void ensureHandlersLoaded() {
     if (!myHandlersLoaded) {
       myHandlersLoaded = true;
-      for (EditorTypedHandlerBean handlerBean : EditorTypedHandlerBean.EP_NAME.getExtensionList()) {
-        myHandler = handlerBean.getHandler(myHandler);
+
+      for (ExtensionTypedActionHandler handler : myApplication.getExtensionPoint(ExtensionTypedActionHandler.class).getExtensionList()) {
+        handler.init(myHandler);
+
+        myHandler = handler;
       }
     }
   }
 
   private void loadRawHandlers() {
-    for (EditorTypedHandlerBean handlerBean : EditorTypedHandlerBean.RAW_EP_NAME.getExtensionList()) {
-      myRawHandler = handlerBean.getHandler(myRawHandler);
+    for (RawTypedActionHandler handler : myApplication.getExtensionPoint(RawTypedActionHandler.class).getExtensionList()) {
+      handler.init(myRawHandler);
+
+      myRawHandler = handler;
     }
   }
 

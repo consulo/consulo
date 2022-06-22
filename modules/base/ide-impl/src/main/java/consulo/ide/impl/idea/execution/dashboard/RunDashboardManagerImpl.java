@@ -93,7 +93,7 @@ public class RunDashboardManagerImpl implements RunDashboardManager, PersistentS
   }
 
   private void initToolWindowListeners() {
-    myProject.getMessageBus().connect().subscribe(RunManagerListener.TOPIC, new RunManagerListener() {
+    myProject.getMessageBus().connect().subscribe(RunManagerListener.class, new RunManagerListener() {
       @Override
       public void runConfigurationAdded(@Nonnull RunnerAndConfigurationSettings settings) {
         updateDashboardIfNeeded(settings);

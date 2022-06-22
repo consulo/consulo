@@ -1,5 +1,6 @@
 package consulo.ide.impl.idea.remoteServer.agent.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.remoteServer.agent.RemoteAgentManager;
 import consulo.ide.impl.idea.remoteServer.agent.RemoteAgentProxyFactory;
@@ -15,6 +16,7 @@ import java.util.List;
  * @author michael.golubev
  */
 @Singleton
+@ServiceImpl
 public class RemoteAgentManagerImpl extends RemoteAgentManager {
 
   private final RemoteAgentClassLoaderCache myClassLoaderCache = new RemoteAgentClassLoaderCache();

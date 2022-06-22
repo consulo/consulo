@@ -775,7 +775,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
     final LightweightHint[] result = {null};
     final EditorHintListener listener = (project1, hint, flags) -> result[0] = hint;
     final MessageBusConnection connection = project.getMessageBus().connect();
-    connection.subscribe(EditorHintListener.TOPIC, listener);
+    connection.subscribe(EditorHintListener.class, listener);
     assert text != null;
     HintManager.getInstance().showInformationHint(editor, StringUtil.escapeXmlEntities(text), HintManager.UNDER);
     connection.disconnect();

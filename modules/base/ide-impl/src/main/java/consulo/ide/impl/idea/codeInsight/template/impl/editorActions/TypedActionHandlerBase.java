@@ -16,20 +16,23 @@
 
 package consulo.ide.impl.idea.codeInsight.template.impl.editorActions;
 
-import consulo.dataContext.DataContext;
-import consulo.codeEditor.action.ActionPlan;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.action.ActionPlan;
 import consulo.codeEditor.action.TypedActionHandler;
 import consulo.codeEditor.action.TypedActionHandlerEx;
+import consulo.codeEditor.internal.OverrideTypedActionHandler;
+import consulo.dataContext.DataContext;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public abstract class TypedActionHandlerBase implements TypedActionHandlerEx {
+public abstract class TypedActionHandlerBase implements TypedActionHandlerEx, OverrideTypedActionHandler {
   @Nullable
-  protected final TypedActionHandler myOriginalHandler;
+  protected TypedActionHandler myOriginalHandler;
 
-  public TypedActionHandlerBase(@Nullable TypedActionHandler originalHandler) {
-    myOriginalHandler = originalHandler;
+  @Override
+  public void init(TypedActionHandler delegate) {
+    myOriginalHandler = delegate;
   }
 
   @Override

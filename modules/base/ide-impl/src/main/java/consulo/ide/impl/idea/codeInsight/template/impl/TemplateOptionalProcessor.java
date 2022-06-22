@@ -16,25 +16,30 @@
 
 package consulo.ide.impl.idea.codeInsight.template.impl;
 
-import consulo.language.editor.template.Template;
-import consulo.document.Document;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.codeEditor.Editor;
-import consulo.document.RangeMarker;
 import consulo.component.extension.ExtensionPointName;
+import consulo.document.Document;
+import consulo.document.RangeMarker;
+import consulo.language.editor.template.Template;
 import consulo.project.Project;
 import org.jetbrains.annotations.Nls;
 
 /**
  * @author yole
  */
+@Extension(ComponentScope.APPLICATION)
 public interface TemplateOptionalProcessor {
-  ExtensionPointName<TemplateOptionalProcessor> EP_NAME = ExtensionPointName.create("consulo.liveTemplateOptionalProcessor");
+  ExtensionPointName<TemplateOptionalProcessor> EP_NAME = ExtensionPointName.create(TemplateOptionalProcessor.class);
 
   void processText(final Project project, final Template template, final Document document, final RangeMarker templateRange, final Editor editor);
+
   @Nls
   String getOptionName();
 
   boolean isEnabled(final Template template);
+
   void setEnabled(Template template, boolean value);
 
   boolean isVisible(final Template template);

@@ -476,7 +476,7 @@ public class CompletionLookupArrangerImpl extends LookupArranger implements Comp
 
   @Nullable
   private LookupElement findMostRelevantItem(Iterable<? extends LookupElement> sorted) {
-    final CompletionPreselectSkipper[] skippers = CompletionPreselectSkipper.EP_NAME.getExtensions();
+    final List<CompletionPreselectSkipper> skippers = CompletionPreselectSkipper.EP_NAME.getExtensionList();
 
     for (LookupElement element : sorted) {
       if (!shouldSkip(skippers, element)) {
@@ -492,7 +492,7 @@ public class CompletionLookupArrangerImpl extends LookupArranger implements Comp
     return element instanceof LiveTemplateLookupElement && ((LiveTemplateLookupElement)element).sudden;
   }
 
-  private boolean shouldSkip(CompletionPreselectSkipper[] skippers, LookupElement element) {
+  private boolean shouldSkip(List<CompletionPreselectSkipper> skippers, LookupElement element) {
     CompletionLocation location = myLocation;
     if (location == null) {
       location = new CompletionLocation(Objects.requireNonNull(myProcess.getParameters()));

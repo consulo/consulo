@@ -362,7 +362,7 @@ public class IncrementalSearchHandler {
 
   public static class MyTypedHandler extends TypedActionHandlerBase {
     public MyTypedHandler(@Nullable TypedActionHandler originalHandler) {
-      super(originalHandler);
+      init(originalHandler);
     }
 
     @Override

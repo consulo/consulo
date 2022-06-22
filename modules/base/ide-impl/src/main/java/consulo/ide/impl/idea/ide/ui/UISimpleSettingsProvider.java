@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.ui;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.ide.SearchTopHitProvider;
 import consulo.ide.impl.idea.ide.ui.search.OptionDescription;
 import consulo.project.Project;
@@ -25,6 +26,7 @@ import java.util.function.Consumer;
 /**
  * @author Konstantin Bulenkov
  */
+@ExtensionImpl
 public class UISimpleSettingsProvider implements SearchTopHitProvider, OptionsTopHitProvider.CoveredByToggleActions {
   private static OptionDescription CYCLING_SCROLLING = AppearanceOptionsTopHitProvider.appearance("Cyclic scrolling", "CYCLE_SCROLLING");
   private static OptionDescription MEMORY_INDICATOR = AppearanceOptionsTopHitProvider.appearance("Show Memory Indicator",

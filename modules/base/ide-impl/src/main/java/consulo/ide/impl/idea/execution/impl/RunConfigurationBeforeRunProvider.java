@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.execution.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.execution.*;
 import consulo.execution.*;
 import consulo.execution.configuration.ConfigurationType;
@@ -57,6 +58,7 @@ import java.util.*;
 /**
  * @author Vassiliy Kudryashov
  */
+@ExtensionImpl
 public class RunConfigurationBeforeRunProvider extends BeforeRunTaskProvider<RunConfigurationBeforeRunProvider.RunConfigurableBeforeRunTask> {
 
   public static final Key<RunConfigurableBeforeRunTask> ID = Key.create("RunConfigurationTask");

@@ -15,15 +15,16 @@
  */
 package consulo.ide.impl.idea.packaging.impl.compiler;
 
-import consulo.ide.impl.idea.compiler.impl.AdditionalCompileScopeProvider;
-import consulo.compiler.scope.ModuleCompileScope;
-import consulo.compiler.scope.CompileScope;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.AccessRule;
+import consulo.application.util.function.ThrowableComputable;
 import consulo.compiler.Compiler;
+import consulo.compiler.artifact.Artifact;
+import consulo.compiler.scope.CompileScope;
+import consulo.compiler.scope.ModuleCompileScope;
+import consulo.ide.impl.idea.compiler.impl.AdditionalCompileScopeProvider;
 import consulo.project.Project;
 import consulo.util.lang.function.Condition;
-import consulo.application.util.function.ThrowableComputable;
-import consulo.compiler.artifact.Artifact;
-import consulo.application.AccessRule;
 
 import javax.annotation.Nonnull;
 import java.util.Set;
@@ -31,6 +32,7 @@ import java.util.Set;
 /**
  * @author nik
  */
+@ExtensionImpl
 public class ArtifactAdditionalCompileScopeProvider extends AdditionalCompileScopeProvider {
   @Override
   public CompileScope getAdditionalScope(@Nonnull final CompileScope baseScope, @Nonnull Condition<Compiler> filter, @Nonnull final Project project) {

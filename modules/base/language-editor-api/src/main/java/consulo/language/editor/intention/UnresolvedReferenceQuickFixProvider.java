@@ -16,23 +16,25 @@
 package consulo.language.editor.intention;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
-import consulo.component.extension.Extensions;
 import consulo.language.psi.PsiReference;
 import consulo.project.DumbService;
 import consulo.util.lang.reflect.ReflectionUtil;
 
 import javax.annotation.Nonnull;
 
+@Extension(ComponentScope.APPLICATION)
 public abstract class UnresolvedReferenceQuickFixProvider<T extends PsiReference> {
+  private static final ExtensionPointName<UnresolvedReferenceQuickFixProvider> EXTENSION_NAME = ExtensionPointName.create(UnresolvedReferenceQuickFixProvider.class);
 
   @RequiredReadAction
   public static <T extends PsiReference> void registerReferenceFixes(T ref, QuickFixActionRegistrar registrar) {
 
     final boolean dumb = DumbService.getInstance(ref.getElement().getProject()).isDumb();
-    UnresolvedReferenceQuickFixProvider[] fixProviders = Extensions.getExtensions(EXTENSION_NAME);
     Class<? extends PsiReference> referenceClass = ref.getClass();
-    for (UnresolvedReferenceQuickFixProvider each : fixProviders) {
+    for (UnresolvedReferenceQuickFixProvider each : EXTENSION_NAME.getExtensionList()) {
       if (dumb && !DumbService.isDumbAware(each)) {
         continue;
       }
@@ -41,8 +43,6 @@ public abstract class UnresolvedReferenceQuickFixProvider<T extends PsiReference
       }
     }
   }
-
-  private static final ExtensionPointName<UnresolvedReferenceQuickFixProvider> EXTENSION_NAME = ExtensionPointName.create("consulo.codeInsight.unresolvedReferenceQuickFixProvider");
 
   public abstract void registerFixes(T ref, QuickFixActionRegistrar registrar);
 

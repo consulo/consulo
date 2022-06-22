@@ -2,41 +2,39 @@
 
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
-import consulo.language.editor.CodeInsightSettings;
-import consulo.language.editor.action.BraceMatchingUtil;
-import consulo.ide.impl.idea.codeInsight.template.impl.editorActions.TypedActionHandlerBase;
-import consulo.ide.impl.idea.lang.LanguageQuoteHandling;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
-import consulo.ide.impl.idea.openapi.editor.impl.DefaultRawTypedHandler;
-import consulo.ide.impl.idea.openapi.editor.impl.TypedActionImpl;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.text.CharArrayUtil;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.extension.KeyedExtensionCollector;
 import consulo.codeEditor.*;
 import consulo.codeEditor.action.ActionPlan;
 import consulo.codeEditor.action.TabOutScopesTracker;
 import consulo.codeEditor.action.TypedAction;
-import consulo.codeEditor.action.TypedActionHandler;
+import consulo.codeEditor.internal.ExtensionTypedActionHandler;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
-import consulo.language.editor.internal.PsiUtilBase;
+import consulo.ide.impl.idea.codeInsight.template.impl.editorActions.TypedActionHandlerBase;
+import consulo.ide.impl.idea.lang.LanguageQuoteHandling;
+import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
+import consulo.ide.impl.idea.openapi.editor.impl.DefaultRawTypedHandler;
+import consulo.ide.impl.idea.openapi.editor.impl.TypedActionImpl;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.editor.AutoPopupController;
-import consulo.language.editor.action.JavaLikeQuoteHandler;
-import consulo.language.editor.action.MultiCharQuoteHandler;
-import consulo.language.editor.action.QuoteHandler;
-import consulo.language.editor.action.TypedHandlerDelegate;
+import consulo.language.editor.CodeInsightSettings;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.action.*;
 import consulo.language.editor.completion.CompletionContributor;
-import consulo.language.editor.highlight.*;
+import consulo.language.editor.highlight.BraceMatcher;
+import consulo.language.editor.highlight.NontrivialBraceMatcher;
+import consulo.language.editor.internal.PsiUtilBase;
 import consulo.language.file.LanguageFileType;
 import consulo.language.file.inject.DocumentWindow;
 import consulo.language.inject.InjectedLanguageManager;
@@ -58,7 +56,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class TypedHandler extends TypedActionHandlerBase {
+@ExtensionImpl(order = "first")
+public class TypedHandler extends TypedActionHandlerBase implements ExtensionTypedActionHandler {
   private static final Set<Character> COMPLEX_CHARS = new HashSet<>(Arrays.asList('\n', '\t', '(', ')', '<', '>', '[', ']', '{', '}', '"', '\''));
 
   private static final Logger LOG = Logger.getInstance(TypedHandler.class);
@@ -68,10 +67,6 @@ public class TypedHandler extends TypedActionHandlerBase {
   private static final Map<String, QuoteHandler> ourCustomQuoterHandlers = new HashMap<>();
 
   private static final Map<Class<? extends Language>, QuoteHandler> ourBaseLanguageQuoteHandlers = new HashMap<>();
-
-  public TypedHandler(TypedActionHandler originalHandler) {
-    super(originalHandler);
-  }
 
   @Nullable
   public static QuoteHandler getQuoteHandler(@Nonnull PsiFile file, @Nonnull Editor editor) {

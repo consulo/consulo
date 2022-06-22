@@ -15,6 +15,7 @@
  */
 package consulo.sandboxPlugin.ide.remoteServer;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.module.Module;
@@ -47,6 +48,7 @@ import java.util.stream.Collectors;
  * @author VISTALL
  * @since 2019-02-25
  */
+@ExtensionImpl
 public class SandServerType extends ServerType<SandServerConfiguration> {
   public SandServerType() {
     super("sand");

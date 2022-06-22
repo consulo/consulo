@@ -22,6 +22,8 @@
  */
 package consulo.execution;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.dataContext.DataContext;
@@ -37,8 +39,9 @@ import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+@Extension(ComponentScope.PROJECT)
 public abstract class BeforeRunTaskProvider<T extends BeforeRunTask> {
-  public static final ExtensionPointName<BeforeRunTaskProvider<BeforeRunTask>> EP_NAME = ExtensionPointName.create("consulo.stepsBeforeRunProvider");
+  public static final ExtensionPointName<BeforeRunTaskProvider> EP_NAME = ExtensionPointName.create(BeforeRunTaskProvider.class);
 
   @Nonnull
   public abstract Key<T> getId();

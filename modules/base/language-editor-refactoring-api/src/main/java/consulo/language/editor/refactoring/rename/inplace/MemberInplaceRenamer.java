@@ -17,7 +17,6 @@ package consulo.language.editor.refactoring.rename.inplace;
 
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.internal.RealEditor;
-import consulo.component.extension.Extensions;
 import consulo.content.scope.SearchScope;
 import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
@@ -239,7 +238,7 @@ public class MemberInplaceRenamer extends VariableInplaceRenamer {
         }
       }
     };
-    for (AutomaticRenamerFactory factory : Extensions.getExtensions(AutomaticRenamerFactory.EP_NAME)) {
+    for (AutomaticRenamerFactory factory : AutomaticRenamerFactory.EP_NAME.getExtensionList()) {
       if (factory.getOptionName() != null && factory.isApplicable(element)) {
         renameProcessor.addRenamerFactory(factory);
       }

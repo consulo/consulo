@@ -2,49 +2,44 @@
 
 package consulo.ide.impl.idea.codeInsight.lookup.impl;
 
-import consulo.language.editor.AutoPopupController;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.statistic.FeatureUsageTracker;
+import consulo.application.util.matcher.PrefixMatcher;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.internal.ExtensionTypedActionHandler;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
+import consulo.document.Document;
 import consulo.ide.impl.idea.codeInsight.completion.CodeCompletionFeatures;
 import consulo.ide.impl.idea.codeInsight.completion.CompletionPhase;
 import consulo.ide.impl.idea.codeInsight.completion.CompletionProgressIndicator;
-import consulo.application.util.matcher.PrefixMatcher;
 import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionServiceImpl;
 import consulo.ide.impl.idea.codeInsight.editorActions.AutoHardWrapHandler;
 import consulo.ide.impl.idea.codeInsight.editorActions.TypedHandler;
 import consulo.ide.impl.idea.codeInsight.lookup.CharFilter;
-import consulo.language.editor.completion.lookup.LookupElement;
-import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.ide.impl.idea.codeInsight.lookup.impl.actions.ChooseItemAction;
 import consulo.ide.impl.idea.codeInsight.template.impl.TemplateSettings;
 import consulo.ide.impl.idea.codeInsight.template.impl.editorActions.TypedActionHandlerBase;
-import consulo.application.statistic.FeatureUsageTracker;
-import consulo.dataContext.DataManager;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
-import consulo.document.Document;
-import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
-import consulo.codeEditor.action.TypedActionHandler;
-import consulo.project.Project;
+import consulo.language.editor.AutoPopupController;
+import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.editor.completion.lookup.LookupManager;
+import consulo.language.editor.internal.PsiUtilBase;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import consulo.language.editor.internal.PsiUtilBase;
 import consulo.logging.Logger;
+import consulo.project.Project;
 
 import javax.annotation.Nonnull;
-
 import javax.annotation.Nullable;
-import java.util.List;
 
-public class LookupTypedHandler extends TypedActionHandlerBase {
+@ExtensionImpl(id = "lookup")
+public class LookupTypedHandler extends TypedActionHandlerBase implements ExtensionTypedActionHandler {
   private static final Logger LOG = Logger.getInstance(LookupTypedHandler.class);
-
-  public LookupTypedHandler(@Nullable TypedActionHandler originalHandler) {
-    super(originalHandler);
-  }
 
   @Override
   public void execute(@Nonnull Editor originalEditor, char charTyped, @Nonnull DataContext dataContext) {
-    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final Project project = dataContext.getData(Project.KEY);
     PsiFile file = project == null ? null : PsiUtilBase.getPsiFileInEditor(originalEditor, project);
 
     if (file == null) {
@@ -177,7 +172,7 @@ public class LookupTypedHandler extends TypedActionHandlerBase {
     LookupElement item = lookup.getCurrentItem();
     int prefixLength = item == null ? lookup.getAdditionalPrefix().length() : lookup.itemPattern(item).length();
 
-    for (CharFilter extension : getFilters()) {
+    for (CharFilter extension : CharFilter.EP_NAME.getExtensionList()) {
       CharFilter.Result result = extension.acceptChar(charTyped, prefixLength, lookup);
       if (result != null) {
         if (LOG.isDebugEnabled()) {
@@ -190,9 +185,5 @@ public class LookupTypedHandler extends TypedActionHandlerBase {
       }
     }
     return null;
-  }
-
-  private static List<CharFilter> getFilters() {
-    return CharFilter.EP_NAME.getExtensionList();
   }
 }

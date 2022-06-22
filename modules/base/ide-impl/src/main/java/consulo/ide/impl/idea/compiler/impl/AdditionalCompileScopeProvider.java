@@ -16,23 +16,24 @@
 
 package consulo.ide.impl.idea.compiler.impl;
 
-import consulo.compiler.scope.CompileScope;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.compiler.Compiler;
+import consulo.compiler.scope.CompileScope;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.util.lang.function.Condition;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
  * @author nik
  */
+@Extension(ComponentScope.APPLICATION)
 public abstract class AdditionalCompileScopeProvider {
-  public static final ExtensionPointName<AdditionalCompileScopeProvider> EXTENSION_POINT_NAME =
-          ExtensionPointName.create("consulo.compiler.additionalCompileScopeProvider");
+  public static final ExtensionPointName<AdditionalCompileScopeProvider> EXTENSION_POINT_NAME = ExtensionPointName.create(AdditionalCompileScopeProvider.class);
 
   @Nullable
-  public abstract CompileScope getAdditionalScope(@Nonnull CompileScope baseScope,
-                                                  @Nonnull Condition<Compiler> filter,
-                                                  @Nonnull Project project);
+  public abstract CompileScope getAdditionalScope(@Nonnull CompileScope baseScope, @Nonnull Condition<Compiler> filter, @Nonnull Project project);
 }

@@ -15,6 +15,7 @@
  */
 package consulo.compiler.execution;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.application.TransactionGuard;
 import consulo.compiler.CompileStatusNotification;
@@ -44,6 +45,7 @@ import javax.annotation.Nonnull;
 /**
  * @author spleaner
  */
+@ExtensionImpl(id = "compileBeforeRun")
 public class CompileStepBeforeRun extends BeforeRunTaskProvider<CompileStepBeforeRun.MakeBeforeRunTask> {
   /**
    * Marked for disable adding CompileStepBeforeRun

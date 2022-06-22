@@ -1,21 +1,23 @@
 package consulo.ide.impl.idea.remoteServer.impl.runtime.ui;
 
-import consulo.project.Project;
-import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.project.ui.wm.ToolWindowManager;
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.remoteServer.runtime.ServerConnection;
 import consulo.ide.impl.idea.remoteServer.runtime.ui.RemoteServersView;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.ide.impl.remoteServer.ui.ServersToolWindowManager;
-
-import javax.annotation.Nonnull;
+import consulo.project.Project;
+import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
  */
 @Singleton
+@ServiceImpl
 public class RemoteServersViewImpl extends RemoteServersView {
   @Nonnull
   private final Project myProject;

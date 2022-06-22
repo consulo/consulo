@@ -740,7 +740,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
 
     if (actions.size() > 1) {
       final List<AnAction> readOnlyActions = Collections.unmodifiableList(actions);
-      for (ActionPromoter promoter : ActionPromoter.EP_NAME.getExtensions()) {
+      for (ActionPromoter promoter : ActionPromoter.EP_NAME.getExtensionList()) {
         final List<AnAction> promoted = promoter.promote(readOnlyActions, myContext.getDataContext());
         if (promoted == null || promoted.isEmpty()) continue;
 

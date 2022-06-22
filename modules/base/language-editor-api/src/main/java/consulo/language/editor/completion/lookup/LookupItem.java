@@ -17,7 +17,6 @@
 package consulo.language.editor.completion.lookup;
 
 import consulo.codeEditor.Editor;
-import consulo.component.extension.Extensions;
 import consulo.language.editor.completion.AutoCompletionPolicy;
 import consulo.language.editor.completion.ClassConditionKey;
 import consulo.util.collection.ContainerUtil;
@@ -253,7 +252,7 @@ public class LookupItem<T> extends MutableLookupElement<T> implements Comparable
 
   @Override
   public void renderElement(LookupElementPresentation presentation) {
-    for (final ElementLookupRenderer renderer : Extensions.getExtensions(ElementLookupRenderer.EP_NAME)) {
+    for (final ElementLookupRenderer renderer : ElementLookupRenderer.EP_NAME.getExtensionList()) {
       if (renderer.handlesItem(getObject())) {
         renderer.renderElement(this, getObject(), presentation);
         return;

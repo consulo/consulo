@@ -538,7 +538,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
 
         String oldToString = toString();
         if (!myProject.isDisposed()) {
-          for (ProjectViewNodeDecorator decorator : Extensions.getExtensions(ProjectViewNodeDecorator.EP_NAME, myProject)) {
+          for (ProjectViewNodeDecorator decorator : ProjectViewNodeDecorator.EP_NAME.getExtensionList(myProject)) {
             decorator.decorate(node, this);
           }
         }

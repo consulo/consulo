@@ -15,6 +15,8 @@
  */
 package consulo.execution.event;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Topic;
 import consulo.component.messagebus.TopicImpl;
 import consulo.annotation.DeprecationInfo;
 import consulo.execution.RunnerAndConfigurationSettings;
@@ -24,6 +26,7 @@ import javax.annotation.Nullable;
 
 import java.util.EventListener;
 
+@Topic(ComponentScope.PROJECT)
 public interface RunManagerListener extends EventListener {
   TopicImpl<RunManagerListener> TOPIC = new TopicImpl<>("RunManager", RunManagerListener.class);
 

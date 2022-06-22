@@ -29,22 +29,6 @@
     </component>
 
     <component>
-      <interface-class>consulo.language.editor.inspection.scheme.InspectionProjectProfileManager</interface-class>
-      <implementation-class>consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManagerImpl</implementation-class>
-      <loadForDefaultProject/>
-    </component>
-
-
-    <component>
-      <interface-class>consulo.ide.impl.idea.openapi.vcs.impl.LineStatusTrackerManagerI</interface-class>
-      <implementation-class>consulo.ide.impl.idea.openapi.vcs.impl.LineStatusTrackerManager</implementation-class>
-      <option name="workspace" value="true"/>
-      <skipForDefaultProject/>
-    </component>
-
-
-
-    <component>
       <implementation-class>consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelveChangesManager</implementation-class>
       <option name="workspace" value="true"/>
     </component>

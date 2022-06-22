@@ -16,28 +16,12 @@
 
 package consulo.ide.impl.idea.codeInsight.template.impl;
 
-import consulo.language.editor.CodeInsightSettings;
-import consulo.undoRedo.ProjectUndoManager;
-import consulo.language.editor.completion.lookup.event.LookupAdapter;
-import consulo.ide.impl.idea.codeInsight.lookup.impl.LookupImpl;
-import consulo.ide.impl.idea.codeInsight.template.RecalculatableResult;
-import consulo.language.editor.template.TemplateCompletionProcessor;
-import consulo.undoRedo.event.CommandAdapter;
-import consulo.language.editor.WriteCommandAction;
-import consulo.undoRedo.BasicUndoableAction;
-import consulo.document.DocumentReference;
-import consulo.document.DocumentReferenceManager;
-import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
-import consulo.codeEditor.event.CaretAdapter;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.language.editor.refactoring.rename.inplace.InplaceRefactoring;
-import consulo.ide.impl.idea.util.ObjectUtils;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorColors;
 import consulo.codeEditor.ScrollType;
+import consulo.codeEditor.event.CaretAdapter;
 import consulo.codeEditor.event.CaretEvent;
 import consulo.codeEditor.event.CaretListener;
 import consulo.codeEditor.markup.HighlighterLayer;
@@ -45,23 +29,34 @@ import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributes;
-import consulo.component.extension.Extensions;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
+import consulo.document.DocumentReference;
+import consulo.document.DocumentReferenceManager;
 import consulo.document.RangeMarker;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import consulo.document.internal.DocumentEx;
 import consulo.document.util.DocumentUtil;
 import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.codeInsight.lookup.impl.LookupImpl;
+import consulo.ide.impl.idea.codeInsight.template.RecalculatableResult;
+import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.psi.impl.source.codeStyle.CodeStyleManagerImpl;
 import consulo.language.codeStyle.CodeStyleManager;
+import consulo.language.editor.CodeInsightSettings;
+import consulo.language.editor.WriteCommandAction;
 import consulo.language.editor.completion.lookup.Lookup;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupManager;
+import consulo.language.editor.completion.lookup.event.LookupAdapter;
 import consulo.language.editor.completion.lookup.event.LookupEvent;
 import consulo.language.editor.completion.lookup.event.LookupListener;
+import consulo.language.editor.refactoring.rename.inplace.InplaceRefactoring;
 import consulo.language.editor.template.*;
 import consulo.language.editor.template.event.TemplateEditingListener;
 import consulo.language.editor.template.macro.MacroCallNode;
@@ -75,7 +70,10 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.undoRedo.BasicUndoableAction;
 import consulo.undoRedo.CommandProcessor;
+import consulo.undoRedo.ProjectUndoManager;
+import consulo.undoRedo.event.CommandAdapter;
 import consulo.undoRedo.event.CommandEvent;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
@@ -424,7 +422,7 @@ public class TemplateStateImpl implements Disposable, TemplateState {
   }
 
   private void preprocessTemplate(final PsiFile file, int caretOffset, final String textToInsert) {
-    for (TemplatePreprocessor preprocessor : Extensions.getExtensions(TemplatePreprocessor.EP_NAME)) {
+    for (TemplatePreprocessor preprocessor : TemplatePreprocessor.EP_NAME.getExtensionList()) {
       preprocessor.preprocessTemplate(myEditor, file, caretOffset, textToInsert, myTemplate.getTemplateText());
     }
   }
@@ -507,7 +505,7 @@ public class TemplateStateImpl implements Disposable, TemplateState {
       if (file != null) {
         IntList indices = initEmptyVariables();
         mySegments.setSegmentsGreedy(false);
-        for (TemplateOptionalProcessor processor : Extensions.getExtensions(TemplateOptionalProcessor.EP_NAME)) {
+        for (TemplateOptionalProcessor processor : TemplateOptionalProcessor.EP_NAME.getExtensionList()) {
           processor.processText(myProject, myTemplate, myDocument, myTemplateRange, myEditor);
         }
         mySegments.setSegmentsGreedy(true);
@@ -950,7 +948,7 @@ public class TemplateStateImpl implements Disposable, TemplateState {
   public void considerNextTabOnLookupItemSelected(LookupElement item) {
     if (item != null) {
       ExpressionContext context = getCurrentExpressionContext();
-      for (TemplateCompletionProcessor processor : Extensions.getExtensions(TemplateCompletionProcessor.EP_NAME)) {
+      for (TemplateCompletionProcessor processor : TemplateCompletionProcessor.EP_NAME.getExtensionList()) {
         if (!processor.nextTabOnItemSelected(context, item)) {
           return;
         }
@@ -1255,7 +1253,7 @@ public class TemplateStateImpl implements Disposable, TemplateState {
     if (file != null) {
       CodeStyleManager style = CodeStyleManager.getInstance(myProject);
       DumbService.getInstance(myProject).withAlternativeResolveEnabled(() -> {
-        for (TemplateOptionalProcessor optionalProcessor : Extensions.getExtensions(TemplateOptionalProcessor.EP_NAME)) {
+        for (TemplateOptionalProcessor optionalProcessor : TemplateOptionalProcessor.EP_NAME.getExtensionList()) {
           optionalProcessor.processText(myProject, myTemplate, myDocument, myTemplateRange, myEditor);
         }
       });

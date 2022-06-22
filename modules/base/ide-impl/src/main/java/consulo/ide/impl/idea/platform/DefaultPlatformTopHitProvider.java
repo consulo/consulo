@@ -15,11 +15,13 @@
  */
 package consulo.ide.impl.idea.platform;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.ide.ActionsTopHitProvider;
 
 /**
  * @author Konstantin Bulenkov
  */
+@ExtensionImpl
 public class DefaultPlatformTopHitProvider extends ActionsTopHitProvider {
   private static final String[][] ACTION_MATRIX = {
           {"op", "open ", "OpenFile"},

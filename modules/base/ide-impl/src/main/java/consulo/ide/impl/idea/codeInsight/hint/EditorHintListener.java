@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.codeInsight.hint;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Topic;
 import consulo.project.Project;
 import consulo.ide.impl.idea.ui.LightweightHint;
 import consulo.component.messagebus.TopicImpl;
@@ -22,8 +24,7 @@ import consulo.component.messagebus.TopicImpl;
 /**
  * @author yole
  */
+@Topic(ComponentScope.APPLICATION)
 public interface EditorHintListener {
-  TopicImpl<EditorHintListener> TOPIC = TopicImpl.create("Notification about showing editor hints", EditorHintListener.class);
-
   void hintShown(Project project, LightweightHint hint, int flags);
 }

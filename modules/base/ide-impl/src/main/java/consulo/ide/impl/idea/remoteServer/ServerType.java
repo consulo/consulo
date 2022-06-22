@@ -1,5 +1,7 @@
 package consulo.ide.impl.idea.remoteServer;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.project.Project;
@@ -18,8 +20,9 @@ import javax.annotation.Nullable;
 /**
  * @author nik
  */
+@Extension(ComponentScope.APPLICATION)
 public abstract class ServerType<C extends ServerConfiguration> {
-  public static final ExtensionPointName<ServerType> EP_NAME = ExtensionPointName.create("consulo.remoteServer.type");
+  public static final ExtensionPointName<ServerType> EP_NAME = ExtensionPointName.create(ServerType.class);
   private final String myId;
 
   protected ServerType(String id) {

@@ -16,6 +16,8 @@
 
 package consulo.ide.impl.idea.codeInsight.navigation;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiFile;
 import javax.annotation.Nullable;
@@ -23,8 +25,9 @@ import javax.annotation.Nullable;
 /**
  * @author yole
  */
+@Extension(ComponentScope.APPLICATION)
 public interface MethodNavigationOffsetProvider {
-  ExtensionPointName<MethodNavigationOffsetProvider> EP_NAME = ExtensionPointName.create("consulo.methodNavigationOffsetProvider");
+  ExtensionPointName<MethodNavigationOffsetProvider> EP_NAME = ExtensionPointName.create(MethodNavigationOffsetProvider.class);
 
   @Nullable
   int[] getMethodNavigationOffsets(PsiFile file, int caretOffset);

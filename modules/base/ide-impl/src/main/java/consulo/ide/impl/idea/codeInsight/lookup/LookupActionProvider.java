@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.codeInsight.lookup;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.ide.impl.idea.util.Consumer;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.editor.completion.lookup.Lookup;
@@ -23,9 +25,9 @@ import consulo.language.editor.completion.lookup.LookupElement;
 /**
  * @author peter
  */
+@Extension(ComponentScope.APPLICATION)
 public interface LookupActionProvider {
-  ExtensionPointName<LookupActionProvider> EP_NAME = ExtensionPointName.create("consulo.lookup.actionProvider");
+  ExtensionPointName<LookupActionProvider> EP_NAME = ExtensionPointName.create(LookupActionProvider.class);
 
   void fillActions(LookupElement element, Lookup lookup, Consumer<LookupElementAction> consumer);
-
 }

@@ -16,19 +16,21 @@
 
 package consulo.ide.impl.idea.ide;
 
-import consulo.project.Project;
-import consulo.language.psi.PsiElement;
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.ide.util.DeleteHandler;
-import javax.annotation.Nonnull;
-
+import consulo.language.psi.PsiElement;
+import consulo.project.Project;
 import consulo.ui.ex.DeleteProvider;
 import jakarta.inject.Singleton;
+
+import javax.annotation.Nonnull;
 import javax.swing.*;
 
 /**
  * @author yole
  */
 @Singleton
+@ServiceImpl
 public class PsiActionSupportFactoryImpl extends PsiActionSupportFactory {
   @Override
   public CopyPasteSupport createPsiBasedCopyPasteSupport(final Project project, final JComponent keyReceiver,

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.template.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.completion.lookup.Lookup;
 import consulo.ide.impl.idea.codeInsight.lookup.LookupActionProvider;
 import consulo.language.editor.completion.lookup.LookupElement;
@@ -29,6 +30,7 @@ import consulo.ide.impl.idea.util.IconUtil;
 /**
  * @author peter
  */
+@ExtensionImpl
 public class LiveTemplateLookupActionProvider implements LookupActionProvider {
   @Override
   public void fillActions(LookupElement element, final Lookup lookup, Consumer<LookupElementAction> consumer) {

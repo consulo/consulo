@@ -15,11 +15,13 @@
  */
 package consulo.ide.impl.idea.tools;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 
+@ExtensionImpl
 public class ToolBeforeRunTaskProvider extends AbstractToolBeforeRunTaskProvider<ToolBeforeRunTask> {
   static final Key<ToolBeforeRunTask> ID = Key.create("ToolBeforeRunTask");
 

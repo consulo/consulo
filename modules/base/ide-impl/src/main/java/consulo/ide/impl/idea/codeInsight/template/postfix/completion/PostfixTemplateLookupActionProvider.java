@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.template.postfix.completion;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.completion.lookup.Lookup;
 import consulo.ide.impl.idea.codeInsight.lookup.LookupActionProvider;
 import consulo.language.editor.completion.lookup.LookupElement;
@@ -30,6 +31,7 @@ import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.IconUtil;
 import consulo.ide.impl.codeInsight.template.postfix.settings.PostfixTemplatesChildConfigurable;
 
+@ExtensionImpl
 public class PostfixTemplateLookupActionProvider implements LookupActionProvider {
   @Override
   public void fillActions(LookupElement element, final Lookup lookup, Consumer<LookupElementAction> consumer) {

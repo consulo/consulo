@@ -1,8 +1,12 @@
 package consulo.ide.impl.idea.vcs.log.ui;
 
 import com.google.common.util.concurrent.SettableFuture;
+import consulo.application.ApplicationManager;
+import consulo.application.progress.ProgressManager;
+import consulo.component.extension.ExtensionPointName;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.vcs.ui.VcsBalloonProblemNotifier;
-import consulo.util.lang.function.PairFunction;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.*;
 import consulo.ide.impl.idea.vcs.log.data.*;
@@ -14,17 +18,12 @@ import consulo.ide.impl.idea.vcs.log.impl.VcsLogImpl;
 import consulo.ide.impl.idea.vcs.log.ui.frame.MainFrame;
 import consulo.ide.impl.idea.vcs.log.ui.frame.VcsLogGraphTable;
 import consulo.ide.impl.idea.vcs.log.ui.tables.GraphTableModel;
-import consulo.application.ApplicationManager;
-import consulo.application.progress.ProgressManager;
-import consulo.component.extension.ExtensionPointName;
-import consulo.component.extension.Extensions;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.util.lang.function.PairFunction;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
@@ -35,8 +34,7 @@ import java.util.concurrent.Future;
 
 public class VcsLogUiImpl implements VcsLogUi, Disposable {
   private static final Logger LOG = Logger.getInstance(VcsLogUiImpl.class);
-  public static final ExtensionPointName<VcsLogHighlighterFactory> LOG_HIGHLIGHTER_FACTORY_EP =
-          ExtensionPointName.create("consulo.logHighlighterFactory");
+  public static final ExtensionPointName<VcsLogHighlighterFactory> LOG_HIGHLIGHTER_FACTORY_EP = ExtensionPointName.create(VcsLogHighlighterFactory.class);
 
   @Nonnull
   private final MainFrame myMainFrame;
@@ -61,11 +59,7 @@ public class VcsLogUiImpl implements VcsLogUi, Disposable {
   @Nonnull
   private VisiblePack myVisiblePack;
 
-  public VcsLogUiImpl(@Nonnull VcsLogData logData,
-                      @Nonnull Project project,
-                      @Nonnull VcsLogColorManager manager,
-                      @Nonnull MainVcsLogUiProperties uiProperties,
-                      @Nonnull VcsLogFilterer filterer) {
+  public VcsLogUiImpl(@Nonnull VcsLogData logData, @Nonnull Project project, @Nonnull VcsLogColorManager manager, @Nonnull MainVcsLogUiProperties uiProperties, @Nonnull VcsLogFilterer filterer) {
     myProject = project;
     myColorManager = manager;
     myUiProperties = uiProperties;
@@ -76,7 +70,7 @@ public class VcsLogUiImpl implements VcsLogUi, Disposable {
     myVisiblePack = VisiblePack.EMPTY;
     myMainFrame = new MainFrame(logData, this, project, uiProperties, myLog, myVisiblePack);
 
-    for (VcsLogHighlighterFactory factory : Extensions.getExtensions(LOG_HIGHLIGHTER_FACTORY_EP, myProject)) {
+    for (VcsLogHighlighterFactory factory : LOG_HIGHLIGHTER_FACTORY_EP.getExtensionList(project)) {
       getTable().addHighlighter(factory.createHighlighter(logData, this));
     }
 
@@ -126,12 +120,7 @@ public class VcsLogUiImpl implements VcsLogUi, Disposable {
       final GraphAnswer<Integer> answer = myVisiblePack.getVisibleGraph().getActionController().performAction(graphAction);
       final Runnable updater = answer.getGraphUpdater();
       ApplicationManager.getApplication().invokeLater(() -> {
-        assert updater != null : "Action:" +
-                                 title +
-                                 "\nController: " +
-                                 myVisiblePack.getVisibleGraph().getActionController() +
-                                 "\nAnswer:" +
-                                 answer;
+        assert updater != null : "Action:" + title + "\nController: " + myVisiblePack.getVisibleGraph().getActionController() + "\nAnswer:" + answer;
         updater.run();
         getTable().handleAnswer(answer, true);
       });
@@ -140,18 +129,12 @@ public class VcsLogUiImpl implements VcsLogUi, Disposable {
 
   public void expandAll() {
     performLongAction(new GraphAction.GraphActionImpl(null, GraphAction.Type.BUTTON_EXPAND),
-                      "Expanding " +
-                      (myUiProperties.get(MainVcsLogUiProperties.BEK_SORT_TYPE) == PermanentGraph.SortType.LinearBek
-                       ? "merges..."
-                       : "linear branches..."));
+                      "Expanding " + (myUiProperties.get(MainVcsLogUiProperties.BEK_SORT_TYPE) == PermanentGraph.SortType.LinearBek ? "merges..." : "linear branches..."));
   }
 
   public void collapseAll() {
     performLongAction(new GraphAction.GraphActionImpl(null, GraphAction.Type.BUTTON_COLLAPSE),
-                      "Collapsing " +
-                      (myUiProperties.get(MainVcsLogUiProperties.BEK_SORT_TYPE) == PermanentGraph.SortType.LinearBek
-                       ? "merges..."
-                       : "linear branches..."));
+                      "Collapsing " + (myUiProperties.get(MainVcsLogUiProperties.BEK_SORT_TYPE) == PermanentGraph.SortType.LinearBek ? "merges..." : "linear branches..."));
   }
 
   public boolean isShowRootNames() {
@@ -192,9 +175,7 @@ public class VcsLogUiImpl implements VcsLogUi, Disposable {
     jumpTo(commitHash, GraphTableModel::getRowOfCommitByPartOfHash, future);
   }
 
-  private <T> void jumpTo(@Nonnull final T commitId,
-                          @Nonnull final PairFunction<GraphTableModel, T, Integer> rowGetter,
-                          @Nonnull final SettableFuture<Boolean> future) {
+  private <T> void jumpTo(@Nonnull final T commitId, @Nonnull final PairFunction<GraphTableModel, T, Integer> rowGetter, @Nonnull final SettableFuture<Boolean> future) {
     if (future.isCancelled()) return;
 
     GraphTableModel model = getTable().getModel();

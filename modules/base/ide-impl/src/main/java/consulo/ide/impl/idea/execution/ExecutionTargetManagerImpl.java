@@ -59,7 +59,7 @@ public class ExecutionTargetManagerImpl extends ExecutionTargetManager implement
     myApplication = application;
     myProject = project;
 
-    project.getMessageBus().connect().subscribe(RunManagerListener.TOPIC, new RunManagerListener() {
+    project.getMessageBus().connect().subscribe(RunManagerListener.class, new RunManagerListener() {
       @Override
       public void runConfigurationChanged(@Nonnull RunnerAndConfigurationSettings settings) {
         if (settings == RunManager.getInstance(myProject).getSelectedConfiguration()) {

@@ -16,8 +16,10 @@
 package consulo.component.impl.extension;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.Application;
 import consulo.component.ComponentManager;
 import consulo.component.bind.InjectingBinding;
+import consulo.component.extension.ExtensionExtender;
 import consulo.component.extension.ExtensionPoint;
 import consulo.injecting.InjectingContainer;
 import consulo.logging.Logger;
@@ -44,11 +46,17 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
     private ExtensionImplOrderable(K value) {
       myValue = value;
       Class<?> valueClass = value.getClass();
-      ExtensionImpl extensionImpl = valueClass.getAnnotation(ExtensionImpl.class);
-      assert extensionImpl != null;
 
-      myOrderId = StringUtil.isEmptyOrSpaces(extensionImpl.id()) ? valueClass.getSimpleName() : extensionImpl.id();
-      myLoadingOrder = LoadingOrder.readOrder(extensionImpl.order());
+      ExtensionImpl extensionImpl = valueClass.getAnnotation(ExtensionImpl.class);
+      // extension impl can be null if extension added by ExtensionExtender
+      if (extensionImpl != null) {
+        myOrderId = StringUtil.isEmptyOrSpaces(extensionImpl.id()) ? valueClass.getSimpleName() : extensionImpl.id();
+        myLoadingOrder = LoadingOrder.readOrder(extensionImpl.order());
+      }
+      else {
+        myOrderId = valueClass.getSimpleName();
+        myLoadingOrder = LoadingOrder.LAST;
+      }
     }
 
     @Nullable
@@ -97,11 +105,19 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
     for (InjectingBinding binding : myInjectingBindings) {
       T extensionInstance = null;
       try {
-        extensionInstance = (T) injectingContainer.getUnbindedInstance(binding.getImplClass(), binding.getParameterTypes(), binding::create);
+        extensionInstance = (T)injectingContainer.getUnbindedInstance(binding.getImplClass(), binding.getParameterTypes(), binding::create);
         extensions.add(extensionInstance);
       }
       catch (Exception e) {
         LOG.error(e);
+      }
+    }
+
+    if (myApiClass != ExtensionExtender.class) {
+      for (ExtensionExtender extender : Application.get().getExtensionPoint(ExtensionExtender.class).getExtensionList()) {
+        if (extender.getExtensionClass() == myApiClass) {
+          extender.extend(myComponentManager, it -> extensions.add((T)it));
+        }
       }
     }
 

@@ -19,7 +19,6 @@ import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
 import consulo.component.extension.ExtensionExtender;
 import consulo.component.extension.ExtensionPoint;
-import consulo.component.extension.KeyedLazyInstanceEP;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.logging.Logger;
@@ -201,28 +200,7 @@ public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
   @Nonnull
   @SuppressWarnings("unchecked")
   private List<ExtensionExtender<T>> getExtenders() {
-    // do not extend extender
-    if (ExtensionExtender.EP_NAME.getName().equals(myName)) {
-      return Collections.emptyList();
-    }
-
-    List<ExtensionExtender<T>> extenders = new ArrayList<>();
-
-    for (KeyedLazyInstanceEP<ExtensionExtender> ep : ExtensionExtender.EP_NAME.getExtensionList()) {
-      if (myName.equals(ep.getKey())) {
-        try {
-          ExtensionExtender extender = ep.getInstance();
-          extenders.add(extender);
-        }
-        catch (ProcessCanceledException e) {
-          throw e;
-        }
-        catch (Throwable e) {
-          LOG.error(e);
-        }
-      }
-    }
-    return extenders;
+    return List.of();
   }
 
   @Nonnull

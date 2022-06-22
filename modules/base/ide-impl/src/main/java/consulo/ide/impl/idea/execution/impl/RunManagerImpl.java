@@ -1239,11 +1239,6 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
     getEventPublisher().runConfigurationSelected(getSelectedConfiguration());
   }
 
-  @Override
-  public void addRunManagerListener(RunManagerListener listener) {
-    myProject.getMessageBus().connect().subscribe(RunManagerListener.TOPIC, listener);
-  }
-
   public void fireBeforeRunTasksUpdated() {
     getEventPublisher().beforeRunTasksChanged();
   }
@@ -1295,7 +1290,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
   private void initProviderMaps() {
     myBeforeStepsMap = new LinkedHashMap<>();
     myProviderKeysMap = new LinkedHashMap<>();
-    for (BeforeRunTaskProvider<? extends BeforeRunTask> provider : Extensions.getExtensions(BeforeRunTaskProvider.EP_NAME, myProject)) {
+    for (BeforeRunTaskProvider<? extends BeforeRunTask> provider : BeforeRunTaskProvider.EP_NAME.getExtensionList(myProject)) {
       final Key<? extends BeforeRunTask> id = provider.getId();
       myBeforeStepsMap.put(id, provider);
       myProviderKeysMap.put(id.toString(), id);
@@ -1304,6 +1299,6 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
 
   @Nonnull
   private RunManagerListener getEventPublisher() {
-    return myProject.getMessageBus().syncPublisher(RunManagerListener.TOPIC);
+    return myProject.getMessageBus().syncPublisher(RunManagerListener.class);
   }
 }

@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.vcs.log.impl;
 
+import consulo.application.ApplicationManager;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
 import consulo.ide.impl.idea.openapi.vcs.CalledInAwt;
@@ -28,11 +31,6 @@ import consulo.ide.impl.idea.vcs.log.data.*;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogColorManagerImpl;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogPanel;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl;
-import consulo.application.ApplicationManager;
-import consulo.component.extension.ExtensionPointName;
-import consulo.component.extension.Extensions;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationType;
@@ -43,11 +41,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class VcsLogManager implements Disposable {
-  public static final ExtensionPointName<VcsLogProvider> LOG_PROVIDER_EP = ExtensionPointName.create("consulo.logProvider");
   private static final Logger LOG = Logger.getInstance(VcsLogManager.class);
 
   @Nonnull
@@ -158,7 +156,7 @@ public class VcsLogManager implements Disposable {
   @Nonnull
   public static Map<VirtualFile, VcsLogProvider> findLogProviders(@Nonnull Collection<VcsRoot> roots, @Nonnull Project project) {
     Map<VirtualFile, VcsLogProvider> logProviders = ContainerUtil.newHashMap();
-    VcsLogProvider[] allLogProviders = Extensions.getExtensions(LOG_PROVIDER_EP, project);
+    List<VcsLogProvider> allLogProviders = project.getExtensionPoint(VcsLogProvider.class).getExtensionList();
     for (VcsRoot root : roots) {
       AbstractVcs vcs = root.getVcs();
       VirtualFile path = root.getPath();

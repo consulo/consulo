@@ -2,7 +2,9 @@
 package consulo.ide.impl.idea.openapi.editor.impl;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.codeEditor.action.TypedAction;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 @Singleton
@@ -10,7 +12,9 @@ import jakarta.inject.Singleton;
 public class TypedActionImpl extends TypedAction {
   private final DefaultRawTypedHandler myDefaultRawTypedHandler;
 
-  public TypedActionImpl() {
+  @Inject
+  public TypedActionImpl(Application application) {
+    super(application);
     myDefaultRawTypedHandler = new DefaultRawTypedHandler(this);
     setupRawHandler(myDefaultRawTypedHandler);
   }

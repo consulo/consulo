@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.ui;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.ide.ui.search.BooleanOptionDescription;
 import consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl;
 import consulo.application.ui.UISettings;
@@ -28,6 +29,7 @@ import java.util.Collection;
 /**
  * @author Sergey.Malenkov
  */
+@ExtensionImpl
 public class AppearanceOptionsTopHitProvider extends OptionsTopHitProvider {
   public static final String ID = "appearance";
 
