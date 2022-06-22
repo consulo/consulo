@@ -65,11 +65,6 @@ public class NewExtensionAreaImpl {
   @Nonnull
   @SuppressWarnings("unchecked")
   public <T> ExtensionPoint<T> getExtensionPoint(@Nonnull Class<T> extensionClass) {
-    NewExtensionPointImpl point = myExtensionPoints.get(extensionClass);
-    if (point != null) {
-      return point;
-    }
-
-    return new NewEmptyExtensionPoint<>(extensionClass);
+    return myExtensionPoints.computeIfAbsent(extensionClass, e -> new NewExtensionPointImpl(e, List.of(), myComponentManager, myCheckCanceled, myComponentScope));
   }
 }
