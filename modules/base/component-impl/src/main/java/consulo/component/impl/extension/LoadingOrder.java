@@ -29,27 +29,19 @@ import java.util.*;
  * @author Alexander Kireyev
  */
 public class LoadingOrder {
-  @NonNls
   public static final String FIRST_STR = "first";
-  @NonNls
   public static final String LAST_STR = "last";
-  @NonNls
   public static final String BEFORE_STR = "before ";
-  @NonNls
   public static final String BEFORE_STR_OLD = "before:";
-  @NonNls
   public static final String AFTER_STR = "after ";
-  @NonNls
   public static final String AFTER_STR_OLD = "after:";
 
-  @NonNls
   public static final String ORDER_RULE_SEPARATOR = ",";
 
   public static final LoadingOrder ANY = new LoadingOrder();
   public static final LoadingOrder FIRST = new LoadingOrder(FIRST_STR);
   public static final LoadingOrder LAST = new LoadingOrder(LAST_STR);
 
-  @NonNls
   private final String myName; // for debug only
   private final boolean myFirst;
   private final boolean myLast;
@@ -62,7 +54,7 @@ public class LoadingOrder {
     myLast = false;
   }
 
-  private LoadingOrder(@NonNls @Nonnull String text) {
+  private LoadingOrder(@Nonnull String text) {
     myName = text;
     boolean last = false;
     boolean first = false;

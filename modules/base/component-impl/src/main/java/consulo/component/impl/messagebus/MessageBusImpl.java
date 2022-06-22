@@ -5,7 +5,6 @@ import consulo.annotation.component.Topic;
 import consulo.annotation.component.TopicBroadcastDirection;
 import consulo.component.ProcessCanceledException;
 import consulo.component.bind.InjectingBinding;
-import consulo.component.impl.extension.MessageDeliveryListener;
 import consulo.component.messagebus.MessageBus;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

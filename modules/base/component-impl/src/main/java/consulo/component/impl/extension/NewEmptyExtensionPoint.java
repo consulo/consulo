@@ -67,10 +67,4 @@ public class NewEmptyExtensionPoint<T> implements ExtensionPoint<T> {
   public Kind getKind() {
     return myClass.isInterface() ? Kind.INTERFACE : Kind.BEAN_CLASS;
   }
-
-  @Nonnull
-  @Override
-  public String getClassName() {
-    return myClass.getName();
-  }
 }

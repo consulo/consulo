@@ -22,18 +22,20 @@ import consulo.component.bind.InjectingBinding;
 import consulo.component.extension.ExtensionPoint;
 import consulo.component.internal.InjectingBindingHolder;
 import consulo.component.internal.InjectingBindingLoader;
+import consulo.util.collection.HashingStrategy;
+import consulo.util.collection.Maps;
 
 import javax.annotation.Nonnull;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author VISTALL
  * @since 17-Jun-22
  */
 public class NewExtensionAreaImpl {
-  private final Map<String, NewExtensionPointImpl> myExtensionPoints = new ConcurrentHashMap<>();
+  private final Map<Class, NewExtensionPointImpl> myExtensionPoints = Maps.newConcurrentHashMap(HashingStrategy.identity());
 
   private final ComponentManager myComponentManager;
   private final ComponentScope myComponentScope;
@@ -47,31 +49,25 @@ public class NewExtensionAreaImpl {
     myInjectingBindingLoader = InjectingBindingLoader.INSTANCE; // TODO ref it
   }
 
-  public void registerFromInjectingBinding() {
+  public void registerFromInjectingBinding(ComponentScope componentScope) {
     InjectingBindingHolder holder = myInjectingBindingLoader.getHolder(Extension.class, myComponentScope);
 
-    for (Map.Entry<String, List<InjectingBinding>> entry : holder.getBindings().entrySet()) {
-      myExtensionPoints.put(entry.getKey(), new NewExtensionPointImpl(entry.getKey(), entry.getValue(), myComponentManager));
+    for (Map.Entry<Class, List<InjectingBinding>> entry : holder.getBindings().entrySet()) {
+      myExtensionPoints.put(entry.getKey(), new NewExtensionPointImpl(entry.getKey(), entry.getValue(), myComponentManager, myCheckCanceled, componentScope));
     }
+  }
+
+  @Nonnull
+  public Collection<? extends ExtensionPoint> getExtensionPoints() {
+    return myExtensionPoints.values();
   }
 
   @Nonnull
   @SuppressWarnings("unchecked")
   public <T> ExtensionPoint<T> getExtensionPoint(@Nonnull Class<T> extensionClass) {
-    NewExtensionPointImpl point = myExtensionPoints.get(extensionClass.getName());
+    NewExtensionPointImpl point = myExtensionPoints.get(extensionClass);
     if (point != null) {
-      point.initialize(extensionClass);
       return point;
-    }
-
-    Extension annotation = extensionClass.getAnnotation(Extension.class);
-    if (annotation == null) {
-      throw new IllegalArgumentException(extensionClass + " is not annotated by @Extension");
-    }
-
-    ComponentScope value = annotation.value();
-    if (value != myComponentScope) {
-      throw new IllegalArgumentException("Wrong extension scope " + value + " vs " + myComponentScope);
     }
 
     return new NewEmptyExtensionPoint<>(extensionClass);

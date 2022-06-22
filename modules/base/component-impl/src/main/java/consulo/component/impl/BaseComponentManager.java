@@ -22,8 +22,8 @@ import consulo.component.ComponentManager;
 import consulo.component.bind.InjectingBinding;
 import consulo.component.extension.ExtensionPoint;
 import consulo.component.extension.ExtensionPointId;
+import consulo.component.impl.extension.EmptyExtensionPoint;
 import consulo.component.impl.extension.ExtensionAreaId;
-import consulo.component.impl.extension.ExtensionsAreaImpl;
 import consulo.component.impl.extension.NewExtensionAreaImpl;
 import consulo.component.impl.messagebus.MessageBusFactory;
 import consulo.component.impl.messagebus.MessageBusImpl;
@@ -48,10 +48,7 @@ import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
@@ -74,11 +71,8 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
 
   private boolean myNotLazyStepFinished;
 
-  private ExtensionsAreaImpl myExtensionsArea;
   @Nonnull
   private final String myName;
-  @Nullable
-  private final ExtensionAreaId myExtensionAreaId;
 
   private List<Class> myNotLazyServices = new ArrayList<>();
 
@@ -93,7 +87,6 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
   protected BaseComponentManager(@Nullable ComponentManager parent, @Nonnull String name, @Nullable ExtensionAreaId extensionAreaId, boolean buildInjectionContainer) {
     myParent = parent;
     myName = name;
-    myExtensionAreaId = extensionAreaId;
 
     if (buildInjectionContainer) {
       buildInjectingContainer();
@@ -111,13 +104,7 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
 
     myNewExtensionArea = new NewExtensionAreaImpl(this, getComponentScope(), this::checkCanceled);
 
-    myNewExtensionArea.registerFromInjectingBinding();
-
-    myExtensionsArea = new ExtensionsAreaImpl(this, this::checkCanceled);
-
-    registerExtensionPointsAndExtensions(myExtensionsArea);
-
-    myExtensionsArea.setLocked();
+    myNewExtensionArea.registerFromInjectingBinding(getComponentScope());
 
     InjectingContainer root = findRootContainer();
 
@@ -153,7 +140,7 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
     if (jdkModuleMain != null) {
       PluginDescriptor plugin = PluginManager.getPlugin(getClass());
       assert plugin != null;
-      ModuleLayer moduleLayer = (ModuleLayer)plugin.getModuleLayer();
+      ModuleLayer moduleLayer = plugin.getModuleLayer();
       assert moduleLayer != null;
       root = InjectingContainer.root(moduleLayer);
     }
@@ -175,10 +162,6 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
     }
   }
 
-  protected void registerExtensionPointsAndExtensions(ExtensionsAreaImpl area) {
-
-  }
-
   protected void registerServices(InjectingContainerBuilder builder) {
 
   }
@@ -186,6 +169,7 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
   protected void bootstrapInjectingContainer(@Nonnull InjectingContainerBuilder builder) {
   }
 
+  @SuppressWarnings("unchecked")
   private void loadServices(List<Class> notLazyServices, InjectingContainerBuilder builder) {
     InjectingBindingHolder holder = InjectingBindingLoader.INSTANCE.getHolder(Service.class, getComponentScope());
 
@@ -335,14 +319,19 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
   }
 
   @Nonnull
-  public ExtensionPoint[] getExtensionPoints() {
-    return myExtensionsArea.getExtensionPoints();
+  public Collection<? extends ExtensionPoint> getExtensionPoints() {
+    return myNewExtensionArea.getExtensionPoints();
   }
+
+  private static final Set<ExtensionPointId> ourLogSet = ConcurrentHashMap.newKeySet();
 
   @Nonnull
   @Override
   public <T> ExtensionPoint<T> getExtensionPoint(@Nonnull ExtensionPointId<T> extensionPointId) {
-    return myExtensionsArea.getExtensionPoint(extensionPointId);
+    if (ourLogSet.add(extensionPointId)) {
+      LOG.error("Calling old extension point: " + extensionPointId);
+    }
+    return new EmptyExtensionPoint<>();
   }
 
   @Nonnull
@@ -381,7 +370,7 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
       myMessageBus = null;
     }
 
-    myExtensionsArea = null;
+    myNewExtensionArea = null;
     myInjectingContainer.dispose();
     myInjectingContainer = null;
 

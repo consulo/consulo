@@ -36,6 +36,7 @@ import java.util.function.Function;
 /**
  * @author AKireyev
  */
+@Deprecated
 public class ExtensionPointImpl<T> implements ExtensionPoint<T> {
   static class CacheValue<K> {
     final List<Pair<K, PluginDescriptor>> myExtensionCache;
