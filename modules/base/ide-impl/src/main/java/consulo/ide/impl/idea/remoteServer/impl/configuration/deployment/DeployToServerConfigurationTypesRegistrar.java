@@ -33,9 +33,12 @@ import java.util.function.Consumer;
 public class DeployToServerConfigurationTypesRegistrar implements ExtensionExtender<ConfigurationType> {
   @Override
   public void extend(@Nonnull ComponentManager componentManager, @Nonnull Consumer<ConfigurationType> consumer) {
-    for (ServerType serverType : ServerType.EP_NAME.getExtensionList()) {
-      consumer.accept(new DeployToServerConfigurationType(serverType));
-    }
+    ServerType.EP_NAME.forEachExtensionSafe(DeployToServerConfigurationType::new);
+  }
+
+  @Override
+  public boolean hasAnyExtensions() {
+    return ServerType.EP_NAME.hasAnyExtensions();
   }
 
   @Nonnull

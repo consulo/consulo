@@ -1,6 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.psi.codeStyle.statusbar;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.application.options.CodeStyleSchemesConfigurable;
 import consulo.ide.impl.idea.application.options.codeStyle.OtherFileTypesCodeStyleConfigurable;
 import consulo.language.editor.CommonDataKeys;
@@ -21,6 +22,7 @@ import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+@ExtensionImpl(id = "codeStyleWidget", order = "after selectionModeWidget")
 public class CodeStyleStatusBarWidgetFactory extends StatusBarEditorBasedWidgetFactory {
   @Override
   public

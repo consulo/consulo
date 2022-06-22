@@ -16,36 +16,37 @@
 
 package consulo.ide.impl.idea.codeInsight.intention.impl.config;
 
-import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
-import consulo.language.editor.rawHighlight.HighlightDisplayKey;
+import consulo.annotation.component.ServiceImpl;
+import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.CleanupOnScopeIntention;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.EditCleanupProfileIntentionAction;
-import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
-import consulo.language.editor.intention.IntentionAction;
-import consulo.language.editor.intention.IntentionActionBean;
-import consulo.language.editor.intention.IntentionManager;
-import consulo.language.editor.inspection.GlobalInspectionTool;
 import consulo.ide.impl.idea.codeInspection.GlobalSimpleInspectionTool;
-import consulo.language.editor.inspection.LocalQuickFix;
-import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.ide.impl.idea.codeInspection.actions.CleanupAllIntention;
 import consulo.ide.impl.idea.codeInspection.actions.CleanupInspectionIntention;
 import consulo.ide.impl.idea.codeInspection.actions.RunInspectionIntention;
 import consulo.ide.impl.idea.codeInspection.ex.*;
-import consulo.project.Project;
+import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.editor.inspection.GlobalInspectionTool;
+import consulo.language.editor.inspection.LocalQuickFix;
+import consulo.language.editor.inspection.ProblemDescriptor;
+import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
+import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
+import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.intention.IntentionActionBean;
+import consulo.language.editor.intention.IntentionManager;
+import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.language.util.IncorrectOperationException;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.disposer.Disposable;
 import consulo.logging.Logger;
+import consulo.project.Project;
 import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Provider;
-import jakarta.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,6 +54,7 @@ import java.util.List;
  * @author dsl
  */
 @Singleton
+@ServiceImpl
 public class IntentionManagerImpl extends IntentionManager implements Disposable {
   private static final Logger LOG = Logger.getInstance(IntentionManagerImpl.class);
 

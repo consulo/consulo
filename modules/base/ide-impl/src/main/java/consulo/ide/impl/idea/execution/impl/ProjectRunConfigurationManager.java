@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.execution.impl;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.*;
 import consulo.execution.RunManager;
 import consulo.execution.RunnerAndConfigurationSettings;
@@ -44,6 +47,8 @@ import java.util.Set;
 @State(name = "ProjectRunConfigurationManager", storages = {
         @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/runConfigurations/", stateSplitter = ProjectRunConfigurationManager.RunConfigurationStateSplitter.class)})
 @Singleton
+@Service(ComponentScope.PROJECT)
+@ServiceImpl
 public class ProjectRunConfigurationManager implements PersistentStateComponent<Element> {
   public static class MyStartupActivity implements StartupActivity.DumbAware {
 

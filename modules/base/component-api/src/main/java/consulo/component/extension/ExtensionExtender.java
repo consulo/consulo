@@ -36,4 +36,9 @@ public interface ExtensionExtender<T> {
 
   @Nonnull
   Class<T> getExtensionClass();
+
+  /**
+   * Return true if extender will add one or more valyues
+   */
+  boolean hasAnyExtensions();
 }

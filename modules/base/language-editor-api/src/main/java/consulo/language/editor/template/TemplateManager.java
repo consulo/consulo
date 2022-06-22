@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.function.BiPredicate;
 
-@Service(ComponentScope.APPLICATION)
+@Service(ComponentScope.PROJECT)
 public abstract class TemplateManager {
   public static TemplateManager getInstance(Project project) {
     return project.getInstance(TemplateManager.class);

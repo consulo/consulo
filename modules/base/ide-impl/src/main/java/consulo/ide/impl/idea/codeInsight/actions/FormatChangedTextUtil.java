@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.codeInsight.actions;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.ide.ServiceManager;
 import consulo.logging.Logger;
 import consulo.document.Document;
@@ -41,6 +43,7 @@ import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
 
+@Service(ComponentScope.APPLICATION)
 public class FormatChangedTextUtil {
   public static final Key<CharSequence> TEST_REVISION_CONTENT = Key.create("test.revision.content");
   protected static final Logger LOG = Logger.getInstance(FormatChangedTextUtil.class);

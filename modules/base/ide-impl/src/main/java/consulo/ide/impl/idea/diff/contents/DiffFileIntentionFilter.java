@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,25 +15,22 @@
  */
 package consulo.ide.impl.idea.diff.contents;
 
-import consulo.ide.impl.idea.codeInsight.daemon.impl.analysis.DefaultHighlightingSettingProvider;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.analysis.FileHighlightingSetting;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.ide.impl.idea.codeInsight.daemon.impl.IntentionActionFilter;
+import consulo.language.editor.intention.IntentionAction;
 import consulo.language.psi.PsiFile;
-import consulo.project.Project;
-import consulo.util.dataholder.Key;
-import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class DiffPsiFileSupport {
-  public static final Key<Boolean> KEY = Key.create("Diff.DiffPsiFileSupport");
-
-
-  public static boolean isDiffFile(@Nullable PsiFile file) {
-    return file != null && isDiffFile(file.getVirtualFile());
-  }
-
-  public static boolean isDiffFile(@Nullable VirtualFile file) {
-    return file != null && file.getUserData(KEY) == Boolean.TRUE;
+/**
+* @author VISTALL
+* @since 22-Jun-22
+*/
+@ExtensionImpl
+public class DiffFileIntentionFilter implements IntentionActionFilter {
+  @Override
+  public boolean accept(@Nonnull IntentionAction intentionAction, @Nullable PsiFile file) {
+    return !DiffPsiFileSupport.isDiffFile(file);
   }
 }

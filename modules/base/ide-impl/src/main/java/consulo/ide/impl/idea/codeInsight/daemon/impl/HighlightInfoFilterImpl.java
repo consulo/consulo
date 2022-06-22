@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ApplicationManager;
 import consulo.colorScheme.TextAttributes;
 import consulo.language.editor.annotation.HighlightSeverity;
@@ -25,6 +26,7 @@ import consulo.language.psi.PsiFile;
 
 import javax.annotation.Nonnull;
 
+@ExtensionImpl(order = "last")
 public class HighlightInfoFilterImpl implements HighlightInfoFilter {
   private static final boolean ourTestMode = ApplicationManager.getApplication().isUnitTestMode();
 

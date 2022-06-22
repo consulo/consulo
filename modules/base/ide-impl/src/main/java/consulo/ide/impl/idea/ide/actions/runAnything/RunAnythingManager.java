@@ -1,27 +1,32 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.runAnything;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
+import consulo.application.ApplicationManager;
+import consulo.disposer.Disposer;
+import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.ide.impl.idea.ide.actions.BigPopupUI;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.application.ApplicationManager;
-import consulo.ide.ServiceManager;
-import consulo.project.Project;
-import consulo.ui.ex.popup.JBPopup;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.language.editor.CommonDataKeys;
+import consulo.project.Project;
+import consulo.project.ui.ProjectWindowStateService;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.JBInsets;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.project.ui.ProjectWindowStateService;
+import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopupFactory;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 
+@Service(ComponentScope.PROJECT)
+@ServiceImpl
 public class RunAnythingManager {
   private static final String LOCATION_SETTINGS_KEY = "run.anything.popup";
   private final Project myProject;
@@ -31,6 +36,7 @@ public class RunAnythingManager {
   @Nullable
   private String mySelectedText;
 
+  @Inject
   public RunAnythingManager(@Nonnull Project project) {
     myProject = project;
   }

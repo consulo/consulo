@@ -1,6 +1,8 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.runAnything.activity;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingContext;
 import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItem;
 import consulo.dataContext.DataContext;
@@ -47,8 +49,9 @@ import java.util.List;
  * <li>add provider to {@link consulo.ide.impl.idea.ide.actions.runAnything.groups.RunAnythingHelpGroup#getProviders()}</li>
  * </ul>
  */
+@Extension(ComponentScope.APPLICATION)
 public interface RunAnythingProvider<V> {
-  ExtensionPointName<RunAnythingProvider> EP_NAME = ExtensionPointName.create("consulo.runAnything.executionProvider");
+  ExtensionPointName<RunAnythingProvider> EP_NAME = ExtensionPointName.create(RunAnythingProvider.class);
   /**
    * Use it to retrieve command executing context, e.g. project base directory, module or custom working directory
    * that'd been chosen by the "Choose context" dropdown

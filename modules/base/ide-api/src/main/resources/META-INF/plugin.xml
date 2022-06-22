@@ -628,7 +628,6 @@
     <extensionPoint name="smartPointerAnchorProvider" interface="consulo.language.psi.SmartPointerAnchorProvider"/>
     <extensionPoint name="elementSignatureProvider" interface="consulo.ide.impl.idea.codeInsight.folding.impl.ElementSignatureProvider"/>
     <extensionPoint name="preFormatProcessor" interface="consulo.ide.impl.psi.impl.source.codeStyle.PreFormatProcessor"/>
-    <extensionPoint name="postFormatProcessor" interface="consulo.ide.impl.psi.impl.source.codeStyle.PostFormatProcessor"/>
 
     <extensionPoint name="declarationRangeHandler" beanClass="consulo.component.extension.MixinEP">
       <with attribute="implementationClass" implements="consulo.ide.impl.idea.codeInsight.hint.DeclarationRangeHandler"/>
@@ -1210,8 +1209,6 @@
                         serviceImplementation="consulo.ide.impl.application.PathMacrosServiceImpl"/>
 
 
-    <applicationService serviceInterface="consulo.ide.impl.idea.codeInsight.actions.FormatChangedTextUtil"
-                        serviceImplementation="consulo.ide.impl.idea.codeInsight.actions.VcsAwareFormatChangedTextUtil"/>
 
     <applicationService serviceInterface="consulo.ide.impl.idea.openapi.vcs.actions.AnnotationsSettings"
                         serviceImplementation="consulo.ide.impl.idea.openapi.vcs.actions.AnnotationsSettings"/>
@@ -1310,8 +1307,6 @@
     <packaging.artifactType implementation="consulo.ide.impl.idea.packaging.impl.artifacts.PlainArtifactType" order="last"/>
     <gotoRelatedProvider implementation="consulo.ide.impl.idea.testIntegration.GotoTestRelatedProvider"/>
 
-    <daemon.highlightInfoFilter implementation="consulo.ide.impl.idea.codeInsight.daemon.impl.HighlightInfoFilterImpl"/>
-
     <!-- Compiler -->
     <projectConfigurable instance="consulo.ide.impl.compiler.setting.CompilerConfigurable" id="project.propCompiler"
 						 key="compiler.configurable.display.name" bundle="consulo.compiler.CompilerBundle" order="after project"/>
@@ -1351,17 +1346,6 @@
 
 
 
-    <applicationService serviceInterface="consulo.language.editor.intention.IntentionManager"
-                        serviceImplementation="consulo.ide.impl.idea.codeInsight.intention.impl.config.IntentionManagerImpl"/>
-
-    <applicationService serviceInterface="consulo.application.internal.concurrency.JobLauncher"
-                        serviceImplementation="consulo.ide.impl.idea.concurrency.JobLauncherImpl"/>
-
-    <applicationService serviceInterface="consulo.ide.impl.idea.codeInsight.documentation.DocumentationManagerUtil"
-                        serviceImplementation="consulo.ide.impl.idea.codeInsight.documentation.DocumentationManagerUtil"/>
-
-    <applicationService serviceInterface="consulo.ide.impl.idea.ide.PsiActionSupportFactory"
-                        serviceImplementation="consulo.ide.impl.idea.ide.PsiActionSupportFactoryImpl"/>
 
     <applicationService serviceInterface="consulo.ide.impl.idea.codeInsight.template.impl.TemplateSettings"
                         serviceImplementation="consulo.ide.impl.idea.codeInsight.template.impl.TemplateSettings"/>
@@ -1941,22 +1925,6 @@
     <searchEverywhereResultsEqualityProvider implementation="consulo.ide.impl.idea.ide.actions.searcheverywhere.PsiElementsEqualityProvider"/>
     <searchEverywhereResultsEqualityProvider implementation="consulo.ide.impl.idea.ide.actions.searcheverywhere.TrivialElementsEqualityProvider"/>
 
-    <projectService serviceImplementation="consulo.ide.impl.idea.ide.util.gotoByName.SearchEverywhereConfiguration"/>
-    <projectService serviceInterface="consulo.ide.impl.idea.ide.actions.searcheverywhere.SearchEverywhereManager" serviceImplementation="consulo.ide.impl.idea.ide.actions.searcheverywhere.SearchEverywhereManagerImpl"/>
-
-    <fileBreadcrumbsCollector implementation="consulo.ide.impl.idea.ui.breadcrumbs.PsiFileBreadcrumbsCollector"/>
-
-    <projectService serviceImplementation="consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingManager"/>
-    <projectService serviceImplementation="consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingContextRecentDirectoryCache"/>
-    <projectService serviceImplementation="consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingCache"/>
-
-    <runAnything.executionProvider id="RunAnythingRunConfigurationProvider"
-                                   implementation="consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingRunConfigurationProvider"/>
-    <runAnything.executionProvider implementation="consulo.ide.impl.idea.ide.actions.runAnything.activity.RunAnythingRecentProjectProvider"/>
-    <runAnything.executionProvider id="recentCommandProvider" implementation="consulo.ide.impl.idea.ide.actions.runAnything.activity.RunAnythingRecentCommandProvider"
-                                   order="last"/>
-    <runAnything.executionProvider implementation="consulo.ide.impl.idea.ide.actions.runAnything.activity.RunAnythingCommandExecutionProvider"
-                                   order="last"/>
 
     <postStartupActivity implementation="consulo.ide.impl.idea.openapi.vcs.update.RestoreUpdateTree$MyStartUpActivity"/>
 
@@ -1975,7 +1943,6 @@
     <statusBarWidgetFactory id="memoryUsageWidget" implementation="consulo.ide.impl.idea.openapi.wm.impl.status.MemoryIndicatorWidgetFactory" order="last"/>
 
 
-    <projectService serviceImplementation="consulo.ide.impl.idea.execution.impl.ProjectRunConfigurationManager"/>
     <postStartupActivity implementation="consulo.ide.impl.idea.execution.impl.ProjectRunConfigurationManager$MyStartupActivity"/>
 
 

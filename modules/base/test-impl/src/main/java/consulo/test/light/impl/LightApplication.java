@@ -78,11 +78,6 @@ public class LightApplication extends BaseComponentManager implements Applicatio
   }
 
   @Override
-  protected void registerExtensionPointsAndExtensions(ExtensionsAreaImpl area) {
-    myRegistrator.registerExtensionPointsAndExtensions(area);
-  }
-
-  @Override
   protected void registerServices(InjectingContainerBuilder builder) {
     myRegistrator.registerServices(builder);
   }

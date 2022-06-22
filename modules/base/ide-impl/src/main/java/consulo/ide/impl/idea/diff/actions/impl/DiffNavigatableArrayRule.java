@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.diff.actions.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.diff.tools.util.DiffDataKeys;
 import consulo.dataContext.GetDataRule;
 import consulo.dataContext.DataProvider;
@@ -22,6 +23,7 @@ import consulo.util.dataholder.Key;
 import consulo.navigation.Navigatable;
 import javax.annotation.Nonnull;
 
+@ExtensionImpl
 public class DiffNavigatableArrayRule implements GetDataRule<Navigatable[]> {
   @Nonnull
   @Override

@@ -46,14 +46,8 @@
     <applicationService serviceInterface="consulo.ide.impl.idea.openapi.vfs.newvfs.RefreshQueue"
                         serviceImplementation="consulo.ide.impl.vfs.newvfs.AsyncRefreshQueueImpl"/>
 
-    <applicationService serviceInterface="consulo.ide.setting.ShowSettingsUtil"
-                        serviceImplementation="consulo.ide.impl.options.impl.UnifiedShowSettingsUtil"/>
-
     <applicationService serviceInterface="consulo.ui.ex.action.ActionToolbarFactory"
                         serviceImplementation="consulo.ide.impl.actionSystem.impl.UnifiedActionToolbarFactoryImpl"/>
-
-    <applicationService serviceInterface="consulo.fileChooser.FileChooserFactory"
-                        serviceImplementation="consulo.ide.impl.fileChooser.FileChooserFactoryImpl"/>
 
     <applicationService serviceInterface="consulo.ide.impl.idea.openapi.wm.impl.SystemDock" serviceImplementation="consulo.web.wm.impl.WebSystemDockImpl"/>
     <applicationService serviceInterface="consulo.application.ui.RemoteDesktopService" serviceImplementation="consulo.web.wm.impl.WebRemoteDesktopServiceImpl"/>

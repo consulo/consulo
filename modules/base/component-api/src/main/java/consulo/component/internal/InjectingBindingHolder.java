@@ -28,16 +28,16 @@ import java.util.Map;
  * @since 13-Jun-22
  */
 public class InjectingBindingHolder {
-  private final Map<String, List<InjectingBinding>> myBindings = new HashMap<>();
+  private final Map<Class, List<InjectingBinding>> myBindings = new HashMap<>();
 
   public InjectingBindingHolder(Class<?> componentAnnotation, ComponentScope componentScope) {
   }
 
   public void addBinding(InjectingBinding binding) {
-    myBindings.computeIfAbsent(binding.getApiClassName(), s -> new LinkedList<>()).add(binding);
+    myBindings.computeIfAbsent(binding.getApiClass(), s -> new LinkedList<>()).add(binding);
   }
 
-  public Map<String, List<InjectingBinding>> getBindings() {
+  public Map<Class, List<InjectingBinding>> getBindings() {
     return myBindings;
   }
 }

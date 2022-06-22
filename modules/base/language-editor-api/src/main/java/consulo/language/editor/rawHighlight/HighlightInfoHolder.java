@@ -29,12 +29,12 @@ import java.util.List;
 
 public class HighlightInfoHolder {
   private final PsiFile myContextFile;
-  private final HighlightInfoFilter[] myFilters;
+  private final List<HighlightInfoFilter> myFilters;
   private final AnnotationSession myAnnotationSession;
   private int myErrorCount;
   private final List<HighlightInfo> myInfos = new ArrayList<>(5);
 
-  public HighlightInfoHolder(@Nonnull PsiFile contextFile, @Nonnull HighlightInfoFilter ... filters) {
+  public HighlightInfoHolder(@Nonnull PsiFile contextFile, @Nonnull List<HighlightInfoFilter> filters) {
     myContextFile = contextFile;
     myAnnotationSession = new AnnotationSession(contextFile);
     myFilters = filters;

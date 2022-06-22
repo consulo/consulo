@@ -1,21 +1,23 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.runAnything;
 
-import consulo.ide.impl.idea.ide.actions.runAnything.activity.RunAnythingProvider;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
+import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.ide.ServiceManager;
+import consulo.ide.impl.idea.ide.actions.runAnything.activity.RunAnythingProvider;
 import consulo.project.Project;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.util.xml.serializer.annotation.AbstractCollection;
 import consulo.util.xml.serializer.annotation.MapAnnotation;
 import consulo.util.xml.serializer.annotation.Tag;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-
-import consulo.component.persist.PersistentStateComponent;
-import jakarta.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +25,8 @@ import java.util.stream.Collectors;
 
 @Singleton
 @State(name = "RunAnythingCache", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
+@Service(ComponentScope.PROJECT)
+@ServiceImpl
 public class RunAnythingCache implements PersistentStateComponent<RunAnythingCache.State> {
   private final State mySettings = new State();
 

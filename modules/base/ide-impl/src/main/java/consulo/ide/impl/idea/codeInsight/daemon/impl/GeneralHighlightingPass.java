@@ -446,7 +446,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
 
   @Nonnull
   protected HighlightInfoHolder createInfoHolder(@Nonnull PsiFile file) {
-    HighlightInfoFilter[] filters = HighlightInfoFilter.EXTENSION_POINT_NAME.getExtensions();
+    List<HighlightInfoFilter> filters = HighlightInfoFilter.EXTENSION_POINT_NAME.getExtensionList();
     EditorColorsScheme actualScheme = getColorsScheme() == null ? EditorColorsManager.getInstance().getGlobalScheme() : getColorsScheme();
     return new HighlightInfoHolder(file, filters) {
       int queued;

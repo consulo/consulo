@@ -1,8 +1,10 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.psi.codeStyle;
 
-import consulo.document.Document;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
+import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
@@ -10,13 +12,14 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiWhiteSpace;
 import consulo.language.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Optional;
 
+@Extension(ComponentScope.APPLICATION)
 public interface ExternalFormatProcessor {
-  ExtensionPointName<ExternalFormatProcessor> EP_NAME = ExtensionPointName.create("consulo.externalFormatProcessor");
+  ExtensionPointName<ExternalFormatProcessor> EP_NAME = ExtensionPointName.create(ExternalFormatProcessor.class);
 
   /**
    * @param source the source file with code

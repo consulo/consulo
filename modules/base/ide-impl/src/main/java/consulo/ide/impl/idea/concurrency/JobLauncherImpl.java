@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.concurrency;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.impl.internal.progress.SensitiveProgressWrapper;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.util.ApplicationUtil;
@@ -31,6 +32,7 @@ import java.util.function.Consumer;
  * @author cdr
  */
 @Singleton
+@ServiceImpl
 public class JobLauncherImpl extends JobLauncher {
   private static final Logger LOG = Logger.getInstance(JobLauncherImpl.class);
   static final int CORES_FORK_THRESHOLD = 1;

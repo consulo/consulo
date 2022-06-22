@@ -39,6 +39,11 @@ public class CustomOrderEntryTypeExtender implements ExtensionExtender<OrderEntr
     });
   }
 
+  @Override
+  public boolean hasAnyExtensions() {
+    return CustomOrderEntryTypeProvider.EP.hasAnyExtensions(Application.get());
+  }
+
   @Nonnull
   @Override
   public Class<OrderEntryType> getExtensionClass() {

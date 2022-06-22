@@ -1,6 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.runAnything.activity;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.RecentProjectsManager;
 import consulo.ide.impl.idea.ide.ReopenProjectAction;
@@ -20,6 +21,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@ExtensionImpl
 public class RunAnythingRecentProjectProvider extends RunAnythingAnActionProvider<AnAction> {
   @Nonnull
   @Override

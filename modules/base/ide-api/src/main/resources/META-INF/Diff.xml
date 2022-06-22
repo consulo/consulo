@@ -31,10 +31,7 @@
                         serviceImplementation="consulo.ide.impl.idea.diff.tools.util.base.TextDiffSettingsHolder"/>
     <applicationService serviceInterface="consulo.ide.impl.idea.diff.tools.external.ExternalDiffSettings"
                         serviceImplementation="consulo.ide.impl.idea.diff.tools.external.ExternalDiffSettings"/>
-    <applicationService serviceInterface="consulo.ide.impl.idea.diff.DiffManager"
-                        serviceImplementation="consulo.ide.impl.idea.diff.DiffManagerImpl"/>
-    <applicationService serviceInterface="consulo.ide.impl.idea.diff.DiffContentFactory"
-                        serviceImplementation="consulo.ide.impl.idea.diff.DiffContentFactoryImpl"/>
+
     <applicationService serviceInterface="consulo.ide.impl.idea.diff.DiffRequestFactory"
                         serviceImplementation="consulo.ide.impl.idea.diff.DiffRequestFactoryImpl"/>
     <applicationService serviceInterface="consulo.ide.impl.idea.diff.comparison.ComparisonManager"
@@ -47,21 +44,13 @@
     <editorTabTitleProvider implementation="consulo.ide.impl.idea.diff.editor.DiffEditorTabTitleProvider"/>
     <editorTabColorProvider implementation="consulo.ide.impl.idea.diff.editor.VcsEditorTabColorProvider"/>
 
-    <iconDescriptorUpdater implementation="consulo.ide.impl.diff.DiffIconDescriptorUpdater" order="last"/>
-
     <diff.merge.MergeTool implementation="consulo.ide.impl.idea.openapi.vcs.changes.patch.tool.ApplyPatchMergeTool"/>
     <diff.DiffTool implementation="consulo.ide.impl.idea.openapi.vcs.changes.patch.tool.ApplyPatchDiffTool"/>
-
-    <daemon.highlightInfoFilter implementation="consulo.ide.impl.idea.diff.contents.DiffPsiFileSupport$HighlightFilter"/>
-    <daemon.intentionActionFilter implementation="consulo.ide.impl.idea.diff.contents.DiffPsiFileSupport$IntentionFilter"/>
-    <defaultHighlightingSettingProvider id="GeneratedSourcesHighlightingSettingProvider"
-                                        implementation="consulo.ide.impl.idea.diff.contents.DiffPsiFileSupport$HighlightingSettingProvider"/>
 
     <openapi.vcs.actions.AnnotateToggleAction.Provider implementation="consulo.ide.impl.idea.openapi.vcs.actions.AnnotateLocalFileAction$Provider"/>
     <openapi.vcs.actions.AnnotateToggleAction.Provider implementation="consulo.ide.impl.idea.openapi.vcs.actions.AnnotateVcsVirtualFileAction$Provider"/>
     <openapi.vcs.actions.AnnotateToggleAction.Provider implementation="consulo.ide.impl.idea.openapi.vcs.actions.AnnotateDiffViewerAction$Provider" order="first"/>
 
-    <getDataRule implementation="consulo.ide.impl.idea.diff.actions.impl.DiffNavigatableArrayRule"/>
 
     <colorAndFontPanelFactory implementation="consulo.ide.impl.idea.openapi.diff.impl.settings.DiffColorsPageFactory"/>
     <colorAndFontDescriptorProvider implementation="consulo.ide.impl.idea.openapi.diff.impl.settings.DiffColorsPageFactory"/>

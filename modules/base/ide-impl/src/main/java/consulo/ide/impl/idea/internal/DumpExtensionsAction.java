@@ -58,7 +58,7 @@ public class DumpExtensionsAction extends DumbAwareAction {
 
     List<ExtensionPoint> points = new ArrayList<>();
     for (BaseComponentManager area : areas) {
-      points.addAll(Arrays.asList(area.getExtensionPoints()));
+      points.addAll(area.getExtensionPoints());
     }
     System.out.println(points.size() + " extension points: ");
     for (ExtensionPoint point : points) {

@@ -1,6 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.application.internal.concurrency;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.util.function.Processor;
@@ -19,6 +21,7 @@ import java.util.function.Consumer;
  * {@link Application#executeOnPooledThread},
  * {@link consulo.ide.impl.idea.execution.process.ProcessIOExecutorService} and {@link consulo.ide.impl.idea.util.concurrency.NonUrgentExecutor} for that.
  */
+@Service(ComponentScope.APPLICATION)
 public abstract class JobLauncher {
   public static JobLauncher getInstance() {
     return Application.get().getInstance(JobLauncher.class);

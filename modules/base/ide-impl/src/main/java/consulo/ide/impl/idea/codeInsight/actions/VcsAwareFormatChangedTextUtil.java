@@ -15,12 +15,13 @@
  */
 package consulo.ide.impl.idea.codeInsight.actions;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
-import consulo.document.Document;
+import consulo.application.util.diff.FilesTooBigForDiffException;
 import consulo.codeEditor.EditorFactory;
-import consulo.ide.impl.idea.openapi.editor.impl.EditorFactoryImpl;
-import consulo.project.Project;
+import consulo.document.Document;
 import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.openapi.editor.impl.EditorFactoryImpl;
 import consulo.ide.impl.idea.openapi.vcs.VcsException;
 import consulo.ide.impl.idea.openapi.vcs.changes.Change;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManager;
@@ -30,19 +31,20 @@ import consulo.ide.impl.idea.openapi.vcs.ex.LineStatusTracker;
 import consulo.ide.impl.idea.openapi.vcs.ex.Range;
 import consulo.ide.impl.idea.openapi.vcs.ex.RangesBuilder;
 import consulo.ide.impl.idea.openapi.vcs.impl.LineStatusTrackerManager;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiDocumentManager;
-import consulo.language.psi.PsiFile;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
-import consulo.application.util.diff.FilesTooBigForDiffException;
 import consulo.ide.impl.idea.vcsUtil.VcsUtil;
-import javax.annotation.Nonnull;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Singleton;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 @Singleton
+@ServiceImpl
 public class VcsAwareFormatChangedTextUtil extends FormatChangedTextUtil {
   @Override
   @Nonnull

@@ -16,6 +16,7 @@
 package consulo.component.extension;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.component.util.ModificationTracker;
 import consulo.component.util.PluginExceptionUtil;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
@@ -33,9 +34,12 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
+ * {@link #getModificationCount()} will be changed if plugins reloaded, and cache was changed.
+ * Also when count count changed all cache {@link #getOrBuildCache(Key, Function)} & {@link #findExtension(Class)} will be dropped
+ *
  * @author AKireyev
  */
-public interface ExtensionPoint<T> {
+public interface ExtensionPoint<T> extends ModificationTracker {
   enum Kind {
     INTERFACE,
     BEAN_CLASS
@@ -67,7 +71,14 @@ public interface ExtensionPoint<T> {
   Kind getKind();
 
   @Nonnull
-  String getClassName();
+  default String getClassName() {
+    return getExtensionClass().getName();
+  }
+
+  @Override
+  default long getModificationCount() {
+    return 0;
+  }
 
   @Nullable
   default <K extends T> K findExtension(Class<K> extensionClass) {

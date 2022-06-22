@@ -15,10 +15,8 @@
  */
 package consulo.ide.impl.intelliLang.inject;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.HighlightErrorFilter;
-import consulo.language.editor.annotation.HighlightSeverity;
-import consulo.language.editor.rawHighlight.HighlightInfo;
-import consulo.language.editor.rawHighlight.HighlightInfoFilter;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiErrorElement;
 import consulo.language.psi.PsiFile;
@@ -29,25 +27,15 @@ import javax.annotation.Nullable;
 /**
  * @author Gregory.Shrago
  */
-public class CustomErrorElementFilter extends HighlightErrorFilter implements HighlightInfoFilter {
+@ExtensionImpl
+public class CustomErrorElementFilter extends HighlightErrorFilter{
 
   @Override
   public boolean shouldHighlightErrorElement(@Nonnull PsiErrorElement element) {
     return !isFrankenstein(element.getContainingFile());
   }
 
-  @Override
-  public boolean accept(@Nonnull HighlightInfo highlightInfo, @Nullable PsiFile file) {
-    if (highlightInfo.getSeverity() != HighlightSeverity.WARNING &&
-        highlightInfo.getSeverity() != HighlightSeverity.WEAK_WARNING) return true;
-    if (!isFrankenstein(file)) return true;
-    int start = highlightInfo.getStartOffset();
-    int end = highlightInfo.getEndOffset();
-    String text = file.getText().substring(start, end);
-    return !"missingValue".equals(text);
-  }
-
-  private static boolean isFrankenstein(@Nullable PsiFile file) {
+  static boolean isFrankenstein(@Nullable PsiFile file) {
     return file != null && Boolean.TRUE.equals(file.getUserData(InjectedLanguageManager.FRANKENSTEIN_INJECTION));
   }
 }

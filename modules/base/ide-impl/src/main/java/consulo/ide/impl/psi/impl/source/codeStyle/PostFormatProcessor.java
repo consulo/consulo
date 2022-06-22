@@ -15,16 +15,21 @@
  */
 package consulo.ide.impl.psi.impl.source.codeStyle;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.document.util.TextRange;
+import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.codeStyle.CodeStyleSettings;
+
 import javax.annotation.Nonnull;
 
+@Extension(ComponentScope.APPLICATION)
 public interface PostFormatProcessor {
-  ExtensionPointName<PostFormatProcessor> EP_NAME = ExtensionPointName.create("consulo.postFormatProcessor");
+  ExtensionPointName<PostFormatProcessor> EP_NAME = ExtensionPointName.create(PostFormatProcessor.class);
 
   PsiElement processElement(@Nonnull PsiElement source, @Nonnull CodeStyleSettings settings);
+
   TextRange processText(@Nonnull PsiFile source, @Nonnull TextRange rangeToReformat, @Nonnull CodeStyleSettings settings);
 }

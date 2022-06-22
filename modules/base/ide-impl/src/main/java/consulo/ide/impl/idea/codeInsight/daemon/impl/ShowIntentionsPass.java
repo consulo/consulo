@@ -162,7 +162,7 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
     private int myOffset;
 
     public void filterActions(@Nullable PsiFile psiFile) {
-      IntentionActionFilter[] filters = IntentionActionFilter.EXTENSION_POINT_NAME.getExtensions();
+      List<IntentionActionFilter> filters = IntentionActionFilter.EXTENSION_POINT_NAME.getExtensionList();
       filter(intentionsToShow, psiFile, filters);
       filter(errorFixesToShow, psiFile, filters);
       filter(inspectionFixesToShow, psiFile, filters);
@@ -178,7 +178,7 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
       return myOffset;
     }
 
-    private static void filter(@Nonnull List<HighlightInfoImpl.IntentionActionDescriptor> descriptors, @Nullable PsiFile psiFile, @Nonnull IntentionActionFilter[] filters) {
+    private static void filter(@Nonnull List<HighlightInfoImpl.IntentionActionDescriptor> descriptors, @Nullable PsiFile psiFile, @Nonnull List<IntentionActionFilter> filters) {
       for (Iterator<HighlightInfoImpl.IntentionActionDescriptor> it = descriptors.iterator(); it.hasNext(); ) {
         HighlightInfoImpl.IntentionActionDescriptor actionDescriptor = it.next();
         for (IntentionActionFilter filter : filters) {

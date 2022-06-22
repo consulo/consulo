@@ -16,12 +16,15 @@
 
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+@Extension(ComponentScope.APPLICATION)
 public interface IntentionActionFilter {
   ExtensionPointName<IntentionActionFilter> EXTENSION_POINT_NAME = ExtensionPointName.create("consulo.daemon.intentionActionFilter");
 

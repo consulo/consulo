@@ -28,13 +28,14 @@ import consulo.project.Project;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.List;
 
 public class CheckLevelHighlightInfoHolder extends HighlightInfoHolder {
   private final HighlightInfoHolder myHolder;
   private PsiElement myLevel;
 
   public CheckLevelHighlightInfoHolder(@Nonnull PsiFile file, @Nonnull HighlightInfoHolder holder) {
-    super(file);
+    super(file, List.of());
     myHolder = holder;
   }
 

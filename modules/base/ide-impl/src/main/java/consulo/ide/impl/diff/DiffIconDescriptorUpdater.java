@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 24/09/2021
  */
-@ExtensionImpl
+@ExtensionImpl(order = "last")
 public class DiffIconDescriptorUpdater implements IconDescriptorUpdater {
   @RequiredReadAction
   @Override

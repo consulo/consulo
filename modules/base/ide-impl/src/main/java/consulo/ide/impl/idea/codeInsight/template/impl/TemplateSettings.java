@@ -15,28 +15,31 @@
  */
 package consulo.ide.impl.idea.codeInsight.template.impl;
 
-import consulo.ide.ServiceManager;
-import consulo.language.editor.template.DefaultLiveTemplatesProvider;
-import consulo.util.xml.serializer.InvalidDataException;
-import consulo.util.xml.serializer.WriteExternalException;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
+import consulo.component.ProcessCanceledException;
 import consulo.component.persist.*;
 import consulo.component.util.localize.AbstractBundle;
-import consulo.language.editor.template.Template;
+import consulo.container.classloader.PluginClassLoader;
+import consulo.ide.ServiceManager;
+import consulo.ide.impl.codeInsight.template.impl.BundleLiveTemplateSetEP;
 import consulo.ide.impl.idea.openapi.application.ex.DecodeDefaultsUtil;
 import consulo.ide.impl.idea.openapi.options.BaseSchemeProcessor;
 import consulo.ide.impl.idea.openapi.options.SchemesManager;
 import consulo.ide.impl.idea.openapi.options.SchemesManagerFactory;
-import consulo.component.ProcessCanceledException;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.util.collection.SmartList;
-import consulo.util.collection.MultiMap;
-import consulo.util.xml.serializer.Converter;
-import consulo.util.xml.serializer.annotation.OptionTag;
-import consulo.ide.impl.codeInsight.template.impl.BundleLiveTemplateSetEP;
-import consulo.container.classloader.PluginClassLoader;
+import consulo.language.editor.template.DefaultLiveTemplatesProvider;
+import consulo.language.editor.template.Template;
 import consulo.logging.Logger;
+import consulo.util.collection.MultiMap;
+import consulo.util.collection.SmartList;
+import consulo.util.xml.serializer.Converter;
+import consulo.util.xml.serializer.InvalidDataException;
+import consulo.util.xml.serializer.WriteExternalException;
+import consulo.util.xml.serializer.annotation.OptionTag;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Document;
@@ -51,21 +54,21 @@ import java.io.InputStream;
 import java.util.*;
 
 @Singleton
-@State(
-        name = "TemplateSettings",
-        storages = {
-                @Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml", deprecated = true),
-                @Storage(file = StoragePathMacros.APP_CONFIG + "/templates.xml")
-        },
-        additionalExportFile = TemplateSettings.TEMPLATES_DIR_PATH
-)
+@State(name = "TemplateSettings", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml", deprecated = true),
+        @Storage(file = StoragePathMacros.APP_CONFIG + "/templates.xml")}, additionalExportFile = TemplateSettings.TEMPLATES_DIR_PATH)
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 public class TemplateSettings implements PersistentStateComponent<TemplateSettings.State> {
   private static final Logger LOG = Logger.getInstance(TemplateSettings.class);
 
-  @NonNls public static final String USER_GROUP_NAME = "user";
-  @NonNls private static final String TEMPLATE_SET = "templateSet";
-  @NonNls private static final String GROUP = "group";
-  @NonNls private static final String TEMPLATE = "template";
+  @NonNls
+  public static final String USER_GROUP_NAME = "user";
+  @NonNls
+  private static final String TEMPLATE_SET = "templateSet";
+  @NonNls
+  private static final String GROUP = "group";
+  @NonNls
+  private static final String TEMPLATE = "template";
 
   public static final char SPACE_CHAR = TemplateConstants.SPACE_CHAR;
   public static final char TAB_CHAR = TemplateConstants.TAB_CHAR;
@@ -74,31 +77,51 @@ public class TemplateSettings implements PersistentStateComponent<TemplateSettin
   public static final char CUSTOM_CHAR = TemplateConstants.CUSTOM_CHAR;
   public static final char NONE_CHAR = TemplateConstants.NONE_CHAR;
 
-  @NonNls private static final String SPACE = "SPACE";
-  @NonNls private static final String TAB = "TAB";
-  @NonNls private static final String ENTER = "ENTER";
-  @NonNls private static final String CUSTOM = "CUSTOM";
+  @NonNls
+  private static final String SPACE = "SPACE";
+  @NonNls
+  private static final String TAB = "TAB";
+  @NonNls
+  private static final String ENTER = "ENTER";
+  @NonNls
+  private static final String CUSTOM = "CUSTOM";
 
-  @NonNls private static final String NAME = "name";
-  @NonNls private static final String VALUE = "value";
-  @NonNls private static final String DESCRIPTION = "description";
-  @NonNls private static final String SHORTCUT = "shortcut";
+  @NonNls
+  private static final String NAME = "name";
+  @NonNls
+  private static final String VALUE = "value";
+  @NonNls
+  private static final String DESCRIPTION = "description";
+  @NonNls
+  private static final String SHORTCUT = "shortcut";
 
-  @NonNls private static final String VARIABLE = "variable";
-  @NonNls private static final String EXPRESSION = "expression";
-  @NonNls private static final String DEFAULT_VALUE = "defaultValue";
-  @NonNls private static final String ALWAYS_STOP_AT = "alwaysStopAt";
+  @NonNls
+  private static final String VARIABLE = "variable";
+  @NonNls
+  private static final String EXPRESSION = "expression";
+  @NonNls
+  private static final String DEFAULT_VALUE = "defaultValue";
+  @NonNls
+  private static final String ALWAYS_STOP_AT = "alwaysStopAt";
 
-  @NonNls private static final String CONTEXT = "context";
-  @NonNls private static final String TO_REFORMAT = "toReformat";
-  @NonNls private static final String TO_SHORTEN_FQ_NAMES = "toShortenFQNames";
-  @NonNls private static final String USE_STATIC_IMPORT = "useStaticImport";
+  @NonNls
+  private static final String CONTEXT = "context";
+  @NonNls
+  private static final String TO_REFORMAT = "toReformat";
+  @NonNls
+  private static final String TO_SHORTEN_FQ_NAMES = "toShortenFQNames";
+  @NonNls
+  private static final String USE_STATIC_IMPORT = "useStaticImport";
 
-  @NonNls private static final String DEACTIVATED = "deactivated";
+  @NonNls
+  private static final String DEACTIVATED = "deactivated";
 
-  @NonNls private static final String RESOURCE_BUNDLE = "resource-bundle";
-  @NonNls private static final String KEY = "key";
-  @NonNls private static final String ID = "id";
+  @NonNls
+  private static final String RESOURCE_BUNDLE = "resource-bundle";
+  @NonNls
+  private static final String KEY = "key";
+  @NonNls
+  private static final String ID = "id";
 
   static final String TEMPLATES_DIR_PATH = StoragePathMacros.ROOT_CONFIG + "/templates";
 
@@ -116,19 +139,13 @@ public class TemplateSettings implements PersistentStateComponent<TemplateSettin
     @Nullable
     @Override
     public Character fromString(@Nonnull String shortcut) {
-      return TAB.equals(shortcut) ? TAB_CHAR :
-             ENTER.equals(shortcut) ? ENTER_CHAR :
-             CUSTOM.equals(shortcut) ? CUSTOM_CHAR :
-             SPACE_CHAR;
+      return TAB.equals(shortcut) ? TAB_CHAR : ENTER.equals(shortcut) ? ENTER_CHAR : CUSTOM.equals(shortcut) ? CUSTOM_CHAR : SPACE_CHAR;
     }
 
     @Nonnull
     @Override
     public String toString(@Nonnull Character shortcut) {
-      return shortcut == TAB_CHAR ? TAB :
-             shortcut == ENTER_CHAR ? ENTER :
-             shortcut == CUSTOM_CHAR ? CUSTOM :
-             SPACE;
+      return shortcut == TAB_CHAR ? TAB : shortcut == ENTER_CHAR ? ENTER : shortcut == CUSTOM_CHAR ? CUSTOM : SPACE;
     }
   }
 
@@ -144,7 +161,8 @@ public class TemplateSettings implements PersistentStateComponent<TemplateSettin
     private String key;
 
     @SuppressWarnings("UnusedDeclaration")
-    public TemplateKey() {}
+    public TemplateKey() {
+    }
 
     private TemplateKey(String groupName, String key) {
       this.groupName = groupName;
@@ -200,8 +218,7 @@ public class TemplateSettings implements PersistentStateComponent<TemplateSettin
       @Override
       @Nullable
       public TemplateGroup readScheme(@Nonnull final Document schemeContent) throws InvalidDataException {
-        return readTemplateFile(schemeContent, schemeContent.getRootElement().getAttributeValue("group"), false, false,
-                                getClass().getClassLoader());
+        return readTemplateFile(schemeContent, schemeContent.getRootElement().getAttributeValue("group"), false, false, getClass().getClassLoader());
       }
 
 
@@ -378,7 +395,7 @@ public class TemplateSettings implements PersistentStateComponent<TemplateSettin
   }
 
   private void clearPreviouslyRegistered(final Template template) {
-    TemplateImpl existing = getTemplate(template.getKey(), ((TemplateImpl) template).getGroupName());
+    TemplateImpl existing = getTemplate(template.getKey(), ((TemplateImpl)template).getGroupName());
     if (existing != null) {
       LOG.info("Template with key " + template.getKey() + " and id " + template.getId() + " already registered");
       TemplateGroup group = mySchemesManager.findSchemeByName(existing.getGroupName());
@@ -423,8 +440,7 @@ public class TemplateSettings implements PersistentStateComponent<TemplateSettin
     }
   }
 
-  private TemplateImpl addTemplate(String key, String string, String group, String description, String shortcut, boolean isDefault,
-                                   final String id) {
+  private TemplateImpl addTemplate(String key, String string, String group, String description, String shortcut, boolean isDefault, final String id) {
     TemplateImpl template = new TemplateImpl(key, string, group);
     template.setId(id);
     template.setDescription(description);
@@ -508,12 +524,10 @@ public class TemplateSettings implements PersistentStateComponent<TemplateSettin
 
   @Deprecated
   @SuppressWarnings("deprecation")
-  private void readDefTemplate(DefaultLiveTemplatesProvider provider, String defTemplate, boolean registerTemplate)
-          throws JDOMException, InvalidDataException, IOException {
+  private void readDefTemplate(DefaultLiveTemplatesProvider provider, String defTemplate, boolean registerTemplate) throws JDOMException, InvalidDataException, IOException {
     InputStream inputStream = DecodeDefaultsUtil.getDefaultsInputStream(provider, defTemplate);
     if (inputStream != null) {
-      TemplateGroup group =
-              readTemplateFile(JDOMUtil.loadDocument(inputStream), defTemplate, true, registerTemplate, provider.getClass().getClassLoader());
+      TemplateGroup group = readTemplateFile(JDOMUtil.loadDocument(inputStream), defTemplate, true, registerTemplate, provider.getClass().getClassLoader());
       if (group != null && group.getReplace() != null) {
         Collection<TemplateImpl> templates = myTemplates.get(group.getReplace());
         for (TemplateImpl template : templates) {
@@ -528,8 +542,7 @@ public class TemplateSettings implements PersistentStateComponent<TemplateSettin
   }
 
   @Nullable
-  private TemplateGroup readTemplateFile(Document document, @NonNls String path, boolean isDefault, boolean registerTemplate,
-                                         ClassLoader classLoader) throws InvalidDataException {
+  private TemplateGroup readTemplateFile(Document document, @NonNls String path, boolean isDefault, boolean registerTemplate, ClassLoader classLoader) throws InvalidDataException {
     if (document == null) {
       throw new InvalidDataException();
     }
@@ -546,16 +559,14 @@ public class TemplateSettings implements PersistentStateComponent<TemplateSettin
 
     TemplateGroup result = new TemplateGroup(groupName, root.getAttributeValue("REPLACE"));
 
-    Map<String, TemplateImpl> created = new LinkedHashMap<String,  TemplateImpl>();
+    Map<String, TemplateImpl> created = new LinkedHashMap<String, TemplateImpl>();
 
     for (final Element element : root.getChildren(TEMPLATE)) {
       TemplateImpl template = readTemplateFromElement(isDefault, groupName, element, classLoader);
       TemplateImpl existing = getTemplate(template.getKey(), template.getGroupName());
-      boolean defaultTemplateModified = isDefault && (myState.deletedKeys.contains(TemplateKey.keyOf(template)) ||
-                                                      myTemplatesById.containsKey(template.getId()) ||
-                                                      existing != null);
+      boolean defaultTemplateModified = isDefault && (myState.deletedKeys.contains(TemplateKey.keyOf(template)) || myTemplatesById.containsKey(template.getId()) || existing != null);
 
-      if(!defaultTemplateModified) {
+      if (!defaultTemplateModified) {
         created.put(template.getKey(), template);
       }
       if (isDefault && existing != null) {
@@ -591,10 +602,7 @@ public class TemplateSettings implements PersistentStateComponent<TemplateSettin
 
   }
 
-  private TemplateImpl readTemplateFromElement(final boolean isDefault,
-                                               final String groupName,
-                                               final Element element,
-                                               ClassLoader classLoader) throws InvalidDataException {
+  private TemplateImpl readTemplateFromElement(final boolean isDefault, final String groupName, final Element element, ClassLoader classLoader) throws InvalidDataException {
     String name = element.getAttributeValue(NAME);
     String value = element.getAttributeValue(VALUE);
     String description;
@@ -656,9 +664,11 @@ public class TemplateSettings implements PersistentStateComponent<TemplateSettin
     element.setAttribute(VALUE, template.getString());
     if (template.getShortcutChar() == TAB_CHAR) {
       element.setAttribute(SHORTCUT, TAB);
-    } else if (template.getShortcutChar() == ENTER_CHAR) {
+    }
+    else if (template.getShortcutChar() == ENTER_CHAR) {
       element.setAttribute(SHORTCUT, ENTER);
-    } else if (template.getShortcutChar() == SPACE_CHAR) {
+    }
+    else if (template.getShortcutChar() == SPACE_CHAR) {
       element.setAttribute(SHORTCUT, SPACE);
     }
     if (template.getDescription() != null) {
@@ -666,9 +676,7 @@ public class TemplateSettings implements PersistentStateComponent<TemplateSettin
     }
     element.setAttribute(TO_REFORMAT, Boolean.toString(template.isToReformat()));
     element.setAttribute(TO_SHORTEN_FQ_NAMES, Boolean.toString(template.isToShortenLongNames()));
-    if (template.getValue(Template.Property.USE_STATIC_IMPORT_IF_POSSIBLE)
-        != Template.getDefaultValue(Template.Property.USE_STATIC_IMPORT_IF_POSSIBLE))
-    {
+    if (template.getValue(Template.Property.USE_STATIC_IMPORT_IF_POSSIBLE) != Template.getDefaultValue(Template.Property.USE_STATIC_IMPORT_IF_POSSIBLE)) {
       element.setAttribute(USE_STATIC_IMPORT, Boolean.toString(template.getValue(Template.Property.USE_STATIC_IMPORT_IF_POSSIBLE)));
     }
     if (template.isDeactivated()) {
@@ -689,7 +697,8 @@ public class TemplateSettings implements PersistentStateComponent<TemplateSettin
       TemplateImpl def = getDefaultTemplate(template);
       template.getTemplateContext().writeTemplateContext(contextElement, def == null ? null : def.getTemplateContext());
       element.addContent(contextElement);
-    } catch (WriteExternalException ignore) {
+    }
+    catch (WriteExternalException ignore) {
     }
     templateSetElement.addContent(element);
   }
@@ -713,7 +722,7 @@ public class TemplateSettings implements PersistentStateComponent<TemplateSettin
     }
   }
 
-  public SchemesManager<TemplateGroup,TemplateGroup> getSchemesManager() {
+  public SchemesManager<TemplateGroup, TemplateGroup> getSchemesManager() {
     return mySchemesManager;
   }
 

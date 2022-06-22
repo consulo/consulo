@@ -70,11 +70,6 @@ public class LightProject extends BaseComponentManager implements Project {
   }
 
   @Override
-  protected void registerExtensionPointsAndExtensions(ExtensionsAreaImpl area) {
-    myRegistrator.registerExtensionPointsAndExtensions(area);
-  }
-
-  @Override
   protected void registerServices(InjectingContainerBuilder builder) {
     myRegistrator.registerServices(builder);
   }

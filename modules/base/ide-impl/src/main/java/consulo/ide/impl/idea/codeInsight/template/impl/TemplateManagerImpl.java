@@ -75,13 +75,12 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
   private static final Key<TemplateStateImpl> TEMPLATE_STATE_KEY = Key.create("TEMPLATE_STATE_KEY");
 
   @Inject
-  public TemplateManagerImpl(Project project) {
+  public TemplateManagerImpl(@Nonnull Project project) {
     myProject = project;
   }
 
   @Override
   public void dispose() {
-
   }
 
   /**
