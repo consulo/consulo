@@ -15,72 +15,61 @@
  */
 package consulo.desktop.awt.settings;
 
+import consulo.application.ApplicationManager;
+import consulo.application.ApplicationProperties;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
-import consulo.ide.impl.idea.ide.ui.search.ConfigurableHit;
-import consulo.ide.impl.idea.ide.ui.search.SearchUtil;
-import consulo.ide.impl.idea.ide.ui.search.SearchableOptionsRegistrar;
-import consulo.project.ProjectBundle;
-import consulo.ui.ex.action.event.AnActionListener;
-import consulo.application.ApplicationManager;
-import consulo.configurable.Configurable;
-import consulo.configurable.ConfigurationException;
-import consulo.configurable.SearchableConfigurable;
-import consulo.configurable.UnnamedConfigurable;
-import consulo.ide.impl.idea.openapi.options.ex.ConfigurableWrapper;
-import consulo.ide.impl.idea.openapi.options.ex.GlassPanel;
-import consulo.ide.setting.Settings;
-import consulo.dataContext.DataContext;
-import consulo.dataContext.DataProvider;
-import consulo.project.Project;
-import consulo.ui.ex.awt.internal.AbstractPainter;
-import consulo.ui.ex.awt.DetailsComponent;
-import consulo.ide.impl.idea.openapi.ui.LoadingDecorator;
-import consulo.ui.ex.awt.NullableComponent;
-import consulo.util.lang.function.Conditions;
-import consulo.ide.impl.idea.openapi.util.EdtRunnable;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.ui.ex.awt.util.IdeGlassPaneUtil;
-import consulo.ui.ex.awt.event.DocumentAdapter;
-import consulo.ui.ex.awt.LightColors;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.awt.SearchTextField;
-import consulo.ui.ex.awt.NonOpaquePanel;
-import consulo.ide.impl.idea.ui.speedSearch.ElementFilter;
-import consulo.ui.ex.awt.tree.SimpleNode;
-import consulo.ide.impl.idea.util.ReflectionUtil;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.update.Activatable;
-import consulo.ui.ex.awt.util.MergingUpdateQueue;
-import consulo.ui.ex.awt.update.UiNotifyConnector;
-import consulo.ui.ex.awt.util.Update;
-import consulo.application.ApplicationProperties;
+import consulo.configurable.*;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.base.BaseShowSettingsUtil;
-import consulo.logging.Logger;
-import consulo.ide.setting.ConfigurableUIMigrationUtil;
-import consulo.ide.impl.options.ProjectConfigurableEP;
-import consulo.ide.setting.ProjectStructureSelector;
+import consulo.ide.impl.idea.ide.ui.search.ConfigurableHit;
+import consulo.ide.impl.idea.ide.ui.search.SearchUtil;
+import consulo.ide.impl.idea.ide.ui.search.SearchableOptionsRegistrar;
+import consulo.ide.impl.idea.openapi.options.ex.ConfigurableWrapper;
+import consulo.ide.impl.idea.openapi.options.ex.GlassPanel;
+import consulo.ide.impl.idea.openapi.ui.LoadingDecorator;
+import consulo.ide.impl.idea.openapi.util.EdtRunnable;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.ui.speedSearch.ElementFilter;
+import consulo.ide.impl.idea.util.ReflectionUtil;
 import consulo.ide.impl.options.ProjectStructureSelectorOverSettings;
 import consulo.ide.impl.roots.ui.configuration.session.internal.ConfigurableSessionImpl;
+import consulo.ide.setting.ConfigurableUIMigrationUtil;
+import consulo.ide.setting.ProjectStructureSelector;
+import consulo.ide.setting.Settings;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.ProjectBundle;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.internal.SwingUIDecorator;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.event.AnActionListener;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.event.DocumentAdapter;
+import consulo.ui.ex.awt.internal.AbstractPainter;
+import consulo.ui.ex.awt.internal.SwingUIDecorator;
+import consulo.ui.ex.awt.tree.SimpleNode;
+import consulo.ui.ex.awt.update.UiNotifyConnector;
+import consulo.ui.ex.awt.util.IdeGlassPaneUtil;
+import consulo.ui.ex.awt.util.MergingUpdateQueue;
+import consulo.ui.ex.awt.util.Update;
+import consulo.ui.ex.update.Activatable;
 import consulo.util.concurrent.AsyncResult;
-import consulo.util.dataholder.Key;
-import consulo.util.lang.Pair;
-import org.jetbrains.annotations.Nls;
 import consulo.util.concurrent.Promise;
 import consulo.util.concurrent.Promises;
+import consulo.util.dataholder.Key;
+import consulo.util.lang.Pair;
+import consulo.util.lang.function.Conditions;
+import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -819,7 +808,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
   }
 
   public static boolean isProjectConfigurable(@Nonnull Configurable configurable) {
-    return configurable instanceof ConfigurableWrapper && ((ConfigurableWrapper)configurable).getEp() instanceof ProjectConfigurableEP;
+    return ConfigurableWrapper.cast(configurable, ProjectConfigurable.class) != null;
   }
 
   private static void assertIsDispatchThread() {
@@ -1054,7 +1043,8 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
   @Nonnull
   private static PluginId getPluginId(@Nonnull Configurable configurable) {
     if (configurable instanceof ConfigurableWrapper) {
-      return ((ConfigurableWrapper)configurable).getEp().getPluginDescriptor().getPluginId();
+      ConfigurableWrapper configurableWrapper = (ConfigurableWrapper)configurable;
+      return PluginManager.getPluginId(configurableWrapper.getConfigurable().getClass());
     }
 
     return PluginManager.getPluginId(configurable.getClass());

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.roots.orderEntry;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.impl.internal.library.LibraryEx;
 import consulo.content.library.Library;
@@ -27,6 +28,7 @@ import consulo.ide.setting.module.OrderEntryTypeEditor;
 import consulo.ide.ui.FileAppearanceService;
 import consulo.ide.ui.OrderEntryAppearanceService;
 import consulo.module.impl.internal.layer.orderEntry.LibraryOrderEntryImpl;
+import consulo.module.impl.internal.layer.orderEntry.LibraryOrderEntryType;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ColoredTextContainer;
@@ -38,12 +40,19 @@ import java.util.function.Consumer;
  * @author VISTALL
  * @since 06-Jun-16
  */
+@ExtensionImpl
 public class LibraryOrderEntryTypeEditor implements OrderEntryTypeEditor<LibraryOrderEntryImpl> {
   @RequiredUIAccess
   @Override
   public void navigate(@Nonnull final LibraryOrderEntryImpl orderEntry) {
     Project project = orderEntry.getModuleRootLayer().getProject();
     ShowSettingsUtil.getInstance().showProjectStructureDialog(project, config -> config.select(orderEntry, true));
+  }
+
+  @Nonnull
+  @Override
+  public String getOrderTypeId() {
+    return LibraryOrderEntryType.ID;
   }
 
   @Nonnull

@@ -15,9 +15,11 @@
  */
 package consulo.ide.impl.settings.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ui.UISettings;
 import consulo.configurable.ApplicationConfigurable;
 import consulo.configurable.SimpleConfigurableByProperties;
+import consulo.configurable.StandardConfigurableIds;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.ApplicationLocalize;
@@ -36,6 +38,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 2020-04-25
  */
+@ExtensionImpl
 public class EditorTabsConfigurable extends SimpleConfigurableByProperties implements ApplicationConfigurable {
   enum ActiveTabState {
     LEFT,
@@ -52,7 +55,12 @@ public class EditorTabsConfigurable extends SimpleConfigurableByProperties imple
   @Nullable
   @Override
   public String getParentId() {
-    return "editor";
+    return StandardConfigurableIds.EDITOR_GROUP;
+  }
+
+  @Override
+  public String getDisplayName() {
+    return "Tabs";
   }
 
   @RequiredUIAccess

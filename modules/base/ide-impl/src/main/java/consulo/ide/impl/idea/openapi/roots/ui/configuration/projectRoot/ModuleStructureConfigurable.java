@@ -16,7 +16,9 @@
 
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
+import consulo.configurable.*;
 import consulo.ide.impl.idea.ide.projectView.impl.ModuleGroup;
 import consulo.ide.impl.idea.ide.projectView.impl.ModuleGroupUtil;
 import consulo.application.ApplicationManager;
@@ -25,7 +27,6 @@ import consulo.language.editor.LangDataKeys;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
-import consulo.configurable.ConfigurationException;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
@@ -51,7 +52,6 @@ import consulo.ide.impl.moduleImport.ModuleImportProviders;
 import consulo.configurable.internal.ConfigurableWeight;
 import consulo.ide.impl.roots.ui.configuration.ProjectConfigurableWeights;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.configurable.MasterDetailsConfigurable;
 import consulo.ui.ex.action.*;
 import consulo.util.dataholder.Key;
 import jakarta.inject.Inject;
@@ -71,7 +71,8 @@ import java.util.*;
  * User: anna
  * Date: 02-Jun-2006
  */
-public class ModuleStructureConfigurable extends BaseStructureConfigurable implements ConfigurableWeight {
+@ExtensionImpl
+public class ModuleStructureConfigurable extends BaseStructureConfigurable implements ConfigurableWeight, ProjectConfigurable, NonDefaultProjectConfigurable {
   public static final String ID = "project.modules";
 
   private static final Comparator<MyNode> NODE_COMPARATOR = (o1, o2) -> {
@@ -106,6 +107,12 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
     super();
     myProject = project;
     myModuleManager = manager;
+  }
+
+  @Nullable
+  @Override
+  public String getParentId() {
+    return StandardConfigurableIds.PROJECT_GROUP;
   }
 
   @Nullable

@@ -15,10 +15,13 @@
  */
 package consulo.ide.impl.updateSettings;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.configurable.ApplicationConfigurable;
 import consulo.configurable.Configurable;
+import consulo.configurable.SimpleConfigurableByProperties;
+import consulo.configurable.StandardConfigurableIds;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
-import consulo.configurable.SimpleConfigurableByProperties;
 import consulo.ui.CheckBox;
 import consulo.ui.ComboBox;
 import consulo.ui.Component;
@@ -29,12 +32,31 @@ import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.LabeledBuilder;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 19-Nov-16.
  */
-public class UpdatesConfigurable extends SimpleConfigurableByProperties implements Configurable {
+@ExtensionImpl
+public class UpdatesConfigurable extends SimpleConfigurableByProperties implements Configurable, ApplicationConfigurable {
+  @Nonnull
+  @Override
+  public String getId() {
+    return "updateSettings";
+  }
+
+  @Override
+  public String getDisplayName() {
+    return "Update Settings";
+  }
+
+  @Nullable
+  @Override
+  public String getParentId() {
+    return StandardConfigurableIds.PLATFORM_AND_PLUGINS_GROUP;
+  }
+
   @RequiredUIAccess
   @Nonnull
   @Override

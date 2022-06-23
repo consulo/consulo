@@ -15,11 +15,15 @@
  */
 package consulo.ide.impl.psi.impl.cache.impl.todo;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.pattern.StringPattern;
 import consulo.ide.impl.psi.impl.cache.impl.IndexPatternUtil;
 import consulo.ide.impl.psi.impl.cache.impl.OccurrenceConsumer;
+import consulo.language.plain.PlainTextFileType;
 import consulo.language.psi.search.IndexPattern;
 import consulo.language.psi.stub.FileContent;
+import consulo.virtualFileSystem.fileType.FileType;
+
 import javax.annotation.Nonnull;
 
 import java.util.Collections;
@@ -28,6 +32,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@ExtensionImpl
 public class PlainTextTodoIndexer implements VersionedTodoIndexer {
   @Override
   @Nonnull
@@ -60,4 +65,9 @@ public class PlainTextTodoIndexer implements VersionedTodoIndexer {
     return map;
   }
 
+  @Nonnull
+  @Override
+  public FileType getFileType() {
+    return PlainTextFileType.INSTANCE;
+  }
 }

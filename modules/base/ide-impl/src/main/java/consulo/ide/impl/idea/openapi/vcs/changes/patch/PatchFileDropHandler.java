@@ -15,16 +15,18 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.patch;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.ide.dnd.FileCopyPasteUtil;
 import consulo.ide.impl.idea.openapi.editor.CustomFileDropHandler;
-import consulo.codeEditor.Editor;
 import consulo.project.Project;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.awt.datatransfer.Transferable;
 import java.io.File;
 import java.util.List;
 
+@ExtensionImpl
 public class PatchFileDropHandler extends CustomFileDropHandler {
 
   @Override

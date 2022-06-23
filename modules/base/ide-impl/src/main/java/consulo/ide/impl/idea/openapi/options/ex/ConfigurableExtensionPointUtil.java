@@ -15,19 +15,19 @@
  */
 package consulo.ide.impl.idea.openapi.options.ex;
 
-import consulo.ide.impl.base.BaseShowSettingsUtil;
-import consulo.logging.Logger;
 import consulo.configurable.Configurable;
-import consulo.ide.impl.idea.openapi.options.ConfigurableEP;
 import consulo.configurable.ConfigurableProvider;
 import consulo.configurable.OptionalConfigurable;
+import consulo.ide.impl.base.BaseShowSettingsUtil;
+import consulo.ide.impl.idea.openapi.options.ConfigurableEP;
+import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.util.lang.function.Condition;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.collection.ContainerUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
+import java.util.function.Predicate;
 
 /**
  * @author nik
@@ -40,22 +40,23 @@ public class ConfigurableExtensionPointUtil {
   }
 
 
-  public static List<Configurable> buildConfigurablesList(List<ConfigurableEP<Configurable>> extensions, @Nullable Condition<Configurable> filter) {
+  public static List<Configurable> buildConfigurablesList(List<Configurable> extensions, @Nullable Predicate<Configurable> filter) {
     final List<Configurable> result = new ArrayList<>();
 
     final Map<String, ConfigurableWrapper> idToConfigurable = new HashMap<>();
-    for (ConfigurableEP<Configurable> ep : extensions) {
-      final Configurable configurable = ConfigurableWrapper.wrapConfigurable(ep);
-      if (isSuppressed(configurable, filter)) continue;
-      if (configurable instanceof ConfigurableWrapper) {
-        final ConfigurableWrapper wrapper = (ConfigurableWrapper)configurable;
-        idToConfigurable.put(wrapper.getId(), wrapper);
+    for (Configurable configurable : extensions) {
+      // do not disable if disable
+      if (configurable instanceof OptionalConfigurable && !((OptionalConfigurable)configurable).needDisplay()) {
+        continue;
       }
-      else {
-//        dumpConfigurable(configurablesExtensionPoint, ep, configurable);
-        ContainerUtil.addIfNotNull(result, configurable);
+
+      if (filter == null || !filter.test(configurable)) {
+        continue;
       }
+
+      idToConfigurable.put(configurable.getId(), ConfigurableWrapper.wrapConfigurable(configurable));
     }
+
     //modify configurables (append children)
     for (final String id : idToConfigurable.keySet()) {
       final ConfigurableWrapper wrapper = idToConfigurable.get(id);
@@ -78,71 +79,10 @@ public class ConfigurableExtensionPointUtil {
         iterator.remove();
       }
     }
-    consulo.util.collection.ContainerUtil.addAll(result, idToConfigurable.values());
+    ContainerUtil.addAll(result, idToConfigurable.values());
 
     return result;
   }
-
-  private static boolean isSuppressed(Configurable each, Condition<Configurable> filter) {
-    OptionalConfigurable configurable = ConfigurableWrapper.cast(each, OptionalConfigurable.class);
-    if(configurable != null && !configurable.needDisplay()) {
-      return true;
-    }
-    return filter != null && !filter.value(each);
-  }
-
-  /*
-  private static void dumpConfigurable(ExtensionPointName<ConfigurableEP<Configurable>> configurablesExtensionPoint,
-                                       ConfigurableEP<Configurable> ep,
-                                       Configurable configurable) {
-    if (configurable != null && !(configurable instanceof ConfigurableGroup)) {
-      if (ep.instanceClass != null && (configurable instanceof SearchableConfigurable) && (configurable instanceof Configurable.Composite)) {
-        Element element = dump(ep, configurable, StringUtil.getShortName(configurablesExtensionPoint.getName()));
-        final Configurable[] configurables = ((Configurable.Composite)configurable).getConfigurables();
-        for (Configurable child : configurables) {
-          final Element dump = dump(null, child, "configurable");
-          element.addContent(dump);
-        }
-        final StringWriter out = new StringWriter();
-        try {
-          new XMLOutputter(Format.getPrettyFormat()).output(element, out);
-        }
-        catch (IOException e) {
-        }
-        System.out.println(out);
-      }
-    }
-  }
-
-  private static Element dump(@Nullable ConfigurableEP ep,
-                              Configurable configurable, String name) {
-    Element element = new Element(name);
-    if (ep != null) {
-      element.setAttribute("instance", ep.instanceClass);
-      String id = ep.id == null ? ((SearchableConfigurable)configurable).getId() : ep.id;
-      element.setAttribute("id", id);
-    }
-    else {
-      element.setAttribute("instance", configurable.getClass().getName());
-      if (configurable instanceof SearchableConfigurable) {
-        element.setAttribute("id", ((SearchableConfigurable)configurable).getId());
-      }
-    }
-
-    CommonBundle.lastKey = null;
-    String displayName = configurable.getDisplayName();
-    if (CommonBundle.lastKey != null) {
-      element.setAttribute("key", CommonBundle.lastKey).setAttribute("bundle", CommonBundle.lastBundle);
-    }
-    else {
-      element.setAttribute("displayName", displayName);
-    }
-    if (configurable instanceof NonDefaultProjectConfigurable) {
-      element.setAttribute("nonDefaultProject", "true");
-    }
-    return element;
-  }
-  */
 
   /**
    * @deprecated create a new instance of configurable instead

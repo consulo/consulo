@@ -15,40 +15,45 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts;
 
-import consulo.compiler.artifact.*;
-import consulo.compiler.artifact.event.ArtifactListener;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.WriteAction;
-import consulo.module.Module;
+import consulo.compiler.artifact.*;
+import consulo.compiler.artifact.element.PackagingElementFactory;
+import consulo.compiler.artifact.event.ArtifactListener;
 import consulo.configurable.ConfigurationException;
-import consulo.ide.setting.ShowSettingsUtil;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.project.Project;
-import consulo.project.ProjectBundle;
-import consulo.module.impl.internal.layer.library.LibraryTableImplUtil;
+import consulo.configurable.NonDefaultProjectConfigurable;
+import consulo.configurable.ProjectConfigurable;
+import consulo.configurable.StandardConfigurableIds;
+import consulo.configurable.internal.ConfigurableWeight;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.BaseStructureConfigurable;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
-import consulo.ui.ex.awt.MasterDetailsState;
-import consulo.ui.ex.awt.MasterDetailsStateService;
 import consulo.ide.impl.idea.openapi.ui.NamedConfigurable;
-import consulo.compiler.artifact.element.PackagingElementFactory;
 import consulo.ide.impl.idea.packaging.impl.artifacts.ArtifactUtil;
 import consulo.ide.impl.idea.packaging.impl.artifacts.InvalidArtifact;
 import consulo.ide.impl.idea.packaging.impl.artifacts.PackagingElementPath;
 import consulo.ide.impl.idea.packaging.impl.artifacts.PackagingElementProcessor;
 import consulo.ide.impl.idea.packaging.impl.elements.LibraryElementType;
 import consulo.ide.impl.idea.packaging.impl.elements.LibraryPackagingElement;
+import consulo.ide.impl.roots.ui.configuration.ProjectConfigurableWeights;
 import consulo.ide.setting.ProjectStructureSettingsUtil;
-import consulo.configurable.internal.ConfigurableWeight;
+import consulo.ide.setting.ShowSettingsUtil;
 import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ide.setting.module.ModulesConfigurator;
-import consulo.ide.impl.roots.ui.configuration.ProjectConfigurableWeights;
+import consulo.module.Module;
+import consulo.module.impl.internal.layer.library.LibraryTableImplUtil;
+import consulo.project.Project;
+import consulo.project.ProjectBundle;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.awt.MasterDetailsState;
+import consulo.ui.ex.awt.MasterDetailsStateService;
 import consulo.ui.image.Image;
+import jakarta.inject.Inject;
 import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;
@@ -60,7 +65,8 @@ import java.util.List;
 /**
  * @author nik
  */
-public class ArtifactsStructureConfigurable extends BaseStructureConfigurable implements ConfigurableWeight {
+@ExtensionImpl
+public class ArtifactsStructureConfigurable extends BaseStructureConfigurable implements ConfigurableWeight, ProjectConfigurable, NonDefaultProjectConfigurable {
   public static final String ID = "project.artifacts";
 
   @Nonnull
@@ -76,6 +82,7 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable im
   @Nonnull
   private final ArtifactEditorSettings myDefaultSettings;
 
+  @Inject
   public ArtifactsStructureConfigurable(@Nonnull Project project, @Nonnull ArtifactManager artifactManager, @Nonnull ArtifactPointerManager artifactPointerManager, ShowSettingsUtil showSettingsUtil) {
     super(new ArtifactStructureConfigurableState());
     myProject = project;
@@ -83,6 +90,12 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable im
     myArtifactPointerManager = artifactPointerManager;
     myShowSettingsUtil = showSettingsUtil;
     myDefaultSettings = new ArtifactEditorSettings(project);
+  }
+
+  @Nullable
+  @Override
+  public String getParentId() {
+    return StandardConfigurableIds.PROJECT_GROUP;
   }
 
   @Nullable

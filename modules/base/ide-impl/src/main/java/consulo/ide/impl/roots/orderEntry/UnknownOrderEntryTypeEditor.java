@@ -18,6 +18,7 @@ package consulo.ide.impl.roots.orderEntry;
 import consulo.ide.setting.module.OrderEntryTypeEditor;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
 
@@ -31,10 +32,21 @@ import java.util.function.Consumer;
 public class UnknownOrderEntryTypeEditor implements OrderEntryTypeEditor<OrderEntry> {
   @Nonnull
   @Override
+  public String getOrderTypeId() {
+    return "";
+  }
+
+  @Nonnull
+  @Override
   public Consumer<ColoredTextContainer> getRender(@Nonnull OrderEntry orderEntry) {
     return it -> {
       it.setIcon(PlatformIconGroup.actionsHelp());
       it.append(orderEntry.getPresentableName(), SimpleTextAttributes.ERROR_ATTRIBUTES);
     };
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void navigate(@Nonnull OrderEntry orderEntry) {
   }
 }

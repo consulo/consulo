@@ -15,10 +15,7 @@
  */
 package consulo.ide.impl.psi.impl.cache.impl.todo;
 
-import consulo.index.io.DataIndexer;
-import consulo.language.psi.stub.FileContent;
-
-public interface VersionedTodoIndexer extends DataIndexer<TodoIndexEntry, Integer, FileContent> {
+public interface VersionedTodoIndexer extends TodoIndexer {
   default int getVersion() {
     return 1;
   }

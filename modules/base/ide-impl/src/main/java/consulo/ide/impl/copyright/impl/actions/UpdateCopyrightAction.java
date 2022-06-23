@@ -16,22 +16,23 @@
 
 package consulo.ide.impl.copyright.impl.actions;
 
+import consulo.codeEditor.Editor;
+import consulo.dataContext.DataContext;
+import consulo.ide.impl.copyright.impl.pattern.FileUtil;
+import consulo.ide.impl.idea.analysis.BaseAnalysisAction;
+import consulo.language.copyright.UpdateCopyrightsProvider;
+import consulo.language.copyright.config.CopyrightManager;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.scope.AnalysisScope;
-import consulo.ide.impl.idea.analysis.BaseAnalysisAction;
-import consulo.codeEditor.Editor;
-import consulo.dataContext.DataContext;
-import consulo.language.util.ModuleUtilCore;
 import consulo.language.psi.*;
+import consulo.language.util.ModuleUtilCore;
 import consulo.project.Project;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.copyright.config.CopyrightManager;
-import consulo.language.copyright.CopyrightUpdaters;
-import consulo.ide.impl.copyright.impl.pattern.FileUtil;
+
 import javax.annotation.Nonnull;
 
 public class UpdateCopyrightAction extends BaseAnalysisAction {
@@ -62,14 +63,14 @@ public class UpdateCopyrightAction extends BaseAnalysisAction {
     final Editor editor = context.getData(CommonDataKeys.EDITOR);
     if (editor != null) {
       final PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
-      if (file == null || !CopyrightUpdaters.hasExtension(file)) {
+      if (file == null || !UpdateCopyrightsProvider.hasExtension(file)) {
         return false;
       }
     }
     else if (files != null && FileUtil.areFiles(files)) {
       boolean copyrightEnabled  = false;
       for (VirtualFile vfile : files) {
-        if (CopyrightUpdaters.hasExtension(vfile)) {
+        if (UpdateCopyrightsProvider.hasExtension(vfile)) {
           copyrightEnabled = true;
           break;
         }
@@ -90,7 +91,7 @@ public class UpdateCopyrightAction extends BaseAnalysisAction {
           for (PsiElement elem : elems) {
             if (!(elem instanceof PsiDirectory)) {
               final PsiFile file = elem.getContainingFile();
-              if (file == null || !CopyrightUpdaters.hasExtension(file.getVirtualFile())) {
+              if (file == null || !UpdateCopyrightsProvider.hasExtension(file.getVirtualFile())) {
                 copyrightEnabled = true;
                 break;
               }

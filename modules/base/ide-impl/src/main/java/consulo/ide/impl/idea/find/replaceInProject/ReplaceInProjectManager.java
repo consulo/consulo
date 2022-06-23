@@ -2,6 +2,9 @@
 
 package consulo.ide.impl.idea.find.replaceInProject;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.find.actions.FindInPathAction;
 import consulo.ide.impl.idea.find.findInProject.FindInProjectManager;
 import consulo.ide.impl.idea.find.impl.FindInProjectUtil;
@@ -54,6 +57,8 @@ import java.awt.event.KeyEvent;
 import java.util.*;
 
 @Singleton
+@Service(ComponentScope.PROJECT)
+@ServiceImpl
 public class ReplaceInProjectManager {
   private static final NotificationGroup NOTIFICATION_GROUP = FindInPathAction.NOTIFICATION_GROUP;
 
@@ -235,7 +240,8 @@ public class ReplaceInProjectManager {
   public boolean showReplaceAllConfirmDialog(@Nonnull String usagesCount, @Nonnull String stringToFind, @Nonnull String filesCount, @Nonnull String stringToReplace) {
     return Messages.YES ==
            MessageDialogBuilder.yesNo(FindBundle.message("find.replace.all.confirmation.title"), FindBundle
-                   .message("find.replace.all.confirmation", usagesCount, StringUtil.escapeXmlEntities(stringToFind), filesCount, StringUtil.escapeXmlEntities(stringToReplace))).yesText(FindBundle.message("find.replace.command")).project(myProject).noText(Messages.CANCEL_BUTTON).show();
+                   .message("find.replace.all.confirmation", usagesCount, StringUtil.escapeXmlEntities(stringToFind), filesCount, StringUtil.escapeXmlEntities(stringToReplace)))
+                   .yesText(FindBundle.message("find.replace.command")).project(myProject).noText(Messages.CANCEL_BUTTON).show();
   }
 
   private static Set<VirtualFile> getFiles(@Nonnull ReplaceContext replaceContext, boolean selectedOnly) {
@@ -277,7 +283,9 @@ public class ReplaceInProjectManager {
         Set<Usage> usages = replaceContext.getUsageView().getUsages();
         if (usages.isEmpty()) return;
         Set<VirtualFile> files = getFiles(replaceContext, false);
-        if (files.size() < 2 || showReplaceAllConfirmDialog(String.valueOf(usages.size()), replaceContext.getFindModel().getStringToFind(), String.valueOf(files.size()), replaceContext.getFindModel().getStringToReplace())) {
+        if (files.size() < 2 ||
+            showReplaceAllConfirmDialog(String.valueOf(usages.size()), replaceContext.getFindModel().getStringToFind(), String.valueOf(files.size()),
+                                        replaceContext.getFindModel().getStringToReplace())) {
           replaceUsagesUnderCommand(replaceContext, usages);
         }
       }

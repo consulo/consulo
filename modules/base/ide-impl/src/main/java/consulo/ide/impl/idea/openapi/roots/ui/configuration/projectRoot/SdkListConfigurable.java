@@ -15,33 +15,28 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.CommonBundle;
+import consulo.configurable.ApplicationConfigurable;
+import consulo.configurable.ConfigurationException;
+import consulo.configurable.MasterDetailsConfigurable;
+import consulo.content.bundle.*;
+import consulo.content.impl.internal.bundle.SdkImpl;
+import consulo.ide.impl.idea.openapi.projectRoots.impl.SdkConfigurationUtil;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.SdkProjectStructureElement;
+import consulo.ide.impl.idea.openapi.ui.NonEmptyInputValidator;
+import consulo.ide.setting.ShowSettingsUtil;
+import consulo.ide.setting.bundle.SettingsSdksModel;
+import consulo.ide.setting.ui.MasterDetailsComponent;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.ProjectBundle;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.configurable.ConfigurationException;
-import consulo.ide.setting.ShowSettingsUtil;
-import consulo.project.ProjectBundle;
-import consulo.content.bundle.Sdk;
-import consulo.content.bundle.SdkModel;
-import consulo.content.bundle.SdkType;
-import consulo.content.bundle.SdkTypeId;
-import consulo.ide.impl.idea.openapi.projectRoots.impl.SdkConfigurationUtil;
-import consulo.content.impl.internal.bundle.SdkImpl;
-import consulo.content.bundle.UnknownSdkType;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.SdkProjectStructureElement;
-import consulo.ide.setting.ui.MasterDetailsComponent;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.ui.NonEmptyInputValidator;
-import consulo.util.lang.function.Condition;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.ui.ex.awt.tree.TreeUtil;
-import consulo.ide.setting.ProjectStructureSettingsUtil;
-import consulo.ide.setting.bundle.SettingsSdksModel;
-import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.configurable.MasterDetailsConfigurable;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.Nls;
 
@@ -52,11 +47,13 @@ import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import java.util.*;
+import java.util.function.Predicate;
 
-public class SdkListConfigurable extends BaseStructureConfigurable {
+@ExtensionImpl
+public class SdkListConfigurable extends BaseStructureConfigurable implements ApplicationConfigurable {
   public static final String ID = "sdks.list";
 
-  public static final Condition<SdkTypeId> ADD_SDK_FILTER = sdkTypeId -> sdkTypeId instanceof SdkType && ((SdkType)sdkTypeId).supportsUserAdd();
+  public static final Predicate<SdkTypeId> ADD_SDK_FILTER = sdkTypeId -> sdkTypeId instanceof SdkType && ((SdkType)sdkTypeId).supportsUserAdd();
 
   private static final UnknownSdkType ourUnknownSdkType = UnknownSdkType.getInstance("UNKNOWN_BUNDLE");
   private final SettingsSdksModel mySdksModel;
@@ -137,9 +134,7 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
 
   @Inject
   public SdkListConfigurable(ShowSettingsUtil showSettingsUtil) {
-    ProjectStructureSettingsUtil sdksSettingsUtil = (ProjectStructureSettingsUtil)showSettingsUtil;
-
-    mySdksModel = sdksSettingsUtil.getSdksModel();
+    mySdksModel = showSettingsUtil.getSdksModel();
     mySdksModel.addListener(myListener);
   }
 
@@ -333,12 +328,7 @@ public class SdkListConfigurable extends BaseStructureConfigurable {
       @Override
       public AnAction[] getChildren(@Nullable final AnActionEvent e) {
         DefaultActionGroup group = new DefaultActionGroup(ProjectBundle.message("add.action.name"), true);
-        mySdksModel.createAddActions(group, myTree, new Consumer<Sdk>() {
-          @Override
-          public void consume(final Sdk sdk) {
-            addSdkNode(sdk, true);
-          }
-        }, ADD_SDK_FILTER);
+        mySdksModel.createAddActions(group, myTree, sdk -> addSdkNode(sdk, true), ADD_SDK_FILTER);
         return group.getChildren(null);
       }
     };

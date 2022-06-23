@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.ide;
 
-import consulo.configurable.ConfigurationException;
-import consulo.configurable.SearchableConfigurable;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.configurable.*;
 import consulo.ide.impl.idea.openapi.util.NotNullComputable;
 import consulo.ide.impl.idea.util.ObjectUtil;
 import consulo.disposer.Disposable;
@@ -24,7 +24,6 @@ import consulo.ide.impl.fileChooser.FileOperateDialogSettings;
 import consulo.ide.IdeBundle;
 import consulo.localize.LocalizeManager;
 import consulo.localize.LocalizeValue;
-import consulo.configurable.SimpleConfigurable;
 import consulo.platform.base.localize.IdeLocalize;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -45,7 +44,8 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSettingsConfigurable.MyComponent> implements SearchableConfigurable {
+@ExtensionImpl
+public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSettingsConfigurable.MyComponent> implements SearchableConfigurable, ApplicationConfigurable {
 
   protected static class MyComponent implements NotNullComputable<Component> {
     private CheckBox myChkReopenLastProject;
@@ -330,7 +330,13 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
 
   @Override
   public String getDisplayName() {
-    return IdeBundle.message("title.general");
+    return "System";
+  }
+
+  @Nullable
+  @Override
+  public String getParentId() {
+    return StandardConfigurableIds.GENERAL_GROUP;
   }
 
   @Override

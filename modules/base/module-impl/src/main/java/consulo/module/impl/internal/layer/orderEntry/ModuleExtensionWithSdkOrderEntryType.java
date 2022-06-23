@@ -30,17 +30,19 @@ import javax.annotation.Nonnull;
  */
 @ExtensionImpl
 public class ModuleExtensionWithSdkOrderEntryType implements OrderEntryType<ModuleExtensionWithSdkOrderEntryImpl> {
+  public static final String ID = "module-extension-sdk";
+
   @Nonnull
   public static ModuleExtensionWithSdkOrderEntryType getInstance() {
     return EP_NAME.findExtensionOrFail(ModuleExtensionWithSdkOrderEntryType.class);
   }
 
-  public static final String EXTENSION_ID_ATTRIBUTE = "extension-id";
+  private static final String EXTENSION_ID_ATTRIBUTE = "extension-id";
 
   @Nonnull
   @Override
   public String getId() {
-    return "module-extension-sdk";
+    return ID;
   }
 
   @Nonnull

@@ -15,40 +15,40 @@
  */
 package consulo.ide.impl.psi.impl.cache.impl.id;
 
-import consulo.language.editor.highlight.HighlighterFactory;
-import consulo.language.Language;
-import consulo.language.parser.LanguageParserDefinitions;
-import consulo.language.parser.ParserDefinition;
-import consulo.logging.Logger;
-import consulo.language.editor.highlight.LexerEditorHighlighter;
 import consulo.codeEditor.EditorHighlighter;
 import consulo.codeEditor.HighlighterIterator;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.language.file.LanguageFileType;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.CustomSyntaxTableFileType;
-import consulo.project.Project;
-import consulo.util.dataholder.Key;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.psi.CustomHighlighterTokenType;
 import consulo.ide.impl.psi.impl.cache.impl.BaseFilterLexer;
 import consulo.ide.impl.psi.impl.cache.impl.IndexPatternUtil;
 import consulo.ide.impl.psi.impl.cache.impl.OccurrenceConsumer;
 import consulo.ide.impl.psi.impl.cache.impl.todo.TodoIndexEntry;
-import consulo.ide.impl.psi.impl.cache.impl.todo.TodoIndexers;
+import consulo.ide.impl.psi.impl.cache.impl.todo.TodoIndexer;
 import consulo.ide.impl.psi.impl.cache.impl.todo.VersionedTodoIndexer;
-import consulo.language.psi.search.IndexPattern;
+import consulo.index.io.DataIndexer;
+import consulo.language.Language;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
-import consulo.language.util.CommentUtilCore;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.index.io.DataIndexer;
-import consulo.language.psi.stub.FileContent;
+import consulo.language.editor.highlight.HighlighterFactory;
+import consulo.language.editor.highlight.LexerEditorHighlighter;
+import consulo.language.file.LanguageFileType;
 import consulo.language.impl.internal.psi.stub.SubstitutedFileType;
+import consulo.language.parser.LanguageParserDefinitions;
+import consulo.language.parser.ParserDefinition;
+import consulo.language.psi.search.IndexPattern;
+import consulo.language.psi.stub.FileContent;
+import consulo.language.util.CommentUtilCore;
 import consulo.language.version.LanguageVersion;
 import consulo.language.version.LanguageVersionUtil;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -68,10 +68,10 @@ public abstract class PlatformIdTableBuilding {
     final DataIndexer<TodoIndexEntry, Integer, FileContent> extIndexer;
     if (fileType instanceof SubstitutedFileType && !((SubstitutedFileType)fileType).isSameFileType()) {
       SubstitutedFileType sft = (SubstitutedFileType)fileType;
-      extIndexer = new CompositeTodoIndexer(getTodoIndexer(sft.getOriginalFileType(), project, virtualFile), getTodoIndexer(sft.getFileType(), project, virtualFile));
+      extIndexer = new CompositeTodoIndexer(fileType, getTodoIndexer(sft.getOriginalFileType(), project, virtualFile), getTodoIndexer(sft.getFileType(), project, virtualFile));
     }
     else {
-      extIndexer = TodoIndexers.INSTANCE.forFileType(fileType);
+      extIndexer = TodoIndexer.forFileType(fileType);
     }
     if (extIndexer != null) {
       return extIndexer;
@@ -105,22 +105,30 @@ public abstract class PlatformIdTableBuilding {
   }
 
   public static boolean isTodoIndexerRegistered(@Nonnull FileType fileType) {
-    return TodoIndexers.INSTANCE.forFileType(fileType) != null;
+    return TodoIndexer.forFileType(fileType) != null;
   }
 
   private static class CompositeTodoIndexer implements VersionedTodoIndexer {
-    private final DataIndexer<TodoIndexEntry, Integer, FileContent>[] indexers;
+    private final DataIndexer<TodoIndexEntry, Integer, FileContent>[] myIndexers;
+    private final FileType myFileType;
 
     @SafeVarargs
-    public CompositeTodoIndexer(@Nonnull DataIndexer<TodoIndexEntry, Integer, FileContent>... indexers) {
-      this.indexers = indexers;
+    public CompositeTodoIndexer(@Nonnull FileType fileType, @Nonnull DataIndexer<TodoIndexEntry, Integer, FileContent>... indexers) {
+      myFileType = fileType;
+      myIndexers = indexers;
+    }
+
+    @Nonnull
+    @Override
+    public FileType getFileType() {
+      return myFileType;
     }
 
     @Nonnull
     @Override
     public Map<TodoIndexEntry, Integer> map(FileContent inputData) {
       Map<TodoIndexEntry, Integer> result = new HashMap<>();
-      for (DataIndexer<TodoIndexEntry, Integer, FileContent> indexer : indexers) {
+      for (DataIndexer<TodoIndexEntry, Integer, FileContent> indexer : myIndexers) {
         for (Map.Entry<TodoIndexEntry, Integer> entry : indexer.map(inputData).entrySet()) {
           TodoIndexEntry key = entry.getKey();
           if (result.containsKey(key)) {
@@ -137,7 +145,7 @@ public abstract class PlatformIdTableBuilding {
     @Override
     public int getVersion() {
       int version = VersionedTodoIndexer.super.getVersion();
-      for (DataIndexer dataIndexer : indexers) {
+      for (DataIndexer dataIndexer : myIndexers) {
         version += dataIndexer instanceof VersionedTodoIndexer ? ((VersionedTodoIndexer)dataIndexer).getVersion() : 0xFF;
       }
       return version;

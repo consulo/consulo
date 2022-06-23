@@ -27,7 +27,7 @@ import consulo.fileEditor.*;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.util.dataholder.Key;
-import consulo.virtualFileSystem.BinaryFileTypeDecompilers;
+import consulo.virtualFileSystem.BinaryFileDecompiler;
 import consulo.virtualFileSystem.RawFileLoaderHelper;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -233,7 +233,7 @@ public abstract class TextEditorProvider implements FileEditorProvider, DumbAwar
     }
 
     final FileType ft = file.getFileType();
-    return !ft.isBinary() || BinaryFileTypeDecompilers.INSTANCE.forFileType(ft) != null;
+    return !ft.isBinary() || BinaryFileDecompiler.forFileType(ft) != null;
   }
 
   private static TextEditorState.CaretState createCaretState(LogicalPosition caretPosition, LogicalPosition selectionStartPosition, LogicalPosition selectionEndPosition) {

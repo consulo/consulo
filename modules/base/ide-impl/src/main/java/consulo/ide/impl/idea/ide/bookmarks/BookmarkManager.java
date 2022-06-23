@@ -141,7 +141,7 @@ public class BookmarkManager implements PersistentStateComponent<Element> {
   public Bookmark addTextBookmark(VirtualFile file, int lineIndex, String description) {
     Bookmark b = new Bookmark(myProject, file, lineIndex, description, true);
     myBookmarks.add(0, b);
-    myBus.syncPublisher(BookmarksListener.TOPIC).bookmarkAdded(b);
+    myBus.syncPublisher(BookmarksListener.class).bookmarkAdded(b);
     return b;
   }
 
@@ -164,7 +164,7 @@ public class BookmarkManager implements PersistentStateComponent<Element> {
 
     Bookmark b = new Bookmark(myProject, file, -1, description, true);
     myBookmarks.add(0, b);
-    myBus.syncPublisher(BookmarksListener.TOPIC).bookmarkAdded(b);
+    myBus.syncPublisher(BookmarksListener.class).bookmarkAdded(b);
     return b;
   }
 
@@ -219,7 +219,7 @@ public class BookmarkManager implements PersistentStateComponent<Element> {
   public void removeBookmark(@Nonnull Bookmark bookmark) {
     myBookmarks.remove(bookmark);
     bookmark.release();
-    myBus.syncPublisher(BookmarksListener.TOPIC).bookmarkRemoved(bookmark);
+    myBus.syncPublisher(BookmarksListener.class).bookmarkRemoved(bookmark);
   }
 
   @Override
@@ -241,7 +241,7 @@ public class BookmarkManager implements PersistentStateComponent<Element> {
   }
 
   private void registerAll(@Nullable List<Bookmark> bookmarksForUpdate) {
-    BookmarksListener publisher = myBus.syncPublisher(BookmarksListener.TOPIC);
+    BookmarksListener publisher = myBus.syncPublisher(BookmarksListener.class);
     for (Bookmark bookmark : myBookmarks) {
       bookmark.release();
       publisher.bookmarkRemoved(bookmark);
@@ -340,8 +340,8 @@ public class BookmarkManager implements PersistentStateComponent<Element> {
     if (index > 0) {
       Collections.swap(myBookmarks, index, index - 1);
       SwingUtilities.invokeLater(() -> {
-        myBus.syncPublisher(BookmarksListener.TOPIC).bookmarkChanged(myBookmarks.get(index));
-        myBus.syncPublisher(BookmarksListener.TOPIC).bookmarkChanged(myBookmarks.get(index - 1));
+        myBus.syncPublisher(BookmarksListener.class).bookmarkChanged(myBookmarks.get(index));
+        myBus.syncPublisher(BookmarksListener.class).bookmarkChanged(myBookmarks.get(index - 1));
       });
     }
     return myBookmarks;
@@ -359,8 +359,8 @@ public class BookmarkManager implements PersistentStateComponent<Element> {
     if (index < myBookmarks.size() - 1) {
       Collections.swap(myBookmarks, index, index + 1);
       SwingUtilities.invokeLater(() -> {
-        myBus.syncPublisher(BookmarksListener.TOPIC).bookmarkChanged(myBookmarks.get(index));
-        myBus.syncPublisher(BookmarksListener.TOPIC).bookmarkChanged(myBookmarks.get(index + 1));
+        myBus.syncPublisher(BookmarksListener.class).bookmarkChanged(myBookmarks.get(index));
+        myBus.syncPublisher(BookmarksListener.class).bookmarkChanged(myBookmarks.get(index + 1));
       });
     }
 
@@ -413,12 +413,12 @@ public class BookmarkManager implements PersistentStateComponent<Element> {
     if (old != null) removeBookmark(old);
 
     bookmark.setMnemonic(c);
-    myBus.syncPublisher(BookmarksListener.TOPIC).bookmarkChanged(bookmark);
+    myBus.syncPublisher(BookmarksListener.class).bookmarkChanged(bookmark);
   }
 
   public void setDescription(@Nonnull Bookmark bookmark, String description) {
     bookmark.setDescription(description);
-    myBus.syncPublisher(BookmarksListener.TOPIC).bookmarkChanged(bookmark);
+    myBus.syncPublisher(BookmarksListener.class).bookmarkChanged(bookmark);
   }
 
   public void colorsChanged() {

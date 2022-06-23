@@ -15,27 +15,28 @@
  */
 package consulo.ide.impl.options;
 
-import consulo.ide.setting.ProjectStructureSelector;
-import consulo.module.Module;
+import consulo.compiler.artifact.Artifact;
 import consulo.configurable.SearchableConfigurable;
+import consulo.configurable.StandardConfigurableIds;
 import consulo.configurable.UnnamedConfigurable;
-import consulo.ide.impl.idea.openapi.options.ex.ConfigurableWrapper;
-import consulo.ide.setting.Settings;
-import consulo.project.ProjectBundle;
 import consulo.content.bundle.Sdk;
-import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
-import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.content.library.Library;
+import consulo.ide.impl.idea.openapi.options.ex.ConfigurableWrapper;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.ClasspathEditor;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.ModuleEditor;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.ProjectConfigurable;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.ProjectConfigurableGroup;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactsStructureConfigurable;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.ModuleConfigurable;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.ModuleStructureConfigurable;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.ProjectLibrariesConfigurable;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.SdkListConfigurable;
+import consulo.ide.setting.ProjectStructureSelector;
+import consulo.ide.setting.Settings;
 import consulo.ide.setting.ui.MasterDetailsComponent;
-import consulo.compiler.artifact.Artifact;
+import consulo.module.Module;
+import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
+import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.project.ProjectBundle;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
@@ -146,7 +147,7 @@ public class ProjectStructureSelectorOverSettings implements ProjectStructureSel
   @Nonnull
   @Override
   public AsyncResult<Void> selectProjectGeneralSettings(boolean requestFocus) {
-    return selectAsync(ProjectConfigurable.ID, ProjectConfigurable.class, (projectConfigurable, runnable) -> {
+    return selectAsync(StandardConfigurableIds.PROJECT_GROUP, ProjectConfigurableGroup.class, (projectConfigurable, runnable) -> {
       runnable.run();
     });
   }

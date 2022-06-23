@@ -1362,16 +1362,8 @@
 
     <search.optionContributor implementation="consulo.ide.impl.idea.codeInsight.intention.impl.config.IntentionManagerSettings$IntentionSearchableOptionContributor"/>
 
-    <applicationService serviceInterface="consulo.find.FindSettings"
-                        serviceImplementation="consulo.ide.impl.idea.find.impl.FindSettingsImpl"/>
+
     <applicationService serviceImplementation="consulo.ide.impl.idea.find.impl.FindSettingsImpl$FindRecents"/>
-    <projectService serviceInterface="consulo.find.FindInProjectSettings" serviceImplementation="consulo.ide.impl.idea.find.impl.FindInProjectRecents"/>
-
-    <applicationService serviceInterface="consulo.language.editor.CodeInsightSettings"
-                        serviceImplementation="consulo.language.editor.CodeInsightSettings"/>
-
-    <applicationService serviceInterface="consulo.ide.impl.idea.openapi.roots.impl.libraries.ApplicationLibraryTable"
-                        serviceImplementation="consulo.ide.impl.idea.openapi.roots.impl.libraries.ApplicationLibraryTable"/>
 
     <applicationService serviceInterface="consulo.ide.impl.idea.openapi.actionSystem.AbbreviationManager"
                         serviceImplementation="consulo.ide.impl.idea.openapi.actionSystem.impl.AbbreviationManagerImpl"/>
@@ -1409,15 +1401,6 @@
     <rearranger.ui implementation="consulo.ide.impl.idea.application.options.codeStyle.arrangement.component.DefaultArrangementUiComponentFactory"/>
 
 
-    <projectService serviceInterface="consulo.ide.impl.idea.find.findInProject.FindInProjectManager"
-                    serviceImplementation="consulo.ide.impl.idea.find.findInProject.FindInProjectManager"/>
-    <projectService serviceInterface="consulo.ide.impl.idea.find.replaceInProject.ReplaceInProjectManager"
-                    serviceImplementation="consulo.ide.impl.idea.find.replaceInProject.ReplaceInProjectManager"/>
-
-    
-
-    
-
 
     <projectService serviceInterface="consulo.module.ProjectLoadingErrorsNotifier"
                     serviceImplementation="consulo.ide.impl.idea.openapi.module.impl.ProjectLoadingErrorsNotifierImpl"/>
@@ -1425,8 +1408,7 @@
     <projectService serviceInterface="consulo.ide.impl.language.codeStyle.ProjectCodeStyleFacade"
                     serviceImplementation="consulo.ide.impl.psi.impl.source.codeStyle.ProjectCodeStyleFacadeImpl"/>
 
-    <projectService serviceInterface="consulo.usage.UsageViewManager"
-                    serviceImplementation="consulo.ide.impl.idea.usages.impl.UsageViewManagerImpl"/>
+    
 
     <projectService serviceInterface="consulo.ide.impl.idea.analysis.AnalysisUIOptions"
                     serviceImplementation="consulo.ide.impl.idea.analysis.AnalysisUIOptions"/>
@@ -1437,8 +1419,7 @@
     <projectService serviceInterface="consulo.language.editor.refactoring.event.RefactoringListenerManager"
                     serviceImplementation="consulo.ide.impl.idea.refactoring.listeners.impl.RefactoringListenerManagerImpl"/>
 
-    <projectService serviceInterface="consulo.ide.impl.idea.util.LogicalRootsManager"
-                    serviceImplementation="consulo.ide.impl.idea.util.LogicalRootsManagerImpl"/>
+
 
     <projectService serviceInterface="consulo.ide.impl.idea.codeEditor.printing.ExportToHTMLSettings"
                     serviceImplementation="consulo.ide.impl.idea.codeEditor.printing.ExportToHTMLSettings"/>
@@ -1455,9 +1436,7 @@
                     serviceImplementation="consulo.ide.impl.idea.ide.hierarchy.HierarchyBrowserManager"/>
 
 
-    <namedScopesHolderProvider implementation="consulo.ide.impl.language.psi.search.scope.DefaultNamedScopesHolderProvider"/>
 
-    <namedScopesHolderProvider implementation="consulo.ide.impl.idea.packageDependencies.DependencyValidationNamedScopesHolderProvider"/>
 
     <projectService serviceInterface="consulo.ide.impl.idea.packageDependencies.DependenciesToolWindow"
                     serviceImplementation="consulo.ide.impl.idea.packageDependencies.DependenciesToolWindow"/>
@@ -1470,9 +1449,6 @@
 
     <projectService serviceInterface="consulo.language.editor.ui.TreeFileChooserFactory"
                     serviceImplementation="consulo.ide.impl.idea.ide.util.TreeFileChooserFactoryImpl"/>
-
-    <projectService serviceInterface="consulo.ide.impl.psi.impl.cache.CacheManager"
-                    serviceImplementation="consulo.ide.impl.psi.impl.cache.impl.IndexCacheManagerImpl"/>
 
 
     <colorSettingsPage implementation="consulo.ide.impl.idea.openapi.options.colors.pages.GeneralColorsPage" id="general"/>
@@ -1504,11 +1480,6 @@
     <customScopesProvider implementation="consulo.ide.impl.packageDependencies.ResourceScopeProvider"/>
     <customScopesProvider implementation="consulo.ide.impl.packageDependencies.TestResourceScopeProvider"/>
     <customScopesProvider implementation="consulo.ide.impl.idea.vcs.changes.ChangeListsScopesProvider" order="last"/>
-    <refactoring.elementListenerProvider implementation="consulo.ide.impl.idea.packageDependencies.ui.RefactoringScopeElementListenerProvider"/>
-
-    <searchScopesProvider implementation="consulo.ide.impl.psi.search.DefaultSearchScopeProviders$Favorites"/>
-    <searchScopesProvider implementation="consulo.ide.impl.idea.vcs.changes.ChangeListsSearchScopeProvider"/>
-    <searchScopesProvider implementation="consulo.ide.impl.psi.search.DefaultSearchScopeProviders$CustomNamed" order="last"/>
 
 
     <syntaxHighlighter factoryClass="consulo.ide.impl.idea.openapi.fileTypes.LanguageFileTypeHighlighterProvider"/>
@@ -1527,7 +1498,7 @@
     <statistician key="completion" implementationClass="consulo.ide.impl.idea.codeInsight.completion.DefaultCompletionStatistician" order="last"/>
 
     <weigher key="proximity" implementationClass="consulo.ide.impl.psi.util.proximity.OpenedInEditorWeigher" id="openedInEditor"/>
-    <weigher key="proximity" implementationClass="consulo.ide.impl.psi.util.proximity.SameLogicalRootWeigher" id="sameLogicalRoot"
+    <weigher key="proximity" implementationClass="consulo.ide.impl.psi.util.proximity.SameSourceRootWeigher" id="sameLogicalRoot"
              order="after openedInEditor"/>
     <weigher key="proximity" implementationClass="consulo.ide.impl.psi.util.proximity.SameModuleWeigher" id="sameModule"
              order="after sameLogicalRoot"/>
@@ -1585,15 +1556,7 @@
     <referenceInjector implementation="consulo.ide.impl.idea.codeInsight.daemon.impl.analysis.encoding.EncodingReferenceInjector"/>
 
 
-    <applicationService serviceImplementation="consulo.ide.impl.psi.templateLanguages.TemplateDataLanguagePatterns"/>
 
-
-    <findUsagesHandlerFactory implementation="consulo.ide.impl.idea.find.findUsages.DefaultFindUsagesHandlerFactory" id="default" order="last"/>
-
-    <extendWordSelectionHandler implementation="consulo.ide.impl.idea.codeInsight.editorActions.wordSelection.PlainTextLineSelectioner"/>
-    <extendWordSelectionHandler implementation="consulo.ide.impl.idea.codeInsight.editorActions.wordSelection.NaturalLanguageTextSelectioner"/>
-    <extendWordSelectionHandler implementation="consulo.ide.impl.idea.codeInsight.editorActions.wordSelection.WordSelectioner"/>
-    <extendWordSelectionHandler implementation="consulo.ide.impl.idea.codeInsight.editorActions.wordSelection.LineCommentSelectioner"/>
 
     <syntaxHighlighter factoryClass="consulo.ide.impl.idea.ide.highlighter.custom.impl.CustomFileTypeHighlighterProvider"/>
     <fileTypeRegistrator implementation="consulo.ide.impl.idea.ide.highlighter.custom.impl.StandardFileTypeRegistrator"/>
@@ -1618,10 +1581,7 @@
                              displayName="General"
                              instance="consulo.ide.impl.idea.application.options.editor.GeneralCodeFoldingConfigurable"/>
 
-    <projectService serviceInterface="consulo.virtualFileSystem.encoding.EncodingProjectManager" serviceImplementation="consulo.ide.impl.idea.openapi.vfs.encoding.EncodingProjectManagerImpl"/>
     <postStartupActivity implementation="consulo.ide.impl.idea.openapi.vfs.encoding.EncodingProjectManagerImpl$EncodingProjectManagerStartUpActivity"/>
-
-    <editorTabColorProvider implementation="consulo.ide.impl.idea.ui.tabs.EditorTabColorProviderImpl"/>
 
     <intentionAction>
       <className>consulo.ide.impl.idea.codeInsight.intention.impl.EditFoldingOptionsAction</className>
@@ -1686,10 +1646,7 @@
     <liveTemplateContext id="OTHER" implementation="consulo.language.editor.template.context.EverywhereContextType" order="last"/>
 
 
-    <codeStyleSettingsProvider implementation="consulo.ide.impl.idea.application.options.GeneralCodeStyleSettingsProvider"/>
-    <codeStyleSettingsProvider implementation="consulo.ide.impl.idea.application.options.codeStyle.OtherFileTypesCodeStyleOptionsProvider" order="last"/>
 
-    
     
     <projectService serviceInterface="consulo.execution.ui.layout.RunnerLayoutUi$Factory"
                     serviceImplementation="consulo.ide.impl.idea.execution.ui.layout.impl.RunnerLayoutUiFactoryImpl"/>
@@ -1759,7 +1716,6 @@
 
     <renamePsiElementProcessor implementation="consulo.ide.impl.idea.refactoring.rename.RenamePsiFileProcessor" order="last"/>
 
-    <refactoring.elementListenerProvider implementation="consulo.ide.impl.idea.execution.impl.RunConfigurationRefactoringElementListenerProvider"/>
 
     <inspectionsReportConverter implementation="consulo.ide.impl.idea.codeInspection.ex.PlainTextFormatter"/>
 
@@ -1804,8 +1760,6 @@
     <applicationService serviceInterface="consulo.ide.impl.idea.packageDependencies.DependenciesVisitorFactory"
                         serviceImplementation="consulo.ide.impl.idea.packageDependencies.DependenciesVisitorFactory"/>
 
-    <projectService serviceInterface="consulo.ide.impl.idea.openapi.vcs.changes.patch.PatchBaseDirectoryDetector"
-                    serviceImplementation="consulo.ide.impl.idea.openapi.vcs.changes.patch.PsiPatchBaseDirectoryDetector"/>
 
     <refactoring.copyHandler implementation="consulo.ide.impl.idea.refactoring.copy.CopyFilesOrDirectoriesHandler"/>
     <refactoring.moveHandler implementation="consulo.ide.impl.idea.refactoring.move.moveFilesOrDirectories.MoveFilesOrDirectoriesHandler"
@@ -1843,11 +1797,7 @@
 
     <pathMacroExpendableProtocol protocol="zip"/>
 
-    <defaultHighlightingSettingProvider implementation="consulo.ide.impl.idea.codeInsight.daemon.impl.analysis.GeneratedSourcesHighlightingSettingProvider"/>
 
-    <actionPromoter implementation="consulo.ide.impl.idea.ui.EditorTextFieldActionPromoter"/>
-    <actionPromoter implementation="consulo.ide.impl.idea.ui.ToolbarDecoratorActionPromoter"/>
-    <actionPromoter implementation="consulo.ide.impl.idea.openapi.vcs.actions.VcsActionPromoter"/>
 
     <copyPastePostProcessor implementation="consulo.ide.impl.idea.openapi.editor.richcopy.TextWithMarkupProcessor"/>
     <!--the following binding uses 'first' order to make sure it captures raw text before any other processor modifies it -->
@@ -1872,8 +1822,6 @@
     <orderEntryTypeEditor key="sourceFolder" implementationClass="consulo.ide.impl.roots.orderEntry.ModuleSourceOrderEntryTypeEditor"/>
     <orderEntryTypeEditor key="" implementationClass="consulo.ide.impl.roots.orderEntry.UnknownOrderEntryTypeEditor"/>
 
-    <customFileDropHandler implementation="consulo.ide.impl.idea.openapi.vcs.changes.patch.PatchFileDropHandler"/>
-
     <vcs.ignoredFileProvider implementation="consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl$DefaultIgnoredFileProvider" order="last"/>
     <vcs.ignoredFileProvider implementation="consulo.ide.impl.configurationStore.vcs.StoreIgnoredFileProvider"/>
 
@@ -1881,21 +1829,14 @@
         implementation="consulo.ide.impl.psi.impl.source.codeStyle.lineIndent.FormatterBasedLineIndentProvider"
         order="last"/>
 
-    <projectService serviceInterface="consulo.ide.impl.idea.execution.dashboard.RunDashboardManager"
-                    serviceImplementation="consulo.ide.impl.idea.execution.dashboard.RunDashboardManagerImpl"/>
-    <runDashboardGroupingRule implementation="consulo.ide.impl.idea.execution.dashboard.tree.ConfigurationTypeDashboardGroupingRule"/>
-    <runDashboardGroupingRule implementation="consulo.ide.impl.idea.execution.dashboard.tree.StatusDashboardGroupingRule"/>
-    <runDashboardGroupingRule implementation="consulo.ide.impl.idea.execution.dashboard.tree.FolderDashboardGroupingRule"/>
-    <runDashboardGroupingRule implementation="consulo.ide.impl.idea.execution.dashboard.tree.RunConfigurationDashboardGroupingRule"/>
+
+
 
     <editorActionHandler action="EditorEscape" implementationClass="consulo.ide.impl.idea.refactoring.changeSignature.inplace.EscapeHandler" id="changeSignatureEscape"
 						 order="before hide-search"/>
 
     <idIndexer filetype="PLAIN_TEXT" implementationClass="consulo.ide.impl.psi.impl.cache.impl.id.PlainTextIndexer"/>
-    <todoIndexer filetype="PLAIN_TEXT" implementationClass="consulo.ide.impl.psi.impl.cache.impl.todo.PlainTextTodoIndexer"/>
 
-
-    <applicationService serviceImplementation="consulo.ide.impl.idea.ide.ScreenReaderSupportHandler" lazy="false"/>
 
     <lang.formatter.restriction implementation="consulo.ide.impl.idea.formatting.ExcludedFileFormattingRestriction"/>
 
@@ -1953,12 +1894,7 @@
 
   </extensions>
 
-  <applicationListeners>
-    <listener class="consulo.ide.impl.idea.util.gist.GistManagerImpl$MyBulkFileListener" topic="consulo.virtualFileSystem.event.BulkFileListener"/>
-  </applicationListeners>
-
   <projectListeners>
     <listener class="consulo.ide.impl.idea.openapi.vfs.newvfs.impl.CachedFileType$PsiListener" topic="consulo.language.psi.PsiModificationTrackerListener"/>
-    <listener class="consulo.module.impl.internal.ExtensionListenerByLayerListenerInvoker" topic="consulo.module.content.layer.event.ModuleRootLayerListener"/>
   </projectListeners>
 </consulo-plugin>

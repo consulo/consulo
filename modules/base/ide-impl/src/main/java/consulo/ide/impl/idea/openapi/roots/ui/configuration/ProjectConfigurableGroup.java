@@ -16,34 +16,35 @@
 
 package consulo.ide.impl.idea.openapi.roots.ui.configuration;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ApplicationManager;
+import consulo.compiler.CompilerConfiguration;
+import consulo.configurable.*;
+import consulo.configurable.internal.ConfigurableWeight;
+import consulo.disposer.Disposable;
 import consulo.fileChooser.FileChooserDescriptorFactory;
-import consulo.configurable.Configurable;
-import consulo.configurable.ConfigurationException;
-import consulo.ide.setting.ShowSettingsUtil;
-import consulo.project.Project;
-import consulo.project.ProjectBundle;
-import consulo.project.internal.ProjectEx;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.compiler.CompilerConfiguration;
-import consulo.disposer.Disposable;
+import consulo.ide.impl.roots.ui.configuration.ProjectStructureElementConfigurable;
 import consulo.ide.setting.ProjectStructureSettingsUtil;
-import consulo.ui.ex.FileChooserTextBoxBuilder;
+import consulo.ide.setting.ShowSettingsUtil;
+import consulo.ide.setting.module.ModulesConfigurator;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.ProjectLocalize;
-import consulo.configurable.internal.ConfigurableWeight;
-import consulo.ide.setting.module.ModulesConfigurator;
-import consulo.ide.impl.roots.ui.configuration.ProjectStructureElementConfigurable;
+import consulo.project.Project;
+import consulo.project.ProjectBundle;
+import consulo.project.internal.ProjectEx;
 import consulo.ui.Component;
 import consulo.ui.HtmlLabel;
 import consulo.ui.TextBox;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.FileChooserTextBoxBuilder;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.VerticalLayout;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -52,9 +53,8 @@ import java.io.IOException;
  * @author Eugene Zhuravlev
  * Date: Dec 15, 2003
  */
-public class ProjectConfigurable extends ProjectStructureElementConfigurable<Project> implements Configurable, ConfigurableWeight {
-  public static final String ID = "project";
-
+@ExtensionImpl
+public class ProjectConfigurableGroup extends ProjectStructureElementConfigurable<Project> implements ProjectConfigurable, ConfigurableWeight, NonDefaultProjectConfigurable {
   private final Project myProject;
 
   private TextBox myProjectName;
@@ -67,11 +67,18 @@ public class ProjectConfigurable extends ProjectStructureElementConfigurable<Pro
 
   private FileChooserTextBoxBuilder.Controller myCompilerPathController;
 
-  public ProjectConfigurable(Project project) {
+  @Inject
+  public ProjectConfigurableGroup(Project project) {
     myProject = project;
     mySettingsElement = new GeneralProjectSettingsElement();
     // todo final ProjectStructureDaemonAnalyzer daemonAnalyzer = context.getDaemonAnalyzer();
     // todo myModulesConfigurator.addAllModuleChangeListener(moduleRootModel -> daemonAnalyzer.queueUpdate(mySettingsElement));
+  }
+
+  @Nonnull
+  @Override
+  public String getId() {
+    return StandardConfigurableIds.PROJECT_GROUP;
   }
 
   @Override

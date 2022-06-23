@@ -52,7 +52,7 @@ public class StubTreeBuilder {
 
       final FileType fileType = inputData.getFileType();
 
-      final BinaryFileStubBuilder builder = BinaryFileStubBuilders.INSTANCE.forFileType(fileType);
+      final BinaryFileStubBuilder builder = BinaryFileStubBuilder.forFileType(fileType);
       if (builder != null) {
         data = builder.buildStubTree(inputData);
         if (data instanceof PsiFileStubImpl && !((PsiFileStubImpl)data).rootsAreSet()) {

@@ -15,7 +15,9 @@
  */
 package consulo.ide.impl.ui;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.CommonBundle;
+import consulo.configurable.*;
 import consulo.ide.impl.idea.ide.highlighter.custom.SyntaxTable;
 import consulo.language.file.FileTypeManager;
 import consulo.ui.ex.awt.*;
@@ -24,9 +26,6 @@ import consulo.ui.ex.action.ActionToolbarPosition;
 import consulo.application.Application;
 import consulo.ide.impl.idea.openapi.fileTypes.*;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.*;
-import consulo.configurable.Configurable;
-import consulo.configurable.ConfigurationException;
-import consulo.configurable.SearchableConfigurable;
 import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.ui.ex.awt.DialogBuilder;
 import consulo.ui.ex.awt.DialogWrapper;
@@ -59,7 +58,8 @@ import java.util.*;
  * @author VISTALL
  * @since 04/12/2021
  */
-public class FileTypeConfigurable implements SearchableConfigurable, Configurable.NoScroll, Configurable.NoMargin {
+@ExtensionImpl
+public class FileTypeConfigurable implements SearchableConfigurable, Configurable.NoScroll, Configurable.NoMargin, ApplicationConfigurable {
   public static class RecognizedFileTypes extends Wrapper {
     private final JList<FileType> myFileTypesList;
     private final MySpeedSearch mySpeedSearch;
@@ -578,6 +578,12 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
   @Override
   public String getId() {
     return "preferences.fileType";
+  }
+
+  @Nullable
+  @Override
+  public String getParentId() {
+    return StandardConfigurableIds.EDITOR_GROUP;
   }
 
   @Override

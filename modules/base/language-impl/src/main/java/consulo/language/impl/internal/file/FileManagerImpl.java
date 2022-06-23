@@ -10,25 +10,21 @@ import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.language.Language;
 import consulo.language.content.FileIndexFacade;
-import consulo.language.file.FileTypeFileViewProviders;
 import consulo.language.file.FileViewProvider;
 import consulo.language.file.FileViewProviderFactory;
 import consulo.language.file.LanguageFileViewProviders;
+import consulo.language.file.VirtualFileViewProviderFactory;
 import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.language.impl.DebugUtil;
 import consulo.language.impl.file.AbstractFileViewProvider;
 import consulo.language.impl.file.FreeThreadedFileViewProvider;
 import consulo.language.impl.file.SingleRootFileViewProvider;
-import consulo.language.impl.psi.PsiDirectoryImpl;
-import consulo.language.psi.PsiFileEx;
-import consulo.language.impl.internal.psi.PsiModificationTrackerImpl;
 import consulo.language.impl.internal.psi.PsiManagerImpl;
+import consulo.language.impl.internal.psi.PsiModificationTrackerImpl;
 import consulo.language.impl.internal.psi.PsiTreeChangeEventImpl;
-import consulo.language.psi.LanguageSubstitutors;
-import consulo.language.psi.PsiDirectory;
-import consulo.language.psi.PsiFile;
-import consulo.language.psi.PsiInvalidElementAccessException;
+import consulo.language.impl.psi.PsiDirectoryImpl;
+import consulo.language.psi.*;
 import consulo.language.psi.event.PsiTreeChangeEvent;
 import consulo.language.util.LanguageUtil;
 import consulo.logging.Logger;
@@ -261,7 +257,7 @@ public final class FileManagerImpl implements FileManager {
   public FileViewProvider createFileViewProvider(@Nonnull final VirtualFile file, boolean eventSystemEnabled) {
     FileType fileType = file.getFileType();
     Language language = LanguageUtil.getLanguageForPsi(myManager.getProject(), file);
-    FileViewProviderFactory factory = language == null ? FileTypeFileViewProviders.INSTANCE.forFileType(fileType) : LanguageFileViewProviders.INSTANCE.forLanguage(language);
+    FileViewProviderFactory factory = language == null ? VirtualFileViewProviderFactory.forFileType(fileType) : LanguageFileViewProviders.INSTANCE.forLanguage(language);
     FileViewProvider viewProvider = factory == null ? null : factory.createFileViewProvider(file, language, myManager, eventSystemEnabled);
 
     return viewProvider == null ? new SingleRootFileViewProvider(myManager, file, eventSystemEnabled) : viewProvider;

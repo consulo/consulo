@@ -172,7 +172,7 @@ public class FindUsagesManager {
 
   @Nullable
   public FindUsagesHandler getFindUsagesHandler(@Nonnull PsiElement element, final boolean forHighlightUsages) {
-    for (FindUsagesHandlerFactory factory : Extensions.getExtensions(FindUsagesHandlerFactory.EP_NAME, myProject)) {
+    for (FindUsagesHandlerFactory factory : FindUsagesHandlerFactory.EP_NAME.getExtensionList(myProject)) {
       if (factory.canFindUsages(element)) {
         final FindUsagesHandler handler = factory.createFindUsagesHandler(element, forHighlightUsages);
         if (handler == FindUsagesHandler.NULL_HANDLER) return null;
@@ -186,7 +186,7 @@ public class FindUsagesManager {
 
   @Nullable
   public FindUsagesHandler getNewFindUsagesHandler(@Nonnull PsiElement element, final boolean forHighlightUsages) {
-    for (FindUsagesHandlerFactory factory : Extensions.getExtensions(FindUsagesHandlerFactory.EP_NAME, myProject)) {
+    for (FindUsagesHandlerFactory factory : FindUsagesHandlerFactory.EP_NAME.getExtensionList(myProject)) {
       if (factory.canFindUsages(element)) {
         Class<? extends FindUsagesHandlerFactory> aClass = factory.getClass();
         FindUsagesHandlerFactory copy = myProject.getInjectingContainer().getUnbindedInstance(aClass);

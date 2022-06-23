@@ -16,6 +16,8 @@
 
 package consulo.ide.impl.idea.refactoring.copy;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
@@ -23,6 +25,7 @@ import consulo.language.psi.PsiElement;
 /**
  * @author yole
  */
+@Extension(ComponentScope.APPLICATION)
 public interface CopyHandlerDelegate {
   ExtensionPointName<CopyHandlerDelegate> EP_NAME = ExtensionPointName.create(CopyHandlerDelegate.class);
 

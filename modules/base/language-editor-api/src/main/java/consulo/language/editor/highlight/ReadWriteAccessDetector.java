@@ -16,6 +16,8 @@
 
 package consulo.language.editor.highlight;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
@@ -25,8 +27,9 @@ import javax.annotation.Nullable;
 /**
  * @author yole
  */
+@Extension(ComponentScope.APPLICATION)
 public abstract class ReadWriteAccessDetector {
-  public static final ExtensionPointName<ReadWriteAccessDetector> EP_NAME = ExtensionPointName.create("consulo.readWriteAccessDetector");
+  public static final ExtensionPointName<ReadWriteAccessDetector> EP_NAME = ExtensionPointName.create(ReadWriteAccessDetector.class);
 
   @Nullable
   public static ReadWriteAccessDetector findDetector(final PsiElement element) {

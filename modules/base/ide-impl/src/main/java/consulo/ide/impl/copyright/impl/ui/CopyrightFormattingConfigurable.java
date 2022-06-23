@@ -20,21 +20,20 @@
  */
 package consulo.ide.impl.copyright.impl.ui;
 
-import consulo.language.copyright.ui.TemplateCommentPanel;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.language.file.FileTypeManager;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
-import consulo.project.Project;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.copyright.CopyrightUpdaters;
 import consulo.language.copyright.UpdateCopyrightsProvider;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.language.copyright.config.CopyrightFileConfigManager;
+import consulo.language.copyright.ui.TemplateCommentPanel;
+import consulo.language.file.FileTypeManager;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.virtualFileSystem.fileType.FileType;
 import org.jetbrains.annotations.Nls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -115,7 +114,7 @@ public class CopyrightFormattingConfigurable extends SearchableConfigurable.Pare
     FileType[] registeredFileTypes = FileTypeManager.getInstance().getRegisteredFileTypes();
     List<Configurable> list = new ArrayList<>();
     for (FileType fileType : registeredFileTypes) {
-      UpdateCopyrightsProvider updateCopyrightsProvider = CopyrightUpdaters.INSTANCE.forFileType(fileType);
+      UpdateCopyrightsProvider updateCopyrightsProvider = UpdateCopyrightsProvider.forFileType(fileType);
       if (updateCopyrightsProvider == null) {
         continue;
       }

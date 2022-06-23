@@ -40,15 +40,15 @@ public interface Settings {
   <T extends Configurable> T findConfigurable(Class<T> configurableClass);
 
   @Deprecated
-  @DeprecationInfo("Use #select(Configurable)")
+  @DeprecationInfo("Use #select(Class)")
   AsyncResult<Void> select(Configurable configurable);
 
   @Deprecated
-  @DeprecationInfo("Use #select(Configurable)")
+  @DeprecationInfo("Use #select(Class)")
   AsyncResult<Void> select(Configurable configurable, final String text);
 
   @Deprecated
-  @DeprecationInfo("Use #select(Configurable)")
+  @DeprecationInfo("Use #select(Class)")
   AsyncResult<Void> clearSearchAndSelect(Configurable configurable);
 
   @Nonnull

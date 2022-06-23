@@ -15,26 +15,25 @@
  */
 package consulo.ide.impl.idea.find.impl;
 
-import consulo.find.FindInProjectSettings;
-import consulo.find.FindSettings;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
+import consulo.find.FindInProjectSettings;
+import consulo.find.FindSettings;
 import consulo.ide.ServiceManager;
-import consulo.project.Project;
 import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.project.Project;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-
 import java.util.ArrayList;
 import java.util.List;
 
 @Singleton
-@State(
-        name = "FindInProjectRecents",
-        storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE, roamingType = RoamingType.DISABLED)})
+@State(name = "FindInProjectRecents", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE, roamingType = RoamingType.DISABLED)})
+@ServiceImpl
 public final class FindInProjectRecents extends FindInProjectSettingsBase implements FindInProjectSettings {
   public static FindInProjectSettings getInstance(Project project) {
     return ServiceManager.getService(project, FindInProjectSettings.class);

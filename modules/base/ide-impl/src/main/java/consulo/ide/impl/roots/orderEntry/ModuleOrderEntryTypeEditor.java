@@ -15,8 +15,10 @@
  */
 package consulo.ide.impl.roots.orderEntry;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.setting.module.OrderEntryTypeEditor;
 import consulo.module.impl.internal.layer.orderEntry.ModuleOrderEntryImpl;
+import consulo.module.impl.internal.layer.orderEntry.ModuleOrderEntryType;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.ColoredTextContainer;
 
@@ -27,7 +29,14 @@ import java.util.function.Consumer;
  * @author VISTALL
  * @since 06-Jun-16
  */
+@ExtensionImpl
 public class ModuleOrderEntryTypeEditor implements OrderEntryTypeEditor<ModuleOrderEntryImpl> {
+  @Nonnull
+  @Override
+  public String getOrderTypeId() {
+    return ModuleOrderEntryType.ID;
+  }
+
   @Nonnull
   @Override
   public Consumer<ColoredTextContainer> getRender(@Nonnull ModuleOrderEntryImpl orderEntry) {

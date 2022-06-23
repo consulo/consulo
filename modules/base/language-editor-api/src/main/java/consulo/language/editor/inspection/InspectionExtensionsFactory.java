@@ -20,6 +20,8 @@
  */
 package consulo.language.editor.inspection;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.editor.inspection.reference.RefManager;
 import consulo.language.editor.inspection.reference.RefManagerExtension;
@@ -29,9 +31,9 @@ import consulo.project.Project;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+@Extension(ComponentScope.APPLICATION)
 public abstract class InspectionExtensionsFactory {
-
-  public static final ExtensionPointName<InspectionExtensionsFactory> EP_NAME = ExtensionPointName.create("consulo.codeInspection.InspectionExtension");
+  public static final ExtensionPointName<InspectionExtensionsFactory> EP_NAME = ExtensionPointName.create(InspectionExtensionsFactory.class);
 
   public abstract GlobalInspectionContextExtension createGlobalInspectionContextExtension();
 
@@ -47,5 +49,4 @@ public abstract class InspectionExtensionsFactory {
   public abstract String getSuppressedInspectionIdsIn(PsiElement element);
 
   public abstract boolean isProjectConfiguredToRunInspections(@Nonnull Project project, boolean online);
-
 }

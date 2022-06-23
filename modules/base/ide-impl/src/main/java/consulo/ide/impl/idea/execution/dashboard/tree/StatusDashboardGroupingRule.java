@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.execution.dashboard.tree;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.execution.ExecutionBundle;
 import consulo.ide.impl.idea.execution.dashboard.*;
 import consulo.application.AllIcons;
@@ -28,6 +29,7 @@ import javax.annotation.Nullable;
 /**
  * @author konstantin.aleev
  */
+@ExtensionImpl
 public class StatusDashboardGroupingRule implements DashboardGroupingRule {
   @NonNls
   private static final String NAME = "StatusDashboardGroupingRule";

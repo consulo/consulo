@@ -15,46 +15,53 @@
  */
 package consulo.ide.setting.module;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.application.Application;
-import consulo.application.extension.KeyedExtensionFactory;
-import consulo.component.extension.ExtensionPointName;
-import consulo.component.extension.KeyedFactoryEPBean;
+import consulo.component.extension.ExtensionPoint;
+import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.module.content.layer.orderEntry.OrderEntry;
-import consulo.module.content.layer.orderEntry.OrderEntryType;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ColoredTextContainer;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
  * @author VISTALL
- * @since 06-Jun-16
- *
  * @see CustomOrderEntryTypeEditor
+ * @since 06-Jun-16
  */
+@Extension(ComponentScope.APPLICATION)
 public abstract interface OrderEntryTypeEditor<T extends OrderEntry> {
-  ExtensionPointName<KeyedFactoryEPBean> EP_NAME = ExtensionPointName.create("consulo.orderEntryTypeEditor");
+  ExtensionPointCacheKey<OrderEntryTypeEditor, Map<String, OrderEntryTypeEditor>> CACHE_KEY = ExtensionPointCacheKey.create("OrderEntryTypeEditor", orderEntryTypeEditors -> {
+    Map<String, OrderEntryTypeEditor> map = new HashMap<>();
+    for (OrderEntryTypeEditor editor : orderEntryTypeEditors) {
+      map.put(editor.getOrderTypeId(), editor);
+    }
+    return map;
+  });
 
-  KeyedExtensionFactory<OrderEntryTypeEditor, OrderEntryType> FACTORY = new KeyedExtensionFactory<>(OrderEntryTypeEditor.class, EP_NAME, Application.get()) {
-    @Override
-    public OrderEntryTypeEditor getByKey(@Nullable OrderEntryType key) {
-      OrderEntryTypeEditor editor = super.getByKey(key);
-      if (editor == null) {
-        return super.getByKey(null);
-      }
+  @Nonnull
+  static OrderEntryTypeEditor getEditor(String id) {
+    ExtensionPoint<OrderEntryTypeEditor> extensionPoint = Application.get().getExtensionPoint(OrderEntryTypeEditor.class);
+
+    Map<String, OrderEntryTypeEditor> map = extensionPoint.getOrBuildCache(CACHE_KEY);
+    OrderEntryTypeEditor editor = map.get(id);
+    if (editor != null) {
       return editor;
     }
 
-    @Override
-    @Nonnull
-    public String getKey(@Nullable final OrderEntryType key) {
-      return key == null ? "" : key.getId();
-    }
-  };
+    return Objects.requireNonNull(map.get(""), "can't find unknown order entry type");
+  }
+
+  @Nonnull
+  String getOrderTypeId();
 
   @Nonnull
   default Consumer<ColoredTextContainer> getRender(@Nonnull T orderEntry) {

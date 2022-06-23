@@ -17,29 +17,29 @@
 package consulo.ide.impl.psi.impl.cache.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.language.file.inject.VirtualFileWindow;
 import consulo.application.ReadAction;
+import consulo.ide.impl.psi.impl.cache.TodoCacheManager;
+import consulo.ide.impl.psi.impl.cache.impl.todo.TodoIndex;
+import consulo.ide.impl.psi.impl.cache.impl.todo.TodoIndexEntry;
+import consulo.language.file.inject.VirtualFileWindow;
+import consulo.language.file.light.LightVirtualFile;
 import consulo.language.impl.internal.psi.stub.FileContentImpl;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
+import consulo.language.psi.PsiUtilCore;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.search.IndexPattern;
+import consulo.language.psi.search.IndexPatternProvider;
 import consulo.language.psi.stub.DumbModeAccessType;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.language.psi.stub.FileBasedIndexExtension;
 import consulo.language.psi.stub.FileContent;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiFile;
-import consulo.language.psi.PsiManager;
-import consulo.ide.impl.psi.impl.cache.TodoCacheManager;
-import consulo.ide.impl.psi.impl.cache.impl.todo.TodoIndex;
-import consulo.ide.impl.psi.impl.cache.impl.todo.TodoIndexEntry;
-import consulo.ide.impl.psi.impl.cache.impl.todo.TodoIndexers;
-import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.language.psi.search.IndexPattern;
-import consulo.language.psi.search.IndexPatternProvider;
-import consulo.language.psi.PsiUtilCore;
-import consulo.language.file.light.LightVirtualFile;
 import consulo.logging.Logger;
+import consulo.module.content.ProjectFileIndex;
+import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ref.SimpleReference;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -81,7 +81,7 @@ public class IndexTodoCacheManagerImpl extends TodoCacheManager {
                 fileBasedIndex.getContainingFiles(TodoIndex.NAME, new TodoIndexEntry(indexPattern.getPatternString(), indexPattern.isCaseSensitive()), GlobalSearchScope.allScope(myProject));
         for (VirtualFile file : files) {
           ReadAction.run(() -> {
-            if (file.isValid() && TodoIndexers.belongsToProject(myProject, file)) {
+            if (file.isValid() && belongsToProject(myProject, file)) {
               ContainerUtil.addIfNotNull(allFiles, myPsiManager.findFile(file));
             }
           });
@@ -90,6 +90,13 @@ public class IndexTodoCacheManagerImpl extends TodoCacheManager {
     }, DumbModeAccessType.RELIABLE_DATA_ONLY);
 
     return allFiles.isEmpty() ? PsiFile.EMPTY_ARRAY : PsiUtilCore.toPsiFileArray(allFiles);
+  }
+
+  public static boolean belongsToProject(@Nonnull Project project, @Nonnull VirtualFile file) {
+    if (!ProjectFileIndex.getInstance(project).isInContent(file)) {
+      return false;
+    }
+    return true;
   }
 
   @Override
@@ -115,7 +122,7 @@ public class IndexTodoCacheManagerImpl extends TodoCacheManager {
       return calculateTodoCount((LightVirtualFile)file, indexPatterns);
     }
 
-    if (!TodoIndexers.belongsToProject(myProject, file)) {
+    if (!belongsToProject(myProject, file)) {
       return 0;
     }
 

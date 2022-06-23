@@ -13,17 +13,10 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.ex.awt.internal.GuiUtils;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.event.BulkFileListener;
-import consulo.virtualFileSystem.event.VFileEvent;
-import consulo.virtualFileSystem.event.VFilePropertyChangeEvent;
-import jakarta.inject.Inject;
-import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -34,29 +27,6 @@ public final class GistManagerImpl extends GistManager {
   private static final Set<String> ourKnownIds = ContainerUtil.newConcurrentSet();
   private static final String ourPropertyName = "file.gist.reindex.count";
   private final AtomicInteger myReindexCount = new AtomicInteger(PropertiesComponent.getInstance().getInt(ourPropertyName, 0));
-
-  static final class MyBulkFileListener implements BulkFileListener {
-    private Provider<GistManager> myGistManager;
-
-    @Inject
-    MyBulkFileListener(Provider<GistManager> gistManager) {
-      myGistManager = gistManager;
-    }
-
-    @Override
-    public void after(@Nonnull List<? extends VFileEvent> events) {
-      if (events.stream().anyMatch(MyBulkFileListener::shouldDropCache)) {
-        ((GistManagerImpl)myGistManager.get()).invalidateGists();
-      }
-    }
-
-    private static boolean shouldDropCache(VFileEvent e) {
-      if (!(e instanceof VFilePropertyChangeEvent)) return false;
-
-      String propertyName = ((VFilePropertyChangeEvent)e).getPropertyName();
-      return propertyName.equals(VirtualFile.PROP_NAME) || propertyName.equals(VirtualFile.PROP_ENCODING);
-    }
-  }
 
   @Nonnull
   @Override
@@ -84,7 +54,7 @@ public final class GistManagerImpl extends GistManager {
     invalidateDependentCaches();
   }
 
-  private void invalidateGists() {
+  protected void invalidateGists() {
     if (LOG.isDebugEnabled()) {
       LOG.debug("Invalidating gists", new Throwable());
     }

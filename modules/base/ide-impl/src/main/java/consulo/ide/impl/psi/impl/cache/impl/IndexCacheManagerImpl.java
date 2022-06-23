@@ -16,30 +16,30 @@
 
 package consulo.ide.impl.psi.impl.cache.impl;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
-import consulo.application.util.ReadActionProcessor;
-import consulo.component.ProcessCanceledException;
-import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.dumb.IndexNotReadyException;
-import consulo.project.Project;
-import consulo.language.content.FileIndexFacade;
+import consulo.application.progress.ProgressIndicatorProvider;
+import consulo.application.util.ReadActionProcessor;
+import consulo.application.util.function.CommonProcessors;
 import consulo.application.util.function.Computable;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiFile;
-import consulo.language.psi.PsiManager;
+import consulo.application.util.function.Processor;
+import consulo.component.ProcessCanceledException;
 import consulo.ide.impl.psi.impl.cache.CacheManager;
 import consulo.ide.impl.psi.impl.cache.impl.id.IdIndex;
 import consulo.ide.impl.psi.impl.cache.impl.id.IdIndexEntry;
+import consulo.language.content.FileIndexFacade;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
 import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.application.util.function.CommonProcessors;
-import consulo.application.util.function.Processor;
 import consulo.language.psi.stub.FileBasedIndex;
-import javax.annotation.Nonnull;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
-
-import consulo.annotation.access.RequiredReadAction;
 import jakarta.inject.Singleton;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,6 +48,7 @@ import java.util.List;
  *         Date: Jan 16, 2008
  */
 @Singleton
+@ServiceImpl
 public class IndexCacheManagerImpl extends CacheManager{
   private final Project myProject;
   private final PsiManager myPsiManager;

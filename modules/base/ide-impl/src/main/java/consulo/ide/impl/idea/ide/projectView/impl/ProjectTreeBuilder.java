@@ -65,7 +65,7 @@ public class ProjectTreeBuilder extends BaseProjectTreeBuilder {
       }
     });
 
-    connection.subscribe(BookmarksListener.TOPIC, new MyBookmarksListener());
+    connection.subscribe(BookmarksListener.class, new MyBookmarksListener());
 
     PsiManager.getInstance(project).addPsiTreeChangeListener(createPsiTreeChangeListener(project), this);
     FileStatusManager.getInstance(project).addFileStatusListener(new MyFileStatusListener(), this);

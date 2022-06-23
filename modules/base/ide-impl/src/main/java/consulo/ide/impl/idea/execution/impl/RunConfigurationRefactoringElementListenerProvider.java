@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.execution.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.execution.RunManager;
 import consulo.ide.impl.idea.execution.configurations.RefactoringListenerProvider;
 import consulo.execution.configuration.RunConfiguration;
@@ -27,6 +28,7 @@ import consulo.language.editor.refactoring.event.RefactoringElementListenerProvi
 /**
  * @author spleaner
 */
+@ExtensionImpl
 public class RunConfigurationRefactoringElementListenerProvider implements RefactoringElementListenerProvider {
   private static final Logger LOG = Logger.getInstance(RunConfigurationRefactoringElementListenerProvider.class);
 

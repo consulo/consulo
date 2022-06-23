@@ -15,11 +15,13 @@
  */
 package consulo.ide.impl.idea.execution.dashboard;
 
-import consulo.project.ui.view.tree.AbstractTreeNode;
-import consulo.fileEditor.structureView.tree.TreeAction;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
-import javax.annotation.Nullable;
+import consulo.fileEditor.structureView.tree.TreeAction;
+import consulo.project.ui.view.tree.AbstractTreeNode;
 
+import javax.annotation.Nullable;
 import java.util.Comparator;
 
 /**
@@ -27,8 +29,9 @@ import java.util.Comparator;
  *
  * @author konstantin.aleev
  */
+@Extension(ComponentScope.APPLICATION)
 public interface DashboardGroupingRule extends TreeAction {
-  ExtensionPointName<DashboardGroupingRule> EP_NAME = ExtensionPointName.create("consulo.runDashboardGroupingRule");
+  ExtensionPointName<DashboardGroupingRule> EP_NAME = ExtensionPointName.create(DashboardGroupingRule.class);
 
   Comparator<DashboardGroupingRule> PRIORITY_COMPARATOR = (o1, o2) -> {
     final int res = o2.getPriority() - o1.getPriority();

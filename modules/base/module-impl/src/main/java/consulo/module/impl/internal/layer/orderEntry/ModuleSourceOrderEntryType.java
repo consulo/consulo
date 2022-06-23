@@ -30,6 +30,8 @@ import javax.annotation.Nonnull;
  */
 @ExtensionImpl
 public class ModuleSourceOrderEntryType implements OrderEntryType<ModuleSourceOrderEntryImpl> {
+  public static final String ID = "sourceFolder";
+
   @Nonnull
   public static ModuleSourceOrderEntryType getInstance() {
     return EP_NAME.findExtensionOrFail(ModuleSourceOrderEntryType.class);
@@ -38,7 +40,7 @@ public class ModuleSourceOrderEntryType implements OrderEntryType<ModuleSourceOr
   @Nonnull
   @Override
   public String getId() {
-    return "sourceFolder";
+    return ID;
   }
 
   @Nonnull

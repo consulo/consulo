@@ -1,6 +1,8 @@
 // Copyright 2000-2017 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.content.scope;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 
@@ -9,8 +11,9 @@ import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
+@Extension(ComponentScope.APPLICATION)
 public interface SearchScopeProvider {
-  ExtensionPointName<SearchScopeProvider> EP_NAME = ExtensionPointName.create("consulo.searchScopesProvider");
+  ExtensionPointName<SearchScopeProvider> EP_NAME = ExtensionPointName.create(SearchScopeProvider.class);
 
   @Nullable
   default String getDisplayName() {

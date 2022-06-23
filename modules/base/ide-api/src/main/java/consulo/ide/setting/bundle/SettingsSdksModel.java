@@ -21,12 +21,12 @@ import consulo.content.bundle.SdkModel;
 import consulo.content.bundle.SdkTypeId;
 import consulo.ide.setting.ui.MasterDetailsComponent;
 import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.util.lang.function.Condition;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * @author VISTALL
@@ -51,5 +51,5 @@ public interface SettingsSdksModel extends SdkModel {
     createAddActions(group, parent, updateTree, null);
   }
 
-  void createAddActions(DefaultActionGroup group, final JComponent parent, final Consumer<Sdk> updateTree, @Nullable Condition<SdkTypeId> filter);
+  void createAddActions(DefaultActionGroup group, final JComponent parent, final Consumer<Sdk> updateTree, @Nullable Predicate<SdkTypeId> filter);
 }

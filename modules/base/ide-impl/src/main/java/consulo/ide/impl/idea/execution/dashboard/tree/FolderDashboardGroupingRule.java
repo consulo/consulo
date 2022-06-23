@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.execution.dashboard.tree;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.execution.ExecutionBundle;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.ide.impl.idea.execution.dashboard.DashboardGroup;
@@ -31,6 +32,7 @@ import javax.annotation.Nullable;
 /**
  * @author konstantin.aleev
  */
+@ExtensionImpl
 public class FolderDashboardGroupingRule implements DashboardGroupingRule {
   private static final String NAME = "FolderDashboardGroupingRule";
 

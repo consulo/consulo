@@ -1,29 +1,28 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.psi.stubs;
 
-import consulo.language.Language;
-import consulo.language.parser.LanguageParserDefinitions;
-import consulo.language.parser.ParserDefinition;
-import consulo.language.psi.stub.BinaryFileStubBuilder;
-import consulo.language.psi.stub.BinaryFileStubBuilders;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.virtualFileSystem.fileType.FileTypeRegistry;
-import consulo.language.file.LanguageFileType;
 import consulo.application.progress.ProgressManager;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.FileAttribute;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.FSRecords;
-import consulo.language.template.TemplateLanguage;
-import consulo.language.ast.IFileElementType;
-import consulo.language.psi.stub.IStubFileElementType;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.indexing.IndexInfrastructure;
 import consulo.ide.impl.idea.util.indexing.IndexingStamp;
 import consulo.index.io.data.DataInputOutputUtil;
+import consulo.language.Language;
+import consulo.language.ast.IFileElementType;
+import consulo.language.file.LanguageFileType;
+import consulo.language.parser.LanguageParserDefinitions;
+import consulo.language.parser.ParserDefinition;
+import consulo.language.psi.stub.BinaryFileStubBuilder;
+import consulo.language.psi.stub.IStubFileElementType;
+import consulo.language.template.TemplateLanguage;
 import consulo.logging.Logger;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import gnu.trove.TLongObjectHashMap;
 import gnu.trove.TObjectLongHashMap;
 
@@ -172,7 +171,7 @@ class StubVersionMap {
       }
     }
 
-    BinaryFileStubBuilder builder = BinaryFileStubBuilders.INSTANCE.forFileType(fileType);
+    BinaryFileStubBuilder builder = BinaryFileStubBuilder.forFileType(fileType);
     if (builder != null) {
       owner = builder;
     }

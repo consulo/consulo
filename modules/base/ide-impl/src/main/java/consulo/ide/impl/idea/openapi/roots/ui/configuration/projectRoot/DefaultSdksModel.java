@@ -16,31 +16,30 @@
 
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot;
 
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.application.ApplicationManager;
-import consulo.configurable.ConfigurationException;
 import consulo.application.progress.PerformInBackgroundOption;
-import consulo.content.bundle.*;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.project.ProjectBundle;
-import consulo.ide.impl.idea.openapi.projectRoots.impl.SdkConfigurationUtil;
+import consulo.configurable.ConfigurationException;
+import consulo.content.bundle.*;
 import consulo.content.impl.internal.bundle.SdkImpl;
-import consulo.ide.setting.ui.MasterDetailsComponent;
-import consulo.ui.ex.awt.Messages;
+import consulo.disposer.Disposable;
+import consulo.ide.impl.idea.openapi.projectRoots.impl.SdkConfigurationUtil;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.util.lang.function.Condition;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.disposer.Disposable;
 import consulo.ide.setting.bundle.SettingsSdksModel;
+import consulo.ide.setting.ui.MasterDetailsComponent;
 import consulo.logging.Logger;
+import consulo.project.ProjectBundle;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.awt.Messages;
 import consulo.util.collection.ArrayUtil;
 import jakarta.inject.Provider;
 
@@ -49,6 +48,7 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * User: anna
@@ -268,11 +268,11 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
   }
 
   @Override
-  public void createAddActions(DefaultActionGroup group, final JComponent parent, final Consumer<Sdk> updateTree, @Nullable Condition<SdkTypeId> filter) {
+  public void createAddActions(DefaultActionGroup group, final JComponent parent, final Consumer<Sdk> updateTree, @Nullable Predicate<SdkTypeId> filter) {
     final List<SdkType> types = SdkType.EP_NAME.getExtensionList();
     List<SdkType> list = new ArrayList<>(types.size());
     for (SdkType sdkType : types) {
-      if (filter != null && !filter.value(sdkType)) {
+      if (filter != null && !filter.test(sdkType)) {
         continue;
       }
 

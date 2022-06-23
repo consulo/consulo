@@ -18,7 +18,6 @@ package consulo.language.copyright.util;
 
 import consulo.language.Commenter;
 import consulo.language.LanguageCommenters;
-import consulo.language.copyright.CopyrightUpdaters;
 import consulo.language.copyright.UpdateCopyrightsProvider;
 import consulo.language.copyright.config.CopyrightFileConfig;
 import consulo.language.file.LanguageFileType;
@@ -33,7 +32,7 @@ public class FileTypeUtil {
   @Nonnull
   public static String buildComment(@Nonnull FileType type, @Nonnull String template, @Nonnull CopyrightFileConfig options) {
     Commenter commenter = getCommenter(type);
-    UpdateCopyrightsProvider updateCopyrightsProvider = CopyrightUpdaters.INSTANCE.forFileType(type);
+    UpdateCopyrightsProvider updateCopyrightsProvider = UpdateCopyrightsProvider.forFileType(type);
     return buildComment(commenter, updateCopyrightsProvider.isAllowSeparator(), template, options);
   }
 

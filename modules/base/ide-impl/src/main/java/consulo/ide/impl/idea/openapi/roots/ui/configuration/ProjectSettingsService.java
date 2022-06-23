@@ -109,10 +109,8 @@ public final class ProjectSettingsService {
   public void openLibraryOrSdkSettings(final @Nonnull OrderEntry orderEntry) {
     OrderEntryType type = orderEntry.getType();
 
-    OrderEntryTypeEditor editor = OrderEntryTypeEditor.FACTORY.getByKey(type);
-    if (editor != null) {
-      editor.navigate(orderEntry);
-    }
+    OrderEntryTypeEditor editor = OrderEntryTypeEditor.getEditor(type.getId());
+    editor.navigate(orderEntry);
   }
 
   @RequiredUIAccess

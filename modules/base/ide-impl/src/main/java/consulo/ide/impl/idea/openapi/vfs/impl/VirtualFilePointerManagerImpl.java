@@ -77,13 +77,6 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
 
   private int myPointerSetModCount;
 
-  static final class MyAsyncFileListener implements AsyncFileListener {
-    @Override
-    public ChangeApplier prepareChange(@Nonnull List<? extends VFileEvent> events) {
-      return ((VirtualFilePointerManagerImpl)VirtualFilePointerManager.getInstance()).prepareChange(events);
-    }
-  }
-
   @Override
   public void dispose() {
     assertAllPointersDisposed();

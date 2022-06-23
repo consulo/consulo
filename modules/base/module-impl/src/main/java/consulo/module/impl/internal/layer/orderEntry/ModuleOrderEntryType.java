@@ -16,13 +16,13 @@
 package consulo.module.impl.internal.layer.orderEntry;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.module.content.layer.orderEntry.DependencyScope;
-import consulo.util.xml.serializer.InvalidDataException;
 import consulo.module.content.layer.ModuleRootLayer;
+import consulo.module.content.layer.orderEntry.DependencyScope;
 import consulo.module.content.layer.orderEntry.OrderEntryType;
 import consulo.module.impl.internal.layer.ModuleRootLayerImpl;
+import consulo.util.xml.serializer.InvalidDataException;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -36,17 +36,16 @@ public class ModuleOrderEntryType implements OrderEntryType<ModuleOrderEntryImpl
     return EP_NAME.findExtensionOrFail(ModuleOrderEntryType.class);
   }
 
-  @NonNls
+  public static final String ID = "module";
+
   public static final String MODULE_NAME_ATTR = "module-name";
-  @NonNls
   private static final String EXPORTED_ATTR = "exported";
-  @NonNls
   private static final String PRODUCTION_ON_TEST_ATTRIBUTE = "production-on-test";
 
   @Nonnull
   @Override
   public String getId() {
-    return "module";
+    return ID;
   }
 
   @Nonnull

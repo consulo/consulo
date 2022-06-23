@@ -15,16 +15,18 @@
  */
 package consulo.module.impl.internal;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.TopicImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.module.Module;
-import consulo.module.extension.ModuleExtension;
-import consulo.module.extension.event.ModuleExtensionChangeListener;
-import consulo.module.impl.internal.layer.ModuleExtensionProviderEP;
-import consulo.module.extension.MutableModuleExtension;
-import consulo.module.impl.internal.extension.ModuleExtensionProviders;
 import consulo.module.content.layer.ModuleRootLayer;
 import consulo.module.content.layer.event.ModuleRootLayerListener;
+import consulo.module.extension.ModuleExtension;
+import consulo.module.extension.MutableModuleExtension;
+import consulo.module.extension.event.ModuleExtensionChangeListener;
+import consulo.module.impl.internal.extension.ModuleExtensionProviders;
+import consulo.module.impl.internal.layer.ModuleExtensionProviderEP;
 import consulo.util.lang.Couple;
 
 import javax.annotation.Nonnull;
@@ -35,6 +37,7 @@ import java.util.List;
  * @author VISTALL
  * @since 31.07.14
  */
+@TopicImpl(ComponentScope.PROJECT)
 public class ExtensionListenerByLayerListenerInvoker implements ModuleRootLayerListener {
   @Override
   public void currentLayerChanged(@Nonnull final Module module,

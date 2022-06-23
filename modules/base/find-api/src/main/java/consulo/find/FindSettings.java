@@ -16,11 +16,14 @@
 
 package consulo.find;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 
+@Service(ComponentScope.APPLICATION)
 public abstract class FindSettings{
 
   public static FindSettings getInstance() {

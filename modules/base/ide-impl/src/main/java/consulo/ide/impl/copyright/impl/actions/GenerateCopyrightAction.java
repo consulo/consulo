@@ -18,22 +18,22 @@ package consulo.ide.impl.copyright.impl.actions;
 
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
+import consulo.ide.impl.copyright.impl.ui.CopyrightProjectConfigurable;
+import consulo.ide.setting.ShowSettingsUtil;
+import consulo.language.copyright.UpdateCopyrightsProvider;
+import consulo.language.copyright.config.CopyrightManager;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
-import consulo.module.Module;
-import consulo.ide.setting.ShowSettingsUtil;
-import consulo.project.Project;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.Messages;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import consulo.language.copyright.config.CopyrightManager;
-import consulo.language.copyright.CopyrightUpdaters;
-import consulo.ide.impl.copyright.impl.ui.CopyrightProjectConfigurable;
+import consulo.module.Module;
+import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.Messages;
 
 import javax.annotation.Nullable;
 
@@ -48,7 +48,7 @@ public class GenerateCopyrightAction extends AnAction {
     }
 
     PsiFile file = getFile(context, project);
-    if (file == null || !CopyrightUpdaters.hasExtension(file)) {
+    if (file == null || !UpdateCopyrightsProvider.hasExtension(file)) {
       presentation.setEnabled(false);
     }
   }

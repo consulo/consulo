@@ -73,7 +73,7 @@ class AsyncProjectViewSupport {
     };
     setModel(tree, myAsyncTreeModel);
     MessageBusConnection connection = project.getMessageBus().connect(parent);
-    connection.subscribe(BookmarksListener.TOPIC, new BookmarksListener() {
+    connection.subscribe(BookmarksListener.class, new BookmarksListener() {
       @Override
       public void bookmarkAdded(@Nonnull Bookmark bookmark) {
         updateByFile(bookmark.getFile(), false);

@@ -2,20 +2,8 @@
 package consulo.ide.impl.idea.openapi.fileEditor.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.openapi.editor.impl.EditorFactoryImpl;
-import consulo.ide.impl.idea.openapi.editor.impl.TrailingSpacesStripper;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.text.TextEditorImpl;
-import consulo.ide.impl.idea.openapi.project.ProjectUtil;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.vfs.SafeWriteRequestor;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.PersistentFS;
-import consulo.ide.impl.idea.pom.core.impl.PomModelImpl;
-import consulo.ide.impl.idea.util.ExceptionUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.*;
 import consulo.application.internal.TransactionGuardEx;
-import consulo.application.progress.ProgressManager;
 import consulo.codeEditor.EditorFactory;
 import consulo.component.ComponentManager;
 import consulo.component.messagebus.MessageBus;
@@ -33,12 +21,21 @@ import consulo.document.internal.FileDocumentManagerEx;
 import consulo.document.internal.PrioritizedDocumentListener;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
+import consulo.ide.impl.idea.openapi.editor.impl.EditorFactoryImpl;
+import consulo.ide.impl.idea.openapi.editor.impl.TrailingSpacesStripper;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.text.TextEditorImpl;
+import consulo.ide.impl.idea.openapi.project.ProjectUtil;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.vfs.SafeWriteRequestor;
+import consulo.ide.impl.idea.pom.core.impl.PomModelImpl;
+import consulo.ide.impl.idea.util.ExceptionUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.codeStyle.CodeStyle;
-import consulo.virtualFileSystem.encoding.EncodingManager;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.language.impl.file.AbstractFileViewProvider;
-import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.impl.internal.psi.LoadTextUtil;
+import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.internal.ExternalChangeAction;
@@ -53,12 +50,12 @@ import consulo.ui.ex.awt.JBScrollPane;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.util.dataholder.Key;
-import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.*;
-import consulo.virtualFileSystem.event.*;
+import consulo.virtualFileSystem.encoding.EncodingManager;
+import consulo.virtualFileSystem.event.VFileContentChangeEvent;
+import consulo.virtualFileSystem.event.VFileDeleteEvent;
+import consulo.virtualFileSystem.event.VFilePropertyChangeEvent;
 import consulo.virtualFileSystem.fileType.FileType;
-import consulo.virtualFileSystem.fileType.FileTypeRegistry;
-import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.virtualFileSystem.impl.internal.RawFileLoaderImpl;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -87,7 +84,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
 
   private static final Key<String> LINE_SEPARATOR_KEY = Key.create("LINE_SEPARATOR_KEY");
   private static final Key<VirtualFile> FILE_KEY = Key.create("FILE_KEY");
-  private static final Key<Boolean> MUST_RECOMPUTE_FILE_TYPE = Key.create("Must recompute file type");
+  protected static final Key<Boolean> MUST_RECOMPUTE_FILE_TYPE = Key.create("Must recompute file type");
   private static final Key<Boolean> BIG_FILE_PREVIEW = Key.create("BIG_FILE_PREVIEW");
 
   private final Set<Document> myUnsavedDocuments = ContainerUtil.newConcurrentSet();
@@ -100,7 +97,8 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
 
   private boolean myOnClose;
 
-  private volatile MemoryDiskConflictResolver myConflictResolver = new MemoryDiskConflictResolver();
+  protected volatile MemoryDiskConflictResolver myConflictResolver = new MemoryDiskConflictResolver();
+
   private final PrioritizedDocumentListener myPhysicalDocumentChangeTracker = new PrioritizedDocumentListener() {
     @Override
     public int getPriority() {
@@ -578,7 +576,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
     return document.getUserData(BIG_FILE_PREVIEW) == Boolean.TRUE;
   }
 
-  private void propertyChanged(@Nonnull VFilePropertyChangeEvent event) {
+  protected void propertyChanged(@Nonnull VFilePropertyChangeEvent event) {
     final VirtualFile file = event.getFile();
     if (VirtualFile.PROP_WRITABLE.equals(event.getPropertyName())) {
       final Document document = getCachedDocument(file);
@@ -605,81 +603,12 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
 
   private static boolean isBinaryWithDecompiler(@Nonnull VirtualFile file) {
     final FileType ft = file.getFileType();
-    return ft.isBinary() && BinaryFileTypeDecompilers.INSTANCE.forFileType(ft) != null;
+    return ft.isBinary() && BinaryFileDecompiler.forFileType(ft) != null;
   }
 
   private static boolean isBinaryWithoutDecompiler(@Nonnull VirtualFile file) {
     final FileType fileType = file.getFileType();
-    return fileType.isBinary() && BinaryFileTypeDecompilers.INSTANCE.forFileType(fileType) == null;
-  }
-
-  static final class MyAsyncFileListener implements AsyncFileListener {
-    private final FileDocumentManagerImpl myFileDocumentManager = (FileDocumentManagerImpl)FileDocumentManager.getInstance();
-
-    @Override
-    public ChangeApplier prepareChange(@Nonnull List<? extends VFileEvent> events) {
-      List<VirtualFile> toRecompute = new ArrayList<>();
-      Map<VirtualFile, Document> strongRefsToDocuments = new HashMap<>();
-      List<VFileContentChangeEvent> contentChanges = ContainerUtil.findAll(events, VFileContentChangeEvent.class);
-      for (VFileContentChangeEvent event : contentChanges) {
-        ProgressManager.checkCanceled();
-        VirtualFile virtualFile = event.getFile();
-
-        // when an empty unknown file is written into, re-run file type detection
-        long lastRecordedLength = PersistentFS.getInstance().getLastRecordedLength(virtualFile);
-        if (lastRecordedLength == 0 && FileTypeRegistry.getInstance().isFileOfType(virtualFile, UnknownFileType.INSTANCE)) { // check file type last to avoid content detection running
-          toRecompute.add(virtualFile);
-        }
-
-        prepareForRangeMarkerUpdate(strongRefsToDocuments, virtualFile);
-      }
-
-      return new ChangeApplier() {
-        @Override
-        public void beforeVfsChange() {
-          for (VFileContentChangeEvent event : contentChanges) {
-            // new range markers could've appeared after "prepareChange" in some read action
-            prepareForRangeMarkerUpdate(strongRefsToDocuments, event.getFile());
-            if (ourConflictsSolverEnabled) {
-              myFileDocumentManager.myConflictResolver.beforeContentChange(event);
-            }
-          }
-
-          for (VirtualFile file : toRecompute) {
-            file.putUserData(MUST_RECOMPUTE_FILE_TYPE, Boolean.TRUE);
-          }
-        }
-
-        @Override
-        public void afterVfsChange() {
-          for (VFileEvent event : events) {
-            if (event instanceof VFileContentChangeEvent && ((VFileContentChangeEvent)event).getFile().isValid()) {
-              myFileDocumentManager.contentsChanged((VFileContentChangeEvent)event);
-            }
-            else if (event instanceof VFileDeleteEvent && ((VFileDeleteEvent)event).getFile().isValid()) {
-              myFileDocumentManager.fileDeleted((VFileDeleteEvent)event);
-            }
-            else if (event instanceof VFilePropertyChangeEvent && ((VFilePropertyChangeEvent)event).getFile().isValid()) {
-              myFileDocumentManager.propertyChanged((VFilePropertyChangeEvent)event);
-            }
-          }
-          ObjectUtil.reachabilityFence(strongRefsToDocuments);
-        }
-      };
-    }
-
-    private void prepareForRangeMarkerUpdate(Map<VirtualFile, Document> strongRefsToDocuments, VirtualFile virtualFile) {
-      Document document = myFileDocumentManager.getCachedDocument(virtualFile);
-      if (document == null && DocumentImpl.areRangeMarkersRetainedFor(virtualFile)) {
-        // re-create document with the old contents prior to this event
-        // then contentChanged() will diff the document with the new contents and update the markers
-        document = myFileDocumentManager.getDocument(virtualFile);
-      }
-      // save document strongly to make it live until contentChanged()
-      if (document != null) {
-        strongRefsToDocuments.put(virtualFile, document);
-      }
-    }
+    return fileType.isBinary() && BinaryFileDecompiler.forFileType(fileType) == null;
   }
 
   public void contentsChanged(VFileContentChangeEvent event) {
@@ -755,7 +684,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
     Disposer.register(disposable, () -> myConflictResolver = old);
   }
 
-  private void fileDeleted(@Nonnull VFileDeleteEvent event) {
+  protected void fileDeleted(@Nonnull VFileDeleteEvent event) {
     Document doc = getCachedDocument(event.getFile());
     if (doc != null) {
       myTrailingSpacesStripper.documentDeleted(doc);

@@ -15,6 +15,7 @@
  */
 package consulo.component.extension;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.component.ComponentManager;
 
 import javax.annotation.Nonnull;
@@ -23,6 +24,8 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 28/12/2021
  */
+@Deprecated
+@DeprecationInfo("since old extension removed this class not work as expected")
 public interface ComponentAware {
   void setComponent(@Nonnull ComponentManager component);
 }

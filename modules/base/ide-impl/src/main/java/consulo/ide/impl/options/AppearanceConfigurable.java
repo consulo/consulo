@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.options;
 
+import consulo.configurable.StandardConfigurableIds;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.util.NotNullComputable;
 import consulo.application.ui.UIFontManager;
@@ -43,6 +44,7 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -210,6 +212,23 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
     public Layout compute() {
       return myPanel;
     }
+  }
+
+  @Nonnull
+  @Override
+  public String getId() {
+    return "appearance";
+  }
+
+  @Nullable
+  @Override
+  public String getParentId() {
+    return StandardConfigurableIds.GENERAL_GROUP;
+  }
+
+  @Override
+  public String getDisplayName() {
+    return "Appearance";
   }
 
   @RequiredUIAccess

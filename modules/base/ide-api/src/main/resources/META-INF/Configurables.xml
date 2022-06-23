@@ -15,9 +15,9 @@
   -->
 <consulo-plugin>
   <extensions defaultExtensionNs="consulo">
-    <applicationConfigurable id="execution"
-                             displayName="Execution"
-                             instance="consulo.configurable.ConfigurableAdapter"/>
+    <!--<applicationConfigurable id="execution"-->
+                             <!--displayName="Execution"-->
+                             <!--instance="consulo.configurable.ConfigurableAdapter"/>-->
 
     <applicationConfigurable instance="consulo.ide.impl.idea.tools.ToolConfigurable"
                              id="preferences.externalTools"
@@ -35,10 +35,12 @@
                              parentId="general"
                              key="title.customizations" bundle="consulo.ide.IdeBundle"/>
 
+<!--
     <applicationConfigurable instance="consulo.ide.impl.options.AppearanceConfigurable"
                              id="appearance"
                              parentId="general"
                              displayName="Appearance"/>
+-->
 
     <applicationConfigurable parentId="editor" id="editor.breadcrumbs"
                              key="configurable.breadcrumbs" bundle="consulo.application.ApplicationBundle"
@@ -167,15 +169,15 @@
 
     <applicationConfigurable displayName="Notifications" id="notifications" parentId="general" instance="consulo.ide.impl.idea.notification.impl.NotificationsConfigurable"/>
 
-    <applicationConfigurable instance="consulo.ide.impl.plugins.PluginsConfigurable"
-                             id="platformAndPlugins"
-                             bundle="consulo.ide.IdeBundle"
-                             key="title.plugins"/>
+    <!--<applicationConfigurable instance="consulo.ide.impl.plugins.PluginsConfigurable"-->
+                             <!--id="platformAndPlugins"-->
+                             <!--bundle="consulo.ide.IdeBundle"-->
+                             <!--key="title.plugins"/>-->
 
-    <applicationConfigurable id="updateSettings"
-                             parentId="platformAndPlugins"
-                             instance="consulo.ide.impl.updateSettings.UpdatesConfigurable"
-                             displayName="Update Settings"/>
+    <!--<applicationConfigurable id="updateSettings"-->
+                             <!--parentId="platformAndPlugins"-->
+                             <!--instance="consulo.ide.impl.updateSettings.UpdatesConfigurable"-->
+                             <!--displayName="Update Settings"/>-->
 
     <applicationConfigurable parentId="general" instance="consulo.ide.impl.idea.util.net.HttpProxyConfigurable" id="http.proxy" displayName="HTTP Proxy"/>
 
@@ -184,16 +186,12 @@
     <applicationConfigurable parentId="general" instance="consulo.ide.impl.idea.openapi.keymap.impl.ui.QuickListsPanel" id="reference.idesettings.quicklists"
 							 displayName="Quick Lists"/>
 
-    <applicationConfigurable displayName="System" parentId="general" instance="consulo.ide.impl.idea.ide.GeneralSettingsConfigurable"/>
+    <!--<applicationConfigurable displayName="System" parentId="general" instance="consulo.ide.impl.idea.ide.GeneralSettingsConfigurable"/>-->
 
-    <applicationConfigurable parentId="editor" instance="consulo.ide.impl.ui.FileTypeConfigurable" id="preferences.fileTypes"
-                             key="filetype.settings.title" bundle="messages.FileTypesBundle"/>
+    <!--<applicationConfigurable parentId="editor" instance="consulo.ide.impl.ui.FileTypeConfigurable" id="preferences.fileTypes"-->
+                             <!--key="filetype.settings.title" bundle="messages.FileTypesBundle"/>-->
 
-    <applicationConfigurable instance="consulo.ide.impl.idea.ide.browsers.BrowserSettings"
-                             id="web.browsers"
-                             parentId="general"
-                             key="browsers.settings"
-                             bundle="consulo.ide.IdeBundle"/>
+
 
     <projectConfigurable instance="consulo.ide.impl.idea.openapi.vcs.configurable.VcsManagerConfigurable"
                          displayName="consulo.vcs.api.VcsApiLocalize@version.control.main.configurable.name"
@@ -209,18 +207,10 @@
                     instance="consulo.ide.impl.diff.ExternalDiffSettingsConfigurable"/>
     </applicationConfigurable>
 
-    <applicationConfigurable id="sdks.list" bundle="consulo.project.ProjectBundle" key="global.bundles.display.name"
-                             instance="consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.SdkListConfigurable"/>
 
-    <projectConfigurable id="project" nonDefaultProject="true" displayName="Project" instance="consulo.ide.impl.idea.openapi.roots.ui.configuration.ProjectConfigurable"/>
 
-    <projectConfigurable id="project.modules" parentId="project" nonDefaultProject="true" displayName="Modules"
-                         instance="consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.ModuleStructureConfigurable"/>
 
-    <projectConfigurable id="project.libraries" parentId="project" nonDefaultProject="true" displayName="Libraries"
-                         instance="consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.ProjectLibrariesConfigurable"/>
 
-    <projectConfigurable id="project.artifacts" parentId="project" nonDefaultProject="true" displayName="Artifacts"
-                         instance="consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactsStructureConfigurable"/>
+
   </extensions>
 </consulo-plugin>

@@ -19,13 +19,16 @@
  */
 package consulo.ide.impl.idea.ide.bookmarks;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Topic;
 import consulo.component.messagebus.TopicImpl;
+
 import javax.annotation.Nonnull;
 
+@Topic(ComponentScope.PROJECT)
 public interface BookmarksListener {
-  TopicImpl<BookmarksListener> TOPIC = TopicImpl.create("Bookmarks", BookmarksListener.class);
-
   void bookmarkAdded(@Nonnull Bookmark b);
+
   void bookmarkRemoved(@Nonnull Bookmark b);
 
   void bookmarkChanged(@Nonnull Bookmark b);

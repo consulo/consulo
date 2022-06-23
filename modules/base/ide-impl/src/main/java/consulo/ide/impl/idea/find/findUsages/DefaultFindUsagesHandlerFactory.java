@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.find.findUsages;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.find.FindUsagesHandler;
 import consulo.find.FindUsagesHandlerFactory;
 import consulo.language.psi.PsiElement;
@@ -25,6 +26,7 @@ import javax.annotation.Nonnull;
 /**
  * @author peter
 */
+@ExtensionImpl(id = "default", order = "last")
 public final class DefaultFindUsagesHandlerFactory extends FindUsagesHandlerFactory {
   @Override
   public boolean canFindUsages(@Nonnull final PsiElement element) {

@@ -15,6 +15,7 @@
  */
 package consulo.component.extension;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.container.plugin.PluginDescriptor;
 
 /**
@@ -22,6 +23,8 @@ import consulo.container.plugin.PluginDescriptor;
  *
  * @author akireyev
  */
+@Deprecated
+@DeprecationInfo("since old extension removed this class not work as expected")
 public interface PluginAware {
   /**
    * Called by extensions framework when extension is loaded from plugin.xml descriptor.

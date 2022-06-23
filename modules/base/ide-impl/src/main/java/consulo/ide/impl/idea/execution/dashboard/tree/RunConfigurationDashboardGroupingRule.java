@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.execution.dashboard.tree;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.ide.impl.idea.execution.dashboard.DashboardGroup;
 import consulo.ide.impl.idea.execution.dashboard.DashboardGroupingRule;
@@ -29,6 +30,7 @@ import javax.annotation.Nullable;
 /**
  * @author konstantin.aleev
  */
+@ExtensionImpl
 public class RunConfigurationDashboardGroupingRule implements DashboardGroupingRule {
   @Nonnull
   @Override

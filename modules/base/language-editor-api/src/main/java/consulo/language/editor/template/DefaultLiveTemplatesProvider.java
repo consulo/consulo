@@ -16,7 +16,8 @@
 
 package consulo.language.editor.template;
 
-import consulo.annotation.DeprecationInfo;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 
 import javax.annotation.Nullable;
@@ -24,10 +25,9 @@ import javax.annotation.Nullable;
 /**
  * @author yole
  */
-@Deprecated
-@DeprecationInfo(value = "Use ep 'consulo.bundleLiveTemplateSet' for register")
+@Extension(ComponentScope.APPLICATION)
 public interface DefaultLiveTemplatesProvider {
-  ExtensionPointName<DefaultLiveTemplatesProvider> EP_NAME = ExtensionPointName.create("consulo.defaultLiveTemplatesProvider");
+  ExtensionPointName<DefaultLiveTemplatesProvider> EP_NAME = ExtensionPointName.create(DefaultLiveTemplatesProvider.class);
 
   String[] getDefaultLiveTemplateFiles();
 

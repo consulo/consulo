@@ -18,6 +18,7 @@ package consulo.ide.impl.configurable;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.ApplicationConfigurable;
 import consulo.configurable.ConfigurableAdapter;
+import consulo.configurable.StandardConfigurableIds;
 import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;
@@ -31,7 +32,7 @@ public class EditorConfigurable extends ConfigurableAdapter implements Applicati
   @Nonnull
   @Override
   public String getId() {
-    return "editor";
+    return StandardConfigurableIds.EDITOR_GROUP;
   }
 
   @Nls

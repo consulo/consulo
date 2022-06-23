@@ -19,10 +19,31 @@
  */
 package consulo.virtualFileSystem;
 
-import consulo.virtualFileSystem.VirtualFile;
-import javax.annotation.Nonnull;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
+import consulo.application.Application;
+import consulo.component.extension.ExtensionPoint;
+import consulo.component.extension.ExtensionPointCacheKey;
+import consulo.virtualFileSystem.fileType.FileType;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Map;
+
+@Extension(ComponentScope.APPLICATION)
 public interface BinaryFileDecompiler {
+  ExtensionPointCacheKey<BinaryFileDecompiler, Map<FileType, BinaryFileDecompiler>> KEY = ExtensionPointCacheKey.groupBy("BinaryFileDecompiler", BinaryFileDecompiler::getFileType);
+
+  @Nullable
+  static BinaryFileDecompiler forFileType(FileType fileType) {
+    ExtensionPoint<BinaryFileDecompiler> extensionPoint = Application.get().getExtensionPoint(BinaryFileDecompiler.class);
+    Map<FileType, BinaryFileDecompiler> map = extensionPoint.getOrBuildCache(KEY);
+    return map.get(fileType);
+  }
+
+  @Nonnull
+  FileType getFileType();
+
   @Nonnull
   CharSequence decompile(VirtualFile file);
 }

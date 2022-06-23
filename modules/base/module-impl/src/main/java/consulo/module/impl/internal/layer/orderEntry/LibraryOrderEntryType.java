@@ -33,22 +33,21 @@ import javax.annotation.Nonnull;
  */
 @ExtensionImpl
 public class LibraryOrderEntryType implements OrderEntryType<LibraryOrderEntryImpl> {
+  public static final String ID = "library";
+
   @Nonnull
   public static LibraryOrderEntryType getInstance() {
     return EP_NAME.findExtensionOrFail(LibraryOrderEntryType.class);
   }
 
-  @NonNls
   private static final String NAME_ATTR = "name";
-  @NonNls
   private static final String LEVEL_ATTR = "level";
-  @NonNls
   private static final String EXPORTED_ATTR = "exploded";
 
   @Nonnull
   @Override
   public String getId() {
-    return "library";
+    return ID;
   }
 
   @Nonnull

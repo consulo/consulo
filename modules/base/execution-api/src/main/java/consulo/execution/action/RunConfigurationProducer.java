@@ -15,6 +15,8 @@
  */
 package consulo.execution.action;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.execution.RunManager;
 import consulo.execution.RunnerAndConfigurationSettings;
@@ -39,8 +41,10 @@ import java.util.List;
  * @since 13
  * @author yole
  */
+@Extension(ComponentScope.APPLICATION)
 public abstract class RunConfigurationProducer<T extends RunConfiguration> {
-  public static final ExtensionPointName<RunConfigurationProducer> EP_NAME = ExtensionPointName.create("consulo.runConfigurationProducer");
+  public static final ExtensionPointName<RunConfigurationProducer> EP_NAME = ExtensionPointName.create(RunConfigurationProducer.class);
+
   private static final Logger LOG = Logger.getInstance(RunConfigurationProducer.class);
 
   @Nonnull

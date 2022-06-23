@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.vcs.changes;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.project.Project;
 import consulo.ide.impl.psi.search.DefaultSearchScopeProviders;
 import consulo.content.scope.SearchScope;
@@ -29,6 +30,7 @@ import java.util.List;
  * @author VISTALL
  * @since 12/12/2021
  */
+@ExtensionImpl
 public class ChangeListsSearchScopeProvider implements SearchScopeProvider {
   @Override
   public String getDisplayName() {

@@ -27,6 +27,7 @@ import consulo.ide.setting.module.OrderEntryTypeEditor;
 import consulo.ide.ui.FileAppearanceService;
 import consulo.ide.ui.OrderEntryAppearanceService;
 import consulo.module.impl.internal.layer.orderEntry.ModuleLibraryOrderEntryImpl;
+import consulo.module.impl.internal.layer.orderEntry.ModuleLibraryOrderEntryType;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ColoredTextContainer;
@@ -64,6 +65,12 @@ public class ModuleLibraryOrderEntryTypeEditor implements OrderEntryTypeEditor<M
                                                                          @Nonnull ModulesConfigurator modulesConfigurator,
                                                                          @Nonnull LibrariesConfigurator librariesConfigurator) {
     return new LibraryClasspathTableItem<>(orderEntry, project, modulesConfigurator, librariesConfigurator);
+  }
+
+  @Nonnull
+  @Override
+  public String getOrderTypeId() {
+    return ModuleLibraryOrderEntryType.ID;
   }
 
   @Nonnull

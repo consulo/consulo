@@ -16,22 +16,21 @@
 
 package consulo.ide.impl.copyright.impl.actions;
 
-import consulo.module.Module;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.project.Project;
-import consulo.module.content.ProjectRootManager;
-import consulo.util.lang.EmptyRunnable;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.copyright.UpdateCopyrightsProvider;
+import consulo.language.copyright.UpdatePsiFileCopyright;
+import consulo.language.copyright.config.CopyrightManager;
+import consulo.language.copyright.config.CopyrightProfile;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
-import consulo.language.copyright.config.CopyrightManager;
-import consulo.language.copyright.config.CopyrightProfile;
-import consulo.language.copyright.CopyrightUpdaters;
-import consulo.language.copyright.UpdateCopyrightsProvider;
-import consulo.language.copyright.UpdatePsiFileCopyright;
 import consulo.logging.Logger;
+import consulo.module.Module;
+import consulo.module.content.ProjectRootManager;
+import consulo.project.Project;
+import consulo.util.lang.EmptyRunnable;
+import consulo.virtualFileSystem.VirtualFile;
 
 public class UpdateCopyrightProcessor extends AbstractFileProcessor {
   private static final Logger logger = Logger.getInstance(UpdateCopyrightProcessor.class);
@@ -81,13 +80,13 @@ public class UpdateCopyrightProcessor extends AbstractFileProcessor {
       return EmptyRunnable.getInstance();
     }
 
-    UpdateCopyrightsProvider updateCopyrightsProvider = CopyrightUpdaters.INSTANCE.forFileType(file.getFileType());
+    UpdateCopyrightsProvider updateCopyrightsProvider = UpdateCopyrightsProvider.forFileType(file.getFileType());
     if(updateCopyrightsProvider == null) {
       return EmptyRunnable.getInstance();
     }
 
     CopyrightProfile copyrightProfile = CopyrightManager.getInstance(project).getCopyrightOptions(file);
-    if (copyrightProfile != null && CopyrightUpdaters.hasExtension(file)) {
+    if (copyrightProfile != null && UpdateCopyrightsProvider.hasExtension(file)) {
       logger.debug("process " + file);
       final UpdatePsiFileCopyright<?> updateCopyright = updateCopyrightsProvider.createInstance(file, copyrightProfile);
 

@@ -19,13 +19,16 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.configurable.ApplicationConfigurable;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
+import consulo.configurable.ProjectConfigurable;
 import consulo.ide.impl.idea.openapi.options.ex.ConfigurableExtensionPointUtil;
+import consulo.ide.impl.idea.openapi.options.ex.ConfigurableWrapper;
 import consulo.ide.impl.options.ApplicationConfigurableEP;
 import consulo.ide.impl.options.ProjectConfigurableEP;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
@@ -71,20 +74,14 @@ public abstract class BaseShowSettingsUtil extends ShowSettingsUtil {
 
     final Project tempProject = project;
 
-    List<ApplicationConfigurable> extensionList = project.getApplication().getExtensionPoint(ApplicationConfigurable.class).getExtensionList();
+    List<ApplicationConfigurable> applicationConfigurables = tempProject.getApplication().getExtensionPoint(ApplicationConfigurable.class).getExtensionList();
+    List<ProjectConfigurable> projectConfigurables = tempProject.getExtensionPoint(ProjectConfigurable.class).getExtensionList();
 
 
-    // TODO [VISTALL] impl new configurable logic
-    /*List<ConfigurableEP<Configurable>> configurableEPs = new ArrayList<>();
-    configurableEPs.addAll(APPLICATION_CONFIGURABLE.getExtensionList());
-    configurableEPs.addAll(PROJECT_CONFIGURABLE.getExtensionList(project));
+    List<Configurable> mergedConfigurables = ContainerUtil.concat(applicationConfigurables, projectConfigurables);
+    List<Configurable> result = ConfigurableExtensionPointUtil.buildConfigurablesList(mergedConfigurables, configurable -> !tempProject.isDefault() || !ConfigurableWrapper.isNonDefaultProject(configurable));
 
-    List<Configurable> result =
-            ConfigurableExtensionPointUtil.buildConfigurablesList(configurableEPs, configurable -> !tempProject.isDefault() || !ConfigurableWrapper.isNonDefaultProject(configurable));
-
-    return ContainerUtil.toArray(result, Configurable.ARRAY_FACTORY);*/
-
-    return extensionList.toArray(Configurable.ARRAY_FACTORY);
+    return ContainerUtil.toArray(result, Configurable.ARRAY_FACTORY);
   }
 
   @Override

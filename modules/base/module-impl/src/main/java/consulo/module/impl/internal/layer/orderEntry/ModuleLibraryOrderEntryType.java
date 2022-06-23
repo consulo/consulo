@@ -35,7 +35,9 @@ import javax.annotation.Nonnull;
  */
 @ExtensionImpl
 public class ModuleLibraryOrderEntryType implements OrderEntryType<ModuleLibraryOrderEntryImpl> {
-  public static final Logger LOGGER = Logger.getInstance(ModuleLibraryOrderEntryType.class);
+  public static final String ID = "module-library";
+
+  private static final Logger LOG = Logger.getInstance(ModuleLibraryOrderEntryType.class);
 
   @Nonnull
   public static ModuleLibraryOrderEntryType getInstance() {
@@ -47,7 +49,7 @@ public class ModuleLibraryOrderEntryType implements OrderEntryType<ModuleLibrary
   @Nonnull
   @Override
   public String getId() {
-    return "module-library";
+    return ID;
   }
 
   @Nonnull
@@ -71,8 +73,7 @@ public class ModuleLibraryOrderEntryType implements OrderEntryType<ModuleLibrary
       library.writeExternal(element);
     }
     catch (WriteExternalException e) {
-      ModuleLibraryOrderEntryType
-              .LOGGER.error("Exception while writing module library: " + orderEntry.getLibraryName() + " in module: " + orderEntry.getOwnerModule().getName(), e);
+      LOG.error("Exception while writing module library: " + orderEntry.getLibraryName() + " in module: " + orderEntry.getOwnerModule().getName(), e);
     }
   }
 }

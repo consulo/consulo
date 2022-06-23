@@ -24,23 +24,18 @@
  */
 package consulo.ide.impl.idea.codeInspection.ex;
 
-import consulo.language.editor.inspection.CommonProblemDescriptor;
-import consulo.language.editor.inspection.HTMLComposer;
-import consulo.language.editor.inspection.InspectionsBundle;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.ide.impl.idea.codeInspection.export.HTMLExporter;
-import consulo.language.editor.inspection.HTMLComposerExtension;
-import consulo.language.editor.inspection.InspectionExtensionsFactory;
-import consulo.ide.impl.idea.codeInspection.reference.*;
+import consulo.ide.impl.idea.codeInspection.reference.RefElementImpl;
 import consulo.language.Language;
-import consulo.component.extension.Extensions;
+import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.reference.*;
-import consulo.module.content.util.ProjectUtilCore;
-import consulo.util.dataholder.Key;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
-import consulo.annotation.access.RequiredReadAction;
+import consulo.module.content.util.ProjectUtilCore;
+import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -71,7 +66,7 @@ public abstract class HTMLComposerImpl extends HTMLComposer {
   protected HTMLComposerImpl() {
     myListStack = new int[5];
     myListStackTop = -1;
-    for (InspectionExtensionsFactory factory : Extensions.getExtensions(InspectionExtensionsFactory.EP_NAME)) {
+    for (InspectionExtensionsFactory factory : InspectionExtensionsFactory.EP_NAME.getExtensionList()) {
       final HTMLComposerExtension extension = factory.createHTMLComposerExtension(this);
       if (extension != null) {
         myExtensions.put(extension.getID(), extension);

@@ -15,21 +15,25 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot;
 
-import consulo.project.Project;
-import consulo.project.ProjectBundle;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.configurable.NonDefaultProjectConfigurable;
+import consulo.configurable.ProjectConfigurable;
+import consulo.configurable.StandardConfigurableIds;
+import consulo.configurable.internal.ConfigurableWeight;
 import consulo.content.library.LibraryTablePresentation;
 import consulo.content.library.LibraryTablesRegistrar;
-import consulo.ide.setting.module.LibraryTableModifiableModelProvider;
-import consulo.configurable.internal.ConfigurableWeight;
 import consulo.ide.impl.roots.ui.configuration.ProjectConfigurableWeights;
+import consulo.ide.setting.module.LibraryTableModifiableModelProvider;
+import consulo.project.Project;
+import consulo.project.ProjectBundle;
 import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-@Singleton
-public class ProjectLibrariesConfigurable extends BaseLibrariesConfigurable implements ConfigurableWeight {
+@ExtensionImpl
+public class ProjectLibrariesConfigurable extends BaseLibrariesConfigurable implements ConfigurableWeight, ProjectConfigurable, NonDefaultProjectConfigurable {
   public static final String ID = "project.libraries";
 
   @Inject
@@ -47,6 +51,12 @@ public class ProjectLibrariesConfigurable extends BaseLibrariesConfigurable impl
   @Nls
   public String getDisplayName() {
     return "Libraries";
+  }
+
+  @Nullable
+  @Override
+  public String getParentId() {
+    return StandardConfigurableIds.PROJECT_GROUP;
   }
 
   @Override

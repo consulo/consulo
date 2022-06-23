@@ -21,7 +21,7 @@ import consulo.document.FileDocumentManager;
 import consulo.document.impl.DocumentImpl;
 import consulo.language.impl.internal.psi.LoadTextUtil;
 import consulo.util.dataholder.Key;
-import consulo.virtualFileSystem.BinaryFileTypeDecompilers;
+import consulo.virtualFileSystem.BinaryFileDecompiler;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
@@ -48,7 +48,7 @@ public class LightFileDocumentManager implements FileDocumentManager {
 
   private static boolean isBinaryWithoutDecompiler(VirtualFile file) {
     final FileType ft = file.getFileType();
-    return ft.isBinary() && BinaryFileTypeDecompilers.INSTANCE.forFileType(ft) == null;
+    return ft.isBinary() && BinaryFileDecompiler.forFileType(ft) == null;
   }
 
   @Override

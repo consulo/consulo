@@ -78,7 +78,7 @@ public class CoreStubTreeLoader extends StubTreeLoader {
       return elementType instanceof IStubFileElementType && ((IStubFileElementType)elementType).shouldBuildStubFor(file);
     }
     else if (fileType.isBinary()) {
-      final BinaryFileStubBuilder builder = BinaryFileStubBuilders.INSTANCE.forFileType(fileType);
+      final BinaryFileStubBuilder builder = BinaryFileStubBuilder.forFileType(fileType);
       return builder != null && builder.acceptsFile(file);
     }
     return false;

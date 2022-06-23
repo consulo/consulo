@@ -16,11 +16,14 @@
 
 package consulo.find;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.project.Project;
 import javax.annotation.Nonnull;
 
 import java.util.List;
 
+@Service(ComponentScope.PROJECT)
 public interface FindInProjectSettings {
 
   static FindInProjectSettings getInstance(Project project) {

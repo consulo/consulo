@@ -15,11 +15,13 @@
  */
 package consulo.ide.impl.roots.orderEntry;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkUtil;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.ide.setting.module.OrderEntryTypeEditor;
 import consulo.module.impl.internal.layer.orderEntry.ModuleExtensionWithSdkOrderEntryImpl;
+import consulo.module.impl.internal.layer.orderEntry.ModuleExtensionWithSdkOrderEntryType;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ColoredTextContainer;
@@ -32,6 +34,7 @@ import java.util.function.Consumer;
  * @author VISTALL
  * @since 06-Jun-16
  */
+@ExtensionImpl
 public class ModuleExtensionWithSdkOrderEntryTypeEditor implements OrderEntryTypeEditor<ModuleExtensionWithSdkOrderEntryImpl> {
   @RequiredUIAccess
   @Override
@@ -42,6 +45,12 @@ public class ModuleExtensionWithSdkOrderEntryTypeEditor implements OrderEntryTyp
     }
     Project project = orderEntry.getModuleRootLayer().getProject();
     ShowSettingsUtil.getInstance().showProjectStructureDialog(project, config -> config.select(sdk, true));
+  }
+
+  @Nonnull
+  @Override
+  public String getOrderTypeId() {
+    return ModuleExtensionWithSdkOrderEntryType.ID;
   }
 
   @Nonnull

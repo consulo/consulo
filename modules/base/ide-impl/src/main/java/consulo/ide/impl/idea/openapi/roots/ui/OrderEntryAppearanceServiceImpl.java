@@ -67,12 +67,8 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
   @SuppressWarnings("unchecked")
   public Consumer<ColoredTextContainer> getRenderForOrderEntry(@Nonnull OrderEntry orderEntry) {
     OrderEntryType<?> type = orderEntry.getType();
-    OrderEntryTypeEditor editor = OrderEntryTypeEditor.FACTORY.getByKey(type);
-    if (editor != null) {
-      return editor.getRender(orderEntry);
-    }
-
-    return component -> component.append(orderEntry.getPresentableName());
+    OrderEntryTypeEditor editor = OrderEntryTypeEditor.getEditor(type.getId());
+    return editor.getRender(orderEntry);
   }
 
   @Nonnull

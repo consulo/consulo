@@ -15,16 +15,18 @@
  */
 package consulo.ide.impl.idea.openapi.editor;
 
-import consulo.component.extension.ExtensionPointName;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.codeEditor.Editor;
+import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.awt.datatransfer.Transferable;
 
+@Extension(ComponentScope.PROJECT)
 public abstract class CustomFileDropHandler {
-  public static final ExtensionPointName<CustomFileDropHandler> CUSTOM_DROP_HANDLER_EP =
-          ExtensionPointName.create("consulo.customFileDropHandler");
+  public static final ExtensionPointName<CustomFileDropHandler> CUSTOM_DROP_HANDLER_EP = ExtensionPointName.create(CustomFileDropHandler.class);
 
   public abstract boolean canHandle(@Nonnull Transferable t, Editor editor);
 

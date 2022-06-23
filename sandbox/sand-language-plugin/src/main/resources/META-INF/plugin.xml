@@ -69,7 +69,6 @@
                              name="Sand 2"
                              immutableClass="consulo.sandboxPlugin.ide.module.extension.Sand2ModuleExtension"
                              mutableClass="consulo.sandboxPlugin.ide.module.extension.Sand2MutableModuleExtension"/>
-    <contentFolderSupportPatcher implementation="consulo.sandboxPlugin.ide.module.SandContentFolderSupportPatcher"/>
     <psi.packageSupportProvider implementation="consulo.sandboxPlugin.ide.module.Sand2PackageProvider"/>
     <taskByVfsChange implementation="consulo.sandboxPlugin.ide.vfs.backgroundTask.SandBackgroundTaskByVfsChangeProvider"/>
     <sdkType implementation="consulo.sandboxPlugin.ide.bundle.SandBundleType"/>

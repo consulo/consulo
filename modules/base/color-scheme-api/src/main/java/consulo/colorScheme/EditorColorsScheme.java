@@ -26,6 +26,7 @@ import java.util.Map;
 
 public interface EditorColorsScheme extends Cloneable, TextAttributesScheme, Named {
   String DEFAULT_SCHEME_NAME = "Default";
+  String DARCULA_SCHEME_NAME = "Darcula";
 
   void setName(String name);
 

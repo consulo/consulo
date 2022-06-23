@@ -15,12 +15,13 @@
  */
 package consulo.ide.impl.psi.impl.cache.impl.id;
 
+import consulo.ide.impl.idea.util.indexing.IdDataConsumer;
+import consulo.language.plain.PlainTextFileType;
 import consulo.language.psi.search.UsageSearchContext;
 import consulo.language.psi.stub.FileContent;
-import consulo.ide.impl.idea.util.indexing.IdDataConsumer;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import consulo.virtualFileSystem.fileType.FileType;
 
+import javax.annotation.Nonnull;
 import java.util.Map;
 
 public class PlainTextIndexer implements IdIndexer {
@@ -29,17 +30,20 @@ public class PlainTextIndexer implements IdIndexer {
   public Map<IdIndexEntry, Integer> map(@Nonnull final FileContent inputData) {
     final IdDataConsumer consumer = new IdDataConsumer();
     final CharSequence chars = inputData.getContentAsText();
-    IdTableBuilding.scanWords(new IdTableBuilding.ScanWordProcessor() {
-      @Override
-      public void run(final CharSequence chars11, @Nullable char[] charsArray, final int start, final int end) {
-        if (charsArray != null) {
-          consumer.addOccurrence(charsArray, start, end, (int)UsageSearchContext.IN_PLAIN_TEXT);
-        }
-        else {
-          consumer.addOccurrence(chars11, start, end, (int)UsageSearchContext.IN_PLAIN_TEXT);
-        }
+    IdTableBuilding.scanWords((chars11, charsArray, start, end) -> {
+      if (charsArray != null) {
+        consumer.addOccurrence(charsArray, start, end, (int)UsageSearchContext.IN_PLAIN_TEXT);
+      }
+      else {
+        consumer.addOccurrence(chars11, start, end, (int)UsageSearchContext.IN_PLAIN_TEXT);
       }
     }, chars, 0, chars.length());
     return consumer.getResult();
+  }
+
+  @Nonnull
+  @Override
+  public FileType getFileType() {
+    return PlainTextFileType.INSTANCE;
   }
 }

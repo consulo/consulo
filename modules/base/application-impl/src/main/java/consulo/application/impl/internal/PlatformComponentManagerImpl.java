@@ -137,7 +137,7 @@ public abstract class PlatformComponentManagerImpl extends BaseComponentManager 
   @Override
   protected <T> T runServiceInitialize(@Nonnull InjectingBinding descriptor, @Nonnull Supplier<T> runnable) {
     // prevent storages from flushing and blocking FS
-    try (AccessToken ignored = HeavyProcessLatch.INSTANCE.processStarted("Creating component '" + descriptor.getImplClassName() + "'")) {
+    try (AccessToken ignored = HeavyProcessLatch.INSTANCE.processStarted("Creating component '" + descriptor.getImplClass().getName() + "'")) {
       return super.runServiceInitialize(descriptor, runnable);
     }
   }

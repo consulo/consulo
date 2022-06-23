@@ -93,7 +93,7 @@ public class StubUpdatingIndex extends SingleEntryFileBasedIndexExtension<Serial
         }
       }
     }
-    final BinaryFileStubBuilder builder = BinaryFileStubBuilders.INSTANCE.forFileType(fileType);
+    final BinaryFileStubBuilder builder = BinaryFileStubBuilder.forFileType(fileType);
     return builder != null && builder.acceptsFile(file);
   }
 

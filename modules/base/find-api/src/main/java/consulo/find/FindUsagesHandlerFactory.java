@@ -16,6 +16,8 @@
 
 package consulo.find;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;
@@ -24,8 +26,9 @@ import javax.annotation.Nullable;
 /**
  * @author yole
  */
+@Extension(ComponentScope.PROJECT)
 public abstract class FindUsagesHandlerFactory {
-  public static final ExtensionPointName<FindUsagesHandlerFactory> EP_NAME = ExtensionPointName.create("consulo.findUsagesHandlerFactory");
+  public static final ExtensionPointName<FindUsagesHandlerFactory> EP_NAME = ExtensionPointName.create(FindUsagesHandlerFactory.class);
 
   public abstract boolean canFindUsages(@Nonnull PsiElement element);
 

@@ -15,11 +15,10 @@
  */
 package consulo.ide.impl.idea.ide.browsers;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.configurable.*;
 import consulo.ide.IdeBundle;
 import consulo.ide.ServiceManager;
-import consulo.configurable.Configurable;
-import consulo.configurable.ConfigurationException;
-import consulo.configurable.SearchableConfigurable;
 import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
 import consulo.webBrowser.WebSearchOptions;
@@ -30,9 +29,11 @@ import jakarta.inject.Provider;
 import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 
-public class BrowserSettings implements SearchableConfigurable, Configurable.NoScroll {
+@ExtensionImpl
+public class BrowserSettings implements ApplicationConfigurable, SearchableConfigurable, Configurable.NoScroll {
   private BrowserSettingsPanel myPanel;
 
   private Provider<WebSearchOptions> myWebSearchOptionsProvider;
@@ -52,6 +53,12 @@ public class BrowserSettings implements SearchableConfigurable, Configurable.NoS
   @Nonnull
   public String getId() {
     return "web.browsers";
+  }
+
+  @Nullable
+  @Override
+  public String getParentId() {
+    return StandardConfigurableIds.GENERAL_GROUP;
   }
 
   @Override

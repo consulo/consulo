@@ -53,7 +53,7 @@ public class IdTableBuilding {
   }
 
   public static boolean isIdIndexerRegistered(FileType fileType) {
-    return ourIdIndexers.containsKey(fileType) || IdIndexers.INSTANCE.forFileType(fileType) != null;
+    return ourIdIndexers.containsKey(fileType) || IdIndexer.forFileType(fileType) != null;
   }
 
   @Nullable
@@ -69,7 +69,7 @@ public class IdTableBuilding {
       return idIndexer;
     }
 
-    final IdIndexer extIndexer = IdIndexers.INSTANCE.forFileType(fileType);
+    final IdIndexer extIndexer = IdIndexer.forFileType(fileType);
     if (extIndexer != null) {
       return extIndexer;
     }
@@ -138,6 +138,12 @@ public class IdTableBuilding {
         }
       });
       return consumer.getResult();
+    }
+
+    @Nonnull
+    @Override
+    public FileType getFileType() {
+      throw new UnsupportedOperationException();
     }
   }
 

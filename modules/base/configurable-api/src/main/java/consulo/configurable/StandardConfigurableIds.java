@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package consulo.ide.impl.psi.impl.cache.impl.id;
-
-import consulo.virtualFileSystem.fileType.FileTypeExtension;
-import consulo.container.plugin.PluginIds;
+package consulo.configurable;
 
 /**
- * @author yole
+ * @author VISTALL
+ * @since 22-Jun-22
  */
-public class IdIndexers extends FileTypeExtension<IdIndexer> {
-  public static IdIndexers INSTANCE = new IdIndexers();
-
-  private IdIndexers() {
-    super(PluginIds.CONSULO_BASE + ".idIndexer");
-  }
+public interface StandardConfigurableIds {
+  String EDITOR_GROUP = "editor";
+  String EXECUTION_GROUP = "execution";
+  String GENERAL_GROUP = "general";
+  String PLATFORM_AND_PLUGINS_GROUP = "platformAndPlugins";
+  String PROJECT_GROUP = "project";
 }

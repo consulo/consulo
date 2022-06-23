@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.refactoring.copy;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.application.CommonBundle;
 import consulo.ide.impl.idea.ide.CopyPasteDelegator;
@@ -54,6 +55,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+@ExtensionImpl
 public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
   private static Logger LOG = Logger.getInstance(CopyFilesOrDirectoriesHandler.class);
 

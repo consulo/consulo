@@ -49,7 +49,7 @@ public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider
     super(project, "Bookmarks");
     myBookmarkManager = bookmarkManager;
     myFavoritesManager = favoritesManager;
-    project.getMessageBus().connect(project).subscribe(BookmarksListener.TOPIC, this);
+    project.getMessageBus().connect(project).subscribe(BookmarksListener.class, this);
     updateChildren();
   }
 

@@ -16,6 +16,8 @@
 package consulo.usage;
 
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import consulo.application.util.function.Computable;
@@ -29,6 +31,7 @@ import java.util.function.Supplier;
 /**
  * @author max
  */
+@Service(ComponentScope.PROJECT)
 public abstract class UsageViewManager {
   public static UsageViewManager getInstance (Project project) {
     return project.getInstance(UsageViewManager.class);

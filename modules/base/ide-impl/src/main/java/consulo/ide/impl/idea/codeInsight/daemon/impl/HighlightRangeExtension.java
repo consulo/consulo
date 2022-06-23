@@ -16,14 +16,23 @@
 
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiFile;
 
 /**
  * @author yole
  */
+@Extension(ComponentScope.APPLICATION)
 public interface HighlightRangeExtension {
-  ExtensionPointName<HighlightRangeExtension> EP_NAME = ExtensionPointName.create("consulo.highlightRangeExtension");
+  ExtensionPointName<HighlightRangeExtension> EP_NAME = ExtensionPointName.create(HighlightRangeExtension.class);
 
+  /**
+   * @return true if this file structure is so peculiar and irregular that it's needed to highlight the parents of the PSI element with an error inside.
+   * In particular, {@link consulo.language.editor.annotation.Annotator}s will be called for all PSI elements irrespective of children with errors.
+   * (Regular highlighting doesn't analyze parents of PSI elements with an error).
+   * Please be aware that returning true may decrease highlighting performance/increase latency.
+   */
   boolean isForceHighlightParents(PsiFile file);
 }

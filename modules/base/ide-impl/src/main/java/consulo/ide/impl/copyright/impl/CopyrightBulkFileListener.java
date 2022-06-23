@@ -15,31 +15,31 @@
  */
 package consulo.ide.impl.copyright.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicImpl;
 import consulo.application.Application;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.document.Document;
 import consulo.codeEditor.EditorFactory;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
-import consulo.document.FileDocumentManager;
-import consulo.language.copyright.CopyrightUpdaters;
+import consulo.ide.impl.copyright.impl.actions.UpdateCopyrightProcessor;
+import consulo.language.copyright.UpdateCopyrightsProvider;
 import consulo.language.copyright.config.CopyrightManager;
 import consulo.language.copyright.config.CopyrightProfile;
-import consulo.module.Module;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
 import consulo.language.util.ModuleUtilCore;
+import consulo.module.Module;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
+import consulo.util.lang.ThreeState;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileCreateEvent;
 import consulo.virtualFileSystem.event.VFileEvent;
-import consulo.language.psi.PsiFile;
-import consulo.language.psi.PsiManager;
-import consulo.ide.impl.copyright.impl.actions.UpdateCopyrightProcessor;
-import consulo.annotation.access.RequiredReadAction;
-import consulo.util.lang.ThreeState;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -113,7 +113,7 @@ public class CopyrightBulkFileListener implements BulkFileListener {
             return;
           }
 
-          if (!CopyrightUpdaters.hasExtension(virtualFile)) {
+          if (!UpdateCopyrightsProvider.hasExtension(virtualFile)) {
             return;
           }
 

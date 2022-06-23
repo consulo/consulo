@@ -25,7 +25,7 @@ import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
 import consulo.document.Document;
 import consulo.language.Commenter;
-import consulo.language.copyright.CopyrightUpdaters;
+import consulo.language.copyright.UpdateCopyrightsProvider;
 import consulo.language.copyright.config.CopyrightFileConfig;
 import consulo.language.copyright.config.CopyrightFileConfigManager;
 import consulo.language.copyright.config.CopyrightManager;
@@ -96,7 +96,7 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
     this(fileType.getName(), fileType, parentPanel, project);
     myAllowBlock = FileTypeUtil.hasBlockComment(fileType);
     myCommenter = FileTypeUtil.getCommenter(fileType);
-    myAllowSeparator = CopyrightUpdaters.INSTANCE.forFileType(fileType).isAllowSeparator();
+    myAllowSeparator = UpdateCopyrightsProvider.forFileType(fileType).isAllowSeparator();
   }
 
   public TemplateCommentPanel(@Nonnull String optionName, @Nullable FileType fileType, @Nullable TemplateCommentPanel parentPanel, @Nonnull Project project) {
@@ -222,7 +222,7 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
   public CopyrightFileConfig getOptions() {
     // If this is a fully custom comment we should really ensure there are no blank lines in the comments outside
     // of a block comment. If there are any blank lines the replacement logic will fall apart.
-    final CopyrightFileConfig res = myFileType == null ? new CopyrightFileConfig() : CopyrightUpdaters.INSTANCE.forFileType(myFileType).createDefaultOptions();
+    final CopyrightFileConfig res = myFileType == null ? new CopyrightFileConfig() : UpdateCopyrightsProvider.forFileType(myFileType).createDefaultOptions();
     res.setBlock(rbBlockComment.isSelected());
     res.setPrefixLines(!myAllowBlock || cbPrefixLines.isSelected());
     res.setSeparateAfter(cbSeparatorAfter.isSelected());

@@ -19,11 +19,32 @@
  */
 package consulo.language.psi.stub;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
+import consulo.application.Application;
+import consulo.component.extension.ExtensionPoint;
+import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Map;
 
+@Extension(ComponentScope.APPLICATION)
 public interface BinaryFileStubBuilder {
+  ExtensionPointCacheKey<BinaryFileStubBuilder, Map<FileType, BinaryFileStubBuilder>> KEY = ExtensionPointCacheKey.groupBy("BinaryFileStubBuilder", BinaryFileStubBuilder::getFileType);
+
+  @Nullable
+  static BinaryFileStubBuilder forFileType(FileType fileType) {
+    ExtensionPoint<BinaryFileStubBuilder> extensionPoint = Application.get().getExtensionPoint(BinaryFileStubBuilder.class);
+    Map<FileType, BinaryFileStubBuilder> map = extensionPoint.getOrBuildCache(KEY);
+    return map.get(fileType);
+  }
+
+  @Nonnull
+  FileType getFileType();
+
   boolean acceptsFile(VirtualFile file);
 
   @Nullable

@@ -214,8 +214,8 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
 
   protected <T> T runServiceInitialize(@Nonnull InjectingBinding binding, @Nonnull Supplier<T> runnable) {
     if (!myNotLazyStepFinished && !binding.isLazy() && myCurrentNotLazyServiceClass != null) {
-      if (!Objects.equals(binding.getApiClassName(), myCurrentNotLazyServiceClass.getName()) && InjectingContainer.LOG_INJECTING_PROBLEMS) {
-        LOG.warn(new IllegalAccessException("Initializing not lazy service [" + binding.getApiClassName() + "] from another service [" + myCurrentNotLazyServiceClass.getName() + "]"));
+      if (!Objects.equals(binding.getApiClass(), myCurrentNotLazyServiceClass) && InjectingContainer.LOG_INJECTING_PROBLEMS) {
+        LOG.warn(new IllegalAccessException("Initializing not lazy service [" + binding.getApiClass().getName() + "] from another service [" + myCurrentNotLazyServiceClass.getName() + "]"));
       }
     }
     return runnable.get();

@@ -15,11 +15,7 @@
  */
 package consulo.ide.impl.psi.stubs;
 
-import consulo.language.psi.stub.StubTreeLoader;
-import consulo.language.psi.stub.BinaryFileStubBuilders;
-import consulo.language.psi.stub.ObjectStubTree;
-import consulo.language.psi.stub.StubTree;
-import consulo.language.psi.stub.StubTreeBuilder;
+import consulo.language.psi.stub.*;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
@@ -110,7 +106,7 @@ public abstract class StubProcessingHelperBase {
 
   // e.g. DOM indices
   private <Psi extends PsiElement> boolean handleNonPsiStubs(@Nonnull VirtualFile file, @Nonnull Processor<? super Psi> processor, @Nonnull Class<Psi> requiredClass, @Nonnull PsiFile psiFile) {
-    if (BinaryFileStubBuilders.INSTANCE.forFileType(psiFile.getFileType()) == null) {
+    if (BinaryFileStubBuilder.forFileType(psiFile.getFileType()) == null) {
       LOG.error("unable to get stub builder for " + psiFile.getFileType() + ", " + StubTreeLoader.getFileViewProviderMismatchDiagnostics(psiFile.getViewProvider()));
       onInternalError(file);
       return true;

@@ -15,42 +15,42 @@
  */
 package consulo.ide.impl.idea.diff;
 
-import consulo.ide.impl.idea.diff.actions.DocumentFragmentContent;
-import consulo.ide.impl.idea.diff.contents.*;
-import consulo.ide.impl.idea.diff.tools.util.DiffNotifications;
-import consulo.ide.impl.idea.diff.util.DiffUserDataKeysEx;
-import consulo.ide.impl.idea.diff.util.DiffUtil;
+import consulo.application.AccessRule;
+import consulo.application.util.function.ThrowableComputable;
+import consulo.application.util.registry.Registry;
 import consulo.codeEditor.EditorFactory;
 import consulo.diff.content.DiffContent;
 import consulo.diff.content.DocumentContent;
 import consulo.diff.content.EmptyContent;
 import consulo.diff.content.FileContent;
-import consulo.virtualFileSystem.BinaryFileTypeDecompilers;
-import consulo.language.plain.PlainTextFileType;
-import consulo.virtualFileSystem.fileType.UnknownFileType;
-import consulo.ui.ex.awt.CopyPasteManager;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.application.util.registry.Registry;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.vcs.FilePath;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.virtualFileSystem.light.BinaryLightVirtualFile;
-import consulo.language.file.light.LightVirtualFile;
-import consulo.ide.impl.idea.util.LineSeparator;
-import consulo.ide.impl.idea.util.PathUtil;
-import consulo.application.AccessRule;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.diff.actions.DocumentFragmentContent;
+import consulo.ide.impl.idea.diff.contents.*;
+import consulo.ide.impl.idea.diff.tools.util.DiffNotifications;
+import consulo.ide.impl.idea.diff.util.DiffUserDataKeysEx;
+import consulo.ide.impl.idea.diff.util.DiffUtil;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.vcs.FilePath;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
+import consulo.ide.impl.idea.util.LineSeparator;
+import consulo.ide.impl.idea.util.PathUtil;
+import consulo.language.file.light.LightVirtualFile;
+import consulo.language.plain.PlainTextFileType;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.ui.style.StandardColors;
 import consulo.util.io.CharsetToolkit;
+import consulo.virtualFileSystem.BinaryFileDecompiler;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.fileType.UnknownFileType;
+import consulo.virtualFileSystem.light.BinaryLightVirtualFile;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
@@ -306,7 +306,7 @@ public class DiffContentFactoryImpl extends DiffContentFactoryEx {
                                        @Nonnull String fileName,
                                        @javax.annotation.Nullable VirtualFile highlightFile) throws IOException {
     // workaround - our JarFileSystem and decompilers can't process non-local files
-    boolean useTemporalFile = type instanceof ArchiveFileType || BinaryFileTypeDecompilers.INSTANCE.forFileType(type) != null;
+    boolean useTemporalFile = type instanceof ArchiveFileType || BinaryFileDecompiler.forFileType(type) != null;
 
     VirtualFile file;
     if (useTemporalFile) {

@@ -15,17 +15,13 @@
  */
 package consulo.ide.impl.idea.openapi.options.ex;
 
-import consulo.component.extension.ExtensionPoint;
 import consulo.component.extension.ExtensionPointName;
-import consulo.ide.impl.idea.openapi.options.*;
 import consulo.configurable.*;
-import consulo.project.Project;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.NullableFunction;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.disposer.Disposable;
-import consulo.logging.Logger;
+import consulo.ide.impl.idea.openapi.options.ConfigurableEP;
+import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.options.ProjectConfigurableEP;
+import consulo.project.Project;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
@@ -40,24 +36,13 @@ import java.util.List;
  * Date: 9/17/12
  */
 public class ConfigurableWrapper implements SearchableConfigurable {
-
-  private static final ConfigurableWrapper[] EMPTY_ARRAY = new ConfigurableWrapper[0];
-  private static final NullableFunction<ConfigurableEP<Configurable>, Configurable> CONFIGURABLE_FUNCTION = ConfigurableWrapper::wrapConfigurable;
-  private static final Logger LOG = Logger.getInstance(ConfigurableWrapper.class);
-
-  @Nullable
-  @SuppressWarnings("unchecked")
-  public static <T extends UnnamedConfigurable> T wrapConfigurable(ConfigurableEP<T> ep) {
-    if (ep.displayName != null || ep.key != null) {
-      return (T)new CompositeWrapper(ep);
-    }
-    else {
-      return ep.createConfigurable();
-    }
+  public static ConfigurableWrapper wrapConfigurable(Configurable configurable) {
+    return new CompositeWrapper(configurable);
   }
 
   public static <T extends UnnamedConfigurable> List<T> createConfigurables(ExtensionPointName<? extends ConfigurableEP<T>> name) {
-    return ContainerUtil.mapNotNull(name.getExtensionList(), ConfigurableWrapper::wrapConfigurable);
+    throw new UnsupportedOperationException("unsupported");
+    //return ContainerUtil.mapNotNull(name.getExtensionList(), ConfigurableWrapper::wrapConfigurable);
   }
 
   public static boolean isNoScroll(Configurable configurable) {
@@ -95,41 +80,23 @@ public class ConfigurableWrapper implements SearchableConfigurable {
     if (cast(configurable, NonDefaultProjectConfigurable.class) != null) {
       return true;
     }
-    if (configurable instanceof ConfigurableWrapper) {
-      ConfigurableEP ep = ((ConfigurableWrapper)configurable).myEp;
-      if (ep instanceof ProjectConfigurableEP && ((ProjectConfigurableEP)ep).nonDefaultProject) {
-        return true;
-      }
-    }
     return false;
   }
 
-  private final ConfigurableEP myEp;
+  private final Configurable myConfigurable;
 
-  public ConfigurableWrapper(ConfigurableEP ep) {
-    myEp = ep;
+  public ConfigurableWrapper(Configurable configurable) {
+    myConfigurable = configurable;
   }
 
-  private UnnamedConfigurable myConfigurable;
-
-  public UnnamedConfigurable getConfigurable() {
-    if (myConfigurable == null) {
-      myConfigurable = myEp.createConfigurable();
-      if (myConfigurable == null) {
-        LOG.error("Can't instantiate configurable for " + myEp);
-      }
-    }
+  public Configurable getConfigurable() {
     return myConfigurable;
-  }
-
-  public ConfigurableEP getEp() {
-    return myEp;
   }
 
   @Nls
   @Override
   public String getDisplayName() {
-    return myEp.getDisplayName();
+    return myConfigurable.getDisplayName();
   }
 
   @Nullable
@@ -186,15 +153,16 @@ public class ConfigurableWrapper implements SearchableConfigurable {
   @Nonnull
   @Override
   public String getId() {
-    return myEp.id == null ? myEp.instanceClass : myEp.id;
+    return myConfigurable.getId();
   }
 
+  @Override
   public String getParentId() {
-    return myEp.parentId;
+    return myConfigurable.getParentId();
   }
 
   public ConfigurableWrapper addChild(Configurable configurable) {
-    return new CompositeWrapper(myEp, configurable);
+    return new CompositeWrapper(myConfigurable, configurable);
   }
 
   @Nonnull
@@ -219,27 +187,27 @@ public class ConfigurableWrapper implements SearchableConfigurable {
   private static class CompositeWrapper extends ConfigurableWrapper implements Configurable.Composite {
     private Configurable[] myKids;
 
-    public CompositeWrapper(ConfigurableEP ep, Configurable... kids) {
-      super(ep);
-      if (ep.dynamic) {
-        kids = ((Composite)getConfigurable()).getConfigurables();
-      }
-      else if (ep.getChildren() != null) {
-        kids = ContainerUtil.mapNotNull(ep.getChildren(), ep1 -> ep1.isAvailable() ? (ConfigurableWrapper)wrapConfigurable(ep1) : null, EMPTY_ARRAY);
-      }
-      if (ep.childrenEPName != null) {
-        ExtensionPoint<Object> childrenEP = getProject(ep).getExtensionPoint(ExtensionPointName.create(ep.childrenEPName));
-        Object[] extensions = childrenEP.getExtensions();
-        if (extensions.length > 0) {
-          if (extensions[0] instanceof ConfigurableEP) {
-            Configurable[] children = ContainerUtil.mapNotNull(((ConfigurableEP<Configurable>[])extensions), CONFIGURABLE_FUNCTION, new Configurable[0]);
-            kids = ArrayUtil.mergeArrays(kids, children);
-          }
-          else {
-            kids = ArrayUtil.mergeArrays(kids, ((Composite)getConfigurable()).getConfigurables());
-          }
-        }
-      }
+    public CompositeWrapper(Configurable configurable, Configurable... kids) {
+      super(configurable);
+      //if (configurable.dynamic) {
+      //  kids = ((Composite)getConfigurable()).getConfigurables();
+      //}
+      //else if (configurable.getChildren() != null) {
+      //  kids = ContainerUtil.mapNotNull(configurable.getChildren(), ep1 -> ep1.isAvailable() ? (ConfigurableWrapper)wrapConfigurable(ep1) : null, EMPTY_ARRAY);
+      //}
+      //if (configurable.childrenEPName != null) {
+      //  ExtensionPoint<Object> childrenEP = getProject(configurable).getExtensionPoint(ExtensionPointName.create(configurable.childrenEPName));
+      //  Object[] extensions = childrenEP.getExtensions();
+      //  if (extensions.length > 0) {
+      //    if (extensions[0] instanceof ConfigurableEP) {
+      //      Configurable[] children = ContainerUtil.mapNotNull(((ConfigurableEP<Configurable>[])extensions), CONFIGURABLE_FUNCTION, new Configurable[0]);
+      //      kids = ArrayUtil.mergeArrays(kids, children);
+      //    }
+      //    else {
+      //      kids = ArrayUtil.mergeArrays(kids, ((Composite)getConfigurable()).getConfigurables());
+      //    }
+      //  }
+      //}
       myKids = kids;
     }
 

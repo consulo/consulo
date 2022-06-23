@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.ide.impl.idea.openapi.vfs.newvfs.impl;
 
-/*
- * @author max
- */
-package consulo.language.file;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.TopicImpl;
+import consulo.language.psi.PsiModificationTrackerListener;
 
-import consulo.container.plugin.PluginIds;
-import consulo.virtualFileSystem.fileType.FileTypeExtension;
-
-public class FileTypeFileViewProviders extends FileTypeExtension<FileViewProviderFactory> {
-  public static FileTypeFileViewProviders INSTANCE = new FileTypeFileViewProviders();
-
-  private FileTypeFileViewProviders() {
-    super(PluginIds.CONSULO_BASE + ".fileType.fileViewProviderFactory");
+@TopicImpl(ComponentScope.PROJECT)
+public class CachedFileTypeModificationListenerImpl implements PsiModificationTrackerListener {
+  @Override
+  public void modificationCountChanged() {
+    CachedFileType.clearCache();
   }
 }

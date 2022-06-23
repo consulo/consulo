@@ -14,7 +14,7 @@ import consulo.document.util.UnfairTextRange;
 import consulo.logging.Logger;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.ObjectUtil;
-import consulo.virtualFileSystem.BinaryFileTypeDecompilers;
+import consulo.virtualFileSystem.BinaryFileDecompiler;
 import consulo.virtualFileSystem.RawFileLoader;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -351,7 +351,7 @@ public class RangeMarkerImpl extends UserDataHolderBase implements RangeMarkerEx
 
   private static boolean isBinaryWithoutDecompiler(@Nonnull VirtualFile file) {
     final FileType fileType = file.getFileType();
-    return fileType.isBinary() && BinaryFileTypeDecompilers.INSTANCE.forFileType(fileType) == null;
+    return fileType.isBinary() && BinaryFileDecompiler.forFileType(fileType) == null;
   }
 
   public boolean setValid(boolean value) {

@@ -34,6 +34,7 @@ import consulo.module.content.layer.orderEntry.*;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.project.ui.view.tree.ViewSettings;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ColoredStringBuilder;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.tree.PresentationData;
@@ -136,12 +137,11 @@ public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement
 
   @Override
   @SuppressWarnings("unchecked")
+  @RequiredUIAccess
   public void navigate(final boolean requestFocus) {
     OrderEntryType type = getValue().getOrderEntry().getType();
-    OrderEntryTypeEditor editor = OrderEntryTypeEditor.FACTORY.getByKey(type);
-    if(editor != null) {
-      editor.navigate(getValue().getOrderEntry());
-    }
+    OrderEntryTypeEditor editor = OrderEntryTypeEditor.getEditor(type.getId());
+    editor.navigate(getValue().getOrderEntry());
   }
 
   @Override

@@ -16,7 +16,6 @@
 
 package consulo.language.copyright.config;
 
-import consulo.language.copyright.CopyrightUpdaters;
 import consulo.language.copyright.UpdateCopyrightsProvider;
 import consulo.logging.Logger;
 import consulo.util.xml.serializer.InvalidDataException;
@@ -119,9 +118,9 @@ public class CopyrightFileConfigManager implements JDOMExternalizable, Cloneable
 
   @Nonnull
   public CopyrightFileConfig getOptions(@Nonnull FileType type) {
-    LoadedOption copyrightFileConfig = myConfigs.get(type.getName());
+    LoadedOption copyrightFileConfig = myConfigs.get(type.getId());
     if (copyrightFileConfig == null) {
-      UpdateCopyrightsProvider updateCopyrightsProvider = CopyrightUpdaters.INSTANCE.forFileType(type);
+      UpdateCopyrightsProvider updateCopyrightsProvider = UpdateCopyrightsProvider.forFileType(type);
       if (updateCopyrightsProvider == null) {
         return CopyrightFileConfig.DEFAULT_SETTINGS_HOLDER;
       }
@@ -188,7 +187,7 @@ public class CopyrightFileConfigManager implements JDOMExternalizable, Cloneable
           option = new UnknownLoadedOption();
         }
         else {
-          UpdateCopyrightsProvider updateCopyrightsProvider = CopyrightUpdaters.INSTANCE.forFileType(fileTypeByName);
+          UpdateCopyrightsProvider updateCopyrightsProvider = UpdateCopyrightsProvider.forFileType(fileTypeByName);
           if(updateCopyrightsProvider == null) {
             option = new UnknownLoadedOption();
           }

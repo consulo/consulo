@@ -18,7 +18,6 @@ package consulo.ide.impl.psi.impl.cache.impl.todo;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
-import consulo.ide.impl.idea.openapi.fileTypes.impl.CustomSyntaxTableFileType;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.psi.impl.cache.impl.id.PlatformIdTableBuilding;
 import consulo.index.io.DataIndexer;
@@ -26,23 +25,20 @@ import consulo.index.io.ID;
 import consulo.index.io.IntInlineKeyDescriptor;
 import consulo.index.io.KeyDescriptor;
 import consulo.index.io.data.DataExternalizer;
-import consulo.language.Language;
-import consulo.language.ast.TokenSet;
 import consulo.language.file.FileTypeManager;
-import consulo.language.file.LanguageFileType;
-import consulo.language.parser.LanguageParserDefinitions;
-import consulo.language.parser.ParserDefinition;
 import consulo.language.psi.search.IndexPatternChangeListener;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.language.psi.stub.FileBasedIndexExtension;
 import consulo.language.psi.stub.FileContent;
-import consulo.language.version.LanguageVersionUtil;
+import consulo.module.content.ProjectFileIndex;
+import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
@@ -51,7 +47,7 @@ import java.util.Collections;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Jan 20, 2008
+ * Date: Jan 20, 2008
  */
 @ExtensionImpl
 public class TodoIndex extends FileBasedIndexExtension<TodoIndexEntry, Integer> {
@@ -98,20 +94,11 @@ public class TodoIndex extends FileBasedIndexExtension<TodoIndexEntry, Integer> 
   };
 
   private final FileBasedIndex.InputFilter myInputFilter = (project, file) -> {
-    if (!file.isInLocalFileSystem()) {
-      return false; // do not index TODOs in library sources
-    }
+    if (!needsTodoIndex(project, file)) return false;
+    FileType fileType = file.getFileType();
 
-    final FileType fileType = file.getFileType();
-
-    if (fileType instanceof LanguageFileType) {
-      final Language lang = ((LanguageFileType)fileType).getLanguage();
-      final ParserDefinition parserDef = LanguageParserDefinitions.INSTANCE.forLanguage(lang);
-      final TokenSet commentTokens = parserDef != null ? parserDef.getCommentTokens(LanguageVersionUtil.findLanguageVersion(lang, project, file)) : null;
-      return commentTokens != null;
-    }
-
-    return PlatformIdTableBuilding.isTodoIndexerRegistered(fileType) || fileType instanceof CustomSyntaxTableFileType;
+    DataIndexer<TodoIndexEntry, Integer, FileContent> indexer = PlatformIdTableBuilding.getTodoIndexer(fileType, project, file);
+    return indexer != null;
   };
 
   @Override
@@ -121,13 +108,30 @@ public class TodoIndex extends FileBasedIndexExtension<TodoIndexEntry, Integer> 
     Arrays.sort(types, (o1, o2) -> Comparing.compare(o1.getId(), o2.getId()));
 
     for (FileType fileType : types) {
-      DataIndexer<TodoIndexEntry, Integer, FileContent> indexer = TodoIndexers.INSTANCE.forFileType(fileType);
+      DataIndexer<TodoIndexEntry, Integer, FileContent> indexer = TodoIndexer.forFileType(fileType);
       if (indexer == null) continue;
 
       int versionFromIndexer = indexer instanceof VersionedTodoIndexer ? (((VersionedTodoIndexer)indexer).getVersion()) : 0xFF;
       version = version * 31 + (versionFromIndexer ^ indexer.getClass().getName().hashCode());
     }
     return version;
+  }
+
+  public static boolean needsTodoIndex(@Nullable Project project, @Nonnull VirtualFile vFile) {
+    if (!vFile.isInLocalFileSystem()) {
+      return false;
+    }
+
+    if (project != null && ProjectFileIndex.getInstance(project).isInContent(vFile)) {
+      return true;
+    }
+
+    //for (ExtraPlaceChecker checker : EP_NAME.getExtensionList()) {
+    //  if (checker.accept(project, vFile)) {
+    //    return true;
+    //  }
+    //}
+    return false;
   }
 
   @Override

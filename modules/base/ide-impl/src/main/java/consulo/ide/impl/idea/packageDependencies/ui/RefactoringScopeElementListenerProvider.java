@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.packageDependencies.ui;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.content.scope.*;
 import consulo.ide.impl.psi.search.scope.packageSet.IntersectionPackageSet;
 import consulo.ide.impl.psi.search.scope.packageSet.PatternBasedPackageSet;
@@ -34,6 +35,7 @@ import javax.annotation.Nonnull;
  * User: anna
  * Date: Jul 26, 2010
  */
+@ExtensionImpl
 public class RefactoringScopeElementListenerProvider implements RefactoringElementListenerProvider {
   private static final Logger LOG = Logger.getInstance(RefactoringScopeElementListenerProvider.class);
 

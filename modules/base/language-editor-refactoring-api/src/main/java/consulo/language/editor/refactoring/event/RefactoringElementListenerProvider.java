@@ -15,6 +15,8 @@
  */
 package consulo.language.editor.refactoring.event;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 
@@ -25,8 +27,9 @@ import javax.annotation.Nullable;
  * {@linkplain RefactoringElementListenerProvider} before particular element is subjected to refactoring.
  * @author dsl
  */
+@Extension(ComponentScope.PROJECT)
 public interface RefactoringElementListenerProvider {
-  ExtensionPointName<RefactoringElementListenerProvider> EP_NAME = ExtensionPointName.create("consulo.refactoring.elementListenerProvider");
+  ExtensionPointName<RefactoringElementListenerProvider> EP_NAME = ExtensionPointName.create(RefactoringElementListenerProvider.class);
 
   /**
    *

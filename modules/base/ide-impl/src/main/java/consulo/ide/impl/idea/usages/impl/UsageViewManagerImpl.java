@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.usages.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.find.SearchInBackgroundOption;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.TypeSafeDataProvider;
@@ -57,6 +58,7 @@ import java.util.function.Supplier;
  * @author max
  */
 @Singleton
+@ServiceImpl
 public class UsageViewManagerImpl extends UsageViewManager {
   private static final Logger LOG = Logger.getInstance(UsageViewManagerImpl.class);
   private final Project myProject;

@@ -36,7 +36,7 @@ public class ClasspathTableItem<T extends OrderEntry> {
                                                  @Nonnull LibrariesConfigurator librariesConfigurator) {
     OrderEntryType<?> type = orderEntry.getType();
 
-    OrderEntryTypeEditor editor = OrderEntryTypeEditor.FACTORY.getByKey(type);
+    OrderEntryTypeEditor editor = OrderEntryTypeEditor.getEditor(type.getId());
     if (editor != null) {
       return editor.createTableItem(orderEntry, project, modulesConfigurator, librariesConfigurator);
     }

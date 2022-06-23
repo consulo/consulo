@@ -39,7 +39,7 @@ import java.util.function.Function;
  *
  * @author AKireyev
  */
-public interface ExtensionPoint<T> extends ModificationTracker {
+public interface ExtensionPoint<E> extends ModificationTracker {
   enum Kind {
     INTERFACE,
     BEAN_CLASS
@@ -52,9 +52,9 @@ public interface ExtensionPoint<T> extends ModificationTracker {
   @SuppressWarnings("unchecked")
   @Deprecated
   @DeprecationInfo("Use #getExtensionList()")
-  default T[] getExtensions() {
-    List<T> list = getExtensionList();
-    return list.toArray((T[])Array.newInstance(getExtensionClass(), list.size()));
+  default E[] getExtensions() {
+    List<E> list = getExtensionList();
+    return list.toArray((E[])Array.newInstance(getExtensionClass(), list.size()));
   }
 
   default boolean hasAnyExtensions() {
@@ -62,10 +62,10 @@ public interface ExtensionPoint<T> extends ModificationTracker {
   }
 
   @Nonnull
-  List<T> getExtensionList();
+  List<E> getExtensionList();
 
   @Nonnull
-  Class<T> getExtensionClass();
+  Class<E> getExtensionClass();
 
   @Nonnull
   Kind getKind();
@@ -81,7 +81,7 @@ public interface ExtensionPoint<T> extends ModificationTracker {
   }
 
   @Nullable
-  default <K extends T> K findExtension(Class<K> extensionClass) {
+  default <K extends E> K findExtension(Class<K> extensionClass) {
     return ContainerUtil.findInstance(getExtensionList(), extensionClass);
   }
 
@@ -89,12 +89,12 @@ public interface ExtensionPoint<T> extends ModificationTracker {
    * Return cache or build it. This cache will be dropped if extensions reloaded (for example plugin added/removed_
    */
   @Nonnull
-  default <K> K getOrBuildCache(@Nonnull Key<K> key, @Nonnull Function<List<T>, K> factory) {
-    return factory.apply(getExtensionList());
+  default <K> K getOrBuildCache(@Nonnull ExtensionPointCacheKey<E, K> key) {
+    return key.getFactory().apply(getExtensionList());
   }
 
   @Nonnull
-  default <V extends T> V findExtensionOrFail(@Nonnull Class<V> instanceOf) {
+  default <V extends E> V findExtensionOrFail(@Nonnull Class<V> instanceOf) {
     V extension = findExtension(instanceOf);
     if (extension == null) {
       throw new IllegalArgumentException("Extension point: " + getName() + " not contains extension of type: " + instanceOf);
@@ -102,15 +102,15 @@ public interface ExtensionPoint<T> extends ModificationTracker {
     return extension;
   }
 
-  default void processWithPluginDescriptor(@Nonnull BiConsumer<? super T, ? super PluginDescriptor> consumer) {
-    for (T extension : getExtensionList()) {
+  default void processWithPluginDescriptor(@Nonnull BiConsumer<? super E, ? super PluginDescriptor> consumer) {
+    for (E extension : getExtensionList()) {
       PluginDescriptor plugin = PluginManager.getPlugin(extension.getClass());
 
       consumer.accept(extension, plugin);
     }
   }
 
-  default void forEachExtensionSafe(@Nonnull Consumer<T> consumer) {
+  default void forEachExtensionSafe(@Nonnull Consumer<E> consumer) {
     processWithPluginDescriptor((value, pluginDescriptor) -> {
       try {
         consumer.accept(value);

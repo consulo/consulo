@@ -23,6 +23,7 @@ import consulo.component.ComponentManager;
 import consulo.component.bind.InjectingBinding;
 import consulo.component.extension.ExtensionExtender;
 import consulo.component.extension.ExtensionPoint;
+import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.injecting.InjectingContainer;
@@ -122,6 +123,7 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
 
   private List<InjectingBinding> myInjectingBindings = List.of();
   private Map<Class, Object> myInstanceOfCacheValue;
+  private Map<ExtensionPointCacheKey, Object> myCaches;
   private long myModificationCount;
   private volatile CacheValue<T> myCacheValue;
 
@@ -140,6 +142,8 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
     myInjectingBindings = newBindings;
     // reset instanceOf cache
     myInstanceOfCacheValue = null;
+    // reset other caches
+    myCaches = null;
     // reset all extension cache
     myCacheValue = new CacheValue<>(null, new ArrayList<>());
   }
@@ -159,6 +163,18 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
     });
 
     return result == ObjectUtil.NULL ? null : (K)result;
+  }
+
+  @Nonnull
+  @Override
+  @SuppressWarnings("unchecked")
+  public <K> K getOrBuildCache(@Nonnull ExtensionPointCacheKey<T, K> key) {
+    Map<ExtensionPointCacheKey, Object> caches = myCaches;
+    if (caches == null) {
+      caches = myCaches = Maps.newConcurrentHashMap(HashingStrategy.identity());
+    }
+
+    return (K) caches.computeIfAbsent(key, k -> key.getFactory().apply(getExtensionList()));
   }
 
   @SuppressWarnings("unchecked")

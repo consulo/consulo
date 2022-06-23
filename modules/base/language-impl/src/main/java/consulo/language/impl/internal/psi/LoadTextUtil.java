@@ -11,7 +11,6 @@ import consulo.util.io.CharsetToolkit;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.*;
 import consulo.virtualFileSystem.BinaryFileDecompiler;
-import consulo.virtualFileSystem.BinaryFileTypeDecompilers;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.encoding.EncodingRegistry;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
@@ -472,7 +471,7 @@ public final class LoadTextUtil {
   public static CharSequence loadText(@Nonnull final VirtualFile file) {
     FileType type = file.getFileType();
     if (type.isBinary()) {
-      final BinaryFileDecompiler decompiler = BinaryFileTypeDecompilers.INSTANCE.forFileType(type);
+      final BinaryFileDecompiler decompiler = BinaryFileDecompiler.forFileType(type);
       if (decompiler != null) {
         CharSequence text = decompiler.decompile(file);
         try {

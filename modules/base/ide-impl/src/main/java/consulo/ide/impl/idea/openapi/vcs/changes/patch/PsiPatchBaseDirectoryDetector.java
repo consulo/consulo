@@ -16,25 +16,25 @@
 
 package consulo.ide.impl.idea.openapi.vcs.changes.patch;
 
-import consulo.project.Project;
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.ide.impl.psi.search.FilenameIndex;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;
-import consulo.ide.impl.psi.search.FilenameIndex;
 import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
-
-import javax.annotation.Nullable;
-
 import jakarta.inject.Singleton;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 
 /**
  * @author yole
  */
 @Singleton
+@ServiceImpl
 public class PsiPatchBaseDirectoryDetector extends PatchBaseDirectoryDetector {
   private final Project myProject;
 

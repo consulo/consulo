@@ -15,44 +15,44 @@
  */
 package consulo.ide.impl.idea.execution.dashboard;
 
-import consulo.execution.RunManager;
-import consulo.execution.configuration.RunConfiguration;
-import consulo.ide.impl.idea.execution.dashboard.tree.DashboardGrouper;
-import consulo.ide.impl.idea.execution.impl.ExecutionManagerImpl;
-import consulo.execution.RunnerAndConfigurationSettings;
-import consulo.execution.event.ExecutionListener;
-import consulo.execution.event.RunManagerListener;
-import consulo.process.ProcessHandler;
-import consulo.execution.runner.ExecutionEnvironment;
-import consulo.execution.ui.RunContentDescriptor;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.AllIcons;
+import consulo.application.util.registry.Registry;
+import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
-import consulo.project.event.DumbModeListener;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.disposer.Disposer;
-import consulo.util.lang.Pair;
-import consulo.application.util.registry.Registry;
-import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.ui.ex.toolWindow.ToolWindowAnchor;
+import consulo.execution.RunManager;
+import consulo.execution.RunnerAndConfigurationSettings;
+import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.event.ExecutionListener;
+import consulo.execution.event.RunManagerListener;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.execution.ui.RunContentDescriptor;
+import consulo.ide.impl.idea.execution.dashboard.tree.DashboardGrouper;
+import consulo.ide.impl.idea.execution.impl.ExecutionManagerImpl;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.process.ProcessHandler;
+import consulo.project.Project;
+import consulo.project.event.DumbModeListener;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.content.ContentUI;
-import consulo.component.messagebus.MessageBusConnection;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.image.Image;
+import consulo.util.lang.Pair;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -62,6 +62,7 @@ import java.util.stream.Collectors;
  */
 @Singleton
 @State(name = "RunDashboard", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
+@ServiceImpl
 public class RunDashboardManagerImpl implements RunDashboardManager, PersistentStateComponent<RunDashboardManagerImpl.State> {
   @Nonnull
   private final Project myProject;
@@ -80,8 +81,7 @@ public class RunDashboardManagerImpl implements RunDashboardManager, PersistentS
     ContentUI contentUI = new PanelContentUI();
     myContentManager = contentFactory.createContentManager(contentUI, false, project);
 
-    myGroupers = Arrays.stream(DashboardGroupingRule.EP_NAME.getExtensions()).sorted(DashboardGroupingRule.PRIORITY_COMPARATOR).map(DashboardGrouper::new)
-            .collect(Collectors.toList());
+    myGroupers = new ArrayList<>(DashboardGroupingRule.EP_NAME.getExtensionList()).stream().sorted(DashboardGroupingRule.PRIORITY_COMPARATOR).map(DashboardGrouper::new).collect(Collectors.toList());
 
     if (isDashboardEnabled()) {
       initToolWindowListeners();
@@ -89,7 +89,7 @@ public class RunDashboardManagerImpl implements RunDashboardManager, PersistentS
   }
 
   private static boolean isDashboardEnabled() {
-    return Registry.is("ide.run.dashboard") && RunDashboardContributor.EP_NAME.getExtensions().length > 0;
+    return Registry.is("ide.run.dashboard") && RunDashboardContributor.EP_NAME.hasAnyExtensions();
   }
 
   private void initToolWindowListeners() {
@@ -174,14 +174,13 @@ public class RunDashboardManagerImpl implements RunDashboardManager, PersistentS
   public List<Pair<RunnerAndConfigurationSettings, RunContentDescriptor>> getRunConfigurations() {
     List<Pair<RunnerAndConfigurationSettings, RunContentDescriptor>> result = new ArrayList<>();
 
-    List<RunnerAndConfigurationSettings> configurations = RunManager.getInstance(myProject).getAllSettings().stream()
-            .filter(runConfiguration -> RunDashboardContributor.isShowInDashboard(runConfiguration.getType())).collect(Collectors.toList());
+    List<RunnerAndConfigurationSettings> configurations =
+            RunManager.getInstance(myProject).getAllSettings().stream().filter(runConfiguration -> RunDashboardContributor.isShowInDashboard(runConfiguration.getType())).collect(Collectors.toList());
 
     //noinspection ConstantConditions ???
     ExecutionManagerImpl executionManager = ExecutionManagerImpl.getInstance(myProject);
     configurations.forEach(configurationSettings -> {
-      List<RunContentDescriptor> descriptors =
-              executionManager.getDescriptors(settings -> Comparing.equal(settings.getConfiguration(), configurationSettings.getConfiguration()));
+      List<RunContentDescriptor> descriptors = executionManager.getDescriptors(settings -> Comparing.equal(settings.getConfiguration(), configurationSettings.getConfiguration()));
       if (descriptors.isEmpty()) {
         result.add(Pair.create(configurationSettings, null));
       }
@@ -256,8 +255,8 @@ public class RunDashboardManagerImpl implements RunDashboardManager, PersistentS
   @Override
   public State getState() {
     State state = new State();
-    state.ruleStates = myGroupers.stream().filter(grouper -> !grouper.getRule().isAlwaysEnabled())
-            .map(grouper -> new RuleState(grouper.getRule().getName(), grouper.isEnabled())).collect(Collectors.toList());
+    state.ruleStates =
+            myGroupers.stream().filter(grouper -> !grouper.getRule().isAlwaysEnabled()).map(grouper -> new RuleState(grouper.getRule().getName(), grouper.isEnabled())).collect(Collectors.toList());
     return state;
   }
 

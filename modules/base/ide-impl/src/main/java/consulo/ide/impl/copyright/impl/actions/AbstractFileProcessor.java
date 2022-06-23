@@ -16,28 +16,28 @@
 
 package consulo.ide.impl.copyright.impl.actions;
 
-import consulo.language.editor.FileModificationService;
 import consulo.application.Result;
-import consulo.language.editor.WriteCommandAction;
-import consulo.module.Module;
-import consulo.module.ModuleManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.project.Project;
 import consulo.content.ContentIterator;
-import consulo.module.content.ModuleFileIndex;
-import consulo.module.content.ModuleRootManager;
-import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.copyright.UpdateCopyrightsProvider;
+import consulo.language.copyright.config.CopyrightManager;
+import consulo.language.copyright.config.CopyrightProfile;
+import consulo.language.editor.FileModificationService;
+import consulo.language.editor.WriteCommandAction;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.language.util.IncorrectOperationException;
-import consulo.language.copyright.config.CopyrightManager;
-import consulo.language.copyright.config.CopyrightProfile;
-import consulo.language.copyright.CopyrightUpdaters;
 import consulo.logging.Logger;
+import consulo.module.Module;
+import consulo.module.ModuleManager;
+import consulo.module.content.ModuleFileIndex;
+import consulo.module.content.ModuleRootManager;
+import consulo.project.Project;
+import consulo.virtualFileSystem.ReadonlyStatusHandler;
+import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -320,7 +320,7 @@ public abstract class AbstractFileProcessor {
     PsiFile[] locals = directory.getFiles();
     for (PsiFile local : locals) {
       CopyrightProfile opts = CopyrightManager.getInstance(project).getCopyrightOptions(local);
-      if (opts != null && CopyrightUpdaters.hasExtension(local)) {
+      if (opts != null && UpdateCopyrightsProvider.hasExtension(local)) {
         files.add(local);
       }
 
