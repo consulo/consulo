@@ -15,6 +15,8 @@
  */
 package consulo.diff;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 import consulo.diff.content.DiffContent;
 import consulo.diff.content.DocumentContent;
@@ -33,6 +35,7 @@ import java.io.IOException;
 /*
  * Use ProgressManager.executeProcessUnderProgress() to pass modality state if needed
  */
+@Service(ComponentScope.APPLICATION)
 public abstract class DiffContentFactory {
   @Nonnull
   public static DiffContentFactory getInstance() {

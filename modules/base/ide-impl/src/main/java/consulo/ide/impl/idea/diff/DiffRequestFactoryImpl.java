@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.diff;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.diff.content.DiffContent;
 import consulo.diff.content.DocumentContent;
 import consulo.diff.content.FileContent;
@@ -47,6 +48,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Singleton
+@ServiceImpl
 public class DiffRequestFactoryImpl extends DiffRequestFactory {
   private final DiffContentFactoryEx myContentFactory = DiffContentFactoryEx.getInstanceEx();
 

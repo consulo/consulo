@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.options.colors.pages;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.ide.highlighter.custom.CustomFileHighlighter;
 import consulo.ide.impl.idea.ide.highlighter.custom.CustomHighlighterColors;
 import consulo.ide.impl.idea.ide.highlighter.custom.SyntaxTable;
@@ -29,6 +30,7 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import java.util.Map;
 
+@ExtensionImpl(id = "custom")
 public class CustomColorsPage implements ColorSettingsPage {
   private static final AttributesDescriptor[] ATTRS = {
     new AttributesDescriptor(OptionsBundle.message("options.custom.attribute.descriptor.keyword1"), CustomHighlighterColors.CUSTOM_KEYWORD1_ATTRIBUTES),

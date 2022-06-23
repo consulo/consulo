@@ -15,29 +15,31 @@
  */
 package consulo.ide.impl.idea.diff.comparison;
 
+import consulo.annotation.component.ServiceImpl;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.util.diff.FilesTooBigForDiffException;
+import consulo.diff.fragment.DiffFragment;
+import consulo.diff.fragment.LineFragment;
 import consulo.ide.impl.idea.diff.comparison.iterables.DiffIterable;
 import consulo.ide.impl.idea.diff.comparison.iterables.FairDiffIterable;
 import consulo.ide.impl.idea.diff.fragments.*;
 import consulo.ide.impl.idea.diff.util.IntPair;
 import consulo.ide.impl.idea.diff.util.MergeRange;
 import consulo.ide.impl.idea.diff.util.Range;
-import consulo.application.progress.ProgressIndicator;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.application.util.diff.FilesTooBigForDiffException;
-import consulo.diff.fragment.DiffFragment;
-import consulo.diff.fragment.LineFragment;
-import consulo.util.lang.CharSequenceSubSequence;
 import consulo.logging.Logger;
+import consulo.util.lang.CharSequenceSubSequence;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-import jakarta.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 @Singleton
+@ServiceImpl
 public class ComparisonManagerImpl extends ComparisonManager {
   public static final Logger LOG = Logger.getInstance(ComparisonManagerImpl.class);
 

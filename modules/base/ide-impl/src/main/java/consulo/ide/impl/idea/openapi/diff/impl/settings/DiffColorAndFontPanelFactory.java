@@ -15,22 +15,15 @@
  */
 package consulo.ide.impl.idea.openapi.diff.impl.settings;
 
-import consulo.ide.impl.idea.application.options.colors.*;
-import consulo.ide.impl.idea.diff.util.DiffLineSeparatorRenderer;
-import consulo.ide.impl.idea.diff.util.TextDiffTypeFactory;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ApplicationBundle;
-import consulo.configurable.OptionsBundle;
-import consulo.colorScheme.setting.AttributesDescriptor;
-import consulo.colorScheme.setting.ColorAndFontDescriptorsProvider;
-import consulo.colorScheme.setting.ColorDescriptor;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.application.options.colors.*;
 import org.jetbrains.annotations.Nls;
+
 import javax.annotation.Nonnull;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class DiffColorsPageFactory implements ColorAndFontPanelFactory, ColorAndFontDescriptorsProvider {
+@ExtensionImpl
+public class DiffColorAndFontPanelFactory implements ColorAndFontPanelFactory {
   @Override
   @Nonnull
   public NewColorAndFontPanel createPanel(@Nonnull ColorAndFontOptions options) {
@@ -56,32 +49,7 @@ public class DiffColorsPageFactory implements ColorAndFontPanelFactory, ColorAnd
 
   @Override
   @Nonnull
-  public AttributesDescriptor[] getAttributeDescriptors() {
-    TextDiffTypeFactory.TextDiffTypeImpl[] diffTypes = TextDiffTypeFactory.getInstance().getAllDiffTypes();
-    return ContainerUtil.map2Array(diffTypes, AttributesDescriptor.class,
-                                   type -> new AttributesDescriptor(OptionsBundle.message("options.general.color.descriptor.vcs.diff.type.tag.prefix") + type.getName(), type.getKey()));
-  }
-
-  @Override
-  @Nonnull
-  public ColorDescriptor[] getColorDescriptors() {
-    List<ColorDescriptor> descriptors = new ArrayList<>();
-
-    descriptors
-            .add(new ColorDescriptor(OptionsBundle.message("options.general.color.descriptor.vcs.diff.separator.background"), DiffLineSeparatorRenderer.BACKGROUND, ColorDescriptor.Kind.BACKGROUND));
-
-    return descriptors.toArray(ColorDescriptor.EMPTY_ARRAY);
-  }
-
-  @Override
-  @Nonnull
   public String getPanelDisplayName() {
-    return getDiffGroup();
-  }
-
-  @Nonnull
-  @Override
-  public String getDisplayName() {
     return getDiffGroup();
   }
 

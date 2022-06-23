@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.ide.util;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.ui.TreeFileChooser;
 import consulo.language.editor.ui.TreeFileChooserFactory;
 import consulo.language.psi.PsiFile;
@@ -32,6 +33,7 @@ import java.util.function.Predicate;
  * @author yole
  */
 @Singleton
+@ExtensionImpl
 public class TreeFileChooserFactoryImpl extends TreeFileChooserFactory {
   private final Project myProject;
 

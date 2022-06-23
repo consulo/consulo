@@ -16,6 +16,10 @@
 
 package consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.language.editor.completion.lookup.LookupElementBuilder;
 import consulo.disposer.Disposable;
 import consulo.language.icon.IconDescriptorUpdaters;
@@ -27,6 +31,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.ide.impl.psi.file.FileLookupInfoProvider;
 import consulo.ui.image.Image;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
@@ -39,11 +44,14 @@ import java.util.Map;
  * @author spleaner
  */
 @Singleton
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 public class FileInfoManager implements Disposable {
   private final Map<FileType, FileLookupInfoProvider> myFileType2InfoProvider = new HashMap<FileType, FileLookupInfoProvider>();
 
-  public FileInfoManager() {
-    for (final FileLookupInfoProvider provider : FileLookupInfoProvider.EP_NAME.getExtensionList()) {
+  @Inject
+  public FileInfoManager(@Nonnull Application application) {
+    for (final FileLookupInfoProvider provider : FileLookupInfoProvider.EP_NAME.getExtensionList(application)) {
       final FileType[] types = provider.getFileTypes();
       for (FileType type : types) {
         myFileType2InfoProvider.put(type, provider);

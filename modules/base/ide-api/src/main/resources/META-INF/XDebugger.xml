@@ -33,10 +33,6 @@
   </extensionPoints>
 
   <extensions defaultExtensionNs="consulo">
-    <executor implementation="consulo.execution.debug.DefaultDebugExecutor" order="first,after run"/>
-
-    <colorSettingsPage implementation="consulo.ide.impl.idea.xdebugger.impl.ui.DebuggerColorsPage"/>
-
     <copyPastePreProcessor implementation="consulo.ide.impl.idea.xdebugger.impl.ui.DebuggerCopyPastePreprocessor"/>
   </extensions>
 </consulo-plugin>

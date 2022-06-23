@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.psi.impl.source.codeStyle;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.language.codeStyle.ApplicationCodeStyleFacade;
 import jakarta.inject.Inject;
 
@@ -25,6 +26,7 @@ import jakarta.inject.Singleton;
  * @since 2018-08-24
  */
 @Singleton
+@ServiceImpl
 public class ApplicationCodeStyleFacadeImpl extends CodeStyleFacadeImpl implements ApplicationCodeStyleFacade {
   @Inject
   public ApplicationCodeStyleFacadeImpl() {

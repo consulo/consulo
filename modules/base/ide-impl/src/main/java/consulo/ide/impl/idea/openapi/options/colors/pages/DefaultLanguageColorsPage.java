@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.options.colors.pages;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.DefaultLanguageHighlighterColors;
 import consulo.codeEditor.HighlighterColors;
 import consulo.colorScheme.TextAttributesKey;
@@ -37,6 +38,7 @@ import java.util.Map;
  *
  * @author Rustam Vishnyakov
  */
+@ExtensionImpl(id = "defaultLanguage")
 public class DefaultLanguageColorsPage implements ColorSettingsPage, ConfigurableWeight {
 
   private static final Map<String, TextAttributesKey> TAG_HIGHLIGHTING_MAP = new HashMap<>();

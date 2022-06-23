@@ -15,6 +15,8 @@
  */
 package consulo.colorScheme.setting;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.colorScheme.EditorColorKey;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.component.extension.ExtensionPointName;
@@ -26,8 +28,9 @@ import javax.annotation.Nonnull;
  * @author Denis Zhdanov
  * @since 1/19/12 1:10 PM
  */
+@Extension(ComponentScope.APPLICATION)
 public interface ColorAndFontDescriptorsProvider {
-  ExtensionPointName<ColorAndFontDescriptorsProvider> EP_NAME = ExtensionPointName.create("consulo.colorAndFontDescriptorProvider");
+  ExtensionPointName<ColorAndFontDescriptorsProvider> EP_NAME = ExtensionPointName.create(ColorAndFontDescriptorsProvider.class);
   
   /**
    * Returns the list of descriptors specifying the {@link TextAttributesKey} instances

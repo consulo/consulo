@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.application.options;
 
 import java.util.Set;
 
-
 public interface OptionsContainingConfigurable {
   Set<String> processListOptions();
 }

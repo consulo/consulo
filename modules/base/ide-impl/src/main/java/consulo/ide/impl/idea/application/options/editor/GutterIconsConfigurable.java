@@ -15,15 +15,14 @@
  */
 package consulo.ide.impl.idea.application.options.editor;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.configurable.*;
 import consulo.language.LanguageExtensionPoint;
 import consulo.application.Application;
 import consulo.application.ApplicationBundle;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.component.extension.ExtensionPoint;
 import consulo.component.extension.ExtensionPointName;
-import consulo.configurable.Configurable;
-import consulo.configurable.ConfigurationException;
-import consulo.configurable.SearchableConfigurable;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.gutter.GutterIconDescriptor;
 import consulo.language.editor.gutter.LineMarkerProvider;
@@ -61,7 +60,8 @@ import java.util.*;
 /**
  * @author Dmitry Avdeev
  */
-public class GutterIconsConfigurable implements SearchableConfigurable, Configurable.NoScroll {
+@ExtensionImpl
+public class GutterIconsConfigurable implements SearchableConfigurable, Configurable.NoScroll,ApplicationConfigurable {
   public static final String DISPLAY_NAME = "Gutter Icons";
   public static final String ID = "editor.gutterIcons";
 
@@ -73,6 +73,12 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
   @Override
   public String getDisplayName() {
     return DISPLAY_NAME;
+  }
+
+  @Nullable
+  @Override
+  public String getParentId() {
+    return StandardConfigurableIds.EDITOR_GROUP;
   }
 
   @RequiredUIAccess

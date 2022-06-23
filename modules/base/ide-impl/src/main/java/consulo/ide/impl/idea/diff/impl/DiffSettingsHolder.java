@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.diff.impl;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.diff.DiffPlaces;
 import consulo.ide.impl.idea.diff.util.DiffUtil;
 import consulo.component.persist.PersistentStateComponent;
@@ -34,6 +37,8 @@ import java.util.Map;
 
 @Singleton
 @State(name = "DiffSettings", storages = @Storage(file = DiffUtil.DIFF_CONFIG))
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 public class DiffSettingsHolder implements PersistentStateComponent<DiffSettingsHolder.State> {
   public static final Key<DiffSettings> KEY = Key.create("DiffSettings");
 
@@ -57,8 +62,7 @@ public class DiffSettingsHolder implements PersistentStateComponent<DiffSettings
     public DiffSettings() {
     }
 
-    public DiffSettings(@Nonnull SharedSettings SHARED_SETTINGS,
-                        @Nonnull PlaceSettings PLACE_SETTINGS) {
+    public DiffSettings(@Nonnull SharedSettings SHARED_SETTINGS, @Nonnull PlaceSettings PLACE_SETTINGS) {
       this.SHARED_SETTINGS = SHARED_SETTINGS;
       this.PLACE_SETTINGS = PLACE_SETTINGS;
     }
@@ -93,7 +97,7 @@ public class DiffSettingsHolder implements PersistentStateComponent<DiffSettings
     }
 
     public void setSyncBinaryEditorSettings(boolean value) {
-      PLACE_SETTINGS.SYNC_BINARY_EDITOR_SETTINGS= value;
+      PLACE_SETTINGS.SYNC_BINARY_EDITOR_SETTINGS = value;
     }
 
     //

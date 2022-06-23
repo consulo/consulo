@@ -1191,8 +1191,7 @@
 
   <extensions defaultExtensionNs="consulo">
 
-    <applicationService serviceInterface="consulo.ide.impl.idea.ide.passwordSafe.impl.providers.masterKey.PasswordDatabase"
-                        serviceImplementation="consulo.ide.impl.idea.ide.passwordSafe.impl.providers.masterKey.PasswordDatabase"/>
+
     <applicationService serviceInterface="consulo.ide.impl.idea.ide.passwordSafe.config.PasswordSafeSettings"
                         serviceImplementation="consulo.ide.impl.idea.ide.passwordSafe.config.PasswordSafeSettings"/>
     <applicationService serviceInterface="consulo.ide.impl.idea.ide.passwordSafe.PasswordSafe"
@@ -1284,8 +1283,7 @@
 
     <projectService serviceInterface="consulo.ide.impl.idea.openapi.vcs.AbstractVcsHelper"
                     serviceImplementation="consulo.ide.impl.idea.openapi.vcs.impl.AbstractVcsHelperImpl"/>
-    <projectService serviceInterface="consulo.ide.impl.idea.openapi.diff.DirDiffManager"
-                    serviceImplementation="consulo.ide.impl.idea.openapi.diff.impl.dir.DirDiffManagerImpl"/>
+    
     <projectService serviceImplementation="consulo.ide.impl.idea.openapi.vcs.contentAnnotation.VcsContentAnnotationSettings"/>
     
 
@@ -1362,15 +1360,6 @@
 
     <search.optionContributor implementation="consulo.ide.impl.idea.codeInsight.intention.impl.config.IntentionManagerSettings$IntentionSearchableOptionContributor"/>
 
-
-    <applicationService serviceImplementation="consulo.ide.impl.idea.find.impl.FindSettingsImpl$FindRecents"/>
-
-    <applicationService serviceInterface="consulo.ide.impl.idea.openapi.actionSystem.AbbreviationManager"
-                        serviceImplementation="consulo.ide.impl.idea.openapi.actionSystem.impl.AbbreviationManagerImpl"/>
-
-
-
-
     <schemeOwner serviceInterface="consulo.language.codeStyle.CodeStyleSchemes"/>
 
     <applicationService serviceInterface="consulo.content.library.LibraryTablesRegistrar"
@@ -1382,18 +1371,13 @@
     <applicationService serviceInterface="consulo.ide.impl.idea.openapi.roots.libraries.LibraryTypeService"
                         serviceImplementation="consulo.ide.impl.idea.openapi.roots.impl.libraries.LibraryTypeServiceImpl"/>
 
-    <applicationService serviceInterface="consulo.language.codeStyle.AppCodeStyleSettingsManager"
-                        serviceImplementation="consulo.language.codeStyle.AppCodeStyleSettingsManager"/>
+    
 
-    <applicationService serviceInterface="consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers.FileInfoManager"
-                        serviceImplementation="consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers.FileInfoManager"/>
 
-    <applicationService serviceInterface="consulo.language.psi.search.IndexPatternSearch"
-                        serviceImplementation="consulo.ide.impl.psi.impl.search.IndexPatternSearchImpl"/>
+
 
     
-    <applicationService serviceInterface="consulo.ide.impl.language.codeStyle.ApplicationCodeStyleFacade"
-                        serviceImplementation="consulo.ide.impl.psi.impl.source.codeStyle.ApplicationCodeStyleFacadeImpl"/>
+
 
     <applicationService serviceImplementation="consulo.ide.impl.psi.codeStyle.arrangement.engine.ArrangementEngine"/>
     <applicationService serviceImplementation="consulo.ide.impl.language.codeStyle.arrangement.MemberOrderService"/>
@@ -1447,14 +1431,6 @@
     <projectService serviceInterface="consulo.ide.impl.idea.moduleDependencies.DependenciesAnalyzeManager"
                     serviceImplementation="consulo.ide.impl.idea.moduleDependencies.DependenciesAnalyzeManager"/>
 
-    <projectService serviceInterface="consulo.language.editor.ui.TreeFileChooserFactory"
-                    serviceImplementation="consulo.ide.impl.idea.ide.util.TreeFileChooserFactoryImpl"/>
-
-
-    <colorSettingsPage implementation="consulo.ide.impl.idea.openapi.options.colors.pages.GeneralColorsPage" id="general"/>
-    <colorSettingsPage implementation="consulo.ide.impl.idea.openapi.options.colors.pages.DefaultLanguageColorsPage" id="defaultLanguage"/>
-    <colorSettingsPage implementation="consulo.ide.impl.idea.openapi.options.colors.pages.ANSIColoredConsoleColorsPage" id="ansi"/>
-    <colorSettingsPage implementation="consulo.ide.impl.idea.openapi.options.colors.pages.CustomColorsPage" id="custom"/>
 
     <elementDescriptionProvider implementation="consulo.ide.impl.psi.impl.DefaultPomTargetDescriptionProvider" order="last" id="pomDefault"/>
 
@@ -1869,21 +1845,6 @@
 
     <postStartupActivity implementation="consulo.ide.impl.idea.openapi.vcs.update.RestoreUpdateTree$MyStartUpActivity"/>
 
-    <statusBarWidgetFactory id="positionWidget" implementation="consulo.ide.impl.idea.openapi.wm.impl.status.PositionPanelWidgetFactory"/>
-    <statusBarWidgetFactory id="lineSeparatorWidget" implementation="consulo.ide.impl.idea.openapi.wm.impl.status.LineSeparatorWidgetFactory" order="after positionWidget"/>
-    <statusBarWidgetFactory id="encodingWidget" implementation="consulo.ide.impl.idea.openapi.wm.impl.status.EncodingPanelWidgetFactory" order="after lineSeparatorWidget"/>
-    <!--TODO <statusBarWidgetFactory id="largeFileEncodingWidget" implementation="com.intellij.largeFilesEditor.encoding.LargeFileEncodingWidgetFactory" order="after encodingWidget"/> -->
-    <statusBarWidgetFactory id="moduleLayerWidget" implementation="consulo.ide.impl.wm.impl.status.ModuleLayerWidgetFactory" order=" after encodingWidget"/>
-    <statusBarWidgetFactory id="selectionModeWidget" implementation="consulo.ide.impl.idea.openapi.wm.impl.status.ColumnSelectionModeWidgetFactory" order="after moduleLayerWidget"/>
-    <statusBarWidgetFactory id="codeStyleWidget" implementation="consulo.ide.impl.psi.codeStyle.statusbar.CodeStyleStatusBarWidgetFactory" order="after selectionModeWidget"/>
-    <statusBarWidgetFactory id="readOnlyWidget" implementation="consulo.ide.impl.idea.openapi.wm.impl.status.ReadOnlyAttributeWidgetFactory" order="after codeStyleWidget"/>
-    <statusBarWidgetFactory id="inspectionProfileWidget" implementation="consulo.ide.impl.idea.openapi.wm.impl.status.InspectionProfileWidgetFactory" order="after readOnlyWidget"/>
-    <statusBarWidgetFactory id="notificationsWidget" implementation="consulo.ide.impl.idea.notification.impl.widget.NotificationWidgetFactory" order="after inspectionProfileWidget"/>
-    <statusBarWidgetFactory id="fatalErrorWidget" implementation="consulo.ide.impl.idea.openapi.wm.impl.status.FatalErrorWidgetFactory" order="after notificationsWidget"/>
-    <statusBarWidgetFactory id="writeActionWidget" implementation="consulo.ide.impl.idea.openapi.wm.impl.status.WriteThreadIndicatorWidgetFactory" order="after fatalErrorWidget"/>
-    <statusBarWidgetFactory id="memoryUsageWidget" implementation="consulo.ide.impl.idea.openapi.wm.impl.status.MemoryIndicatorWidgetFactory" order="last"/>
-
-
     <postStartupActivity implementation="consulo.ide.impl.idea.execution.impl.ProjectRunConfigurationManager$MyStartupActivity"/>
 
 
@@ -1894,7 +1855,4 @@
 
   </extensions>
 
-  <projectListeners>
-    <listener class="consulo.ide.impl.idea.openapi.vfs.newvfs.impl.CachedFileType$PsiListener" topic="consulo.language.psi.PsiModificationTrackerListener"/>
-  </projectListeners>
 </consulo-plugin>

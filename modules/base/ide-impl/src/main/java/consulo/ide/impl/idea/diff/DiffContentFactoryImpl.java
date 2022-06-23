@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.diff;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.AccessRule;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.application.util.registry.Registry;
@@ -61,6 +62,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 
 @Singleton
+@ServiceImpl
 public class DiffContentFactoryImpl extends DiffContentFactoryEx {
   public static final Logger LOG = Logger.getInstance(DiffContentFactoryImpl.class);
 

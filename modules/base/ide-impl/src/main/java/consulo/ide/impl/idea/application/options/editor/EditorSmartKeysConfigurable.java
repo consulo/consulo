@@ -16,6 +16,8 @@
 
 package consulo.ide.impl.idea.application.options.editor;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.configurable.*;
 import consulo.language.editor.CodeInsightSettings;
 import consulo.codeEditor.action.SmartBackspaceMode;
 import consulo.language.CodeDocumentationAwareCommenter;
@@ -24,14 +26,10 @@ import consulo.language.Language;
 import consulo.language.LanguageCommenters;
 import consulo.application.ApplicationBundle;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
-import consulo.configurable.Configurable;
-import consulo.configurable.ConfigurationException;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.NotNullComputable;
-import consulo.configurable.UnnamedConfigurable;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
-import consulo.configurable.SimpleConfigurable;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.LabeledLayout;
@@ -39,6 +37,7 @@ import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.LabeledComponents;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 
@@ -53,7 +52,8 @@ import java.util.Collection;
  *
  * @author yole
  */
-public class EditorSmartKeysConfigurable extends SimpleConfigurable<EditorSmartKeysConfigurable.Panel> implements Configurable {
+@ExtensionImpl
+public class EditorSmartKeysConfigurable extends SimpleConfigurable<EditorSmartKeysConfigurable.Panel> implements Configurable, ApplicationConfigurable {
   protected static class Panel implements NotNullComputable<Component> {
     private CheckBox myCbSmartHome;
     private CheckBox myCbSmartEnd;
@@ -137,7 +137,19 @@ public class EditorSmartKeysConfigurable extends SimpleConfigurable<EditorSmartK
   @Override
   @Nls
   public String getDisplayName() {
-    return null;
+    return "Smart Keys";
+  }
+
+  @Nonnull
+  @Override
+  public String getId() {
+    return "editor.preferences.smartKeys";
+  }
+
+  @Nullable
+  @Override
+  public String getParentId() {
+    return StandardConfigurableIds.EDITOR_GROUP;
   }
 
   @RequiredUIAccess

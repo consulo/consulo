@@ -16,17 +16,20 @@
 
 package consulo.ide.impl.idea.ide.passwordSafe.impl.providers.masterKey;
 
-import consulo.ide.impl.idea.ide.passwordSafe.impl.providers.ByteArrayWrapper;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
+import consulo.ide.impl.idea.ide.passwordSafe.impl.providers.ByteArrayWrapper;
 import consulo.logging.Logger;
+import jakarta.inject.Singleton;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 
 import javax.annotation.Nullable;
-import jakarta.inject.Singleton;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -35,10 +38,9 @@ import java.util.TreeMap;
  * The password database. The internal component for {@link MasterKeyPasswordSafe}.
  */
 @Singleton
-@State(
-  name = "PasswordDatabase",
-  storages = {@Storage(
-    file = StoragePathMacros.APP_CONFIG + "/security.xml")})
+@State(name = "PasswordDatabase", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/security.xml")})
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 public class PasswordDatabase implements PersistentStateComponent<PasswordDatabase.State> {
   /**
    * The name of logger

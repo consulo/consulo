@@ -102,8 +102,7 @@ public class ConfigurableWrapper implements SearchableConfigurable {
   @Nullable
   @Override
   public String getHelpTopic() {
-    UnnamedConfigurable configurable = getConfigurable();
-    return configurable instanceof Configurable ? ((Configurable)configurable).getHelpTopic() : null;
+    return myConfigurable.getHelpTopic();
   }
 
   @RequiredUIAccess
@@ -189,25 +188,9 @@ public class ConfigurableWrapper implements SearchableConfigurable {
 
     public CompositeWrapper(Configurable configurable, Configurable... kids) {
       super(configurable);
-      //if (configurable.dynamic) {
-      //  kids = ((Composite)getConfigurable()).getConfigurables();
-      //}
-      //else if (configurable.getChildren() != null) {
-      //  kids = ContainerUtil.mapNotNull(configurable.getChildren(), ep1 -> ep1.isAvailable() ? (ConfigurableWrapper)wrapConfigurable(ep1) : null, EMPTY_ARRAY);
-      //}
-      //if (configurable.childrenEPName != null) {
-      //  ExtensionPoint<Object> childrenEP = getProject(configurable).getExtensionPoint(ExtensionPointName.create(configurable.childrenEPName));
-      //  Object[] extensions = childrenEP.getExtensions();
-      //  if (extensions.length > 0) {
-      //    if (extensions[0] instanceof ConfigurableEP) {
-      //      Configurable[] children = ContainerUtil.mapNotNull(((ConfigurableEP<Configurable>[])extensions), CONFIGURABLE_FUNCTION, new Configurable[0]);
-      //      kids = ArrayUtil.mergeArrays(kids, children);
-      //    }
-      //    else {
-      //      kids = ArrayUtil.mergeArrays(kids, ((Composite)getConfigurable()).getConfigurables());
-      //    }
-      //  }
-      //}
+      if (configurable instanceof Composite c) {
+        kids = consulo.util.collection.ArrayUtil.mergeArrays(c.getConfigurables(), kids);
+      }
       myKids = kids;
     }
 

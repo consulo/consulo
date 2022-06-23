@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.diff.tools.util.base;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.diff.DiffPlaces;
 import consulo.ide.impl.idea.diff.util.DiffUtil;
 import consulo.component.persist.PersistentStateComponent;
@@ -32,6 +35,8 @@ import java.util.TreeMap;
 
 @Singleton
 @State(name = "TextDiffSettings", storages = @Storage(file = DiffUtil.DIFF_CONFIG))
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 public class TextDiffSettingsHolder implements PersistentStateComponent<TextDiffSettingsHolder.State> {
   public static final Key<TextDiffSettings> KEY = Key.create("TextDiffSettings");
 

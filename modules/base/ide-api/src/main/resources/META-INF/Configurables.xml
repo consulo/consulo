@@ -60,10 +60,10 @@
                          key="template.data.language.configurable"
                          bundle="consulo.language.LangBundle"/>
 
-    <projectConfigurable displayName="Code Style"
-                         parentId="editor"
-                         dynamic="true"
-                         instance="consulo.ide.impl.idea.application.options.CodeStyleSchemesConfigurable"/>
+    <!--<projectConfigurable displayName="Code Style"-->
+                         <!--parentId="editor"-->
+                         <!--dynamic="true"-->
+                         <!--instance="consulo.ide.impl.idea.application.options.CodeStyleSchemesConfigurable"/>-->
 
     <applicationConfigurable instance="consulo.ide.impl.idea.ide.todo.configurable.TodoConfigurable"
                              id="preferences.toDoOptions"
@@ -102,17 +102,17 @@
                              bundle="consulo.application.ApplicationBundle"
                              order="after appearance"/>
 
-    <applicationConfigurable instance="consulo.ide.impl.idea.application.options.colors.ColorAndFontOptions"
-                             parentId="editor"
-                             id="editor.preferences.colors.and.fonts"
-                             dynamic="true"
-                             key="title.colors.and.fonts"
-                             bundle="consulo.application.ApplicationBundle"/>
+    <!--<applicationConfigurable instance="consulo.ide.impl.idea.application.options.colors.ColorAndFontOptions"-->
+                             <!--parentId="editor"-->
+                             <!--id="editor.preferences.colors.and.fonts"-->
+                             <!--dynamic="true"-->
+                             <!--key="title.colors.and.fonts"-->
+                             <!--bundle="consulo.application.ApplicationBundle"/>-->
 
-    <applicationConfigurable instance="consulo.ide.impl.settings.impl.EditorTabsConfigurable"
-                             id="editor.preferences.tabs"
-                             parentId="editor"
-                             displayName="Tabs"/>
+    <!--<applicationConfigurable instance="consulo.ide.impl.settings.impl.EditorTabsConfigurable"-->
+                             <!--id="editor.preferences.tabs"-->
+                             <!--parentId="editor"-->
+                             <!--displayName="Tabs"/>-->
 
     <applicationConfigurable instance="consulo.ide.impl.idea.ide.passwordSafe.config.PasswordSafeConfigurable"
                              id="application.passwordSafe"
@@ -136,20 +136,20 @@
                              key="auto.import"
                              bundle="consulo.application.ApplicationBundle"/>
 
-    <applicationConfigurable instance="consulo.ide.impl.idea.application.options.editor.EditorSmartKeysConfigurable"
-                             id="editor.preferences.smartKeys"
-                             parentId="editor"
-                             displayName="Smart Keys"/>
+    <!--<applicationConfigurable instance="consulo.ide.impl.idea.application.options.editor.EditorSmartKeysConfigurable"-->
+                             <!--id="editor.preferences.smartKeys"-->
+                             <!--parentId="editor"-->
+                             <!--displayName="Smart Keys"/>-->
 
     <applicationConfigurable instance="consulo.ide.impl.idea.application.options.editor.EditorAppearanceConfigurable"
                              id="editor.preferences.appearance"
                              parentId="editor"
                              displayName="Appearance"/>
 
-    <applicationConfigurable instance="consulo.ide.impl.idea.application.options.editor.GutterIconsConfigurable"
-                             id="editor.gutterIcons"
-                             parentId="editor"
-                             displayName="Gutter Icons"/>
+    <!--<applicationConfigurable instance="consulo.ide.impl.idea.application.options.editor.GutterIconsConfigurable"-->
+                             <!--id="editor.gutterIcons"-->
+                             <!--parentId="editor"-->
+                             <!--displayName="Gutter Icons"/>-->
 
     <projectConfigurable id="file.encoding"
                          bundle="consulo.ide.IdeBundle"
@@ -157,10 +157,10 @@
                          parentId="editor"
                          instance="consulo.ide.impl.idea.openapi.vfs.encoding.FileEncodingConfigurable"/>
 
-    <projectConfigurable instance="consulo.ide.impl.idea.ui.tabs.FileColorsConfigurable"
-                         parentId="editor"
-                         id="fileColors"
-                         displayName="File Colors"/>
+    <!--<projectConfigurable instance="consulo.ide.impl.idea.ui.tabs.FileColorsConfigurable"-->
+                         <!--parentId="editor"-->
+                         <!--id="fileColors"-->
+                         <!--displayName="File Colors"/>-->
 
     <applicationConfigurable id="general"
                              displayName="General"

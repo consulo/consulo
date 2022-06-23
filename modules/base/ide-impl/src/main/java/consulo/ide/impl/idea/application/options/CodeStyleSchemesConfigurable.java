@@ -16,25 +16,24 @@
 
 package consulo.ide.impl.idea.application.options;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.codeEditor.EditorFactory;
+import consulo.configurable.*;
 import consulo.ide.impl.idea.application.options.codeStyle.CodeStyleMainPanel;
 import consulo.ide.impl.idea.application.options.codeStyle.CodeStyleSchemesModel;
 import consulo.ide.impl.idea.application.options.codeStyle.CodeStyleSettingsPanelFactory;
 import consulo.ide.impl.idea.application.options.codeStyle.NewCodeStyleSettingsPanel;
-import consulo.codeEditor.EditorFactory;
-import consulo.configurable.Configurable;
-import consulo.configurable.ConfigurationException;
-import consulo.configurable.SearchableConfigurable;
-import consulo.project.Project;
+import consulo.ide.impl.psi.impl.source.codeStyle.CodeStyleSchemeImpl;
 import consulo.language.codeStyle.CodeStyleScheme;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.codeStyle.setting.CodeStyleSettingsProvider;
-import consulo.ide.impl.psi.impl.source.codeStyle.CodeStyleSchemeImpl;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.Nls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.ArrayList;
@@ -42,7 +41,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.Abstract implements OptionsContainingConfigurable, Configurable.NoMargin {
+@ExtensionImpl
+public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.Abstract implements OptionsContainingConfigurable, Configurable.NoMargin, ProjectConfigurable {
 
   private CodeStyleSchemesModel myModel;
   private List<CodeStyleConfigurableWrapper> myPanels;
@@ -59,6 +59,12 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
   @Inject
   public CodeStyleSchemesConfigurable(Project project) {
     myProject = project;
+  }
+
+  @Nullable
+  @Override
+  public String getParentId() {
+    return StandardConfigurableIds.EDITOR_GROUP;
   }
 
   @RequiredUIAccess
@@ -200,7 +206,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
 
         myModel.apply();
         EditorFactory.getInstance().refreshAllEditors();
-        
+
         CodeStyleSettingsManager.getInstance(myProject).fireCodeStyleSettingsChanged(null);
       }
       finally {
@@ -287,7 +293,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
   @Override
   public boolean isModified() {
     if (myModel != null) {
-      boolean schemeListModified = myModel.isSchemeListModified() ||myRootConfigurable != null && myRootConfigurable.isModified();
+      boolean schemeListModified = myModel.isSchemeListModified() || myRootConfigurable != null && myRootConfigurable.isModified();
       if (schemeListModified) {
         myApplyCompleted = false;
         myRevertCompleted = false;
@@ -424,7 +430,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
     }
 
     public void applyPanel() {
-      if(myPanel != null) {
+      if (myPanel != null) {
         myPanel.apply();
       }
     }

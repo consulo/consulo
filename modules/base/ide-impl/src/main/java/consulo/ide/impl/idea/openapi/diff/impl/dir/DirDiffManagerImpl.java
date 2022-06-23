@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.diff.impl.dir;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.ide.diff.*;
 import consulo.ide.impl.idea.openapi.diff.DirDiffManager;
 import consulo.ui.ex.awt.DialogWrapper;
@@ -35,6 +36,7 @@ import java.awt.event.WindowEvent;
  * @author Konstantin Bulenkov
  */
 @Singleton
+@ServiceImpl
 public class DirDiffManagerImpl extends DirDiffManager {
   private final Project myProject;
 

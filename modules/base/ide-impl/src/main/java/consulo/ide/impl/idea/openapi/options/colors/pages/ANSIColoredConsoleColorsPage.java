@@ -1,5 +1,6 @@
 package consulo.ide.impl.idea.openapi.options.colors.pages;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.execution.process.ConsoleHighlighter;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.colorScheme.TextAttributesKey;
@@ -19,6 +20,7 @@ import java.util.Map;
 /**
  * @author oleg, Roman.Chernyatchik
  */
+@ExtensionImpl(id = "ansi")
 public class ANSIColoredConsoleColorsPage implements ColorSettingsPage, ConfigurableWeight {
 
   private static final String DEMO_TEXT =

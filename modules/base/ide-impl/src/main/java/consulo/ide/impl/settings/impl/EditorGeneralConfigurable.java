@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.settings.impl;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.configurable.ApplicationConfigurable;
+import consulo.configurable.StandardConfigurableIds;
 import consulo.language.editor.CodeInsightSettings;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.ide.impl.idea.codeInsight.daemon.DaemonCodeAnalyzerSettings;
@@ -55,6 +58,7 @@ import consulo.ui.util.LabeledComponents;
 import consulo.util.collection.ContainerUtil;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,7 +66,8 @@ import java.util.List;
  * @author VISTALL
  * @since 2020-04-19
  */
-public class EditorGeneralConfigurable extends SimpleConfigurableByProperties implements Configurable {
+@ExtensionImpl
+public class EditorGeneralConfigurable extends SimpleConfigurableByProperties implements Configurable, ApplicationConfigurable {
   @RequiredUIAccess
   @Nonnull
   @Override
@@ -284,9 +289,7 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
             .add(nextErrorGoPriorityProblem, () -> daemonCodeAnalyzerSettings.NEXT_ERROR_ACTION_GOES_TO_ERRORS_FIRST, v -> daemonCodeAnalyzerSettings.NEXT_ERROR_ACTION_GOES_TO_ERRORS_FIRST = v);
     errorHighlightingLayout.add(nextErrorGoPriorityProblem);
 
-    for (ErrorPropertiesProvider provider : ErrorPropertiesProvider.EP_NAME.getExtensionList()) {
-      provider.fillProperties(errorHighlightingLayout::add, propertyBuilder);
-    }
+    ErrorPropertiesProvider.EP_NAME.forEachExtensionSafe(provider -> provider.fillProperties(errorHighlightingLayout::add, propertyBuilder));
 
     layout.add(LabeledLayout.create(ApplicationLocalize.groupErrorHighlighting(), errorHighlightingLayout));
 
@@ -336,6 +339,23 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
     reinitAllEditors();
 
     restartDaemons();
+  }
+
+  @Nonnull
+  @Override
+  public String getId() {
+    return "editor.general";
+  }
+
+  @Nullable
+  @Override
+  public String getParentId() {
+    return StandardConfigurableIds.EDITOR_GROUP;
+  }
+
+  @Override
+  public String getDisplayName() {
+    return "General";
   }
 
   public static void restartDaemons() {

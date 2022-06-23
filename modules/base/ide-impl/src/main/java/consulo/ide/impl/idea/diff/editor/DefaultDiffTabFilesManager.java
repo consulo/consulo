@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.diff.editor;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.project.Project;
@@ -27,6 +28,7 @@ import jakarta.inject.Singleton;
 * @since 23/09/2021
 */
 @Singleton
+@ServiceImpl
 public class DefaultDiffTabFilesManager implements DiffEditorTabFilesManager {
   private final Project myProject;
 

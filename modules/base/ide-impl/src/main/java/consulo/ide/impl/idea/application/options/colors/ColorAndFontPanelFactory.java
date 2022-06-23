@@ -16,6 +16,8 @@
 
 package consulo.ide.impl.idea.application.options.colors;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
 import javax.annotation.Nonnull;
@@ -25,9 +27,9 @@ import javax.annotation.Nonnull;
  * 
  * @author yole
  */
+@Extension(ComponentScope.APPLICATION)
 public interface ColorAndFontPanelFactory {
-
-  ExtensionPointName<ColorAndFontPanelFactory> EP_NAME = ExtensionPointName.create("consulo.colorAndFontPanelFactory");
+  ExtensionPointName<ColorAndFontPanelFactory> EP_NAME = ExtensionPointName.create(ColorAndFontPanelFactory.class);
   
   @Nonnull
   NewColorAndFontPanel createPanel(@Nonnull ColorAndFontOptions options);

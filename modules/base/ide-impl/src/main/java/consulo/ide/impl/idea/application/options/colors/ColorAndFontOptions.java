@@ -16,6 +16,8 @@
 
 package consulo.ide.impl.idea.application.options.colors;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.configurable.*;
 import consulo.ide.impl.idea.application.options.OptionsContainingConfigurable;
 import consulo.ide.impl.idea.execution.impl.ConsoleViewUtil;
 import consulo.ide.impl.idea.ide.bookmarks.BookmarkManager;
@@ -36,9 +38,6 @@ import consulo.colorScheme.*;
 import consulo.colorScheme.setting.AttributesDescriptor;
 import consulo.colorScheme.setting.ColorAndFontDescriptorsProvider;
 import consulo.colorScheme.setting.ColorDescriptor;
-import consulo.configurable.Configurable;
-import consulo.configurable.ConfigurationException;
-import consulo.configurable.SearchableConfigurable;
 import consulo.configurable.internal.ConfigurableWeight;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;
@@ -76,7 +75,8 @@ import java.util.List;
 import java.util.*;
 import java.util.function.Function;
 
-public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract implements Configurable.NoMargin {
+@ExtensionImpl
+public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract implements Configurable.NoMargin, ApplicationConfigurable {
   /**
    * Shows a requested page to edit a color settings.
    * If current data context represents a setting dialog that can open a requested page,
@@ -632,6 +632,12 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
                                             Image icon,
                                             String toolTip) {
     list.add(new SchemeTextAttributesDescription(name, group, key, scheme, icon, toolTip));
+  }
+
+  @Nullable
+  @Override
+  public String getParentId() {
+    return StandardConfigurableIds.EDITOR_GROUP;
   }
 
   @Override

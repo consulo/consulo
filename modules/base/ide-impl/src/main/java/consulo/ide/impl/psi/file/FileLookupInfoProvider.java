@@ -16,22 +16,26 @@
 
 package consulo.ide.impl.psi.file;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.Project;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author spleaner
  */
+@Extension(ComponentScope.APPLICATION)
 public abstract class FileLookupInfoProvider {
-  public static ExtensionPointName<FileLookupInfoProvider> EP_NAME = ExtensionPointName.create("consulo.fileLookupInfoProvider");
+  public static ExtensionPointName<FileLookupInfoProvider> EP_NAME = ExtensionPointName.create(FileLookupInfoProvider.class);
 
   @Nonnull
   public abstract FileType[] getFileTypes();
 
-  @javax.annotation.Nullable
+  @Nullable
   public abstract Pair<String, String> getLookupInfo(@Nonnull final VirtualFile file, Project project);
 }

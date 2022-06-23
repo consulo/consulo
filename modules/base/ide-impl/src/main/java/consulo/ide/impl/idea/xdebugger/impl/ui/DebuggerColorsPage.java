@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.ui;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.language.editor.highlight.DefaultSyntaxHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighter;
@@ -33,6 +34,7 @@ import java.util.Map;
 /**
  * @author max
  */
+@ExtensionImpl
 public class DebuggerColorsPage implements ColorSettingsPage, ConfigurableWeight {
   @Override
   @Nonnull

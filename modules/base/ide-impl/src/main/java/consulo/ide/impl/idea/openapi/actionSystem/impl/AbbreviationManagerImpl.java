@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.actionSystem.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.AbbreviationManager;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.RoamingType;
@@ -32,6 +33,7 @@ import java.util.*;
  */
 @Singleton
 @State(name = "AbbreviationManager", storages = @Storage(value = "abbreviations.xml", roamingType = RoamingType.PER_OS))
+@ServiceImpl
 public class AbbreviationManagerImpl extends AbbreviationManager implements PersistentStateComponent<Element> {
   private final Map<String, List<String>> myAbbreviation2ActionId = new HashMap<>();
   private final Map<String, LinkedHashSet<String>> myActionId2Abbreviations = new HashMap<>();

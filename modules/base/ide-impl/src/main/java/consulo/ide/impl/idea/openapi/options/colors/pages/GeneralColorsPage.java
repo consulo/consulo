@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.options.colors.pages;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.CodeInsightColors;
 import consulo.codeEditor.EditorColors;
 import consulo.codeEditor.HighlighterColors;
@@ -37,6 +38,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+@ExtensionImpl(id = "general")
 public class GeneralColorsPage implements ColorSettingsPage, InspectionColorSettingsPage, ConfigurableWeight {
   private static final String ADDITIONAL_DEMO_TEXT = "\n" +
                                                      "<todo>//TODO: Visit Consulo Web resources:</todo>\n" +

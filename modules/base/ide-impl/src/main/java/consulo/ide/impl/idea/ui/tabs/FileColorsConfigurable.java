@@ -16,9 +16,8 @@
 
 package consulo.ide.impl.idea.ui.tabs;
 
-import consulo.configurable.Configurable;
-import consulo.configurable.ConfigurationException;
-import consulo.configurable.SearchableConfigurable;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.configurable.*;
 import consulo.project.Project;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ui.FileColorManager;
@@ -27,18 +26,26 @@ import jakarta.inject.Inject;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 /**
  * @author spleaner
  */
-public class FileColorsConfigurable implements SearchableConfigurable, Configurable.NoScroll {
+@ExtensionImpl
+public class FileColorsConfigurable implements SearchableConfigurable, Configurable.NoScroll, ProjectConfigurable {
   private final Project myProject;
   private FileColorsConfigurablePanel myPanel;
 
   @Inject
   public FileColorsConfigurable(@Nonnull final Project project) {
     myProject = project;
+  }
+
+  @Nullable
+  @Override
+  public String getParentId() {
+    return StandardConfigurableIds.EDITOR_GROUP;
   }
 
   @Override
