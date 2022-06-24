@@ -15,6 +15,8 @@
  */
 package consulo.language.editor.folding;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 
 /**
@@ -22,8 +24,9 @@ import consulo.component.extension.ExtensionPointName;
  *
  * @author Rustam Vishnyakov
  */
+@Extension(ComponentScope.APPLICATION)
 public abstract class CustomFoldingProvider {
-  public static final ExtensionPointName<CustomFoldingProvider> EP_NAME = ExtensionPointName.create("consulo.customFoldingProvider");
+  public static final ExtensionPointName<CustomFoldingProvider> EP_NAME = ExtensionPointName.create(CustomFoldingProvider.class);
 
   public abstract boolean isCustomRegionStart(String elementText);
 

@@ -15,12 +15,14 @@
  */
 package consulo.ide.impl.idea.lang.customFolding;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.folding.CustomFoldingProvider;
 
 /**
  * Supports <a href="http://msdn.microsoft.com/en-us/library/9a1ybwek%28v=vs.100%29.aspx">VisualStudio custom foldings.</a>
  * @author Rustam Vishnyakov
  */
+@ExtensionImpl
 public class VisualStudioCustomFoldingProvider extends CustomFoldingProvider {
   @Override
   public boolean isCustomRegionStart(String elementText) {

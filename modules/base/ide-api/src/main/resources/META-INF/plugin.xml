@@ -1706,8 +1706,6 @@
 
 
 
-    <customFoldingProvider implementation="consulo.ide.impl.idea.lang.customFolding.NetBeansCustomFoldingProvider"/>
-    <customFoldingProvider implementation="consulo.ide.impl.idea.lang.customFolding.VisualStudioCustomFoldingProvider"/>
 
     <completion.contributor language="TEXT" implementationClass="consulo.ide.impl.idea.ui.TextFieldWithAutoCompletionContributor"
                             order="first, before commitCompletion"/>

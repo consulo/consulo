@@ -15,12 +15,14 @@
  */
 package consulo.ide.impl.idea.lang.customFolding;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.folding.CustomFoldingProvider;
 
 /**
  * Custom folding provider for <a href="http://ui.netbeans.org/docs/ui/code_folding/cf_uispec.html#menus">NetBeans folding conventions.</a>
  * @author Rustam Vishnyakov
  */
+@ExtensionImpl
 public class NetBeansCustomFoldingProvider extends CustomFoldingProvider {
   @Override
   public boolean isCustomRegionStart(String elementText) {
