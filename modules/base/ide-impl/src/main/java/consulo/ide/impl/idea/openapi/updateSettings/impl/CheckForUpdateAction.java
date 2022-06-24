@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.updateSettings.impl;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
@@ -33,6 +34,7 @@ import jakarta.inject.Provider;
 
 import javax.annotation.Nonnull;
 
+@ActionImpl(id = "CheckForUpdate")
 public class CheckForUpdateAction extends DumbAwareAction {
   private final Provider<UpdateSettings> myUpdateSettingsProvider;
 

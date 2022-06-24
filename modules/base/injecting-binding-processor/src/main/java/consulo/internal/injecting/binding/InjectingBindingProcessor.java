@@ -40,7 +40,7 @@ import java.util.*;
  * @see https://github.com/google/auto/blob/master/service/processor/src/main/java/com/google/auto/service/processor/AutoServiceProcessor.java
  * @since 16-Jun-22
  */
-@SupportedAnnotationTypes({InjectingBindingProcessor.SERVICE_IMPL, InjectingBindingProcessor.EXTENSION_IMPL, InjectingBindingProcessor.TOPIC_IMPL})
+@SupportedAnnotationTypes({InjectingBindingProcessor.SERVICE_IMPL, InjectingBindingProcessor.EXTENSION_IMPL, InjectingBindingProcessor.TOPIC_IMPL, InjectingBindingProcessor.ACTION_IMPL})
 @SupportedSourceVersion(SourceVersion.RELEASE_17)
 public class InjectingBindingProcessor extends AbstractProcessor {
   private static record AnnotationResolveInfo(Annotation annotation, TypeElement typeElement) {
@@ -49,6 +49,7 @@ public class InjectingBindingProcessor extends AbstractProcessor {
   public static final String SERVICE_IMPL = "consulo.annotation.component.ServiceImpl";
   public static final String EXTENSION_IMPL = "consulo.annotation.component.ExtensionImpl";
   public static final String TOPIC_IMPL = "consulo.annotation.component.TopicImpl";
+  public static final String ACTION_IMPL = "consulo.annotation.component.ActionImpl";
 
   private Map<String, Class<? extends Annotation>> myApiAnnotations = new HashMap<>();
 
@@ -56,6 +57,8 @@ public class InjectingBindingProcessor extends AbstractProcessor {
     myApiAnnotations.put(SERVICE_IMPL, Service.class);
     myApiAnnotations.put(EXTENSION_IMPL, Extension.class);
     myApiAnnotations.put(TOPIC_IMPL, Topic.class);
+    // action don't have api annotation - just return self
+    myApiAnnotations.put(ACTION_IMPL, ActionImpl.class);
   }
 
   @Override
@@ -348,6 +351,11 @@ public class InjectingBindingProcessor extends AbstractProcessor {
 
     if (annotation instanceof Extension) {
       return ((Extension)annotation).value();
+    }
+
+    if (annotation instanceof ActionImpl) {
+      // actions always bind in application injecting scope
+      return ComponentScope.APPLICATION;
     }
 
     throw new UnsupportedOperationException(annotation.getClass().getName());

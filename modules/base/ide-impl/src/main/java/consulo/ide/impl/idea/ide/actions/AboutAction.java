@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
@@ -30,6 +31,7 @@ import jakarta.inject.Provider;
 
 import javax.annotation.Nonnull;
 
+@ActionImpl(id = "About")
 public class AboutAction extends AnAction implements DumbAware {
   private final Provider<AboutManager> myAboutManager;
   private final Provider<WindowManager> myWindowManager;

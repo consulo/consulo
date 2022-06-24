@@ -15,10 +15,7 @@
  */
 package consulo.component.internal;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
-import consulo.annotation.component.Service;
-import consulo.annotation.component.Topic;
+import consulo.annotation.component.*;
 import consulo.component.bind.InjectingBinding;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
@@ -36,6 +33,7 @@ public class InjectingBindingLoader {
   private final Map<ComponentScope, InjectingBindingHolder> myServices = new HashMap<>();
   private final Map<ComponentScope, InjectingBindingHolder> myExtensions = new HashMap<>();
   private final Map<ComponentScope, InjectingBindingHolder> myTopics = new HashMap<>();
+  private final InjectingBindingHolder myActions = new InjectingBindingHolder(ActionImpl.class, ComponentScope.APPLICATION);
 
   private InjectingBindingLoader() {
   }
@@ -49,20 +47,31 @@ public class InjectingBindingLoader {
         continue;
       }
 
-      ServiceLoader<InjectingBinding> loader = ServiceLoader.load(InjectingBinding.class, pluginDescriptor.getPluginClassLoader());
+      ModuleLayer moduleLayer = pluginDescriptor.getModuleLayer();
+      ServiceLoader<InjectingBinding> loader;
+      if (moduleLayer != null) {
+        loader = ServiceLoader.load(moduleLayer, InjectingBinding.class);
+      }
+      else {
+        loader = ServiceLoader.load(InjectingBinding.class, pluginDescriptor.getPluginClassLoader());
+      }
 
-      for (InjectingBinding binding : loader) {
-        ClassLoader classLoader = binding.getClass().getClassLoader();
+      Iterator<ServiceLoader.Provider<InjectingBinding>> iterator = loader.stream().iterator();
+      while (iterator.hasNext()) {
+        ServiceLoader.Provider<InjectingBinding> provider = iterator.next();
+
+        ClassLoader classLoader = provider.type().getClassLoader();
 
         // if we loaded binding by another plugin - stop it, since we it will be called #getParent()
         if (classLoader != pluginDescriptor.getPluginClassLoader()) {
           break;
         }
 
-        if (!processed.add(binding.getClass())) {
-          throw new IllegalArgumentException("Duplicate registration of binding: " + binding.getClass());
+        if (!processed.add(provider.type())) {
+          throw new IllegalArgumentException("Duplicate registration of binding: " + provider.type());
         }
 
+        InjectingBinding binding = provider.get();
         getHolder(binding.getComponentAnnotationClass(), binding.getComponentScope()).addBinding(binding);
       }
     }
@@ -78,6 +87,9 @@ public class InjectingBindingLoader {
     }
     else if (annotationClass == Topic.class) {
       return myTopics.computeIfAbsent(componentScope, c -> new InjectingBindingHolder(annotationClass, componentScope));
+    }
+    else if (annotationClass == ActionImpl.class) {
+      return myActions;
     }
 
     throw new UnsupportedOperationException("Unknown annotation: " + annotationClass);
