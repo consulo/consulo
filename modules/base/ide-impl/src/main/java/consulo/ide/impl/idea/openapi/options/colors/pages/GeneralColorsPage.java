@@ -38,7 +38,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-@ExtensionImpl(id = "general")
+@ExtensionImpl(id = "general", order = "first")
 public class GeneralColorsPage implements ColorSettingsPage, InspectionColorSettingsPage, ConfigurableWeight {
   private static final String ADDITIONAL_DEMO_TEXT = "\n" +
                                                      "<todo>//TODO: Visit Consulo Web resources:</todo>\n" +

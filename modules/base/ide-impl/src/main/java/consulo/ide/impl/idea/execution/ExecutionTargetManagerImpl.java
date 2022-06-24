@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.execution;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.ReadAction;
@@ -23,10 +24,10 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.execution.*;
+import consulo.execution.event.ExecutionTargetListener;
 import consulo.execution.event.RunManagerListener;
-import consulo.project.Project;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.annotation.access.RequiredReadAction;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -146,7 +147,7 @@ public class ExecutionTargetManagerImpl extends ExecutionTargetManager implement
     }
 
     if (toNotify != null) {
-      myProject.getMessageBus().syncPublisher(TOPIC).activeTargetChanged(toNotify);
+      myProject.getMessageBus().syncPublisher(ExecutionTargetListener.class).activeTargetChanged(toNotify);
     }
   }
 

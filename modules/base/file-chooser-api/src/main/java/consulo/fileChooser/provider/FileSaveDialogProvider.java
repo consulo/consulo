@@ -32,7 +32,7 @@ import java.awt.*;
  */
 @Extension(ComponentScope.APPLICATION)
 public interface FileSaveDialogProvider extends FileOperateDialogProvider {
-  ExtensionPointName<FileSaveDialogProvider> EP_NAME = ExtensionPointName.create("consulo.fileSaveDialogProvider");
+  ExtensionPointName<FileSaveDialogProvider> EP_NAME = ExtensionPointName.create(FileSaveDialogProvider.class);
 
   @Nonnull
   FileSaverDialog createSaveFileDialog(@Nonnull FileSaverDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent);

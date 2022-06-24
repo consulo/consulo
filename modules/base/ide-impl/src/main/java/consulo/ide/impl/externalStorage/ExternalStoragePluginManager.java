@@ -72,7 +72,7 @@ public class ExternalStoragePluginManager implements PluginActionListener {
 
   public ExternalStoragePluginManager(Application application, ExternalServiceConfiguration externalServiceConfiguration) {
     myExternalServiceConfiguration = externalServiceConfiguration;
-    application.getMessageBus().connect().subscribe(PluginActionListener.TOPIC, this);
+    application.getMessageBus().connect().subscribe(PluginActionListener.class, this);
   }
 
   @Override

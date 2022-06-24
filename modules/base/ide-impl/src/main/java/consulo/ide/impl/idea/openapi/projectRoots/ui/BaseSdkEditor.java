@@ -114,7 +114,7 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
 
     for (OrderRootType type : OrderRootType.getAllTypes()) {
       if (showTabForType(type)) {
-        final OrderRootTypeUIFactory factory = OrderRootTypeUIFactory.FACTORY.getByKey(type);
+        final OrderRootTypeUIFactory factory = OrderRootTypeUIFactory.forOrderType(type);
         if (factory == null) {
           LOG.error("OrderRootTypeUIFactory is not defined for order root type: " + type);
           continue;

@@ -364,7 +364,7 @@ public class EncodingManagerImpl extends EncodingManager implements PersistentSt
 
   static void firePropertyChange(@Nullable Document document, @Nonnull String propertyName, final Object oldValue, final Object newValue, @Nullable Project project) {
     MessageBus messageBus = (project != null ? project : ApplicationManager.getApplication()).getMessageBus();
-    EncodingManagerListener publisher = messageBus.syncPublisher(EncodingManagerListener.ENCODING_MANAGER_CHANGES);
+    EncodingManagerListener publisher = messageBus.syncPublisher(EncodingManagerListener.class);
     publisher.propertyChanged(document, propertyName, oldValue, newValue);
   }
 }

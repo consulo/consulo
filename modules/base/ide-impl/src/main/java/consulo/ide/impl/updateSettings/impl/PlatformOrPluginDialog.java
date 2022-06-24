@@ -281,7 +281,7 @@ public class PlatformOrPluginDialog extends DialogWrapper {
           if (pluginDescriptor instanceof PluginNode) {
             ((PluginNode)pluginDescriptor).setStatus(PluginNode.STATUS_DOWNLOADED);
 
-            application.getMessageBus().syncPublisher(PluginActionListener.TOPIC).pluginInstalled(pluginDescriptor.getPluginId());
+            application.getMessageBus().syncPublisher(PluginActionListener.class).pluginInstalled(pluginDescriptor.getPluginId());
 
             if (myType == PlatformOrPluginUpdateResult.Type.PLUGIN_INSTALL && pluginDescriptor.isExperimental()) {
               updateHistory.setShowExperimentalWarning(true);

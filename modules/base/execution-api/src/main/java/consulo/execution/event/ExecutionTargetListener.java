@@ -15,10 +15,13 @@
  */
 package consulo.execution.event;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Topic;
 import consulo.execution.ExecutionTarget;
 
 import javax.annotation.Nonnull;
 
+@Topic(ComponentScope.PROJECT)
 public interface ExecutionTargetListener {
   void activeTargetChanged(@Nonnull ExecutionTarget newTarget);
 }

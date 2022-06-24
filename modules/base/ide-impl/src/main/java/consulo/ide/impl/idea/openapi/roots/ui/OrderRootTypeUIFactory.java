@@ -20,26 +20,33 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.application.Application;
-import consulo.component.extension.ExtensionPointName;
-import consulo.component.extension.KeyedFactoryEPBean;
+import consulo.component.extension.ExtensionPoint;
+import consulo.component.extension.ExtensionPointCacheKey;
+import consulo.content.OrderRootType;
 import consulo.content.bundle.Sdk;
 import consulo.ide.impl.idea.openapi.projectRoots.ui.SdkPathEditor;
-import consulo.content.OrderRootType;
-import consulo.application.extension.KeyedExtensionFactory;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Map;
 
+@Extension(ComponentScope.APPLICATION)
 public interface OrderRootTypeUIFactory {
-  ExtensionPointName<KeyedFactoryEPBean> EP_NAME = ExtensionPointName.create("consulo.orderRootTypeEditor");
+  ExtensionPointCacheKey<OrderRootTypeUIFactory, Map<String, OrderRootTypeUIFactory>> KEY = ExtensionPointCacheKey.groupBy("OrderRootTypeUIFactory", OrderRootTypeUIFactory::getOrderRootTypeId);
 
-  KeyedExtensionFactory<OrderRootTypeUIFactory, OrderRootType> FACTORY = new KeyedExtensionFactory<OrderRootTypeUIFactory, OrderRootType>(OrderRootTypeUIFactory.class, EP_NAME, Application.get()) {
-    @Override
-    public String getKey(@Nonnull final OrderRootType key) {
-      return key.getName();
-    }
-  };
+  @Nullable
+  static OrderRootTypeUIFactory forOrderType(@Nonnull OrderRootType orderRootType) {
+    ExtensionPoint<OrderRootTypeUIFactory> point = Application.get().getExtensionPoint(OrderRootTypeUIFactory.class);
+    Map<String, OrderRootTypeUIFactory> map = point.getOrBuildCache(KEY);
+    return map.get(orderRootType.getId());
+  }
+
+  @Nonnull
+  String getOrderRootTypeId();
 
   @Nonnull
   SdkPathEditor createPathEditor(Sdk sdk);

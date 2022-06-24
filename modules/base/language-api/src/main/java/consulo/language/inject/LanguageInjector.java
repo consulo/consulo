@@ -16,6 +16,8 @@
 
 package consulo.language.inject;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
@@ -28,8 +30,9 @@ import javax.annotation.Nonnull;
  * E.g. "inject XPath language into all XML attributes named 'select' that sit inside XML tag prefixed with 'xsl:'".
  * @see PsiLanguageInjectionHost
  */
+@Extension(ComponentScope.APPLICATION)
 public interface LanguageInjector {
-  ExtensionPointName<LanguageInjector> EXTENSION_POINT_NAME = ExtensionPointName.create("consulo.languageInjector");
+  ExtensionPointName<LanguageInjector> EXTENSION_POINT_NAME = ExtensionPointName.create(LanguageInjector.class);
 
   /**
    * @param host PSI element inside which your language will be injected.
@@ -39,5 +42,5 @@ public interface LanguageInjector {
    *        For example, to inject your language in string literal inside quotes, you might want to <br>
    *        <code>injectionPlacesRegistrar.addPlace(myLanguage, new TextRange(1,host.getTextLength()-1))</code>
    */
-  void getLanguagesToInject(@Nonnull PsiLanguageInjectionHost host, @Nonnull InjectedLanguagePlaces injectionPlacesRegistrar);
+  void injectLanguages(@Nonnull PsiLanguageInjectionHost host, @Nonnull InjectedLanguagePlaces injectionPlacesRegistrar);
 }

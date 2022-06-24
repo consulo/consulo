@@ -59,7 +59,7 @@ public class EncodingPanel extends EditorBasedStatusBarPopup {
     MessageBusConnection connection = ApplicationManager.getApplication().getMessageBus().connect(this);
 
     // should update to reflect encoding-from-content
-    connection.subscribe(EncodingManagerListener.ENCODING_MANAGER_CHANGES, new EncodingManagerListener() {
+    connection.subscribe(EncodingManagerListener.class, new EncodingManagerListener() {
       @Override
       public void propertyChanged(@Nullable Document document, @Nonnull String propertyName, Object oldValue, Object newValue) {
         if (propertyName.equals(EncodingManagerImpl.PROP_CACHED_ENCODING_CHANGED)) {

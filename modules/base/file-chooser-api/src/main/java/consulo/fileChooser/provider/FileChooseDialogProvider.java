@@ -33,7 +33,7 @@ import java.awt.*;
  */
 @Extension(ComponentScope.APPLICATION)
 public interface FileChooseDialogProvider extends FileOperateDialogProvider {
-  ExtensionPointName<FileChooseDialogProvider> EP_NAME = ExtensionPointName.create("consulo.fileChooseDialogProvider");
+  ExtensionPointName<FileChooseDialogProvider> EP_NAME = ExtensionPointName.create(FileChooseDialogProvider.class);
 
   @Nonnull
   FileChooserDialog createFileChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent);

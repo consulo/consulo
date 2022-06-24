@@ -16,6 +16,7 @@
 package consulo.ide.impl.externalService.impl;
 
 import com.google.gson.Gson;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.application.progress.Task;
 import consulo.ide.impl.idea.openapi.util.io.StreamUtil;
@@ -44,6 +45,7 @@ import java.nio.charset.StandardCharsets;
  * @author VISTALL
  * @since 04/09/2021
  */
+@ExtensionImpl
 public class RedirectAuthHttpHandler extends HttpRequestHandler {
   private static final Logger LOG = Logger.getInstance(RedirectAuthHttpHandler.class);
 

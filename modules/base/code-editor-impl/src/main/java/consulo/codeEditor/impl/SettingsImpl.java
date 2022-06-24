@@ -212,7 +212,7 @@ public class SettingsImpl implements EditorSettings {
 
   @Override
   public int getRightMargin(Project project) {
-    return myRightMargin != null ? myRightMargin : CodeStyle.getSettings(project).getRightMargin(myLanguage);
+    return myRightMargin != null ? myRightMargin : CodeStyle.getProjectOrDefaultSettings(project).getRightMargin(myLanguage);
   }
 
   @Nullable

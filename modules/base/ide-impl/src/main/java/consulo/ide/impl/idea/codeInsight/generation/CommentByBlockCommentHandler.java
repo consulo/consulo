@@ -344,7 +344,7 @@ public class CommentByBlockCommentHandler extends MultiCaretCodeInsightActionHan
 
     final FileViewProvider viewProvider = file.getViewProvider();
 
-    for (MultipleLangCommentProvider provider : MultipleLangCommentProvider.EP_NAME.getExtensions()) {
+    for (MultipleLangCommentProvider provider : MultipleLangCommentProvider.EP_NAME.getExtensionList()) {
       if (provider.canProcess(file, viewProvider)) {
         return provider.getLineCommenter(file, editor, lineStartLanguage, lineEndLanguage);
       }

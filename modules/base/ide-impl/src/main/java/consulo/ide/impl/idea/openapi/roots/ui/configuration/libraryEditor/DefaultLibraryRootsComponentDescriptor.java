@@ -55,7 +55,7 @@ public class DefaultLibraryRootsComponentDescriptor extends LibraryRootsComponen
   }
 
   public static OrderRootTypePresentation getDefaultPresentation(OrderRootType type) {
-    final OrderRootTypeUIFactory factory = OrderRootTypeUIFactory.FACTORY.getByKey(type);
+    final OrderRootTypeUIFactory factory = OrderRootTypeUIFactory.forOrderType(type);
     return new OrderRootTypePresentation(factory.getNodeText(), factory.getIcon());
   }
   private static class AttachUrlJavadocDescriptor extends AttachRootButtonDescriptor {

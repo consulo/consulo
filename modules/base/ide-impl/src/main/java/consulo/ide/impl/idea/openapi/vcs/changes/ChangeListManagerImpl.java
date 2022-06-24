@@ -35,6 +35,7 @@ import consulo.ide.impl.idea.openapi.vcs.impl.*;
 import consulo.ide.impl.idea.openapi.vcs.readOnlyHandler.ReadonlyStatusHandlerImpl;
 import consulo.ide.impl.idea.openapi.vcs.ui.VcsBalloonProblemNotifier;
 import consulo.util.lang.Pair;
+import consulo.util.lang.ThreeState;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
@@ -359,7 +360,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
    * so waiting for its completion on AWT thread is not good runnable is invoked on AWT thread
    */
   @Override
-  public void invokeAfterUpdate(final Runnable afterUpdate, final InvokeAfterUpdateMode mode, @javax.annotation.Nullable final String title, @Nullable final IdeaModalityState state) {
+  public void invokeAfterUpdate(final Runnable afterUpdate, final InvokeAfterUpdateMode mode, @Nullable final String title, @Nullable final IdeaModalityState state) {
     myUpdater.invokeAfterUpdate(afterUpdate, mode, title, null, state);
   }
 
@@ -893,7 +894,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
     }
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   Map<VirtualFile, String> getSwitchedRoots() {
     synchronized (myDataLock) {
       return ((SwitchedFileHolder)myComposite.get(FileHolder.HolderType.ROOT_SWITCH)).getFilesMapCopy();
@@ -920,7 +921,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
   }
 
   @Override
-  @javax.annotation.Nullable
+  @Nullable
   public LocalChangeList findChangeList(final String name) {
     synchronized (myDataLock) {
       return myWorker.getCopyByName(name);
@@ -935,13 +936,13 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
   }
 
   @Override
-  public LocalChangeList addChangeList(@Nonnull final String name, @javax.annotation.Nullable final String comment) {
+  public LocalChangeList addChangeList(@Nonnull final String name, @Nullable final String comment) {
     return addChangeList(name, comment, null);
   }
 
   @Nonnull
   @Override
-  public LocalChangeList addChangeList(@Nonnull final String name, @javax.annotation.Nullable final String comment, @Nullable final Object data) {
+  public LocalChangeList addChangeList(@Nonnull final String name, @Nullable final String comment, @Nullable final Object data) {
     return ApplicationManager.getApplication().runReadAction((Computable<LocalChangeList>)() -> {
       synchronized (myDataLock) {
         final LocalChangeList changeList = myModifier.addChangeList(name, comment, data);
@@ -1014,7 +1015,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
   }
 
   @Override
-  @javax.annotation.Nullable
+  @Nullable
   public LocalChangeList getDefaultChangeList() {
     synchronized (myDataLock) {
       return myWorker.getDefaultListCopy();
@@ -1053,7 +1054,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
    * @deprecated better use normal comparison, with equals
    */
   @Override
-  @javax.annotation.Nullable
+  @Nullable
   public LocalChangeList getIdentityChangeList(Change change) {
     synchronized (myDataLock) {
       final List<LocalChangeList> lists = myWorker.getListsCopy();
@@ -1076,7 +1077,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
   }
 
   @Override
-  @javax.annotation.Nullable
+  @Nullable
   public Change getChange(@Nonnull VirtualFile file) {
     return getChange(VcsUtil.getFilePath(file));
   }
@@ -1089,7 +1090,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
   }
 
   @Override
-  @javax.annotation.Nullable
+  @Nullable
   public Change getChange(final FilePath file) {
     synchronized (myDataLock) {
       return myWorker.getChangeForPath(file);
@@ -1129,8 +1130,8 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
 
   @Nonnull
   @Override
-  public consulo.util.lang.ThreeState haveChangesUnder(@Nonnull final VirtualFile vf) {
-    if (!vf.isValid() || !vf.isDirectory()) return consulo.util.lang.ThreeState.NO;
+  public ThreeState haveChangesUnder(@Nonnull final VirtualFile vf) {
+    if (!vf.isValid() || !vf.isDirectory()) return ThreeState.NO;
     synchronized (myDataLock) {
       return myWorker.haveChangesUnder(vf);
     }
@@ -1176,7 +1177,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
   public List<VcsException> addUnversionedFiles(final LocalChangeList list,
                                                 @Nonnull final List<VirtualFile> files,
                                                 @Nonnull final Condition<FileStatus> statusChecker,
-                                                @javax.annotation.Nullable Consumer<List<Change>> changesConsumer) {
+                                                @Nullable Consumer<List<Change>> changesConsumer) {
     final List<VcsException> exceptions = new ArrayList<>();
     final Set<VirtualFile> allProcessedFiles = new HashSet<>();
     ChangesUtil.processVirtualFilesByVcs(myProject, files, (vcs, items) -> {
@@ -1366,7 +1367,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
     myConflictTracker.loadState(element);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public Element getState() {
     Element element = new Element("state");
@@ -1513,15 +1514,8 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
     return ContainerUtil.exists(IgnoredFileProvider.IGNORE_FILE.getExtensionList(), it -> it.isIgnoredFile(myProject, filePath));
   }
 
-  public static class DefaultIgnoredFileProvider implements IgnoredFileProvider {
-    @Override
-    public boolean isIgnoredFile(@Nonnull Project project, @Nonnull FilePath filePath) {
-      return ((ChangeListManagerImpl)ChangeListManager.getInstance(project)).myIgnoredIdeaLevel.isIgnoredFile(filePath);
-    }
-  }
-
   @Override
-  @javax.annotation.Nullable
+  @Nullable
   public String getSwitchedBranch(final VirtualFile file) {
     synchronized (myDataLock) {
       return myWorker.getBranchForFile(file);

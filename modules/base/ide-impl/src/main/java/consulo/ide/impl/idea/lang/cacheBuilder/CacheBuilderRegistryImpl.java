@@ -17,13 +17,17 @@
 package consulo.ide.impl.idea.lang.cacheBuilder;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
+import consulo.component.extension.ExtensionPoint;
 import consulo.language.cacheBuilder.CacheBuilderRegistry;
 import consulo.language.cacheBuilder.WordsScanner;
 import consulo.virtualFileSystem.fileType.FileType;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Map;
 
 /**
  * @author yole
@@ -31,14 +35,18 @@ import javax.annotation.Nullable;
 @Singleton
 @ServiceImpl
 public class CacheBuilderRegistryImpl extends CacheBuilderRegistry {
+  private final Application myApplication;
+
+  @Inject
+  public CacheBuilderRegistryImpl(Application application) {
+    myApplication = application;
+  }
+
   @Override
   @Nullable
   public WordsScanner getCacheBuilder(@Nonnull FileType fileType) {
-    for(CacheBuilderEP ep: CacheBuilderEP.EP_NAME.getExtensionList()) {
-      if (ep.getFileType().equals(fileType.getId())) {
-        return ep.getWordsScanner();
-      }
-    }
-    return null;
+    ExtensionPoint<FileWordsScannerProvider> extensionPoint = myApplication.getExtensionPoint(FileWordsScannerProvider.class);
+    Map<FileType, WordsScanner> map = extensionPoint.getOrBuildCache(FileWordsScannerProvider.SCANNERS);
+    return map.get(fileType);
   }
 }

@@ -20,6 +20,7 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.libraryEditor;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.project.ProjectBundle;
@@ -31,7 +32,14 @@ import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 
+@ExtensionImpl
 public class SourcesOrderRootTypeUIFactory implements OrderRootTypeUIFactory {
+
+  @Nonnull
+  @Override
+  public String getOrderRootTypeId() {
+    return "sources";
+  }
 
   @Nonnull
   @Override

@@ -425,9 +425,8 @@ public class InjectedLanguageManagerImpl extends InjectedLanguageManager impleme
       final PsiLanguageInjectionHost host = (PsiLanguageInjectionHost)context;
       InjectedLanguagePlaces placesRegistrar =
               (language, rangeInsideHost, prefix, suffix) -> injectionPlacesRegistrar.startInjecting(language).addPlace(prefix, suffix, host, rangeInsideHost).doneInjecting();
-      for (LanguageInjector injector : LanguageInjector.EXTENSION_POINT_NAME.getExtensionList()) {
-        injector.getLanguagesToInject(host, placesRegistrar);
-      }
+
+      LanguageInjector.EXTENSION_POINT_NAME.forEachExtensionSafe(injector -> injector.injectLanguages(host, placesRegistrar));
     }
   }
 }

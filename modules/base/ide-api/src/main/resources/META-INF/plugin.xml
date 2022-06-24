@@ -582,10 +582,7 @@
     <extensionPoint name="multiLangCommenter"
                     interface="consulo.ide.impl.psi.templateLanguages.MultipleLangCommentProvider"/>
 
-    <extensionPoint name="cacheBuilder"
-                    beanClass="consulo.ide.impl.idea.lang.cacheBuilder.CacheBuilderEP">
-      <with attribute="wordsScannerClass" implements="consulo.language.cacheBuilder.WordsScanner"/>
-    </extensionPoint>
+
 
     <extensionPoint name="referencesSearch" interface="consulo.application.util.query.QueryExecutor"/>
     <extensionPoint name="definitionsScopedSearch" interface="consulo.application.util.query.QueryExecutor"/>
@@ -1136,8 +1133,6 @@
                     interface="consulo.ide.impl.idea.codeInsight.daemon.impl.analysis.DefaultHighlightingSettingProvider"/>
 
 
-    <extensionPoint name="unusedDeclarationFixProvider"
-                    interface="consulo.ide.impl.idea.codeInspection.reference.UnusedDeclarationFixProvider"/>
     <extensionPoint name="library.dependencyScopeSuggester" interface="consulo.module.content.layer.orderEntry.LibraryDependencyScopeSuggester"/>
 
     <extensionPoint name="eventLogCategory" interface="consulo.ide.impl.idea.notification.EventLogCategory"/>

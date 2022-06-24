@@ -15,17 +15,19 @@
  */
 package consulo.ide.impl.externalService.impl.ui;
 
-import consulo.ide.impl.idea.internal.statistic.configurable.SendPeriod;
-import consulo.ide.impl.idea.internal.statistic.persistence.UsageStatisticsPersistenceComponent;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
-import consulo.configurable.Configurable;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.configurable.ApplicationConfigurable;
+import consulo.configurable.SimpleConfigurableByProperties;
+import consulo.configurable.StandardConfigurableIds;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.externalService.ExternalService;
 import consulo.ide.impl.externalService.ExternalServiceConfiguration;
 import consulo.ide.impl.externalService.ExternalServiceConfigurationListener;
+import consulo.ide.impl.idea.internal.statistic.configurable.SendPeriod;
+import consulo.ide.impl.idea.internal.statistic.persistence.UsageStatisticsPersistenceComponent;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.localize.LocalizeValue;
-import consulo.configurable.SimpleConfigurableByProperties;
 import consulo.ui.ComboBox;
 import consulo.ui.Component;
 import consulo.ui.HtmlLabel;
@@ -40,13 +42,15 @@ import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
  * @author VISTALL
  * @since 04/09/2021
  */
-public class ExternalServiceConfigurable extends SimpleConfigurableByProperties implements Configurable {
+@ExtensionImpl
+public class ExternalServiceConfigurable extends SimpleConfigurableByProperties implements ApplicationConfigurable {
   private final Application myApplication;
   private final Provider<ExternalServiceConfiguration> myExternalServiceConfigurationProvider;
   private final Provider<UsageStatisticsPersistenceComponent> myUsageStatisticsPersistenceComponentProvider;
@@ -60,6 +64,23 @@ public class ExternalServiceConfigurable extends SimpleConfigurableByProperties 
     myUsageStatisticsPersistenceComponentProvider = usageStatisticsPersistenceComponentProvider;
   }
 
+  @Nonnull
+  @Override
+  public String getId() {
+    return "externalServices";
+  }
+
+  @Nullable
+  @Override
+  public String getParentId() {
+    return StandardConfigurableIds.PLATFORM_AND_PLUGINS_GROUP;
+  }
+
+  @Override
+  public String getDisplayName() {
+    return "External Services";
+  }
+
   @Override
   protected void afterApply() {
     super.afterApply();
@@ -70,7 +91,7 @@ public class ExternalServiceConfigurable extends SimpleConfigurableByProperties 
   @RequiredUIAccess
   @Nonnull
   @Override
-  protected Component createLayout(PropertyBuilder propertyBuilder, @Nonnull Disposable uiDisposable) {
+  protected Component createLayout(@Nonnull PropertyBuilder propertyBuilder, @Nonnull Disposable uiDisposable) {
     ExternalServiceConfiguration extService = myExternalServiceConfigurationProvider.get();
     UsageStatisticsPersistenceComponent statistics = myUsageStatisticsPersistenceComponentProvider.get();
 

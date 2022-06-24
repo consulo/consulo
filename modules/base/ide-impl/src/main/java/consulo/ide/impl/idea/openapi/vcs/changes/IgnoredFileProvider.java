@@ -15,13 +15,16 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.vcs.FilePath;
 import javax.annotation.Nonnull;
 
+@Extension(ComponentScope.APPLICATION)
 public interface IgnoredFileProvider {
-  ExtensionPointName<IgnoredFileProvider> IGNORE_FILE = ExtensionPointName.create("consulo.vcs.ignoredFileProvider");
+  ExtensionPointName<IgnoredFileProvider> IGNORE_FILE = ExtensionPointName.create(IgnoredFileProvider.class);
 
   boolean isIgnoredFile(@Nonnull Project project, @Nonnull FilePath filePath);
 }

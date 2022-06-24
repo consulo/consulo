@@ -28,8 +28,6 @@ import java.util.EventListener;
 
 @Topic(ComponentScope.PROJECT)
 public interface RunManagerListener extends EventListener {
-  TopicImpl<RunManagerListener> TOPIC = new TopicImpl<>("RunManager", RunManagerListener.class);
-
   @SuppressWarnings("deprecation")
   default void runConfigurationSelected(@Nullable RunnerAndConfigurationSettings settings) {
     runConfigurationSelected();

@@ -15,10 +15,5 @@
   -->
 <consulo-plugin>
   <extensions defaultExtensionNs="consulo">
-    <applicationLoadListener implementation="consulo.ide.impl.externalStorage.ExternalStorageAppListener"/>
-
-    <httpRequestHandler implementation="consulo.ide.impl.externalService.impl.RedirectAuthHttpHandler"/>
-
-    <applicationConfigurable id="externalServices" parentId="platformAndPlugins" displayName="External Services" instance="consulo.ide.impl.externalService.impl.ui.ExternalServiceConfigurable"/>
   </extensions>
 </consulo-plugin>

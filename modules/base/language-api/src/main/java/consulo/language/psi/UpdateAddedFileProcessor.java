@@ -16,6 +16,8 @@
 
 package consulo.language.psi;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.util.IncorrectOperationException;
 
@@ -26,8 +28,9 @@ import javax.annotation.Nullable;
  *         Date: Sep 18, 2008
  *         Time: 3:13:17 PM
  */
+@Extension(ComponentScope.APPLICATION)
 public abstract class UpdateAddedFileProcessor {
-  private static final ExtensionPointName<UpdateAddedFileProcessor> EP_NAME = ExtensionPointName.create("consulo.updateAddedFileProcessor");
+  private static final ExtensionPointName<UpdateAddedFileProcessor> EP_NAME = ExtensionPointName.create(UpdateAddedFileProcessor.class);
 
   public abstract boolean canProcessElement(PsiFile element);
 

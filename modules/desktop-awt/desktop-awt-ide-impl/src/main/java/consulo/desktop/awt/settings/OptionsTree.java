@@ -446,7 +446,10 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
 
     @Override
     public boolean isAlwaysLeaf() {
-      return !(myConfigurable instanceof Configurable.Composite) || ((Configurable.Composite)myConfigurable).getConfigurables().length == 0;
+      if (myConfigurable instanceof Configurable.Composite composite) {
+        return composite.getConfigurables().length == 0;
+      }
+      return false;
     }
 
     @Override

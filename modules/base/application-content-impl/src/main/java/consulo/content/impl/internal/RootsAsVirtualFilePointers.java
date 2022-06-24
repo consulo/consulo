@@ -142,7 +142,7 @@ public class RootsAsVirtualFilePointers implements RootProvider {
    * </roots>
    */
   private void read(@Nonnull Element roots, @Nonnull OrderRootType type) {
-    String sdkRootName = type.getName();
+    String sdkRootName = type.getId();
     Element child = sdkRootName == null ? null : roots.getChild(sdkRootName);
     if (child == null) {
       return;
@@ -170,7 +170,7 @@ public class RootsAsVirtualFilePointers implements RootProvider {
    * </roots>
    */
   private void write(@Nonnull Element roots, @Nonnull OrderRootType type) {
-    String sdkRootName = type.getName();
+    String sdkRootName = type.getId();
     if (sdkRootName == null) {
       return;
     }

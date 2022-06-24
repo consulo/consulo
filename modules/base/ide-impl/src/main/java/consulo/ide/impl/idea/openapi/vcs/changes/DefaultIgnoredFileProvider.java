@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.remote;
+package consulo.ide.impl.idea.openapi.vcs.changes;
 
-import consulo.component.messagebus.TopicImpl;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.ide.impl.idea.openapi.vcs.FilePath;
+import consulo.project.Project;
+
 import javax.annotation.Nonnull;
 
 /**
- * @author Irina.Chernushina on 2/4/2016.
- */
-public interface RemoteMappingsListener {
-  TopicImpl<RemoteMappingsListener> REMOTE_MAPPINGS_CHANGED =
-    new TopicImpl<>("remotesdk.RemoteMappingsListener", RemoteMappingsListener.class);
-
-  void mappingsChanged(@Nonnull String prefix, @Nonnull String serverId);
-  void mappingsChanged();
+* @author VISTALL
+* @since 24-Jun-22
+*/
+@ExtensionImpl(order = "last")
+public class DefaultIgnoredFileProvider implements IgnoredFileProvider {
+  @Override
+  public boolean isIgnoredFile(@Nonnull Project project, @Nonnull FilePath filePath) {
+    return ((ChangeListManagerImpl)ChangeListManager.getInstance(project)).getIgnoredFilesComponent().isIgnoredFile(filePath);
+  }
 }

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.configurationStore.vcs;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.vcs.FilePath;
 import consulo.ide.impl.idea.openapi.vcs.changes.IgnoredFileProvider;
@@ -27,6 +28,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 06-Nov-16
  */
+@ExtensionImpl
 public class StoreIgnoredFileProvider implements IgnoredFileProvider {
   @Override
   public boolean isIgnoredFile(@Nonnull Project project, @Nonnull FilePath filePath) {

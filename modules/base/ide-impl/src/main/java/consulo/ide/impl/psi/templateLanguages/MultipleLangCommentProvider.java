@@ -15,10 +15,12 @@
  */
 package consulo.ide.impl.psi.templateLanguages;
 
-import consulo.language.Commenter;
-import consulo.language.Language;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.codeEditor.Editor;
 import consulo.component.extension.ExtensionPointName;
+import consulo.language.Commenter;
+import consulo.language.Language;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiFile;
 
@@ -27,12 +29,12 @@ import javax.annotation.Nullable;
 /**
  * @author Roman.Chernyatchik
  */
+@Extension(ComponentScope.APPLICATION)
 public interface MultipleLangCommentProvider {
-  ExtensionPointName<MultipleLangCommentProvider> EP_NAME = ExtensionPointName.create("consulo.multiLangCommenter");
+  ExtensionPointName<MultipleLangCommentProvider> EP_NAME = ExtensionPointName.create(MultipleLangCommentProvider.class);
 
   @Nullable
-  Commenter getLineCommenter(PsiFile file, Editor editor,
-                             Language lineStartLanguage, Language lineEndLanguage);
+  Commenter getLineCommenter(PsiFile file, Editor editor, Language lineStartLanguage, Language lineEndLanguage);
 
   boolean canProcess(PsiFile file, FileViewProvider viewProvider);
 }

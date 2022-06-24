@@ -18,15 +18,14 @@ package consulo.content;
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.Extension;
+import consulo.application.Application;
+import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.component.extension.ExtensionPointName;
-import consulo.util.lang.lazy.LazyValue;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Supplier;
 
 /**
  * Root types that can be queried from OrderEntry.
@@ -36,51 +35,50 @@ import java.util.function.Supplier;
  */
 @Extension(ComponentScope.APPLICATION)
 public class OrderRootType {
-  private static final ExtensionPointName<OrderRootType> EP_NAME = ExtensionPointName.create(OrderRootType.class);
-
-  private static Supplier<List<OrderRootType>> ourSortExtensions = LazyValue.notNull(() -> {
-    List<OrderRootType> extensions = new ArrayList<>(EP_NAME.getExtensionList());
-    Collections.sort(extensions, (o1, o2) -> o1.getName().compareTo(o2.getName()));
-    return Collections.unmodifiableList(extensions);
+  private static final ExtensionPointCacheKey<OrderRootType, List<OrderRootType>> SORTED_KEY = ExtensionPointCacheKey.create("SortedOrderRootType", orderRootTypes -> {
+    List<OrderRootType> extensions = new ArrayList<>(orderRootTypes);
+    Collections.sort(extensions, (o1, o2) -> o1.getId().compareTo(o2.getId()));
+    return List.copyOf(extensions);
   });
 
-  private final String myName;
+  private final String myId;
 
-  protected OrderRootType(@NonNls String name) {
-    myName = name;
+  protected OrderRootType(String id) {
+    myId = id;
   }
 
-  public String getName() {
-    return myName;
+  @Nonnull
+  public String getId() {
+    return myId;
   }
 
   @Deprecated
-  @DeprecationInfo(value = "Use getName()")
+  @DeprecationInfo(value = "Use getId()")
   public String name() {
-    return getName();
+    return getId();
   }
 
   public boolean isMe(@Nonnull String type) {
-    return type.equals(getName());
+    return type.equals(getId());
   }
 
   @Nonnull
   public static List<OrderRootType> getAllTypes() {
-    return EP_NAME.getExtensionList();
+    return Application.get().getExtensionPoint(OrderRootType.class).getExtensionList();
   }
 
   @Nonnull
   public static List<OrderRootType> getSortedRootTypes() {
-    return ourSortExtensions.get();
+    return Application.get().getExtensionPoint(OrderRootType.class).getOrBuildCache(SORTED_KEY);
   }
 
   @Nonnull
   public static <T extends OrderRootType> T getOrderRootType(final Class<? extends T> orderRootTypeClass) {
-    return EP_NAME.findExtensionOrFail(orderRootTypeClass);
+    return Application.get().getExtensionPoint(OrderRootType.class).findExtensionOrFail(orderRootTypeClass);
   }
 
   @Override
   public String toString() {
-    return "Root " + getName();
+    return "Root " + getId();
   }
 }

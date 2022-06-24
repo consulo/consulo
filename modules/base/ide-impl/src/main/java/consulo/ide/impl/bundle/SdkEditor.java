@@ -42,7 +42,7 @@ public class SdkEditor extends BaseSdkEditor {
     TabbedPaneWrapper tabbedPane = new TabbedPaneWrapper(parentUIDisposable);
     for (OrderRootType type : OrderRootType.getAllTypes()) {
       if (showTabForType(type)) {
-        final OrderRootTypeUIFactory factory = OrderRootTypeUIFactory.FACTORY.getByKey(type);
+        final OrderRootTypeUIFactory factory = OrderRootTypeUIFactory.forOrderType(type);
         if (factory == null) {
           continue;
         }
