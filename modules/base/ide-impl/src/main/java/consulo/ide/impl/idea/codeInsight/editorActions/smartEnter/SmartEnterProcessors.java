@@ -16,13 +16,13 @@
 
 package consulo.ide.impl.idea.codeInsight.editorActions.smartEnter;
 
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 import consulo.container.plugin.PluginIds;
 
 /**
  * @author spleaner
  */
-public class SmartEnterProcessors extends LanguageExtension<SmartEnterProcessor> {
+public class SmartEnterProcessors extends OldLanguageExtension<SmartEnterProcessor> {
 
   public static final SmartEnterProcessors INSTANCE = new SmartEnterProcessors();
 

@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.ide.hierarchy.HierarchyBrowser;
 import consulo.ide.impl.idea.ide.hierarchy.HierarchyBrowserManager;
 import consulo.ide.impl.idea.ide.hierarchy.HierarchyProvider;
 import consulo.dataContext.DataContext;
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.language.editor.CommonDataKeys;
@@ -51,9 +51,9 @@ import java.util.List;
  */
 public abstract class BrowseHierarchyActionBase extends AnAction {
   private static final Logger LOG = Logger.getInstance(BrowseHierarchyActionBase.class);
-  private final LanguageExtension<HierarchyProvider> myExtension;
+  private final OldLanguageExtension<HierarchyProvider> myExtension;
 
-  protected BrowseHierarchyActionBase(@Nonnull LanguageExtension<HierarchyProvider> extension) {
+  protected BrowseHierarchyActionBase(@Nonnull OldLanguageExtension<HierarchyProvider> extension) {
     myExtension = extension;
   }
 
@@ -147,7 +147,7 @@ public abstract class BrowseHierarchyActionBase extends AnAction {
 
   @Nullable
   @RequiredReadAction
-  public static HierarchyProvider findProvider(@Nonnull LanguageExtension<HierarchyProvider> extension,
+  public static HierarchyProvider findProvider(@Nonnull OldLanguageExtension<HierarchyProvider> extension,
                                                @Nullable PsiElement psiElement,
                                                @Nullable PsiFile psiFile,
                                                @Nonnull DataContext dataContext) {
@@ -160,7 +160,7 @@ public abstract class BrowseHierarchyActionBase extends AnAction {
 
   @Nullable
   @RequiredReadAction
-  public static HierarchyProvider findBestHierarchyProvider(final LanguageExtension<HierarchyProvider> extension,
+  public static HierarchyProvider findBestHierarchyProvider(final OldLanguageExtension<HierarchyProvider> extension,
                                                             @Nullable PsiElement element,
                                                             DataContext dataContext) {
     if (element == null) return null;

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.packaging.impl.artifacts;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.compiler.CompilerBundle;
 import consulo.compiler.artifact.ArtifactType;
@@ -23,15 +24,14 @@ import consulo.compiler.artifact.element.PackagingElementFactory;
 import consulo.compiler.artifact.element.PackagingElementOutputKind;
 import consulo.ide.impl.idea.packaging.impl.elements.ArtifactRootElementImpl;
 import consulo.ui.image.Image;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 
 /**
  * @author nik
  */
+@ExtensionImpl(order = "last")
 public class PlainArtifactType extends ArtifactType {
-  @NonNls
   public static final String ID = "plain";
 
   public static PlainArtifactType getInstance() {

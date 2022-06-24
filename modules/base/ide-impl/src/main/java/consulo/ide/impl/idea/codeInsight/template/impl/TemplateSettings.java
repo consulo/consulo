@@ -494,8 +494,6 @@ public class TemplateSettings implements PersistentStateComponent<TemplateSettin
     }
   }
 
-  @Deprecated
-  @SuppressWarnings("deprecation")
   private void loadDefaultLiveTemplates() {
     try {
       for (DefaultLiveTemplatesProvider provider : DefaultLiveTemplatesProvider.EP_NAME.getExtensionList()) {

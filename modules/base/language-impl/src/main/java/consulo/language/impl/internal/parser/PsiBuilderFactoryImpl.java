@@ -21,7 +21,6 @@ import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.LighterLazyParseableNode;
 import consulo.language.lexer.Lexer;
-import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.parser.PsiBuilder;
 import consulo.language.parser.PsiBuilderFactory;
@@ -48,7 +47,7 @@ public class PsiBuilderFactoryImpl extends PsiBuilderFactory {
   @Override
   public PsiBuilder createBuilder(@Nonnull final Project project, @Nonnull final LighterLazyParseableNode chameleon, LanguageVersion languageVersion) {
     final Language language = chameleon.getTokenType().getLanguage();
-    ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(language);
+    ParserDefinition parserDefinition = ParserDefinition.forLanguage(language);
 
     return new PsiBuilderImpl(project, parserDefinition, languageVersion, createLexer(languageVersion), chameleon, chameleon.getText());
   }
@@ -61,7 +60,7 @@ public class PsiBuilderFactoryImpl extends PsiBuilderFactory {
                                   @Nonnull final Language lang,
                                   @Nonnull LanguageVersion languageVersion,
                                   @Nonnull final CharSequence seq) {
-    final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(lang);
+    final ParserDefinition parserDefinition = ParserDefinition.forLanguage(lang);
     return new PsiBuilderImpl(project, parserDefinition, languageVersion, lexer != null ? lexer : createLexer(languageVersion), chameleon, seq);
   }
 
@@ -74,13 +73,13 @@ public class PsiBuilderFactoryImpl extends PsiBuilderFactory {
                                   @Nonnull LanguageVersion languageVersion,
                                   @Nonnull final CharSequence seq) {
     final Language language = chameleon.getTokenType().getLanguage();
-    final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(language);
+    final ParserDefinition parserDefinition = ParserDefinition.forLanguage(language);
     return new PsiBuilderImpl(project, parserDefinition, languageVersion, lexer != null ? lexer : createLexer(languageVersion), chameleon, seq);
   }
 
   private static Lexer createLexer(LanguageVersion languageVersion) {
     Language lang = languageVersion.getLanguage();
-    final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(lang);
+    final ParserDefinition parserDefinition = ParserDefinition.forLanguage(lang);
     assert parserDefinition != null : "ParserDefinition absent for language: " + lang.getID();
     return parserDefinition.createLexer(languageVersion);
   }

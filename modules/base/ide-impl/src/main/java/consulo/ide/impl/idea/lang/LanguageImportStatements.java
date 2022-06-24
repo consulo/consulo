@@ -20,7 +20,7 @@
 package consulo.ide.impl.idea.lang;
 
 import consulo.language.editor.refactoring.ImportOptimizer;
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 import consulo.language.psi.PsiFile;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.container.plugin.PluginIds;
@@ -30,7 +30,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class LanguageImportStatements extends LanguageExtension<ImportOptimizer> {
+public class LanguageImportStatements extends OldLanguageExtension<ImportOptimizer> {
   public static final LanguageImportStatements INSTANCE = new LanguageImportStatements();
 
   private LanguageImportStatements() {

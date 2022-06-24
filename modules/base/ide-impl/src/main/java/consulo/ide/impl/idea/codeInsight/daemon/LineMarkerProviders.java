@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.codeInsight.daemon;
 
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 import consulo.container.plugin.PluginIds;
 import consulo.language.editor.gutter.LineMarkerProvider;
 
@@ -24,7 +24,7 @@ import consulo.language.editor.gutter.LineMarkerProvider;
  * @author yole
  * @author Konstantin Bulenkov
  */
-public class LineMarkerProviders extends LanguageExtension<LineMarkerProvider> {
+public class LineMarkerProviders extends OldLanguageExtension<LineMarkerProvider> {
   public static LineMarkerProviders INSTANCE = new LineMarkerProviders();
 
   private LineMarkerProviders() {

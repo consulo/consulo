@@ -15,14 +15,14 @@
  */
 package consulo.ide.impl.idea.codeInsight.editorActions.emacs;
 
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 import consulo.container.plugin.PluginIds;
 
 /**
  * @author Denis Zhdanov
  * @since 4/11/11 2:21 PM
  */
-public class LanguageEmacsExtension extends LanguageExtension<EmacsProcessingHandler> {
+public class LanguageEmacsExtension extends OldLanguageExtension<EmacsProcessingHandler> {
 
   public static final LanguageEmacsExtension INSTANCE = new LanguageEmacsExtension();
 

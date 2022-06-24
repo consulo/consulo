@@ -16,11 +16,11 @@
 
 package consulo.ide.impl.idea.codeInsight.unwrap;
 
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 import consulo.container.plugin.PluginIds;
 import consulo.language.editor.refactoring.unwrap.UnwrapDescriptor;
 
-public class LanguageUnwrappers extends LanguageExtension<UnwrapDescriptor>{
+public class LanguageUnwrappers extends OldLanguageExtension<UnwrapDescriptor> {
   public static final LanguageUnwrappers INSTANCE = new LanguageUnwrappers();
 
   public LanguageUnwrappers() {

@@ -2,40 +2,39 @@
 
 package consulo.ide.impl.psi.impl.search;
 
+import consulo.application.progress.ProgressManager;
+import consulo.application.util.function.Processor;
+import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.openapi.fileTypes.impl.CustomSyntaxTableFileType;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.ide.impl.psi.CustomHighlighterTokenType;
+import consulo.ide.impl.psi.impl.cache.CacheUtil;
+import consulo.ide.impl.psi.impl.cache.TodoCacheManager;
 import consulo.language.Language;
-import consulo.language.parser.LanguageParserDefinitions;
-import consulo.language.parser.ParserDefinition;
-import consulo.language.lexer.Lexer;
-import consulo.project.util.query.QueryExecutorBase;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
+import consulo.language.editor.highlight.SyntaxHighlighter;
+import consulo.language.editor.highlight.SyntaxHighlighterFactory;
 import consulo.language.file.FileViewProvider;
+import consulo.language.lexer.Lexer;
+import consulo.language.parser.ParserDefinition;
+import consulo.language.pattern.StringPattern;
+import consulo.language.plain.psi.PsiPlainTextFile;
 import consulo.language.psi.PsiBinaryFile;
 import consulo.language.psi.PsiCompiledElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.plain.psi.PsiPlainTextFile;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.language.editor.highlight.SyntaxHighlighter;
-import consulo.language.editor.highlight.SyntaxHighlighterFactory;
-import consulo.ide.impl.idea.openapi.fileTypes.impl.CustomSyntaxTableFileType;
-import consulo.application.progress.ProgressManager;
-import consulo.document.util.TextRange;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.pattern.StringPattern;
-import consulo.ide.impl.psi.impl.cache.CacheUtil;
-import consulo.ide.impl.psi.impl.cache.TodoCacheManager;
 import consulo.language.psi.search.IndexPattern;
 import consulo.language.psi.search.IndexPatternOccurrence;
 import consulo.language.psi.search.IndexPatternProvider;
 import consulo.language.psi.search.IndexPatternSearch;
-import consulo.language.ast.IElementType;
-import consulo.language.ast.TokenSet;
-import consulo.application.util.function.Processor;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.text.CharArrayUtil;
-import consulo.util.lang.CharSequenceSubSequence;
 import consulo.language.version.LanguageVersion;
+import consulo.project.util.query.QueryExecutorBase;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
+import consulo.util.lang.CharSequenceSubSequence;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -120,7 +119,7 @@ public class IndexPatternSearcher extends QueryExecutorBase<IndexPatternOccurren
           }
         }
         if (builderForFile == null) {
-          final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(lang);
+          final ParserDefinition parserDefinition = ParserDefinition.forLanguage(lang);
           if (parserDefinition != null) {
             commentTokens = parserDefinition.getCommentTokens(file.getLanguageVersion());
           }

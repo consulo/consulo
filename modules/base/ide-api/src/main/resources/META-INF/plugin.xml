@@ -191,11 +191,7 @@
       <with attribute="conditionClass" implements="consulo.util.lang.function.Condition"/>
     </extensionPoint>
 
-    <extensionPoint name="productivityFeaturesProvider" interface="consulo.ide.impl.idea.featureStatistics.ProductivityFeaturesProvider"/>
-
     <extensionPoint name="tipAndTrick" beanClass="consulo.ide.impl.idea.ide.util.TipAndTrickBean"/>
-
-    <extensionPoint name="iconDescriptorUpdater" interface="consulo.language.icon.IconDescriptorUpdater" area="PROJECT"/>
 
     <extensionPoint name="checkinHandlerFactory" interface="consulo.ide.impl.idea.openapi.vcs.checkin.CheckinHandlerFactory"/>
 
@@ -605,14 +601,6 @@
 
     <extensionPoint name="gotoRelatedProvider" interface="consulo.language.navigation.GotoRelatedProvider"/>
 
-    <extensionPoint name="roots.watchedRootsProvider" interface="consulo.project.content.WatchedRootsProvider" area="PROJECT"/>
-
-    <extensionPoint name="moduleExtensionProvider" beanClass="consulo.module.impl.internal.layer.ModuleExtensionProviderEP">
-      <with attribute="immutableClass" implements="consulo.module.extension.ModuleExtension"/>
-      <with attribute="mutableClass" implements="consulo.module.extension.MutableModuleExtension"/>
-    </extensionPoint>
-
-    <extensionPoint name="moduleRootsProcessor" interface="consulo.module.impl.internal.layer.ModuleRootsProcessor"/>
     <extensionPoint name="orderRootType" interface="consulo.content.OrderRootType"/>
     <extensionPoint name="orderEntryType" interface="consulo.module.content.layer.orderEntry.OrderEntryType" internal="true"/>
     <extensionPoint name="orderEntryTypeEditor" beanClass="consulo.component.extension.KeyedFactoryEPBean">
@@ -1296,8 +1284,7 @@
         implementation="consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.ModulesAndLibrariesSourceItemsProvider"/>
     <packaging.sourceItemProvider
         implementation="consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.ArtifactsSourceItemsProvider"/>
-    <packaging.artifactType implementation="consulo.ide.impl.packaging.impl.artifacts.ZipArtifactType" order="first" id="zip-artifact"/>
-    <packaging.artifactType implementation="consulo.ide.impl.idea.packaging.impl.artifacts.PlainArtifactType" order="last"/>
+
     <gotoRelatedProvider implementation="consulo.ide.impl.idea.testIntegration.GotoTestRelatedProvider"/>
 
     <!-- Compiler -->

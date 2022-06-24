@@ -1,9 +1,9 @@
 package consulo.language.editor.inspection;
 
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 import consulo.container.plugin.PluginIds;
 
-public class LanguageInspectionSuppressors extends LanguageExtension<InspectionSuppressor> {
+public class LanguageInspectionSuppressors extends OldLanguageExtension<InspectionSuppressor> {
   public static final LanguageInspectionSuppressors INSTANCE = new LanguageInspectionSuppressors();
 
   private LanguageInspectionSuppressors() {

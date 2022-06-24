@@ -17,7 +17,7 @@ package consulo.codeEditor.impl;
 
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LineWrapPositionStrategy;
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
@@ -31,7 +31,7 @@ import javax.annotation.Nonnull;
  * @author Denis Zhdanov
  * @since Aug 25, 2010 11:30:21 AM
  */
-public class LanguageLineWrapPositionStrategy extends LanguageExtension<LineWrapPositionStrategy> {
+public class LanguageLineWrapPositionStrategy extends OldLanguageExtension<LineWrapPositionStrategy> {
 
   public static final LanguageLineWrapPositionStrategy INSTANCE = new LanguageLineWrapPositionStrategy();
 

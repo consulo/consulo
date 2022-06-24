@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.codeInsight.template.postfix.templates;
 
 import consulo.language.Language;
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 import consulo.language.LanguageExtensionPoint;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.component.extension.ExtensionPointName;
@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Set;
 
-public class LanguagePostfixTemplate extends LanguageExtension<PostfixTemplateProvider> {
+public class LanguagePostfixTemplate extends OldLanguageExtension<PostfixTemplateProvider> {
   public static final LanguagePostfixTemplate LANG_EP = new LanguagePostfixTemplate();
 
   public static final ExtensionPointName<LanguageExtensionPoint> EP_NAME = ExtensionPointName.create(PluginIds.CONSULO_BASE + ".codeInsight.template.postfixTemplateProvider");

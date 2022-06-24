@@ -15,7 +15,7 @@
  */
 package consulo.language.codeStyle;
 
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 import consulo.container.plugin.PluginIds;
 
 /**
@@ -24,7 +24,7 @@ import consulo.container.plugin.PluginIds;
  * @author Denis Zhdanov
  * @since Sep 20, 2010 7:41:55 PM
  */
-public class LanguageWhiteSpaceFormattingStrategy extends LanguageExtension<WhiteSpaceFormattingStrategy> {
+public class LanguageWhiteSpaceFormattingStrategy extends OldLanguageExtension<WhiteSpaceFormattingStrategy> {
 
   public static final LanguageWhiteSpaceFormattingStrategy INSTANCE = new LanguageWhiteSpaceFormattingStrategy();
 

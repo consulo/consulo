@@ -20,14 +20,13 @@
 package consulo.ide.impl.idea.lang;
 
 import consulo.language.ast.IElementType;
-import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.version.LanguageVersion;
 
 public class DefaultWordCompletionFilter implements WordCompletionElementFilter {
   @Override
   public boolean isWordCompletionEnabledIn(final IElementType element, LanguageVersion languageVersion) {
-    final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(element.getLanguage());
+    final ParserDefinition parserDefinition = ParserDefinition.forLanguage(element.getLanguage());
     return parserDefinition != null && parserDefinition.getCommentTokens(languageVersion).contains(element);
   }
 }

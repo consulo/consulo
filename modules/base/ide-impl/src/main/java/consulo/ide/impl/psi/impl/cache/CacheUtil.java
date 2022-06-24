@@ -17,10 +17,9 @@
 package consulo.ide.impl.psi.impl.cache;
 
 import consulo.language.Language;
-import consulo.language.parser.LanguageParserDefinitions;
-import consulo.language.parser.ParserDefinition;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
+import consulo.language.parser.ParserDefinition;
 import consulo.language.version.LanguageVersion;
 
 public class CacheUtil {
@@ -35,7 +34,7 @@ public class CacheUtil {
     //}
 
     boolean inComments = false;
-    final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(language);
+    final ParserDefinition parserDefinition = ParserDefinition.forLanguage(language);
 
     if (parserDefinition != null) {
       final TokenSet commentTokens = parserDefinition.getCommentTokens(languageVersion);

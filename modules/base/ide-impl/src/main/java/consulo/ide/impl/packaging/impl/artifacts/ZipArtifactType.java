@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.packaging.impl.artifacts;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.compiler.artifact.ArtifactType;
 import consulo.compiler.artifact.element.CompositePackagingElement;
@@ -30,6 +31,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 15:59/18.06.13
  */
+@ExtensionImpl(id = "zip-artifact", order = "first")
 public class ZipArtifactType extends ArtifactType {
   public ZipArtifactType() {
     super("zip", "Zip");

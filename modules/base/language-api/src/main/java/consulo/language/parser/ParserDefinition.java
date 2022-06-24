@@ -18,29 +18,43 @@ package consulo.language.parser;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.Extension;
+import consulo.application.Application;
+import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.IFileElementType;
 import consulo.language.ast.TokenSet;
 import consulo.language.ast.TokenType;
-import consulo.language.lexer.Lexer;
+import consulo.language.extension.ByLanguageValue;
+import consulo.language.extension.LanguageExtension;
+import consulo.language.extension.LanguageGroupByFactory;
 import consulo.language.file.FileViewProvider;
+import consulo.language.lexer.Lexer;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.version.LanguageVersion;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Defines the implementation of a parser for a custom language.
  *
- * @see LanguageParserDefinitions#forLanguage(Language)
+ * @see #forLanguage(Language)
  */
 @Extension(ComponentScope.APPLICATION)
-public interface ParserDefinition {
+public interface ParserDefinition extends LanguageExtension {
+  ExtensionPointCacheKey<ParserDefinition, ByLanguageValue<ParserDefinition>> KEY = ExtensionPointCacheKey.create("ParserDefinition", LanguageGroupByFactory.build());
+
+  @Nullable
+  static ParserDefinition forLanguage(@Nonnull Language language) {
+    return Application.get().getExtensionPoint(ParserDefinition.class).getOrBuildCache(KEY).get(language);
+  }
+
   /**
    * Language of parser definition
    */
+  @Override
   @Nonnull
   Language getLanguage();
 
@@ -56,6 +70,7 @@ public interface ParserDefinition {
 
   /**
    * Returns the parser for parsing files in the specified project.
+   *
    * @param languageVersion version of language
    * @return the parser instance.
    */
@@ -78,8 +93,8 @@ public interface ParserDefinition {
    * <p><strong>It is strongly advised you return TokenSet that only contains {@link TokenType#WHITE_SPACE},
    * which is suitable for all the languages unless you really need to use special whitespace token</strong>
    *
-   * @return the set of whitespace token types.
    * @param languageVersion version of language
+   * @return the set of whitespace token types.
    */
   @Nonnull
   default TokenSet getWhitespaceTokens(@Nonnull LanguageVersion languageVersion) {
@@ -91,8 +106,8 @@ public interface ParserDefinition {
    * Tokens of those types are automatically skipped by PsiBuilder. Also, To Do patterns
    * are searched in the text of tokens of those types.
    *
-   * @return the set of comment token types.
    * @param languageVersion version of language
+   * @return the set of comment token types.
    */
   @Nonnull
   TokenSet getCommentTokens(@Nonnull LanguageVersion languageVersion);
@@ -101,8 +116,8 @@ public interface ParserDefinition {
    * Returns the set of element types which are treated as string literals. "Search in strings"
    * option in refactorings is applied to the contents of such tokens.
    *
-   * @return the set of string literal element types.
    * @param languageVersion version of language
+   * @return the set of string literal element types.
    */
   @Nonnull
   TokenSet getStringLiteralElements(@Nonnull LanguageVersion languageVersion);
@@ -160,13 +175,20 @@ public interface ParserDefinition {
    * @see ParserDefinition#spaceExistenceTypeBetweenTokens
    */
   enum SpaceRequirements {
-    /** Whitespace between tokens is optional. */
+    /**
+     * Whitespace between tokens is optional.
+     */
     MAY,
-    /** Whitespace between tokens is required. */
+    /**
+     * Whitespace between tokens is required.
+     */
     MUST,
-    /** Whitespace between tokens is not allowed. */
+    /**
+     * Whitespace between tokens is not allowed.
+     */
     MUST_NOT,
-    /** A line break is required between tokens. */
-    MUST_LINE_BREAK,
-  }
+    /**
+     * A line break is required between tokens.
+     */
+    MUST_LINE_BREAK,}
 }

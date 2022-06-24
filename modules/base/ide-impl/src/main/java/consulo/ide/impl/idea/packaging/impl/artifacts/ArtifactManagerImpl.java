@@ -217,7 +217,7 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
   private ArtifactImpl loadArtifact(ArtifactState state) {
     ArtifactType type = ArtifactType.findById(state.getArtifactType());
     if (type == null) {
-      UnknownFeaturesCollector.getInstance(myProject).registerUnknownFeature(ArtifactType.EP_NAME.getName(), state.getArtifactType());
+      UnknownFeaturesCollector.getInstance(myProject).registerUnknownFeature(ArtifactType.class, state.getArtifactType());
       return createInvalidArtifact(state, "Unknown artifact type: " + state.getArtifactType());
     }
 

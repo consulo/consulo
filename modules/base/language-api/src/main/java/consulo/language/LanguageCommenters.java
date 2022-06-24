@@ -21,7 +21,7 @@ import consulo.container.plugin.PluginIds;
 /**
  * @author yole
  */
-public class LanguageCommenters extends LanguageExtension<Commenter> {
+public class LanguageCommenters extends OldLanguageExtension<Commenter> {
   public static final LanguageCommenters INSTANCE = new LanguageCommenters();
 
   private LanguageCommenters() {

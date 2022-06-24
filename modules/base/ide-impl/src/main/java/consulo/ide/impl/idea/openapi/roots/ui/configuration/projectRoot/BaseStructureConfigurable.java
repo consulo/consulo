@@ -176,7 +176,7 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent i
       loadTree();
     }
     else {
-      super.disposeUIResources();
+      resetUI();
       myTree.setShowsRootHandles(false);
       loadTree();
     }

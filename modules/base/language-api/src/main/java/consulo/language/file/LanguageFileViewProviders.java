@@ -17,12 +17,12 @@
 package consulo.language.file;
 
 import consulo.container.plugin.PluginIds;
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 
 /**
  * @author yole
  */
-public class LanguageFileViewProviders extends LanguageExtension<FileViewProviderFactory> {
+public class LanguageFileViewProviders extends OldLanguageExtension<FileViewProviderFactory> {
   public static final LanguageFileViewProviders INSTANCE = new LanguageFileViewProviders();
 
   private LanguageFileViewProviders() {

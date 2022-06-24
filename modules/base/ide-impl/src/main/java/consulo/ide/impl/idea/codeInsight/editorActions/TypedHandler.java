@@ -39,7 +39,6 @@ import consulo.language.file.LanguageFileType;
 import consulo.language.file.inject.DocumentWindow;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
-import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.plain.PlainTextFileType;
 import consulo.language.plain.PlainTextLanguage;
@@ -298,7 +297,7 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
     int offset = editor.getCaretModel().getOffset();
     PsiElement element = file.findElementAt(offset);
     if (element == null) return false;
-    final ParserDefinition definition = LanguageParserDefinitions.INSTANCE.forLanguage(element.getLanguage());
+    final ParserDefinition definition = ParserDefinition.forLanguage(element.getLanguage());
     if (definition != null) {
       final TokenSet stringLiteralElements = definition.getStringLiteralElements(element.getLanguageVersion());
       final ASTNode node = element.getNode();

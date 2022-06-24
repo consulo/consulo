@@ -16,9 +16,9 @@
 package consulo.ide.impl.roots.ui.configuration.extension;
 
 import consulo.ide.impl.idea.ui.CheckboxTree;
-import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
+import consulo.module.content.layer.ModuleExtensionProvider;
 import consulo.ui.ex.SimpleTextAttributes;
-import consulo.module.impl.internal.layer.ModuleExtensionProviderEP;
+import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.image.ImageEffects;
 
 import javax.swing.*;
@@ -37,7 +37,7 @@ public class ExtensionTreeCellRenderer extends CheckboxTree.CheckboxTreeCellRend
     if (value instanceof ExtensionCheckedTreeNode) {
       ExtensionCheckedTreeNode extensionCheckedTreeNode = (ExtensionCheckedTreeNode)value;
 
-      final ModuleExtensionProviderEP providerEP = extensionCheckedTreeNode.getProviderEP();
+      final ModuleExtensionProvider providerEP = extensionCheckedTreeNode.getProvider();
       if (providerEP == null) {
         return;
       }
@@ -47,10 +47,10 @@ public class ExtensionTreeCellRenderer extends CheckboxTree.CheckboxTreeCellRend
       boolean enabled = extensionCheckedTreeNode.isEnabled();
       textRenderer.setIcon(enabled ? providerEP.getIcon() : ImageEffects.transparent(providerEP.getIcon()));
       if (enabled) {
-        textRenderer.append(providerEP.getName(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
+        textRenderer.append(providerEP.getName().get(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
       }
       else {
-        textRenderer.append(providerEP.getName(), SimpleTextAttributes.GRAY_ATTRIBUTES);
+        textRenderer.append(providerEP.getName().get(), SimpleTextAttributes.GRAY_ATTRIBUTES);
       }
     }
   }

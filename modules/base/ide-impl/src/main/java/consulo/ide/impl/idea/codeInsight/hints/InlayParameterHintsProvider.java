@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.codeInsight.hints;
 
 import consulo.language.Language;
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 import consulo.language.psi.PsiElement;
 import consulo.container.plugin.PluginIds;
 
@@ -30,7 +30,7 @@ import java.util.Set;
  * convert from kotlin
  */
 public interface InlayParameterHintsProvider {
-  LanguageExtension<InlayParameterHintsProvider> EP = new LanguageExtension<>(PluginIds.CONSULO_BASE + ".codeInsight.parameterNameHints");
+  OldLanguageExtension<InlayParameterHintsProvider> EP = new OldLanguageExtension<>(PluginIds.CONSULO_BASE + ".codeInsight.parameterNameHints");
 
   /**
    * Hints for params to be shown

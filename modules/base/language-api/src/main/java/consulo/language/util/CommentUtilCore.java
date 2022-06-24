@@ -23,7 +23,6 @@ import consulo.language.LanguageCommenters;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
-import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
@@ -65,7 +64,7 @@ public class CommentUtilCore {
       return false;
     }
 
-    final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(language);
+    final ParserDefinition parserDefinition = ParserDefinition.forLanguage(language);
 
     if (parserDefinition != null) {
       final TokenSet commentTokens = parserDefinition.getCommentTokens(languageVersion);

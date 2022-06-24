@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.lang.refactoring;
 
 import consulo.language.Language;
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 import consulo.container.plugin.PluginIds;
 
 import java.util.List;
@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * @author Dmitry Avdeev
  */
-public class InlineHandlers extends LanguageExtension<InlineHandler> {
+public class InlineHandlers extends OldLanguageExtension<InlineHandler> {
 
   private final static InlineHandlers INSTANCE = new InlineHandlers();
 

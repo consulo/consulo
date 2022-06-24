@@ -64,6 +64,8 @@ public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurabl
   @RequiredUIAccess
   @Override
   public void initialize() {
+    super.initialize();
+
     getLibrariesConfigurator().addLibraryEditorListener(new LibraryEditorListener() {
       @Override
       public void libraryCreated(@Nonnull Library library) {

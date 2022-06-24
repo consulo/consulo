@@ -15,11 +15,11 @@
  */
 package consulo.ide.impl.idea.refactoring.changeSignature.inplace;
 
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 import consulo.ide.impl.idea.refactoring.changeSignature.ChangeInfo;
 import consulo.container.plugin.PluginIds;
 
-public class LanguageChangeSignatureDetectors extends LanguageExtension<LanguageChangeSignatureDetector<ChangeInfo>> {
+public class LanguageChangeSignatureDetectors extends OldLanguageExtension<LanguageChangeSignatureDetector<ChangeInfo>> {
   public static final LanguageChangeSignatureDetectors INSTANCE = new LanguageChangeSignatureDetectors();
 
   LanguageChangeSignatureDetectors() {

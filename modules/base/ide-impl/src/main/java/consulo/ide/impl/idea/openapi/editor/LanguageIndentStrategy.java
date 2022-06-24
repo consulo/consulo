@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.editor;
 
 import consulo.language.Language;
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.container.plugin.PluginIds;
@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 /**
  * @author Rustam Vishnyakov
  */
-public class LanguageIndentStrategy extends LanguageExtension<IndentStrategy> {
+public class LanguageIndentStrategy extends OldLanguageExtension<IndentStrategy> {
   public static final LanguageIndentStrategy INSTANCE = new LanguageIndentStrategy();
 
   private static final DefaultIndentStrategy DEFAULT_INDENT_STRATEGY = new DefaultIndentStrategy();

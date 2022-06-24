@@ -64,7 +64,7 @@ public class ArtifactConfigurable extends ArtifactConfigurableBase {
   @Override
   protected JComponent createTopRightComponent(final JTextField nameField) {
     final ComboBox artifactTypeBox = new ComboBox();
-    for (ArtifactType type : ArtifactType.EP_NAME.getExtensions()) {
+    for (ArtifactType type : ArtifactType.EP_NAME.getExtensionList()) {
       artifactTypeBox.addItem(type);
     }
 

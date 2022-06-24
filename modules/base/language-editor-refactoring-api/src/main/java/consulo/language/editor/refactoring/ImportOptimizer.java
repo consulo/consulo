@@ -25,7 +25,6 @@ import javax.annotation.Nullable;
 
 /**
  * Implementers of the interface encapsulate optimize imports process for the language.
- * Should be registered as "lang.importOptimizer" extension.
  *
  * @author max
  */

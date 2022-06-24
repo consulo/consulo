@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.codeInsight.editorActions.enter;
 
 import consulo.language.Language;
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiDocumentManager;
@@ -23,7 +23,7 @@ import javax.annotation.Nullable;
  */
 public class EnterBetweenBracesDelegate {
   private static final Logger LOG = Logger.getInstance(EnterBetweenBracesDelegate.class);
-  static final LanguageExtension<EnterBetweenBracesDelegate> EP_NAME = new LanguageExtension<>(PluginIds.CONSULO_BASE + ".enterBetweenBracesDelegate");
+  static final OldLanguageExtension<EnterBetweenBracesDelegate> EP_NAME = new OldLanguageExtension<>(PluginIds.CONSULO_BASE + ".enterBetweenBracesDelegate");
 
   /**
    * Checks that the braces belong to the same syntax element, and whether there is a need to calculate indentation or it can be simplified.

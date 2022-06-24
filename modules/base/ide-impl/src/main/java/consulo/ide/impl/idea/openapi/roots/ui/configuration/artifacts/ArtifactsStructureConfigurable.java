@@ -112,6 +112,8 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable im
   @RequiredUIAccess
   @Override
   public void initialize() {
+    super.initialize();
+
     ProjectStructureSettingsUtil showSettingsUtil = (ProjectStructureSettingsUtil)myShowSettingsUtil;
 
     ModulesConfigurator modulesModel = showSettingsUtil.getModulesModel(myProject);

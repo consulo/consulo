@@ -19,43 +19,39 @@
  */
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPass;
-import consulo.language.editor.action.BraceMatchingUtil;
+import consulo.application.dumb.DumbAware;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
 import consulo.codeEditor.*;
-import consulo.language.Language;
-import consulo.language.parser.LanguageParserDefinitions;
-import consulo.language.parser.ParserDefinition;
-import consulo.codeEditor.EditorColors;
-import consulo.colorScheme.EditorColorsScheme;
-import consulo.codeEditor.EditorEx;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.codeEditor.HighlighterIterator;
-import consulo.ide.impl.idea.openapi.editor.impl.DesktopEditorImpl;
-import consulo.ide.impl.idea.openapi.editor.impl.view.EditorPainter;
-import consulo.ide.impl.idea.openapi.editor.impl.view.VisualLinesIterator;
 import consulo.codeEditor.markup.CustomHighlighterRenderer;
 import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.codeEditor.markup.MarkupModel;
 import consulo.codeEditor.markup.RangeHighlighter;
+import consulo.colorScheme.EditorColorsScheme;
 import consulo.document.Document;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.ProgressManager;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
+import consulo.document.util.DocumentUtil;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
-import consulo.language.psi.PsiFile;
+import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPass;
+import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
+import consulo.ide.impl.idea.openapi.editor.impl.DesktopEditorImpl;
+import consulo.ide.impl.idea.openapi.editor.impl.view.EditorPainter;
+import consulo.ide.impl.idea.openapi.editor.impl.view.VisualLinesIterator;
+import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
+import consulo.ide.impl.idea.util.text.CharArrayUtil;
+import consulo.language.Language;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
-import consulo.ui.ex.awt.paint.LinePainter2D;
-import consulo.document.util.DocumentUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
-import consulo.util.collection.primitive.ints.IntStack;
-import consulo.ide.impl.idea.util.text.CharArrayUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.language.editor.action.BraceMatchingUtil;
+import consulo.language.parser.ParserDefinition;
+import consulo.language.psi.PsiFile;
 import consulo.language.version.LanguageVersionUtil;
+import consulo.project.Project;
+import consulo.ui.ex.awt.paint.LinePainter2D;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.util.collection.primitive.ints.IntStack;
 import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -432,7 +428,7 @@ public class IndentsPass extends TextEditorHighlightingPass implements DumbAware
       Language language = tokenType.getLanguage();
       TokenSet comments = myComments.get(language);
       if (comments == null) {
-        ParserDefinition definition = LanguageParserDefinitions.INSTANCE.forLanguage(language);
+        ParserDefinition definition = ParserDefinition.forLanguage(language);
         if (definition != null) {
           comments = definition.getCommentTokens(LanguageVersionUtil.findLanguageVersion(language, myFile));
         }

@@ -24,7 +24,6 @@ import consulo.language.impl.ast.LeafElement;
 import consulo.language.impl.psi.LeafPsiElement;
 import consulo.language.impl.psi.PsiCoreCommentImpl;
 import consulo.language.impl.psi.PsiWhiteSpaceImpl;
-import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.version.LanguageVersion;
 
@@ -40,7 +39,7 @@ public class DefaultASTLeafFactory implements ASTLeafFactory {
   @Nonnull
   @Override
   public LeafElement createLeaf(@Nonnull IElementType type, @Nonnull LanguageVersion languageVersion, @Nonnull CharSequence text) {
-    final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(type.getLanguage());
+    final ParserDefinition parserDefinition = ParserDefinition.forLanguage(type.getLanguage());
     if(parserDefinition != null) {
       if(parserDefinition.getCommentTokens(languageVersion).contains(type)) {
         return new PsiCoreCommentImpl(type, text);

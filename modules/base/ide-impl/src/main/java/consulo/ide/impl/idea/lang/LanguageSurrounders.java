@@ -21,9 +21,9 @@ package consulo.ide.impl.idea.lang;
 
 import consulo.language.editor.surroundWith.SurroundDescriptor;
 import consulo.container.plugin.PluginIds;
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 
-public class LanguageSurrounders extends LanguageExtension<SurroundDescriptor> {
+public class LanguageSurrounders extends OldLanguageExtension<SurroundDescriptor> {
   public static final LanguageSurrounders INSTANCE = new LanguageSurrounders();
 
   private LanguageSurrounders() {

@@ -19,10 +19,10 @@
  */
 package consulo.language.editor.highlight;
 
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 import consulo.container.plugin.PluginIds;
 
-public class SyntaxHighlighterLanguageFactory extends LanguageExtension<SyntaxHighlighterFactory> {
+public class SyntaxHighlighterLanguageFactory extends OldLanguageExtension<SyntaxHighlighterFactory> {
   SyntaxHighlighterLanguageFactory() {
     super(PluginIds.CONSULO_BASE + ".lang.syntaxHighlighterFactory", new DefaultSyntaxHighlighterFactory());
   }

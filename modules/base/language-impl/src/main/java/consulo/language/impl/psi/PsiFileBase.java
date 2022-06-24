@@ -19,7 +19,6 @@ package consulo.language.impl.psi;
 import consulo.language.Language;
 import consulo.language.ast.IFileElementType;
 import consulo.language.file.FileViewProvider;
-import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.psi.PsiElementVisitor;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -40,7 +39,7 @@ public abstract class PsiFileBase extends PsiFileImpl {
   protected PsiFileBase(@Nonnull FileViewProvider viewProvider, @Nonnull Language language) {
     super(viewProvider);
     myLanguage = findLanguage(language, viewProvider);
-    final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(myLanguage);
+    final ParserDefinition parserDefinition = ParserDefinition.forLanguage(myLanguage);
     if (parserDefinition == null) {
       throw new RuntimeException("PsiFileBase: language.getParserDefinition() returned null for: "+myLanguage);
     }

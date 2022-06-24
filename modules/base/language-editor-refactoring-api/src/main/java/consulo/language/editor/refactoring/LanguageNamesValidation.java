@@ -19,11 +19,11 @@
  */
 package consulo.language.editor.refactoring;
 
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 import consulo.project.Project;
 import consulo.container.plugin.PluginIds;
 
-public class LanguageNamesValidation extends LanguageExtension<NamesValidator> {
+public class LanguageNamesValidation extends OldLanguageExtension<NamesValidator> {
   public static final LanguageNamesValidation INSTANCE = new LanguageNamesValidation();
 
   private LanguageNamesValidation() {

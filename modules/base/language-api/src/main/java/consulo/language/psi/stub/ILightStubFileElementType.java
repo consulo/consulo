@@ -47,7 +47,7 @@ public class ILightStubFileElementType<T extends PsiFileStub> extends IStubFileE
     final Language language = getLanguage();
     final LanguageVersion languageVersion = psi.getLanguageVersion();
     final PsiBuilder builder = factory.createBuilder(project, chameleon, languageVersion);
-    final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(language);
+    final ParserDefinition parserDefinition = ParserDefinition.forLanguage(language);
     assert parserDefinition != null : this;
     final PsiParser parser = parserDefinition.createParser(languageVersion);
     parser.parse(this, builder, languageVersion);

@@ -16,7 +16,7 @@
 package consulo.language.ast;
 
 import consulo.language.Language;
-import consulo.language.parser.LanguageParserDefinitions;
+import consulo.language.parser.ParserDefinition;
 import consulo.language.parser.PsiBuilder;
 import consulo.language.parser.PsiBuilderFactory;
 import consulo.language.parser.PsiParser;
@@ -71,7 +71,7 @@ public class ILazyParseableElementType extends IElementType implements ILazyPars
     final LanguageVersion tempLanguageVersion = chameleon.getUserData(LanguageVersion.KEY);
     final LanguageVersion languageVersion = tempLanguageVersion == null ? psi.getLanguageVersion() : tempLanguageVersion;
     final PsiBuilder builder = PsiBuilderFactory.getInstance().createBuilder(project, chameleon, null, languageForParser, languageVersion, chameleon.getChars());
-    final PsiParser parser = LanguageParserDefinitions.INSTANCE.forLanguage(languageForParser).createParser(languageVersion);
+    final PsiParser parser = ParserDefinition.forLanguage(languageForParser).createParser(languageVersion);
     return parser.parse(this, builder, languageVersion).getFirstChildNode();
   }
 

@@ -35,30 +35,13 @@
   </permissions>
 
   <extensions defaultExtensionNs="consulo">
-    <eapDescriptor implementation="consulo.sandboxPlugin.ide.eap.Sand1EapDescriptor"/>
-    <eapDescriptor implementation="consulo.sandboxPlugin.ide.eap.Sand2EapDescriptor"/>
-    <eapDescriptor implementation="consulo.sandboxPlugin.ide.eap.Sand3EapDescriptor"/>
-    <eapDescriptor implementation="consulo.sandboxPlugin.ide.eap.Sand4EapDescriptor"/>
-    <eapDescriptor implementation="consulo.sandboxPlugin.ide.eap.Sand5EapDescriptor"/>
-    <eapDescriptor implementation="consulo.sandboxPlugin.ide.eap.Sand6EapDescriptor"/>
 
-    <fileTypeFactory implementation="consulo.sandboxPlugin.lang.SandFileTypeFactory"/>
-    <lang.parserDefinition language="SAND" implementationClass="consulo.sandboxPlugin.lang.SandParsingDefinition"/>
 
     <lang.syntaxHighlighterFactory language="SAND" implementationClass="consulo.sandboxPlugin.ide.highlight.SandHighlighterFactory"/>
 
-    <lang.defineVersion language="SAND" implementationClass="consulo.sandboxPlugin.lang.version.SandLanguageVersion"/>
-    <lang.defineVersion language="SAND" implementationClass="consulo.sandboxPlugin.lang.version.Sand2LanguageVersion"/>
-
-    <compiler implementation="consulo.sandboxPlugin.ide.compiler.SandCompiler"/>
 
     <codeInsight.template.postfixTemplateProvider language="SAND"
                                                   implementationClass="consulo.sandboxPlugin.ide.codeInsight.template.postfix.templates.SandPostfixTemplateProvider"/>
-    <fileEditorProvider implementation="consulo.sandboxPlugin.ide.fileEditor.SandFileEditorProvider"/>
-    <library.type implementation="consulo.sandboxPlugin.ide.library.SandLibraryType"/>
-    <packaging.artifactType implementation="consulo.sandboxPlugin.ide.artifact.SandArtifactType"/>
-    <executor implementation="consulo.sandboxPlugin.ide.run.SandExecutor"/>
-    <configurationType implementation="consulo.sandboxPlugin.ide.run.SandConfigurationType"/>
     <moduleExtensionProvider key="sand"
                              icon="consulo.platform.base.PlatformIconGroup@nodes.static"
                              name="Sand"
@@ -69,29 +52,8 @@
                              name="Sand 2"
                              immutableClass="consulo.sandboxPlugin.ide.module.extension.Sand2ModuleExtension"
                              mutableClass="consulo.sandboxPlugin.ide.module.extension.Sand2MutableModuleExtension"/>
-    <psi.packageSupportProvider implementation="consulo.sandboxPlugin.ide.module.Sand2PackageProvider"/>
-    <taskByVfsChange implementation="consulo.sandboxPlugin.ide.vfs.backgroundTask.SandBackgroundTaskByVfsChangeProvider"/>
-    <sdkType implementation="consulo.sandboxPlugin.ide.bundle.SandBundleType"/>
     <lang.importOptimizer language="SAND" implementationClass="consulo.sandboxPlugin.lang.format.SandImportOptimizer"/>
-    <toolWindow id="Sand"
-                anchor="right"
-                requireModuleExtensions="sand"
-                icon="consulo.platform.base.PlatformIconGroup@toolwindows.toolwindowcommander"
-                canCloseContents="true"
-                factoryClass="consulo.sandboxPlugin.ide.toolwindow.SandToolWindowFactory"/>
-    <newModuleBuilder implementation="consulo.sandboxPlugin.ide.module.SandNewModuleBuilder"/>
-    <moduleImportProvider implementation="consulo.sandboxPlugin.lang.moduleImport.SandModuleImportProvider"/>
-    <moduleImportProvider implementation="consulo.sandboxPlugin.lang.moduleImport.Sand2ModuleImportProvider"/>
-
-    <remoteServer.type implementation="consulo.sandboxPlugin.ide.remoteServer.SandServerType"/>
-
-    <xdebugger.attachDebuggerProvider implementation="consulo.sandboxPlugin.ide.debugger.attach.SandAttachToProcessProvider"/>
-
-    <runConfigurationsSettings implementation="consulo.sandboxPlugin.ide.run.SandRunConfigurationsSettings"/>
-
-    <webSocketAccepter implementation="consulo.sandboxPlugin.webSocket.TestWebSocketAccepter"/>
 
     <projectConfigurable id="sand.editor" parentId="editor" displayName="Sand Editor" instance="consulo.sandboxPlugin.ui.SandConfigurable"/>
-
   </extensions>
 </consulo-plugin>

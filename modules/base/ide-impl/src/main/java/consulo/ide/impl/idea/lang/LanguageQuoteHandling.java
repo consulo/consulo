@@ -17,12 +17,12 @@ package consulo.ide.impl.idea.lang;
 
 import consulo.language.editor.action.QuoteHandler;
 import consulo.container.plugin.PluginIds;
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 
 /**
  * @author gregsh
  */
-public class LanguageQuoteHandling extends LanguageExtension<QuoteHandler> {
+public class LanguageQuoteHandling extends OldLanguageExtension<QuoteHandler> {
   public static final LanguageQuoteHandling INSTANCE = new LanguageQuoteHandling();
 
   private LanguageQuoteHandling() {

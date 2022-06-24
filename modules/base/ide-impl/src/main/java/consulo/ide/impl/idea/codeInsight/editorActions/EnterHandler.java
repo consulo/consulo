@@ -2,14 +2,6 @@
 
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
-import consulo.language.editor.CodeInsightSettings;
-import consulo.ide.impl.idea.codeInsight.editorActions.enter.EnterHandlerDelegate;
-import consulo.ide.impl.idea.codeStyle.CodeStyleFacade;
-import consulo.ide.impl.idea.lang.LanguageDocumentation;
-import consulo.ide.impl.idea.lang.documentation.CompositeDocumentationProvider;
-import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.CaretModel;
 import consulo.codeEditor.Editor;
@@ -22,8 +14,14 @@ import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.document.util.DocumentUtil;
 import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.codeInsight.editorActions.enter.EnterHandlerDelegate;
+import consulo.ide.impl.idea.codeStyle.CodeStyleFacade;
+import consulo.ide.impl.idea.lang.LanguageDocumentation;
+import consulo.ide.impl.idea.lang.documentation.CompositeDocumentationProvider;
+import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.ide.impl.psi.codeStyle.lineIndent.LineIndentProvider;
-import consulo.language.editor.internal.PsiUtilBase;
 import consulo.language.CodeDocumentationAwareCommenter;
 import consulo.language.Commenter;
 import consulo.language.Language;
@@ -34,14 +32,15 @@ import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.codeStyle.FormatterUtil;
 import consulo.language.codeStyle.PostprocessReformattingAspect;
 import consulo.language.editor.CodeInsightBundle;
+import consulo.language.editor.CodeInsightSettings;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.action.CommentCompleteHandler;
 import consulo.language.editor.action.JavaLikeQuoteHandler;
 import consulo.language.editor.action.QuoteHandler;
 import consulo.language.editor.documentation.CodeDocumentationProvider;
 import consulo.language.editor.documentation.DocumentationProvider;
+import consulo.language.editor.internal.PsiUtilBase;
 import consulo.language.lexer.Lexer;
-import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.psi.*;
 import consulo.language.psi.util.PsiTreeUtil;
@@ -196,7 +195,7 @@ public class EnterHandler extends BaseEnterHandler {
 
     final PsiFile containingFile = comment.getContainingFile();
     final Language language = containingFile.getLanguage();
-    ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(language);
+    ParserDefinition parserDefinition = ParserDefinition.forLanguage(language);
     if (parserDefinition == null) {
       return true;
     }

@@ -20,21 +20,21 @@
 package consulo.ide.impl.idea.lang;
 
 import consulo.container.plugin.PluginIds;
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 import consulo.language.editor.action.LanguageCodeInsightActionHandler;
 
 public class CodeInsightActions {
-  public static final LanguageExtension<LanguageCodeInsightActionHandler>
-    IMPLEMENT_METHOD = new LanguageExtension<>(PluginIds.CONSULO_BASE + ".codeInsight.implementMethod");
+  public static final OldLanguageExtension<LanguageCodeInsightActionHandler>
+    IMPLEMENT_METHOD = new OldLanguageExtension<>(PluginIds.CONSULO_BASE + ".codeInsight.implementMethod");
 
-  public static final LanguageExtension<LanguageCodeInsightActionHandler>
-    OVERRIDE_METHOD = new LanguageExtension<>(PluginIds.CONSULO_BASE + ".codeInsight.overrideMethod");
+  public static final OldLanguageExtension<LanguageCodeInsightActionHandler>
+    OVERRIDE_METHOD = new OldLanguageExtension<>(PluginIds.CONSULO_BASE + ".codeInsight.overrideMethod");
 
-  public static final LanguageExtension<LanguageCodeInsightActionHandler>
-    DELEGATE_METHODS = new LanguageExtension<>(PluginIds.CONSULO_BASE + ".codeInsight.delegateMethods");
+  public static final OldLanguageExtension<LanguageCodeInsightActionHandler>
+    DELEGATE_METHODS = new OldLanguageExtension<>(PluginIds.CONSULO_BASE + ".codeInsight.delegateMethods");
 
-  public static final LanguageExtension<LanguageCodeInsightActionHandler>
-    GOTO_SUPER = new LanguageExtension<>(PluginIds.CONSULO_BASE + ".codeInsight.gotoSuper");
+  public static final OldLanguageExtension<LanguageCodeInsightActionHandler>
+    GOTO_SUPER = new OldLanguageExtension<>(PluginIds.CONSULO_BASE + ".codeInsight.gotoSuper");
 
   private CodeInsightActions() {
   }

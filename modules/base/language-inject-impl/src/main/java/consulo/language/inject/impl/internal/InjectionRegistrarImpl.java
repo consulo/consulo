@@ -31,16 +31,18 @@ import consulo.language.impl.DebugUtil;
 import consulo.language.impl.ast.FileElement;
 import consulo.language.impl.ast.TreeUtil;
 import consulo.language.impl.file.AbstractFileViewProvider;
-import consulo.language.impl.internal.psi.*;
-import consulo.language.impl.psi.PsiFileImpl;
+import consulo.language.impl.internal.psi.BooleanRunnable;
+import consulo.language.impl.internal.psi.FileContextUtil;
+import consulo.language.impl.internal.psi.PsiDocumentManagerBase;
+import consulo.language.impl.internal.psi.PsiManagerEx;
 import consulo.language.impl.internal.psi.diff.BlockSupportImpl;
 import consulo.language.impl.internal.psi.diff.DiffLog;
 import consulo.language.impl.internal.psi.pointer.Identikit;
 import consulo.language.impl.internal.psi.pointer.SelfElementInfo;
 import consulo.language.impl.internal.psi.pointer.SmartPointerManagerImpl;
+import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.inject.MultiHostRegistrar;
 import consulo.language.inject.ReferenceInjector;
-import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.psi.*;
 import consulo.language.psi.util.PsiTreeUtil;
@@ -120,7 +122,7 @@ class InjectionRegistrarImpl implements MultiHostRegistrar {
     }
     currentThread = Thread.currentThread();
 
-    if (LanguageParserDefinitions.INSTANCE.forLanguage(languageVersion.getLanguage()) == null) {
+    if (ParserDefinition.forLanguage(languageVersion.getLanguage()) == null) {
       throw new UnsupportedOperationException("Cannot inject language '" + languageVersion.getLanguage() + "' because it has no ParserDefinition");
     }
     myLanguageVersion = languageVersion;
@@ -353,7 +355,7 @@ class InjectionRegistrarImpl implements MultiHostRegistrar {
   }
 
   void injectReference(@Nonnull LanguageVersion languageVersion, @Nonnull String prefix, @Nonnull String suffix, @Nonnull PsiLanguageInjectionHost host, @Nonnull TextRange rangeInsideHost) {
-    ParserDefinition parser = LanguageParserDefinitions.INSTANCE.forLanguage(languageVersion.getLanguage());
+    ParserDefinition parser = ParserDefinition.forLanguage(languageVersion.getLanguage());
     if (parser != null) {
       throw new IllegalArgumentException("Language " + languageVersion + " being injected as reference must not have ParserDefinition and yet - " + parser);
     }
@@ -693,7 +695,7 @@ class InjectionRegistrarImpl implements MultiHostRegistrar {
     ASTNode[] parsedNodes = new ASTNode[languages.size()];
     int i = 0;
     for (Language lang : languages) {
-      ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(lang);
+      ParserDefinition parserDefinition = ParserDefinition.forLanguage(lang);
       assert parserDefinition != null : "Parser definition for language " + finalLanguage + " is null";
       PsiFileImpl psiFile = (PsiFileImpl)parserDefinition.createFile(viewProvider);
       if (lang == languageVersion.getLanguage()) {

@@ -15,11 +15,11 @@
  */
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 import consulo.container.plugin.PluginIds;
 import consulo.codeEditor.action.BackspaceModeOverride;
 
-public class LanguageBackspaceModeOverride extends LanguageExtension<BackspaceModeOverride> {
+public class LanguageBackspaceModeOverride extends OldLanguageExtension<BackspaceModeOverride> {
   public static final LanguageBackspaceModeOverride INSTANCE = new LanguageBackspaceModeOverride();
 
   private LanguageBackspaceModeOverride() {

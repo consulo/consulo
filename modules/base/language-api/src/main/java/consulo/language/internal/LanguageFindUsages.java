@@ -16,7 +16,7 @@
 
 package consulo.language.internal;
 
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 import consulo.container.plugin.PluginIds;
 import consulo.language.findUsage.EmptyFindUsagesProvider;
 import consulo.language.findUsage.FindUsagesProvider;
@@ -24,7 +24,7 @@ import consulo.language.findUsage.FindUsagesProvider;
 /**
  * @author yole
  */
-public class LanguageFindUsages extends LanguageExtension<FindUsagesProvider> {
+public class LanguageFindUsages extends OldLanguageExtension<FindUsagesProvider> {
   public static final LanguageFindUsages INSTANCE = new LanguageFindUsages();
 
   private LanguageFindUsages() {

@@ -15,15 +15,14 @@
  */
 package consulo.ide.impl.idea.codeInsight.completion;
 
-import consulo.language.parser.LanguageParserDefinitions;
-import consulo.language.version.LanguageVersion;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.pattern.PlatformPatterns;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiErrorElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.psi.PsiUtilCore;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.version.LanguageVersion;
 import consulo.util.lang.ThreeState;
 
 import javax.annotation.Nonnull;
@@ -45,7 +44,7 @@ public class SkipAutopopupInStrings extends CompletionConfidence {
   public static boolean isInStringLiteral(PsiElement element) {
     LanguageVersion languageVersion = PsiUtilCore.findLanguageVersionFromElement(element);
 
-    ParserDefinition definition = LanguageParserDefinitions.INSTANCE.forLanguage(languageVersion.getLanguage());
+    ParserDefinition definition = ParserDefinition.forLanguage(languageVersion.getLanguage());
     if (definition == null) {
       return false;
     }

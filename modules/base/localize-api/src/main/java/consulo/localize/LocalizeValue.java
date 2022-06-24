@@ -85,4 +85,6 @@ public interface LocalizeValue extends Supplier<String> {
   default LocalizeValue toLowerCase() {
     return map(DefaultMapFunctions.TO_LOWER_CASE);
   }
+
+  int compareIgnoreCase(@Nonnull LocalizeValue other);
 }

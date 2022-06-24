@@ -20,7 +20,7 @@
 package consulo.ide.impl.idea.lang;
 
 import consulo.language.editor.annotation.ExternalAnnotator;
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 import consulo.language.psi.PsiFile;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.container.plugin.PluginIds;
@@ -28,7 +28,7 @@ import consulo.language.Language;
 
 import java.util.List;
 
-public class ExternalLanguageAnnotators extends LanguageExtension<ExternalAnnotator> {
+public class ExternalLanguageAnnotators extends OldLanguageExtension<ExternalAnnotator> {
 
   private static final ExternalLanguageAnnotators INSTANCE = new ExternalLanguageAnnotators();
 

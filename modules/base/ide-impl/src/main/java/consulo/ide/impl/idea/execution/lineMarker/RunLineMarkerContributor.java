@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.execution.lineMarker;
 
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataContext;
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.psi.PsiElement;
@@ -34,7 +34,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public abstract class RunLineMarkerContributor {
-  static final LanguageExtension<RunLineMarkerContributor> EXTENSION = new LanguageExtension<>(PluginIds.CONSULO_BASE + ".runLineMarkerContributor");
+  static final OldLanguageExtension<RunLineMarkerContributor> EXTENSION = new OldLanguageExtension<>(PluginIds.CONSULO_BASE + ".runLineMarkerContributor");
 
   public static class Info {
     public final Image icon;

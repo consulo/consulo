@@ -16,35 +16,33 @@
 
 package consulo.ide.impl.intelliLang.inject;
 
-import consulo.language.Language;
-import consulo.language.psi.ElementManipulators;
-import consulo.language.parser.LanguageParserDefinitions;
-import consulo.language.parser.ParserDefinition;
-import consulo.language.inject.MultiHostRegistrar;
-import consulo.language.psi.*;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.language.file.FileTypeManager;
-import consulo.language.file.LanguageFileType;
-import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeIdentifiableByVirtualFile;
-import consulo.project.Project;
-import consulo.util.lang.ref.Ref;
 import consulo.document.util.TextRange;
-import consulo.util.lang.Trinity;
+import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeIdentifiableByVirtualFile;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
-import consulo.language.inject.ReferenceInjector;
-import consulo.language.psi.util.PsiTreeUtil;
-import consulo.language.file.light.LightVirtualFile;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.NullableFunction;
 import consulo.ide.impl.idea.util.ObjectUtils;
-import consulo.util.collection.SmartList;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.psi.injection.LanguageInjectionSupport;
-import consulo.ide.impl.psi.injection.LanguageSupportCache;
-import consulo.util.dataholder.Key;
 import consulo.ide.impl.intelliLang.Configuration;
 import consulo.ide.impl.intelliLang.inject.config.BaseInjection;
+import consulo.ide.impl.psi.injection.LanguageInjectionSupport;
+import consulo.ide.impl.psi.injection.LanguageSupportCache;
+import consulo.language.Language;
+import consulo.language.file.FileTypeManager;
+import consulo.language.file.LanguageFileType;
+import consulo.language.file.light.LightVirtualFile;
+import consulo.language.inject.MultiHostRegistrar;
+import consulo.language.inject.ReferenceInjector;
+import consulo.language.inject.impl.internal.InjectedLanguageUtil;
+import consulo.language.parser.ParserDefinition;
+import consulo.language.psi.*;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.project.Project;
+import consulo.util.collection.SmartList;
+import consulo.util.dataholder.Key;
+import consulo.util.lang.Trinity;
+import consulo.util.lang.ref.Ref;
+import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -130,7 +128,7 @@ public class InjectorUtils {
       return;
     }
 
-    ParserDefinition parser = LanguageParserDefinitions.INSTANCE.forLanguage(language);
+    ParserDefinition parser = ParserDefinition.forLanguage(language);
     ReferenceInjector injector = ReferenceInjector.findById(language.getID());
     if (parser == null && injector != null) {
       for (Trinity<PsiLanguageInjectionHost, InjectedLanguage, TextRange> trinity : list) {

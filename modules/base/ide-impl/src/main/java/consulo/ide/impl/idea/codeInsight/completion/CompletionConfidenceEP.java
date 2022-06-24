@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.codeInsight.completion;
 
 import consulo.language.Language;
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 import consulo.language.LanguageExtensionPoint;
 import consulo.container.plugin.PluginIds;
 import consulo.language.editor.completion.CompletionContributor;
@@ -28,7 +28,7 @@ import java.util.List;
  * @author peter
  */
 public class CompletionConfidenceEP extends LanguageExtensionPoint<CompletionContributor> {
-  private static final LanguageExtension<CompletionConfidence> INSTANCE = new LanguageExtension<>(PluginIds.CONSULO_BASE + ".completion.confidence");
+  private static final OldLanguageExtension<CompletionConfidence> INSTANCE = new OldLanguageExtension<>(PluginIds.CONSULO_BASE + ".completion.confidence");
 
   public static List<CompletionConfidence> forLanguage(@Nonnull Language language) {
     return INSTANCE.forKey(language);

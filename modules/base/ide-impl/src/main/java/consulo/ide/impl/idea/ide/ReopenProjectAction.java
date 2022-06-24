@@ -15,22 +15,21 @@
  */
 package consulo.ide.impl.idea.ide;
 
-import consulo.ide.impl.idea.ide.impl.ProjectUtil;
 import consulo.application.dumb.DumbAware;
-import consulo.language.editor.CommonDataKeys;
-import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
+import consulo.ide.impl.idea.ide.impl.ProjectUtil;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.util.lang.BitUtil;
-import consulo.module.impl.internal.layer.ModuleExtensionProviderEP;
-import consulo.module.impl.internal.extension.ModuleExtensionProviders;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.language.editor.CommonDataKeys;
+import consulo.module.content.layer.ModuleExtensionProvider;
+import consulo.project.Project;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.image.Image;
+import consulo.util.lang.BitUtil;
 
 import javax.annotation.Nonnull;
 import java.awt.event.InputEvent;
@@ -92,7 +91,7 @@ public class ReopenProjectAction extends AnAction implements DumbAware {
     Image moduleMainIcon = Image.empty(16);
     if (!extensions.isEmpty()) {
       for (String extensionId : extensions) {
-        ModuleExtensionProviderEP provider = ModuleExtensionProviders.findProvider(extensionId);
+        ModuleExtensionProvider provider = ModuleExtensionProvider.findProvider(extensionId);
         if (provider != null) {
           moduleMainIcon = provider.getIcon();
           break;

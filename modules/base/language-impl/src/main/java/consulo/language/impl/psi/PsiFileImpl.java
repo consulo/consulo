@@ -28,7 +28,6 @@ import consulo.language.impl.internal.psi.*;
 import consulo.language.impl.internal.psi.diff.BlockSupportImpl;
 import consulo.language.psi.stub.StubTreeLoader;
 import consulo.language.psi.PsiFileEx;
-import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.psi.*;
 import consulo.language.psi.internal.PsiFileWithStubSupport;
@@ -268,7 +267,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
 
   @Nullable
   public IStubFileElementType getElementTypeForStubBuilder() {
-    ParserDefinition definition = LanguageParserDefinitions.INSTANCE.forLanguage(getLanguage());
+    ParserDefinition definition = ParserDefinition.forLanguage(getLanguage());
     IFileElementType type = definition == null ? null : definition.getFileNodeType();
     return type instanceof IStubFileElementType ? (IStubFileElementType)type : null;
   }

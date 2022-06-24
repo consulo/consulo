@@ -15,13 +15,13 @@
  */
 package consulo.ide.impl.eap;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
+import consulo.configurable.*;
 import consulo.ide.IdeBundle;
 import consulo.application.Application;
 import consulo.application.eap.EarlyAccessProgramDescriptor;
 import consulo.application.eap.EarlyAccessProgramManager;
-import consulo.configurable.Configurable;
-import consulo.configurable.ConfigurationException;
 import consulo.ui.ex.awt.VerticalFlowLayout;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ui.ex.JBColor;
@@ -32,10 +32,11 @@ import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.VerticalLayoutPanel;
-import consulo.configurable.ConfigurableSession;
 import consulo.ui.annotation.RequiredUIAccess;
+import jakarta.inject.Inject;
 import org.jetbrains.annotations.Nls;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -49,13 +50,27 @@ import java.util.Map;
  * @author VISTALL
  * @since 16:30/15.10.13
  */
-public class EarlyAccessProgramConfigurable implements Configurable, Configurable.NoScroll {
+@ExtensionImpl
+public class EarlyAccessProgramConfigurable implements ApplicationConfigurable, Configurable.NoScroll {
   private Map<EarlyAccessProgramDescriptor, JCheckBox> myCheckBoxes;
 
   private final Application myApplication;
 
+  @Inject
   public EarlyAccessProgramConfigurable(Application application) {
     myApplication = application;
+  }
+
+  @Nonnull
+  @Override
+  public String getId() {
+    return "eap";
+  }
+
+  @Nullable
+  @Override
+  public String getParentId() {
+    return StandardConfigurableIds.PLATFORM_AND_PLUGINS_GROUP;
   }
 
   @Nls
@@ -157,7 +172,7 @@ public class EarlyAccessProgramConfigurable implements Configurable, Configurabl
   public boolean isModified() {
     EarlyAccessProgramManager manager = EarlyAccessProgramManager.getInstance();
 
-    for (EarlyAccessProgramDescriptor descriptor : EarlyAccessProgramDescriptor.EP_NAME.getExtensionList()) {
+    for (EarlyAccessProgramDescriptor descriptor : EarlyAccessProgramDescriptor.EP_NAME.getExtensionList(myApplication)) {
       JCheckBox box = myCheckBoxes.get(descriptor);
 
       if (box.isSelected() != manager.getState(descriptor.getClass())) {
@@ -178,7 +193,7 @@ public class EarlyAccessProgramConfigurable implements Configurable, Configurabl
   public void reset() {
     EarlyAccessProgramManager manager = EarlyAccessProgramManager.getInstance();
 
-    for (EarlyAccessProgramDescriptor descriptor : EarlyAccessProgramDescriptor.EP_NAME.getExtensionList()) {
+    for (EarlyAccessProgramDescriptor descriptor : EarlyAccessProgramDescriptor.EP_NAME.getExtensionList(myApplication)) {
       JCheckBox box = myCheckBoxes.get(descriptor);
 
       box.setSelected(manager.getState(descriptor.getClass()));

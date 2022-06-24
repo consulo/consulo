@@ -15,30 +15,31 @@
  */
 package consulo.ide.impl.idea.codeInsight.completion;
 
-import consulo.language.editor.completion.*;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.dumb.DumbAware;
+import consulo.ide.impl.idea.lang.LanguageWordCompletion;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.psi.impl.cache.impl.id.IdTableBuilding;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.IElementType;
+import consulo.language.editor.completion.CompletionContributor;
+import consulo.language.editor.completion.CompletionParameters;
+import consulo.language.editor.completion.CompletionResultSet;
+import consulo.language.editor.completion.CompletionType;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementBuilder;
-import consulo.language.ast.ASTNode;
 import consulo.language.editor.impl.internal.completion.CompletionData;
 import consulo.language.editor.impl.internal.completion.CompletionUtil;
 import consulo.language.editor.impl.internal.completion.CompletionVariant;
-import consulo.language.psi.ElementManipulators;
-import consulo.language.parser.LanguageParserDefinitions;
-import consulo.ide.impl.idea.lang.LanguageWordCompletion;
-import consulo.language.plain.ast.PlainTextTokenTypes;
 import consulo.language.parser.ParserDefinition;
-import consulo.language.psi.*;
-import consulo.application.dumb.DumbAware;
-import consulo.project.DumbService;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.pattern.ElementPattern;
-import consulo.ide.impl.psi.impl.cache.impl.id.IdTableBuilding;
-import consulo.language.ast.IElementType;
+import consulo.language.plain.ast.PlainTextTokenTypes;
+import consulo.language.psi.*;
 import consulo.language.psi.util.PsiTreeUtil;
-import consulo.annotation.access.RequiredReadAction;
+import consulo.project.DumbService;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -86,7 +87,7 @@ public class WordCompletionContributor extends CompletionContributor implements 
   private static void addValuesFromOtherStringLiterals(CompletionResultSet result,
                                                        CompletionParameters parameters,
                                                        final Set<String> realExcludes, PsiElement position) {
-    ParserDefinition definition = LanguageParserDefinitions.INSTANCE.forLanguage(position.getLanguage());
+    ParserDefinition definition = ParserDefinition.forLanguage(position.getLanguage());
     if (definition == null) {
       return;
     }

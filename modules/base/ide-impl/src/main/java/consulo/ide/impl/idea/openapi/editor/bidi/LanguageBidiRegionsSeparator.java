@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.editor.bidi;
 
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 import consulo.language.ast.IElementType;
 import consulo.container.plugin.PluginIds;
 
@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
 /**
  * @see BidiRegionsSeparator
  */
-public class LanguageBidiRegionsSeparator extends LanguageExtension<BidiRegionsSeparator> {
+public class LanguageBidiRegionsSeparator extends OldLanguageExtension<BidiRegionsSeparator> {
   public static final LanguageBidiRegionsSeparator INSTANCE = new LanguageBidiRegionsSeparator();
 
   private LanguageBidiRegionsSeparator() {

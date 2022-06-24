@@ -15,25 +15,23 @@
  */
 package consulo.module.impl.internal.extension;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
+import consulo.module.content.ModuleRootManager;
+import consulo.module.content.layer.ModuleExtensionProvider;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionHelper;
 import consulo.module.extension.event.ModuleExtensionChangeListener;
-import consulo.module.impl.internal.layer.ModuleExtensionProviderEP;
 import consulo.project.Project;
-import consulo.module.content.ModuleRootManager;
 import consulo.ui.image.Image;
 import consulo.util.collection.MultiMap;
-import consulo.annotation.access.RequiredReadAction;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Map;
 
@@ -87,15 +85,15 @@ public class ModuleExtensionHelperImpl implements ModuleExtensionHelper {
   @Nonnull
   @Override
   public String getModuleExtensionName(@Nonnull ModuleExtension<?> moduleExtension) {
-    final ModuleExtensionProviderEP provider = ModuleExtensionProviders.findProvider(moduleExtension.getId());
+    final ModuleExtensionProvider provider = ModuleExtensionProvider.findProvider(moduleExtension.getId());
     assert provider != null;
-    return provider.getName();
+    return provider.getName().getValue();
   }
 
   @Nullable
   @Override
   public Image getModuleExtensionIcon(@Nonnull String extensionId) {
-    ModuleExtensionProviderEP provider = ModuleExtensionProviders.findProvider(extensionId);
+    ModuleExtensionProvider provider = ModuleExtensionProvider.findProvider(extensionId);
     return provider == null ? null : provider.getIcon();
   }
 

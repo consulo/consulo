@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.language.extension;
 
-package consulo.ide.impl.idea.ide.hierarchy;
+import consulo.language.Language;
 
-import consulo.language.OldLanguageExtension;
-import consulo.container.plugin.PluginIds;
+import javax.annotation.Nonnull;
 
 /**
- * Provides language-specific implementations of method hierarchy providers.
- *
- * @author yole
+ * @author VISTALL
+ * @since 24-Jun-22
  */
-public class LanguageMethodHierarchy extends OldLanguageExtension<HierarchyProvider> {
-  public static final LanguageMethodHierarchy INSTANCE = new LanguageMethodHierarchy();
-
-  public LanguageMethodHierarchy() {
-    super(PluginIds.CONSULO_BASE + ".methodHierarchyProvider");
-  }
+public interface LanguageExtension {
+  @Nonnull
+  Language getLanguage();
 }

@@ -34,7 +34,7 @@ import consulo.ui.ex.awt.dnd.DnDManager;
 import consulo.ui.ex.awt.dnd.DnDSource;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.dataContext.DataContext;
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ComboBoxAction;
 import consulo.application.ApplicationManager;
 import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
@@ -579,12 +579,12 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
     private final String myActionId;
     private final Key<?> myBrowserDataKey;
     @Nonnull
-    private final LanguageExtension<HierarchyProvider> myProviderLanguageExtension;
+    private final OldLanguageExtension<HierarchyProvider> myProviderLanguageExtension;
 
     BaseOnThisElementAction(@Nonnull String text,
                             @Nonnull String actionId,
                             @Nonnull Key<?> browserDataKey,
-                            @Nonnull LanguageExtension<HierarchyProvider> providerLanguageExtension) {
+                            @Nonnull OldLanguageExtension<HierarchyProvider> providerLanguageExtension) {
       super(text);
       myActionId = actionId;
       myBrowserDataKey = browserDataKey;

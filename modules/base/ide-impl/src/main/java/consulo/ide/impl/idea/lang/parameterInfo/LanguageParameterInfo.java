@@ -16,13 +16,13 @@
 
 package consulo.ide.impl.idea.lang.parameterInfo;
 
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 import consulo.container.plugin.PluginIds;
 
 /**
  * @author yole
  */
-public class LanguageParameterInfo extends LanguageExtension<ParameterInfoHandler> {
+public class LanguageParameterInfo extends OldLanguageExtension<ParameterInfoHandler> {
   public static final LanguageParameterInfo INSTANCE = new LanguageParameterInfo();
 
   private LanguageParameterInfo() {

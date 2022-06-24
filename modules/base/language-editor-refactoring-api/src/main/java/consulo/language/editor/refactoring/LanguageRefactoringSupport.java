@@ -20,9 +20,9 @@
 package consulo.language.editor.refactoring;
 
 import consulo.container.plugin.PluginIds;
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 
-public class LanguageRefactoringSupport extends LanguageExtension<RefactoringSupportProvider> {
+public class LanguageRefactoringSupport extends OldLanguageExtension<RefactoringSupportProvider> {
   public static final LanguageRefactoringSupport INSTANCE = new LanguageRefactoringSupport();
 
   private LanguageRefactoringSupport() {

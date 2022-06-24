@@ -20,11 +20,11 @@
  */
 package consulo.ide.impl.idea.codeInsight.hint;
 
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 import consulo.container.plugin.PluginIds;
 import consulo.language.editor.ImplementationTextSelectioner;
 
-public class LanguageImplementationTextSelectioner extends LanguageExtension<ImplementationTextSelectioner>{
+public class LanguageImplementationTextSelectioner extends OldLanguageExtension<ImplementationTextSelectioner> {
   public static final LanguageImplementationTextSelectioner INSTANCE = new LanguageImplementationTextSelectioner();
 
   public LanguageImplementationTextSelectioner() {

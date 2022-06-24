@@ -14,21 +14,5 @@
   - limitations under the License.
   -->
 <consulo-plugin>
-  <extensionPoints>
-    <extensionPoint name="eapDescriptor" interface="consulo.application.eap.EarlyAccessProgramDescriptor"/>
-  </extensionPoints>
 
-  <extensions defaultExtensionNs="consulo">
-    <eapDescriptor implementation="consulo.ide.impl.diagram.actions.ShowDiagramAction$DiagramSupport"/>
-    <eapDescriptor implementation="consulo.ui.ex.awt.internal.ModalityPerProjectEAPDescriptor"/>
-    <eapDescriptor implementation="consulo.ide.impl.eap.plugins.ExperimentalPluginsDescriptor"/>
-    <eapDescriptor implementation="consulo.application.impl.internal.start.PluginPermissionEarlyAccessProgramDescriptor"/>
-
-    <applicationConfigurable parentId="platformAndPlugins"
-                             id="eap"
-                             bundle="consulo.ide.IdeBundle"
-                             key="eap.configurable.name"
-                             instance="consulo.ide.impl.eap.EarlyAccessProgramConfigurable"/>
-    <applicationService serviceImplementation="consulo.application.eap.EarlyAccessProgramManager"/>
-  </extensions>
 </consulo-plugin>

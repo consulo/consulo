@@ -15,6 +15,7 @@
  */
 package consulo.sandboxPlugin.ide.toolwindow;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.ide.impl.idea.ide.actions.ToolWindowTabRenameActionBase;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -39,6 +40,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 19.03.14
  */
+@ExtensionImpl
 public class SandToolWindowFactory implements ToolWindowFactory {
   @Nonnull
   @Override

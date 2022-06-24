@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.language.extension;
 
-/*
- * @author max
+import consulo.language.Language;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+/**
+ * @author VISTALL
+ * @since 24-Jun-22
  */
-package consulo.language.parser;
-
-import consulo.container.plugin.PluginIds;
-import consulo.language.LanguageExtension;
-
-public class LanguageParserDefinitions extends LanguageExtension<ParserDefinition> {
-  public static final LanguageParserDefinitions INSTANCE = new LanguageParserDefinitions();
-
-  private LanguageParserDefinitions() {
-    super(PluginIds.CONSULO_BASE + ".lang.parserDefinition");
-  }
+public interface ByLanguageValue<V> {
+  @Nullable
+  V get(@Nonnull Language language);
 }

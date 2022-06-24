@@ -19,7 +19,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.language.Language;
 import consulo.language.ast.IFileElementType;
 import consulo.language.file.LanguageFileType;
-import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.internal.PsiFileWithStubSupport;
@@ -72,7 +71,7 @@ public class CoreStubTreeLoader extends StubTreeLoader {
     final FileType fileType = file.getFileType();
     if (fileType instanceof LanguageFileType) {
       Language l = ((LanguageFileType)fileType).getLanguage();
-      ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(l);
+      ParserDefinition parserDefinition = ParserDefinition.forLanguage(l);
       if (parserDefinition == null) return false;
       final IFileElementType elementType = parserDefinition.getFileNodeType();
       return elementType instanceof IStubFileElementType && ((IStubFileElementType)elementType).shouldBuildStubFor(file);

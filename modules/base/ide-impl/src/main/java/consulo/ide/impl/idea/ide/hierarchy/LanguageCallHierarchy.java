@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.ide.hierarchy;
 
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 import consulo.container.plugin.PluginIds;
 
 /**
@@ -24,7 +24,7 @@ import consulo.container.plugin.PluginIds;
  *
  * @author yole
  */
-public class LanguageCallHierarchy extends LanguageExtension<HierarchyProvider> {
+public class LanguageCallHierarchy extends OldLanguageExtension<HierarchyProvider> {
   public static final LanguageCallHierarchy INSTANCE = new LanguageCallHierarchy();
 
   public LanguageCallHierarchy() {

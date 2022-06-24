@@ -18,7 +18,6 @@ import consulo.language.impl.internal.psi.*;
 import consulo.language.impl.plain.PsiPlainTextFileImpl;
 import consulo.language.impl.psi.*;
 import consulo.language.psi.PsiFileEx;
-import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
@@ -131,7 +130,7 @@ public abstract class AbstractFileViewProvider extends UserDataHolderBase implem
   @Nullable
   protected PsiFile createFile(@Nonnull Language lang) {
     if (lang != getBaseLanguage()) return null;
-    final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(lang);
+    final ParserDefinition parserDefinition = ParserDefinition.forLanguage(lang);
     if (parserDefinition != null) {
       return parserDefinition.createFile(this);
     }

@@ -15,39 +15,41 @@
  */
 package consulo.compiler.artifact;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
+import consulo.application.Application;
 import consulo.compiler.artifact.element.*;
 import consulo.compiler.artifact.ui.ArtifactProblemsHolder;
 import consulo.compiler.artifact.ui.PackagingSourceItem;
+import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.component.extension.ExtensionPointName;
 import consulo.module.content.layer.ModulesProvider;
 import consulo.ui.image.Image;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author nik
  */
+@Extension(ComponentScope.APPLICATION)
 public abstract class ArtifactType {
-  @Nullable
-  public static ArtifactType findById(@Nonnull @NonNls String id) {
-    for (ArtifactType type : EP_NAME.getExtensionList()) {
-      if (id.equals(type.getId())) {
-        return type;
-      }
-    }
-    return null;
-  }
+  private static final ExtensionPointCacheKey<ArtifactType, Map<String, ArtifactType>> GROUP = ExtensionPointCacheKey.groupBy("GroupArtifactType", ArtifactType::getId);
 
+  @Nullable
+  public static ArtifactType findById(@Nonnull String id) {
+    Map<String, ArtifactType> map = Application.get().getExtensionPoint(ArtifactType.class).getOrBuildCache(GROUP);
+    return map.get(id);
+  }
 
   public static final ExtensionPointName<ArtifactType> EP_NAME = ExtensionPointName.create("consulo.packaging.artifactType");
   private final String myId;
   private final String myTitle;
 
-  protected ArtifactType(@NonNls String id, String title) {
+  protected ArtifactType(String id, String title) {
     myId = id;
     myTitle = title;
   }

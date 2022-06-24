@@ -15,23 +15,23 @@
  */
 package consulo.ide.impl.roots.ui.configuration.extension;
 
-import consulo.module.content.layer.ModifiableRootModel;
-import consulo.ide.setting.module.ModuleConfigurationState;
+import consulo.application.Application;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.ui.CheckedTreeNode;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.module.extension.ModuleExtension;
-import consulo.module.impl.internal.layer.ModuleExtensionProviderEP;
-import consulo.module.impl.internal.extension.ModuleExtensionProviders;
-import consulo.module.extension.MutableModuleExtension;
 import consulo.ide.impl.roots.ui.configuration.ExtensionEditor;
+import consulo.ide.setting.module.ModuleConfigurationState;
+import consulo.module.content.layer.ModifiableRootModel;
+import consulo.module.content.layer.ModuleExtensionProvider;
+import consulo.module.extension.ModuleExtension;
+import consulo.module.extension.MutableModuleExtension;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.tree.TreeNode;
-import java.util.*;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Vector;
 
 /**
  * @author VISTALL
@@ -43,40 +43,38 @@ public class ExtensionCheckedTreeNode extends CheckedTreeNode {
 
     @Override
     public int compare(TreeNode o1, TreeNode o2) {
-      final ModuleExtensionProviderEP i1 = ((ExtensionCheckedTreeNode)o1).myProviderEP;
-      final ModuleExtensionProviderEP i2 = ((ExtensionCheckedTreeNode)o2).myProviderEP;
-      return StringUtil.compare(i1.getName(), i2.getName(), true);
+      final ModuleExtensionProvider i1 = ((ExtensionCheckedTreeNode)o1).myProvider;
+      final ModuleExtensionProvider i2 = ((ExtensionCheckedTreeNode)o2).myProvider;
+      return i1.getName().compareIgnoreCase(i2.getName());
     }
   }
 
-  private final ModuleExtensionProviderEP myProviderEP;
+  private final ModuleExtensionProvider myProvider;
   @Nonnull
   private final ModuleConfigurationState myState;
   private final ExtensionEditor myExtensionEditor;
   private MutableModuleExtension<?> myExtension;
 
-  public ExtensionCheckedTreeNode(@Nullable ModuleExtensionProviderEP providerEP,
-                                  @Nonnull ModuleConfigurationState state,
-                                  ExtensionEditor extensionEditor) {
+  public ExtensionCheckedTreeNode(@Nullable ModuleExtensionProvider moduleExtensionProvider, @Nonnull ModuleConfigurationState state, ExtensionEditor extensionEditor) {
     super(null);
-    myProviderEP = providerEP;
+    myProvider = moduleExtensionProvider;
     myState = state;
     myExtensionEditor = extensionEditor;
 
-    String parentKey = null;
-    if (providerEP != null) {
-      parentKey = providerEP.key;
+    String parentId = null;
+    if (moduleExtensionProvider != null) {
+      parentId = moduleExtensionProvider.getId();
 
       final ModifiableRootModel model = state.getRootModel();
       if (model != null) {
-        myExtension = model.getExtensionWithoutCheck(providerEP.getKey());
+        myExtension = model.getExtensionWithoutCheck(moduleExtensionProvider.getId());
       }
     }
 
     setAllowsChildren(true);
     Vector<TreeNode> child = new Vector<>();
-    for (ModuleExtensionProviderEP ep : ModuleExtensionProviders.getProviders()) {
-      if (Comparing.equal(ep.parentKey, parentKey)) {
+    for (ModuleExtensionProvider ep : Application.get().getExtensionPoint(ModuleExtensionProvider.class).getExtensionList()) {
+      if (Comparing.equal(ep.getParentId(), parentId)) {
         final ExtensionCheckedTreeNode e = new ExtensionCheckedTreeNode(ep, state, myExtensionEditor);
         e.setParent(this);
 
@@ -108,14 +106,14 @@ public class ExtensionCheckedTreeNode extends CheckedTreeNode {
   @Override
   public boolean isEnabled() {
     // if extension not found dont allow manage it
-    if(myExtension == null) {
+    if (myExtension == null) {
       return false;
     }
-    if (myProviderEP != null && myProviderEP.allowMixin) {
+    if (myProvider != null && myProvider.isAllowMixin()) {
       return true;
     }
 
-    if(myProviderEP != null && myProviderEP.systemOnly) {
+    if (myProvider != null && myProvider.isSystemOnly()) {
       return false;
     }
 
@@ -124,34 +122,35 @@ public class ExtensionCheckedTreeNode extends CheckedTreeNode {
       return false;
     }
 
-    final ModuleExtensionProviderEP absoluteParent = findParentWithoutParent(myExtension.getId());
+    final ModuleExtensionProvider absoluteParent = findParentWithoutParent(myExtension.getId());
 
-    final ModuleExtension extension = rootModel.getExtension(absoluteParent.getKey());
+    final ModuleExtension extension = rootModel.getExtension(absoluteParent.getId());
     if (extension != null) {
       return true;
     }
 
     // if no nodes checked - it enabled
-    for (ModuleExtensionProviderEP ep : ModuleExtensionProviders.getProviders()) {
-      if (ep.parentKey != null) {
+    for (ModuleExtensionProvider ep : Application.get().getExtensionPoint(ModuleExtensionProvider.class).getExtensionList()) {
+      if (ep.getParentId() != null) {
         continue;
       }
-      final ModuleExtension tempExtension = rootModel.getExtension(ep.getKey());
+      final ModuleExtension tempExtension = rootModel.getExtension(ep.getId());
       if (tempExtension != null) {
         return false;
       }
-    } return true;
+    }
+    return true;
   }
 
   @Nonnull
-  private static ModuleExtensionProviderEP findParentWithoutParent(String id) {
-    for (ModuleExtensionProviderEP ep : ModuleExtensionProviders.getProviders()) {
-      if (ep.key.equals(id)) {
-        if (ep.parentKey == null) {
+  private static ModuleExtensionProvider findParentWithoutParent(String id) {
+    for (ModuleExtensionProvider ep : Application.get().getExtensionPoint(ModuleExtensionProvider.class).getExtensionList()) {
+      if (ep.getId().equals(id)) {
+        if (ep.getParentId() == null) {
           return ep;
         }
         else {
-          return findParentWithoutParent(ep.parentKey);
+          return findParentWithoutParent(ep.getParentId());
         }
       }
     }
@@ -159,8 +158,8 @@ public class ExtensionCheckedTreeNode extends CheckedTreeNode {
   }
 
   @Nullable
-  public ModuleExtensionProviderEP getProviderEP() {
-    return myProviderEP;
+  public ModuleExtensionProvider getProvider() {
+    return myProvider;
   }
 
   @Nullable

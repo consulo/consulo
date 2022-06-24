@@ -20,7 +20,6 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.IElementTypeAsPsiFactory;
-import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiElementFactory;
@@ -43,7 +42,7 @@ public class DefaultPsiElementFactory implements PsiElementFactory {
       return ((IElementTypeAsPsiFactory)elementType).createElement(node);
     }
 
-    final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(elementType.getLanguage());
+    final ParserDefinition parserDefinition = ParserDefinition.forLanguage(elementType.getLanguage());
     if (parserDefinition != null) {
       return parserDefinition.createElement(node);
     }

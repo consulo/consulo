@@ -16,13 +16,13 @@
 package consulo.language.version;
 
 import consulo.container.plugin.PluginIds;
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 
 /**
  * @author VISTALL
  * @since 18:04/30.05.13
  */
-public class LanguageVersionResolvers extends LanguageExtension<LanguageVersionResolver> {
+public class LanguageVersionResolvers extends OldLanguageExtension<LanguageVersionResolver> {
   public static final LanguageVersionResolvers INSTANCE = new LanguageVersionResolvers();
 
   private LanguageVersionResolvers() {

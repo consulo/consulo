@@ -13,7 +13,7 @@ import consulo.ide.impl.idea.util.PathUtil;
 import consulo.application.util.function.Computable;
 import consulo.container.plugin.PluginIds;
 import consulo.language.Language;
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 import consulo.language.editor.scratch.ScratchFileService;
 import consulo.language.file.LanguageFileType;
 import consulo.language.psi.PsiFile;
@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
  * @author gregsh
  */
 public abstract class ScratchFileCreationHelper {
-  public static final LanguageExtension<ScratchFileCreationHelper> EXTENSION = new LanguageExtension<>(PluginIds.CONSULO_BASE + ".scratch.creationHelper", new ScratchFileCreationHelper() {
+  public static final OldLanguageExtension<ScratchFileCreationHelper> EXTENSION = new OldLanguageExtension<>(PluginIds.CONSULO_BASE + ".scratch.creationHelper", new ScratchFileCreationHelper() {
   });
 
   /**

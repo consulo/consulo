@@ -15,6 +15,7 @@
  */
 package consulo.sandboxPlugin.ide.compiler;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.compiler.CompileContext;
 import consulo.compiler.scope.CompileScope;
 import consulo.compiler.CompilerMessageCategory;
@@ -31,6 +32,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 17.05.14
  */
+@ExtensionImpl
 public class SandCompiler implements TranslatingCompiler {
   private boolean myAddError = false;
 

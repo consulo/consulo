@@ -16,31 +16,29 @@
 package consulo.ide.impl.psi.stubs;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.ReadAction;
+import consulo.component.ProcessCanceledException;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.FileAttribute;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.NewVirtualFile;
-import consulo.util.lang.BitUtil;
 import consulo.ide.impl.idea.util.indexing.*;
 import consulo.ide.impl.idea.util.indexing.impl.DebugAssertions;
 import consulo.ide.impl.idea.util.indexing.impl.IndexStorage;
 import consulo.ide.impl.idea.util.indexing.impl.InputDataDiffBuilder;
 import consulo.ide.impl.idea.util.indexing.impl.forward.EmptyForwardIndex;
 import consulo.ide.impl.idea.util.io.PersistentHashMapValueStorage;
-import consulo.application.ReadAction;
-import consulo.component.ProcessCanceledException;
 import consulo.index.io.ID;
 import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.data.DataInputOutputUtil;
 import consulo.language.Language;
 import consulo.language.ast.IFileElementType;
 import consulo.language.file.LanguageFileType;
-import consulo.language.psi.stub.IndexingStampInfo;
 import consulo.language.impl.internal.psi.stub.SubstitutedFileType;
-import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.psi.stub.*;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
+import consulo.util.lang.BitUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.inject.Inject;
@@ -75,7 +73,7 @@ public class StubUpdatingIndex extends SingleEntryFileBasedIndexExtension<Serial
     FileType fileType = SubstitutedFileType.substituteFileType(file, file.getFileType(), project == null ? projectLocator.guessProjectForFile(file) : project);
     if (fileType instanceof LanguageFileType) {
       final Language l = ((LanguageFileType)fileType).getLanguage();
-      final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(l);
+      final ParserDefinition parserDefinition = ParserDefinition.forLanguage(l);
       if (parserDefinition == null) {
         return false;
       }

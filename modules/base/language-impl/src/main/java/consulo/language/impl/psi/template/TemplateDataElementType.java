@@ -6,20 +6,20 @@ import consulo.application.progress.ProgressManager;
 import consulo.container.plugin.PluginIds;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 import consulo.language.ast.*;
 import consulo.language.file.FileViewProvider;
 import consulo.language.file.LanguageFileType;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.language.impl.DebugUtil;
 import consulo.language.impl.ast.FileElement;
+import consulo.language.impl.ast.SharedImplUtil;
 import consulo.language.impl.ast.TreeElement;
 import consulo.language.impl.ast.TreeUtil;
 import consulo.language.impl.file.SingleRootFileViewProvider;
-import consulo.language.impl.ast.SharedImplUtil;
 import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.lexer.Lexer;
-import consulo.language.parser.LanguageParserDefinitions;
+import consulo.language.parser.ParserDefinition;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.language.template.ITemplateDataElementType;
@@ -44,7 +44,7 @@ import java.util.function.Supplier;
  */
 public class TemplateDataElementType extends IFileElementType implements ITemplateDataElementType {
   private static final int CHECK_PROGRESS_AFTER_TOKENS = 1000;
-  public static final LanguageExtension<TreePatcher> TREE_PATCHER = new LanguageExtension<>(PluginIds.CONSULO_BASE + ".lang.treePatcher", new SimpleTreePatcher());
+  public static final OldLanguageExtension<TreePatcher> TREE_PATCHER = new OldLanguageExtension<>(PluginIds.CONSULO_BASE + ".lang.treePatcher", new SimpleTreePatcher());
 
   @Nonnull
   private final IElementType myTemplateElementType;
@@ -62,7 +62,7 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
   protected Lexer createBaseLexer(PsiFile file, TemplateLanguageFileViewProvider viewProvider) {
     final Language baseLanguage = viewProvider.getBaseLanguage();
     final LanguageVersion languageVersion = LanguageVersionResolvers.INSTANCE.forLanguage(baseLanguage).getLanguageVersion(baseLanguage, file);
-    return LanguageParserDefinitions.INSTANCE.forLanguage(viewProvider.getBaseLanguage()).createLexer(languageVersion);
+    return ParserDefinition.forLanguage(viewProvider.getBaseLanguage()).createLexer(languageVersion);
   }
 
   protected LanguageFileType createTemplateFakeFileType(final Language language) {
@@ -383,7 +383,7 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
    */
   public interface OuterLanguageRangePatcher {
 
-    LanguageExtension<OuterLanguageRangePatcher> EXTENSION = new LanguageExtension<>(PluginIds.CONSULO_BASE + ".outerLanguageRangePatcher");
+    OldLanguageExtension<OuterLanguageRangePatcher> EXTENSION = new OldLanguageExtension<>(PluginIds.CONSULO_BASE + ".outerLanguageRangePatcher");
 
     /**
      * @return Text to be inserted for parsing in outer element insertion ranges provided by

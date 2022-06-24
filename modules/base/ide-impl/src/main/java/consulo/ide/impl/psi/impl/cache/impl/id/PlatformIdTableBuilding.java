@@ -34,7 +34,6 @@ import consulo.language.editor.highlight.HighlighterFactory;
 import consulo.language.editor.highlight.LexerEditorHighlighter;
 import consulo.language.file.LanguageFileType;
 import consulo.language.impl.internal.psi.stub.SubstitutedFileType;
-import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.psi.search.IndexPattern;
 import consulo.language.psi.stub.FileContent;
@@ -79,7 +78,7 @@ public abstract class PlatformIdTableBuilding {
 
     if (fileType instanceof LanguageFileType) {
       final Language lang = ((LanguageFileType)fileType).getLanguage();
-      final ParserDefinition parserDef = LanguageParserDefinitions.INSTANCE.forLanguage(lang);
+      final ParserDefinition parserDef = ParserDefinition.forLanguage(lang);
       LanguageVersion languageVersion = LanguageVersionUtil.findLanguageVersion(lang, project, virtualFile);
       final TokenSet commentTokens = parserDef != null ? parserDef.getCommentTokens(languageVersion) : null;
       if (commentTokens != null) {

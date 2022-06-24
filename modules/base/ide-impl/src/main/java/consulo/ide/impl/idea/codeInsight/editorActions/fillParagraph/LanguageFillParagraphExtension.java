@@ -1,12 +1,12 @@
 package consulo.ide.impl.idea.codeInsight.editorActions.fillParagraph;
 
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 import consulo.container.plugin.PluginIds;
 
 /**
  * User : ktisha
  */
-public class LanguageFillParagraphExtension extends LanguageExtension<ParagraphFillHandler> {
+public class LanguageFillParagraphExtension extends OldLanguageExtension<ParagraphFillHandler> {
 
   public static final LanguageFillParagraphExtension INSTANCE = new LanguageFillParagraphExtension();
 

@@ -20,36 +20,35 @@
 package consulo.language.impl.internal.psi;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.language.file.FileViewProvider;
-import consulo.language.file.FileViewProviderFactory;
-import consulo.language.file.LanguageFileViewProviders;
-import consulo.language.impl.file.SingleRootFileViewProvider;
-import consulo.language.lexer.Lexer;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
-import consulo.language.parser.LanguageParserDefinitions;
+import consulo.language.ast.IElementType;
+import consulo.language.file.FileViewProvider;
+import consulo.language.file.FileViewProviderFactory;
+import consulo.language.file.LanguageFileType;
+import consulo.language.file.LanguageFileViewProviders;
+import consulo.language.file.light.LightVirtualFile;
+import consulo.language.impl.ast.FileElement;
+import consulo.language.impl.ast.TreeElement;
+import consulo.language.impl.file.SingleRootFileViewProvider;
+import consulo.language.impl.plain.PsiPlainTextFileImpl;
+import consulo.language.impl.psi.CodeEditUtil;
+import consulo.language.impl.psi.DummyHolder;
+import consulo.language.impl.psi.DummyHolderFactory;
+import consulo.language.lexer.Lexer;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.parser.PsiBuilder;
 import consulo.language.parser.PsiBuilderFactory;
 import consulo.language.psi.*;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.virtualFileSystem.fileType.FileTypeRegistry;
-import consulo.language.file.LanguageFileType;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.impl.psi.DummyHolder;
-import consulo.language.impl.psi.DummyHolderFactory;
-import consulo.language.impl.plain.PsiPlainTextFileImpl;
-import consulo.language.impl.psi.CodeEditUtil;
-import consulo.language.impl.ast.FileElement;
-import consulo.language.impl.ast.TreeElement;
-import consulo.language.ast.IElementType;
-import consulo.language.file.light.LightVirtualFile;
-import consulo.util.lang.CharSequenceSubSequence;
 import consulo.language.version.LanguageVersion;
 import consulo.language.version.LanguageVersionUtil;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.util.lang.CharSequenceSubSequence;
 import consulo.util.lang.LocalTimeCounter;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -177,7 +176,7 @@ public class PsiFileFactoryImpl extends PsiFileFactory {
     if (viewProvider == null) viewProvider = new SingleRootFileViewProvider(myManager, virtualFile, physical);
 
     language = viewProvider.getBaseLanguage();
-    final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(language);
+    final ParserDefinition parserDefinition = ParserDefinition.forLanguage(language);
     if (parserDefinition != null) {
       final PsiFile psiFile = viewProvider.getPsi(language);
       if (psiFile != null) {
@@ -202,7 +201,7 @@ public class PsiFileFactoryImpl extends PsiFileFactory {
                                     boolean markAsCopy) {
     final LightVirtualFile virtualFile = new LightVirtualFile(name, fileType, text, modificationStamp);
 
-    final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(language);
+    final ParserDefinition parserDefinition = ParserDefinition.forLanguage(language);
     final FileViewProviderFactory factory = LanguageFileViewProviders.INSTANCE.forLanguage(language);
     FileViewProvider viewProvider = factory != null ? factory.createFileViewProvider(virtualFile, language, myManager, physical) : null;
     if (viewProvider == null) viewProvider = new SingleRootFileViewProvider(myManager, virtualFile, physical);
@@ -268,7 +267,7 @@ public class PsiFileFactoryImpl extends PsiFileFactory {
     final DummyHolder result = DummyHolderFactory.createHolder(myManager, language, context);
     final FileElement holder = result.getTreeElement();
 
-    final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(language);
+    final ParserDefinition parserDefinition = ParserDefinition.forLanguage(language);
     if (parserDefinition == null) {
       throw new AssertionError("No parser definition for " + language);
     }

@@ -21,9 +21,9 @@ package consulo.ide.impl.idea.lang;
 
 import consulo.language.editor.annotation.Annotator;
 import consulo.container.plugin.PluginIds;
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 
-public class LanguageAnnotators extends LanguageExtension<Annotator> {
+public class LanguageAnnotators extends OldLanguageExtension<Annotator> {
   public static final LanguageAnnotators INSTANCE = new LanguageAnnotators();
 
   private LanguageAnnotators() {

@@ -16,7 +16,7 @@
 package consulo.language.findUsage;
 
 import consulo.language.Language;
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 import consulo.language.cacheBuilder.SimpleWordsScanner;
 import consulo.language.cacheBuilder.WordsScanner;
 import consulo.language.psi.PsiElement;
@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
  * Defines the support for the "Find Usages" feature in a custom language.
  *
  * @author max
- * @see LanguageExtension#forLanguage(Language)
+ * @see OldLanguageExtension#forLanguage(Language)
  */
 public interface FindUsagesProvider {
 

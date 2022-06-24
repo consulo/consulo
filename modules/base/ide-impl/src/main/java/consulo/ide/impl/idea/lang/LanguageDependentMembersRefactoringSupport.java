@@ -18,12 +18,12 @@ package consulo.ide.impl.idea.lang;
 
 import consulo.ide.impl.idea.refactoring.classMembers.ClassMembersRefactoringSupport;
 import consulo.container.plugin.PluginIds;
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 
 /**
  * @author Dennis.Ushakov
  */
-public class LanguageDependentMembersRefactoringSupport extends LanguageExtension<ClassMembersRefactoringSupport> {
+public class LanguageDependentMembersRefactoringSupport extends OldLanguageExtension<ClassMembersRefactoringSupport> {
   public static final LanguageDependentMembersRefactoringSupport INSTANCE = new LanguageDependentMembersRefactoringSupport();
 
   private LanguageDependentMembersRefactoringSupport() {

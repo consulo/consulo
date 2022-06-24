@@ -22,7 +22,7 @@ import consulo.ui.image.Image;
  * @author VISTALL
  * @since 12:27/08.10.13
  */
-public class LanguageElementIcons extends LanguageExtension<Image> {
+public class LanguageElementIcons extends OldLanguageExtension<Image> {
   public static final LanguageElementIcons INSTANCE = new LanguageElementIcons();
 
   public LanguageElementIcons() {

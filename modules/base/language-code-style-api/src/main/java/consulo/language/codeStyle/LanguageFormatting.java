@@ -19,7 +19,7 @@
  */
 package consulo.language.codeStyle;
 
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 import consulo.language.psi.PsiElement;
 import consulo.container.plugin.PluginIds;
 import consulo.language.Language;
@@ -27,7 +27,7 @@ import consulo.language.Language;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class LanguageFormatting extends LanguageExtension<FormattingModelBuilder> {
+public class LanguageFormatting extends OldLanguageExtension<FormattingModelBuilder> {
   public static final LanguageFormatting INSTANCE = new LanguageFormatting();
 
   private LanguageFormatting() {

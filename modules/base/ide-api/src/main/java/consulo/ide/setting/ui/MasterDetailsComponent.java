@@ -265,9 +265,13 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
 
   @RequiredUIAccess
   @Override
-  public JComponent createComponent(@Nonnull Disposable parentUIDisposable) {
+  public void initialize() {
     myDisposable = Disposable.newDisposable();
+  }
 
+  @RequiredUIAccess
+  @Override
+  public JComponent createComponent(@Nonnull Disposable parentUIDisposable) {
     reInitWholePanelIfNeeded();
 
     updateSelectionFromTree();
@@ -414,9 +418,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
     XmlSerializerUtil.copyBean(object, myState);
   }
 
-  @RequiredUIAccess
-  @Override
-  public void disposeUIResources() {
+  protected void resetUI() {
     myState.getProportions().saveSplitterProportions(myWholePanel);
     myAutoScrollHandler.cancelAllRequests();
     myDetails.disposeUIResources();
@@ -428,6 +430,12 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
       stateService.setComponentState(key, getState());
     }
     myCurrentConfigurable = null;
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void disposeUIResources() {
+    resetUI();
 
     if (myDisposable != null) {
       Disposer.dispose(myDisposable);

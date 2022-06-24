@@ -24,7 +24,6 @@ import consulo.language.file.FileViewProvider;
 import consulo.language.file.LanguageFileType;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.language.lexer.Lexer;
-import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.psi.LanguageSubstitutor;
 import consulo.language.psi.LanguageSubstitutors;
@@ -41,10 +40,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public final class LanguageUtil {
   public static final Comparator<Language> LANGUAGE_COMPARATOR = (o1, o2) -> StringUtil.naturalCompare(o1.getDisplayName(), o2.getDisplayName());
@@ -141,7 +137,7 @@ public final class LanguageUtil {
     if (language instanceof TemplateLanguage) {
       return false;
     }
-    if (LanguageParserDefinitions.INSTANCE.forLanguage(language) == null) {
+    if (ParserDefinition.forLanguage(language) == null) {
       return false;
     }
     return true;
@@ -149,7 +145,7 @@ public final class LanguageUtil {
 
   public static boolean isFileLanguage(@Nonnull Language language) {
     if (language instanceof InjectableLanguage) return false;
-    if (LanguageParserDefinitions.INSTANCE.forLanguage(language) == null) return false;
+    if (ParserDefinition.forLanguage(language) == null) return false;
     LanguageFileType type = language.getAssociatedFileType();
     if (type == null || StringUtil.isEmpty(type.getDefaultExtension())) return false;
     String name = language.getDisplayName();
@@ -159,7 +155,7 @@ public final class LanguageUtil {
 
   @Nonnull
   public static List<Language> getFileLanguages() {
-    List<Language> result = ContainerUtil.newArrayList();
+    List<Language> result = new ArrayList<>();
     for (Language language : Language.getRegisteredLanguages()) {
       if (!isFileLanguage(language)) continue;
       result.add(language);

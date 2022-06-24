@@ -17,12 +17,11 @@ package consulo.language.impl.internal.psi;
 
 import consulo.container.plugin.PluginIds;
 import consulo.language.Language;
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.TokenSeparatorGenerator;
 import consulo.language.ast.TokenType;
 import consulo.language.impl.ast.Factory;
-import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.PsiUtilCore;
@@ -30,7 +29,7 @@ import consulo.language.psi.PsiUtilCore;
 /**
  * @author yole
  */
-public class LanguageTokenSeparatorGenerators extends LanguageExtension<TokenSeparatorGenerator> {
+public class LanguageTokenSeparatorGenerators extends OldLanguageExtension<TokenSeparatorGenerator> {
   public static final LanguageTokenSeparatorGenerators INSTANCE = new LanguageTokenSeparatorGenerators();
 
   private LanguageTokenSeparatorGenerators() {
@@ -42,7 +41,7 @@ public class LanguageTokenSeparatorGenerators extends LanguageExtension<TokenSep
         if (rightLang.isKindOf(l)) {
           l = rightLang; // get more precise lexer
         }
-        final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(l);
+        final ParserDefinition parserDefinition = ParserDefinition.forLanguage(l);
         if (parserDefinition != null) {
           PsiManager manager = right.getTreeParent().getPsi().getManager();
           ASTNode generatedWhitespace;

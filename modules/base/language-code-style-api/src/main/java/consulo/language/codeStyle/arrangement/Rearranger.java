@@ -18,7 +18,7 @@ package consulo.language.codeStyle.arrangement;
 import consulo.container.plugin.PluginIds;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.arrangement.std.ArrangementStandardSettingsAware;
 import consulo.language.codeStyle.arrangement.std.StdArrangementTokens;
@@ -41,7 +41,7 @@ import java.util.List;
  */
 public interface Rearranger<E extends ArrangementEntry> {
 
-  LanguageExtension<Rearranger<?>> EXTENSION = new LanguageExtension<>(PluginIds.CONSULO_BASE + ".lang.rearranger");
+  OldLanguageExtension<Rearranger<?>> EXTENSION = new OldLanguageExtension<>(PluginIds.CONSULO_BASE + ".lang.rearranger");
 
   /**
    * Tries to wrap given element into arrangement entry at the target context.

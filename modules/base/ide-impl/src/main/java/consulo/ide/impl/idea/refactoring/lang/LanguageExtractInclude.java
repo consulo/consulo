@@ -16,14 +16,14 @@
 
 package consulo.ide.impl.idea.refactoring.lang;
 
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 import consulo.language.editor.refactoring.RefactoringActionHandler;
 import consulo.container.plugin.PluginIds;
 
 /**
  * @author yole
  */
-public class LanguageExtractInclude extends LanguageExtension<RefactoringActionHandler> {
+public class LanguageExtractInclude extends OldLanguageExtension<RefactoringActionHandler> {
   public static final LanguageExtractInclude INSTANCE = new LanguageExtractInclude();
 
   private LanguageExtractInclude() {

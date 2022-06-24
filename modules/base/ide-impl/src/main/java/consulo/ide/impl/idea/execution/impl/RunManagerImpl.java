@@ -17,39 +17,41 @@
 package consulo.ide.impl.idea.execution.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.execution.*;
-import consulo.execution.configuration.*;
-import consulo.execution.event.RunManagerListener;
-import consulo.execution.executor.Executor;
-import consulo.ide.impl.idea.execution.*;
-import consulo.ide.impl.idea.execution.configurations.*;
-import consulo.execution.runner.ExecutionEnvironment;
+import consulo.application.dumb.IndexNotReadyException;
+import consulo.application.util.registry.Registry;
+import consulo.component.ProcessCanceledException;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
-import consulo.component.extension.Extensions;
-import consulo.component.ProcessCanceledException;
-import consulo.project.DumbService;
-import consulo.application.dumb.IndexNotReadyException;
-import consulo.project.Project;
+import consulo.disposer.Disposable;
+import consulo.execution.*;
+import consulo.execution.configuration.*;
+import consulo.execution.event.RunManagerListener;
+import consulo.execution.executor.Executor;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.ide.impl.execution.ConfigurationTypeCache;
+import consulo.ide.impl.idea.execution.ProgramRunnerUtil;
+import consulo.ide.impl.idea.execution.RunManagerConfig;
+import consulo.ide.impl.idea.execution.RunManagerEx;
+import consulo.ide.impl.idea.execution.configurations.UnknownConfigurationType;
+import consulo.ide.impl.idea.execution.configurations.UnknownRunConfiguration;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.logging.Logger;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
+import consulo.project.DumbService;
+import consulo.project.Project;
+import consulo.project.ProjectPropertiesComponent;
 import consulo.project.UnknownFeaturesCollector;
+import consulo.ui.ex.IconDeferrer;
+import consulo.ui.image.Image;
+import consulo.util.collection.SmartList;
+import consulo.util.dataholder.Key;
+import consulo.util.lang.Pair;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizableStringList;
-import consulo.util.lang.Pair;
 import consulo.util.xml.serializer.WriteExternalException;
-import consulo.application.util.registry.Registry;
-import consulo.ui.ex.IconDeferrer;
-import consulo.util.collection.SmartList;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.disposer.Disposable;
-import consulo.ide.impl.execution.ConfigurationTypeCache;
-import consulo.logging.Logger;
-import consulo.ui.image.Image;
-import consulo.project.ProjectPropertiesComponent;
-import consulo.util.dataholder.Key;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -894,7 +896,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
   public ConfigurationFactory getFactory(final String typeName, String factoryName, boolean checkUnknown) {
     final ConfigurationType type = typeCache().getConfigurationType(typeName);
     if (type == null && checkUnknown && typeName != null) {
-      UnknownFeaturesCollector.getInstance(myProject).registerUnknownFeature(ConfigurationType.EP_NAME.getName(), typeName);
+      UnknownFeaturesCollector.getInstance(myProject).registerUnknownFeature(ConfigurationType.class, typeName);
     }
     if (factoryName == null) {
       factoryName = type != null ? type.getConfigurationFactories()[0].getName() : null;

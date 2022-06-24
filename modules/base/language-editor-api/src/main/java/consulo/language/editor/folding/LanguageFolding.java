@@ -18,7 +18,7 @@ package consulo.language.editor.folding;
 
 import consulo.language.ast.ASTNode;
 import consulo.language.Language;
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 import consulo.document.Document;
 import consulo.language.editor.internal.CompositeFoldingBuilder;
 import consulo.project.DumbService;
@@ -35,7 +35,7 @@ import java.util.List;
  * @author yole
  * @author Konstantin Bulenkov
  */
-public class LanguageFolding extends LanguageExtension<FoldingBuilder> {
+public class LanguageFolding extends OldLanguageExtension<FoldingBuilder> {
   public static final LanguageFolding INSTANCE = new LanguageFolding();
 
   private LanguageFolding() {

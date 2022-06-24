@@ -21,7 +21,7 @@ import consulo.container.plugin.PluginIds;
 /**
  * @author yole
  */
-public class LanguageBraceMatching extends LanguageExtension<PairedBraceMatcher> {
+public class LanguageBraceMatching extends OldLanguageExtension<PairedBraceMatcher> {
   public static final LanguageBraceMatching INSTANCE = new LanguageBraceMatching();
 
   private LanguageBraceMatching() {

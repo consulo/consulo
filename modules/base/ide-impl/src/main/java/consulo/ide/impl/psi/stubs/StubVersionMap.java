@@ -14,7 +14,6 @@ import consulo.index.io.data.DataInputOutputUtil;
 import consulo.language.Language;
 import consulo.language.ast.IFileElementType;
 import consulo.language.file.LanguageFileType;
-import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.psi.stub.BinaryFileStubBuilder;
 import consulo.language.psi.stub.IStubFileElementType;
@@ -162,7 +161,7 @@ class StubVersionMap {
     Object owner = null;
     if (fileType instanceof LanguageFileType) {
       Language l = ((LanguageFileType)fileType).getLanguage();
-      ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(l);
+      ParserDefinition parserDefinition = ParserDefinition.forLanguage(l);
       if (parserDefinition != null) {
         final IFileElementType type = parserDefinition.getFileNodeType();
         if (type instanceof IStubFileElementType) {

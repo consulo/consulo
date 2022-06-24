@@ -47,8 +47,8 @@ public class UnknownFeaturesCollector implements PersistentStateComponent<Elemen
     return project.getInstance(UnknownFeaturesCollector.class);
   }
 
-  public void registerUnknownFeature(String featureType, String implementationName) {
-    final UnknownExtension feature = new UnknownExtension(featureType, implementationName);
+  public void registerUnknownFeature(Class extensionClass, String implementationName) {
+    final UnknownExtension feature = new UnknownExtension(extensionClass.getName(), implementationName);
     if (!isIgnored(feature)) {
       myUnknownExtensions.add(feature);
     }

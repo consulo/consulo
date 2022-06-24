@@ -27,15 +27,15 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class LanguageExtension<T> extends KeyedExtensionCollector<T, Language> {
+public class OldLanguageExtension<T> extends KeyedExtensionCollector<T, Language> {
   private final T myDefaultImplementation;
   private final /* non static!!! */ Key<T> IN_LANGUAGE_CACHE;
 
-  public LanguageExtension(final String epName) {
+  public OldLanguageExtension(final String epName) {
     this(epName, null);
   }
 
-  public LanguageExtension(final String epName, @Nullable final T defaultImplementation) {
+  public OldLanguageExtension(final String epName, @Nullable final T defaultImplementation) {
     super(epName);
     myDefaultImplementation = defaultImplementation;
     IN_LANGUAGE_CACHE = Key.create("EXTENSIONS_IN_LANGUAGE_" + epName);

@@ -20,9 +20,9 @@
 package consulo.ide.impl.idea.lang;
 
 import consulo.container.plugin.PluginIds;
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 
-public class LanguageExpressionTypes extends LanguageExtension<ExpressionTypeProvider> {
+public class LanguageExpressionTypes extends OldLanguageExtension<ExpressionTypeProvider> {
   public static final LanguageExpressionTypes INSTANCE = new LanguageExpressionTypes();
 
   private LanguageExpressionTypes() {

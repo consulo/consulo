@@ -24,7 +24,7 @@ import consulo.codeEditor.internal.RealEditor;
 import consulo.container.plugin.PluginIds;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 import consulo.language.editor.WriteCommandAction;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.language.editor.refactoring.RefactoringActionHandler;
@@ -55,7 +55,7 @@ import java.util.function.BiPredicate;
  * @author ven
  */
 public class VariableInplaceRenamer extends InplaceRefactoring {
-  public static final LanguageExtension<ResolveSnapshotProvider> INSTANCE = new LanguageExtension<>(PluginIds.CONSULO_BASE + ".rename.inplace.resolveSnapshotProvider");
+  public static final OldLanguageExtension<ResolveSnapshotProvider> INSTANCE = new OldLanguageExtension<>(PluginIds.CONSULO_BASE + ".rename.inplace.resolveSnapshotProvider");
   private ResolveSnapshotProvider.ResolveSnapshot mySnapshot;
   private TextRange mySelectedRange;
   private Language myLanguage;

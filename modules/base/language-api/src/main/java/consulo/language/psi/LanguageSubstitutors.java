@@ -19,7 +19,7 @@ import consulo.application.Application;
 import consulo.container.plugin.PluginIds;
 import consulo.document.util.FileContentUtilCore;
 import consulo.language.Language;
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 import consulo.language.file.inject.VirtualFileWindow;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -32,7 +32,7 @@ import javax.annotation.Nonnull;
 /**
  * @author peter
  */
-public final class LanguageSubstitutors extends LanguageExtension<LanguageSubstitutor> {
+public final class LanguageSubstitutors extends OldLanguageExtension<LanguageSubstitutor> {
   public static final LanguageSubstitutors INSTANCE = new LanguageSubstitutors();
   private static final Logger LOG = Logger.getInstance(LanguageSubstitutors.class);
   private static final Key<Language> SUBSTITUTED_LANG_KEY = Key.create("SUBSTITUTED_LANG_KEY");

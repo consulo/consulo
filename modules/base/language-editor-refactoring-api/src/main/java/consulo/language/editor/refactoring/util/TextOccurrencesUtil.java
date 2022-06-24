@@ -26,7 +26,6 @@ import consulo.find.FindManager;
 import consulo.find.FindUsagesHandler;
 import consulo.find.FindUsagesUtil;
 import consulo.language.ast.ASTNode;
-import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -100,7 +99,7 @@ public class TextOccurrencesUtil {
     TextOccurenceProcessor occurenceProcessor = new TextOccurenceProcessor() {
       @Override
       public boolean execute(PsiElement element, int offsetInElement) {
-        final ParserDefinition definition = LanguageParserDefinitions.INSTANCE.forLanguage(element.getLanguage());
+        final ParserDefinition definition = ParserDefinition.forLanguage(element.getLanguage());
         final ASTNode node = element.getNode();
         if (definition != null && node != null && definition.getStringLiteralElements(element.getLanguageVersion()).contains(node.getElementType())) {
           return processor.process(element);

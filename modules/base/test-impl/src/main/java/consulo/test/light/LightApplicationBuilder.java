@@ -15,21 +15,15 @@
  */
 package consulo.test.light;
 
-import consulo.ui.ex.UiActivityMonitor;
-import consulo.component.macro.PathMacroFilter;
-import consulo.application.impl.internal.progress.CoreProgressManager;
-import consulo.virtualFileSystem.encoding.EncodingManager;
-import consulo.ui.ex.awt.ExpandableItemsHandlerFactory;
-import consulo.ui.ex.awt.tree.TreeUIHelper;
 import consulo.application.Application;
-import consulo.application.macro.PathMacros;
+import consulo.application.impl.internal.progress.CoreProgressManager;
 import consulo.application.internal.concurrency.JobLauncher;
-import consulo.component.store.impl.internal.PathMacrosService;
+import consulo.application.macro.PathMacros;
 import consulo.application.progress.ProgressManager;
 import consulo.application.ui.UISettings;
-import consulo.component.extension.ExtensionExtender;
-import consulo.component.extension.KeyedLazyInstanceEP;
 import consulo.component.impl.extension.ExtensionsAreaImpl;
+import consulo.component.macro.PathMacroFilter;
+import consulo.component.store.impl.internal.PathMacrosService;
 import consulo.disposer.Disposable;
 import consulo.document.FileDocumentManager;
 import consulo.injecting.InjectingContainerBuilder;
@@ -42,12 +36,15 @@ import consulo.language.impl.internal.ast.DefaultASTCompositeFactory;
 import consulo.language.impl.internal.ast.DefaultASTLazyFactory;
 import consulo.language.impl.internal.ast.DefaultASTLeafFactory;
 import consulo.language.impl.internal.parser.PsiBuilderFactoryImpl;
-import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.PsiBuilderFactory;
 import consulo.language.psi.LanguageSubstitutors;
 import consulo.language.version.LanguageVersionResolvers;
 import consulo.test.light.impl.*;
+import consulo.ui.ex.UiActivityMonitor;
+import consulo.ui.ex.awt.ExpandableItemsHandlerFactory;
+import consulo.ui.ex.awt.tree.TreeUIHelper;
 import consulo.ui.ex.tree.TreeAnchorizer;
+import consulo.virtualFileSystem.encoding.EncodingManager;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 
 import javax.annotation.Nonnull;
@@ -69,13 +66,13 @@ public class LightApplicationBuilder {
       registerExtensionPoint(area, ASTCompositeFactory.EP.getExtensionPointName(), ASTCompositeFactory.class);
       registerExtension(area, ASTCompositeFactory.EP.getExtensionPointName(), new DefaultASTCompositeFactory());
 
-      registerExtensionPoint(area, LanguageParserDefinitions.INSTANCE.getExtensionPointName(), LanguageExtensionPoint.class);
+      //registerExtensionPoint(area, LanguageParserDefinitions.INSTANCE.getExtensionPointName(), LanguageExtensionPoint.class);
       registerExtensionPoint(area, LanguageSubstitutors.INSTANCE.getExtensionPointName(), LanguageExtensionPoint.class);
       registerExtensionPoint(area, LanguageVersionResolvers.INSTANCE.getExtensionPointName(), LanguageExtensionPoint.class);
       registerExtensionPoint(area, LanguageFileViewProviders.INSTANCE.getExtensionPointName(), LanguageExtensionPoint.class);
 
       registerExtensionPoint(area, PathMacroFilter.EP_NAME, PathMacroFilter.class);
-      registerExtensionPoint(area, ExtensionExtender.EP_NAME, KeyedLazyInstanceEP.class);
+      //registerExtensionPoint(area, ExtensionExtender.EP_NAME, KeyedLazyInstanceEP.class);
     }
 
     @Override

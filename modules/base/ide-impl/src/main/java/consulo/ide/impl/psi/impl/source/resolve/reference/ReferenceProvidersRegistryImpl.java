@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.psi.PsiReferenceProviderBean;
 import consulo.language.Language;
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 import consulo.language.pattern.ElementPattern;
 import consulo.language.psi.*;
 import consulo.language.util.ProcessingContext;
@@ -34,8 +34,8 @@ import java.util.*;
 @Singleton
 @ServiceImpl
 public class ReferenceProvidersRegistryImpl extends ReferenceProvidersRegistry {
-  private static final LanguageExtension<PsiReferenceContributor> CONTRIBUTOR_EXTENSION = new LanguageExtension<PsiReferenceContributor>(PsiReferenceContributor.EP_NAME.getName());
-  private static final LanguageExtension<PsiReferenceProviderBean> REFERENCE_PROVIDER_EXTENSION = new LanguageExtension<PsiReferenceProviderBean>(PsiReferenceProviderBean.EP_NAME.getName());
+  private static final OldLanguageExtension<PsiReferenceContributor> CONTRIBUTOR_EXTENSION = new OldLanguageExtension<PsiReferenceContributor>(PsiReferenceContributor.EP_NAME.getName());
+  private static final OldLanguageExtension<PsiReferenceProviderBean> REFERENCE_PROVIDER_EXTENSION = new OldLanguageExtension<PsiReferenceProviderBean>(PsiReferenceProviderBean.EP_NAME.getName());
 
   private static final Comparator<ProviderBinding.ProviderInfo<PsiReferenceProvider, ProcessingContext>> PRIORITY_COMPARATOR =
           new Comparator<ProviderBinding.ProviderInfo<PsiReferenceProvider, ProcessingContext>>() {

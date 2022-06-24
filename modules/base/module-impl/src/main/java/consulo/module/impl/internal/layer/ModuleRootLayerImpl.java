@@ -16,6 +16,7 @@
 package consulo.module.impl.internal.layer;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.content.library.Library;
@@ -27,10 +28,7 @@ import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.content.internal.ModuleRootLayerEx;
 import consulo.module.content.internal.RootConfigurationAccessor;
-import consulo.module.content.layer.ContentEntry;
-import consulo.module.content.layer.ContentFolder;
-import consulo.module.content.layer.ModifiableModuleRootLayer;
-import consulo.module.content.layer.OrderEnumerator;
+import consulo.module.content.layer.*;
 import consulo.module.content.layer.extension.ModuleExtensionBase;
 import consulo.module.content.layer.orderEntry.*;
 import consulo.module.extension.ModuleExtension;
@@ -38,8 +36,6 @@ import consulo.module.extension.ModuleExtensionWithSdk;
 import consulo.module.extension.MutableModuleExtension;
 import consulo.module.extension.event.ModuleExtensionChangeListener;
 import consulo.module.impl.internal.ProjectRootManagerImpl;
-import consulo.module.impl.internal.extension.ModuleExtensionIndexCache;
-import consulo.module.impl.internal.extension.ModuleExtensionProviders;
 import consulo.module.impl.internal.layer.library.ModuleLibraryTable;
 import consulo.module.impl.internal.layer.orderEntry.*;
 import consulo.project.Project;
@@ -188,7 +184,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
   // cleared by myOrderEntries modification, see Order
   @Nullable
   private OrderEntry[] myCachedOrderEntries;
-  private ModuleExtension[] myExtensions = ModuleExtension.EMPTY_ARRAY;
+  private Map<String, ModuleExtension> myExtensions = new HashMap<>();
   private final List<Element> myUnknownModuleExtensions = new SmartList<>();
   private RootModelImpl myRootModel;
   @Nonnull
@@ -230,14 +226,14 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         case ModuleExtensionBase.ELEMENT_NAME:
           final String id = child.getAttributeValue("id");
 
-          ModuleExtensionProviderEP providerEP = ModuleExtensionProviders.findProvider(id);
-          if (providerEP != null) {
+          ModuleExtensionProvider provider = ModuleExtensionProvider.findProvider(id);
+          if (provider != null) {
             ModuleExtension<?> moduleExtension = getExtensionWithoutCheck(id);
             assert moduleExtension != null;
             moduleExtension.loadState(child);
           }
           else {
-            UnknownFeaturesCollector.getInstance(getProject()).registerUnknownFeature(ModuleExtensionProviders.getEpName(), id);
+            UnknownFeaturesCollector.getInstance(getProject()).registerUnknownFeature(ModuleExtensionProvider.class, id);
 
             myUnknownModuleExtensions.add(child.clone());
           }
@@ -276,11 +272,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
 
   public void writeExternal(@Nonnull Element element) {
     List<Element> moduleExtensionElements = new ArrayList<>();
-    for (ModuleExtension<?> extension : myExtensions) {
-      if (extension == null) {
-        continue;
-      }
-
+    for (ModuleExtension<?> extension : myExtensions.values()) {
       final Element state = extension.getState();
       if (state == null) {
         continue;
@@ -318,11 +310,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
     boolean changed = false;
     ModuleExtensionChangeListener moduleExtensionChangeListener = getModule().getProject().getMessageBus().syncPublisher(ModuleExtensionChangeListener.class);
 
-    for (ModuleExtension extension : myExtensions) {
-      if (extension == null) {
-        continue;
-      }
-
+    for (ModuleExtension extension : myExtensions.values()) {
       MutableModuleExtension mutableExtension = (MutableModuleExtension)extension;
 
       ModuleExtension originalExtension = toSet.getExtensionWithoutCheck(extension.getId());
@@ -356,21 +344,19 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
   @SuppressWarnings("unchecked")
   @RequiredReadAction
   public void createMutableExtensions(@Nullable ModuleRootLayerImpl layer) {
-    List<ModuleExtensionProviderEP> providers = ModuleExtensionProviders.getProviders();
-    myExtensions = new ModuleExtension[providers.size()];
-    for (ModuleExtensionProviderEP providerEP : providers) {
-      MutableModuleExtension mutable = providerEP.createMutable(this);
-      if (mutable == null) {
-        continue;
-      }
+    myExtensions.clear();
+
+    List<ModuleExtensionProvider> providers = Application.get().getExtensionPoint(ModuleExtensionProvider.class).getExtensionList();
+    for (ModuleExtensionProvider provider : providers) {
+      MutableModuleExtension mutable = provider.createMutableExtension(this);
 
       if (layer != null) {
-        final ModuleExtension<?> originalExtension = layer.getExtensionWithoutCheck(providerEP.getKey());
+        final ModuleExtension<?> originalExtension = layer.getExtensionWithoutCheck(provider.getId());
         assert originalExtension != null;
         mutable.commit(originalExtension);
       }
 
-      myExtensions[providerEP.getInternalIndex()] = mutable;
+      myExtensions.put(provider.getId(), mutable);
     }
   }
 
@@ -440,9 +426,10 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
 
   @SuppressWarnings("unchecked")
   public boolean areExtensionsChanged(@Nonnull ModuleRootLayerImpl original) {
-    for (int i = 0; i < ModuleExtensionProviders.getProviders().size(); i++) {
-      MutableModuleExtension selfExtension = getExtension0(i);
-      ModuleExtension originalExtension = original.getExtension0(i);
+    List<ModuleExtensionProvider> extensions = Application.get().getExtensionPoint(ModuleExtensionProvider.class).getExtensionList();
+    for (ModuleExtensionProvider extensionProvider : extensions) {
+      MutableModuleExtension selfExtension = getExtensionWithoutCheck(extensionProvider.getId());
+      ModuleExtension originalExtension = original.getExtensionWithoutCheck(extensionProvider.getId());
 
       if (selfExtension == null || originalExtension == null) {
         continue;
@@ -657,11 +644,11 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
   @Nonnull
   @Override
   public List<ModuleExtension> getExtensions() {
-    if (myExtensions.length == 0) {
+    if (myExtensions.isEmpty()) {
       return Collections.emptyList();
     }
-    List<ModuleExtension> list = new ArrayList<>(myExtensions.length);
-    for (ModuleExtension<?> extension : myExtensions) {
+    List<ModuleExtension> list = new ArrayList<>(myExtensions.size());
+    for (ModuleExtension<?> extension : myExtensions.values()) {
       if (extension.isEnabled()) {
         list.add(extension);
       }
@@ -701,14 +688,12 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
   @Nullable
   @SuppressWarnings("unchecked")
   public <T extends ModuleExtension> T getExtension(Class<T> clazz) {
-    if (myExtensions.length == 0) {
+    if (myExtensions.isEmpty()) {
       return null;
     }
 
-    int[] ids = ModuleExtensionIndexCache.get(clazz);
-    for (int id : ids) {
-      ModuleExtension extension = myExtensions[id];
-      if (extension != null && extension.isEnabled()) {
+    for (ModuleExtension extension : myExtensions.values()) {
+      if (extension.isEnabled() && clazz.isInstance(extension)) {
         return (T)extension;
       }
     }
@@ -719,14 +704,12 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
   @Nullable
   @SuppressWarnings("unchecked")
   public <T extends ModuleExtension> T getExtensionWithoutCheck(Class<T> clazz) {
-    if (myExtensions.length == 0) {
+    if (myExtensions.isEmpty()) {
       return null;
     }
 
-    int[] ids = ModuleExtensionIndexCache.get(clazz);
-    for (int id : ids) {
-      ModuleExtension extension = myExtensions[id];
-      if (extension != null) {
+    for (ModuleExtension extension : myExtensions.values()) {
+      if (clazz.isInstance(extension)) {
         return (T)extension;
       }
     }
@@ -737,11 +720,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
   @Nullable
   @SuppressWarnings("unchecked")
   public <T extends ModuleExtension> T getExtension(@Nonnull String key) {
-    ModuleExtensionProviderEP ep = ModuleExtensionProviders.findProvider(key);
-    if (ep == null) {
-      return null;
-    }
-    ModuleExtension extension = getExtension0(ep.getInternalIndex());
+    ModuleExtension extension = myExtensions.get(key);
     return extension != null && extension.isEnabled() ? (T)extension : null;
   }
 
@@ -749,17 +728,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
   @Nullable
   @SuppressWarnings("unchecked")
   public <T extends ModuleExtension> T getExtensionWithoutCheck(@Nonnull String key) {
-    ModuleExtensionProviderEP ep = ModuleExtensionProviders.findProvider(key);
-    if (ep == null) {
-      return null;
-    }
-    return getExtension0(ep.getInternalIndex());
-  }
-
-  @Nullable
-  @SuppressWarnings("unchecked")
-  private <T extends ModuleExtension> T getExtension0(int i) {
-    ModuleExtension extension = myExtensions.length == 0 ? null : myExtensions[i];
+    ModuleExtension extension = myExtensions.get(key);
     return (T)extension;
   }
 
@@ -964,12 +933,12 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
   }
 
   private void removeAllExtensions() {
-    for (ModuleExtension<?> extension : myExtensions) {
+    for (ModuleExtension<?> extension : myExtensions.values()) {
       if (extension instanceof Disposable) {
         Disposer.dispose((Disposable)extension);
       }
     }
-    myExtensions = ModuleExtension.EMPTY_ARRAY;
+    myExtensions.clear();
   }
 
   @Override

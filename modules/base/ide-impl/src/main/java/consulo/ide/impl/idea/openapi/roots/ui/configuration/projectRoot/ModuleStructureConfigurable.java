@@ -255,6 +255,8 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
   @RequiredUIAccess
   @Override
   public void initialize() {
+    super.initialize();
+
     addItemsChangeListener(deletedItem -> {
       if (deletedItem instanceof Library) {
         final Library library = (Library)deletedItem;

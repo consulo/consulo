@@ -15,14 +15,14 @@
  */
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 import consulo.container.plugin.PluginIds;
 import consulo.language.editor.action.CodeBlockProvider;
 
 /**
  * @author yole
  */
-public class CodeBlockProviders extends LanguageExtension<CodeBlockProvider> {
+public class CodeBlockProviders extends OldLanguageExtension<CodeBlockProvider> {
   public static CodeBlockProviders INSTANCE = new CodeBlockProviders();
   
   private CodeBlockProviders() {

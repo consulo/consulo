@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.documentation;
 
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.language.psi.PsiComment;
@@ -29,7 +29,7 @@ import javax.annotation.Nonnull;
  */
 public interface DocCommentFixer {
 
-  LanguageExtension<DocCommentFixer> EXTENSION = new LanguageExtension<>(PluginIds.CONSULO_BASE + ".lang.documentationFixer");
+  OldLanguageExtension<DocCommentFixer> EXTENSION = new OldLanguageExtension<>(PluginIds.CONSULO_BASE + ".lang.documentationFixer");
 
   // TODO den add doc
   void fixComment(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiComment comment);

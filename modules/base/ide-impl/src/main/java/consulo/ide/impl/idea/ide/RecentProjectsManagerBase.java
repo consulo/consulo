@@ -15,36 +15,35 @@
  */
 package consulo.ide.impl.idea.ide;
 
-import consulo.ide.impl.idea.ide.impl.ProjectUtil;
-import consulo.project.event.ProjectManagerListener;
-import consulo.ui.ex.action.AnAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.application.util.SystemInfo;
+import consulo.application.util.registry.Registry;
+import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.persist.PersistentStateComponent;
+import consulo.ide.impl.components.impl.stores.ProjectStoreImpl;
+import consulo.ide.impl.idea.ide.impl.ProjectUtil;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.wm.impl.SystemDock;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
+import consulo.module.content.ModuleRootManager;
+import consulo.module.content.layer.ModuleExtensionProvider;
+import consulo.module.content.layer.event.ModuleRootEvent;
+import consulo.module.content.layer.event.ModuleRootListener;
+import consulo.module.extension.ModuleExtension;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerAdapter;
-import consulo.module.content.layer.event.ModuleRootEvent;
-import consulo.module.content.layer.event.ModuleRootListener;
-import consulo.module.content.ModuleRootManager;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.application.util.registry.Registry;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.openapi.wm.impl.SystemDock;
-import consulo.util.collection.SmartList;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.component.messagebus.MessageBusConnection;
-import consulo.annotation.access.RequiredReadAction;
-import consulo.ide.impl.components.impl.stores.ProjectStoreImpl;
-import consulo.module.extension.ModuleExtension;
-import consulo.module.impl.internal.layer.ModuleExtensionProviderEP;
-import consulo.module.impl.internal.extension.ModuleExtensionProviders;
+import consulo.project.event.ProjectManagerListener;
 import consulo.ui.UIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.util.collection.SmartList;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -522,11 +521,11 @@ public class RecentProjectsManagerBase extends RecentProjectsManager implements 
 
           List<ModuleExtension> extensions = manager.getExtensions();
           for (ModuleExtension extension : extensions) {
-            ModuleExtensionProviderEP provider = ModuleExtensionProviders.findProvider(extension.getId());
+            ModuleExtensionProvider provider = ModuleExtensionProvider.findProvider(extension.getId());
             assert provider != null;
 
-            if (provider.parentKey == null) {
-              info.extensions.add(provider.getKey());
+            if (provider.getParentId() == null) {
+              info.extensions.add(provider.getId());
             }
           }
         }

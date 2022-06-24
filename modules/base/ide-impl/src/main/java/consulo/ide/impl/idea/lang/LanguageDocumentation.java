@@ -23,12 +23,12 @@ import consulo.ide.impl.idea.lang.documentation.CompositeDocumentationProvider;
 import consulo.language.editor.documentation.DocumentationProvider;
 import consulo.container.plugin.PluginIds;
 import consulo.language.Language;
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class LanguageDocumentation extends LanguageExtension<DocumentationProvider> {
+public class LanguageDocumentation extends OldLanguageExtension<DocumentationProvider> {
   public static final LanguageDocumentation INSTANCE = new LanguageDocumentation();
 
   private LanguageDocumentation() {

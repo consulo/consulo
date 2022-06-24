@@ -16,10 +16,10 @@
 
 package consulo.ide.impl.idea.testIntegration;
 
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 import consulo.container.plugin.PluginIds;
 
-public class LanguageTestCreators extends LanguageExtension<TestCreator> {
+public class LanguageTestCreators extends OldLanguageExtension<TestCreator> {
   public static final LanguageTestCreators INSTANCE = new LanguageTestCreators();
 
   public LanguageTestCreators() {

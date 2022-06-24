@@ -15,6 +15,7 @@
  */
 package consulo.sandboxPlugin.ide.artifact;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.openapi.module.ModuleUtil;
 import consulo.ide.impl.idea.packaging.impl.elements.ArtifactRootElementImpl;
 import consulo.application.AllIcons;
@@ -33,6 +34,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 19.03.14
  */
+@ExtensionImpl
 public class SandArtifactType extends ArtifactType {
   @NonNls
   public static final String ID = "sand";

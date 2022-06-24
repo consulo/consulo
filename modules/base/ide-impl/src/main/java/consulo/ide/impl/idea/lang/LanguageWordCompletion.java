@@ -19,7 +19,7 @@
  */
 package consulo.ide.impl.idea.lang;
 
-import consulo.language.LanguageExtension;
+import consulo.language.OldLanguageExtension;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
 import consulo.language.ast.IElementType;
@@ -28,7 +28,7 @@ import consulo.language.version.LanguageVersionUtil;
 
 import javax.annotation.Nonnull;
 
-public class LanguageWordCompletion extends LanguageExtension<WordCompletionElementFilter> {
+public class LanguageWordCompletion extends OldLanguageExtension<WordCompletionElementFilter> {
   public static final LanguageWordCompletion INSTANCE = new LanguageWordCompletion();
 
   private LanguageWordCompletion() {
