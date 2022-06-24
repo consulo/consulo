@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
@@ -24,11 +26,11 @@ import java.awt.*;
 /**
  * @author yole
  */
+@Service(ComponentScope.PROJECT)
 public abstract class ChangesFileNameDecorator {
   public static ChangesFileNameDecorator getInstance(Project project) {
     return ServiceManager.getService(project, ChangesFileNameDecorator.class);
   }
 
-  public abstract void appendFileName(final ChangesBrowserNodeRenderer renderer, final VirtualFile vFile, final String fileName, 
-                                      final Color color, boolean highlightProblems);
+  public abstract void appendFileName(final ChangesBrowserNodeRenderer renderer, final VirtualFile vFile, final String fileName, final Color color, boolean highlightProblems);
 }

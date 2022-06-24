@@ -16,6 +16,7 @@
 
 package consulo.language.editor.refactoring.rename.inplace;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.dataContext.DataContext;
@@ -38,6 +39,7 @@ import consulo.util.lang.StringUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+@ExtensionImpl(id = "variable")
 public class VariableInplaceRenameHandler implements RenameHandler {
   private static final ThreadLocal<String> ourPreventInlineRenameFlag = new ThreadLocal<String>();
   private static final Logger LOG = Logger.getInstance(VariableInplaceRenameHandler.class);

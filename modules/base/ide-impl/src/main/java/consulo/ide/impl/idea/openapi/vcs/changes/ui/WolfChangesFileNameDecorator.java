@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
 import consulo.ui.ex.JBColor;
@@ -29,6 +30,7 @@ import java.awt.*;
  * @author yole
  */
 @Singleton
+@ServiceImpl
 public class WolfChangesFileNameDecorator extends ChangesFileNameDecorator {
   private final WolfTheProblemSolver myProblemSolver;
 

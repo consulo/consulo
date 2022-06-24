@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.ide.scopeView;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.SelectInTarget;
 import consulo.ide.impl.idea.ide.projectView.ProjectView;
@@ -63,6 +64,7 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * @author cdr
  */
+@ExtensionImpl
 public class ScopeViewPane extends AbstractProjectViewPane {
   private static final Logger LOG = Logger.getInstance(ScopeViewPane.class);
   private LinkedHashMap<String, NamedScopeFilter> myFilters;

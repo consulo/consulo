@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.refactoring.rename.inplace;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.completion.lookup.LookupManager;
@@ -38,6 +39,7 @@ import java.util.function.Consumer;
  * User: anna
  * Date: 11/9/11
  */
+@ExtensionImpl(id = "member", order = "after variable")
 public class MemberInplaceRenameHandler extends VariableInplaceRenameHandler {
   @Override
   protected boolean isAvailable(PsiElement element, Editor editor, PsiFile file) {

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.psi.impl.cache.impl.id;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.util.indexing.IdDataConsumer;
 import consulo.language.plain.PlainTextFileType;
 import consulo.language.psi.search.UsageSearchContext;
@@ -24,6 +25,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 import javax.annotation.Nonnull;
 import java.util.Map;
 
+@ExtensionImpl
 public class PlainTextIndexer implements IdIndexer {
   @Override
   @Nonnull

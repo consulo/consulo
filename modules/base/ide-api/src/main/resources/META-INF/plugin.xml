@@ -1648,16 +1648,10 @@
     <applicationService serviceInterface="consulo.language.editor.template.TemplateBuilderFactory"
                         serviceImplementation="consulo.language.editor.impl.internal.template.TemplateBuilderFactoryImpl"/>
 
-    <projectViewPane implementation="consulo.ide.impl.idea.ide.scopeView.ScopeViewPane"/>
-
-    <renameHandler implementation="consulo.language.editor.refactoring.rename.inplace.VariableInplaceRenameHandler"/>
-    <renameHandler implementation="consulo.language.editor.refactoring.rename.inplace.MemberInplaceRenameHandler"/>
     <completion.contributor language="any"
                             implementationClass="consulo.ide.impl.idea.refactoring.rename.inplace.CompletionContributorForInplaceRename"
                             order="first"/>
 
-    <projectService serviceInterface="consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesFileNameDecorator"
-                    serviceImplementation="consulo.ide.impl.idea.openapi.vcs.changes.ui.WolfChangesFileNameDecorator"/>
 
     <filePasteProvider implementation="consulo.ide.impl.idea.ide.FileListPasteProvider"/>
 
@@ -1738,18 +1732,12 @@
                          key="resource.compiler.description" bundle="consulo.compiler.CompilerBundle"/>
 
 
-    <search.topHitProvider implementation="consulo.ide.impl.idea.platform.DefaultPlatformTopHitProvider"/>
-    <search.topHitProvider implementation="consulo.ide.impl.idea.ide.ui.UISimpleSettingsProvider"/>
-
-
 
     <consoleFilterProvider implementation="consulo.ide.impl.idea.execution.filters.UrlFilter$UrlFilterProvider"/>
 
     <schemeOwner serviceInterface="consulo.language.editor.inspection.scheme.InspectionProfileManager"/>
 
 
-
-    <qualifiedNameProvider implementation="consulo.ide.impl.actions.DefaultPackageQualifiedNameProvider" id="defaultPackage" order="last"/>
 
     <pathMacroExpendableProtocol protocol="zip"/>
 
@@ -1766,20 +1754,6 @@
 
     <bidiRegionsSeparator language="" implementationClass="consulo.ide.impl.idea.openapi.editor.bidi.PlainTextBidiRegionsSeparator"/>
 
-    <additionalTextAttributes scheme="Default" file="/colorSchemes/ext/FindViewColorsScheme.xml"/>
-    <additionalTextAttributes scheme="Darcula" file="/colorSchemes/ext/FindViewColorsScheme.xml"/>
-
-    <extensionExtender key="consulo.orderEntryType" implementationClass="consulo.module.impl.internal.layer.orderEntry.CustomOrderEntryTypeExtender" />
-
-    <orderEntryTypeEditor key="library" implementationClass="consulo.ide.impl.roots.orderEntry.LibraryOrderEntryTypeEditor"/>
-    <orderEntryTypeEditor key="module-extension-sdk" implementationClass="consulo.ide.impl.roots.orderEntry.ModuleExtensionWithSdkOrderEntryTypeEditor"/>
-    <orderEntryTypeEditor key="module-library" implementationClass="consulo.ide.impl.roots.orderEntry.ModuleLibraryOrderEntryTypeEditor"/>
-    <orderEntryTypeEditor key="module" implementationClass="consulo.ide.impl.roots.orderEntry.ModuleOrderEntryTypeEditor"/>
-    <orderEntryTypeEditor key="sourceFolder" implementationClass="consulo.ide.impl.roots.orderEntry.ModuleSourceOrderEntryTypeEditor"/>
-    <orderEntryTypeEditor key="" implementationClass="consulo.ide.impl.roots.orderEntry.UnknownOrderEntryTypeEditor"/>
-
-    <vcs.ignoredFileProvider implementation="consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl$DefaultIgnoredFileProvider" order="last"/>
-    <vcs.ignoredFileProvider implementation="consulo.ide.impl.configurationStore.vcs.StoreIgnoredFileProvider"/>
 
     <lineIndentProvider
         implementation="consulo.ide.impl.psi.impl.source.codeStyle.lineIndent.FormatterBasedLineIndentProvider"
@@ -1791,8 +1765,6 @@
     <editorActionHandler action="EditorEscape" implementationClass="consulo.ide.impl.idea.refactoring.changeSignature.inplace.EscapeHandler" id="changeSignatureEscape"
 						 order="before hide-search"/>
 
-    <idIndexer filetype="PLAIN_TEXT" implementationClass="consulo.ide.impl.psi.impl.cache.impl.id.PlainTextIndexer"/>
-
 
     <lang.formatter.restriction implementation="consulo.ide.impl.idea.formatting.ExcludedFileFormattingRestriction"/>
 
@@ -1800,9 +1772,6 @@
 
     <daemon.tooltipActionProvider order="last" id="defaultProvider" implementation="consulo.ide.impl.idea.codeInsight.daemon.impl.DaemonTooltipActionProvider"/>
 
-    <vfs.asyncListener implementation="consulo.ide.impl.idea.openapi.fileEditor.impl.FileDocumentManagerImpl$MyAsyncFileListener"/>
-
-    <vfs.asyncListener implementation="consulo.ide.impl.idea.openapi.vfs.impl.VirtualFilePointerManagerImpl$MyAsyncFileListener"/>
 
     <dateTimeFormatter id="vcs.annotate" name="VCS Annotate"/>
     <dateTimeFormatter id="vcs.log" name="VCS Log"/>

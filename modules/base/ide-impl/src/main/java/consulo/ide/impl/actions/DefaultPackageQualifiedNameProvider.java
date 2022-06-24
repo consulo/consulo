@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.actions;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.QualifiedNameProvider;
 import consulo.project.Project;
 import consulo.language.psi.PsiDirectory;
@@ -27,6 +28,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 22:51/08.10.13
  */
+@ExtensionImpl(id = "defaultPackage", order = "last")
 public class DefaultPackageQualifiedNameProvider implements QualifiedNameProvider {
   @Nullable
   @Override
