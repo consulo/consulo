@@ -20,7 +20,6 @@ import consulo.application.util.TypePresentationService;
 import consulo.language.LangBundle;
 import consulo.language.Language;
 import consulo.language.findUsage.FindUsagesProvider;
-import consulo.language.internal.LanguageFindUsages;
 import consulo.language.psi.*;
 import consulo.language.psi.meta.PsiMetaData;
 import consulo.language.psi.meta.PsiMetaOwner;
@@ -63,7 +62,7 @@ public class UsageViewTypeLocation extends ElementDescriptionLocation {
       }
 
       final Language lang = psiElement.getLanguage();
-      FindUsagesProvider provider = LanguageFindUsages.INSTANCE.forLanguage(lang);
+      FindUsagesProvider provider = FindUsagesProvider.forLanguage(lang);
       final String type = provider.getType(psiElement);
       if (StringUtil.isNotEmpty(type)) {
         return type;

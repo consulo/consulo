@@ -19,30 +19,39 @@
  */
 package consulo.language.editor.highlight;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
+import consulo.application.Application;
+import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.language.Language;
+import consulo.language.editor.internal.DefaultSyntaxHighlighterFactory;
+import consulo.language.extension.ByLanguageValue;
+import consulo.language.extension.LanguageExtension;
+import consulo.language.extension.LanguageGroupByFactory;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.extension.FileTypeExtensionFactory;
 import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public abstract class SyntaxHighlighterFactory {
-  public static final SyntaxHighlighterLanguageFactory LANGUAGE_FACTORY = new SyntaxHighlighterLanguageFactory();
-
-  private static final SyntaxHighlighterProvider PROVIDER = new FileTypeExtensionFactory<>(SyntaxHighlighterProvider.class, SyntaxHighlighter.EP_NAME).get();
+@Extension(ComponentScope.APPLICATION)
+public abstract class SyntaxHighlighterFactory implements LanguageExtension {
+  private static final ExtensionPointCacheKey<SyntaxHighlighterFactory, ByLanguageValue<SyntaxHighlighterFactory>> KEY =
+          ExtensionPointCacheKey.create("SyntaxHighlighterFactory", LanguageGroupByFactory.build(new DefaultSyntaxHighlighterFactory()));
 
   /**
    * Returns syntax highlighter for the given language.
    *
-   * @param lang        a {@code Language} to get highlighter for
+   * @param language        a {@code Language} to get highlighter for
    * @param project     might be necessary to gather various project settings from
    * @param virtualFile might be necessary to collect file specific settings
    * @return {@code SyntaxHighlighter} interface implementation for the given file type
    */
-  public static SyntaxHighlighter getSyntaxHighlighter(@Nonnull Language lang, @Nullable Project project, @Nullable final VirtualFile virtualFile) {
-    return LANGUAGE_FACTORY.forLanguage(lang).getSyntaxHighlighter(project, virtualFile);
+  public static SyntaxHighlighter getSyntaxHighlighter(@Nonnull Language language, @Nullable Project project, @Nullable final VirtualFile virtualFile) {
+    SyntaxHighlighterFactory highlighterFactory = Application.get().getExtensionPoint(SyntaxHighlighterFactory.class).getOrBuildCache(KEY).get(language);
+    assert highlighterFactory != null;
+    return highlighterFactory.getSyntaxHighlighter(project, virtualFile);
   }
 
   /**
@@ -57,7 +66,13 @@ public abstract class SyntaxHighlighterFactory {
    */
   @Nullable
   public static SyntaxHighlighter getSyntaxHighlighter(final FileType fileType, final @Nullable Project project, final @Nullable VirtualFile virtualFile) {
-    return PROVIDER.create(fileType, project, virtualFile);
+    for (SyntaxHighlighterProvider provider : Application.get().getExtensionPoint(SyntaxHighlighterProvider.class).getExtensionList()) {
+      SyntaxHighlighter highlighter = provider.create(fileType, project, virtualFile);
+      if (highlighter != null) {
+        return highlighter;
+      }
+    }
+    return null;
   }
 
   /**
@@ -73,4 +88,11 @@ public abstract class SyntaxHighlighterFactory {
    */
   @Nonnull
   public abstract SyntaxHighlighter getSyntaxHighlighter(@Nullable Project project, @Nullable VirtualFile virtualFile);
+
+  /**
+   * Target language for this highlighter
+   */
+  @Override
+  @Nonnull
+  public abstract Language getLanguage();
 }

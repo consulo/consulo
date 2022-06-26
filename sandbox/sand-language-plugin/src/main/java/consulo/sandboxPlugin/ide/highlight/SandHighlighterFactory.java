@@ -15,6 +15,8 @@
  */
 package consulo.sandboxPlugin.ide.highlight;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.Language;
 import consulo.language.editor.highlight.LanguageVersionableSyntaxHighlighterFactory;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.version.LanguageVersion;
@@ -26,14 +28,17 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 19.03.14
  */
+@ExtensionImpl
 public class SandHighlighterFactory extends LanguageVersionableSyntaxHighlighterFactory {
-  public SandHighlighterFactory() {
-    super(SandLanguage.INSTANCE);
-  }
-
   @Nonnull
   @Override
   public SyntaxHighlighter getSyntaxHighlighter(@Nonnull LanguageVersion languageVersion) {
     return new SandHighlighter(languageVersion);
+  }
+
+  @Nonnull
+  @Override
+  public Language getLanguage() {
+    return SandLanguage.INSTANCE;
   }
 }

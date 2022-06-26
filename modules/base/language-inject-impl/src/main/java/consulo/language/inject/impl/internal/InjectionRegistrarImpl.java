@@ -23,7 +23,6 @@ import consulo.language.ast.FileASTNode;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.highlight.EditorHighlighterProvider;
-import consulo.language.editor.highlight.FileTypeEditorHighlighterProviders;
 import consulo.language.file.FileViewProvider;
 import consulo.language.file.inject.DocumentWindow;
 import consulo.language.file.inject.VirtualFileWindow;
@@ -810,7 +809,7 @@ class InjectionRegistrarImpl implements MultiHostRegistrar {
                                                                                      @Nonnull List<? extends PlaceInfo> placeInfos) {
     VirtualFile file = (VirtualFile)virtualFile;
     FileType fileType = file.getFileType();
-    EditorHighlighterProvider provider = FileTypeEditorHighlighterProviders.INSTANCE.forFileType(fileType);
+    EditorHighlighterProvider provider = EditorHighlighterProvider.forFileType(fileType);
     EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
     EditorHighlighter highlighter = provider.getEditorHighlighter(project, fileType, file, scheme);
     highlighter.setText(outChars);

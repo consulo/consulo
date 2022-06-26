@@ -15,28 +15,28 @@
  */
 package consulo.ide.impl.idea.application.options.codeStyle;
 
-import consulo.ide.impl.idea.application.options.CodeStyleAbstractPanel;
 import consulo.application.ApplicationManager;
-import consulo.undoRedo.CommandProcessor;
-import consulo.document.Document;
-import consulo.colorScheme.EditorColorsScheme;
 import consulo.codeEditor.EditorHighlighter;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.language.editor.highlight.FileTypeEditorHighlighterProviders;
-import consulo.language.plain.PlainTextFileType;
-import consulo.project.Project;
+import consulo.colorScheme.EditorColorsScheme;
+import consulo.document.Document;
+import consulo.ide.impl.idea.application.options.CodeStyleAbstractPanel;
 import consulo.ide.impl.idea.openapi.project.ProjectUtil;
-import consulo.language.psi.PsiDocumentManager;
-import consulo.language.psi.PsiFile;
+import consulo.ide.impl.idea.util.Function;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.setting.CodeStyleSettingsCustomizable;
 import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
-import consulo.ide.impl.idea.util.Function;
+import consulo.language.editor.highlight.EditorHighlighterProvider;
+import consulo.language.plain.PlainTextFileType;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.util.collection.MultiMap;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.undoRedo.CommandProcessor;
+import consulo.util.collection.MultiMap;
+import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -111,7 +111,7 @@ public abstract class CustomizableLanguageCodeStylePanel extends CodeStyleAbstra
   @Nullable
   protected EditorHighlighter createHighlighter(final EditorColorsScheme scheme) {
     FileType fileType = getFileType();
-    return FileTypeEditorHighlighterProviders.INSTANCE.forFileType(fileType).getEditorHighlighter(ProjectUtil.guessCurrentProject(getPanel()), fileType, null, scheme);
+    return EditorHighlighterProvider.forFileType(fileType).getEditorHighlighter(ProjectUtil.guessCurrentProject(getPanel()), fileType, null, scheme);
   }
 
 

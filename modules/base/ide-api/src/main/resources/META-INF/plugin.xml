@@ -204,9 +204,6 @@
 
     <extensionPoint name="statistics.usagesCollector" interface="consulo.ide.impl.idea.internal.statistic.UsagesCollector"/>
 
-    <extensionPoint name="editorHighlighterProvider" beanClass="consulo.virtualFileSystem.extension.FileTypeExtensionPoint">
-      <with attribute="implementationClass" implements="consulo.language.editor.highlight.EditorHighlighterProvider"/>
-    </extensionPoint>
 
     <extensionPoint name="actionPromoter" interface="consulo.ide.impl.idea.openapi.actionSystem.ActionPromoter"/>
 
@@ -1426,8 +1423,6 @@
 
     <stepsBeforeRunProvider implementation="consulo.ide.impl.idea.tools.ToolBeforeRunTaskProvider"/>
 
-    <lang.parserDefinition language="TEXT" implementationClass="consulo.language.impl.plain.PlainTextParserDefinition"/>
-    <lang.syntaxHighlighterFactory language="TEXT" implementationClass="consulo.ide.impl.idea.openapi.fileTypes.PlainTextSyntaxHighlighterFactory"/>
     <lang.braceMatcher language="TEXT" implementationClass="consulo.ide.impl.idea.ide.highlighter.custom.impl.CustomFileTypeBraceMatcher"/>
     <lang.ast.leafFactory implementation="consulo.ide.impl.psi.impl.source.tree.PlainTextASTLeafFactory"/>
 
@@ -1440,7 +1435,6 @@
     <customScopesProvider implementation="consulo.ide.impl.idea.vcs.changes.ChangeListsScopesProvider" order="last"/>
 
 
-    <syntaxHighlighter factoryClass="consulo.ide.impl.idea.openapi.fileTypes.LanguageFileTypeHighlighterProvider"/>
     <structureViewBuilder factoryClass="consulo.ide.impl.idea.ide.highlighter.LanguageFileTypeStructureViewBuilderProvider"/>
 
     <lang.elementManipulator forClass="consulo.language.plain.psi.PsiPlainTextFile"
@@ -1507,17 +1501,8 @@
 
     <gotoRelatedProvider implementation="consulo.ide.impl.idea.ide.actions.RelatedItemLineMarkerGotoAdapter"/>
 
-    <elementLookupRenderer implementation="consulo.ide.impl.idea.codeInsight.template.impl.TemplateLookupRenderer"/>
-
     <customPasteProvider implementation="consulo.ide.impl.idea.ide.actions.PasteReferenceProvider"/>
 
-    <referenceInjector implementation="consulo.ide.impl.idea.codeInsight.daemon.impl.analysis.encoding.EncodingReferenceInjector"/>
-
-
-
-
-    <syntaxHighlighter factoryClass="consulo.ide.impl.idea.ide.highlighter.custom.impl.CustomFileTypeHighlighterProvider"/>
-    <fileTypeRegistrator implementation="consulo.ide.impl.idea.ide.highlighter.custom.impl.StandardFileTypeRegistrator"/>
 
     <statementUpDownMover implementation="consulo.ide.impl.idea.codeInsight.editorActions.moveUpDown.LineMover" id="line" order="last"/>
 

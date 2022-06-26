@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.ide.highlighter.custom.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.highlight.SyntaxHighlighterProvider;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -29,6 +30,7 @@ import javax.annotation.Nullable;
 /**
  * @author yole
  */
+@ExtensionImpl
 public class CustomFileTypeHighlighterProvider implements SyntaxHighlighterProvider {
   @Override
   @Nullable

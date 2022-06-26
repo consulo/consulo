@@ -17,7 +17,6 @@ package consulo.language.findUsage;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.Language;
-import consulo.language.internal.LanguageFindUsages;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.meta.PsiMetaData;
 import consulo.language.psi.meta.PsiMetaOwner;
@@ -46,8 +45,7 @@ public class DescriptiveNameUtil {
     }
 
     final Language lang = psiElement.getLanguage();
-    final FindUsagesProvider provider = LanguageFindUsages.INSTANCE.forLanguage(lang);
-    assert provider != null : lang;
+    final FindUsagesProvider provider = FindUsagesProvider.forLanguage(lang);
     return provider.getDescriptiveName(psiElement);
   }
 }

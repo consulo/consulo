@@ -16,7 +16,14 @@
 package consulo.language.version;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
+import consulo.application.Application;
+import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.language.Language;
+import consulo.language.extension.ByLanguageValue;
+import consulo.language.extension.LanguageExtension;
+import consulo.language.extension.LanguageGroupByFactory;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
@@ -28,8 +35,15 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 18:05/30.05.13
  */
-public interface LanguageVersionResolver {
+@Extension(ComponentScope.APPLICATION)
+public interface LanguageVersionResolver extends LanguageExtension {
   LanguageVersionResolver DEFAULT = new LanguageVersionResolver() {
+    @Nonnull
+    @Override
+    public Language getLanguage() {
+      return Language.ANY;
+    }
+
     @RequiredReadAction
     @Nonnull
     @Override
@@ -56,6 +70,15 @@ public interface LanguageVersionResolver {
       return versions[0];
     }
   };
+
+  @Nonnull
+  static LanguageVersionResolver forLanguage(@Nonnull Language language) {
+    ByLanguageValue<LanguageVersionResolver> value = Application.get().getExtensionPoint(LanguageVersionResolver.class).getOrBuildCache(KEY);
+    return value.get(language);
+  }
+
+  ExtensionPointCacheKey<LanguageVersionResolver, ByLanguageValue<LanguageVersionResolver>> KEY =
+          ExtensionPointCacheKey.create("LanguageVersionResolver", LanguageGroupByFactory.build(LanguageVersionResolver.DEFAULT));
 
   @Nonnull
   @RequiredReadAction

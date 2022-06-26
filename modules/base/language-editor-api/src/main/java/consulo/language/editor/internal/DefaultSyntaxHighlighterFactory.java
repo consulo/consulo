@@ -17,8 +17,12 @@
 /*
  * @author max
  */
-package consulo.language.editor.highlight;
+package consulo.language.editor.internal;
 
+import consulo.language.Language;
+import consulo.language.editor.highlight.DefaultSyntaxHighlighter;
+import consulo.language.editor.highlight.SyntaxHighlighter;
+import consulo.language.editor.highlight.SyntaxHighlighterFactory;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -29,5 +33,11 @@ public class DefaultSyntaxHighlighterFactory extends SyntaxHighlighterFactory {
   @Nonnull
   public SyntaxHighlighter getSyntaxHighlighter(final Project project, final VirtualFile virtualFile) {
     return new DefaultSyntaxHighlighter();
+  }
+
+  @Nonnull
+  @Override
+  public Language getLanguage() {
+    return Language.ANY;
   }
 }

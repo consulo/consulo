@@ -21,7 +21,7 @@ import consulo.application.util.function.Processor;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.component.ProcessCanceledException;
 import consulo.document.util.TextRange;
-import consulo.language.internal.LanguageFindUsages;
+import consulo.language.findUsage.FindUsagesProvider;
 import consulo.language.psi.PsiCompiledElement;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
@@ -75,7 +75,7 @@ public class FindUsagesHelper {
   }
 
   public static String getHelpID(PsiElement element) {
-    return LanguageFindUsages.INSTANCE.forLanguage(element.getLanguage()).getHelpId(element);
+    return FindUsagesProvider.forLanguage(element.getLanguage()).getHelpId(element);
   }
 
   public static boolean processTextOccurrences(@Nonnull final PsiElement element,

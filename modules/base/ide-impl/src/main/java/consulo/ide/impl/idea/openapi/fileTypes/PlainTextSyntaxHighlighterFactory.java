@@ -19,14 +19,17 @@
  */
 package consulo.ide.impl.idea.openapi.fileTypes;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.ide.highlighter.custom.AbstractCustomLexer;
 import consulo.ide.impl.idea.ide.highlighter.custom.tokens.*;
+import consulo.language.Language;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighterBase;
 import consulo.language.editor.highlight.SyntaxHighlighterFactory;
 import consulo.language.lexer.Lexer;
 import consulo.language.lexer.MergingLexerAdapter;
 import consulo.colorScheme.TextAttributesKey;
+import consulo.language.plain.PlainTextLanguage;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.psi.CustomHighlighterTokenType;
@@ -39,6 +42,7 @@ import java.util.ArrayList;
 /**
  * @author peter
  */
+@ExtensionImpl
 public class PlainTextSyntaxHighlighterFactory extends SyntaxHighlighterFactory {
   @Override
   @Nonnull
@@ -58,8 +62,14 @@ public class PlainTextSyntaxHighlighterFactory extends SyntaxHighlighterFactory 
     };
   }
 
+  @Nonnull
+  @Override
+  public Language getLanguage() {
+    return PlainTextLanguage.INSTANCE;
+  }
+
   public static Lexer createPlainTextLexer() {
-    ArrayList<TokenParser> tokenParsers = new ArrayList<TokenParser>();
+    ArrayList<TokenParser> tokenParsers = new ArrayList<>();
     tokenParsers.add(new WhitespaceParser());
 
     tokenParsers.addAll(BraceTokenParser.getBraces());

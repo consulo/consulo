@@ -32,7 +32,10 @@ public class LanguageGroupByFactory<E extends LanguageExtension> implements Func
   private static class ByLanguageValueWithBase<T extends LanguageExtension> implements ByLanguageValue<T> {
     private final Map<Language, T> myExtensions = new ConcurrentHashMap<>();
 
-    public ByLanguageValueWithBase(List<T> extensions) {
+    private final T myDefaultImplementation;
+
+    public ByLanguageValueWithBase(List<T> extensions, T defaultImplementation) {
+      myDefaultImplementation = defaultImplementation;
       for (T extension : extensions) {
         myExtensions.put(extension.getLanguage(), extension);
       }
@@ -54,20 +57,28 @@ public class LanguageGroupByFactory<E extends LanguageExtension> implements Func
           return baseExtension;
         }
       }
-      return null;
+      return myDefaultImplementation;
     }
   }
 
   @Nonnull
   public static <E1 extends LanguageExtension> Function<List<E1>, ByLanguageValue<E1>> build() {
-    return new LanguageGroupByFactory<>();
+    return build(null);
   }
 
-  private LanguageGroupByFactory() {
+  @Nonnull
+  public static <E1 extends LanguageExtension> Function<List<E1>, ByLanguageValue<E1>> build(@Nullable E1 defaultImpl) {
+    return new LanguageGroupByFactory<>(defaultImpl);
+  }
+
+  private final E myDefaultImplementation;
+
+  private LanguageGroupByFactory(E defaultImpl) {
+    myDefaultImplementation = defaultImpl;
   }
 
   @Override
   public ByLanguageValue<E> apply(List<E> es) {
-    return new ByLanguageValueWithBase<E>(es);
+    return new ByLanguageValueWithBase<>(es, myDefaultImplementation);
   }
 }

@@ -1,4 +1,4 @@
-  /*
+/*
  * Copyright 2000-2011 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,30 +15,45 @@
  */
 package consulo.language.editor.highlight;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
+import consulo.application.Application;
 import consulo.codeEditor.EditorHighlighter;
 import consulo.colorScheme.EditorColorsScheme;
+import consulo.component.extension.ExtensionPointCacheKey;
+import consulo.language.editor.internal.DefaultEditorHighlighterProvider;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Map;
 
 /**
  * @author yole
  */
+@Extension(ComponentScope.APPLICATION)
 public interface EditorHighlighterProvider {
+  ExtensionPointCacheKey<EditorHighlighterProvider, Map<FileType, EditorHighlighterProvider>> KEY = ExtensionPointCacheKey.groupBy("EditorHighlighterProvider", EditorHighlighterProvider::getFileType);
+
+  @Nonnull
+  static EditorHighlighterProvider forFileType(@Nonnull FileType fileType) {
+    Map<FileType, EditorHighlighterProvider> map = Application.get().getExtensionPoint(EditorHighlighterProvider.class).getOrBuildCache(KEY);
+    return map.getOrDefault(fileType, DefaultEditorHighlighterProvider.INSTANCE);
+  }
+
   /**
    * Lower level API for customizing language's file syntax highlighting in editor component.
    *
-   * @param project The project in which the highlighter will work, or null if the highlighter is not tied to any project.
-   * @param fileType the file type of the file to be highlighted
+   * @param project     The project in which the highlighter will work, or null if the highlighter is not tied to any project.
+   * @param fileType    the file type of the file to be highlighted
    * @param virtualFile The file to be highlighted
-   * @param colors color scheme highlighter shall be initialized with.   @return EditorHighlighter implementation
+   * @param colors      color scheme highlighter shall be initialized with.   @return EditorHighlighter implementation
    */
+  @Nonnull
+  EditorHighlighter getEditorHighlighter(@Nullable Project project, @Nonnull FileType fileType, @Nullable final VirtualFile virtualFile, @Nonnull EditorColorsScheme colors);
 
-  EditorHighlighter getEditorHighlighter(@Nullable Project project,
-                                         @Nonnull FileType fileType,
-                                         @Nullable final VirtualFile virtualFile,
-                                         @Nonnull EditorColorsScheme colors);
+  @Nonnull
+  FileType getFileType();
 }

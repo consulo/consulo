@@ -38,7 +38,7 @@ public class LanguageVersionUtil {
       return languageVersion;
     }
     else {
-      return LanguageVersionResolvers.INSTANCE.forLanguage(language).getLanguageVersion(language, project, virtualFile);
+      return LanguageVersionResolver.forLanguage(language).getLanguageVersion(language, project, virtualFile);
     }
   }
 
@@ -52,7 +52,7 @@ public class LanguageVersionUtil {
 
     PsiFile psi = viewProvider.getPsi(language);
     if (psi == null) {
-      return LanguageVersionResolvers.INSTANCE.forLanguage(language).getLanguageVersion(language, psiFile);
+      return LanguageVersionResolver.forLanguage(language).getLanguageVersion(language, psiFile);
     }
     return psi.getLanguageVersion();
   }
@@ -64,13 +64,13 @@ public class LanguageVersionUtil {
     }
     PsiFile containingFile = element.getContainingFile();
     if (containingFile == null) {
-      return LanguageVersionResolvers.INSTANCE.forLanguage(language).getLanguageVersion(language, element);
+      return LanguageVersionResolver.forLanguage(language).getLanguageVersion(language, element);
     }
     return findLanguageVersion(language, containingFile);
   }
 
   @RequiredReadAction
   public static LanguageVersion findDefaultVersion(@Nonnull Language language) {
-    return LanguageVersionResolvers.INSTANCE.forLanguage(language).getLanguageVersion(language, null, null);
+    return LanguageVersionResolver.forLanguage(language).getLanguageVersion(language, null, null);
   }
 }

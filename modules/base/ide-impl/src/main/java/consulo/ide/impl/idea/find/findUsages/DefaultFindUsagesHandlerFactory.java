@@ -18,9 +18,10 @@ package consulo.ide.impl.idea.find.findUsages;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.find.FindUsagesHandler;
 import consulo.find.FindUsagesHandlerFactory;
+import consulo.language.findUsage.FindUsagesProvider;
 import consulo.language.psi.PsiElement;
-import consulo.language.internal.LanguageFindUsages;
 import consulo.language.psi.PsiFileSystemItem;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -33,7 +34,7 @@ public final class DefaultFindUsagesHandlerFactory extends FindUsagesHandlerFact
     if (element instanceof PsiFileSystemItem) {
       if (((PsiFileSystemItem)element).getVirtualFile() == null) return false;
     }
-    else if (!LanguageFindUsages.INSTANCE.forLanguage(element.getLanguage()).canFindUsagesFor(element)) {
+    else if (!FindUsagesProvider.forLanguage(element.getLanguage()).canFindUsagesFor(element)) {
       return false;
     }
     return element.isValid();

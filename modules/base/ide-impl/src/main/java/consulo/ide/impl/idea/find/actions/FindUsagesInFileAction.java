@@ -17,27 +17,27 @@
 package consulo.ide.impl.idea.find.actions;
 
 import consulo.application.CommonBundle;
+import consulo.codeEditor.Editor;
+import consulo.dataContext.DataContext;
+import consulo.fileEditor.FileEditor;
+import consulo.find.FindBundle;
+import consulo.language.Language;
+import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.hint.HintManager;
-import consulo.find.FindBundle;
-import consulo.dataContext.DataContext;
-import consulo.language.Language;
+import consulo.language.editor.internal.PsiUtilBase;
 import consulo.language.findUsage.EmptyFindUsagesProvider;
-import consulo.language.internal.LanguageFindUsages;
-import consulo.codeEditor.Editor;
-import consulo.fileEditor.FileEditor;
-import consulo.language.editor.CommonDataKeys;
-import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
+import consulo.language.findUsage.FindUsagesProvider;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import consulo.language.editor.internal.PsiUtilBase;
-import consulo.usage.UsageTarget;
-import consulo.usage.UsageView;
+import consulo.project.Project;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.awt.Messages;
+import consulo.usage.UsageTarget;
+import consulo.usage.UsageView;
 
 public class FindUsagesInFileAction extends AnAction {
 
@@ -99,7 +99,7 @@ public class FindUsagesInFileAction extends AnAction {
       if (language == null) {
         language = file.getLanguage();
       }
-      return !(LanguageFindUsages.INSTANCE.forLanguage(language) instanceof EmptyFindUsagesProvider);
+      return !(FindUsagesProvider.forLanguage(language) instanceof EmptyFindUsagesProvider);
     }
   }
 

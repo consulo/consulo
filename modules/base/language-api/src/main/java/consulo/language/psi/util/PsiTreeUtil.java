@@ -27,7 +27,6 @@ import consulo.language.psi.resolve.ResolveState;
 import consulo.language.psi.stub.StubElement;
 import consulo.language.version.LanguageVersion;
 import consulo.language.version.LanguageVersionResolver;
-import consulo.language.version.LanguageVersionResolvers;
 import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
@@ -1069,7 +1068,7 @@ public class PsiTreeUtil {
     }
 
     return LanguageCachedValueUtil.getCachedValue(element, () -> {
-      final LanguageVersionResolver versionResolver = LanguageVersionResolvers.INSTANCE.forLanguage(language);
+      final LanguageVersionResolver versionResolver = LanguageVersionResolver.forLanguage(language);
       return CachedValueProvider.Result.create(versionResolver.getLanguageVersion(language, element), PsiModificationTracker.MODIFICATION_COUNT);
     });
   }

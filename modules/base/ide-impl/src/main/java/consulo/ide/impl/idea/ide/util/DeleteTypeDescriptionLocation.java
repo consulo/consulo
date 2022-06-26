@@ -17,8 +17,8 @@
 package consulo.ide.impl.idea.ide.util;
 
 import consulo.ide.IdeBundle;
-import consulo.language.internal.LanguageFindUsages;
 import consulo.language.editor.internal.PsiUtilBase;
+import consulo.language.findUsage.FindUsagesProvider;
 import consulo.language.psi.*;
 
 import javax.annotation.Nonnull;
@@ -63,7 +63,7 @@ public class DeleteTypeDescriptionLocation extends ElementDescriptionLocation {
           return IdeBundle.message("prompt.delete.directory", count);
         }
         if (!plural) {
-          return LanguageFindUsages.INSTANCE.forLanguage(element.getLanguage()).getType(element);
+          return FindUsagesProvider.forLanguage(element.getLanguage()).getType(element);
         }
         return "elements";
       }

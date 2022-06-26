@@ -16,23 +16,28 @@
 
 package consulo.ide.impl.idea.internal.psiView;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.project.Project;
 import consulo.language.psi.PsiElement;
-import javax.annotation.Nonnull;
+import consulo.project.Project;
+import consulo.virtualFileSystem.fileType.FileType;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 
 /**
  * @author yole
  * @author Konstantin Bulenkov
  */
+@Extension(ComponentScope.APPLICATION)
 public interface PsiViewerExtension {
   ExtensionPointName<PsiViewerExtension> EP_NAME = ExtensionPointName.create("consulo.psiViewerExtension");
 
   String getName();
+
   Icon getIcon();
+
   PsiElement createElement(Project project, String text);
 
   @Nonnull

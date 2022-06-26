@@ -15,7 +15,7 @@
  */
 package consulo.language.findUsage;
 
-import consulo.language.cacheBuilder.WordsScanner;
+import consulo.language.Language;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
 
@@ -27,22 +27,9 @@ import javax.annotation.Nullable;
  * @author max
  */
 public class EmptyFindUsagesProvider implements FindUsagesProvider {
-
-  @Override
-  @Nullable
-  public WordsScanner getWordsScanner() {
-    return null;
-  }
-
   @Override
   public boolean canFindUsagesFor(@Nonnull PsiElement psiElement) {
     return false;
-  }
-
-  @Override
-  @Nullable
-  public String getHelpId(@Nonnull PsiElement psiElement) {
-    return null;
   }
 
   @Override
@@ -67,5 +54,11 @@ public class EmptyFindUsagesProvider implements FindUsagesProvider {
       }
     }
     return "";
+  }
+
+  @Nonnull
+  @Override
+  public Language getLanguage() {
+    return Language.ANY;
   }
 }

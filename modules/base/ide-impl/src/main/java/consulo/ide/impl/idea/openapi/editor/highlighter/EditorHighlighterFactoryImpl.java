@@ -32,6 +32,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author yole
@@ -52,7 +53,7 @@ public class EditorHighlighterFactoryImpl extends EditorHighlighterFactory {
   @Override
   public EditorHighlighter createEditorHighlighter(@Nonnull final FileType fileType, @Nonnull final EditorColorsScheme settings, final Project project) {
     if (fileType instanceof LanguageFileType) {
-      return FileTypeEditorHighlighterProviders.INSTANCE.forFileType(fileType).getEditorHighlighter(project, fileType, null, settings);
+      return EditorHighlighterProvider.forFileType(fileType).getEditorHighlighter(project, fileType, null, settings);
     }
 
     SyntaxHighlighter highlighter = SyntaxHighlighterFactory.getSyntaxHighlighter(fileType, project, null);
@@ -67,12 +68,12 @@ public class EditorHighlighterFactoryImpl extends EditorHighlighterFactory {
 
   @Nonnull
   @Override
-  public EditorHighlighter createEditorHighlighter(@Nonnull VirtualFile vFile, @Nonnull EditorColorsScheme settings, @javax.annotation.Nullable Project project) {
+  public EditorHighlighter createEditorHighlighter(@Nonnull VirtualFile vFile, @Nonnull EditorColorsScheme settings, @Nullable Project project) {
     FileType fileType = vFile.getFileType();
     if (fileType instanceof LanguageFileType) {
       LanguageFileType substFileType = substituteFileType(((LanguageFileType)fileType).getLanguage(), vFile, project);
       if (substFileType != null) {
-        EditorHighlighterProvider provider = FileTypeEditorHighlighterProviders.INSTANCE.forFileType(substFileType);
+        EditorHighlighterProvider provider = EditorHighlighterProvider.forFileType(substFileType);
         EditorHighlighter editorHighlighter = provider.getEditorHighlighter(project, fileType, vFile, settings);
         boolean isPlain = editorHighlighter.getClass() == LexerEditorHighlighter.class && ((LexerEditorHighlighter)editorHighlighter).isPlain();
         if (!isPlain) {
@@ -80,7 +81,7 @@ public class EditorHighlighterFactoryImpl extends EditorHighlighterFactory {
         }
       }
       try {
-        return FileTypeEditorHighlighterProviders.INSTANCE.forFileType(fileType).getEditorHighlighter(project, fileType, vFile, settings);
+        return EditorHighlighterProvider.forFileType(fileType).getEditorHighlighter(project, fileType, vFile, settings);
       }
       catch (ProcessCanceledException e) {
         throw e;
@@ -94,7 +95,7 @@ public class EditorHighlighterFactoryImpl extends EditorHighlighterFactory {
     return createEditorHighlighter(highlighter, settings);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   private static LanguageFileType substituteFileType(Language language, VirtualFile vFile, Project project) {
     LanguageFileType fileType = null;
     if (vFile != null && project != null) {
@@ -120,7 +121,7 @@ public class EditorHighlighterFactoryImpl extends EditorHighlighterFactory {
 
   @Nonnull
   @Override
-  public EditorHighlighter createEditorHighlighter(@Nonnull final EditorColorsScheme settings, @Nonnull final String fileName, @javax.annotation.Nullable final Project project) {
+  public EditorHighlighter createEditorHighlighter(@Nonnull final EditorColorsScheme settings, @Nonnull final String fileName, @Nullable final Project project) {
     return createEditorHighlighter(new LightVirtualFile(fileName), settings, project);
   }
 }

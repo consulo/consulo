@@ -15,7 +15,6 @@
  */
 package consulo.language.editor.highlight;
 
-import consulo.language.Language;
 import consulo.language.version.LanguageVersion;
 import consulo.language.version.LanguageVersionUtil;
 import consulo.project.Project;
@@ -29,17 +28,9 @@ import java.util.Map;
 /**
  * @author VISTALL
  * @since 21:14/24.06.13
- *
- * This is need register in plugin.xml like
- * - <lang.syntaxHighlighterFactory key="LANGUAGE" implementationClass="CLASS"/>
  */
 public abstract class LanguageVersionableSyntaxHighlighterFactory extends SyntaxHighlighterFactory {
-  private final Map<LanguageVersion, SyntaxHighlighter> myHighlighters = new HashMap<LanguageVersion, SyntaxHighlighter>();
-  private final Language myLanguage;
-
-  protected LanguageVersionableSyntaxHighlighterFactory(Language language) {
-    myLanguage = language;
-  }
+  private final Map<LanguageVersion, SyntaxHighlighter> myHighlighters = new HashMap<>();
 
   @Nonnull
   public abstract SyntaxHighlighter getSyntaxHighlighter(@Nonnull LanguageVersion languageVersion);
@@ -47,7 +38,7 @@ public abstract class LanguageVersionableSyntaxHighlighterFactory extends Syntax
   @Nonnull
   @Override
   public final SyntaxHighlighter getSyntaxHighlighter(@Nullable Project project, @Nullable VirtualFile virtualFile) {
-    final LanguageVersion languageVersion = LanguageVersionUtil.findLanguageVersion(myLanguage, project, virtualFile);
+    final LanguageVersion languageVersion = LanguageVersionUtil.findLanguageVersion(getLanguage(), project, virtualFile);
     SyntaxHighlighter syntaxHighlighter = myHighlighters.get(languageVersion);
     if(syntaxHighlighter == null) {
       myHighlighters.put(languageVersion, syntaxHighlighter = getSyntaxHighlighter(languageVersion));

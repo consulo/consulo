@@ -19,7 +19,7 @@ import consulo.language.psi.stub.FileContent;
 import consulo.language.psi.stub.IndexingDataKeys;
 import consulo.language.psi.stub.PsiDependentFileContent;
 import consulo.language.version.LanguageVersion;
-import consulo.language.version.LanguageVersionResolvers;
+import consulo.language.version.LanguageVersionResolver;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.util.dataholder.Key;
@@ -132,7 +132,7 @@ public class FileContentImpl extends IndexedFileImpl implements PsiDependentFile
   public static PsiFile createFileFromText(@Nonnull Project project, @Nonnull CharSequence text, @Nonnull LanguageFileType fileType, @Nonnull VirtualFile file, @Nonnull String fileName) {
     Language language = fileType.getLanguage();
     Language substitutedLanguage = LanguageSubstitutors.INSTANCE.substituteLanguage(language, file, project);
-    LanguageVersion languageVersion = LanguageVersionResolvers.INSTANCE.forLanguage(substitutedLanguage).getLanguageVersion(substitutedLanguage, project, file);
+    LanguageVersion languageVersion = LanguageVersionResolver.forLanguage(substitutedLanguage).getLanguageVersion(substitutedLanguage, project, file);
     PsiFile psiFile = PsiFileFactory.getInstance(project).createFileFromText(fileName, languageVersion, text, false, false, false, file);
     if (psiFile == null) {
       throw new IllegalStateException("psiFile is null. language = " + language.getID() + ", substitutedLanguage = " + substitutedLanguage.getID());

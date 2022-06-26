@@ -15,10 +15,16 @@
  */
 package consulo.language.findUsage;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
+import consulo.application.Application;
+import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.language.Language;
-import consulo.language.OldLanguageExtension;
 import consulo.language.cacheBuilder.SimpleWordsScanner;
 import consulo.language.cacheBuilder.WordsScanner;
+import consulo.language.extension.ByLanguageValue;
+import consulo.language.extension.LanguageExtension;
+import consulo.language.extension.LanguageGroupByFactory;
 import consulo.language.psi.PsiElement;
 
 import javax.annotation.Nonnull;
@@ -28,9 +34,17 @@ import javax.annotation.Nullable;
  * Defines the support for the "Find Usages" feature in a custom language.
  *
  * @author max
- * @see OldLanguageExtension#forLanguage(Language)
+ * @see #forLanguage(Language)
  */
-public interface FindUsagesProvider {
+@Extension(ComponentScope.APPLICATION)
+public interface FindUsagesProvider extends LanguageExtension {
+  ExtensionPointCacheKey<FindUsagesProvider, ByLanguageValue<FindUsagesProvider>> KEY =
+          ExtensionPointCacheKey.create("FindUsagesProvider", LanguageGroupByFactory.build(new EmptyFindUsagesProvider()));
+
+  @Nonnull
+  static FindUsagesProvider forLanguage(@Nonnull Language language) {
+    return Application.get().getExtensionPoint(FindUsagesProvider.class).getOrBuildCache(KEY).get(language);
+  }
 
   /**
    * Gets the word scanner for building a word index for the specified language.

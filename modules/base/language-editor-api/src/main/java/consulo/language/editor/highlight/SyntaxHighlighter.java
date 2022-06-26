@@ -15,14 +15,13 @@
  */
 package consulo.language.editor.highlight;
 
-import consulo.language.Language;
-import consulo.language.lexer.Lexer;
 import consulo.colorScheme.TextAttributesKey;
-import consulo.component.extension.ExtensionPointName;
-import consulo.component.extension.KeyedFactoryEPBean;
+import consulo.language.Language;
+import consulo.language.ast.IElementType;
+import consulo.language.lexer.Lexer;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.ast.IElementType;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -32,8 +31,6 @@ import javax.annotation.Nonnull;
  * @see SyntaxHighlighterFactory#getSyntaxHighlighter(Language, Project, VirtualFile)
  */
 public interface SyntaxHighlighter {
-  ExtensionPointName<KeyedFactoryEPBean> EP_NAME = ExtensionPointName.create("consulo.syntaxHighlighter");
-
   /**
    * Returns the lexer used for highlighting the file. The lexer is invoked incrementally when the file is changed, so it must be
    * capable of saving/restoring state and resuming lexing from the middle of the file.

@@ -224,18 +224,6 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
     }
   }
 
-  public static class Highlighter implements SyntaxHighlighterProvider {
-    @Override
-    @Nullable
-    public SyntaxHighlighter create(@Nonnull FileType fileType, @Nullable Project project, @Nullable VirtualFile file) {
-      if (project == null || file == null) return null;
-      if (!ScratchUtil.isScratch(file)) return null;
-
-      Language language = LanguageUtil.getLanguageForPsi(project, file);
-      return language == null ? null : SyntaxHighlighterFactory.getSyntaxHighlighter(language, project, file);
-    }
-  }
-
   @Override
   public VirtualFile findFile(@Nonnull RootType rootType, @Nonnull String pathName, @Nonnull Option option) throws IOException {
     ApplicationManager.getApplication().assertReadAccessAllowed();

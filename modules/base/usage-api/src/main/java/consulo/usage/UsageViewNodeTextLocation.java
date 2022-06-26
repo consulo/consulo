@@ -19,7 +19,6 @@ package consulo.usage;
 import consulo.language.Language;
 import consulo.language.findUsage.DescriptiveNameUtil;
 import consulo.language.findUsage.FindUsagesProvider;
-import consulo.language.internal.LanguageFindUsages;
 import consulo.language.psi.ElementDescriptionLocation;
 import consulo.language.psi.ElementDescriptionProvider;
 import consulo.language.psi.PsiElement;
@@ -27,6 +26,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.meta.PsiMetaData;
 import consulo.language.psi.meta.PsiMetaOwner;
 import consulo.language.psi.meta.PsiPresentableMetaData;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -59,8 +59,7 @@ public class UsageViewNodeTextLocation extends ElementDescriptionLocation {
       }
 
       Language language = element.getLanguage();
-      FindUsagesProvider provider = LanguageFindUsages.INSTANCE.forLanguage(language);
-      assert provider != null : "Element: " + element + ", language: " + language;
+      FindUsagesProvider provider = FindUsagesProvider.forLanguage(language);
       return provider.getNodeText(element, true);
     }
   };
