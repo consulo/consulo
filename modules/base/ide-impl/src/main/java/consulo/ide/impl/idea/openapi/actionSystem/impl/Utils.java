@@ -7,12 +7,12 @@ import consulo.dataContext.DataContext;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.application.util.registry.Registry;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ide.impl.actionSystem.ex.TopApplicationMenuUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.util.concurrent.CancellablePromise;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

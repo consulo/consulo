@@ -18,6 +18,7 @@ import consulo.dataContext.DataContext;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.ex.internal.XmlActionGroupStub;
 import consulo.util.lang.function.Conditions;
 import consulo.application.util.registry.Registry;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
@@ -254,7 +255,7 @@ class ActionUpdater {
   }
 
   private List<AnAction> doExpandActionGroup(ActionGroup group, boolean hideDisabled, UpdateStrategy strategy) {
-    if (group instanceof ActionGroupStub) {
+    if (group instanceof XmlActionGroupStub) {
       throw new IllegalStateException("Trying to expand non-unstubbed group");
     }
     if (myAllowPartialExpand) {

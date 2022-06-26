@@ -3,6 +3,7 @@ package consulo.ui.ex.action;
 
 import consulo.component.ProcessCanceledException;
 import consulo.logging.Logger;
+import consulo.ui.ex.internal.ActionStubBase;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
 import consulo.util.lang.Pair;
@@ -49,7 +50,7 @@ public class DefaultActionGroup extends ActionGroup {
   private final List<Pair<AnAction, Constraints>> myPairs = Lists.newLockFreeCopyOnWriteList();
 
   public DefaultActionGroup() {
-    this(null, false);
+    // do not initialize template if not data for it
   }
 
   /**
@@ -182,7 +183,7 @@ public class DefaultActionGroup extends ActionGroup {
   }
 
   private void actionAdded(@Nonnull AnAction addedAction, @Nonnull ActionManager actionManager) {
-    String addedActionId = addedAction instanceof ActionStub ? ((ActionStub)addedAction).getId() : actionManager.getId(addedAction);
+    String addedActionId = addedAction instanceof ActionStubBase ? ((ActionStubBase)addedAction).getId() : actionManager.getId(addedAction);
     if (addedActionId == null) {
       return;
     }
@@ -220,8 +221,8 @@ public class DefaultActionGroup extends ActionGroup {
   private static int findIndex(String actionId, @Nonnull List<? extends AnAction> actions, @Nonnull ActionManager actionManager) {
     for (int i = 0; i < actions.size(); i++) {
       AnAction action = actions.get(i);
-      if (action instanceof ActionStub) {
-        if (((ActionStub)action).getId().equals(actionId)) {
+      if (action instanceof ActionStubBase) {
+        if (((ActionStubBase)action).getId().equals(actionId)) {
           return i;
         }
       }
@@ -249,10 +250,10 @@ public class DefaultActionGroup extends ActionGroup {
   }
 
   public final void remove(@Nonnull AnAction action, @Nullable String id) {
-    if (!mySortedChildren.remove(action) && !mySortedChildren.removeIf(oldAction -> oldAction instanceof ActionStub && ((ActionStub)oldAction).getId().equals(id))) {
+    if (!mySortedChildren.remove(action) && !mySortedChildren.removeIf(oldAction -> oldAction instanceof ActionStubBase && ((ActionStubBase)oldAction).getId().equals(id))) {
       for (int i = 0; i < myPairs.size(); i++) {
         Pair<AnAction, Constraints> pair = myPairs.get(i);
-        if (pair.first.equals(action) || (pair.first instanceof ActionStub && ((ActionStub)pair.first).getId().equals(id))) {
+        if (pair.first.equals(action) || (pair.first instanceof ActionStubBase && ((ActionStubBase)pair.first).getId().equals(id))) {
           myPairs.remove(i);
           break;
         }

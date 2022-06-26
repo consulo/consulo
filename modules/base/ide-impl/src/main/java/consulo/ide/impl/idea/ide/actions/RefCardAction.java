@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.HelpManager;
@@ -27,6 +28,7 @@ import javax.annotation.Nonnull;
 /**
  * @author Vladimir Kondratyev
  */
+@ActionImpl(id = "Help.KeymapReference")
 public class RefCardAction extends AnAction implements DumbAware {
   @RequiredUIAccess
   @Override

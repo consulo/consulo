@@ -15,7 +15,7 @@
  */
 package consulo.ui.ex.action;
 
-import org.jetbrains.annotations.NonNls;
+import javax.annotation.Nonnull;
 
 /**
  * Defines possible positions of an action relative to another action.
@@ -26,12 +26,12 @@ public class Anchor {
    * Anchor type that specifies the action to be the first in the list at the
    * moment of addition.
    */
-  public static final Anchor FIRST  = new Anchor("first");
+  public static final Anchor FIRST = new Anchor("first");
   /**
    * Anchor type that specifies the action to be the last in the list at the
    * moment of addition.
    */
-  public static final Anchor LAST   = new Anchor("last");
+  public static final Anchor LAST = new Anchor("last");
   /**
    * Anchor type that specifies the action to be placed before the relative
    * action.
@@ -41,14 +41,15 @@ public class Anchor {
    * Anchor type that specifies the action to be placed after the relative
    * action.
    */
-  public static final Anchor AFTER  = new Anchor("after");
+  public static final Anchor AFTER = new Anchor("after");
 
   private final String myText;
 
-  private Anchor(@NonNls String text) {
+  private Anchor(@Nonnull String text) {
     myText = text;
   }
 
+  @Override
   public String toString() {
     return myText;
   }

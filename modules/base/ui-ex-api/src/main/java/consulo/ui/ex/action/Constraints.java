@@ -15,7 +15,8 @@
  */
 package consulo.ui.ex.action;
 
-import org.jetbrains.annotations.NonNls;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Represents constraints for some action. Constraints are used to specify
@@ -35,7 +36,6 @@ public class Constraints implements Cloneable {
   /**
    * Id of the action to be positioned relative to. Used when anchor type
    * is either {@link Anchor#AFTER} or {@link Anchor#BEFORE}.
-   *
    */
   public String myRelativeToActionId;
 
@@ -43,20 +43,20 @@ public class Constraints implements Cloneable {
    * Creates a new constraints instance with the specified anchor type and
    * id of the relative action.
    *
-   * @param anchor anchor
+   * @param anchor             anchor
    * @param relativeToActionId Id of the relative action
    */
-  public Constraints(Anchor anchor, @NonNls String relativeToActionId){
+  public Constraints(@Nonnull Anchor anchor, @Nullable String relativeToActionId) {
     myAnchor = anchor;
     myRelativeToActionId = relativeToActionId;
   }
 
   @Override
-  public Object clone(){
-    try{
+  public Object clone() {
+    try {
       return super.clone();
     }
-    catch(CloneNotSupportedException exc){
+    catch (CloneNotSupportedException exc) {
       throw new RuntimeException(exc.getMessage());
     }
   }

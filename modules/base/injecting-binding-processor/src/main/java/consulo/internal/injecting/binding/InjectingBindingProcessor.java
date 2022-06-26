@@ -57,8 +57,7 @@ public class InjectingBindingProcessor extends AbstractProcessor {
     myApiAnnotations.put(SERVICE_IMPL, Service.class);
     myApiAnnotations.put(EXTENSION_IMPL, Extension.class);
     myApiAnnotations.put(TOPIC_IMPL, Topic.class);
-    // action don't have api annotation - just return self
-    myApiAnnotations.put(ACTION_IMPL, ActionImpl.class);
+    myApiAnnotations.put(ACTION_IMPL, Action.class);
   }
 
   @Override
@@ -103,14 +102,9 @@ public class InjectingBindingProcessor extends AbstractProcessor {
           bindBuilder.addAnnotation(suppressWarning);
           bindBuilder.addSuperinterface(injectingBindingClass);
 
-          bindBuilder.addMethod(MethodSpec.methodBuilder("getApiClassName").returns(String.class).addModifiers(Modifier.PUBLIC)
-                                        .addCode(CodeBlock.of("return $S;", apiInfo.typeElement().getQualifiedName().toString())).build());
           bindBuilder.addMethod(MethodSpec.methodBuilder("getApiClass").returns(Class.class).addModifiers(Modifier.PUBLIC)
                                         .addCode(CodeBlock.of("return $T.class;", ClassName.bestGuess(apiInfo.typeElement().getQualifiedName().toString()))).build());
 
-          bindBuilder.addMethod(
-                  MethodSpec.methodBuilder("getImplClassName").returns(String.class).addModifiers(Modifier.PUBLIC).addCode(CodeBlock.of("return $S;", typeElement.getQualifiedName().toString()))
-                          .build());
           bindBuilder.addMethod(MethodSpec.methodBuilder("getImplClass").returns(Class.class).addModifiers(Modifier.PUBLIC).addCode(CodeBlock.of("return $T.class;", typeElement)).build());
 
           bindBuilder.addMethod(MethodSpec.methodBuilder("getComponentAnnotationClass").addModifiers(Modifier.PUBLIC).returns(Class.class)
@@ -353,7 +347,7 @@ public class InjectingBindingProcessor extends AbstractProcessor {
       return ((Extension)annotation).value();
     }
 
-    if (annotation instanceof ActionImpl) {
+    if (annotation instanceof Action) {
       // actions always bind in application injecting scope
       return ComponentScope.APPLICATION;
     }

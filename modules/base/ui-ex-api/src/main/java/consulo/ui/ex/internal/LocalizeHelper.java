@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.actionSystem.impl;
+package consulo.ui.ex.internal;
 
 import consulo.component.util.localize.AbstractBundle;
 import consulo.application.CommonBundle;

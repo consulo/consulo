@@ -16,23 +16,23 @@
 package consulo.ide.impl.idea.openapi.editor.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.dataContext.DataContext;
-import consulo.disposer.Disposable;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.action.ActionStub;
-import consulo.ui.ex.action.event.AnActionListener;
 import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
-import consulo.ide.impl.idea.openapi.editor.EditorLastActionTracker;
 import consulo.codeEditor.event.EditorEventMulticaster;
 import consulo.codeEditor.event.EditorMouseEvent;
 import consulo.codeEditor.event.EditorMouseListener;
-import consulo.disposer.Disposer;
 import consulo.codeEditor.impl.CodeEditorBase;
+import consulo.dataContext.DataContext;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.openapi.editor.EditorLastActionTracker;
+import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.event.AnActionListener;
+import consulo.ui.ex.internal.ActionStubBase;
 import consulo.util.dataholder.Key;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -119,7 +119,7 @@ public class EditorLastActionTrackerImpl extends EditorLastActionTracker impleme
   }
 
   private String getActionId(AnAction action) {
-    return action instanceof ActionStub ? ((ActionStub)action).getId() : myActionManager.getId(action);
+    return action instanceof ActionStubBase ? ((ActionStubBase)action).getId() : myActionManager.getId(action);
   }
 
   private void resetLastAction() {

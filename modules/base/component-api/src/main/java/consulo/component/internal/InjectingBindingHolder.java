@@ -15,13 +15,11 @@
  */
 package consulo.component.internal;
 
-import consulo.annotation.component.ComponentScope;
 import consulo.component.bind.InjectingBinding;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import javax.annotation.Nonnull;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author VISTALL
@@ -29,15 +27,22 @@ import java.util.Map;
  */
 public class InjectingBindingHolder {
   private final Map<Class, List<InjectingBinding>> myBindings = new HashMap<>();
+  private final AtomicBoolean myLocked;
 
-  public InjectingBindingHolder(Class<?> componentAnnotation, ComponentScope componentScope) {
+  public InjectingBindingHolder(AtomicBoolean locked) {
+    myLocked = locked;
   }
 
   public void addBinding(InjectingBinding binding) {
+    if (myLocked.get()) {
+      throw new IllegalArgumentException("locked");
+    }
+
     myBindings.computeIfAbsent(binding.getApiClass(), s -> new LinkedList<>()).add(binding);
   }
 
+  @Nonnull
   public Map<Class, List<InjectingBinding>> getBindings() {
-    return myBindings;
+    return Collections.unmodifiableMap(myBindings);
   }
 }

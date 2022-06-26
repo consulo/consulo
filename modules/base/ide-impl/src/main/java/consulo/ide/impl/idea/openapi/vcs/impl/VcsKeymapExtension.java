@@ -16,16 +16,17 @@
 package consulo.ide.impl.idea.openapi.vcs.impl;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ui.ex.keymap.KeyMapBundle;
 import consulo.ide.impl.idea.openapi.keymap.KeymapExtension;
 import consulo.ide.impl.idea.openapi.keymap.KeymapGroup;
 import consulo.ide.impl.idea.openapi.keymap.KeymapGroupFactory;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.ActionsTreeUtil;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.Group;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.project.Project;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.internal.ActionStubBase;
+import consulo.ui.ex.keymap.KeyMapBundle;
 import consulo.util.lang.function.Condition;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 
 /**
  * @author yole
@@ -77,7 +78,7 @@ public class VcsKeymapExtension implements KeymapExtension {
     }
     else {
       if (filtered == null || filtered.value(action)) {
-        String id = action instanceof ActionStub ? ((ActionStub)action).getId() : ActionManager.getInstance().getId(action);
+        String id = action instanceof ActionStubBase ? ((ActionStubBase)action).getId() : ActionManager.getInstance().getId(action);
         result.addActionId(id);
       }
     }

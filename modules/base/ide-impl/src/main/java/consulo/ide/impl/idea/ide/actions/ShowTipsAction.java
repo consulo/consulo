@@ -15,15 +15,17 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
+import consulo.annotation.component.ActionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.tipOfDay.TipOfDayManager;
 import consulo.ui.annotation.RequiredUIAccess;
-
-import javax.annotation.Nonnull;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import jakarta.inject.Inject;
 
+import javax.annotation.Nonnull;
+
+@ActionImpl(id = "ShowTips")
 public class ShowTipsAction extends AnAction implements DumbAware {
   private final TipOfDayManager myManager;
 

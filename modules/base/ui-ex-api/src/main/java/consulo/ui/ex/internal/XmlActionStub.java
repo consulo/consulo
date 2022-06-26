@@ -13,15 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.ex.action;
+package consulo.ui.ex.internal;
 
+import consulo.application.Application;
+import consulo.component.ProcessCanceledException;
+import consulo.container.PluginException;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
+import consulo.ui.image.ImageKey;
+import consulo.ui.style.StandardColors;
 
 import javax.annotation.Nonnull;
-
+import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
 /**
@@ -30,8 +41,8 @@ import java.util.function.Supplier;
  *
  * @author Vladimir Kondratyev
  */
-public class ActionStub extends AnAction implements ActionStubBase {
-  private static final Logger LOG = Logger.getInstance(ActionStub.class);
+public class XmlActionStub extends AnAction implements ActionStubBase {
+  private static final Logger LOG = Logger.getInstance(XmlActionStub.class);
 
   private final String myClassName;
   private final String myId;
@@ -40,11 +51,7 @@ public class ActionStub extends AnAction implements ActionStubBase {
   @Nonnull
   private final PluginDescriptor myPluginDescriptor;
 
-  public ActionStub(@Nonnull String actionClass,
-                    @Nonnull String id,
-                    @Nonnull PluginDescriptor pluginDescriptor,
-                    String iconPath,
-                    @Nonnull Supplier<Presentation> templatePresentation) {
+  public XmlActionStub(@Nonnull String actionClass, @Nonnull String id, @Nonnull PluginDescriptor pluginDescriptor, String iconPath, @Nonnull Supplier<Presentation> templatePresentation) {
     LOG.assertTrue(id.length() > 0);
     myPluginDescriptor = pluginDescriptor;
     myClassName = actionClass;
@@ -82,10 +89,64 @@ public class ActionStub extends AnAction implements ActionStubBase {
     return myIconPath;
   }
 
+  @Nullable
+  @Override
+  public AnAction initialize(@Nonnull Application application, @Nonnull ActionManager manager) {
+    return convertStub(this);
+  }
+
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     throw new UnsupportedOperationException();
+  }
+
+  @Nullable
+  static AnAction convertStub(@Nonnull XmlActionStub stub) {
+    AnAction anAction = instantiate(stub.getClassName(), stub.getLoader(), stub.getPluginId(), AnAction.class);
+    if (anAction == null) return null;
+
+    stub.initAction(anAction);
+    updateIconFromStub(stub, anAction);
+    return anAction;
+  }
+
+  @Nullable
+  @SuppressWarnings("unchecked")
+  static <T> T instantiate(String stubClassName, ClassLoader classLoader, PluginId pluginId, Class<T> expectedClass) {
+    Object obj;
+    try {
+      Class<?> actionClass = Class.forName(stubClassName, true, classLoader);
+      obj = Application.get().getUnbindedInstance(actionClass);
+    }
+    catch (ProcessCanceledException e) {
+      throw e;
+    }
+    catch (Throwable e) {
+      LOG.error(new PluginException(e, pluginId));
+      return null;
+    }
+
+    if (!expectedClass.isInstance(obj)) {
+      LOG.error(new PluginException("class with name '" + stubClassName + "' must be an instance of '" + expectedClass.getName() + "'; got " + obj, pluginId));
+      return null;
+    }
+    //noinspection unchecked
+    return (T)obj;
+  }
+
+  static void updateIconFromStub(@Nonnull ActionStubBase stub, AnAction anAction) {
+    String iconPath = stub.getIconPath();
+    if (iconPath != null) {
+      ImageKey imageKey = ImageKey.fromString(iconPath, Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE);
+      if (imageKey != null) {
+        anAction.getTemplatePresentation().setIcon(imageKey);
+      }
+      else {
+        LOG.warn("Wrong icon path: " + iconPath);
+        anAction.getTemplatePresentation().setIcon(ImageEffects.colorFilled(Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE, StandardColors.MAGENTA));
+      }
+    }
   }
 
   public final void initAction(@Nonnull AnAction targetAction) {

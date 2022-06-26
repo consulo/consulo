@@ -16,29 +16,29 @@
 package consulo.ide.impl.idea.openapi.keymap.impl.ui;
 
 import consulo.application.AllIcons;
+import consulo.application.util.registry.Registry;
+import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginId;
+import consulo.container.plugin.PluginManager;
 import consulo.ide.impl.idea.ide.actionMacro.ActionMacro;
 import consulo.ide.impl.idea.ide.plugins.PluginManagerCore;
 import consulo.ide.impl.idea.ide.ui.search.SearchUtil;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionManagerEx;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.QuickList;
-import consulo.ui.ex.keymap.KeyMapBundle;
-import consulo.ui.ex.keymap.Keymap;
 import consulo.ide.impl.idea.openapi.keymap.KeymapExtension;
 import consulo.ide.impl.idea.openapi.keymap.ex.KeymapManagerEx;
 import consulo.ide.impl.idea.openapi.keymap.impl.KeymapImpl;
-import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.util.lang.function.Condition;
-import consulo.application.util.registry.Registry;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.container.plugin.PluginDescriptor;
-import consulo.container.plugin.PluginId;
-import consulo.container.plugin.PluginManager;
 import consulo.logging.Logger;
+import consulo.project.Project;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.internal.ActionStubBase;
+import consulo.ui.ex.keymap.KeyMapBundle;
+import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.image.Image;
+import consulo.util.lang.function.Condition;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nullable;
@@ -141,7 +141,7 @@ public class ActionsTreeUtil {
       @Override
       public boolean value(final AnAction action) {
         if (action == null) return false;
-        final String id = action instanceof ActionStub ? ((ActionStub)action).getId() : actionManager.getId(action);
+        final String id = action instanceof ActionStubBase ? ((ActionStubBase)action).getId() : actionManager.getId(action);
         if (id != null) {
           boolean actionBound = isActionBound(keymap, id);
           return filter == null ? !actionBound : !actionBound && filter.value(action);
@@ -173,7 +173,7 @@ public class ActionsTreeUtil {
       return name;
     }
     else {
-      final String id = action instanceof ActionStub ? ((ActionStub)action).getId() : ActionManager.getInstance().getId(action);
+      final String id = action instanceof ActionStubBase ? ((ActionStubBase)action).getId() : ActionManager.getInstance().getId(action);
       if (id != null) {
         return id;
       }
@@ -222,7 +222,7 @@ public class ActionsTreeUtil {
         group.addSeparator();
       }
       else if (action != null) {
-        String id = action instanceof ActionStub ? ((ActionStub)action).getId() : actionManager.getId(action);
+        String id = action instanceof ActionStubBase ? ((ActionStubBase)action).getId() : actionManager.getId(action);
         if (id != null) {
           if (id.startsWith(TOOL_ACTION_PREFIX)) continue;
           if (filtered == null || filtered.value(action)) {
@@ -265,7 +265,7 @@ public class ActionsTreeUtil {
         addEditorActions(filtered, (DefaultActionGroup)editorAction, ids);
       }
       else {
-        String actionId = editorAction instanceof ActionStub ? ((ActionStub)editorAction).getId() : actionManager.getId(editorAction);
+        String actionId = editorAction instanceof ActionStubBase ? ((ActionStubBase)editorAction).getId() : actionManager.getId(editorAction);
         if (actionId == null) continue;
         if (actionId.startsWith(EDITOR_PREFIX)) {
           AnAction action = actionManager.getActionOrStub('$' + actionId.substring(6));
@@ -393,7 +393,7 @@ public class ActionsTreeUtil {
       DefaultActionGroup group = (DefaultActionGroup)action;
       AnAction[] children = group.getChildActionsOrStubs();
       for (AnAction child : children) {
-        String childId = child instanceof ActionStub ? ((ActionStub)child).getId() : actionManager.getId(child);
+        String childId = child instanceof ActionStubBase ? ((ActionStubBase)child).getId() : actionManager.getId(child);
         if (childId == null) {
           // SCR 35149
           continue;
@@ -494,7 +494,7 @@ public class ActionsTreeUtil {
       public boolean value(final AnAction action) {
         if (keyboardShortcut == null) return true;
         if (action == null) return false;
-        final Shortcut[] actionShortcuts = keymap.getShortcuts(action instanceof ActionStub ? ((ActionStub)action).getId() : actionManager.getId(action));
+        final Shortcut[] actionShortcuts = keymap.getShortcuts(action instanceof ActionStubBase ? ((ActionStubBase)action).getId() : actionManager.getId(action));
         for (Shortcut shortcut : actionShortcuts) {
           if (shortcut instanceof KeyboardShortcut) {
             final KeyboardShortcut keyboardActionShortcut = (KeyboardShortcut)shortcut;
@@ -511,7 +511,7 @@ public class ActionsTreeUtil {
   public static Condition<AnAction> isActionFiltered(final ActionManager actionManager, final Keymap keymap, final Condition<? super Shortcut> predicat) {
     return action -> {
       if (action == null) return false;
-      final Shortcut[] actionShortcuts = keymap.getShortcuts(action instanceof ActionStub ? ((ActionStub)action).getId() : actionManager.getId(action));
+      final Shortcut[] actionShortcuts = keymap.getShortcuts(action instanceof ActionStubBase ? ((ActionStubBase)action).getId() : actionManager.getId(action));
       for (Shortcut actionShortcut : actionShortcuts) {
         if (predicat.value(actionShortcut)) return true;
       }

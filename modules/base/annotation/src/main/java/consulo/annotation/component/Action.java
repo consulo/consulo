@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.ex.action;
+package consulo.annotation.component;
 
-import consulo.container.plugin.PluginId;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * from kotlin
+ * @author VISTALL
+ * @since 26-Jun-22
+ *
+ * Annotation - marker for action/action group marker. Don't use it's directly
  */
-public interface ActionStubBase {
-  String getId();
-
-  PluginId getPluginId();
-
-  String getIconPath();
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+public @interface Action {
 }

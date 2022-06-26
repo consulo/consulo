@@ -22,6 +22,7 @@ import consulo.container.plugin.PluginManager;
 
 import javax.annotation.Nonnull;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author VISTALL
@@ -30,10 +31,12 @@ import java.util.*;
 public class InjectingBindingLoader {
   public static final InjectingBindingLoader INSTANCE = new InjectingBindingLoader();
 
+  private final AtomicBoolean myLocked = new AtomicBoolean();
+
   private final Map<ComponentScope, InjectingBindingHolder> myServices = new HashMap<>();
   private final Map<ComponentScope, InjectingBindingHolder> myExtensions = new HashMap<>();
   private final Map<ComponentScope, InjectingBindingHolder> myTopics = new HashMap<>();
-  private final InjectingBindingHolder myActions = new InjectingBindingHolder(ActionImpl.class, ComponentScope.APPLICATION);
+  private final InjectingBindingHolder myActions = new InjectingBindingHolder(myLocked);
 
   private InjectingBindingLoader() {
   }
@@ -75,20 +78,22 @@ public class InjectingBindingLoader {
         getHolder(binding.getComponentAnnotationClass(), binding.getComponentScope()).addBinding(binding);
       }
     }
+
+    myLocked.set(true);
   }
 
   @Nonnull
   public InjectingBindingHolder getHolder(@Nonnull Class<?> annotationClass, @Nonnull ComponentScope componentScope) {
     if (annotationClass == Service.class) {
-      return myServices.computeIfAbsent(componentScope, c -> new InjectingBindingHolder(annotationClass, componentScope));
+      return myServices.computeIfAbsent(componentScope, c -> new InjectingBindingHolder(myLocked));
     }
     else if (annotationClass == Extension.class) {
-      return myExtensions.computeIfAbsent(componentScope, c -> new InjectingBindingHolder(annotationClass, componentScope));
+      return myExtensions.computeIfAbsent(componentScope, c -> new InjectingBindingHolder(myLocked));
     }
     else if (annotationClass == Topic.class) {
-      return myTopics.computeIfAbsent(componentScope, c -> new InjectingBindingHolder(annotationClass, componentScope));
+      return myTopics.computeIfAbsent(componentScope, c -> new InjectingBindingHolder(myLocked));
     }
-    else if (annotationClass == ActionImpl.class) {
+    else if (annotationClass == Action.class) {
       return myActions;
     }
 

@@ -16,6 +16,7 @@
 package consulo.ui.ex.action;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.annotation.component.Action;
 import consulo.application.TransactionGuard;
 import consulo.application.dumb.DumbAware;
 import consulo.application.dumb.PossiblyDumbAware;
@@ -69,6 +70,7 @@ import java.util.function.Consumer;
  * @see Presentation
  * @see ActionPlaces
  */
+@Action
 public abstract class AnAction implements PossiblyDumbAware {
   @Nonnull
   @Deprecated
@@ -119,6 +121,8 @@ public abstract class AnAction implements PossiblyDumbAware {
 
   /**
    * Creates a new action with <code>icon</code> provided. Its text, description set to <code>null</code>.
+   *
+   * If creating action via @{@link consulo.annotation.component.ActionImpl} use {@link #getTemplateIcon()}
    *
    * @param icon Default icon to appear in toolbars and menus (Note some platform don't have icons in menu).
    */
@@ -302,7 +306,17 @@ public abstract class AnAction implements PossiblyDumbAware {
 
   @Nonnull
   protected Presentation createTemplatePresentation() {
-    return new Presentation();
+    Presentation presentation = new Presentation();
+    presentation.setIcon(getTemplateIcon());
+    return presentation;
+  }
+
+  /**
+   * Icon from template presentation, without creating presentation. Don't use constructor if registering it via @ActionImpl
+   */
+  @Nullable
+  protected Image getTemplateIcon() {
+    return null;
   }
 
   /**

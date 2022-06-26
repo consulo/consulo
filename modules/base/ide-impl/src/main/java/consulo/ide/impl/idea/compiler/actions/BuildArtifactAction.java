@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.compiler.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.CommonShortcuts;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
@@ -61,6 +62,7 @@ import java.util.*;
 /**
  * @author nik
  */
+@ActionImpl(id = "BuildArtifact")
 public class BuildArtifactAction extends DumbAwareAction {
   private static final NotificationGroup NOTIFICATION_GROUP = NotificationGroup.balloonGroup("Clean artifact");
 

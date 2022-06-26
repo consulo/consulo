@@ -16,12 +16,16 @@
 package consulo.ide.impl.idea.xdebugger.impl.actions;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ui.ex.keymap.KeyMapBundle;
 import consulo.ide.impl.idea.openapi.keymap.KeymapExtension;
 import consulo.ide.impl.idea.openapi.keymap.KeymapGroup;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.Group;
 import consulo.project.Project;
-import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.internal.ActionStubBase;
+import consulo.ui.ex.keymap.KeyMapBundle;
 import consulo.util.lang.function.Condition;
 
 import java.util.ArrayList;
@@ -39,7 +43,7 @@ public class DebuggerKeymapExtension implements KeymapExtension {
 
     ArrayList<String> ids = new ArrayList<String>();
     for (AnAction debuggerAction : debuggerActions) {
-      String actionId = debuggerAction instanceof ActionStub ? ((ActionStub)debuggerAction).getId() : actionManager.getId(debuggerAction);
+      String actionId = debuggerAction instanceof ActionStubBase ? ((ActionStubBase)debuggerAction).getId() : actionManager.getId(debuggerAction);
       if (filtered == null || filtered.value(debuggerAction)) {
         ids.add(actionId);
       }

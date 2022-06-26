@@ -28,13 +28,7 @@ public interface InjectingBinding {
   Type[] EMPTY_TYPES = new Type[0];
 
   @Nonnull
-  String getApiClassName();
-
-  @Nonnull
   Class getApiClass();
-
-  @Nonnull
-  String getImplClassName();
 
   @Nonnull
   Class getImplClass();
@@ -48,7 +42,9 @@ public interface InjectingBinding {
   @Nonnull
   String[] getComponentProfiles();
 
-  int getParametersCount();
+  default int getParametersCount() {
+    return getParameterTypes().length;
+  }
 
   @Nonnull
   Type[] getParameterTypes();

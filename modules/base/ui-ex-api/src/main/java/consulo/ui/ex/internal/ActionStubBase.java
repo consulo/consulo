@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2022 consulo.io
+ * Copyright 2013-2019 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,26 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.annotation.component;
+package consulo.ui.ex.internal;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import consulo.application.Application;
+import consulo.container.plugin.PluginId;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnAction;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
- * @author VISTALL
- * @since 24-Jun-22
+ * from kotlin
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface ActionImpl {
-  String id();
+public interface ActionStubBase {
+  String getId();
 
-  AddActionToGroup[] addToGroups() default {};
+  PluginId getPluginId();
 
-  /**
-   * Action references for actions groups
-   */
-  String[] references() default {};
+  String getIconPath();
+
+  @Nullable
+  AnAction initialize(@Nonnull Application application, @Nonnull ActionManager manager);
 }

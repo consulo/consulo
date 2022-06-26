@@ -13,26 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.annotation.component;
+package consulo.ui.ex.internal;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import consulo.annotation.component.ActionImpl;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 24-Jun-22
+ * @since 26-Jun-22
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface ActionImpl {
-  String id();
-
-  AddActionToGroup[] addToGroups() default {};
-
-  /**
-   * Action references for actions groups
-   */
-  String[] references() default {};
+public interface InjectingBindingActionStubBase extends ActionStubBase {
+  @Nonnull
+  ActionImpl getActionImpl();
 }

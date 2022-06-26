@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.HelpManager;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -27,6 +28,7 @@ import javax.annotation.Nonnull;
 /**
  * @author Vladimir Kondratyev
  */
+@ActionImpl(id = "OnlineDocAction")
 public class OnlineDocAction extends DumbAwareAction {
   private final Provider<HelpManager> myHelpManagerProvider;
 

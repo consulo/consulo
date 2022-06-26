@@ -13,26 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.actionSystem;
+package consulo.ui.ex.internal;
 
+import consulo.application.Application;
 import consulo.container.PluginException;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
-import consulo.ide.impl.idea.util.ObjectUtil;
-import consulo.ui.ex.action.ActionStubBase;
 import consulo.ui.ex.action.*;
+import consulo.util.lang.ObjectUtil;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * from kotlin
  */
-public class ActionGroupStub extends DefaultActionGroup implements ActionStubBase {
+public class XmlActionGroupStub extends DefaultActionGroup implements ActionStubBase {
   private final String myId;
   private final String myActionClass;
   private final PluginDescriptor myPluginDescriptor;
   private String myIconPath;
   private boolean myPopupDefinedInXml;
 
-  public ActionGroupStub(String id, String actionClass, PluginDescriptor pluginDescriptor) {
+  public XmlActionGroupStub(String id, String actionClass, PluginDescriptor pluginDescriptor) {
     myId = id;
     myActionClass = actionClass;
     myPluginDescriptor = pluginDescriptor;
@@ -69,12 +72,27 @@ public class ActionGroupStub extends DefaultActionGroup implements ActionStubBas
     return myIconPath;
   }
 
+  @Nullable
+  @Override
+  public AnAction initialize(@Nonnull Application application, @Nonnull ActionManager manager) {
+    return convertGroupStub(this, manager);
+  }
+
+  @Nullable
+  static ActionGroup convertGroupStub(@Nonnull XmlActionGroupStub stub, @Nonnull ActionManager actionManager) {
+    ActionGroup group = XmlActionStub.instantiate(stub.getActionClass(), stub.getClassLoader(), stub.getPluginId(), ActionGroup.class);
+    if (group == null) return null;
+    stub.initGroup(group, actionManager);
+    XmlActionStub.updateIconFromStub(stub, group);
+    return group;
+  }
+
   public void setIconPath(String iconPath) {
     myIconPath = iconPath;
   }
 
   public void initGroup(ActionGroup target, ActionManager actionManager) {
-    ActionStub.copyTemplatePresentation(getTemplatePresentation(), target.getTemplatePresentation());
+    XmlActionStub.copyTemplatePresentation(getTemplatePresentation(), target.getTemplatePresentation());
     target.setCanUseProjectAsDefault(isCanUseProjectAsDefault());
     target.setModuleExtensionIds(getModuleExtensionIds());
 

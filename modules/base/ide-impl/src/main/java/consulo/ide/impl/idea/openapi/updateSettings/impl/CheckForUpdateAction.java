@@ -16,18 +16,17 @@
 package consulo.ide.impl.idea.openapi.updateSettings.impl;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.application.progress.Task;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.project.Project;
 import consulo.ide.impl.actionSystem.ex.TopApplicationMenuUtil;
 import consulo.ide.impl.updateSettings.UpdateSettings;
 import consulo.ide.impl.updateSettings.impl.PlatformOrPluginUpdateChecker;
 import consulo.ide.impl.updateSettings.impl.PlatformOrPluginUpdateResult;
+import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.util.concurrent.AsyncResult;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
@@ -58,7 +57,7 @@ public class CheckForUpdateAction extends DumbAwareAction {
   @Override
   @RequiredUIAccess
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
 
     actionPerformed(project, myUpdateSettingsProvider.get(), UIAccess.current());
   }

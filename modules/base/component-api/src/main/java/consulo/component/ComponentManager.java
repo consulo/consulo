@@ -27,8 +27,10 @@ import consulo.util.lang.ThreeState;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.function.BooleanSupplier;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -66,6 +68,11 @@ public interface ComponentManager extends UserDataHolder, Disposable, InjectingC
   @Nonnull
   default <T> T getUnbindedInstance(@Nonnull Class<T> clazz) {
     return getInjectingContainer().getUnbindedInstance(clazz);
+  }
+
+  @Nonnull
+  default <T> T getUnbindedInstance(@Nonnull Class<T> clazz, @Nonnull Type[] constructorTypes, @Nonnull Function<Object[], T> constructor) {
+    return getInjectingContainer().getUnbindedInstance(clazz, constructorTypes, constructor);
   }
 
   @Deprecated

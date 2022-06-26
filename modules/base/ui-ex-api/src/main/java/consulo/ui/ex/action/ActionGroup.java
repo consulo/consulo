@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ui.ex.action;
 
+import consulo.annotation.component.Action;
 import consulo.dataContext.DataContext;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -27,6 +28,7 @@ import java.util.Set;
  * @see CheckedActionGroup
  * @see CompactActionGroup
  */
+@Action
 public abstract class ActionGroup extends AnAction {
   public abstract static class Builder {
     protected final List<AnAction> myActions = new ArrayList<>();

@@ -59,7 +59,7 @@
     <action id="EditSourceInNewWindow" class="consulo.ide.impl.idea.ide.actions.EditSourceInNewWindowAction"/>
     <action id="SearchEverywhere" class="consulo.ide.impl.idea.ide.actions.SearchEverywhereAction" icon="consulo.platform.base.PlatformIconGroup@actions.find"/>
     <action id="RunAnything" icon="consulo.platform.base.PlatformIconGroup@actions.run_anything" class="consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingAction" text="Run anything"
-			description="Allows to execute any command"/>
+            description="Allows to execute any command"/>
     <action id="SettingsEntryPoint" class="consulo.ide.impl.idea.ide.actions.SettingsEntryPointAction" icon="consulo.platform.base.PlatformIconGroup@general.gearplain"/>
 
     <group id="TemplateParametersNavigation">
@@ -223,9 +223,9 @@
 
     <group id="DirDiffMenu">
       <action id="DirDiffMenu.SetCopyToRight" class="consulo.ide.impl.idea.openapi.diff.impl.dir.actions.popup.SetCopyToRight" text="Set Copy to Right"
-			  icon="consulo.platform.base.PlatformIconGroup@vcs.arrow_right"/>
+              icon="consulo.platform.base.PlatformIconGroup@vcs.arrow_right"/>
       <action id="DirDiffMenu.SetCopyToLeft" class="consulo.ide.impl.idea.openapi.diff.impl.dir.actions.popup.SetCopyToLeft" text="Set Copy to Left"
-			  icon="consulo.platform.base.PlatformIconGroup@vcs.arrow_left"/>
+              icon="consulo.platform.base.PlatformIconGroup@vcs.arrow_left"/>
       <action id="DirDiffMenu.SetDelete" class="consulo.ide.impl.idea.openapi.diff.impl.dir.actions.popup.SetDelete" text="Set Delete" icon="consulo.platform.base.PlatformIconGroup@vcs.remove"/>
       <action id="DirDiffMenu.SetNoOperation" class="consulo.ide.impl.idea.openapi.diff.impl.dir.actions.popup.SetNoOperation" text="Set Do Nothing"/>
       <separator/>
@@ -537,21 +537,21 @@
       <group id="HelpMenu" popup="true">
         <action id="GotoAction" class="consulo.ide.impl.idea.ide.actions.GotoActionAction"/>
         <separator/>
-        <action id="HelpTopics" class="consulo.ide.impl.idea.ide.actions.HelpTopicsAction" icon="consulo.platform.base.PlatformIconGroup@actions.help"/>
-        <action id="ShowTips" class="consulo.ide.impl.idea.ide.actions.ShowTipsAction"/>
+        <reference id="HelpTopics"/>
+        <reference id="ShowTips"/>
         <action id="ProductivityGude" class="consulo.ide.impl.idea.featureStatistics.actions.ShowFeatureUsageStatisticsAction"/>
         <separator/>
         <action id="TechnicalSupport" class="consulo.ide.impl.idea.ide.actions.TechnicalSupportAction"/>
         <action id="SendFeedback" class="consulo.ide.impl.idea.ide.actions.SendFeedbackAction"/>
         <action id="ShowLog" class="consulo.ide.impl.idea.ide.actions.ShowLogAction"/>
         <separator/>
-        <action id="OnlineDocAction" class="consulo.ide.impl.idea.ide.actions.OnlineDocAction"/>
-        <action id="Help.KeymapReference" class="consulo.ide.impl.idea.ide.actions.RefCardAction"/>
-        <action id="Help.Youtube" class="consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.OpenYoutubeAction"/>
-        <action id="Help.JoinDiscordChannel" class="consulo.ide.impl.wm.impl.welcomeScreen.JoinDiscordChannelAction" icon="consulo.platform.base.PlatformIconGroup@providers.discord"/>
+        <reference id="OnlineDocAction"/>
+        <reference id="Help.KeymapReference"/>
+        <reference id="Help.Youtube"/>
+        <reference id="Help.JoinDiscordChannel"/>
         <separator/>
-        <action id="CheckForUpdate" class="consulo.ide.impl.idea.openapi.updateSettings.impl.CheckForUpdateAction"/>
-        <action id="About" class="consulo.ide.impl.idea.ide.actions.AboutAction"/>
+        <reference id="CheckForUpdate"/>
+        <reference id="About"/>
       </group>
     </group>
 
@@ -624,19 +624,6 @@
     </group>
 
     <group id="WelcomeScreen.QuickStart">
-    </group>
-
-    <group id="WelcomeScreen.Documentation">
-      <action id="WelcomeScreen.ReadHelp" class="consulo.ide.impl.idea.ide.actions.HelpTopicsAction"
-              icon="consulo.platform.base.PlatformIconGroup@actions.help"/>
-      <action id="WelcomeScreen.ShowTips" class="consulo.ide.impl.idea.ide.actions.ShowTipsAction"/>
-      <reference ref="Help.KeymapReference"/>
-
-      <action id="WelcomeScreen.Youtube" class="consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.OpenYoutubeAction"
-              icon="consulo.platform.base.PlatformIconGroup@general.youtube"/>
-      <reference id="Help.JoinDiscordChannel"/>
-      <action id="WelcomeScreen.DevelopPlugins" class="consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.DevelopPluginsAction"
-              icon="consulo.platform.base.PlatformIconGroup@nodes.plugin"/>
     </group>
 
     <group id="WelcomeScreen.Configure">
@@ -1004,9 +991,9 @@
 
     <action id="RunConfiguration" class="consulo.ide.impl.idea.execution.actions.RunConfigurationsComboBoxAction"/>
     <action id="ChooseRunConfiguration" class="consulo.ide.impl.idea.execution.actions.ChooseRunConfigurationPopupAction" text="Run..."
-			description="Choose and run configuration" icon="consulo.platform.base.PlatformIconGroup@toolwindows.toolwindowrun"/>
+            description="Choose and run configuration" icon="consulo.platform.base.PlatformIconGroup@toolwindows.toolwindowrun"/>
     <action id="ChooseDebugConfiguration" class="consulo.ide.impl.idea.execution.actions.ChooseDebugConfigurationPopupAction" text="Debug..."
-			description="Choose and debug configuration" icon="consulo.platform.base.PlatformIconGroup@actions.startdebugger"/>
+            description="Choose and debug configuration" icon="consulo.platform.base.PlatformIconGroup@actions.startdebugger"/>
 
     <group id="RunContextGroup" popup="false">
       <!-- A dynamic group filled with executor actions -->
@@ -1660,7 +1647,7 @@
       <action id="UsageView.Exclude" class="consulo.ide.impl.idea.usages.actions.ExcludeUsageAction" use-shortcut-of="$Delete"/>
       <separator/>
       <action id="UsageView.ShowRecentFindUsages" class="consulo.ide.impl.idea.find.impl.ShowRecentFindUsagesAction" icon="consulo.platform.base.PlatformIconGroup@actions.back"
-			  use-shortcut-of="RecentFiles"/>
+              use-shortcut-of="RecentFiles"/>
     </group>
 
     <!-- <action id="UsageView.ImportToFavorites" class="consulo.ide.impl.idea.ide.favoritesTreeView.ImportUsagesAction"/> -->
@@ -1740,7 +1727,8 @@
       <action id="XDebugger.EditWatch" class="consulo.ide.impl.idea.xdebugger.impl.frame.actions.XEditWatchAction"/>
       <action id="XDebugger.CopyWatch" class="consulo.ide.impl.idea.xdebugger.impl.frame.actions.XCopyWatchAction" icon="consulo.platform.base.PlatformIconGroup@actions.copy" text="Copy Watch"/>
       <action id="XDebugger.RemoveWatch" class="consulo.ide.impl.idea.xdebugger.impl.frame.actions.XRemoveWatchAction" icon="consulo.platform.base.PlatformIconGroup@actions.cancel"/>
-      <action id="XDebugger.SwitchWatchesInVariables" class="consulo.ide.impl.idea.xdebugger.impl.frame.actions.XSwitchWatchesInVariables" icon="consulo.platform.base.PlatformIconGroup@debugger.watch"/>
+      <action id="XDebugger.SwitchWatchesInVariables" class="consulo.ide.impl.idea.xdebugger.impl.frame.actions.XSwitchWatchesInVariables"
+              icon="consulo.platform.base.PlatformIconGroup@debugger.watch"/>
       <action id="XDebugger.RemoveAllWatches" class="consulo.ide.impl.idea.xdebugger.impl.frame.actions.XRemoveAllWatchesAction"/>
       <action id="XDebugger.MuteBreakpoints" class="consulo.ide.impl.idea.xdebugger.impl.actions.MuteBreakpointAction"
               icon="consulo.platform.base.PlatformIconGroup@debugger.mutebreakpoints"/>
@@ -2032,7 +2020,7 @@
       <!--<action id="GenerateAntBuild" class="consulo.ide.impl.idea.compiler.actions.GenerateAntBuildAction"/>
 
       <separator/>  -->
-      <action id="BuildArtifact" class="consulo.ide.impl.idea.compiler.actions.BuildArtifactAction"/>
+      <reference id="BuildArtifact"/>
       <add-to-group group-id="MainMenu" anchor="before" relative-to-action="RunMenu"/>
     </group>
 
@@ -2044,10 +2032,6 @@
       <add-to-group group-id="ConsoleEditorPopupMenu" anchor="after" relative-to-action="$SearchWeb"/>
     </action>
 
-    <!-- Help -->
-    <action id="WhatsNewAction" class="consulo.ide.impl.idea.ide.actions.WhatsNewAction">
-      <add-to-group group-id="HelpMenu" anchor="after" relative-to-action="OnlineDocAction"/>
-    </action>
 
     <!-- Toolbar -->
 
@@ -2346,13 +2330,13 @@
 
     <group id="SearchEverywhereActions" text="Search Everywhere">
       <action id="SearchEverywhere.NextTab" class="consulo.ide.impl.idea.ide.actions.searcheverywhere.SEActionStub" text="Next tab"
-			  description="Switch to next tab in Search Everywhere dialog"/>
+              description="Switch to next tab in Search Everywhere dialog"/>
       <action id="SearchEverywhere.PrevTab" class="consulo.ide.impl.idea.ide.actions.searcheverywhere.SEActionStub" text="Prev tab"
-			  description="Switch to previous tab in Search Everywhere dialog"/>
+              description="Switch to previous tab in Search Everywhere dialog"/>
       <action id="SearchEverywhere.CompleteCommand" class="consulo.ide.impl.idea.ide.actions.searcheverywhere.SEActionStub"
               text="Complete Command" description="Autocomplete command in Search Everywhere dialog"/>
       <action id="SearchEverywhere.SelectItem" class="consulo.ide.impl.idea.ide.actions.searcheverywhere.SEActionStub" text="Select item"
-			  description="Select item in Search Everywhere dialog"/>
+              description="Select item in Search Everywhere dialog"/>
       <action id="SearchEverywhere.NavigateToNextGroup" class="consulo.ide.impl.idea.ide.actions.searcheverywhere.SEActionStub"
               text="Next group element" description="Navigate to next group in Search Everywhere dialog"/>
       <action id="SearchEverywhere.NavigateToPrevGroup" class="consulo.ide.impl.idea.ide.actions.searcheverywhere.SEActionStub"

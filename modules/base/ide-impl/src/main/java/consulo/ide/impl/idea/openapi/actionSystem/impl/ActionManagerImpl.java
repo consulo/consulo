@@ -1,25 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.actionSystem.impl;
 
-import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.internal.statistic.collectors.fus.actions.persistence.ActionIdProvider;
-import consulo.ide.impl.idea.openapi.actionSystem.AbbreviationManager;
-import consulo.ide.impl.idea.openapi.actionSystem.ActionGroupStub;
-import consulo.ide.impl.idea.openapi.actionSystem.DefaultCompactActionGroup;
-import consulo.ide.impl.idea.openapi.actionSystem.OverridingAction;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionManagerEx;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionPopupMenuListener;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.keymap.ex.KeymapManagerEx;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.ObjectUtils;
-import consulo.ide.impl.idea.util.ReflectionUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ui.ex.action.ActionToolbarFactory;
-import consulo.ide.impl.actionSystem.impl.LastActionTracker;
-import consulo.ide.impl.actionSystem.impl.LocalizeHelper;
-import consulo.ide.impl.actionSystem.impl.UnifiedActionPopupMenuImpl;
+import consulo.annotation.component.Action;
+import consulo.annotation.component.*;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
@@ -31,7 +14,10 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.registry.Registry;
 import consulo.component.ProcessCanceledException;
+import consulo.component.bind.InjectingBinding;
 import consulo.component.extension.ListOfElementsEP;
+import consulo.component.internal.InjectingBindingHolder;
+import consulo.component.internal.InjectingBindingLoader;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.container.PluginException;
 import consulo.container.plugin.PluginDescriptor;
@@ -42,6 +28,20 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ide.impl.actionSystem.impl.LastActionTracker;
+import consulo.ide.impl.actionSystem.impl.UnifiedActionPopupMenuImpl;
+import consulo.ide.impl.idea.internal.statistic.collectors.fus.actions.persistence.ActionIdProvider;
+import consulo.ide.impl.idea.openapi.actionSystem.AbbreviationManager;
+import consulo.ide.impl.idea.openapi.actionSystem.DefaultCompactActionGroup;
+import consulo.ide.impl.idea.openapi.actionSystem.OverridingAction;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionManagerEx;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionPopupMenuListener;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.ide.impl.idea.openapi.keymap.ex.KeymapManagerEx;
+import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.ide.impl.idea.util.ReflectionUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.Language;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.psi.PsiFile;
@@ -53,6 +53,7 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.event.AnActionListener;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.internal.*;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.image.Image;
@@ -62,6 +63,7 @@ import consulo.ui.style.StandardColors;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.MultiMap;
 import consulo.util.concurrent.ActionCallback;
+import consulo.util.lang.StringUtil;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
 import gnu.trove.TObjectIntHashMap;
 import jakarta.inject.Inject;
@@ -120,10 +122,6 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
   private static final String REQUIRE_MODULE_EXTENSIONS = "require-module-extensions";
   private static final String CAN_USE_PROJECT_AS_DEFAULT = "can-use-project-as-default";
 
-  @Deprecated
-  private static final String PROJECT_TYPE = "project-type";
-  private static final String UNREGISTER_ELEMENT_NAME = "unregister";
-
   private static final Logger LOG = Logger.getInstance(ActionManagerImpl.class);
   private static final int DEACTIVATED_TIMER_DELAY = 5000;
   private static final int TIMER_DELAY = 500;
@@ -154,79 +152,142 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
   ActionManagerImpl(ActionToolbarFactory toolbarFactory) {
     myToolbarFactory = toolbarFactory;
 
-    StatCollector collector = new StatCollector();
+    List<InjectingBindingActionStubBase> bindings = new ArrayList<>();
 
+    StatCollector injectStat = new StatCollector();
+    injectStat.markWith("register", () -> {
+      InjectingBindingHolder holder = InjectingBindingLoader.INSTANCE.getHolder(Action.class, ComponentScope.APPLICATION);
+
+      for (List<InjectingBinding> bindingList : holder.getBindings().values()) {
+        for (InjectingBinding binding : bindingList) {
+          Class<?> actionImplClass = binding.getImplClass();
+          ActionImpl actionImpl = actionImplClass.getAnnotation(ActionImpl.class);
+
+          boolean isGroup = binding.getApiClass() == ActionGroup.class;
+          if (isGroup) {
+            InjectingBindingActionGroupStub groupStub = new InjectingBindingActionGroupStub(actionImpl, binding);
+            registerAction(actionImpl.id(), groupStub, groupStub.getPluginId());
+
+            bindings.add(groupStub);
+          }
+          else {
+            InjectingBindingActionStub actionStub = new InjectingBindingActionStub(actionImpl, binding);
+            registerAction(actionImpl.id(), actionStub, actionStub.getPluginId());
+
+            if (actionImpl.addToGroups().length > 0) {
+              bindings.add(actionStub);
+            }
+          }
+        }
+      }
+    });
+
+    StatCollector xmlAnalyze = new StatCollector();
     for (PluginDescriptor plugin : PluginManager.getEnabledPlugins()) {
-      collector.markWith(plugin.getPluginId().toString(), () -> {
+      xmlAnalyze.markWith(plugin.getPluginId().toString(), () -> {
         LocalizeHelper localizeHelper = LocalizeHelper.build(plugin);
 
         registerPluginActions(plugin, localizeHelper);
       });
     }
 
-    collector.dump("ActionManager statistics", LOG::info);
+    xmlAnalyze.dump("ActionManager:xml.analyze", LOG::info);
+
+    injectStat.markWith("add.to.group", () -> {
+      // in first iteration we add references from groups
+      for (InjectingBindingActionStubBase binding : bindings) {
+        ActionImpl actionImpl = binding.getActionImpl();
+
+        String[] references = actionImpl.references();
+        if (references.length > 0) {
+          if (!(binding instanceof DefaultActionGroup)) {
+            LOG.error(actionImpl.id() + ": impossible use #references() with not DefaultActionGroup");
+            return;
+          }
+
+          for (String referenceActionId : references) {
+            if (AnSeparator.ID.equals(referenceActionId)) {
+              ((DefaultActionGroup)binding).add(AnSeparator.create(), Constraints.LAST, this);
+            }
+            else {
+              AnAction refAction = myId2Action.get(referenceActionId);
+              if (refAction == null) {
+                LOG.error(actionImpl.id() + ": can't find reference action id: " + refAction);
+                continue;
+              }
+
+              ((DefaultActionGroup)binding).addAction(refAction, Constraints.LAST, this);
+            }
+          }
+        }
+      }
+
+      // in second iteration we add actions from action #addToGroups
+      for (InjectingBindingActionStubBase binding : bindings) {
+        ActionImpl actionImpl = binding.getActionImpl();
+
+        AddActionToGroup[] addToGroups = actionImpl.addToGroups();
+
+        for (AddActionToGroup addToGroup : addToGroups) {
+          Constraints constraints = convertConstraints(addToGroup, actionImpl.id());
+
+          AnAction group = myId2Action.get(addToGroup.id());
+          if (!(group instanceof ActionGroup)) {
+            LOG.error(actionImpl.id() + ": can't find group for @AddToGroup(id = " + addToGroup.id());
+          }
+
+          if (group instanceof DefaultActionGroup defaultActionGroup) {
+            defaultActionGroup.add((AnAction)binding, constraints, this);
+          }
+          else {
+            LOG.error(actionImpl.id() + ": can't add to group which not instance of DefaultActionGroup: " + group.getClass().getName());
+          }
+        }
+      }
+    });
+
+    injectStat.dump("ActionManager:injecting", LOG::info);
+  }
+
+  private Constraints convertConstraints(AddActionToGroup group, String actionId) {
+    Anchor anchor;
+    switch (group.anchor()) {
+      case BEFORE:
+        anchor = Anchor.BEFORE;
+        break;
+      case AFTER:
+        anchor = Anchor.AFTER;
+        break;
+      case FIRST:
+        anchor = Anchor.FIRST;
+        break;
+      case LAST:
+        anchor = Anchor.LAST;
+        break;
+      default:
+        throw new IllegalArgumentException(group.anchor().name());
+    }
+
+    if (anchor == Anchor.LAST) {
+      return Constraints.LAST;
+    }
+
+    if (anchor == Anchor.FIRST) {
+      return Constraints.FIRST;
+    }
+
+    String relatedToActionId = group.relatedToActionId();
+    if (StringUtil.isEmptyOrSpaces(relatedToActionId)) {
+      LOG.error(actionId + ": bad relatedToActionId, with anchor: " + anchor);
+      return Constraints.LAST;
+    }
+
+    return new Constraints(anchor, relatedToActionId);
   }
 
   @Nonnull
   private static AnActionListener publisher() {
     return ApplicationManager.getApplication().getMessageBus().syncPublisher(AnActionListener.class);
-  }
-
-  @Nullable
-  static AnAction convertStub(@Nonnull ActionStub stub) {
-    AnAction anAction = instantiate(stub.getClassName(), stub.getLoader(), stub.getPluginId(), AnAction.class);
-    if (anAction == null) return null;
-
-    stub.initAction(anAction);
-    updateIconFromStub(stub, anAction);
-    return anAction;
-  }
-
-  @Nullable
-  @SuppressWarnings("unchecked")
-  private static <T> T instantiate(String stubClassName, ClassLoader classLoader, PluginId pluginId, Class<T> expectedClass) {
-    Object obj;
-    try {
-      Class<?> actionClass = Class.forName(stubClassName, true, classLoader);
-      obj = Application.get().getInjectingContainer().getUnbindedInstance(actionClass);
-    }
-    catch (ProcessCanceledException e) {
-      throw e;
-    }
-    catch (Throwable e) {
-      LOG.error(new PluginException(e, pluginId));
-      return null;
-    }
-
-    if (!expectedClass.isInstance(obj)) {
-      LOG.error(new PluginException("class with name '" + stubClassName + "' must be an instance of '" + expectedClass.getName() + "'; got " + obj, pluginId));
-      return null;
-    }
-    //noinspection unchecked
-    return (T)obj;
-  }
-
-  private static void updateIconFromStub(@Nonnull ActionStubBase stub, AnAction anAction) {
-    String iconPath = stub.getIconPath();
-    if (iconPath != null) {
-      ImageKey imageKey = ImageKey.fromString(iconPath, Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE);
-      if(imageKey != null) {
-        anAction.getTemplatePresentation().setIcon(imageKey);
-      }
-      else {
-        LOG.warn("Wrong icon path: " + iconPath);
-        anAction.getTemplatePresentation().setIcon(ImageEffects.colorFilled(Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE, StandardColors.MAGENTA));
-      }
-    }
-  }
-
-  @Nullable
-  static ActionGroup convertGroupStub(@Nonnull ActionGroupStub stub, @Nonnull ActionManager actionManager) {
-    ActionGroup group = instantiate(stub.getActionClass(), stub.getClassLoader(), stub.getPluginId(), ActionGroup.class);
-    if (group == null) return null;
-    stub.initGroup(group, actionManager);
-    updateIconFromStub(stub, group);
-    return group;
   }
 
   private static void processAbbreviationNode(@Nonnull SimpleXmlElement e, @Nonnull String id) {
@@ -253,7 +314,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
   @Nonnull
   private static LocalizeValue computeDescription(LocalizeHelper localizeHelper, String id, String elementType, String descriptionValue) {
-    if(!StringUtil.isEmpty(descriptionValue)) {
+    if (!StringUtil.isEmpty(descriptionValue)) {
       return LocalizeValue.of(descriptionValue);
     }
 
@@ -263,7 +324,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
   @Nonnull
   private static LocalizeValue computeActionText(LocalizeHelper localizeHelper, String id, String elementType, String textValue) {
-    if(!StringUtil.isEmptyOrSpaces(textValue)) {
+    if (!StringUtil.isEmptyOrSpaces(textValue)) {
       return LocalizeValue.of(textValue);
     }
     String key = elementType + "." + id + "." + TEXT_ATTR_NAME;
@@ -280,7 +341,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
   @Nullable
   private static Anchor parseAnchor(final String anchorStr, @Nullable final String actionName, @Nullable final PluginId pluginId) {
-    if (anchorStr == null) {
+    if (StringUtil.isEmptyOrSpaces(anchorStr)) {
       return Anchor.LAST;
     }
 
@@ -331,7 +392,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
   }
 
   private void assertActionIsGroupOrStub(final AnAction action) {
-    if (!(action instanceof ActionGroup || action instanceof ActionStub)) {
+    if (!(action instanceof ActionGroup || action instanceof ActionStubBase)) {
       LOG.error("Action : " + action + "; class: " + action.getClass());
     }
   }
@@ -425,7 +486,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
   @Nonnull
   public ActionPopupMenu createActionPopupMenu(@Nonnull String place, @Nonnull ActionGroup group, @Nullable PresentationFactory presentationFactory) {
-    if(Application.get().isUnifiedApplication()) {
+    if (Application.get().isUnifiedApplication()) {
       return new UnifiedActionPopupMenuImpl(place, group, this, presentationFactory);
     }
     return new DesktopActionPopupMenuImpl(place, group, this, presentationFactory);
@@ -478,7 +539,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         return action;
       }
     }
-    AnAction converted = action instanceof ActionStub ? convertStub((ActionStub)action) : convertGroupStub((ActionGroupStub)action, this);
+    AnAction converted = ((ActionStubBase)action).initialize(Application.get(), this);
     if (converted == null) {
       unregisterAction(id);
       return null;
@@ -564,7 +625,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
     // read ID and register loaded action
     String id = obtainActionId(element, className);
-    if (Boolean.valueOf(element.getAttributeValue(INTERNAL_ATTR_NAME))&& !ApplicationManager.getApplication().isInternal()) {
+    if (Boolean.valueOf(element.getAttributeValue(INTERNAL_ATTR_NAME)) && !ApplicationManager.getApplication().isInternal()) {
       myNotRegisteredInternalActionIds.add(id);
       return null;
     }
@@ -574,7 +635,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     String textValue = element.getAttributeValue(TEXT_ATTR_NAME);
     String descriptionValue = element.getAttributeValue(DESCRIPTION);
 
-    ActionStub stub = new ActionStub(className, id, plugin, iconPath, () -> {
+    XmlActionStub stub = new XmlActionStub(className, id, plugin, iconPath, () -> {
       Presentation presentation = new Presentation();
       presentation.setTextValue(computeActionText(localizeHelper, id, ACTION_ELEMENT_NAME, textValue));
       presentation.setDescriptionValue(computeDescription(localizeHelper, id, ACTION_ELEMENT_NAME, descriptionValue));
@@ -631,7 +692,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         }
       }
       else {
-        registerAction(id, action, pluginId, element.getAttributeValue(PROJECT_TYPE));
+        registerAction(id, action, pluginId);
       }
       //ActionsCollectorImpl.onActionLoadedFromXml(action, id, pluginId);
     }
@@ -682,7 +743,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         group = (ActionGroup)obj;
       }
       else {
-        group = new ActionGroupStub(id, className, plugin);
+        group = new XmlActionGroupStub(id, className, plugin);
         customClass = true;
       }
       // read ID and register loaded group
@@ -716,10 +777,10 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
       // icon
       String iconPath = element.getAttributeValue(ICON_ATTR_NAME);
-      if (group instanceof ActionGroupStub) {
-        ((ActionGroupStub)group).setIconPath(iconPath);
+      if (group instanceof XmlActionGroupStub) {
+        ((XmlActionGroupStub)group).setIconPath(iconPath);
       }
-      else if(iconPath != null) {
+      else if (iconPath != null) {
         if (iconPath.contains("@")) {
           String[] groupIdAndImageId = iconPath.split("@");
           group.getTemplatePresentation().setIcon(ImageKey.of(groupIdAndImageId[0], groupIdAndImageId[1], Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE));
@@ -734,8 +795,8 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
       String popup = element.getAttributeValue(POPUP_ATTR_NAME);
       if (popup != null) {
         group.setPopup(Boolean.valueOf(popup));
-        if (group instanceof ActionGroupStub) {
-          ((ActionGroupStub)group).setPopupDefinedInXml(true);
+        if (group instanceof XmlActionGroupStub) {
+          ((XmlActionGroupStub)group).setPopupDefinedInXml(true);
         }
       }
       if (customClass && element.getAttributeValue(USE_SHORTCUT_OF_ATTR_NAME) != null) {
@@ -804,8 +865,8 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
       assertActionIsGroupOrStub(action);
     }
 
-    String name = action instanceof ActionStub ? ((ActionStub)action).getClassName() : action.getClass().getName();
-    String id = action instanceof ActionStub ? ((ActionStub)action).getId() : myAction2Id.get(action);
+    String name = action instanceof XmlActionStub ? ((XmlActionStub)action).getClassName() : action.getClass().getName();
+    String id = action instanceof XmlActionStub ? ((XmlActionStub)action).getId() : myAction2Id.get(action);
     String actionName = name + " (" + id + ")";
 
     if (!ADD_TO_GROUP_ELEMENT_NAME.equals(element.getName())) {
@@ -833,7 +894,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
   }
 
   private void addToGroupInner(AnAction group, AnAction action, Constraints constraints, boolean secondary) {
-    String actionId = action instanceof ActionStub ? ((ActionStub)action).getId() : myAction2Id.get(action);
+    String actionId = action instanceof ActionStubBase ? ((ActionStubBase)action).getId() : myAction2Id.get(action);
     ((DefaultActionGroup)group).addAction(action, constraints, this).setAsSecondary(secondary);
     myId2GroupId.putValue(actionId, myAction2Id.get(group));
   }
@@ -883,22 +944,6 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         processAddToGroupNode(separator, child, pluginId, isSecondary(child));
       }
     }
-  }
-
-  private void processUnregisterNode(SimpleXmlElement element, PluginId pluginId) {
-    String id = element.getAttributeValue(ID_ATTR_NAME);
-    if (id == null) {
-      reportActionError(pluginId, "'id' attribute is required for 'unregister' elements");
-      return;
-    }
-    AnAction action = getAction(id);
-    if (action == null) {
-      reportActionError(pluginId, "Trying to unregister non-existing action " + id);
-      return;
-    }
-
-    AbbreviationManager.getInstance().removeAllAbbreviations(id);
-    unregisterAction(id);
   }
 
   private static void processKeyboardShortcutNode(SimpleXmlElement element, String actionId, PluginId pluginId, @Nonnull KeymapManagerEx keymapManager) {
@@ -1039,10 +1084,6 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
   @Override
   public void registerAction(@Nonnull String actionId, @Nonnull AnAction action, @Nullable PluginId pluginId) {
-    registerAction(actionId, action, pluginId, null);
-  }
-
-  public void registerAction(@Nonnull String actionId, @Nonnull AnAction action, @Nullable PluginId pluginId, @Nullable String projectType) {
     synchronized (myLock) {
       if (addToMap(actionId, action) == null) return;
       if (myAction2Id.containsKey(action)) {
@@ -1140,15 +1181,6 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     if (myPopups.isEmpty()) {
       fireAfterActionPerformed(action, context, event);
     }
-  }
-
-  public boolean isToolWindowContextMenuVisible() {
-    for (Object popup : myPopups) {
-      if (popup instanceof DesktopActionPopupMenuImpl && ((DesktopActionPopupMenuImpl)popup).isToolWindowContextMenu()) {
-        return true;
-      }
-    }
-    return false;
   }
 
   @Override
@@ -1299,7 +1331,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     }
     for (String id : ids) {
       indicator.checkCanceled();
-      
+
       getActionImpl(id, false);
       // don't preload ActionGroup.getChildren() because that would un-stub child actions
       // and make it impossible to replace the corresponding actions later

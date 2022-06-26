@@ -15,17 +15,19 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
+import consulo.annotation.component.ActionAnchor;
+import consulo.annotation.component.ActionImpl;
+import consulo.annotation.component.AddActionToGroup;
 import consulo.application.Application;
-import consulo.fileEditor.FileEditorManager;
 import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
+import consulo.fileEditor.FileEditorManager;
 import consulo.ide.impl.plugins.whatsNew.WhatsNewVirtualFile;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.IdeLocalize;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
@@ -33,6 +35,7 @@ import javax.annotation.Nonnull;
 /**
  * @author max
  */
+@ActionImpl(id = "WhatsNewAction", addToGroups = @AddActionToGroup(id = "HelpMenu", anchor = ActionAnchor.AFTER, relatedToActionId = "OnlineDocAction"))
 public class WhatsNewAction extends AnAction implements DumbAware {
   private final Application myApplication;
 
@@ -44,7 +47,7 @@ public class WhatsNewAction extends AnAction implements DumbAware {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if(project == null) {
       return;
     }
@@ -57,7 +60,7 @@ public class WhatsNewAction extends AnAction implements DumbAware {
   @RequiredUIAccess
   @Override
   public void update(AnActionEvent e) {
-    e.getPresentation().setVisible(e.getData(CommonDataKeys.PROJECT) != null);
+    e.getPresentation().setVisible(e.getData(Project.KEY) != null);
     e.getPresentation().setTextValue(IdeLocalize.whatsnewActionCustomText(myApplication.getName()));
     e.getPresentation().setDescriptionValue(IdeLocalize.whatsnewActionCustomDescription(myApplication.getName()));
   }

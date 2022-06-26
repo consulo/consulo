@@ -15,17 +15,28 @@
  */
 package consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.ide.impl.idea.ide.BrowserUtil;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
+@ActionImpl(id = "Help.Youtube")
 public class OpenYoutubeAction extends DumbAwareAction {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     BrowserUtil.browse("http://www.youtube.com/user/ConsuloIDE");
+  }
+
+  @Nullable
+  @Override
+  protected Image getTemplateIcon() {
+    return PlatformIconGroup.generalYoutube();
   }
 }
