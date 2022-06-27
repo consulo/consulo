@@ -1,19 +1,20 @@
 package consulo.ide.impl.idea.ide.passwordSafe.config;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.configurable.*;
 import consulo.ide.impl.idea.ide.passwordSafe.PasswordSafe;
-import consulo.configurable.Configurable;
-import consulo.configurable.ConfigurationException;
-import consulo.configurable.SearchableConfigurable;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 /**
  * A configurable for password safe
  */
-public class PasswordSafeConfigurable implements SearchableConfigurable, Configurable.NoScroll {
+@ExtensionImpl
+public class PasswordSafeConfigurable implements SearchableConfigurable, Configurable.NoScroll, ApplicationConfigurable {
   /**
    * The settings for the password safe
    */
@@ -91,10 +92,9 @@ public class PasswordSafeConfigurable implements SearchableConfigurable, Configu
     return "application.passwordSafe";
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  public Runnable enableSearch(String option) {
-    return null;
+  @Nullable
+  @Override
+  public String getParentId() {
+    return StandardConfigurableIds.GENERAL_GROUP;
   }
 }

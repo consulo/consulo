@@ -16,6 +16,9 @@
 
 package consulo.ide.impl.idea.application.options.editor;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.configurable.ApplicationConfigurable;
+import consulo.configurable.StandardConfigurableIds;
 import consulo.ide.impl.idea.codeInsight.folding.CodeFoldingManager;
 import consulo.application.ApplicationBundle;
 import consulo.application.ApplicationManager;
@@ -37,13 +40,27 @@ import consulo.ui.layout.VerticalLayout;
 import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author yole
  */
-public class CodeFoldingConfigurable extends SimpleConfigurableByProperties implements Configurable {
+@ExtensionImpl
+public class CodeFoldingConfigurable extends SimpleConfigurableByProperties implements Configurable, ApplicationConfigurable {
+  @Nonnull
+  @Override
+  public String getId() {
+    return "editor.preferences.folding";
+  }
+
+  @Nullable
+  @Override
+  public String getParentId() {
+    return StandardConfigurableIds.EDITOR_GROUP;
+  }
+
   @Override
   @Nls
   public String getDisplayName() {

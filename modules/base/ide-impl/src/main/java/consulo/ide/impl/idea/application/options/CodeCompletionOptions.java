@@ -16,17 +16,18 @@
 
 package consulo.ide.impl.idea.application.options;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.configurable.*;
 import consulo.ui.ex.action.ActionManager;
 import consulo.application.ApplicationBundle;
-import consulo.configurable.ConfigurationException;
-import consulo.configurable.SearchableConfigurable;
 import consulo.disposer.Disposable;
-import consulo.configurable.SimpleConfigurable;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-public class CodeCompletionOptions extends SimpleConfigurable<CodeCompletionPanel> implements SearchableConfigurable {
+@ExtensionImpl
+public class CodeCompletionOptions extends SimpleConfigurable<CodeCompletionPanel> implements SearchableConfigurable, ApplicationConfigurable {
 
   @RequiredUIAccess
   @Nonnull
@@ -58,9 +59,10 @@ public class CodeCompletionOptions extends SimpleConfigurable<CodeCompletionPane
     return ApplicationBundle.message("title.code.completion");
   }
 
+  @Nullable
   @Override
-  public String getHelpTopic() {
-    return "reference.settingsdialog.IDE.editor.code.completion";
+  public String getParentId() {
+    return StandardConfigurableIds.EDITOR_GROUP;
   }
 
   @Override

@@ -97,7 +97,7 @@ public class PathMacroEditor extends DialogWrapper {
   }
 
   protected void doHelpAction() {
-    HelpManager.getInstance().invokeHelp(PathMacroConfigurable.HELP_ID);
+    HelpManager.getInstance().invokeHelp(PathMacroConfigurable.ID);
   }
 
   protected void doOKAction() {

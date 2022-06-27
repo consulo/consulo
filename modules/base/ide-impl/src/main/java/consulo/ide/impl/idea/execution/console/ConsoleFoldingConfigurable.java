@@ -1,8 +1,7 @@
 package consulo.ide.impl.idea.execution.console;
 
-import consulo.configurable.Configurable;
-import consulo.configurable.ConfigurationException;
-import consulo.configurable.SearchableConfigurable;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.configurable.*;
 import consulo.ui.ex.InputValidatorEx;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.Splitter;
@@ -21,7 +20,8 @@ import java.util.List;
 /**
  * @author peter
  */
-public class ConsoleFoldingConfigurable implements SearchableConfigurable, Configurable.NoScroll {
+@ExtensionImpl
+public class ConsoleFoldingConfigurable implements SearchableConfigurable, Configurable.NoScroll, ApplicationConfigurable {
   private JPanel myMainComponent;
   private MyAddDeleteListPanel myPositivePanel;
   private MyAddDeleteListPanel myNegativePanel;
@@ -78,12 +78,13 @@ public class ConsoleFoldingConfigurable implements SearchableConfigurable, Confi
   @Override
   @Nonnull
   public String getId() {
-    return getDisplayName();
+    return "execution.console.folding";
   }
 
+  @Nullable
   @Override
-  public Runnable enableSearch(String option) {
-    return null;
+  public String getParentId() {
+    return StandardConfigurableIds.EXECUTION_GROUP;
   }
 
   @Override

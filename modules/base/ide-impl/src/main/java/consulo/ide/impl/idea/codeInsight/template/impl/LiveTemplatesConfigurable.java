@@ -16,20 +16,17 @@
 
 package consulo.ide.impl.idea.codeInsight.template.impl;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.configurable.*;
 import consulo.language.editor.CodeInsightBundle;
-import consulo.configurable.Configurable;
-import consulo.configurable.ConfigurationException;
-import consulo.configurable.SearchableConfigurable;
 import consulo.disposer.Disposer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 
-public class LiveTemplatesConfigurable implements SearchableConfigurable, Configurable.NoScroll {
-  public static String displayName() {
-    return CodeInsightBundle.message("templates.settings.page.title");
-  }
+@ExtensionImpl
+public class LiveTemplatesConfigurable implements SearchableConfigurable, Configurable.NoScroll, ApplicationConfigurable {
 
   private TemplateListPanel myPanel;
 
@@ -44,9 +41,15 @@ public class LiveTemplatesConfigurable implements SearchableConfigurable, Config
     return myPanel;
   }
 
+  @Nullable
+  @Override
+  public String getParentId() {
+    return StandardConfigurableIds.EDITOR_GROUP;
+  }
+
   @Override
   public String getDisplayName() {
-    return displayName();
+    return CodeInsightBundle.message("templates.settings.page.title");
   }
 
   @Override
@@ -73,11 +76,6 @@ public class LiveTemplatesConfigurable implements SearchableConfigurable, Config
     return "editing.templates";
   }
 
-  @Override
-  @Nullable
-  public Runnable enableSearch(String option) {
-    return null;
-  }
 
   public TemplateListPanel getTemplateListPanel() {
     return myPanel;

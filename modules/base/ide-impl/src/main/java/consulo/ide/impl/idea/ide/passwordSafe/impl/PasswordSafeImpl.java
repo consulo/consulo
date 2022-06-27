@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.passwordSafe.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.ide.passwordSafe.PasswordSafe;
 import consulo.ide.impl.idea.ide.passwordSafe.PasswordSafeException;
 import consulo.ide.impl.idea.ide.passwordSafe.config.PasswordSafeSettings;
@@ -24,14 +25,16 @@ import consulo.ide.impl.idea.ide.passwordSafe.impl.providers.memory.MemoryPasswo
 import consulo.ide.impl.idea.ide.passwordSafe.impl.providers.nil.NilProvider;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import javax.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+
+import javax.annotation.Nullable;
 
 /**
  * The implementation of password safe service
  */
 @Singleton
+@ServiceImpl
 public class PasswordSafeImpl extends PasswordSafe {
   /**
    * The logger instance

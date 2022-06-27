@@ -16,14 +16,13 @@
 
 package consulo.ide.impl.idea.ide.todo.configurable;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
+import consulo.configurable.*;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.todo.TodoConfiguration;
 import consulo.ide.impl.idea.ide.todo.TodoFilter;
 import consulo.ui.ex.JBColor;
-import consulo.configurable.Configurable;
-import consulo.configurable.ConfigurationException;
-import consulo.configurable.SearchableConfigurable;
 import consulo.ui.ex.awt.*;
 import consulo.ide.impl.psi.search.TodoAttributesUtil;
 import consulo.language.psi.search.TodoPattern;
@@ -49,7 +48,8 @@ import java.util.List;
 /**
  * @author Vladimir Kondratyev
  */
-public class TodoConfigurable implements SearchableConfigurable, Configurable.NoScroll {
+@ExtensionImpl
+public class TodoConfigurable implements SearchableConfigurable, Configurable.NoScroll, ApplicationConfigurable {
   /*
    * UI resources
    */
@@ -434,12 +434,12 @@ public class TodoConfigurable implements SearchableConfigurable, Configurable.No
   @Override
   @Nonnull
   public String getId() {
-    return "toDoOptions";
+    return "preferences.toDoOptions";
   }
 
-  @Override
   @Nullable
-  public Runnable enableSearch(String option) {
-    return null;
+  @Override
+  public String getParentId() {
+    return StandardConfigurableIds.EDITOR_GROUP;
   }
 }

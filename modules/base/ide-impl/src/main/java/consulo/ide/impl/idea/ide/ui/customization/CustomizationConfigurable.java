@@ -15,21 +15,22 @@
  */
 package consulo.ide.impl.idea.ide.ui.customization;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.configurable.*;
 import consulo.ide.IdeBundle;
-import consulo.configurable.Configurable;
-import consulo.configurable.ConfigurationException;
-import consulo.configurable.SearchableConfigurable;
 import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 /**
  * User: anna
  * Date: Mar 17, 2005
  */
-public class CustomizationConfigurable implements SearchableConfigurable, Configurable.NoScroll {
+@ExtensionImpl
+public class CustomizationConfigurable implements SearchableConfigurable, Configurable.NoScroll, ApplicationConfigurable {
   private CustomizableActionsPanel myPanel;
 
   @RequiredUIAccess
@@ -77,5 +78,11 @@ public class CustomizationConfigurable implements SearchableConfigurable, Config
   @Nonnull
   public String getId() {
     return "preferences.customizations";
+  }
+
+  @Nullable
+  @Override
+  public String getParentId() {
+    return StandardConfigurableIds.GENERAL_GROUP;
   }
 }

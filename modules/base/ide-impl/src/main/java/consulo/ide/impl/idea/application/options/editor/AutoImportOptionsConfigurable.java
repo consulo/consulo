@@ -16,14 +16,37 @@
 
 package consulo.ide.impl.idea.application.options.editor;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.ApplicationBundle;
+import consulo.configurable.ApplicationConfigurable;
 import consulo.configurable.ConfigurableAdapter;
+import consulo.configurable.StandardConfigurableIds;
+import org.jetbrains.annotations.Nls;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Dmitry Avdeev
  */
-public class AutoImportOptionsConfigurable extends ConfigurableAdapter {
+@ExtensionImpl
+public class AutoImportOptionsConfigurable extends ConfigurableAdapter implements ApplicationConfigurable {
+  @Nonnull
   @Override
-  public String getHelpTopic() {
-    return "reference.settingsdialog.IDE.editor.autoimport";
+  public String getId() {
+    return "editor.preferences.import";
+  }
+
+  @Nullable
+  @Override
+  public String getParentId() {
+    return StandardConfigurableIds.EDITOR_GROUP;
+  }
+
+  @Nonnull
+  @Nls
+  @Override
+  public String getDisplayName() {
+    return ApplicationBundle.message("auto.import");
   }
 }

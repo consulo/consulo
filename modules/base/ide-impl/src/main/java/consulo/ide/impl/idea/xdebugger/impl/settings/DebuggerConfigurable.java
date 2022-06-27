@@ -15,9 +15,8 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.settings;
 
-import consulo.configurable.Configurable;
-import consulo.configurable.ConfigurationException;
-import consulo.configurable.SearchableConfigurable;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.configurable.*;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.util.collection.SmartList;
 import consulo.execution.debug.XDebuggerBundle;
@@ -36,9 +35,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
-public class DebuggerConfigurable implements SearchableConfigurable.Parent {
-  public static final String DISPLAY_NAME = XDebuggerBundle.message("debugger.configurable.display.name");
-
+@ExtensionImpl
+public class DebuggerConfigurable implements SearchableConfigurable.Parent, ApplicationConfigurable {
   static final Configurable[] EMPTY_CONFIGURABLES = new Configurable[0];
   private static final DebuggerSettingsCategory[] MERGED_CATEGORIES = {DebuggerSettingsCategory.STEPPING, DebuggerSettingsCategory.HOTSWAP};
 
@@ -46,8 +44,20 @@ public class DebuggerConfigurable implements SearchableConfigurable.Parent {
   private Configurable[] myChildren;
 
   @Override
+  @Nonnull
+  public String getId() {
+    return "project.propDebugger";
+  }
+
+  @Override
   public String getDisplayName() {
-    return DISPLAY_NAME;
+    return XDebuggerBundle.message("debugger.configurable.display.name");
+  }
+
+  @Nullable
+  @Override
+  public String getParentId() {
+    return StandardConfigurableIds.EXECUTION_GROUP;
   }
 
   @Nonnull
@@ -182,11 +192,5 @@ public class DebuggerConfigurable implements SearchableConfigurable.Parent {
     if (myRootConfigurable != null) {
       myRootConfigurable.disposeUIResources();
     }
-  }
-
-  @Override
-  @Nonnull
-  public String getId() {
-    return "project.propDebugger";
   }
 }

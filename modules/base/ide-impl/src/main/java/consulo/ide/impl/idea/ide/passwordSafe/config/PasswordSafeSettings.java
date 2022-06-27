@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.ide.passwordSafe.config;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
@@ -24,14 +27,14 @@ import jakarta.inject.Singleton;
 /**
  * The password safe settings
  */
+
 /**
  * The password database. The internal component for {@link consulo.ide.impl.idea.ide.passwordSafe.impl.providers.masterKey.MasterKeyPasswordSafe}.
  */
 @Singleton
-@State(
-  name = "PasswordSafe",
-  storages = {@Storage(
-    file = StoragePathMacros.APP_CONFIG + "/security.xml")})
+@State(name = "PasswordSafe", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/security.xml")})
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 public class PasswordSafeSettings implements PersistentStateComponent<PasswordSafeSettings.State> {
   /**
    * The selected provider type
@@ -93,6 +96,5 @@ public class PasswordSafeSettings implements PersistentStateComponent<PasswordSa
     /**
      * The passwords are encrypted with master password
      */
-    MASTER_PASSWORD
-  }
+    MASTER_PASSWORD}
 }

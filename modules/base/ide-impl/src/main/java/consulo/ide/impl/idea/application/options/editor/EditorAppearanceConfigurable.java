@@ -16,21 +16,21 @@
 
 package consulo.ide.impl.idea.application.options.editor;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.codeEditor.impl.EditorSettingsExternalizable;
+import consulo.component.extension.ExtensionPointName;
+import consulo.configurable.*;
 import consulo.ide.impl.idea.codeInsight.daemon.DaemonCodeAnalyzerSettings;
 import consulo.ide.impl.idea.codeInsight.hints.InlayParameterHintsProvider;
 import consulo.ide.impl.idea.codeInsight.hints.settings.ParameterNameHintsConfigurable;
-import consulo.codeEditor.impl.EditorSettingsExternalizable;
-import consulo.component.extension.ExtensionPointName;
 import consulo.ide.impl.idea.openapi.options.CompositeConfigurable;
-import consulo.configurable.Configurable;
-import consulo.configurable.ConfigurationException;
-import consulo.configurable.UnnamedConfigurable;
 import consulo.ide.impl.idea.openapi.options.ex.ConfigurableWrapper;
-import consulo.ui.ex.awt.JBCheckBox;
 import consulo.ide.impl.settings.impl.EditorGeneralConfigurable;
 import consulo.ui.annotation.RequiredUIAccess;
-import org.jetbrains.annotations.Nls;
+import consulo.ui.ex.awt.JBCheckBox;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -46,7 +46,8 @@ import java.util.List;
  *
  * @author yole
  */
-public class EditorAppearanceConfigurable extends CompositeConfigurable<UnnamedConfigurable> implements Configurable {
+@ExtensionImpl
+public class EditorAppearanceConfigurable extends CompositeConfigurable<UnnamedConfigurable> implements Configurable, ApplicationConfigurable {
   private static final ExtensionPointName<EditorAppearanceConfigurableEP> EP_NAME = ExtensionPointName.create("consulo.editorAppearanceConfigurable");
   private JPanel myRootPanel;
   private JCheckBox myCbBlinkCaret;
@@ -160,23 +161,35 @@ public class EditorAppearanceConfigurable extends CompositeConfigurable<UnnamedC
       int fieldValue = Integer.parseInt(textField.getText().trim());
       return fieldValue != value;
     }
-    catch(NumberFormatException e) {
+    catch (NumberFormatException e) {
       return false;
     }
   }
 
+  @Nonnull
   @Override
-  @Nls
   public String getDisplayName() {
-    return "Gutters";
+    return "Appearance";
+  }
+
+  @Nonnull
+  @Override
+  public String getId() {
+    return "editor.preferences.appearance";
+  }
+
+  @Nullable
+  @Override
+  public String getParentId() {
+    return StandardConfigurableIds.EDITOR_GROUP;
   }
 
   @RequiredUIAccess
   @Override
   public JComponent createComponent() {
     for (UnnamedConfigurable provider : getConfigurables()) {
-      myAddonPanel.add(provider.createComponent(), new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 0, 0, GridBagConstraints.NORTHWEST,
-                                                                            GridBagConstraints.NONE, new Insets(0,0,15,0), 0,0));
+      myAddonPanel.add(provider.createComponent(),
+                       new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 0, 0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(0, 0, 15, 0), 0, 0));
     }
     return myRootPanel;
   }

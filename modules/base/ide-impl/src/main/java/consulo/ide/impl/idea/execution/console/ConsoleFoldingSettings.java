@@ -17,30 +17,33 @@ package consulo.ide.impl.idea.execution.console;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.ide.ServiceManager;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nullable;
-
 import java.util.*;
 
 /**
  * @author peter
  */
 @Singleton
-@State(name="ConsoleFoldingSettings", storages=@Storage( file = StoragePathMacros.APP_CONFIG + "/consoleFolding.xml"))
+@State(name = "ConsoleFoldingSettings", storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/consoleFolding.xml"))
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 public class ConsoleFoldingSettings implements PersistentStateComponent<ConsoleFoldingSettings.MyBean> {
   private final List<String> myPositivePatterns = new ArrayList<String>();
   private final List<String> myNegativePatterns = new ArrayList<String>();
 
   public ConsoleFoldingSettings() {
-    for (CustomizableConsoleFoldingBean regexp : CustomizableConsoleFoldingBean.EP_NAME.getExtensions()) {
+    for (CustomizableConsoleFoldingBean regexp : CustomizableConsoleFoldingBean.EP_NAME.getExtensionList()) {
       patternList(regexp.negate).add(regexp.substring);
     }
   }
@@ -79,7 +82,7 @@ public class ConsoleFoldingSettings implements PersistentStateComponent<ConsoleF
   }
 
   private void writeDiff(List<String> added, List<String> removed, boolean negated) {
-    Set<String> baseline = ContainerUtil.newTroveSet();
+    Set<String> baseline = new LinkedHashSet<>();
     for (CustomizableConsoleFoldingBean regexp : CustomizableConsoleFoldingBean.EP_NAME.getExtensions()) {
       if (regexp.negate == negated) {
         baseline.add(regexp.substring);

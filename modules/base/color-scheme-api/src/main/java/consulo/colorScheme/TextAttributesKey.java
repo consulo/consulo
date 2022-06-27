@@ -180,8 +180,4 @@ public final class TextAttributesKey implements Comparable<TextAttributesKey> {
   public void setFallbackAttributeKey(TextAttributesKey fallbackAttributeKey) {
     myFallbackAttributeKey = fallbackAttributeKey;
   }
-
-  public interface TextAttributeKeyDefaultsProvider {
-    TextAttributes getDefaultAttributes(TextAttributesKey key);
-  }
 }

@@ -15,16 +15,14 @@
  */
 package consulo.ide.impl.idea.application.options.pathMacros;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ApplicationBundle;
-import consulo.configurable.Configurable;
-import consulo.configurable.ConfigurationException;
-import consulo.configurable.SearchableConfigurable;
+import consulo.configurable.*;
+import consulo.ide.impl.components.impl.stores.ProjectStorageUtil;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.internal.ProjectEx;
-import consulo.ide.impl.components.impl.stores.ProjectStorageUtil;
 import consulo.ui.annotation.RequiredUIAccess;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -33,9 +31,9 @@ import javax.swing.*;
 /**
  * @author dsl
  */
-public class PathMacroConfigurable implements SearchableConfigurable, Configurable.NoScroll {
-  @NonNls
-  public static final String HELP_ID = "preferences.pathVariables";
+@ExtensionImpl
+public class PathMacroConfigurable implements SearchableConfigurable, Configurable.NoScroll, ApplicationConfigurable {
+  public static final String ID = "preferences.pathVariables";
   private PathMacroListEditor myEditor;
 
   @Override
@@ -70,6 +68,12 @@ public class PathMacroConfigurable implements SearchableConfigurable, Configurab
     return ApplicationBundle.message("title.path.variables");
   }
 
+  @Nullable
+  @Override
+  public String getParentId() {
+    return StandardConfigurableIds.GENERAL_GROUP;
+  }
+
   @Override
   public boolean isModified() {
     return myEditor != null && myEditor.isModified();
@@ -78,12 +82,6 @@ public class PathMacroConfigurable implements SearchableConfigurable, Configurab
   @Override
   @Nonnull
   public String getId() {
-    return HELP_ID;
-  }
-
-  @Override
-  @Nullable
-  public Runnable enableSearch(String option) {
-    return null;
+    return ID;
   }
 }

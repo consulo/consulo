@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.language.editor.util.ColorGenerator;
 import consulo.ide.ServiceManager;
 import consulo.colorScheme.EditorColorKey;
@@ -30,6 +33,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Singleton
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 public class AnnotationsSettings {
   private static final int ANCHORS_COUNT = 5;
   private static final int COLORS_BETWEEN_ANCHORS = 4;

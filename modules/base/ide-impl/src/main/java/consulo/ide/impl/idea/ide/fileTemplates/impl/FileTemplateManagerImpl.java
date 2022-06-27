@@ -247,10 +247,10 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
   @Override
   @Nonnull
   public FileTemplate[] getInternalTemplates() {
-    InternalTemplateBean[] internalTemplateBeans = InternalTemplateBean.EP_NAME.getExtensions();
-    FileTemplate[] result = new FileTemplate[internalTemplateBeans.length];
-    for (int i = 0; i < internalTemplateBeans.length; i++) {
-      result[i] = getInternalTemplate(internalTemplateBeans[i].name);
+    List<InternalTemplateBean> internalTemplateBeans = InternalTemplateBean.EP_NAME.getExtensionList();
+    FileTemplate[] result = new FileTemplate[internalTemplateBeans.size()];
+    for (int i = 0; i < internalTemplateBeans.size(); i++) {
+      result[i] = getInternalTemplate(internalTemplateBeans.get(i).name);
     }
     return result;
   }

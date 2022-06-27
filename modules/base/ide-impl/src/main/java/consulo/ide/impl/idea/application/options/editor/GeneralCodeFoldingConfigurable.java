@@ -16,6 +16,8 @@
 
 package consulo.ide.impl.idea.application.options.editor;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.configurable.ApplicationConfigurable;
 import consulo.language.editor.folding.CodeFoldingSettings;
 import consulo.configurable.Configurable;
 import consulo.disposer.Disposable;
@@ -27,11 +29,31 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.VerticalLayout;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author yole
  */
-public class GeneralCodeFoldingConfigurable extends SimpleConfigurableByProperties implements Configurable {
+@ExtensionImpl
+public class GeneralCodeFoldingConfigurable extends SimpleConfigurableByProperties implements Configurable, ApplicationConfigurable {
+  @Nonnull
+  @Override
+  public String getId() {
+    return "editor.preferences.folding.general";
+  }
+
+  @Nullable
+  @Override
+  public String getParentId() {
+    return "editor.preferences.folding";
+  }
+
+  @Nonnull
+  @Override
+  public String getDisplayName() {
+    return "General";
+  }
+
   @RequiredUIAccess
   @Nonnull
   @Override

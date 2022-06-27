@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.fileTemplate;
+package consulo.colorScheme;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
-import consulo.component.extension.ExtensionPointName;
+import consulo.annotation.component.Service;
 
-import javax.annotation.Nullable;
-
-/**
- * Should be implemented in an extension point
- */
-@Extension(ComponentScope.APPLICATION)
-public interface FileTemplateGroupDescriptorFactory {
-  ExtensionPointName<FileTemplateGroupDescriptorFactory> EP_NAME = ExtensionPointName.create(FileTemplateGroupDescriptorFactory.class);
-
-  @Nullable
-  FileTemplateGroupDescriptor getFileTemplatesDescriptor();
+@Service(ComponentScope.APPLICATION)
+public interface TextAttributeKeyDefaultsProvider {
+  TextAttributes getDefaultAttributes(TextAttributesKey key);
 }

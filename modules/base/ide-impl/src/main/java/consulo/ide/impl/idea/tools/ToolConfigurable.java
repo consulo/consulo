@@ -16,17 +16,24 @@
 
 package consulo.ide.impl.idea.tools;
 
-import consulo.configurable.Configurable;
-import consulo.configurable.ConfigurationException;
-import consulo.configurable.SearchableConfigurable;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.configurable.*;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.io.IOException;
 
-public class ToolConfigurable implements SearchableConfigurable, Configurable.NoScroll, Configurable.NoMargin {
+@ExtensionImpl
+public class ToolConfigurable implements SearchableConfigurable, Configurable.NoScroll, Configurable.NoMargin, ApplicationConfigurable {
   private BaseToolsPanel myPanel;
+
+  @Nullable
+  @Override
+  public String getParentId() {
+    return StandardConfigurableIds.EXECUTION_GROUP;
+  }
 
   @Override
   public String getDisplayName() {

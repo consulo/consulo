@@ -1,5 +1,8 @@
 package consulo.execution.process;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EffectType;
@@ -19,6 +22,8 @@ import java.util.Map;
  * @author yole
  */
 @Singleton
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 public class ColoredOutputTypeRegistry {
   public static ColoredOutputTypeRegistry getInstance() {
     return Application.get().getInstance(ColoredOutputTypeRegistry.class);

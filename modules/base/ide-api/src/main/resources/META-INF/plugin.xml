@@ -1164,29 +1164,6 @@
   <extensions defaultExtensionNs="consulo">
 
 
-    <applicationService serviceInterface="consulo.ide.impl.idea.ide.passwordSafe.config.PasswordSafeSettings"
-                        serviceImplementation="consulo.ide.impl.idea.ide.passwordSafe.config.PasswordSafeSettings"/>
-    <applicationService serviceInterface="consulo.ide.impl.idea.ide.passwordSafe.PasswordSafe"
-                        serviceImplementation="consulo.ide.impl.idea.ide.passwordSafe.impl.PasswordSafeImpl"/>
-    <applicationService serviceInterface="consulo.execution.process.ColoredOutputTypeRegistry"
-                        serviceImplementation="consulo.execution.process.ColoredOutputTypeRegistry"/>
-
-
-    <applicationService serviceInterface="consulo.colorScheme.TextAttributesKey$TextAttributeKeyDefaultsProvider"
-                        serviceImplementation="consulo.ide.impl.idea.openapi.editor.colors.impl.TextAttributeKeyDefaultsProviderImpl"/>
-    <applicationService serviceInterface="consulo.colorScheme.EditorColorsManager"
-                        serviceImplementation="consulo.ide.impl.idea.openapi.editor.colors.impl.EditorColorsManagerImpl"/>
-    <applicationService serviceInterface="consulo.component.store.impl.internal.PathMacrosService"
-                        serviceImplementation="consulo.ide.impl.application.PathMacrosServiceImpl"/>
-
-
-
-    <applicationService serviceInterface="consulo.ide.impl.idea.openapi.vcs.actions.AnnotationsSettings"
-                        serviceImplementation="consulo.ide.impl.idea.openapi.vcs.actions.AnnotationsSettings"/>
-
-
-
-
 
     <projectService serviceInterface="consulo.ide.impl.idea.ide.errorTreeView.impl.ErrorTreeViewConfiguration"
                     serviceImplementation="consulo.ide.impl.idea.ide.errorTreeView.impl.ErrorTreeViewConfiguration"/>
@@ -1473,8 +1450,7 @@
 							order="first, before liveTemplates"/>
 
 
-    <applicationService serviceInterface="consulo.ide.impl.idea.execution.console.ConsoleFoldingSettings"
-                        serviceImplementation="consulo.ide.impl.idea.execution.console.ConsoleFoldingSettings"/>
+
     <console.folding implementation="consulo.ide.impl.idea.execution.console.SubstringConsoleFolding"/>
 
     <lookup.charFilter implementation="consulo.ide.impl.idea.codeInsight.template.impl.LiveTemplateCharFilter" order="first" id="liveTemplate"/>
@@ -1504,10 +1480,10 @@
     <codeInsight.lineMarkerProvider language="" implementationClass="consulo.ide.impl.idea.execution.lineMarker.RunLineMarkerProvider"/>
     <codeInsight.lineMarkerProvider language="" implementationClass="consulo.ide.impl.idea.ui.ColorLineMarkerProvider"/>
 
-    <applicationConfigurable id="editor.preferences.folding.general"
-                             parentId="editor.preferences.folding"
-                             displayName="General"
-                             instance="consulo.ide.impl.idea.application.options.editor.GeneralCodeFoldingConfigurable"/>
+    <!--<applicationConfigurable id="editor.preferences.folding.general"-->
+                             <!--parentId="editor.preferences.folding"-->
+                             <!--displayName="General"-->
+                             <!--instance="consulo.ide.impl.idea.application.options.editor.GeneralCodeFoldingConfigurable"/>-->
 
     <postStartupActivity implementation="consulo.ide.impl.idea.openapi.vfs.encoding.EncodingProjectManagerImpl$EncodingProjectManagerStartUpActivity"/>
 

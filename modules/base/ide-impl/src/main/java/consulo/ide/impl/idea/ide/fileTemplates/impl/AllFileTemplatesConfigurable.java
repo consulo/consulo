@@ -16,7 +16,9 @@
 
 package consulo.ide.impl.idea.ide.fileTemplates.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
+import consulo.configurable.*;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.actionSystem.*;
@@ -27,9 +29,6 @@ import consulo.fileTemplate.impl.internal.BundledFileTemplate;
 import consulo.fileTemplate.impl.internal.CustomFileTemplate;
 import consulo.fileTemplate.impl.internal.FileTemplateImplUtil;
 import consulo.language.plain.PlainTextFileType;
-import consulo.configurable.Configurable;
-import consulo.configurable.ConfigurationException;
-import consulo.configurable.SearchableConfigurable;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
@@ -65,8 +64,8 @@ import static consulo.fileTemplate.FileTemplateManager.*;
  * Date: Jul 26, 2002
  * Time: 12:44:56 PM
  */
-
-public class AllFileTemplatesConfigurable implements SearchableConfigurable, Configurable.NoMargin, Configurable.NoScroll {
+@ExtensionImpl
+public class AllFileTemplatesConfigurable implements SearchableConfigurable, Configurable.NoMargin, Configurable.NoScroll, ProjectConfigurable {
   private static final Logger LOG = Logger.getInstance(AllFileTemplatesConfigurable.class);
 
   private static final String TEMPLATES_TITLE = IdeBundle.message("tab.filetemplates.templates");
@@ -224,7 +223,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
           }
 
           //noinspection HardCodedStringLiteral
-          return new FileTemplateNode("ROOT", null, ContainerUtil.map2List(categories, s -> new FileTemplateNode(s)));
+          return new FileTemplateNode("ROOT", null, ContainerUtil.map2List(categories, FileTemplateNode::new));
         }
       };
       allTabs.add(myOtherTemplatesList);
@@ -642,6 +641,12 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
   @Nonnull
   public String getId() {
     return "fileTemplates";
+  }
+
+  @Nullable
+  @Override
+  public String getParentId() {
+    return StandardConfigurableIds.EDITOR_GROUP;
   }
 
   public static void editCodeTemplate(@Nonnull final String templateId, Project project) {

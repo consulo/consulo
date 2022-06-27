@@ -15,12 +15,17 @@
  */
 package consulo.ide.impl.idea.util.net;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.configurable.ApplicationConfigurable;
 import consulo.configurable.IdeaConfigurableBase;
+import consulo.configurable.StandardConfigurableIds;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-public class HttpProxyConfigurable extends IdeaConfigurableBase<HttpProxySettingsUi, HttpConfigurable> {
+@ExtensionImpl
+public class HttpProxyConfigurable extends IdeaConfigurableBase<HttpProxySettingsUi, HttpConfigurable> implements ApplicationConfigurable {
   private final HttpConfigurable settings;
 
   public HttpProxyConfigurable() {
@@ -32,6 +37,12 @@ public class HttpProxyConfigurable extends IdeaConfigurableBase<HttpProxySetting
     super("http.proxy", "HTTP Proxy", "http.proxy");
 
     this.settings = settings;
+  }
+
+  @Nullable
+  @Override
+  public String getParentId() {
+    return StandardConfigurableIds.GENERAL_GROUP;
   }
 
   @Nonnull

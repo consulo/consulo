@@ -18,10 +18,17 @@ package consulo.configurable;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.Extension;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author VISTALL
  * @since 18-Jun-22
  */
 @Extension(ComponentScope.PROJECT)
 public interface ProjectConfigurable extends Configurable {
+  @Nonnull
+  String getId();
+
+  @Nonnull
+  String getDisplayName();
 }

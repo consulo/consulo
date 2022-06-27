@@ -15,19 +15,30 @@
  */
 package consulo.ide.impl.idea.openapi.editor.colors.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.colorScheme.EditorColorsManager;
+import consulo.colorScheme.TextAttributeKeyDefaultsProvider;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.colorScheme.TextAttributes;
 
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 /**
  * @author Dennis.Ushakov
  */
 @Singleton
-public class TextAttributeKeyDefaultsProviderImpl implements TextAttributesKey.TextAttributeKeyDefaultsProvider {
+@ServiceImpl
+public class TextAttributeKeyDefaultsProviderImpl implements TextAttributeKeyDefaultsProvider {
+  private final EditorColorsManager myEditorColorsManager;
+
+  @Inject
+  public TextAttributeKeyDefaultsProviderImpl(EditorColorsManager editorColorsManager) {
+    myEditorColorsManager = editorColorsManager;
+  }
+
   @Override
   public TextAttributes getDefaultAttributes(TextAttributesKey key) {
-    return ((EditorColorsManagerImpl)EditorColorsManager.getInstance()).getDefaultAttributes(key);
+    return ((EditorColorsManagerImpl)myEditorColorsManager).getDefaultAttributes(key);
   }
 }

@@ -1,5 +1,8 @@
 package consulo.ide.impl.idea.execution.console;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.execution.ConsoleFolding;
 
 import java.util.List;

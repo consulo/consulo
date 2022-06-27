@@ -7,7 +7,6 @@ import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.template.TemplateManager;
-import consulo.ide.impl.idea.codeInsight.template.impl.LiveTemplatesConfigurable;
 import consulo.ide.impl.idea.codeInsight.template.impl.SurroundWithTemplateHandler;
 import consulo.dataContext.DataManager;
 import consulo.ide.IdeBundle;
@@ -280,7 +279,7 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
 
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
-      ShowSettingsUtil.getInstance().showSettingsDialog(e.getData(CommonDataKeys.PROJECT), LiveTemplatesConfigurable.displayName());
+      ShowSettingsUtil.getInstance().showSettingsDialog(e.getData(CommonDataKeys.PROJECT), CodeInsightBundle.message("templates.settings.page.title"));
     }
   }
 }

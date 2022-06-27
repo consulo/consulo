@@ -15,29 +15,40 @@
  */
 package consulo.ide.impl.idea.notification.impl;
 
+import consulo.configurable.*;
 import consulo.ide.impl.idea.notification.impl.ui.NotificationsConfigurablePanel;
-import consulo.configurable.Configurable;
-import consulo.configurable.ConfigurationException;
-import consulo.configurable.SearchableConfigurable;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 /**
  * @author spleaner
  */
-public class NotificationsConfigurable implements Configurable, SearchableConfigurable, Configurable.NoScroll {
-  public static final String DISPLAY_NAME = "Notifications";
+public class NotificationsConfigurable implements Configurable, SearchableConfigurable, Configurable.NoScroll, ApplicationConfigurable {
   private NotificationsConfigurablePanel myComponent;
 
   @Override
+  @Nonnull
+  public String getId() {
+    return "notifications";
+  }
+
+  @Nullable
+  @Override
+  public String getParentId() {
+    return StandardConfigurableIds.GENERAL_GROUP;
+  }
+
+  @Nonnull
+  @Override
   @Nls
   public String getDisplayName() {
-    return DISPLAY_NAME;
+    return "Notifications";
   }
 
   @RequiredUIAccess
@@ -73,12 +84,6 @@ public class NotificationsConfigurable implements Configurable, SearchableConfig
   @Override
   public void disposeUIResources() {
     myComponent = null;
-  }
-
-  @Override
-  @Nonnull
-  public String getId() {
-    return "notifcations";
   }
 
   @Override
