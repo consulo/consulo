@@ -1,24 +1,23 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.runAnything;
 
-import consulo.execution.executor.Executor;
+import consulo.application.Application;
+import consulo.application.dumb.DumbAware;
 import consulo.application.statistic.FeatureUsageTracker;
+import consulo.application.util.SystemInfo;
+import consulo.application.util.registry.Registry;
+import consulo.execution.executor.Executor;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.ide.impl.idea.ide.actions.GotoActionBase;
 import consulo.ide.impl.idea.ide.actions.runAnything.activity.RunAnythingProvider;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.CustomComponentAction;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButton;
-import consulo.application.Application;
+import consulo.ide.impl.idea.openapi.keymap.impl.ModifierKeyDoubleClickHandler;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.util.MacKeymapUtil;
-import consulo.ide.impl.idea.openapi.keymap.impl.ModifierKeyDoubleClickHandler;
-import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
-import consulo.application.util.SystemInfo;
-import consulo.application.util.registry.Registry;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.FontUtil;
 import consulo.util.dataholder.Key;
 
@@ -37,14 +36,6 @@ public class RunAnythingAction extends AnAction implements CustomComponentAction
   public static final AtomicBoolean ALT_IS_PRESSED = new AtomicBoolean(false);
 
   private boolean myIsDoubleCtrlRegistered;
-
-  private static final NotNullLazyValue<Boolean> IS_ACTION_ENABLED = new NotNullLazyValue<>() {
-    @Nonnull
-    @Override
-    protected Boolean compute() {
-      return RunAnythingProvider.EP_NAME.hasAnyExtensions();
-    }
-  };
 
   public RunAnythingAction(@Nonnull Application application) {
     if(application.isSwingApplication()) {
@@ -95,8 +86,7 @@ public class RunAnythingAction extends AnAction implements CustomComponentAction
       }
     }
 
-    boolean isEnabled = IS_ACTION_ENABLED.getValue();
-    e.getPresentation().setEnabledAndVisible(isEnabled);
+    e.getPresentation().setEnabledAndVisible(RunAnythingProvider.EP_NAME.hasAnyExtensions());
   }
 
   @Nonnull
