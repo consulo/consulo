@@ -1,21 +1,17 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.psi.impl.file.impl;
 
-import consulo.document.event.FileDocumentManagerListener;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.FileDocumentManagerImpl;
-import consulo.language.file.event.FileTypeEvent;
-import consulo.language.file.event.FileTypeListener;
-import consulo.language.file.FileTypeManager;
-import consulo.ide.impl.idea.openapi.roots.impl.PushedFilePropertiesUpdater;
-import consulo.ide.impl.idea.openapi.roots.impl.PushedFilePropertiesUpdaterImpl;
-import consulo.language.psi.internal.ExternalChangeAction;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.Application;
 import consulo.application.util.registry.Registry;
-import consulo.component.messagebus.MessageBusConnection;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
+import consulo.document.event.FileDocumentManagerListener;
 import consulo.document.util.FileContentUtilCore;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.FileDocumentManagerImpl;
+import consulo.ide.impl.idea.openapi.roots.impl.PushedFilePropertiesUpdater;
+import consulo.ide.impl.idea.openapi.roots.impl.PushedFilePropertiesUpdaterImpl;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.file.FileTypeManager;
 import consulo.language.file.FileViewProvider;
 import consulo.language.impl.DebugUtil;
 import consulo.language.impl.internal.file.FileManagerImpl;
@@ -23,6 +19,7 @@ import consulo.language.impl.internal.psi.PsiManagerImpl;
 import consulo.language.impl.internal.psi.PsiTreeChangeEventImpl;
 import consulo.language.psi.*;
 import consulo.language.psi.event.PsiTreeChangeEvent;
+import consulo.language.psi.internal.ExternalChangeAction;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
@@ -31,8 +28,6 @@ import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import consulo.project.startup.StartupActivity;
-import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.RawFileLoader;
 import consulo.virtualFileSystem.VirtualFile;
@@ -51,31 +46,12 @@ import java.util.function.BiPredicate;
 
 @Singleton
 public class PsiVFSListener implements BulkFileListener {
-  public static class MyStartUpActivity implements StartupActivity {
-
-    @Override
-    public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
-      PsiVFSListener psiVFSListener = project.getInstance(PsiVFSListener.class);
-
-      MessageBusConnection connection = project.getMessageBus().connect();
-      connection.subscribe(ModuleRootListener.class, psiVFSListener.new MyModuleRootListener());
-      connection.subscribe(FileTypeListener.class, new FileTypeListener() {
-        @Override
-        public void fileTypesChanged(@Nonnull FileTypeEvent e) {
-          psiVFSListener.myFileManager.processFileTypesChanged(e.getRemovedFileType() != null);
-        }
-      });
-      connection.subscribe(FileDocumentManagerListener.class, psiVFSListener.new MyFileDocumentManagerAdapter());
-
-      installGlobalListener();
-    }
-  }
   private static final Logger LOG = Logger.getInstance(PsiVFSListener.class);
 
   private final FileTypeManager myFileTypeManager;
   private final Provider<ProjectFileIndex> myFileIndex;
   private final PsiManagerImpl myManager;
-  private final FileManagerImpl myFileManager;
+  final FileManagerImpl myFileManager;
   private final Project myProject;
   private boolean myReportedUnloadedPsiChange;
 
@@ -88,13 +64,12 @@ public class PsiVFSListener implements BulkFileListener {
     myFileIndex = fileIndex;
     myManager = (PsiManagerImpl)PsiManager.getInstance(project);
     myFileManager = (FileManagerImpl)myManager.getFileManager();
-
   }
 
   /**
    * This code is implemented as static method (and not static constructor, as it was done before) to prevent installing listeners in Upsource
    */
-  private static void installGlobalListener() {
+  static void installGlobalListener() {
     if (!ourGlobalListenerInstalled.compareAndSet(false, true)) {
       return;
     }
@@ -104,7 +79,7 @@ public class PsiVFSListener implements BulkFileListener {
       @Override
       public void before(@Nonnull List<? extends VFileEvent> events) {
         for (Project project : ProjectManager.getInstance().getOpenProjects()) {
-          project.getComponent(PsiVFSListener.class).before(events);
+          project.getInstance(PsiVFSListener.class).before(events);
         }
       }
 
@@ -120,7 +95,7 @@ public class PsiVFSListener implements BulkFileListener {
           }
         }
         for (Project project : projects) {
-          project.getComponent(PsiVFSListener.class).after(events);
+          project.getInstance(PsiVFSListener.class).after(events);
         }
       }
     });
@@ -557,7 +532,7 @@ public class PsiVFSListener implements BulkFileListener {
             .createFileFromText(name, fileTypeByFileName, document != null ? document.getCharsSequence() : "", vFile.getModificationStamp(), true, false);
   }
 
-  private class MyModuleRootListener implements ModuleRootListener {
+  class MyModuleRootListener implements ModuleRootListener {
     private int depthCounter; // accessed from within write action only
 
     @Override
@@ -592,7 +567,7 @@ public class PsiVFSListener implements BulkFileListener {
     }
   }
 
-  private class MyFileDocumentManagerAdapter implements FileDocumentManagerListener {
+  class MyFileDocumentManagerAdapter implements FileDocumentManagerListener {
     @Override
     public void fileWithNoDocumentChanged(@Nonnull final VirtualFile file) {
       FileViewProvider viewProvider = myFileManager.findCachedViewProvider(file);

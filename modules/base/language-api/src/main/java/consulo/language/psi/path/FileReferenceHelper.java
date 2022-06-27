@@ -15,6 +15,8 @@
  */
 package consulo.language.psi.path;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.PsiManager;
@@ -30,9 +32,10 @@ import java.util.Collections;
 /**
  * @author peter
  */
+@Extension(ComponentScope.APPLICATION)
 public abstract class FileReferenceHelper {
 
-  public static final ExtensionPointName<FileReferenceHelper> EP_NAME = ExtensionPointName.create("consulo.psi.fileReferenceHelper");
+  public static final ExtensionPointName<FileReferenceHelper> EP_NAME = ExtensionPointName.create(FileReferenceHelper.class);
 
   @Nonnull
   public String trimUrl(@Nonnull String url) {

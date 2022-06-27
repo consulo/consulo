@@ -18,17 +18,14 @@ package consulo.ide.impl.idea.execution.impl;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.Service;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.AccessRule;
 import consulo.component.persist.*;
 import consulo.execution.RunManager;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.ide.impl.idea.execution.configurations.UnknownRunConfiguration;
-import consulo.project.Project;
-import consulo.util.collection.SmartList;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.application.AccessRule;
-import consulo.project.startup.StartupActivity;
-import consulo.ui.UIAccess;
+import consulo.util.collection.SmartList;
 import consulo.util.lang.Pair;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -50,24 +47,6 @@ import java.util.Set;
 @Service(ComponentScope.PROJECT)
 @ServiceImpl
 public class ProjectRunConfigurationManager implements PersistentStateComponent<Element> {
-  public static class MyStartupActivity implements StartupActivity.DumbAware {
-
-    @Override
-    public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
-      ProjectRunConfigurationManager manager = project.getInstance(ProjectRunConfigurationManager.class);
-
-      // just initialize it project run manager (load shared runs)
-
-      RunManager runManager = RunManager.getInstance(project);
-      RunnerAndConfigurationSettings selectedConfiguration = runManager.getSelectedConfiguration();
-      if (selectedConfiguration == null) {
-        List<RunnerAndConfigurationSettings> settings = runManager.getAllSettings();
-        if (!settings.isEmpty()) {
-          runManager.setSelectedConfiguration(settings.get(0));
-        }
-      }
-    }
-  }
 
   private final RunManagerImpl myManager;
   private List<Element> myUnloadedElements;

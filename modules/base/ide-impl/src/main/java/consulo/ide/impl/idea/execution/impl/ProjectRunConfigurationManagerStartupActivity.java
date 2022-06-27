@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,35 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide;
+package consulo.ide.impl.idea.execution.impl;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.tipOfDay.TipOfDayManager;
+import consulo.execution.RunManager;
+import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.project.Project;
 import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
-import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 @ExtensionImpl
-public class TipOfTheDayStartupActivity implements PostStartupActivity, DumbAware {
-  private final TipOfDayManager myManager;
-  private final GeneralSettings myGeneralSettings;
-
-  @Inject
-  public TipOfTheDayStartupActivity(TipOfDayManager manager, GeneralSettings generalSettings) {
-    myManager = manager;
-    myGeneralSettings = generalSettings;
-  }
+public class ProjectRunConfigurationManagerStartupActivity implements PostStartupActivity, DumbAware {
 
   @Override
   public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
-    if (!myGeneralSettings.isShowTipsOnStartup()) {
-      return;
-    }
+    ProjectRunConfigurationManager manager = project.getInstance(ProjectRunConfigurationManager.class);
 
-    myManager.scheduleShow(uiAccess, project);
+    // just initialize it project run manager (load shared runs)
+
+    RunManager runManager = RunManager.getInstance(project);
+    RunnerAndConfigurationSettings selectedConfiguration = runManager.getSelectedConfiguration();
+    if (selectedConfiguration == null) {
+      List<RunnerAndConfigurationSettings> settings = runManager.getAllSettings();
+      if (!settings.isEmpty()) {
+        runManager.setSelectedConfiguration(settings.get(0));
+      }
+    }
   }
 }

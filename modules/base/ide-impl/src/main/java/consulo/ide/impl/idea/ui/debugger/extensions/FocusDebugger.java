@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.ui.debugger.extensions;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.logging.Logger;
 import consulo.ui.ex.awt.Splitter;
@@ -38,6 +39,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 
+@ExtensionImpl
 public class FocusDebugger implements UiDebuggerExtension, PropertyChangeListener, ListSelectionListener  {
 
   private static final Logger LOG = Logger.getInstance(FocusDebugger.class);

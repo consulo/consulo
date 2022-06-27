@@ -16,6 +16,7 @@
 
 package consulo.desktop.awt.uiOld.debugger.extensions;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import consulo.component.persist.State;
@@ -69,6 +70,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
+@ExtensionImpl
 public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.StatusCallback {
 
   private static final Logger LOG = Logger.getInstance(PlaybackDebugger.class);

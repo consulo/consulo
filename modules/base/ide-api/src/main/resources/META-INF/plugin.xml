@@ -216,8 +216,6 @@
 
     <extensionPoint name="intentionMenuContributor" interface="consulo.ide.impl.idea.codeInsight.daemon.impl.IntentionMenuContributor"/>
 
-    <extensionPoint name="fileTypeDetector" interface="consulo.virtualFileSystem.fileType.FileTypeRegistry$FileTypeDetector"/>
-
     <extensionPoint name="pathMacroFilter" interface="consulo.component.macro.PathMacroFilter"/>
     <extensionPoint name="pathMacroExpendableProtocol" beanClass="consulo.component.macro.PathMacroExpendableProtocolBean"/>
 
@@ -385,8 +383,7 @@
                     interface="consulo.util.lang.function.Condition"/>
     <extensionPoint name="typedHandler"
                     interface="consulo.language.editor.action.TypedHandlerDelegate"/>
-    <extensionPoint name="selectionDequotingFilter"
-                    interface="consulo.ide.impl.idea.codeInsight.editorActions.SelectionQuotingTypedHandler$DequotingFilter"/>
+
 
     <extensionPoint name="joinLinesHandler"
                     interface="consulo.language.editor.action.JoinLinesHandlerDelegate"/>
@@ -1571,15 +1568,9 @@
                 factoryClass="consulo.ide.impl.idea.execution.dashboard.RunDashboardToolWindowFactory"
                 conditionClass="consulo.ide.impl.idea.execution.dashboard.RunDashboardToolWindowFactory"/>
 
-    <psi.fileReferenceHelper implementation="consulo.language.editor.impl.internal.psi.path.PsiFileReferenceHelper"/>
-    <psi.fileReferenceHelper implementation="consulo.language.editor.impl.internal.psi.path.JarFileReferenceHelper"/>
-    <psi.fileReferenceHelper implementation="consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers.HttpFileReferenceHelper"/>
-    <psi.fileReferenceHelper implementation="consulo.language.psi.path.NullFileReferenceHelper" order="last"/>
     <psi.referenceContributor implementation="consulo.ide.impl.psi.impl.source.resolve.reference.CommentsReferenceContributor"/>
     <referenceProviderType key="commentsReferenceProvider"
                            implementationClass="consulo.ide.impl.psi.impl.source.resolve.reference.ArbitraryPlaceUrlReferenceProvider"/>
-
-    <uiDebuggerExtension implementation="consulo.ide.impl.idea.ui.debugger.extensions.ActionTracer"/>
 
     <globalInspection shortName="Annotator" displayName="Annotator" groupKey="inspection.general.tools.group.name" groupBundle="consulo.language.editor.inspection.InspectionsBundle"
                       enabledByDefault="true" level="ERROR"
@@ -1728,12 +1719,6 @@
     <projectService serviceImplementation="consulo.ide.impl.idea.openapi.vcs.changes.committed.IncomingChangesIndicator" lazy="false"/>
     <projectService serviceImplementation="consulo.ide.impl.psi.impl.file.impl.PsiVFSListener" lazy="false"/>
     <postStartupActivity id="vfsStartup" implementation="consulo.ide.impl.psi.impl.file.impl.PsiVFSListener$MyStartUpActivity" order="first"/>
-
-
-
-    <postStartupActivity implementation="consulo.ide.impl.idea.openapi.vcs.update.RestoreUpdateTree$MyStartUpActivity"/>
-
-    <postStartupActivity implementation="consulo.ide.impl.idea.execution.impl.ProjectRunConfigurationManager$MyStartupActivity"/>
 
 
 

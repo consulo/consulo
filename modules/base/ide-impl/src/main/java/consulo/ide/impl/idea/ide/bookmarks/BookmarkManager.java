@@ -41,11 +41,9 @@ import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import consulo.language.psi.event.PsiDocumentListener;
 import consulo.project.Project;
 import consulo.project.startup.StartupActivity;
 import consulo.project.startup.StartupManager;
-import consulo.ui.UIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -70,15 +68,6 @@ import java.util.concurrent.atomic.AtomicReference;
 @Service(ComponentScope.PROJECT)
 @ServiceImpl
 public class BookmarkManager implements PersistentStateComponent<Element> {
-  public static class MyStartupActivity implements StartupActivity.DumbAware {
-    @Override
-    public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
-      project.getMessageBus().connect().subscribe(PsiDocumentListener.class, BookmarkManager::documentCreated);
-
-      // init
-      BookmarkManager.getInstance(project);
-    }
-  }
 
   private static final int MAX_AUTO_DESCRIPTION_SIZE = 50;
 
@@ -104,7 +93,7 @@ public class BookmarkManager implements PersistentStateComponent<Element> {
     multicaster.addEditorMouseListener(new MyEditorMouseListener(), myProject);
   }
 
-  private static void documentCreated(@Nonnull final Document document, PsiFile ignored, Project project) {
+  static void documentCreated(@Nonnull final Document document, PsiFile ignored, Project project) {
     BookmarkManager bookmarkManager = BookmarkManager.getInstance(project);
 
     final VirtualFile file = FileDocumentManager.getInstance().getFile(document);
@@ -291,7 +280,7 @@ public class BookmarkManager implements PersistentStateComponent<Element> {
           b.setMnemonic(mnemonic.charAt(0));
         }
 
-        if(b != null) {
+        if (b != null) {
           bookmarks.add(b);
         }
       }

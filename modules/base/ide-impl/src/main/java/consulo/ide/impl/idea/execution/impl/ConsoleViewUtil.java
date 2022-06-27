@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author peter
@@ -160,7 +161,7 @@ public class ConsoleViewUtil {
       });
     }
 
-    static final Map<Key, List<TextAttributesKey>> textAttributeKeys = ContainerUtil.newConcurrentMap();
+    static final Map<Key, List<TextAttributesKey>> textAttributeKeys = new ConcurrentHashMap<>();
     static final Map<Key, TextAttributes> mergedTextAttributes = ConcurrentFactoryMap.createMap(contentKey -> {
       EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
       TextAttributes result = scheme.getAttributes(HighlighterColors.TEXT);
@@ -238,7 +239,7 @@ public class ConsoleViewUtil {
   @Nonnull
   public static List<Filter> computeConsoleFilters(@Nonnull Project project, @Nullable ConsoleView consoleView, @Nonnull SearchScope searchScope) {
     List<Filter> result = new ArrayList<>();
-    for (ConsoleFilterProvider eachProvider : ConsoleFilterProvider.FILTER_PROVIDERS.getExtensionList()) {
+    ConsoleFilterProvider.FILTER_PROVIDERS.forEachExtensionSafe(eachProvider -> {
       Filter[] filters;
       if (consoleView != null && eachProvider instanceof ConsoleDependentFilterProvider) {
         filters = ((ConsoleDependentFilterProvider)eachProvider).getDefaultFilters(consoleView, project, searchScope);
@@ -250,7 +251,7 @@ public class ConsoleViewUtil {
         filters = eachProvider.getDefaultFilters(project);
       }
       ContainerUtil.addAll(result, filters);
-    }
+    });
     return result;
   }
 }

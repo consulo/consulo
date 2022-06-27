@@ -16,6 +16,7 @@
 
 package consulo.language.editor.impl.internal.psi.path;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.path.FileReferenceHelper;
 import consulo.module.Module;
@@ -30,6 +31,7 @@ import java.util.Collections;
 /**
  * @author Dmitry Avdeev
  */
+@ExtensionImpl
 public class JarFileReferenceHelper extends FileReferenceHelper {
 
   @Override

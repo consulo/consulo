@@ -20,12 +20,18 @@
  */
 package consulo.execution.ui.console;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import javax.annotation.Nonnull;
 
+/**
+ * @see ConsoleFilterProviderEx for additional API
+ */
+@Extension(ComponentScope.APPLICATION)
 public interface ConsoleFilterProvider {
-  ExtensionPointName<ConsoleFilterProvider> FILTER_PROVIDERS = ExtensionPointName.create("consulo.consoleFilterProvider");
+  ExtensionPointName<ConsoleFilterProvider> FILTER_PROVIDERS = ExtensionPointName.create(ConsoleFilterProvider.class);
 
   @Nonnull
   Filter[] getDefaultFilters(@Nonnull Project project);

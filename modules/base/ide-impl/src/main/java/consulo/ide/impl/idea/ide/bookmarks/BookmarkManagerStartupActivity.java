@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,35 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide;
+package consulo.ide.impl.idea.ide.bookmarks;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.tipOfDay.TipOfDayManager;
+import consulo.language.psi.event.PsiDocumentListener;
 import consulo.project.Project;
 import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
-import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 
 @ExtensionImpl
-public class TipOfTheDayStartupActivity implements PostStartupActivity, DumbAware {
-  private final TipOfDayManager myManager;
-  private final GeneralSettings myGeneralSettings;
-
-  @Inject
-  public TipOfTheDayStartupActivity(TipOfDayManager manager, GeneralSettings generalSettings) {
-    myManager = manager;
-    myGeneralSettings = generalSettings;
-  }
-
+public class BookmarkManagerStartupActivity implements PostStartupActivity, DumbAware {
   @Override
   public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
-    if (!myGeneralSettings.isShowTipsOnStartup()) {
-      return;
-    }
+    project.getMessageBus().connect().subscribe(PsiDocumentListener.class, BookmarkManager::documentCreated);
 
-    myManager.scheduleShow(uiAccess, project);
+    // init
+    BookmarkManager.getInstance(project);
   }
 }

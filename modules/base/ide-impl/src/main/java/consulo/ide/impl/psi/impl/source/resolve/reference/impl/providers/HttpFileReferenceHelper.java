@@ -1,17 +1,24 @@
 package consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.path.FileReferenceHelper;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.http.HttpVirtualFile;
-import consulo.language.psi.PsiFileSystemItem;
+import jakarta.inject.Inject;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collection;
 import java.util.Collections;
 
+@ExtensionImpl
 final class HttpFileReferenceHelper extends FileReferenceHelper {
+  @Inject
+  HttpFileReferenceHelper() {
+  }
+
   @Nullable
   @Override
   public PsiFileSystemItem findRoot(Project project, @Nonnull VirtualFile file) {

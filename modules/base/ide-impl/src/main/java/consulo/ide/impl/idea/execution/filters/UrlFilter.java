@@ -98,20 +98,6 @@ public class UrlFilter implements Filter, DumbAware {
     return null;
   }
 
-  public static class UrlFilterProvider implements ConsoleFilterProviderEx {
-    @Override
-    @Nonnull
-    public Filter[] getDefaultFilters(@Nonnull Project project, @Nonnull SearchScope scope) {
-      return new Filter[]{new UrlFilter(project)};
-    }
-
-    @Nonnull
-    @Override
-    public Filter[] getDefaultFilters(@Nonnull Project project) {
-      return getDefaultFilters(project, GlobalSearchScope.allScope(project));
-    }
-  }
-
   private class FileUrlHyperlinkInfo extends LazyFileHyperlinkInfo implements HyperlinkWithPopupMenuInfo {
     private
     @Nonnull

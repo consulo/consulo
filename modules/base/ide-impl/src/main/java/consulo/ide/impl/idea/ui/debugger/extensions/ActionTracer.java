@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ui.debugger.extensions;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
@@ -33,12 +34,11 @@ import javax.swing.text.Document;
 import java.awt.*;
 
 /**
- * Created by IntelliJ IDEA.
  * User: kirillk
  * Date: 8/4/11
  * Time: 7:52 PM
- * To change this template use File | Settings | File Templates.
  */
+@ExtensionImpl
 public class ActionTracer implements UiDebuggerExtension, AnActionListener {
 
   private final Logger LOG = Logger.getInstance(ActionTracer.class);

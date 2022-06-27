@@ -16,16 +16,19 @@
 
 package consulo.ide.impl.idea.ui.debugger;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 
 import javax.swing.*;
 
+@Extension(ComponentScope.APPLICATION)
 public interface UiDebuggerExtension {
-  ExtensionPointName<UiDebuggerExtension> EP_NAME = ExtensionPointName.create("consulo.uiDebuggerExtension");
+  ExtensionPointName<UiDebuggerExtension> EP_NAME = ExtensionPointName.create(UiDebuggerExtension.class);
 
   JComponent getComponent();
+
   String getName();
 
   void disposeUiResources();
-
 }

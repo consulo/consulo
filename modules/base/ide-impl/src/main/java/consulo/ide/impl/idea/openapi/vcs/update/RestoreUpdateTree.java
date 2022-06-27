@@ -20,13 +20,7 @@ import consulo.annotation.component.Service;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.*;
 import consulo.ide.ServiceManager;
-import consulo.ide.impl.idea.openapi.project.ProjectReloadState;
-import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
-import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesCache;
-import consulo.ide.impl.idea.openapi.vcs.ex.ProjectLevelVcsManagerEx;
 import consulo.project.Project;
-import consulo.project.startup.IdeaStartupActivity;
-import consulo.ui.UIAccess;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -44,31 +38,10 @@ public class RestoreUpdateTree implements PersistentStateComponent<Element> {
     return ServiceManager.getService(project, RestoreUpdateTree.class);
   }
 
-  public static class MyStartUpActivity implements IdeaStartupActivity.DumbAware {
-    @Override
-    public void runActivity(@Nonnull UIAccess uiAccess, @Nonnull Project project) {
-      RestoreUpdateTree restoreUpdateTree = RestoreUpdateTree.getInstance(project);
-      UpdateInfo updateInfo = restoreUpdateTree.myUpdateInfo;
-
-      if (updateInfo != null && !updateInfo.isEmpty() && ProjectReloadState.getInstance(project).isAfterAutomaticReload()) {
-        ActionInfo actionInfo = updateInfo.getActionInfo();
-        if (actionInfo != null) {
-          ProjectLevelVcsManagerEx.getInstanceEx(project).showUpdateProjectInfo(updateInfo.getFileInformation(), VcsBundle.message("action.display.name.update"), actionInfo, false);
-
-          CommittedChangesCache.getInstance(project).refreshIncomingChangesAsync();
-        }
-        restoreUpdateTree.myUpdateInfo = null;
-      }
-      else {
-        restoreUpdateTree.myUpdateInfo = null;
-      }
-    }
-  }
-
   private static final String UPDATE_INFO = "UpdateInfo";
 
   private final Project myProject;
-  private UpdateInfo myUpdateInfo;
+  protected UpdateInfo myUpdateInfo;
 
   @Inject
   public RestoreUpdateTree(Project project) {

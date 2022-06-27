@@ -15,6 +15,7 @@
  */
 package consulo.language.psi.path;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.PsiManager;
 import consulo.module.Module;
@@ -29,6 +30,7 @@ import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Collections;
 
+@ExtensionImpl(order = "last")
 public class NullFileReferenceHelper extends FileReferenceHelper {
 
   public static final NullFileReferenceHelper INSTANCE = new NullFileReferenceHelper();
