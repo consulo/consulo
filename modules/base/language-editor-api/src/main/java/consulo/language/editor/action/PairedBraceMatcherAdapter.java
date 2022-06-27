@@ -16,29 +16,37 @@
 
 package consulo.language.editor.action;
 
+import consulo.codeEditor.HighlighterIterator;
 import consulo.language.BracePair;
 import consulo.language.Language;
 import consulo.language.PairedBraceMatcher;
-import consulo.language.editor.highlight.BraceMatcherTerminationAspect;
-import consulo.codeEditor.HighlighterIterator;
-import consulo.language.editor.highlight.NontrivialBraceMatcher;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.language.psi.PsiFile;
 import consulo.language.ast.IElementType;
+import consulo.language.editor.highlight.BraceMatcherTerminationAspect;
+import consulo.language.editor.highlight.NontrivialBraceMatcher;
+import consulo.language.psi.PsiFile;
+import consulo.virtualFileSystem.fileType.FileType;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class PairedBraceMatcherAdapter implements NontrivialBraceMatcher {
+  private final FileType myFileType;
   private final PairedBraceMatcher myMatcher;
   private final Language myLanguage;
 
-  public PairedBraceMatcherAdapter(final PairedBraceMatcher matcher, Language language) {
+  public PairedBraceMatcherAdapter(FileType fileType, final PairedBraceMatcher matcher, Language language) {
+    myFileType = fileType;
     myMatcher = matcher;
     myLanguage = language;
+  }
+
+  @Nonnull
+  @Override
+  public final FileType getFileType() {
+    return myFileType;
   }
 
   @Override
@@ -85,8 +93,7 @@ public class PairedBraceMatcherAdapter implements NontrivialBraceMatcher {
   public boolean isPairBraces(IElementType tokenType, IElementType tokenType2) {
     final BracePair[] pairs = myMatcher.getPairs();
     for (BracePair pair : pairs) {
-      if (tokenType == pair.getLeftBraceType() && tokenType2 == pair.getRightBraceType() ||
-          tokenType == pair.getRightBraceType() && tokenType2 == pair.getLeftBraceType()) {
+      if (tokenType == pair.getLeftBraceType() && tokenType2 == pair.getRightBraceType() || tokenType == pair.getRightBraceType() && tokenType2 == pair.getLeftBraceType()) {
         return true;
       }
     }

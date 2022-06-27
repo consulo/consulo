@@ -15,7 +15,14 @@
  */
 package consulo.language;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
+import consulo.application.Application;
+import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.language.ast.IElementType;
+import consulo.language.extension.ByLanguageValue;
+import consulo.language.extension.LanguageExtension;
+import consulo.language.extension.LanguageGroupByFactory;
 import consulo.language.psi.PsiFile;
 
 import javax.annotation.Nonnull;
@@ -28,10 +35,17 @@ import javax.annotation.Nullable;
  * lexer from <code>getHighlightingLexer()</code>.
  *
  * @author max
- * @see LanguageBraceMatching
  * @see BracePair
  */
-public interface PairedBraceMatcher {
+@Extension(ComponentScope.APPLICATION)
+public interface PairedBraceMatcher extends LanguageExtension {
+  ExtensionPointCacheKey<PairedBraceMatcher, ByLanguageValue<PairedBraceMatcher>> KEY = ExtensionPointCacheKey.create("PairedBraceMatcher", LanguageGroupByFactory.build());
+
+  @Nullable
+  static PairedBraceMatcher forLanguage(@Nonnull Language language) {
+    return Application.get().getExtensionPoint(PairedBraceMatcher.class).getOrBuildCache(KEY).get(language);
+  }
+
   /**
    * Returns the array of definitions for brace pairs that need to be matched when
    * editing code in the language.
@@ -43,7 +57,8 @@ public interface PairedBraceMatcher {
   /**
    * Returns true if paired rbrace should be inserted after lbrace of given type when lbrace is encountered before contextType token.
    * It is safe to always return true, then paired brace will be inserted anyway.
-   * @param lbraceType lbrace for which information is queried
+   *
+   * @param lbraceType  lbrace for which information is queried
    * @param contextType token type that follows lbrace
    * @return true / false as described
    */
@@ -53,7 +68,7 @@ public interface PairedBraceMatcher {
    * Returns the start offset of the code construct which owns the opening structural brace at the specified offset. For example,
    * if the opening brace belongs to an 'if' statement, returns the start offset of the 'if' statement.
    *
-   * @param file the file in which brace matching is performed.
+   * @param file               the file in which brace matching is performed.
    * @param openingBraceOffset the offset of an opening structural brace.
    * @return the offset of corresponding code construct, or the same offset if not defined.
    */

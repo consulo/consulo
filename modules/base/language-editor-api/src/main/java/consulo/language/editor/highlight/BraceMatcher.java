@@ -16,18 +16,30 @@
 
 package consulo.language.editor.highlight;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
+import consulo.application.Application;
 import consulo.codeEditor.HighlighterIterator;
-import consulo.component.extension.ExtensionPointName;
+import consulo.component.extension.ExtensionPoint;
+import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.language.ast.IElementType;
 import consulo.language.psi.PsiFile;
-import consulo.virtualFileSystem.extension.FileTypeExtensionPoint;
 import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Map;
 
+@Extension(ComponentScope.APPLICATION)
 public interface BraceMatcher {
-  ExtensionPointName<FileTypeExtensionPoint<BraceMatcher>> EP_NAME = ExtensionPointName.create("consulo.braceMatcher");
+  ExtensionPointCacheKey<BraceMatcher, Map<FileType, BraceMatcher>> KEY = ExtensionPointCacheKey.groupBy("BraceMatcher", BraceMatcher::getFileType);
+
+  @Nullable
+  static BraceMatcher forFileType(FileType fileType) {
+    ExtensionPoint<BraceMatcher> extensionPoint = Application.get().getExtensionPoint(BraceMatcher.class);
+    Map<FileType, BraceMatcher> map = extensionPoint.getOrBuildCache(KEY);
+    return map.get(fileType);
+  }
 
   int getBraceTokenGroupId(IElementType tokenType);
 
@@ -53,4 +65,7 @@ public interface BraceMatcher {
    * @return the offset of corresponding code construct, or the same offset if not defined.
    */
   int getCodeConstructStart(final PsiFile file, int openingBraceOffset);
+
+  @Nonnull
+  FileType getFileType();
 }

@@ -1411,10 +1411,6 @@
     <applicationService serviceInterface="consulo.ide.impl.idea.application.options.codeStyle.CodeStyleSchemesUIConfiguration"
                         serviceImplementation="consulo.ide.impl.idea.application.options.codeStyle.CodeStyleSchemesUIConfiguration"/>
 
-    <stepsBeforeRunProvider implementation="consulo.ide.impl.idea.tools.ToolBeforeRunTaskProvider"/>
-
-    <lang.braceMatcher language="TEXT" implementationClass="consulo.ide.impl.idea.ide.highlighter.custom.impl.CustomFileTypeBraceMatcher"/>
-    <lang.ast.leafFactory implementation="consulo.ide.impl.psi.impl.source.tree.PlainTextASTLeafFactory"/>
 
     <patternDialectProvider implementation="consulo.ide.impl.idea.packageDependencies.ui.ProjectPatternProvider" id="file"/>
     <customScopesProvider implementation="consulo.ide.impl.idea.packageDependencies.DefaultScopesProvider"/>

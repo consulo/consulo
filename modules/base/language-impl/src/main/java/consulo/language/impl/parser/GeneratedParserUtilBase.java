@@ -19,7 +19,6 @@ package consulo.language.impl.parser;
 import consulo.application.Application;
 import consulo.language.BracePair;
 import consulo.language.Language;
-import consulo.language.LanguageBraceMatching;
 import consulo.language.PairedBraceMatcher;
 import consulo.language.ast.*;
 import consulo.language.impl.internal.parser.PsiBuilderImpl;
@@ -922,7 +921,7 @@ public class GeneratedParserUtilBase {
       state.completionState = file == null ? null : file.getUserData(COMPLETION_STATE_KEY);
       Language language = file == null ? root.getLanguage() : file.getLanguage();
       state.caseSensitive = language.isCaseSensitive();
-      PairedBraceMatcher matcher = LanguageBraceMatching.INSTANCE.forLanguage(language);
+      PairedBraceMatcher matcher = PairedBraceMatcher.forLanguage(language);
       state.braces = matcher == null ? null : matcher.getPairs();
       if (state.braces != null && state.braces.length == 0) state.braces = null;
     }

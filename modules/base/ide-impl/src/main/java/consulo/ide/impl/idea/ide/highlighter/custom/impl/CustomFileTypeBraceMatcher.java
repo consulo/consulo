@@ -16,11 +16,16 @@
 
 package consulo.ide.impl.idea.ide.highlighter.custom.impl;
 
-import consulo.language.editor.action.PairedBraceMatcherAdapter;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.BracePair;
+import consulo.language.Language;
 import consulo.language.PairedBraceMatcher;
-import consulo.language.psi.PsiFile;
 import consulo.language.ast.IElementType;
+import consulo.language.editor.action.PairedBraceMatcherAdapter;
+import consulo.language.plain.PlainTextFileType;
+import consulo.language.plain.PlainTextLanguage;
+import consulo.language.psi.PsiFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -29,6 +34,7 @@ import static consulo.ide.impl.psi.CustomHighlighterTokenType.*;
 /**
  * @author Maxim.Mossienko
  */
+@ExtensionImpl
 public class CustomFileTypeBraceMatcher implements PairedBraceMatcher {
   public static final BracePair[] PAIRS = new BracePair[]{
           new BracePair(L_BRACKET, R_BRACKET, true),
@@ -63,12 +69,18 @@ public class CustomFileTypeBraceMatcher implements PairedBraceMatcher {
 
   @Nonnull
   public static PairedBraceMatcherAdapter createBraceMatcher() {
-    return new PairedBraceMatcherAdapter(new CustomFileTypeBraceMatcher(), IDENTIFIER.getLanguage()) {
+    return new PairedBraceMatcherAdapter(PlainTextFileType.INSTANCE, new CustomFileTypeBraceMatcher(), IDENTIFIER.getLanguage()) {
       @Override
       public int getBraceTokenGroupId(IElementType tokenType) {
         int id = super.getBraceTokenGroupId(tokenType);
         return id == -1 ? -1 : 777;
       }
     };
+  }
+
+  @Nonnull
+  @Override
+  public Language getLanguage() {
+    return PlainTextLanguage.INSTANCE;
   }
 }
