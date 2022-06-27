@@ -18,8 +18,8 @@ package consulo.language.impl.psi;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.ApplicationManager;
-import consulo.application.util.query.Query;
 import consulo.application.util.Queryable;
+import consulo.application.util.query.Query;
 import consulo.document.util.TextRange;
 import consulo.language.ast.ASTNode;
 import consulo.language.impl.DebugUtil;
@@ -30,7 +30,7 @@ import consulo.logging.Logger;
 import consulo.module.content.DirectoryIndex;
 import consulo.module.extension.ModuleExtension;
 import consulo.navigation.ItemPresentation;
-import consulo.navigation.ItemPresentationProviders;
+import consulo.navigation.ItemPresentationProvider;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -365,7 +365,7 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
 
   @Override
   public ItemPresentation getPresentation() {
-    return ItemPresentationProviders.getItemPresentation(this);
+    return ItemPresentationProvider.getItemPresentation(this);
   }
 
   @Override

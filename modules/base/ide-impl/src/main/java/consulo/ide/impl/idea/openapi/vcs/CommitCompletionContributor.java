@@ -15,25 +15,32 @@
  */
 package consulo.ide.impl.idea.openapi.vcs;
 
-import consulo.language.editor.completion.CompletionContributor;
-import consulo.language.editor.completion.CompletionParameters;
-import consulo.language.editor.completion.CompletionResultSet;
-import consulo.language.editor.internal.matcher.CamelHumpMatcher;
-import consulo.language.editor.completion.lookup.LookupElementBuilder;
-import consulo.virtualFileSystem.VirtualFilePresentation;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.ide.impl.idea.openapi.vcs.changes.Change;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeList;
 import consulo.ide.impl.idea.openapi.vcs.ui.CommitMessage;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.ide.impl.idea.ui.TextFieldWithAutoCompletionListProvider;
+import consulo.language.Language;
+import consulo.language.editor.completion.CompletionContributor;
+import consulo.language.editor.completion.CompletionParameters;
+import consulo.language.editor.completion.CompletionResultSet;
+import consulo.language.editor.completion.lookup.LookupElementBuilder;
+import consulo.language.editor.internal.matcher.CamelHumpMatcher;
+import consulo.language.plain.PlainTextLanguage;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import consulo.ide.impl.idea.ui.TextFieldWithAutoCompletionListProvider;import consulo.annotation.access.RequiredReadAction;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFilePresentation;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
  */
+@ExtensionImpl(id = "commitCompletion", order = "first, before liveTemplates")
 public class CommitCompletionContributor extends CompletionContributor {
 
   @RequiredReadAction
@@ -63,5 +70,11 @@ public class CommitCompletionContributor extends CompletionContributor {
         }
       }
     }
+  }
+
+  @Nonnull
+  @Override
+  public Language getLanguage() {
+    return PlainTextLanguage.INSTANCE;
   }
 }

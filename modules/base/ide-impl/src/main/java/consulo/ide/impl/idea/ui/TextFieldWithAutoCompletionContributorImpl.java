@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.lang;
+package consulo.ide.impl.idea.ui;
 
-import consulo.language.editor.action.QuoteHandler;
-import consulo.container.plugin.PluginIds;
-import consulo.language.OldLanguageExtension;
+import consulo.annotation.component.ExtensionImpl;
+import jakarta.inject.Inject;
 
 /**
- * @author gregsh
+ * @author VISTALL
+ * @since 27-Jun-22
  */
-public class LanguageQuoteHandling extends OldLanguageExtension<QuoteHandler> {
-  public static final LanguageQuoteHandling INSTANCE = new LanguageQuoteHandling();
-
-  private LanguageQuoteHandling() {
-    super(PluginIds.CONSULO_BASE + ".lang.quoteHandler");
+@ExtensionImpl(order = "first, before commitCompletion")
+class TextFieldWithAutoCompletionContributorImpl extends TextFieldWithAutoCompletionContributor<Object> {
+  @Inject
+  TextFieldWithAutoCompletionContributorImpl() {
   }
 }

@@ -15,7 +15,9 @@
  */
 package consulo.ide.impl.psi.impl.source.resolve.reference;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.psi.ReferenceProviderType;
+import consulo.language.Language;
 import consulo.language.pattern.PlatformPatterns;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiReferenceContributor;
@@ -23,6 +25,7 @@ import consulo.language.psi.PsiReferenceRegistrar;
 
 import javax.annotation.Nonnull;
 
+@ExtensionImpl
 public class CommentsReferenceContributor extends PsiReferenceContributor {
   /**
    * Use this provider type if your element is not PsiComment but you want to fill it
@@ -36,5 +39,11 @@ public class CommentsReferenceContributor extends PsiReferenceContributor {
   @Override
   public void registerReferenceProviders(@Nonnull PsiReferenceRegistrar registrar) {
     registrar.registerReferenceProvider(PlatformPatterns.psiElement(PsiComment.class), COMMENTS_REFERENCE_PROVIDER_TYPE.getProvider());
+  }
+
+  @Nonnull
+  @Override
+  public Language getLanguage() {
+    return Language.ANY;
   }
 }

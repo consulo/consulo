@@ -16,30 +16,25 @@
 
 package consulo.ide.impl.idea.codeInsight.completion;
 
-import consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers.*;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.progress.ProgressManager;
+import consulo.component.ProcessCanceledException;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
+import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers.FileInfoManager;
+import consulo.ide.impl.psi.search.FilenameIndex;
+import consulo.ide.navigation.ChooseByNameContributor;
 import consulo.ide.navigation.GotoFileContributor;
+import consulo.language.Language;
 import consulo.language.editor.CodeInsightBundle;
+import consulo.language.editor.completion.*;
 import consulo.language.editor.completion.lookup.InsertionContext;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementPresentation;
-import consulo.ide.navigation.ChooseByNameContributor;
-import consulo.language.editor.completion.*;
-import consulo.language.psi.path.*;
-import consulo.ui.ex.action.IdeActions;
 import consulo.language.file.FileTypeManager;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.language.psi.PsiMultiReference;
-import consulo.ide.impl.psi.search.FilenameIndex;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.component.ProcessCanceledException;
-import consulo.application.progress.ProgressManager;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
-import consulo.language.psi.PsiFileSystemItem;
-import consulo.language.psi.PsiReference;
+import consulo.language.psi.*;
+import consulo.language.psi.path.*;
 import consulo.language.util.ProcessingContext;
 import consulo.logging.Logger;
 import consulo.module.Module;
@@ -48,7 +43,10 @@ import consulo.module.content.ProjectRootManager;
 import consulo.project.Project;
 import consulo.project.content.scope.ProjectAwareSearchScope;
 import consulo.project.content.scope.ProjectScopes;
+import consulo.ui.ex.action.IdeActions;
 import consulo.ui.image.Image;
+import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileNameMatcher;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -63,6 +61,7 @@ import static consulo.language.pattern.PlatformPatterns.psiElement;
 /**
  * @author spleaner
  */
+@ExtensionImpl(id = "filePath", order = "before javaClassName")
 public class FilePathCompletionContributor extends CompletionContributor {
   private static final Logger LOG = Logger.getInstance(FilePathCompletionContributor.class);
 
@@ -256,6 +255,12 @@ public class FilePathCompletionContributor extends CompletionContributor {
     }
 
     return null;
+  }
+
+  @Nonnull
+  @Override
+  public Language getLanguage() {
+    return Language.ANY;
   }
 
   public static class FilePathLookupItem extends LookupElement {

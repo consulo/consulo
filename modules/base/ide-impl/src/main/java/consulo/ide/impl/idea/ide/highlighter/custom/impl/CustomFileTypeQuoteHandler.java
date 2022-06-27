@@ -16,24 +16,32 @@
 
 package consulo.ide.impl.idea.ide.highlighter.custom.impl;
 
-import consulo.language.editor.action.QuoteHandler;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.HighlighterIterator;
+import consulo.document.Document;
+import consulo.ide.impl.idea.openapi.fileTypes.impl.AbstractFileType;
 import consulo.ide.impl.psi.CustomHighlighterTokenType;
 import consulo.language.ast.IElementType;
+import consulo.language.editor.action.FileQuoteHandler;
+import consulo.virtualFileSystem.fileType.FileType;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
  */
-class CustomFileTypeQuoteHandler implements QuoteHandler {
+class CustomFileTypeQuoteHandler implements FileQuoteHandler {
+  private final AbstractFileType myFileType;
+
+  CustomFileTypeQuoteHandler(AbstractFileType fileType) {
+    myFileType = fileType;
+  }
+
   @Override
   public boolean isClosingQuote(HighlighterIterator iterator, int offset) {
     final IElementType tokenType = (IElementType)iterator.getTokenType();
 
-    if (tokenType == CustomHighlighterTokenType.STRING ||
-        tokenType == CustomHighlighterTokenType.SINGLE_QUOTED_STRING ||
-        tokenType == CustomHighlighterTokenType.CHARACTER){
+    if (tokenType == CustomHighlighterTokenType.STRING || tokenType == CustomHighlighterTokenType.SINGLE_QUOTED_STRING || tokenType == CustomHighlighterTokenType.CHARACTER) {
       int start = iterator.getStart();
       int end = iterator.getEnd();
       return end - start >= 1 && offset == end - 1;
@@ -45,9 +53,7 @@ class CustomFileTypeQuoteHandler implements QuoteHandler {
   public boolean isOpeningQuote(HighlighterIterator iterator, int offset) {
     final IElementType tokenType = (IElementType)iterator.getTokenType();
 
-    if (tokenType == CustomHighlighterTokenType.STRING ||
-        tokenType == CustomHighlighterTokenType.SINGLE_QUOTED_STRING ||
-        tokenType == CustomHighlighterTokenType.CHARACTER){
+    if (tokenType == CustomHighlighterTokenType.STRING || tokenType == CustomHighlighterTokenType.SINGLE_QUOTED_STRING || tokenType == CustomHighlighterTokenType.CHARACTER) {
       int start = iterator.getStart();
       return offset == start;
     }
@@ -64,18 +70,16 @@ class CustomFileTypeQuoteHandler implements QuoteHandler {
       while (!iterator.atEnd() && iterator.getStart() < lineEnd) {
         IElementType tokenType = (IElementType)iterator.getTokenType();
 
-        if (tokenType == CustomHighlighterTokenType.STRING ||
-            tokenType == CustomHighlighterTokenType.SINGLE_QUOTED_STRING ||
-            tokenType == CustomHighlighterTokenType.CHARACTER) {
+        if (tokenType == CustomHighlighterTokenType.STRING || tokenType == CustomHighlighterTokenType.SINGLE_QUOTED_STRING || tokenType == CustomHighlighterTokenType.CHARACTER) {
 
-          if (iterator.getStart() >= iterator.getEnd() - 1 ||
-              chars.charAt(iterator.getEnd() - 1) != '\"' && chars.charAt(iterator.getEnd() - 1) != '\'') {
+          if (iterator.getStart() >= iterator.getEnd() - 1 || chars.charAt(iterator.getEnd() - 1) != '\"' && chars.charAt(iterator.getEnd() - 1) != '\'') {
             return true;
           }
         }
         iterator.advance();
       }
-    } finally {
+    }
+    finally {
       while (!iterator.atEnd() && iterator.getStart() != offset) iterator.retreat();
     }
 
@@ -86,8 +90,12 @@ class CustomFileTypeQuoteHandler implements QuoteHandler {
   public boolean isInsideLiteral(HighlighterIterator iterator) {
     final IElementType tokenType = (IElementType)iterator.getTokenType();
 
-    return tokenType == CustomHighlighterTokenType.STRING ||
-        tokenType == CustomHighlighterTokenType.SINGLE_QUOTED_STRING ||
-        tokenType == CustomHighlighterTokenType.CHARACTER;
+    return tokenType == CustomHighlighterTokenType.STRING || tokenType == CustomHighlighterTokenType.SINGLE_QUOTED_STRING || tokenType == CustomHighlighterTokenType.CHARACTER;
+  }
+
+  @Nonnull
+  @Override
+  public FileType getFileType() {
+    return myFileType;
   }
 }

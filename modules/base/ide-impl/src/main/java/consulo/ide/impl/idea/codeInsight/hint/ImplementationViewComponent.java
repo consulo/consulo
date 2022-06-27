@@ -442,8 +442,7 @@ public class ImplementationViewComponent extends JPanel {
       return null;
     }
 
-    final ImplementationTextSelectioner implementationTextSelectioner =
-      LanguageImplementationTextSelectioner.INSTANCE.forLanguage(elt.getLanguage());
+    final ImplementationTextSelectioner implementationTextSelectioner = ImplementationTextSelectioner.forLanguage(elt.getLanguage());
     int start = implementationTextSelectioner.getTextStartOffset(elt);
     final int end = implementationTextSelectioner.getTextEndOffset(elt);
 

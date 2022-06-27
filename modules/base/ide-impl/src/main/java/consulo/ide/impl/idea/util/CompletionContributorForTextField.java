@@ -1,16 +1,22 @@
 package consulo.ide.impl.idea.util;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.Language;
 import consulo.language.editor.completion.CompletionContributor;
 import consulo.language.editor.completion.CompletionParameters;
 import consulo.language.editor.completion.CompletionResultSet;
 import consulo.application.dumb.DumbAware;
+import consulo.language.plain.PlainTextLanguage;
 import consulo.project.DumbService;
 import consulo.language.psi.PsiFile;
 import consulo.language.plain.psi.PsiPlainTextFile;import consulo.annotation.access.RequiredReadAction;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author sergey.evdokimov
  */
+@ExtensionImpl(order = "first, before commitCompletion")
 public class CompletionContributorForTextField extends CompletionContributor implements DumbAware {
 
   @RequiredReadAction
@@ -43,5 +49,11 @@ public class CompletionContributorForTextField extends CompletionContributor imp
     }
 
     field.addCompletionVariants(text, offset, prefix, activeResult);
+  }
+
+  @Nonnull
+  @Override
+  public Language getLanguage() {
+    return PlainTextLanguage.INSTANCE;
   }
 }

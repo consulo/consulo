@@ -51,7 +51,7 @@ public class StandardFileTypeRegistrator implements FileTypeRegistrator {
       BraceMatchingUtil.registerBraceMatcher(abstractFileType, CustomFileTypeBraceMatcher.createBraceMatcher());
     }
 
-    TypedHandler.registerQuoteHandler(abstractFileType, new CustomFileTypeQuoteHandler());
+    TypedHandler.registerQuoteHandler(abstractFileType, new CustomFileTypeQuoteHandler(abstractFileType));
 
   }
 

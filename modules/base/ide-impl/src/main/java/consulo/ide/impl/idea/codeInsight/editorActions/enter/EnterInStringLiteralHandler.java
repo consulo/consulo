@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.codeInsight.editorActions.enter;
 
 import consulo.ide.impl.idea.codeInsight.editorActions.EnterHandler;
 import consulo.language.editor.action.JavaLikeQuoteHandler;
+import consulo.language.editor.action.LanguageQuoteHandler;
 import consulo.language.editor.action.QuoteHandler;
 import consulo.ide.impl.idea.codeInsight.editorActions.TypedHandler;
 import consulo.language.ast.ASTNode;
@@ -110,7 +111,7 @@ public class EnterInStringLiteralHandler extends EnterHandlerDelegateAdapter {
   private static boolean isInStringLiteral(@Nonnull Editor editor, @Nonnull DataContext dataContext, int offset) {
     Language language = EnterHandler.getLanguage(dataContext);
     if (offset > 0 && language != null) {
-      QuoteHandler quoteHandler = TypedHandler.getLanguageQuoteHandler(language);
+      QuoteHandler quoteHandler = LanguageQuoteHandler.forLanguage(language);
       if (quoteHandler == null) {
         FileType fileType = language.getAssociatedFileType();
         quoteHandler = fileType != null ? TypedHandler.getQuoteHandlerForType(fileType) : null;

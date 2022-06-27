@@ -20,6 +20,9 @@
  */
 package consulo.ide.impl.idea.packageDependencies;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.ServiceManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiElementVisitor;
@@ -29,6 +32,8 @@ import consulo.language.psi.PsiReference;
 import jakarta.inject.Singleton;
 
 @Singleton
+@ServiceAPI(ComponentScope.APPLICATION)
+@ServiceImpl
 public class DependenciesVisitorFactory {
 
   public static DependenciesVisitorFactory getInstance() {

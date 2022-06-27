@@ -16,16 +16,13 @@
 package consulo.ide.impl.idea.codeInsight.completion;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.lang.LanguageWordCompletion;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.psi.impl.cache.impl.id.IdTableBuilding;
+import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
-import consulo.language.editor.completion.CompletionContributor;
-import consulo.language.editor.completion.CompletionParameters;
-import consulo.language.editor.completion.CompletionResultSet;
-import consulo.language.editor.completion.CompletionType;
+import consulo.language.editor.completion.*;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementBuilder;
 import consulo.language.editor.impl.internal.completion.CompletionData;
@@ -37,9 +34,9 @@ import consulo.language.plain.ast.PlainTextTokenTypes;
 import consulo.language.psi.*;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.project.DumbService;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -50,6 +47,7 @@ import static consulo.language.pattern.PlatformPatterns.psiElement;
 /**
  * @author peter
  */
+@ExtensionImpl(id = "wordCompletion", order = "last")
 public class WordCompletionContributor extends CompletionContributor implements DumbAware {
 
   @RequiredReadAction
@@ -58,6 +56,12 @@ public class WordCompletionContributor extends CompletionContributor implements 
     if (parameters.getCompletionType() == CompletionType.BASIC && shouldPerformWordCompletion(parameters)) {
       addWordCompletionVariants(result, parameters, Collections.emptySet());
     }
+  }
+
+  @Nonnull
+  @Override
+  public Language getLanguage() {
+    return Language.ANY;
   }
 
   public static void addWordCompletionVariants(CompletionResultSet result, final CompletionParameters parameters, Set<String> excludes) {
@@ -84,9 +88,7 @@ public class WordCompletionContributor extends CompletionContributor implements 
     addValuesFromOtherStringLiterals(result, parameters, realExcludes, position);
   }
 
-  private static void addValuesFromOtherStringLiterals(CompletionResultSet result,
-                                                       CompletionParameters parameters,
-                                                       final Set<String> realExcludes, PsiElement position) {
+  private static void addValuesFromOtherStringLiterals(CompletionResultSet result, CompletionParameters parameters, final Set<String> realExcludes, PsiElement position) {
     ParserDefinition definition = ParserDefinition.forLanguage(position.getLanguage());
     if (definition == null) {
       return;
@@ -102,7 +104,7 @@ public class WordCompletionContributor extends CompletionContributor implements 
     }
     int offset = manipulator.getRangeInElement(localString).getStartOffset();
     PsiFile file = position.getContainingFile();
-    final CompletionResultSet fullStringResult = result.withPrefixMatcher( file.getText().substring(offset + localString.getTextRange().getStartOffset(), parameters.getOffset()));
+    final CompletionResultSet fullStringResult = result.withPrefixMatcher(file.getText().substring(offset + localString.getTextRange().getStartOffset(), parameters.getOffset()));
     file.accept(new PsiRecursiveElementWalkingVisitor() {
       @Override
       public void visitElement(PsiElement element) {
@@ -127,6 +129,7 @@ public class WordCompletionContributor extends CompletionContributor implements 
     });
   }
 
+  @RequiredReadAction
   private static boolean shouldPerformWordCompletion(CompletionParameters parameters) {
     final PsiElement insertedElement = parameters.getPosition();
     final boolean dumb = DumbService.getInstance(insertedElement.getProject()).isDumb();
@@ -137,8 +140,6 @@ public class WordCompletionContributor extends CompletionContributor implements 
     if (parameters.getInvocationCount() == 0) {
       return false;
     }
-
-
 
     final PsiFile file = insertedElement.getContainingFile();
     final CompletionData data = CompletionUtil.getCompletionDataByElement(insertedElement, file);
@@ -164,7 +165,7 @@ public class WordCompletionContributor extends CompletionContributor implements 
     ASTNode textContainer = element != null ? element.getNode() : null;
     while (textContainer != null) {
       final IElementType elementType = textContainer.getElementType();
-      if (LanguageWordCompletion.INSTANCE.isEnabledIn(textContainer) || elementType == PlainTextTokenTypes.PLAIN_TEXT) {
+      if (WordCompletionElementFilter.isEnabledIn(textContainer) || elementType == PlainTextTokenTypes.PLAIN_TEXT) {
         return true;
       }
       textContainer = textContainer.getTreeParent();
@@ -179,12 +180,9 @@ public class WordCompletionContributor extends CompletionContributor implements 
     }
 
     final CharSequence chars = context.getContainingFile().getViewProvider().getContents(); // ??
-    IdTableBuilding.scanWords(new IdTableBuilding.ScanWordProcessor() {
-      @Override
-      public void run(final CharSequence chars, @Nullable char[] charsArray, final int start, final int end) {
-        if (start > offset || offset > end) {
-          words.add(chars.subSequence(start, end).toString());
-        }
+    IdTableBuilding.scanWords((chars1, charsArray, start, end) -> {
+      if (start > offset || offset > end) {
+        words.add(chars1.subSequence(start, end).toString());
       }
     }, chars, 0, chars.length());
     return words;

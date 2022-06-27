@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.codeInsight.completion;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.Language;
 import consulo.language.editor.completion.lookup.LookupElementBuilder;
 import consulo.ide.impl.idea.ide.highlighter.custom.SyntaxTable;
 import consulo.codeEditor.EditorEx;
@@ -40,6 +42,7 @@ import static consulo.language.pattern.StandardPatterns.instanceOf;
 /**
  * @author yole
  */
+@ExtensionImpl
 public class CustomFileTypeCompletionContributor extends CompletionContributor implements DumbAware {
   public CustomFileTypeCompletionContributor() {
     extend(CompletionType.BASIC, psiElement().inFile(psiFile().withFileType(instanceOf(CustomSyntaxTableFileType.class))), new CompletionProvider() {
@@ -98,5 +101,11 @@ public class CustomFileTypeCompletionContributor extends CompletionContributor i
       --start;
     }
     return text.substring(start + 1, offsetInElement).trim();
+  }
+
+  @Nonnull
+  @Override
+  public Language getLanguage() {
+    return Language.ANY;
   }
 }

@@ -22,12 +22,12 @@
   </extensionPoints>
 
   <extensions defaultExtensionNs="consulo">
-    <applicationConfigurable
-        id="editing.postfixCompletion"
-        parentId="editor.preferences.completion"
-        displayName="Postfix Completion"
-        dynamic="true"
-        instance="consulo.ide.impl.idea.codeInsight.template.postfix.settings.PostfixTemplatesConfigurable"/>
-    <completion.contributor language="any" implementationClass="consulo.ide.impl.idea.codeInsight.template.postfix.completion.PostfixTemplateCompletionContributor" order="last"/>
+    <!--<applicationConfigurable-->
+        <!--id="editing.postfixCompletion"-->
+        <!--parentId="editor.preferences.completion"-->
+        <!--displayName="Postfix Completion"-->
+        <!--dynamic="true"-->
+        <!--instance="consulo.ide.impl.idea.codeInsight.template.postfix.settings.PostfixTemplatesConfigurable"/>-->
+    <!--<completion.contributor language="any" implementationClass="consulo.ide.impl.idea.codeInsight.template.postfix.completion.PostfixTemplateCompletionContributor" order="last"/>-->
   </extensions>
 </consulo-plugin>

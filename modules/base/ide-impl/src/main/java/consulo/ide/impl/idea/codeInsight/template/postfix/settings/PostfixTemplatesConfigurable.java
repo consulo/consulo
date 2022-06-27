@@ -15,27 +15,25 @@
  */
 package consulo.ide.impl.idea.codeInsight.template.postfix.settings;
 
-import consulo.language.editor.CodeInsightBundle;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.configurable.*;
+import consulo.disposer.Disposable;
+import consulo.ide.impl.codeInsight.template.postfix.settings.PostfixTemplatesChildConfigurable;
 import consulo.ide.impl.idea.codeInsight.template.impl.LiveTemplateCompletionContributor;
 import consulo.ide.impl.idea.codeInsight.template.impl.TemplateSettings;
 import consulo.ide.impl.idea.codeInsight.template.postfix.templates.LanguagePostfixTemplate;
 import consulo.ide.impl.idea.codeInsight.template.postfix.templates.PostfixTemplateProvider;
-import consulo.language.LanguageExtensionPoint;
-import consulo.configurable.Configurable;
-import consulo.configurable.ConfigurationException;
-import consulo.configurable.SearchableConfigurable;
 import consulo.ide.impl.idea.openapi.util.NotNullComputable;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.codeInsight.template.postfix.settings.PostfixTemplatesChildConfigurable;
-import consulo.disposer.Disposable;
+import consulo.language.LanguageExtensionPoint;
+import consulo.language.editor.CodeInsightBundle;
 import consulo.localize.LocalizeValue;
-import consulo.configurable.SimpleConfigurable;
 import consulo.ui.CheckBox;
 import consulo.ui.ComboBox;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.LabeledBuilder;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -43,7 +41,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class PostfixTemplatesConfigurable extends SimpleConfigurable<PostfixTemplatesConfigurable.Layout> implements Configurable.Composite, SearchableConfigurable {
+@ExtensionImpl
+public class PostfixTemplatesConfigurable extends SimpleConfigurable<PostfixTemplatesConfigurable.Layout> implements Configurable.Composite, SearchableConfigurable, ApplicationConfigurable {
   protected static class Layout implements NotNullComputable<Component> {
     private final CheckBox myPostfixTemplatesEnabled;
     private final CheckBox myCompletionEnabledCheckbox;
@@ -92,6 +91,17 @@ public class PostfixTemplatesConfigurable extends SimpleConfigurable<PostfixTemp
   @Override
   public String getId() {
     return "editing.postfixCompletion";
+  }
+
+  @Nullable
+  @Override
+  public String getParentId() {
+    return "editor.preferences.completion";
+  }
+
+  @Override
+  public String getDisplayName() {
+    return "Postfix Completion";
   }
 
   protected Configurable[] buildConfigurables() {

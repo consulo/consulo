@@ -16,7 +16,9 @@
 package consulo.ide.impl.idea.codeInsight.completion;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.util.matcher.PlainPrefixMatcher;
+import consulo.language.Language;
 import consulo.language.editor.completion.*;
 import consulo.language.editor.completion.lookup.*;
 import consulo.document.Document;
@@ -32,6 +34,7 @@ import javax.swing.*;
 /**
  * @author peter
  */
+@ExtensionImpl(id = "comboEditor", order = "first")
 public class ComboEditorCompletionContributor extends CompletionContributor implements DumbAware {
 
   public static final Key<Boolean> CONTINUE_RUN_COMPLETION = Key.create("CONTINUE_RUN_COMPLETION");
@@ -72,5 +75,11 @@ public class ComboEditorCompletionContributor extends CompletionContributor impl
         }
       }
     }
+  }
+
+  @Nonnull
+  @Override
+  public Language getLanguage() {
+    return Language.ANY;
   }
 }

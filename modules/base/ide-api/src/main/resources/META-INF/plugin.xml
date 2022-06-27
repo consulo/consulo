@@ -1387,22 +1387,22 @@
     <weigher key="completion" implementationClass="consulo.ide.impl.idea.codeInsight.completion.GroupingWeigher" id="grouping"
 			 order="last"/>
 
-    <completion.contributor language="any" implementationClass="consulo.ide.impl.idea.codeInsight.completion.DefaultCompletionContributor"
-                            id="default"
-                            order="last"/>
-    <completion.contributor language="any" implementationClass="consulo.ide.impl.idea.codeInsight.completion.ComboEditorCompletionContributor"
-                            id="comboEditor" order="first"/>
-    <completion.contributor language="any" implementationClass="consulo.ide.impl.idea.codeInsight.completion.WordCompletionContributor"
-                            id="wordCompletion" order="last"/>
-    <completion.contributor language="any" implementationClass="consulo.ide.impl.idea.codeInsight.completion.LegacyCompletionContributor" id="legacy"
-							order="last"/>
-    <completion.contributor language="any" implementationClass="consulo.ide.impl.idea.codeInsight.completion.FilePathCompletionContributor"
-                            id="filePath" order="before javaClassName"/>
-    <completion.contributor language="any" implementationClass="consulo.ide.impl.idea.codeInsight.template.impl.LiveTemplateCompletionContributor"
-                            id="liveTemplates" order="first"/>
+    <!--<completion.contributor language="any" implementationClass="consulo.ide.impl.idea.codeInsight.completion.DefaultCompletionContributor"-->
+                            <!--id="default"-->
+                            <!--order="last"/>-->
+    <!--<completion.contributor language="any" implementationClass="consulo.ide.impl.idea.codeInsight.completion.ComboEditorCompletionContributor"-->
+                            <!--id="comboEditor" order="first"/>-->
+    <!--<completion.contributor language="any" implementationClass="consulo.ide.impl.idea.codeInsight.completion.WordCompletionContributor"-->
+                            <!--id="wordCompletion" order="last"/>-->
+    <!--<completion.contributor language="any" implementationClass="consulo.ide.impl.idea.codeInsight.completion.LegacyCompletionContributor" id="legacy"-->
+							<!--order="last"/>-->
+    <!--<completion.contributor language="any" implementationClass="consulo.ide.impl.idea.codeInsight.completion.FilePathCompletionContributor"-->
+                            <!--id="filePath" order="before javaClassName"/>-->
+    <!--<completion.contributor language="any" implementationClass="consulo.ide.impl.idea.codeInsight.template.impl.LiveTemplateCompletionContributor"-->
+                            <!--id="liveTemplates" order="first"/>-->
 
-    <completion.contributor language="TEXT" implementationClass="consulo.ide.impl.idea.openapi.vcs.CommitCompletionContributor" id="commitCompletion"
-							order="first, before liveTemplates"/>
+    <!--<completion.contributor language="TEXT" implementationClass="consulo.ide.impl.idea.openapi.vcs.CommitCompletionContributor" id="commitCompletion"-->
+							<!--order="first, before liveTemplates"/>-->
 
 
 
@@ -1532,9 +1532,9 @@
     <applicationService serviceInterface="consulo.language.editor.template.TemplateBuilderFactory"
                         serviceImplementation="consulo.language.editor.impl.internal.template.TemplateBuilderFactoryImpl"/>
 
-    <completion.contributor language="any"
-                            implementationClass="consulo.ide.impl.idea.refactoring.rename.inplace.CompletionContributorForInplaceRename"
-                            order="first"/>
+    <!--<completion.contributor language="any"-->
+                            <!--implementationClass="consulo.ide.impl.idea.refactoring.rename.inplace.CompletionContributorForInplaceRename"-->
+                            <!--order="first"/>-->
 
 
     <filePasteProvider implementation="consulo.ide.impl.idea.ide.FileListPasteProvider"/>
@@ -1543,7 +1543,6 @@
 
 
 
-    <indexPatternProvider implementation="consulo.ide.impl.idea.ide.todo.TodoIndexPatternProvider"/>
 
     <copyPastePostProcessor implementation="consulo.ide.impl.idea.codeInsight.editorActions.CopyPasteIndentProcessor"/>
     <statistics.usagesCollector implementation="consulo.ide.impl.idea.execution.impl.statistics.RunConfigurationTypeUsagesCollector"/>
@@ -1572,27 +1571,21 @@
 
 
 
-    <completion.contributor language="TEXT" implementationClass="consulo.ide.impl.idea.ui.TextFieldWithAutoCompletionContributor"
-                            order="first, before commitCompletion"/>
+    <!--<completion.contributor language="TEXT" implementationClass="consulo.ide.impl.idea.ui.TextFieldWithAutoCompletionContributor"-->
+                            <!--order="first, before commitCompletion"/>-->
 
-    <completion.contributor language="TEXT" implementationClass="consulo.ide.impl.idea.util.CompletionContributorForTextField"
-                            order="first, before commitCompletion"/>
+    <!--<completion.contributor language="TEXT" implementationClass="consulo.ide.impl.idea.util.CompletionContributorForTextField"-->
+                            <!--order="first, before commitCompletion"/>-->
 
-    <completion.contributor language="any" implementationClass="consulo.ide.impl.idea.codeInsight.completion.CustomFileTypeCompletionContributor"/>
+    <!--<completion.contributor language="any" implementationClass="consulo.ide.impl.idea.codeInsight.completion.CustomFileTypeCompletionContributor"/>-->
 
-    <pathMacroFilter implementation="consulo.ide.impl.idea.execution.configuration.RunConfigurationPathMacroFilter"/>
-    <pathMacroFilter implementation="consulo.ide.impl.idea.openapi.application.StructuralSearchPathMacroFilter"/>
 
     <usageContextPanelProvider implementation="consulo.ide.impl.idea.usages.impl.UsagePreviewPanel$Provider"/>
     <usageContextPanelProvider implementation="consulo.ide.impl.idea.usageView.impl.UsageContextCallHierarchyPanel$Provider"/>
 
 
-    <applicationService serviceInterface="consulo.ui.ex.tree.TreeAnchorizer"
-                        serviceImplementation="consulo.ide.impl.idea.ide.projectView.impl.nodes.PsiTreeAnchorizer"/>
 
-    <!--Platform-->
-    <applicationService serviceInterface="consulo.ide.impl.idea.packageDependencies.DependenciesVisitorFactory"
-                        serviceImplementation="consulo.ide.impl.idea.packageDependencies.DependenciesVisitorFactory"/>
+
 
 
     <refactoring.copyHandler implementation="consulo.ide.impl.idea.refactoring.copy.CopyFilesOrDirectoriesHandler"/>

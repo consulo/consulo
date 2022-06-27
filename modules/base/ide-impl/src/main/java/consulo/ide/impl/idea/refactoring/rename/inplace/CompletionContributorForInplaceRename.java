@@ -15,10 +15,12 @@
  */
 package consulo.ide.impl.idea.refactoring.rename.inplace;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.codeInsight.template.impl.TemplateManagerImpl;
 import consulo.ide.impl.idea.codeInsight.template.impl.TemplateStateImpl;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
+import consulo.language.Language;
 import consulo.language.editor.completion.CompletionContributor;
 import consulo.language.editor.completion.CompletionParameters;
 import consulo.language.editor.completion.CompletionResultSet;
@@ -30,6 +32,7 @@ import javax.annotation.Nonnull;
  * User: anna
  * Date: 11/22/11
  */
+@ExtensionImpl(order = "first")
 public class CompletionContributorForInplaceRename extends CompletionContributor {
 
   @RequiredReadAction
@@ -42,5 +45,11 @@ public class CompletionContributorForInplaceRename extends CompletionContributor
         result.stopHere();
       }
     }
+  }
+
+  @Nonnull
+  @Override
+  public Language getLanguage() {
+    return Language.ANY;
   }
 }

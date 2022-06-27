@@ -18,15 +18,16 @@
  * User: anna
  * Date: 01-Feb-2008
  */
-package consulo.ide.impl.idea.codeInsight.hint;
+package consulo.language.editor;
 
-import consulo.language.editor.ImplementationTextSelectioner;
-import consulo.logging.Logger;
 import consulo.document.util.TextRange;
+import consulo.language.Language;
 import consulo.language.psi.PsiElement;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 
-public class DefaultImplementationTextSelectioner implements ImplementationTextSelectioner {
+class DefaultImplementationTextSelectioner implements ImplementationTextSelectioner {
   private static final Logger LOG = Logger.getInstance(DefaultImplementationTextSelectioner.class);
 
   @Override
@@ -41,5 +42,11 @@ public class DefaultImplementationTextSelectioner implements ImplementationTextS
     final TextRange textRange = element.getTextRange();
     LOG.assertTrue(textRange != null, element);
     return textRange.getEndOffset();
+  }
+
+  @Nonnull
+  @Override
+  public Language getLanguage() {
+    return Language.ANY;
   }
 }

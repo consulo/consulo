@@ -34,20 +34,13 @@ import java.util.*;
 @Singleton
 @ServiceImpl
 public class ReferenceProvidersRegistryImpl extends ReferenceProvidersRegistry {
-  private static final OldLanguageExtension<PsiReferenceContributor> CONTRIBUTOR_EXTENSION = new OldLanguageExtension<PsiReferenceContributor>(PsiReferenceContributor.EP_NAME.getName());
   private static final OldLanguageExtension<PsiReferenceProviderBean> REFERENCE_PROVIDER_EXTENSION = new OldLanguageExtension<PsiReferenceProviderBean>(PsiReferenceProviderBean.EP_NAME.getName());
 
-  private static final Comparator<ProviderBinding.ProviderInfo<PsiReferenceProvider, ProcessingContext>> PRIORITY_COMPARATOR =
-          new Comparator<ProviderBinding.ProviderInfo<PsiReferenceProvider, ProcessingContext>>() {
-            @Override
-            public int compare(ProviderBinding.ProviderInfo<PsiReferenceProvider, ProcessingContext> o1, ProviderBinding.ProviderInfo<PsiReferenceProvider, ProcessingContext> o2) {
-              return Comparing.compare(o2.priority, o1.priority);
-            }
-          };
+  private static final Comparator<ProviderBinding.ProviderInfo<PsiReferenceProvider, ProcessingContext>> PRIORITY_COMPARATOR = (o1, o2) -> Comparing.compare(o2.priority, o1.priority);
 
   private final Map<Language, PsiReferenceRegistrarImpl> myRegistrars = FactoryMap.create(language -> {
     PsiReferenceRegistrarImpl registrar = new PsiReferenceRegistrarImpl();
-    for (PsiReferenceContributor contributor : CONTRIBUTOR_EXTENSION.allForLanguage(language)) {
+    for (PsiReferenceContributor contributor : PsiReferenceContributor.forLanguage(language)) {
       contributor.registerReferenceProviders(registrar);
     }
 

@@ -4,7 +4,6 @@ package consulo.ide.impl.idea.codeInsight.editorActions;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ApplicationManager;
-import consulo.application.extension.KeyedExtensionCollector;
 import consulo.codeEditor.*;
 import consulo.codeEditor.action.ActionPlan;
 import consulo.codeEditor.action.TabOutScopesTracker;
@@ -16,7 +15,6 @@ import consulo.document.RangeMarker;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.codeInsight.template.impl.editorActions.TypedActionHandlerBase;
-import consulo.ide.impl.idea.lang.LanguageQuoteHandling;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.ide.impl.idea.openapi.editor.impl.DefaultRawTypedHandler;
 import consulo.ide.impl.idea.openapi.editor.impl.TypedActionImpl;
@@ -29,7 +27,6 @@ import consulo.language.ast.TokenSet;
 import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.editor.AutoPopupController;
 import consulo.language.editor.CodeInsightSettings;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.action.*;
 import consulo.language.editor.completion.CompletionContributor;
 import consulo.language.editor.highlight.BraceMatcher;
@@ -61,11 +58,7 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
 
   private static final Logger LOG = Logger.getInstance(TypedHandler.class);
 
-  private static final KeyedExtensionCollector<QuoteHandler, String> quoteHandlers = new KeyedExtensionCollector<>(QuoteHandlerEP.EP_NAME);
-
-  private static final Map<String, QuoteHandler> ourCustomQuoterHandlers = new HashMap<>();
-
-  private static final Map<Class<? extends Language>, QuoteHandler> ourBaseLanguageQuoteHandlers = new HashMap<>();
+  private static final Map<String, FileQuoteHandler> ourCustomQuoterHandlers = new HashMap<>();
 
   @Nullable
   public static QuoteHandler getQuoteHandler(@Nonnull PsiFile file, @Nonnull Editor editor) {
@@ -78,18 +71,9 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
       }
     }
     if (quoteHandler == null) {
-      return getLanguageQuoteHandler(file.getViewProvider().getBaseLanguage());
+      return LanguageQuoteHandler.forLanguage(file.getViewProvider().getBaseLanguage());
     }
     return quoteHandler;
-  }
-
-  public static QuoteHandler getLanguageQuoteHandler(Language baseLanguage) {
-    for (Map.Entry<Class<? extends Language>, QuoteHandler> entry : ourBaseLanguageQuoteHandlers.entrySet()) {
-      if (entry.getKey().isInstance(baseLanguage)) {
-        return entry.getValue();
-      }
-    }
-    return LanguageQuoteHandling.INSTANCE.forLanguage(baseLanguage);
   }
 
   @Nonnull
@@ -103,22 +87,23 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
     return fileType;
   }
 
-  public static void registerBaseLanguageQuoteHandler(@Nonnull Class<? extends Language> languageClass, @Nonnull QuoteHandler quoteHandler) {
-    ourBaseLanguageQuoteHandlers.put(languageClass, quoteHandler);
-  }
-
   @Nullable
-  public static QuoteHandler getQuoteHandlerForType(@Nonnull FileType fileType) {
-    QuoteHandler handler = ourCustomQuoterHandlers.get(fileType.getId());
-    return handler != null ? handler : ContainerUtil.getFirstItem(quoteHandlers.forKey(fileType.getId()));
+  public static FileQuoteHandler getQuoteHandlerForType(@Nonnull FileType fileType) {
+    FileQuoteHandler handler = ourCustomQuoterHandlers.get(fileType.getId());
+    if (handler != null) {
+      return handler;
+    }
+    else {
+      return FileQuoteHandler.forFileType(fileType);
+    }
   }
 
   /**
    * @deprecated use {@link QuoteHandlerEP}
    */
   @Deprecated
-  public static void registerQuoteHandler(@Nonnull FileType fileType, @Nonnull QuoteHandler quoteHandler) {
-    ourCustomQuoterHandlers.put(fileType.getName(), quoteHandler);
+  public static void registerQuoteHandler(@Nonnull FileType fileType, @Nonnull FileQuoteHandler quoteHandler) {
+    ourCustomQuoterHandlers.put(fileType.getId(), quoteHandler);
   }
 
   @Override
@@ -139,7 +124,7 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
 
   @Override
   public void execute(@Nonnull final Editor originalEditor, final char charTyped, @Nonnull final DataContext dataContext) {
-    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final Project project = dataContext.getData(Project.KEY);
     final PsiFile originalFile;
 
     if (project == null || (originalFile = PsiUtilBase.getPsiFileInEditor(originalEditor, project)) == null) {

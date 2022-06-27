@@ -16,20 +16,29 @@
 package consulo.ide.impl.idea.navigation;
 
 import consulo.application.AllIcons;
-import consulo.ui.ex.tree.PresentationData;
-import consulo.ide.impl.idea.ide.projectView.impl.ProjectRootsUtil;
 import consulo.application.Application;
+import consulo.content.ContentFolderTypeProvider;
+import consulo.ide.impl.idea.ide.projectView.impl.ProjectRootsUtil;
+import consulo.language.psi.PsiDirectory;
 import consulo.module.Module;
+import consulo.module.content.ProjectFileIndex;
+import consulo.module.content.ProjectRootManager;
 import consulo.navigation.ItemPresentation;
 import consulo.navigation.ItemPresentationProvider;
 import consulo.project.Project;
-import consulo.module.content.ProjectFileIndex;
-import consulo.module.content.ProjectRootManager;
+import consulo.ui.ex.tree.PresentationData;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiDirectory;
-import consulo.content.ContentFolderTypeProvider;
+
+import javax.annotation.Nonnull;
 
 public class DirectoryPresentationProvider implements ItemPresentationProvider<PsiDirectory> {
+  @Nonnull
+  @Override
+  public Class<PsiDirectory> getItemClass() {
+    return PsiDirectory.class;
+  }
+
+  @Nonnull
   @Override
   public ItemPresentation getPresentation(final PsiDirectory directory) {
     final VirtualFile vFile = directory.getVirtualFile();
@@ -48,7 +57,7 @@ public class DirectoryPresentationProvider implements ItemPresentationProvider<P
 
     final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
     ContentFolderTypeProvider contentFolderTypeForFile = fileIndex.getContentFolderTypeForFile(vFile);
-    if(contentFolderTypeForFile != null) {
+    if (contentFolderTypeForFile != null) {
       return new PresentationData(directory.getName(), locationString, contentFolderTypeForFile.getIcon(), null);
     }
     return new PresentationData(directory.getName(), locationString, AllIcons.Nodes.TreeClosed, null);

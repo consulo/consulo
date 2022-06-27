@@ -16,17 +16,20 @@
 package consulo.language.editor.completion;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.extension.KeyedExtensionCollector;
-import consulo.application.util.function.Computable;
 import consulo.application.util.matcher.PrefixMatcher;
 import consulo.codeEditor.Editor;
-import consulo.container.plugin.PluginIds;
+import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.language.Language;
 import consulo.language.editor.completion.lookup.InsertionContext;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementPresentation;
+import consulo.language.extension.ByLanguageValue;
+import consulo.language.extension.LanguageExtension;
+import consulo.language.extension.LanguageOneToMany;
 import consulo.language.pattern.ElementPattern;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -43,9 +46,8 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.function.Supplier;
 
 /**
  * Completion FAQ:<p>
@@ -126,12 +128,20 @@ import java.util.Set;
  * is the 'final' consumer, it will pass your lookup elements directly to the lookup.<br>
  * If your contributor isn't even invoked, probably there was another contributor that said 'stop' to the system, and yours happened to be ordered after
  * that contributor. To test this hypothesis, put a breakpoint to
- * {@link CompletionService#getVariantsFromContributors(CompletionParameters, CompletionContributor, consulo.ide.impl.idea.util.Consumer)},
+ * {@link CompletionService#getVariantsFromContributors(CompletionParameters, CompletionContributor, java.util.function.Consumer)},
  * to the 'return false' line.<p>
  *
  * @author peter
  */
-public abstract class CompletionContributor {
+@ExtensionAPI(ComponentScope.APPLICATION)
+public abstract class CompletionContributor implements LanguageExtension {
+  private static final ExtensionPointCacheKey<CompletionContributor, ByLanguageValue<List<CompletionContributor>>> KEY =
+          ExtensionPointCacheKey.create("CompletionContributor", LanguageOneToMany.build(true));
+
+  @Nonnull
+  public static List<CompletionContributor> forLanguage(@Nonnull Language language) {
+    return Application.get().getExtensionPoint(CompletionContributor.class).getOrBuildCache(KEY).requiredGet(language);
+  }
 
   private final MultiMap<CompletionType, Pair<ElementPattern<? extends PsiElement>, CompletionProvider>> myMap = new MultiMap<>();
 
@@ -243,40 +253,11 @@ public abstract class CompletionContributor {
 
   public static List<CompletionContributor> forParameters(final CompletionParameters parameters) {
     return ApplicationManager.getApplication()
-            .runReadAction((Computable<List<CompletionContributor>>)() -> forLanguage(PsiUtilCore.getLanguageAtOffset(parameters.getPosition().getContainingFile(), parameters.getOffset())));
-  }
-
-  public static List<CompletionContributor> forLanguage(@Nonnull Language language) {
-    return MyExtensionPointManager.INSTANCE.forKey(language);
+            .runReadAction((Supplier<List<CompletionContributor>>)() -> forLanguage(PsiUtilCore.getLanguageAtOffset(parameters.getPosition().getContainingFile(), parameters.getOffset())));
   }
 
   @Nonnull
   public static List<CompletionContributor> forLanguageHonorDumbness(@Nonnull Language language, @Nonnull Project project) {
     return DumbService.getInstance(project).filterByDumbAwareness(forLanguage(language));
   }
-
-  private static class MyExtensionPointManager extends KeyedExtensionCollector<CompletionContributor, Language> {
-    public static final MyExtensionPointManager INSTANCE = new MyExtensionPointManager();
-
-    MyExtensionPointManager() {
-      super(PluginIds.CONSULO_BASE + ".completion.contributor");
-    }
-
-    @Override
-    protected List<CompletionContributor> buildExtensions(String stringKey, Language key) {
-      final Set<String> allowed = new HashSet<String>();
-      while (key != null) {
-        allowed.add(keyToString(key));
-        key = key.getBaseLanguage();
-      }
-      allowed.add("any");
-      return buildExtensions(allowed);
-    }
-
-    @Override
-    protected String keyToString(Language key) {
-      return key.getID();
-    }
-  }
-
 }

@@ -14,8 +14,6 @@ import consulo.codeEditor.HighlighterIterator;
  * and {@link BackspaceHandlerDelegate}.
  *
  * @see CodeInsightSettings#AUTOINSERT_PAIR_QUOTE
- * @see QuoteHandlerEP
- * @see LanguageQuoteHandling
  * @see MultiCharQuoteHandler
  */
 public interface QuoteHandler {

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.intelliLang.references;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.intelliLang.Configuration;
 import consulo.ide.impl.intelliLang.inject.InjectedLanguage;
@@ -22,6 +23,7 @@ import consulo.ide.impl.intelliLang.inject.InjectorUtils;
 import consulo.ide.impl.intelliLang.inject.TemporaryPlacesRegistry;
 import consulo.ide.impl.intelliLang.inject.config.BaseInjection;
 import consulo.ide.impl.psi.injection.LanguageInjectionSupport;
+import consulo.language.Language;
 import consulo.language.inject.ReferenceInjector;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.inject.impl.internal.InjectedReferenceVisitor;
@@ -42,6 +44,7 @@ import java.util.List;
  * @author Dmitry Avdeev
  *         Date: 01.08.13
  */
+@ExtensionImpl
 public class InjectedReferencesContributor extends PsiReferenceContributor {
 
   private static final Key<PsiReference[]> INJECTED_REFERENCES = Key.create("injected references");
@@ -110,5 +113,11 @@ public class InjectedReferencesContributor extends PsiReferenceContributor {
         return array;
       }
     });
+  }
+
+  @Nonnull
+  @Override
+  public Language getLanguage() {
+    return Language.ANY;
   }
 }

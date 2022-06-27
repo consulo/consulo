@@ -24,7 +24,7 @@ import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 
 @UsedInPlugin
-public class SimpleTokenSetQuoteHandler implements QuoteHandler {
+public abstract class SimpleTokenSetQuoteHandler implements QuoteHandler {
   protected final TokenSet myLiteralTokenSet;
 
   public SimpleTokenSetQuoteHandler(IElementType... _literalTokens) {

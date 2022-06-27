@@ -37,7 +37,7 @@ import consulo.language.psi.resolve.PsiFileSystemItemProcessor;
 import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 import consulo.navigation.ItemPresentation;
-import consulo.navigation.ItemPresentationProviders;
+import consulo.navigation.ItemPresentationProvider;
 import consulo.project.DumbService;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.Comparing;
@@ -615,7 +615,7 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
 
   @Override
   public ItemPresentation getPresentation() {
-    return ItemPresentationProviders.getItemPresentation(this);
+    return ItemPresentationProvider.getItemPresentation(this);
   }
 
   @Override

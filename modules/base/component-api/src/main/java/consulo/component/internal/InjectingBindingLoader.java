@@ -52,6 +52,9 @@ public class InjectingBindingLoader {
 
       ModuleLayer moduleLayer = pluginDescriptor.getModuleLayer();
       ServiceLoader<InjectingBinding> loader;
+      // this is optimization, since in legacy mode it's read META-INF and module-info services
+      // and when load META-INF service loader will skip class, if it from named module (and we have all named)
+      // that why load only from module-info
       if (moduleLayer != null) {
         loader = ServiceLoader.load(moduleLayer, InjectingBinding.class);
       }

@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.codeInsight.completion;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.Language;
 import consulo.language.editor.completion.*;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.impl.internal.completion.CompletionData;
@@ -40,6 +42,7 @@ import java.util.Set;
 /**
  * @author peter
  */
+@ExtensionImpl(id = "legacy", order = "last")
 public class LegacyCompletionContributor extends CompletionContributor {
   private static final Logger LOG = Logger.getInstance(LegacyCompletionContributor.class);
 
@@ -140,4 +143,9 @@ public class LegacyCompletionContributor extends CompletionContributor {
   }
 
 
+  @Nonnull
+  @Override
+  public Language getLanguage() {
+    return Language.ANY;
+  }
 }

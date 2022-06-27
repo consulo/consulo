@@ -1,6 +1,8 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.template.impl;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.Language;
 import consulo.language.editor.internal.matcher.CamelHumpMatcher;
 import consulo.ide.impl.idea.codeInsight.template.CustomLiveTemplate;
 import consulo.ide.impl.idea.codeInsight.template.CustomLiveTemplateBase;
@@ -37,6 +39,7 @@ import static consulo.ide.impl.idea.codeInsight.template.impl.ListTemplatesHandl
 /**
  * @author peter
  */
+@ExtensionImpl(id = "liveTemplates", order = "first")
 public class LiveTemplateCompletionContributor extends CompletionContributor implements DumbAware {
   private static final Key<Boolean> ourShowTemplatesInTests = Key.create("ShowTemplatesInTests");
 
@@ -173,4 +176,9 @@ public class LiveTemplateCompletionContributor extends CompletionContributor imp
     return null;
   }
 
+  @Nonnull
+  @Override
+  public Language getLanguage() {
+    return Language.ANY;
+  }
 }

@@ -15,9 +15,35 @@
  */
 package consulo.navigation;
 
+import consulo.application.Application;
+import consulo.component.extension.ExtensionPointCacheKey;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Map;
+
 /**
  * @author yole
  */
 public interface ItemPresentationProvider<T extends NavigationItem> {
+  ExtensionPointCacheKey<ItemPresentationProvider, Map<Class, ItemPresentationProvider>> KEY = ExtensionPointCacheKey.groupBy("ItemPresentationProvider", ItemPresentationProvider::getItemClass);
+
+  @Nullable
+  @SuppressWarnings("unchecked")
+  public static <T extends NavigationItem> ItemPresentationProvider<T> getItemPresentationProvider(@Nonnull T element) {
+    Map<Class, ItemPresentationProvider> map = Application.get().getExtensionPoint(ItemPresentationProvider.class).getOrBuildCache(KEY);
+    return map.get(element.getClass());
+  }
+
+  @Nullable
+  public static ItemPresentation getItemPresentation(NavigationItem element) {
+    final ItemPresentationProvider<NavigationItem> provider = getItemPresentationProvider(element);
+    return provider != null ? provider.getPresentation(element) : null;
+  }
+
+  @Nonnull
+  Class<T> getItemClass();
+
+  @Nonnull
   ItemPresentation getPresentation(T item);
 }

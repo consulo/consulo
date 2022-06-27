@@ -15,21 +15,27 @@
  */
 package consulo.ide.impl.idea.ui;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.ApplicationManager;
+import consulo.application.progress.ProgressManager;
 import consulo.application.util.matcher.PrefixMatcher;
-import consulo.language.editor.completion.*;
+import consulo.component.ProcessCanceledException;
+import consulo.document.Document;
+import consulo.language.Language;
+import consulo.language.editor.completion.AutoCompletionPolicy;
+import consulo.language.editor.completion.CompletionContributor;
+import consulo.language.editor.completion.CompletionParameters;
+import consulo.language.editor.completion.CompletionResultSet;
 import consulo.language.editor.completion.lookup.LookupElementBuilder;
 import consulo.language.editor.completion.lookup.PrioritizedLookupElement;
-import consulo.ui.ex.action.IdeActions;
-import consulo.application.ApplicationManager;
-import consulo.document.Document;
-import consulo.component.ProcessCanceledException;
-import consulo.application.progress.ProgressManager;
-import consulo.project.Project;
-import consulo.util.dataholder.Key;
+import consulo.language.plain.PlainTextLanguage;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import consulo.annotation.access.RequiredReadAction;
+import consulo.project.Project;
+import consulo.ui.ex.action.IdeActions;
+import consulo.util.dataholder.Key;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.concurrent.Callable;
@@ -43,10 +49,7 @@ public class TextFieldWithAutoCompletionContributor<T> extends CompletionContrib
   private static final Key<TextFieldWithAutoCompletionListProvider> KEY = Key.create("text field simple completion available");
   private static final Key<Boolean> AUTO_POPUP_KEY = Key.create("text Field simple completion auto-popup");
 
-  public static <T> void installCompletion(Document document,
-                                           Project project,
-                                           @Nullable TextFieldWithAutoCompletionListProvider<T> consumer,
-                                           boolean autoPopup) {
+  public static <T> void installCompletion(Document document, Project project, @Nullable TextFieldWithAutoCompletionListProvider<T> consumer, boolean autoPopup) {
     PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(document);
     if (psiFile != null) {
       //noinspection unchecked
@@ -90,14 +93,12 @@ public class TextFieldWithAutoCompletionContributor<T> extends CompletionContrib
     Collection<T> items = provider.getItems(prefix, true, parameters);
     addCompletionElements(result, provider, items, -10000);
 
-    Future<Collection<T>>
-      future =
-      ApplicationManager.getApplication().executeOnPooledThread(new Callable<Collection<T>>() {
-        @Override
-        public Collection<T> call() {
-          return provider.getItems(prefix, false, parameters);
-        }
-      });
+    Future<Collection<T>> future = ApplicationManager.getApplication().executeOnPooledThread(new Callable<Collection<T>>() {
+      @Override
+      public Collection<T> call() {
+        return provider.getItems(prefix, false, parameters);
+      }
+    });
 
     while (true) {
       try {
@@ -117,18 +118,19 @@ public class TextFieldWithAutoCompletionContributor<T> extends CompletionContrib
     }
   }
 
-  private static <T> void addCompletionElements(final CompletionResultSet result,
-                                                final TextFieldWithAutoCompletionListProvider<T> listProvider,
-                                                final Collection<T> items,
-                                                final int index) {
-    final AutoCompletionPolicy completionPolicy = ApplicationManager.getApplication().isUnitTestMode()
-                                                  ? AutoCompletionPolicy.ALWAYS_AUTOCOMPLETE
-                                                  : AutoCompletionPolicy.NEVER_AUTOCOMPLETE;
+  private static <T> void addCompletionElements(final CompletionResultSet result, final TextFieldWithAutoCompletionListProvider<T> listProvider, final Collection<T> items, final int index) {
+    final AutoCompletionPolicy completionPolicy = ApplicationManager.getApplication().isUnitTestMode() ? AutoCompletionPolicy.ALWAYS_AUTOCOMPLETE : AutoCompletionPolicy.NEVER_AUTOCOMPLETE;
     int grouping = index;
     for (final T item : items) {
       LookupElementBuilder builder = listProvider.createLookupBuilder(item);
 
       result.addElement(PrioritizedLookupElement.withGrouping(builder.withAutoCompletionPolicy(completionPolicy), grouping--));
     }
+  }
+
+  @Nonnull
+  @Override
+  public Language getLanguage() {
+    return PlainTextLanguage.INSTANCE;
   }
 }
