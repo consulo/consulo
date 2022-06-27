@@ -88,12 +88,12 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
   private static class CacheValue<K> {
     final List<Pair<K, PluginDescriptor>> myExtensionCache;
     final List<K> myUnwrapExtensionCache;
-    final List<ExtensionComponentAdapter<K>> myExtensionAdapters;
+    final List<InjectingBinding> myInjectingBindings;
 
-    private CacheValue(@Nullable List<Pair<K, PluginDescriptor>> extensionCache, @Nullable List<ExtensionComponentAdapter<K>> extensionAdapters) {
+    private CacheValue(@Nullable List<Pair<K, PluginDescriptor>> extensionCache, @Nullable List<InjectingBinding> injectingBindings) {
       myExtensionCache = extensionCache;
       myUnwrapExtensionCache = extensionCache == null ? null : new UnwrapList<K>(extensionCache);
-      myExtensionAdapters = extensionAdapters;
+      myInjectingBindings = injectingBindings;
     }
   }
 
@@ -121,7 +121,6 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
   private final Runnable myCheckCanceled;
   private final ComponentScope myComponentScope;
 
-  private List<InjectingBinding> myInjectingBindings = List.of();
   private Map<Class, Object> myInstanceOfCacheValue;
   private Map<ExtensionPointCacheKey, Object> myCaches;
   private long myModificationCount;
@@ -130,22 +129,19 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
   @SuppressWarnings("unchecked")
   public NewExtensionPointImpl(Class apiClass, List<InjectingBinding> bindings, ComponentManager componentManager, Runnable checkCanceled, ComponentScope componentScope) {
     myApiClass = apiClass;
-    myInjectingBindings = bindings;
     myCheckCanceled = checkCanceled;
     myComponentManager = componentManager;
     myComponentScope = componentScope;
-    myCacheValue = new CacheValue<>(null, new ArrayList<>());
+    myCacheValue = new CacheValue<>(null, bindings);
   }
 
   public void reset(@Nonnull List<InjectingBinding> newBindings) {
-    // set new bindings
-    myInjectingBindings = newBindings;
     // reset instanceOf cache
     myInstanceOfCacheValue = null;
     // reset other caches
     myCaches = null;
     // reset all extension cache
-    myCacheValue = new CacheValue<>(null, new ArrayList<>());
+    myCacheValue = new CacheValue<>(null, new ArrayList<>(newBindings));
   }
 
   @Nullable
@@ -174,11 +170,15 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
       caches = myCaches = Maps.newConcurrentHashMap(HashingStrategy.identity());
     }
 
-    return (K) caches.computeIfAbsent(key, k -> key.getFactory().apply(getExtensionList()));
+    return (K)caches.computeIfAbsent(key, k -> key.getFactory().apply(getExtensionList()));
   }
 
   @SuppressWarnings("unchecked")
-  private List<Pair<T, PluginDescriptor>> build() {
+  private List<Pair<T, PluginDescriptor>> build(@Nullable List<InjectingBinding> injectingBindings) {
+    if (injectingBindings == null) {
+      throw new IllegalArgumentException("cache dropped");
+    }
+
     Extension annotation = myApiClass.getAnnotation(Extension.class);
     if (annotation == null) {
       throw new IllegalArgumentException(myApiClass + " is not annotated by @Extension");
@@ -191,8 +191,8 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
 
     InjectingContainer injectingContainer = myComponentManager.getInjectingContainer();
 
-    List<Pair<T, PluginDescriptor>> extensions = new ArrayList<>(myInjectingBindings.size());
-    for (InjectingBinding binding : myInjectingBindings) {
+    List<Pair<T, PluginDescriptor>> extensions = new ArrayList<>(injectingBindings.size());
+    for (InjectingBinding binding : injectingBindings) {
       T extension;
       try {
         myCheckCanceled.run();
@@ -257,7 +257,7 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
 
     List<Pair<T, PluginDescriptor>> extensionCache = cacheValue.myExtensionCache;
     if (extensionCache == null) {
-      List<Pair<T, PluginDescriptor>> result = build();
+      List<Pair<T, PluginDescriptor>> result = build(cacheValue.myInjectingBindings);
       CacheValue<T> value = set(result);
       extensionCache = value.myExtensionCache;
     }
@@ -295,7 +295,7 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
     }
 
     // at this moment myExtensionAdapters must exists
-    return !cacheValue.myExtensionAdapters.isEmpty();
+    return !cacheValue.myInjectingBindings.isEmpty();
   }
 
   @Override
@@ -319,7 +319,7 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
       return extensionCache;
     }
 
-    List<Pair<T, PluginDescriptor>> result = build();
+    List<Pair<T, PluginDescriptor>> result = build(cacheValue.myInjectingBindings);
     CacheValue<T> value = set(result);
     return value.myUnwrapExtensionCache;
   }
