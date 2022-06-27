@@ -19,7 +19,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.language.CodeDocumentationAwareCommenterEx;
 import consulo.language.Commenter;
 import consulo.language.Language;
-import consulo.language.LanguageCommenters;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
@@ -48,7 +47,7 @@ public class CommentUtilCore {
 
   @RequiredReadAction
   public static boolean isCommentTextElement(final PsiElement element) {
-    final Commenter commenter = LanguageCommenters.INSTANCE.forLanguage(element.getLanguage());
+    final Commenter commenter = Commenter.forLanguage(element.getLanguage());
     if (commenter instanceof CodeDocumentationAwareCommenterEx) {
       final CodeDocumentationAwareCommenterEx commenterEx = (CodeDocumentationAwareCommenterEx)commenter;
       if (commenterEx.isDocumentationCommentText(element)) return true;

@@ -24,7 +24,6 @@ import javax.annotation.Nullable;
 /**
  * Defines support for "Enter within comments" actions in a custom language.
  * @author Maxim.Mossienko
- * @see LanguageCommenters
  */
 public interface CodeDocumentationAwareCommenter extends Commenter {
   /**

@@ -15,37 +15,56 @@
  */
 package consulo.ide.impl.idea.codeInsight.generation;
 
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
+import consulo.application.Application;
+import consulo.component.extension.ExtensionPoint;
 import consulo.component.extension.Extensions;
 import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import jakarta.inject.Inject;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
  */
 public class GenerateByPatternAction extends AnAction {
+  private final Application myApplication;
 
+  @Inject
+  public GenerateByPatternAction(Application application) {
+    myApplication = application;
+  }
+
+  @RequiredUIAccess
   @Override
-  public void update(AnActionEvent e) {
-    PatternProvider[] extensions = Extensions.getExtensions(PatternProvider.EXTENSION_POINT_NAME);
+  public void update(@Nonnull AnActionEvent e) {
+    ExtensionPoint<PatternProvider> point = myApplication.getExtensionPoint(PatternProvider.class);
+    if (!point.hasAnyExtensions()) {
+      e.getPresentation().setVisible(false);
+      return;
+    }
+
     e.getPresentation().setVisible(true);
-    for (PatternProvider extension : extensions) {
+    for (PatternProvider extension : point.getExtensionList()) {
       if (extension.isAvailable(e.getDataContext())) return;
     }
     e.getPresentation().setVisible(false);
   }
 
+  @RequiredUIAccess
   @Override
   public void actionPerformed(AnActionEvent e) {
     PatternDescriptor[] patterns = new PatternDescriptor[0];
-    PatternProvider[] extensions = Extensions.getExtensions(PatternProvider.EXTENSION_POINT_NAME);
-    for (PatternProvider extension : extensions) {
+    ExtensionPoint<PatternProvider> point = myApplication.getExtensionPoint(PatternProvider.class);
+    for (PatternProvider extension : point.getExtensionList()) {
       if (extension.isAvailable(e.getDataContext())) {
         patterns = ArrayUtil.mergeArrays(patterns, extension.getDescriptors());
       }
     }
-    GenerateByPatternDialog dialog = new GenerateByPatternDialog(e.getData(CommonDataKeys.PROJECT), patterns, e.getDataContext());
+    GenerateByPatternDialog dialog = new GenerateByPatternDialog(e.getData(Project.KEY), patterns, e.getDataContext());
     dialog.show();
     if (dialog.isOK()) {
       dialog.getSelectedDescriptor().actionPerformed(e.getDataContext());

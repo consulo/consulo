@@ -1,31 +1,30 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.editor.impl.view;
 
+import consulo.codeEditor.HighlighterIterator;
+import consulo.codeEditor.impl.FontInfo;
 import consulo.codeEditor.impl.IterationState;
+import consulo.document.Document;
+import consulo.document.util.DocumentUtil;
+import consulo.ide.impl.idea.openapi.editor.bidi.BidiRegionsSeparator;
+import consulo.ide.impl.idea.openapi.editor.bidi.LanguageBidiRegionsSeparator;
+import consulo.ide.impl.idea.openapi.editor.impl.FontFallbackIterator;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.CodeDocumentationAwareCommenter;
 import consulo.language.Commenter;
 import consulo.language.Language;
-import consulo.language.LanguageCommenters;
-import consulo.logging.Logger;
-import consulo.document.Document;
-import consulo.ide.impl.idea.openapi.editor.bidi.BidiRegionsSeparator;
-import consulo.ide.impl.idea.openapi.editor.bidi.LanguageBidiRegionsSeparator;
-import consulo.codeEditor.HighlighterIterator;
-import consulo.ide.impl.idea.openapi.editor.impl.FontFallbackIterator;
-import consulo.codeEditor.impl.FontInfo;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.language.ast.IElementType;
 import consulo.language.ast.StringEscapesTokenTypes;
 import consulo.language.ast.TokenType;
-import consulo.language.ast.IElementType;
-import consulo.util.lang.BitUtil;
-import consulo.document.util.DocumentUtil;
-import consulo.util.collection.SmartList;
-import consulo.ide.impl.idea.util.text.CharArrayUtil;
+import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;
+import consulo.util.collection.SmartList;
+import consulo.util.lang.BitUtil;
 import org.intellij.lang.annotations.JdkConstants;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
 import java.text.Bidi;
 import java.util.List;
@@ -194,7 +193,7 @@ abstract class LineLayout {
 
   private static String getLineCommentPrefix(IElementType token) {
     if (token == null) return null;
-    Commenter commenter = LanguageCommenters.INSTANCE.forLanguage(token.getLanguage());
+    Commenter commenter = Commenter.forLanguage(token.getLanguage());
     if (!(commenter instanceof CodeDocumentationAwareCommenter) || !token.equals(((CodeDocumentationAwareCommenter)commenter).getLineCommentTokenType())) return null;
     String prefix = commenter.getLineCommentPrefix();
     return prefix == null ? null : StringUtil.trimTrailing(prefix); // some commenters (e.g. for Python) include space in comment prefix

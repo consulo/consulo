@@ -16,47 +16,42 @@
 
 package consulo.ide.impl.idea.codeInsight.generation;
 
-import consulo.language.codeStyle.CodeStyle;
-import consulo.ide.impl.idea.codeInsight.CommentUtil;
-import consulo.ide.impl.idea.codeInsight.actions.MultiCaretCodeInsightActionHandler;
 import consulo.application.statistic.FeatureUsageTracker;
-import consulo.language.codeStyle.internal.IndentData;
-import consulo.ide.impl.idea.ide.highlighter.custom.SyntaxTable;
-import consulo.language.editor.inject.EditorWindow;
-import consulo.language.Commenter;
+import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.LogicalPosition;
-import consulo.language.Language;
-import consulo.language.LanguageCommenters;
-import consulo.language.inject.InjectedLanguageManager;
-import consulo.ui.ex.action.IdeActions;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionManagerEx;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
-import consulo.virtualFileSystem.fileType.FileType;
+import consulo.document.util.DocumentUtil;
+import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.codeInsight.CommentUtil;
+import consulo.ide.impl.idea.codeInsight.actions.MultiCaretCodeInsightActionHandler;
+import consulo.ide.impl.idea.ide.highlighter.custom.SyntaxTable;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionManagerEx;
+import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.AbstractFileType;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.CustomSyntaxTableFileType;
-import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.document.util.TextRange;
-import consulo.application.util.registry.Registry;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.text.CharArrayUtil;
+import consulo.language.Commenter;
+import consulo.language.Language;
+import consulo.language.codeStyle.*;
+import consulo.language.codeStyle.internal.IndentData;
+import consulo.language.editor.inject.EditorWindow;
+import consulo.language.editor.internal.PsiUtilBase;
+import consulo.language.inject.InjectedLanguageManager;
+import consulo.language.inject.impl.internal.InjectedCaret;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.codeStyle.CodeStyleManager;
-import consulo.language.codeStyle.CodeStyleSettings;
-import consulo.language.codeStyle.CodeStyleSettingsManager;
-import consulo.language.codeStyle.CommonCodeStyleSettings;
-import consulo.language.inject.impl.internal.InjectedCaret;
-import consulo.language.editor.internal.PsiUtilBase;
 import consulo.language.psi.PsiUtilCore;
-import consulo.document.util.DocumentUtil;
-import consulo.ide.impl.idea.util.text.CharArrayUtil;
+import consulo.project.Project;
+import consulo.ui.ex.action.IdeActions;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
+import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -287,7 +282,7 @@ public class CommentByLineCommentHandler extends MultiCaretCodeInsightActionHand
     }
 
 
-    Commenter blockSuitableCommenter = languageSuitableForCompleteFragment == null ? LanguageCommenters.INSTANCE.forLanguage(file.getLanguage()) : null;
+    Commenter blockSuitableCommenter = languageSuitableForCompleteFragment == null ? Commenter.forLanguage(file.getLanguage()) : null;
     if (blockSuitableCommenter == null && file.getFileType() instanceof CustomSyntaxTableFileType) {
       blockSuitableCommenter = new Commenter() {
         final SyntaxTable mySyntaxTable = ((CustomSyntaxTableFileType)file.getFileType()).getSyntaxTable();
@@ -308,6 +303,12 @@ public class CommentByLineCommentHandler extends MultiCaretCodeInsightActionHand
         @Nullable
         public String getBlockCommentSuffix() {
           return mySyntaxTable.getEndComment();
+        }
+
+        @Nonnull
+        @Override
+        public Language getLanguage() {
+          return Language.ANY;
         }
 
         @Override

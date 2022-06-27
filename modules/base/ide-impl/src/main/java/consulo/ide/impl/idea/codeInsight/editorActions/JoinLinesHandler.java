@@ -2,42 +2,36 @@
 
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
-import consulo.language.codeStyle.CodeStyle;
-import consulo.ide.impl.idea.formatting.FormatterEx;
-import consulo.language.codeStyle.FormattingModel;
-import consulo.language.codeStyle.FormattingModelBuilder;
-import consulo.dataContext.DataManager;
-import consulo.language.CodeDocumentationAwareCommenter;
-import consulo.language.Commenter;
-import consulo.language.LanguageCommenters;
-import consulo.language.codeStyle.LanguageFormatting;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;
 import consulo.application.internal.ApplicationEx;
-import consulo.ide.impl.idea.openapi.editor.*;
-import consulo.codeEditor.action.EditorActionHandler;
-import consulo.document.internal.DocumentEx;
-import consulo.document.Document;
-import consulo.document.RangeMarker;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.ScrollType;
+import consulo.codeEditor.action.EditorActionHandler;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
+import consulo.document.Document;
+import consulo.document.RangeMarker;
+import consulo.document.internal.DocumentEx;
+import consulo.document.util.DocumentUtil;
+import consulo.ide.impl.idea.formatting.FormatterEx;
+import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.text.CharArrayUtil;
+import consulo.language.CodeDocumentationAwareCommenter;
+import consulo.language.Commenter;
+import consulo.language.codeStyle.*;
+import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.action.JoinLinesHandlerDelegate;
 import consulo.language.editor.action.JoinRawLinesHandlerDelegate;
 import consulo.language.psi.*;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.ProgressManager;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.language.codeStyle.CodeStyleManager;
-import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.psi.util.PsiTreeUtil;
-import consulo.document.util.DocumentUtil;
 import consulo.language.util.IncorrectOperationException;
-import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.logging.Logger;
+import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -401,7 +395,7 @@ public class JoinLinesHandler extends EditorActionHandler {
   }
 
   private static boolean tryConvertEndOfLineComment(PsiElement commentElement) {
-    Commenter commenter = LanguageCommenters.INSTANCE.forLanguage(commentElement.getLanguage());
+    Commenter commenter = Commenter.forLanguage(commentElement.getLanguage());
     if (commenter instanceof CodeDocumentationAwareCommenter) {
       CodeDocumentationAwareCommenter docCommenter = (CodeDocumentationAwareCommenter)commenter;
       String lineCommentPrefix = commenter.getLineCommentPrefix();

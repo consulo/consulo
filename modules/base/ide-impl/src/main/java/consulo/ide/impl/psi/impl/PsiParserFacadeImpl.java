@@ -20,7 +20,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.language.Commenter;
 import consulo.language.Language;
-import consulo.language.LanguageCommenters;
 import consulo.language.ast.TokenType;
 import consulo.language.file.LanguageFileType;
 import consulo.language.impl.ast.ASTFactory;
@@ -63,7 +62,7 @@ public class PsiParserFacadeImpl implements PsiParserFacade {
   @Override
   @Nonnull
   public PsiComment createLineCommentFromText(@Nonnull final LanguageFileType fileType, @Nonnull final String text) throws IncorrectOperationException {
-    Commenter commenter = LanguageCommenters.INSTANCE.forLanguage(fileType.getLanguage());
+    Commenter commenter = Commenter.forLanguage(fileType.getLanguage());
     assert commenter != null;
     String prefix = commenter.getLineCommentPrefix();
     if (prefix == null) {
@@ -77,7 +76,7 @@ public class PsiParserFacadeImpl implements PsiParserFacade {
   @Nonnull
   @Override
   public PsiComment createBlockCommentFromText(@Nonnull Language language, @Nonnull String text) throws IncorrectOperationException {
-    Commenter commenter = LanguageCommenters.INSTANCE.forLanguage(language);
+    Commenter commenter = Commenter.forLanguage(language);
     assert commenter != null : language;
     final String blockCommentPrefix = commenter.getBlockCommentPrefix();
     final String blockCommentSuffix = commenter.getBlockCommentSuffix();
@@ -89,7 +88,7 @@ public class PsiParserFacadeImpl implements PsiParserFacade {
   @Override
   @Nonnull
   public PsiComment createLineOrBlockCommentFromText(@Nonnull Language lang, @Nonnull String text) throws IncorrectOperationException {
-    Commenter commenter = LanguageCommenters.INSTANCE.forLanguage(lang);
+    Commenter commenter = Commenter.forLanguage(lang);
     assert commenter != null : lang;
     String prefix = commenter.getLineCommentPrefix();
     final String blockCommentPrefix = commenter.getBlockCommentPrefix();

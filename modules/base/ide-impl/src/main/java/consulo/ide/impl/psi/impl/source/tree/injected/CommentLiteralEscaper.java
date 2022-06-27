@@ -17,12 +17,12 @@
 package consulo.ide.impl.psi.impl.source.tree.injected;
 
 import consulo.document.util.ProperTextRange;
+import consulo.document.util.TextRange;
+import consulo.ide.impl.psi.impl.source.tree.PsiCommentImpl;
 import consulo.language.CodeDocumentationAwareCommenter;
 import consulo.language.Commenter;
-import consulo.language.LanguageCommenters;
-import consulo.document.util.TextRange;
 import consulo.language.psi.LiteralTextEscaper;
-import consulo.ide.impl.psi.impl.source.tree.PsiCommentImpl;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -50,7 +50,7 @@ public class CommentLiteralEscaper extends LiteralTextEscaper<PsiCommentImpl> {
 
   @Override
   public boolean isOneLine() {
-    final Commenter commenter = LanguageCommenters.INSTANCE.forLanguage(myHost.getLanguage());
+    final Commenter commenter = Commenter.forLanguage(myHost.getLanguage());
     if (commenter instanceof CodeDocumentationAwareCommenter) {
       return myHost.getTokenType() == ((CodeDocumentationAwareCommenter) commenter).getLineCommentTokenType();
     }

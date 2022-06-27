@@ -15,31 +15,30 @@
  */
 package consulo.ide.impl.idea.lang.folding;
 
-import consulo.language.ast.ASTNode;
+import consulo.codeEditor.Editor;
+import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.Commenter;
 import consulo.language.Language;
-import consulo.language.LanguageCommenters;
-import consulo.language.editor.surroundWith.SurroundDescriptor;
-import consulo.language.editor.surroundWith.Surrounder;
-import consulo.codeEditor.Editor;
+import consulo.language.ast.ASTNode;
+import consulo.language.codeStyle.CodeStyleManager;
+import consulo.language.codeStyle.CodeStyleSettingsManager;
+import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.editor.folding.CustomFoldingBuilder;
 import consulo.language.editor.folding.CustomFoldingProvider;
 import consulo.language.editor.folding.FoldingBuilder;
 import consulo.language.editor.folding.LanguageFolding;
-import consulo.project.Project;
-import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.language.editor.surroundWith.SurroundDescriptor;
+import consulo.language.editor.surroundWith.Surrounder;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiWhiteSpace;
-import consulo.language.codeStyle.CodeStyleManager;
-import consulo.language.codeStyle.CodeStyleSettingsManager;
-import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.util.IncorrectOperationException;
+import consulo.project.Project;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,7 +64,7 @@ public class CustomFoldingSurroundDescriptor implements SurroundDescriptor {
   @Override
   public PsiElement[] getElementsToSurround(PsiFile file, int startOffset, int endOffset) {
     if (startOffset >= endOffset - 1) return PsiElement.EMPTY_ARRAY;
-    Commenter commenter = LanguageCommenters.INSTANCE.forLanguage(file.getLanguage());
+    Commenter commenter = Commenter.forLanguage(file.getLanguage());
     if (commenter == null || commenter.getLineCommentPrefix() == null) return PsiElement.EMPTY_ARRAY;
     PsiElement startElement = file.findElementAt(startOffset);
     if (startElement instanceof PsiWhiteSpace) startElement = startElement.getNextSibling();
@@ -177,7 +176,7 @@ public class CustomFoldingSurroundDescriptor implements SurroundDescriptor {
       PsiElement lastElement = elements[elements.length - 1];
       PsiFile psiFile = firstElement.getContainingFile();
       Language language = psiFile.getLanguage();
-      Commenter commenter = LanguageCommenters.INSTANCE.forLanguage(language);
+      Commenter commenter = Commenter.forLanguage(language);
       if (commenter == null) return null;
       String linePrefix = commenter.getLineCommentPrefix();
       if (linePrefix == null) return null;

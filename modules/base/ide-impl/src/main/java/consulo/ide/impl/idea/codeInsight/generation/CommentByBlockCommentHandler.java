@@ -16,51 +16,45 @@
 
 package consulo.ide.impl.idea.codeInsight.generation;
 
-import consulo.ide.impl.psi.CustomHighlighterTokenType;
-import consulo.language.codeStyle.CodeStyle;
-import consulo.language.CodeDocumentationAwareCommenter;
-import consulo.language.Commenter;
-import consulo.language.LanguageCommenters;
-import consulo.language.editor.CodeInsightBundle;
-import consulo.ide.impl.idea.codeInsight.CommentUtil;
-import consulo.ide.impl.idea.codeInsight.actions.MultiCaretCodeInsightActionHandler;
-import consulo.language.editor.hint.HintManager;
-import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
-import consulo.language.editor.ui.awt.HintUtil;
 import consulo.application.statistic.FeatureUsageTracker;
-import consulo.language.codeStyle.internal.IndentData;
-import consulo.ide.impl.idea.ide.highlighter.custom.CustomFileTypeLexer;
-import consulo.ide.impl.idea.lang.*;
-import consulo.codeEditor.Caret;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.LogicalPosition;
-import consulo.codeEditor.ScrollType;
-import consulo.language.lexer.Lexer;
-import consulo.codeEditor.EditorEx;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.codeEditor.HighlighterIterator;
+import consulo.codeEditor.*;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
-import consulo.language.Language;
-import consulo.language.file.FileViewProvider;
-import consulo.language.psi.*;
-import consulo.virtualFileSystem.fileType.FileType;
+import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.codeInsight.CommentUtil;
+import consulo.ide.impl.idea.codeInsight.actions.MultiCaretCodeInsightActionHandler;
+import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
+import consulo.ide.impl.idea.ide.highlighter.custom.CustomFileTypeLexer;
+import consulo.ide.impl.idea.lang.CustomUncommenter;
+import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.AbstractFileType;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.CustomSyntaxTableFileType;
-import consulo.project.Project;
-import consulo.util.lang.Couple;
-import consulo.document.util.TextRange;
-import consulo.language.codeStyle.CodeStyleSettingsManager;
-import consulo.language.codeStyle.CommonCodeStyleSettings;
-import consulo.ide.impl.psi.templateLanguages.MultipleLangCommentProvider;
-import consulo.language.template.TemplateLanguageFileViewProvider;
-import consulo.language.ast.IElementType;
-import consulo.language.psi.util.PsiTreeUtil;
-import consulo.language.editor.internal.PsiUtilBase;
 import consulo.ide.impl.idea.ui.LightweightHint;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
+import consulo.ide.impl.psi.CustomHighlighterTokenType;
+import consulo.ide.impl.psi.templateLanguages.MultipleLangCommentProvider;
+import consulo.language.CodeDocumentationAwareCommenter;
+import consulo.language.Commenter;
+import consulo.language.Language;
+import consulo.language.ast.IElementType;
+import consulo.language.codeStyle.CodeStyle;
+import consulo.language.codeStyle.CodeStyleSettingsManager;
+import consulo.language.codeStyle.CommonCodeStyleSettings;
+import consulo.language.codeStyle.internal.IndentData;
+import consulo.language.editor.CodeInsightBundle;
+import consulo.language.editor.hint.HintManager;
+import consulo.language.editor.internal.PsiUtilBase;
+import consulo.language.editor.ui.awt.HintUtil;
+import consulo.language.file.FileViewProvider;
+import consulo.language.lexer.Lexer;
+import consulo.language.psi.*;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.template.TemplateLanguageFileViewProvider;
+import consulo.project.Project;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
+import consulo.util.lang.Couple;
+import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -351,7 +345,7 @@ public class CommentByBlockCommentHandler extends MultiCaretCodeInsightActionHan
     }
 
     final Language fileLanguage = file.getLanguage();
-    Language lang = lineStartLanguage == null || LanguageCommenters.INSTANCE.forLanguage(lineStartLanguage) == null || fileLanguage.getBaseLanguage() == lineStartLanguage
+    Language lang = lineStartLanguage == null || Commenter.forLanguage(lineStartLanguage) == null || fileLanguage.getBaseLanguage() == lineStartLanguage
                     // file language is a more specific dialect of the line language
                     ? fileLanguage
                     : lineStartLanguage;
@@ -360,7 +354,7 @@ public class CommentByBlockCommentHandler extends MultiCaretCodeInsightActionHan
       lang = viewProvider.getBaseLanguage();
     }
 
-    return LanguageCommenters.INSTANCE.forLanguage(lang);
+    return Commenter.forLanguage(lang);
   }
 
   @Nullable

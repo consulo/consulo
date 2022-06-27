@@ -1,15 +1,14 @@
 package consulo.ide.impl.idea.codeInsight.generation;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.dataContext.DataContext;
-import consulo.component.extension.ExtensionPointName;
 
 /**
  * @author Dmitry Avdeev
  */
+@Extension(ComponentScope.APPLICATION)
 public interface PatternProvider {
-
-  ExtensionPointName<PatternProvider> EXTENSION_POINT_NAME = ExtensionPointName.create("consulo.patternProvider");
-
   PatternDescriptor[] getDescriptors();
 
   boolean isAvailable(DataContext context);

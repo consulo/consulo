@@ -16,20 +16,19 @@
 
 package consulo.ide.impl.idea.codeInsight.editorActions.enter;
 
-import consulo.dataContext.DataContext;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
-import consulo.language.Commenter;
-import consulo.language.LanguageCommenters;
-import consulo.language.CodeDocumentationAwareCommenter;
-import consulo.util.lang.ref.Ref;
+import consulo.dataContext.DataContext;
+import consulo.document.Document;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.text.CharArrayUtil;
+import consulo.language.CodeDocumentationAwareCommenter;
+import consulo.language.Commenter;
+import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.ide.impl.idea.util.text.CharArrayUtil;
-import consulo.language.Language;
+import consulo.util.lang.ref.Ref;
 
 import javax.annotation.Nonnull;
 
@@ -44,7 +43,7 @@ public class EnterInLineCommentHandler extends EnterHandlerDelegateAdapter {
       Document document = editor.getDocument();
       CharSequence text = document.getText();
       final Language language = psiAtOffset.getLanguage();
-      final Commenter languageCommenter = LanguageCommenters.INSTANCE.forLanguage(language);
+      final Commenter languageCommenter = Commenter.forLanguage(language);
       final CodeDocumentationAwareCommenter commenter = languageCommenter instanceof CodeDocumentationAwareCommenter
                                                         ? (CodeDocumentationAwareCommenter)languageCommenter: null;
       if (commenter != null && token.getElementType() == commenter.getLineCommentTokenType() ) {

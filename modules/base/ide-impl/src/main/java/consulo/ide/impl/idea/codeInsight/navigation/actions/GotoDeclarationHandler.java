@@ -16,6 +16,8 @@
 
 package consulo.ide.impl.idea.codeInsight.navigation.actions;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
 import consulo.component.extension.ExtensionPointName;
@@ -25,6 +27,7 @@ import javax.annotation.Nullable;
 /**
  * @author yole
  */
+@Extension(ComponentScope.APPLICATION)
 public interface GotoDeclarationHandler {
   ExtensionPointName<GotoDeclarationHandler> EP_NAME = ExtensionPointName.create(GotoDeclarationHandler.class);
 

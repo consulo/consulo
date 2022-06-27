@@ -18,11 +18,10 @@ package consulo.ide.impl.idea.codeInsight.editorActions.wordSelection;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
-import consulo.language.CodeDocumentationAwareCommenter;
-import consulo.language.Commenter;
-import consulo.language.LanguageCommenters;
 import consulo.codeEditor.Editor;
 import consulo.document.util.TextRange;
+import consulo.language.CodeDocumentationAwareCommenter;
+import consulo.language.Commenter;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiWhiteSpace;
@@ -34,7 +33,7 @@ public class LineCommentSelectioner extends WordSelectioner {
   @Override
   public boolean canSelect(PsiElement e) {
     if (e instanceof PsiComment) {
-      final Commenter commenter = LanguageCommenters.INSTANCE.forLanguage(e.getLanguage());
+      final Commenter commenter = Commenter.forLanguage(e.getLanguage());
       if (!(commenter instanceof CodeDocumentationAwareCommenter)) return true;
       return !((CodeDocumentationAwareCommenter) commenter).isDocumentationComment((PsiComment)e);
     }

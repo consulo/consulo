@@ -15,12 +15,13 @@
  */
 package consulo.ide.impl.idea.application.options.codeStyle.arrangement.match;
 
-import consulo.language.codeStyle.arrangement.ArrangementColorsProvider;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
+import consulo.ide.impl.language.codeStyle.arrangement.std.ArrangementStandardSettingsManagerImpl;
 import consulo.language.Commenter;
 import consulo.language.Language;
-import consulo.language.LanguageCommenters;
-import consulo.util.lang.ref.Ref;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.language.codeStyle.arrangement.ArrangementColorsProvider;
 import consulo.language.codeStyle.arrangement.ArrangementUtil;
 import consulo.language.codeStyle.arrangement.match.StdArrangementEntryMatcher;
 import consulo.language.codeStyle.arrangement.match.StdArrangementMatchRule;
@@ -29,13 +30,11 @@ import consulo.language.codeStyle.arrangement.model.ArrangementCompositeMatchCon
 import consulo.language.codeStyle.arrangement.model.ArrangementMatchCondition;
 import consulo.language.codeStyle.arrangement.model.ArrangementMatchConditionVisitor;
 import consulo.language.codeStyle.arrangement.std.ArrangementSettingsToken;
-import consulo.ide.impl.language.codeStyle.arrangement.std.ArrangementStandardSettingsManagerImpl;
 import consulo.language.codeStyle.arrangement.std.CompositeArrangementSettingsToken;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
+import consulo.util.lang.ref.Ref;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
 import java.util.Set;
 
@@ -71,7 +70,7 @@ public class ArrangementSectionRuleManager {
                                         @Nonnull ArrangementStandardSettingsManagerImpl settingsManager,
                                         @Nonnull ArrangementColorsProvider colorsProvider,
                                         @Nonnull ArrangementMatchingRulesControl control) {
-    myCommenter = LanguageCommenters.INSTANCE.forLanguage(language);
+    myCommenter = Commenter.forLanguage(language);
     myControl = control;
     final List<CompositeArrangementSettingsToken> tokens = ContainerUtil.newArrayList();
     tokens.add(new CompositeArrangementSettingsToken(TYPE, ContainerUtil.newArrayList(START_SECTION, END_SECTION)));

@@ -1,29 +1,28 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
-import consulo.language.codeStyle.CodeStyle;
-import consulo.ide.impl.idea.codeInsight.documentation.DocCommentFixer;
-import consulo.ide.impl.idea.lang.LanguageDocumentation;
-import consulo.ide.impl.idea.lang.documentation.CompositeDocumentationProvider;
-import consulo.language.editor.CommonDataKeys;
-import consulo.codeEditor.impl.action.EditorAction;
-import consulo.codeEditor.action.EditorActionHandler;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.language.codeStyle.CodeStyleManager;
-import consulo.language.codeStyle.CodeStyleSettings;
-import consulo.language.codeStyle.DocCommentSettings;
-import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
-import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.CaretModel;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.action.EditorActionHandler;
+import consulo.codeEditor.impl.action.EditorAction;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
+import consulo.ide.impl.idea.codeInsight.documentation.DocCommentFixer;
+import consulo.ide.impl.idea.lang.LanguageDocumentation;
+import consulo.ide.impl.idea.lang.documentation.CompositeDocumentationProvider;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.CodeDocumentationAwareCommenter;
 import consulo.language.Commenter;
 import consulo.language.Language;
-import consulo.language.LanguageCommenters;
+import consulo.language.codeStyle.CodeStyle;
+import consulo.language.codeStyle.CodeStyleManager;
+import consulo.language.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.DocCommentSettings;
+import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
+import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.FileModificationService;
 import consulo.language.editor.documentation.CodeDocumentationProvider;
 import consulo.language.editor.documentation.DocumentationProvider;
@@ -111,7 +110,7 @@ public class FixDocCommentAction extends EditorAction {
       return;
     }
 
-    Commenter c = LanguageCommenters.INSTANCE.forLanguage(language);
+    Commenter c = Commenter.forLanguage(language);
     if (!(c instanceof CodeDocumentationAwareCommenter)) {
       return;
     }

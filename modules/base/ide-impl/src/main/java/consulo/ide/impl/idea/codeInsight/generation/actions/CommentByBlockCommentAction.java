@@ -16,18 +16,18 @@
 
 package consulo.ide.impl.idea.codeInsight.generation.actions;
 
+import consulo.application.dumb.DumbAware;
+import consulo.codeEditor.Caret;
+import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.codeInsight.actions.MultiCaretCodeInsightAction;
 import consulo.ide.impl.idea.codeInsight.actions.MultiCaretCodeInsightActionHandler;
 import consulo.ide.impl.idea.codeInsight.generation.CommentByBlockCommentHandler;
-import consulo.language.Commenter;
-import consulo.language.LanguageCommenters;
-import consulo.codeEditor.Caret;
-import consulo.codeEditor.Editor;
-import consulo.virtualFileSystem.fileType.FileType;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.AbstractFileType;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
+import consulo.language.Commenter;
 import consulo.language.psi.PsiFile;
+import consulo.project.Project;
+import consulo.virtualFileSystem.fileType.FileType;
+
 import javax.annotation.Nonnull;
 
 public class CommentByBlockCommentAction extends MultiCaretCodeInsightAction implements DumbAware {
@@ -48,8 +48,8 @@ public class CommentByBlockCommentAction extends MultiCaretCodeInsightAction imp
       return ((AbstractFileType)fileType).getCommenter() != null;
     }
 
-    Commenter commenter = LanguageCommenters.INSTANCE.forLanguage(file.getLanguage());
-    if (commenter == null) commenter = LanguageCommenters.INSTANCE.forLanguage(file.getViewProvider().getBaseLanguage());
+    Commenter commenter = Commenter.forLanguage(file.getLanguage());
+    if (commenter == null) commenter = Commenter.forLanguage(file.getViewProvider().getBaseLanguage());
     if (commenter == null) return false;
     return commenter.getBlockCommentPrefix() != null && commenter.getBlockCommentSuffix() != null;
   }

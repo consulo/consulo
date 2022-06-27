@@ -17,28 +17,30 @@
 package consulo.ide.impl.idea.application.options.editor;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.configurable.*;
-import consulo.language.editor.CodeInsightSettings;
+import consulo.application.ApplicationBundle;
 import consulo.codeEditor.action.SmartBackspaceMode;
+import consulo.codeEditor.impl.EditorSettingsExternalizable;
+import consulo.configurable.*;
+import consulo.disposer.Disposable;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.openapi.util.NotNullComputable;
 import consulo.language.CodeDocumentationAwareCommenter;
 import consulo.language.Commenter;
 import consulo.language.Language;
-import consulo.language.LanguageCommenters;
-import consulo.application.ApplicationBundle;
-import consulo.codeEditor.impl.EditorSettingsExternalizable;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.NotNullComputable;
-import consulo.disposer.Disposable;
+import consulo.language.editor.CodeInsightSettings;
 import consulo.localize.LocalizeValue;
-import consulo.ui.*;
+import consulo.ui.CheckBox;
+import consulo.ui.ComboBox;
+import consulo.ui.Component;
+import consulo.ui.ValueComponent;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.LabeledLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.LabeledComponents;
 import org.jetbrains.annotations.Nls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collection;
 
 /**
@@ -113,7 +115,7 @@ public class EditorSmartKeysConfigurable extends SimpleConfigurable<EditorSmartK
     private static boolean hasAnyDocAwareCommenters() {
       final Collection<Language> languages = Language.getRegisteredLanguages();
       for (Language language : languages) {
-        final Commenter commenter = LanguageCommenters.INSTANCE.forLanguage(language);
+        final Commenter commenter = Commenter.forLanguage(language);
         if (commenter instanceof CodeDocumentationAwareCommenter) {
           final CodeDocumentationAwareCommenter docCommenter = (CodeDocumentationAwareCommenter)commenter;
           if (docCommenter.getDocumentationCommentLinePrefix() != null) {

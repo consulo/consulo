@@ -22,7 +22,6 @@ import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.util.TextRange;
 import consulo.language.Commenter;
-import consulo.language.LanguageCommenters;
 import consulo.language.copyright.config.CopyrightFileConfig;
 import consulo.language.copyright.config.CopyrightManager;
 import consulo.language.copyright.config.CopyrightProfile;
@@ -74,7 +73,7 @@ public abstract class UpdatePsiFileCopyright<T extends CopyrightFileConfig> {
   private static CommentRange getLineCopyrightComments(List<PsiComment> comments, Document doc, int i, PsiComment comment) {
     PsiElement firstComment = comment;
     PsiElement lastComment = comment;
-    final Commenter commenter = LanguageCommenters.INSTANCE.forLanguage(PsiUtilCore.findLanguageFromElement(comment));
+    final Commenter commenter = Commenter.forLanguage(PsiUtilCore.findLanguageFromElement(comment));
     if (isLineComment(commenter, comment, doc)) {
       int sline = doc.getLineNumber(comment.getTextRange().getStartOffset());
       int eline = doc.getLineNumber(comment.getTextRange().getEndOffset());

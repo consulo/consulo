@@ -467,7 +467,7 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
 
   private static boolean isCommentToken(final ASTNode element) {
     final Language language = element.getElementType().getLanguage();
-    final Commenter commenter = LanguageCommenters.INSTANCE.forLanguage(language);
+    final Commenter commenter = Commenter.forLanguage(language);
     if (commenter instanceof CodeDocumentationAwareCommenter) {
       final CodeDocumentationAwareCommenter documentationAwareCommenter = (CodeDocumentationAwareCommenter)commenter;
       return element.getElementType() == documentationAwareCommenter.getBlockCommentTokenType() || element.getElementType() == documentationAwareCommenter.getLineCommentTokenType();

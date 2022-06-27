@@ -20,7 +20,6 @@ import consulo.application.ApplicationManager;
 import consulo.application.util.function.Computable;
 import consulo.language.Commenter;
 import consulo.language.Language;
-import consulo.language.LanguageCommenters;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiParserFacade;
@@ -108,7 +107,7 @@ public class SuppressionUtil {
 
   @Nullable
   public static Couple<String> getBlockPrefixSuffixPair(PsiElement comment) {
-    final Commenter commenter = LanguageCommenters.INSTANCE.forLanguage(comment.getLanguage());
+    final Commenter commenter = Commenter.forLanguage(comment.getLanguage());
     if (commenter != null) {
       final String prefix = commenter.getBlockCommentPrefix();
       final String suffix = commenter.getBlockCommentSuffix();
@@ -121,7 +120,7 @@ public class SuppressionUtil {
 
   @Nullable
   public static String getLineCommentPrefix(@Nonnull final PsiElement comment) {
-    final Commenter commenter = LanguageCommenters.INSTANCE.forLanguage(comment.getLanguage());
+    final Commenter commenter = Commenter.forLanguage(comment.getLanguage());
     return commenter == null ? null : commenter.getLineCommentPrefix();
   }
 

@@ -17,7 +17,6 @@
 package consulo.language.copyright.util;
 
 import consulo.language.Commenter;
-import consulo.language.LanguageCommenters;
 import consulo.language.copyright.UpdateCopyrightsProvider;
 import consulo.language.copyright.config.CopyrightFileConfig;
 import consulo.language.file.LanguageFileType;
@@ -199,7 +198,7 @@ public class FileTypeUtil {
 
   public static Commenter getCommenter(FileType fileType) {
     if (fileType instanceof LanguageFileType) {
-      return LanguageCommenters.INSTANCE.forLanguage(((LanguageFileType)fileType).getLanguage());
+      return Commenter.forLanguage(((LanguageFileType)fileType).getLanguage());
     }
     return null;
   }

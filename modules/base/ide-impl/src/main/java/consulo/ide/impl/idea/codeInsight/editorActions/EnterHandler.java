@@ -25,7 +25,6 @@ import consulo.ide.impl.psi.codeStyle.lineIndent.LineIndentProvider;
 import consulo.language.CodeDocumentationAwareCommenter;
 import consulo.language.Commenter;
 import consulo.language.Language;
-import consulo.language.LanguageCommenters;
 import consulo.language.ast.IElementType;
 import consulo.language.codeStyle.CodeStyle;
 import consulo.language.codeStyle.CodeStyleManager;
@@ -356,7 +355,7 @@ public class EnterHandler extends BaseEnterHandler {
         if (i < 0) i = 0;
         int lineStart = CharArrayUtil.shiftForward(chars, i, " \t");
         Language language = myDataContext instanceof UserDataHolder ? CONTEXT_LANGUAGE.get((UserDataHolder)myDataContext) : null;
-        Commenter langCommenter = language != null ? LanguageCommenters.INSTANCE.forLanguage(language) : null;
+        Commenter langCommenter = language != null ? Commenter.forLanguage(language) : null;
         CodeDocumentationUtil.CommentContext commentContext = CodeDocumentationUtil.tryParseCommentContext(langCommenter, chars, lineStart);
 
         PsiDocumentManager psiDocumentManager = PsiDocumentManager.getInstance(getProject());

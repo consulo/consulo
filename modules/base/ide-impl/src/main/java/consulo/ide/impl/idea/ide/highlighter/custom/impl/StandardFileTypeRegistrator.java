@@ -18,13 +18,17 @@ package consulo.ide.impl.idea.ide.highlighter.custom.impl;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.codeInsight.editorActions.TypedHandler;
+import consulo.language.Language;
 import consulo.language.editor.action.BraceMatchingUtil;
 import consulo.ide.impl.idea.ide.highlighter.FileTypeRegistrator;
 import consulo.ide.impl.idea.ide.highlighter.custom.SyntaxTable;
 import consulo.language.Commenter;
+import consulo.language.plain.PlainTextLanguage;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.AbstractFileType;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.CustomSyntaxTableFileType;
+
+import javax.annotation.Nonnull;
 
 @ExtensionImpl
 public class StandardFileTypeRegistrator implements FileTypeRegistrator {
@@ -82,6 +86,12 @@ public class StandardFileTypeRegistrator implements FileTypeRegistrator {
     @Override
     public String getCommentedBlockCommentSuffix() {
       return null;
+    }
+
+    @Nonnull
+    @Override
+    public Language getLanguage() {
+      return PlainTextLanguage.INSTANCE;
     }
   }
 

@@ -16,7 +16,9 @@
 package consulo.language.copyright.internal;
 
 import consulo.language.Commenter;
+import consulo.language.Language;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -54,5 +56,11 @@ public class TemplateCopyrightCommenter implements Commenter {
   @Override
   public String getCommentedBlockCommentSuffix() {
     return null;
+  }
+
+  @Nonnull
+  @Override
+  public Language getLanguage() {
+    return Language.ANY;
   }
 }

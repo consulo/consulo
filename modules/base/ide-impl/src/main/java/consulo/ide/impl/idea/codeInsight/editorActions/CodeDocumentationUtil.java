@@ -16,16 +16,16 @@
 
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
+import consulo.document.Document;
+import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.CodeDocumentationAwareCommenter;
 import consulo.language.Commenter;
-import consulo.language.LanguageCommenters;
-import consulo.document.Document;
-import consulo.project.Project;
-import consulo.language.psi.PsiFile;
 import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.codeStyle.DocCommentSettings;
+import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
-import consulo.ide.impl.idea.util.text.CharArrayUtil;
+import consulo.project.Project;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -112,7 +112,7 @@ public class CodeDocumentationUtil {
    */
   @Nonnull
   public static CommentContext tryParseCommentContext(@Nonnull PsiFile file, @Nonnull CharSequence chars, int offset, int lineStartOffset) {
-    Commenter langCommenter = LanguageCommenters.INSTANCE.forLanguage(PsiUtilCore.getLanguageAtOffset(file, offset));
+    Commenter langCommenter = Commenter.forLanguage(PsiUtilCore.getLanguageAtOffset(file, offset));
     return tryParseCommentContext(langCommenter, chars, lineStartOffset);
   }
 

@@ -16,18 +16,36 @@
 
 package consulo.language;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
+import consulo.application.Application;
+import consulo.component.extension.ExtensionPointCacheKey;
+import consulo.language.extension.ByLanguageValue;
+import consulo.language.extension.LanguageExtension;
+import consulo.language.extension.LanguageGroupByFactory;
+
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
  * Defines the support for "Comment with Line Comment" and "Comment with Block Comment"
  * actions in a custom language.
+ *
  * @author max
- * @see LanguageCommenters
  */
-public interface Commenter {
+@Extension(ComponentScope.APPLICATION)
+public interface Commenter extends LanguageExtension {
+  ExtensionPointCacheKey<Commenter, ByLanguageValue<Commenter>> KEY = ExtensionPointCacheKey.create("Commenter", LanguageGroupByFactory.build());
+
+  @Nullable
+  static Commenter forLanguage(@Nonnull Language language) {
+    return Application.get().getExtensionPoint(Commenter.class).getOrBuildCache(KEY).get(language);
+  }
+
   /**
    * Returns the string which prefixes a line comment in the language, or null if the language
    * does not support line comments.
+   *
    * @return the line comment text, or null.
    */
   @Nullable
@@ -36,6 +54,7 @@ public interface Commenter {
   /**
    * Returns the string which marks the beginning of a block comment in the language,
    * or null if the language does not support block comments.
+   *
    * @return the block comment start text, or null.
    */
   @Nullable
@@ -44,6 +63,7 @@ public interface Commenter {
   /**
    * Returns the string which marks the end of a block comment in the language,
    * or null if the language does not support block comments.
+   *
    * @return the block comment end text, or null.
    */
   @Nullable
@@ -52,6 +72,7 @@ public interface Commenter {
   /**
    * Returns the string which marks the commented beginning of a block comment in the language,
    * or null if the language does not support block comments.
+   *
    * @return the commented block comment start text, or null.
    */
   @Nullable
@@ -60,6 +81,7 @@ public interface Commenter {
   /**
    * Returns the string which marks the commented end of a block comment in the language,
    * or null if the language does not support block comments.
+   *
    * @return the commented block comment end text, or null.
    */
   @Nullable
