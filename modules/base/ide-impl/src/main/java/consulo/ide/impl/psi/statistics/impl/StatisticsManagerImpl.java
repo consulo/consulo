@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.psi.statistics.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.CommonBundle;
 import consulo.ide.IdeBundle;
 import consulo.application.ApplicationManager;
@@ -40,6 +41,7 @@ import java.util.HashSet;
 import java.util.List;
 
 @Singleton
+@ServiceImpl
 public class StatisticsManagerImpl extends StatisticsManager {
   private static final int UNIT_COUNT = 997;
   private static final Object LOCK = new Object();

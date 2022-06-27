@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,25 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Created by IntelliJ IDEA.
- * User: cdr
- * Date: Sep 10, 2007
- * Time: 1:58:08 PM
- */
-package consulo.language.inject;
+package consulo.execution.ui.layout;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
-import consulo.language.psi.PsiElement;
+import consulo.annotation.component.ServiceAPI;
+import consulo.disposer.Disposable;
+import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 
-@ExtensionAPI(ComponentScope.PROJECT)
-public interface ConcatenationAwareInjector {
-  ExtensionPointName<ConcatenationAwareInjector> EP_NAME = ExtensionPointName.create(ConcatenationAwareInjector.class);
+@ServiceAPI(ComponentScope.PROJECT)
+public interface RunnerLayoutUiFactory {
+  public static RunnerLayoutUiFactory getInstance(Project project) {
+    return project.getInstance(RunnerLayoutUiFactory.class);
+  }
 
-  void inject(@Nonnull MultiHostRegistrar registrar, @Nonnull PsiElement... operands);
+  @Nonnull
+  public abstract RunnerLayoutUi create(@Nonnull String runnerId, @Nonnull String runnerTitle, @Nonnull String sessionName, @Nonnull Disposable parent);
 }

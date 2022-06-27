@@ -15,12 +15,12 @@
  */
 package consulo.component.macro;
 
-import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;
 import consulo.util.lang.StringUtil;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -37,26 +37,15 @@ public class ReplacePathToMacroMap extends PathMacroMap {
   private List<String> myPathsIndex = null;
   private final Map<String, String> myMacroMap = new LinkedHashMap<>();
 
-  private static final String[] PROTOCOLS;
-
-  // TODO [VISTALL] this logic will be failed with dynamic plugins, replace by service
-  static {
-    List<String> protocols = new ArrayList<>();
-    protocols.add("file");
-    for (PathMacroExpendableProtocolBean bean : PathMacroExpendableProtocolBean.EP_NAME.getExtensionList()) {
-      protocols.add(bean.protocol);
-    }
-    PROTOCOLS = ArrayUtil.toStringArray(protocols);
+  public void addMacroReplacement(@Nonnull PathMacroProtocolProvider pathMacroProtocolProvider, String path, String macroName) {
+    addReplacement(pathMacroProtocolProvider, quotePath(path), "$" + macroName + "$", true);
   }
 
-  public void addMacroReplacement(String path, String macroName) {
-    addReplacement(quotePath(path), "$" + macroName + "$", true);
-  }
-
-  public void addReplacement(String path, String macroExpr, boolean overwrite) {
+  public void addReplacement(@Nonnull PathMacroProtocolProvider pathMacroProtocolProvider, String path, String macroExpr, boolean overwrite) {
     path = StringUtil.trimEnd(path, "/");
     putIfAbsent(path, macroExpr, overwrite);
-    for (String protocol : PROTOCOLS) {
+    
+    for (String protocol : pathMacroProtocolProvider.getSupportedProtocols()) {
       putIfAbsent(protocol + ":" + path, protocol + ":" + macroExpr, overwrite);
       putIfAbsent(protocol + ":/" + path, protocol + ":/" + macroExpr, overwrite);
       putIfAbsent(protocol + "://" + path, protocol + "://" + macroExpr, overwrite);

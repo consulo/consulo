@@ -2,47 +2,44 @@
 package consulo.ide.impl.idea.openapi.vfs.encoding;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.concurrency.ConcurrentCollectionFactory;
-import consulo.ide.IdeBundle;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.TransactionGuard;
+import consulo.application.progress.ProgressManager;
 import consulo.application.util.SystemInfo;
+import consulo.application.util.function.Processor;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
+import consulo.component.util.ModificationTracker;
 import consulo.component.util.SimpleModificationTracker;
+import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
+import consulo.ide.IdeBundle;
+import consulo.ide.impl.idea.concurrency.ConcurrentCollectionFactory;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileDocumentManagerImpl;
-import consulo.component.util.ModificationTracker;
-import consulo.virtualFileSystem.encoding.EncodingManager;
-import consulo.virtualFileSystem.encoding.EncodingProjectManager;
-import consulo.virtualFileSystem.fileType.FileTypeRegistry;
-import consulo.language.internal.InternalStdFileTypes;
-import consulo.application.progress.ProgressManager;
-import consulo.project.Project;
-import consulo.project.ProjectLocator;
-import consulo.module.content.ProjectFileIndex;
-import consulo.module.content.ProjectRootManager;
-import consulo.project.startup.IdeaStartupActivity;
-import consulo.ide.impl.idea.openapi.util.*;
+import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.util.io.CharsetToolkit;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import consulo.ide.impl.idea.openapi.vfs.impl.LightFilePointer;
-import consulo.virtualFileSystem.event.VFileContentChangeEvent;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.internal.InternalStdFileTypes;
+import consulo.module.content.ProjectFileIndex;
+import consulo.module.content.ProjectRootManager;
+import consulo.project.Project;
+import consulo.project.ProjectLocator;
+import consulo.util.collection.HashingStrategy;
+import consulo.util.io.CharsetToolkit;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.encoding.EncodingManager;
+import consulo.virtualFileSystem.encoding.EncodingProjectManager;
+import consulo.virtualFileSystem.event.VFileContentChangeEvent;
+import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
-import consulo.ui.ex.awt.internal.GuiUtils;
-import consulo.application.util.function.Processor;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.disposer.Disposable;
-import consulo.util.collection.HashingStrategy;
+import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -86,13 +83,6 @@ public final class EncodingProjectManagerImpl extends EncodingProjectManager imp
   public EncodingProjectManagerImpl(@Nonnull Project project) {
     myProject = project;
     myIdeEncodingManager = (EncodingManagerImpl)EncodingManager.getInstance();
-  }
-
-  static final class EncodingProjectManagerStartUpActivity implements IdeaStartupActivity.DumbAware {
-    @Override
-    public void runActivity(@Nonnull Project project) {
-      GuiUtils.invokeLaterIfNeeded(() -> ((EncodingProjectManagerImpl)getInstance(project)).reloadAlreadyLoadedDocuments(), IdeaModalityState.NON_MODAL, project.getDisposed());
-    }
   }
 
   @Override
@@ -171,7 +161,7 @@ public final class EncodingProjectManagerImpl extends EncodingProjectManager imp
     myModificationTracker.incModificationCount();
   }
 
-  private void reloadAlreadyLoadedDocuments() {
+  void reloadAlreadyLoadedDocuments() {
     if (myMapping.isEmpty()) {
       return;
     }

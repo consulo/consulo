@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.fileTypes.ex;
+package consulo.component.macro;
 
-import consulo.component.extension.ExtensionPointName;
-import consulo.ide.impl.idea.openapi.fileTypes.UserFileType;
-import org.jdom.Element;
-import javax.annotation.Nullable;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.util.io.URLUtil;
 
-public interface CustomFileTypeFactory {
-  ExtensionPointName<CustomFileTypeFactory> EP_NAME = ExtensionPointName.create("consulo.customFileTypeFactory");
+import javax.annotation.Nonnull;
+import java.util.List;
 
-  @Nullable
-  UserFileType createFileType(Element element);
+/**
+ * @author VISTALL
+ * @since 27-Jun-22
+ */
+@ServiceAPI(ComponentScope.APPLICATION)
+public interface PathMacroProtocolProvider {
+  @Nonnull
+  default List<String> getSupportedProtocols() {
+    return List.of(URLUtil.FILE_PROTOCOL);
+  }
 }

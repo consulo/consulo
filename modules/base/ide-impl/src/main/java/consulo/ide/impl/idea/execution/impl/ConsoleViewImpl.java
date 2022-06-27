@@ -1097,7 +1097,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
       return myCommandLineFolding;
     }
 
-    for (ConsoleFolding extension : ConsoleFolding.EP_NAME.getExtensions()) {
+    for (ConsoleFolding extension : ConsoleFolding.EP_NAME.getExtensionList()) {
       if (extension.shouldFoldLine(myProject, lineText)) {
         return extension;
       }

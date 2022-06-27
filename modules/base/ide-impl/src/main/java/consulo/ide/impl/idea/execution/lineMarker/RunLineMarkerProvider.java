@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.execution.lineMarker;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.Language;
 import consulo.language.editor.Pass;
 import consulo.language.editor.gutter.LineMarkerInfo;
 import consulo.language.editor.gutter.LineMarkerProviderDescriptor;
@@ -37,7 +39,14 @@ import java.util.List;
 /**
  * @author Dmitry Avdeev
  */
+@ExtensionImpl
 public class RunLineMarkerProvider extends LineMarkerProviderDescriptor {
+
+  @Nonnull
+  @Override
+  public Language getLanguage() {
+    return Language.ANY;
+  }
 
   @RequiredReadAction
   @Nullable

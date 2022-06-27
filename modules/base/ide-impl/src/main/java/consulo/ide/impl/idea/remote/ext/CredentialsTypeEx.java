@@ -15,13 +15,16 @@
  */
 package consulo.ide.impl.idea.remote.ext;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.ide.impl.idea.remote.CredentialsType;
 import consulo.ide.impl.idea.remote.RemoteCredentials;
 
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class CredentialsTypeEx<T> extends CredentialsType<T> {
 
-  public static final ExtensionPointName<CredentialsTypeEx> EP_NAME = ExtensionPointName.create("consulo.remote.credentialsType");
+  public static final ExtensionPointName<CredentialsTypeEx> EP_NAME = ExtensionPointName.create(CredentialsTypeEx.class);
 
   protected CredentialsTypeEx(String name, String prefix) {
     super(name, prefix);

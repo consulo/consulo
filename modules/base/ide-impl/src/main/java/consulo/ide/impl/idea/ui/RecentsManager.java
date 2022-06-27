@@ -15,17 +15,17 @@
  */
 package consulo.ide.impl.idea.ui;
 
-import consulo.component.persist.StoragePathMacros;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
+import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
+import consulo.component.persist.StoragePathMacros;
 import consulo.ide.ServiceManager;
 import consulo.project.Project;
-import java.util.HashMap;
-
-import consulo.component.persist.PersistentStateComponent;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -34,20 +34,17 @@ import java.util.*;
  * @author ven
  */
 @Singleton
-@State(
-  name="RecentsManager",
-  storages= {
-    @Storage(
-      file = StoragePathMacros.WORKSPACE_FILE
-    )}
-)
+@State(name = "RecentsManager", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
+@ServiceAPI(ComponentScope.PROJECT)
+@ServiceImpl
 public class RecentsManager implements PersistentStateComponent<Element> {
-  private final Map<String, LinkedList<String>> myMap = new HashMap<String, LinkedList<String>>();
+  private final Map<String, LinkedList<String>> myMap = new HashMap<>();
 
   private int myRecentsNumberToKeep = 5;
-  @NonNls private static final String KEY_ELEMENT_NAME = "key";
-  @NonNls private static final String RECENT_ELEMENT_NAME = "recent";
-  @NonNls protected static final String NAME_ATTR = "name";
+  
+  private static final String KEY_ELEMENT_NAME = "key";
+  private static final String RECENT_ELEMENT_NAME = "recent";
+  protected static final String NAME_ATTR = "name";
 
   public static RecentsManager getInstance(Project project) {
     return ServiceManager.getService(project, RecentsManager.class);
@@ -80,15 +77,16 @@ public class RecentsManager implements PersistentStateComponent<Element> {
     recentEntrues.addFirst(newEntry);
   }
 
+  @Override
   public void loadState(Element element) {
     myMap.clear();
     final List keyElements = element.getChildren(KEY_ELEMENT_NAME);
-    for (Iterator iterator = keyElements.iterator(); iterator.hasNext();) {
+    for (Iterator iterator = keyElements.iterator(); iterator.hasNext(); ) {
       Element keyElement = (Element)iterator.next();
       final String key = keyElement.getAttributeValue(NAME_ATTR);
       LinkedList<String> recents = new LinkedList<String>();
       final List children = keyElement.getChildren(RECENT_ELEMENT_NAME);
-      for (Iterator<Element> iterator1 = children.iterator(); iterator1.hasNext();) {
+      for (Iterator<Element> iterator1 = children.iterator(); iterator1.hasNext(); ) {
         recents.addLast(iterator1.next().getAttributeValue(NAME_ATTR));
       }
 
@@ -96,6 +94,7 @@ public class RecentsManager implements PersistentStateComponent<Element> {
     }
   }
 
+  @Override
   public Element getState() {
     Element element = new Element("state");
     final Set<Map.Entry<String, LinkedList<String>>> entries = myMap.entrySet();

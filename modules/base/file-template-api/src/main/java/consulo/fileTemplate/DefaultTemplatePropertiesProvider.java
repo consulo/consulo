@@ -16,9 +16,11 @@
 
 package consulo.fileTemplate;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiDirectory;
-import consulo.annotation.DeprecationInfo;
 
 import java.util.Enumeration;
 import java.util.Map;
@@ -30,14 +32,15 @@ import java.util.Properties;
  * @author yole
  * @since 8.0
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface DefaultTemplatePropertiesProvider {
-  ExtensionPointName<DefaultTemplatePropertiesProvider> EP_NAME = ExtensionPointName.create("consulo.defaultTemplatePropertiesProvider");
+  ExtensionPointName<DefaultTemplatePropertiesProvider> EP_NAME = ExtensionPointName.create(DefaultTemplatePropertiesProvider.class);
 
   /**
    * Fills the default properties for a file which is created in the specified directory.
    *
    * @param directory the directory in which the file is created.
-   * @param props the map in which the defined properties should be stored.
+   * @param props     the map in which the defined properties should be stored.
    */
   @Deprecated
   @DeprecationInfo("Use #fillProperties(PsiDirectory directory, Map<String, Object> props)")

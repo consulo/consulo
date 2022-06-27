@@ -16,6 +16,8 @@
 
 package consulo.fileTemplate;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
@@ -28,17 +30,14 @@ import java.util.Map;
 /**
  * @author yole
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface CreateFromTemplateHandler {
-  ExtensionPointName<CreateFromTemplateHandler> EP_NAME = ExtensionPointName.create("consulo.createFromTemplateHandler");
+  ExtensionPointName<CreateFromTemplateHandler> EP_NAME = ExtensionPointName.create(CreateFromTemplateHandler.class);
 
   boolean handlesTemplate(FileTemplate template);
 
-  PsiElement createFromTemplate(Project project,
-                                PsiDirectory directory,
-                                final String fileName,
-                                FileTemplate template,
-                                String templateText,
-                                Map<String, Object> props) throws IncorrectOperationException;
+  PsiElement createFromTemplate(Project project, PsiDirectory directory, final String fileName, FileTemplate template, String templateText, Map<String, Object> props)
+          throws IncorrectOperationException;
 
   boolean canCreate(final PsiDirectory[] dirs);
 

@@ -16,13 +16,16 @@
 
 package consulo.execution.ui.console;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface ConsoleInputFilterProvider {
-  ExtensionPointName<ConsoleInputFilterProvider> INPUT_FILTER_PROVIDERS = ExtensionPointName.create("consulo.consoleInputFilterProvider");
+  ExtensionPointName<ConsoleInputFilterProvider> INPUT_FILTER_PROVIDERS = ExtensionPointName.create(ConsoleInputFilterProvider.class);
 
   @Nonnull
   InputFilter[] getDefaultFilters(@Nonnull Project project);

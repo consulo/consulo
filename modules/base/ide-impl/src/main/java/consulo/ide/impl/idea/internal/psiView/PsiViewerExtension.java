@@ -32,7 +32,7 @@ import javax.swing.*;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface PsiViewerExtension {
-  ExtensionPointName<PsiViewerExtension> EP_NAME = ExtensionPointName.create("consulo.psiViewerExtension");
+  ExtensionPointName<PsiViewerExtension> EP_NAME = ExtensionPointName.create(PsiViewerExtension.class);
 
   String getName();
 

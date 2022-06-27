@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.ui;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.Language;
 import consulo.language.editor.Pass;
 import consulo.ide.impl.idea.codeInsight.daemon.*;
 import consulo.language.editor.WriteCommandAction;
@@ -44,6 +46,7 @@ import java.util.List;
 /**
  * @author Konstantin Bulenkov
  */
+@ExtensionImpl
 public final class ColorLineMarkerProvider implements LineMarkerProvider {
   private static class MyInfo extends MergeableLineMarkerInfo<PsiElement> {
     private final ColorValue myColor;
@@ -88,6 +91,12 @@ public final class ColorLineMarkerProvider implements LineMarkerProvider {
     public Function<? super PsiElement, String> getCommonTooltip(@Nonnull List<MergeableLineMarkerInfo> infos) {
       return FunctionUtil.nullConstant();
     }
+  }
+
+  @Nonnull
+  @Override
+  public Language getLanguage() {
+    return Language.ANY;
   }
 
   @RequiredReadAction

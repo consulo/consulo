@@ -129,7 +129,6 @@
     <extensionPoint name="ideRootPaneNorth" interface="consulo.project.ui.wm.IdeRootPaneNorthExtension" area="PROJECT"/>
 
     <extensionPoint name="handleTypeFactory" interface="consulo.ide.impl.idea.openapi.vcs.readOnlyHandler.HandleTypeFactory" area="PROJECT"/>
-    <extensionPoint name="customFileTypeFactory" interface="consulo.ide.impl.idea.openapi.fileTypes.ex.CustomFileTypeFactory"/>
     <extensionPoint name="fileTypeRegistrator" interface="consulo.ide.impl.idea.ide.highlighter.FileTypeRegistrator"/>
 
     <extensionPoint name="undoProvider" interface="consulo.ide.impl.idea.openapi.command.impl.UndoProvider"/>
@@ -1297,8 +1296,7 @@
 
 
 
-    <applicationService serviceInterface="consulo.ide.impl.psi.statistics.StatisticsManager"
-                        serviceImplementation="consulo.ide.impl.psi.statistics.impl.StatisticsManagerImpl"/>
+
 
     <applicationService serviceInterface="consulo.ide.impl.idea.codeInsight.intention.impl.config.IntentionManagerSettings"
                         serviceImplementation="consulo.ide.impl.idea.codeInsight.intention.impl.config.IntentionManagerSettings"/>
@@ -1482,7 +1480,9 @@
                              <!--displayName="General"-->
                              <!--instance="consulo.ide.impl.idea.application.options.editor.GeneralCodeFoldingConfigurable"/>-->
 
+<!--
     <postStartupActivity implementation="consulo.ide.impl.idea.openapi.vfs.encoding.EncodingProjectManagerImpl$EncodingProjectManagerStartUpActivity"/>
+-->
 
     <intentionAction>
       <className>consulo.ide.impl.idea.codeInsight.intention.impl.EditFoldingOptionsAction</className>
@@ -1547,11 +1547,6 @@
     <liveTemplateContext id="OTHER" implementation="consulo.language.editor.template.context.EverywhereContextType" order="last"/>
 
 
-
-    
-    <projectService serviceInterface="consulo.execution.ui.layout.RunnerLayoutUi$Factory"
-                    serviceImplementation="consulo.ide.impl.idea.execution.ui.layout.impl.RunnerLayoutUiFactoryImpl"/>
-   
 
     <toolWindow id="Project"
                 anchor="left"
@@ -1703,9 +1698,6 @@
 						 order="before hide-search"/>
 
 
-    <lang.formatter.restriction implementation="consulo.ide.impl.idea.formatting.ExcludedFileFormattingRestriction"/>
-
-
 
     <daemon.tooltipActionProvider order="last" id="defaultProvider" implementation="consulo.ide.impl.idea.codeInsight.daemon.impl.DaemonTooltipActionProvider"/>
 
@@ -1717,8 +1709,6 @@
 
     <projectService serviceImplementation="consulo.ide.impl.idea.openapi.vcs.changes.committed.OutdatedVersionNotifier" lazy="false"/>
     <projectService serviceImplementation="consulo.ide.impl.idea.openapi.vcs.changes.committed.IncomingChangesIndicator" lazy="false"/>
-    <projectService serviceImplementation="consulo.ide.impl.psi.impl.file.impl.PsiVFSListener" lazy="false"/>
-    <postStartupActivity id="vfsStartup" implementation="consulo.ide.impl.psi.impl.file.impl.PsiVFSListener$MyStartUpActivity" order="first"/>
 
 
 

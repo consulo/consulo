@@ -29,6 +29,7 @@ import consulo.execution.configuration.log.OutputFileUtil;
 import consulo.execution.ui.ExecutionConsole;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.execution.ui.layout.RunnerLayoutUi;
+import consulo.execution.ui.layout.RunnerLayoutUiFactory;
 import consulo.process.ProcessHandler;
 import consulo.project.Project;
 import consulo.ui.image.Image;
@@ -70,7 +71,7 @@ public abstract class RunTab implements DataProvider, Disposable {
     myProject = project;
     mySearchScope = searchScope;
 
-    myUi = RunnerLayoutUi.Factory.getInstance(project).create(runnerType, runnerTitle, sessionName, this);
+    myUi = RunnerLayoutUiFactory.getInstance(project).create(runnerType, runnerTitle, sessionName, this);
     myUi.getContentManager().addDataProvider(this);
   }
 

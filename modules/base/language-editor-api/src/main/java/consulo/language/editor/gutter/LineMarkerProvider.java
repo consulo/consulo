@@ -18,6 +18,9 @@ package consulo.language.editor.gutter;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.language.extension.LanguageExtension;
 import consulo.language.psi.PsiElement;
 
 import javax.annotation.Nonnull;
@@ -27,10 +30,10 @@ import java.util.List;
 
 /**
  * @author yole
- * @see LineMarkerProviders#EP_NAME
  * @see LineMarkerProviderDescriptor
  */
-public interface LineMarkerProvider {
+@ExtensionAPI(ComponentScope.APPLICATION)
+public interface LineMarkerProvider extends LanguageExtension {
   /**
    * Get line markers for this PsiElement.
    * <p/>

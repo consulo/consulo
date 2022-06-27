@@ -15,8 +15,6 @@
  */
 package consulo.ide.impl.idea.execution.console;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Collections2;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
@@ -25,10 +23,10 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.ide.ServiceManager;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.StringUtil;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -83,7 +81,7 @@ public class ConsoleFoldingSettings implements PersistentStateComponent<ConsoleF
 
   private void writeDiff(List<String> added, List<String> removed, boolean negated) {
     Set<String> baseline = new LinkedHashSet<>();
-    for (CustomizableConsoleFoldingBean regexp : CustomizableConsoleFoldingBean.EP_NAME.getExtensions()) {
+    for (CustomizableConsoleFoldingBean regexp : CustomizableConsoleFoldingBean.EP_NAME.getExtensionList()) {
       if (regexp.negate == negated) {
         baseline.add(regexp.substring);
       }
@@ -102,12 +100,7 @@ public class ConsoleFoldingSettings implements PersistentStateComponent<ConsoleF
   }
 
   private Collection<String> filterEmptyStringsFromCollection(Collection<String> collection) {
-    return Collections2.filter(collection, new Predicate<String>() {
-      @Override
-      public boolean apply(@Nullable String input) {
-        return !StringUtil.isEmpty(input);
-      }
-    });
+    return ContainerUtil.filter(collection, input -> !StringUtil.isEmpty(input));
   }
 
   @Override

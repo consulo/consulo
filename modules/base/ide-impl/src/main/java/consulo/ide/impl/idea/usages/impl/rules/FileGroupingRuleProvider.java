@@ -21,6 +21,8 @@ import consulo.usage.rule.UsageGroupingRule;
 
 /**
  * @author yole
+ *
+ * FIXME [VISTALL] This impl used in PyCharm. We need it?
  */
 public class FileGroupingRuleProvider implements FileStructureGroupRuleProvider {
   @Override

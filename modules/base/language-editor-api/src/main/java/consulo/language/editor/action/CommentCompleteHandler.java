@@ -15,6 +15,8 @@
  */
 package consulo.language.editor.action;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.language.CodeDocumentationAwareCommenter;
 import consulo.codeEditor.Editor;
 import consulo.component.extension.ExtensionPointName;
@@ -23,8 +25,9 @@ import consulo.language.psi.PsiComment;
 /**
  * @author Alexander Podkhalyuzin
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface CommentCompleteHandler {
-  ExtensionPointName<CommentCompleteHandler> EP_NAME = ExtensionPointName.create("consulo.commentCompleteHandler");
+  ExtensionPointName<CommentCompleteHandler> EP_NAME = ExtensionPointName.create(CommentCompleteHandler.class);
 
   boolean isCommentComplete(PsiComment comment, CodeDocumentationAwareCommenter commenter, Editor editor);
 

@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface IntentionActionFilter {
-  ExtensionPointName<IntentionActionFilter> EXTENSION_POINT_NAME = ExtensionPointName.create("consulo.daemon.intentionActionFilter");
+  ExtensionPointName<IntentionActionFilter> EXTENSION_POINT_NAME = ExtensionPointName.create(IntentionActionFilter.class);
 
   /**
    * @param file - might (and will be) null. Return true in this case if you'd like to switch this kind of action in ANY file

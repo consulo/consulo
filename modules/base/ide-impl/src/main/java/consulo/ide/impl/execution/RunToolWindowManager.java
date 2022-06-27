@@ -15,28 +15,28 @@
  */
 package consulo.ide.impl.execution;
 
-import consulo.execution.executor.Executor;
-import consulo.ide.impl.idea.execution.dashboard.RunDashboardManager;
-import consulo.execution.ui.RunContentManager;
 import consulo.dataContext.DataManager;
-import consulo.ui.ex.toolWindow.ContentManagerWatcher;
 import consulo.dataContext.DataProvider;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.execution.executor.Executor;
+import consulo.execution.ui.event.RunContentWithExecutorListener;
+import consulo.ide.impl.idea.execution.dashboard.RunDashboardManager;
 import consulo.language.editor.PlatformDataKeys;
+import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.ToolWindowManagerListener;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.content.event.ContentManagerAdapter;
 import consulo.ui.ex.content.event.ContentManagerEvent;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.logging.Logger;
-import consulo.ui.UIAccess;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.toolWindow.ContentManagerWatcher;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
@@ -158,7 +158,7 @@ public class RunToolWindowManager {
     });
 
     toolWindow.setIcon(toolWindowIcon);
-    new ContentManagerWatcher(toolWindow, contentManager);
+    ContentManagerWatcher.watchContentManager(toolWindow, contentManager);
     initToolWindow(executor, toolWindowId, toolWindowIcon, contentManager);
 
     return contentManager;
@@ -179,7 +179,7 @@ public class RunToolWindowManager {
             // Must contain this user data since all content is added by this class.
             LOG.assertTrue(contentExecutor != null);
           }
-          myProject.getMessageBus().syncPublisher(RunContentManager.TOPIC).contentSelected(getRunContentDescriptorByContent(content), contentExecutor);
+          myProject.getMessageBus().syncPublisher(RunContentWithExecutorListener.class).contentSelected(getRunContentDescriptorByContent(content), contentExecutor);
         }
       }
     });

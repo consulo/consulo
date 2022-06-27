@@ -181,7 +181,7 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
 
     ExtensionAPI annotation = myApiClass.getAnnotation(ExtensionAPI.class);
     if (annotation == null) {
-      throw new IllegalArgumentException(myApiClass + " is not annotated by @Extension");
+      throw new IllegalArgumentException(myApiClass + " is not annotated by @ExtensionAPI");
     }
 
     ComponentScope value = annotation.value();

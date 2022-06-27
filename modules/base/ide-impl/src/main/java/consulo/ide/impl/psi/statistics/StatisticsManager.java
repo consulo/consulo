@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.psi.statistics;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
 import consulo.ide.ServiceManager;
 import consulo.component.persist.SettingsSavingComponent;
 import consulo.application.extension.KeyedExtensionCollector;
@@ -25,6 +27,7 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class StatisticsManager implements SettingsSavingComponent {
   /**
    * The number of last entries stored for each context in {@link #getUseCount(StatisticsInfo)}.

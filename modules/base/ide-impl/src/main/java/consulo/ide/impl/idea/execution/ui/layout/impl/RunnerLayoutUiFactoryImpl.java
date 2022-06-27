@@ -16,16 +16,19 @@
 
 package consulo.ide.impl.idea.execution.ui.layout.impl;
 
-import consulo.execution.ui.layout.RunnerLayoutUi;
-import consulo.project.Project;
+import consulo.annotation.component.ServiceImpl;
 import consulo.disposer.Disposable;
-
-import javax.annotation.Nonnull;
+import consulo.execution.ui.layout.RunnerLayoutUi;
+import consulo.execution.ui.layout.RunnerLayoutUiFactory;
+import consulo.project.Project;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import javax.annotation.Nonnull;
+
 @Singleton
-public class RunnerLayoutUiFactoryImpl extends RunnerLayoutUi.Factory {
+@ServiceImpl
+public class RunnerLayoutUiFactoryImpl implements RunnerLayoutUiFactory {
   private final Project myProject;
 
   @Inject

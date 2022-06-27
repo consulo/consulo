@@ -82,16 +82,4 @@ public interface RunnerLayoutUi  {
   @Nonnull
   Content[] getContents();
 
-  abstract class Factory {
-    protected Factory() {
-    }
-
-    public static Factory getInstance(Project project) {
-      return project.getInstance(Factory.class);
-    }
-
-    @Nonnull
-    public abstract RunnerLayoutUi create(@Nonnull String runnerId, @Nonnull String runnerTitle, @Nonnull String sessionName, @Nonnull Disposable parent);
-  }
-
 }

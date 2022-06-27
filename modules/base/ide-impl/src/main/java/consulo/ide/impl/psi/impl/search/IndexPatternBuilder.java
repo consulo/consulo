@@ -2,6 +2,8 @@
 
 package consulo.ide.impl.psi.impl.search;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.ide.impl.psi.impl.cache.impl.todo.LexerBasedTodoIndexer;
 import consulo.language.lexer.Lexer;
 import consulo.component.extension.ExtensionPointName;
@@ -15,8 +17,9 @@ import javax.annotation.Nullable;
  * @author yole
  * @see LexerBasedTodoIndexer
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface IndexPatternBuilder {
-  ExtensionPointName<IndexPatternBuilder> EP_NAME = ExtensionPointName.create("consulo.indexPatternBuilder");
+  ExtensionPointName<IndexPatternBuilder> EP_NAME = ExtensionPointName.create(IndexPatternBuilder.class);
 
   @Nullable
   Lexer getIndexingLexer(@Nonnull PsiFile file);

@@ -45,7 +45,7 @@ public abstract class ArtifactType {
     return map.get(id);
   }
 
-  public static final ExtensionPointName<ArtifactType> EP_NAME = ExtensionPointName.create("consulo.packaging.artifactType");
+  public static final ExtensionPointName<ArtifactType> EP_NAME = ExtensionPointName.create(ArtifactType.class);
   private final String myId;
   private final String myTitle;
 

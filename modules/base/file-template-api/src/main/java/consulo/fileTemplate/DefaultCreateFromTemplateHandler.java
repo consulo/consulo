@@ -16,6 +16,7 @@
 
 package consulo.fileTemplate;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.file.FileTypeManager;
 import consulo.language.psi.PsiDirectory;
@@ -26,13 +27,19 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
+import jakarta.inject.Inject;
 
 import java.util.Map;
 
 /**
  * @author yole
  */
+@ExtensionImpl(order = "last")
 class DefaultCreateFromTemplateHandler implements CreateFromTemplateHandler {
+  @Inject
+  DefaultCreateFromTemplateHandler() {
+  }
+
   @Override
   public boolean handlesTemplate(final FileTemplate template) {
     return true;

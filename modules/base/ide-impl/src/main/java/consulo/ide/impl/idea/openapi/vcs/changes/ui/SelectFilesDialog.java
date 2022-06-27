@@ -16,26 +16,25 @@
 
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Collections2;
 import consulo.dataContext.DataSink;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.ui.ex.DeleteProvider;
 import consulo.ide.impl.idea.openapi.fileChooser.actions.VirtualFileDeleteProvider;
-import consulo.project.Project;
-import consulo.ui.ex.action.CommonShortcuts;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.util.dataholder.Key;
 import consulo.ide.impl.idea.openapi.vcs.VcsShowConfirmationOption;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.DeleteUnversionedFilesAction;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.PlatformDataKeys;
+import consulo.project.Project;
+import consulo.ui.ex.DeleteProvider;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.CommonShortcuts;
+import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.tree.DefaultTreeModel;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -138,12 +137,7 @@ public class SelectFilesDialog extends AbstractSelectFilesDialog<VirtualFile> {
     }
 
     public void refresh() {
-      setChangesToDisplay(new ArrayList<>(Collections2.filter(getIncludedChanges(), new Predicate<VirtualFile>() {
-        @Override
-        public boolean apply(@Nullable VirtualFile input) {
-          return input != null && input.isValid();
-        }
-      })));
+      setChangesToDisplay(new ArrayList<>(ContainerUtil.filter(getIncludedChanges(), input -> input != null && input.isValid())));
     }
 
   }

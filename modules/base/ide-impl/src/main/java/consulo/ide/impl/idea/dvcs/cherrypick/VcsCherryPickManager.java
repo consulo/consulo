@@ -15,10 +15,13 @@
  */
 package consulo.ide.impl.idea.dvcs.cherrypick;
 
-import com.google.common.collect.Lists;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.ApplicationManager;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
+import consulo.application.progress.Task;
 import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
 import consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager;
@@ -31,10 +34,6 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.CommitId;
 import consulo.ide.impl.idea.vcs.log.VcsFullCommitDetails;
 import consulo.ide.impl.idea.vcs.log.VcsLog;
-import consulo.application.ApplicationManager;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.ProgressManager;
-import consulo.application.progress.Task;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.collection.MultiMap;
@@ -149,7 +148,7 @@ public class VcsCherryPickManager {
 
         if (isOk) {
           for (Map.Entry<VcsCherryPicker, Collection<VcsFullCommitDetails>> entry : groupedCommits.entrySet()) {
-            entry.getKey().cherryPick(Lists.newArrayList(entry.getValue()));
+            entry.getKey().cherryPick(new ArrayList<>(entry.getValue()));
           }
         }
       }

@@ -173,7 +173,7 @@ public abstract class TreeInplaceEditor implements AWTEventListener {
       rootPane.removeComponentListener(componentListener);
     });
 
-    getProject().getMessageBus().connect(myDisposable).subscribe(RunContentManager.TOPIC, new RunContentWithExecutorListener() {
+    getProject().getMessageBus().connect(myDisposable).subscribe(RunContentWithExecutorListener.class, new RunContentWithExecutorListener() {
       @Override
       public void contentSelected(@Nullable RunContentDescriptor descriptor, @Nonnull Executor executor) {
         cancelEditing();

@@ -13,7 +13,7 @@ import java.util.Set;
 
 import static java.util.Collections.singleton;
 
-public abstract class LocalFileSystem extends NewVirtualFileSystem {
+public abstract class LocalFileSystem extends NewVirtualFileSystem implements VirtualFileSystemWithMacroSupport {
   public static final String PROTOCOL = StandardFileSystems.FILE_PROTOCOL;
   public static final String PROTOCOL_PREFIX = StandardFileSystems.FILE_PROTOCOL_PREFIX;
 

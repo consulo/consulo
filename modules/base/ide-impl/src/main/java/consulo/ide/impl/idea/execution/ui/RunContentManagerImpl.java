@@ -90,7 +90,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
   }
 
   private RunContentWithExecutorListener getSyncPublisher() {
-    return myProject.getMessageBus().syncPublisher(TOPIC);
+    return myProject.getMessageBus().syncPublisher(RunContentWithExecutorListener.class);
   }
 
   @Override

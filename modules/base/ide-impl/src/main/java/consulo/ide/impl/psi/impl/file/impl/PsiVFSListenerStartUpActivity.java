@@ -28,7 +28,7 @@ import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
 
-@ExtensionImpl
+@ExtensionImpl(order = "first")
 public class PsiVFSListenerStartUpActivity implements PostStartupActivity, DumbAware {
 
   @Override

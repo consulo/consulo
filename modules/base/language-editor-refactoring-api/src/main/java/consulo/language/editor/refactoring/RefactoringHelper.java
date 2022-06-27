@@ -16,6 +16,8 @@
 
 package consulo.language.editor.refactoring;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.usage.UsageInfo;
@@ -23,8 +25,9 @@ import consulo.usage.UsageInfo;
 /**
  * @author yole
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface RefactoringHelper<T> {
-  ExtensionPointName<RefactoringHelper> EP_NAME = ExtensionPointName.create("consulo.refactoring.helper");
+  ExtensionPointName<RefactoringHelper> EP_NAME = ExtensionPointName.create(RefactoringHelper.class);
 
   T prepareOperation(UsageInfo[] usages);
 

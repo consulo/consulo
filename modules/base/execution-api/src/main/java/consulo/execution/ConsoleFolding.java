@@ -1,6 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.execution;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import javax.annotation.Nonnull;
@@ -11,8 +13,9 @@ import java.util.List;
 /**
  * @author peter
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class ConsoleFolding {
-  public static final ExtensionPointName<ConsoleFolding> EP_NAME = ExtensionPointName.create("consulo.console.folding");
+  public static final ExtensionPointName<ConsoleFolding> EP_NAME = ExtensionPointName.create(ConsoleFolding.class);
 
   /**
    * @param project current project
@@ -20,7 +23,7 @@ public abstract class ConsoleFolding {
    * @return {@code true} if line should be folded, {@code false} if not
    */
   public boolean shouldFoldLine(@Nonnull Project project, @Nonnull String line) {
-    return shouldFoldLine(line);
+    return false;
   }
 
   /**
@@ -38,27 +41,6 @@ public abstract class ConsoleFolding {
    */
   @Nullable
   public String getPlaceholderText(@Nonnull Project project, @Nonnull List<String> lines) {
-    return getPlaceholderText(lines);
-  }
-
-  /**
-   * @param line to check if should be folded
-   * @return {@code true} if line should be folded, {@code false} if not
-   * @deprecated since 2018.1. Use {@link #shouldFoldLine(Project, String)} instead.
-   */
-  @Deprecated
-  public boolean shouldFoldLine(@SuppressWarnings("unused") @Nonnull String line) {
-    return false;
-  }
-
-  /**
-   * @param lines to fold
-   * @return placeholder for lines
-   * @deprecated since 2018.1. Use {@link #getPlaceholderText(Project, List)} instead.
-   */
-  @Deprecated
-  @Nullable
-  public String getPlaceholderText(@SuppressWarnings("unused") @Nonnull List<String> lines) {
     return null;
   }
 }

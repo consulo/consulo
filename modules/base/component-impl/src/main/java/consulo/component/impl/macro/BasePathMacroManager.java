@@ -15,12 +15,10 @@
  */
 package consulo.component.impl.macro;
 
+import consulo.application.Application;
 import consulo.application.macro.PathMacros;
 import consulo.application.util.SystemInfo;
-import consulo.component.macro.ExpandMacroToPathMap;
-import consulo.component.macro.PathMacroManager;
-import consulo.component.macro.PathMacroUtil;
-import consulo.component.macro.ReplacePathToMacroMap;
+import consulo.component.macro.*;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.StandardFileSystems;
@@ -53,11 +51,13 @@ public class BasePathMacroManager implements PathMacroManager {
   protected static void addFileHierarchyReplacements(ReplacePathToMacroMap result, String macroName, @Nullable String path, @Nullable String stopAt) {
     if (path == null) return;
 
+    PathMacroProtocolProvider pathMacroProtocolProvider = Application.get().getInstance(PathMacroProtocolProvider.class);
+
     String macro = "$" + macroName + "$";
     path = StringUtil.trimEnd(FileUtil.toSystemIndependentName(path), "/");
     boolean overwrite = true;
     while (StringUtil.isNotEmpty(path) && path.contains("/")) {
-      result.addReplacement(path, macro, overwrite);
+      result.addReplacement(pathMacroProtocolProvider, path, macro, overwrite);
 
       if (path.equals(stopAt)) {
         break;
@@ -84,9 +84,11 @@ public class BasePathMacroManager implements PathMacroManager {
   }
 
   public ReplacePathToMacroMap getReplacePathMap() {
+    PathMacroProtocolProvider pathMacroProtocolProvider = Application.get().getInstance(PathMacroProtocolProvider.class);
+
     ReplacePathToMacroMap result = new ReplacePathToMacroMap();
     for (Map.Entry<String, String> entry : PathMacroUtil.getGlobalSystemMacros().entrySet()) {
-      result.addMacroReplacement(entry.getValue(), entry.getKey());
+      result.addMacroReplacement(pathMacroProtocolProvider, entry.getValue(), entry.getKey());
     }
     getPathMacros().addMacroReplacements(result);
     return result;

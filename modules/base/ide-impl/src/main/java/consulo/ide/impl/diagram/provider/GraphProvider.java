@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.diagram.provider;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 import consulo.ide.impl.diagram.builder.GraphBuilder;
@@ -24,8 +26,9 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 23:48/15.10.13
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface GraphProvider {
-  ExtensionPointName<GraphProvider> EP_NAME = ExtensionPointName.create("consulo.graphProvider");
+  ExtensionPointName<GraphProvider> EP_NAME = ExtensionPointName.create(GraphProvider.class);
 
   @Nonnull
   GraphBuilder createBuilder(@Nonnull PsiElement element);

@@ -18,6 +18,7 @@ package consulo.application.impl.internal.macro;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.macro.PathMacros;
 import consulo.component.macro.ExpandMacroToPathMap;
+import consulo.component.macro.PathMacroProtocolProvider;
 import consulo.component.macro.PathMacroUtil;
 import consulo.component.macro.ReplacePathToMacroMap;
 import consulo.component.persist.PersistentStateComponent;
@@ -27,6 +28,8 @@ import consulo.component.persist.Storage;
 import consulo.logging.Logger;
 import consulo.util.collection.Lists;
 import consulo.util.xml.serializer.InvalidDataException;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
@@ -71,8 +74,11 @@ public class PathMacrosImpl implements PathMacros, PersistentStateComponent<Elem
     SYSTEM_MACROS.add(USER_HOME_MACRO_NAME);
   }
 
-  public PathMacrosImpl() {
-    //setMacro(USER_HOME_MACRO_NAME, FileUtil.toSystemIndependentName(SystemProperties.getUserHome()));
+  private final Provider<PathMacroProtocolProvider> myPathMacroProtocolProviderProvider;
+
+  @Inject
+  public PathMacrosImpl(Provider<PathMacroProtocolProvider> pathMacroProtocolProviderProvider) {
+    myPathMacroProtocolProviderProvider = pathMacroProtocolProviderProvider;
   }
 
   @Override
@@ -272,14 +278,16 @@ public class PathMacrosImpl implements PathMacros, PersistentStateComponent<Elem
     return state;
   }
 
+  @Override
   public void addMacroReplacements(ReplacePathToMacroMap result) {
     for (final String name : getUserMacroNames()) {
       final String value = getValue(name);
-      if (value != null && !value.trim().isEmpty()) result.addMacroReplacement(value, name);
+      if (value != null && !value.trim().isEmpty()) result.addMacroReplacement(myPathMacroProtocolProviderProvider.get(), value, name);
     }
   }
 
 
+  @Override
   public void addMacroExpands(ExpandMacroToPathMap result) {
     for (final String name : getUserMacroNames()) {
       final String value = getValue(name);

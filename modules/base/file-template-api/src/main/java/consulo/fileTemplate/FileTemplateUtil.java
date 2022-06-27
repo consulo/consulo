@@ -44,7 +44,6 @@ import java.util.regex.Pattern;
  */
 public class FileTemplateUtil {
   private static final Logger LOG = Logger.getInstance(FileTemplateUtil.class);
-  private static final CreateFromTemplateHandler ourDefaultCreateFromTemplateHandler = new DefaultCreateFromTemplateHandler();
 
   private FileTemplateUtil() {
   }
@@ -150,12 +149,13 @@ public class FileTemplateUtil {
     return result[0];
   }
 
+  @Nonnull
   public static CreateFromTemplateHandler findHandler(final FileTemplate template) {
     CreateFromTemplateHandler templateHandler = CreateFromTemplateHandler.EP_NAME.computeSafeIfAny(it -> it.handlesTemplate(template) ? it : null);
     if (templateHandler != null) {
       return templateHandler;
     }
-    return ourDefaultCreateFromTemplateHandler;
+    throw new IllegalArgumentException("DefaultCreateFromTemplateHandler not registered");
   }
 
   public static void fillDefaultProperties(final Map<String, Object> props, final PsiDirectory directory) {

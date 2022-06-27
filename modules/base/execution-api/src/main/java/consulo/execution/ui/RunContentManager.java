@@ -29,8 +29,6 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public interface RunContentManager {
-  TopicImpl<RunContentWithExecutorListener> TOPIC = TopicImpl.create("Run Content", RunContentWithExecutorListener.class);
-
   @Nullable
   RunContentDescriptor getSelectedContent();
 

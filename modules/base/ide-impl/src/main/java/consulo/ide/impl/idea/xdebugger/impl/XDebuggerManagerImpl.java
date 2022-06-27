@@ -16,49 +16,43 @@
 package consulo.ide.impl.idea.xdebugger.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.document.event.FileDocumentManagerListener;
-import consulo.execution.debug.event.XDebuggerManagerListener;
-import consulo.process.ExecutionException;
-import consulo.execution.ExecutionManager;
-import consulo.execution.executor.Executor;
-import consulo.execution.debug.DefaultDebugExecutor;
-import consulo.process.ProcessHandler;
-import consulo.execution.runner.ExecutionEnvironment;
-import consulo.execution.ui.ExecutionConsole;
-import consulo.execution.ui.RunContentDescriptor;
-import consulo.execution.ui.RunContentManager;
-import consulo.execution.ui.event.RunContentWithExecutorListener;
 import consulo.application.ApplicationManager;
+import consulo.codeEditor.markup.GutterIconRenderer;
+import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.document.Document;
-import consulo.codeEditor.markup.GutterIconRenderer;
+import consulo.document.event.FileDocumentManagerListener;
+import consulo.execution.ExecutionManager;
+import consulo.execution.debug.*;
+import consulo.execution.debug.breakpoint.XBreakpoint;
+import consulo.execution.debug.breakpoint.XLineBreakpoint;
+import consulo.execution.debug.event.XBreakpointListener;
+import consulo.execution.debug.event.XDebuggerManagerListener;
+import consulo.execution.executor.Executor;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.execution.ui.ExecutionConsole;
+import consulo.execution.ui.RunContentDescriptor;
+import consulo.execution.ui.event.RunContentWithExecutorListener;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.event.FileEditorManagerListener;
-import consulo.project.Project;
-import consulo.project.startup.StartupManager;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.util.collection.SmartList;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.component.messagebus.MessageBusConnection;
-import consulo.util.xml.serializer.annotation.Property;
-import consulo.execution.debug.XDebugProcess;
-import consulo.execution.debug.XDebugSession;
-import consulo.execution.debug.XDebuggerManager;
-import consulo.execution.debug.XSourcePosition;
-import consulo.execution.debug.breakpoint.XBreakpoint;
-import consulo.execution.debug.event.XBreakpointListener;
-import consulo.execution.debug.breakpoint.XLineBreakpoint;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XBreakpointBase;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XBreakpointManagerImpl;
 import consulo.ide.impl.idea.xdebugger.impl.evaluate.quick.common.ValueLookupManager;
 import consulo.ide.impl.idea.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
 import consulo.ide.impl.idea.xdebugger.impl.ui.ExecutionPointHighlighter;
 import consulo.ide.impl.idea.xdebugger.impl.ui.XDebugSessionTab;
+import consulo.process.ExecutionException;
+import consulo.process.ProcessHandler;
+import consulo.project.Project;
+import consulo.project.startup.StartupManager;
 import consulo.ui.image.Image;
-import consulo.execution.debug.XDebugProcessStarter;
+import consulo.util.collection.SmartList;
+import consulo.util.xml.serializer.annotation.Property;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -132,7 +126,7 @@ public class XDebuggerManagerImpl extends XDebuggerManager implements Persistent
       }
     });
 
-    messageBusConnection.subscribe(RunContentManager.TOPIC, new RunContentWithExecutorListener() {
+    messageBusConnection.subscribe(RunContentWithExecutorListener.class, new RunContentWithExecutorListener() {
       @Override
       public void contentSelected(@Nullable RunContentDescriptor descriptor, @Nonnull Executor executor) {
         if (descriptor != null && executor.equals(DefaultDebugExecutor.getDebugExecutorInstance())) {

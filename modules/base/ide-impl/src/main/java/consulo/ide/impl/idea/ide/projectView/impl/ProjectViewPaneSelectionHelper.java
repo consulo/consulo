@@ -1,6 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.projectView.impl;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.component.extension.ExtensionPointName;
 import consulo.virtualFileSystem.VirtualFile;
@@ -15,8 +17,9 @@ import java.util.List;
 /**
  * Implement this extension to customise selection process in the project view.
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface ProjectViewPaneSelectionHelper {
-  public static final ExtensionPointName<ProjectViewPaneSelectionHelper> EP_NAME = ExtensionPointName.create("consulo.projectViewPaneSelectionHelper");
+  public static final ExtensionPointName<ProjectViewPaneSelectionHelper> EP_NAME = ExtensionPointName.create(ProjectViewPaneSelectionHelper.class);
 
   /**
    * @param selectionDescriptor information about target elements and potential {@link TreePath tree paths} for selection found by {@link AbstractProjectViewPane#createVisitor(PsiElement, VirtualFile, List)}  node visitor}

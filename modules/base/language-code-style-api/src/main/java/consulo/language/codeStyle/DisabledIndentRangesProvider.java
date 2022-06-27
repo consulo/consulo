@@ -15,6 +15,8 @@
  */
 package consulo.language.codeStyle;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
@@ -28,8 +30,9 @@ import java.util.Collection;
  *
  * @author Rustam Vishnyakov
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface DisabledIndentRangesProvider {
-  ExtensionPointName<DisabledIndentRangesProvider> EP_NAME = ExtensionPointName.create("consulo.disabledIndentRangesProvider");
+  ExtensionPointName<DisabledIndentRangesProvider> EP_NAME = ExtensionPointName.create(DisabledIndentRangesProvider.class);
 
   /**
    * Collects ranges which should never be indented inside the given PSI element.

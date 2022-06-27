@@ -15,6 +15,8 @@
  */
 package consulo.execution.ui.console;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.ui.ex.action.AnAction;
 import consulo.component.extension.ExtensionPointName;
 import javax.annotation.Nonnull;
@@ -25,9 +27,10 @@ import javax.annotation.Nonnull;
  * @author Denis Zhdanov
  * @since 4/25/11 1:16 PM
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class ConsoleActionsPostProcessor {
 
-  public static final ExtensionPointName<ConsoleActionsPostProcessor> EP_NAME = ExtensionPointName.create("consulo.consoleActionsPostProcessor");
+  public static final ExtensionPointName<ConsoleActionsPostProcessor> EP_NAME = ExtensionPointName.create(ConsoleActionsPostProcessor.class);
 
   /**
    * Allows to adjust actions to use within the given console instance.
