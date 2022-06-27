@@ -2,48 +2,42 @@
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.dumb.DumbAware;
+import consulo.application.progress.ProgressManager;
+import consulo.application.util.ConcurrentFactoryMap;
+import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.codeInsight.daemon.AnnotatorStatisticsCollector;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.analysis.ErrorQuickFixProvider;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
-import consulo.language.editor.rawHighlight.HighlightInfoHolder;
-import consulo.language.editor.HighlightErrorFilter;
-import consulo.ide.impl.idea.diagnostic.PluginException;
 import consulo.language.Language;
-import consulo.ide.impl.idea.lang.LanguageAnnotators;
-import consulo.language.editor.rawHighlight.HighlightInfoType;
-import consulo.language.editor.rawHighlight.HighlightVisitor;
-import consulo.language.util.LanguageUtil;
+import consulo.language.editor.HighlightErrorFilter;
 import consulo.language.editor.annotation.Annotation;
 import consulo.language.editor.annotation.Annotator;
-import consulo.ide.impl.idea.openapi.diagnostic.Logger;
-import consulo.application.progress.ProgressManager;
-import consulo.application.dumb.DumbAware;
-import consulo.project.DumbService;
-import consulo.project.Project;
-import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.language.editor.annotation.AnnotatorFactory;
+import consulo.language.editor.rawHighlight.HighlightInfoHolder;
+import consulo.language.editor.rawHighlight.HighlightInfoType;
+import consulo.language.editor.rawHighlight.HighlightVisitor;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiErrorElement;
 import consulo.language.psi.PsiFile;
-import consulo.ide.impl.idea.util.ReflectionUtil;
-import consulo.application.util.ConcurrentFactoryMap;
+import consulo.language.util.LanguageUtil;
 import consulo.localize.LocalizeValue;
+import consulo.project.DumbService;
+import consulo.project.Project;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
-
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 
 @ExtensionImpl
 final class DefaultHighlightVisitor implements HighlightVisitor, DumbAware {
-  private static final Logger LOG = Logger.getInstance(DefaultHighlightVisitor.class);
   private AnnotationHolderImpl myAnnotationHolder;
-  private final Map<Language, List<Annotator>> myAnnotators = ConcurrentFactoryMap.createMap(language -> createAnnotators(language));
+  private final Map<Language, List<Annotator>> myAnnotators = ConcurrentFactoryMap.createMap(this::createAnnotators);
   private final Project myProject;
   private final boolean myHighlightErrorElements;
   private final boolean myRunAnnotators;
@@ -151,9 +145,7 @@ final class DefaultHighlightVisitor implements HighlightVisitor, DumbAware {
   private static HighlightInfoImpl createErrorElementInfo(@Nonnull PsiErrorElement element) {
     HighlightInfoImpl info = createInfoWithoutFixes(element);
     if (info != null) {
-      for (ErrorQuickFixProvider provider : ErrorQuickFixProvider.EP_NAME.getExtensionList()) {
-        provider.registerErrorQuickFix(element, info);
-      }
+      ErrorQuickFixProvider.EP_NAME.forEachExtensionSafe(provider -> provider.registerErrorQuickFix(element, info));
     }
     return info;
   }
@@ -192,25 +184,22 @@ final class DefaultHighlightVisitor implements HighlightVisitor, DumbAware {
   }
 
   @Nonnull
-  private List<Annotator> cloneTemplates(@Nonnull Collection<? extends Annotator> templates) {
-    List<Annotator> result = new ArrayList<>(templates.size());
-    for (Annotator template : templates) {
-      Annotator annotator;
-      try {
-        annotator = ReflectionUtil.newInstance(template.getClass());
-      }
-      catch (Exception e) {
-        LOG.error(PluginException.createByClass(e, template.getClass()));
-        continue;
-      }
-      result.add(annotator);
-      myAnnotatorStatisticsCollector.reportNewAnnotatorCreated(annotator);
-    }
-    return result;
-  }
-
-  @Nonnull
   private List<Annotator> createAnnotators(@Nonnull Language language) {
-    return cloneTemplates(LanguageAnnotators.INSTANCE.allForLanguageOrAny(language));
+    List<AnnotatorFactory> annotatorFactories = AnnotatorFactory.forLanguage(myProject, language);
+    if (annotatorFactories.isEmpty()) {
+      return List.of();
+    }
+    
+    List<Annotator> result = new ArrayList<>();
+    for (AnnotatorFactory factory : annotatorFactories) {
+      Annotator annotator = factory.createAnnotator();
+      if (annotator != null) {
+        result.add(annotator);
+
+        myAnnotatorStatisticsCollector.reportNewAnnotatorCreated(annotator);
+      }
+    }
+
+    return result;
   }
 }

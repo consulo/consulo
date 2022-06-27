@@ -15,8 +15,18 @@
  */
 package consulo.language.editor.annotation;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.application.Application;
+import consulo.component.extension.ExtensionPointCacheKey;
+import consulo.language.Language;
+import consulo.language.editor.gutter.LineMarkerProvider;
+import consulo.language.extension.ByLanguageValue;
+import consulo.language.extension.LanguageOneToMany;
 import consulo.language.psi.PsiElement;
+
 import javax.annotation.Nonnull;
+import java.util.List;
 
 /**
  * Implemented by a custom language plugin to add annotations to files in the language.
@@ -25,7 +35,7 @@ import javax.annotation.Nonnull;
  * If you absolutely must, clear the state upon exit from the {@link #annotate(PsiElement, AnnotationHolder)} method.
  *
  * @author max
- * @see consulo.ide.impl.idea.lang.LanguageAnnotators
+ * @see AnnotatorFactory
  */
 public interface Annotator {
   /**
