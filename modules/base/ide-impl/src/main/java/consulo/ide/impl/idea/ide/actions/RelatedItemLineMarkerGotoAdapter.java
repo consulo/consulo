@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.gutter.LineMarkerProvider;
 import consulo.language.editor.gutter.RelatedItemLineMarkerInfo;
 import consulo.language.editor.gutter.RelatedItemLineMarkerProvider;
@@ -32,6 +33,7 @@ import java.util.*;
 /**
  * @author nik
  */
+@ExtensionImpl
 public class RelatedItemLineMarkerGotoAdapter extends GotoRelatedProvider {
   @Nonnull
   @Override

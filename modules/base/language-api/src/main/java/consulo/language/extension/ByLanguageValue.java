@@ -19,6 +19,7 @@ import consulo.language.Language;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 /**
  * @author VISTALL
@@ -27,4 +28,9 @@ import javax.annotation.Nullable;
 public interface ByLanguageValue<V> {
   @Nullable
   V get(@Nonnull Language language);
+
+  @Nonnull
+  default V requiredGet(@Nonnull Language language) {
+    return Objects.requireNonNull(get(language), () -> "value required for language: " + language.toString());
+  }
 }

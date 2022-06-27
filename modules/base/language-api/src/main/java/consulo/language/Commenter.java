@@ -22,7 +22,7 @@ import consulo.application.Application;
 import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.language.extension.ByLanguageValue;
 import consulo.language.extension.LanguageExtension;
-import consulo.language.extension.LanguageGroupByFactory;
+import consulo.language.extension.LanguageOneToOne;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,7 +35,7 @@ import javax.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface Commenter extends LanguageExtension {
-  ExtensionPointCacheKey<Commenter, ByLanguageValue<Commenter>> KEY = ExtensionPointCacheKey.create("Commenter", LanguageGroupByFactory.build());
+  ExtensionPointCacheKey<Commenter, ByLanguageValue<Commenter>> KEY = ExtensionPointCacheKey.create("Commenter", LanguageOneToOne.build());
 
   @Nullable
   static Commenter forLanguage(@Nonnull Language language) {

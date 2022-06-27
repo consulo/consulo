@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.language.codeStyle.arrangement;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.psi.codeStyle.arrangement.engine.ArrangementEngine;
 import consulo.language.Language;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
@@ -45,6 +48,8 @@ import java.util.*;
  * @since 9/4/12 11:12 AM
  */
 @Singleton
+@ServiceAPI(ComponentScope.APPLICATION)
+@ServiceImpl
 public class MemberOrderService {
 
   /**
@@ -53,12 +58,12 @@ public class MemberOrderService {
    * <p/>
    * E.g. the IDE might generate given 'member' element and wants to know element after which it should be inserted
    *
-   * @param member    target member which anchor should be calculated
-   * @param settings  code style settings to use
-   * @param context   given member's context
-   * @return          given member's anchor if the one can be computed;
-   *                  given 'context' element if given member should be the first child
-   *                  <code>null</code> otherwise
+   * @param member   target member which anchor should be calculated
+   * @param settings code style settings to use
+   * @param context  given member's context
+   * @return given member's anchor if the one can be computed;
+   * given 'context' element if given member should be the first child
+   * <code>null</code> otherwise
    */
   @SuppressWarnings("MethodMayBeStatic")
   @Nullable
@@ -78,7 +83,7 @@ public class MemberOrderService {
       return null;
     }
 
-    Pair<? extends ArrangementEntry,? extends List<? extends ArrangementEntry>> pair =
+    Pair<? extends ArrangementEntry, ? extends List<? extends ArrangementEntry>> pair =
             rearranger.parseWithNew(context, null, Collections.singleton(context.getTextRange()), member, arrangementSettings);
     if (pair == null || pair.second.isEmpty()) {
       return null;

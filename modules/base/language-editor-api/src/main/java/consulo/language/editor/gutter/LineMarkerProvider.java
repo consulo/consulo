@@ -20,7 +20,12 @@ import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
+import consulo.application.Application;
+import consulo.component.extension.ExtensionPointCacheKey;
+import consulo.language.Language;
+import consulo.language.extension.ByLanguageValue;
 import consulo.language.extension.LanguageExtension;
+import consulo.language.extension.LanguageOneToMany;
 import consulo.language.psi.PsiElement;
 
 import javax.annotation.Nonnull;
@@ -34,6 +39,13 @@ import java.util.List;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface LineMarkerProvider extends LanguageExtension {
+  ExtensionPointCacheKey<LineMarkerProvider, ByLanguageValue<List<LineMarkerProvider>>> KEY = ExtensionPointCacheKey.create("LineMarkerProvider", LanguageOneToMany.build(true));
+
+  @Nonnull
+  static List<LineMarkerProvider> forLanguage(@Nonnull Language language) {
+    return Application.get().getExtensionPoint(LineMarkerProvider.class).getOrBuildCache(KEY).requiredGet(language);
+  }
+
   /**
    * Get line markers for this PsiElement.
    * <p/>

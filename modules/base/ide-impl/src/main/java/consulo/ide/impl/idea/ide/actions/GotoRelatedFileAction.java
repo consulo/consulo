@@ -15,42 +15,40 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.application.ApplicationManager;
+import consulo.application.util.function.Processor;
+import consulo.codeEditor.Editor;
+import consulo.dataContext.DataContext;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
+import consulo.ide.impl.idea.ui.popup.list.PopupListElementRenderer;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.ui.DefaultPsiElementCellRenderer;
 import consulo.language.navigation.GotoRelatedItem;
 import consulo.language.navigation.GotoRelatedProvider;
-import consulo.application.ApplicationManager;
-import consulo.codeEditor.Editor;
-import consulo.component.extension.Extensions;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.popup.JBPopup;
-import consulo.ui.ex.popup.PopupStep;
-import consulo.ui.ex.popup.BaseListPopupStep;
-import consulo.util.lang.ref.Ref;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.dataContext.DataContext;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.JBColor;
-import consulo.ui.ex.awt.SeparatorWithText;
 import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
-import consulo.ide.impl.idea.ui.popup.list.PopupListElementRenderer;
-import consulo.application.util.function.Processor;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
+import consulo.ui.ex.awt.SeparatorWithText;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.popup.BaseListPopupStep;
+import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.image.Image;
+import consulo.util.lang.ref.Ref;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * @author Dmitry Avdeev
@@ -81,14 +79,14 @@ public class GotoRelatedFileAction extends AnAction {
   public static JBPopup createPopup(final List<? extends GotoRelatedItem> items, final String title) {
     Object[] elements = new Object[items.size()];
     //todo[nik] move presentation logic to GotoRelatedItem class
-    final Map<PsiElement, GotoRelatedItem> itemsMap = new HashMap<PsiElement, GotoRelatedItem>();
+    final Map<PsiElement, GotoRelatedItem> itemsMap = new HashMap<>();
     for (int i = 0; i < items.size(); i++) {
       GotoRelatedItem item = items.get(i);
       elements[i] = item.getElement() != null ? item.getElement() : item;
       itemsMap.put(item.getElement(), item);
     }
 
-    return getPsiElementPopup(elements, itemsMap, title, new Processor<Object>() {
+    return getPsiElementPopup(elements, itemsMap, title, new Processor<>() {
       @Override
       public boolean process(Object element) {
         if (element instanceof PsiElement) {
@@ -207,7 +205,7 @@ public class GotoRelatedFileAction extends AnAction {
     }) {
     };
     popup.getList().setCellRenderer(new PopupListElementRenderer(popup) {
-      Map<Object, String> separators = new HashMap<Object, String>();
+      Map<Object, String> separators = new HashMap<>();
       {
         final ListModel model = popup.getList().getModel();
         String current = null;
@@ -276,29 +274,30 @@ public class GotoRelatedFileAction extends AnAction {
       }
     }
 
-    Set<GotoRelatedItem> items = new LinkedHashSet<GotoRelatedItem>();
+    Set<GotoRelatedItem> items = new LinkedHashSet<>();
 
-    for (GotoRelatedProvider provider : Extensions.getExtensions(GotoRelatedProvider.EP_NAME)) {
-      items.addAll(provider.getItems(contextElement));
+    final PsiElement finalContextElement = contextElement;
+    GotoRelatedProvider.EP_NAME.forEachExtensionSafe(provider -> {
+      items.addAll(provider.getItems(finalContextElement));
       if (dataContext != null) {
         items.addAll(provider.getItems(dataContext));
       }
-    }
+    });
     sortByGroupNames(items);
-    return new ArrayList<GotoRelatedItem>(items);
+    return new ArrayList<>(items);
   }
 
   private static void sortByGroupNames(Set<GotoRelatedItem> items) {
-    Map<String, List<GotoRelatedItem>> map = new HashMap<String, List<GotoRelatedItem>>();
+    Map<String, List<GotoRelatedItem>> map = new HashMap<>();
     for (GotoRelatedItem item : items) {
       final String key = item.getGroup();
       if (!map.containsKey(key)) {
-        map.put(key, new ArrayList<GotoRelatedItem>());
+        map.put(key, new ArrayList<>());
       }
       map.get(key).add(item);
     }
-    final List<String> keys = new ArrayList<String>(map.keySet());
-    Collections.sort(keys, new Comparator<String>() {
+    final List<String> keys = new ArrayList<>(map.keySet());
+    Collections.sort(keys, new Comparator<>() {
       @Override
       public int compare(String o1, String o2) {
         return StringUtil.isEmpty(o1) ? 1 : StringUtil.isEmpty(o2) ? -1 : o1.compareTo(o2);

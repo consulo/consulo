@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.testIntegration;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.navigation.GotoRelatedItem;
 import consulo.language.navigation.GotoRelatedProvider;
 import consulo.dataContext.DataContext;
@@ -29,6 +30,7 @@ import java.util.List;
 /**
  * @author Konstantin Bulenkov
  */
+@ExtensionImpl
 public class GotoTestRelatedProvider extends GotoRelatedProvider {
   @Nonnull
   @Override

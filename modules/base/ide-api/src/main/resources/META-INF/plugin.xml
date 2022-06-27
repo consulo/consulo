@@ -1247,8 +1247,6 @@
     <packaging.sourceItemProvider
         implementation="consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.ArtifactsSourceItemsProvider"/>
 
-    <gotoRelatedProvider implementation="consulo.ide.impl.idea.testIntegration.GotoTestRelatedProvider"/>
-
     <!-- Compiler -->
     <projectConfigurable instance="consulo.ide.impl.compiler.setting.CompilerConfigurable" id="project.propCompiler"
 						 key="compiler.configurable.display.name" bundle="consulo.compiler.CompilerBundle" order="after project"/>
@@ -1258,18 +1256,7 @@
                          instance="consulo.ide.impl.compiler.setting.CompilerExcludedConfigurable"/>
 
     <checkoutListener implementation="consulo.ide.impl.idea.openapi.vcs.checkout.ProjectImporterCheckoutListener"/>
-    <vcsAwareCheckoutListener implementation="consulo.ide.impl.idea.openapi.vcs.checkout.RegisterMappingCheckoutListener"/>
 
-    <orderRootTypeEditor key="binaries"
-                         implementationClass="consulo.ide.impl.idea.openapi.roots.ui.configuration.libraryEditor.BinariesOrderRootTypeUIFactory"/>
-
-    <orderRootTypeEditor key="sources"
-                         implementationClass="consulo.ide.impl.idea.openapi.roots.ui.configuration.libraryEditor.SourcesOrderRootTypeUIFactory"/>
-
-    <orderRootTypeEditor key="documentation"
-                         implementationClass="consulo.ide.impl.idea.openapi.roots.ui.configuration.libraryEditor.DocumentationOrderRootTypeUIFactory"/>
-
-    <statistics.usagesCollector implementation="consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.impl.LibraryUsageCollector"/>
 
     <copyPastePostProcessor implementation="consulo.ide.impl.idea.codeInsight.editorActions.CopyPasteFoldingProcessor"/>
 
@@ -1289,41 +1276,16 @@
 
 
 
-    <applicationService serviceInterface="consulo.ide.impl.idea.codeInsight.template.impl.TemplateSettings"
-                        serviceImplementation="consulo.ide.impl.idea.codeInsight.template.impl.TemplateSettings"/>
     <applicationService serviceInterface="consulo.ide.impl.idea.codeInsight.template.impl.ExportableTemplateSettings"
                         serviceImplementation="consulo.ide.impl.idea.codeInsight.template.impl.ExportableTemplateSettings"/>
 
 
 
 
-
-    <applicationService serviceInterface="consulo.ide.impl.idea.codeInsight.intention.impl.config.IntentionManagerSettings"
-                        serviceImplementation="consulo.ide.impl.idea.codeInsight.intention.impl.config.IntentionManagerSettings"/>
-
     <search.optionContributor implementation="consulo.ide.impl.idea.codeInsight.intention.impl.config.IntentionManagerSettings$IntentionSearchableOptionContributor"/>
 
     <schemeOwner serviceInterface="consulo.language.codeStyle.CodeStyleSchemes"/>
 
-    <applicationService serviceInterface="consulo.content.library.LibraryTablesRegistrar"
-                        serviceImplementation="consulo.ide.impl.idea.openapi.roots.impl.libraries.LibraryTablesRegistrarImpl"/>
-
-    <applicationService serviceInterface="consulo.content.library.LibraryDetectionManager"
-                        serviceImplementation="consulo.ide.impl.idea.openapi.roots.impl.libraries.LibraryDetectionManagerImpl"/>
-
-    <applicationService serviceInterface="consulo.ide.impl.idea.openapi.roots.libraries.LibraryTypeService"
-                        serviceImplementation="consulo.ide.impl.idea.openapi.roots.impl.libraries.LibraryTypeServiceImpl"/>
-
-    
-
-
-
-
-    
-
-
-    <applicationService serviceImplementation="consulo.ide.impl.psi.codeStyle.arrangement.engine.ArrangementEngine"/>
-    <applicationService serviceImplementation="consulo.ide.impl.language.codeStyle.arrangement.MemberOrderService"/>
 
     <rearranger.ui implementation="consulo.ide.impl.idea.application.options.codeStyle.arrangement.component.DefaultArrangementUiComponentFactory"/>
 
@@ -1400,8 +1362,6 @@
     <lang.elementManipulator forClass="consulo.language.psi.PsiComment"
                              implementationClass="consulo.ide.impl.psi.impl.source.resolve.reference.impl.manipulators.PsiCommentManipulator"/>
 
-    <applicationService serviceInterface="consulo.pathMacro.MacroManager" serviceImplementation="consulo.pathMacro.impl.internal.MacroManagerImpl"/>
-    <hectorComponentProvider implementation="consulo.ide.impl.idea.codeInsight.daemon.impl.FileIncludeContextHectorProvider"/>
 
     <statistician key="completion" implementationClass="consulo.ide.impl.idea.codeInsight.completion.DecoratorCompletionStatistician" order="first"
 				  id="decorator"/>
@@ -1445,14 +1405,6 @@
 							order="first, before liveTemplates"/>
 
 
-
-    <console.folding implementation="consulo.ide.impl.idea.execution.console.SubstringConsoleFolding"/>
-
-    <lookup.charFilter implementation="consulo.ide.impl.idea.codeInsight.template.impl.LiveTemplateCharFilter" order="first" id="liveTemplate"/>
-    <lookup.charFilter implementation="consulo.ide.impl.idea.codeInsight.completion.CompletionCharFilter" order="last" id="completion"/>
-    <lookup.charFilter implementation="consulo.ide.impl.idea.refactoring.IdentifierCharFilter" id="identifier" order="last"/>
-    <lookup.charFilter implementation="consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers.FileReferenceCharFilter" id="fileRef"
-                       order="before completion"/>
 
 
     <gotoRelatedProvider implementation="consulo.ide.impl.idea.ide.actions.RelatedItemLineMarkerGotoAdapter"/>

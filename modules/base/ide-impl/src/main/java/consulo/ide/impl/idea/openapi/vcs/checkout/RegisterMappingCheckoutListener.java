@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.checkout;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager;
 import consulo.ide.impl.idea.openapi.vcs.VcsDirectoryMapping;
@@ -23,6 +24,7 @@ import consulo.ide.impl.idea.openapi.vcs.VcsKey;
 import java.io.File;
 import java.util.Collections;
 
+@ExtensionImpl
 public class RegisterMappingCheckoutListener implements VcsAwareCheckoutListener {
   @Override
   public boolean processCheckedOutDirectory(Project currentProject, File directory, VcsKey vcsKey) {

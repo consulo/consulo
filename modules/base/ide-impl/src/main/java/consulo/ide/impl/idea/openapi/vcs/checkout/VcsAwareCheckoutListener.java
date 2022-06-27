@@ -15,19 +15,22 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.checkout;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
-import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.vcs.VcsKey;
+import consulo.project.Project;
 
 import java.io.File;
 
 /**
- * Created by IntelliJ IDEA.
  * User: Irina.Chernushina
  * Date: 11/19/11
  * Time: 1:48 PM
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface VcsAwareCheckoutListener {
-  ExtensionPointName<VcsAwareCheckoutListener> EP_NAME = ExtensionPointName.create("consulo.vcsAwareCheckoutListener");
+  ExtensionPointName<VcsAwareCheckoutListener> EP_NAME = ExtensionPointName.create(VcsAwareCheckoutListener.class);
+
   boolean processCheckedOutDirectory(final Project project, final File directory, final VcsKey vcsKey);
 }

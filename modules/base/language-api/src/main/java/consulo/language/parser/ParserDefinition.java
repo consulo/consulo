@@ -27,7 +27,7 @@ import consulo.language.ast.TokenSet;
 import consulo.language.ast.TokenType;
 import consulo.language.extension.ByLanguageValue;
 import consulo.language.extension.LanguageExtension;
-import consulo.language.extension.LanguageGroupByFactory;
+import consulo.language.extension.LanguageOneToOne;
 import consulo.language.file.FileViewProvider;
 import consulo.language.lexer.Lexer;
 import consulo.language.psi.PsiElement;
@@ -44,7 +44,7 @@ import javax.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ParserDefinition extends LanguageExtension {
-  ExtensionPointCacheKey<ParserDefinition, ByLanguageValue<ParserDefinition>> KEY = ExtensionPointCacheKey.create("ParserDefinition", LanguageGroupByFactory.build());
+  ExtensionPointCacheKey<ParserDefinition, ByLanguageValue<ParserDefinition>> KEY = ExtensionPointCacheKey.create("ParserDefinition", LanguageOneToOne.build());
 
   @Nullable
   static ParserDefinition forLanguage(@Nonnull Language language) {

@@ -28,13 +28,13 @@ import java.util.function.Function;
  * @author VISTALL
  * @since 24-Jun-22
  */
-public class LanguageGroupByFactory<E extends LanguageExtension> implements Function<List<E>, ByLanguageValue<E>> {
-  private static class ByLanguageValueWithBase<T extends LanguageExtension> implements ByLanguageValue<T> {
+public final class LanguageOneToOne<E extends LanguageExtension> implements Function<List<E>, ByLanguageValue<E>> {
+  private static class ByLanguageValueImpl<T extends LanguageExtension> implements ByLanguageValue<T> {
     private final Map<Language, T> myExtensions = new ConcurrentHashMap<>();
 
     private final T myDefaultImplementation;
 
-    public ByLanguageValueWithBase(List<T> extensions, T defaultImplementation) {
+    public ByLanguageValueImpl(List<T> extensions, T defaultImplementation) {
       myDefaultImplementation = defaultImplementation;
       for (T extension : extensions) {
         myExtensions.put(extension.getLanguage(), extension);
@@ -68,17 +68,17 @@ public class LanguageGroupByFactory<E extends LanguageExtension> implements Func
 
   @Nonnull
   public static <E1 extends LanguageExtension> Function<List<E1>, ByLanguageValue<E1>> build(@Nullable E1 defaultImpl) {
-    return new LanguageGroupByFactory<>(defaultImpl);
+    return new LanguageOneToOne<>(defaultImpl);
   }
 
   private final E myDefaultImplementation;
 
-  private LanguageGroupByFactory(E defaultImpl) {
+  private LanguageOneToOne(E defaultImpl) {
     myDefaultImplementation = defaultImpl;
   }
 
   @Override
   public ByLanguageValue<E> apply(List<E> es) {
-    return new ByLanguageValueWithBase<>(es, myDefaultImplementation);
+    return new ByLanguageValueImpl<>(es, myDefaultImplementation);
   }
 }

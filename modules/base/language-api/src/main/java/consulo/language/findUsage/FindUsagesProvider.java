@@ -24,7 +24,7 @@ import consulo.language.cacheBuilder.SimpleWordsScanner;
 import consulo.language.cacheBuilder.WordsScanner;
 import consulo.language.extension.ByLanguageValue;
 import consulo.language.extension.LanguageExtension;
-import consulo.language.extension.LanguageGroupByFactory;
+import consulo.language.extension.LanguageOneToOne;
 import consulo.language.psi.PsiElement;
 
 import javax.annotation.Nonnull;
@@ -39,11 +39,11 @@ import javax.annotation.Nullable;
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface FindUsagesProvider extends LanguageExtension {
   ExtensionPointCacheKey<FindUsagesProvider, ByLanguageValue<FindUsagesProvider>> KEY =
-          ExtensionPointCacheKey.create("FindUsagesProvider", LanguageGroupByFactory.build(new EmptyFindUsagesProvider()));
+          ExtensionPointCacheKey.create("FindUsagesProvider", LanguageOneToOne.build(new EmptyFindUsagesProvider()));
 
   @Nonnull
   static FindUsagesProvider forLanguage(@Nonnull Language language) {
-    return Application.get().getExtensionPoint(FindUsagesProvider.class).getOrBuildCache(KEY).get(language);
+    return Application.get().getExtensionPoint(FindUsagesProvider.class).getOrBuildCache(KEY).requiredGet(language);
   }
 
   /**

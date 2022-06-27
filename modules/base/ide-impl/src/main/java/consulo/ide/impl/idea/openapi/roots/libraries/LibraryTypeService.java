@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.roots.libraries;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
 import consulo.ide.ServiceManager;
 import consulo.content.library.LibraryType;
 import consulo.content.library.NewLibraryConfiguration;
@@ -29,6 +31,7 @@ import javax.swing.*;
 /**
  * @author nik
  */
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class LibraryTypeService {
   public static LibraryTypeService getInstance() {
     return ServiceManager.getService(LibraryTypeService.class);

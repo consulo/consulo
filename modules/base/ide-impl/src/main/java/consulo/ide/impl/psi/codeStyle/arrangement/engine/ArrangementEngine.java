@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.psi.codeStyle.arrangement.engine;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
@@ -63,6 +66,8 @@ import static consulo.language.codeStyle.arrangement.std.StdArrangementTokens.Se
  * @since 7/20/12 1:56 PM
  */
 @Singleton
+@ServiceAPI(ComponentScope.APPLICATION)
+@ServiceImpl
 public class ArrangementEngine {
   private boolean myCodeChanged;
 

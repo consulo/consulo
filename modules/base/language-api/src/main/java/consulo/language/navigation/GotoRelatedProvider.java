@@ -15,6 +15,8 @@
  */
 package consulo.language.navigation;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.dataContext.DataContext;
 import consulo.language.psi.PsiElement;
@@ -31,9 +33,10 @@ import java.util.List;
  *
  * @author Dmitry Avdeev
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class GotoRelatedProvider {
 
-  public static final ExtensionPointName<GotoRelatedProvider> EP_NAME = ExtensionPointName.create("consulo.gotoRelatedProvider");
+  public static final ExtensionPointName<GotoRelatedProvider> EP_NAME = ExtensionPointName.create(GotoRelatedProvider.class);
 
   @Nonnull
   public List<? extends GotoRelatedItem> getItems(@Nonnull PsiElement psiElement) {

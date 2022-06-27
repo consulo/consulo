@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.internal.statistic.AbstractApplicationUsagesCollector;
 import consulo.ide.impl.idea.internal.statistic.beans.UsageDescriptor;
 import consulo.module.Module;
@@ -32,6 +33,7 @@ import java.util.Set;
 /**
  * @author nik
  */
+@ExtensionImpl
 public class LibraryUsageCollector extends AbstractApplicationUsagesCollector {
   @Nonnull
   @Override

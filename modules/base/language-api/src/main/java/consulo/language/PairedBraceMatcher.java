@@ -22,7 +22,7 @@ import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.language.ast.IElementType;
 import consulo.language.extension.ByLanguageValue;
 import consulo.language.extension.LanguageExtension;
-import consulo.language.extension.LanguageGroupByFactory;
+import consulo.language.extension.LanguageOneToOne;
 import consulo.language.psi.PsiFile;
 
 import javax.annotation.Nonnull;
@@ -39,7 +39,7 @@ import javax.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface PairedBraceMatcher extends LanguageExtension {
-  ExtensionPointCacheKey<PairedBraceMatcher, ByLanguageValue<PairedBraceMatcher>> KEY = ExtensionPointCacheKey.create("PairedBraceMatcher", LanguageGroupByFactory.build());
+  ExtensionPointCacheKey<PairedBraceMatcher, ByLanguageValue<PairedBraceMatcher>> KEY = ExtensionPointCacheKey.create("PairedBraceMatcher", LanguageOneToOne.build());
 
   @Nullable
   static PairedBraceMatcher forLanguage(@Nonnull Language language) {

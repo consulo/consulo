@@ -144,7 +144,7 @@ public class LineMarkersPass extends TextEditorHighlightingPass {
 
   @Nonnull
   public static List<LineMarkerProvider> getMarkerProviders(@Nonnull Language language, @Nonnull final Project project) {
-    List<LineMarkerProvider> forLanguage = LineMarkerProviders.INSTANCE.allForLanguageOrAny(language);
+    List<LineMarkerProvider> forLanguage = LineMarkerProvider.forLanguage(language);
     List<LineMarkerProvider> providers = DumbService.getInstance(project).filterByDumbAwareness(forLanguage);
     final LineMarkerSettings settings = LineMarkerSettings.getInstance();
     return ContainerUtil.filter(providers, provider -> !(provider instanceof LineMarkerProviderDescriptor) || settings.isEnabled((LineMarkerProviderDescriptor)provider));

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.roots.impl.libraries;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.roots.libraries.LibraryTypeService;
 import consulo.ide.impl.idea.openapi.roots.libraries.ui.impl.RootDetectionUtil;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
@@ -41,6 +42,7 @@ import java.util.List;
  * @author nik
  */
 @Singleton
+@ServiceImpl
 public class LibraryTypeServiceImpl extends LibraryTypeService {
   private static final String DEFAULT_LIBRARY_NAME = "Unnamed";
 
