@@ -2,19 +2,16 @@
 package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.actions.GotoActionBase;
 import consulo.ide.impl.idea.ide.util.gotoByName.FilteringGotoByModel;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoSymbolModel2;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.Language;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.project.Project;
-import consulo.language.psi.PsiElement;
 import consulo.ide.impl.idea.ui.IdeUICustomization;
+import consulo.language.Language;
+import consulo.language.psi.PsiElement;
+import consulo.project.Project;
+import consulo.ui.ex.action.AnAction;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
 
 /**
@@ -61,11 +58,4 @@ public class SymbolSearchEverywhereContributor extends AbstractGotoSEContributor
     return doGetActions(includeNonProjectItemsText(), myFilter, onChanged);
   }
 
-  public static class Factory implements SearchEverywhereContributorFactory<Object> {
-    @Nonnull
-    @Override
-    public SearchEverywhereContributor<Object> createContributor(@Nonnull AnActionEvent initEvent) {
-      return new SymbolSearchEverywhereContributor(initEvent.getData(CommonDataKeys.PROJECT), GotoActionBase.getPsiContext(initEvent));
-    }
-  }
 }

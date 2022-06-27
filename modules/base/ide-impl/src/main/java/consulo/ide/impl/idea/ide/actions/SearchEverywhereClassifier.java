@@ -1,6 +1,8 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
@@ -14,6 +16,7 @@ import java.awt.*;
 /**
  * @author Philipp Smorygo
  */
+@Extension(ComponentScope.APPLICATION)
 public interface SearchEverywhereClassifier {
   class EP_Manager {
     private EP_Manager() {
@@ -61,7 +64,7 @@ public interface SearchEverywhereClassifier {
     }
   }
 
-  ExtensionPointName<SearchEverywhereClassifier> EP_NAME = ExtensionPointName.create("consulo.searchEverywhereClassifier");
+  ExtensionPointName<SearchEverywhereClassifier> EP_NAME = ExtensionPointName.create(SearchEverywhereClassifier.class);
 
   boolean isClass(@Nullable Object o);
 

@@ -16,13 +16,15 @@
 
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
-import consulo.ide.ServiceManager;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
-import consulo.virtualFileSystem.fileType.FileType;
+import consulo.ide.ServiceManager;
 import consulo.project.Project;
-
+import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.inject.Singleton;
 
 /**
@@ -31,10 +33,9 @@ import jakarta.inject.Singleton;
  * @author Constantine.Plotnikov
  */
 @Singleton
-@State(
-    name = "GotoFileConfiguration",
-    storages = {@Storage(
-        file = StoragePathMacros.WORKSPACE_FILE)})
+@State(name = "GotoFileConfiguration", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
+@Service(ComponentScope.PROJECT)
+@ServiceImpl
 public class GotoFileConfiguration extends ChooseByNameFilterConfiguration<FileType> {
   /**
    * Get configuration instance
@@ -48,6 +49,6 @@ public class GotoFileConfiguration extends ChooseByNameFilterConfiguration<FileT
 
   @Override
   protected String nameForElement(FileType type) {
-    return type.getName();
+    return type.getId();
   }
 }

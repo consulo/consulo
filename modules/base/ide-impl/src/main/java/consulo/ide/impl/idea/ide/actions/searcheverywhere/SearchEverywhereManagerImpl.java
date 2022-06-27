@@ -70,9 +70,12 @@ public class SearchEverywhereManagerImpl implements SearchEverywhereManager {
                   new RecentFilesSEContributor(project, GotoActionBase.getPsiContext(initEvent)),
                   new RunConfigurationsSEContributor(project, contextComponent, () -> mySearchEverywhereUI.getSearchField().getValue()));
     List<SearchEverywhereContributor<?>> contributors = new ArrayList<>(serviceContributors);
-    for (SearchEverywhereContributorFactory<?> factory : SearchEverywhereContributor.EP_NAME.getExtensionList()) {
-      contributors.add(factory.createContributor(initEvent));
-    }
+    SearchEverywhereContributorFactory.EP_NAME.forEachExtensionSafe(factory -> {
+      SearchEverywhereContributor contributor = factory.createContributor(initEvent);
+      if (contributor != null) {
+        contributors.add(contributor);
+      }
+    });
     Collections.sort(contributors, Comparator.comparingInt(SearchEverywhereContributor::getSortWeight));
 
     mySearchEverywhereUI = createView(myProject, contributors);

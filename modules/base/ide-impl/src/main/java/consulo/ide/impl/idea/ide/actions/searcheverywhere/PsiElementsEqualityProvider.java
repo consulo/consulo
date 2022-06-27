@@ -1,6 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.PsiElementNavigationItem;
 import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;
@@ -8,6 +9,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Objects;
 
+@ExtensionImpl(order = "first")
 public class PsiElementsEqualityProvider implements SEResultsEqualityProvider {
 
   @Nonnull

@@ -1,19 +1,21 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.application.Application;
+import consulo.application.dumb.DumbAware;
 import consulo.application.statistic.FeatureUsageTracker;
+import consulo.application.util.registry.Registry;
+import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.actions.searcheverywhere.SymbolSearchEverywhereContributor;
 import consulo.ide.impl.idea.ide.util.gotoByName.*;
-import consulo.language.editor.CommonDataKeys;
+import consulo.ide.navigation.GotoSymbolContributor;
 import consulo.language.Language;
-import consulo.ide.navigation.ChooseByNameContributor;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.dataContext.DataContext;
-import consulo.application.dumb.DumbAware;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.psi.PsiDocumentManager;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.application.util.registry.Registry;
-import consulo.language.psi.PsiDocumentManager;
+import consulo.ui.ex.action.AnActionEvent;
+
 import javax.annotation.Nonnull;
 
 public class GotoSymbolAction extends GotoActionBase implements DumbAware {
@@ -66,6 +68,6 @@ public class GotoSymbolAction extends GotoActionBase implements DumbAware {
 
   @Override
   protected boolean hasContributors(DataContext dataContext) {
-    return ChooseByNameContributor.SYMBOL_EP_NAME.hasAnyExtensions();
+    return Application.get().getExtensionPoint(GotoSymbolContributor.class).hasAnyExtensions();
   }
 }

@@ -1,20 +1,22 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.runAnything.handlers;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
+import consulo.component.extension.ExtensionPointName;
 import consulo.execution.ui.console.TextConsoleBuilder;
 import consulo.ide.impl.idea.execution.process.KillableProcessHandler;
-import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.util.Arrays;
 
 /**
  * This class customizes 'run anything' command execution settings depending on input command
  */
+@Extension(ComponentScope.APPLICATION)
 public abstract class RunAnythingCommandHandler {
-  public static final ExtensionPointName<RunAnythingCommandHandler> EP_NAME = ExtensionPointName.create("consulo.runAnything.commandHandler");
+  public static final ExtensionPointName<RunAnythingCommandHandler> EP_NAME = ExtensionPointName.create(RunAnythingCommandHandler.class);
 
   public abstract boolean isMatched(@Nonnull String commandLine);
 
@@ -41,6 +43,6 @@ public abstract class RunAnythingCommandHandler {
 
   @Nullable
   public static RunAnythingCommandHandler getMatchedHandler(@Nonnull String commandLine) {
-    return Arrays.stream(EP_NAME.getExtensions()).filter(handler -> handler.isMatched(commandLine)).findFirst().orElse(null);
+    return EP_NAME.getExtensionList().stream().filter(handler -> handler.isMatched(commandLine)).findFirst().orElse(null);
   }
 }

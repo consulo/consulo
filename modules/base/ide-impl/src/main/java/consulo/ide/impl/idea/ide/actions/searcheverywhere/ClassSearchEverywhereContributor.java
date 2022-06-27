@@ -1,30 +1,27 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
-import consulo.language.editor.ui.PopupNavigationUtil;
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.actions.GotoActionBase;
 import consulo.ide.impl.idea.ide.actions.GotoClassAction;
 import consulo.ide.impl.idea.ide.actions.GotoClassPresentationUpdater;
 import consulo.ide.impl.idea.ide.util.gotoByName.FilteringGotoByModel;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoClassModel2;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoClassSymbolConfiguration;
-import consulo.language.DependentLanguage;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.Language;
-import consulo.language.util.LanguageUtil;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.file.LanguageFileType;
-import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.navigation.Navigatable;
+import consulo.ide.impl.idea.ui.IdeUICustomization;
+import consulo.language.DependentLanguage;
+import consulo.language.Language;
+import consulo.language.editor.ui.PopupNavigationUtil;
+import consulo.language.file.LanguageFileType;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
-import consulo.ide.impl.idea.ui.IdeUICustomization;
-import javax.annotation.Nonnull;
+import consulo.language.util.LanguageUtil;
+import consulo.navigation.Navigatable;
+import consulo.project.Project;
+import consulo.ui.ex.action.AnAction;
+import consulo.virtualFileSystem.VirtualFile;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
@@ -179,15 +176,6 @@ public class ClassSearchEverywhereContributor extends AbstractGotoSEContributor 
 
     String name = searchedText.substring(index + 1).trim();
     return StringUtil.isEmpty(name) ? null : name;
-  }
-
-  public static class Factory implements SearchEverywhereContributorFactory<Object> {
-
-    @Nonnull
-    @Override
-    public SearchEverywhereContributor<Object> createContributor(@Nonnull AnActionEvent initEvent) {
-      return new ClassSearchEverywhereContributor(initEvent.getData(CommonDataKeys.PROJECT), GotoActionBase.getPsiContext(initEvent));
-    }
   }
 
   @Nonnull

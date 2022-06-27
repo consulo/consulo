@@ -1,15 +1,18 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.List;
 
+@Extension(ComponentScope.APPLICATION)
 public interface SEResultsEqualityProvider {
 
-  ExtensionPointName<SEResultsEqualityProvider> EP_NAME = ExtensionPointName.create("consulo.searchEverywhereResultsEqualityProvider");
+  ExtensionPointName<SEResultsEqualityProvider> EP_NAME = ExtensionPointName.create(SEResultsEqualityProvider.class);
 
   enum SEEqualElementsActionType {
     DO_NOTHING,

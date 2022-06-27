@@ -15,13 +15,15 @@
  */
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
-import consulo.language.Language;
-import consulo.ide.ServiceManager;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
+import consulo.ide.ServiceManager;
+import consulo.language.Language;
 import consulo.project.Project;
-
 import jakarta.inject.Singleton;
 
 /**
@@ -29,6 +31,8 @@ import jakarta.inject.Singleton;
  */
 @Singleton
 @State(name = "GotoClassSymbolConfiguration", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
+@Service(ComponentScope.PROJECT)
+@ServiceImpl
 public class GotoClassSymbolConfiguration extends ChooseByNameFilterConfiguration<Language> {
   public static GotoClassSymbolConfiguration getInstance(Project project) {
     return ServiceManager.getService(project, GotoClassSymbolConfiguration.class);

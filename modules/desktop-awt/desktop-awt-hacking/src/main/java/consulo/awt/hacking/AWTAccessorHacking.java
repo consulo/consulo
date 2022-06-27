@@ -30,6 +30,14 @@ public class AWTAccessorHacking {
     AWTAccessor.getComponentAccessor().setParent(comp, null);
   }
 
+  public static void setLocation(Component comp, int x, int y) {
+    AWTAccessor.getComponentAccessor().setLocation(comp, x, y);
+  }
+
+  public static void setSize(Component comp, int x, int y) {
+    AWTAccessor.getComponentAccessor().setSize(comp, x, y);
+  }
+
   public static void setGraphicsConfiguration(Component component, GraphicsConfiguration gc) {
     AWTAccessor.getComponentAccessor().setGraphicsConfiguration(component, gc);
   }

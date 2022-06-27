@@ -17,6 +17,7 @@
 package consulo.ide.impl.idea.codeInsight.completion;
 
 import consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers.*;
+import consulo.ide.navigation.GotoFileContributor;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.completion.lookup.InsertionContext;
 import consulo.language.editor.completion.lookup.LookupElement;
@@ -214,8 +215,7 @@ public class FilePathCompletionContributor extends CompletionContributor {
 
   private static String[] getAllNames(@Nonnull final Project project) {
     Set<String> names = new HashSet<>();
-    final ChooseByNameContributor[] nameContributors = ChooseByNameContributor.FILE_EP_NAME.getExtensions();
-    for (final ChooseByNameContributor contributor : nameContributors) {
+    for (final ChooseByNameContributor contributor : project.getApplication().getExtensionList(GotoFileContributor.class)) {
       try {
         names.addAll(Arrays.asList(contributor.getNames(project, false)));
       }

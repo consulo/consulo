@@ -1,12 +1,6 @@
 // Copyright 2000-2017 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ide.impl.idea.ide.actions.searcheverywhere.FoundItemDescriptor;
-import consulo.ide.impl.idea.ide.util.gotoByName.*;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.function.Processor;
@@ -14,8 +8,14 @@ import consulo.application.util.matcher.FixingLayoutMatcher;
 import consulo.application.util.matcher.MatcherTextRange;
 import consulo.application.util.matcher.MinusculeMatcher;
 import consulo.application.util.matcher.NameUtil;
+import consulo.ide.impl.idea.ide.actions.searcheverywhere.FoundItemDescriptor;
+import consulo.ide.impl.idea.ide.util.gotoByName.*;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.psi.search.FilenameIndex;
-import consulo.ide.navigation.ChooseByNameContributor;
+import consulo.ide.navigation.GotoFileContributor;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFileSystemItem;
@@ -124,8 +124,8 @@ public class GotoFileItemProvider extends DefaultChooseByNameItemProvider {
    * and filling {@link ContributorsBasedGotoByModel#myContributorToItsSymbolsMap} is expensive for the default contributor.
    */
   private void processNames(@Nonnull FindSymbolParameters parameters, @Nonnull Processor<? super String> nameProcessor) {
-    List<ChooseByNameContributor> contributors = DumbService.getDumbAwareExtensions(myProject, ChooseByNameContributor.FILE_EP_NAME);
-    for (ChooseByNameContributor contributor : contributors) {
+    List<GotoFileContributor> contributors = DumbService.getDumbAwareExtensions(myProject, myProject.getApplication().getExtensionPoint(GotoFileContributor.class));
+    for (GotoFileContributor contributor : contributors) {
       if (contributor instanceof DefaultFileNavigationContributor) {
         FilenameIndex.processAllFileNames(nameProcessor, parameters.getSearchScope(), // todo why it was true?
                                           parameters.getIdFilter());

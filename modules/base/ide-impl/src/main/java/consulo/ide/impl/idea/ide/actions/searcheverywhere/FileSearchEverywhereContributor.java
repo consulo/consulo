@@ -2,29 +2,27 @@
 package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.actions.GotoActionBase;
 import consulo.ide.impl.idea.ide.actions.GotoFileAction;
 import consulo.ide.impl.idea.ide.util.gotoByName.FilteringGotoByModel;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoFileConfiguration;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoFileModel;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.language.file.FileTypeManager;
-import consulo.project.Project;
-import consulo.util.dataholder.Key;
-import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.ide.impl.idea.ui.IdeUICustomization;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.file.FileTypeManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileSystemItem;
-import consulo.ide.impl.idea.ui.IdeUICustomization;
+import consulo.project.Project;
+import consulo.ui.ex.action.AnAction;
+import consulo.util.dataholder.Key;
+import consulo.util.lang.Pair;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -137,17 +135,9 @@ public class FileSearchEverywhereContributor extends AbstractGotoSEContributor {
     return super.getDataForItem(element, dataId);
   }
 
-  public static class Factory implements SearchEverywhereContributorFactory<Object> {
-    @Nonnull
-    @Override
-    public SearchEverywhereContributor<Object> createContributor(@Nonnull AnActionEvent initEvent) {
-      return new FileSearchEverywhereContributor(initEvent.getData(CommonDataKeys.PROJECT), GotoActionBase.getPsiContext(initEvent));
-    }
-  }
-
   @Nonnull
   public static PersistentSearchEverywhereContributorFilter<FileType> createFileTypeFilter(@Nonnull Project project) {
     List<FileType> items = Stream.of(FileTypeManager.getInstance().getRegisteredFileTypes()).sorted(GotoFileAction.FileTypeComparator.INSTANCE).collect(Collectors.toList());
-    return new PersistentSearchEverywhereContributorFilter<>(items, GotoFileConfiguration.getInstance(project), FileType::getName, FileType::getIcon);
+    return new PersistentSearchEverywhereContributorFilter<>(items, GotoFileConfiguration.getInstance(project), FileType::getId, FileType::getIcon);
   }
 }

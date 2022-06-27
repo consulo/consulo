@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.ide.ui.search;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.ui.ex.action.AnAction;
 import consulo.component.extension.ExtensionPointName;
 import javax.annotation.Nonnull;
@@ -23,8 +25,9 @@ import javax.annotation.Nullable;
 /**
  * @author ignatov
  */
+@Extension(ComponentScope.APPLICATION)
 public abstract class ActionFromOptionDescriptorProvider {
-  public static final ExtensionPointName<ActionFromOptionDescriptorProvider> EP = ExtensionPointName.create("consulo.actionFromOptionDescriptorProvider");
+  public static final ExtensionPointName<ActionFromOptionDescriptorProvider> EP = ExtensionPointName.create(ActionFromOptionDescriptorProvider.class);
 
   @Nullable
   public abstract AnAction provide(@Nonnull OptionDescription description);

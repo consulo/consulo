@@ -41,13 +41,13 @@ public abstract class ContributorsBasedGotoByModel implements ChooseByNameModelE
   public static final Logger LOG = Logger.getInstance(ContributorsBasedGotoByModel.class);
 
   protected final Project myProject;
-  private final List<ChooseByNameContributor> myContributors;
+  private final List<? extends ChooseByNameContributor> myContributors;
 
   protected ContributorsBasedGotoByModel(@Nonnull Project project, @Nonnull ChooseByNameContributor[] contributors) {
     this(project, Arrays.asList(contributors));
   }
 
-  protected ContributorsBasedGotoByModel(@Nonnull Project project, @Nonnull List<ChooseByNameContributor> contributors) {
+  protected ContributorsBasedGotoByModel(@Nonnull Project project, @Nonnull List<? extends ChooseByNameContributor> contributors) {
     myProject = project;
     myContributors = contributors;
     assert !contributors.contains(null);
@@ -73,7 +73,7 @@ public abstract class ContributorsBasedGotoByModel implements ChooseByNameModelE
   @Override
   public void processNames(@Nonnull Processor<? super String> nameProcessor, @Nonnull FindSymbolParameters parameters) {
     long start = System.currentTimeMillis();
-    List<ChooseByNameContributor> contributors = filterDumb(getContributorList());
+    List<? extends ChooseByNameContributor> contributors = filterDumb(getContributorList());
     ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
     Processor<ChooseByNameContributor> processor = new ReadActionProcessor<ChooseByNameContributor>() {
       @Override
@@ -147,7 +147,7 @@ public abstract class ContributorsBasedGotoByModel implements ChooseByNameModelE
     return ArrayUtil.toStringArray(allNames);
   }
 
-  private List<ChooseByNameContributor> filterDumb(List<ChooseByNameContributor> contributors) {
+  private List<? extends ChooseByNameContributor> filterDumb(List<? extends ChooseByNameContributor> contributors) {
     if (!DumbService.getInstance(myProject).isDumb()) return contributors;
     List<ChooseByNameContributor> answer = new ArrayList<>(contributors.size());
     for (ChooseByNameContributor contributor : contributors) {
@@ -252,12 +252,8 @@ public abstract class ContributorsBasedGotoByModel implements ChooseByNameModelE
     return null;
   }
 
-  protected List<ChooseByNameContributor> getContributorList() {
+  protected List<? extends ChooseByNameContributor> getContributorList() {
     return myContributors;
-  }
-
-  protected ChooseByNameContributor[] getContributors() {
-    return getContributorList().toArray(new ChooseByNameContributor[0]);
   }
 
   /**

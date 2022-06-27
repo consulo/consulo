@@ -15,19 +15,17 @@
  */
 package consulo.ide.navigation;
 
-import consulo.component.extension.ExtensionPointName;
 import consulo.navigation.NavigationItem;
 import consulo.project.Project;
+
 import javax.annotation.Nonnull;
 
 /**
- * Allows a plugin to add items to "Goto Class" and "Goto Symbol" lists.
+ * @see GotoFileContributor
+ * @see GotoSymbolContributor
+ * @see GotoClassOrTypeContributor
  */
 public interface ChooseByNameContributor {
-  ExtensionPointName<ChooseByNameContributor> CLASS_EP_NAME = ExtensionPointName.create("consulo.gotoClassContributor");
-  ExtensionPointName<ChooseByNameContributor> SYMBOL_EP_NAME = ExtensionPointName.create("consulo.gotoSymbolContributor");
-  ExtensionPointName<ChooseByNameContributor> FILE_EP_NAME = ExtensionPointName.create("consulo.gotoFileContributor");
-
 
   /**
    * Returns the list of names for the specified project to which it is possible to navigate

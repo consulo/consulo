@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,18 +15,18 @@
  */
 package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
-import consulo.component.extension.ExtensionPointName;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.ide.impl.idea.ide.actions.GotoActionBase;
+import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.AnActionEvent;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-@Extension(ComponentScope.APPLICATION)
-public interface SearchEverywhereContributorFactory<Item> {
-  ExtensionPointName<SearchEverywhereContributorFactory> EP_NAME = ExtensionPointName.create(SearchEverywhereContributorFactory.class);
-
-  @Nullable
-  SearchEverywhereContributor<Item> createContributor(@Nonnull AnActionEvent initEvent);
+@ExtensionImpl
+public class FileSearchEverywhereContributorFactory implements SearchEverywhereContributorFactory<Object> {
+  @Nonnull
+  @Override
+  public SearchEverywhereContributor<Object> createContributor(@Nonnull AnActionEvent initEvent) {
+    return new FileSearchEverywhereContributor(initEvent.getData(CommonDataKeys.PROJECT), GotoActionBase.getPsiContext(initEvent));
+  }
 }

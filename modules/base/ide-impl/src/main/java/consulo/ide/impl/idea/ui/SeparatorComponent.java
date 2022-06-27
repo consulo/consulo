@@ -97,4 +97,16 @@ public class SeparatorComponent extends JComponent {
   public Dimension getMinimumSize() {
     return getPreferredSize();
   }
+
+  @Override
+  public Dimension getMaximumSize() {
+    Dimension size = getPreferredSize();
+    if (myOrientation != SeparatorOrientation.VERTICAL) {
+      size.width = Integer.MAX_VALUE;
+    }
+    else {
+      size.height = Integer.MAX_VALUE;
+    }
+    return size;
+  }
 }

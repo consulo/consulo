@@ -39,6 +39,7 @@ import java.util.function.Supplier;
  *
  * @see Application
  * @see Project
+ * @see Module
  */
 public interface ComponentManager extends UserDataHolder, Disposable, InjectingContainerOwner {
   default void initNotLazyServices() {
@@ -90,6 +91,7 @@ public interface ComponentManager extends UserDataHolder, Disposable, InjectingC
   }
 
   @Nonnull
+  @Deprecated
   default <T> List<T> getExtensionList(@Nonnull ExtensionPointName<T> extensionPointName) {
     return getExtensionPoint(extensionPointName).getExtensionList();
   }
@@ -98,6 +100,11 @@ public interface ComponentManager extends UserDataHolder, Disposable, InjectingC
   @Deprecated
   default <T> ExtensionPoint<T> getExtensionPoint(@Nonnull ExtensionPointName<T> extensionPointName) {
     return getExtensionPoint(extensionPointName.getId());
+  }
+
+  @Nonnull
+  default <T> List<T> getExtensionList(@Nonnull Class<T> extensionPointName) {
+    return getExtensionPoint(extensionPointName).getExtensionList();
   }
 
   @Nonnull

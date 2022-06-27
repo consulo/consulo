@@ -25,7 +25,7 @@ public abstract class FilteringGotoByModel<T> extends ContributorsBasedGotoByMod
     super(project, contributors);
   }
 
-  protected FilteringGotoByModel(@Nonnull Project project, @Nonnull List<ChooseByNameContributor> contributors) {
+  protected FilteringGotoByModel(@Nonnull Project project, @Nonnull List<? extends ChooseByNameContributor> contributors) {
     super(project, contributors);
   }
 

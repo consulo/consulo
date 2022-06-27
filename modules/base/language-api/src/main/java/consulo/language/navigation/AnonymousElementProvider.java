@@ -15,14 +15,17 @@
  */
 package consulo.language.navigation;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 
 /**
  * @author Konstantin Bulenkov
  */
+@Extension(ComponentScope.APPLICATION)
 public interface AnonymousElementProvider {
-  ExtensionPointName<AnonymousElementProvider> EP_NAME = ExtensionPointName.create("consulo.anonymousElementProvider");
+  ExtensionPointName<AnonymousElementProvider> EP_NAME = ExtensionPointName.create(AnonymousElementProvider.class);
 
   PsiElement[] getAnonymousElements(PsiElement parent);
 }

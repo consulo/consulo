@@ -15,8 +15,10 @@
  */
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.navigation.ChooseByNameContributorEx;
 import consulo.ide.impl.psi.search.FilenameIndex;
+import consulo.ide.navigation.GotoFileContributor;
 import consulo.language.psi.search.FindSymbolParameters;
 import consulo.application.dumb.DumbAware;
 import consulo.application.util.function.Processor;
@@ -30,7 +32,8 @@ import consulo.project.ProjectCoreUtil;
 
 import javax.annotation.Nonnull;
 
-public class DefaultFileNavigationContributor implements ChooseByNameContributorEx, DumbAware {
+@ExtensionImpl
+public class DefaultFileNavigationContributor implements GotoFileContributor, ChooseByNameContributorEx, DumbAware {
   private static final Logger LOG = Logger.getInstance(DefaultFileNavigationContributor.class);
 
   @Override

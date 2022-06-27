@@ -233,7 +233,12 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
 
     if (prevTabIsAll != nextTabIsAll) {
       //reset cell renderer to show/hide group titles in "All" tab
-      myResultsList.setCellRenderer(myResultsList.getCellRenderer());
+      ListCellRenderer cellRenderer = myResultsList.getCellRenderer();
+      if (cellRenderer instanceof ExpandedItemListCellRendererWrapper) {
+        cellRenderer = ((ExpandedItemListCellRendererWrapper)cellRenderer).getWrappee();
+      }
+
+      myResultsList.setCellRenderer(cellRenderer);
     }
     if (myToolbar != null) {
       myToolbar.updateActionsImmediately();

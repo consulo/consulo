@@ -16,9 +16,10 @@
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
 import consulo.ide.IdeBundle;
+import consulo.ide.navigation.GotoSymbolContributor;
 import consulo.language.Language;
 import consulo.ide.navigation.ChooseByNameContributor;
-import consulo.ide.navigation.GotoClassContributor;
+import consulo.ide.navigation.GotoClassOrTypeContributor;
 import consulo.navigation.NavigationItem;
 import consulo.project.Project;
 import consulo.application.util.SystemInfo;
@@ -34,7 +35,7 @@ public class GotoSymbolModel2 extends FilteringGotoByModel<Language> {
   private String[] mySeparators;
 
   public GotoSymbolModel2(@Nonnull Project project) {
-    super(project, ChooseByNameContributor.SYMBOL_EP_NAME.getExtensionList());
+    super(project, project.getApplication().getExtensionPoint(GotoSymbolContributor.class).getExtensionList());
   }
 
   @Override
@@ -92,9 +93,9 @@ public class GotoSymbolModel2 extends FilteringGotoByModel<Language> {
 
   @Override
   public String getFullName(final Object element) {
-    for(ChooseByNameContributor c: getContributors()) {
-      if (c instanceof GotoClassContributor) {
-        String result = ((GotoClassContributor) c).getQualifiedName((NavigationItem) element);
+    for(ChooseByNameContributor c: getContributorList()) {
+      if (c instanceof GotoClassOrTypeContributor) {
+        String result = ((GotoClassOrTypeContributor) c).getQualifiedName((NavigationItem) element);
         if (result != null) return result;
       }
     }

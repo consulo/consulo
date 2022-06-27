@@ -15,17 +15,17 @@
  */
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
+import consulo.application.util.SystemInfo;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.language.Language;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.navigation.ChooseByNameContributor;
-import consulo.ide.navigation.GotoClassContributor;
+import consulo.ide.navigation.GotoClassOrTypeContributor;
+import consulo.language.Language;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.stub.FileBasedIndex;
 import consulo.navigation.NavigationItem;
 import consulo.project.Project;
-import consulo.application.util.SystemInfo;
-import consulo.language.psi.PsiElement;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.psi.stub.FileBasedIndex;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -38,7 +38,7 @@ public class GotoClassModel2 extends FilteringGotoByModel<Language> {
   private String[] mySeparators;
 
   public GotoClassModel2(@Nonnull Project project) {
-    super(project, ChooseByNameContributor.CLASS_EP_NAME.getExtensionList());
+    super(project, project.getApplication().getExtensionList(GotoClassOrTypeContributor.class));
   }
 
   @Override
@@ -106,9 +106,9 @@ public class GotoClassModel2 extends FilteringGotoByModel<Language> {
       return null;
     }
 
-    for (ChooseByNameContributor c : getContributors()) {
-      if (c instanceof GotoClassContributor) {
-        String result = ((GotoClassContributor)c).getQualifiedName((NavigationItem)element);
+    for (ChooseByNameContributor c : getContributorList()) {
+      if (c instanceof GotoClassOrTypeContributor) {
+        String result = ((GotoClassOrTypeContributor)c).getQualifiedName((NavigationItem)element);
         if (result != null) return result;
       }
     }
@@ -125,12 +125,12 @@ public class GotoClassModel2 extends FilteringGotoByModel<Language> {
     return mySeparators;
   }
 
-  public static String[] getSeparatorsFromContributors(List<ChooseByNameContributor> contributors) {
+  public static String[] getSeparatorsFromContributors(List<? extends ChooseByNameContributor> contributors) {
     final Set<String> separators = new HashSet<>();
     separators.add(".");
     for(ChooseByNameContributor c: contributors) {
-      if (c instanceof GotoClassContributor) {
-        ContainerUtil.addIfNotNull(separators, ((GotoClassContributor)c).getQualifiedNameSeparator());
+      if (c instanceof GotoClassOrTypeContributor) {
+        ContainerUtil.addIfNotNull(separators, ((GotoClassOrTypeContributor)c).getQualifiedNameSeparator());
       }
     }
     return separators.toArray(new String[separators.size()]);

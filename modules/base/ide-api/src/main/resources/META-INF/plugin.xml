@@ -1150,14 +1150,6 @@
 
     <extensionPoint name="textEditorHighlightingPassFactory" area="PROJECT" interface="consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPassFactory"/>
 
-    <extensionPoint name="searchEverywhereContributor" interface="consulo.ide.impl.idea.ide.actions.searcheverywhere.SearchEverywhereContributorFactory"/>
-    <extensionPoint name="searchEverywhereClassifier" interface="consulo.ide.impl.idea.ide.actions.SearchEverywhereClassifier"/>
-    <extensionPoint name="searchEverywhereResultsEqualityProvider" interface="consulo.ide.impl.idea.ide.actions.searcheverywhere.SEResultsEqualityProvider"/>
-
-    <extensionPoint name="runAnything.executionProvider" interface="consulo.ide.impl.idea.ide.actions.runAnything.activity.RunAnythingProvider"/>
-    <extensionPoint name="runAnything.commandHandler" interface="consulo.ide.impl.idea.ide.actions.runAnything.handlers.RunAnythingCommandHandler"/>
-    <extensionPoint name="runAnything.commandCustomizer" interface="consulo.ide.impl.idea.ide.actions.runAnything.commands.RunAnythingCommandCustomizer"/>
-
     <extensionPoint name="searchScopesProvider" interface="consulo.content.scope.SearchScopeProvider"/>
     <extensionPoint name="findInProjectExtension" interface="consulo.ide.impl.idea.find.impl.FindInProjectExtension"/>
 
@@ -1390,10 +1382,8 @@
     <projectService serviceInterface="consulo.execution.configuration.log.LogConsolePreferences"
                     serviceImplementation="consulo.execution.configuration.log.LogConsolePreferences"/>
 
-    <projectService serviceInterface="consulo.ide.impl.idea.ide.util.gotoByName.GotoFileConfiguration"
-                    serviceImplementation="consulo.ide.impl.idea.ide.util.gotoByName.GotoFileConfiguration"/>
-    <projectService serviceInterface="consulo.ide.impl.idea.ide.util.gotoByName.GotoClassSymbolConfiguration"
-                    serviceImplementation="consulo.ide.impl.idea.ide.util.gotoByName.GotoClassSymbolConfiguration"/>
+
+
 
     <projectService serviceInterface="consulo.ide.impl.idea.ide.hierarchy.HierarchyBrowserManager"
                     serviceImplementation="consulo.ide.impl.idea.ide.hierarchy.HierarchyBrowserManager"/>
@@ -1497,7 +1487,6 @@
     <lookup.charFilter implementation="consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers.FileReferenceCharFilter" id="fileRef"
                        order="before completion"/>
 
-    <gotoFileContributor implementation="consulo.ide.impl.idea.ide.util.gotoByName.DefaultFileNavigationContributor"/>
 
     <gotoRelatedProvider implementation="consulo.ide.impl.idea.ide.actions.RelatedItemLineMarkerGotoAdapter"/>
 
@@ -1768,13 +1757,6 @@
     <projectService serviceImplementation="consulo.ide.impl.psi.impl.file.impl.PsiVFSListener" lazy="false"/>
     <postStartupActivity id="vfsStartup" implementation="consulo.ide.impl.psi.impl.file.impl.PsiVFSListener$MyStartUpActivity" order="first"/>
 
-    <searchEverywhereContributor implementation="consulo.ide.impl.idea.ide.actions.searcheverywhere.ClassSearchEverywhereContributor$Factory"/>
-    <searchEverywhereContributor implementation="consulo.ide.impl.idea.ide.actions.searcheverywhere.FileSearchEverywhereContributor$Factory"/>
-    <searchEverywhereContributor implementation="consulo.ide.impl.idea.ide.actions.searcheverywhere.SymbolSearchEverywhereContributor$Factory"/>
-    <searchEverywhereContributor implementation="consulo.ide.impl.idea.ide.actions.searcheverywhere.ActionSearchEverywhereContributor$Factory"/>
-
-    <searchEverywhereResultsEqualityProvider implementation="consulo.ide.impl.idea.ide.actions.searcheverywhere.PsiElementsEqualityProvider"/>
-    <searchEverywhereResultsEqualityProvider implementation="consulo.ide.impl.idea.ide.actions.searcheverywhere.TrivialElementsEqualityProvider"/>
 
 
     <postStartupActivity implementation="consulo.ide.impl.idea.openapi.vcs.update.RestoreUpdateTree$MyStartUpActivity"/>
@@ -1782,7 +1764,6 @@
     <postStartupActivity implementation="consulo.ide.impl.idea.execution.impl.ProjectRunConfigurationManager$MyStartupActivity"/>
 
 
-    <psiReferenceLocalFixProvider implementation="consulo.language.editor.impl.internal.psi.path.FileReferenceLocalQuickFixProvider"/>
 
     <applicationService serviceInterface="consulo.language.impl.parser.GeneratedParserUtilBase$PrefixMatcher"
                         serviceImplementation="consulo.language.editor.impl.internal.parser.ParserCamelCaseMatcherPrefixMatcher"/>

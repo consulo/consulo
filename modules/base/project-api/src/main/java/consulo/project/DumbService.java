@@ -16,6 +16,7 @@ import consulo.application.util.function.ThrowableComputable;
 import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
 import consulo.component.extension.ExtensionList;
+import consulo.component.extension.ExtensionPoint;
 import consulo.component.extension.ExtensionPointName;
 import consulo.component.util.ComponentUtil;
 import consulo.component.util.ModificationTracker;
@@ -70,6 +71,17 @@ public abstract class DumbService {
 
   @Nonnull
   public static <T> List<T> getDumbAwareExtensions(@Nonnull Project project, @Nonnull ExtensionPointName<T> extensionPoint) {
+    List<T> list = extensionPoint.getExtensionList();
+    if (list.isEmpty()) {
+      return list;
+    }
+
+    DumbService dumbService = getInstance(project);
+    return dumbService.filterByDumbAwareness(list);
+  }
+
+  @Nonnull
+  public static <T> List<T> getDumbAwareExtensions(@Nonnull Project project, @Nonnull ExtensionPoint<T> extensionPoint) {
     List<T> list = extensionPoint.getExtensionList();
     if (list.isEmpty()) {
       return list;

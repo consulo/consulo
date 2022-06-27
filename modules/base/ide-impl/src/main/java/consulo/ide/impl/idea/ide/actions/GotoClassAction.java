@@ -1,16 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.language.editor.ui.PopupNavigationUtil;
-import consulo.ide.impl.idea.ide.actions.searcheverywhere.ClassSearchEverywhereContributor;
-import consulo.language.psi.util.EditSourceUtil;
-import consulo.ide.impl.idea.ide.util.gotoByName.*;
-import consulo.ide.impl.idea.lang.LanguageStructureViewBuilder;
-import consulo.language.navigation.AnonymousElementProvider;
-import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
-import consulo.ide.impl.idea.openapi.ui.playback.commands.ActionCommand;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.application.statistic.FeatureUsageTracker;
 import consulo.application.util.matcher.MinusculeMatcher;
@@ -25,13 +16,23 @@ import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.fileEditor.structureView.StructureViewTreeElement;
 import consulo.fileEditor.structureView.tree.TreeElement;
 import consulo.ide.IdeBundle;
-import consulo.ide.navigation.ChooseByNameContributor;
+import consulo.ide.impl.idea.ide.actions.searcheverywhere.ClassSearchEverywhereContributor;
+import consulo.ide.impl.idea.ide.util.gotoByName.*;
+import consulo.ide.impl.idea.lang.LanguageStructureViewBuilder;
+import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.ide.impl.idea.openapi.ui.playback.commands.ActionCommand;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.ide.navigation.GotoClassOrTypeContributor;
 import consulo.language.Language;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.structureView.PsiStructureViewFactory;
+import consulo.language.editor.ui.PopupNavigationUtil;
+import consulo.language.navigation.AnonymousElementProvider;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
+import consulo.language.psi.util.EditSourceUtil;
 import consulo.navigation.Navigatable;
 import consulo.navigation.NavigationItem;
 import consulo.project.DumbService;
@@ -257,6 +258,6 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
 
   @Override
   protected boolean hasContributors(DataContext dataContext) {
-    return ChooseByNameContributor.CLASS_EP_NAME.hasAnyExtensions();
+    return Application.get().getExtensionPoint(GotoClassOrTypeContributor.class).hasAnyExtensions();
   }
 }

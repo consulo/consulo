@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.navigation;
 
-import consulo.navigation.NavigationItem;
-
-import javax.annotation.Nullable;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 
 /**
- * @author yole
+ * @author VISTALL
+ * @since 27-Jun-22
  */
-public interface GotoClassContributor extends ChooseByNameContributor {
-  @Nullable
-  String getQualifiedName(NavigationItem item);
-
-  @Nullable
-  String getQualifiedNameSeparator();
+@Extension(ComponentScope.APPLICATION)
+public interface GotoFileContributor extends ChooseByNameContributor {
 }

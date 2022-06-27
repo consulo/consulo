@@ -1,6 +1,8 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.runAnything.commands;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.dataContext.DataContext;
 import consulo.component.extension.ExtensionPointName;
@@ -12,8 +14,9 @@ import javax.annotation.Nonnull;
  * This class customizes 'Run Anything' command line and its data context.
  * E.g. it's possible to wrap command into a shell or/and patch environment variables.
  */
+@Extension(ComponentScope.APPLICATION)
 public abstract class RunAnythingCommandCustomizer {
-  public static final ExtensionPointName<RunAnythingCommandCustomizer> EP_NAME = ExtensionPointName.create("consulo.runAnything.commandCustomizer");
+  public static final ExtensionPointName<RunAnythingCommandCustomizer> EP_NAME = ExtensionPointName.create(RunAnythingCommandCustomizer.class);
 
   /**
    * Customizes command line to be executed

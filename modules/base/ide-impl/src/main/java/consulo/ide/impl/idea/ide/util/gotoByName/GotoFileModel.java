@@ -2,30 +2,30 @@
 
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
+import consulo.application.ApplicationManager;
+import consulo.application.dumb.DumbAware;
+import consulo.application.util.matcher.MinusculeMatcher;
+import consulo.application.util.matcher.NameUtil;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.actions.GotoFileItemProvider;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.language.editor.ui.PsiElementListCellRenderer;
-import consulo.ide.navigation.ChooseByNameContributor;
-import consulo.navigation.NavigationItem;
-import consulo.application.ApplicationManager;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
+import consulo.ide.impl.idea.ui.IdeUICustomization;
+import consulo.ide.navigation.GotoFileContributor;
+import consulo.language.editor.ui.PsiElementListCellRenderer;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileSystemItem;
-import consulo.application.util.matcher.MinusculeMatcher;
-import consulo.application.util.matcher.NameUtil;
-import consulo.ide.impl.idea.ui.IdeUICustomization;
+import consulo.navigation.NavigationItem;
+import consulo.project.Project;
 import consulo.util.collection.JBIterable;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.util.Collection;
 import java.util.Comparator;
@@ -37,7 +37,7 @@ public class GotoFileModel extends FilteringGotoByModel<FileType> implements Dum
   private final int myMaxSize;
 
   public GotoFileModel(@Nonnull Project project) {
-    super(project, ChooseByNameContributor.FILE_EP_NAME.getExtensionList());
+    super(project, project.getApplication().getExtensionList(GotoFileContributor.class));
     myMaxSize = ApplicationManager.getApplication().isUnitTestMode() ? Integer.MAX_VALUE : WindowManagerEx.getInstanceEx().getFrame(project).getSize().width;
   }
 

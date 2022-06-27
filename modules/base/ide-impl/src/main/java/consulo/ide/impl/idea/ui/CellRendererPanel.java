@@ -1,20 +1,7 @@
-/*
- * Copyright 2000-2013 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ui;
 
+import consulo.awt.hacking.AWTAccessorHacking;
 import consulo.ui.ex.awt.JBInsets;
 
 import javax.swing.*;
@@ -22,16 +9,22 @@ import java.awt.*;
 
 /**
  * Cell renderer CPU optimization.
- * @see javax.swing.table.DefaultTableCellRenderer#invalidate()
  *
  * @author gregsh
+ * @see javax.swing.table.DefaultTableCellRenderer#invalidate()
  */
 public class CellRendererPanel extends JPanel {
 
   private boolean mySelected;
 
   public CellRendererPanel() {
-    super(null); // we do the layout ourselves
+    this(null);
+  }
+
+  public CellRendererPanel(LayoutManager lm) {
+    super(lm);
+    super.setOpaque(false); // to be consistent with #isOpaque
+    super.setFont(null);
   }
 
   public final boolean isSelected() {
@@ -42,6 +35,13 @@ public class CellRendererPanel extends JPanel {
     mySelected = isSelected;
   }
 
+  public void setForcedBackground(Color bg) {
+    super.setBackground(bg);
+    if (bg != null && !mySelected) {
+      setSelected(true);
+    }
+  }
+
   // property change support ----------------
   @Override
   protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
@@ -49,12 +49,6 @@ public class CellRendererPanel extends JPanel {
 
   @Override
   public void firePropertyChange(String propertyName, boolean oldValue, boolean newValue) {
-  }
-
-  // isOpaque() optimization ----------------
-  @Override
-  public boolean isOpaque() {
-    return false;
   }
 
   @Override
@@ -68,24 +62,23 @@ public class CellRendererPanel extends JPanel {
   // BEGIN no validation methods --------------
   @Override
   public void doLayout() {
-    int count = getComponentCount();
-    if (count == 1) {
-      Rectangle bounds = new Rectangle(getWidth(), getHeight());
-      JBInsets.removeFrom(bounds, getInsets());
-      Component child = getComponent(0);
-      child.setBounds(bounds);
-      if (child instanceof CellRendererPanel) {
-        ((CellRendererPanel)child).invalidateLayout();
-        child.doLayout();
+    if (getWidth() == 0 || getHeight() == 0) return;
+    synchronized (getTreeLock()) {
+      int count = getComponentCount();
+      if (count == 1) {
+        Rectangle bounds = new Rectangle(getWidth(), getHeight());
+        JBInsets.removeFrom(bounds, getInsets());
+        JComponent child = (JComponent)getComponent(0);
+        reshapeImpl(child, bounds.x, bounds.y, bounds.width, bounds.height);
+        invalidateLayout(child);
+        child.validate();
       }
-    }
-    else {
-      invalidateLayout();
-      super.doLayout();
-      for (int i = 0; i < count; i++) {
-        Component c = getComponent(i);
-        if (c instanceof CellRendererPanel) {
-          c.doLayout();
+      else {
+        invalidateLayout(this);
+        super.doLayout();
+        for (int i = 0; i < count; i++) {
+          Component c = getComponent(i);
+          c.validate();
         }
       }
     }
@@ -93,26 +86,72 @@ public class CellRendererPanel extends JPanel {
 
   @Override
   public Dimension getPreferredSize() {
-    if (getComponentCount() != 1) {
+    if (getComponentCount() != 1 || super.getBorder() != null) {
       return super.getPreferredSize();
     }
     return getComponent(0).getPreferredSize();
+  }
+
+  protected final Dimension super_getPreferredSize() {
+    return super.getPreferredSize();
+  }
+
+  /**
+   * Calculate preferred size via layout manager every time.
+   *
+   * <p>
+   * When running {@link Container#validateTree()} the flag {@link Component#valid}
+   * can change its value to {@code true}. But {@link CellRendererPanel#invalidate()} has empty body and never rewrites the flag value.
+   * Therefore {@link Component#preferredSize()} uses a cached value for preferred size and never changes it after.
+   * </p>
+   *
+   * <p>
+   * To avoid that CellRendererPanel overrides default implementation to calculate preferred size via layout manager every time.
+   * </p>
+   *
+   * @deprecated do not this method directly, use {@link #getPreferredSize()} instead
+   */
+  @Deprecated
+  @Override
+  public final Dimension preferredSize() {
+    LayoutManager layoutMgr = getLayout();
+    return (layoutMgr != null) ? layoutMgr.preferredLayoutSize(this) : super.preferredSize();
+  }
+
+  @Override
+  public void reshape(int x, int y, int w, int h) {
+    reshapeImpl(this, x, y, w, h);
+  }
+
+  static void reshapeImpl(JComponent component, int x, int y, int w, int h) {
+    // suppress per-cell "moved" and "resized" events on paint
+    // see Component#setBounds, Component#notifyNewBounds
+    AWTAccessorHacking.setLocation(component, x, y);
+    AWTAccessorHacking.setSize(component, w, h);
   }
 
   @Override
   public void invalidate() {
   }
 
-  private void invalidateLayout() {
-    LayoutManager layout = getLayout();
+  public void forceInvalidate() {
+    super.invalidate();
+  }
+
+  private static void invalidateLayout(JComponent component) {
+    LayoutManager layout = component.getLayout();
     if (layout instanceof LayoutManager2) {
-      ((LayoutManager2)layout).invalidateLayout(this);
+      ((LayoutManager2)layout).invalidateLayout(component);
     }
   }
 
   @Override
   public void validate() {
     doLayout();
+  }
+
+  protected final void super_validate() {
+    super.validate();
   }
 
   @Override
@@ -131,5 +170,5 @@ public class CellRendererPanel extends JPanel {
   public void repaint() {
   }
 
-// END no validation methods --------------
+  // END no validation methods --------------
 }

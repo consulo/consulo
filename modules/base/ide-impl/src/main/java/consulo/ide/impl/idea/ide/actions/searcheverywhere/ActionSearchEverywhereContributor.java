@@ -1,6 +1,12 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
+import consulo.application.ApplicationManager;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.ui.UISettings;
+import consulo.application.util.function.Processor;
+import consulo.codeEditor.Editor;
+import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.actions.GotoActionAction;
 import consulo.ide.impl.idea.ide.actions.SetShortcutAction;
 import consulo.ide.impl.idea.ide.ui.search.BooleanOptionDescription;
@@ -9,18 +15,10 @@ import consulo.ide.impl.idea.ide.util.gotoByName.GotoActionModel;
 import consulo.ide.impl.idea.openapi.keymap.impl.ActionShortcutRestrictions;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapPanel;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.application.ApplicationManager;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.ui.UISettings;
-import consulo.application.util.function.Processor;
-import consulo.codeEditor.Editor;
-import consulo.ide.IdeBundle;
-import consulo.language.editor.CommonDataKeys;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
@@ -206,11 +204,4 @@ public class ActionSearchEverywhereContributor implements SearchEverywhereContri
     });
   }
 
-  public static class Factory implements SearchEverywhereContributorFactory<GotoActionModel.MatchedValue> {
-    @Nonnull
-    @Override
-    public SearchEverywhereContributor<GotoActionModel.MatchedValue> createContributor(@Nonnull AnActionEvent initEvent) {
-      return new ActionSearchEverywhereContributor(initEvent.getData(CommonDataKeys.PROJECT), initEvent.getData(UIExAWTDataKey.CONTEXT_COMPONENT), initEvent.getData(CommonDataKeys.EDITOR));
-    }
-  }
 }

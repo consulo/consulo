@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.execution.testframework.sm;
 
 import consulo.ide.navigation.ChooseByNameContributor;
+import consulo.ide.navigation.GotoFileContributor;
 import consulo.navigation.NavigationItem;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
@@ -137,7 +138,7 @@ public class TestsLocationProviderUtil {
   public static List<FileInfo> collectCandidates(final Project project, final String fileName,
                                                  final boolean includeNonProjectItems) {
     final List<FileInfo> filesInfo = new ArrayList<FileInfo>();
-    for (ChooseByNameContributor contributor : ChooseByNameContributor.FILE_EP_NAME.getExtensionList()) {
+    for (ChooseByNameContributor contributor : project.getApplication().getExtensionList(GotoFileContributor.class)) {
       // let's find files with same name in project and libraries
       final NavigationItem[] navigationItems = contributor.getItemsByName(fileName, fileName, project, includeNonProjectItems);
       for (NavigationItem navigationItem : navigationItems) {
