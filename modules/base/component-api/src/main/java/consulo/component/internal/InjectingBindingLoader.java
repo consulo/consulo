@@ -75,7 +75,13 @@ public class InjectingBindingLoader {
         }
 
         InjectingBinding binding = provider.get();
-        getHolder(binding.getComponentAnnotationClass(), binding.getComponentScope()).addBinding(binding);
+        try {
+          getHolder(binding.getComponentAnnotationClass(), binding.getComponentScope()).addBinding(binding);
+        }
+        catch (Error e) {
+          // TODO [VISTALL] log may not initialized here
+          e.printStackTrace();
+        }
       }
     }
 
@@ -84,16 +90,16 @@ public class InjectingBindingLoader {
 
   @Nonnull
   public InjectingBindingHolder getHolder(@Nonnull Class<?> annotationClass, @Nonnull ComponentScope componentScope) {
-    if (annotationClass == Service.class) {
+    if (annotationClass == ServiceAPI.class) {
       return myServices.computeIfAbsent(componentScope, c -> new InjectingBindingHolder(myLocked));
     }
-    else if (annotationClass == Extension.class) {
+    else if (annotationClass == ExtensionAPI.class) {
       return myExtensions.computeIfAbsent(componentScope, c -> new InjectingBindingHolder(myLocked));
     }
-    else if (annotationClass == Topic.class) {
+    else if (annotationClass == TopicAPI.class) {
       return myTopics.computeIfAbsent(componentScope, c -> new InjectingBindingHolder(myLocked));
     }
-    else if (annotationClass == Action.class) {
+    else if (annotationClass == ActionAPI.class) {
       return myActions;
     }
 

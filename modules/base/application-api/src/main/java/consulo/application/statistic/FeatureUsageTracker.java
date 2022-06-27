@@ -16,7 +16,7 @@
 package consulo.application.statistic;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.component.ComponentManager;
 
@@ -24,7 +24,7 @@ import consulo.component.ComponentManager;
  * User: anna
  * Date: Jan 28, 2005
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class FeatureUsageTracker {
 
   public static FeatureUsageTracker getInstance() {

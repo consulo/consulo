@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.codeHighlighting;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.codeEditor.Editor;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.editor.Pass;
@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
  * User: anna
  * Date: 19-Apr-2006
  */
-@Extension(ComponentScope.PROJECT)
+@ExtensionAPI(ComponentScope.PROJECT)
 public interface TextEditorHighlightingPassFactory {
   interface Registrar {
     public enum Anchor {

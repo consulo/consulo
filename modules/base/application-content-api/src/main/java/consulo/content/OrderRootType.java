@@ -17,10 +17,9 @@ package consulo.content;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
 import consulo.component.extension.ExtensionPointCacheKey;
-import consulo.component.extension.ExtensionPointName;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -33,7 +32,7 @@ import java.util.List;
  * @author dsl
  * @see OrderEntry
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public class OrderRootType {
   private static final ExtensionPointCacheKey<OrderRootType, List<OrderRootType>> SORTED_KEY = ExtensionPointCacheKey.create("SortedOrderRootType", orderRootTypes -> {
     List<OrderRootType> extensions = new ArrayList<>(orderRootTypes);

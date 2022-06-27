@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.util;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.util.mac.foundation.Foundation;
 
@@ -27,7 +27,7 @@ import jakarta.inject.Singleton;
  * User: spLeaner
  */
 @Singleton
-@Service(value = ComponentScope.APPLICATION, lazy = false)
+@ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
 @ServiceImpl
 public class FoundationLoader {
   public FoundationLoader() {

@@ -17,12 +17,12 @@ package consulo.project.ui.wm;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Topic;
+import consulo.annotation.component.TopicAPI;
 
 import javax.annotation.Nonnull;
 import java.util.EventListener;
 
-@Topic(ComponentScope.PROJECT)
+@TopicAPI(ComponentScope.PROJECT)
 public interface ToolWindowManagerListener extends EventListener {
 
   /**

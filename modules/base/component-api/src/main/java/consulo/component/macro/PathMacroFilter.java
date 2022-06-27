@@ -16,7 +16,7 @@
 package consulo.component.macro;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import org.jdom.Attribute;
 import org.jdom.Text;
@@ -26,7 +26,7 @@ import org.jdom.Text;
  *
  * @author yole
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class PathMacroFilter {
   public static final ExtensionPointName<PathMacroFilter> EP_NAME = ExtensionPointName.create(PathMacroFilter.class);
 

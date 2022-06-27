@@ -16,7 +16,7 @@
 package consulo.ide.impl.psi.templateLanguages;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.language.DependentLanguage;
 import consulo.language.InjectableLanguage;
@@ -43,7 +43,7 @@ import java.util.List;
  */
 @Singleton
 @State(name = "TemplateDataLanguageMappings", storages = {@Storage("templateLanguages.xml")})
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class TemplateDataLanguageMappings extends LanguagePerFileMappings<Language> {
 

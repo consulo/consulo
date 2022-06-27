@@ -23,7 +23,7 @@
 package consulo.language.codeStyle.setting;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
@@ -38,7 +38,7 @@ import javax.annotation.Nonnull;
  * @see LanguageCodeStyleSettingsProvider
  * @see CodeStyleSettings#getIndentOptions(FileType)
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface FileTypeIndentOptionsProvider {
   ExtensionPointName<FileTypeIndentOptionsProvider> EP_NAME = ExtensionPointName.create(FileTypeIndentOptionsProvider.class);
   

@@ -16,7 +16,7 @@
 package consulo.language.impl.ast;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.ILazyParseableElementType;
 import consulo.language.psi.ElementTypeEntryExtensionCollector;
@@ -29,7 +29,7 @@ import java.util.function.Predicate;
  * @author VISTALL
  * @since 2:10/02.04.13
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface ASTLazyFactory extends Predicate<IElementType> {
   ElementTypeEntryExtensionCollector<ASTLazyFactory> EP = ElementTypeEntryExtensionCollector.create(ASTLazyFactory.class);
 

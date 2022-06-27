@@ -16,7 +16,7 @@
 package consulo.language.psi;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.util.IncorrectOperationException;
 import javax.annotation.Nonnull;
@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 0:08/11.11.13
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface PsiDirectoryMethodProxy {
   ExtensionPointName<PsiDirectoryMethodProxy> EP_NAME = ExtensionPointName.create(PsiDirectoryMethodProxy.class);
 

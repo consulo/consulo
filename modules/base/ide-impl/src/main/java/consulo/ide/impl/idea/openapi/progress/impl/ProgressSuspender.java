@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.progress.impl;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Topic;
+import consulo.annotation.component.TopicAPI;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.progress.CoreProgressManager;
@@ -160,7 +160,7 @@ public class ProgressSuspender implements AutoCloseable {
     }
   }
 
-  @Topic(ComponentScope.APPLICATION)
+  @TopicAPI(ComponentScope.APPLICATION)
   public interface SuspenderListener {
     /**
      * Called (on any thread) when a new progress is created with suspension capability

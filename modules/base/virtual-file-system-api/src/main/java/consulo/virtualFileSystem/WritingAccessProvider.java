@@ -16,7 +16,7 @@
 package consulo.virtualFileSystem;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.ComponentManager;
 import consulo.component.extension.ExtensionPointName;
 
@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * @author Dmitry Avdeev
  */
-@Extension(ComponentScope.PROJECT)
+@ExtensionAPI(ComponentScope.PROJECT)
 public abstract class WritingAccessProvider {
 
   private static final ExtensionPointName<WritingAccessProvider> EP_NAME = ExtensionPointName.create(WritingAccessProvider.class);

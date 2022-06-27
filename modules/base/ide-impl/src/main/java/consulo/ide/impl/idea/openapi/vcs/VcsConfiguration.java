@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.vcs;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.progress.PerformInBackgroundOption;
 import consulo.component.persist.PersistentStateComponent;
@@ -43,7 +43,7 @@ import java.util.*;
 
 @Singleton
 @State(name = "VcsManagerConfiguration", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public final class VcsConfiguration implements PersistentStateComponent<VcsConfiguration> {
   public final static long ourMaximumFileForBaseRevisionSize = 500 * 1000;

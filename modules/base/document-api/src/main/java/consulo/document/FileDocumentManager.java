@@ -2,7 +2,7 @@
 package consulo.document;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.util.function.Computable;
@@ -17,7 +17,7 @@ import javax.annotation.Nullable;
  * Tracks the correspondence between {@link VirtualFile} instances and corresponding {@link Document} instances.
  * Manages the saving of changes to disk.
  */
-@Service(value = ComponentScope.APPLICATION, lazy = false)
+@ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
 public interface FileDocumentManager extends SavingRequestor {
   @Nonnull
   public static FileDocumentManager getInstance() {

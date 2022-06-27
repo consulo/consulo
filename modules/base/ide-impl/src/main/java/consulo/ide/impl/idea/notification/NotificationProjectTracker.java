@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.notification;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAwareRunnable;
@@ -45,7 +45,7 @@ import java.util.Map;
 * @since 18-Jun-22
 */
 @Singleton
-@Service(value = ComponentScope.PROJECT, lazy = false)
+@ServiceAPI(value = ComponentScope.PROJECT, lazy = false)
 @ServiceImpl
 public class NotificationProjectTracker implements Disposable {
   private final Map<String, EventLogConsole> myCategoryMap = ContainerUtil.newConcurrentMap();

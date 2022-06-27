@@ -2,7 +2,7 @@
 package consulo.language.file;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.util.PerApplicationInstance;
 import consulo.language.Language;
 import consulo.language.file.event.FileTypeListener;
@@ -19,7 +19,7 @@ import java.util.function.Supplier;
 /**
  * Manages the relationship between filenames and {@link FileType} instances.
  */
-@Service(value = ComponentScope.APPLICATION, lazy = false)
+@ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
 public abstract class FileTypeManager extends FileTypeRegistry {
   private static Supplier<FileTypeManager> ourInstance = PerApplicationInstance.of(FileTypeManager.class);
 

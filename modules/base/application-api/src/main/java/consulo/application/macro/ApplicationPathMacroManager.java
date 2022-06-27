@@ -16,7 +16,7 @@
 package consulo.application.macro;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.component.macro.PathMacroManager;
 
@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 23-Mar-22
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public interface ApplicationPathMacroManager extends PathMacroManager {
   public static PathMacroManager getInstance(@Nonnull Application application) {
     return application.getInstance(ApplicationPathMacroManager.class);

@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.ide.actionMacro;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.AllIcons;
 import consulo.ide.IdeBundle;
@@ -79,7 +79,7 @@ import java.util.Set;
  */
 @State(name = "ActionMacroManager", storages = @Storage("macros.xml"))
 @Singleton
-@Service(value = ComponentScope.APPLICATION, lazy = false)
+@ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
 @ServiceImpl
 public class ActionMacroManager implements JDOMExternalizable, Disposable {
   public static ActionMacroManager getInstance() {

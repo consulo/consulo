@@ -6,7 +6,7 @@
 package consulo.language.psi.stub;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.ApplicationManager;
 import consulo.application.util.function.Processor;
 import consulo.application.util.function.Processors;
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@Service(value = ComponentScope.APPLICATION, lazy = false)
+@ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
 public abstract class StubIndex {
   private static class StubIndexHolder {
     private static final StubIndex ourInstance = ApplicationManager.getApplication().getComponent(StubIndex.class);

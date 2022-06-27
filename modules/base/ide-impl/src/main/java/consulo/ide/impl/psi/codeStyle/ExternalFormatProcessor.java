@@ -2,7 +2,7 @@
 package consulo.ide.impl.psi.codeStyle;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface ExternalFormatProcessor {
   ExtensionPointName<ExternalFormatProcessor> EP_NAME = ExtensionPointName.create(ExternalFormatProcessor.class);
 

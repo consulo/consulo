@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.build;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.build.progress.BuildProgress;
 import consulo.ide.impl.idea.build.progress.BuildProgressDescriptor;
@@ -18,7 +18,7 @@ import javax.annotation.Nonnull;
  * @author Vladislav.Soroka
  */
 @Singleton
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class SyncViewManager extends AbstractViewManager {
   @Inject

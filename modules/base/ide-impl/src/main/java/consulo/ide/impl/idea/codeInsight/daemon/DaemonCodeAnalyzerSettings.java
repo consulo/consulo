@@ -17,12 +17,12 @@
 package consulo.ide.impl.idea.codeInsight.daemon;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.ide.ServiceManager;
 import consulo.annotation.DeprecationInfo;
 import org.jetbrains.annotations.NonNls;
 
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public class DaemonCodeAnalyzerSettings {
   public static DaemonCodeAnalyzerSettings getInstance() {
     return ServiceManager.getService(DaemonCodeAnalyzerSettings.class);

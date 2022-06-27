@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.actionSystem;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.AnAction;
@@ -36,7 +36,7 @@ import java.util.List;
  * @author Konstantin Bulenkov
  * @since 13
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface ActionPromoter {
   ExtensionPointName<ActionPromoter> EP_NAME = ExtensionPointName.create(ActionPromoter.class);
 

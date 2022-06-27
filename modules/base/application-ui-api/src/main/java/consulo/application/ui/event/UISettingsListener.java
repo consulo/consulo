@@ -20,12 +20,12 @@
 package consulo.application.ui.event;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Topic;
+import consulo.annotation.component.TopicAPI;
 import consulo.application.ui.UISettings;
 
 import java.util.EventListener;
 
-@Topic(ComponentScope.APPLICATION)
+@TopicAPI(ComponentScope.APPLICATION)
 public interface UISettingsListener extends EventListener {
   void uiSettingsChanged(UISettings source);
 }

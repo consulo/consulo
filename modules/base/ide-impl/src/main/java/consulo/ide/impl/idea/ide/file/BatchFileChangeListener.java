@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.ide.file;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Topic;
+import consulo.annotation.component.TopicAPI;
 import consulo.component.messagebus.MessageBus;
 import consulo.project.Project;
 
@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
  * <p/>
  * To subscribe to such batch file changes, connect to the Project's {@link MessageBus}
  */
-@Topic(ComponentScope.APPLICATION)
+@TopicAPI(ComponentScope.APPLICATION)
 public interface BatchFileChangeListener {
   /**
    * @param project      Project where many file changes are expected to happen

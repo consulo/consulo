@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.ide;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.application.util.registry.Registry;
@@ -14,7 +14,7 @@ import java.util.function.Consumer;
 /**
  * @author Konstantin Bulenkov
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface SearchTopHitProvider {
   ExtensionPointName<SearchTopHitProvider> EP_NAME = ExtensionPointName.create(SearchTopHitProvider.class);
 

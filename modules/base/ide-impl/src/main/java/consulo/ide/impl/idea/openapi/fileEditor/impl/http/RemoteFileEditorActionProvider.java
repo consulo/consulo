@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.fileEditor.impl.http;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.ui.ex.action.AnAction;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 /**
  * @author nik
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class RemoteFileEditorActionProvider {
   public static final ExtensionPointName<RemoteFileEditorActionProvider> EP_NAME = ExtensionPointName.create(RemoteFileEditorActionProvider.class);
 

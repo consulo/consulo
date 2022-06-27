@@ -16,8 +16,8 @@
 package consulo.component.impl;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
-import consulo.annotation.component.Topic;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.TopicAPI;
 import consulo.component.ComponentManager;
 import consulo.component.bind.InjectingBinding;
 import consulo.component.extension.ExtensionPoint;
@@ -151,7 +151,7 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
   }
 
   protected void fillListenerDescriptors(MultiMap<Class, InjectingBinding> mapByTopic) {
-    InjectingBindingHolder holder = InjectingBindingLoader.INSTANCE.getHolder(Topic.class, getComponentScope());
+    InjectingBindingHolder holder = InjectingBindingLoader.INSTANCE.getHolder(TopicAPI.class, getComponentScope());
 
     for (List<InjectingBinding> bindings : holder.getBindings().values()) {
       for (InjectingBinding binding : bindings) {
@@ -171,7 +171,7 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
 
   @SuppressWarnings("unchecked")
   private void loadServices(List<Class> notLazyServices, InjectingContainerBuilder builder) {
-    InjectingBindingHolder holder = InjectingBindingLoader.INSTANCE.getHolder(Service.class, getComponentScope());
+    InjectingBindingHolder holder = InjectingBindingLoader.INSTANCE.getHolder(ServiceAPI.class, getComponentScope());
 
     for (List<InjectingBinding> listOfBindings : holder.getBindings().values()) {
       // TODO [VISTALL] filter by profiles, and throw if two or more

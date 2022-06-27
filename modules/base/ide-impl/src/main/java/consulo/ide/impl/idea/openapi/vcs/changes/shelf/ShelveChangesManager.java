@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.shelf;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.impl.internal.JobScheduler;
 import consulo.application.impl.internal.IdeaModalityState;
@@ -87,7 +87,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 @Singleton
-@Service(value = ComponentScope.PROJECT, lazy = false)
+@ServiceAPI(value = ComponentScope.PROJECT, lazy = false)
 @ServiceImpl
 public class ShelveChangesManager implements ProjectComponent, JDOMExternalizable {
   private static final Logger LOG = Logger.getInstance(ShelveChangesManager.class);

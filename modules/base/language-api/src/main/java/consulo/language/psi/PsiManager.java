@@ -17,7 +17,7 @@ package consulo.language.psi;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.disposer.Disposable;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.event.PsiTreeChangeListener;
@@ -32,7 +32,7 @@ import javax.annotation.Nullable;
 /**
  * The main entry point for accessing the PSI services for a project.
  */
-@Service(value = ComponentScope.PROJECT, lazy = false)
+@ServiceAPI(value = ComponentScope.PROJECT, lazy = false)
 public abstract class PsiManager extends UserDataHolderBase {
 
   /**

@@ -20,7 +20,7 @@
 package consulo.ui.ex;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.ui.image.Image;
 import consulo.util.lang.Comparing;
@@ -28,7 +28,7 @@ import consulo.util.lang.Comparing;
 import javax.annotation.Nonnull;
 import java.util.function.Function;
 
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class IconDeferrer {
   @Nonnull
   public static IconDeferrer getInstance() {

@@ -1,7 +1,7 @@
 package consulo.execution.coverage;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
@@ -33,7 +33,7 @@ import java.util.Map;
  */
 @Singleton
 @State(name = "CoverageViewManager", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class CoverageViewManager implements PersistentStateComponent<CoverageViewManager.StateBean> {
   private static final Logger LOG = Logger.getInstance(CoverageViewManager.class);

@@ -16,7 +16,7 @@
 package consulo.project.startup;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 
 /**
  * <p>Executed some time after startup on a background thread with no visible progress indicator. Such activities may produce
@@ -28,6 +28,6 @@ import consulo.annotation.component.Extension;
  * immediately when this happens, so if you need to access other components, you're responsible for doing this in a
  * thread-safe way (e.g. by taking a read action to collect all the state you need).</p>
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface BackgroundStartupActivity extends StartupActivity {
 }

@@ -3,7 +3,7 @@
 package consulo.ui.ex.popup;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.dataContext.DataContext;
 import consulo.ui.NotificationType;
@@ -78,7 +78,7 @@ import java.util.List;
  *
  * @author mike
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class JBPopupFactory {
   /**
    * Returns the popup factory instance.

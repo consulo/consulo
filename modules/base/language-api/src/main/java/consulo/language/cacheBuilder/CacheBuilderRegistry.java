@@ -18,7 +18,7 @@ package consulo.language.cacheBuilder;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.virtualFileSystem.fileType.FileType;
 
@@ -32,7 +32,7 @@ import javax.annotation.Nullable;
  *
  * @author yole
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class CacheBuilderRegistry {
   @Nonnull
   @Deprecated

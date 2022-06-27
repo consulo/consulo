@@ -16,7 +16,7 @@
 package consulo.language.editor.ui.internal;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.language.editor.ui.PsiElementListNavigator;
 import consulo.language.navigation.GotoRelatedItem;
@@ -32,7 +32,7 @@ import java.util.function.Predicate;
  * @author VISTALL
  * @since 29-Apr-22
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public interface LanguageEditorPopupFactory {
   static LanguageEditorPopupFactory getInstance() {
     return Application.get().getInstance(LanguageEditorPopupFactory.class);

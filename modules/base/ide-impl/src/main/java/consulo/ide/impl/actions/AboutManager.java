@@ -16,7 +16,7 @@
 package consulo.ide.impl.actions;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.Window;
 
@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 2019-02-15
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public interface AboutManager {
   @RequiredUIAccess
   void showAsync(@Nullable Window parentWindow);

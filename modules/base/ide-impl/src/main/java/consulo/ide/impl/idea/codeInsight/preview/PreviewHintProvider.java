@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.codeInsight.preview;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -32,7 +32,7 @@ import javax.swing.*;
  *
  * @author yole
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface PreviewHintProvider {
   ExtensionPointName<PreviewHintProvider> EP_NAME = ExtensionPointName.create(PreviewHintProvider.class);
 

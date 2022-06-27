@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.packageDependencies;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.extension.Extensions;
 import consulo.component.persist.PersistentStateComponent;
@@ -31,7 +31,7 @@ import jakarta.inject.Singleton;
 
 @Singleton
 @State(name = "DependencyUISettings", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml")})
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class DependencyUISettings implements PersistentStateComponent<DependencyUISettings> {
   public boolean UI_FLATTEN_PACKAGES = true;

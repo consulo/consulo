@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.openapi.vcs;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
@@ -44,7 +44,7 @@ import java.util.regex.Pattern;
  */
 @Singleton
 @State(name = "IssueNavigationConfiguration", storages = {@Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/vcs.xml")})
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class IssueNavigationConfiguration extends SimpleModificationTracker implements PersistentStateComponent<IssueNavigationConfiguration> {
   @NonNls

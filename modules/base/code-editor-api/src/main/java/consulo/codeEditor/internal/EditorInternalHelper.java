@@ -16,7 +16,7 @@
 package consulo.codeEditor.internal;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
@@ -38,7 +38,7 @@ import java.util.Objects;
  * @author VISTALL
  * @since 18-Mar-22
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public interface EditorInternalHelper {
   public static class CaretDataContext extends DataContextWrapper {
     protected final Caret myCaret;

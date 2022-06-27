@@ -54,10 +54,10 @@ public class InjectingBindingProcessor extends AbstractProcessor {
   private Map<String, Class<? extends Annotation>> myApiAnnotations = new HashMap<>();
 
   public InjectingBindingProcessor() {
-    myApiAnnotations.put(SERVICE_IMPL, Service.class);
-    myApiAnnotations.put(EXTENSION_IMPL, Extension.class);
-    myApiAnnotations.put(TOPIC_IMPL, Topic.class);
-    myApiAnnotations.put(ACTION_IMPL, Action.class);
+    myApiAnnotations.put(SERVICE_IMPL, ServiceAPI.class);
+    myApiAnnotations.put(EXTENSION_IMPL, ExtensionAPI.class);
+    myApiAnnotations.put(TOPIC_IMPL, TopicAPI.class);
+    myApiAnnotations.put(ACTION_IMPL, ActionAPI.class);
   }
 
   @Override
@@ -112,7 +112,7 @@ public class InjectingBindingProcessor extends AbstractProcessor {
 
           ComponentScope scope;
           // use TopicImpl scope
-          if (apiInfo.annotation() instanceof Topic) {
+          if (apiInfo.annotation() instanceof TopicAPI) {
             TopicImpl topicImpl = typeElement.getAnnotation(TopicImpl.class);
             scope = topicImpl.value();
           } else {
@@ -339,15 +339,15 @@ public class InjectingBindingProcessor extends AbstractProcessor {
   }
 
   private static ComponentScope getScope(Annotation annotation) {
-    if (annotation instanceof Service) {
-      return ((Service)annotation).value();
+    if (annotation instanceof ServiceAPI) {
+      return ((ServiceAPI)annotation).value();
     }
 
-    if (annotation instanceof Extension) {
-      return ((Extension)annotation).value();
+    if (annotation instanceof ExtensionAPI) {
+      return ((ExtensionAPI)annotation).value();
     }
 
-    if (annotation instanceof Action) {
+    if (annotation instanceof ActionAPI) {
       // actions always bind in application injecting scope
       return ComponentScope.APPLICATION;
     }
@@ -356,8 +356,8 @@ public class InjectingBindingProcessor extends AbstractProcessor {
   }
 
   private static boolean isLazy(Annotation annotation) {
-    if (annotation instanceof Service) {
-      return ((Service)annotation).lazy();
+    if (annotation instanceof ServiceAPI) {
+      return ((ServiceAPI)annotation).lazy();
     }
     return true;
   }

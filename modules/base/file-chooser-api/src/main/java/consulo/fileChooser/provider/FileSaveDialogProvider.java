@@ -16,7 +16,7 @@
 package consulo.fileChooser.provider;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.ComponentManager;
 import consulo.component.extension.ExtensionPointName;
 import consulo.fileChooser.FileSaverDescriptor;
@@ -30,7 +30,7 @@ import java.awt.*;
  * @author VISTALL
  * @since 2018-06-28
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface FileSaveDialogProvider extends FileOperateDialogProvider {
   ExtensionPointName<FileSaveDialogProvider> EP_NAME = ExtensionPointName.create(FileSaveDialogProvider.class);
 

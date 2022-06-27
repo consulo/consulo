@@ -17,7 +17,7 @@
 package consulo.ide.navigation;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.editor.ui.PsiElementListCellRenderer;
 import consulo.language.psi.PsiElement;
@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
 /**
  * @author yole
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface GotoTargetRendererProvider {
   ExtensionPointName<GotoTargetRendererProvider> EP_NAME = ExtensionPointName.create(GotoTargetRendererProvider.class);
 

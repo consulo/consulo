@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
 import consulo.ide.impl.idea.openapi.vcs.impl.VcsDescriptor;
 
@@ -27,7 +27,7 @@ import java.util.Collection;
 /**
  * @author Irina.Chernushina
  */
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 public interface AllVcsesI {
   @Nullable
   AbstractVcs getByName(String name);

@@ -16,13 +16,13 @@
 package consulo.ide.impl.language.codeStyle;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.ide.impl.idea.codeStyle.CodeStyleFacade;
 
 /**
  * @author VISTALL
  * @since 2018-08-24
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public interface ApplicationCodeStyleFacade extends CodeStyleFacade {
 }

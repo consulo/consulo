@@ -1,7 +1,7 @@
 package consulo.ide.impl.idea.remoteServer.configuration;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.remoteServer.ServerType;
 import javax.annotation.Nonnull;
@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * @author nik
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class RemoteServersManager {
   public static RemoteServersManager getInstance() {
     return ServiceManager.getService(RemoteServersManager.class);

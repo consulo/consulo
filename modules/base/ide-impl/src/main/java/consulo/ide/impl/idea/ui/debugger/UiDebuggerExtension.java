@@ -17,12 +17,12 @@
 package consulo.ide.impl.idea.ui.debugger;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 
 import javax.swing.*;
 
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface UiDebuggerExtension {
   ExtensionPointName<UiDebuggerExtension> EP_NAME = ExtensionPointName.create(UiDebuggerExtension.class);
 

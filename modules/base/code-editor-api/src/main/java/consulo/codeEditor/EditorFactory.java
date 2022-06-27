@@ -2,7 +2,7 @@
 package consulo.codeEditor;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
@@ -20,7 +20,7 @@ import javax.annotation.Nullable;
  * <p>
  * Creating and releasing of editors must be done from EDT.
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class EditorFactory {
   /**
    * Returns the editor factory instance.

@@ -2,7 +2,7 @@
 package consulo.language.psi;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.navigation.Navigatable;
 import consulo.platform.Platform;
@@ -16,7 +16,7 @@ import java.io.File;
 /**
  * @author yole
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class PsiNavigationSupport {
   public static PsiNavigationSupport getInstance() {
     return Application.get().getInstance(PsiNavigationSupport.class);

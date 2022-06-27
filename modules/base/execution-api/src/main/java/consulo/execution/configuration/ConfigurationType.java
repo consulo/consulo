@@ -16,7 +16,7 @@
 package consulo.execution.configuration;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.ui.image.Image;
 
@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
  *
  * @see ConfigurationTypeBase
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface ConfigurationType {
   ExtensionPointName<ConfigurationType> EP_NAME = ExtensionPointName.create(ConfigurationType.class);
 

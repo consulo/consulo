@@ -16,7 +16,7 @@
 package consulo.application.ui;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 
 import javax.annotation.Nonnull;
@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 21-Feb-22
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public interface UIFontManager {
   @Nonnull
   static UIFontManager getInstance() {

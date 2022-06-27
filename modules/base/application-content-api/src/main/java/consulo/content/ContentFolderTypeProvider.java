@@ -17,7 +17,7 @@ package consulo.content;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.ComponentManager;
 import consulo.component.extension.ExtensionPointName;
 import consulo.content.base.ExcludedContentFolderTypeProvider;
@@ -37,7 +37,7 @@ import java.util.function.Predicate;
  * @author VISTALL
  * @since 22:32/31.10.13
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class ContentFolderTypeProvider {
   @Nonnull
   public static Predicate<ContentFolderTypeProvider> allExceptExcluded() {

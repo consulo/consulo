@@ -17,7 +17,7 @@ package consulo.language.psi;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
 
@@ -29,7 +29,7 @@ import java.util.function.Predicate;
  * @author VISTALL
  * @since 17:38/30.03.13
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface PsiElementFactory extends Predicate<IElementType> {
   ElementTypeEntryExtensionCollector<PsiElementFactory> EP = ElementTypeEntryExtensionCollector.create(PsiElementFactory.class);
 

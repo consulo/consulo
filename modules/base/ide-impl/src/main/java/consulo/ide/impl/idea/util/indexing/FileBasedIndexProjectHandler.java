@@ -20,7 +20,7 @@
 package consulo.ide.impl.idea.util.indexing;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.impl.internal.performance.PerformanceWatcher;
 import consulo.ide.IdeBundle;
@@ -53,7 +53,7 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 
 @Singleton
-@Service(value = ComponentScope.PROJECT, lazy = false)
+@ServiceAPI(value = ComponentScope.PROJECT, lazy = false)
 @ServiceImpl
 public class FileBasedIndexProjectHandler implements IndexableFileSet, Disposable {
   private static final Logger LOG = Logger.getInstance(FileBasedIndexProjectHandler.class);

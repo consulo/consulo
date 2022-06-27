@@ -16,7 +16,7 @@
 package consulo.language.sem;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 
@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * @author peter
  */
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 public abstract class SemService {
 
   public static SemService getSemService(Project p) {

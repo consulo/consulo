@@ -2,7 +2,7 @@
 package consulo.virtualFileSystem.event;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.application.ReadAction;
 import consulo.virtualFileSystem.VirtualFileManager;
 import org.jetbrains.annotations.Contract;
@@ -48,7 +48,7 @@ import java.util.List;
  * introduce a discrepancy in the world when the VFS is already changed but other subsystems aren't, and this discrepancy
  * should be made as explicit as possible.
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface AsyncFileListener {
 
   /**

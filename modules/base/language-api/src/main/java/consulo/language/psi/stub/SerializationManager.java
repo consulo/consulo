@@ -2,14 +2,14 @@
 package consulo.language.psi.stub;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.ApplicationManager;
 import consulo.application.util.function.Computable;
 import consulo.language.ast.IElementType;
 
 import java.util.List;
 
-@Service(value = ComponentScope.APPLICATION, lazy = false)
+@ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
 public abstract class SerializationManager {
   private volatile boolean mySerializersLoaded;
 

@@ -23,7 +23,7 @@
 package consulo.execution.ui.console;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.content.scope.SearchScope;
 import consulo.project.Project;
@@ -33,7 +33,7 @@ import javax.annotation.Nonnull;
 /**
  * @author dyoma
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class TextConsoleBuilderFactory {
   public abstract TextConsoleBuilder createBuilder(@Nonnull Project project);
 

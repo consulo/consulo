@@ -2,7 +2,7 @@
 package consulo.language.codeStyle.setting;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.configurable.Configurable;
 import consulo.language.Language;
@@ -22,7 +22,7 @@ import java.util.Set;
 /**
  * Base class and extension point for common code style settings for a specific language.
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class LanguageCodeStyleSettingsProvider extends CodeStyleSettingsProvider {
   public static final ExtensionPointName<LanguageCodeStyleSettingsProvider> EP_NAME = ExtensionPointName.create(LanguageCodeStyleSettingsProvider.class);
 

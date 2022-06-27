@@ -21,14 +21,14 @@
 package consulo.project.ui.wm;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.application.ui.UISettings;
 import consulo.component.extension.ExtensionPointName;
 import consulo.disposer.Disposable;
 
 import javax.swing.*;
 
-@Extension(ComponentScope.PROJECT)
+@ExtensionAPI(ComponentScope.PROJECT)
 public abstract class IdeRootPaneNorthExtension implements Disposable {
   public static final ExtensionPointName<IdeRootPaneNorthExtension> EP_NAME = ExtensionPointName.create(IdeRootPaneNorthExtension.class);
 

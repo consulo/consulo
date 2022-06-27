@@ -16,17 +16,16 @@
 package consulo.colorScheme;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.colorScheme.event.EditorColorsListener;
-import consulo.component.messagebus.TopicImpl;
 import consulo.disposer.Disposable;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
 
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class EditorColorsManager {
   public static final String DEFAULT_SCHEME_NAME = "Default";
 

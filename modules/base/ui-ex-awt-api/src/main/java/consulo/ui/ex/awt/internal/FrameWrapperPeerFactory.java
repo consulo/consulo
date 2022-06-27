@@ -16,7 +16,7 @@
 package consulo.ui.ex.awt.internal;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.ui.ex.awt.FrameWrapper;
 
@@ -29,7 +29,7 @@ import javax.swing.*;
  * Hack for extract desktop dep to desktop module
  * TODO [VISTALL] drop this class when FrameWrapper removed
 */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public interface FrameWrapperPeerFactory {
   JFrame createJFrame(FrameWrapper owner, IdeFrame parent);
 

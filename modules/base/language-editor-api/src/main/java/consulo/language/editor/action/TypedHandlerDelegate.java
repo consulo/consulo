@@ -2,7 +2,7 @@
 package consulo.language.editor.action;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
  *
  * @author yole
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class TypedHandlerDelegate {
   public static final ExtensionPointName<TypedHandlerDelegate> EP_NAME = ExtensionPointName.create(TypedHandlerDelegate.class);
 

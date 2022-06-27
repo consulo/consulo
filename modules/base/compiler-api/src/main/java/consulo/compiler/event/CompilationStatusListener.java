@@ -16,7 +16,7 @@
 package consulo.compiler.event;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Topic;
+import consulo.annotation.component.TopicAPI;
 import consulo.compiler.CompileContext;
 
 import java.util.EventListener;
@@ -24,7 +24,7 @@ import java.util.EventListener;
 /**
  * A listener for compiler events.
  */
-@Topic(ComponentScope.PROJECT)
+@TopicAPI(ComponentScope.PROJECT)
 public interface CompilationStatusListener extends EventListener {
   /**
    * Invoked in a Swing dispatch thread after the compilation is finished.

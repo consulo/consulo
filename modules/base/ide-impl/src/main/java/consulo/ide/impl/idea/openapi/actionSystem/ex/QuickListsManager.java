@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.actionSystem.ex;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.component.persist.RoamingType;
@@ -44,7 +44,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Singleton
-@Service(value = ComponentScope.APPLICATION, lazy = false)
+@ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
 @ServiceImpl
 public class QuickListsManager {
   public static QuickListsManager getInstance() {

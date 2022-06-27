@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.codeInsight.completion;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.language.editor.completion.CompletionLocation;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.component.extension.ExtensionPointName;
@@ -25,7 +25,7 @@ import consulo.component.extension.ExtensionPointName;
 /**
  * @author peter
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class CompletionPreselectSkipper {
   public static final ExtensionPointName<CompletionPreselectSkipper> EP_NAME = ExtensionPointName.create(CompletionPreselectSkipper.class);
 

@@ -16,7 +16,7 @@
 package consulo.ide.impl.start;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.Application;
@@ -39,7 +39,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 23-Sep-17
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class WelcomeFrameManager {
   @Nonnull
   public static WelcomeFrameManager getInstance() {

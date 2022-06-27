@@ -16,8 +16,7 @@
 package consulo.ide.impl.plugins;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Topic;
-import consulo.component.messagebus.TopicImpl;
+import consulo.annotation.component.TopicAPI;
 import consulo.container.plugin.PluginId;
 
 import javax.annotation.Nonnull;
@@ -26,7 +25,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 13/09/2021
  */
-@Topic(ComponentScope.APPLICATION)
+@TopicAPI(ComponentScope.APPLICATION)
 public interface PluginActionListener {
   void pluginInstalled(@Nonnull PluginId pluginId);
 

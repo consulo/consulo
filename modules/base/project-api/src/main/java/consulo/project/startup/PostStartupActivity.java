@@ -16,12 +16,12 @@
 package consulo.project.startup;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 
 /**
  * @author VISTALL
  * @since 18-Jun-22
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface PostStartupActivity extends StartupActivity {
 }

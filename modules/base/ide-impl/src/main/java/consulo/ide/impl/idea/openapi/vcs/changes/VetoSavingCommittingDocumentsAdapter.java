@@ -23,7 +23,7 @@
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
@@ -42,7 +42,7 @@ import jakarta.inject.Singleton;
 import java.util.Map;
 
 @Singleton
-@Service(value = ComponentScope.APPLICATION, lazy = false)
+@ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
 @ServiceImpl
 public class VetoSavingCommittingDocumentsAdapter {
   static final Object SAVE_DENIED = new Object();

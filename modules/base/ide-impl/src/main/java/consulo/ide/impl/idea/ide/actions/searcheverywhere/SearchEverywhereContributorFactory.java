@@ -16,14 +16,14 @@
 package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.ui.ex.action.AnActionEvent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface SearchEverywhereContributorFactory<Item> {
   ExtensionPointName<SearchEverywhereContributorFactory> EP_NAME = ExtensionPointName.create(SearchEverywhereContributorFactory.class);
 

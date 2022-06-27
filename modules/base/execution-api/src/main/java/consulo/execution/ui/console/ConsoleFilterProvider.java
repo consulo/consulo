@@ -21,7 +21,7 @@
 package consulo.execution.ui.console;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import javax.annotation.Nonnull;
@@ -29,7 +29,7 @@ import javax.annotation.Nonnull;
 /**
  * @see ConsoleFilterProviderEx for additional API
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface ConsoleFilterProvider {
   ExtensionPointName<ConsoleFilterProvider> FILTER_PROVIDERS = ExtensionPointName.create(ConsoleFilterProvider.class);
 

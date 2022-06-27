@@ -22,12 +22,11 @@ import java.lang.annotation.Target;
 
 /**
  * @author VISTALL
- * @since 13-Jun-22
+ * @since 26-Jun-22
+ *
+ * Annotation - marker for action/action group marker. Don't use it's directly
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface Topic {
-  ComponentScope value();
-
-  TopicBroadcastDirection direction() default TopicBroadcastDirection.TO_CHILDREN;
+public @interface ActionAPI {
 }

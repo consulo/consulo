@@ -16,7 +16,7 @@
 package consulo.execution.event;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Topic;
+import consulo.annotation.component.TopicAPI;
 import consulo.annotation.component.TopicBroadcastDirection;
 import consulo.execution.configuration.RunProfile;
 import consulo.execution.runner.ExecutionEnvironment;
@@ -28,7 +28,7 @@ import java.util.EventListener;
 /**
  * @author nik
  */
-@Topic(value = ComponentScope.PROJECT, direction = TopicBroadcastDirection.TO_PARENT)
+@TopicAPI(value = ComponentScope.PROJECT, direction = TopicBroadcastDirection.TO_PARENT)
 public interface ExecutionListener extends EventListener {
 
   default void processStartScheduled(@Nonnull String executorId, @Nonnull ExecutionEnvironment env) {

@@ -16,7 +16,7 @@
 package consulo.application.impl.internal.performance;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
@@ -63,7 +63,7 @@ import java.util.function.Consumer;
  * @author yole
  */
 @Singleton
-@Service(value = ComponentScope.APPLICATION, lazy = false)
+@ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
 @ServiceImpl
 public class PerformanceWatcher implements Disposable {
   private static final Logger LOG = Logger.getInstance(PerformanceWatcher.class);

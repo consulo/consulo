@@ -20,12 +20,11 @@
 package consulo.ide.impl.idea.ide.bookmarks;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Topic;
-import consulo.component.messagebus.TopicImpl;
+import consulo.annotation.component.TopicAPI;
 
 import javax.annotation.Nonnull;
 
-@Topic(ComponentScope.PROJECT)
+@TopicAPI(ComponentScope.PROJECT)
 public interface BookmarksListener {
   void bookmarkAdded(@Nonnull Bookmark b);
 

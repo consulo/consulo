@@ -16,7 +16,7 @@
 package consulo.component.extension;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.ComponentManager;
 
 import javax.annotation.Nonnull;
@@ -30,7 +30,7 @@ import java.util.function.Consumer;
  * @author VISTALL
  * @since 2019-02-25
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface ExtensionExtender<T> {
   void extend(@Nonnull ComponentManager componentManager, @Nonnull Consumer<T> consumer);
 

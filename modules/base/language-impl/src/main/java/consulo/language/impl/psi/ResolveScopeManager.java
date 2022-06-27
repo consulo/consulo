@@ -17,7 +17,7 @@ package consulo.language.impl.psi;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.project.Project;
@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
 /**
  * @author yole
  */
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 public abstract class ResolveScopeManager {
   @Nonnull
   public abstract GlobalSearchScope getResolveScope(@Nonnull PsiElement element);

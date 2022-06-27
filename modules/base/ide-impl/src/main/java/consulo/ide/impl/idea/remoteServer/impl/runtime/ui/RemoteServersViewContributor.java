@@ -1,7 +1,7 @@
 package consulo.ide.impl.idea.remoteServer.impl.runtime.ui;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
@@ -19,7 +19,7 @@ import java.util.List;
  *
  * @author nik
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class RemoteServersViewContributor {
   public static final ExtensionPointName<RemoteServersViewContributor> EP_NAME = ExtensionPointName.create(RemoteServersViewContributor.class);
 

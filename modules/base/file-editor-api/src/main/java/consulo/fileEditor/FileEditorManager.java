@@ -16,7 +16,7 @@
 package consulo.fileEditor;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.disposer.Disposable;
@@ -37,7 +37,7 @@ import javax.swing.*;
 import java.util.List;
 import java.util.Set;
 
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 public abstract class FileEditorManager {
   public static final Key<Boolean> CLOSING_TO_REOPEN = Key.create("CLOSING_TO_REOPEN");
 

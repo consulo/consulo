@@ -16,7 +16,7 @@
 package consulo.virtualFileSystem.fileType;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.util.io.ByteSequence;
 import consulo.virtualFileSystem.VirtualFile;
@@ -28,7 +28,7 @@ import java.util.Collection;
 /**
  * Pluggable file type detector by content
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface FileTypeDetector {
   ExtensionPointName<FileTypeDetector> EP_NAME = ExtensionPointName.create(FileTypeDetector.class);
 

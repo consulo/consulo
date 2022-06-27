@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.openapi.fileTypes.impl;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.document.util.FileContentUtilCore;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -22,7 +22,7 @@ import javax.annotation.Nullable;
  * {@link FileContentUtilCore#reparseFiles(VirtualFile...)} if it's possible to identify specific files affected
  * by the change, or {@link FileTypeManagerEx#makeFileTypesChange(String, Runnable)} ()} if the change affects an unknown number of files.
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface FileTypeOverrider {
   ExtensionPointName<FileTypeOverrider> EP_NAME = ExtensionPointName.create(FileTypeOverrider.class);
 

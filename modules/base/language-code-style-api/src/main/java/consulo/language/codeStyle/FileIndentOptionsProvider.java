@@ -16,7 +16,7 @@
 package consulo.language.codeStyle;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
@@ -29,7 +29,7 @@ import static consulo.language.codeStyle.CommonCodeStyleSettings.IndentOptions;
  * Provides indent options for a PSI file thus allowing different PSI files having different indentation policies withing the same project.
  * The provider can also offer ad hoc actions to control the current indentation policy without opening settings.
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class FileIndentOptionsProvider {
 
   public final static ExtensionPointName<FileIndentOptionsProvider> EP_NAME = ExtensionPointName.create(FileIndentOptionsProvider.class);

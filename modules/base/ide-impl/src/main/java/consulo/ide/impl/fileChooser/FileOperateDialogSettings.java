@@ -16,7 +16,7 @@
 package consulo.ide.impl.fileChooser;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.ServiceManager;
 import consulo.util.xml.serializer.XmlSerializerUtil;
@@ -35,7 +35,7 @@ import javax.annotation.Nullable;
  * @since 2018-06-28
  */
 @Singleton
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 @State(name = "FileOperateDialogSettings", storages = @Storage(value = "ide.file.dialog.xml", roamingType = RoamingType.PER_OS))
 public class FileOperateDialogSettings implements PersistentStateComponent<FileOperateDialogSettings.State> {

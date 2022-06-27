@@ -17,7 +17,7 @@
 package consulo.execution.executor;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.ApplicationManager;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.project.Project;
@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
 /**
  * @author spleaner
  */
-@Service(value = ComponentScope.APPLICATION, lazy = false)
+@ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
 public abstract class ExecutorRegistry {
   public static ExecutorRegistry getInstance() {
     return ApplicationManager.getApplication().getInstance(ExecutorRegistry.class);

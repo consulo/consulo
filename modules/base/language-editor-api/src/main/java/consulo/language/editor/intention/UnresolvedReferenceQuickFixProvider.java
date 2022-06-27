@@ -17,7 +17,7 @@ package consulo.language.editor.intention;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiReference;
 import consulo.project.DumbService;
@@ -25,7 +25,7 @@ import consulo.util.lang.reflect.ReflectionUtil;
 
 import javax.annotation.Nonnull;
 
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class UnresolvedReferenceQuickFixProvider<T extends PsiReference> {
   private static final ExtensionPointName<UnresolvedReferenceQuickFixProvider> EXTENSION_NAME = ExtensionPointName.create(UnresolvedReferenceQuickFixProvider.class);
 

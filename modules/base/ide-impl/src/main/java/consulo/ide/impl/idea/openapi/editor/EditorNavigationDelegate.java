@@ -1,7 +1,7 @@
 package consulo.ide.impl.idea.openapi.editor;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.dataContext.DataContext;
 import consulo.component.extension.ExtensionPointName;
 import consulo.codeEditor.Editor;
@@ -14,7 +14,7 @@ import javax.annotation.Nonnull;
  * @author Denis Zhdanov
  * @since 5/26/11 3:31 PM
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface EditorNavigationDelegate {
 
   ExtensionPointName<EditorNavigationDelegate> EP_NAME = ExtensionPointName.create(EditorNavigationDelegate.class);

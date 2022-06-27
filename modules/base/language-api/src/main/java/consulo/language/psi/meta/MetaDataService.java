@@ -16,7 +16,7 @@
 package consulo.language.psi.meta;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.language.pattern.ElementPattern;
 import consulo.language.psi.PsiElement;
@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
  *
  * @see MetaDataContributor
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public interface MetaDataService extends MetaDataRegistrar {
   /**
    * Associates elements matching given filter with metadata class.

@@ -1,7 +1,7 @@
 package consulo.ide.impl.idea.openapi.externalSystem.service;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -45,7 +45,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @since 8/8/11 1:08 PM
  */
 @Singleton
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class ExternalSystemFacadeManager {
 

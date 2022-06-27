@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Topic;
+import consulo.annotation.component.TopicAPI;
 import consulo.annotation.component.TopicBroadcastDirection;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.TopicImpl;
@@ -31,7 +31,7 @@ import java.awt.*;
 /**
 * User: spLeaner
 */
-@Topic(value = ComponentScope.PROJECT, direction = TopicBroadcastDirection.NONE)
+@TopicAPI(value = ComponentScope.PROJECT, direction = TopicBroadcastDirection.NONE)
 public interface ConfigurationErrors {
   TopicImpl<ConfigurationErrors> TOPIC = TopicImpl.create("Configuration Error", ConfigurationErrors.class, TopicBroadcastDirection.NONE);
 

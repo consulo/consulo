@@ -16,7 +16,7 @@
 package consulo.language.psi;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.language.content.ProductionContentFolderTypeProvider;
@@ -32,7 +32,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 8:21/20.05.13
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface PsiPackageSupportProvider {
   ExtensionPointName<PsiPackageSupportProvider> EP_NAME = ExtensionPointName.create(PsiPackageSupportProvider.class);
 

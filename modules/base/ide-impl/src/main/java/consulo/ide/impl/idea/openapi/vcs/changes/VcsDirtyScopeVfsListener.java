@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressManager;
@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit;
  * Listens to file system events and notifies VcsDirtyScopeManagers responsible for changed files to mark these files dirty.
  */
 @Singleton
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class VcsDirtyScopeVfsListener implements AsyncFileListener, Disposable {
   @Nonnull

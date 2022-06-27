@@ -2,12 +2,12 @@
 package consulo.ide.impl.idea.codeInsight.completion;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Topic;
+import consulo.annotation.component.TopicAPI;
 
 /**
  * @author yole
  */
-@Topic(ComponentScope.APPLICATION)
+@TopicAPI(ComponentScope.APPLICATION)
 public interface CompletionPhaseListener {
   void completionPhaseChanged(boolean isCompletionRunning);
 }

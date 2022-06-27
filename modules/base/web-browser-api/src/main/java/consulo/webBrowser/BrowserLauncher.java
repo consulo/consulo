@@ -16,7 +16,7 @@
 package consulo.webBrowser;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.project.Project;
 
@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.net.URI;
 
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class BrowserLauncher {
   @Nonnull
   public static BrowserLauncher getInstance() {

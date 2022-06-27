@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.tools;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * @author traff
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class ToolsProvider {
   public static final ExtensionPointName<ToolsProvider> EP_NAME = ExtensionPointName.create(ToolsProvider.class);
 

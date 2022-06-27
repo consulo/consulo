@@ -2,7 +2,7 @@
 package consulo.execution.ui.console;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.project.Project;
@@ -14,7 +14,7 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class HyperlinkInfoFactory {
   @Nonnull
   public static HyperlinkInfoFactory getInstance() {

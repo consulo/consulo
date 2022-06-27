@@ -2,7 +2,7 @@
 package consulo.project;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.AccessToken;
 import consulo.application.ApplicationManager;
 import consulo.application.NonBlockingReadAction;
@@ -49,7 +49,7 @@ import java.util.function.Function;
  *
  * @author peter
  */
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 public abstract class DumbService {
 
   /**

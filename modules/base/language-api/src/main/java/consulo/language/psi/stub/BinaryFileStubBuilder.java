@@ -20,7 +20,7 @@
 package consulo.language.psi.stub;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
 import consulo.component.extension.ExtensionPoint;
 import consulo.component.extension.ExtensionPointCacheKey;
@@ -31,7 +31,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Map;
 
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface BinaryFileStubBuilder {
   ExtensionPointCacheKey<BinaryFileStubBuilder, Map<FileType, BinaryFileStubBuilder>> KEY = ExtensionPointCacheKey.groupBy("BinaryFileStubBuilder", BinaryFileStubBuilder::getFileType);
 

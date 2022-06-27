@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.ide.favoritesTreeView;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.project.ui.view.tree.ViewSettings;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.dataContext.DataContext;
@@ -36,7 +36,7 @@ import java.util.Collection;
  *
  * @author yole
  */
-@Extension(ComponentScope.PROJECT)
+@ExtensionAPI(ComponentScope.PROJECT)
 public abstract class FavoriteNodeProvider {
   public static final ExtensionPointName<FavoriteNodeProvider> EP_NAME = ExtensionPointName.create(FavoriteNodeProvider.class);
 

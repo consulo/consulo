@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
@@ -95,7 +95,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Singleton
-@Service(value = ComponentScope.PROJECT, lazy = false)
+@ServiceAPI(value = ComponentScope.PROJECT, lazy = false)
 @ServiceImpl
 public final class DaemonListeners implements Disposable {
   private static final Logger LOG = Logger.getInstance(DaemonListeners.class);

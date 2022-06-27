@@ -16,7 +16,7 @@
 package consulo.language.psi.search;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.function.Processor;
 import consulo.content.scope.SearchScope;
@@ -37,7 +37,7 @@ import javax.annotation.Nullable;
  * <p>
  * Use {@link PsiSearchHelper#getInstance}() to get a search helper instance.
  */
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 public interface PsiSearchHelper {
   @Deprecated
   class SERVICE {

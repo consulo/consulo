@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.dupLocator;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.ide.impl.idea.dupLocator.treeHash.FragmentsCollector;
 import consulo.ide.impl.idea.dupLocator.util.PsiFragment;
 import consulo.language.Language;
@@ -29,7 +29,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class DuplicatesProfile {
   public static final ExtensionPointName<DuplicatesProfile> EP_NAME = ExtensionPointName.create(DuplicatesProfile.class);
 

@@ -17,7 +17,7 @@ package consulo.virtualFileSystem;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.component.ComponentManager;
 import consulo.component.internal.RootComponentHolder;
@@ -39,7 +39,7 @@ import java.nio.file.Path;
  *
  * @see VirtualFileSystem
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class VirtualFileManager implements ModificationTracker {
 
   public static final ModificationTracker VFS_STRUCTURE_MODIFICATIONS = () -> getInstance().getStructureModificationCount();

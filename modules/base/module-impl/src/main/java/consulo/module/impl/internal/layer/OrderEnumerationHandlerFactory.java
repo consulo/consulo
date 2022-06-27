@@ -16,7 +16,7 @@
 package consulo.module.impl.internal.layer;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.module.Module;
 import consulo.project.Project;
@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
 * @author VISTALL
 * @since 18-Jun-22
 */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class OrderEnumerationHandlerFactory {
   public static final ExtensionPointName<OrderEnumerationHandlerFactory> EP_NAME = ExtensionPointName.create(OrderEnumerationHandlerFactory.class);
 

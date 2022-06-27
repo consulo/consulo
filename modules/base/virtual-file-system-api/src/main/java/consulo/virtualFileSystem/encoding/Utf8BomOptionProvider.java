@@ -2,7 +2,7 @@
 package consulo.virtualFileSystem.encoding;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
@@ -10,7 +10,7 @@ import javax.annotation.Nonnull;
 /**
  * Allows to overwrite project level UTF-8 BOM option for a specific virtual file.
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface Utf8BomOptionProvider {
   ExtensionPointName<Utf8BomOptionProvider> EP_NAME = ExtensionPointName.create(Utf8BomOptionProvider.class);
 

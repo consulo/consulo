@@ -16,7 +16,7 @@
 package consulo.language.editor.intention;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
@@ -35,7 +35,7 @@ import java.util.List;
  *
  * @see IntentionAction
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class IntentionManager  {
   public static final ExtensionPointName<IntentionActionBean> EP_INTENTION_ACTIONS = ExtensionPointName.create("consulo.intentionAction");
 

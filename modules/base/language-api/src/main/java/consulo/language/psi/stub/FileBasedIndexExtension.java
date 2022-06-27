@@ -2,7 +2,7 @@
 package consulo.language.psi.stub;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.index.io.ID;
 import consulo.index.io.IndexExtension;
@@ -20,7 +20,7 @@ import java.util.List;
  *
  * @author Eugene Zhuravlev
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class FileBasedIndexExtension<K, V> extends IndexExtension<K, V, FileContent> {
 
   public static final ExtensionPointName<FileBasedIndexExtension> EXTENSION_POINT_NAME = ExtensionPointName.create(FileBasedIndexExtension.class);

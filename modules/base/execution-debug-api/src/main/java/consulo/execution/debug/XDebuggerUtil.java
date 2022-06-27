@@ -18,7 +18,7 @@ package consulo.execution.debug;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.application.util.function.Processor;
 import consulo.codeEditor.Editor;
@@ -42,7 +42,7 @@ import java.util.List;
 /**
  * @author nik
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class XDebuggerUtil {
   public static XDebuggerUtil getInstance() {
     return Application.get().getInstance(XDebuggerUtil.class);

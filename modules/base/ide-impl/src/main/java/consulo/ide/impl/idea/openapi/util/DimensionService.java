@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.openapi.util;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ui.WindowStateService;
 import consulo.component.persist.RoamingType;
@@ -43,7 +43,7 @@ import java.util.Map;
  * sizes of window, dialogs, etc.
  */
 @Singleton
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 @State(name = "DimensionService", storages = @Storage(value = "window.state.xml", roamingType = RoamingType.DISABLED))
 public class DimensionService extends SimpleModificationTracker implements PersistentStateComponent<Element> {

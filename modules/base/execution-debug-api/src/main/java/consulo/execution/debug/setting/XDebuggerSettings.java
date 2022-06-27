@@ -16,7 +16,7 @@
 package consulo.execution.debug.setting;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.extension.ExtensionPointName;
 import consulo.configurable.Configurable;
@@ -32,7 +32,7 @@ import java.util.Collections;
  *
  * @author nik
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class XDebuggerSettings<T> implements PersistentStateComponent<T> {
   public static final ExtensionPointName<XDebuggerSettings> EXTENSION_POINT = ExtensionPointName.create(XDebuggerSettings.class);
 

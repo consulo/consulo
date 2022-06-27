@@ -16,12 +16,12 @@
 package consulo.language.editor.inspection.scheme.event;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Topic;
+import consulo.annotation.component.TopicAPI;
 import consulo.language.editor.inspection.scheme.Profile;
 
 import javax.annotation.Nullable;
 
-@Topic(ComponentScope.PROJECT)
+@TopicAPI(ComponentScope.PROJECT)
 public interface ProfileChangeAdapter {
   default void profileChanged(@Nullable Profile profile) {
   }

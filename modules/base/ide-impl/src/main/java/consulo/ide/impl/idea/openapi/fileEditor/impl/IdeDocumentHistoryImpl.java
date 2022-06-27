@@ -2,9 +2,8 @@
 package consulo.ide.impl.idea.openapi.fileEditor.impl;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
 import consulo.annotation.component.ServiceImpl;
-import consulo.annotation.component.Topic;
+import consulo.annotation.component.TopicAPI;
 import consulo.application.ui.UISettings;
 import consulo.application.ApplicationManager;
 import consulo.fileEditor.*;
@@ -54,7 +53,6 @@ import consulo.index.io.EnumeratorStringDescriptor;
 import consulo.ide.impl.idea.util.io.PersistentHashMap;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.component.messagebus.TopicImpl;
 import consulo.ide.impl.idea.util.text.DateFormatUtil;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.text.TextEditorProvider;
@@ -713,7 +711,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
   /**
    * {@link RecentPlacesListener} listens recently viewed or changed place adding and removing events.
    */
-  @Topic(ComponentScope.PROJECT)
+  @TopicAPI(ComponentScope.PROJECT)
   public interface RecentPlacesListener {
     /**
      * Fires on a new place info adding into {@link #myChangePlaces} or {@link #myBackPlaces} infos list

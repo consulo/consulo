@@ -17,13 +17,13 @@
 package consulo.ide.impl.psi.search.scope.packageSet;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.content.scope.NamedScope;
 
 import javax.annotation.Nonnull;
 
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface CustomScopesFilter {
   ExtensionPointName<CustomScopesFilter> EP_NAME = ExtensionPointName.create(CustomScopesFilter.class);
 

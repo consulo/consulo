@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.codeEditor.printing;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.StoragePathMacros;
 import consulo.colorScheme.EditorColorsManager;
@@ -31,7 +31,7 @@ import org.jetbrains.annotations.NonNls;
 
 @Singleton
 @State(name = "PrintSettings", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/print.xml")})
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class PrintSettings implements PersistentStateComponent<PrintSettings> {
   @NonNls

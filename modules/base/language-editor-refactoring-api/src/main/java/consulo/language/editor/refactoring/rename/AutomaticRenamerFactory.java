@@ -17,7 +17,7 @@
 package consulo.language.editor.refactoring.rename;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 import consulo.usage.UsageInfo;
@@ -28,7 +28,7 @@ import java.util.Collection;
 /**
  * @author yole
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface AutomaticRenamerFactory {
   ExtensionPointName<AutomaticRenamerFactory> EP_NAME = ExtensionPointName.create(AutomaticRenamerFactory.class);
 

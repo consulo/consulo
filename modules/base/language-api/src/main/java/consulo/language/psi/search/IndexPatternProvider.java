@@ -16,10 +16,8 @@
 package consulo.language.psi.search;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
-import consulo.component.messagebus.TopicImpl;
-import kava.beans.PropertyChangeListener;
 
 import javax.annotation.Nonnull;
 
@@ -32,7 +30,7 @@ import javax.annotation.Nonnull;
  * @see IndexPatternSearch
  * @since 5.1
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface IndexPatternProvider {
   ExtensionPointName<IndexPatternProvider> EP_NAME = ExtensionPointName.create(IndexPatternProvider.class);
 

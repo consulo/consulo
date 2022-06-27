@@ -2,7 +2,7 @@
 package consulo.language.inject.impl.internal;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.util.SimpleModificationTracker;
 import consulo.language.impl.internal.psi.PsiManagerEx;
@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 @Singleton
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public final class ConcatenationInjectorManager extends SimpleModificationTracker {
   @Nonnull

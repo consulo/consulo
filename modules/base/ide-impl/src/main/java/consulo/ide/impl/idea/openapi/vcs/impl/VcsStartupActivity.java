@@ -2,14 +2,14 @@
 package consulo.ide.impl.idea.openapi.vcs.impl;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
 import consulo.component.extension.ExtensionList;
 import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface VcsStartupActivity {
   ExtensionList<VcsStartupActivity, Application> EP = ExtensionList.of(VcsStartupActivity.class);
 

@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.diff.comparison;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.diff.fragment.DiffFragment;
 import consulo.diff.fragment.LineFragment;
 import consulo.ide.impl.idea.diff.fragments.MergeLineFragment;
@@ -32,7 +32,7 @@ import java.util.List;
  * <p/>
  * It's good idea not to compare String due to expensive subSequence() implementation. Use CharSequenceSubSequence.
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class ComparisonManager {
   @Nonnull
   public static ComparisonManager getInstance() {

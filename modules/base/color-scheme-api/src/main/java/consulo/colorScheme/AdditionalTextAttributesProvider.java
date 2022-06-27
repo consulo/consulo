@@ -16,7 +16,7 @@
 package consulo.colorScheme;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 
 import javax.annotation.Nonnull;
 
@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 18-Jun-22
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface AdditionalTextAttributesProvider {
   @Nonnull
   String getColorSchemeName();

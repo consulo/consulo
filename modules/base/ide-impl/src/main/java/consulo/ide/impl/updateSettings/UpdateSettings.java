@@ -16,7 +16,7 @@
 package consulo.ide.impl.updateSettings;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationProperties;
 import consulo.component.persist.PersistentStateComponent;
@@ -37,7 +37,7 @@ import java.io.File;
  * @since 02-Sep-16
  */
 @Singleton
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 @State(name = "UpdateSettings", storages = @Storage(value = "updates.xml", roamingType = RoamingType.DISABLED))
 public class UpdateSettings implements PersistentStateComponent<UpdateSettings.State> {

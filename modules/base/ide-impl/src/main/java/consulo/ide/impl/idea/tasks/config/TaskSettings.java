@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.tasks.config;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
@@ -31,7 +31,7 @@ import jakarta.inject.Singleton;
  * Date: 3/23/12
  */
 @Singleton
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 @State(name = "TaskSettings", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml")})
 public class TaskSettings implements PersistentStateComponent<TaskSettings> {

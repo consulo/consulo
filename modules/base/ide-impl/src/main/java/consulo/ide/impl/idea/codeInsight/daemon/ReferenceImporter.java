@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.codeInsight.daemon;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.codeEditor.Editor;
 import consulo.language.editor.intention.HintAction;
@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
 /**
  * @author yole
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface ReferenceImporter {
   ExtensionPointName<ReferenceImporter> EP_NAME = ExtensionPointName.create(ReferenceImporter.class);
 

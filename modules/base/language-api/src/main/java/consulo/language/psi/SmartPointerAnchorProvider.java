@@ -16,7 +16,7 @@
 package consulo.language.psi;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 
 import javax.annotation.Nonnull;
@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
  *
  * @author Dennis.Ushakov
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface SmartPointerAnchorProvider {
   ExtensionPointName<SmartPointerAnchorProvider> EP_NAME = ExtensionPointName.create(SmartPointerAnchorProvider.class);
 

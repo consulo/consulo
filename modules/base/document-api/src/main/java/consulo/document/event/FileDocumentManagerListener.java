@@ -2,7 +2,7 @@
 package consulo.document.event;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Topic;
+import consulo.annotation.component.TopicAPI;
 import consulo.document.Document;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -12,7 +12,7 @@ import java.util.EventListener;
 /**
  * @see #TOPIC
  */
-@Topic(ComponentScope.APPLICATION)
+@TopicAPI(ComponentScope.APPLICATION)
 public interface FileDocumentManagerListener extends EventListener {
   /**
    * Fired before processing FileDocumentManager.saveAllDocuments(). Can be used by plugins

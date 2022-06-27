@@ -16,7 +16,7 @@
 package consulo.language.editor.highlight;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
 import consulo.codeEditor.EditorHighlighter;
 import consulo.colorScheme.EditorColorsScheme;
@@ -33,7 +33,7 @@ import java.util.Map;
 /**
  * @author yole
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface EditorHighlighterProvider {
   ExtensionPointCacheKey<EditorHighlighterProvider, Map<FileType, EditorHighlighterProvider>> KEY = ExtensionPointCacheKey.groupBy("EditorHighlighterProvider", EditorHighlighterProvider::getFileType);
 

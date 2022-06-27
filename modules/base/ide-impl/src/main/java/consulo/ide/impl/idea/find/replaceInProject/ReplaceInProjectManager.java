@@ -3,7 +3,7 @@
 package consulo.ide.impl.idea.find.replaceInProject;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.find.actions.FindInPathAction;
 import consulo.ide.impl.idea.find.findInProject.FindInProjectManager;
@@ -57,7 +57,7 @@ import java.awt.event.KeyEvent;
 import java.util.*;
 
 @Singleton
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class ReplaceInProjectManager {
   private static final NotificationGroup NOTIFICATION_GROUP = FindInPathAction.NOTIFICATION_GROUP;

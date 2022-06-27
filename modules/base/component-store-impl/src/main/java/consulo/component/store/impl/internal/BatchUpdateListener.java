@@ -16,10 +16,10 @@
 package consulo.component.store.impl.internal;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Topic;
+import consulo.annotation.component.TopicAPI;
 
 // FIXME [VISTALL] this topic for App&Project
-@Topic(ComponentScope.APPLICATION)
+@TopicAPI(ComponentScope.APPLICATION)
 public interface BatchUpdateListener {
   void onBatchUpdateStarted();
 

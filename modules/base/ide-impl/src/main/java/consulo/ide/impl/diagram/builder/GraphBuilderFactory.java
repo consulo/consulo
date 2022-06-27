@@ -16,7 +16,7 @@
 package consulo.ide.impl.diagram.builder;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.ide.ServiceManager;
 import javax.annotation.Nonnull;
 
@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 22:36/15.10.13
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class GraphBuilderFactory {
   @Nonnull
   public static GraphBuilderFactory getInstance() {

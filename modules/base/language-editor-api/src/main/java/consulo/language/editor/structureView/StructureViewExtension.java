@@ -16,7 +16,7 @@
 package consulo.language.editor.structureView;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.codeEditor.Editor;
 import consulo.component.extension.ExtensionPointName;
 import consulo.fileEditor.structureView.StructureViewTreeElement;
@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface StructureViewExtension {
   ExtensionPointName<StructureViewExtension> EXTENSION_POINT_NAME = ExtensionPointName.create(StructureViewExtension.class);
 

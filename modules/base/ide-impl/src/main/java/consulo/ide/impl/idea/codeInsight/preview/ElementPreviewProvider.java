@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.codeInsight.preview;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.codeEditor.Editor;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
 
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface ElementPreviewProvider {
   ExtensionPointName<ElementPreviewProvider> EP_NAME = ExtensionPointName.create(ElementPreviewProvider.class);
 

@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.internal.psiView;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
@@ -30,7 +30,7 @@ import javax.swing.*;
  * @author yole
  * @author Konstantin Bulenkov
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface PsiViewerExtension {
   ExtensionPointName<PsiViewerExtension> EP_NAME = ExtensionPointName.create("consulo.psiViewerExtension");
 

@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.ide;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
 import consulo.util.concurrent.AsyncResult;
@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
  *
  * @since 5.0.2
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class FrameStateManager {
   /**
    * Returns the global <code>FrameStateManager</code> instance.

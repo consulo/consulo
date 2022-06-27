@@ -1,7 +1,7 @@
 package consulo.ide.impl.idea.tasks.timeTracking;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.ide.impl.idea.openapi.util.Disposer;
@@ -42,7 +42,7 @@ import java.util.Date;
 
 @Singleton
 @State(name = "TimeTrackingManager", storages = {@Storage(StoragePathMacros.WORKSPACE_FILE)})
-@Service(value = ComponentScope.PROJECT, lazy = false)
+@ServiceAPI(value = ComponentScope.PROJECT, lazy = false)
 @ServiceImpl
 public class TimeTrackingManager implements PersistentStateComponent<TimeTrackingManager.Config>, Disposable {
   public static final int TIME_TRACKING_TIME_UNIT = 1000;

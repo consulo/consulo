@@ -16,7 +16,7 @@
 package consulo.project.ui.wm.dock;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
 
@@ -26,7 +26,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.Set;
 
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 public abstract class DockManager {
   public static DockManager getInstance(Project project) {
     return project.getInstance(DockManager.class);

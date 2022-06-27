@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.ide.projectView;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.ide.impl.idea.packageDependencies.ui.PackageDependenciesNode;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
@@ -26,7 +26,7 @@ import consulo.ui.ex.tree.PresentationData;
 /**
  * @author yole
  */
-@Extension(ComponentScope.PROJECT)
+@ExtensionAPI(ComponentScope.PROJECT)
 public interface ProjectViewNodeDecorator {
   ExtensionPointName<ProjectViewNodeDecorator> EP_NAME = ExtensionPointName.create(ProjectViewNodeDecorator.class);
 

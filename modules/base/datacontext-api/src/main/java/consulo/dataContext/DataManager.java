@@ -16,7 +16,7 @@
 package consulo.dataContext;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.component.internal.RootComponentHolder;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.concurrent.Promise;
@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class DataManager {
   @Nonnull
   public static DataManager getInstance() {

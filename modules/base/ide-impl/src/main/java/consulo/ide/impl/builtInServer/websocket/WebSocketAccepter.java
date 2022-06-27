@@ -16,7 +16,7 @@
 package consulo.ide.impl.builtInServer.websocket;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 
 import javax.annotation.Nonnull;
@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 2020-06-14
  */
-@Extension(ComponentScope.PROJECT)
+@ExtensionAPI(ComponentScope.PROJECT)
 public interface WebSocketAccepter {
   ExtensionPointName<WebSocketAccepter> EP_NAME = ExtensionPointName.create(WebSocketAccepter.class);
 

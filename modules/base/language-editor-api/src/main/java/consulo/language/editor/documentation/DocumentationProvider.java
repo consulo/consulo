@@ -2,7 +2,7 @@
 package consulo.language.editor.documentation;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
@@ -22,7 +22,7 @@ import java.util.List;
  * @see ExternalDocumentationProvider
  * @see ExternalDocumentationHandler
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface DocumentationProvider {
 
   /**

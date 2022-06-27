@@ -1,7 +1,7 @@
 package consulo.ide.impl.idea.util.net.ssl;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
@@ -72,7 +72,7 @@ import static org.apache.http.conn.ssl.SSLConnectionSocketFactory.BROWSER_COMPAT
 
 @Singleton
 @State(name = "CertificateManager", storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml"))
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class CertificateManager implements PersistentStateComponent<CertificateManager.Config> {
   @NonNls

@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.codeEditor.Editor;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.editor.intention.IntentionAction;
@@ -15,7 +15,7 @@ import javax.annotation.Nonnull;
  * be used by plugins. Plugin developers should implement {@link IntentionAction} or
  * {@link QuickFix} instead.
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface IntentionMenuContributor {
   ExtensionPointName<IntentionMenuContributor> EP_NAME = ExtensionPointName.create(IntentionMenuContributor.class);
 

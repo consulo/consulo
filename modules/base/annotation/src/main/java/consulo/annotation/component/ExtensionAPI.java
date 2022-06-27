@@ -22,11 +22,10 @@ import java.lang.annotation.Target;
 
 /**
  * @author VISTALL
- * @since 26-Jun-22
- *
- * Annotation - marker for action/action group marker. Don't use it's directly
+ * @since 13-Jun-22
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface Action {
+public @interface ExtensionAPI {
+  ComponentScope value();
 }

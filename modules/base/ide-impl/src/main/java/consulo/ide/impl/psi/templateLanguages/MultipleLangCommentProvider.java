@@ -16,7 +16,7 @@
 package consulo.ide.impl.psi.templateLanguages;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.codeEditor.Editor;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.Commenter;
@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
 /**
  * @author Roman.Chernyatchik
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface MultipleLangCommentProvider {
   ExtensionPointName<MultipleLangCommentProvider> EP_NAME = ExtensionPointName.create(MultipleLangCommentProvider.class);
 

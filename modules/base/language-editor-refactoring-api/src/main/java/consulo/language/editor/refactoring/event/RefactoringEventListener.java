@@ -16,7 +16,7 @@
 package consulo.language.editor.refactoring.event;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Topic;
+import consulo.annotation.component.TopicAPI;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
  *
  * RefactoringEventData depends on the refactoring performed. It should reflect state of the data before/after refactoring.
  */
-@Topic(ComponentScope.PROJECT)
+@TopicAPI(ComponentScope.PROJECT)
 public interface RefactoringEventListener {
 
   /**

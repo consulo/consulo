@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.roots.impl.libraries;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.content.library.LibraryType;
 import jakarta.inject.Singleton;
@@ -25,7 +25,7 @@ import jakarta.inject.Singleton;
  * @author nik
  */
 @Singleton
-@Service(value = ComponentScope.APPLICATION, lazy = false)
+@ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
 @ServiceImpl
 public class LibraryKindLoader {
   public LibraryKindLoader() {

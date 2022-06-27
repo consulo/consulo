@@ -23,7 +23,7 @@
 package consulo.language.editor.highlight;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
 /**
  * Syntax highlight provider for per file. For highlight per language use {@link SyntaxHighlighterFactory}
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface SyntaxHighlighterProvider {
   @Nullable
   SyntaxHighlighter create(FileType fileType, @Nullable Project project, @Nullable VirtualFile file);

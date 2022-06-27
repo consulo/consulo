@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.tasks;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.ide.impl.idea.tasks.config.TaskRepositoryEditor;
 import consulo.ide.impl.idea.util.Consumer;
@@ -34,7 +34,7 @@ import java.util.List;
  *
  * @author Dmitry Avdeev
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class TaskRepositoryType<T extends TaskRepository> implements TaskRepositorySubtype {
 
   public static final ExtensionPointName<TaskRepositoryType> EP_NAME = ExtensionPointName.create(TaskRepositoryType.class);

@@ -17,7 +17,7 @@ package consulo.language.parser;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
 import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.language.Language;
@@ -42,7 +42,7 @@ import javax.annotation.Nullable;
  *
  * @see #forLanguage(Language)
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface ParserDefinition extends LanguageExtension {
   ExtensionPointCacheKey<ParserDefinition, ByLanguageValue<ParserDefinition>> KEY = ExtensionPointCacheKey.create("ParserDefinition", LanguageGroupByFactory.build());
 

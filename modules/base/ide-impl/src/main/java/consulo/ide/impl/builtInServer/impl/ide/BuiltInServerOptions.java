@@ -1,7 +1,7 @@
 package consulo.ide.impl.builtInServer.impl.ide;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
@@ -18,7 +18,7 @@ import javax.annotation.Nullable;
 
 @Singleton
 @State(name = "BuiltInServerOptions", storages = @Storage("other.xml"))
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class BuiltInServerOptions implements PersistentStateComponent<BuiltInServerOptions>, Getter<BuiltInServerOptions> {
   public static final int DEFAULT_PORT = 63342;

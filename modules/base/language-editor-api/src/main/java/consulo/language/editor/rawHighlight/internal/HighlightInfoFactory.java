@@ -16,7 +16,7 @@
 package consulo.language.editor.rawHighlight.internal;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
@@ -25,7 +25,7 @@ import consulo.language.editor.rawHighlight.HighlightInfoType;
  * @author VISTALL
  * @since 13-Feb-22
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public interface HighlightInfoFactory {
   static HighlightInfoFactory getInstance() {
     return Application.get().getInstance(HighlightInfoFactory.class);

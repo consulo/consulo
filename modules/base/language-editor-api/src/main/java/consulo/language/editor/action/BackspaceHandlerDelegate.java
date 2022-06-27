@@ -17,7 +17,7 @@
 package consulo.language.editor.action;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.codeEditor.Editor;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiFile;
@@ -25,7 +25,7 @@ import consulo.language.psi.PsiFile;
 /**
  * @author yole
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class BackspaceHandlerDelegate {
   public static ExtensionPointName<BackspaceHandlerDelegate> EP_NAME = ExtensionPointName.create(BackspaceHandlerDelegate.class);
 

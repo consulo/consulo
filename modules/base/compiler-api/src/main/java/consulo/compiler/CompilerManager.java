@@ -18,7 +18,7 @@ package consulo.compiler;
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.compiler.event.CompilationStatusListener;
 import consulo.compiler.scope.CompileScope;
 import consulo.compiler.setting.ExcludedEntriesConfiguration;
@@ -40,7 +40,7 @@ import java.util.function.Consumer;
  * A "root" class in compiler subsystem - allows one to register a custom compiler or a compilation task, register/unregister a compilation listener
  * and invoke various types of compilations (make, compile, rebuild)
  */
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 public abstract class CompilerManager {
   @Nonnull
   public static CompilerManager getInstance(@Nonnull Project project) {

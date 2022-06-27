@@ -16,7 +16,7 @@
 package consulo.language.editor.wolfAnalyzer;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 20-Jun-22
  */
-@Extension(ComponentScope.PROJECT)
+@ExtensionAPI(ComponentScope.PROJECT)
 public interface WolfFileProblemFilter {
   boolean isToBeHighlighted(@Nonnull VirtualFile file);
 }

@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.ide.actions.runAnything;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 
 @Singleton
 @State(name = "RunAnythingCache", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class RunAnythingCache implements PersistentStateComponent<RunAnythingCache.State> {
   private final State mySettings = new State();

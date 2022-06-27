@@ -16,7 +16,7 @@
 package consulo.usage.rule;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.component.messagebus.TopicImpl;
 import consulo.project.Project;
@@ -25,7 +25,7 @@ import consulo.usage.UsageView;
 
 import javax.annotation.Nonnull;
 
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface UsageFilteringRuleProvider {
   ExtensionPointName<UsageFilteringRuleProvider> EP_NAME = ExtensionPointName.create(UsageFilteringRuleProvider.class);
 

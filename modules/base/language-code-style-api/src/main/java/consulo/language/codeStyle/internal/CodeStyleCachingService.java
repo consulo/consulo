@@ -2,7 +2,7 @@
 package consulo.language.codeStyle.internal;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
@@ -12,7 +12,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 public interface CodeStyleCachingService {
 
   static CodeStyleCachingService getInstance(@Nonnull Project project) {

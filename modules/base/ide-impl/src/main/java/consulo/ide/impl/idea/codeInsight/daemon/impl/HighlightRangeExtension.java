@@ -17,14 +17,14 @@
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiFile;
 
 /**
  * @author yole
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface HighlightRangeExtension {
   ExtensionPointName<HighlightRangeExtension> EP_NAME = ExtensionPointName.create(HighlightRangeExtension.class);
 

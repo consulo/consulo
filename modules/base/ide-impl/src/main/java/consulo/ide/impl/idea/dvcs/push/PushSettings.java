@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.dvcs.push;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
@@ -36,7 +36,7 @@ import java.util.Set;
 
 @Singleton
 @State(name = "Push.Settings", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class PushSettings implements PersistentStateComponent<PushSettings.State> {
 

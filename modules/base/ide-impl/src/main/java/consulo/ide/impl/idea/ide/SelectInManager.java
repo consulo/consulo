@@ -16,10 +16,9 @@
 package consulo.ide.impl.idea.ide;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.IdeBundle;
-import consulo.ide.ServiceManager;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import jakarta.inject.Inject;
@@ -32,7 +31,7 @@ import java.util.Comparator;
 import java.util.List;
 
 @Singleton
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class SelectInManager {
   public static class SelectInTargetComparator implements Comparator<SelectInTarget> {

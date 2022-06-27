@@ -2,7 +2,7 @@
 package consulo.virtualFileSystem.event;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.disposer.Disposable;
 import consulo.application.Application;
 
@@ -19,7 +19,7 @@ import javax.annotation.Nonnull;
  *
  * @see AsyncVfsEventsListener
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public interface AsyncVfsEventsPostProcessor {
 
   /**

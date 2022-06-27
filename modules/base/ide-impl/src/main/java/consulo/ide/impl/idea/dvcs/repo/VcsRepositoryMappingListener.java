@@ -16,9 +16,9 @@
 package consulo.ide.impl.idea.dvcs.repo;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Topic;
+import consulo.annotation.component.TopicAPI;
 
-@Topic(ComponentScope.PROJECT)
+@TopicAPI(ComponentScope.PROJECT)
 public interface VcsRepositoryMappingListener {
   void mappingChanged();
 }

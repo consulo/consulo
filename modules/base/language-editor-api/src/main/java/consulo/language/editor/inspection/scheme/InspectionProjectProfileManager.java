@@ -16,7 +16,7 @@
 package consulo.language.editor.inspection.scheme;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.language.editor.rawHighlight.SeverityProvider;
 import consulo.project.Project;
 
@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 17-Feb-22
  */
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 public interface InspectionProjectProfileManager extends SeverityProvider, ProjectProfileManager {
   @Nonnull
   static InspectionProjectProfileManager getInstance(Project project) {

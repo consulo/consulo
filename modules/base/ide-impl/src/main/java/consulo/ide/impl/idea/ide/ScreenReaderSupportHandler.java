@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.ide;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.ui.ex.awt.accessibility.ScreenReader;
 import consulo.disposer.Disposable;
@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
  * Keep {@link ScreenReader#isActive} in sync with {@link GeneralSettings#isSupportScreenReaders}
  */
 @Singleton
-@Service(value = ComponentScope.APPLICATION, lazy = false)
+@ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
 @ServiceImpl
 public class ScreenReaderSupportHandler implements Disposable {
   private final GeneralSettings mySettings;

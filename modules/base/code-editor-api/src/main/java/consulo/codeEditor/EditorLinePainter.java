@@ -16,7 +16,7 @@
 package consulo.codeEditor;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
@@ -28,7 +28,7 @@ import java.util.Collection;
 /**
  * @author Konstantin Bulenkov
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class EditorLinePainter {
   public static final ExtensionPointName<EditorLinePainter> EP_NAME = ExtensionPointName.create(EditorLinePainter.class);
 

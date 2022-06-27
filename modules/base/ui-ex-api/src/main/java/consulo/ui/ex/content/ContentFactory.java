@@ -17,7 +17,7 @@ package consulo.ui.ex.content;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.component.ComponentManager;
 import consulo.ui.Component;
@@ -25,7 +25,7 @@ import consulo.ui.Component;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public interface ContentFactory {
   @Nonnull
   static ContentFactory getInstance() {

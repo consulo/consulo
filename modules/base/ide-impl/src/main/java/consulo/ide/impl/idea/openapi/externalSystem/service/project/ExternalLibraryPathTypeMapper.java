@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.externalSystem.service.project;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.ide.impl.idea.openapi.externalSystem.model.project.LibraryPathType;
 import consulo.content.OrderRootType;
 import javax.annotation.Nonnull;
@@ -32,7 +32,7 @@ import javax.annotation.Nonnull;
  * @author Denis Zhdanov
  * @since 1/17/13 3:51 PM
  */
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 public interface ExternalLibraryPathTypeMapper {
   @Nonnull
   OrderRootType map(@Nonnull LibraryPathType type);

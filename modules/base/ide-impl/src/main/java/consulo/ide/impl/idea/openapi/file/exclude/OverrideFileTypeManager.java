@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.openapi.file.exclude;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.component.persist.State;
@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
  */
 @State(name = "OverrideFileTypeManager", storages = @Storage("overrideFileTypes.xml"))
 @Singleton
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public final class OverrideFileTypeManager extends PersistentFileSetManager {
   public boolean isMarkedPlainText(@Nonnull VirtualFile file) {

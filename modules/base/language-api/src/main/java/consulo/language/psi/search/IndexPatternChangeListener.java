@@ -16,13 +16,13 @@
 package consulo.language.psi.search;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Topic;
+import consulo.annotation.component.TopicAPI;
 
 /**
  * @author VISTALL
  * @since 20-Jun-22
  */
-@Topic(ComponentScope.APPLICATION)
+@TopicAPI(ComponentScope.APPLICATION)
 public interface IndexPatternChangeListener {
   void patternsChanged(TodoPattern[] oldPatterns, TodoPattern[] newPatterns);
 }

@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.find.impl;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
@@ -26,7 +26,7 @@ import consulo.ide.ServiceManager;
 import jakarta.inject.Inject;
 
 @State(name = "FindRecents", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/find.recents.xml", roamingType = RoamingType.DISABLED)})
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 final class FindRecents extends FindInProjectSettingsBase {
   public static FindRecents getInstance() {

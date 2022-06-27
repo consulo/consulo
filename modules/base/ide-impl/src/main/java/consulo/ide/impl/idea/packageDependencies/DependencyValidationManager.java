@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.packageDependencies;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
@@ -31,7 +31,7 @@ import java.util.Map;
  * User: anna
  * Date: Mar 2, 2005
  */
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 public abstract class DependencyValidationManager extends NamedScopesHolder {
   public DependencyValidationManager(final Project project) {
     super(project);

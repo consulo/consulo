@@ -17,7 +17,7 @@
 package consulo.language.editor.highlight.usage;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.codeEditor.Editor;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
 /**
  * @author yole
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface HighlightUsagesHandlerFactory<T extends PsiElement> {
   ExtensionPointName<HighlightUsagesHandlerFactory> EP_NAME = ExtensionPointName.create(HighlightUsagesHandlerFactory.class);
 

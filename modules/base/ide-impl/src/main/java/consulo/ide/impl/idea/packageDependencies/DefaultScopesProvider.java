@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.packageDependencies;
 
-import consulo.annotation.component.Extension;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.scratch.ScratchesNamedScope;

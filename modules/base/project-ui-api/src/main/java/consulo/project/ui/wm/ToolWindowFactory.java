@@ -17,7 +17,7 @@
 package consulo.project.ui.wm;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.application.dumb.DumbAware;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
@@ -36,7 +36,7 @@ import javax.annotation.Nonnull;
  * @author yole
  * @author Konstantin Bulenkov
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface ToolWindowFactory {
   @Nonnull
   String getId();

@@ -17,7 +17,7 @@
 package consulo.language.editor.highlight;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
 import consulo.codeEditor.HighlighterIterator;
 import consulo.component.extension.ExtensionPoint;
@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Map;
 
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface BraceMatcher {
   ExtensionPointCacheKey<BraceMatcher, Map<FileType, BraceMatcher>> KEY = ExtensionPointCacheKey.groupBy("BraceMatcher", BraceMatcher::getFileType);
 

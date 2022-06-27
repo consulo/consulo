@@ -16,7 +16,7 @@
 package consulo.codeEditor.impl;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.codeEditor.BidiTextDirection;
@@ -38,7 +38,7 @@ import java.util.Map;
 import java.util.Set;
 
 @Singleton
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 @State(name = "EditorSettings", storages = {@Storage("editor.xml")})
 public class EditorSettingsExternalizable implements PersistentStateComponent<EditorSettingsExternalizable.OptionSet> {

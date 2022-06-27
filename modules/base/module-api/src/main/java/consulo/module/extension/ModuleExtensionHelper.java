@@ -16,7 +16,7 @@
 package consulo.module.extension;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 
@@ -28,7 +28,7 @@ import java.util.Collection;
  * @author VISTALL
  * @since 7:57/12.11.13
  */
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 public interface ModuleExtensionHelper {
   @Nonnull
   public static ModuleExtensionHelper getInstance(@Nonnull Project project) {

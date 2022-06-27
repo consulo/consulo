@@ -16,7 +16,7 @@
 package consulo.ui.ex.awt.internal;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.logging.Logger;
@@ -30,7 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Singleton
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class MouseGestureManager {
   public static MouseGestureManager getInstance() {

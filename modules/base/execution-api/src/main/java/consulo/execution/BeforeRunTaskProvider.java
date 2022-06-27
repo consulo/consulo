@@ -23,7 +23,7 @@
 package consulo.execution;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.dataContext.DataContext;
@@ -39,7 +39,7 @@ import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-@Extension(ComponentScope.PROJECT)
+@ExtensionAPI(ComponentScope.PROJECT)
 public abstract class BeforeRunTaskProvider<T extends BeforeRunTask> {
   public static final ExtensionPointName<BeforeRunTaskProvider> EP_NAME = ExtensionPointName.create(BeforeRunTaskProvider.class);
 

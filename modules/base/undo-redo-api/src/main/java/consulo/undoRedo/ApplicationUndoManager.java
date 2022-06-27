@@ -16,14 +16,14 @@
 package consulo.undoRedo;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 
 /**
  * @author VISTALL
  * @since 2018-08-24
  */
-@Service(value = ComponentScope.APPLICATION, lazy = false)
+@ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
 public interface ApplicationUndoManager extends UndoManager {
   static UndoManager getGlobalInstance() {
     return Application.get().getInstance(ApplicationUndoManager.class);

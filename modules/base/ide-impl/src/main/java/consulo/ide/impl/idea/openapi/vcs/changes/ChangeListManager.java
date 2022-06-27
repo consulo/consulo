@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
 import consulo.ide.impl.idea.openapi.vcs.FilePath;
 import consulo.ide.impl.idea.util.Consumer;
@@ -37,7 +37,7 @@ import java.util.List;
 /**
  * @author max
  */
-@Service(value = ComponentScope.PROJECT, lazy = false)
+@ServiceAPI(value = ComponentScope.PROJECT, lazy = false)
 public abstract class ChangeListManager implements ChangeListModification {
   @Nonnull
   public static ChangeListManager getInstance(Project project) {

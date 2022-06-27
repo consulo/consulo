@@ -16,9 +16,9 @@
 package consulo.colorScheme;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public interface TextAttributeKeyDefaultsProvider {
   TextAttributes getDefaultAttributes(TextAttributesKey key);
 }

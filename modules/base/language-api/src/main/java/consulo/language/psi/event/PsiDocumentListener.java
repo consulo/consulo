@@ -2,7 +2,7 @@
 package consulo.language.psi.event;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Topic;
+import consulo.annotation.component.TopicAPI;
 import consulo.document.Document;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
@@ -11,7 +11,7 @@ import consulo.project.Project;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-@Topic(ComponentScope.PROJECT)
+@TopicAPI(ComponentScope.PROJECT)
 public interface PsiDocumentListener {
 
   /**

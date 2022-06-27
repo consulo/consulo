@@ -16,7 +16,7 @@
 package consulo.execution.runner;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.execution.ExecutionResult;
 import consulo.execution.RuntimeConfigurationException;
@@ -37,7 +37,7 @@ import javax.annotation.Nullable;
  * @param <Settings>
  * @see GenericProgramRunner
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface ProgramRunner<Settings extends RunnerSettings> {
   ExtensionPointName<ProgramRunner> PROGRAM_RUNNER_EP = ExtensionPointName.create(ProgramRunner.class);
 

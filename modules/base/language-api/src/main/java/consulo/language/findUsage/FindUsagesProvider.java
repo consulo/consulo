@@ -16,7 +16,7 @@
 package consulo.language.findUsage;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
 import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.language.Language;
@@ -36,7 +36,7 @@ import javax.annotation.Nullable;
  * @author max
  * @see #forLanguage(Language)
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface FindUsagesProvider extends LanguageExtension {
   ExtensionPointCacheKey<FindUsagesProvider, ByLanguageValue<FindUsagesProvider>> KEY =
           ExtensionPointCacheKey.create("FindUsagesProvider", LanguageGroupByFactory.build(new EmptyFindUsagesProvider()));

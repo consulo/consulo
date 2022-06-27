@@ -16,7 +16,7 @@
 package consulo.language.impl.ast;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.language.ast.IElementType;
 import consulo.language.psi.ElementTypeEntryExtensionCollector;
 
@@ -27,7 +27,7 @@ import java.util.function.Predicate;
  * @author VISTALL
  * @since 2:13/02.04.13
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface ASTCompositeFactory extends Predicate<IElementType> {
   ElementTypeEntryExtensionCollector<ASTCompositeFactory> EP = ElementTypeEntryExtensionCollector.create(ASTCompositeFactory.class);
 

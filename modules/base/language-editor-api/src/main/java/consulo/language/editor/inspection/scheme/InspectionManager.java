@@ -16,7 +16,7 @@
 package consulo.language.editor.inspection.scheme;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.document.util.TextRange;
 import consulo.language.editor.inspection.*;
 import consulo.language.psi.PsiElement;
@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
 /**
  * @author max
  */
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 public abstract class InspectionManager {
   public static InspectionManager getInstance(Project project) {
     return project.getInstance(InspectionManager.class);

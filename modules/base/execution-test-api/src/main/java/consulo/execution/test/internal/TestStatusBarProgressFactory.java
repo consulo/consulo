@@ -16,14 +16,14 @@
 package consulo.execution.test.internal;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.progress.ProgressIndicator;
 
 /**
  * @author VISTALL
  * @since 05-Apr-22
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public interface TestStatusBarProgressFactory {
   ProgressIndicator createStatusBarProgress();
 }

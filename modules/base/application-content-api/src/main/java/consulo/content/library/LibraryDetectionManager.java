@@ -16,7 +16,7 @@
 package consulo.content.library;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * @author nik
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class LibraryDetectionManager {
   public static LibraryDetectionManager getInstance() {
     return Application.get().getInstance(LibraryDetectionManager.class);

@@ -2,13 +2,13 @@
 package consulo.application.impl.internal.performance;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Topic;
+import consulo.annotation.component.TopicAPI;
 import consulo.application.util.concurrent.ThreadDump;
 
 import javax.annotation.Nonnull;
 import java.io.File;
 
-@Topic(ComponentScope.APPLICATION)
+@TopicAPI(ComponentScope.APPLICATION)
 public interface IdePerformanceListener {
   /**
    * Invoked after thread state has been dumped to a file.

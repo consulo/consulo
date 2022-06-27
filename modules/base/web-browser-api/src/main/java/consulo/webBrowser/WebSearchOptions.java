@@ -16,7 +16,7 @@
 package consulo.webBrowser;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
  */
 @Singleton
 @State(name = "WebSearchOptions", storages = @Storage("web.search.xml"))
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class WebSearchOptions implements PersistentStateComponent<WebSearchOptions> {
   private WebSearchEngine myEngine = WebSearchEngine.GOOGLE;

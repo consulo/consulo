@@ -16,7 +16,7 @@
 package consulo.compiler.scope;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.module.Module;
 import javax.annotation.Nonnull;
@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 12:55/20.12.13
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface CompileModuleScopeFactory {
   ExtensionPointName<CompileModuleScopeFactory> EP_NAME = ExtensionPointName.create(CompileModuleScopeFactory.class);
 

@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.vcs.update;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.*;
 import consulo.ide.ServiceManager;
@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
 
 @Singleton
 @State(name = "RestoreUpdateTree", storages = @Storage(value = StoragePathMacros.WORKSPACE_FILE, roamingType = RoamingType.DISABLED))
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class RestoreUpdateTree implements PersistentStateComponent<Element> {
   @Nonnull

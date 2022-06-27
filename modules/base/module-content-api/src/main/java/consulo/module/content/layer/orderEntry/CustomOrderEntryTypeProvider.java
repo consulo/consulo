@@ -16,7 +16,7 @@
 package consulo.module.content.layer.orderEntry;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
 import consulo.component.extension.ExtensionList;
 import consulo.module.content.layer.ModuleRootLayer;
@@ -29,7 +29,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 17-May-22
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface CustomOrderEntryTypeProvider<M extends CustomOrderEntryModel> {
   ExtensionList<CustomOrderEntryTypeProvider, Application> EP = ExtensionList.of(CustomOrderEntryTypeProvider.class);
 

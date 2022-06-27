@@ -17,7 +17,7 @@ package consulo.execution;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 public abstract class ExecutionTargetManager {
   @Nonnull
   public static ExecutionTargetManager getInstance(@Nonnull Project project) {

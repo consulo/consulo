@@ -1,7 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.actionSystem.impl;
 
-import consulo.annotation.component.Action;
+import consulo.annotation.component.ActionAPI;
 import consulo.annotation.component.*;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
@@ -156,7 +156,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
     StatCollector injectStat = new StatCollector();
     injectStat.markWith("register", () -> {
-      InjectingBindingHolder holder = InjectingBindingLoader.INSTANCE.getHolder(Action.class, ComponentScope.APPLICATION);
+      InjectingBindingHolder holder = InjectingBindingLoader.INSTANCE.getHolder(ActionAPI.class, ComponentScope.APPLICATION);
 
       for (List<InjectingBinding> bindingList : holder.getBindings().values()) {
         for (InjectingBinding binding : bindingList) {

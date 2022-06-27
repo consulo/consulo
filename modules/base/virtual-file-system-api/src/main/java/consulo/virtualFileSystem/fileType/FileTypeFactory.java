@@ -16,14 +16,14 @@
 package consulo.virtualFileSystem.fileType;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import javax.annotation.Nonnull;
 
 /**
  * @author peter
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class FileTypeFactory {
   public static final ExtensionPointName<FileTypeFactory> FILE_TYPE_FACTORY_EP = ExtensionPointName.create(FileTypeFactory.class);
 

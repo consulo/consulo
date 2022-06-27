@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
 import consulo.component.extension.ExtensionList;
 import consulo.language.psi.PsiDirectory;
@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 19-Jun-22
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface CreateFileFromTemplateModuleResolver {
   ExtensionList<CreateFileFromTemplateModuleResolver, Application> EP = ExtensionList.of(CreateFileFromTemplateModuleResolver.class);
 

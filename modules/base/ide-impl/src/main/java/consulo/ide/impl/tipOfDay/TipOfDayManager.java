@@ -16,7 +16,7 @@
 package consulo.ide.impl.tipOfDay;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 2020-06-23
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public interface TipOfDayManager {
   /**
    * Schedule show tips dialog. Will open one time, per app start (even if mupliple projects open)

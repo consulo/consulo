@@ -2,7 +2,7 @@
 package consulo.project.ui.wm;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 
@@ -16,7 +16,7 @@ import javax.annotation.Nullable;
  * It provides configurable widgets that can be disabled or reordered.
  */
 @Deprecated
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface StatusBarWidgetProvider {
   ExtensionPointName<StatusBarWidgetProvider> EP_NAME = ExtensionPointName.create(StatusBarWidgetProvider.class);
 

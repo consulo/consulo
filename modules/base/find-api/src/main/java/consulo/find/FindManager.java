@@ -16,7 +16,7 @@
 package consulo.find;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.codeEditor.Editor;
 import consulo.content.scope.SearchScope;
 import consulo.fileEditor.FileEditor;
@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
 /**
  * Allows to invoke and control Find, Replace and Find Usages operations.
  */
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 public abstract class FindManager {
   public abstract FindModel createReplaceInFileModel();
 

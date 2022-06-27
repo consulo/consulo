@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.ide.actions.runAnything;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.disposer.Disposer;
@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class RunAnythingManager {
   private static final String LOCATION_SETTINGS_KEY = "run.anything.popup";

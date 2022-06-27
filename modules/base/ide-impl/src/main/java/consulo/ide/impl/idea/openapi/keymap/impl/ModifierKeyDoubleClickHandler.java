@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.keymap.impl;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.ide.IdeEventQueue;
@@ -57,7 +57,7 @@ import static consulo.ide.impl.idea.openapi.keymap.KeymapUtil.getActiveKeymapSho
  * SearchEverywhere behaviour remains intact.
  */
 @Singleton
-@Service(value = ComponentScope.APPLICATION, lazy = false)
+@ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
 @ServiceImpl
 public class ModifierKeyDoubleClickHandler implements Disposable {
   private static final Logger LOG = Logger.getInstance(ModifierKeyDoubleClickHandler.class);

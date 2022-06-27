@@ -2,7 +2,7 @@
 package consulo.virtualFileSystem.encoding;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
 import java.nio.charset.Charset;
 import java.util.Collection;
 
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class EncodingManager extends EncodingRegistry {
   public static final String PROP_NATIVE2ASCII_SWITCH = "native2ascii";
   public static final String PROP_PROPERTIES_FILES_ENCODING = "propertiesFilesEncoding";

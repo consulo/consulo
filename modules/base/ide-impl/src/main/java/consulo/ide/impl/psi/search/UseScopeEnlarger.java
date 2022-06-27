@@ -16,7 +16,7 @@
 package consulo.ide.impl.psi.search;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 import consulo.content.scope.SearchScope;
@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
 /**
  * @author nik
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class UseScopeEnlarger {
   public static final ExtensionPointName<UseScopeEnlarger> EP_NAME = ExtensionPointName.create(UseScopeEnlarger.class);
 

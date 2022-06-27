@@ -3,7 +3,7 @@
 package consulo.language.editor.completion.lookup;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.codeEditor.Editor;
 import consulo.disposer.Disposable;
 import consulo.language.editor.inject.EditorWindow;
@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 public abstract class LookupManager {
   public static LookupManager getInstance(@Nonnull Project project) {
     return project.getInstance(LookupManager.class);

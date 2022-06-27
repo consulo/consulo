@@ -16,7 +16,7 @@
 package consulo.language.psi.resolve;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.language.psi.*;
 import consulo.project.Project;
@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 26-Mar-22
  */
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 public interface ResolveCache {
   @FunctionalInterface
   public interface AbstractResolver<TRef extends PsiReference, TResult> {

@@ -16,7 +16,7 @@
 package consulo.usage;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.colorScheme.EditorColorsScheme;
 import jakarta.inject.Singleton;
@@ -24,7 +24,7 @@ import jakarta.inject.Singleton;
 import javax.annotation.Nonnull;
 
 @Singleton
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public interface UsageTreeColorsScheme {
   @Nonnull
   public static UsageTreeColorsScheme getInstance() {

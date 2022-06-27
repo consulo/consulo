@@ -16,7 +16,7 @@
 package consulo.application.impl.internal.progress;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 
 import javax.annotation.Nullable;
@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 23-Mar-22
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public interface ProgressActivityFactory {
   static ProgressActivityFactory getInstance() {
     return Application.get().getInstance(ProgressActivityFactory.class);

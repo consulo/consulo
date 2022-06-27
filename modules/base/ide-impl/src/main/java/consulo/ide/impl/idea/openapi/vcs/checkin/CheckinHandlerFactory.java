@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.openapi.vcs.checkin;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.ide.impl.idea.openapi.vcs.CheckinProjectPanel;
 import consulo.ide.impl.idea.openapi.vcs.changes.CommitContext;
@@ -35,7 +35,7 @@ import consulo.project.Project;
  * @author lesya
  * @since 5.1
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class CheckinHandlerFactory implements BaseCheckinHandlerFactory {
   public static final ExtensionPointName<CheckinHandlerFactory> EP_NAME = ExtensionPointName.create(CheckinHandlerFactory.class);
   

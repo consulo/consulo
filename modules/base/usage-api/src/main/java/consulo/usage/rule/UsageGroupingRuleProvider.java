@@ -4,7 +4,7 @@
 package consulo.usage.rule;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
@@ -16,7 +16,7 @@ import javax.annotation.Nonnull;
 /**
  * @author max
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface UsageGroupingRuleProvider {
   ExtensionPointName<UsageGroupingRuleProvider> EP_NAME = ExtensionPointName.create(UsageGroupingRuleProvider.class);
 

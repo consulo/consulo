@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.util.text;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.ide.ServiceManager;
@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
  */
 @Singleton
 @State(name = "DateTimeFormatter", storages = @Storage("ui-datetime.xml"))
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class DateTimeFormatManager implements PersistentStateComponent<Element> {
   private boolean myPrettyFormattingAllowed = true;

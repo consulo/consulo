@@ -16,7 +16,7 @@
 package consulo.component.impl.extension;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.ComponentManager;
 import consulo.component.bind.InjectingBinding;
 import consulo.component.extension.ExtensionPoint;
@@ -50,7 +50,7 @@ public class NewExtensionAreaImpl {
   }
 
   public void registerFromInjectingBinding(ComponentScope componentScope) {
-    InjectingBindingHolder holder = myInjectingBindingLoader.getHolder(Extension.class, myComponentScope);
+    InjectingBindingHolder holder = myInjectingBindingLoader.getHolder(ExtensionAPI.class, myComponentScope);
 
     for (Map.Entry<Class, List<InjectingBinding>> entry : holder.getBindings().entrySet()) {
       myExtensionPoints.put(entry.getKey(), new NewExtensionPointImpl(entry.getKey(), entry.getValue(), myComponentManager, myCheckCanceled, componentScope));

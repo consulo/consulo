@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.refactoring.move;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.codeEditor.Editor;
 import consulo.component.extension.ExtensionPointName;
 import consulo.dataContext.DataContext;
@@ -31,7 +31,7 @@ import java.util.Set;
 /**
  * @author yole
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class MoveHandlerDelegate {
   public static final ExtensionPointName<MoveHandlerDelegate> EP_NAME = ExtensionPointName.create(MoveHandlerDelegate.class);
 

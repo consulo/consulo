@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.openapi.vcs.roots;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
@@ -38,7 +38,7 @@ import java.util.regex.PatternSyntaxException;
 import static consulo.virtualFileSystem.util.VirtualFileVisitor.*;
 
 @Singleton
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public final class VcsRootScanner implements Disposable {
   private static final Logger LOG = Logger.getInstance(VcsRootScanner.class);

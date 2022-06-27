@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.vcs.readOnlyHandler;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nullable;
@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
 /**
  * @author yole
  */
-@Extension(ComponentScope.PROJECT)
+@ExtensionAPI(ComponentScope.PROJECT)
 public interface HandleTypeFactory {
   ExtensionPointName<HandleTypeFactory> EP_NAME = ExtensionPointName.create(HandleTypeFactory.class);
 

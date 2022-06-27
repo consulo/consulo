@@ -16,7 +16,7 @@
 package consulo.compiler;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.module.Module;
 import consulo.virtualFileSystem.VirtualFile;
@@ -30,7 +30,7 @@ import java.util.Locale;
  * @author VISTALL
  * @since 18:27/20.10.13
  */
-@Service(ComponentScope.MODULE)
+@ServiceAPI(ComponentScope.MODULE)
 public abstract class ModuleCompilerPathsManager {
   @Nonnull
   public static ModuleCompilerPathsManager getInstance(@Nonnull Module module) {

@@ -17,7 +17,7 @@ package consulo.compiler;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.module.Module;
@@ -37,7 +37,7 @@ import javax.annotation.Nullable;
 @Deprecated
 @DeprecationInfo(value = "Use CompilerConfiguration for projects, and ModuleCompilerPathsManager for modules")
 @Singleton
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class CompilerPathsManager {
   @Nonnull

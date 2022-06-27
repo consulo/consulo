@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.vcs;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 
 import javax.annotation.Nonnull;
@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
  *
  * @author Kirill Likhodedov
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class VcsRootChecker {
 
   public static final ExtensionPointName<VcsRootChecker> EXTENSION_POINT_NAME = ExtensionPointName.create(VcsRootChecker.class);

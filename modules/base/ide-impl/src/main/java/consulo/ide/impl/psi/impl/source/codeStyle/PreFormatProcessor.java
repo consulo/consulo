@@ -17,7 +17,7 @@
 package consulo.ide.impl.psi.impl.source.codeStyle;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.language.ast.ASTNode;
 import consulo.component.extension.ExtensionPointName;
 import consulo.document.util.TextRange;
@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 /**
  * @author yole
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface PreFormatProcessor {
   ExtensionPointName<PreFormatProcessor> EP_NAME = ExtensionPointName.create(PreFormatProcessor.class);
 

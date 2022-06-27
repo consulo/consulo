@@ -16,12 +16,12 @@
 package consulo.ide.navigation;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 
 /**
  * @author VISTALL
  * @since 27-Jun-22
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface GotoFileContributor extends ChooseByNameContributor {
 }

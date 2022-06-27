@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Topic;
+import consulo.annotation.component.TopicAPI;
 import consulo.annotation.component.TopicBroadcastDirection;
 import consulo.codeEditor.Editor;
 
@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
 import java.util.EventListener;
 import java.util.List;
 
-@Topic(value = ComponentScope.PROJECT, direction = TopicBroadcastDirection.NONE)
+@TopicAPI(value = ComponentScope.PROJECT, direction = TopicBroadcastDirection.NONE)
 public interface EditorTrackerListener extends EventListener {
   void activeEditorsChanged(@Nonnull List<Editor> activeEditors);
 }

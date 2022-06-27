@@ -16,13 +16,13 @@
 package consulo.project.internal;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Topic;
+import consulo.annotation.component.TopicAPI;
 import consulo.annotation.component.TopicBroadcastDirection;
 import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 
-@Topic(value = ComponentScope.APPLICATION, direction = TopicBroadcastDirection.NONE)
+@TopicAPI(value = ComponentScope.APPLICATION, direction = TopicBroadcastDirection.NONE)
 public interface ProjectExListener {
   void saved(@Nonnull final Project project);
 }

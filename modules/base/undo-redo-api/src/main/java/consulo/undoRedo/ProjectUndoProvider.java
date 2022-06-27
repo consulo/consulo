@@ -16,12 +16,12 @@
 package consulo.undoRedo;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 
 /**
  * @author VISTALL
  * @since 20-Jun-22
  */
-@Extension(ComponentScope.PROJECT)
+@ExtensionAPI(ComponentScope.PROJECT)
 public interface ProjectUndoProvider extends UndoProvider {
 }

@@ -23,13 +23,11 @@ import java.lang.annotation.Target;
 /**
  * @author VISTALL
  * @since 13-Jun-22
- *
- * @see ServiceImpl
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface Service {
+public @interface TopicAPI {
   ComponentScope value();
 
-  boolean lazy() default true;
+  TopicBroadcastDirection direction() default TopicBroadcastDirection.TO_CHILDREN;
 }

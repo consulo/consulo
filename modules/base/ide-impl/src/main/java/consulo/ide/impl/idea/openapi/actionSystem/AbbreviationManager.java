@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.actionSystem;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.ide.ServiceManager;
 import javax.annotation.Nonnull;
 
@@ -27,7 +27,7 @@ import java.util.Set;
  * @author Konstantin Bulenkov
  * @since 13
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class AbbreviationManager {
   public static AbbreviationManager getInstance() {
     return ServiceManager.getService(AbbreviationManager.class);

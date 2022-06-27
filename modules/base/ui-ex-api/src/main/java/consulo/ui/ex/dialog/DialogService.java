@@ -16,7 +16,7 @@
 package consulo.ui.ex.dialog;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.ui.Component;
 
 import javax.annotation.Nonnull;
@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 13/12/2021
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public interface DialogService {
   @Nonnull
   <V> Dialog<V> build(@Nullable Component parent, @Nonnull DialogDescriptor<V> descriptor);

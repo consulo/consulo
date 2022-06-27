@@ -16,7 +16,7 @@
 package consulo.ide.impl.psi.impl.cache;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
@@ -25,7 +25,7 @@ import consulo.language.psi.search.IndexPattern;
 import consulo.language.psi.search.IndexPatternProvider;
 import javax.annotation.Nonnull;
 
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 public abstract class TodoCacheManager {
   @Nonnull
   public static TodoCacheManager getInstance(@Nonnull Project project) {

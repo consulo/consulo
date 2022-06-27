@@ -16,12 +16,12 @@
 package consulo.execution.debug.setting;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 
 import javax.annotation.Nonnull;
 
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class XDebuggerSettingsManager {
   @Nonnull
   public static XDebuggerSettingsManager getInstance() {

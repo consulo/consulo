@@ -16,7 +16,7 @@
 package consulo.ide.impl.moduleImport;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
@@ -37,7 +37,7 @@ import java.util.function.Consumer;
  * @author VISTALL
  * @since 30-Jan-17
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface ModuleImportProvider<C extends ModuleImportContext> {
   ExtensionPointName<ModuleImportProvider> EP_NAME = ExtensionPointName.create(ModuleImportProvider.class);
 

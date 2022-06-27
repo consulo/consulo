@@ -13,7 +13,7 @@
 package consulo.ide.impl.idea.openapi.vcs.impl;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.document.Document;
 import consulo.ide.impl.idea.openapi.vcs.ex.LineStatusTracker;
 
@@ -22,7 +22,7 @@ import javax.annotation.Nullable;
 /**
  * @author irengrig
  */
-@Service(value = ComponentScope.PROJECT, lazy = false)
+@ServiceAPI(value = ComponentScope.PROJECT, lazy = false)
 public interface LineStatusTrackerManagerI {
   @Nullable
   LineStatusTracker getLineStatusTracker(Document document);

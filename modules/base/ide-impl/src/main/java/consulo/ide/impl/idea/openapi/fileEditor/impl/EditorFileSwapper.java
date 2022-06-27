@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.fileEditor.impl;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.TextEditor;
@@ -29,7 +29,7 @@ import consulo.fileEditor.FileEditorWithProviderComposite;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class EditorFileSwapper {
   public static final ExtensionPointName<EditorFileSwapper> EP_NAME = ExtensionPointName.create(EditorFileSwapper.class);
 

@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.keymap.impl;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.container.plugin.PluginManager;
@@ -43,7 +43,7 @@ import java.util.List;
  * @author Eugene Belyaev
  */
 @Singleton
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class DefaultKeymap {
   private static final Logger LOG = Logger.getInstance(DefaultKeymap.class);

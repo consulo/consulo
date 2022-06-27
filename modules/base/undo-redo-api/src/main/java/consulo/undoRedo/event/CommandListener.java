@@ -16,11 +16,11 @@
 package consulo.undoRedo.event;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Topic;
+import consulo.annotation.component.TopicAPI;
 
 import java.util.EventListener;
 
-@Topic(ComponentScope.APPLICATION)
+@TopicAPI(ComponentScope.APPLICATION)
 public interface CommandListener extends EventListener {
   default void commandStarted(CommandEvent event) {
   }

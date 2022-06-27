@@ -17,7 +17,7 @@
 package consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.language.editor.completion.lookup.LookupElementBuilder;
@@ -44,7 +44,7 @@ import java.util.Map;
  * @author spleaner
  */
 @Singleton
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class FileInfoManager implements Disposable {
   private final Map<FileType, FileLookupInfoProvider> myFileType2InfoProvider = new HashMap<FileType, FileLookupInfoProvider>();

@@ -16,7 +16,7 @@
 package consulo.module.event;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Topic;
+import consulo.annotation.component.TopicAPI;
 import consulo.module.Module;
 import consulo.project.Project;
 
@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * @author max
  */
-@Topic(ComponentScope.PROJECT)
+@TopicAPI(ComponentScope.PROJECT)
 public interface ModuleListener extends EventListener {
   void moduleAdded(Project project, Module module);
 

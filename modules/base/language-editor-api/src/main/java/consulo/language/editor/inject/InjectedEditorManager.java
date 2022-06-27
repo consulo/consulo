@@ -16,7 +16,7 @@
 package consulo.language.editor.inject;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 20-Apr-22
  */
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 public interface InjectedEditorManager {
   static InjectedEditorManager getInstance(@Nonnull Project project) {
     return project.getInstance(InjectedEditorManager.class);

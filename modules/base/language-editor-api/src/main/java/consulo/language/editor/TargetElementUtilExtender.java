@@ -16,7 +16,7 @@
 package consulo.language.editor;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.component.extension.ExtensionList;
@@ -33,7 +33,7 @@ import java.util.Set;
  * @author VISTALL
  * @since 20.04.2015
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface TargetElementUtilExtender {
   ExtensionList<TargetElementUtilExtender, Application> EP = ExtensionList.of(TargetElementUtilExtender.class);
 

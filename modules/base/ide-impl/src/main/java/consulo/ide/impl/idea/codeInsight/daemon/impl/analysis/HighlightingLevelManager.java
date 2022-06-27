@@ -16,14 +16,14 @@
 package consulo.ide.impl.idea.codeInsight.daemon.impl.analysis;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.ide.ServiceManager;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 public abstract class HighlightingLevelManager {
   public static HighlightingLevelManager getInstance(Project project) {
     return ServiceManager.getService(project, HighlightingLevelManager.class);

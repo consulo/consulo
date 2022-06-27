@@ -16,7 +16,7 @@
 package consulo.execution;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.execution.configuration.RunProfileState;
 import consulo.execution.executor.Executor;
 import consulo.execution.runner.ExecutionEnvironment;
@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
 /**
  * Manages the execution of run configurations and the relationship between running processes and Run/Debug toolwindow tabs.
  */
-@Service(value = ComponentScope.PROJECT, lazy = false)
+@ServiceAPI(value = ComponentScope.PROJECT, lazy = false)
 public abstract class ExecutionManager {
   public static ExecutionManager getInstance(@Nonnull Project project) {
     return project.getInstance(ExecutionManager.class);

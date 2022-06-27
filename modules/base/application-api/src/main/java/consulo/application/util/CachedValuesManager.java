@@ -2,7 +2,7 @@
 package consulo.application.util;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.internal.util.CachedValueManagerHelper;
 import consulo.component.ComponentManager;
 import consulo.util.dataholder.Key;
@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentMap;
  * @see #getCachedValue(PsiElement, CachedValueProvider)
  * @see #getCachedValue(UserDataHolder, CachedValueProvider)
  */
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 public abstract class CachedValuesManager {
   public static CachedValuesManager getManager(@Nonnull ComponentManager project) {
     return project.getInstance(CachedValuesManager.class);

@@ -16,7 +16,7 @@
 package consulo.codeEditor;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.document.util.TextRange;
 
@@ -27,7 +27,7 @@ import java.awt.datatransfer.Transferable;
 /**
  * Support for data transfer between editor and clipboard.
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class EditorCopyPasteHelper {
   /**
    * Setup JTextComponent.getDocument().putProperty(TRIM_TEXT_ON_PASTE_KEY, Boolean.TRUE) to trim text that is being pasted

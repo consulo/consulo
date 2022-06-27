@@ -16,14 +16,14 @@
 package consulo.ide.impl.idea.notification;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Topic;
+import consulo.annotation.component.TopicAPI;
 import consulo.annotation.component.TopicBroadcastDirection;
 
 /**
  * @author VISTALL
  * @since 19-Jun-22
  */
-@Topic(value = ComponentScope.APPLICATION, direction = TopicBroadcastDirection.NONE)
+@TopicAPI(value = ComponentScope.APPLICATION, direction = TopicBroadcastDirection.NONE)
 public interface LogModelListener {
   void modelChanged();
 }

@@ -2,12 +2,12 @@
 package consulo.ide.impl.idea.build;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 
 /**
  * Project Service
  */
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 public interface BuildWorkspaceConfiguration {
   boolean isShowFirstErrorInEditor();
 }

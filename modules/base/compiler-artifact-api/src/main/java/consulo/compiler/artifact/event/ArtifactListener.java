@@ -16,7 +16,7 @@
 package consulo.compiler.artifact.event;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Topic;
+import consulo.annotation.component.TopicAPI;
 import consulo.compiler.artifact.Artifact;
 
 import javax.annotation.Nonnull;
@@ -25,7 +25,7 @@ import java.util.EventListener;
 /**
  * @author nik
  */
-@Topic(ComponentScope.PROJECT)
+@TopicAPI(ComponentScope.PROJECT)
 public interface ArtifactListener extends EventListener {
 
   default void artifactAdded(@Nonnull Artifact artifact) {

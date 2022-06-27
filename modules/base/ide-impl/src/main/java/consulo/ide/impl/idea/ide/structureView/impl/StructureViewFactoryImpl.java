@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.ide.structureView.impl;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.ide.impl.StructureViewWrapperImpl;
 import consulo.ide.impl.idea.ide.structureView.newStructureView.StructureViewComponent;
@@ -53,7 +53,7 @@ import java.util.HashSet;
 
 @Singleton
 @State(name = "StructureViewFactory", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public final class StructureViewFactoryImpl extends StructureViewFactoryEx implements PersistentStateComponent<StructureViewFactoryImpl.State> {
   public static class State {

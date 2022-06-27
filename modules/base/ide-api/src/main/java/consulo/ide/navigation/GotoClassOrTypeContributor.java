@@ -17,7 +17,7 @@
 package consulo.ide.navigation;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.navigation.NavigationItem;
 
 import javax.annotation.Nullable;
@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
 /**
  * @author yole
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface GotoClassOrTypeContributor extends ChooseByNameContributor {
   @Nullable
   default String getQualifiedName(NavigationItem item) {

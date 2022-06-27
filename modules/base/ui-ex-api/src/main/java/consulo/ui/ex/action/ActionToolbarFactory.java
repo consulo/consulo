@@ -16,7 +16,7 @@
 package consulo.ui.ex.action;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 
 import javax.annotation.Nonnull;
 
@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 2020-05-11
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public interface ActionToolbarFactory {
   /**
    * Factory method that creates an <code>ActionToolbar</code> from the

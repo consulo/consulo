@@ -20,12 +20,12 @@
 package consulo.project.content.scope;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 public abstract class ProjectScopeProvider {
   public static ProjectScopeProvider getInstance(Project project) {
     return project.getInstance(ProjectScopeProvider.class);

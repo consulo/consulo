@@ -17,11 +17,11 @@ package consulo.ide.impl.idea.openapi.options;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.component.persist.RoamingType;
 import consulo.ide.ServiceManager;
 
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class SchemesManagerFactory {
   public abstract <T, E extends ExternalizableScheme> SchemesManager<T, E> createSchemesManager(String fileSpec, SchemeProcessor<T, E> processor, RoamingType roamingType);
 

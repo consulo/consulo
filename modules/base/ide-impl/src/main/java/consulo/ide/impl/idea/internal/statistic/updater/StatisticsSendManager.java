@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.internal.statistic.updater;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.impl.internal.ApplicationInfo;
@@ -47,7 +47,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 @Singleton
-@Service(value = ComponentScope.APPLICATION, lazy = false)
+@ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
 @ServiceImpl
 public class StatisticsSendManager implements Disposable {
   private static final Logger LOG = Logger.getInstance(StatisticsSendManager.class);

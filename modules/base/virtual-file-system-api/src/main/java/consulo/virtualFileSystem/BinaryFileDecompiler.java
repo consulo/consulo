@@ -20,7 +20,7 @@
 package consulo.virtualFileSystem;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
 import consulo.component.extension.ExtensionPoint;
 import consulo.component.extension.ExtensionPointCacheKey;
@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Map;
 
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface BinaryFileDecompiler {
   ExtensionPointCacheKey<BinaryFileDecompiler, Map<FileType, BinaryFileDecompiler>> KEY = ExtensionPointCacheKey.groupBy("BinaryFileDecompiler", BinaryFileDecompiler::getFileType);
 

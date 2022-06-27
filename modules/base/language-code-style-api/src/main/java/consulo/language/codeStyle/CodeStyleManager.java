@@ -2,7 +2,7 @@
 package consulo.language.codeStyle;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.util.function.Computable;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.document.Document;
@@ -28,7 +28,7 @@ import java.util.List;
  * @see com.intellij.psi.impl.source.codeStyle.PreFormatProcessor
  * @see com.intellij.psi.impl.source.codeStyle.PostFormatProcessor
  */
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 public abstract class CodeStyleManager {
   /**
    * Returns the code style manager for the specified project.

@@ -16,7 +16,7 @@
 package consulo.ide.impl.remoteServer.ui;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.remoteServer.configuration.RemoteServer;
@@ -36,7 +36,7 @@ import javax.annotation.Nonnull;
  * @since 2020-05-30
  */
 @Singleton
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class ServersToolWindowManager {
   public static ServersToolWindowManager getInstance(@Nonnull Project project) {

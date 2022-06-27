@@ -16,7 +16,7 @@
 package consulo.project.startup;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.annotation.DeprecationInfo;
@@ -28,7 +28,7 @@ import java.util.function.Consumer;
 /**
  * Allows to register activities which are run during project loading.
  */
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 public abstract class StartupManager {
   /**
    * Returns the startup manager instance for the specified project.

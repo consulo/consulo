@@ -17,7 +17,7 @@
 package consulo.language.editor.action;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.codeEditor.Editor;
 import consulo.component.extension.ExtensionPointName;
 import consulo.document.util.TextRange;
@@ -25,7 +25,7 @@ import consulo.language.psi.PsiElement;
 
 import java.util.List;
 
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface ExtendWordSelectionHandler {
   ExtensionPointName<ExtendWordSelectionHandler> EP_NAME = ExtensionPointName.create(ExtendWordSelectionHandler.class);
   

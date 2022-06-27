@@ -16,7 +16,7 @@
 package consulo.webBrowser;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiFile;
 import consulo.util.collection.ContainerUtil;
@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
 
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class WebBrowserUrlProvider {
   public static final ExtensionPointName<WebBrowserUrlProvider> EP_NAME = ExtensionPointName.create(WebBrowserUrlProvider.class);
 

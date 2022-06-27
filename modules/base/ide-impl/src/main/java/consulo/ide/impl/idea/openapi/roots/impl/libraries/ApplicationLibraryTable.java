@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.openapi.roots.impl.libraries;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
@@ -35,7 +35,7 @@ import jakarta.inject.Singleton;
  */
 @Singleton
 @State(name = "libraryTable", storages = @Storage(value = "applicationLibraries.xml", roamingType = RoamingType.DISABLED))
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class ApplicationLibraryTable extends LibraryTableBase {
   private static final LibraryTablePresentation GLOBAL_LIBRARY_TABLE_PRESENTATION = new LibraryTablePresentation() {

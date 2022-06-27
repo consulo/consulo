@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.vcs;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.ide.ServiceManager;
@@ -30,7 +30,7 @@ import jakarta.inject.Singleton;
  */
 @Singleton
 @State(name = "VcsApplicationSettings", storages = @Storage("vcs.xml"))
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class VcsApplicationSettings implements PersistentStateComponent<VcsApplicationSettings> {
   public String PATCH_STORAGE_LOCATION = null;

@@ -16,7 +16,7 @@
 package consulo.compiler;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.ui.ex.toolWindow.ToolWindow;
@@ -37,7 +37,7 @@ import java.util.StringTokenizer;
  * @author Eugene Zhuravlev
  * Date: 9/18/12
  */
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 public abstract class ProblemsView {
   @Nonnull
   public static ProblemsView getInstance(@Nonnull Project project) {

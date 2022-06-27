@@ -16,7 +16,7 @@
 package consulo.ide.impl.compiler;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.ide.impl.idea.compiler.progress.BuildViewService;
 import consulo.project.Project;
 
@@ -27,7 +27,7 @@ import java.util.UUID;
  * @author VISTALL
  * @since 28/11/2021
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public interface BuildViewServiceFactory {
   @Nonnull
   BuildViewService createBuildViewService(Project project, UUID sessionId, String contentName);

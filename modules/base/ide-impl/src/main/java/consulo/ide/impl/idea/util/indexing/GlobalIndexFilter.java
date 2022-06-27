@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.util.indexing;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.index.io.IndexId;
 import consulo.virtualFileSystem.VirtualFile;
@@ -13,7 +13,7 @@ import javax.annotation.Nonnull;
  *
  * @author yole
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface GlobalIndexFilter {
   /**
    * Returns true if the given file should be excluded from indexing by the given index.

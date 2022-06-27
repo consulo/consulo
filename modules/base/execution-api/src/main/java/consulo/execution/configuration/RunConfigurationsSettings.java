@@ -16,12 +16,12 @@
 package consulo.execution.configuration;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.configurable.UnnamedConfigurable;
 import javax.annotation.Nonnull;
 
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface RunConfigurationsSettings {
   ExtensionPointName<RunConfigurationsSettings> EXTENSION_POINT = ExtensionPointName.create(RunConfigurationsSettings.class);
 

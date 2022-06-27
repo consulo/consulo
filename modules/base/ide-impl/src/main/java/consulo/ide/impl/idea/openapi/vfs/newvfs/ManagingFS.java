@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.openapi.vfs.newvfs;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.ide.ServiceManager;
 import consulo.virtualFileSystem.FileSystemInterface;
 import consulo.virtualFileSystem.NewVirtualFileSystem;
@@ -18,7 +18,7 @@ import java.util.function.Function;
 /**
  * @author max
  */
-@Service(value = ComponentScope.APPLICATION, lazy = false)
+@ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
 public abstract class ManagingFS implements FileSystemInterface {
   private static class ManagingFSHolder {
     private static final ManagingFS ourInstance = ServiceManager.getService(ManagingFS.class);

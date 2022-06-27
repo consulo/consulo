@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XBreakpointUtil;
@@ -28,7 +28,7 @@ import jakarta.inject.Singleton;
 import javax.annotation.Nullable;
 
 @Singleton
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class BreakpointsDialogFactory {
 

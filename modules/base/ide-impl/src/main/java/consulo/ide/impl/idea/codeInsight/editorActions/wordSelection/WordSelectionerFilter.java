@@ -16,14 +16,14 @@
 package consulo.ide.impl.idea.codeInsight.editorActions.wordSelection;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.language.psi.PsiElement;
 
 /**
  * @author VISTALL
  * @since 21-Jun-22
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface WordSelectionerFilter {
   boolean canSelect(PsiElement element);
 }

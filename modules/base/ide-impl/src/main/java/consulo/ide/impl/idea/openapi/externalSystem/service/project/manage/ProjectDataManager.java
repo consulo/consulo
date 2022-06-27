@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.externalSystem.service.project.manage;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.externalSystem.model.DataNode;
 import consulo.ide.impl.idea.openapi.externalSystem.model.Key;
@@ -42,7 +42,7 @@ import java.util.Map;
  * @since 4/16/13 11:38 AM
  */
 @Singleton
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class ProjectDataManager {
 

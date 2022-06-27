@@ -16,7 +16,7 @@
 package consulo.usage;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.language.psi.PsiElement;
 
@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 20-Apr-22
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public interface PsiElementUsageTargetFactory {
   static PsiElementUsageTargetFactory getInstance() {
     return Application.get().getInstance(PsiElementUsageTargetFactory.class);

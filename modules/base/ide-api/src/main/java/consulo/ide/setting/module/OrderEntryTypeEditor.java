@@ -16,7 +16,7 @@
 package consulo.ide.setting.module;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
 import consulo.component.extension.ExtensionPoint;
 import consulo.component.extension.ExtensionPointCacheKey;
@@ -37,7 +37,7 @@ import java.util.function.Consumer;
  * @see CustomOrderEntryTypeEditor
  * @since 06-Jun-16
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract interface OrderEntryTypeEditor<T extends OrderEntry> {
   ExtensionPointCacheKey<OrderEntryTypeEditor, Map<String, OrderEntryTypeEditor>> CACHE_KEY = ExtensionPointCacheKey.create("OrderEntryTypeEditor", orderEntryTypeEditors -> {
     Map<String, OrderEntryTypeEditor> map = new HashMap<>();

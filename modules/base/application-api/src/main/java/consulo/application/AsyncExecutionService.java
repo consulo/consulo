@@ -2,7 +2,7 @@
 package consulo.application;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.ui.ModalityState;
 
 import javax.annotation.Nonnull;
@@ -12,7 +12,7 @@ import java.util.concurrent.Callable;
  * An internal service not supposed to be used directly
  */
 //@ApiStatus.Internal
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class AsyncExecutionService {
   //@NotNull
   //protected abstract ExpirableExecutor createExecutor(@NotNull Executor executor);

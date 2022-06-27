@@ -21,7 +21,7 @@
 package consulo.language.editor.inspection;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.editor.inspection.reference.RefManager;
 import consulo.language.editor.inspection.reference.RefManagerExtension;
@@ -31,7 +31,7 @@ import consulo.project.Project;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class InspectionExtensionsFactory {
   public static final ExtensionPointName<InspectionExtensionsFactory> EP_NAME = ExtensionPointName.create(InspectionExtensionsFactory.class);
 

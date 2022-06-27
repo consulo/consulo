@@ -2,7 +2,7 @@
 package consulo.ide.impl.psi.codeStyle.modifier;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.codeStyle.CodeStyleStatusBarUIContributor;
 import consulo.project.Project;
@@ -20,7 +20,7 @@ import java.util.function.Consumer;
  * of {@code TransientCodeStyleSettings} object. The modifier can be registered via "com.intellij.codeStyleSettingsModifier" extension
  * point.
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface CodeStyleSettingsModifier {
   ExtensionPointName<CodeStyleSettingsModifier> EP_NAME = ExtensionPointName.create(CodeStyleSettingsModifier.class);
 

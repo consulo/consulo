@@ -20,7 +20,7 @@
 package consulo.usage;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.codeEditor.Editor;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
@@ -28,7 +28,7 @@ import consulo.language.psi.PsiFile;
 
 import javax.annotation.Nullable;
 
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface UsageTargetProvider {
   ExtensionPointName<UsageTargetProvider> EP_NAME = ExtensionPointName.create(UsageTargetProvider.class);
 

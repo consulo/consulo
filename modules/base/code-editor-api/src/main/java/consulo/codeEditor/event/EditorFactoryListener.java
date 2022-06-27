@@ -16,7 +16,7 @@
 package consulo.codeEditor.event;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 
@@ -27,7 +27,7 @@ import java.util.EventListener;
 /**
  * @see {@link EditorFactory#addEditorFactoryListener(EditorFactoryListener)}
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface EditorFactoryListener extends EventListener {
   /**
    * Called after {@link Editor} instance has been created.

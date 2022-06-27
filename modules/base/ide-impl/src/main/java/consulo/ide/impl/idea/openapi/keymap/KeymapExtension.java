@@ -23,7 +23,7 @@
 package consulo.ide.impl.idea.openapi.keymap;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.ui.ex.action.AnAction;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
@@ -31,7 +31,7 @@ import consulo.util.lang.function.Condition;
 
 import javax.annotation.Nullable;
 
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface KeymapExtension {
   ExtensionPointName<KeymapExtension> EXTENSION_POINT_NAME = ExtensionPointName.create(KeymapExtension.class);
 

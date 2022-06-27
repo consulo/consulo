@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.util.indexing.provided;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.stub.FileBasedIndexExtension;
 import javax.annotation.Nonnull;
@@ -10,7 +10,7 @@ import javax.annotation.Nullable;
 
 import java.util.Objects;
 
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface ProvidedIndexExtensionLocator {
   ExtensionPointName<ProvidedIndexExtensionLocator> EP_NAME = ExtensionPointName.create(ProvidedIndexExtensionLocator.class);
 

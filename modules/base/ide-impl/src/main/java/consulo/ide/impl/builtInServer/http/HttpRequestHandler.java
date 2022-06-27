@@ -16,7 +16,7 @@
 package consulo.ide.impl.builtInServer.http;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.ide.impl.builtInServer.http.util.HttpRequestUtil;
 import io.netty.channel.ChannelHandlerContext;
@@ -28,7 +28,7 @@ import io.netty.handler.codec.http.QueryStringDecoder;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class HttpRequestHandler {
   public static final ExtensionPointName<HttpRequestHandler> EP_NAME = ExtensionPointName.create(HttpRequestHandler.class);
 

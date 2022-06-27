@@ -16,7 +16,7 @@
 package consulo.language.psi.stub;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -31,7 +31,7 @@ import java.util.Set;
 /**
  * @author peter
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class IndexableSetContributor {
 
   public static final ExtensionPointName<IndexableSetContributor> EP_NAME = ExtensionPointName.create(IndexableSetContributor.class);

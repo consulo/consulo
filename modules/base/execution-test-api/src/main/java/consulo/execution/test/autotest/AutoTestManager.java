@@ -16,7 +16,7 @@
 package consulo.execution.test.autotest;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
@@ -33,7 +33,7 @@ import javax.annotation.Nonnull;
  * @author yole
  */
 @Singleton
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 @State(name = "AutoTestManager", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
 public class AutoTestManager extends AbstractAutoTestManager {

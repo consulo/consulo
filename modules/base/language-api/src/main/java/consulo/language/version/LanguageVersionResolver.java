@@ -17,7 +17,7 @@ package consulo.language.version;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
 import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.language.Language;
@@ -35,7 +35,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 18:05/30.05.13
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface LanguageVersionResolver extends LanguageExtension {
   LanguageVersionResolver DEFAULT = new LanguageVersionResolver() {
     @Nonnull

@@ -16,7 +16,7 @@
 package consulo.ui.ex.action;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.annotation.component.Action;
+import consulo.annotation.component.ActionAPI;
 import consulo.application.TransactionGuard;
 import consulo.application.dumb.DumbAware;
 import consulo.application.dumb.PossiblyDumbAware;
@@ -70,7 +70,7 @@ import java.util.function.Consumer;
  * @see Presentation
  * @see ActionPlaces
  */
-@Action
+@ActionAPI
 public abstract class AnAction implements PossiblyDumbAware {
   @Nonnull
   @Deprecated

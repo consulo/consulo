@@ -20,7 +20,7 @@
 package consulo.project;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.virtualFileSystem.VirtualFile;
@@ -31,7 +31,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class ProjectLocator {
   public static ProjectLocator getInstance() {
     return Application.get().getInstance(ProjectLocator.class);

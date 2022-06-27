@@ -17,7 +17,7 @@ package consulo.project;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.project.event.ProjectManagerListener;
@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
 /**
  * Provides project management.
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class ProjectManager {
 
   /**

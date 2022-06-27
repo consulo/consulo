@@ -16,7 +16,7 @@
 package consulo.virtualFileSystem.http;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.component.internal.RootComponentHolder;
 import consulo.disposer.Disposable;
 import consulo.virtualFileSystem.http.event.HttpVirtualFileListener;
@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 /**
  * @author nik
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class RemoteFileManager {
   public static RemoteFileManager getInstance() {
     return RootComponentHolder.getRootComponent().getInstance(RemoteFileManager.class);

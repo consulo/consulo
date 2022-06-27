@@ -17,7 +17,7 @@
 package consulo.language.inject;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
  * E.g. "inject XPath language into all XML attributes named 'select' that sit inside XML tag prefixed with 'xsl:'".
  * @see PsiLanguageInjectionHost
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface LanguageInjector {
   ExtensionPointName<LanguageInjector> EXTENSION_POINT_NAME = ExtensionPointName.create(LanguageInjector.class);
 

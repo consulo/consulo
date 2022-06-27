@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.ui.ex.content.Content;
 
 import javax.annotation.Nullable;
@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
 /**
  * @author irengrig
  */
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 public interface ChangesViewContentI {
   void addContent(Content content);
 

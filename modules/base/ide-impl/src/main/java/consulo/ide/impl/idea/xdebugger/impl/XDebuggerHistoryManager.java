@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.xdebugger.impl;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.execution.debug.breakpoint.XExpression;
 import consulo.ide.ServiceManager;
@@ -34,7 +34,7 @@ import java.util.*;
  * @author nik
  */
 @Singleton
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class XDebuggerHistoryManager {
   public static final int MAX_RECENT_EXPRESSIONS = 10;

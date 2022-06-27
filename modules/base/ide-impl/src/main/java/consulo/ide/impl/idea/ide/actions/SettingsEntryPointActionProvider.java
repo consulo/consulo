@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.ui.ex.action.AnAction;
 import consulo.dataContext.DataContext;
 import consulo.component.extension.ExtensionPointName;
@@ -10,7 +10,7 @@ import consulo.component.extension.ExtensionPointName;
 import javax.annotation.Nonnull;
 import java.util.Collection;
 
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface SettingsEntryPointActionProvider {
   ExtensionPointName<SettingsEntryPointActionProvider> EP_NAME = ExtensionPointName.create(SettingsEntryPointActionProvider.class);
 

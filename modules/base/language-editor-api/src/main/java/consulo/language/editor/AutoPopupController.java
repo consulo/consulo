@@ -3,7 +3,7 @@
 package consulo.language.editor;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.codeEditor.Editor;
 import consulo.language.editor.completion.CompletionType;
 import consulo.project.Project;
@@ -18,7 +18,7 @@ import javax.annotation.Nullable;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 public abstract class AutoPopupController implements Disposable {
   /**
    * Settings this user data key to the editor with a completion provider

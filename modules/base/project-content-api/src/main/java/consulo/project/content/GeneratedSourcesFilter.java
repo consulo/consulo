@@ -16,7 +16,7 @@
 package consulo.project.content;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.application.ReadAction;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
 /**
  * @author nik
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class GeneratedSourcesFilter {
   public static final ExtensionPointName<GeneratedSourcesFilter> EP_NAME = ExtensionPointName.create(GeneratedSourcesFilter.class);
 

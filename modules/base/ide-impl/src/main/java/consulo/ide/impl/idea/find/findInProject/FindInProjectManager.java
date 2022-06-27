@@ -3,7 +3,7 @@
 package consulo.ide.impl.idea.find.findInProject;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.find.impl.FindInProjectUtil;
 import consulo.ide.impl.idea.find.impl.FindManagerImpl;
@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 @Singleton
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class FindInProjectManager {
   private final Project myProject;

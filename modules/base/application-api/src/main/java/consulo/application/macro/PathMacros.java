@@ -16,7 +16,7 @@
 package consulo.application.macro;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.component.macro.ExpandMacroToPathMap;
 import consulo.component.macro.ReplacePathToMacroMap;
@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Set;
 
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public interface PathMacros {
 
   public static PathMacros getInstance() {

@@ -16,7 +16,7 @@
 package consulo.codeEditor.action;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.document.Document;
 import consulo.document.ReadonlyFragmentModificationHandler;
@@ -29,7 +29,7 @@ import javax.annotation.Nonnull;
  * Allows to register actions which are activated by typing and navigation keystrokes
  * in the editor.
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class EditorActionManager {
   /**
    * Returns the instance of the editor action manager.

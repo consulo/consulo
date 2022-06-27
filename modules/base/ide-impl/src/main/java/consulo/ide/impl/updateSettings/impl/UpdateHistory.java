@@ -16,7 +16,7 @@
 package consulo.ide.impl.updateSettings.impl;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.RoamingType;
@@ -35,7 +35,7 @@ import java.util.TreeMap;
  * @since 21/11/2021
  */
 @Singleton
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 @State(name = "UpdateHistory", storages = @Storage(value = "updateHistory.xml", roamingType = RoamingType.DISABLED))
 public class UpdateHistory implements PersistentStateComponent<UpdateHistory.State> {

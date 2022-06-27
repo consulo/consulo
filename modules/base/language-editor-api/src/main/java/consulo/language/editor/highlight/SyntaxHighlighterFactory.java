@@ -20,7 +20,7 @@
 package consulo.language.editor.highlight;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
 import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.language.Language;
@@ -35,7 +35,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class SyntaxHighlighterFactory implements LanguageExtension {
   private static final ExtensionPointCacheKey<SyntaxHighlighterFactory, ByLanguageValue<SyntaxHighlighterFactory>> KEY =
           ExtensionPointCacheKey.create("SyntaxHighlighterFactory", LanguageGroupByFactory.build(new DefaultSyntaxHighlighterFactory()));

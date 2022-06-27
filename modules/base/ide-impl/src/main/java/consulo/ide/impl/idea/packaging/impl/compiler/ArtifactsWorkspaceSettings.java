@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.packaging.impl.compiler;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactManager;
@@ -43,7 +43,7 @@ import java.util.List;
  */
 @Singleton
 @State(name = "ArtifactsWorkspaceSettings", storages = {@Storage(StoragePathMacros.WORKSPACE_FILE)})
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class ArtifactsWorkspaceSettings implements PersistentStateComponent<ArtifactsWorkspaceSettings.ArtifactsWorkspaceSettingsState> {
   public static class ArtifactsWorkspaceSettingsState {

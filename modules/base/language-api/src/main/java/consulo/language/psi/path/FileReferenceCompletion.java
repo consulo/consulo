@@ -16,13 +16,13 @@
 package consulo.language.psi.path;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 
 /**
  * @author yole
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class FileReferenceCompletion {
   public static FileReferenceCompletion getInstance() {
     return Application.get().getInstance(FileReferenceCompletion.class);

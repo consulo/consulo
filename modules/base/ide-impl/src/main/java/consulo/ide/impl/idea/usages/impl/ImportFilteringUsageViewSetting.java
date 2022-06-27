@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.usages.impl;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
@@ -31,7 +31,7 @@ import jakarta.inject.Singleton;
  */
 @Singleton
 @State(name = "ImportFilteringUsageViewSetting", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml")})
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class ImportFilteringUsageViewSetting implements PersistentStateComponent<ImportFilteringUsageViewSetting> {
   public static ImportFilteringUsageViewSetting getInstance() {

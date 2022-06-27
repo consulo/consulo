@@ -16,7 +16,7 @@
 package consulo.fileTemplate;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 
 import javax.annotation.Nullable;
@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
 /**
  * Should be implemented in an extension point
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface FileTemplateGroupDescriptorFactory {
   ExtensionPointName<FileTemplateGroupDescriptorFactory> EP_NAME = ExtensionPointName.create(FileTemplateGroupDescriptorFactory.class);
 

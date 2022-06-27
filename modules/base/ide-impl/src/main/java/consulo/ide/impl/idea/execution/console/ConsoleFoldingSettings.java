@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.execution.console;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
@@ -36,7 +36,7 @@ import java.util.*;
  */
 @Singleton
 @State(name = "ConsoleFoldingSettings", storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/consoleFolding.xml"))
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class ConsoleFoldingSettings implements PersistentStateComponent<ConsoleFoldingSettings.MyBean> {
   private final List<String> myPositivePatterns = new ArrayList<String>();

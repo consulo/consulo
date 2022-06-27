@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.packaging.impl.artifacts;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
@@ -28,7 +28,7 @@ import java.util.Collection;
 /**
  * @author nik
  */
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 public abstract class ArtifactBySourceFileFinder {
   public static ArtifactBySourceFileFinder getInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, ArtifactBySourceFileFinder.class);

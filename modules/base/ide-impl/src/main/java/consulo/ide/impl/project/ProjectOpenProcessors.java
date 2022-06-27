@@ -16,7 +16,7 @@
 package consulo.ide.impl.project;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.ide.impl.idea.projectImport.ProjectOpenProcessor;
 
@@ -28,7 +28,7 @@ import java.io.File;
  * @author VISTALL
  * @since 31-Jan-17
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public interface ProjectOpenProcessors {
 
   @Nonnull

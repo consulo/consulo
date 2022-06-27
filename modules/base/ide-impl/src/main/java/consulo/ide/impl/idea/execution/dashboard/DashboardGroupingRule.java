@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.execution.dashboard;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.fileEditor.structureView.tree.TreeAction;
 import consulo.project.ui.view.tree.AbstractTreeNode;
@@ -29,7 +29,7 @@ import java.util.Comparator;
  *
  * @author konstantin.aleev
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface DashboardGroupingRule extends TreeAction {
   ExtensionPointName<DashboardGroupingRule> EP_NAME = ExtensionPointName.create(DashboardGroupingRule.class);
 

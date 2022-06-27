@@ -17,7 +17,7 @@
 package consulo.language.codeStyle;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
@@ -25,7 +25,7 @@ import jakarta.inject.Singleton;
 
 @Singleton
 @State(name = "CodeStyleSettingsManager", storages = @Storage("other.xml"))
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class AppCodeStyleSettingsManager extends CodeStyleSettingsManager {
 }

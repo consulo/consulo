@@ -16,7 +16,7 @@
 package consulo.language.pom;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiTarget;
 import consulo.project.Project;
@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 /**
  * @author peter
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class PomService {
 
   private static PomService getInstance(Project project) {

@@ -16,7 +16,7 @@
 package consulo.compiler.artifact;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
 import consulo.compiler.artifact.element.*;
 import consulo.compiler.artifact.ui.ArtifactProblemsHolder;
@@ -35,7 +35,7 @@ import java.util.Map;
 /**
  * @author nik
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class ArtifactType {
   private static final ExtensionPointCacheKey<ArtifactType, Map<String, ArtifactType>> GROUP = ExtensionPointCacheKey.groupBy("GroupArtifactType", ArtifactType::getId);
 

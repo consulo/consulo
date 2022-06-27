@@ -2,7 +2,7 @@
 package consulo.language.psi.stub;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.ReadAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.PerApplicationInstance;
@@ -38,7 +38,7 @@ import java.util.function.Consumer;
  * @author dmitrylomov
  * @see FileBasedIndexExtension
  */
-@Service(value = ComponentScope.APPLICATION, lazy = false)
+@ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
 public abstract class FileBasedIndex {
   private static final PerApplicationInstance<FileBasedIndex> ourInstance = PerApplicationInstance.of(FileBasedIndex.class);
 

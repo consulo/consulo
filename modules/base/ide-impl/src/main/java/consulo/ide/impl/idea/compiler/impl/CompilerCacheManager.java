@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.compiler.impl;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.compiler.impl.generic.GenericCompilerCache;
 import consulo.compiler.*;
@@ -45,7 +45,7 @@ import java.util.Map;
  *         Date: May 4, 2008
  */
 @Singleton
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class CompilerCacheManager implements Disposable {
   private static final Logger LOG = Logger.getInstance(CompilerCacheManager.class);

@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.application;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
@@ -45,7 +45,7 @@ import java.util.concurrent.Executor;
  * @author peter
  */
 @Singleton
-@Service(value = ComponentScope.APPLICATION, lazy = false)
+@ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
 @ServiceImpl
 public class Preloader implements Disposable {
   private static final Logger LOG = Logger.getInstance(Preloader.class);

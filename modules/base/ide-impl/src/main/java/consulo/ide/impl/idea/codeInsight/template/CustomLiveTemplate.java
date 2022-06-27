@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.codeInsight.template;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
 /**
  * @author Eugene.Kudelevsky
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface CustomLiveTemplate {
   ExtensionPointName<CustomLiveTemplate> EP_NAME = ExtensionPointName.create(CustomLiveTemplate.class);
 

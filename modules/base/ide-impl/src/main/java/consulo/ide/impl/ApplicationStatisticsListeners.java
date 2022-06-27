@@ -16,7 +16,7 @@
 package consulo.ide.impl;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
@@ -39,7 +39,7 @@ import javax.annotation.Nonnull;
  * @since 2020-06-14
  */
 @Singleton
-@Service(value = ComponentScope.APPLICATION, lazy = false)
+@ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
 @ServiceImpl
 public class ApplicationStatisticsListeners {
   private boolean persistOnClosing = !ApplicationManager.getApplication().isUnitTestMode();

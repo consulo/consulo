@@ -16,7 +16,7 @@
 package consulo.execution.debug.attach;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import javax.annotation.Nonnull;
@@ -28,7 +28,7 @@ import java.util.List;
  * This interface describes the provider to enumerate different hosts/environments capable of attaching to with the debugger.
  * The examples are local machine environment (see {@link LocalAttachHost}) or SSH connection to a remote server.
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface XAttachHostProvider<T extends XAttachHost> {
   ExtensionPointName<XAttachHostProvider> EP = ExtensionPointName.create(XAttachHostProvider.class);
 

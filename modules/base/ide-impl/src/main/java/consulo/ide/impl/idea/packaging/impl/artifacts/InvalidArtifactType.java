@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.packaging.impl.artifacts;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.AllIcons;
 import consulo.ide.ServiceManager;
@@ -33,7 +33,7 @@ import javax.annotation.Nonnull;
  * @author nik
  */
 @Singleton
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class InvalidArtifactType extends ArtifactType {
 

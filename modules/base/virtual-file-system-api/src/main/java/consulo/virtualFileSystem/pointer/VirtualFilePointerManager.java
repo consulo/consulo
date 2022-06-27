@@ -2,7 +2,7 @@
 package consulo.virtualFileSystem.pointer;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.component.util.ModificationTracker;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.component.internal.RootComponentHolder;
@@ -11,7 +11,7 @@ import consulo.disposer.Disposable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public interface VirtualFilePointerManager extends ModificationTracker {
   public static VirtualFilePointerManager getInstance() {
     return RootComponentHolder.getRootComponent().getComponent(VirtualFilePointerManager.class);

@@ -17,7 +17,7 @@ package consulo.fileChooser;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.component.ComponentManager;
 import consulo.disposer.Disposable;
@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class FileChooserFactory {
   public static FileChooserFactory getInstance() {
     return Application.get().getInstance(FileChooserFactory.class);

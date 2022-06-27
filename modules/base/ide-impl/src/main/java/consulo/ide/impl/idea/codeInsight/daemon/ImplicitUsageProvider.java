@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.codeInsight.daemon;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;
@@ -34,7 +34,7 @@ import javax.annotation.Nonnull;
  * @author yole
  * @since 6.0
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface ImplicitUsageProvider {
   ExtensionPointName<ImplicitUsageProvider> EP_NAME = ExtensionPointName.create(ImplicitUsageProvider.class);
 

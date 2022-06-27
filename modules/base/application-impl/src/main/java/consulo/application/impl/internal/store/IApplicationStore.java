@@ -16,12 +16,12 @@
 package consulo.application.impl.internal.store;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.component.store.impl.internal.IComponentStore;
 
 import javax.annotation.Nonnull;
 
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public interface IApplicationStore extends IComponentStore {
   void setOptionsPath(@Nonnull String path);
 

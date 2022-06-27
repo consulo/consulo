@@ -2,7 +2,7 @@
 package consulo.execution.debug.attach;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.process.ProcessInfo;
 import consulo.project.Project;
@@ -16,7 +16,7 @@ import java.util.List;
  * @deprecated use {@link XAttachDebuggerProvider} instead
  */
 @Deprecated
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface XLocalAttachDebuggerProvider extends XAttachDebuggerProvider {
   ExtensionPointName<XAttachDebuggerProvider> EP = ExtensionPointName.create(XLocalAttachDebuggerProvider.class);
 

@@ -16,7 +16,7 @@
 package consulo.fileEditor;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.content.scope.SearchScope;
 import consulo.project.Project;
@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
 /**
  * @author yole
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class UniqueVFilePathBuilder {
   private static final UniqueVFilePathBuilder DUMMY_BUILDER = new UniqueVFilePathBuilder() {
     @Nonnull

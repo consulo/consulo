@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.ide.passwordSafe.impl.providers.masterKey;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
@@ -39,7 +39,7 @@ import java.util.TreeMap;
  */
 @Singleton
 @State(name = "PasswordDatabase", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/security.xml")})
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class PasswordDatabase implements PersistentStateComponent<PasswordDatabase.State> {
   /**

@@ -21,7 +21,7 @@
 package consulo.ide.impl.idea.xdebugger.impl.evaluate.quick.common;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
@@ -45,7 +45,7 @@ import java.awt.*;
 import java.util.List;
 
 @Singleton
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class ValueLookupManager extends EditorMouseAdapter implements EditorMouseMotionListener {
   /**

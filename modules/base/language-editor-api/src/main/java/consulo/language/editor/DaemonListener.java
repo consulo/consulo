@@ -16,13 +16,13 @@
 package consulo.language.editor;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Topic;
+import consulo.annotation.component.TopicAPI;
 import consulo.fileEditor.FileEditor;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
 
-@Topic(ComponentScope.PROJECT)
+@TopicAPI(ComponentScope.PROJECT)
 public interface DaemonListener {
   /**
    * Fired when the background code analysis is being scheduled for the specified set of files.

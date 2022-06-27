@@ -21,7 +21,7 @@
 package consulo.language.editor.rawHighlight;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.component.extension.ExtensionPointName;
@@ -31,7 +31,7 @@ import consulo.ui.color.ColorValue;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class SeveritiesProvider {
   public static final ExtensionPointName<SeveritiesProvider> EP_NAME = ExtensionPointName.create(SeveritiesProvider.class);
 

@@ -16,7 +16,7 @@
 package consulo.ui.ex.awt;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.util.registry.Registry;
@@ -29,7 +29,7 @@ import javax.swing.*;
 import java.util.Collection;
 import java.util.Collections;
 
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class ExpandableItemsHandlerFactory {
   public static ExpandableItemsHandler<Integer> install(JList list) {
     ExpandableItemsHandlerFactory i = getInstance();

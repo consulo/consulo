@@ -16,7 +16,7 @@
 package consulo.compiler;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.compiler.scope.CompileScope;
 import consulo.component.extension.ExtensionPointName;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -27,7 +27,7 @@ import java.util.function.Consumer;
 /**
  * Base interface for a custom compiler which participates in the IDE build process.
  */
-@Extension(ComponentScope.PROJECT)
+@ExtensionAPI(ComponentScope.PROJECT)
 public interface Compiler {
   ExtensionPointName<Compiler> EP_NAME = ExtensionPointName.create(Compiler.class);
   

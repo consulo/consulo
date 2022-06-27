@@ -20,9 +20,9 @@
 package consulo.ide.impl.idea.ide.navigationToolbar;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Topic;
+import consulo.annotation.component.TopicAPI;
 
-@Topic(ComponentScope.PROJECT)
+@TopicAPI(ComponentScope.PROJECT)
 public interface NavBarModelListener {
   void modelChanged();
 

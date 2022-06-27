@@ -16,7 +16,7 @@
 package consulo.fileEditor;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.application.dumb.DumbAware;
 import consulo.component.extension.ExtensionPointName;
 import consulo.disposer.Disposer;
@@ -35,7 +35,7 @@ import javax.annotation.Nonnull;
  * @author Vladimir Kondratyev
  * @see DumbAware
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface FileEditorProvider {
   ExtensionPointName<FileEditorProvider> EP_FILE_EDITOR_PROVIDER = ExtensionPointName.create(FileEditorProvider.class);
 

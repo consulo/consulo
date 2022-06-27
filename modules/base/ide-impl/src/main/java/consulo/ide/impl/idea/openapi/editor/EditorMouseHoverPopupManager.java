@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.openapi.editor;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.IndexNotReadyException;
@@ -73,7 +73,7 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 @Singleton
 @ServiceImpl
 public final class EditorMouseHoverPopupManager implements Disposable {

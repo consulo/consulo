@@ -1,10 +1,10 @@
 package consulo.language.editor.folding;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public class CodeFoldingSettings {
   public boolean COLLAPSE_IMPORTS = true;
   public boolean COLLAPSE_METHODS;

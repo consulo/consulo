@@ -1,7 +1,7 @@
 package consulo.ide.impl.idea.openapi.externalSystem.service.internal;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.ide.impl.idea.openapi.externalSystem.model.ProjectSystemId;
@@ -32,7 +32,7 @@ import java.util.concurrent.TimeUnit;
  * @since 2/8/12 1:52 PM
  */
 @Singleton
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class ExternalSystemProcessingManager implements ExternalSystemTaskNotificationListener, Disposable {
 

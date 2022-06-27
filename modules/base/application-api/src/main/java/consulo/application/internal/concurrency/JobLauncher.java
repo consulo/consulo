@@ -2,7 +2,7 @@
 package consulo.application.internal.concurrency;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.util.function.Processor;
@@ -21,7 +21,7 @@ import java.util.function.Consumer;
  * {@link Application#executeOnPooledThread},
  * {@link consulo.ide.impl.idea.execution.process.ProcessIOExecutorService} and {@link consulo.ide.impl.idea.util.concurrency.NonUrgentExecutor} for that.
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class JobLauncher {
   public static JobLauncher getInstance() {
     return Application.get().getInstance(JobLauncher.class);

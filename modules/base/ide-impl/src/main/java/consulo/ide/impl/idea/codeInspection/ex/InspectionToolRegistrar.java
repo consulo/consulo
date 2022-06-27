@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.codeInspection.ex;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.codeInspection.InspectionToolProvider;
 import consulo.ide.impl.idea.codeInspection.InspectionToolsFactory;
@@ -48,7 +48,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author max
  */
 @Singleton
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class InspectionToolRegistrar {
   private static final Logger LOG = Logger.getInstance(InspectionToolRegistrar.class);

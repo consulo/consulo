@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.keymap;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.util.SystemInfo;
@@ -38,7 +38,7 @@ import java.util.Locale;
  */
 
 @Singleton
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 @State(name = "KeyboardSettings", storages = @Storage("keyboard.xml"))
 public class KeyboardSettingsExternalizable implements PersistentStateComponent<KeyboardSettingsExternalizable.OptionSet> {

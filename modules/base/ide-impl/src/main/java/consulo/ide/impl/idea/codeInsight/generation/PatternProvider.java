@@ -1,13 +1,13 @@
 package consulo.ide.impl.idea.codeInsight.generation;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.dataContext.DataContext;
 
 /**
  * @author Dmitry Avdeev
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface PatternProvider {
   PatternDescriptor[] getDescriptors();
 

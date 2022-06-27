@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.packaging.impl.artifacts;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import javax.annotation.Nonnull;
@@ -27,7 +27,7 @@ import java.util.Map;
 /**
  * @author nik
  */
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 public abstract class ArtifactSortingUtil {
   public static ArtifactSortingUtil getInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, ArtifactSortingUtil.class);

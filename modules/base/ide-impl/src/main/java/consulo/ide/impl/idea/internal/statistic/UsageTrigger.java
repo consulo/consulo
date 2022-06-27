@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.internal.statistic;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.RoamingType;
@@ -41,7 +41,7 @@ import java.util.Set;
  * User: ksafonov
  */
 @Singleton
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 @State(name = "UsageTrigger", storages = @Storage(value = "statistics.application.usages.xml", roamingType = RoamingType.DISABLED))
 public class UsageTrigger implements PersistentStateComponent<UsageTrigger.State> {

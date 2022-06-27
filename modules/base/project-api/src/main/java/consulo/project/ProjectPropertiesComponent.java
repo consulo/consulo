@@ -16,14 +16,14 @@
 package consulo.project;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.component.PropertiesComponent;
 
 /**
  * @author VISTALL
  * @since 2018-08-24
  */
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 public interface ProjectPropertiesComponent extends PropertiesComponent {
   static PropertiesComponent getInstance(Project project) {
     return project.getInstance(ProjectPropertiesComponent.class);

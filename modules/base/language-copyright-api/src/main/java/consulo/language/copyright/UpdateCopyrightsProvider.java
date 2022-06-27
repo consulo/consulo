@@ -16,7 +16,7 @@
 package consulo.language.copyright;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
 import consulo.component.extension.ExtensionPoint;
 import consulo.component.extension.ExtensionPointCacheKey;
@@ -35,7 +35,7 @@ import java.util.Map;
 /**
  * @author yole
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class UpdateCopyrightsProvider<T extends CopyrightFileConfig> {
   private static final ExtensionPointCacheKey<UpdateCopyrightsProvider, Map<FileType, UpdateCopyrightsProvider>> KEY =
           ExtensionPointCacheKey.groupBy("UpdateCopyrightsProvider", UpdateCopyrightsProvider::getFileType);

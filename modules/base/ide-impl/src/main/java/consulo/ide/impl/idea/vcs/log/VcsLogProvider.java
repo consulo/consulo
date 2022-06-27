@@ -1,7 +1,7 @@
 package consulo.ide.impl.idea.vcs.log;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.ide.impl.idea.openapi.vcs.VcsException;
 import consulo.ide.impl.idea.openapi.vcs.VcsKey;
 import consulo.virtualFileSystem.VirtualFile;
@@ -20,7 +20,7 @@ import java.util.Set;
 /**
  * Provides the information needed to build the VCS log, such as the list of most recent commits with their parents.
  */
-@Extension(ComponentScope.PROJECT)
+@ExtensionAPI(ComponentScope.PROJECT)
 public interface VcsLogProvider {
 
   /**

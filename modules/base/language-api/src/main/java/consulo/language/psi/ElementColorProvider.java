@@ -18,7 +18,7 @@ package consulo.language.psi;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionList;
 import consulo.project.Project;
 import consulo.ui.color.ColorValue;
@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
 /**
  * @author Konstantin Bulenkov
  */
-@Extension(ComponentScope.PROJECT)
+@ExtensionAPI(ComponentScope.PROJECT)
 public interface ElementColorProvider {
   ExtensionList<ElementColorProvider, Project> EP = ExtensionList.of(ElementColorProvider.class);
 

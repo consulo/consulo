@@ -16,7 +16,7 @@
 package consulo.language.editor.highlight;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.colorScheme.TextAttributes;
@@ -36,7 +36,7 @@ import java.util.Collection;
  *
  * @author max
  */
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 public abstract class HighlightManager {
   public static HighlightManager getInstance(Project project) {
     return project.getInstance(HighlightManager.class);

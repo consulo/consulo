@@ -16,7 +16,7 @@
 package consulo.execution;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.execution.executor.Executor;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.project.Project;
@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 05-Apr-22
  */
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 public interface RunConfigurationEditor {
   static RunConfigurationEditor getInstance(Project project) {
     return project.getInstance(RunConfigurationEditor.class);

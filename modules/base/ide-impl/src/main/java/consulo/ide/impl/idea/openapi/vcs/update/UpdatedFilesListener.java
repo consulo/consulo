@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.vcs.update;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Topic;
+import consulo.annotation.component.TopicAPI;
 
 import java.util.Set;
 
@@ -25,7 +25,7 @@ import java.util.Set;
  *         Date: 6/9/11
  *         Time: 7:38 PM
  */
-@Topic(ComponentScope.PROJECT)
+@TopicAPI(ComponentScope.PROJECT)
 public interface UpdatedFilesListener {
   void consume(Set<String> files);
 }

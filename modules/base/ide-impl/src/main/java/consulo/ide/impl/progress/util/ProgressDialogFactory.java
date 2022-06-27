@@ -16,7 +16,7 @@
 package consulo.ide.impl.progress.util;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
 import consulo.project.Project;
@@ -28,7 +28,7 @@ import javax.swing.*;
  * @author VISTALL
  * @since 2020-05-11
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public interface ProgressDialogFactory {
   static ProgressDialogFactory getInstance() {
     return ServiceManager.getService(ProgressDialogFactory.class);

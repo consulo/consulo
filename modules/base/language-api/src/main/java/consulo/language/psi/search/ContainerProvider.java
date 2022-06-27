@@ -16,7 +16,7 @@
 package consulo.language.psi.search;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;
@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
 /**
  * @author Max Medvedev
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public interface ContainerProvider {
   ExtensionPointName<ContainerProvider> EP_NAME = ExtensionPointName.create(ContainerProvider.class);
 

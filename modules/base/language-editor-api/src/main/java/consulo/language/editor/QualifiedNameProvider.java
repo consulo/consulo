@@ -17,7 +17,7 @@
 package consulo.language.editor;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.util.EditorModificationUtil;
 import consulo.component.extension.ExtensionPointName;
@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
 /**
  * @author yole
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface QualifiedNameProvider {
   ExtensionPointName<QualifiedNameProvider> EP_NAME = ExtensionPointName.create(QualifiedNameProvider.class);
 

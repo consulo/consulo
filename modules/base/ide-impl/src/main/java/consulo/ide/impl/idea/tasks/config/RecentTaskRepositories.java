@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.tasks.config;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
@@ -30,7 +30,6 @@ import consulo.ide.impl.idea.tasks.impl.TaskManagerImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Sets;
-import consulo.util.lang.function.Condition;
 import consulo.util.xml.serializer.XmlSerializer;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -44,7 +43,7 @@ import java.util.Set;
  */
 @Singleton
 @State(name = "RecentTaskRepositories", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml")})
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class RecentTaskRepositories implements PersistentStateComponent<Element> {
 

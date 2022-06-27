@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.ide.passwordSafe;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.ide.ServiceManager;
 
 /**
@@ -28,7 +28,7 @@ import consulo.ide.ServiceManager;
  *
  * @see consulo.ide.impl.idea.ide.passwordSafe.ui.PasswordSafePromptDialog
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class PasswordSafe implements PasswordStorage {
 
   /**

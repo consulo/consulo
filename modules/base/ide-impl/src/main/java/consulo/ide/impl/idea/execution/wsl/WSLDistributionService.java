@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.execution.wsl;
 
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
@@ -28,7 +28,7 @@ import java.util.*;
  * Service automatically adds default descriptors on first invocation.
  */
 @Singleton
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 @State(name = "WslDistributionsService", storages = @Storage(value = "wsl.distributions.xml"))
 public class WSLDistributionService implements PersistentStateComponent<WSLDistributionService> {

@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.diff;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.ide.impl.idea.ide.diff.DiffElement;
 import consulo.ide.impl.idea.ide.diff.DirDiffModel;
 import consulo.ide.impl.idea.ide.diff.DirDiffSettings;
@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
 /**
  * @author Konstantin Bulenkov
  */
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 public abstract class DirDiffManager {
   public static DirDiffManager getInstance(@Nonnull Project project) {
     return ServiceManager.getService(project, DirDiffManager.class);

@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.find.findUsages;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.find.FindUsagesOptions;
 import consulo.language.psi.PsiElement;
@@ -27,7 +27,7 @@ import consulo.application.util.function.Processor;
 /**
  * @author gregsh
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class CustomUsageSearcher {
   public static final ExtensionPointName<CustomUsageSearcher> EP_NAME = ExtensionPointName.create(CustomUsageSearcher.class);
 

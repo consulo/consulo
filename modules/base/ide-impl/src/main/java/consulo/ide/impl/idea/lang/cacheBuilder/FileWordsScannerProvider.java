@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.lang.cacheBuilder;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.language.cacheBuilder.WordsScanner;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -29,7 +29,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 24-Jun-22
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface FileWordsScannerProvider {
   ExtensionPointCacheKey<FileWordsScannerProvider, Map<FileType, WordsScanner>> SCANNERS = ExtensionPointCacheKey.create("FileWordsScannerProvider", fileWordsScannerProviders -> {
     Map<FileType, WordsScanner> scannerMap = new HashMap<>();

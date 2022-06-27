@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.ide.ui;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.ide.ServiceManager;
 import consulo.disposer.Disposable;
 import consulo.ui.style.Style;
@@ -30,7 +30,7 @@ import java.util.List;
  * User: anna
  * Date: 17-May-2006
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class LafManager {
   @Nonnull
   public static LafManager getInstance(){

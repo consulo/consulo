@@ -16,12 +16,12 @@
 package consulo.execution.debug.event;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Topic;
+import consulo.annotation.component.TopicAPI;
 import consulo.execution.debug.XDebugProcess;
 
 import javax.annotation.Nonnull;
 
-@Topic(ComponentScope.PROJECT)
+@TopicAPI(ComponentScope.PROJECT)
 public interface XDebuggerManagerListener {
   void processStarted(@Nonnull XDebugProcess debugProcess);
 

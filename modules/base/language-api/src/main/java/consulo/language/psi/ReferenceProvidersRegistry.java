@@ -17,7 +17,7 @@
 package consulo.language.psi;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.language.Language;
@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
  * Date: 27.03.2003
  * Time: 17:13:45
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class ReferenceProvidersRegistry {
   public final static PsiReferenceProvider NULL_REFERENCE_PROVIDER = new PsiReferenceProvider() {
       @Nonnull

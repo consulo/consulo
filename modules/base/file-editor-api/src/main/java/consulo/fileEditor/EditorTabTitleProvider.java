@@ -16,7 +16,7 @@
 package consulo.fileEditor;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
 /**
  * @author yole
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface EditorTabTitleProvider {
   ExtensionPointName<EditorTabTitleProvider> EP_NAME = ExtensionPointName.create(EditorTabTitleProvider.class);
 

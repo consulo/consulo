@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.featureStatistics;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.ide.ServiceManager;
 import javax.annotation.Nonnull;
 
@@ -26,7 +26,7 @@ import java.util.Set;
  * User: anna
  * Date: Feb 3, 2005
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class ProductivityFeaturesRegistry {
   @Nonnull
   public abstract Set<String> getFeatureIds();

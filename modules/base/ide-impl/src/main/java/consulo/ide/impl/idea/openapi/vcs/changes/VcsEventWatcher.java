@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
@@ -37,7 +37,7 @@ import javax.annotation.Nonnull;
  * @author yole
  */
 @Singleton
-@Service(value = ComponentScope.PROJECT, lazy = false)
+@ServiceAPI(value = ComponentScope.PROJECT, lazy = false)
 @ServiceImpl
 public class VcsEventWatcher implements ProjectComponent {
   private Project myProject;

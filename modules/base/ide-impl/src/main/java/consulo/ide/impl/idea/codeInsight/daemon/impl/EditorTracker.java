@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.event.EditorFactoryEvent;
 import consulo.disposer.Disposable;
@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 public abstract class EditorTracker implements Disposable {
   @Nonnull
   public static EditorTracker getInstance(@Nonnull Project project) {

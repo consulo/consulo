@@ -16,7 +16,7 @@
 package consulo.project.ui.notification;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Topic;
+import consulo.annotation.component.TopicAPI;
 import consulo.annotation.component.TopicBroadcastDirection;
 import consulo.application.Application;
 import consulo.application.util.concurrent.AppExecutorUtil;
@@ -31,7 +31,7 @@ import java.util.concurrent.TimeUnit;
  * @author spleaner
  */
 // FIXME [VISTALL] this topic is App&Project level
-@Topic(value = ComponentScope.APPLICATION, direction = TopicBroadcastDirection.NONE)
+@TopicAPI(value = ComponentScope.APPLICATION, direction = TopicBroadcastDirection.NONE)
 public interface Notifications {
   TopicImpl<Notifications> TOPIC = TopicImpl.create("Notifications", Notifications.class, TopicBroadcastDirection.NONE);
 

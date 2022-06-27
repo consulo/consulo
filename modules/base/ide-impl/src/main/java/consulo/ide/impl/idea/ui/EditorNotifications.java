@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.ui;
 
 import consulo.annotation.UsedInPlugin;
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.virtualFileSystem.VirtualFile;
@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
 /**
  * @author Dmitry Avdeev
  */
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 public abstract class EditorNotifications  {
   @Nonnull
   public static EditorNotifications getInstance(Project project) {

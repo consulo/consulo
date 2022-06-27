@@ -20,7 +20,7 @@
 package consulo.document.event;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Topic;
+import consulo.annotation.component.TopicAPI;
 import consulo.document.Document;
 
 import javax.annotation.Nonnull;
@@ -29,7 +29,7 @@ import javax.annotation.Nonnull;
  * @deprecated Use {@link DocumentListener} instead
  */
 @Deprecated
-@Topic(ComponentScope.APPLICATION)
+@TopicAPI(ComponentScope.APPLICATION)
 public interface DocumentBulkUpdateListener {
   void updateStarted(@Nonnull Document doc);
 

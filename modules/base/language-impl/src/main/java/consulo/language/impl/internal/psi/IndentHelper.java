@@ -16,7 +16,7 @@
 package consulo.language.impl.internal.psi;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiFile;
@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
 /**
  * @author yole
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class IndentHelper {
   public static IndentHelper getInstance() {
     return Application.get().getInstance(IndentHelper.class);

@@ -2,12 +2,12 @@
 package consulo.language.editor.wolfAnalyzer;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Topic;
+import consulo.annotation.component.TopicAPI;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 
-@Topic(ComponentScope.PROJECT)
+@TopicAPI(ComponentScope.PROJECT)
 public interface ProblemListener {
 
   default void problemsAppeared(@Nonnull VirtualFile file) {

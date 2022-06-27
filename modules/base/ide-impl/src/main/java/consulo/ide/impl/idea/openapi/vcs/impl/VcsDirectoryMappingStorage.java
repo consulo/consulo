@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.openapi.vcs.impl;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
@@ -33,7 +33,7 @@ import jakarta.inject.Inject;
  */
 @State(name = "VcsDirectoryMappings", storages = @Storage("vcs.xml"))
 @Singleton
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class VcsDirectoryMappingStorage implements PersistentStateComponent<Element> {
   private final ProjectLevelVcsManager myVcsManager;

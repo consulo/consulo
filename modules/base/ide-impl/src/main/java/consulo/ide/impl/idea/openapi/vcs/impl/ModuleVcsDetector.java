@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.openapi.vcs.impl;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
@@ -50,7 +50,7 @@ import java.util.*;
  * @author yole
  */
 @Singleton
-@Service(value = ComponentScope.PROJECT)
+@ServiceAPI(value = ComponentScope.PROJECT)
 @ServiceImpl
 public class ModuleVcsDetector implements Disposable {
   private final Project myProject;

@@ -1,7 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.component.impl.messagebus;
 
-import consulo.annotation.component.Topic;
+import consulo.annotation.component.TopicAPI;
 import consulo.annotation.component.TopicBroadcastDirection;
 import consulo.component.ProcessCanceledException;
 import consulo.component.bind.InjectingBinding;
@@ -173,7 +173,7 @@ public class MessageBusImpl implements MessageBus, Disposable {
       return publisher;
     }
 
-    if (!topicClass.isAnnotationPresent(Topic.class)) {
+    if (!topicClass.isAnnotationPresent(TopicAPI.class)) {
       throw new IllegalArgumentException(topicClass + " is not annotated by @Topic");
     }
 
@@ -304,7 +304,7 @@ public class MessageBusImpl implements MessageBus, Disposable {
       result.addAll(topicSubscribers);
     }
 
-    Topic annotation = topicClass.getAnnotation(Topic.class);
+    TopicAPI annotation = topicClass.getAnnotation(TopicAPI.class);
     if (annotation == null) {
       throw new IllegalArgumentException(topicClass + " is not annotated by @Topic");
     }

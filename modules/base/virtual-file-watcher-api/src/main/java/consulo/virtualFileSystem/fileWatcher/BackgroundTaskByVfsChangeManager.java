@@ -16,7 +16,7 @@
 package consulo.virtualFileSystem.fileWatcher;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
@@ -28,7 +28,7 @@ import java.util.List;
  * @author VISTALL
  * @since 22:46/06.10.13
  */
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 public abstract class BackgroundTaskByVfsChangeManager {
   @Nonnull
   public static BackgroundTaskByVfsChangeManager getInstance(@Nonnull Project project) {

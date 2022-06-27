@@ -16,7 +16,7 @@
 package consulo.codeEditor;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.popup.JBPopup;
@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 09-Mar-22
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public interface EditorPopupHelper {
 
   /**

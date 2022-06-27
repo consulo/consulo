@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.actionSystem.impl;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 
 import javax.annotation.Nonnull;
@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
 /**
  * @author Roman.Chernyatchik
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface BundledQuickListsProvider {
   ExtensionPointName<BundledQuickListsProvider> EP_NAME = ExtensionPointName.create(BundledQuickListsProvider.class);
 

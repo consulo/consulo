@@ -16,13 +16,13 @@
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiFile;
 
 import javax.annotation.Nonnull;
 
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class DequotingFilter {
   public abstract boolean skipReplacementQuotesOrBraces(@Nonnull PsiFile file, @Nonnull Editor editor, @Nonnull String selectedText, char c);
 }

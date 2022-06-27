@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.vcs.impl;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.vcs.changes.ContentRevision;
@@ -25,7 +25,7 @@ import consulo.virtualFileSystem.VirtualFile;
 /**
  * @author yole
  */
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 public abstract class VcsPathPresenter {
   public static VcsPathPresenter getInstance(Project project) {
     return ServiceManager.getService(project, VcsPathPresenter.class);

@@ -17,7 +17,7 @@
 package consulo.language.editor.refactoring;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.component.persist.PersistentStateComponent;
@@ -30,7 +30,7 @@ import jakarta.inject.Singleton;
  * @author yole
  */
 @Singleton
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 @State(name = "BaseRefactoringSettings", storages = {@Storage("other.xml")})
 public class RefactoringSettings implements PersistentStateComponent<RefactoringSettings> {

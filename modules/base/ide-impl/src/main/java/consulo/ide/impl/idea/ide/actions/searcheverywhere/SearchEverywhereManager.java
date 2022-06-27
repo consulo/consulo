@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ide.ServiceManager;
 import consulo.project.Project;
@@ -14,7 +14,7 @@ import javax.annotation.Nullable;
 /**
  * @author Mikhail.Sokolov
  */
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 public interface SearchEverywhereManager {
   public static final Key<JBPopup> SEARCH_EVERYWHERE_POPUP = new Key<>("SearchEverywherePopup");
 

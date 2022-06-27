@@ -16,7 +16,7 @@
 package consulo.ide.impl.psi.impl.cache.impl.todo;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
 import consulo.component.extension.ExtensionPoint;
 import consulo.component.extension.ExtensionPointCacheKey;
@@ -32,7 +32,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 23-Jun-22
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface TodoIndexer extends DataIndexer<TodoIndexEntry, Integer, FileContent> {
   ExtensionPointCacheKey<TodoIndexer, Map<FileType, TodoIndexer>> KEY = ExtensionPointCacheKey.groupBy("BinaryFileStubBuilder", TodoIndexer::getFileType);
 

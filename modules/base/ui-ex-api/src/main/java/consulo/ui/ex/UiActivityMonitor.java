@@ -16,7 +16,7 @@
 package consulo.ui.ex;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.component.ComponentManager;
 import consulo.component.util.BusyObject;
@@ -24,7 +24,7 @@ import consulo.ui.ModalityState;
 
 import javax.annotation.Nonnull;
 
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class UiActivityMonitor {
 
   public abstract BusyObject getBusy(@Nonnull ComponentManager project, UiActivity... toWatch);

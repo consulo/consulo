@@ -16,7 +16,7 @@
 package consulo.ide.impl.codeInspection.ui;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.configurable.SimpleConfigurableByProperties;
 import consulo.ui.Component;
@@ -28,7 +28,7 @@ import java.util.function.Consumer;
  * @author VISTALL
  * @since 2020-04-25
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface ErrorPropertiesProvider {
   ExtensionPointName<ErrorPropertiesProvider> EP_NAME = ExtensionPointName.create(ErrorPropertiesProvider.class);
 

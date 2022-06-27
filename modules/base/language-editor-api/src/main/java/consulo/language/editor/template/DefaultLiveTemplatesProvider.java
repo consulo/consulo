@@ -17,7 +17,7 @@
 package consulo.language.editor.template;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 
 import javax.annotation.Nullable;
@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
 /**
  * @author yole
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface DefaultLiveTemplatesProvider {
   ExtensionPointName<DefaultLiveTemplatesProvider> EP_NAME = ExtensionPointName.create(DefaultLiveTemplatesProvider.class);
 

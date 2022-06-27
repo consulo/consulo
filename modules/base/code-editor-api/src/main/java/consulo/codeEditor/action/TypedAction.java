@@ -2,7 +2,7 @@
 package consulo.codeEditor.action;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.application.util.FreezeLogger;
 import consulo.codeEditor.Editor;
@@ -22,7 +22,7 @@ import javax.annotation.Nullable;
 /**
  * Provides services for registering actions which are activated by typing in the editor.
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class TypedAction {
   public static TypedAction getInstance() {
     return Application.get().getInstance(TypedAction.class);

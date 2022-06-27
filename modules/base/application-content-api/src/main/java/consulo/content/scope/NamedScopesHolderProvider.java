@@ -16,7 +16,7 @@
 package consulo.content.scope;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionList;
 import consulo.project.Project;
 
@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 13-Feb-22
  */
-@Extension(ComponentScope.PROJECT)
+@ExtensionAPI(ComponentScope.PROJECT)
 public interface NamedScopesHolderProvider {
   ExtensionList<NamedScopesHolderProvider, Project> EP = ExtensionList.of(NamedScopesHolderProvider.class);
 

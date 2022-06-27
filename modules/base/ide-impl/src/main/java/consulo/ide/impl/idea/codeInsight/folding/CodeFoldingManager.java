@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.codeInsight.folding;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.ide.ServiceManager;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
@@ -14,7 +14,7 @@ import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 public abstract class CodeFoldingManager {
   public static CodeFoldingManager getInstance(Project project) {
     return ServiceManager.getService(project, CodeFoldingManager.class);

@@ -16,14 +16,14 @@
 package consulo.webBrowser;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface UrlOpener {
   ExtensionPointName<UrlOpener> EP_NAME = ExtensionPointName.create(UrlOpener.class);
 

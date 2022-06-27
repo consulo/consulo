@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.diff.tools.external;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.diff.util.DiffUtil;
 import consulo.component.persist.PersistentStateComponent;
@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 @Singleton
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 @State(name = "ExternalDiffSettings", storages = @Storage(file = DiffUtil.DIFF_CONFIG))
 public class ExternalDiffSettings implements PersistentStateComponent<ExternalDiffSettings.State> {

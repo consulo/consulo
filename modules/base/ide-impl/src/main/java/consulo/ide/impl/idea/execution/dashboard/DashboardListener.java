@@ -16,13 +16,13 @@
 package consulo.ide.impl.idea.execution.dashboard;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Topic;
+import consulo.annotation.component.TopicAPI;
 import consulo.annotation.component.TopicBroadcastDirection;
 
 /**
  * @author konstantin.aleev
  */
-@Topic(value = ComponentScope.PROJECT, direction = TopicBroadcastDirection.TO_PARENT)
+@TopicAPI(value = ComponentScope.PROJECT, direction = TopicBroadcastDirection.TO_PARENT)
 public interface DashboardListener {
   void contentChanged(boolean withStructure);
 }

@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.ide.favoritesTreeView;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.favoritesTreeView.actions.AddToFavoritesAction;
@@ -64,7 +64,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 @Singleton
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 @State(name = "FavoritesManager", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 public class FavoritesManager implements PersistentStateComponent<Element> {

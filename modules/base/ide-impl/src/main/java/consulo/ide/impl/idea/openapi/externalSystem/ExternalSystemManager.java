@@ -1,7 +1,7 @@
 package consulo.ide.impl.idea.openapi.externalSystem;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.ide.impl.idea.openapi.externalSystem.model.ProjectSystemId;
@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
  * @author Denis Zhdanov
  * @since 4/4/13 4:05 PM
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface ExternalSystemManager<ProjectSettings extends ExternalProjectSettings, SettingsListener extends ExternalSystemSettingsListener<ProjectSettings>, Settings extends AbstractExternalSystemSettings<Settings, ProjectSettings, SettingsListener>, LocalSettings extends AbstractExternalSystemLocalSettings, ExecutionSettings extends ExternalSystemExecutionSettings>
         extends ParametersEnhancer {
 

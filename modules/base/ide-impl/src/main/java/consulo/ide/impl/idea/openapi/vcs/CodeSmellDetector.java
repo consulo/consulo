@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.vcs;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.ide.impl.idea.codeInsight.CodeSmellInfo;
 import consulo.ide.ServiceManager;
 import consulo.component.ProcessCanceledException;
@@ -29,7 +29,7 @@ import java.util.List;
 /**
  * @author yole
  */
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 public abstract class CodeSmellDetector {
   public static CodeSmellDetector getInstance(Project project) {
     return ServiceManager.getService(project, CodeSmellDetector.class);

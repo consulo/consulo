@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.ide.actions.runAnything;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
@@ -36,7 +36,7 @@ import java.util.List;
  */
 @Singleton
 @State(name = "RunAnythingContextRecentDirectoryCache", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class RunAnythingContextRecentDirectoryCache implements PersistentStateComponent<RunAnythingContextRecentDirectoryCache.State> {
   static class State {

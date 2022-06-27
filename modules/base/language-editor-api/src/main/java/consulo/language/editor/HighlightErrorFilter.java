@@ -17,7 +17,7 @@
 package consulo.language.editor;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiErrorElement;
 import javax.annotation.Nonnull;
@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
 /**
  * @author spleaner
  */
-@Extension(ComponentScope.PROJECT)
+@ExtensionAPI(ComponentScope.PROJECT)
 public abstract class HighlightErrorFilter {
   public static final ExtensionPointName<HighlightErrorFilter> EP_NAME = ExtensionPointName.create(HighlightErrorFilter.class);
 

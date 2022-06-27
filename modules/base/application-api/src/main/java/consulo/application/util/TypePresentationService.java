@@ -16,7 +16,7 @@
 package consulo.application.util;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.application.util.matcher.NameUtilCore;
 import consulo.ui.image.Image;
@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
 /**
  * @author peter
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class TypePresentationService {
   @Nonnull
   public static TypePresentationService getInstance() {

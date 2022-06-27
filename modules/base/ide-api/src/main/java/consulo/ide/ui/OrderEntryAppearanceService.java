@@ -16,7 +16,7 @@
 package consulo.ide.ui;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.content.bundle.Sdk;
 import consulo.content.library.Library;
@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.function.Consumer;
 
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class OrderEntryAppearanceService {
   public static OrderEntryAppearanceService getInstance() {
     return Application.get().getInstance(OrderEntryAppearanceService.class);

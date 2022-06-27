@@ -16,12 +16,12 @@
 package consulo.virtualFileSystem.event;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Topic;
+import consulo.annotation.component.TopicAPI;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 
-@Topic(ComponentScope.APPLICATION)
+@TopicAPI(ComponentScope.APPLICATION)
 public interface BulkFileListener {
   /**
    * @deprecated obsolete, implement {@link BulkFileListener} directly (to be removed in IDEA 2019)

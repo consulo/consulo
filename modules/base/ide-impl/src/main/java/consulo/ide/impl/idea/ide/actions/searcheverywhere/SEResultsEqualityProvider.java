@@ -2,14 +2,14 @@
 package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import javax.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.List;
 
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface SEResultsEqualityProvider {
 
   ExtensionPointName<SEResultsEqualityProvider> EP_NAME = ExtensionPointName.create(SEResultsEqualityProvider.class);

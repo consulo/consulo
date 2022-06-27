@@ -16,7 +16,7 @@
 package consulo.language;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
 import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.language.ast.IElementType;
@@ -37,7 +37,7 @@ import javax.annotation.Nullable;
  * @author max
  * @see BracePair
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface PairedBraceMatcher extends LanguageExtension {
   ExtensionPointCacheKey<PairedBraceMatcher, ByLanguageValue<PairedBraceMatcher>> KEY = ExtensionPointCacheKey.create("PairedBraceMatcher", LanguageGroupByFactory.build());
 

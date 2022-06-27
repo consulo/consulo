@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.openapi.roots.impl.libraries;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.State;
 import consulo.component.persist.StateSplitterEx;
@@ -43,7 +43,7 @@ import java.util.List;
  * @author dsl
  */
 @Singleton
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 @State(name = "libraryTable", storages = @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/libraries/", stateSplitter = ProjectLibraryTable.LibraryStateSplitter.class))
 public class ProjectLibraryTable extends LibraryTableBase {

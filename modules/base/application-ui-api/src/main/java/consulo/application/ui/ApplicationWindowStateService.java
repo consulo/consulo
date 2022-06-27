@@ -16,7 +16,7 @@
 package consulo.application.ui;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 
 import javax.annotation.Nonnull;
@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 2018-08-24
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public interface ApplicationWindowStateService extends WindowStateService {
   @Nonnull
   static ApplicationWindowStateService getInstance() {

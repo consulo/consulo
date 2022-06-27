@@ -16,15 +16,14 @@
 package consulo.ide.impl.idea.codeInsight.hint;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Topic;
+import consulo.annotation.component.TopicAPI;
 import consulo.project.Project;
 import consulo.ide.impl.idea.ui.LightweightHint;
-import consulo.component.messagebus.TopicImpl;
 
 /**
  * @author yole
  */
-@Topic(ComponentScope.APPLICATION)
+@TopicAPI(ComponentScope.APPLICATION)
 public interface EditorHintListener {
   void hintShown(Project project, LightweightHint hint, int flags);
 }

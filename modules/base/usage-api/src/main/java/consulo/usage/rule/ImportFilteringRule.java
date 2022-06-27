@@ -16,7 +16,7 @@
 package consulo.usage.rule;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 
 /**
@@ -24,7 +24,7 @@ import consulo.component.extension.ExtensionPointName;
  * Date: 11.03.2010
  * Time: 19:08:33
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface ImportFilteringRule extends UsageFilteringRule {
   ExtensionPointName<ImportFilteringRule> EP_NAME = ExtensionPointName.create(ImportFilteringRule.class);
 }

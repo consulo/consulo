@@ -2,7 +2,7 @@
 package consulo.project.ui.wm;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import org.jetbrains.annotations.Nls;
@@ -16,7 +16,7 @@ import javax.annotation.Nonnull;
  * By default, a widget would be available only in the main IDE, but not in Light Edit.
  * Prohibiting the widget for the main IDE could be done in the {@link StatusBarWidgetFactory#isAvailable(Project)} method.
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface StatusBarWidgetFactory {
   ExtensionPointName<StatusBarWidgetFactory> EP_NAME = ExtensionPointName.create(StatusBarWidgetFactory.class);
 

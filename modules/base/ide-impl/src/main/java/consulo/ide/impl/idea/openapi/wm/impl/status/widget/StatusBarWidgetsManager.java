@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.openapi.wm.impl.status.widget;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 @Singleton
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public final class StatusBarWidgetsManager extends SimpleModificationTracker implements Disposable {
   @Nonnull

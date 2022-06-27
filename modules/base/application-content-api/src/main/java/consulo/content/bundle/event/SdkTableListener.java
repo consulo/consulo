@@ -16,7 +16,7 @@
 package consulo.content.bundle.event;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Topic;
+import consulo.annotation.component.TopicAPI;
 import consulo.content.bundle.Sdk;
 import javax.annotation.Nonnull;
 
@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 22.05.2015
  */
-@Topic(ComponentScope.APPLICATION)
+@TopicAPI(ComponentScope.APPLICATION)
 public interface SdkTableListener {
   default void beforeSdkAdded(@Nonnull Sdk sdk){}
 

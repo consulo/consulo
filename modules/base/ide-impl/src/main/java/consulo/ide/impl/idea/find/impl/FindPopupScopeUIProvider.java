@@ -16,11 +16,11 @@
 package consulo.ide.impl.idea.find.impl;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.ide.ServiceManager;
 import javax.annotation.Nonnull;
 
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public interface FindPopupScopeUIProvider {
   static FindPopupScopeUIProvider getInstance() {
     return ServiceManager.getService(FindPopupScopeUIProvider.class);

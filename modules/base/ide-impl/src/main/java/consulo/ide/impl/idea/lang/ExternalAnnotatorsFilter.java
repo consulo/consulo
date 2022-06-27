@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.lang;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.language.editor.annotation.ExternalAnnotator;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiFile;
@@ -24,7 +24,7 @@ import consulo.language.psi.PsiFile;
 /**
  * @author Dmitry Avdeev
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface ExternalAnnotatorsFilter {
   ExtensionPointName<ExternalAnnotatorsFilter> EXTENSION_POINT_NAME = ExtensionPointName.create(ExternalAnnotatorsFilter.class);
 

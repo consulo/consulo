@@ -17,7 +17,7 @@
 package consulo.language.editor.ui;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -29,7 +29,7 @@ import java.util.function.Predicate;
 /**
  * @author yole
  */
-@Extension(ComponentScope.PROJECT)
+@ExtensionAPI(ComponentScope.PROJECT)
 public abstract class TreeFileChooserFactory {
   public static TreeFileChooserFactory getInstance(Project project) {
     return project.getInstance(TreeFileChooserFactory.class);

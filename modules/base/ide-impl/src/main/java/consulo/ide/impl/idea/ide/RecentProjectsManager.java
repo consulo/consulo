@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.ide;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.ui.ex.action.AnAction;
 import consulo.ide.ServiceManager;
 import consulo.project.Project;
@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class RecentProjectsManager {
   @Nonnull
   public static RecentProjectsManager getInstance() {

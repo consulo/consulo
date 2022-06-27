@@ -25,7 +25,7 @@
 package consulo.ide.impl.idea.codeInsight.intention.impl.config;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.ide.ui.search.SearchableOptionContributor;
 import consulo.ide.impl.idea.ide.ui.search.SearchableOptionProcessor;
@@ -51,7 +51,7 @@ import java.util.regex.Pattern;
 
 @Singleton
 @State(name = "IntentionManagerSettings", storages = @Storage("intentionSettings.xml"))
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class IntentionManagerSettings implements PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance(IntentionManagerSettings.class);

@@ -6,14 +6,14 @@
 package consulo.language.psi.stub;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.index.io.KeyDescriptor;
 import consulo.language.psi.PsiElement;
 
 import javax.annotation.Nonnull;
 
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface StubIndexExtension<Key, Psi extends PsiElement> {
   ExtensionPointName<StubIndexExtension> EP_NAME = ExtensionPointName.create(StubIndexExtension.class);
 

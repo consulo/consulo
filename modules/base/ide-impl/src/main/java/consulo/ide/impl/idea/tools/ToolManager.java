@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.tools;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.ui.ex.action.ActionManager;
 import consulo.application.ApplicationManager;
@@ -29,7 +29,7 @@ import jakarta.inject.Singleton;
  * @author traff
  */
 @Singleton
-@Service(value = ComponentScope.APPLICATION, lazy = false)
+@ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
 @ServiceImpl
 public class ToolManager extends BaseToolManager<Tool> {
   public static ToolManager getInstance() {

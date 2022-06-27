@@ -1,7 +1,7 @@
 package consulo.ide.impl.idea.remoteServer.configuration;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Topic;
+import consulo.annotation.component.TopicAPI;
 
 import javax.annotation.Nonnull;
 import java.util.EventListener;
@@ -9,7 +9,7 @@ import java.util.EventListener;
 /**
  * @author nik
  */
-@Topic(ComponentScope.APPLICATION)
+@TopicAPI(ComponentScope.APPLICATION)
 public interface RemoteServerListener extends EventListener {
   void serverAdded(@Nonnull RemoteServer<?> server);
 

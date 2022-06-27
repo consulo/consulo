@@ -2,7 +2,7 @@
 package consulo.language.editor.hint;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.ui.ex.RelativePoint;
@@ -16,7 +16,7 @@ import javax.swing.event.HyperlinkListener;
 /**
  * @author cdr
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class HintManager {
   public static HintManager getInstance() {
     return Application.get().getInstance(HintManager.class);

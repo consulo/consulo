@@ -16,7 +16,7 @@
 package consulo.module.content.layer;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.content.ContentFolderTypeProvider;
 
@@ -27,7 +27,7 @@ import java.util.Set;
  * @author VISTALL
  * @since 31.03.14
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface ContentFolderSupportPatcher {
   ExtensionPointName<ContentFolderSupportPatcher> EP_NAME = ExtensionPointName.create(ContentFolderSupportPatcher.class);
 

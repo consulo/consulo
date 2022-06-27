@@ -1,7 +1,7 @@
 package consulo.ide.impl.idea.openapi.externalSystem.service.notification;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.ui.ex.errorTreeView.ErrorTreeElementKind;
 import consulo.util.rmi.RemoteUtil;
@@ -63,7 +63,7 @@ import java.util.concurrent.ExecutorService;
  * @since 3/21/12 4:04 PM
  */
 @Singleton
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class ExternalSystemNotificationManager {
   @Nonnull

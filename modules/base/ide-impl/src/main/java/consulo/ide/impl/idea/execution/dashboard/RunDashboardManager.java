@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.execution.dashboard;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.ide.ServiceManager;
@@ -32,7 +32,7 @@ import java.util.List;
 /**
  * @author konstantin.aleev
  */
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 public interface RunDashboardManager {
   static RunDashboardManager getInstance(Project project) {
     return ServiceManager.getService(project, RunDashboardManager.class);

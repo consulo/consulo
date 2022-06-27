@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.editor;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.ApplicationManager;
 
 import javax.annotation.Nullable;
@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
  * <p>
  * It's supposed to be used from EDT only.
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class EditorLastActionTracker {
   public static EditorLastActionTracker getInstance() {
     return ApplicationManager.getApplication().getComponent(EditorLastActionTracker.class);

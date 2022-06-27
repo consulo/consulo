@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.ide.ui.search;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.ide.ServiceManager;
 import consulo.configurable.Configurable;
 import consulo.configurable.SearchableConfigurable;
@@ -33,7 +33,7 @@ import java.util.Set;
  * User: anna
  * Date: 13-Feb-2006
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class SearchableOptionsRegistrar {
   public static SearchableOptionsRegistrar getInstance(){
     return ServiceManager.getService(SearchableOptionsRegistrar.class);

@@ -2,7 +2,7 @@
 package consulo.application.util.query;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 
 import javax.annotation.Nonnull;
@@ -12,7 +12,7 @@ import java.util.function.Function;
 /**
  * This class is intentionally package local.
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class Queries {
   @Nonnull
   static Queries getInstance() {

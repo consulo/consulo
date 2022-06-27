@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.build;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.content.Content;
@@ -17,7 +17,7 @@ import javax.swing.*;
 /**
  * @author Vladislav.Soroka
  */
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 public interface BuildContentManager {
   String TOOL_WINDOW_ID = "Build";
 

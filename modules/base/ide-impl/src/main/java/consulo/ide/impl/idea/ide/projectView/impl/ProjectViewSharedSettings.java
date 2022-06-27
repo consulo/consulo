@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.ide.projectView.impl;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
@@ -33,7 +33,7 @@ import javax.annotation.Nonnull;
  *         from kotlin by @author Konstantin Bulenkov
  */
 @Singleton
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 @State(name = "ProjectViewSharedSettings", storages = @Storage("projectView.xml"))
 public class ProjectViewSharedSettings implements PersistentStateComponent<ProjectViewSharedSettings> {

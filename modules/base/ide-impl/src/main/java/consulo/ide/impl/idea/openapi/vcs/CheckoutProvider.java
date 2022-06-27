@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.vcs;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import org.jetbrains.annotations.NonNls;
@@ -31,7 +31,7 @@ import static consulo.ui.ex.awt.internal.GuiUtils.getTextWithoutMnemonicEscaping
 /**
  * Implement this interface and register it as extension to checkoutProvider extension point in order to provide checkout
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface CheckoutProvider {
   ExtensionPointName<CheckoutProvider> EXTENSION_POINT_NAME = ExtensionPointName.create(CheckoutProvider.class);
 

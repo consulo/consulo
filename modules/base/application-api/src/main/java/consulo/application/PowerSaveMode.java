@@ -16,10 +16,9 @@
 package consulo.application;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.messagebus.MessageBus;
-import consulo.component.messagebus.TopicImpl;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -27,7 +26,7 @@ import jakarta.inject.Singleton;
  * @author yole
  */
 @Singleton
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class PowerSaveMode {
   private static final String POWER_SAVE_MODE = "power.save.mode";

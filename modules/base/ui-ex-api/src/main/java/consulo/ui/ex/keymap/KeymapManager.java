@@ -16,7 +16,7 @@
 package consulo.ui.ex.keymap;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.util.PerApplicationInstance;
 import consulo.disposer.Disposable;
 import consulo.ui.ex.keymap.event.KeymapManagerListener;
@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
-@Service(value = ComponentScope.APPLICATION, lazy = false)
+@ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
 public abstract class KeymapManager {
   public static final String DEFAULT_IDEA_KEYMAP = "$default";
   public static final String MAC_OS_X_KEYMAP = "Mac OS X";

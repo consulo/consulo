@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.ide;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.util.Patches;
 import consulo.application.Application;
@@ -51,7 +51,7 @@ import java.util.function.Supplier;
  * @author nik
  */
 @Singleton
-@Service(value = ComponentScope.APPLICATION, lazy = false)
+@ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
 @ServiceImpl
 public class ClipboardSynchronizer implements Disposable {
   private static final Logger LOG = Logger.getInstance(ClipboardSynchronizer.class);

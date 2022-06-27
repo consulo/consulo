@@ -21,7 +21,7 @@
 package consulo.ide.impl.idea.codeInspection;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.editor.inspection.scheme.InspectionEP;
 import consulo.language.editor.inspection.scheme.InspectionProfileEntry;
@@ -31,7 +31,7 @@ import consulo.language.editor.inspection.scheme.InspectionProfileEntry;
  * Please use {@link InspectionEP} for inspection registration
  */
 @Deprecated
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface InspectionToolsFactory {
   ExtensionPointName<InspectionToolsFactory> EXTENSION_POINT_NAME = ExtensionPointName.create(InspectionToolsFactory.class);
 

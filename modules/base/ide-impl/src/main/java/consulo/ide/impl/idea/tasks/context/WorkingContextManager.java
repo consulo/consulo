@@ -17,9 +17,8 @@
 package consulo.ide.impl.idea.tasks.context;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.component.extension.Extensions;
 import consulo.container.boot.ContainerPathManager;
 import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.openapi.diagnostic.Logger;
@@ -58,7 +57,7 @@ import java.util.List;
  * @author Dmitry Avdeev
  */
 @Singleton
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class WorkingContextManager {
 

@@ -16,7 +16,7 @@
 package consulo.project.ui.wm;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Topic;
+import consulo.annotation.component.TopicAPI;
 
 import javax.annotation.Nullable;
 
@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
  * User: spLeaner
  */
 // FIXME [VISTALL] this topic is App&Project level
-@Topic(ComponentScope.APPLICATION)
+@TopicAPI(ComponentScope.APPLICATION)
 public interface StatusBarInfo {
 
   /**

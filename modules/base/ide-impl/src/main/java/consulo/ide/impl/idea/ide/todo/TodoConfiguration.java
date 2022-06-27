@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.ide.todo;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.component.messagebus.MessageBus;
@@ -42,7 +42,7 @@ import java.util.List;
  */
 @Singleton
 @State(name = "TodoConfiguration", storages = @Storage("editor.xml"))
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class TodoConfiguration implements PersistentStateComponent<Element> {
   private TodoPattern[] myTodoPatterns;

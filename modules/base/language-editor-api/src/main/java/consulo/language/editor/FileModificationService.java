@@ -16,7 +16,7 @@
 package consulo.language.editor;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
 
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class FileModificationService {
   public static FileModificationService getInstance() {
     return Application.get().getInstance(FileModificationService.class);

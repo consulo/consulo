@@ -17,7 +17,7 @@
 package consulo.project.ui.notification;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
 
@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
 /**
  * @author spleaner
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class NotificationsManager {
 
   public static NotificationsManager getNotificationsManager() {

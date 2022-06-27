@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.diff.impl;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.diff.DiffPlaces;
 import consulo.ide.impl.idea.diff.util.DiffUtil;
@@ -37,7 +37,7 @@ import java.util.Map;
 
 @Singleton
 @State(name = "DiffSettings", storages = @Storage(file = DiffUtil.DIFF_CONFIG))
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class DiffSettingsHolder implements PersistentStateComponent<DiffSettingsHolder.State> {
   public static final Key<DiffSettings> KEY = Key.create("DiffSettings");

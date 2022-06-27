@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.diff;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.diff.merge.MergeRequest;
 import consulo.diff.merge.MergeResult;
 import consulo.ide.impl.idea.diff.merge.TextMergeRequest;
@@ -35,7 +35,7 @@ import java.util.List;
 /**
  * Use ProgressManager.executeProcessUnderProgress() to pass modality state if needed
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class DiffRequestFactory {
   @Nonnull
   public static DiffRequestFactory getInstance() {

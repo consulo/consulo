@@ -2,7 +2,7 @@
 package consulo.codeEditor.event;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.disposer.Disposable;
 import consulo.codeEditor.Editor;
 
@@ -17,7 +17,7 @@ import java.util.EventListener;
  * @see EditorEventMulticaster#addEditorMouseListener(EditorMouseListener, Disposable)
  * @see EditorMouseMotionListener
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface EditorMouseListener extends EventListener {
 
   /**

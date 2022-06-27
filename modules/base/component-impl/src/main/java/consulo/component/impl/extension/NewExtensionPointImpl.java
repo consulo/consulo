@@ -16,7 +16,7 @@
 package consulo.component.impl.extension;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.component.ComponentManager;
@@ -179,7 +179,7 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
       throw new IllegalArgumentException("cache dropped");
     }
 
-    Extension annotation = myApiClass.getAnnotation(Extension.class);
+    ExtensionAPI annotation = myApiClass.getAnnotation(ExtensionAPI.class);
     if (annotation == null) {
       throw new IllegalArgumentException(myApiClass + " is not annotated by @Extension");
     }

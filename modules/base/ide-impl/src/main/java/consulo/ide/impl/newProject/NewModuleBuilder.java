@@ -16,7 +16,7 @@
 package consulo.ide.impl.newProject;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 
 import javax.annotation.Nonnull;
 
@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 05.06.14
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface NewModuleBuilder {
   void setupContext(@Nonnull NewModuleContext context);
 }

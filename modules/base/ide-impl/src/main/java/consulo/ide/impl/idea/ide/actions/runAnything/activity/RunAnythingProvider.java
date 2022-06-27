@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.ide.actions.runAnything.activity;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingContext;
 import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItem;
 import consulo.dataContext.DataContext;
@@ -49,7 +49,7 @@ import java.util.List;
  * <li>add provider to {@link consulo.ide.impl.idea.ide.actions.runAnything.groups.RunAnythingHelpGroup#getProviders()}</li>
  * </ul>
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface RunAnythingProvider<V> {
   ExtensionPointName<RunAnythingProvider> EP_NAME = ExtensionPointName.create(RunAnythingProvider.class);
   /**

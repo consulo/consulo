@@ -16,14 +16,14 @@
 package consulo.project.content;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.component.util.ModificationTracker;
 import consulo.project.Project;
 
 /**
  * @author yole
  */
-@Service(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
 public abstract class ProjectRootModificationTracker implements ModificationTracker {
   public static ProjectRootModificationTracker getInstance(Project project) {
     return project.getInstance(ProjectRootModificationTracker.class);

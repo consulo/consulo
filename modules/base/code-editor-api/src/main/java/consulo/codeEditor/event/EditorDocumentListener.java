@@ -16,13 +16,13 @@
 package consulo.codeEditor.event;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.document.event.DocumentListener;
 
 /**
  * @author VISTALL
  * @since 20-Jun-22
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface EditorDocumentListener extends DocumentListener {
 }

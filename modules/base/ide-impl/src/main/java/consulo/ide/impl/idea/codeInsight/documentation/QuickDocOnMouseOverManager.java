@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.codeInsight.documentation;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
@@ -50,7 +50,7 @@ import java.util.Map;
  * @author Denis Zhdanov
  */
 @Singleton
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public final class QuickDocOnMouseOverManager {
   private static final Logger LOG = Logger.getInstance(QuickDocOnMouseOverManager.class);

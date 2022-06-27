@@ -16,15 +16,12 @@
 package consulo.component.store.impl.internal;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.util.jdom.JDOMUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
-import jakarta.inject.Inject;
-import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -42,7 +39,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @since 2019-04-10
  */
 @Singleton
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class ApplicationDefaultStoreCache implements Disposable {
   private final Map<Pair<ClassLoader, String>, Object> myUrlCache = new ConcurrentHashMap<>();

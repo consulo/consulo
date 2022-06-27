@@ -17,7 +17,7 @@ package consulo.project.ui.wm;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
 /**
  * @author yole
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class FrameTitleBuilder {
   public static FrameTitleBuilder getInstance() {
     return Application.get().getInstance(FrameTitleBuilder.class);

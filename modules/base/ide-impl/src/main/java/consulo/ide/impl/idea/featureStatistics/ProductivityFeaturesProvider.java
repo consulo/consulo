@@ -16,14 +16,14 @@
 package consulo.ide.impl.idea.featureStatistics;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 
 /**
  * User: anna
  * Date: Jan 30, 2005
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class ProductivityFeaturesProvider {
   public static ExtensionPointName<ProductivityFeaturesProvider> EP_NAME = ExtensionPointName.create(ProductivityFeaturesProvider.class);
   

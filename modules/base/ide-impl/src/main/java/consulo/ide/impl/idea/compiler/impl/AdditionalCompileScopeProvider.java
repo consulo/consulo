@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.compiler.impl;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.compiler.Compiler;
 import consulo.compiler.scope.CompileScope;
 import consulo.component.extension.ExtensionPointName;
@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
 /**
  * @author nik
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class AdditionalCompileScopeProvider {
   public static final ExtensionPointName<AdditionalCompileScopeProvider> EXTENSION_POINT_NAME = ExtensionPointName.create(AdditionalCompileScopeProvider.class);
 

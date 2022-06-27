@@ -23,9 +23,13 @@ import java.lang.annotation.Target;
 /**
  * @author VISTALL
  * @since 13-Jun-22
+ *
+ * @see ServiceImpl
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface Extension {
+public @interface ServiceAPI {
   ComponentScope value();
+
+  boolean lazy() default true;
 }

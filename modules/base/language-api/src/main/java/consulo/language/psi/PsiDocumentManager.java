@@ -2,7 +2,7 @@
 package consulo.language.psi;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.TransactionGuard;
 import consulo.application.util.function.Computable;
 import consulo.document.Document;
@@ -20,7 +20,7 @@ import java.util.EventListener;
 /**
  * Manages the relationship between documents and PSI trees.
  */
-@Service(value = ComponentScope.PROJECT, lazy = false)
+@ServiceAPI(value = ComponentScope.PROJECT, lazy = false)
 public abstract class PsiDocumentManager {
   /**
    * Returns the document manager instance for the specified project.

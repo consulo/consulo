@@ -17,7 +17,7 @@
 package consulo.execution.action;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.execution.RunManager;
 import consulo.execution.RunnerAndConfigurationSettings;
@@ -43,7 +43,7 @@ import java.util.List;
 /**
  * @deprecated please use {@link RunConfigurationProducer} instead
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class RuntimeConfigurationProducer implements Comparable, Cloneable {
   public static final ExtensionPointName<RuntimeConfigurationProducer> RUNTIME_CONFIGURATION_PRODUCER = ExtensionPointName.create(RuntimeConfigurationProducer.class);
 

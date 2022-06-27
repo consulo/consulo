@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.codeInsight.template.impl;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.ProcessCanceledException;
 import consulo.component.persist.*;
@@ -56,7 +56,7 @@ import java.util.*;
 @Singleton
 @State(name = "TemplateSettings", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml", deprecated = true),
         @Storage(file = StoragePathMacros.APP_CONFIG + "/templates.xml")}, additionalExportFile = TemplateSettings.TEMPLATES_DIR_PATH)
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class TemplateSettings implements PersistentStateComponent<TemplateSettings.State> {
   private static final Logger LOG = Logger.getInstance(TemplateSettings.class);

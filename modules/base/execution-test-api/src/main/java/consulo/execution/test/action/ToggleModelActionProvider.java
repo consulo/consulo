@@ -21,13 +21,13 @@
 package consulo.execution.test.action;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.execution.test.TestConsoleProperties;
 
 import javax.annotation.Nonnull;
 
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface ToggleModelActionProvider {
   ExtensionPointName<ToggleModelActionProvider> EP_NAME = ExtensionPointName.create(ToggleModelActionProvider.class);
 

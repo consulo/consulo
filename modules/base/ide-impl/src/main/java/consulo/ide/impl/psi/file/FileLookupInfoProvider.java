@@ -17,7 +17,7 @@
 package consulo.ide.impl.psi.file;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
 /**
  * @author spleaner
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class FileLookupInfoProvider {
   public static ExtensionPointName<FileLookupInfoProvider> EP_NAME = ExtensionPointName.create(FileLookupInfoProvider.class);
 

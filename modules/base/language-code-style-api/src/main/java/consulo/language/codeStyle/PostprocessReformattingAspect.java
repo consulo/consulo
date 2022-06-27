@@ -16,7 +16,7 @@
 package consulo.language.codeStyle;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.language.file.FileViewProvider;
 import consulo.language.pom.PomModelAspect;
 import consulo.project.Project;
@@ -28,7 +28,7 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 23-Mar-22
  */
-@Service(value = ComponentScope.PROJECT, lazy = false)
+@ServiceAPI(value = ComponentScope.PROJECT, lazy = false)
 public interface PostprocessReformattingAspect extends PomModelAspect {
   public static PostprocessReformattingAspect getInstance(Project project) {
     return project.getInstance(PostprocessReformattingAspect.class);

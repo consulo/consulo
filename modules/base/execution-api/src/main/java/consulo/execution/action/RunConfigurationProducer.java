@@ -16,7 +16,7 @@
 package consulo.execution.action;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.execution.RunManager;
 import consulo.execution.RunnerAndConfigurationSettings;
@@ -41,7 +41,7 @@ import java.util.List;
  * @since 13
  * @author yole
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class RunConfigurationProducer<T extends RunConfiguration> {
   public static final ExtensionPointName<RunConfigurationProducer> EP_NAME = ExtensionPointName.create(RunConfigurationProducer.class);
 

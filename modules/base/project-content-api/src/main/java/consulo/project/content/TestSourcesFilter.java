@@ -2,7 +2,7 @@
 package consulo.project.content;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.content.FileIndex;
 import consulo.project.Project;
@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
  * @see FileIndex#isInTestSourceContent(VirtualFile)
  * @see JpsModuleSourceRootType#isForTests()
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class TestSourcesFilter {
   private static final ExtensionPointName<TestSourcesFilter> EP_NAME = ExtensionPointName.create(TestSourcesFilter.class);
 

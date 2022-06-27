@@ -2,7 +2,7 @@
 package consulo.ide.impl.psi.impl.cache.impl.id;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
 import consulo.component.extension.ExtensionPoint;
 import consulo.component.extension.ExtensionPointCacheKey;
@@ -17,7 +17,7 @@ import java.util.Map;
 /**
  * @author traff
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface IdIndexer extends DataIndexer<IdIndexEntry, Integer, FileContent> {
   ExtensionPointCacheKey<IdIndexer, Map<FileType, IdIndexer>> KEY = ExtensionPointCacheKey.groupBy("IdIndexer", IdIndexer::getFileType);
 

@@ -16,7 +16,7 @@
 package consulo.ui.ex.awt.internal;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.project.Project;
@@ -30,7 +30,7 @@ import javax.swing.*;
  * @author VISTALL
  * @since 16-Apr-22
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public interface TabFactoryBuilder {
   public interface TabFactory {
     TabbedPane createTabbedPane(int tabPlacement);

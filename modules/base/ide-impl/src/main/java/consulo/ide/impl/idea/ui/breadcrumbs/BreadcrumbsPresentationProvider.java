@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.ui.breadcrumbs;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;
@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
 /**
  * @author Eugene.Kudelevsky
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class BreadcrumbsPresentationProvider {
   public static final ExtensionPointName<BreadcrumbsPresentationProvider> EP_NAME = ExtensionPointName.create(BreadcrumbsPresentationProvider.class);
 

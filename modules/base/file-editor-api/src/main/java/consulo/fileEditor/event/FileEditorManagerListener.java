@@ -16,7 +16,7 @@
 package consulo.fileEditor.event;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Topic;
+import consulo.annotation.component.TopicAPI;
 import consulo.annotation.component.TopicBroadcastDirection;
 import consulo.component.messagebus.TopicImpl;
 import consulo.fileEditor.FileEditorManager;
@@ -25,7 +25,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 import java.util.EventListener;
 
-@Topic(value = ComponentScope.PROJECT, direction = TopicBroadcastDirection.TO_PARENT)
+@TopicAPI(value = ComponentScope.PROJECT, direction = TopicBroadcastDirection.TO_PARENT)
 public interface FileEditorManagerListener extends EventListener {
 
   default void fileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
@@ -37,7 +37,7 @@ public interface FileEditorManagerListener extends EventListener {
   default void selectionChanged(@Nonnull FileEditorManagerEvent event) {
   }
 
-  @Topic(value = ComponentScope.PROJECT, direction = TopicBroadcastDirection.TO_PARENT)
+  @TopicAPI(value = ComponentScope.PROJECT, direction = TopicBroadcastDirection.TO_PARENT)
   interface Before extends EventListener {
     TopicImpl<Before> FILE_EDITOR_MANAGER = new TopicImpl<>("file editor before events", Before.class, TopicBroadcastDirection.TO_PARENT);
 

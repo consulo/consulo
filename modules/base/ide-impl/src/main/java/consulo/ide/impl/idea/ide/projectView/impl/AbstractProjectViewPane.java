@@ -3,7 +3,7 @@
 package consulo.ide.impl.idea.ide.projectView.impl;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.ide.impl.idea.ide.DefaultTreeExpander;
 import consulo.ide.impl.idea.ide.PsiCopyPasteManager;
 import consulo.ide.impl.idea.ide.SelectInTarget;
@@ -91,7 +91,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 
-@Extension(ComponentScope.PROJECT)
+@ExtensionAPI(ComponentScope.PROJECT)
 public abstract class AbstractProjectViewPane extends UserDataHolderBase implements DataProvider, Disposable, BusyObject {
   private static final Logger LOG = Logger.getInstance(AbstractProjectViewPane.class);
   public static final ExtensionPointName<AbstractProjectViewPane> EP_NAME = ExtensionPointName.create(AbstractProjectViewPane.class);

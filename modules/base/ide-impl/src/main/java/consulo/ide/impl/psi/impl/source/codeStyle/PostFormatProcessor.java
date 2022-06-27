@@ -16,7 +16,7 @@
 package consulo.ide.impl.psi.impl.source.codeStyle;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.document.util.TextRange;
 import consulo.language.codeStyle.CodeStyleSettings;
@@ -25,7 +25,7 @@ import consulo.language.psi.PsiFile;
 
 import javax.annotation.Nonnull;
 
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface PostFormatProcessor {
   ExtensionPointName<PostFormatProcessor> EP_NAME = ExtensionPointName.create(PostFormatProcessor.class);
 

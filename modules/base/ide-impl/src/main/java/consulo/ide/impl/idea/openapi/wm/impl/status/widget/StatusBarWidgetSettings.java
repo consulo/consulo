@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.wm.impl.status.widget;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ui.UISettings;
 import consulo.component.persist.PersistentStateComponent;
@@ -37,7 +37,7 @@ import java.util.Map;
  */
 @Singleton
 @State(name = "StatusBar", storages = @Storage(value = "ide.general.xml"))
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class StatusBarWidgetSettings implements PersistentStateComponent<StatusBarWidgetSettings.StatusBarState> {
   public static class StatusBarState {

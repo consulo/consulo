@@ -17,7 +17,7 @@
 package consulo.execution.debug;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.ProgramRunner;
 import consulo.execution.ui.ExecutionConsole;
@@ -33,7 +33,7 @@ import java.util.List;
 /**
  * @author nik
  */
-@Service(value = ComponentScope.PROJECT, lazy = false)
+@ServiceAPI(value = ComponentScope.PROJECT, lazy = false)
 public abstract class XDebuggerManager {
 
   public static XDebuggerManager getInstance(@Nonnull Project project) {

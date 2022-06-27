@@ -3,7 +3,7 @@ package consulo.undoRedo;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.disposer.Disposable;
@@ -22,7 +22,7 @@ import javax.annotation.Nullable;
  * actions (commands) are similar to usual commands but don't create a separate undo/redo step - they are undone/redone together with a
  * 'adjacent' non-transparent commands.
  */
-@Service(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class CommandProcessor {
   @Nonnull
   public static CommandProcessor getInstance() {

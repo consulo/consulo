@@ -16,7 +16,7 @@
 package consulo.virtualFileSystem;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
 import consulo.virtualFileSystem.event.VirtualFileListener;
 
@@ -31,7 +31,7 @@ import java.io.IOException;
  * @see VirtualFile
  * @see VirtualFileManager
  */
-@Extension(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface VirtualFileSystem {
   /**
    * Gets the protocol for this file system. Protocols should differ for all file systems.
