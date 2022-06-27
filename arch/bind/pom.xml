@@ -86,13 +86,13 @@
     <dependency>
       <groupId>consulo.internal</groupId>
       <artifactId>jakarta.inject-api</artifactId>
-      <optional>true</optional>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
       <artifactId>consulo-injecting-binding-processor</artifactId>
       <version>${project.version}</version>
-      <optional>true</optional>
+      <scope>compile</scope>
     </dependency>
   </dependencies>
 </project>
