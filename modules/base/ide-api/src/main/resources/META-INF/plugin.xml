@@ -1565,11 +1565,6 @@
     <checkinHandlerFactory implementation="consulo.ide.impl.idea.openapi.vcs.checkin.CodeCleanupCheckinHandlerFactory"/>
 
 
-    <itemPresentationProvider forClass="consulo.language.psi.PsiDirectory"
-                              implementationClass="consulo.ide.impl.idea.navigation.DirectoryPresentationProvider"/>
-
-
-
 
     <!--<completion.contributor language="TEXT" implementationClass="consulo.ide.impl.idea.ui.TextFieldWithAutoCompletionContributor"-->
                             <!--order="first, before commitCompletion"/>-->

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.navigation;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.content.ContentFolderTypeProvider;
@@ -31,6 +32,7 @@ import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 
+@ExtensionImpl
 public class DirectoryPresentationProvider implements ItemPresentationProvider<PsiDirectory> {
   @Nonnull
   @Override

@@ -15,6 +15,8 @@
  */
 package consulo.navigation;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
 import consulo.component.extension.ExtensionPointCacheKey;
 
@@ -25,6 +27,7 @@ import java.util.Map;
 /**
  * @author yole
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface ItemPresentationProvider<T extends NavigationItem> {
   ExtensionPointCacheKey<ItemPresentationProvider, Map<Class, ItemPresentationProvider>> KEY = ExtensionPointCacheKey.groupBy("ItemPresentationProvider", ItemPresentationProvider::getItemClass);
 
