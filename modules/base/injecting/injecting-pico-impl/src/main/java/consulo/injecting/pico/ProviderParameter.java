@@ -23,12 +23,12 @@ import jakarta.inject.Provider;
  */
 class ProviderParameter<T> implements Parameter<Provider<T>> {
   private static class ProviderImpl<T> implements Provider<T> {
-    private DefaultPicoContainer myContainer;
+    private InstanceContainer myContainer;
     private Class<? super T> myClass;
 
     private volatile T myValue;
 
-    private ProviderImpl(DefaultPicoContainer container, Class<? super T> aClass) {
+    private ProviderImpl(InstanceContainer container, Class<? super T> aClass) {
       myContainer = container;
       myClass = aClass;
     }
@@ -56,12 +56,12 @@ class ProviderParameter<T> implements Parameter<Provider<T>> {
   }
 
   @Override
-  public Provider<T> resolveInstance(DefaultPicoContainer picoContainer, ComponentAdapter<Provider<T>> componentAdapter, Class<? super Provider<T>> aClass) {
+  public Provider<T> resolveInstance(InstanceContainer picoContainer, ComponentAdapter<Provider<T>> componentAdapter, Class<? super Provider<T>> aClass) {
     return new ProviderImpl<>(picoContainer, myType);
   }
 
   @Override
-  public boolean isResolvable(DefaultPicoContainer picoContainer, ComponentAdapter<Provider<T>> componentAdapter, Class<? super Provider<T>> aClass) {
+  public boolean isResolvable(InstanceContainer picoContainer, ComponentAdapter<Provider<T>> componentAdapter, Class<? super Provider<T>> aClass) {
     return picoContainer.getComponentAdapter(myType) != null;
   }
 }

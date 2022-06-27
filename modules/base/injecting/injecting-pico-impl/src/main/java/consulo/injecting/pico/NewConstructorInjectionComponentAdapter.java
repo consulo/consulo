@@ -31,7 +31,7 @@ class NewConstructorInjectionComponentAdapter<T> extends ConstructorInjectionCom
   private final Type[] myConstructorParameterTypes;
   private final Function<Object[], T> myConstructorFactory;
 
-  NewConstructorInjectionComponentAdapter(@Nonnull Object componentKey, @Nonnull Class<T> componentImplementation, Type[] constructorParameterTypes, Function<Object[], T> constructorFactory) {
+  NewConstructorInjectionComponentAdapter(@Nonnull Class<? super T> componentKey, @Nonnull Class<T> componentImplementation, Type[] constructorParameterTypes, Function<Object[], T> constructorFactory) {
     super(componentKey, componentImplementation);
     myConstructorParameterTypes = constructorParameterTypes;
     myConstructorFactory = constructorFactory;
@@ -39,12 +39,12 @@ class NewConstructorInjectionComponentAdapter<T> extends ConstructorInjectionCom
 
   @Nonnull
   @Override
-  protected T doGetComponentInstance(DefaultPicoContainer guardedContainer) {
+  protected T doGetComponentInstance(InstanceContainer guardedContainer) {
     Object[] args = getConstructorArguments(guardedContainer);
     return myConstructorFactory.apply(args);
   }
 
-  private Object[] getConstructorArguments(DefaultPicoContainer container) {
+  private Object[] getConstructorArguments(InstanceContainer container) {
     Object[] result = new Object[myConstructorParameterTypes.length];
     Parameter[] currentParameters = createParameters();
 

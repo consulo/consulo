@@ -86,7 +86,12 @@
       <groupId>jgraph</groupId>
       <artifactId>jgraph</artifactId>
     </dependency>
-
+    <dependency>
+      <groupId>consulo.internal</groupId>
+      <artifactId>jakarta.inject-api</artifactId>
+      <scope>compile</scope>
+    </dependency>
+ 
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>consulo-injecting-pico-impl</artifactId>

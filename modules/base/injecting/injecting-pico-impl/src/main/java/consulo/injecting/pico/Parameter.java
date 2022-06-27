@@ -36,7 +36,7 @@ interface Parameter<T> {
    * @throws PicoInitializationException if a referenced component could not be instantiated.
    * @since 1.1
    */
-  T resolveInstance(DefaultPicoContainer container, ComponentAdapter<T> adapter, Class<? super T> expectedType);
+  T resolveInstance(InstanceContainer container, ComponentAdapter<T> adapter, Class<? super T> expectedType);
 
   /**
    * Check if the Parameter can statisfy the expected type using the container.
@@ -47,5 +47,5 @@ interface Parameter<T> {
    * @return <code>true</code> if the component parameter can be resolved.
    * @since 1.1
    */
-  boolean isResolvable(DefaultPicoContainer container, ComponentAdapter<T> adapter, Class<? super T> expectedType);
+  boolean isResolvable(InstanceContainer container, ComponentAdapter<T> adapter, Class<? super T> expectedType);
 }

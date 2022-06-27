@@ -24,10 +24,10 @@ class UnsatisfiableDependenciesException extends PicoIntrospectionException {
   private final ComponentAdapter instantiatingComponentAdapter;
   private final Set unsatisfiableDependencies;
   private final Type unsatisfiedDependencyType;
-  private final DefaultPicoContainer leafContainer;
+  private final InstanceContainer leafContainer;
 
-  public UnsatisfiableDependenciesException(ComponentAdapter instantiatingComponentAdapter, Set unsatisfiableDependencies, DefaultPicoContainer leafContainer) {
-    super(instantiatingComponentAdapter.getComponentImplementation().getName() +
+  public UnsatisfiableDependenciesException(ComponentAdapter instantiatingComponentAdapter, Set unsatisfiableDependencies, InstanceContainer leafContainer) {
+    super(instantiatingComponentAdapter.getComponentImplClass().getName() +
           " has unsatisfiable dependencies: " +
           unsatisfiableDependencies +
           " where " +
@@ -39,8 +39,8 @@ class UnsatisfiableDependenciesException extends PicoIntrospectionException {
     this.leafContainer = leafContainer;
   }
 
-  public UnsatisfiableDependenciesException(ComponentAdapter instantiatingComponentAdapter, Type unsatisfiedDependencyType, Set unsatisfiableDependencies, DefaultPicoContainer leafContainer) {
-    super(instantiatingComponentAdapter.getComponentImplementation().getName() +
+  public UnsatisfiableDependenciesException(ComponentAdapter instantiatingComponentAdapter, Type unsatisfiedDependencyType, Set unsatisfiableDependencies, InstanceContainer leafContainer) {
+    super(instantiatingComponentAdapter.getComponentImplClass().getName() +
           " has unsatisfied dependency: " +
           unsatisfiedDependencyType +
           " among unsatisfiable dependencies: " +
@@ -66,7 +66,7 @@ class UnsatisfiableDependenciesException extends PicoIntrospectionException {
     return unsatisfiedDependencyType;
   }
 
-  public DefaultPicoContainer getLeafContainer() {
+  public InstanceContainer getLeafContainer() {
     return leafContainer;
   }
 

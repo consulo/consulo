@@ -23,12 +23,12 @@ class PicoComponentParameter<T> implements Parameter<T> {
   public static final Parameter DEFAULT = new PicoComponentParameter();
 
   @Override
-  public T resolveInstance(DefaultPicoContainer container, ComponentAdapter<T> adapter, Class<? super T> expectedType) {
+  public T resolveInstance(InstanceContainer container, ComponentAdapter<T> adapter, Class<? super T> expectedType) {
     return container.getComponentInstance(expectedType);
   }
 
   @Override
-  public boolean isResolvable(DefaultPicoContainer container, ComponentAdapter<T> adapter, Class<? super T> expectedType) {
+  public boolean isResolvable(InstanceContainer container, ComponentAdapter<T> adapter, Class<? super T> expectedType) {
     return container.getComponentAdapter(expectedType) != null;
   }
 }

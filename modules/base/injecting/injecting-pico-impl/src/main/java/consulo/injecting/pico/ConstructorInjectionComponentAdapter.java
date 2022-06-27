@@ -17,7 +17,8 @@ package consulo.injecting.pico;
 
 import consulo.injecting.InjectingContainer;
 import consulo.logging.Logger;
-import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.HashingStrategy;
+import consulo.util.collection.Sets;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.reflect.ReflectionUtil;
 import jakarta.inject.Inject;
@@ -39,36 +40,36 @@ class ConstructorInjectionComponentAdapter<T> implements ComponentAdapter<T> {
 
   private static final ThreadLocal<Set<ConstructorInjectionComponentAdapter>> ourGuard = new ThreadLocal<>();
   @Nonnull
-  private final Object myComponentKey;
+  private final Class<? super T> myComponentKey;
   @Nonnull
   private final Class<T> myComponentImplementation;
 
-  public ConstructorInjectionComponentAdapter(@Nonnull Object componentKey, @Nonnull Class<T> componentImplementation) {
+  public ConstructorInjectionComponentAdapter(@Nonnull Class<? super T> componentKey, @Nonnull Class<T> componentImplementation) {
     myComponentKey = componentKey;
     myComponentImplementation = componentImplementation;
   }
 
   @Override
   @Nonnull
-  public Object getComponentKey() {
+  public Class<? super T> getComponentClass() {
     return myComponentKey;
   }
 
   @Override
   @Nonnull
-  public Class<T> getComponentImplementation() {
+  public Class<T> getComponentImplClass() {
     return myComponentImplementation;
   }
 
   @Override
-  public T getComponentInstance(DefaultPicoContainer container) throws PicoInitializationException, PicoIntrospectionException {
-    return instantiateGuarded(container, getComponentImplementation());
+  public T getComponentInstance(InstanceContainer container) throws PicoInitializationException, PicoIntrospectionException {
+    return instantiateGuarded(container, getComponentImplClass());
   }
 
-  private T instantiateGuarded(DefaultPicoContainer container, Class stackFrame) {
+  private T instantiateGuarded(InstanceContainer container, Class stackFrame) {
     Set<ConstructorInjectionComponentAdapter> currentStack = ourGuard.get();
     if (currentStack == null) {
-      ourGuard.set(currentStack = ContainerUtil.newIdentityTroveSet());
+      ourGuard.set(currentStack = Sets.newHashSet(HashingStrategy.identity()));
     }
 
     if (currentStack.contains(this)) {
@@ -89,7 +90,7 @@ class ConstructorInjectionComponentAdapter<T> implements ComponentAdapter<T> {
   }
 
   @Nonnull
-  protected T doGetComponentInstance(DefaultPicoContainer guardedContainer) {
+  protected T doGetComponentInstance(InstanceContainer guardedContainer) {
     Constructor<T> constructor = getGreediestSatisfiableConstructor(guardedContainer);
 
     if (InjectingContainer.LOG_INJECTING_PROBLEMS && !isDefaultConstructor(constructor) && !constructor.isAnnotationPresent(Inject.class)) {
@@ -117,7 +118,7 @@ class ConstructorInjectionComponentAdapter<T> implements ComponentAdapter<T> {
     return constructor.newInstance(parameters);
   }
 
-  private Object[] getConstructorArguments(DefaultPicoContainer container, Constructor ctor) {
+  private Object[] getConstructorArguments(InstanceContainer container, Constructor ctor) {
     Class[] parameterTypes = ctor.getParameterTypes();
     Object[] result = new Object[parameterTypes.length];
     Parameter[] currentParameters = createParameters(ctor);
@@ -165,7 +166,7 @@ class ConstructorInjectionComponentAdapter<T> implements ComponentAdapter<T> {
   }
 
   @SuppressWarnings("unchecked")
-  private Constructor<T> getGreediestSatisfiableConstructor(DefaultPicoContainer container) throws PicoIntrospectionException {
+  private Constructor<T> getGreediestSatisfiableConstructor(InstanceContainer container) throws PicoIntrospectionException {
     Constructor<T>[] constructors = getConstructors();
     // special check for default constructors, return it without any check
     if (constructors.length == 1) {
@@ -227,7 +228,7 @@ class ConstructorInjectionComponentAdapter<T> implements ComponentAdapter<T> {
       }
     }
     if (!conflicts.isEmpty()) {
-      throw new TooManySatisfiableConstructorsException(getComponentImplementation(), conflicts);
+      throw new TooManySatisfiableConstructorsException(getComponentImplClass(), conflicts);
     }
     else if (greediestConstructor == null && !unsatisfiableDependencyTypes.isEmpty()) {
       throw new UnsatisfiableDependenciesException(this, unsatisfiedDependencyType, unsatisfiableDependencyTypes, container);
@@ -238,7 +239,7 @@ class ConstructorInjectionComponentAdapter<T> implements ComponentAdapter<T> {
       throw new PicoInitializationException("Either do the specified parameters not match any of the following constructors: " +
                                             nonMatching.toString() +
                                             " or the constructors were not accessible for '" +
-                                            getComponentImplementation() +
+                                            getComponentImplClass() +
                                             "'");
     }
     return greediestConstructor;
@@ -246,6 +247,6 @@ class ConstructorInjectionComponentAdapter<T> implements ComponentAdapter<T> {
 
   @Nonnull
   private Constructor[] getConstructors() {
-    return getComponentImplementation().getDeclaredConstructors();
+    return getComponentImplClass().getDeclaredConstructors();
   }
 }

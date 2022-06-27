@@ -7,6 +7,7 @@
  *****************************************************************************/
 package consulo.injecting.pico;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -24,21 +25,10 @@ import javax.annotation.Nullable;
  * @since 1.0
  */
 interface ComponentAdapter<T> {
-  /**
-   * Retrieve the key associated with the component.
-   *
-   * @return the component's key. Should either be a class type (normally an interface) or an identifier that is
-   * unique (within the scope of the current PicoContainer).
-   */
-  Object getComponentKey();
+  @Nonnull
+  Class<? super T> getComponentClass();
 
-  /**
-   * Retrieve the class of the component.
-   *
-   * @return the component's implementation class. Should normally be a concrete class (ie, a class that can be
-   * instantiated).
-   */
-  Class<T> getComponentImplementation();
+  Class<T> getComponentImplClass();
 
   /**
    * Retrieve the component instance. This method will usually create a new instance each time it is called, but that
@@ -52,10 +42,10 @@ interface ComponentAdapter<T> {
    *                                     instantiation of the component lead to an ambigous situation within the
    *                                     container.
    */
-  T getComponentInstance(DefaultPicoContainer container) throws PicoInitializationException, PicoIntrospectionException;
+  T getComponentInstance(InstanceContainer container) throws PicoInitializationException, PicoIntrospectionException;
 
   @Nullable
-  default T getComponentInstanceOfCreated(DefaultPicoContainer container) {
+  default T getComponentInstanceOfCreated(InstanceContainer container) {
     return getComponentInstance(container);
   }
 }

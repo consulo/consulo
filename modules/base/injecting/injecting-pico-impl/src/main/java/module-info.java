@@ -14,7 +14,6 @@ module consulo.injecting.pico.impl {
 
   requires consulo.util.collection;
   requires consulo.util.lang;
-  requires gnu.trove;
 
   provides RootInjectingContainerFactory with PicoRootInjectingContainerFactory;
 }

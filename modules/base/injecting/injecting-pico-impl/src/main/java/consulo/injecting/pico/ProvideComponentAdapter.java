@@ -19,7 +19,6 @@ import consulo.injecting.key.InjectingKey;
 import jakarta.inject.Provider;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -34,19 +33,20 @@ class ProvideComponentAdapter<T> implements ComponentAdapter<T> {
     myValue = value;
   }
 
+  @Nonnull
   @Override
-  public String getComponentKey() {
-    return myInterfaceKey.getTargetClassName();
+  public Class getComponentClass() {
+    return myInterfaceKey.getTargetClass();
   }
 
   @Override
   @SuppressWarnings("unchecked")
-  public Class<T> getComponentImplementation() {
+  public Class<T> getComponentImplClass() {
     return (Class<T>)myValue.get().getClass();
   }
 
   @Override
-  public T getComponentInstance(@Nonnull DefaultPicoContainer container) throws PicoInitializationException, PicoIntrospectionException {
+  public T getComponentInstance(@Nonnull InstanceContainer container) throws PicoInitializationException, PicoIntrospectionException {
     return myValue.get();
   }
 

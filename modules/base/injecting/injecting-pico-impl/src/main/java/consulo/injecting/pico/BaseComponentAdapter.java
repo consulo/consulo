@@ -87,19 +87,20 @@ class BaseComponentAdapter<T> implements ComponentAdapter<T> {
     myConstructorFactory = constructorFactory;
   }
 
+  @Nonnull
   @Override
-  public String getComponentKey() {
-    return myInterfaceKey.getTargetClassName();
+  public Class getComponentClass() {
+    return myInterfaceKey.getTargetClass();
   }
 
   @Override
-  public Class getComponentImplementation() {
+  public Class getComponentImplClass() {
     return myImplementationKey.getTargetClass();
   }
 
   @Nullable
   @Override
-  public T getComponentInstanceOfCreated(DefaultPicoContainer container) {
+  public T getComponentInstanceOfCreated(InstanceContainer container) {
     T instance = myInstanceIfSingleton;
     if (instance != null) {
       return instance;
@@ -109,7 +110,7 @@ class BaseComponentAdapter<T> implements ComponentAdapter<T> {
   }
 
   @Override
-  public T getComponentInstance(@Nonnull DefaultPicoContainer container) throws PicoInitializationException, PicoIntrospectionException {
+  public T getComponentInstance(@Nonnull InstanceContainer container) throws PicoInitializationException, PicoIntrospectionException {
     T instance = myInstanceIfSingleton;
     if (instance != null) {
       return instance;
@@ -143,10 +144,10 @@ class BaseComponentAdapter<T> implements ComponentAdapter<T> {
       try {
         ConstructorInjectionComponentAdapter<T> delegate;
         if (myConstructorParameterTypes != null && myConstructorFactory != null) {
-          delegate = new NewConstructorInjectionComponentAdapter<T>(getComponentKey(), getComponentImplementation(), myConstructorParameterTypes, myConstructorFactory);
+          delegate = new NewConstructorInjectionComponentAdapter<T>(getComponentClass(), getComponentImplClass(), myConstructorParameterTypes, myConstructorFactory);
         }
         else {
-          delegate = new ConstructorInjectionComponentAdapter<T>(getComponentKey(), getComponentImplementation());
+          delegate = new ConstructorInjectionComponentAdapter<T>(getComponentClass(), getComponentImplClass());
         }
 
         instance = myRemap.apply(() -> GetInstanceValidator.createObject(targetClass, () -> (T)delegate.getComponentInstance(container)));

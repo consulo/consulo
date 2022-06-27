@@ -15,22 +15,24 @@
  */
 package consulo.injecting.pico;
 
-import gnu.trove.TIntObjectHashMap;
+import consulo.util.collection.HashingStrategy;
+import consulo.util.collection.Maps;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Map;
 
-class DefaultPicoContainer {
-  private final DefaultPicoContainer myParent;
+class InstanceContainer {
+  private final InstanceContainer myParent;
 
-  private final TIntObjectHashMap<ComponentAdapter> myClassNameToComponentAdapters = new TIntObjectHashMap<>();
+  private final Map<Class, ComponentAdapter> myInstanceAdapters = Maps.newHashMap(HashingStrategy.identity());
 
-  DefaultPicoContainer(@Nullable DefaultPicoContainer parent) {
+  InstanceContainer(@Nullable InstanceContainer parent) {
     myParent = parent;
   }
 
   @Nullable
-  public final <T> ComponentAdapter<T> getComponentAdapter(Object componentKey) {
+  public final <T> ComponentAdapter<T> getComponentAdapter(Class componentKey) {
     ComponentAdapter<T> adapter = findLocalAdapter(componentKey);
     if (adapter == null && myParent != null) {
       return myParent.getComponentAdapter(componentKey);
@@ -40,12 +42,12 @@ class DefaultPicoContainer {
 
   @Nullable
   @SuppressWarnings("unchecked")
-  private <T> ComponentAdapter<T> findLocalAdapter(final Object componentKey) {
-    return (ComponentAdapter<T>) myClassNameToComponentAdapters.get(toMapKey(componentKey));
+  private <T> ComponentAdapter<T> findLocalAdapter(final Class componentKey) {
+    return (ComponentAdapter<T>) myInstanceAdapters.get(componentKey);
   }
 
   @Nullable
-  public <T> T getComponentInstance(Object componentKey) {
+  public <T> T getComponentInstance(Class componentKey) {
     ComponentAdapter<T> adapter = findLocalAdapter(componentKey);
     if (adapter != null) {
       return getLocalInstance(adapter);
@@ -53,14 +55,14 @@ class DefaultPicoContainer {
     if (myParent != null) {
       adapter = myParent.getComponentAdapter(componentKey);
       if (adapter != null) {
-        return myParent.getComponentInstance(adapter.getComponentKey());
+        return myParent.getComponentInstance(adapter.getComponentClass());
       }
     }
     return null;
   }
 
   @Nullable
-  public <T> T getComponentInstanceIfCreated(Object componentKey) {
+  public <T> T getComponentInstanceIfCreated(Class componentKey) {
     ComponentAdapter<T> adapter = findLocalAdapter(componentKey);
     if (adapter != null) {
       return adapter.getComponentInstanceOfCreated(this);
@@ -71,30 +73,18 @@ class DefaultPicoContainer {
     return null;
   }
 
-  private boolean contains(int key) {
-    return myClassNameToComponentAdapters.containsKey(key) || myParent != null && myParent.contains(key);
+  private boolean contains(Class componentKey) {
+    return myInstanceAdapters.containsKey(componentKey);
   }
 
   public void registerComponent(@Nonnull ComponentAdapter componentAdapter) {
-    int componentKey = toMapKey(componentAdapter.getComponentKey());
+    Class componentKey = componentAdapter.getComponentClass();
 
     if (contains(componentKey)) {
       throw new DuplicateComponentKeyRegistrationException(componentKey);
     }
 
-    myClassNameToComponentAdapters.put(componentKey, componentAdapter);
-  }
-
-  private int toMapKey(Object value) {
-    if (value instanceof String) {
-      return value.hashCode();
-    }
-
-    if (value instanceof Class) {
-      return ((Class)value).getName().hashCode();
-    }
-
-    throw new UnsupportedOperationException("Unknown key type " + value);
+    myInstanceAdapters.put(componentKey, componentAdapter);
   }
 
   private <T> T getLocalInstance(@Nonnull ComponentAdapter<T> componentAdapter) {
@@ -107,7 +97,7 @@ class DefaultPicoContainer {
     }
 
     if (myParent != null) {
-      T instance = myParent.getComponentInstance(componentAdapter.getComponentKey());
+      T instance = myParent.getComponentInstance(componentAdapter.getComponentClass());
       if (instance != null) {
         return instance;
       }
@@ -117,10 +107,6 @@ class DefaultPicoContainer {
   }
 
   public void dispose() {
-    myClassNameToComponentAdapters.clear();
-  }
-
-  public DefaultPicoContainer getParent() {
-    return myParent;
+    myInstanceAdapters.clear();
   }
 }

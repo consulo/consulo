@@ -38,13 +38,13 @@ import java.util.function.Function;
 public class PicoInjectingContainer implements InjectingContainer {
   private static final Logger LOG = Logger.getInstance(PicoInjectingContainer.class);
 
-  private final DefaultPicoContainer myContainer;
+  private final InstanceContainer myContainer;
   private final List<InjectingKey<?>> myKeys;
 
   private final Set<Pair<Class, Class>> myGetInstanceWarningSet = new CopyOnWriteArraySet<>();
 
   public PicoInjectingContainer(@Nullable PicoInjectingContainer parent, int size) {
-    myContainer = new DefaultPicoContainer(parent == null ? null : parent.myContainer);
+    myContainer = new InstanceContainer(parent == null ? null : parent.myContainer);
     myKeys = new ArrayList<>(size);
   }
 
@@ -65,7 +65,7 @@ public class PicoInjectingContainer implements InjectingContainer {
   public <T> T getInstance(@Nonnull Class<T> clazz) {
     Class<?> insideObjectCreation = GetInstanceValidator.insideObjectCreation();
     if (InjectingContainer.LOG_INJECTING_PROBLEMS && insideObjectCreation != null && myGetInstanceWarningSet.add(Pair.create(clazz, insideObjectCreation))) {
-      LOG.warn("Calling #getInstance(" + clazz + ".class) inside object initialization. Use contructor injection instead. MainInjecting: " + insideObjectCreation);
+      LOG.warn("Calling #getInstance(" + clazz + ".class) inside object initialization. Use constructor injection instead. MainInjecting: " + insideObjectCreation);
     }
 
     T instance = (T)myContainer.getComponentInstance(clazz);
@@ -90,14 +90,14 @@ public class PicoInjectingContainer implements InjectingContainer {
   @Nonnull
   @Override
   public <T> T getUnbindedInstance(@Nonnull Class<T> clazz) {
-    ConstructorInjectionComponentAdapter<T> adapter = new ConstructorInjectionComponentAdapter<>(clazz.getName(), clazz);
+    ConstructorInjectionComponentAdapter<T> adapter = new ConstructorInjectionComponentAdapter<>(clazz, clazz);
     return adapter.getComponentInstance(myContainer);
   }
 
   @Nonnull
   @Override
   public <T> T getUnbindedInstance(@Nonnull Class<T> clazz, @Nonnull Type[] constructorTypes, @Nonnull Function<Object[], T> constructor) {
-    NewConstructorInjectionComponentAdapter<T> adapter = new NewConstructorInjectionComponentAdapter<>(clazz.getName(), clazz, constructorTypes, constructor);
+    NewConstructorInjectionComponentAdapter<T> adapter = new NewConstructorInjectionComponentAdapter<>(clazz, clazz, constructorTypes, constructor);
     return adapter.getComponentInstance(myContainer);
   }
 
