@@ -15,6 +15,7 @@
  */
 package consulo.virtualFileSystem.fileWatcher.impl;
 
+import consulo.component.macro.PathMacroProtocolProvider;
 import consulo.component.macro.ReplacePathToMacroMap;
 import consulo.ide.impl.idea.build.progress.BuildProgress;
 import consulo.ide.impl.idea.build.progress.BuildProgressDescriptor;
@@ -196,12 +197,14 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
   }
 
   public ReplacePathToMacroMap createReplaceMacroToPathMap() {
+    PathMacroProtocolProvider pathMacroProtocolProvider = Application.get().getInstance(PathMacroProtocolProvider.class);
+
     final ReplacePathToMacroMap replacePathToMacroMap = new ReplacePathToMacroMap();
     replacePathToMacroMap.put(myVirtualFilePointer.getFileName(), "$FileName$");
-    replacePathToMacroMap.addMacroReplacement(myVirtualFilePointer.getPresentableUrl(), "FilePath");
+    replacePathToMacroMap.addMacroReplacement(pathMacroProtocolProvider, myVirtualFilePointer.getPresentableUrl(), "FilePath");
 
     File parentFile = FileUtil.getParentFile(new File(myVirtualFilePointer.getPresentableUrl()));
-    replacePathToMacroMap.addMacroReplacement(parentFile.getAbsolutePath(), "FileParentPath");
+    replacePathToMacroMap.addMacroReplacement(pathMacroProtocolProvider, parentFile.getAbsolutePath(), "FileParentPath");
     return replacePathToMacroMap;
   }
 
