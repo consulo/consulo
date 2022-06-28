@@ -16,18 +16,18 @@
 
 package consulo.ide.impl.copyright.impl.ui;
 
-import consulo.configurable.Configurable;
-import consulo.configurable.ConfigurationException;
-import consulo.configurable.SearchableConfigurable;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.configurable.*;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
-
+import javax.annotation.Nullable;
 import javax.swing.*;
 
-public class CopyrightProjectConfigurable extends SearchableConfigurable.Parent.Abstract implements Configurable.NoScroll {
+@ExtensionImpl
+public class CopyrightProjectConfigurable extends SearchableConfigurable.Parent.Abstract implements Configurable.NoScroll, ProjectConfigurable {
   private final Project project;
   private ProjectSettingsPanel myOptionsPanel = null;
   private final CopyrightProfilesPanel myProfilesPanel;
@@ -38,9 +38,16 @@ public class CopyrightProjectConfigurable extends SearchableConfigurable.Parent.
     myProfilesPanel = new CopyrightProfilesPanel(project);
   }
 
+  @Nonnull
   @Override
   public String getDisplayName() {
     return "Copyright";
+  }
+
+  @Nullable
+  @Override
+  public String getParentId() {
+    return StandardConfigurableIds.EDITOR_GROUP;
   }
 
   @RequiredUIAccess

@@ -131,7 +131,7 @@ public class InspectionManagerEx extends InspectionManagerBase {
     if (ApplicationManager.getApplication().isDisposed()) return;
     final Set<String> words = myOptionsRegistrar.getProcessedWordsWithoutStemming(descriptionText);
     for (String word : words) {
-      myOptionsRegistrar.addOption(word, tool.getShortName(), tool.getDisplayName(), InspectionToolsConfigurable.ID, InspectionToolsConfigurable.DISPLAY_NAME);
+      myOptionsRegistrar.addOption(word, tool.getShortName(), tool.getDisplayName(), InspectionToolsConfigurable.ID, "Inspections");
     }
   }
 

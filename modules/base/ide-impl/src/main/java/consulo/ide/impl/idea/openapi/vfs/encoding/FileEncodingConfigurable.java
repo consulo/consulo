@@ -2,6 +2,9 @@
 
 package consulo.ide.impl.idea.openapi.vfs.encoding;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.configurable.ProjectConfigurable;
+import consulo.configurable.StandardConfigurableIds;
 import consulo.ide.IdeBundle;
 import consulo.language.LangBundle;
 import consulo.virtualFileSystem.encoding.EncodingProjectManager;
@@ -27,6 +30,8 @@ import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.ide.impl.idea.util.ui.tree.PerFileConfigurableBase;
 import consulo.util.dataholder.Key;
+import jakarta.inject.Inject;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -38,7 +43,8 @@ import java.util.List;
 import java.util.*;
 import java.util.function.Supplier;
 
-class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> {
+@ExtensionImpl
+class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> implements ProjectConfigurable  {
   private JPanel myPanel;
   private JCheckBox myTransparentNativeToAsciiCheckBox;
   private JPanel myPropertiesFilesEncodingCombo;
@@ -50,6 +56,7 @@ class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> {
   private final Trinity<String, Supplier<Charset>, Consumer<Charset>> myProjectMapping;
   private final Trinity<String, Supplier<Charset>, Consumer<Charset>> myGlobalMapping;
 
+  @Inject
   FileEncodingConfigurable(@Nonnull Project project) {
     super(project, createMappings(project));
     myBOMForUTF8Combo.setModel(new EnumComboBoxModel<>(EncodingProjectManagerImpl.BOMForNewUTF8Files.class));
@@ -90,6 +97,7 @@ class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> {
     }
   }
 
+  @Nonnull
   @Override
   public String getDisplayName() {
     return IdeBundle.message("file.encodings.configurable");
@@ -99,6 +107,12 @@ class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> {
   @Nonnull
   public String getId() {
     return "file.encoding";
+  }
+
+  @Nullable
+  @Override
+  public String getParentId() {
+    return StandardConfigurableIds.EDITOR_GROUP;
   }
 
   @Override

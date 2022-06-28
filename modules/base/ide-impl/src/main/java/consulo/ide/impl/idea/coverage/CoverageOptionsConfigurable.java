@@ -1,12 +1,10 @@
 package consulo.ide.impl.idea.coverage;
 
-import consulo.ide.impl.idea.openapi.util.NotNullComputable;
-import consulo.configurable.Configurable;
-import consulo.configurable.ConfigurationException;
-import consulo.configurable.SearchableConfigurable;
-import consulo.configurable.SimpleConfigurable;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.configurable.*;
 import consulo.disposer.Disposable;
 import consulo.execution.coverage.CoverageOptionsProvider;
+import consulo.ide.impl.idea.openapi.util.NotNullComputable;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.CheckBox;
@@ -20,6 +18,7 @@ import jakarta.inject.Inject;
 import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +26,8 @@ import java.util.List;
  * User: anna
  * Date: 12/16/10
  */
-public class CoverageOptionsConfigurable extends SimpleConfigurable<CoverageOptionsConfigurable.Panel> implements SearchableConfigurable, Configurable.NoScroll {
+@ExtensionImpl
+public class CoverageOptionsConfigurable extends SimpleConfigurable<CoverageOptionsConfigurable.Panel> implements ProjectConfigurable, SearchableConfigurable, Configurable.NoScroll {
   public static class Panel implements NotNullComputable<Component> {
     private final Disposable myUiDisposable;
 
@@ -45,7 +45,7 @@ public class CoverageOptionsConfigurable extends SimpleConfigurable<CoverageOpti
     @RequiredUIAccess
     Panel(Project project, Disposable uiDisposable) {
       myUiDisposable = uiDisposable;
-      
+
       myWholePanel = VerticalLayout.create();
 
       ValueGroup<Boolean> group = ValueGroup.createBool();
@@ -66,15 +66,15 @@ public class CoverageOptionsConfigurable extends SimpleConfigurable<CoverageOpti
       myAddRB = RadioButton.create(LocalizeValue.localizeTODO("Add to the active suites"));
       primaryGroup.add(myAddRB);
       group.add(myAddRB);
-      
+
       myActivateCoverageViewCB = CheckBox.create(LocalizeValue.localizeTODO("Activate Coverage &View "));
       primaryGroup.add(myActivateCoverageViewCB);
-      
+
       myWholePanel.add(LabeledLayout.create(LocalizeValue.localizeTODO("When new coverage is gathered"), primaryGroup));
 
       for (CoverageOptions options : CoverageOptions.EP_NAME.getExtensionList(project)) {
         Configurable configurable = options.createConfigurable();
-        if(configurable != null) {
+        if (configurable != null) {
           myChildren.add(configurable);
         }
       }
@@ -106,6 +106,12 @@ public class CoverageOptionsConfigurable extends SimpleConfigurable<CoverageOpti
   @Override
   public String getId() {
     return "coverage";
+  }
+
+  @Nullable
+  @Override
+  public String getParentId() {
+    return StandardConfigurableIds.EXECUTION_GROUP;
   }
 
   @Nls
@@ -169,7 +175,7 @@ public class CoverageOptionsConfigurable extends SimpleConfigurable<CoverageOpti
     }
 
     for (Configurable child : panel.myChildren) {
-      if(child.isModified()) {
+      if (child.isModified()) {
         return true;
       }
     }

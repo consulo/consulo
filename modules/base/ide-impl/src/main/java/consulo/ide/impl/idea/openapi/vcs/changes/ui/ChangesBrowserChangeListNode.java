@@ -32,7 +32,7 @@ import static consulo.ui.ex.awt.FontUtil.spaceAndThinSpace;
  * @author yole
  */
 public class ChangesBrowserChangeListNode extends ChangesBrowserNode<ChangeList> {
-  private final ChangeListDecorator[] myDecorators;
+  private final List<ChangeListDecorator> myDecorators;
   private final ChangeListManagerEx myClManager;
   private final ChangeListRemoteState myChangeListRemoteState;
 
@@ -40,7 +40,7 @@ public class ChangesBrowserChangeListNode extends ChangesBrowserNode<ChangeList>
     super(userObject);
     myChangeListRemoteState = changeListRemoteState;
     myClManager = (ChangeListManagerEx) ChangeListManager.getInstance(project);
-    myDecorators = ChangeListDecorator.EP_NAME.getExtensions(project);
+    myDecorators = ChangeListDecorator.EP_NAME.getExtensionList(project);
   }
 
   @Override

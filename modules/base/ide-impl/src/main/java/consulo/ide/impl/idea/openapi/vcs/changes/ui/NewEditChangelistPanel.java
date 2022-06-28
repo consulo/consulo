@@ -15,26 +15,28 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
-import consulo.ide.ServiceManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
-import consulo.component.extension.Extensions;
-import consulo.language.editor.ui.EditorCustomization;
-import consulo.language.editor.ui.awt.EditorTextField;
-import consulo.language.plain.PlainTextLanguage;
-import consulo.project.Project;
+import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
 import consulo.ide.impl.idea.openapi.vcs.VcsConfiguration;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManager;
 import consulo.ide.impl.idea.openapi.vcs.changes.LocalChangeList;
-import consulo.language.editor.ui.SpellCheckerCustomization;
-import consulo.application.ui.wm.IdeFocusManager;
-import consulo.ide.impl.idea.ui.*;
+import consulo.ide.impl.idea.ui.EditorTextFieldProvider;
+import consulo.ide.impl.idea.ui.HorizontalScrollBarEditorCustomization;
+import consulo.ide.impl.idea.ui.OneLineEditorCustomization;
+import consulo.ide.impl.idea.ui.SoftWrapsEditorCustomization;
 import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.editor.ui.EditorCustomization;
+import consulo.language.editor.ui.SpellCheckerCustomization;
+import consulo.language.editor.ui.awt.EditorTextField;
+import consulo.language.plain.PlainTextLanguage;
+import consulo.project.Project;
 import consulo.ui.ex.awt.JBUI;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Set;
@@ -101,7 +103,7 @@ public abstract class NewEditChangelistPanel extends JPanel {
 
   public void init(final LocalChangeList initial) {
     myMakeActiveCheckBox.setSelected(VcsConfiguration.getInstance(myProject).MAKE_NEW_CHANGELIST_ACTIVE);
-    for (EditChangelistSupport support : Extensions.getExtensions(EditChangelistSupport.EP_NAME, myProject)) {
+    for (EditChangelistSupport support : EditChangelistSupport.EP_NAME.getExtensionList(myProject)) {
       support.installSearch(myNameTextField, myDescriptionTextArea);
       myConsumer = support.addControls(myAdditionalControlsPanel, initial);
     }

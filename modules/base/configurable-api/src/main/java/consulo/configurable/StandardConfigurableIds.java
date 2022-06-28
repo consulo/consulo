@@ -25,4 +25,7 @@ public interface StandardConfigurableIds {
   String GENERAL_GROUP = "general";
   String PLATFORM_AND_PLUGINS_GROUP = "platformAndPlugins";
   String PROJECT_GROUP = "project";
+  String VCS_GROUP = "vcs";
+  String COMPILER_GROUP = "project.propCompiler";
+  String TASKS_GROUP = "tasks";
 }

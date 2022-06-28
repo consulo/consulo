@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.codeInsight.intention.impl.config;
 
+import consulo.configurable.StandardConfigurableIds;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.configurable.Configurable;
 import consulo.configurable.SearchableConfigurable;
@@ -23,6 +24,7 @@ import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 public class IntentionSettingsConfigurable implements SearchableConfigurable, Configurable.NoMargin, Configurable.NoScroll, Configurable.HoldPreferredFocusedComponent {
@@ -52,6 +54,12 @@ public class IntentionSettingsConfigurable implements SearchableConfigurable, Co
   @Override
   public String getDisplayName() {
     return CodeInsightBundle.message("intention.settings");
+  }
+
+  @Nullable
+  @Override
+  public String getParentId() {
+    return StandardConfigurableIds.EDITOR_GROUP;
   }
 
   @RequiredUIAccess

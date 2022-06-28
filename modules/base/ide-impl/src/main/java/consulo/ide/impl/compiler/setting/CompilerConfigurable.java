@@ -15,14 +15,16 @@
  */
 package consulo.ide.impl.compiler.setting;
 
-import consulo.ide.impl.compiler.CompilerWorkspaceConfiguration;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.compiler.CompilerBundle;
-import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.NotNullComputable;
-import consulo.disposer.Disposable;
+import consulo.configurable.ProjectConfigurable;
 import consulo.configurable.SimpleConfigurable;
+import consulo.configurable.StandardConfigurableIds;
+import consulo.disposer.Disposable;
+import consulo.ide.impl.compiler.CompilerWorkspaceConfiguration;
+import consulo.ide.impl.idea.openapi.util.NotNullComputable;
+import consulo.project.Project;
 import consulo.ui.CheckBox;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -31,7 +33,8 @@ import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 
-public class CompilerConfigurable extends SimpleConfigurable<CompilerConfigurable.Root> implements Configurable {
+@ExtensionImpl
+public class CompilerConfigurable extends SimpleConfigurable<CompilerConfigurable.Root> implements ProjectConfigurable {
   protected static class Root implements NotNullComputable<Component> {
     private CheckBox myCbClearOutputDirectory;
     private CheckBox myCbAutoShowFirstError;
@@ -92,8 +95,15 @@ public class CompilerConfigurable extends SimpleConfigurable<CompilerConfigurabl
     myCompilerWorkspaceConfiguration.CLEAR_OUTPUT_DIRECTORY = component.myCbClearOutputDirectory.getValue();
   }
 
+  @Nonnull
   @Override
   public String getDisplayName() {
     return CompilerBundle.message("compiler.configurable.display.name");
+  }
+
+  @Nonnull
+  @Override
+  public String getId() {
+    return StandardConfigurableIds.COMPILER_GROUP;
   }
 }

@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.psi.templateLanguages;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.configurable.ProjectConfigurable;
+import consulo.configurable.StandardConfigurableIds;
 import consulo.language.LangBundle;
 import consulo.language.Language;
 import consulo.application.impl.internal.ApplicationNamesInfo;
@@ -26,6 +29,7 @@ import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.ide.impl.idea.util.ui.tree.PerFileConfigurableBase;
 import consulo.util.dataholder.Key;
+import jakarta.inject.Inject;
 import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;
@@ -34,7 +38,9 @@ import javax.annotation.Nullable;
 /**
  * @author peter
  */
-public class TemplateDataLanguageConfigurable extends PerFileConfigurableBase<Language> {
+@ExtensionImpl
+public class TemplateDataLanguageConfigurable extends PerFileConfigurableBase<Language> implements ProjectConfigurable {
+  @Inject
   public TemplateDataLanguageConfigurable(@Nonnull Project project) {
     super(project, TemplateDataLanguageMappings.getInstance(project));
   }
@@ -43,6 +49,12 @@ public class TemplateDataLanguageConfigurable extends PerFileConfigurableBase<La
   @Override
   public String getId() {
     return "template.data.language.configurable";
+  }
+
+  @Nullable
+  @Override
+  public String getParentId() {
+    return StandardConfigurableIds.EDITOR_GROUP;
   }
 
   @Override

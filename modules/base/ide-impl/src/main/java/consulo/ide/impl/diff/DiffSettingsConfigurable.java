@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.diff;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.configurable.ApplicationConfigurable;
+import consulo.configurable.StandardConfigurableIds;
 import consulo.ide.impl.idea.diff.impl.DiffSettingsHolder;
 import consulo.ide.impl.idea.diff.tools.util.base.TextDiffSettingsHolder;
 import consulo.configurable.Configurable;
@@ -31,6 +34,7 @@ import consulo.ui.util.LabeledBuilder;
 import consulo.util.collection.ArrayUtil;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +42,8 @@ import java.util.List;
  * @author VISTALL
  * @since 24/09/2021
  */
-public class DiffSettingsConfigurable extends SimpleConfigurableByProperties implements Configurable {
+@ExtensionImpl
+public class DiffSettingsConfigurable extends SimpleConfigurableByProperties implements Configurable, ApplicationConfigurable {
   @RequiredUIAccess
   @Nonnull
   @Override
@@ -75,5 +80,23 @@ public class DiffSettingsConfigurable extends SimpleConfigurableByProperties imp
     diffLayout.add(showDiffInEditorBox);
     propertyBuilder.add(showDiffInEditorBox, diffSettings::isShowDiffInEditor, diffSettings::setShowDiffInEditor);
     return rootLayout;
+  }
+
+  @Nonnull
+  @Override
+  public String getId() {
+    return "diff.base";
+  }
+
+  @Nonnull
+  @Override
+  public String getDisplayName() {
+    return "Diff & Merge";
+  }
+
+  @Nullable
+  @Override
+  public String getParentId() {
+    return StandardConfigurableIds.VCS_GROUP;
   }
 }

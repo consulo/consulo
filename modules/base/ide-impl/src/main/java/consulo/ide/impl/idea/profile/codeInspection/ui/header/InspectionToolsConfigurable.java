@@ -83,7 +83,6 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
   private static final Logger LOG = Logger.getInstance(InspectionToolsConfigurable.class);
 
   public static final String ID = "Errors";
-  public static final String DISPLAY_NAME = "Inspections";
 
   private static final String HEADER_TITLE = "Profile:";
   protected final InspectionProfileManager myProfileManager;
@@ -423,7 +422,7 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
 
   @Override
   public String getDisplayName() {
-    return DISPLAY_NAME;
+    return "Inspections";
   }
 
   @Override

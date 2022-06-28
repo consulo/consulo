@@ -15,25 +15,23 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
-import consulo.ui.ex.awt.*;
-import consulo.component.util.localize.BundleBase;
-import consulo.diff.DiffPlaces;
-import consulo.ide.impl.idea.diff.util.DiffUserDataKeysEx;
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.dataContext.DataSink;
-import consulo.dataContext.TypeSafeDataProvider;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.component.extension.Extensions;
-import consulo.document.FileDocumentManager;
 import consulo.application.progress.ProgressManager;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.ui.*;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.function.Computable;
-import consulo.ui.ex.awt.internal.laf.MultiLineLabelUI;
-import consulo.util.lang.ref.Ref;
 import consulo.application.util.registry.Registry;
+import consulo.component.util.localize.BundleBase;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.TypeSafeDataProvider;
+import consulo.diff.DiffPlaces;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.document.FileDocumentManager;
+import consulo.ide.impl.idea.diff.util.DiffUserDataKeysEx;
+import consulo.ide.impl.idea.ide.util.PropertiesComponent;
+import consulo.ide.impl.idea.openapi.ui.InputException;
+import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.*;
 import consulo.ide.impl.idea.openapi.vcs.changes.*;
@@ -43,17 +41,18 @@ import consulo.ide.impl.idea.openapi.vcs.impl.CheckinHandlersManager;
 import consulo.ide.impl.idea.openapi.vcs.ui.CommitMessage;
 import consulo.ide.impl.idea.openapi.vcs.ui.Refreshable;
 import consulo.ide.impl.idea.openapi.vcs.ui.RefreshableOnComponent;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.application.ui.wm.IdeFocusManager;
-import consulo.ui.ex.JBColor;
 import consulo.ide.impl.idea.ui.SplitterWithSecondHideable;
-import consulo.ui.ex.awt.util.Alarm;
 import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.ui.GridBag;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
+import consulo.project.Project;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.internal.laf.MultiLineLabelUI;
+import consulo.ui.ex.awt.util.Alarm;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.ref.Ref;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -487,7 +486,7 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
     updateOnListSelection();
     myCommitMessageArea.requestFocusInMessage();
 
-    for (EditChangelistSupport support : Extensions.getExtensions(EditChangelistSupport.EP_NAME, project)) {
+    for (EditChangelistSupport support : EditChangelistSupport.EP_NAME.getExtensionList(project)) {
       support.installSearch(myCommitMessageArea.getEditorField(), myCommitMessageArea.getEditorField());
     }
 

@@ -1201,8 +1201,7 @@
     <projectService serviceInterface="consulo.ide.impl.idea.openapi.vcs.AbstractVcsHelper"
                     serviceImplementation="consulo.ide.impl.idea.openapi.vcs.impl.AbstractVcsHelperImpl"/>
     
-    <projectService serviceImplementation="consulo.ide.impl.idea.openapi.vcs.contentAnnotation.VcsContentAnnotationSettings"/>
-    
+
 
 
     <changesViewContent tabName="Repository" className="consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesViewManager"
@@ -1220,12 +1219,8 @@
         implementation="consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.ArtifactsSourceItemsProvider"/>
 
     <!-- Compiler -->
-    <projectConfigurable instance="consulo.ide.impl.compiler.setting.CompilerConfigurable" id="project.propCompiler"
-						 key="compiler.configurable.display.name" bundle="consulo.compiler.CompilerBundle" order="after project"/>
 
-    <projectConfigurable id="project.propCompiler.excluded" bundle="consulo.compiler.CompilerBundle" key="actions.exclude.from.compile.text"
-                         parentId="project.propCompiler"
-                         instance="consulo.ide.impl.compiler.setting.CompilerExcludedConfigurable"/>
+
 
     <checkoutListener implementation="consulo.ide.impl.idea.openapi.vcs.checkout.ProjectImporterCheckoutListener"/>
 
@@ -1537,9 +1532,7 @@
     <refactoring.moveHandler implementation="consulo.ide.impl.idea.refactoring.move.moveFilesOrDirectories.MoveFilesOrDirectoriesHandler"
                              id="moveFileOrDir"/>
 
-    <projectConfigurable instance="consulo.ide.impl.idea.ide.util.scopeChooser.ScopeChooserConfigurable"
-                         id="project.scopes" parentId="general"
-                         key="scopes.display.name" bundle="consulo.ide.IdeBundle"/>
+
 
 
     <weigher key="proximity" implementationClass="consulo.ide.impl.psi.util.proximity.SameDirectoryWeigher" id="sameDirectory"
@@ -1548,10 +1541,6 @@
 
     <compiler implementation="consulo.ide.impl.idea.packaging.impl.compiler.ArtifactsCompiler" id="artifactsCompiler" order="last"/>
     <compiler implementation="consulo.ide.impl.idea.compiler.impl.resourceCompiler.ResourceCompiler" id="resourceCompiler"/>
-
-    <projectConfigurable parentId="project.propCompiler"
-                         instance="consulo.ide.impl.compiler.resourceCompiler.ResourceCompilerConfigurable"
-                         key="resource.compiler.description" bundle="consulo.compiler.CompilerBundle"/>
 
 
 

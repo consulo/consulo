@@ -88,28 +88,15 @@
 
   <extensions defaultExtensionNs="consulo">
 
-    <projectConfigurable instance="consulo.ide.impl.idea.tasks.config.TaskConfigurable" id="tasks" displayName="Tasks" nonDefaultProject="true">
-      <configurable instance="consulo.ide.impl.idea.tasks.config.TaskRepositoriesConfigurable" displayName="Servers" id="tasks.servers"/>
-    </projectConfigurable>
-
-    <editChangelistSupport implementation="consulo.ide.impl.idea.tasks.impl.TaskChangelistSupport"/>
 
     <lang.documentationProvider language="TEXT" implementationClass="consulo.ide.impl.idea.tasks.doc.TaskDocumentationProvider"/>
 
-    <!--context providers-->
-    <tasks.contextProvider implementation="consulo.ide.impl.idea.tasks.context.OpenEditorsContextProvider"/>
-    <tasks.contextProvider implementation="consulo.ide.impl.idea.tasks.context.ProjectViewContextProvider"/>
-    <tasks.contextProvider implementation="consulo.ide.impl.idea.tasks.context.RunConfigurationsContextProvider"/>
-    <tasks.contextProvider implementation="consulo.ide.impl.idea.tasks.context.XDebuggerBreakpointsContextProvider"/>
+
 
     <checkinHandlerFactory implementation="consulo.ide.impl.idea.tasks.impl.TaskCheckinHandlerFactory"/>
 
 
 
-    <projectConfigurable instance="consulo.ide.impl.idea.tasks.timeTracking.TimeTrackingConfigurable" displayName="Time Tracking"
-						 id="tasks.timeTracking"
-						 nonDefaultProject="true"
-						 parentId="tasks"/>
 
     <toolWindow id="Time Tracking" anchor="right" secondary="false" icon="consulo.task.impl.TaskImplIconGroup@clock"
                 factoryClass="consulo.ide.impl.idea.tasks.timeTracking.TasksToolWindowFactory"

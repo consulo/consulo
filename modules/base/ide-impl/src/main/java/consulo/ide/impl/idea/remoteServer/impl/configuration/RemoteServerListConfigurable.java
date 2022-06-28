@@ -1,22 +1,15 @@
 package consulo.ide.impl.idea.remoteServer.impl.configuration;
 
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.CommonShortcuts;
-import consulo.configurable.Configurable;
-import consulo.configurable.ConfigurationException;
-import consulo.configurable.OptionalConfigurable;
-import consulo.configurable.SearchableConfigurable;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ide.setting.ui.MasterDetailsComponent;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.component.util.text.UniqueNameGenerator;
+import consulo.configurable.*;
 import consulo.ide.impl.idea.remoteServer.ServerType;
 import consulo.ide.impl.idea.remoteServer.configuration.RemoteServer;
 import consulo.ide.impl.idea.remoteServer.configuration.RemoteServersManager;
 import consulo.ide.impl.idea.util.IconUtil;
-import consulo.component.util.text.UniqueNameGenerator;
+import consulo.ide.setting.ui.MasterDetailsComponent;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.configurable.MasterDetailsConfigurable;
+import consulo.ui.ex.action.*;
 import consulo.ui.image.Image;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.Nls;
@@ -31,9 +24,12 @@ import java.util.Set;
 /**
  * @author nik
  */
-public class RemoteServerListConfigurable extends MasterDetailsComponent implements OptionalConfigurable, SearchableConfigurable, Configurable.NoScroll, Configurable.NoMargin {
+@ExtensionImpl
+public class RemoteServerListConfigurable extends MasterDetailsComponent
+        implements OptionalConfigurable, ApplicationConfigurable, SearchableConfigurable, Configurable.NoScroll, Configurable.NoMargin {
   private final RemoteServersManager myServersManager;
-  @Nullable private final ServerType<?> myServerType;
+  @Nullable
+  private final ServerType<?> myServerType;
   private RemoteServer<?> myLastSelectedServer;
 
   @Inject
@@ -51,10 +47,17 @@ public class RemoteServerListConfigurable extends MasterDetailsComponent impleme
     return new RemoteServerListConfigurable(RemoteServersManager.getInstance(), type);
   }
 
+  @Nonnull
   @Nls
   @Override
   public String getDisplayName() {
     return "Clouds";
+  }
+
+  @Nullable
+  @Override
+  public String getParentId() {
+    return StandardConfigurableIds.EXECUTION_GROUP;
   }
 
   @RequiredUIAccess
@@ -87,7 +90,7 @@ public class RemoteServerListConfigurable extends MasterDetailsComponent impleme
   @Nonnull
   @Override
   public String getId() {
-    return "RemoteServers";
+    return "remote.servers";
   }
 
   @Nullable

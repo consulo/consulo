@@ -20,16 +20,35 @@
  */
 package consulo.ide.impl.idea.profile.codeInspection.ui;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.configurable.ProjectConfigurable;
+import consulo.configurable.StandardConfigurableIds;
 import consulo.ide.impl.idea.codeInspection.ex.InspectionProfileImpl;
-import consulo.language.editor.inspection.scheme.InspectionProfileManager;
-import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
 import consulo.ide.impl.idea.profile.codeInspection.ui.header.InspectionToolsConfigurable;
-import consulo.logging.Logger;
+import consulo.language.editor.inspection.scheme.InspectionProfileManager;
+import consulo.language.editor.inspection.scheme.InspectionProjectProfileManager;
+import jakarta.inject.Inject;
 
-public class ProjectInspectionToolsConfigurable extends InspectionToolsConfigurable {
-  private static final Logger LOG = Logger.getInstance(ProjectInspectionToolsConfigurable.class);
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+@ExtensionImpl
+public class ProjectInspectionToolsConfigurable extends InspectionToolsConfigurable implements ProjectConfigurable {
+  @Inject
   public ProjectInspectionToolsConfigurable(InspectionProfileManager profileManager, InspectionProjectProfileManager projectProfileManager) {
-    super(projectProfileManager, profileManager);
+    super((consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager)projectProfileManager, profileManager);
+  }
+
+  @Nonnull
+  @Override
+  public String getId() {
+    return "editor.code.inspections";
+  }
+
+  @Nullable
+  @Override
+  public String getParentId() {
+    return StandardConfigurableIds.EDITOR_GROUP;
   }
 
   @Override
@@ -41,7 +60,8 @@ public class ProjectInspectionToolsConfigurable extends InspectionToolsConfigura
   protected void applyRootProfile(String name, boolean isShared) {
     if (isShared) {
       myProjectProfileManager.setProjectProfile(name);
-    } else {
+    }
+    else {
       myProfileManager.setRootProfile(name);
       myProjectProfileManager.setProjectProfile(null);
     }

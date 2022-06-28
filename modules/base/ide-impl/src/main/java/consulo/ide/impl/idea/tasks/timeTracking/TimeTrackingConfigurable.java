@@ -1,7 +1,7 @@
 package consulo.ide.impl.idea.tasks.timeTracking;
 
-import consulo.configurable.Configurable;
-import consulo.configurable.SearchableConfigurable;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.configurable.*;
 import consulo.project.Project;
 import consulo.ui.ex.awt.internal.GuiUtils;
 import jakarta.inject.Inject;
@@ -10,14 +10,13 @@ import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * User: Evgeny.Zakrevsky
  * Date: 11/19/12
  */
-public class TimeTrackingConfigurable implements SearchableConfigurable, Configurable.NoScroll {
+@ExtensionImpl
+public class TimeTrackingConfigurable implements SearchableConfigurable, Configurable.NoScroll, ProjectConfigurable, NonDefaultProjectConfigurable {
   private JCheckBox myEnableTimeTrackingCheckBox;
   private JTextField myTimeTrackingSuspendDelay;
   private JPanel myTimeTrackingSettings;
@@ -27,11 +26,7 @@ public class TimeTrackingConfigurable implements SearchableConfigurable, Configu
   @Inject
   public TimeTrackingConfigurable(Project project) {
     myProject = project;
-    myEnableTimeTrackingCheckBox.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        enableTimeTrackingPanel();
-      }
-    });
+    myEnableTimeTrackingCheckBox.addActionListener(e -> enableTimeTrackingPanel());
   }
 
   private void enableTimeTrackingPanel() {
@@ -56,8 +51,7 @@ public class TimeTrackingConfigurable implements SearchableConfigurable, Configu
 
   @Override
   public boolean isModified() {
-    return myEnableTimeTrackingCheckBox.isSelected() != getConfig().enabled ||
-           !myTimeTrackingSuspendDelay.getText().equals(String.valueOf(getConfig().suspendDelayInSeconds));
+    return myEnableTimeTrackingCheckBox.isSelected() != getConfig().enabled || !myTimeTrackingSuspendDelay.getText().equals(String.valueOf(getConfig().suspendDelayInSeconds));
   }
 
   @Override
@@ -67,7 +61,7 @@ public class TimeTrackingConfigurable implements SearchableConfigurable, Configu
     if (getConfig().enabled != oldTimeTrackingEnabled) {
       TimeTrackingManager.getInstance(myProject).updateTimeTrackingToolWindow();
     }
-    try{
+    try {
       getConfig().suspendDelayInSeconds = Integer.parseInt(myTimeTrackingSuspendDelay.getText());
     }
     catch (NumberFormatException ignored) {
@@ -90,6 +84,12 @@ public class TimeTrackingConfigurable implements SearchableConfigurable, Configu
   @Override
   public String getDisplayName() {
     return "Time Tracking";
+  }
+
+  @Nullable
+  @Override
+  public String getParentId() {
+    return StandardConfigurableIds.TASKS_GROUP;
   }
 
   @Nullable

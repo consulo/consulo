@@ -16,14 +16,13 @@
 
 package consulo.ide.impl.idea.ide.util.scopeChooser;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.configurable.*;
 import consulo.ide.impl.psi.search.scope.packageSet.CustomScopesProvider;
 import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.execution.ExecutionBundle;
 import consulo.application.AllIcons;
 import consulo.ide.IdeBundle;
-import consulo.configurable.Configurable;
-import consulo.configurable.ConfigurationException;
-import consulo.configurable.SearchableConfigurable;
 import consulo.content.scope.NamedScope;
 import consulo.language.editor.scope.NamedScopeManager;
 import consulo.content.scope.NamedScopesHolder;
@@ -46,7 +45,6 @@ import consulo.util.xml.serializer.annotation.AbstractCollection;
 import consulo.util.xml.serializer.annotation.Tag;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.configurable.MasterDetailsConfigurable;
 import consulo.ui.ex.action.*;
 import consulo.ui.image.Image;
 import jakarta.inject.Inject;
@@ -70,7 +68,8 @@ import java.util.*;
  * User: anna
  * Date: 01-Jul-2006
  */
-public class ScopeChooserConfigurable extends MasterDetailsComponent implements SearchableConfigurable, Configurable.NoMargin {
+@ExtensionImpl
+public class ScopeChooserConfigurable extends MasterDetailsComponent implements SearchableConfigurable, Configurable.NoMargin, ProjectConfigurable {
   @NonNls
   public static final String SCOPE_CHOOSER_CONFIGURABLE_UI_KEY = "ScopeChooserConfigurable.UI";
   public static final String PROJECT_SCOPES = "project.scopes";
@@ -378,6 +377,12 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
   @Nonnull
   public String getId() {
     return PROJECT_SCOPES;
+  }
+
+  @Nullable
+  @Override
+  public String getParentId() {
+    return StandardConfigurableIds.GENERAL_GROUP;
   }
 
   @Override

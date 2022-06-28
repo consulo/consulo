@@ -1,5 +1,6 @@
 package consulo.ide.impl.idea.tasks.timeTracking;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
@@ -13,7 +14,6 @@ import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.image.Image;
-import consulo.util.lang.function.Condition;
 
 import javax.annotation.Nonnull;
 
@@ -21,12 +21,8 @@ import javax.annotation.Nonnull;
  * User: evgeny.zakrevsky
  * Date: 11/8/12
  */
-public class TasksToolWindowFactory implements ToolWindowFactory, Condition<Project>, DumbAware {
-
-  @Override
-  public boolean value(final Project project) {
-    return TimeTrackingManager.getInstance(project).isTimeTrackingToolWindowAvailable();
-  }
+@ExtensionImpl
+public class TasksToolWindowFactory implements ToolWindowFactory, DumbAware {
 
   @Nonnull
   @Override
@@ -59,5 +55,10 @@ public class TasksToolWindowFactory implements ToolWindowFactory, Condition<Proj
   @Override
   public LocalizeValue getDisplayName() {
     return LocalizeValue.localizeTODO("Time Tracking");
+  }
+
+  @Override
+  public boolean shouldBeAvailable(@Nonnull Project project) {
+    return TimeTrackingManager.getInstance(project).isTimeTrackingToolWindowAvailable();
   }
 }

@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.keymap.impl.ui;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.configurable.*;
 import consulo.ui.ex.action.CommonActionsManager;
 import consulo.ui.ex.TreeExpander;
 import consulo.ide.impl.idea.openapi.actionSystem.AbbreviationManager;
@@ -39,9 +41,6 @@ import consulo.application.AllIcons;
 import consulo.application.CommonBundle;
 import consulo.application.ui.wm.FocusableFrame;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.configurable.Configurable;
-import consulo.configurable.ConfigurationException;
-import consulo.configurable.SearchableConfigurable;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
@@ -62,6 +61,7 @@ import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.image.ImageEffects;
+import jakarta.inject.Inject;
 import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;
@@ -75,7 +75,8 @@ import java.beans.PropertyChangeListener;
 import java.util.List;
 import java.util.*;
 
-public class KeymapPanel implements SearchableConfigurable, Configurable.NoScroll, KeymapListener {
+@ExtensionImpl
+public class KeymapPanel implements SearchableConfigurable, Configurable.NoScroll, KeymapListener, ApplicationConfigurable {
 
   private final PropertyChangeListener myAncestor;
 
@@ -102,6 +103,7 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
   private JPanel myRootPanel;
   private Disposable myUIDisposable;
 
+  @Inject
   public KeymapPanel() {
     myAncestor = evt -> {
       if (evt.getPropertyName().equals("ancestor") && evt.getNewValue() != null && evt.getOldValue() == null && myQuickListsModified) {
@@ -792,6 +794,12 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
   @Nonnull
   public String getId() {
     return "preferences.keymap";
+  }
+
+  @Nullable
+  @Override
+  public String getParentId() {
+    return StandardConfigurableIds.EDITOR_GROUP;
   }
 
   @RequiredUIAccess

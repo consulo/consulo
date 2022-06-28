@@ -15,6 +15,10 @@
  */
 package consulo.ide.impl.compiler.resourceCompiler;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.compiler.CompilerBundle;
+import consulo.configurable.ProjectConfigurable;
+import consulo.configurable.StandardConfigurableIds;
 import consulo.ide.impl.compiler.MalformedPatternException;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
@@ -37,7 +41,8 @@ import java.awt.*;
  * @author VISTALL
  * @since 20:47/12.06.13
  */
-public class ResourceCompilerConfigurable implements Configurable, Configurable.NoScroll {
+@ExtensionImpl
+public class ResourceCompilerConfigurable implements ProjectConfigurable, Configurable.NoScroll {
   @Nonnull
   private final Project myProject;
   private ResourceCompilerConfiguration myResourceCompilerConfiguration;
@@ -55,7 +60,19 @@ public class ResourceCompilerConfigurable implements Configurable, Configurable.
   @Nls
   @Override
   public String getDisplayName() {
-    return "Resource";
+    return CompilerBundle.message("resource.compiler.description");
+  }
+
+  @Nonnull
+  @Override
+  public String getId() {
+    return "project.propCompiler";
+  }
+
+  @Nullable
+  @Override
+  public String getParentId() {
+    return StandardConfigurableIds.COMPILER_GROUP;
   }
 
   @Nullable

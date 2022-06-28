@@ -15,17 +15,20 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.ide.impl.idea.openapi.vcs.changes.LocalChangeList;
-import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.ide.impl.idea.util.Consumer;
-import javax.annotation.Nullable;
+import consulo.language.editor.ui.awt.EditorTextField;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 /**
  * @author Dmitry Avdeev
  */
+@ExtensionAPI(ComponentScope.PROJECT)
 public interface EditChangelistSupport {
 
   ExtensionPointName<EditChangelistSupport> EP_NAME = ExtensionPointName.create("consulo.editChangelistSupport");
@@ -33,5 +36,6 @@ public interface EditChangelistSupport {
   void installSearch(EditorTextField name, EditorTextField comment);
 
   Consumer<LocalChangeList> addControls(JPanel bottomPanel, @Nullable LocalChangeList initial);
+
   void changelistCreated(LocalChangeList changeList);
 }

@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.impl.internal.JobScheduler;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.component.persist.StoragePathMacros;
@@ -67,6 +70,8 @@ import java.util.concurrent.TimeUnit;
  */
 @State(name = "CommittedChangesCache", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
 @Singleton
+@ServiceAPI(value = ComponentScope.PROJECT, lazy = false)
+@ServiceImpl
 public class CommittedChangesCache implements PersistentStateComponent<CommittedChangesCache.State> {
   private static final Logger LOG = Logger.getInstance(CommittedChangesCache.class);
 

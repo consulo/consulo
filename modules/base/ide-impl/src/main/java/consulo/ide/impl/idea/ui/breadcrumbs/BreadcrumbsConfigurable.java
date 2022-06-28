@@ -1,24 +1,29 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ui.breadcrumbs;
 
-import consulo.dataContext.DataManager;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ui.UISettings;
-import consulo.language.Language;
-import consulo.dataContext.DataContext;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
-import consulo.ide.impl.idea.openapi.options.CompositeConfigurable;
+import consulo.configurable.ApplicationConfigurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
+import consulo.configurable.StandardConfigurableIds;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
+import consulo.disposer.Disposable;
+import consulo.ide.impl.idea.openapi.options.CompositeConfigurable;
 import consulo.ide.impl.idea.openapi.options.colors.pages.GeneralColorsPage;
-import consulo.ui.ex.awt.LinkLabel;
 import consulo.ide.impl.idea.ui.components.panels.HorizontalLayout;
 import consulo.ide.impl.idea.ui.components.panels.VerticalLayout;
-import consulo.ui.ex.awt.JBUIScale;
+import consulo.language.Language;
 import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.JBUIScale;
+import consulo.ui.ex.awt.LinkLabel;
 import consulo.ui.ex.awt.UIUtil;
+import jakarta.inject.Inject;
 import org.jetbrains.annotations.Nls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -26,8 +31,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
-import static consulo.ide.impl.idea.application.options.colors.ColorAndFontOptions.selectOrEditColor;
 import static consulo.application.ApplicationBundle.message;
+import static consulo.ide.impl.idea.application.options.colors.ColorAndFontOptions.selectOrEditColor;
 import static consulo.ide.impl.idea.openapi.util.text.StringUtil.naturalCompare;
 import static consulo.ide.impl.idea.util.containers.ContainerUtil.newSmartList;
 import static javax.swing.SwingConstants.LEFT;
@@ -35,7 +40,8 @@ import static javax.swing.SwingConstants.LEFT;
 /**
  * @author Sergey.Malenkov
  */
-final class BreadcrumbsConfigurable extends CompositeConfigurable<BreadcrumbsConfigurable.BreadcrumbsProviderConfigurable> implements SearchableConfigurable {
+@ExtensionImpl
+final class BreadcrumbsConfigurable extends CompositeConfigurable<BreadcrumbsConfigurable.BreadcrumbsProviderConfigurable> implements ApplicationConfigurable, SearchableConfigurable {
   private final HashMap<String, JCheckBox> map = new HashMap<>();
   private JComponent component;
   private JCheckBox show;
@@ -44,10 +50,20 @@ final class BreadcrumbsConfigurable extends CompositeConfigurable<BreadcrumbsCon
   private JLabel placement;
   private JLabel languages;
 
+  @Inject
+  BreadcrumbsConfigurable() {
+  }
+
   @Nonnull
   @Override
   public String getId() {
     return "editor.breadcrumbs";
+  }
+
+  @Nullable
+  @Override
+  public String getParentId() {
+    return StandardConfigurableIds.EDITOR_GROUP;
   }
 
   @Override
@@ -56,7 +72,7 @@ final class BreadcrumbsConfigurable extends CompositeConfigurable<BreadcrumbsCon
   }
 
   @Override
-  public JComponent createComponent() {
+  public JComponent createComponent(@Nonnull Disposable uiDisposable) {
     if (component == null) {
       for (final BreadcrumbsProviderConfigurable configurable : getConfigurables()) {
         final String id = configurable.getId();
@@ -64,7 +80,7 @@ final class BreadcrumbsConfigurable extends CompositeConfigurable<BreadcrumbsCon
           map.put(id, configurable.createComponent());
         }
       }
-      JPanel boxes = new JPanel(new GridLayout(0, 3, UIUtil.isUnderDarcula() ? JBUIScale.scale(10) : 0, 0));
+      JPanel boxes = new JPanel(new GridLayout(0, 3, JBUIScale.scale(10), 0));
       map.values().stream().sorted((box1, box2) -> naturalCompare(box1.getText(), box2.getText())).forEach(box -> boxes.add(box));
 
       show = new JCheckBox(message("checkbox.show.breadcrumbs"));

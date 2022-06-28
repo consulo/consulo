@@ -15,22 +15,27 @@
  */
 package consulo.ide.impl.idea.openapi.keymap.impl.ui;
 
-import consulo.ui.ex.action.ActionToolbarPosition;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.QuickList;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.QuickListsManager;
-import consulo.application.ApplicationManager;
-import consulo.ui.ex.keymap.KeyMapBundle;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.Application;
+import consulo.configurable.ApplicationConfigurable;
 import consulo.configurable.Configurable;
 import consulo.configurable.SearchableConfigurable;
-import consulo.ui.ex.awt.*;
+import consulo.configurable.StandardConfigurableIds;
+import consulo.disposer.Disposable;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.QuickList;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.QuickListsManager;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ui.ex.awt.JBList;
 import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionToolbarPosition;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awt.util.ListUtil;
-import org.jetbrains.annotations.Nls;
-import javax.annotation.Nonnull;
+import consulo.ui.ex.keymap.KeyMapBundle;
+import jakarta.inject.Inject;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
@@ -43,23 +48,23 @@ import java.util.ArrayList;
  * User: anna
  * Date: 13-Apr-2006
  */
-public class QuickListsPanel extends JPanel implements SearchableConfigurable, Configurable.NoScroll, Configurable.NoMargin {
-  private final DefaultListModel myQuickListsModel = new DefaultListModel();
-  private JBList myQuickListsList = new JBList(myQuickListsModel);
-  private final JPanel myRightPanel = new JPanel(new BorderLayout());
+@ExtensionImpl
+public class QuickListsPanel implements SearchableConfigurable, Configurable.NoScroll, Configurable.NoMargin, ApplicationConfigurable {
+  private DefaultListModel myQuickListsModel;
+  private JBList myQuickListsList;
+  private JPanel myRightPanel;
   private int myCurrentIndex = -1;
   private QuickListPanel myQuickListPanel = null;
   private final KeymapListener myKeymapListener;
 
-  public QuickListsPanel() {
-    super(new BorderLayout());
-    myKeymapListener = ApplicationManager.getApplication().getMessageBus().syncPublisher(KeymapListener.class);
-    Splitter splitter = new OnePixelSplitter(false, 0.3f);
-    splitter.setFirstComponent(createQuickListsPanel());
-    splitter.setSecondComponent(myRightPanel);
-    add(splitter, BorderLayout.CENTER);
+  private JPanel myRoot;
+
+  @Inject
+  public QuickListsPanel(Application application) {
+    myKeymapListener = application.getMessageBus().syncPublisher(KeymapListener.class);
   }
 
+  @RequiredUIAccess
   @Override
   public void reset() {
     myQuickListsModel.removeAllElements();
@@ -77,6 +82,7 @@ public class QuickListsPanel extends JPanel implements SearchableConfigurable, C
     });
   }
 
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     QuickList[] storedLists = QuickListsManager.getInstance().getAllQuickLists();
@@ -84,12 +90,15 @@ public class QuickListsPanel extends JPanel implements SearchableConfigurable, C
     return !Comparing.equal(storedLists, modelLists);
   }
 
+  @RequiredUIAccess
   @Override
   public void apply() {
     QuickListsManager.getInstance().setQuickLists(getCurrentQuickListIds());
   }
 
   private JPanel createQuickListsPanel() {
+    myQuickListsModel = new DefaultListModel();
+
     myQuickListsList = new JBList(myQuickListsModel);
     myQuickListsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     myQuickListsList.setCellRenderer(new MyQuickListCellRenderer());
@@ -134,8 +143,7 @@ public class QuickListsPanel extends JPanel implements SearchableConfigurable, C
 
   private void addDescriptionLabel() {
     final JLabel descLabel =
-            new JLabel("<html>Quick Lists allow you to define commonly used groups of actions (for example, refactoring or VCS actions)" +
-                       " and to assign keyboard shortcuts to such groups.</html>");
+            new JLabel("<html>Quick Lists allow you to define commonly used groups of actions (for example, refactoring or VCS actions)" + " and to assign keyboard shortcuts to such groups.</html>");
     descLabel.setBorder(new EmptyBorder(0, 25, 0, 25));
     myRightPanel.add(descLabel, BorderLayout.CENTER);
   }
@@ -219,11 +227,6 @@ public class QuickListsPanel extends JPanel implements SearchableConfigurable, C
     return "quick.lists";
   }
 
-  @Override
-  public Runnable enableSearch(String option) {
-    return null;
-  }
-
   private static class MyQuickListCellRenderer extends ColoredListCellRenderer {
     @Override
     protected void customizeCellRenderer(JList list, Object value, int index, boolean selected, boolean hasFocus) {
@@ -233,18 +236,35 @@ public class QuickListsPanel extends JPanel implements SearchableConfigurable, C
     }
   }
 
+  @Nonnull
   @Override
-  @Nls
   public String getDisplayName() {
     return "Quick Lists";
   }
 
+  @Nullable
   @Override
-  public JComponent createComponent() {
-    return this;
+  public String getParentId() {
+    return StandardConfigurableIds.GENERAL_GROUP;
   }
 
+  @RequiredUIAccess
+  @Override
+  public JComponent createComponent(@Nonnull Disposable uiDisposable) {
+    myRoot = new JPanel(new BorderLayout());
+    myRightPanel = new JPanel(new BorderLayout());
+
+    Splitter splitter = new OnePixelSplitter(false, 0.3f);
+    splitter.setFirstComponent(createQuickListsPanel());
+    splitter.setSecondComponent(myRightPanel);
+    myRoot.add(splitter, BorderLayout.CENTER);
+    return myRoot;
+  }
+
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
+    myRoot = null;
+    myRightPanel = null;
   }
 }

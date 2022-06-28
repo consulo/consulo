@@ -15,10 +15,7 @@
   -->
 <consulo-plugin>
   <extensions defaultExtensionNs="consulo">
-    <projectConfigurable displayName="Copyright"
-                         parentId="editor"
-                         dynamic="true"
-                         instance="consulo.ide.impl.copyright.impl.ui.CopyrightProjectConfigurable"/>
+
 
     <predefinedCopyright name="Apache 2" file="/copyright/Apache2.txt"/>
     <predefinedCopyright name="MIT" file="/copyright/MIT.txt"/>

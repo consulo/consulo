@@ -15,14 +15,18 @@
  */
 package consulo.ide.impl.compiler.setting;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.compiler.CompilerBundle;
 import consulo.compiler.CompilerManager;
-import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
+import consulo.configurable.ProjectConfigurable;
+import consulo.configurable.StandardConfigurableIds;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.project.Project;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.Nls;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 
@@ -30,7 +34,8 @@ import javax.swing.*;
  * @author VISTALL
  * @since 17:53/11.07.13
  */
-public class CompilerExcludedConfigurable implements Configurable {
+@ExtensionImpl
+public class CompilerExcludedConfigurable implements ProjectConfigurable {
   private ExcludedEntriesConfigurable myConfigurable;
 
   @Inject
@@ -70,6 +75,18 @@ public class CompilerExcludedConfigurable implements Configurable {
   @Nls
   @Override
   public String getDisplayName() {
-    return null;
+    return CompilerBundle.message("actions.exclude.from.compile.text");
+  }
+
+  @Nonnull
+  @Override
+  public String getId() {
+    return "project.propCompiler.excluded";
+  }
+
+  @Nullable
+  @Override
+  public String getParentId() {
+    return StandardConfigurableIds.COMPILER_GROUP;
   }
 }

@@ -15,32 +15,35 @@
  */
 package consulo.ide.impl.diff;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.configurable.ApplicationConfigurable;
+import consulo.configurable.SimpleConfigurableByProperties;
+import consulo.disposer.Disposable;
+import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.ide.impl.idea.diff.tools.external.ExternalDiffSettings;
 import consulo.ide.impl.idea.openapi.diff.DiffBundle;
-import consulo.fileChooser.FileChooserDescriptorFactory;
-import consulo.configurable.Configurable;
-import consulo.disposer.Disposable;
-import consulo.ui.ex.FileChooserTextBoxBuilder;
 import consulo.localize.LocalizeValue;
-import consulo.configurable.SimpleConfigurableByProperties;
 import consulo.platform.base.localize.DiffLocalize;
 import consulo.ui.CheckBox;
 import consulo.ui.Component;
 import consulo.ui.HtmlLabel;
 import consulo.ui.TextBox;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.FileChooserTextBoxBuilder;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.FormBuilder;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 11/29/2020
  */
-public class ExternalDiffSettingsConfigurable extends SimpleConfigurableByProperties implements Configurable {
+@ExtensionImpl
+public class ExternalDiffSettingsConfigurable extends SimpleConfigurableByProperties implements ApplicationConfigurable {
   private final Provider<ExternalDiffSettings> myExternalDiffSettings;
 
   @Inject
@@ -111,5 +114,23 @@ public class ExternalDiffSettingsConfigurable extends SimpleConfigurableByProper
     rootLayout.add(HtmlLabel.create(LocalizeValue.localizeTODO(
             "Different merge tools have different parameters. It's important to specify all necessary parameters in proper order<br> <b>%1</b> - left (Local changes)<br> <b>%2</b> - base (Current version without local changes)<br> <b>%3</b> - right (Server content)<br> <b>%4</b> - output path")));
     return rootLayout;
+  }
+
+  @Nonnull
+  @Override
+  public String getId() {
+    return "diff.external";
+  }
+
+  @Nullable
+  @Override
+  public String getParentId() {
+    return "diff.base";
+  }
+
+  @Nonnull
+  @Override
+  public String getDisplayName() {
+    return "External Diff Tools";
   }
 }

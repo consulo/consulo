@@ -15,9 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.configurable;
 
-import consulo.configurable.Configurable;
-import consulo.configurable.ConfigurationException;
-import consulo.configurable.SearchableConfigurable;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.configurable.*;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
 import consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager;
@@ -38,7 +37,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class VcsManagerConfigurable extends SearchableConfigurable.Parent.Abstract implements Configurable.NoScroll {
+@ExtensionImpl
+public class VcsManagerConfigurable extends SearchableConfigurable.Parent.Abstract implements Configurable.NoScroll, ProjectConfigurable {
   private final Project myProject;
   private VcsDirectoryConfigurationPanel myMappings;
   private VcsGeneralConfigurationPanel myGeneralPanel;
@@ -50,8 +50,8 @@ public class VcsManagerConfigurable extends SearchableConfigurable.Parent.Abstra
 
   @RequiredUIAccess
   @Override
-  public JComponent createComponent(@Nonnull Disposable uiDiposable) {
-    myMappings = new VcsDirectoryConfigurationPanel(myProject, uiDiposable);
+  public JComponent createComponent(@Nonnull Disposable uiDisposable) {
+    myMappings = new VcsDirectoryConfigurationPanel(myProject, uiDisposable);
     if (myGeneralPanel != null) {
       addListenerToGeneralPanel();
     }
@@ -96,6 +96,7 @@ public class VcsManagerConfigurable extends SearchableConfigurable.Parent.Abstra
     myMappings = null;
   }
 
+  @Nonnull
   @Override
   public String getDisplayName() {
     return VcsBundle.message("version.control.main.configurable.name");
@@ -104,13 +105,7 @@ public class VcsManagerConfigurable extends SearchableConfigurable.Parent.Abstra
   @Override
   @Nonnull
   public String getId() {
-    return getDefaultConfigurableIdValue(this);
-  }
-
-  @Nonnull
-  private static String getDefaultConfigurableIdValue(final Configurable configurable) {
-    final String helpTopic = configurable.getHelpTopic();
-    return helpTopic == null ? configurable.getClass().getName() : helpTopic;
+    return StandardConfigurableIds.VCS_GROUP;
   }
 
   @Override
@@ -145,12 +140,12 @@ public class VcsManagerConfigurable extends SearchableConfigurable.Parent.Abstra
       result.add(new ChangelistConflictConfigurable(ChangeListManagerImpl.getInstanceImpl(myProject)));
     }
 
-    for (VcsConfigurableProvider provider : VcsConfigurableProvider.EP_NAME.getExtensionList()) {
+    VcsConfigurableProvider.EP_NAME.forEachExtensionSafe(provider -> {
       final Configurable configurable = provider.getConfigurable(myProject);
       if (configurable != null) {
         result.add(configurable);
       }
-    }
+    });
 
     for (AbstractVcs<?> vcs : ProjectLevelVcsManager.getInstance(myProject).getAllSupportedVcss()) {
       Configurable configurable = vcs.getConfigurable();
