@@ -16,11 +16,8 @@
 
 package consulo.ide.impl.psi.injection;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ServiceAPI;
-import consulo.annotation.component.ServiceImpl;
-import consulo.ide.ServiceManager;
-import jakarta.inject.Singleton;
+import consulo.application.Application;
+import consulo.component.extension.ExtensionPointCacheKey;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -33,34 +30,36 @@ import java.util.Set;
  * @author VISTALL
  * @since 2019-10-23
  */
-@Singleton
-@ServiceAPI(ComponentScope.APPLICATION)
-@ServiceImpl
 public class LanguageSupportCache {
+  private static final LanguageSupportCache ourInstance = new LanguageSupportCache();
+
   public static LanguageSupportCache getInstance() {
-    return ServiceManager.getService(LanguageSupportCache.class);
+    return ourInstance;
   }
 
-  private Map<String, LanguageInjectionSupport> myInjectors = new HashMap<>();
+  private static final ExtensionPointCacheKey<LanguageInjectionSupport, Map<String, LanguageInjectionSupport>> CACHE_KEY =
+          ExtensionPointCacheKey.create("LanguageInjectionSupportCache", extensions -> {
+            Map<String, LanguageInjectionSupport> injectors = new HashMap<>();
 
-  public LanguageSupportCache() {
-    for (LanguageInjectionSupport support : LanguageInjectionSupport.EP_NAME.getExtensionList()) {
-      myInjectors.put(support.getId(), support);
-    }
-  }
+            for (LanguageInjectionSupport support : extensions) {
+              injectors.put(support.getId(), support);
+            }
+            return injectors;
+          });
+
 
   @Nonnull
   public Collection<LanguageInjectionSupport> getAllSupports() {
-    return myInjectors.values();
+    return Application.get().getExtensionPoint(LanguageInjectionSupport.class).getOrBuildCache(CACHE_KEY).values();
   }
 
   @Nullable
   public LanguageInjectionSupport getSupport(String id) {
-    return myInjectors.get(id);
+    return Application.get().getExtensionPoint(LanguageInjectionSupport.class).getOrBuildCache(CACHE_KEY).get(id);
   }
 
   @Nonnull
   public Set<String> getAllSupportIds() {
-    return myInjectors.keySet();
+    return Application.get().getExtensionPoint(LanguageInjectionSupport.class).getOrBuildCache(CACHE_KEY).keySet();
   }
 }

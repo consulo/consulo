@@ -21,7 +21,9 @@ import consulo.application.AllIcons;
 import consulo.configurable.ProjectConfigurable;
 import consulo.configurable.StandardConfigurableIds;
 import consulo.dataContext.DataManager;
+import consulo.disposer.Disposable;
 import consulo.language.editor.LangDataKeys;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleColoredText;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.action.DefaultActionGroup;
@@ -93,13 +95,13 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
   private final Project myProject;
   private final CfgInfo[] myInfos;
 
-  private final JPanel myRoot;
-  private final InjectionsTable myInjectionsTable;
+  private JPanel myRoot;
+  private InjectionsTable myInjectionsTable;
   private final Map<String, LanguageInjectionSupport> mySupports = new HashMap<String, LanguageInjectionSupport>();
   private final Map<String, AnAction> myEditActions = new HashMap<String, AnAction>();
   private final List<AnAction> myAddActions = new ArrayList<AnAction>();
-  private final ActionToolbar myToolbar;
-  private final JLabel myCountLabel;
+  private ActionToolbar myToolbar;
+  private JLabel myCountLabel;
 
   private Configurable[] myConfigurables;
   private Configuration myConfiguration;
@@ -117,26 +119,6 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
     myInfos = configuration instanceof ProjectInjectionConfiguration
               ? new CfgInfo[]{new CfgInfo(((ProjectInjectionConfiguration)configuration).getParentConfiguration(), "global"), currentInfo}
               : new CfgInfo[]{currentInfo};
-
-    myRoot = new JPanel(new BorderLayout());
-
-    myInjectionsTable = new InjectionsTable(getInjInfoList(myInfos));
-    myInjectionsTable.getEmptyText().setText("No injections configured");
-    final JPanel tablePanel = new JPanel(new BorderLayout());
-
-    tablePanel.add(ScrollPaneFactory.createScrollPane(myInjectionsTable), BorderLayout.CENTER);
-
-    final DefaultActionGroup group = createActions();
-
-    myToolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true);
-    myToolbar.setTargetComponent(myInjectionsTable);
-    myRoot.add(myToolbar.getComponent(), BorderLayout.NORTH);
-    myRoot.add(tablePanel, BorderLayout.CENTER);
-    myCountLabel = new JLabel();
-    myCountLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-    myCountLabel.setForeground(SimpleTextAttributes.GRAY_ITALIC_ATTRIBUTES.getFgColor());
-    myRoot.add(myCountLabel, BorderLayout.SOUTH);
-    updateCountLabel();
   }
 
   private DefaultActionGroup createActions() {
@@ -168,17 +150,20 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
 
     final DefaultActionGroup group = new DefaultActionGroup();
     final AnAction addAction = new AnAction("Add", "Add", IconUtil.getAddIcon()) {
+      @RequiredUIAccess
       @Override
       public void update(final AnActionEvent e) {
         e.getPresentation().setEnabled(!myAddActions.isEmpty());
       }
 
+      @RequiredUIAccess
       @Override
       public void actionPerformed(final AnActionEvent e) {
         performAdd(e);
       }
     };
     final AnAction removeAction = new AnAction("Remove", "Remove", IconUtil.getRemoveIcon()) {
+      @RequiredUIAccess
       @Override
       public void update(final AnActionEvent e) {
         boolean enabled = false;
@@ -191,6 +176,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
         e.getPresentation().setEnabled(enabled);
       }
 
+      @RequiredUIAccess
       @Override
       public void actionPerformed(final AnActionEvent e) {
         performRemove();
@@ -198,6 +184,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
     };
 
     final AnAction editAction = new AnAction("Edit", "Edit", AllIcons.Actions.Properties) {
+      @RequiredUIAccess
       @Override
       public void update(final AnActionEvent e) {
         final AnAction action = getEditAction();
@@ -207,12 +194,14 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
         }
       }
 
+      @RequiredUIAccess
       @Override
       public void actionPerformed(final AnActionEvent e) {
         performEditAction(e);
       }
     };
     final AnAction copyAction = new AnAction("Duplicate", "Duplicate", AllIcons.Actions.Copy) {
+      @RequiredUIAccess
       @Override
       public void update(final AnActionEvent e) {
         final AnAction action = getEditAction();
@@ -222,6 +211,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
         }
       }
 
+      @RequiredUIAccess
       @Override
       public void actionPerformed(final AnActionEvent e) {
         final InjInfo injection = getSelectedInjection();
@@ -242,12 +232,14 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
 
     group.addSeparator();
     group.add(new AnAction("Enable Selected Injections", "Enable Selected Injections", AllIcons.Actions.Selectall) {
+      @RequiredUIAccess
       @Override
       public void actionPerformed(final AnActionEvent e) {
         performSelectedInjectionsEnabled(true);
       }
     });
     group.add(new AnAction("Disable Selected Injections", "Disable Selected Injections", AllIcons.Actions.Unselectall) {
+      @RequiredUIAccess
       @Override
       public void actionPerformed(final AnActionEvent e) {
         performSelectedInjectionsEnabled(false);
@@ -255,6 +247,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
     });
 
     new AnAction("Toggle") {
+      @RequiredUIAccess
       @Override
       public void actionPerformed(final AnActionEvent e) {
         performToggleAction();
@@ -264,6 +257,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
     if (myInfos.length > 1) {
       group.addSeparator();
       final AnAction shareAction = new AnAction("Make Global", null, AllIcons.ToolbarDecorator.Import) {
+        @RequiredUIAccess
         @Override
         public void actionPerformed(final AnActionEvent e) {
           final List<InjInfo> injections = getSelectedInjections();
@@ -286,6 +280,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
           TableUtil.selectRows(myInjectionsTable, selectedRows);
         }
 
+        @RequiredUIAccess
         @Override
         public void update(final AnActionEvent e) {
           final CfgInfo cfg = getTargetCfgInfo(getSelectedInjections());
@@ -324,6 +319,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
     }
     group.addSeparator();
     group.add(new AnAction("Import", "Import", AllIcons.Actions.Install) {
+      @RequiredUIAccess
       @Override
       public void actionPerformed(final AnActionEvent e) {
         doImportAction(e.getDataContext());
@@ -331,6 +327,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
       }
     });
     group.add(new AnAction("Export", "Export", AllIcons.Actions.Export) {
+      @RequiredUIAccess
       @Override
       public void actionPerformed(final AnActionEvent e) {
         final List<BaseInjection> injections = getInjectionList(getSelectedInjections());
@@ -351,6 +348,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
         }
       }
 
+      @RequiredUIAccess
       @Override
       public void update(final AnActionEvent e) {
         e.getPresentation().setEnabled(!getSelectedInjections().isEmpty());
@@ -471,11 +469,32 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
     });
   }
 
+  @RequiredUIAccess
   @Override
-  public JComponent createComponent() {
+  public JComponent createComponent(Disposable uiDisposable) {
+    myRoot = new JPanel(new BorderLayout());
+
+    myInjectionsTable = new InjectionsTable(getInjInfoList(myInfos));
+    myInjectionsTable.getEmptyText().setText("No injections configured");
+    final JPanel tablePanel = new JPanel(new BorderLayout());
+
+    tablePanel.add(ScrollPaneFactory.createScrollPane(myInjectionsTable), BorderLayout.CENTER);
+
+    final DefaultActionGroup group = createActions();
+
+    myToolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true);
+    myToolbar.setTargetComponent(myInjectionsTable);
+    myRoot.add(myToolbar.getComponent(), BorderLayout.NORTH);
+    myRoot.add(tablePanel, BorderLayout.CENTER);
+    myCountLabel = new JLabel();
+    myCountLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+    myCountLabel.setForeground(SimpleTextAttributes.GRAY_ITALIC_ATTRIBUTES.getFgColor());
+    myRoot.add(myCountLabel, BorderLayout.SOUTH);
+    updateCountLabel();
     return myRoot;
   }
 
+  @RequiredUIAccess
   @Override
   public void reset() {
     for (CfgInfo info : myInfos) {
@@ -485,10 +504,15 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
     updateCountLabel();
   }
 
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
+    myRoot = null;
+    myInjectionsTable = null;
+    myToolbar = null;
   }
 
+  @RequiredUIAccess
   @Override
   public void apply() {
     for (CfgInfo info : myInfos) {
@@ -497,6 +521,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
     reset();
   }
 
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     for (CfgInfo info : myInfos) {
@@ -859,6 +884,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
         return super.isFileVisible(file, showHiddenFiles) && (file.isDirectory() || "xml".equals(file.getExtension()) || file.getFileType() instanceof ArchiveFileType);
       }
 
+      @RequiredUIAccess
       @Override
       public boolean isFileSelectable(VirtualFile file) {
         return "xml".equalsIgnoreCase(file.getExtension());

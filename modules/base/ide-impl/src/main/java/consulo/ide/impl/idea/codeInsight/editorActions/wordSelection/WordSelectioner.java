@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.codeInsight.editorActions.wordSelection;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.component.extension.ExtensionPointName;
+import consulo.language.editor.action.WordSelectionerFilter;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiWhiteSpace;

@@ -18,7 +18,6 @@ import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.SelectionModel;
 import consulo.language.Language;
-import consulo.ide.impl.idea.lang.LanguageSurrounders;
 import consulo.ide.impl.idea.lang.folding.CustomFoldingSurroundDescriptor;
 import consulo.language.editor.surroundWith.SurroundDescriptor;
 import consulo.language.editor.surroundWith.Surrounder;
@@ -107,8 +106,8 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
     assert element1 != null;
     final Language l = element1.getParent().getLanguage();
 
-    List<SurroundDescriptor> surroundDescriptors = new ArrayList<>(LanguageSurrounders.INSTANCE.allForLanguage(l));
-    if (l != baseLanguage) surroundDescriptors.addAll(LanguageSurrounders.INSTANCE.allForLanguage(baseLanguage));
+    List<SurroundDescriptor> surroundDescriptors = new ArrayList<>(SurroundDescriptor.forLanguage(l));
+    if (l != baseLanguage) surroundDescriptors.addAll(SurroundDescriptor.forLanguage(baseLanguage));
     surroundDescriptors.add(CustomFoldingSurroundDescriptor.INSTANCE);
 
     int exclusiveCount = 0;

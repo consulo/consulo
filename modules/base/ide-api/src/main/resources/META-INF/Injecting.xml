@@ -1,6 +1,5 @@
 <consulo-plugin>
   <extensionPoints>
-    <extensionPoint name="injectionLanguageSupport" interface="consulo.ide.impl.psi.injection.LanguageInjectionSupport"/>
     <extensionPoint name="injectionConfig" beanClass="consulo.ide.impl.intelliLang.inject.LanguageInjectionConfigBean"/>
   </extensionPoints>
 
@@ -20,7 +19,7 @@
 
 
 
-    <projectConfigurable displayName="Language Injections" id="IntelliLang.Configuration" parentId="editor" instance="consulo.ide.impl.intelliLang.InjectionsSettingsUI" nonDefaultProject="true"/>
+    <!--<projectConfigurable displayName="Language Injections" id="IntelliLang.Configuration" parentId="editor" instance="consulo.ide.impl.intelliLang.InjectionsSettingsUI" nonDefaultProject="true"/>-->
 
     <multiHostInjector forClass="consulo.language.psi.PsiLanguageInjectionHost"
                        implementationClass="consulo.ide.impl.intelliLang.inject.CommentLanguageInjector"/>

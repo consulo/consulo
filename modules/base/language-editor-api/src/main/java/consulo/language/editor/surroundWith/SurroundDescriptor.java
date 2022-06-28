@@ -15,10 +15,20 @@
  */
 package consulo.language.editor.surroundWith;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.application.Application;
+import consulo.component.extension.ExtensionPointCacheKey;
+import consulo.language.Language;
+import consulo.language.extension.ByLanguageValue;
+import consulo.language.extension.LanguageExtension;
+import consulo.language.extension.LanguageOneToMany;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 /**
  * Defines a code fragment type on which the Surround With action can be used for files
@@ -28,9 +38,16 @@ import javax.annotation.Nonnull;
  * is prompted to choose a specific surrounder for that surround descriptor.
  *
  * @author ven
- * @see consulo.ide.impl.idea.lang.LanguageSurrounders
  */
-public interface SurroundDescriptor {
+@ExtensionAPI(ComponentScope.APPLICATION)
+public interface SurroundDescriptor extends LanguageExtension {
+  ExtensionPointCacheKey<SurroundDescriptor, ByLanguageValue<List<SurroundDescriptor>>> KEY = ExtensionPointCacheKey.create("SurroundDescriptor", LanguageOneToMany.build(false));
+
+  @Nonnull
+  static List<SurroundDescriptor> forLanguage(@Nonnull Language language) {
+    return Application.get().getExtensionPoint(SurroundDescriptor.class).getOrBuildCache(KEY).requiredGet(language);
+  }
+
   /**
    * Returns the list of elements which will be included in the surrounded region for
    * the specified selection in the specified file, or an empty array if no surrounders
@@ -42,6 +59,7 @@ public interface SurroundDescriptor {
    * @return the elements to be surrounded, or an empty array if cannot surround
    */
   @Nonnull
+  @RequiredReadAction
   PsiElement[] getElementsToSurround(PsiFile file, int startOffset, int endOffset);
 
   /**

@@ -15,9 +15,11 @@
  */
 package consulo.ide.impl.idea.lang.folding;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
 import consulo.codeEditor.Editor;
+import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.Commenter;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
@@ -36,6 +38,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiWhiteSpace;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -46,20 +49,17 @@ import java.util.List;
  * @author Rustam Vishnyakov
  */
 public class CustomFoldingSurroundDescriptor implements SurroundDescriptor {
+  private static final ExtensionPointCacheKey<CustomFoldingProvider, Surrounder[]> CUSTOM_SURROUNDERS = ExtensionPointCacheKey.create("CUSTOM_SURROUNDERS", customFoldingProviders -> {
+    List<CustomFoldingRegionSurrounder> surrounderList = new ArrayList<CustomFoldingRegionSurrounder>();
+    CustomFoldingProvider.EP_NAME.forEachExtensionSafe(it -> surrounderList.add(new CustomFoldingRegionSurrounder(it)));
+    return surrounderList.toArray(new CustomFoldingRegionSurrounder[surrounderList.size()]);
+  });
 
   public final static CustomFoldingSurroundDescriptor INSTANCE = new CustomFoldingSurroundDescriptor();
-  public final static CustomFoldingRegionSurrounder[] SURROUNDERS;
 
   private final static String DEFAULT_DESC_TEXT = "Description";
 
-  static {
-    List<CustomFoldingRegionSurrounder> surrounderList = new ArrayList<CustomFoldingRegionSurrounder>();
-    for (CustomFoldingProvider provider : CustomFoldingProvider.EP_NAME.getExtensionList()) {
-      surrounderList.add(new CustomFoldingRegionSurrounder(provider));
-    }
-    SURROUNDERS = surrounderList.toArray(new CustomFoldingRegionSurrounder[surrounderList.size()]);
-  }
-
+  @RequiredReadAction
   @Nonnull
   @Override
   public PsiElement[] getElementsToSurround(PsiFile file, int startOffset, int endOffset) {
@@ -78,8 +78,8 @@ public class CustomFoldingSurroundDescriptor implements SurroundDescriptor {
         if (endElement != null) {
           PsiElement commonParent = startElement.getParent();
           if (endElement.getParent() == commonParent) {
-            if (startElement == endElement) return new PsiElement[] {startElement};
-            return new PsiElement[] {startElement, endElement};
+            if (startElement == endElement) return new PsiElement[]{startElement};
+            return new PsiElement[]{startElement, endElement};
           }
         }
       }
@@ -138,12 +138,18 @@ public class CustomFoldingSurroundDescriptor implements SurroundDescriptor {
   @Nonnull
   @Override
   public Surrounder[] getSurrounders() {
-    return SURROUNDERS;
+    return Application.get().getExtensionPoint(CustomFoldingProvider.class).getOrBuildCache(CUSTOM_SURROUNDERS);
   }
 
   @Override
   public boolean isExclusive() {
     return false;
+  }
+
+  @Nonnull
+  @Override
+  public Language getLanguage() {
+    return Language.ANY;
   }
 
   private static class CustomFoldingRegionSurrounder implements Surrounder {
@@ -169,8 +175,7 @@ public class CustomFoldingSurroundDescriptor implements SurroundDescriptor {
     }
 
     @Override
-    public TextRange surroundElements(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiElement[] elements)
-      throws IncorrectOperationException {
+    public TextRange surroundElements(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiElement[] elements) throws IncorrectOperationException {
       if (elements.length == 0) return null;
       PsiElement firstElement = elements[0];
       PsiElement lastElement = elements[elements.length - 1];
@@ -200,10 +205,8 @@ public class CustomFoldingSurroundDescriptor implements SurroundDescriptor {
       rangeToSelect = rangeToSelect.shiftRight(prefixLength);
       PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
       documentManager.commitDocument(documentManager.getDocument(psiFile));
-      adjustLineIndent(project, psiFile, language,
-                       new TextRange(endOffset + delta - endString.length(), endOffset + delta));
-      adjustLineIndent(project, psiFile, language,
-                       new TextRange(startOffset, startOffset + startString.length()));
+      adjustLineIndent(project, psiFile, language, new TextRange(endOffset + delta - endString.length(), endOffset + delta));
+      adjustLineIndent(project, psiFile, language, new TextRange(startOffset, startOffset + startString.length()));
       return rangeToSelect;
     }
 

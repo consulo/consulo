@@ -2,17 +2,19 @@
 
 package consulo.ide.impl.idea.codeInsight.generation.actions;
 
-import consulo.language.editor.action.CodeInsightActionHandler;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.codeInsight.actions.BaseCodeInsightAction;
 import consulo.ide.impl.idea.codeInsight.generation.surroundWith.SurroundWithHandler;
-import consulo.language.editor.template.context.TemplateActionContext;
 import consulo.ide.impl.idea.codeInsight.template.impl.TemplateManagerImpl;
 import consulo.language.Language;
-import consulo.ide.impl.idea.lang.LanguageSurrounders;
-import consulo.codeEditor.Editor;
-import consulo.project.Project;
+import consulo.language.editor.action.CodeInsightActionHandler;
+import consulo.language.editor.surroundWith.SurroundDescriptor;
+import consulo.language.editor.template.context.TemplateActionContext;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
+import consulo.project.Project;
+
 import javax.annotation.Nonnull;
 
 public class SurroundWithAction extends BaseCodeInsightAction {
@@ -32,13 +34,14 @@ public class SurroundWithAction extends BaseCodeInsightAction {
   }
 
   @Override
+  @RequiredReadAction
   protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull final PsiFile file) {
     final Language language = file.getLanguage();
-    if (!LanguageSurrounders.INSTANCE.allForLanguage(language).isEmpty()) {
+    if (!SurroundDescriptor.forLanguage(language).isEmpty()) {
       return true;
     }
     final PsiFile baseFile = PsiUtilCore.getTemplateLanguageFile(file);
-    if (baseFile != null && baseFile != file && !LanguageSurrounders.INSTANCE.allForLanguage(baseFile.getLanguage()).isEmpty()) {
+    if (baseFile != null && baseFile != file && !SurroundDescriptor.forLanguage(baseFile.getLanguage()).isEmpty()) {
       return true;
     }
 

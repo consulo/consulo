@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.psi.injection;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.ide.impl.idea.openapi.util.Factory;
 import consulo.ui.ex.SimpleColoredText;
 import consulo.ide.impl.idea.util.Consumer;
@@ -39,8 +41,8 @@ import javax.annotation.Nullable;
 /**
  * @author Gregory.Shrago
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class LanguageInjectionSupport {
-  public static final ExtensionPointName<LanguageInjectionSupport> EP_NAME = ExtensionPointName.create("consulo.injectionLanguageSupport");
   public static final ExtensionPointName<LanguageInjectionConfigBean> CONFIG_EP_NAME = ExtensionPointName.create("consulo.injectionConfig");
 
 
