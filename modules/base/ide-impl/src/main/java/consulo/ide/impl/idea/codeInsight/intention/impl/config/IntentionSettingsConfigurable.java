@@ -16,6 +16,8 @@
 
 package consulo.ide.impl.idea.codeInsight.intention.impl.config;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.configurable.ApplicationConfigurable;
 import consulo.configurable.StandardConfigurableIds;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.configurable.Configurable;
@@ -27,7 +29,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 
-public class IntentionSettingsConfigurable implements SearchableConfigurable, Configurable.NoMargin, Configurable.NoScroll, Configurable.HoldPreferredFocusedComponent {
+@ExtensionImpl
+public class IntentionSettingsConfigurable implements ApplicationConfigurable, SearchableConfigurable, Configurable.NoMargin, Configurable.NoScroll, Configurable.HoldPreferredFocusedComponent {
   private IntentionSettingsPanel myPanel;
 
   @RequiredUIAccess

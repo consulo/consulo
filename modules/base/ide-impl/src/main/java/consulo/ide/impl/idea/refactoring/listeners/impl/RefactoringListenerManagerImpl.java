@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.refactoring.listeners.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.refactoring.listeners.impl.impl.RefactoringTransactionImpl;
 import consulo.language.editor.refactoring.RefactoringTransaction;
 import consulo.language.editor.refactoring.event.RefactoringElementListenerProvider;
@@ -32,6 +33,7 @@ import java.util.List;
  * @author dsl
  */
 @Singleton
+@ServiceImpl
 public class RefactoringListenerManagerImpl extends RefactoringListenerManagerEx {
   private final List<RefactoringElementListenerProvider> myListenerProviders = Lists.newLockFreeCopyOnWriteList();
   private final Project myProject;

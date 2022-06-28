@@ -16,31 +16,29 @@
 
 package consulo.ide.impl.idea.ide.hierarchy;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.AllIcons;
-import consulo.ui.ex.toolWindow.ContentManagerWatcher;
+import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.ide.ServiceManager;
 import consulo.project.Project;
-import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.content.ContentManager;
-import consulo.component.persist.PersistentStateComponent;
+import consulo.ui.ex.toolWindow.ContentManagerWatcher;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import jakarta.inject.Inject;
-
 import jakarta.inject.Singleton;
 
 @Singleton
-@State(
-  name="HierarchyBrowserManager",
-  storages= {
-    @Storage(
-      file = StoragePathMacros.WORKSPACE_FILE
-    )}
-)
+@State(name = "HierarchyBrowserManager", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
+@ServiceAPI(ComponentScope.PROJECT)
+@ServiceImpl
 public final class HierarchyBrowserManager implements PersistentStateComponent<HierarchyBrowserManager.State> {
   public static class State {
     public boolean IS_AUTOSCROLL_TO_SOURCE;
@@ -55,11 +53,11 @@ public final class HierarchyBrowserManager implements PersistentStateComponent<H
 
   @Inject
   public HierarchyBrowserManager(final Project project) {
-    final ToolWindowManager toolWindowManager=ToolWindowManager.getInstance(project);
+    final ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
     final ToolWindow toolWindow = toolWindowManager.registerToolWindow(ToolWindowId.HIERARCHY, true, ToolWindowAnchor.RIGHT, project);
     myContentManager = toolWindow.getContentManager();
     toolWindow.setIcon(AllIcons.Toolwindows.ToolWindowHierarchy);
-    new ContentManagerWatcher(toolWindow,myContentManager);
+    new ContentManagerWatcher(toolWindow, myContentManager);
   }
 
   public final ContentManager getContentManager() {

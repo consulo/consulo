@@ -16,6 +16,9 @@
 
 package consulo.execution.configuration.log;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
@@ -23,7 +26,6 @@ import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.logging.Logger;
 import consulo.process.ProcessOutputTypes;
 import consulo.project.Project;
-import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
@@ -48,6 +50,8 @@ import java.util.regex.Pattern;
  */
 @Singleton
 @State(name = "LogFilters", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
+@ServiceAPI(ComponentScope.PROJECT)
+@ServiceImpl
 public class LogConsolePreferences extends LogFilterRegistrar {
   private final SortedMap<LogFilter, Boolean> myRegisteredLogFilters = new TreeMap<LogFilter, Boolean>((o1, o2) -> -1);
   @NonNls

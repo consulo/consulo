@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018 consulo.io
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.language.codeStyle;
+package consulo.language.copyright;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ServiceAPI;
-import consulo.ide.impl.idea.codeStyle.CodeStyleFacade;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.localize.LocalizeValue;
+
+import javax.annotation.Nonnull;
+import java.util.Map;
 
 /**
  * @author VISTALL
- * @since 2018-08-24
+ * @since 28-Jun-22
  */
-@ServiceAPI(ComponentScope.PROJECT)
-public interface ProjectCodeStyleFacade extends CodeStyleFacade
-{
+@ExtensionAPI(ComponentScope.APPLICATION)
+public interface PredefinedCopyrightProvider {
+  /**
+   * Map of copyright name and text
+   */
+  @Nonnull
+  Map<LocalizeValue, String> getCopyrightTexts();
 }

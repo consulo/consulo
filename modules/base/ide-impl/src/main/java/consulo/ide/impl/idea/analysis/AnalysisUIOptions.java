@@ -16,6 +16,9 @@
 
 package consulo.ide.impl.idea.analysis;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.ServiceManager;
 import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.ide.impl.idea.codeInspection.ui.InspectionResultsView;
@@ -39,13 +42,9 @@ import jakarta.inject.Singleton;
  * Date: 28-Feb-2006
  */
 @Singleton
-@State(
-  name = "AnalysisUIOptions",
-  storages = {
-    @Storage(
-      file = StoragePathMacros.WORKSPACE_FILE
-    )}
-)
+@State(name = "AnalysisUIOptions", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
+@ServiceAPI(ComponentScope.PROJECT)
+@ServiceImpl
 public class AnalysisUIOptions implements PersistentStateComponent<AnalysisUIOptions> {
   public static AnalysisUIOptions getInstance(Project project) {
     return ServiceManager.getService(project, AnalysisUIOptions.class);
@@ -95,8 +94,7 @@ public class AnalysisUIOptions implements PersistentStateComponent<AnalysisUIOpt
   }
 
   public AnAction createGroupBySeverityAction(final InspectionResultsView view) {
-    return new ToggleAction(InspectionsBundle.message("inspection.action.group.by.severity"),
-                            InspectionsBundle.message("inspection.action.group.by.severity.description"),
+    return new ToggleAction(InspectionsBundle.message("inspection.action.group.by.severity"), InspectionsBundle.message("inspection.action.group.by.severity.description"),
                             AllIcons.Nodes.SortBySeverity) {
 
 
@@ -113,10 +111,8 @@ public class AnalysisUIOptions implements PersistentStateComponent<AnalysisUIOpt
     };
   }
 
-  public AnAction createFilterResolvedItemsAction(final InspectionResultsView view){
-    return new ToggleAction(InspectionsBundle.message("inspection.filter.resolved.action.text"),
-                            InspectionsBundle.message("inspection.filter.resolved.action.text"),
-                            AllIcons.General.Filter) {
+  public AnAction createFilterResolvedItemsAction(final InspectionResultsView view) {
+    return new ToggleAction(InspectionsBundle.message("inspection.filter.resolved.action.text"), InspectionsBundle.message("inspection.filter.resolved.action.text"), AllIcons.General.Filter) {
 
 
       @Override
@@ -133,9 +129,7 @@ public class AnalysisUIOptions implements PersistentStateComponent<AnalysisUIOpt
   }
 
   public AnAction createShowOutdatedProblemsAction(final InspectionResultsView view) {
-    return new ToggleAction(InspectionsBundle.message("inspection.filter.show.diff.action.text"),
-                            InspectionsBundle.message("inspection.filter.show.diff.action.text"),
-                            AllIcons.Actions.Diff) {
+    return new ToggleAction(InspectionsBundle.message("inspection.filter.show.diff.action.text"), InspectionsBundle.message("inspection.filter.show.diff.action.text"), AllIcons.Actions.Diff) {
 
 
       @Override
@@ -155,9 +149,7 @@ public class AnalysisUIOptions implements PersistentStateComponent<AnalysisUIOpt
   }
 
   public AnAction createGroupByDirectoryAction(final InspectionResultsView view) {
-    return new ToggleAction("Group by directory",
-                            "Group by directory",
-                            AllIcons.Actions.GroupByPackage) {
+    return new ToggleAction("Group by directory", "Group by directory", AllIcons.Actions.GroupByPackage) {
 
       @Override
       public boolean isSelected(AnActionEvent e) {
@@ -173,8 +165,7 @@ public class AnalysisUIOptions implements PersistentStateComponent<AnalysisUIOpt
   }
 
   public AnAction createShowDiffOnlyAction(final InspectionResultsView view) {
-    return new ToggleAction(InspectionsBundle.message("inspection.filter.show.diff.only.action.text"),
-                            InspectionsBundle.message("inspection.filter.show.diff.only.action.text"),
+    return new ToggleAction(InspectionsBundle.message("inspection.filter.show.diff.only.action.text"), InspectionsBundle.message("inspection.filter.show.diff.only.action.text"),
                             AllIcons.Actions.ShowChangesOnly) {
 
 

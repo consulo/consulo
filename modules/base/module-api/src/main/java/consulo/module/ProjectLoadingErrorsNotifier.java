@@ -16,6 +16,8 @@
 
 package consulo.module;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 
 import javax.annotation.Nonnull;
@@ -24,6 +26,7 @@ import java.util.Collection;
 /**
  * @author nik
  */
+@ServiceAPI(ComponentScope.PROJECT)
 public abstract class ProjectLoadingErrorsNotifier {
 
   public static ProjectLoadingErrorsNotifier getInstance(@Nonnull Project project) {

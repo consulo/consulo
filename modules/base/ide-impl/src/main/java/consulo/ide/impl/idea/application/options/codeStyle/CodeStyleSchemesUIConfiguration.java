@@ -15,19 +15,21 @@
  */
 package consulo.ide.impl.idea.application.options.codeStyle;
 
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
+import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.ide.ServiceManager;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.util.xml.serializer.XmlSerializerUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import consulo.component.persist.PersistentStateComponent;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Singleton;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -35,10 +37,9 @@ import java.net.URL;
  * @author Rustam Vishnyakov
  */
 @Singleton
-@State(
-        name = "CodeStyleSchemesUIConfiguration",
-        storages = {@Storage(
-                file = StoragePathMacros.APP_CONFIG + "/other.xml")})
+@State(name = "CodeStyleSchemesUIConfiguration", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml")})
+@ServiceAPI(ComponentScope.APPLICATION)
+@ServiceImpl
 public class CodeStyleSchemesUIConfiguration implements PersistentStateComponent<CodeStyleSchemesUIConfiguration> {
 
   public String RECENT_IMPORT_FILE_LOCATION = "";

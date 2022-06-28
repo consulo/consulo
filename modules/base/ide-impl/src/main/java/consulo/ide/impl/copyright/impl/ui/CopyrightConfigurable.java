@@ -17,15 +17,17 @@
 package consulo.ide.impl.copyright.impl.ui;
 
 import consulo.application.AllIcons;
+import consulo.application.Application;
 import consulo.application.WriteAction;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
+import consulo.component.extension.ExtensionPoint;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.document.Document;
-import consulo.ide.impl.copyright.impl.PredefinedCopyrightTextEP;
 import consulo.ide.impl.idea.openapi.ui.NamedConfigurable;
 import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.language.copyright.PredefinedCopyrightProvider;
 import consulo.language.copyright.config.CopyrightManager;
 import consulo.language.copyright.config.CopyrightProfile;
 import consulo.language.copyright.internal.CopyrightEditorUtil;
@@ -43,6 +45,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
+import java.util.Map;
 
 public class CopyrightConfigurable extends NamedConfigurable<CopyrightProfile> implements Configurable.NoScroll {
   public static class PreviewDialog extends DialogWrapper {
@@ -132,22 +135,27 @@ public class CopyrightConfigurable extends NamedConfigurable<CopyrightProfile> i
         }
       }
     });
-    if (PredefinedCopyrightTextEP.EP_NAME.hasAnyExtensions()) {
+
+    ExtensionPoint<PredefinedCopyrightProvider> point = Application.get().getExtensionPoint(PredefinedCopyrightProvider.class);
+    if (point.hasAnyExtensions()) {
       group.add(new AnAction("Reset To", null, AllIcons.General.Reset) {
         @RequiredUIAccess
         @Override
         public void actionPerformed(@Nonnull AnActionEvent e) {
           ActionGroup.Builder actionGroup = ActionGroup.newImmutableBuilder();
-          for (PredefinedCopyrightTextEP extension : PredefinedCopyrightTextEP.EP_NAME.getExtensionList()) {
-            actionGroup.add(new AnAction(LocalizeValue.of(extension.name)) {
-              @RequiredUIAccess
-              @Override
-              public void actionPerformed(@Nonnull AnActionEvent e) {
-                String text = extension.getText();
-                WriteAction.run(() -> myCopyrightDocument.setText(text));
-              }
-            });
+          for (PredefinedCopyrightProvider provider : point) {
+            for (Map.Entry<LocalizeValue, String> entry : provider.getCopyrightTexts().entrySet()) {
+              actionGroup.add(new AnAction(entry.getKey()) {
+                @RequiredUIAccess
+                @Override
+                public void actionPerformed(@Nonnull AnActionEvent e) {
+                  String text = entry.getValue();
+                  WriteAction.run(() -> myCopyrightDocument.setText(text));
+                }
+              });
+            }
           }
+
           ActionPopupMenu popupMenu = ActionManager.getInstance().createActionPopupMenu(ActionPlaces.UNKNOWN, actionGroup.build());
 
           popupMenu.getComponent().show(e.getInputEvent().getComponent(), e.getInputEvent().getComponent().getWidth(), 0);

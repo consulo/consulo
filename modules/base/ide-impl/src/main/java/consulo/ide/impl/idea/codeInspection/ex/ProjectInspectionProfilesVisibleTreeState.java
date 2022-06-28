@@ -16,24 +16,22 @@
 
 package consulo.ide.impl.idea.codeInspection.ex;
 
-import consulo.ide.ServiceManager;
-import consulo.language.editor.inspection.scheme.InspectionProfile;
-import consulo.component.persist.StoragePathMacros;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
+import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
+import consulo.component.persist.StoragePathMacros;
+import consulo.ide.ServiceManager;
+import consulo.language.editor.inspection.scheme.InspectionProfile;
 import consulo.project.Project;
-
-import consulo.component.persist.PersistentStateComponent;
 import jakarta.inject.Singleton;
 
 @Singleton
-@State(
-  name = "ProjectInspectionProfilesVisibleTreeState",
-  storages = {
-    @Storage(
-        file = StoragePathMacros.WORKSPACE_FILE
-    )}
-)
+@State(name = "ProjectInspectionProfilesVisibleTreeState", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
+@ServiceAPI(ComponentScope.PROJECT)
+@ServiceImpl
 public class ProjectInspectionProfilesVisibleTreeState implements PersistentStateComponent<VisibleTreeStateComponent> {
   private final VisibleTreeStateComponent myComponent = new VisibleTreeStateComponent();
 

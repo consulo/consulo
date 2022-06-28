@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.openapi.module.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.CommonBundle;
@@ -44,6 +45,7 @@ import java.util.List;
  * @author nik
  */
 @Singleton
+@ServiceImpl
 public class ProjectLoadingErrorsNotifierImpl extends ProjectLoadingErrorsNotifier {
   private final MultiMap<ConfigurationErrorType, ConfigurationErrorDescription> myErrors = new MultiMap<ConfigurationErrorType, ConfigurationErrorDescription>();
   private final Object myLock = new Object();

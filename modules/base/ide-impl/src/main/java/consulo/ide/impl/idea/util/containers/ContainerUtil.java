@@ -506,10 +506,10 @@ public class ContainerUtil extends ContainerUtilRt {
   }
 
   @Nonnull
-  public static <K, V> MultiMap<K, V> groupBy(@Nonnull Iterable<V> collection, @Nonnull NullableFunction<V, K> grouper) {
+  public static <K, V> MultiMap<K, V> groupBy(@Nonnull Iterable<V> collection, @Nonnull java.util.function.Function<V, K> grouper) {
     MultiMap<K, V> result = MultiMap.createLinked();
     for (V data : collection) {
-      K key = grouper.fun(data);
+      K key = grouper.apply(data);
       if (key == null) {
         continue;
       }

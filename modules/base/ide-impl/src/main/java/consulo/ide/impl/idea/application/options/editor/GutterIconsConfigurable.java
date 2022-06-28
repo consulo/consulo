@@ -16,13 +16,18 @@
 package consulo.ide.impl.idea.application.options.editor;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.configurable.*;
-import consulo.language.LanguageExtensionPoint;
 import consulo.application.Application;
 import consulo.application.ApplicationBundle;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
-import consulo.component.extension.ExtensionPoint;
-import consulo.component.extension.ExtensionPointName;
+import consulo.configurable.*;
+import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginManager;
+import consulo.disposer.Disposable;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.ui.ListSpeedSearch;
+import consulo.ide.impl.idea.util.ObjectUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.settings.impl.EditorGeneralConfigurable;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.gutter.GutterIconDescriptor;
 import consulo.language.editor.gutter.LineMarkerProvider;
@@ -30,23 +35,12 @@ import consulo.language.editor.gutter.LineMarkerProviderDescriptor;
 import consulo.language.editor.gutter.LineMarkerSettings;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ui.ex.awt.CheckBoxList;
-import consulo.ide.impl.idea.ui.ListSpeedSearch;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.awt.SeparatorWithText;
-import consulo.ui.ex.awt.JBCheckBox;
-import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
-import consulo.ide.impl.idea.util.NullableFunction;
-import consulo.ide.impl.idea.util.ObjectUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.util.collection.MultiMap;
-import consulo.ui.ex.awt.util.DialogUtil;
-import consulo.ui.ex.awt.EmptyIcon;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.container.plugin.PluginDescriptor;
-import consulo.ide.impl.settings.impl.EditorGeneralConfigurable;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
+import consulo.ui.ex.awt.util.DialogUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.util.collection.MultiMap;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.TestOnly;
 
@@ -56,12 +50,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * @author Dmitry Avdeev
  */
 @ExtensionImpl
-public class GutterIconsConfigurable implements SearchableConfigurable, Configurable.NoScroll,ApplicationConfigurable {
+public class GutterIconsConfigurable implements SearchableConfigurable, Configurable.NoScroll, ApplicationConfigurable {
   public static final String DISPLAY_NAME = "Gutter Icons";
   public static final String ID = "editor.gutterIcons";
 
@@ -84,7 +79,7 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
   @RequiredUIAccess
   @Nullable
   @Override
-  public JComponent createComponent() {
+  public JComponent createComponent(@Nonnull Disposable uiDisposable) {
     myShowGutterIconsJBCheckBox = new JBCheckBox(ApplicationBundle.message("checkbox.show.gutter.icons"));
     DialogUtil.registerMnemonic(myShowGutterIconsJBCheckBox, '&');
 
@@ -115,7 +110,7 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
         checkBox.setBorder(null);
 
         PluginDescriptor pluginDescriptor = firstDescriptors.get(descriptor);
-        if(pluginDescriptor != null) {
+        if (pluginDescriptor != null) {
           SeparatorWithText separator = new SeparatorWithText();
           String name = pluginDescriptor.getName();
           separator.setCaption(name);
@@ -136,21 +131,20 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
     new ListSpeedSearch(myList, o -> o instanceof JCheckBox ? ((JCheckBox)o).getText() : null);
     panel.add(ScrollPaneFactory.createScrollPane(myList), BorderLayout.CENTER);
 
-    ExtensionPoint<LanguageExtensionPoint<LineMarkerProvider>> point = Application.get().getExtensionPoint(ExtensionPointName.create("consulo.codeInsight.lineMarkerProvider"));
-    List<LanguageExtensionPoint<LineMarkerProvider>> extensions = point.getExtensionList();
-    NullableFunction<LanguageExtensionPoint<LineMarkerProvider>, PluginDescriptor> function = point1 -> {
-      LineMarkerProvider instance = point1.getInstance();
-      return instance instanceof LineMarkerProviderDescriptor && ((LineMarkerProviderDescriptor)instance).getName() != null ? point1.getPluginDescriptor() : null;
+    List<LineMarkerProvider> providers = Application.get().getExtensionList(LineMarkerProvider.class);
+    Function<LineMarkerProvider, PluginDescriptor> function = provider -> {
+      PluginDescriptor plugin = PluginManager.getPlugin(provider.getClass());
+      return provider instanceof LineMarkerProviderDescriptor && ((LineMarkerProviderDescriptor)provider).getName() != null ? plugin : null;
     };
 
-    MultiMap<PluginDescriptor, LanguageExtensionPoint<LineMarkerProvider>> map = ContainerUtil.groupBy(extensions, function);
+    MultiMap<PluginDescriptor, LineMarkerProvider> map = ContainerUtil.groupBy(providers, function);
     Map<GutterIconDescriptor, PluginDescriptor> pluginDescriptorMap = ContainerUtil.newHashMap();
     Set<String> ids = new HashSet<>();
     myDescriptors = new ArrayList<>();
     for (final PluginDescriptor descriptor : map.keySet()) {
-      Collection<LanguageExtensionPoint<LineMarkerProvider>> points = map.get(descriptor);
-      for (LanguageExtensionPoint<LineMarkerProvider> extensionPoint : points) {
-        GutterIconDescriptor instance = (GutterIconDescriptor)extensionPoint.getInstance();
+      Collection<LineMarkerProvider> markerProviders = map.get(descriptor);
+      for (LineMarkerProvider provider : markerProviders) {
+        GutterIconDescriptor instance = (GutterIconDescriptor)provider;
         if (instance.getOptions().length > 0) {
           for (GutterIconDescriptor option : instance.getOptions()) {
             if (ids.add(option.getId())) {

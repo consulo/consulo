@@ -16,6 +16,9 @@
 
 package consulo.ide.impl.idea.codeEditor.printing;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
@@ -29,6 +32,8 @@ import jakarta.inject.Singleton;
 
 @Singleton
 @State(name = "ExportToHTMLSettings", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
+@ServiceAPI(ComponentScope.PROJECT)
+@ServiceImpl
 public class ExportToHTMLSettings implements PersistentStateComponent<ExportToHTMLSettings> {
   public boolean PRINT_LINE_NUMBERS;
   public boolean OPEN_IN_BROWSER;

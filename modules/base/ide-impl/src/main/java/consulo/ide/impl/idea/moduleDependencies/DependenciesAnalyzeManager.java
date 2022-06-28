@@ -16,22 +16,24 @@
 
 package consulo.ide.impl.idea.moduleDependencies;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.AllIcons;
-import consulo.ui.ex.toolWindow.ContentManagerWatcher;
+import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;
-import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
-
-import consulo.component.persist.PersistentStateComponent;
+import consulo.ui.ex.toolWindow.ContentManagerWatcher;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -40,10 +42,9 @@ import jakarta.inject.Singleton;
  * Date: Feb 10, 2005
  */
 @Singleton
-@State(
-    name = "DependenciesAnalyzeManager",
-    storages = {@Storage( file = StoragePathMacros.WORKSPACE_FILE)}
-)
+@State(name = "DependenciesAnalyzeManager", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
+@ServiceAPI(ComponentScope.PROJECT)
+@ServiceImpl
 public class DependenciesAnalyzeManager implements PersistentStateComponent<DependenciesAnalyzeManager.State> {
   private final Project myProject;
   private ContentManager myContentManager;
@@ -61,10 +62,7 @@ public class DependenciesAnalyzeManager implements PersistentStateComponent<Depe
       @Override
       public void run() {
         ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(myProject);
-        ToolWindow toolWindow = toolWindowManager.registerToolWindow(ToolWindowId.MODULES_DEPENDENCIES,
-                                                                     true,
-                                                                     ToolWindowAnchor.RIGHT,
-                                                                     project);
+        ToolWindow toolWindow = toolWindowManager.registerToolWindow(ToolWindowId.MODULES_DEPENDENCIES, true, ToolWindowAnchor.RIGHT, project);
         myContentManager = toolWindow.getContentManager();
         toolWindow.setIcon(AllIcons.Toolwindows.ToolWindowModuleDependencies);
         new ContentManagerWatcher(toolWindow, myContentManager);
@@ -72,7 +70,7 @@ public class DependenciesAnalyzeManager implements PersistentStateComponent<Depe
     });
   }
 
-  public static DependenciesAnalyzeManager getInstance(Project project){
+  public static DependenciesAnalyzeManager getInstance(Project project) {
     return ServiceManager.getService(project, DependenciesAnalyzeManager.class);
   }
 

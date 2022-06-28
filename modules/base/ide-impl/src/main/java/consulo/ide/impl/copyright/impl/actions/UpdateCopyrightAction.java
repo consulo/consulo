@@ -16,6 +16,9 @@
 
 package consulo.ide.impl.copyright.impl.actions;
 
+import consulo.annotation.component.ActionAnchor;
+import consulo.annotation.component.ActionImpl;
+import consulo.annotation.component.AddActionToGroup;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.copyright.impl.pattern.FileUtil;
@@ -35,9 +38,16 @@ import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 
+@ActionImpl(id = "UpdateCopyright", addToGroups = {
+        @AddActionToGroup(id = "ProjectViewPopupMenu", anchor = ActionAnchor.LAST),
+        @AddActionToGroup(id = "CodeMenu", anchor = ActionAnchor.LAST),
+        @AddActionToGroup(id = "NavbarPopupMenu", anchor = ActionAnchor.LAST),
+})
 public class UpdateCopyrightAction extends BaseAnalysisAction {
   public UpdateCopyrightAction() {
     super(UpdateCopyrightProcessor.TITLE, UpdateCopyrightProcessor.TITLE);
+    getTemplatePresentation().setText(UpdateCopyrightProcessor.TITLE);
+    getTemplatePresentation().setDescription(UpdateCopyrightProcessor.DESCRIPTION);
   }
 
   @Override

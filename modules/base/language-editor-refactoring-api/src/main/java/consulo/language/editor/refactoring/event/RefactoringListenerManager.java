@@ -15,6 +15,8 @@
  */
 package consulo.language.editor.refactoring.event;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 
@@ -33,6 +35,7 @@ import consulo.project.Project;
  * <li>When refactoring is completed, listeners for all refactoring subjects are notified,
  * </ul>
  */
+@ServiceAPI(ComponentScope.PROJECT)
 public abstract class RefactoringListenerManager {
   /**
    * Registers a provider of listeners.

@@ -28,6 +28,7 @@ import consulo.util.lang.ControlFlowException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.Array;
+import java.util.Iterator;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -39,7 +40,7 @@ import java.util.function.Function;
  *
  * @author AKireyev
  */
-public interface ExtensionPoint<E> extends ModificationTracker {
+public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
   enum Kind {
     INTERFACE,
     BEAN_CLASS
@@ -122,5 +123,10 @@ public interface ExtensionPoint<E> extends ModificationTracker {
         PluginExceptionUtil.logPluginError(Logger.getInstance(ExtensionPoint.class), e.getMessage(), e, value.getClass());
       }
     });
+  }
+
+  @Override
+  default Iterator<E> iterator() {
+    return getExtensionList().iterator();
   }
 }

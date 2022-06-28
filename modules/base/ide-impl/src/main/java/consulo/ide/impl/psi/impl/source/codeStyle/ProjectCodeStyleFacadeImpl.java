@@ -15,18 +15,20 @@
  */
 package consulo.ide.impl.psi.impl.source.codeStyle;
 
-import consulo.project.Project;
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.language.codeStyle.ProjectCodeStyleFacade;
-
-import javax.annotation.Nonnull;
+import consulo.project.Project;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2018-08-24
  */
 @Singleton
+@ServiceImpl
 public class ProjectCodeStyleFacadeImpl extends CodeStyleFacadeImpl implements ProjectCodeStyleFacade {
   @Inject
   public ProjectCodeStyleFacadeImpl(@Nonnull Project project) {

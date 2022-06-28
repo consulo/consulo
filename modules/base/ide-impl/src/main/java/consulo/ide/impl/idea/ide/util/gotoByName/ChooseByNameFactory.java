@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
 import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import javax.annotation.Nonnull;
@@ -23,6 +25,7 @@ import javax.annotation.Nonnull;
  * User: anna
  * Date: Jan 26, 2005
  */
+@ServiceAPI(ComponentScope.PROJECT)
 public abstract class ChooseByNameFactory {
   public static ChooseByNameFactory getInstance(Project project){
     return ServiceManager.getService(project, ChooseByNameFactory.class);

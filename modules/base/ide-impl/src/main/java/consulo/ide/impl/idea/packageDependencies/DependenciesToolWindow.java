@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.packageDependencies;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.AllIcons;
 import consulo.ui.ex.toolWindow.ContentManagerWatcher;
 import consulo.ide.ServiceManager;
@@ -34,6 +37,8 @@ import jakarta.inject.Singleton;
  * @author yole
  */
 @Singleton
+@ServiceAPI(ComponentScope.APPLICATION)
+@ServiceImpl
 public class DependenciesToolWindow {
   public static DependenciesToolWindow getInstance(Project project) {
     return ServiceManager.getService(project, DependenciesToolWindow.class);
@@ -50,10 +55,7 @@ public class DependenciesToolWindow {
       public void run() {
         final ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(myProject);
         if (toolWindowManager == null) return;
-        ToolWindow toolWindow = toolWindowManager.registerToolWindow(ToolWindowId.DEPENDENCIES,
-                                                                     true,
-                                                                     ToolWindowAnchor.BOTTOM,
-                                                                     project);
+        ToolWindow toolWindow = toolWindowManager.registerToolWindow(ToolWindowId.DEPENDENCIES, true, ToolWindowAnchor.BOTTOM, project);
         myContentManager = toolWindow.getContentManager();
 
         toolWindow.setIcon(AllIcons.Toolwindows.ToolWindowInspection);

@@ -1253,59 +1253,6 @@
 
 
 
-    <projectService serviceInterface="consulo.module.ProjectLoadingErrorsNotifier"
-                    serviceImplementation="consulo.ide.impl.idea.openapi.module.impl.ProjectLoadingErrorsNotifierImpl"/>
-
-    <projectService serviceInterface="consulo.ide.impl.language.codeStyle.ProjectCodeStyleFacade"
-                    serviceImplementation="consulo.ide.impl.psi.impl.source.codeStyle.ProjectCodeStyleFacadeImpl"/>
-
-    
-
-    <projectService serviceInterface="consulo.ide.impl.idea.analysis.AnalysisUIOptions"
-                    serviceImplementation="consulo.ide.impl.idea.analysis.AnalysisUIOptions"/>
-
-    <projectService serviceInterface="consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNameFactory"
-                    serviceImplementation="consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNameFactoryImpl"/>
-
-    <projectService serviceInterface="consulo.language.editor.refactoring.event.RefactoringListenerManager"
-                    serviceImplementation="consulo.ide.impl.idea.refactoring.listeners.impl.RefactoringListenerManagerImpl"/>
-
-
-
-    <projectService serviceInterface="consulo.ide.impl.idea.codeEditor.printing.ExportToHTMLSettings"
-                    serviceImplementation="consulo.ide.impl.idea.codeEditor.printing.ExportToHTMLSettings"/>
-
-    <projectService serviceInterface="consulo.execution.configuration.log.LogConsolePreferences"
-                    serviceImplementation="consulo.execution.configuration.log.LogConsolePreferences"/>
-
-
-
-
-    <projectService serviceInterface="consulo.ide.impl.idea.ide.hierarchy.HierarchyBrowserManager"
-                    serviceImplementation="consulo.ide.impl.idea.ide.hierarchy.HierarchyBrowserManager"/>
-
-
-
-
-    <projectService serviceInterface="consulo.ide.impl.idea.packageDependencies.DependenciesToolWindow"
-                    serviceImplementation="consulo.ide.impl.idea.packageDependencies.DependenciesToolWindow"/>
-
-    
-
-    <projectService serviceInterface="consulo.ide.impl.idea.moduleDependencies.DependenciesAnalyzeManager"
-                    serviceImplementation="consulo.ide.impl.idea.moduleDependencies.DependenciesAnalyzeManager"/>
-
-
-
-    <applicationService serviceInterface="consulo.ide.impl.idea.codeInspection.ex.AppInspectionProfilesVisibleTreeState"
-                        serviceImplementation="consulo.ide.impl.idea.codeInspection.ex.AppInspectionProfilesVisibleTreeState"/>
-    <projectService serviceInterface="consulo.ide.impl.idea.codeInspection.ex.ProjectInspectionProfilesVisibleTreeState"
-                    serviceImplementation="consulo.ide.impl.idea.codeInspection.ex.ProjectInspectionProfilesVisibleTreeState"/>
-
-    <applicationService serviceInterface="consulo.ide.impl.idea.application.options.codeStyle.CodeStyleSchemesUIConfiguration"
-                        serviceImplementation="consulo.ide.impl.idea.application.options.codeStyle.CodeStyleSchemesUIConfiguration"/>
-
-
     <patternDialectProvider implementation="consulo.ide.impl.idea.packageDependencies.ui.ProjectPatternProvider" id="file"/>
     <customScopesProvider implementation="consulo.ide.impl.idea.packageDependencies.DefaultScopesProvider"/>
     <customScopesProvider implementation="consulo.ide.impl.packageDependencies.SourceScopeProvider"/>

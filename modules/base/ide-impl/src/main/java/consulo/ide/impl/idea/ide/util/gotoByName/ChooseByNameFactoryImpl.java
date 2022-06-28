@@ -16,19 +16,20 @@
 
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.ide.actions.GotoActionBase;
 import consulo.project.Project;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-
-import jakarta.inject.Singleton;
 
 /**
  * User: anna
  * Date: Jan 26, 2005
  */
 @Singleton
+@ServiceImpl
 public class ChooseByNameFactoryImpl extends ChooseByNameFactory {
   private final Project myProject;
 
