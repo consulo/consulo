@@ -15,28 +15,30 @@
  */
 package consulo.ide.impl.idea.openapi.fileEditor.impl.text;
 
-import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
-import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
-import consulo.fileEditor.*;
-import consulo.fileEditor.structureView.StructureViewBuilder;
-import consulo.document.Document;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
-import consulo.colorScheme.EditorColorsManager;
-import consulo.colorScheme.EditorColorsScheme;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorHighlighter;
+import consulo.colorScheme.EditorColorsManager;
+import consulo.colorScheme.EditorColorsScheme;
+import consulo.disposer.Disposer;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
+import consulo.fileEditor.*;
+import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
+import consulo.fileEditor.structureView.StructureViewBuilder;
+import consulo.fileEditor.structureView.StructureViewBuilderProvider;
 import consulo.fileEditor.text.TextEditorState;
+import consulo.ide.impl.fileEditor.text.TextEditorComponentContainerFactory;
+import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.language.editor.highlight.EditorHighlighterFactory;
+import consulo.navigation.Navigatable;
 import consulo.navigation.OpenFileDescriptor;
 import consulo.project.Project;
-import consulo.document.FileDocumentManager;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.navigation.Navigatable;
-import consulo.disposer.Disposer;
-import consulo.ide.impl.fileEditor.text.TextEditorComponentContainerFactory;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.UserDataHolderBase;
+import consulo.virtualFileSystem.VirtualFile;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
 
@@ -195,11 +197,19 @@ public class TextEditorImpl extends UserDataHolderBase implements TextEditor {
   }
 
   @Override
+  @RequiredReadAction
   public StructureViewBuilder getStructureViewBuilder() {
     Document document = myComponent.getEditor().getDocument();
     VirtualFile file = FileDocumentManager.getInstance().getFile(document);
     if (file == null || !file.isValid()) return null;
-    return StructureViewBuilder.PROVIDER.getStructureViewBuilder(file.getFileType(), file, myProject);
+
+    for (StructureViewBuilderProvider provider : myProject.getApplication().getExtensionList(StructureViewBuilderProvider.class)) {
+      StructureViewBuilder builder = provider.getStructureViewBuilder(file.getFileType(), file, myProject);
+      if (builder != null) {
+        return builder;
+      }
+    }
+    return null;
   }
 
   @Nullable

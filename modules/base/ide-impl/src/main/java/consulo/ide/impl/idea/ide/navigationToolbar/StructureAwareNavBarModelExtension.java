@@ -19,12 +19,12 @@ import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.fileEditor.structureView.StructureViewModel;
 import consulo.fileEditor.structureView.StructureViewTreeElement;
 import consulo.fileEditor.structureView.TreeBasedStructureViewBuilder;
+import consulo.language.editor.structureView.PsiStructureViewFactory;
 import consulo.language.editor.structureView.PsiTreeElementBase;
 import consulo.application.ui.UISettings;
 import consulo.fileEditor.structureView.tree.NodeProvider;
 import consulo.fileEditor.structureView.tree.TreeElement;
 import consulo.language.Language;
-import consulo.ide.impl.idea.lang.LanguageStructureViewBuilder;
 import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
@@ -197,7 +197,7 @@ public abstract class StructureAwareNavBarModelExtension extends AbstractNavBarM
       }
     }
 
-    StructureViewBuilder builder = LanguageStructureViewBuilder.INSTANCE.getStructureViewBuilder(file);
+    StructureViewBuilder builder = PsiStructureViewFactory.createBuilderForFile(file);
     if (builder instanceof TreeBasedStructureViewBuilder) {
       StructureViewModel model = ((TreeBasedStructureViewBuilder)builder).createStructureViewModel(editor);
 

@@ -209,9 +209,7 @@
     <extensionPoint name="fileDocumentManagerListener" interface="consulo.document.event.FileDocumentManagerListener"/>
     <extensionPoint name="fileDocumentSynchronizationVetoer" interface="consulo.document.FileDocumentSynchronizationVetoer"/>
 
-    <extensionPoint name="itemPresentationProvider" beanClass="consulo.application.extension.ClassExtensionPoint">
-      <with attribute="implementationClass" implements="consulo.navigation.ItemPresentationProvider"/>
-    </extensionPoint>
+
 
     <extensionPoint name="intentionMenuContributor" interface="consulo.ide.impl.idea.codeInsight.daemon.impl.IntentionMenuContributor"/>
 
@@ -765,18 +763,12 @@
     <extensionPoint name="runDashboardGroupingRule"
                     interface="consulo.ide.impl.idea.execution.dashboard.DashboardGroupingRule"/>
 
-    <extensionPoint name="scopeTreeExpander" interface="consulo.ide.impl.idea.ide.scopeView.ScopeTreeStructureExpander" area="PROJECT"/>
 
     <extensionPoint name="schemeImporter" beanClass="consulo.ide.impl.idea.openapi.options.SchemeImporterEP">
       <with attribute="schemeClass" implements="consulo.component.util.pointer.Named"/>
       <with attribute="implementationClass" implements="consulo.ide.impl.idea.openapi.options.SchemeImporter"/>
     </extensionPoint>
 
-    <extensionPoint name="lang.elementManipulator" beanClass="consulo.application.extension.ClassExtensionPoint">
-      <with attribute="implementationClass" implements="consulo.language.psi.ElementManipulator"/>
-    </extensionPoint>
-
-    <extensionPoint name="fileContextProvider" interface="consulo.language.psi.FileContextProvider" area="PROJECT"/>
     <extensionPoint name="psi.fileReferenceHelper"
                     interface="consulo.language.psi.path.FileReferenceHelper"/>
 
@@ -1335,7 +1327,6 @@
                     serviceImplementation="consulo.ide.impl.idea.moduleDependencies.DependenciesAnalyzeManager"/>
 
 
-    <elementDescriptionProvider implementation="consulo.ide.impl.psi.impl.DefaultPomTargetDescriptionProvider" order="last" id="pomDefault"/>
 
     <applicationService serviceInterface="consulo.ide.impl.idea.codeInspection.ex.AppInspectionProfilesVisibleTreeState"
                         serviceImplementation="consulo.ide.impl.idea.codeInspection.ex.AppInspectionProfilesVisibleTreeState"/>
@@ -1355,12 +1346,6 @@
     <customScopesProvider implementation="consulo.ide.impl.idea.vcs.changes.ChangeListsScopesProvider" order="last"/>
 
 
-    <structureViewBuilder factoryClass="consulo.ide.impl.idea.ide.highlighter.LanguageFileTypeStructureViewBuilderProvider"/>
-
-    <lang.elementManipulator forClass="consulo.language.plain.psi.PsiPlainTextFile"
-                             implementationClass="consulo.ide.impl.psi.impl.source.resolve.reference.impl.manipulators.PlainFileManipulator"/>
-    <lang.elementManipulator forClass="consulo.language.psi.PsiComment"
-                             implementationClass="consulo.ide.impl.psi.impl.source.resolve.reference.impl.manipulators.PsiCommentManipulator"/>
 
 
     <statistician key="completion" implementationClass="consulo.ide.impl.idea.codeInsight.completion.DecoratorCompletionStatistician" order="first"

@@ -19,20 +19,24 @@
  */
 package consulo.ide.impl.idea.ide.highlighter;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.fileEditor.structureView.StructureViewBuilderProvider;
-import consulo.ide.impl.idea.lang.LanguageStructureViewBuilder;
 import consulo.language.editor.structureView.PsiStructureViewFactory;
-import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.file.LanguageFileType;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+@ExtensionImpl
 public class LanguageFileTypeStructureViewBuilderProvider implements StructureViewBuilderProvider {
+  @RequiredReadAction
   @Override
   @Nullable
   public StructureViewBuilder getStructureViewBuilder(@Nonnull final FileType fileType, @Nonnull final VirtualFile file, @Nonnull final Project project) {
@@ -41,7 +45,6 @@ public class LanguageFileTypeStructureViewBuilderProvider implements StructureVi
     final PsiFile psiFile = PsiManager.getInstance(project).findFile(file);
     if (psiFile == null) return null;
 
-    final PsiStructureViewFactory factory = LanguageStructureViewBuilder.INSTANCE.forLanguage(psiFile.getLanguage());
-    return factory == null ?  null : factory.getStructureViewBuilder(psiFile);
+    return PsiStructureViewFactory.createBuilderForFile(psiFile);
   }
 }

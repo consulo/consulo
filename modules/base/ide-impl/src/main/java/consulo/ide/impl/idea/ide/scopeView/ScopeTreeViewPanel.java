@@ -286,11 +286,11 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
       }
     };
     myTreeExpansionMonitor = PackageTreeExpansionMonitor.install(myTree, myProject);
-    final ScopeTreeStructureExpander[] extensions = Extensions.getExtensions(ScopeTreeStructureExpander.EP_NAME, myProject);
-    for (ScopeTreeStructureExpander expander : extensions) {
+    List<ScopeTreeStructureExpander> extensionList = myProject.getExtensionList(ScopeTreeStructureExpander.class);
+    for (ScopeTreeStructureExpander expander : extensionList) {
       myTree.addTreeWillExpandListener(expander);
     }
-    if (extensions.length == 0) {
+    if (extensionList.isEmpty()) {
       myTree.addTreeWillExpandListener(new SortingExpandListener());
     }
     myTree.addKeyListener(new KeyAdapter() {

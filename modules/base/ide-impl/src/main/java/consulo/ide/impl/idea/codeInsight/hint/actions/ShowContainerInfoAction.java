@@ -19,10 +19,10 @@ import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.ide.impl.idea.codeInsight.actions.BaseCodeInsightAction;
 import consulo.ide.impl.idea.codeInsight.hint.ShowContainerInfoHandler;
 import consulo.fileEditor.structureView.TreeBasedStructureViewBuilder;
-import consulo.ide.impl.idea.lang.LanguageStructureViewBuilder;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.codeEditor.Editor;
+import consulo.language.editor.structureView.PsiStructureViewFactory;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
@@ -43,6 +43,6 @@ public class ShowContainerInfoAction extends BaseCodeInsightAction{
 
   @Override
   protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull final PsiFile file) {
-    return LanguageStructureViewBuilder.INSTANCE.getStructureViewBuilder(file) instanceof TreeBasedStructureViewBuilder;
+    return PsiStructureViewFactory.createBuilderForFile(file) instanceof TreeBasedStructureViewBuilder;
   }
 }

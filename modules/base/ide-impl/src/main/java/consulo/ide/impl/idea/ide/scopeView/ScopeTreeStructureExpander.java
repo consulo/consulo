@@ -20,10 +20,11 @@
  */
 package consulo.ide.impl.idea.ide.scopeView;
 
-import consulo.component.extension.ExtensionPointName;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 
 import javax.swing.event.TreeWillExpandListener;
 
+@ExtensionAPI(ComponentScope.PROJECT)
 public interface ScopeTreeStructureExpander extends TreeWillExpandListener {
-  ExtensionPointName<ScopeTreeStructureExpander> EP_NAME = ExtensionPointName.create("consulo.scopeTreeExpander");
 }

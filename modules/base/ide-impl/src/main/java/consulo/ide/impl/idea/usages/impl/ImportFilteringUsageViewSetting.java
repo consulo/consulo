@@ -31,7 +31,7 @@ import jakarta.inject.Singleton;
  */
 @Singleton
 @State(name = "ImportFilteringUsageViewSetting", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml")})
-@ServiceAPI(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class ImportFilteringUsageViewSetting implements PersistentStateComponent<ImportFilteringUsageViewSetting> {
   public static ImportFilteringUsageViewSetting getInstance() {

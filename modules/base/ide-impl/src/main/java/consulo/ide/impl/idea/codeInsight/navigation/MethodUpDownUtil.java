@@ -16,12 +16,12 @@
 
 package consulo.ide.impl.idea.codeInsight.navigation;
 
-import consulo.ide.impl.idea.lang.LanguageStructureViewBuilder;
 import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.fileEditor.structureView.StructureViewModel;
 import consulo.fileEditor.structureView.StructureViewTreeElement;
 import consulo.fileEditor.structureView.TreeBasedStructureViewBuilder;
 import consulo.fileEditor.structureView.tree.TreeElement;
+import consulo.language.editor.structureView.PsiStructureViewFactory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import gnu.trove.TIntArrayList;
@@ -59,7 +59,7 @@ public class MethodUpDownUtil {
   }
 
   private static void addNavigationElements(Collection<PsiElement> array, PsiFile element) {
-    StructureViewBuilder structureViewBuilder = LanguageStructureViewBuilder.INSTANCE.getStructureViewBuilder(element);
+    StructureViewBuilder structureViewBuilder = PsiStructureViewFactory.createBuilderForFile(element);
     if (structureViewBuilder instanceof TreeBasedStructureViewBuilder) {
       TreeBasedStructureViewBuilder builder = (TreeBasedStructureViewBuilder) structureViewBuilder;
       StructureViewModel model = builder.createStructureViewModel(null);

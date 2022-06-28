@@ -15,24 +15,26 @@
  */
 package consulo.ide.impl.idea.openapi.fileEditor.impl.text;
 
-import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
-import consulo.fileEditor.*;
-import consulo.fileEditor.structureView.StructureViewBuilder;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.*;
-import consulo.fileEditor.text.TextEditorState;
-import consulo.project.Project;
 import consulo.document.FileDocumentManager;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.navigation.Navigatable;
-import consulo.language.impl.file.SingleRootFileViewProvider;
-import consulo.ide.impl.fileEditor.text.TextEditorComponentContainerFactory;
+import consulo.fileEditor.*;
+import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
+import consulo.fileEditor.structureView.StructureViewBuilder;
+import consulo.fileEditor.structureView.StructureViewBuilderProvider;
 import consulo.fileEditor.text.TextEditorProvider;
+import consulo.fileEditor.text.TextEditorState;
+import consulo.ide.impl.fileEditor.text.TextEditorComponentContainerFactory;
+import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
+import consulo.language.impl.file.SingleRootFileViewProvider;
 import consulo.logging.Logger;
+import consulo.navigation.Navigatable;
+import consulo.project.Project;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.util.ShowNotifier;
 import consulo.util.dataholder.UserDataHolderBase;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import kava.beans.PropertyChangeListener;
 
@@ -176,13 +178,20 @@ public class TextEditorProviderImpl extends TextEditorProvider {
     }
 
     @Override
+    @RequiredReadAction
     public StructureViewBuilder getStructureViewBuilder() {
       VirtualFile file = FileDocumentManager.getInstance().getFile(myEditor.getDocument());
       if (file == null) return null;
 
       final Project project = myEditor.getProject();
       LOG.assertTrue(project != null);
-      return StructureViewBuilder.PROVIDER.getStructureViewBuilder(file.getFileType(), file, project);
+      for (StructureViewBuilderProvider provider : project.getApplication().getExtensionList(StructureViewBuilderProvider.class)) {
+        StructureViewBuilder builder = provider.getStructureViewBuilder(file.getFileType(), file, project);
+        if (builder != null) {
+          return builder;
+        }
+      }
+      return null;
     }
 
     @Nullable

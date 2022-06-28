@@ -19,7 +19,6 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.component.extension.KeyedFactoryEPBean;
 import consulo.fileEditor.FileEditor;
 import consulo.project.Project;
-import consulo.virtualFileSystem.extension.FileTypeExtensionFactory;
 
 import javax.annotation.Nonnull;
 
@@ -30,15 +29,8 @@ import javax.annotation.Nonnull;
  * and to customize only how the Structure View is populated with the file data,
  * the standard implementation of this interface - {@link TreeBasedStructureViewBuilder} -
  * should be used.
- *
- * @see consulo.ide.impl.idea.lang.LanguageStructureViewBuilder#getStructureViewBuilder(PsiFile)
  */
-
 public interface StructureViewBuilder {
-  ExtensionPointName<KeyedFactoryEPBean> EP_NAME = ExtensionPointName.create("consulo.structureViewBuilder");
-
-  StructureViewBuilderProvider PROVIDER = new FileTypeExtensionFactory<>(StructureViewBuilderProvider.class, EP_NAME).get();
-
   /**
    * Returns the structure view implementation for the file displayed in the specified
    * editor.

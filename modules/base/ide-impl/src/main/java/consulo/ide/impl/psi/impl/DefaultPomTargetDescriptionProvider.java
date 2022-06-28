@@ -15,8 +15,9 @@
  */
 package consulo.ide.impl.psi.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.util.TypePresentationService;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.language.editor.highlight.HighlightUsagesDescriptionLocation;
 import consulo.language.pom.PomDescriptionProvider;
 import consulo.language.pom.PomNamedTarget;
 import consulo.language.pom.PomTarget;
@@ -24,12 +25,14 @@ import consulo.language.psi.ElementDescriptionLocation;
 import consulo.language.psi.PsiElement;
 import consulo.usage.UsageViewNodeTextLocation;
 import consulo.usage.UsageViewTypeLocation;
-import consulo.language.editor.highlight.HighlightUsagesDescriptionLocation;
+import consulo.util.lang.StringUtil;
+
 import javax.annotation.Nonnull;
 
 /**
  * @author peter
  */
+@ExtensionImpl(id = "pomDefault", order = "last")
 public class DefaultPomTargetDescriptionProvider extends PomDescriptionProvider {
   @Override
   public String getElementDescription(@Nonnull PomTarget element, @Nonnull ElementDescriptionLocation location) {

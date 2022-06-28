@@ -30,10 +30,10 @@ import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.fileEditor.structureView.StructureViewModel;
 import consulo.fileEditor.structureView.TreeBasedStructureViewBuilder;
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.lang.LanguageStructureViewBuilder;
 import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.language.editor.structureView.PsiStructureViewFactory;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.navigation.ItemPresentation;
@@ -290,7 +290,7 @@ public class Bookmark implements Navigatable {
 
     if (psiFile == null) return presentableUrl;
 
-    StructureViewBuilder builder = LanguageStructureViewBuilder.INSTANCE.getStructureViewBuilder(psiFile);
+    StructureViewBuilder builder = PsiStructureViewFactory.createBuilderForFile(psiFile);
     if (builder instanceof TreeBasedStructureViewBuilder) {
       StructureViewModel model = ((TreeBasedStructureViewBuilder)builder).createStructureViewModel(null);
       Object element;

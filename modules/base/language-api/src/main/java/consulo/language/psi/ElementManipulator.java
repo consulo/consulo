@@ -16,19 +16,36 @@
 
 package consulo.language.psi;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.application.Application;
+import consulo.application.extension.ByClassGrouper;
+import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.document.util.TextRange;
 import consulo.language.util.IncorrectOperationException;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.function.Function;
 
 /**
  * User: ik
  * Date: 03.04.2003
  * Time: 11:22:05
  *
- * @see ElementManipulators
+ * @see AbstractElementManipulator
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface ElementManipulator<T extends PsiElement> {
+  ExtensionPointCacheKey<ElementManipulator, Function<Class, ElementManipulator>> KEY =
+          ExtensionPointCacheKey.create("ItemPresentationProvider", ByClassGrouper.build(ElementManipulator::getElementClass));
+
+  @Nullable
+  @SuppressWarnings("unchecked")
+  public static <T extends PsiElement> ElementManipulator<T> getManipulator(@Nonnull T element) {
+    Function<Class, ElementManipulator> call = Application.get().getExtensionPoint(ElementManipulator.class).getOrBuildCache(KEY);
+    return call.apply(element.getClass());
+  }
 
   /**
    * Changes the element's text to a new value
@@ -45,4 +62,7 @@ public interface ElementManipulator<T extends PsiElement> {
 
   @Nonnull
   TextRange getRangeInElement(@Nonnull T element);
+
+  @Nonnull
+  Class<T> getElementClass();
 }

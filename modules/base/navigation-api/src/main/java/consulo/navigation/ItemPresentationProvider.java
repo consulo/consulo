@@ -18,24 +18,26 @@ package consulo.navigation;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
+import consulo.application.extension.ByClassGrouper;
 import consulo.component.extension.ExtensionPointCacheKey;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Map;
+import java.util.function.Function;
 
 /**
  * @author yole
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ItemPresentationProvider<T extends NavigationItem> {
-  ExtensionPointCacheKey<ItemPresentationProvider, Map<Class, ItemPresentationProvider>> KEY = ExtensionPointCacheKey.groupBy("ItemPresentationProvider", ItemPresentationProvider::getItemClass);
+  ExtensionPointCacheKey<ItemPresentationProvider, Function<Class, ItemPresentationProvider>> KEY =
+          ExtensionPointCacheKey.create("ItemPresentationProvider", ByClassGrouper.build(ItemPresentationProvider::getItemClass));
 
   @Nullable
   @SuppressWarnings("unchecked")
   public static <T extends NavigationItem> ItemPresentationProvider<T> getItemPresentationProvider(@Nonnull T element) {
-    Map<Class, ItemPresentationProvider> map = Application.get().getExtensionPoint(ItemPresentationProvider.class).getOrBuildCache(KEY);
-    return map.get(element.getClass());
+    Function<Class, ItemPresentationProvider> call = Application.get().getExtensionPoint(ItemPresentationProvider.class).getOrBuildCache(KEY);
+    return call.apply(element.getClass());
   }
 
   @Nullable

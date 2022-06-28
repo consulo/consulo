@@ -15,8 +15,6 @@
  */
 package consulo.language.psi;
 
-import consulo.application.extension.ClassExtension;
-import consulo.container.plugin.PluginIds;
 import consulo.document.util.TextRange;
 import consulo.logging.Logger;
 
@@ -25,22 +23,14 @@ import javax.annotation.Nonnull;
 /**
  * @author peter
  */
-public class ElementManipulators extends ClassExtension<ElementManipulator> {
-
-  public static final ElementManipulators INSTANCE = new ElementManipulators();
-
+public class ElementManipulators {
   private static final Logger LOG = Logger.getInstance(ElementManipulators.class);
-
-  private ElementManipulators() {
-    super(PluginIds.CONSULO_BASE + ".lang.elementManipulator");
-  }
 
   /**
    * @see #getNotNullManipulator(PsiElement)
    */
   public static <T extends PsiElement> ElementManipulator<T> getManipulator(@Nonnull T element) {
-    //noinspection unchecked
-    return INSTANCE.forClass(element.getClass());
+    return ElementManipulator.getManipulator(element);
   }
 
   public static int getOffsetInElement(final PsiElement element) {

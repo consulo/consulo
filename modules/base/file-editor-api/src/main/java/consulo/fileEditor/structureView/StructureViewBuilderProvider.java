@@ -19,6 +19,9 @@
  */
 package consulo.fileEditor.structureView;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -26,6 +29,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface StructureViewBuilderProvider {
   /**
    * Returns the structure view builder for the specified file.
@@ -35,5 +39,6 @@ public interface StructureViewBuilderProvider {
    * @return The structure view builder, or null if no structure view is available for the file.
    */
   @Nullable
+  @RequiredReadAction
   StructureViewBuilder getStructureViewBuilder(@Nonnull FileType fileType, @Nonnull VirtualFile file, @Nonnull Project project);
 }

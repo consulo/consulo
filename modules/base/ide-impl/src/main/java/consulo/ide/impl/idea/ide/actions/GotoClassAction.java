@@ -18,7 +18,6 @@ import consulo.fileEditor.structureView.tree.TreeElement;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.actions.searcheverywhere.ClassSearchEverywhereContributor;
 import consulo.ide.impl.idea.ide.util.gotoByName.*;
-import consulo.ide.impl.idea.lang.LanguageStructureViewBuilder;
 import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.openapi.ui.playback.commands.ActionCommand;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
@@ -150,8 +149,7 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
 
   @Nullable
   public static Navigatable findMember(String memberPattern, String fullPattern, PsiElement psiElement, VirtualFile file) {
-    final PsiStructureViewFactory factory = LanguageStructureViewBuilder.INSTANCE.forLanguage(psiElement.getLanguage());
-    final StructureViewBuilder builder = factory == null ? null : factory.getStructureViewBuilder(psiElement.getContainingFile());
+    final StructureViewBuilder builder = PsiStructureViewFactory.createBuilderForFile(psiElement.getContainingFile());
     final FileEditor[] editors = FileEditorManager.getInstance(psiElement.getProject()).getEditors(file);
     if (builder == null || editors.length == 0) {
       return null;

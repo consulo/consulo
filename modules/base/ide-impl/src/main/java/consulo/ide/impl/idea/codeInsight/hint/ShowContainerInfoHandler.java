@@ -19,10 +19,10 @@ import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.fileEditor.structureView.StructureViewModel;
 import consulo.fileEditor.structureView.TreeBasedStructureViewBuilder;
-import consulo.ide.impl.idea.lang.LanguageStructureViewBuilder;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
+import consulo.language.editor.structureView.PsiStructureViewFactory;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.document.util.TextRange;
@@ -57,7 +57,7 @@ public class ShowContainerInfoHandler implements CodeInsightActionHandler {
       }
     }
 
-    StructureViewBuilder builder = LanguageStructureViewBuilder.INSTANCE.getStructureViewBuilder(file);
+    StructureViewBuilder builder = PsiStructureViewFactory.createBuilderForFile(file);
     if (builder instanceof TreeBasedStructureViewBuilder) {
       StructureViewModel model = ((TreeBasedStructureViewBuilder) builder).createStructureViewModel(editor);
       boolean goOneLevelUp = true;

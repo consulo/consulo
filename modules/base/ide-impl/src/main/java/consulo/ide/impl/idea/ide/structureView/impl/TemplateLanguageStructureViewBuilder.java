@@ -7,7 +7,6 @@ import consulo.fileEditor.structureView.StructureViewModel;
 import consulo.fileEditor.structureView.TreeBasedStructureViewBuilder;
 import consulo.ide.impl.idea.ide.util.StructureViewCompositeModel;
 import consulo.language.Language;
-import consulo.ide.impl.idea.lang.LanguageStructureViewBuilder;
 import consulo.language.util.LanguageUtil;
 import consulo.language.editor.structureView.PsiStructureViewFactory;
 import consulo.codeEditor.Editor;
@@ -140,8 +139,7 @@ public abstract class TemplateLanguageStructureViewBuilder extends TreeBasedStru
     if (psi == null) return null;
     if (language == baseLanguage) return createMainBuilder(psi);
     if (!isAcceptableBaseLanguageFile(psi)) return null;
-    PsiStructureViewFactory factory = LanguageStructureViewBuilder.INSTANCE.forLanguage(language);
-    return factory == null ? null : factory.getStructureViewBuilder(psi);
+    return PsiStructureViewFactory.createBuilderForFile(psi);
   }
 
   protected boolean isAcceptableBaseLanguageFile(PsiFile dataFile) {

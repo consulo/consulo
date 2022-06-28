@@ -16,6 +16,8 @@
 
 package consulo.language.psi;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 
 import javax.annotation.Nonnull;
@@ -26,8 +28,9 @@ import javax.annotation.Nullable;
  *
  * @author yole
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface ElementDescriptionProvider {
-  ExtensionPointName<ElementDescriptionProvider> EP_NAME = ExtensionPointName.create("consulo.elementDescriptionProvider");
+  ExtensionPointName<ElementDescriptionProvider> EP_NAME = ExtensionPointName.create(ElementDescriptionProvider.class);
   
   @Nullable
   String getElementDescription(@Nonnull PsiElement element, @Nonnull ElementDescriptionLocation location);

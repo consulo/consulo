@@ -22,8 +22,8 @@ import consulo.ide.impl.idea.codeInsight.navigation.MethodUpHandler;
 import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.fileEditor.structureView.TreeBasedStructureViewBuilder;
 import consulo.ide.impl.idea.ide.structureView.impl.TemplateLanguageStructureViewBuilder;
-import consulo.ide.impl.idea.lang.LanguageStructureViewBuilder;
 import consulo.codeEditor.Editor;
+import consulo.language.editor.structureView.PsiStructureViewFactory;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
@@ -46,7 +46,7 @@ public class MethodUpAction extends BaseCodeInsightAction {
   }
 
   static boolean checkValidForFile(final PsiFile file) {
-    final StructureViewBuilder structureViewBuilder = LanguageStructureViewBuilder.INSTANCE.getStructureViewBuilder(file);
+    final StructureViewBuilder structureViewBuilder = PsiStructureViewFactory.createBuilderForFile(file);
     return structureViewBuilder instanceof TreeBasedStructureViewBuilder || structureViewBuilder instanceof TemplateLanguageStructureViewBuilder;
   }
 }

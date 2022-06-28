@@ -20,9 +20,9 @@ import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.commander.CommanderPanel;
 import consulo.ide.impl.idea.ide.commander.ProjectListBuilder;
 import consulo.ide.impl.idea.ide.structureView.newStructureView.TreeModelWrapper;
+import consulo.language.editor.structureView.PsiStructureViewFactory;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ide.impl.idea.ide.util.treeView.smartTree.SmartTreeStructure;
-import consulo.ide.impl.idea.lang.LanguageStructureViewBuilder;
 import consulo.ui.ex.action.IdeActions;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
@@ -260,7 +260,7 @@ public class FileStructureDialog extends DialogWrapper {
   }
 
   protected boolean isShowRoot(final PsiFile psiFile) {
-    StructureViewBuilder viewBuilder = LanguageStructureViewBuilder.INSTANCE.getStructureViewBuilder(psiFile);
+    StructureViewBuilder viewBuilder = PsiStructureViewFactory.createBuilderForFile(psiFile);
     return viewBuilder instanceof TreeBasedStructureViewBuilder && ((TreeBasedStructureViewBuilder)viewBuilder).isRootNodeShown();
   }
 

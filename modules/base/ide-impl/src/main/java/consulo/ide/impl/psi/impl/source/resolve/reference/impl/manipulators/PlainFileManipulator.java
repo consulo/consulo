@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.psi.impl.source.resolve.reference.impl.manipulators;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.util.TextRange;
@@ -26,12 +27,11 @@ import consulo.language.util.IncorrectOperationException;
 import javax.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
  * User: ik
  * Date: 09.12.2003
  * Time: 14:10:35
- * To change this template use Options | File Templates.
  */
+@ExtensionImpl
 public class PlainFileManipulator extends AbstractElementManipulator<PsiPlainTextFile> {
   @Override
   public PsiPlainTextFile handleContentChange(@Nonnull PsiPlainTextFile file, @Nonnull TextRange range, String newContent)
@@ -41,5 +41,11 @@ public class PlainFileManipulator extends AbstractElementManipulator<PsiPlainTex
     PsiDocumentManager.getInstance(file.getProject()).commitDocument(document);
 
     return file;
+  }
+
+  @Nonnull
+  @Override
+  public Class<PsiPlainTextFile> getElementClass() {
+    return PsiPlainTextFile.class;
   }
 }

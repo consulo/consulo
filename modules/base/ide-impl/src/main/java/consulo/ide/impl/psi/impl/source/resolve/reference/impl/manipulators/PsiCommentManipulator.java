@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.psi.impl.source.resolve.reference.impl.manipulators;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.document.util.TextRange;
 import consulo.language.psi.AbstractElementManipulator;
@@ -29,6 +30,7 @@ import javax.annotation.Nonnull;
 /**
  * @author peter
  */
+@ExtensionImpl
 public class PsiCommentManipulator extends AbstractElementManipulator<PsiComment> {
   @Override
   public PsiComment handleContentChange(@Nonnull PsiComment psiComment, @Nonnull TextRange range, String newContent) throws IncorrectOperationException {
@@ -53,5 +55,11 @@ public class PsiCommentManipulator extends AbstractElementManipulator<PsiComment
     if (text.startsWith("--")) return new TextRange(2, element.getTextLength());
     if (text.startsWith("#")) return new TextRange(1, element.getTextLength());
     return super.getRangeInElement(element);
+  }
+
+  @Nonnull
+  @Override
+  public Class<PsiComment> getElementClass() {
+    return PsiComment.class;
   }
 }

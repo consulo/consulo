@@ -25,8 +25,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class ClassExtension<T> extends KeyedExtensionCollector<T, Class> {
-  public ClassExtension(final String epName) {
+public class OldClassExtension<T> extends KeyedExtensionCollector<T, Class> {
+  public OldClassExtension(final String epName) {
     super(epName);
   }
 

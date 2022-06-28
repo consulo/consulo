@@ -16,7 +16,8 @@
 
 package consulo.language.psi;
 
-import consulo.component.extension.ExtensionPointName;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -25,13 +26,11 @@ import java.util.Collection;
 /**
  * @author Dmitry Avdeev
  */
+@ExtensionAPI(ComponentScope.PROJECT)
 public abstract class FileContextProvider {
-
-  private final static ExtensionPointName<FileContextProvider> EP_NAME = ExtensionPointName.create("consulo.fileContextProvider");
-
   @Nullable
   public static FileContextProvider getProvider(final @Nonnull PsiFile file) {
-    for (FileContextProvider provider : EP_NAME.getExtensionList(file.getProject())) {
+    for (FileContextProvider provider : file.getProject().getExtensionList(FileContextProvider.class)) {
       if (provider.isAvailable(file)) {
         return provider;
       }
