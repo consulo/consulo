@@ -1,6 +1,8 @@
 package consulo.execution.coverage;
 
 import com.intellij.rt.coverage.data.LineData;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.codeEditor.Editor;
 import consulo.component.extension.ExtensionPointName;
 import consulo.dataContext.DataContext;
@@ -32,8 +34,9 @@ import java.util.Set;
  * Each coverage engine may work with several coverage runner. E.g. Java coverage engine supports IDEA/EMMA/Cobertura,
  * Ruby engine works with RCov
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class CoverageEngine {
-  public static final ExtensionPointName<CoverageEngine> EP_NAME = ExtensionPointName.create("consulo.coverageEngine");
+  public static final ExtensionPointName<CoverageEngine> EP_NAME = ExtensionPointName.create(CoverageEngine.class);
 
   /**
    * Checks whether coverage feature is supported by this engine for given configuration or not.

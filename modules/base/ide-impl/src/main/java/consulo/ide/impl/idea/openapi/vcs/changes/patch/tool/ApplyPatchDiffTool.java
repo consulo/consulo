@@ -15,11 +15,13 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.patch.tool;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.diff.DiffContext;
 import consulo.ide.impl.idea.diff.FrameDiffTool;
 import consulo.diff.request.DiffRequest;
 import javax.annotation.Nonnull;
 
+@ExtensionImpl
 public class ApplyPatchDiffTool implements FrameDiffTool {
   @Nonnull
   @Override

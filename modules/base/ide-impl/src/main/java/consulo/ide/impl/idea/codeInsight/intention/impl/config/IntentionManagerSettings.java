@@ -27,25 +27,21 @@ package consulo.ide.impl.idea.codeInsight.intention.impl.config;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.ide.ui.search.SearchableOptionContributor;
-import consulo.ide.impl.idea.ide.ui.search.SearchableOptionProcessor;
-import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.ide.ServiceManager;
-import consulo.language.editor.CodeInsightBundle;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.intention.IntentionActionBean;
 import consulo.language.editor.intention.IntentionManager;
 import consulo.logging.Logger;
 import consulo.util.interner.Interner;
+import consulo.util.lang.Pair;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -69,8 +65,7 @@ public class IntentionManagerSettings implements PersistentStateComponent<Elemen
 
   private static final String IGNORE_ACTION_TAG = "ignoreAction";
   private static final String NAME_ATT = "name";
-  private static final Pattern HTML_PATTERN = Pattern.compile("<[^<>]*>");
-
+  public static final Pattern HTML_PATTERN = Pattern.compile("<[^<>]*>");
 
   public static IntentionManagerSettings getInstance() {
     return ServiceManager.getService(IntentionManagerSettings.class);
@@ -80,7 +75,7 @@ public class IntentionManagerSettings implements PersistentStateComponent<Elemen
     registerMetaData(new IntentionActionMetaData(intentionAction, getClassLoader(intentionAction), category, descriptionDirectoryName));
   }
 
-  private static ClassLoader getClassLoader(@Nonnull IntentionAction intentionAction) {
+  protected static ClassLoader getClassLoader(@Nonnull IntentionAction intentionAction) {
     return intentionAction instanceof IntentionActionWrapper ? ((IntentionActionWrapper)intentionAction).getImplementationClassLoader() : intentionAction.getClass().getClassLoader();
   }
 
@@ -174,40 +169,4 @@ public class IntentionManagerSettings implements PersistentStateComponent<Elemen
     }
   }
 
-  public static class IntentionSearchableOptionContributor extends SearchableOptionContributor {
-
-    @Override
-    public void processOptions(@Nonnull SearchableOptionProcessor processor) {
-      for (IntentionActionBean bean : IntentionManager.EP_INTENTION_ACTIONS.getExtensionList()) {
-        String[] categories = bean.getCategories();
-
-        if (categories == null) {
-          continue;
-        }
-        String descriptionDirectoryName = bean.getDescriptionDirectoryName();
-
-        IntentionActionWrapper intentionAction = new IntentionActionWrapper(bean);
-        if (descriptionDirectoryName == null) {
-          descriptionDirectoryName = IntentionManagerImpl.getDescriptionDirectoryName(intentionAction);
-        }
-
-        IntentionActionMetaData data = new IntentionActionMetaData(intentionAction, getClassLoader(intentionAction), categories, descriptionDirectoryName);
-
-        final TextDescriptor description = data.getDescription();
-
-        try {
-          String descriptionText = description.getText().toLowerCase();
-          descriptionText = HTML_PATTERN.matcher(descriptionText).replaceAll(" ");
-          final Set<String> words = processor.getProcessedWordsWithoutStemming(descriptionText);
-          words.addAll(processor.getProcessedWords(data.getFamily()));
-          for (String word : words) {
-            processor.addOption(word, data.getFamily(), data.getFamily(), "editor.code.intentions", CodeInsightBundle.message("intention.settings"));
-          }
-        }
-        catch (IOException e) {
-          LOG.error(e);
-        }
-      }
-    }
-  }
 }

@@ -15,6 +15,8 @@
  */
 package consulo.compiler.artifact;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 
 import javax.annotation.Nonnull;
@@ -23,8 +25,9 @@ import javax.annotation.Nullable;
 /**
  * @author nik
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class ArtifactPropertiesProvider {
-  public static final ExtensionPointName<ArtifactPropertiesProvider> EP_NAME = ExtensionPointName.create("consulo.packaging.artifactPropertiesProvider");
+  public static final ExtensionPointName<ArtifactPropertiesProvider> EP_NAME = ExtensionPointName.create(ArtifactPropertiesProvider.class);
   private final String myId;
 
   protected ArtifactPropertiesProvider(@Nonnull String id) {

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.patch.tool;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.diff.DiffContext;
 import consulo.ide.impl.idea.diff.merge.*;
 import consulo.ide.impl.idea.diff.util.DiffUtil;
@@ -33,6 +34,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
+@ExtensionImpl
 public class ApplyPatchMergeTool implements MergeTool {
   @Nonnull
   @Override

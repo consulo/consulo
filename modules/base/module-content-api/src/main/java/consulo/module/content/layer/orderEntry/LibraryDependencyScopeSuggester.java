@@ -15,6 +15,8 @@
  */
 package consulo.module.content.layer.orderEntry;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.content.library.Library;
 
@@ -24,8 +26,9 @@ import javax.annotation.Nullable;
 /**
  * @author nik
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class LibraryDependencyScopeSuggester {
-  public static final ExtensionPointName<LibraryDependencyScopeSuggester> EP_NAME = ExtensionPointName.create("consulo.library.dependencyScopeSuggester");
+  public static final ExtensionPointName<LibraryDependencyScopeSuggester> EP_NAME = ExtensionPointName.create(LibraryDependencyScopeSuggester.class);
 
   @Nullable
   public abstract DependencyScope getDefaultDependencyScope(@Nonnull Library library);

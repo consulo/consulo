@@ -15,19 +15,17 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
-import consulo.component.extension.Extensions;
-import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
 import consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class IgnoredFilesCompositeHolder implements IgnoredFilesHolder {
   private final Map<AbstractVcs, IgnoredFilesHolder> myVcsIgnoredHolderMap;
@@ -81,8 +79,7 @@ public class IgnoredFilesCompositeHolder implements IgnoredFilesHolder {
   }
 
   public boolean isInUpdatingMode() {
-    return myVcsIgnoredHolderMap.values().stream()
-            .anyMatch((holder) -> (holder instanceof VcsIgnoredFilesHolder) && ((VcsIgnoredFilesHolder)holder).isInUpdatingMode());
+    return myVcsIgnoredHolderMap.values().stream().anyMatch((holder) -> (holder instanceof VcsIgnoredFilesHolder) && ((VcsIgnoredFilesHolder)holder).isInUpdatingMode());
   }
 
   @Override
@@ -98,8 +95,7 @@ public class IgnoredFilesCompositeHolder implements IgnoredFilesHolder {
   public Collection<VirtualFile> values() {
     final HashSet<VirtualFile> result = ContainerUtil.newHashSet();
     result.addAll(myIdeIgnoredFilesHolder.values());
-    result.addAll(
-            myVcsIgnoredHolderMap.values().stream().map(IgnoredFilesHolder::values).flatMap(set -> set.stream()).collect(Collectors.toSet()));
+    result.addAll(myVcsIgnoredHolderMap.values().stream().map(IgnoredFilesHolder::values).flatMap(set -> set.stream()).collect(Collectors.toSet()));
     return result;
   }
 
@@ -108,8 +104,7 @@ public class IgnoredFilesCompositeHolder implements IgnoredFilesHolder {
     myCurrentVcs = vcs;
     if (myVcsIgnoredHolderMap.containsKey(vcs)) return;
 
-    IgnoredFilesHolder ignoredFilesHolder =
-            ObjectUtils.chooseNotNull(getHolderFromEP(vcs, myProject), new RecursiveFileHolder<>(myProject, HolderType.IGNORED));
+    IgnoredFilesHolder ignoredFilesHolder = ObjectUtils.chooseNotNull(getHolderFromEP(vcs, myProject), new RecursiveFileHolder<>(myProject, HolderType.IGNORED));
     ignoredFilesHolder.notifyVcsStarted(vcs);
     myVcsIgnoredHolderMap.put(vcs, ignoredFilesHolder);
   }
@@ -128,10 +123,7 @@ public class IgnoredFilesCompositeHolder implements IgnoredFilesHolder {
 
   @Nullable
   private static VcsIgnoredFilesHolder getHolderFromEP(AbstractVcs vcs, @Nonnull Project project) {
-    Optional<VcsIgnoredFilesHolder> ignoredFilesHolder =
-            Stream.of(Extensions.getExtensions(VcsIgnoredFilesHolder.VCS_IGNORED_FILES_HOLDER_EP, project))
-                    .filter(holder -> holder.getVcs().equals(vcs))
-                    .findFirst();
+    Optional<VcsIgnoredFilesHolder> ignoredFilesHolder = VcsIgnoredFilesHolder.VCS_IGNORED_FILES_HOLDER_EP.getExtensionList(project).stream().filter(holder -> holder.getVcs().equals(vcs)).findFirst();
     return ignoredFilesHolder.isPresent() ? ignoredFilesHolder.get() : null;
   }
 

@@ -19,6 +19,8 @@
  */
 package consulo.language.ast;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
@@ -26,8 +28,9 @@ import consulo.language.util.CharTable;
 
 import javax.annotation.Nullable;
 
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface TreeGenerator {
-  ExtensionPointName<TreeGenerator> EP_NAME = ExtensionPointName.create("consulo.treeGenerator");
+  ExtensionPointName<TreeGenerator> EP_NAME = ExtensionPointName.create(TreeGenerator.class);
   
   @Nullable
   ASTNode generateTreeFor(PsiElement original, CharTable table, final PsiManager manager);

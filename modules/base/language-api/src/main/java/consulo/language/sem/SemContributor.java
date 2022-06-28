@@ -15,6 +15,8 @@
  */
 package consulo.language.sem;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 
 /**
@@ -22,8 +24,7 @@ import consulo.component.extension.ExtensionPointName;
  *
  * @author peter
  */
+@ExtensionAPI(ComponentScope.PROJECT)
 public abstract class SemContributor {
-  public static final ExtensionPointName<SemContributorEP> EP_NAME = ExtensionPointName.create("consulo.semContributor");
-
   public abstract void registerSemProviders(SemRegistrar registrar);
 }

@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.options.ex;
 
+import consulo.application.Application;
+import consulo.configurable.ApplicationConfigurable;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurableProvider;
 import consulo.configurable.OptionalConfigurable;
@@ -89,12 +91,12 @@ public class ConfigurableExtensionPointUtil {
    */
   @Nonnull
   public static <T extends Configurable> T findProjectConfigurable(@Nonnull Project project, @Nonnull Class<T> configurableClass) {
-    return findConfigurable(project.getExtensions(BaseShowSettingsUtil.PROJECT_CONFIGURABLE), configurableClass);
+    return (T)project.getExtensionPoint(ApplicationConfigurable.class).findExtension((Class)configurableClass);
   }
 
   @Nonnull
   public static <T extends Configurable> T findApplicationConfigurable(@Nonnull Class<T> configurableClass) {
-    return findConfigurable(BaseShowSettingsUtil.APPLICATION_CONFIGURABLE.getExtensions(), configurableClass);
+    return (T)Application.get().getExtensionPoint(ApplicationConfigurable.class).findExtension((Class)configurableClass);
   }
 
   @Nonnull

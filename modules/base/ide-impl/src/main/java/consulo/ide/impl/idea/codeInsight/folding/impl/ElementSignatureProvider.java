@@ -16,6 +16,8 @@
 
 package consulo.ide.impl.idea.codeInsight.folding.impl;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -25,8 +27,9 @@ import javax.annotation.Nullable;
 /**
  * @author yole
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface ElementSignatureProvider {
-  ExtensionPointName<ElementSignatureProvider> EP_NAME = ExtensionPointName.create("consulo.elementSignatureProvider");
+  ExtensionPointName<ElementSignatureProvider> EP_NAME = ExtensionPointName.create(ElementSignatureProvider.class);
 
   @Nullable
   String getSignature(@Nonnull PsiElement element);

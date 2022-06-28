@@ -1080,8 +1080,6 @@
 
     <extensionPoint name="aliasingPsiTargetMapper" interface="consulo.ide.impl.psi.targets.AliasingPsiTargetMapper"/>
 
-    <extensionPoint name="inspectionsReportConverter"
-                    interface="consulo.ide.impl.idea.codeInspection.InspectionsReportConverter"/>
 
     <extensionPoint name="patternProvider"
                     interface="consulo.ide.impl.idea.codeInsight.generation.PatternProvider"/>
@@ -1170,7 +1168,6 @@
     
 
 
-    <scopeParserExtension implementation="consulo.ide.impl.psi.search.scope.packageSet.FilePackageSetParserExtension"/>
 
     <editorActionHandler action="EditorEscape" implementationClass="consulo.ide.impl.idea.codeInsight.hint.EscapeHandler" id="hide-hints"/>
 
@@ -1449,7 +1446,6 @@
     <renamePsiElementProcessor implementation="consulo.ide.impl.idea.refactoring.rename.RenamePsiFileProcessor" order="last"/>
 
 
-    <inspectionsReportConverter implementation="consulo.ide.impl.idea.codeInspection.ex.PlainTextFormatter"/>
 
     <refactoring.moveDirectoryWithClassesHelper
 			implementation="consulo.ide.impl.idea.refactoring.move.moveClassesOrPackages.MoveDirectoryWithClassesHelper$Default" order="last"/>

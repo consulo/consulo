@@ -15,29 +15,27 @@
  */
 package consulo.ide.impl.idea.openapi.vcs;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
-import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.util.lang.function.Condition;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.project.Project;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collection;
 import java.util.List;
 
+@ExtensionAPI(ComponentScope.PROJECT)
 public abstract class VcsTaskHandler {
 
   private static final String DEFAULT_PROHIBITED_SYMBOLS = " ";
+  private static final ExtensionPointName<VcsTaskHandler> EXTENSION_POINT_NAME = ExtensionPointName.create(VcsTaskHandler.class);
 
   public static VcsTaskHandler[] getAllHandlers(final Project project) {
     VcsTaskHandler[] extensions = EXTENSION_POINT_NAME.getExtensions(project);
-    List<VcsTaskHandler> handlers = ContainerUtil.filter(extensions, new Condition<VcsTaskHandler>() {
-      @Override
-      public boolean value(VcsTaskHandler handler) {
-        return handler.isEnabled();
-      }
-    });
+    List<VcsTaskHandler> handlers = ContainerUtil.filter(extensions, VcsTaskHandler::isEnabled);
     return handlers.toArray(new VcsTaskHandler[handlers.size()]);
   }
 
@@ -94,8 +92,6 @@ public abstract class VcsTaskHandler {
       return myBranch.hashCode();
     }
   }
-
-  private static final ExtensionPointName<VcsTaskHandler> EXTENSION_POINT_NAME = ExtensionPointName.create("consulo.vcs.taskHandler");
 
   public abstract boolean isEnabled();
 

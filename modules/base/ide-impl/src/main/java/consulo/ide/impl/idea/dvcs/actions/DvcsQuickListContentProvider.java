@@ -32,8 +32,8 @@ import java.util.List;
 public abstract class DvcsQuickListContentProvider implements VcsQuickListContentProvider {
 
   @Nullable
-  public List<AnAction> getVcsActions(@Nullable Project project, @javax.annotation.Nullable AbstractVcs activeVcs,
-                                      @javax.annotation.Nullable DataContext dataContext) {
+  public List<AnAction> getVcsActions(@Nullable Project project, @Nullable AbstractVcs activeVcs,
+                                      @Nullable DataContext dataContext) {
 
     if (activeVcs == null || !getVcsName().equals(activeVcs.getName())) {
       return null;
@@ -63,7 +63,7 @@ public abstract class DvcsQuickListContentProvider implements VcsQuickListConten
   protected abstract void addVcsSpecificActions(@Nonnull ActionManager manager, @Nonnull List<AnAction> actions);
 
   @Override
-  public boolean replaceVcsActionsFor(@Nonnull AbstractVcs activeVcs, @javax.annotation.Nullable DataContext dataContext) {
+  public boolean replaceVcsActionsFor(@Nonnull AbstractVcs activeVcs, @Nullable DataContext dataContext) {
     return getVcsName().equals(activeVcs.getName());
   }
 

@@ -51,8 +51,8 @@ public final class LanguageOneToMany<E extends LanguageExtension> implements Fun
         return joinAny(language, extension);
       }
 
-      Language base = null;
-      while ((base = language.getBaseLanguage()) != null) {
+      Language base = language;
+      while ((base = base.getBaseLanguage()) != null) {
         List<T> baseExtension = myExtensions.get(base);
         if (baseExtension != null) {
           myExtensions.put(language, baseExtension);

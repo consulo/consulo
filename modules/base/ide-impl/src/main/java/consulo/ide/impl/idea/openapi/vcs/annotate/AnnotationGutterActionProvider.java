@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.annotate;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.ui.ex.action.AnAction;
 import consulo.component.extension.ExtensionPointName;
 import javax.annotation.Nonnull;
@@ -24,9 +26,10 @@ import javax.annotation.Nonnull;
  *
  * @author Kirill Likhodedov
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface AnnotationGutterActionProvider {
 
-  ExtensionPointName<AnnotationGutterActionProvider> EP_NAME = ExtensionPointName.create("consulo.vcsAnnotationGutterActionProvider");
+  ExtensionPointName<AnnotationGutterActionProvider> EP_NAME = ExtensionPointName.create(AnnotationGutterActionProvider.class);
 
   /**
    * Create an action that will be added to the annotation gutter popup.
@@ -35,5 +38,4 @@ public interface AnnotationGutterActionProvider {
    */
   @Nonnull
   AnAction createAction(FileAnnotation annotation);
-
 }

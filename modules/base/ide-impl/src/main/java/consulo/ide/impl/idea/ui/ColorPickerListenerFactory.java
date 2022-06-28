@@ -15,10 +15,11 @@
  */
 package consulo.ide.impl.idea.ui;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
-import consulo.language.psi.PsiElement;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.psi.PsiElement;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -26,18 +27,12 @@ import java.util.List;
 /**
  * User: ksafonov
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class ColorPickerListenerFactory {
-  private static final ExtensionPointName<ColorPickerListenerFactory> EP_NAME =
-    ExtensionPointName.create("consulo.colorPickerListenerFactory");
+  private static final ExtensionPointName<ColorPickerListenerFactory> EP_NAME = ExtensionPointName.create(ColorPickerListenerFactory.class);
 
   public static ColorPickerListener[] createListenersFor(@Nullable final PsiElement element) {
-    final List<ColorPickerListener> listeners =
-      ContainerUtil.mapNotNull(EP_NAME.getExtensions(), new Function<ColorPickerListenerFactory, ColorPickerListener>() {
-        @Override
-        public ColorPickerListener fun(ColorPickerListenerFactory factory) {
-          return factory.createListener(element);
-        }
-      });
+    final List<ColorPickerListener> listeners = ContainerUtil.mapNotNull(EP_NAME.getExtensionList(), factory -> factory.createListener(element));
     return listeners.toArray(new ColorPickerListener[listeners.size()]);
   }
 

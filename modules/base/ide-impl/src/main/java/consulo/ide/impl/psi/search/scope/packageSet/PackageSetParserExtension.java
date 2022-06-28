@@ -20,6 +20,8 @@
  */
 package consulo.ide.impl.psi.search.scope.packageSet;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.language.lexer.Lexer;
 import consulo.component.extension.ExtensionPointName;
 import consulo.content.scope.PackageSet;
@@ -27,8 +29,9 @@ import consulo.content.scope.ParsingException;
 
 import javax.annotation.Nullable;
 
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface PackageSetParserExtension {
-  ExtensionPointName<PackageSetParserExtension> EP_NAME = ExtensionPointName.create("consulo.scopeParserExtension");
+  ExtensionPointName<PackageSetParserExtension> EP_NAME = ExtensionPointName.create(PackageSetParserExtension.class);
 
   @Nullable
   PackageSet parsePackageSet(Lexer lexer, final String scope, String modulePattern) throws ParsingException;

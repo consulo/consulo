@@ -16,19 +16,18 @@
 
 package consulo.ide.impl.idea.codeInsight.navigation.actions;
 
-import consulo.language.editor.action.CodeInsightActionHandler;
-import consulo.language.editor.CodeInsightBundle;
-import consulo.ide.impl.idea.codeInsight.actions.BaseCodeInsightAction;
-import consulo.language.editor.ui.PopupNavigationUtil;
-import consulo.codeEditor.Editor;
-import consulo.fileEditor.FileEditorManager;
-import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.dumb.DumbAware;
+import consulo.codeEditor.Editor;
+import consulo.fileEditor.FileEditorManager;
+import consulo.ide.impl.idea.codeInsight.actions.BaseCodeInsightAction;
+import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.TargetElementUtil;
 import consulo.language.editor.TargetElementUtilExtender;
-import consulo.component.extension.Extensions;
+import consulo.language.editor.action.CodeInsightActionHandler;
+import consulo.language.editor.ui.PopupNavigationUtil;
 import consulo.language.psi.*;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -138,7 +137,7 @@ public class GotoTypeDeclarationAction extends BaseCodeInsightAction implements 
   @Nullable
   @RequiredReadAction
   private static PsiElement[] getSymbolTypeDeclarations(final PsiElement targetElement, Editor editor, int offset) {
-    for (TypeDeclarationProvider provider : Extensions.getExtensions(TypeDeclarationProvider.EP_NAME)) {
+    for (TypeDeclarationProvider provider : TypeDeclarationProvider.EP_NAME.getExtensionList()) {
       PsiElement[] result = provider.getSymbolTypeDeclarations(targetElement, editor, offset);
       if (result != null) {
         return result;

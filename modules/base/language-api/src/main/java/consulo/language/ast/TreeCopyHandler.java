@@ -19,12 +19,15 @@
  */
 package consulo.language.ast;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 
 import java.util.Map;
 
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface TreeCopyHandler {
-  ExtensionPointName<TreeCopyHandler> EP_NAME = ExtensionPointName.create("consulo.treeCopyHandler");
+  ExtensionPointName<TreeCopyHandler> EP_NAME = ExtensionPointName.create(TreeCopyHandler.class);
 
   void encodeInformation(ASTNode element, ASTNode original, Map<Object, Object> encodingState);
 

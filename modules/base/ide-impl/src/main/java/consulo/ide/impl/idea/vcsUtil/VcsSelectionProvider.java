@@ -15,15 +15,20 @@
  */
 package consulo.ide.impl.idea.vcsUtil;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.ide.impl.idea.openapi.vcs.actions.VcsContext;
+
+import javax.annotation.Nullable;
 
 /**
  * @author yole
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface VcsSelectionProvider {
-  ExtensionPointName<VcsSelectionProvider> EP_NAME = ExtensionPointName.create("consulo.vcsSelectionProvider");
+  ExtensionPointName<VcsSelectionProvider> EP_NAME = ExtensionPointName.create(VcsSelectionProvider.class);
 
-  @javax.annotation.Nullable
+  @Nullable
   VcsSelection getSelection(VcsContext context);
 }

@@ -1,5 +1,7 @@
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.ui.ex.action.AnAction;
 import consulo.dataContext.DataContext;
 import consulo.component.extension.ExtensionPointName;
@@ -13,8 +15,9 @@ import java.util.List;
 /**
  * @author Roman.Chernyatchik
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface VcsQuickListContentProvider {
-  ExtensionPointName<VcsQuickListContentProvider> EP_NAME = ExtensionPointName.create("consulo.vcsPopupProvider");
+  ExtensionPointName<VcsQuickListContentProvider> EP_NAME = ExtensionPointName.create(VcsQuickListContentProvider.class);
 
   /**
    * Allows to customise VCS actions popup for both custom VCS and general list 
@@ -23,7 +26,7 @@ public interface VcsQuickListContentProvider {
    * @param dataContext Context
    * @return actions list or null if do nothing
    */
-  @javax.annotation.Nullable
+  @Nullable
   List<AnAction> getVcsActions(@Nullable final Project project,
                                @Nullable final AbstractVcs activeVcs,
                                @Nullable final DataContext dataContext);
@@ -36,7 +39,7 @@ public interface VcsQuickListContentProvider {
    */
   @Nullable
   List<AnAction> getNotInVcsActions(@Nullable final Project project,
-                                    @javax.annotation.Nullable final DataContext dataContext);
+                                    @Nullable final DataContext dataContext);
 
   /**
    * @param activeVcs Active vcs for current file
@@ -45,5 +48,5 @@ public interface VcsQuickListContentProvider {
    * custom actions will be inserted in general popup. Usually should be false.
    */
   boolean replaceVcsActionsFor(@Nonnull final AbstractVcs activeVcs,
-                               @javax.annotation.Nullable final DataContext dataContext);
+                               @Nullable final DataContext dataContext);
 }

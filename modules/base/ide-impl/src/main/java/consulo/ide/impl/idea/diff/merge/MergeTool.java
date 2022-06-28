@@ -15,22 +15,24 @@
  */
 package consulo.ide.impl.idea.diff.merge;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.component.extension.ExtensionPointName;
 import consulo.diff.merge.MergeRequest;
 import consulo.diff.merge.MergeResult;
-import consulo.ui.ex.action.AnAction;
-import consulo.component.extension.ExtensionPointName;
+import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.util.BooleanGetter;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import consulo.disposer.Disposable;
-import consulo.ui.annotation.RequiredUIAccess;
-
 import javax.swing.*;
 import java.util.List;
 
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface MergeTool {
-  ExtensionPointName<MergeTool> EP_NAME = ExtensionPointName.create("consulo.diff.merge.MergeTool");
+  ExtensionPointName<MergeTool> EP_NAME = ExtensionPointName.create(MergeTool.class);
 
   /**
    * Creates viewer for the given request. Clients should call {@link #canShow(MergeContext, MergeRequest)} first.

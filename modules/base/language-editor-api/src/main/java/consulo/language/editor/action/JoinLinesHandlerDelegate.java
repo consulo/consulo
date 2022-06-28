@@ -16,6 +16,8 @@
 
 package consulo.language.editor.action;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.document.Document;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiFile;
@@ -23,8 +25,9 @@ import consulo.language.psi.PsiFile;
 /**
  * @author yole
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface JoinLinesHandlerDelegate {
-  ExtensionPointName<JoinLinesHandlerDelegate> EP_NAME = ExtensionPointName.create("consulo.joinLinesHandler");
+  ExtensionPointName<JoinLinesHandlerDelegate> EP_NAME = ExtensionPointName.create(JoinLinesHandlerDelegate.class);
 
   /**
    * Tries to join lines at the specified position of the specified file.

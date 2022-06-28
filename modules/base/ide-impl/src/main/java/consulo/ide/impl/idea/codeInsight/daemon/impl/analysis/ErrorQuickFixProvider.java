@@ -27,7 +27,7 @@ import consulo.language.psi.PsiErrorElement;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ErrorQuickFixProvider {
-  ExtensionPointName<ErrorQuickFixProvider> EP_NAME = ExtensionPointName.create("consulo.errorQuickFixProvider");
+  ExtensionPointName<ErrorQuickFixProvider> EP_NAME = ExtensionPointName.create(ErrorQuickFixProvider.class);
   
   void registerErrorQuickFix(PsiErrorElement errorElement, HighlightInfo highlightInfo);
 }

@@ -15,13 +15,16 @@
  */
 package consulo.execution.test;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 
 import javax.annotation.Nullable;
 
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class TestStatusListener {
-  public static final ExtensionPointName<TestStatusListener> EP_NAME = ExtensionPointName.create("consulo.testStatusListener");
+  public static final ExtensionPointName<TestStatusListener> EP_NAME = ExtensionPointName.create(TestStatusListener.class);
 
   public abstract void testSuiteFinished(@Nullable AbstractTestProxy root);
 

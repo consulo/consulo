@@ -103,17 +103,8 @@ public class SemServiceImpl extends SemService {
       }
     };
 
-    for (SemContributorEP contributor : myProject.getExtensionList(SemContributor.EP_NAME)) {
-      try {
-        Class<SemContributor> contributorClass = contributor.<SemContributor>findClass(contributor.implementation);
-
-        SemContributor semContributor = myProject.getUnbindedInstance(contributorClass);
-
-        semContributor.registerSemProviders(registrar);
-      }
-      catch (ClassNotFoundException e) {
-        LOG.error(e);
-      }
+    for (SemContributor contributor : myProject.getExtensionList(SemContributor.class)) {
+      contributor.registerSemProviders(registrar);
     }
 
     return map;

@@ -15,14 +15,17 @@
  */
 package consulo.ide.impl.idea.openapi.editor;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.codeEditor.markup.GutterMark;
 import consulo.component.extension.ExtensionPointName;
 import javax.annotation.Nonnull;
 
 import java.util.List;
 
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface GutterMarkPreprocessor {
-  ExtensionPointName<GutterMarkPreprocessor> EP_NAME = ExtensionPointName.create("consulo.gutterMarkPreprocessor");
+  ExtensionPointName<GutterMarkPreprocessor> EP_NAME = ExtensionPointName.create(GutterMarkPreprocessor.class);
 
   @Nonnull
   List<GutterMark> processMarkers(@Nonnull List<GutterMark> list);

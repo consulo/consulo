@@ -15,16 +15,22 @@
  */
 package consulo.ide.impl.idea.testIntegration;
 
-import consulo.execution.action.Location;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
+import consulo.execution.action.Location;
 import consulo.project.Project;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
-/** @deprecated override SMTRunnerConsoleProperties.getTestLocator() instead (to be removed in IDEA 17) */
+/**
+ * @deprecated override SMTRunnerConsoleProperties.getTestLocator() instead (to be removed in IDEA 17)
+ */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface TestLocationProvider {
-  @SuppressWarnings("deprecation") ExtensionPointName<TestLocationProvider> EP_NAME = ExtensionPointName.create("consulo.testSrcLocator");
+  @SuppressWarnings("deprecation")
+  ExtensionPointName<TestLocationProvider> EP_NAME = ExtensionPointName.create(TestLocationProvider.class);
 
   @Nonnull
   List<Location> getLocation(@Nonnull String protocolId, @Nonnull String locationData, Project project);

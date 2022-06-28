@@ -16,18 +16,22 @@
 
 package consulo.ide.impl.idea.codeInsight.navigation.actions;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.codeEditor.Editor;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotation.access.RequiredReadAction;
 
 /**
  * @author yole
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class TypeDeclarationProvider {
-  public static final ExtensionPointName<TypeDeclarationProvider> EP_NAME = ExtensionPointName.create("consulo.typeDeclarationProvider");
+  public static final ExtensionPointName<TypeDeclarationProvider> EP_NAME = ExtensionPointName.create(TypeDeclarationProvider.class);
 
   @Nullable
   @RequiredReadAction

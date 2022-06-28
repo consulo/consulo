@@ -4,6 +4,8 @@
  */
 package consulo.execution.coverage;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.rt.coverage.data.ProjectData;
 import org.jetbrains.annotations.NonNls;
@@ -12,8 +14,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class CoverageRunner {
-  public static final ExtensionPointName<CoverageRunner> EP_NAME = ExtensionPointName.create("consulo.coverageRunner");
+  public static final ExtensionPointName<CoverageRunner> EP_NAME = ExtensionPointName.create(CoverageRunner.class);
 
   public abstract ProjectData loadCoverageData(@Nonnull final File sessionDataFile, @Nullable final CoverageSuite baseCoverageSuite);
 

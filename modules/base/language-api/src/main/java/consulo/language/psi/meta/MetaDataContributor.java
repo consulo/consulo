@@ -16,13 +16,16 @@
 
 package consulo.language.psi.meta;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 
 /**
  * @author yole
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface MetaDataContributor {
-  ExtensionPointName<MetaDataContributor> EP_NAME = ExtensionPointName.create("consulo.metaDataContributor");
+  ExtensionPointName<MetaDataContributor> EP_NAME = ExtensionPointName.create(MetaDataContributor.class);
 
   void contributeMetaData(MetaDataRegistrar registrar);
 }

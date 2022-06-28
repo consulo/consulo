@@ -27,8 +27,6 @@
   <extensions defaultExtensionNs="consulo">
 
 
-    <diff.merge.MergeTool implementation="consulo.ide.impl.idea.openapi.vcs.changes.patch.tool.ApplyPatchMergeTool"/>
-    <diff.DiffTool implementation="consulo.ide.impl.idea.openapi.vcs.changes.patch.tool.ApplyPatchDiffTool"/>
 
     <openapi.vcs.actions.AnnotateToggleAction.Provider implementation="consulo.ide.impl.idea.openapi.vcs.actions.AnnotateLocalFileAction$Provider"/>
     <openapi.vcs.actions.AnnotateToggleAction.Provider implementation="consulo.ide.impl.idea.openapi.vcs.actions.AnnotateVcsVirtualFileAction$Provider"/>
