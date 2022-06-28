@@ -16,6 +16,8 @@
 
 package consulo.ide.impl.idea.codeInsight.generation.surroundWith;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.document.util.TextRange;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiFile;
@@ -24,10 +26,11 @@ import javax.annotation.Nullable;
 /**
  * @author yole
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface SurroundWithRangeAdjuster {
-  ExtensionPointName<SurroundWithRangeAdjuster> EP_NAME = ExtensionPointName.create("consulo.codeInsight.surroundWithRangeAdjuster");
+  ExtensionPointName<SurroundWithRangeAdjuster> EP_NAME = ExtensionPointName.create(SurroundWithRangeAdjuster.class);
 
-  @javax.annotation.Nullable
+  @Nullable
   TextRange adjustSurroundWithRange(PsiFile file, TextRange selectedRange);
 
   @Nullable

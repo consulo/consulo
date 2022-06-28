@@ -6,15 +6,16 @@ import consulo.application.ApplicationManager;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.TabOutScopesTracker;
+import consulo.codeEditor.internal.RealEditor;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
-import consulo.ide.impl.idea.openapi.editor.impl.DesktopEditorImpl;
 import consulo.language.editor.CodeInsightSettings;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.language.file.inject.DocumentWindow;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import jakarta.inject.Singleton;
 
@@ -29,6 +30,7 @@ public class TabOutScopesTrackerImpl implements TabOutScopesTracker {
   private static final Key<Integer> CARET_SHIFT = Key.create("tab.out.caret.shift");
 
   @Override
+  @RequiredUIAccess
   public void registerEmptyScope(@Nonnull Editor editor, int offset, int tabOutOffset) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     if (editor.isDisposed()) throw new IllegalArgumentException("Editor is already disposed");
@@ -41,23 +43,26 @@ public class TabOutScopesTrackerImpl implements TabOutScopesTracker {
       offset = documentWindow.injectedToHost(offset);
       editor = ((EditorWindow)editor).getDelegate();
     }
-    if (!(editor instanceof DesktopEditorImpl)) return;
+    if (!(editor instanceof RealEditor)) return;
 
-    Tracker tracker = Tracker.forEditor((DesktopEditorImpl)editor, true);
+    Tracker tracker = Tracker.forEditor((RealEditor)editor, true);
     tracker.registerScope(offset, tabOutOffset - offset);
   }
 
+  @RequiredUIAccess
   @Override
   public boolean hasScopeEndingAt(@Nonnull Editor editor, int offset) {
     return checkOrRemoveScopeEndingAt(editor, offset, false) > 0;
   }
 
+  @RequiredUIAccess
   @Override
   public int removeScopeEndingAt(@Nonnull Editor editor, int offset) {
     int caretShift = checkOrRemoveScopeEndingAt(editor, offset, true);
     return caretShift > 0 ? offset + caretShift : -1;
   }
 
+  @RequiredUIAccess
   private static int checkOrRemoveScopeEndingAt(@Nonnull Editor editor, int offset, boolean removeScope) {
     ApplicationManager.getApplication().assertIsDispatchThread();
 
@@ -68,9 +73,9 @@ public class TabOutScopesTrackerImpl implements TabOutScopesTracker {
       offset = documentWindow.injectedToHost(offset);
       editor = ((EditorWindow)editor).getDelegate();
     }
-    if (!(editor instanceof DesktopEditorImpl)) return 0;
+    if (!(editor instanceof RealEditor)) return 0;
 
-    Tracker tracker = Tracker.forEditor((DesktopEditorImpl)editor, false);
+    Tracker tracker = Tracker.forEditor((RealEditor)editor, false);
     if (tracker == null) return 0;
 
     return tracker.getCaretShiftForScopeEndingAt(offset, removeScope);
@@ -82,7 +87,7 @@ public class TabOutScopesTrackerImpl implements TabOutScopesTracker {
 
     private final Editor myEditor;
 
-    private static Tracker forEditor(@Nonnull DesktopEditorImpl editor, boolean createIfAbsent) {
+    private static Tracker forEditor(@Nonnull RealEditor editor, boolean createIfAbsent) {
       Tracker tracker = editor.getUserData(TRACKER);
       if (tracker == null && createIfAbsent) {
         editor.putUserData(TRACKER, tracker = new Tracker(editor));
@@ -90,7 +95,7 @@ public class TabOutScopesTrackerImpl implements TabOutScopesTracker {
       return tracker;
     }
 
-    private Tracker(@Nonnull DesktopEditorImpl editor) {
+    private Tracker(@Nonnull RealEditor editor) {
       myEditor = editor;
       Disposable editorDisposable = editor.getDisposable();
       myEditor.getDocument().addDocumentListener(this, editorDisposable);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.completion;
+package consulo.language.psi.search;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.codeEditor.Editor;
-import consulo.component.extension.ExtensionPointName;
-import consulo.language.psi.PsiFile;
+import consulo.application.util.query.QueryExecutor;
+import consulo.language.psi.PsiReference;
 
 /**
- * @author Evgeny Gerashchenko
- * @since 2/1/12
+ * @author VISTALL
+ * @since 28-Jun-22
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
-public interface TemplateParameterTraversalPolicy {
-  ExtensionPointName<TemplateParameterTraversalPolicy> EP_NAME = ExtensionPointName.create(TemplateParameterTraversalPolicy.class);
-
-  boolean isValidForFile(Editor editor, PsiFile file);
-
-  void invoke(Editor editor, PsiFile file, boolean next);
+public interface ReferencesSearchQueryExecutor extends QueryExecutor<PsiReference, ReferencesSearch.SearchParameters> {
 }

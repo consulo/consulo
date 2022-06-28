@@ -18,21 +18,21 @@ package consulo.ide.impl.idea.usages.impl;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
-import consulo.language.editor.CommonDataKeys;
-import consulo.project.Project;
-import consulo.usage.UsageViewBundle;
-import consulo.usage.UsageView;
 import consulo.ide.impl.idea.usages.impl.rules.ReadAccessFilteringRule;
 import consulo.ide.impl.idea.usages.impl.rules.WriteAccessFilteringRule;
-import consulo.usage.rule.UsageFilteringRule;
-import consulo.usage.rule.UsageFilteringRuleProvider;
+import consulo.language.editor.CommonDataKeys;
+import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.ex.action.ToggleAction;
+import consulo.usage.UsageView;
+import consulo.usage.UsageViewBundle;
+import consulo.usage.rule.UsageFilteringRule;
+import consulo.usage.rule.UsageFilteringRuleListener;
+import consulo.usage.rule.UsageFilteringRuleProvider;
 
 import javax.annotation.Nonnull;
-
 import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -118,7 +118,7 @@ public class UsageFilteringRuleProviderImpl implements UsageFilteringRuleProvide
       myReadWriteState.setShowReadAccess(state);
       Project project = e.getData(CommonDataKeys.PROJECT);
       if (project == null) return;
-      project.getMessageBus().syncPublisher(RULES_CHANGED).run();
+      project.getMessageBus().syncPublisher(UsageFilteringRuleListener.class).rulesChanged();
     }
   }
 
@@ -137,7 +137,7 @@ public class UsageFilteringRuleProviderImpl implements UsageFilteringRuleProvide
       myReadWriteState.setShowWriteAccess(state);
       Project project = e.getData(CommonDataKeys.PROJECT);
       if (project == null) return;
-      project.getMessageBus().syncPublisher(RULES_CHANGED).run();
+      project.getMessageBus().syncPublisher(UsageFilteringRuleListener.class).rulesChanged();
     }
   }
 }

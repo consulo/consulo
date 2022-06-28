@@ -1,13 +1,11 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.psi.search;
 
-import consulo.application.util.query.Query;
 import consulo.application.util.function.Processor;
 import consulo.application.util.query.ExtensibleQueryFactory;
 import consulo.application.util.query.MergeQuery;
-import consulo.application.util.query.QueryExecutor;
+import consulo.application.util.query.Query;
 import consulo.application.util.query.UniqueResultsQuery;
-import consulo.component.extension.ExtensionPointName;
 import consulo.content.scope.SearchScope;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
@@ -28,10 +26,10 @@ import java.util.function.BiPredicate;
  * @see PsiReference
  */
 public class ReferencesSearch extends ExtensibleQueryFactory<PsiReference, ReferencesSearch.SearchParameters> {
-  public static final ExtensionPointName<QueryExecutor> EP_NAME = ExtensionPointName.create("consulo.referencesSearch");
   private static final ReferencesSearch INSTANCE = new ReferencesSearch();
 
   private ReferencesSearch() {
+    super(ReferencesSearchQueryExecutor.class);
   }
 
   public static class SearchParameters implements DumbAwareSearchParameters, consulo.project.util.query.SearchParameters<PsiReference> {

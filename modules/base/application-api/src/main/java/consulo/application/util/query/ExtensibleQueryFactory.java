@@ -17,66 +17,38 @@
 package consulo.application.util.query;
 
 import consulo.application.Application;
-import consulo.component.extension.ExtensionPoint;
-import consulo.component.extension.ExtensionPointId;
-import consulo.component.extension.SimpleSmartExtensionPoint;
-import consulo.container.plugin.PluginIds;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.util.lang.StringUtil;
-import consulo.util.lang.lazy.LazyValue;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Supplier;
 
 /**
  * @author yole
  */
 public class ExtensibleQueryFactory<Result, Parameters> extends QueryFactory<Result, Parameters> {
-  private final Supplier<SimpleSmartExtensionPoint<QueryExecutor<Result, Parameters>>> myPoint;
+  private final Class<? extends QueryExecutor<Result, Parameters>> myExtensionClass;
 
-  protected ExtensibleQueryFactory() {
-    this(PluginIds.CONSULO_BASE.getIdString());
-  }
-
-  protected ExtensibleQueryFactory(final String epNamespace) {
-    myPoint = LazyValue.notNull(() -> {
-      return new SimpleSmartExtensionPoint<>(new ArrayList<>()) {
-        @Override
-        @Nonnull
-        protected ExtensionPoint<QueryExecutor<Result, Parameters>> getExtensionPoint() {
-          String epName = ExtensibleQueryFactory.this.getClass().getName();
-          int pos = epName.lastIndexOf('.');
-          if (pos >= 0) {
-            epName = epName.substring(pos + 1);
-          }
-          epName = epNamespace + "." + StringUtil.decapitalize(epName);
-          return Application.get().getExtensionPoint(ExtensionPointId.of(epName));
-        }
-      };
-    });
-  }
-
-  public void registerExecutor(final QueryExecutor<Result, Parameters> queryExecutor, Disposable parentDisposable) {
-    registerExecutor(queryExecutor);
-    Disposer.register(parentDisposable, () -> unregisterExecutor(queryExecutor));
+  protected ExtensibleQueryFactory(Class<? extends QueryExecutor<Result, Parameters>> extensionClass) {
+    myExtensionClass = extensionClass;
   }
 
   @Override
   public void registerExecutor(@Nonnull final QueryExecutor<Result, Parameters> queryExecutor) {
-    myPoint.get().addExplicitExtension(queryExecutor);
+    throw new UnsupportedOperationException();
   }
 
   @Override
   public void unregisterExecutor(@Nonnull final QueryExecutor<Result, Parameters> queryExecutor) {
-    myPoint.get().removeExplicitExtension(queryExecutor);
+    throw new UnsupportedOperationException();
   }
 
   @Override
   @Nonnull
-  protected List<QueryExecutor<Result, Parameters>> getExecutors() {
-    return myPoint.get().getExtensions();
+  protected List<? extends QueryExecutor<Result, Parameters>> getExecutors() {
+    return Application.get().getExtensionList(myExtensionClass);
+  }
+
+  @Override
+  public boolean hasAnyExecutors() {
+    return Application.get().getExtensionPoint(myExtensionClass).hasAnyExtensions();
   }
 }

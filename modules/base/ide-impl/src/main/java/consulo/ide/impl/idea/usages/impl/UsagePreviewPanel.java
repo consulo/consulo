@@ -101,25 +101,6 @@ public class UsagePreviewPanel extends UsageContextPanelBase implements DataProv
     return null;
   }
 
-  public static class Provider implements UsageContextPanelProvider {
-    @Nonnull
-    @Override
-    public UsageContextPanel create(@Nonnull UsageView usageView) {
-      return new UsagePreviewPanel(((UsageViewImpl)usageView).getProject(), usageView.getPresentation(), true);
-    }
-
-    @Override
-    public boolean isAvailableFor(@Nonnull UsageView usageView) {
-      return true;
-    }
-
-    @Nonnull
-    @Override
-    public String getTabTitle() {
-      return "Preview";
-    }
-  }
-
   private void resetEditor(@Nonnull final List<? extends UsageInfo> infos) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     PsiElement psiElement = infos.get(0).getElement();

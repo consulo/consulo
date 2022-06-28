@@ -15,20 +15,21 @@
  */
 package consulo.ide.impl.idea.tasks.actions.vcs;
 
-import javax.annotation.Nonnull;
-
-import consulo.project.Project;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.tasks.LocalTask;
 import consulo.ide.impl.idea.tasks.Task;
 import consulo.ide.impl.idea.tasks.TaskManager;
 import consulo.ide.impl.idea.tasks.ui.TaskDialogPanel;
 import consulo.ide.impl.idea.tasks.ui.TaskDialogPanelProvider;
+import consulo.project.Project;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
  * @author Dmitry Avdeev
  */
+@ExtensionImpl
 public class VcsTaskDialogPanelProvider extends TaskDialogPanelProvider {
   @Nullable
   @Override

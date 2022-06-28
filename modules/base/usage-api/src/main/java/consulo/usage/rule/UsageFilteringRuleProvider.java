@@ -29,8 +29,6 @@ import javax.annotation.Nonnull;
 public interface UsageFilteringRuleProvider {
   ExtensionPointName<UsageFilteringRuleProvider> EP_NAME = ExtensionPointName.create(UsageFilteringRuleProvider.class);
 
-  TopicImpl<Runnable> RULES_CHANGED = new TopicImpl<Runnable>("usave view rules changed", Runnable.class);
-
   @Nonnull
   UsageFilteringRule[] getActiveRules(@Nonnull Project project);
 

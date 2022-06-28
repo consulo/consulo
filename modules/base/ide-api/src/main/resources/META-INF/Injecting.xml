@@ -18,9 +18,7 @@
       <category>Language Injection</category>
     </intentionAction>
 
-    <applicationService serviceImplementation="consulo.ide.impl.psi.injection.LanguageSupportCache"/>
 
-    <highlightErrorFilter implementation="consulo.ide.impl.intelliLang.inject.CustomErrorElementFilter"/>
 
     <projectConfigurable displayName="Language Injections" id="IntelliLang.Configuration" parentId="editor" instance="consulo.ide.impl.intelliLang.InjectionsSettingsUI" nonDefaultProject="true"/>
 
@@ -32,15 +30,7 @@
     <multiHostInjector forClass="consulo.language.psi.PsiLanguageInjectionHost"
 					   implementationClass="consulo.ide.impl.intelliLang.inject.DefaultLanguageInjector" order="last"/>
 
-    <projectService serviceInterface="consulo.ide.impl.intelliLang.inject.TemporaryPlacesRegistry"
-                    serviceImplementation="consulo.ide.impl.intelliLang.inject.TemporaryPlacesRegistry"/>
 
-    <applicationService serviceImplementation="consulo.ide.impl.psi.injection.impl.ApplicationInjectionConfiguration"/>
-
-    <projectService serviceImplementation="consulo.ide.impl.psi.injection.impl.ProjectInjectionConfiguration"/>
-
-    <psi.referenceContributor implementation="consulo.ide.impl.intelliLang.references.InjectedReferencesContributor"/>
-    <referenceInjector implementation="consulo.ide.impl.intelliLang.references.FileReferenceInjector"/>
     <localInspection implementationClass="consulo.ide.impl.intelliLang.references.InjectedReferencesInspection"
                      enabledByDefault="true" level="ERROR"
                      displayName="Injected References" groupBundle="consulo.language.editor.inspection.InspectionsBundle" groupKey="inspection.general.tools.group.name"/>

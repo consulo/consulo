@@ -16,24 +16,23 @@
 
 package consulo.ide.impl.idea.refactoring.safeDelete;
 
+import consulo.application.HelpManager;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.util.DeleteUtil;
-import consulo.component.extension.Extensions;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider;
-import consulo.application.HelpManager;
-import consulo.project.DumbService;
-import consulo.project.Project;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.Messages;
-import consulo.language.psi.PsiElement;
 import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.refactoring.RefactoringSettings;
 import consulo.language.editor.refactoring.util.TextOccurrencesUtil;
-import consulo.ui.ex.awt.StateRestoringCheckBox;
+import consulo.language.psi.PsiElement;
+import consulo.project.DumbService;
+import consulo.project.Project;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.StateRestoringCheckBox;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -170,7 +169,7 @@ public class SafeDeleteDialog extends DialogWrapper {
   @Nullable
   private SafeDeleteProcessorDelegate getDelegate() {
     if (myElements.length == 1) {
-      for (SafeDeleteProcessorDelegate delegate : Extensions.getExtensions(SafeDeleteProcessorDelegate.EP_NAME)) {
+      for (SafeDeleteProcessorDelegate delegate : SafeDeleteProcessorDelegate.EP_NAME.getExtensionList()) {
         if (delegate.handlesElement(myElements[0])) {
           return delegate;
         }

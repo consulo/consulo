@@ -1157,27 +1157,10 @@
                     serviceImplementation="consulo.ide.impl.idea.ide.errorTreeView.impl.ErrorTreeViewConfiguration"/>
 
 
-    <projectService serviceInterface="consulo.fileEditor.SelectInEditorManager"
-                    serviceImplementation="consulo.ide.impl.idea.ide.impl.SelectInEditorManagerImpl"/>
-    <projectService serviceInterface="consulo.ide.impl.idea.ui.RecentsManager"
-                    serviceImplementation="consulo.ide.impl.idea.ui.RecentsManager"/>
-    <projectService serviceInterface="consulo.project.ui.view.MessageView"
-                    serviceImplementation="consulo.ide.impl.idea.ui.content.impl.MessageViewImpl"/>
-
-
-
-
 
     <projectService serviceImplementation="consulo.execution.test.export.ExportTestResultsConfiguration"/>
 
-    <projectService serviceInterface="consulo.ide.impl.idea.openapi.vcs.VcsFileListenerContextHelper"
-                    serviceImplementation="consulo.ide.impl.idea.openapi.vcs.VcsFileListenerContextHelper"/>
 
-    <projectService serviceInterface="consulo.document.LazyRangeMarkerFactory"
-                    serviceImplementation="consulo.ide.impl.idea.openapi.editor.impl.LazyRangeMarkerFactoryImpl"/>
-
-    <projectService serviceInterface="consulo.ide.impl.idea.openapi.project.ProjectReloadState"
-                    serviceImplementation="consulo.ide.impl.idea.openapi.project.impl.ProjectReloadStateImpl"/>
 
     <projectService serviceImplementation="consulo.ide.impl.idea.execution.TestStateStorage"/>
 
@@ -1186,9 +1169,6 @@
 
     
 
-
-
-    <postStartupActivity implementation="consulo.ide.impl.idea.ide.bookmarks.BookmarkManager$MyStartupActivity"/>
 
     <scopeParserExtension implementation="consulo.ide.impl.psi.search.scope.packageSet.FilePackageSetParserExtension"/>
 
@@ -1261,11 +1241,6 @@
     <applicationService serviceInterface="consulo.ide.impl.roots.ui.configuration.projectRoot.daemon.ApplicationStructureProblemsSettings"
                         serviceImplementation="consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.GlobalProjectStructureProblemsSettings"/>
 
-    <referencesSearch implementation="consulo.ide.impl.psi.impl.search.CachesBasedRefSearcher"/>
-    <referencesSearch implementation="consulo.ide.impl.psi.impl.search.NonPhysicalReferenceSearcher"/>
-
-
-
 
 
     <applicationService serviceInterface="consulo.ide.impl.idea.codeInsight.template.impl.ExportableTemplateSettings"
@@ -1320,8 +1295,7 @@
     <projectService serviceInterface="consulo.ide.impl.idea.packageDependencies.DependenciesToolWindow"
                     serviceImplementation="consulo.ide.impl.idea.packageDependencies.DependenciesToolWindow"/>
 
-    <projectService serviceInterface="consulo.ide.impl.idea.codeInsight.documentation.DocumentationManager"
-                    serviceImplementation="consulo.ide.impl.idea.codeInsight.documentation.DocumentationManager"/>
+    
 
     <projectService serviceInterface="consulo.ide.impl.idea.moduleDependencies.DependenciesAnalyzeManager"
                     serviceImplementation="consulo.ide.impl.idea.moduleDependencies.DependenciesAnalyzeManager"/>
@@ -1399,18 +1373,18 @@
 
     <statementUpDownMover implementation="consulo.ide.impl.idea.codeInsight.editorActions.moveUpDown.LineMover" id="line" order="last"/>
 
-    <enterHandlerDelegate implementation="consulo.ide.impl.idea.codeInsight.editorActions.enter.EnterInStringLiteralHandler"/>
-    <enterHandlerDelegate implementation="consulo.ide.impl.idea.codeInsight.editorActions.enter.EnterInLineCommentHandler"/>
-    <enterHandlerDelegate implementation="consulo.ide.impl.idea.codeInsight.editorActions.enter.EnterAfterUnmatchedBraceHandler" id="afterUnmatchedBrace"/>
-    <enterHandlerDelegate implementation="consulo.ide.impl.idea.codeInsight.editorActions.enter.EnterBetweenBracesFinalHandler"
-                          id="EnterBetweenBracesHandler"/>
-    <enterHandlerDelegate implementation="consulo.ide.impl.idea.codeInsight.editorActions.enter.EnterAfterJavadocTagHandler"/>
+    <!--<enterHandlerDelegate implementation="consulo.ide.impl.idea.codeInsight.editorActions.enter.EnterInStringLiteralHandler"/>-->
+    <!--<enterHandlerDelegate implementation="consulo.ide.impl.idea.codeInsight.editorActions.enter.EnterInLineCommentHandler"/>-->
+    <!--<enterHandlerDelegate implementation="consulo.ide.impl.idea.codeInsight.editorActions.enter.EnterAfterUnmatchedBraceHandler" id="afterUnmatchedBrace"/>-->
+    <!--<enterHandlerDelegate implementation="consulo.ide.impl.idea.codeInsight.editorActions.enter.EnterBetweenBracesFinalHandler"-->
+                          <!--id="EnterBetweenBracesHandler"/>-->
+    <!--<enterHandlerDelegate implementation="consulo.ide.impl.idea.codeInsight.editorActions.enter.EnterAfterJavadocTagHandler"/>-->
 
     <codeInsight.linkHandler prefix="#inspection/" handlerClass="consulo.ide.impl.idea.codeInsight.hint.InspectionDescriptionLinkHandler"/>
     <codeInsight.linkHandler prefix="#navigation/" handlerClass="consulo.ide.impl.idea.codeInsight.hint.NavigationLinkHandler"/>
 
-    <codeInsight.lineMarkerProvider language="" implementationClass="consulo.ide.impl.idea.execution.lineMarker.RunLineMarkerProvider"/>
-    <codeInsight.lineMarkerProvider language="" implementationClass="consulo.ide.impl.idea.ui.ColorLineMarkerProvider"/>
+    <!--<codeInsight.lineMarkerProvider language="" implementationClass="consulo.ide.impl.idea.execution.lineMarker.RunLineMarkerProvider"/>-->
+    <!--<codeInsight.lineMarkerProvider language="" implementationClass="consulo.ide.impl.idea.ui.ColorLineMarkerProvider"/>-->
 
     <!--<applicationConfigurable id="editor.preferences.folding.general"-->
                              <!--parentId="editor.preferences.folding"-->
@@ -1446,8 +1420,8 @@
     <editorActionHandler action="EditorDuplicate" implementationClass="consulo.ide.impl.idea.openapi.editor.actions.NamedElementDuplicateHandler"/>
 
     <!-- LookupManagerActions -->
-    <editorActionHandler action="EditorUp" implementationClass="consulo.ide.impl.idea.codeInsight.lookup.impl.LookupActionHandler$UpHandler"/>
-    <editorActionHandler action="EditorDown" implementationClass="consulo.ide.impl.idea.codeInsight.lookup.impl.LookupActionHandler$DownHandler"/>
+    <editorActionHandler action="EditorUp" implementationClass="consulo.ide.impl.idea.codeInsight.lookup.impl.LookupActionUpHandler"/>
+    <editorActionHandler action="EditorDown" implementationClass="consulo.ide.impl.idea.codeInsight.lookup.impl.LookupActionDownHandler"/>
     <editorActionHandler action="EditorPageUp"
                          implementationClass="consulo.ide.impl.idea.codeInsight.lookup.impl.LookupActionHandler$PageUpHandler"/>
     <editorActionHandler action="EditorPageDown"
@@ -1478,7 +1452,7 @@
     <editorActionHandler action="EditorEscape" implementationClass="consulo.ide.impl.idea.refactoring.rename.inplace.EscapeHandler"
                          order="before hide-hints"/>
 
-    <editorTypedHandler implementationClass="consulo.ide.impl.idea.codeInsight.lookup.impl.LookupTypedHandler" id="lookup"/>
+    <!--<editorTypedHandler implementationClass="consulo.ide.impl.idea.codeInsight.lookup.impl.LookupTypedHandler" id="lookup"/>-->
 
 
     <liveTemplateContext id="OTHER" implementation="consulo.language.editor.template.context.EverywhereContextType" order="last"/>
@@ -1500,9 +1474,6 @@
                 factoryClass="consulo.ide.impl.idea.execution.dashboard.RunDashboardToolWindowFactory"
                 conditionClass="consulo.ide.impl.idea.execution.dashboard.RunDashboardToolWindowFactory"/>
 
-    <psi.referenceContributor implementation="consulo.ide.impl.psi.impl.source.resolve.reference.CommentsReferenceContributor"/>
-    <referenceProviderType key="commentsReferenceProvider"
-                           implementationClass="consulo.ide.impl.psi.impl.source.resolve.reference.ArbitraryPlaceUrlReferenceProvider"/>
 
     <globalInspection shortName="Annotator" displayName="Annotator" groupKey="inspection.general.tools.group.name" groupBundle="consulo.language.editor.inspection.InspectionsBundle"
                       enabledByDefault="true" level="ERROR"
@@ -1524,7 +1495,6 @@
 
     <filePasteProvider implementation="consulo.ide.impl.idea.ide.FileListPasteProvider"/>
 
-    <definitionsScopedSearch implementation="consulo.language.impl.internal.pom.PomDefinitionSearch"/>
 
 
 
@@ -1558,11 +1528,6 @@
                             <!--order="first, before commitCompletion"/>-->
 
     <!--<completion.contributor language="any" implementationClass="consulo.ide.impl.idea.codeInsight.completion.CustomFileTypeCompletionContributor"/>-->
-
-
-    <usageContextPanelProvider implementation="consulo.ide.impl.idea.usages.impl.UsagePreviewPanel$Provider"/>
-    <usageContextPanelProvider implementation="consulo.ide.impl.idea.usageView.impl.UsageContextCallHierarchyPanel$Provider"/>
-
 
 
 
@@ -1604,10 +1569,6 @@
     <!--the following binding uses 'first' order to make sure it captures raw text before any other processor modifies it -->
     <copyPastePreProcessor implementation="consulo.ide.impl.idea.openapi.editor.richcopy.TextWithMarkupProcessor$RawTextSetter" order="first" id="richcopy"/>
 
-    <backspaceHandlerDelegate implementation="consulo.ide.impl.idea.codeInsight.editorActions.SimpleIndentingBackspaceHandler"/>
-    <backspaceHandlerDelegate implementation="consulo.ide.impl.idea.codeInsight.editorActions.SmartIndentingBackspaceHandler"/>
-
-    <fileIndentOptionsProvider implementation="consulo.ide.impl.psi.codeStyle.DetectableIndentOptionsProvider" order="last"/>
 
     <bidiRegionsSeparator language="" implementationClass="consulo.ide.impl.idea.openapi.editor.bidi.PlainTextBidiRegionsSeparator"/>
 
@@ -1624,8 +1585,6 @@
 
 
 
-    <daemon.tooltipActionProvider order="last" id="defaultProvider" implementation="consulo.ide.impl.idea.codeInsight.daemon.impl.DaemonTooltipActionProvider"/>
-
 
     <dateTimeFormatter id="vcs.annotate" name="VCS Annotate"/>
     <dateTimeFormatter id="vcs.log" name="VCS Log"/>
@@ -1636,9 +1595,6 @@
     <projectService serviceImplementation="consulo.ide.impl.idea.openapi.vcs.changes.committed.IncomingChangesIndicator" lazy="false"/>
 
 
-
-    <applicationService serviceInterface="consulo.language.impl.parser.GeneratedParserUtilBase$PrefixMatcher"
-                        serviceImplementation="consulo.language.editor.impl.internal.parser.ParserCamelCaseMatcherPrefixMatcher"/>
 
   </extensions>
 

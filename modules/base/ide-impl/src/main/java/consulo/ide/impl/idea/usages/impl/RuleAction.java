@@ -15,14 +15,14 @@
  */
 package consulo.ide.impl.idea.usages.impl;
 
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.action.ToggleAction;
 import consulo.application.dumb.DumbAware;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
-import consulo.usage.UsageView;
-import consulo.usage.rule.UsageFilteringRuleProvider;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.image.Image;
+import consulo.usage.UsageView;
+import consulo.usage.rule.UsageFilteringRuleListener;
 
 import javax.annotation.Nonnull;
 
@@ -56,7 +56,7 @@ public abstract class RuleAction extends ToggleAction implements DumbAware {
 
     Project project = e.getData(CommonDataKeys.PROJECT);
     if (project != null) {
-      project.getMessageBus().syncPublisher(UsageFilteringRuleProvider.RULES_CHANGED).run();
+      project.getMessageBus().syncPublisher(UsageFilteringRuleListener.class).rulesChanged();
     }
 
     myView.select();

@@ -15,34 +15,34 @@
  */
 package consulo.ide.impl.idea.tasks.ui;
 
-import java.util.List;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.component.extension.ExtensionPointName;
+import consulo.ide.impl.idea.tasks.LocalTask;
+import consulo.ide.impl.idea.tasks.Task;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.component.extension.ExtensionPointName;
-import consulo.component.extension.Extensions;
-import consulo.project.Project;
-import consulo.ide.impl.idea.tasks.LocalTask;
-import consulo.ide.impl.idea.tasks.Task;
-import consulo.ide.impl.idea.util.NullableFunction;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import java.util.List;
 
 /**
  * @author Dmitry Avdeev
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class TaskDialogPanelProvider
 {
-
-	private final static ExtensionPointName<TaskDialogPanelProvider> EP_NAME = ExtensionPointName.create("consulo.tasks.dialogPanelProvider");
+	private final static ExtensionPointName<TaskDialogPanelProvider> EP_NAME = ExtensionPointName.create(TaskDialogPanelProvider.class);
 
 	public static List<TaskDialogPanel> getOpenTaskPanels(@Nonnull Project project, @Nonnull Task task)
 	{
-		return ContainerUtil.mapNotNull(Extensions.getExtensions(EP_NAME), (NullableFunction<TaskDialogPanelProvider, TaskDialogPanel>) provider -> provider.getOpenTaskPanel(project, task));
+		return ContainerUtil.mapNotNull(EP_NAME.getExtensionList(), provider -> provider.getOpenTaskPanel(project, task));
 	}
 
 	public static List<TaskDialogPanel> getCloseTaskPanels(@Nonnull Project project, @Nonnull LocalTask task)
 	{
-		return ContainerUtil.mapNotNull(Extensions.getExtensions(EP_NAME), (NullableFunction<TaskDialogPanelProvider, TaskDialogPanel>) provider -> provider.getCloseTaskPanel(project, task));
+		return ContainerUtil.mapNotNull(EP_NAME.getExtensionList(), provider -> provider.getCloseTaskPanel(project, task));
 	}
 
 	@Nullable

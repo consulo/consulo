@@ -13,22 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.editor.impl.internal.parser;
+package consulo.ide.impl.idea.codeInsight.lookup.impl;
 
-import consulo.annotation.component.ServiceImpl;
-import consulo.language.editor.internal.matcher.CamelHumpMatcher;
-import consulo.language.impl.parser.ParserPrefixMatcher;
-import jakarta.inject.Singleton;
+import consulo.codeEditor.Caret;
+import consulo.codeEditor.action.EditorActionHandler;
+import consulo.dataContext.DataContext;
 
-/**
- * @author VISTALL
- * @since 26-Mar-22
- */
-@Singleton
-@ServiceImpl
-public class ParserCamelCaseMatcherPrefixMatcher implements ParserPrefixMatcher {
-  @Override
-  public boolean prefixMatches(String prefix, String variant) {
-    return new CamelHumpMatcher(prefix, false).prefixMatches(prefix);
+public class LookupActionDownHandler extends LookupActionHandler {
+
+  public LookupActionDownHandler(EditorActionHandler originalHandler) {
+    super(originalHandler);
   }
+
+  @Override
+  protected void executeInLookup(final LookupImpl lookup, DataContext context, Caret caret) {
+    executeUpOrDown(lookup, false);
+  }
+
 }

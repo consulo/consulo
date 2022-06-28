@@ -772,12 +772,6 @@ public class GeneratedParserUtilBase {
 
   public static final Key<CompletionState> COMPLETION_STATE_KEY = Key.create("COMPLETION_STATE_KEY");
 
-  @Nonnull
-  public interface PrefixMatcher {
-    // new CamelHumpMatcher(prefix, false).prefixMatches
-    boolean prefixMatches(String prefix, String variant);
-  }
-
   public static class CompletionState implements Function<Object, String> {
     public final int offset;
     public final Collection<String> items = new HashSet<>();
@@ -835,7 +829,7 @@ public class GeneratedParserUtilBase {
     }
 
     public boolean prefixMatches(@Nonnull String prefix, @Nonnull String variant) {
-      boolean matches = Application.get().getInstance(PrefixMatcher.class).prefixMatches(prefix, variant.replace(' ', '_'));
+      boolean matches = Application.get().getInstance(ParserPrefixMatcher.class).prefixMatches(prefix, variant.replace(' ', '_'));
       if (matches && StringUtil.isWhiteSpace(prefix.charAt(prefix.length() - 1))) {
         return StringUtil.startsWithIgnoreCase(variant, prefix);
       }

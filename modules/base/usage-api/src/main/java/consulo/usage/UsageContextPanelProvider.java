@@ -15,12 +15,15 @@
  */
 package consulo.usage;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 
 import javax.annotation.Nonnull;
 
+@ExtensionAPI(ComponentScope.PROJECT)
 public interface UsageContextPanelProvider {
-  ExtensionPointName<UsageContextPanelProvider> EP_NAME = ExtensionPointName.create("consulo.usageContextPanelProvider");
+  ExtensionPointName<UsageContextPanelProvider> EP_NAME = ExtensionPointName.create(UsageContextPanelProvider.class);
 
   @Nonnull
   UsageContextPanel create(@Nonnull UsageView usageView);

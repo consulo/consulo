@@ -16,7 +16,10 @@
 
 package consulo.ide.impl.intelliLang;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
+import consulo.configurable.ProjectConfigurable;
+import consulo.configurable.StandardConfigurableIds;
 import consulo.dataContext.DataManager;
 import consulo.language.editor.LangDataKeys;
 import consulo.ui.ex.SimpleColoredText;
@@ -83,7 +86,8 @@ import java.util.*;
 /**
  * @author Gregory.Shrago
  */
-public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Configurable.NoScroll {
+@ExtensionImpl
+public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Configurable.NoScroll, ProjectConfigurable {
   private static final Logger LOG = Logger.getInstance(InjectionsSettingsUI.class);
 
   private final Project myProject;
@@ -581,6 +585,12 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
   @Nls
   public String getDisplayName() {
     return "Language Injections";
+  }
+
+  @Nullable
+  @Override
+  public String getParentId() {
+    return StandardConfigurableIds.EDITOR_GROUP;
   }
 
   private class InjectionsTable extends TableView<InjInfo> {

@@ -16,43 +16,37 @@
 
 package consulo.ide.impl.idea.refactoring.safeDelete;
 
-import consulo.ide.impl.find.PsiElement2UsageTargetAdapter;
-import consulo.language.editor.refactoring.LanguageRefactoringSupport;
-import consulo.usage.UsageViewManager;
-import consulo.language.psi.ElementDescriptionUtil;
-import consulo.language.inject.InjectedLanguageManager;
-import consulo.language.editor.refactoring.RefactoringSupportProvider;
 import consulo.application.ApplicationManager;
-import consulo.language.psi.*;
-import consulo.logging.Logger;
-import consulo.component.extension.Extensions;
-import consulo.project.Project;
-import consulo.usage.*;
-import consulo.util.lang.function.Condition;
-import consulo.util.lang.ref.Ref;
-import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.language.psi.search.ReferencesSearch;
-import consulo.language.psi.util.PsiTreeUtil;
-import consulo.language.psi.PsiUtilCore;
-import consulo.language.editor.refactoring.BaseRefactoringProcessor;
-import consulo.language.editor.refactoring.RefactoringBundle;
-import consulo.language.editor.refactoring.event.RefactoringEventData;
-import consulo.language.editor.refactoring.event.RefactoringEventListener;
+import consulo.application.util.function.Processor;
+import consulo.ide.impl.find.PsiElement2UsageTargetAdapter;
 import consulo.ide.impl.idea.refactoring.safeDelete.usageInfo.SafeDeleteCustomUsageInfo;
 import consulo.ide.impl.idea.refactoring.safeDelete.usageInfo.SafeDeleteReferenceSimpleDeleteUsageInfo;
 import consulo.ide.impl.idea.refactoring.safeDelete.usageInfo.SafeDeleteReferenceUsageInfo;
 import consulo.ide.impl.idea.refactoring.safeDelete.usageInfo.SafeDeleteUsageInfo;
-import consulo.language.editor.refactoring.util.NonCodeSearchDescriptionLocation;
-import consulo.language.editor.refactoring.ui.RefactoringUIUtil;
-import consulo.language.editor.refactoring.util.TextOccurrencesUtil;
-import consulo.usage.UsageViewUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.language.editor.refactoring.BaseRefactoringProcessor;
+import consulo.language.editor.refactoring.LanguageRefactoringSupport;
+import consulo.language.editor.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.RefactoringSupportProvider;
+import consulo.language.editor.refactoring.event.RefactoringEventData;
+import consulo.language.editor.refactoring.event.RefactoringEventListener;
+import consulo.language.editor.refactoring.ui.RefactoringUIUtil;
+import consulo.language.editor.refactoring.util.NonCodeSearchDescriptionLocation;
+import consulo.language.editor.refactoring.util.TextOccurrencesUtil;
+import consulo.language.inject.InjectedLanguageManager;
+import consulo.language.psi.*;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.search.ReferencesSearch;
+import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
-import consulo.application.util.function.Processor;
-import java.util.HashMap;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.usage.*;
+import consulo.util.lang.function.Condition;
+import consulo.util.lang.ref.Ref;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 
 /**
@@ -135,7 +129,7 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
     List<UsageInfo> usages = Collections.synchronizedList(new ArrayList<UsageInfo>());
     for (PsiElement element : myElements) {
       boolean handled = false;
-      for (SafeDeleteProcessorDelegate delegate : Extensions.getExtensions(SafeDeleteProcessorDelegate.EP_NAME)) {
+      for (SafeDeleteProcessorDelegate delegate : SafeDeleteProcessorDelegate.EP_NAME.getExtensionList()) {
         if (delegate.handlesElement(element)) {
           final NonCodeUsageSearchInfo filter = delegate.findUsages(element, myElements, usages);
           if (filter != null) {
@@ -184,7 +178,7 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
     ArrayList<String> conflicts = new ArrayList<String>();
 
     for (PsiElement element : myElements) {
-      for (SafeDeleteProcessorDelegate delegate : Extensions.getExtensions(SafeDeleteProcessorDelegate.EP_NAME)) {
+      for (SafeDeleteProcessorDelegate delegate : SafeDeleteProcessorDelegate.EP_NAME.getExtensionList()) {
         if (delegate.handlesElement(element)) {
           Collection<String> foundConflicts = delegate.findConflicts(element, myElements);
           if (foundConflicts != null) {
@@ -227,7 +221,7 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
     }
 
     UsageInfo[] preprocessedUsages = usages;
-    for (SafeDeleteProcessorDelegate delegate : Extensions.getExtensions(SafeDeleteProcessorDelegate.EP_NAME)) {
+    for (SafeDeleteProcessorDelegate delegate : SafeDeleteProcessorDelegate.EP_NAME.getExtensionList()) {
       preprocessedUsages = delegate.preprocessUsages(myProject, preprocessedUsages);
       if (preprocessedUsages == null) return false;
     }
@@ -259,7 +253,7 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
       @Override
       public void run() {
         UsageInfo[] preprocessedUsages = usages;
-        for (SafeDeleteProcessorDelegate delegate : Extensions.getExtensions(SafeDeleteProcessorDelegate.EP_NAME)) {
+        for (SafeDeleteProcessorDelegate delegate : SafeDeleteProcessorDelegate.EP_NAME.getExtensionList()) {
           preprocessedUsages = delegate.preprocessUsages(myProject, preprocessedUsages);
           if (preprocessedUsages == null) return;
         }
@@ -270,7 +264,7 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
   }
 
   private UsageView showUsages(UsageInfo[] usages, UsageViewPresentation presentation, UsageViewManager manager) {
-    for (SafeDeleteProcessorDelegate delegate : Extensions.getExtensions(SafeDeleteProcessorDelegate.EP_NAME)) {
+    for (SafeDeleteProcessorDelegate delegate : SafeDeleteProcessorDelegate.EP_NAME.getExtensionList()) {
       if (delegate instanceof SafeDeleteProcessorDelegateBase) {
         final UsageView view = ((SafeDeleteProcessorDelegateBase)delegate).showUsages(usages, presentation, manager, myElements);
         if (view != null) return view;
@@ -393,7 +387,7 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
       }
 
       for (PsiElement element : myElements) {
-        for (SafeDeleteProcessorDelegate delegate : Extensions.getExtensions(SafeDeleteProcessorDelegate.EP_NAME)) {
+        for (SafeDeleteProcessorDelegate delegate : SafeDeleteProcessorDelegate.EP_NAME.getExtensionList()) {
           if (delegate.handlesElement(element)) {
             delegate.prepareForDeletion(element);
           }
@@ -479,7 +473,7 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
     HashSet<PsiElement> elementsToDeleteSet = new HashSet<PsiElement>(Arrays.asList(elementsToDelete));
 
     for (PsiElement psiElement : elementsToDelete) {
-      for (SafeDeleteProcessorDelegate delegate : Extensions.getExtensions(SafeDeleteProcessorDelegate.EP_NAME)) {
+      for (SafeDeleteProcessorDelegate delegate : SafeDeleteProcessorDelegate.EP_NAME.getExtensionList()) {
         if (delegate.handlesElement(psiElement)) {
           Collection<PsiElement> addedElements = delegate.getAdditionalElementsToDelete(psiElement, elementsToDeleteSet, askForAccessors);
           if (addedElements != null) {

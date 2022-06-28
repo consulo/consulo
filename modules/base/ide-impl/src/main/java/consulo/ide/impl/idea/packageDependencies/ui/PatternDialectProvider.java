@@ -20,13 +20,14 @@
  */
 package consulo.ide.impl.idea.packageDependencies.ui;
 
-import consulo.ui.ex.action.AnAction;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
-import consulo.component.extension.Extensions;
-import consulo.project.Project;
+import consulo.content.scope.PackageSet;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.language.psi.PsiFile;
-import consulo.content.scope.PackageSet;
+import consulo.project.Project;
+import consulo.ui.ex.action.AnAction;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 
@@ -34,11 +35,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Set;
 
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class PatternDialectProvider {
-  public static final ExtensionPointName<PatternDialectProvider> EP_NAME = ExtensionPointName.create("consulo.patternDialectProvider");
+  public static final ExtensionPointName<PatternDialectProvider> EP_NAME = ExtensionPointName.create(PatternDialectProvider.class);
 
   public static PatternDialectProvider getInstance(String shortName) {
-    for (PatternDialectProvider provider : Extensions.getExtensions(EP_NAME)) {
+    for (PatternDialectProvider provider : EP_NAME.getExtensionList()) {
       if (Comparing.strEqual(provider.getShortName(), shortName)) return provider;
     }
     return null; //todo replace with File
@@ -46,12 +48,12 @@ public abstract class PatternDialectProvider {
 
   public abstract TreeModel createTreeModel(Project project, Marker marker);
 
-  public abstract TreeModel createTreeModel(Project project, Set<PsiFile> deps, Marker marker,
-                                            final DependenciesPanel.DependencyPanelSettings settings);
+  public abstract TreeModel createTreeModel(Project project, Set<PsiFile> deps, Marker marker, final DependenciesPanel.DependencyPanelSettings settings);
 
   public abstract String getDisplayName();
 
-  @NonNls @Nonnull
+  @NonNls
+  @Nonnull
   public abstract String getShortName();
 
   public abstract AnAction[] createActions(Project project, final Runnable update);

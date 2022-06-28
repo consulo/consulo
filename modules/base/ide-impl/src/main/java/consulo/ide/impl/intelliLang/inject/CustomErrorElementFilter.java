@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
  * @author Gregory.Shrago
  */
 @ExtensionImpl
-public class CustomErrorElementFilter extends HighlightErrorFilter{
+public class CustomErrorElementFilter extends HighlightErrorFilter {
 
   @Override
   public boolean shouldHighlightErrorElement(@Nonnull PsiErrorElement element) {

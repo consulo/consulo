@@ -49,8 +49,8 @@ public final class LanguageOneToOne<E extends LanguageExtension> implements Func
         return extension;
       }
 
-      Language base = null;
-      while ((base = language.getBaseLanguage()) != null) {
+      Language base = language;
+      while ((base = base.getBaseLanguage()) != null) {
         T baseExtension = myExtensions.get(base);
         if (baseExtension != null) {
           myExtensions.put(language, baseExtension);

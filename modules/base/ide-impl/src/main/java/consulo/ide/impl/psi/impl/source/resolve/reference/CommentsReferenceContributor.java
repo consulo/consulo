@@ -16,7 +16,7 @@
 package consulo.ide.impl.psi.impl.source.resolve.reference;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.psi.ReferenceProviderType;
+import consulo.language.psi.ReferenceProviderType;
 import consulo.language.Language;
 import consulo.language.pattern.PlatformPatterns;
 import consulo.language.psi.PsiComment;

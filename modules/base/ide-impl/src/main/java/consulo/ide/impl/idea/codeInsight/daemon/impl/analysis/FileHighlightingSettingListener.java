@@ -31,6 +31,8 @@
 
 package consulo.ide.impl.idea.codeInsight.daemon.impl.analysis;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.TopicAPI;
 import consulo.language.psi.PsiElement;
 import consulo.component.messagebus.TopicImpl;
 import javax.annotation.Nonnull;
@@ -39,9 +41,8 @@ import javax.annotation.Nonnull;
  * Listener for Highlighting settings modified from the 'Hector Inspector' slider.
  * Doesn't get called during the initial settings load
  */
+@TopicAPI(ComponentScope.PROJECT)
 public interface FileHighlightingSettingListener {
-  TopicImpl<FileHighlightingSettingListener> SETTING_CHANGE = TopicImpl.create("File Highlighting Setting", FileHighlightingSettingListener.class);
-
   /**
    * @param root    element in the PSI tree for which the settings has changed
    * @param setting new value for the highlighting level

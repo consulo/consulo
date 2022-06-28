@@ -1,9 +1,9 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.psi.search;
 
+import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.application.util.function.Processor;
-import consulo.component.extension.ExtensionPointName;
 import consulo.content.scope.SearchScope;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFileSystemItem;
@@ -20,8 +20,6 @@ import java.util.*;
  * @author peter
  */
 public class SearchRequestCollector {
-  private static final ExtensionPointName<ScopeOptimizer> CODE_USAGE_SCOPE_OPTIMIZER_EP_NAME = ExtensionPointName.create("consulo.codeUsageScopeOptimizer");
-
   private final Object lock = new Object();
   private final List<PsiSearchRequest> myWordRequests = new ArrayList<>();
   private final List<QuerySearchRequest> myQueryRequests = new ArrayList<>();
@@ -54,13 +52,15 @@ public class SearchRequestCollector {
                           short searchContext,
                           boolean caseSensitive,
                           String containerName,
-                          PsiElement searchTarget, @Nonnull RequestResultProcessor processor) {
+                          PsiElement searchTarget,
+                          @Nonnull RequestResultProcessor processor) {
     if (!makesSenseToSearch(word, searchScope)) return;
 
     Collection<PsiSearchRequest> requests = null;
     if (searchTarget != null && searchScope instanceof GlobalSearchScope && ((searchContext & UsageSearchContext.IN_CODE) != 0 || searchContext == UsageSearchContext.ANY)) {
 
-      SearchScope restrictedCodeUsageSearchScope = ReadAction.compute(() -> ScopeOptimizer.calculateOverallRestrictedUseScope(CODE_USAGE_SCOPE_OPTIMIZER_EP_NAME.getExtensions(), searchTarget));
+      SearchScope restrictedCodeUsageSearchScope =
+              ReadAction.compute(() -> ScopeOptimizer.calculateOverallRestrictedUseScope(Application.get().getExtensionList(ScopeOptimizer.class), searchTarget));
       if (restrictedCodeUsageSearchScope != null) {
         short exceptCodeSearchContext = searchContext == UsageSearchContext.ANY
                                         ? UsageSearchContext.IN_COMMENTS | UsageSearchContext.IN_STRINGS | UsageSearchContext.IN_FOREIGN_LANGUAGES | UsageSearchContext.IN_PLAIN_TEXT

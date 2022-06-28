@@ -15,12 +15,15 @@
  */
 package consulo.project.ui.view;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.toolWindow.ToolWindow;
 
 import javax.annotation.Nonnull;
 
+@ServiceAPI(ComponentScope.PROJECT)
 public interface MessageView {
   @Nonnull
   public static MessageView getInstance(Project project) {

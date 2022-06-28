@@ -44,9 +44,8 @@ public class QueryFactory<Result, Parameters> {
     return new ExecutorsQuery<>(parameters, getExecutors());
   }
 
-
   @Nonnull
-  protected List<QueryExecutor<Result, Parameters>> getExecutors() {
+  protected List<? extends QueryExecutor<Result, Parameters>> getExecutors() {
     return myExecutors;
   }
 

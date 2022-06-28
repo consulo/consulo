@@ -16,6 +16,8 @@
 
 package consulo.ide.impl.idea.testIntegration;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;
@@ -23,8 +25,9 @@ import javax.annotation.Nullable;
 
 import java.util.Collection;
 
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface TestFinder {
-  ExtensionPointName<TestFinder> EP_NAME = ExtensionPointName.create("consulo.testFinder");
+  ExtensionPointName<TestFinder> EP_NAME = ExtensionPointName.create(TestFinder.class);
 
   @Nullable
   PsiElement findSourceElement(@Nonnull PsiElement from);

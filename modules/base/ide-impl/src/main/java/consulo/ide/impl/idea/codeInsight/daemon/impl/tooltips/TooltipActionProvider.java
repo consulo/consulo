@@ -1,11 +1,13 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.daemon.impl.tooltips;
 
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.ide.impl.idea.openapi.editor.ex.TooltipAction;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.application.ApplicationPropertiesComponent;
 import consulo.application.util.registry.Registry;
-import consulo.component.extension.ExtensionPointName;
 import consulo.codeEditor.Editor;
+import consulo.component.extension.ExtensionPointName;
+import consulo.ide.impl.idea.openapi.editor.ex.TooltipAction;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
@@ -20,8 +22,9 @@ import javax.annotation.Nullable;
  *
  * @see consulo.ide.impl.idea.codeInsight.daemon.impl.DaemonTooltipActionProvider
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface TooltipActionProvider {
-  ExtensionPointName<TooltipActionProvider> EXTENSION_POINT_NAME = ExtensionPointName.create("consulo.daemon.tooltipActionProvider");
+  ExtensionPointName<TooltipActionProvider> EP = ExtensionPointName.create(TooltipActionProvider.class);
 
   String SHOW_FIXES_KEY = "tooltips.show.actions.in.key";
   boolean SHOW_FIXES_DEFAULT_VALUE = true;
@@ -40,7 +43,7 @@ public interface TooltipActionProvider {
     PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
     if (file == null) return null;
 
-    for (TooltipActionProvider extension : EXTENSION_POINT_NAME.getExtensionList()) {
+    for (TooltipActionProvider extension : EP.getExtensionList()) {
       TooltipAction action = extension.getTooltipAction(info, editor, file);
       if (action != null) return action;
     }
@@ -49,10 +52,10 @@ public interface TooltipActionProvider {
   }
 
   static boolean isShowActions() {
-    return PropertiesComponent.getInstance().getBoolean(SHOW_FIXES_KEY, SHOW_FIXES_DEFAULT_VALUE);
+    return ApplicationPropertiesComponent.getInstance().getBoolean(SHOW_FIXES_KEY, SHOW_FIXES_DEFAULT_VALUE);
   }
 
   static void setShowActions(boolean newValue) {
-    PropertiesComponent.getInstance().setValue(SHOW_FIXES_KEY, newValue, SHOW_FIXES_DEFAULT_VALUE);
+    ApplicationPropertiesComponent.getInstance().setValue(SHOW_FIXES_KEY, newValue, SHOW_FIXES_DEFAULT_VALUE);
   }
 }

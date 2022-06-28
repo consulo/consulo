@@ -2,24 +2,24 @@
 
 package consulo.ide.impl.idea.codeInsight.lookup.impl;
 
+import consulo.application.statistic.FeatureUsageTracker;
+import consulo.codeEditor.Caret;
+import consulo.codeEditor.CaretAction;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.action.EditorActionHandler;
+import consulo.codeEditor.action.EditorActionManager;
+import consulo.codeEditor.impl.action.EditorAction;
+import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.codeInsight.completion.CodeCompletionFeatures;
 import consulo.ide.impl.idea.codeInsight.completion.CompletionProgressIndicator;
 import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionServiceImpl;
 import consulo.ide.impl.idea.codeInsight.lookup.CharFilter;
 import consulo.language.editor.completion.lookup.LookupFocusDegree;
 import consulo.language.editor.completion.lookup.LookupManager;
-import consulo.application.statistic.FeatureUsageTracker;
-import consulo.application.ui.UISettings;
-import consulo.dataContext.DataContext;
-import consulo.ui.ex.action.IdeActions;
-import consulo.codeEditor.Caret;
-import consulo.codeEditor.CaretAction;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.impl.action.EditorAction;
-import consulo.codeEditor.action.EditorActionHandler;
-import consulo.codeEditor.action.EditorActionManager;
 import consulo.project.Project;
+import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.ScrollingUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -62,7 +62,7 @@ public abstract class LookupActionHandler extends EditorActionHandler {
     return lookup != null || myOriginalHandler.isEnabled(editor, caret, dataContext);
   }
 
-  private static void executeUpOrDown(LookupImpl lookup, boolean up) {
+  protected static void executeUpOrDown(LookupImpl lookup, boolean up) {
     if (!lookup.isFocused()) {
       boolean semiFocused = lookup.getLookupFocusDegree() == LookupFocusDegree.SEMI_FOCUSED;
       lookup.setFocusDegree(LookupFocusDegree.FOCUSED);
@@ -78,20 +78,6 @@ public abstract class LookupActionHandler extends EditorActionHandler {
     }
     lookup.markSelectionTouched();
     lookup.refreshUi(false, true);
-
-  }
-
-  public static class DownHandler extends LookupActionHandler {
-
-    public DownHandler(EditorActionHandler originalHandler) {
-      super(originalHandler);
-    }
-
-    @Override
-    protected void executeInLookup(final LookupImpl lookup, DataContext context, Caret caret) {
-      executeUpOrDown(lookup, false);
-    }
-
   }
 
   public static class UpAction extends EditorAction {
@@ -131,22 +117,6 @@ public abstract class LookupActionHandler extends EditorActionHandler {
       lookup.hideLookup(true);
       EditorActionManager.getInstance().getActionHandler(myUp ? IdeActions.ACTION_EDITOR_MOVE_CARET_UP : IdeActions.ACTION_EDITOR_MOVE_CARET_DOWN).execute(editor, caret, dataContext);
     }
-  }
-
-  public static class UpHandler extends LookupActionHandler {
-    public UpHandler(EditorActionHandler originalHandler) {
-      super(originalHandler);
-    }
-
-    @Override
-    protected void executeInLookup(final LookupImpl lookup, DataContext context, Caret caret) {
-      if (!UISettings.getInstance().getCycleScrolling() && !lookup.isFocused() && lookup.getList().getSelectedIndex() == 0) {
-        myOriginalHandler.execute(lookup.getEditor(), caret, context);
-        return;
-      }
-      executeUpOrDown(lookup, true);
-    }
-
   }
 
   public static class PageDownHandler extends LookupActionHandler {

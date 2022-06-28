@@ -16,6 +16,7 @@
  */
 package consulo.ide.impl.idea.ui.content.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.AllIcons;
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;
@@ -37,6 +38,7 @@ import java.util.List;
  * @author Eugene Belyaev
  */
 @Singleton
+@ServiceImpl
 public class MessageViewImpl implements MessageView {
   private ToolWindow myToolWindow;
   private final List<Runnable> myPostponedRunnables = new ArrayList<Runnable>();

@@ -198,7 +198,7 @@ public class UsageViewImpl implements UsageViewEx {
     myBuilder = new UsageNodeTreeBuilder(myTargets, getActiveGroupingRules(project, getUsageViewSettings()), getActiveFilteringRules(project), myRoot, myProject);
 
     final MessageBusConnection messageBusConnection = myProject.getMessageBus().connect(this);
-    messageBusConnection.subscribe(UsageFilteringRuleProvider.RULES_CHANGED, this::rulesChanged);
+    messageBusConnection.subscribe(UsageFilteringRuleListener.class, this::rulesChanged);
 
     myUsageViewTreeCellRenderer = new UsageViewTreeCellRenderer(this);
     if (!myPresentation.isDetachedMode()) {
@@ -576,7 +576,7 @@ public class UsageViewImpl implements UsageViewEx {
       JBTabbedPane tabbedPane = new JBTabbedPane(SwingConstants.BOTTOM);
       tabbedPane.setTabComponentInsets(null);
 
-      UsageContextPanelProvider[] extensions = UsageContextPanelProvider.EP_NAME.getExtensions(myProject);
+      List<UsageContextPanelProvider> extensions = UsageContextPanelProvider.EP_NAME.getExtensionList(myProject);
       myUsageContextPanelProviders = ContainerUtil.filter(extensions, provider -> provider.isAvailableFor(this));
       Map<String, JComponent> components = new LinkedHashMap<>();
       for (UsageContextPanelProvider provider : myUsageContextPanelProviders) {

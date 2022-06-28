@@ -16,6 +16,9 @@
 
 package consulo.ide.impl.psi.injection;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.ServiceManager;
 import jakarta.inject.Singleton;
 
@@ -31,6 +34,8 @@ import java.util.Set;
  * @since 2019-10-23
  */
 @Singleton
+@ServiceAPI(ComponentScope.APPLICATION)
+@ServiceImpl
 public class LanguageSupportCache {
   public static LanguageSupportCache getInstance() {
     return ServiceManager.getService(LanguageSupportCache.class);

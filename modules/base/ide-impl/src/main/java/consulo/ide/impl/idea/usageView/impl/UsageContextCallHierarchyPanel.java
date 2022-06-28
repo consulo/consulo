@@ -39,37 +39,6 @@ import java.util.List;
 public class UsageContextCallHierarchyPanel extends UsageContextPanelBase {
   private HierarchyBrowser myBrowser;
 
-  public static class Provider implements UsageContextPanelProvider {
-    @Nonnull
-    @Override
-    public UsageContextPanel create(@Nonnull UsageView usageView) {
-      return new UsageContextCallHierarchyPanel(((UsageViewImpl)usageView).getProject(), usageView.getPresentation());
-    }
-
-    @Override
-    public boolean isAvailableFor(@Nonnull UsageView usageView) {
-      UsageTarget[] targets = ((UsageViewImpl)usageView).getTargets();
-      if (targets.length == 0) return false;
-      UsageTarget target = targets[0];
-      if (!(target instanceof PsiElementUsageTarget)) return false;
-      PsiElement element = ((PsiElementUsageTarget)target).getElement();
-      if (element == null || !element.isValid()) return false;
-
-      Project project = element.getProject();
-      DataContext context = SimpleDataContext.getSimpleContext(CommonDataKeys.PSI_ELEMENT, element, SimpleDataContext.getProjectContext(project));
-      HierarchyProvider provider = BrowseHierarchyActionBase.findBestHierarchyProvider(LanguageCallHierarchy.INSTANCE, element, context);
-      if (provider == null) return false;
-      PsiElement providerTarget = provider.getTarget(context);
-      return providerTarget != null;
-    }
-
-    @Nonnull
-    @Override
-    public String getTabTitle() {
-      return "Call Hierarchy";
-    }
-  }
-
   public UsageContextCallHierarchyPanel(@Nonnull Project project, @Nonnull UsageViewPresentation presentation) {
     super(project, presentation);
   }

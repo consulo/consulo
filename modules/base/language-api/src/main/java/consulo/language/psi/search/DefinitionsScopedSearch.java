@@ -17,24 +17,26 @@
 package consulo.language.psi.search;
 
 import consulo.application.ApplicationManager;
-import consulo.application.util.query.ExtensibleQueryFactory;
-import consulo.component.extension.ExtensionPointName;
 import consulo.application.util.function.Computable;
-import consulo.language.psi.PsiElement;
-import consulo.content.scope.SearchScope;
+import consulo.application.util.query.ExtensibleQueryFactory;
 import consulo.application.util.query.Query;
-import consulo.application.util.query.QueryExecutor;
+import consulo.content.scope.SearchScope;
+import consulo.language.psi.PsiElement;
+
 import javax.annotation.Nonnull;
+import java.util.function.Supplier;
 
 /**
  * The search is used in two IDE navigation functions namely Go To Implementation (Ctrl+Alt+B) and
  * Quick View Definition (Ctrl+Shift+I). Default searchers produce implementing/overriding methods if the method
  * have been searched and class inheritors for the class.
- *
  */
 public class DefinitionsScopedSearch extends ExtensibleQueryFactory<PsiElement, DefinitionsScopedSearch.SearchParameters> {
-  public static final ExtensionPointName<QueryExecutor> EP_NAME = ExtensionPointName.create("consulo.definitionsScopedSearch");
   public static final DefinitionsScopedSearch INSTANCE = new DefinitionsScopedSearch();
+
+  private DefinitionsScopedSearch() {
+    super(DefinitionsScopedSearchExecutor.class);
+  }
 
   public static Query<PsiElement> search(PsiElement definitionsOf) {
     return INSTANCE.createUniqueResultsQuery(new SearchParameters(definitionsOf));
@@ -47,9 +49,7 @@ public class DefinitionsScopedSearch extends ExtensibleQueryFactory<PsiElement, 
   /**
    * @param checkDeep false for show implementations to present definition only
    */
-  public static Query<PsiElement> search(PsiElement definitionsOf,
-                                         SearchScope searchScope,
-                                         final boolean checkDeep) {
+  public static Query<PsiElement> search(PsiElement definitionsOf, SearchScope searchScope, final boolean checkDeep) {
     return INSTANCE.createUniqueResultsQuery(new SearchParameters(definitionsOf, searchScope, checkDeep));
   }
 
@@ -59,9 +59,9 @@ public class DefinitionsScopedSearch extends ExtensibleQueryFactory<PsiElement, 
     private final boolean myCheckDeep;
 
     public SearchParameters(@Nonnull final PsiElement element) {
-      this(element, ApplicationManager.getApplication().runReadAction(new Computable<SearchScope>() {
+      this(element, ApplicationManager.getApplication().runReadAction(new Supplier<SearchScope>() {
         @Override
-        public SearchScope compute() {
+        public SearchScope get() {
           return element.getUseScope();
         }
       }), true);

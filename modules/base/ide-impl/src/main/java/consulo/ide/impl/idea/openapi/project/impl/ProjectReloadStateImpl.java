@@ -15,16 +15,19 @@
  */
 package consulo.ide.impl.idea.openapi.project.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.ide.impl.idea.openapi.project.ProjectReloadState;
-import javax.annotation.Nullable;
 import jakarta.inject.Singleton;
+
+import javax.annotation.Nullable;
 
 @Singleton
 @State(name = "ProjectReloadState", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
+@ServiceImpl
 public class ProjectReloadStateImpl implements ProjectReloadState, PersistentStateComponent<ProjectReloadStateImpl> {
   public static final int UNKNOWN = 0;
   public static final int BEFORE_RELOAD = 1;

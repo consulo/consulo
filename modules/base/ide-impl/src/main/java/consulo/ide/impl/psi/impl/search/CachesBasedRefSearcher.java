@@ -1,25 +1,29 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.psi.impl.search;
 
-import consulo.project.util.query.QueryExecutorBase;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.util.function.Processor;
+import consulo.content.scope.SearchScope;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.ide.impl.psi.impl.SyntheticFileSystemItem;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.PsiReference;
-import consulo.ide.impl.psi.impl.SyntheticFileSystemItem;
 import consulo.language.psi.meta.PsiMetaData;
 import consulo.language.psi.meta.PsiMetaOwner;
-import consulo.content.scope.SearchScope;
+import consulo.language.psi.search.ReferencesSearchQueryExecutor;
 import consulo.language.psi.search.ReferencesSearch;
-import consulo.application.util.function.Processor;
+import consulo.project.util.query.QueryExecutorBase;
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 
 /**
  * @author max
  */
-public class CachesBasedRefSearcher extends QueryExecutorBase<PsiReference, ReferencesSearch.SearchParameters> {
+@ExtensionImpl
+public class CachesBasedRefSearcher extends QueryExecutorBase<PsiReference, ReferencesSearch.SearchParameters> implements ReferencesSearchQueryExecutor {
   public CachesBasedRefSearcher() {
     super(true);
   }

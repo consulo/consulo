@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.editorActions.enter;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.CodeInsightSettings;
 import consulo.ide.impl.idea.codeInsight.editorActions.CodeDocumentationUtil;
 import consulo.dataContext.DataContext;
@@ -37,6 +38,7 @@ import java.util.Set;
  * @author Denis Zhdanov
  * @since 1/20/11 12:32 PM
  */
+@ExtensionImpl(id = "afterJavadoc", order = "after EnterBetweenBracesHandler")
 public class EnterAfterJavadocTagHandler extends EnterHandlerDelegateAdapter {
 
   private static final Context NOT_MATCHED_CONTEXT = new Context();

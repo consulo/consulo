@@ -18,16 +18,15 @@ package consulo.ide.impl.idea.ide.actions;
 
 import consulo.ide.impl.idea.ide.fileTemplates.impl.AllFileTemplatesConfigurable;
 import consulo.ide.impl.idea.ide.fileTemplates.ui.ConfigureTemplatesDialog;
-import consulo.component.extension.Extensions;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
+import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiFile;
-import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 
@@ -43,7 +42,7 @@ public class SaveFileAsTemplateAction extends AnAction {
     AllFileTemplatesConfigurable fileTemplateOptions = new AllFileTemplatesConfigurable(project);
     ConfigureTemplatesDialog dialog = new ConfigureTemplatesDialog(project, fileTemplateOptions);
     PsiFile psiFile = e.getData(LangDataKeys.PSI_FILE);
-    for(SaveFileAsTemplateHandler handler: Extensions.getExtensions(SaveFileAsTemplateHandler.EP_NAME)) {
+    for(SaveFileAsTemplateHandler handler: SaveFileAsTemplateHandler.EP_NAME.getExtensionList()) {
       String textFromHandler = handler.getTemplateText(psiFile, fileText, nameWithoutExtension);
       if (textFromHandler != null) {
         fileText = textFromHandler;

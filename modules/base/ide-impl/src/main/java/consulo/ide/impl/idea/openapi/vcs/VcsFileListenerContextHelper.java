@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.vcs;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
@@ -22,6 +25,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -31,6 +35,8 @@ import java.util.Set;
  * Time: 6:40 PM
  */
 @Singleton
+@ServiceAPI(ComponentScope.PROJECT)
+@ServiceImpl
 public class VcsFileListenerContextHelper {
   // to ignore by listeners
   private final Set<FilePath> myDeletedContext;
@@ -38,14 +44,14 @@ public class VcsFileListenerContextHelper {
 
   @Inject
   VcsFileListenerContextHelper(final Project project) {
-    myDeletedContext = new java.util.HashSet<FilePath>();
-    myAddContext = new java.util.HashSet<VirtualFile>();
+    myDeletedContext = new HashSet<>();
+    myAddContext = new HashSet<>();
   }
 
   public static VcsFileListenerContextHelper getInstance(final Project project) {
     return ServiceManager.getService(project, VcsFileListenerContextHelper.class);
   }
-  
+
   public void ignoreDeleted(final FilePath filePath) {
     myDeletedContext.add(filePath);
   }

@@ -16,6 +16,8 @@
 
 package consulo.ide.impl.idea.codeInsight.template.impl;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiFile;
@@ -23,8 +25,9 @@ import consulo.language.psi.PsiFile;
 /**
  * @author yole
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface TemplatePreprocessor {
-  ExtensionPointName<TemplatePreprocessor> EP_NAME = ExtensionPointName.create("consulo.liveTemplatePreprocessor");
+  ExtensionPointName<TemplatePreprocessor> EP_NAME = ExtensionPointName.create(TemplatePreprocessor.class);
 
   void preprocessTemplate(final Editor editor, final PsiFile file, int caretOffset, final String textToInsert, final String templateText);
 }

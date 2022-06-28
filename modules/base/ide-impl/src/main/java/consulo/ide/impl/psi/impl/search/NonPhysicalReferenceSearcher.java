@@ -1,18 +1,20 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.psi.impl.search;
 
-import consulo.language.editor.scratch.ScratchFileService;
-import consulo.application.ApplicationManager;
-import consulo.project.util.query.QueryExecutorBase;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.util.function.Processor;
+import consulo.content.scope.SearchScope;
 import consulo.fileEditor.FileEditorManager;
+import consulo.language.editor.scratch.ScratchFileService;
 import consulo.language.psi.*;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.scope.LocalSearchScope;
-import consulo.content.scope.SearchScope;
+import consulo.language.psi.search.ReferencesSearchQueryExecutor;
 import consulo.language.psi.search.ReferencesSearch;
-import consulo.application.util.function.Processor;
+import consulo.project.Project;
+import consulo.project.util.query.QueryExecutorBase;
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -20,7 +22,8 @@ import javax.annotation.Nonnull;
  * This searcher does the job for various console and fragment editors and other non-physical files.
  * We need this because ScopeEnlarger functionality will not work for nonphysical files.
  */
-public class NonPhysicalReferenceSearcher extends QueryExecutorBase<PsiReference, ReferencesSearch.SearchParameters> {
+@ExtensionImpl
+public class NonPhysicalReferenceSearcher extends QueryExecutorBase<PsiReference, ReferencesSearch.SearchParameters> implements ReferencesSearchQueryExecutor {
 
   public NonPhysicalReferenceSearcher() {
     super(true);
@@ -28,9 +31,6 @@ public class NonPhysicalReferenceSearcher extends QueryExecutorBase<PsiReference
 
   @Override
   public void processQuery(@Nonnull ReferencesSearch.SearchParameters queryParameters, @Nonnull Processor<? super PsiReference> consumer) {
-    if (ApplicationManager.getApplication().isUnitTestMode()) {
-      return;
-    }
     final SearchScope scope = queryParameters.getScopeDeterminedByUser();
     final PsiElement element = queryParameters.getElementToSearch();
     final PsiFile containingFile = element.getContainingFile();

@@ -16,6 +16,9 @@
 
 package consulo.ide.impl.psi.injection.impl;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -35,6 +38,8 @@ import java.util.List;
  */
 @Singleton
 @State(name = Configuration.COMPONENT_NAME, storages = {@Storage("injecting.xml"), @Storage(value = "IntelliLang.xml", deprecated = true)})
+@ServiceAPI(ComponentScope.PROJECT)
+@ServiceImpl
 public class ProjectInjectionConfiguration extends Configuration {
   private final Configuration myParentConfiguration;
 

@@ -16,6 +16,8 @@
 
 package consulo.ide.impl.idea.codeInsight.editorActions.enter;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
@@ -29,8 +31,9 @@ import javax.annotation.Nullable;
 /**
  * @author yole
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface EnterHandlerDelegate {
-  ExtensionPointName<EnterHandlerDelegate> EP_NAME = ExtensionPointName.create("consulo.enterHandlerDelegate");
+  ExtensionPointName<EnterHandlerDelegate> EP_NAME = ExtensionPointName.create(EnterHandlerDelegate.class);
 
   enum Result {
     Default, Continue, DefaultForceIndent, DefaultSkipIndent, Stop

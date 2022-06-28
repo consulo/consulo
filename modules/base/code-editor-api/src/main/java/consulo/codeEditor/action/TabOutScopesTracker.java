@@ -5,6 +5,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.codeEditor.Editor;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 
@@ -40,12 +41,14 @@ public interface TabOutScopesTracker {
    *
    * @param tabOutOffset position where caret should be moved when Tab is used to exit the scope (should be larger than {@code offset})
    */
+  @RequiredUIAccess
   void registerEmptyScope(@Nonnull Editor editor, int offset, int tabOutOffset);
 
   /**
    * Checks whether given offset is at the end of tracked scope (so if caret is located at that offset, Tab key can be used to move out of
    * the scope).
    */
+  @RequiredUIAccess
   boolean hasScopeEndingAt(@Nonnull Editor editor, int offset);
 
   /**
@@ -55,5 +58,6 @@ public interface TabOutScopesTracker {
    * @see #hasScopeEndingAt(Editor, int)
    * @see #registerEmptyScope(Editor, int, int)
    */
+  @RequiredUIAccess
   int removeScopeEndingAt(@Nonnull Editor editor, int offset);
 }

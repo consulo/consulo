@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.codeInsight.editorActions.enter;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.dataContext.DataContext;
@@ -32,6 +33,7 @@ import consulo.util.lang.ref.Ref;
 
 import javax.annotation.Nonnull;
 
+@ExtensionImpl(id = "inLineComment", order = "after inStringLiteral")
 public class EnterInLineCommentHandler extends EnterHandlerDelegateAdapter {
   @Override
   public Result preprocessEnter(@Nonnull final PsiFile file, @Nonnull final Editor editor, @Nonnull final Ref<Integer> caretOffsetRef, @Nonnull final Ref<Integer> caretAdvance,

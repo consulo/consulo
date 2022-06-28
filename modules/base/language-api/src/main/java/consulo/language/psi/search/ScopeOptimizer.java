@@ -15,16 +15,17 @@
  */
 package consulo.language.psi.search;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.application.progress.ProgressManager;
+import consulo.content.scope.SearchScope;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.content.scope.SearchScope;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
+import java.util.List;
 import java.util.Objects;
-import java.util.stream.Stream;
 
 /**
  * A general interface to perform PsiElement's search scope optimization. The interface should be used only for optimization purposes.
@@ -43,11 +44,12 @@ import java.util.stream.Stream;
  * </li>
  * </ol>
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface ScopeOptimizer {
 
   /**
-   * @deprecated use {@link ScopeOptimizer#getRestrictedUseScope(PsiElement)} instead.
    * @return is null when given optimizer can't provide a scope to exclude
+   * @deprecated use {@link ScopeOptimizer#getRestrictedUseScope(PsiElement)} instead.
    */
   @Deprecated
   @Nullable
@@ -67,8 +69,8 @@ public interface ScopeOptimizer {
   }
 
   @Nullable
-  static SearchScope calculateOverallRestrictedUseScope(@Nonnull ScopeOptimizer[] optimizers, @Nonnull PsiElement element) {
-    return Stream.of(optimizers).peek(optimizer -> ProgressManager.checkCanceled()).map(optimizer -> optimizer.getRestrictedUseScope(element)).filter(Objects::nonNull)
-            .reduce((s1, s2) -> s1.intersectWith(s2)).orElse(null);
+  static SearchScope calculateOverallRestrictedUseScope(@Nonnull List<ScopeOptimizer> optimizers, @Nonnull PsiElement element) {
+    return optimizers.stream().peek(optimizer -> ProgressManager.checkCanceled()).map(optimizer -> optimizer.getRestrictedUseScope(element)).filter(Objects::nonNull)
+            .reduce(SearchScope::intersectWith).orElse(null);
   }
 }

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.editor.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.codeStyle.CodeStyleFacade;
 import consulo.codeEditor.EditorFactory;
 import consulo.document.event.DocumentAdapter;
@@ -38,6 +39,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 @Singleton
+@ServiceImpl
 public class LazyRangeMarkerFactoryImpl extends LazyRangeMarkerFactory {
   private final Project myProject;
   private static final Key<WeakList<LazyMarker>> LAZY_MARKERS_KEY = Key.create("LAZY_MARKERS_KEY");

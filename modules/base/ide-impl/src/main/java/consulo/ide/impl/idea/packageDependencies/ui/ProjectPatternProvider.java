@@ -20,6 +20,7 @@
  */
 package consulo.ide.impl.idea.packageDependencies.ui;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.ide.IdeBundle;
 import consulo.ui.ex.action.AnAction;
@@ -44,6 +45,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Set;
 
+@ExtensionImpl(id = ProjectPatternProvider.FILE, order = "last")
 public class ProjectPatternProvider extends PatternDialectProvider {
 
   @NonNls public static final String FILE = "file";

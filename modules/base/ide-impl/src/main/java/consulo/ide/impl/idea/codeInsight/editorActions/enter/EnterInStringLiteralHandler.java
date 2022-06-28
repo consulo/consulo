@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.codeInsight.editorActions.enter;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.codeInsight.editorActions.EnterHandler;
 import consulo.language.editor.action.JavaLikeQuoteHandler;
 import consulo.language.editor.action.LanguageQuoteHandler;
@@ -43,6 +44,7 @@ import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
 import javax.annotation.Nonnull;
 
+@ExtensionImpl(id = "inStringLiteral", order = "first")
 public class EnterInStringLiteralHandler extends EnterHandlerDelegateAdapter {
   @Override
   public Result preprocessEnter(@Nonnull final PsiFile file, @Nonnull final Editor editor, @Nonnull Ref<Integer> caretOffsetRef,

@@ -15,36 +15,34 @@
  */
 package consulo.ide.impl.idea.refactoring.introduce.inplace;
 
-import consulo.language.editor.completion.lookup.LookupElement;
-import consulo.language.editor.completion.lookup.LookupElementBuilder;
-import consulo.language.editor.template.ExpressionContext;
-import consulo.language.editor.template.TextResult;
-import consulo.ide.impl.idea.codeInsight.template.impl.TemplateManagerImpl;
-import consulo.ide.impl.idea.codeInsight.template.impl.TemplateStateImpl;
-import consulo.language.ast.ASTNode;
-import consulo.language.impl.internal.psi.LanguageTokenSeparatorGenerators;
 import consulo.application.Result;
-import consulo.language.editor.WriteCommandAction;
-import consulo.undoRedo.internal.StartMarkAction;
 import consulo.codeEditor.Editor;
 import consulo.document.RangeMarker;
-import consulo.component.extension.Extensions;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.codeInsight.template.impl.TemplateManagerImpl;
+import consulo.ide.impl.idea.codeInsight.template.impl.TemplateStateImpl;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.language.ast.ASTNode;
+import consulo.language.editor.WriteCommandAction;
+import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.editor.completion.lookup.LookupElementBuilder;
+import consulo.language.editor.refactoring.rename.NameSuggestionProvider;
+import consulo.language.editor.refactoring.rename.PreferrableNameSuggestionProvider;
+import consulo.language.editor.refactoring.rename.SuggestedNameInfo;
+import consulo.language.editor.refactoring.rename.inplace.InplaceRefactoring;
+import consulo.language.editor.refactoring.rename.inplace.MyLookupExpression;
+import consulo.language.editor.template.ExpressionContext;
+import consulo.language.editor.template.TextResult;
+import consulo.language.impl.internal.psi.LanguageTokenSeparatorGenerators;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.SmartPointerManager;
 import consulo.language.psi.SmartPsiElementPointer;
-import consulo.language.editor.refactoring.rename.SuggestedNameInfo;
-import consulo.language.editor.refactoring.rename.NameSuggestionProvider;
-import consulo.language.editor.refactoring.rename.PreferrableNameSuggestionProvider;
-import consulo.language.editor.refactoring.rename.inplace.InplaceRefactoring;
-import consulo.language.editor.refactoring.rename.inplace.MyLookupExpression;
+import consulo.project.Project;
+import consulo.undoRedo.internal.StartMarkAction;
 import consulo.util.lang.Pair;
 
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -209,7 +207,7 @@ public abstract class InplaceVariableIntroducer<E extends PsiElement> extends In
           if (!text.isEmpty() && !Comparing.strEqual(text, name)) {
             final LinkedHashSet<String> names = new LinkedHashSet<String>();
             names.add(text);
-            for (NameSuggestionProvider provider : Extensions.getExtensions(NameSuggestionProvider.EP_NAME)) {
+            for (NameSuggestionProvider provider : NameSuggestionProvider.EP_NAME.getExtensionList()) {
               final SuggestedNameInfo suggestedNameInfo = provider.getSuggestedNames(psiVariable, psiVariable, names);
               if (suggestedNameInfo != null &&
                   provider instanceof PreferrableNameSuggestionProvider &&

@@ -16,33 +16,28 @@
 
 package consulo.ide.impl.idea.refactoring.safeDelete;
 
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
-import consulo.language.editor.LangDataKeys;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
-import consulo.component.extension.Extensions;
-import consulo.module.Module;
-import consulo.project.Project;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
-import consulo.language.psi.util.PsiTreeUtil;
-import consulo.language.psi.PsiUtilCore;
+import consulo.dataContext.DataContext;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.refactoring.RefactoringActionHandler;
 import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.refactoring.RefactoringSettings;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import java.util.HashSet;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiUtilCore;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.module.Module;
+import consulo.project.Project;
+import consulo.ui.ex.awt.DialogWrapper;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author dsl
@@ -88,7 +83,7 @@ public class SafeDeleteHandler implements RefactoringActionHandler {
     if (checkDelegates) {
       for (PsiElement element : temptoDelete) {
         boolean found = false;
-        for(SafeDeleteProcessorDelegate delegate: Extensions.getExtensions(SafeDeleteProcessorDelegate.EP_NAME)) {
+        for(SafeDeleteProcessorDelegate delegate: SafeDeleteProcessorDelegate.EP_NAME.getExtensionList()) {
           if (delegate.handlesElement(element)) {
             found = true;
             Collection<? extends PsiElement> addElements = delegate instanceof SafeDeleteProcessorDelegateBase

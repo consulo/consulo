@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.tooltips.TooltipActionProvider;
 import consulo.ide.impl.idea.codeInsight.intention.AbstractEmptyIntentionAction;
 import consulo.ide.impl.idea.codeInsight.intention.IntentionActionDelegate;
@@ -42,6 +43,7 @@ import java.util.List;
 /**
  * from kotlin
  */
+@ExtensionImpl(id = "defaultProvider", order = "last")
 public class DaemonTooltipActionProvider implements TooltipActionProvider {
   @Nullable
   @Override

@@ -28,7 +28,7 @@ import consulo.usage.UsageView;
 import consulo.usage.UsageViewBundle;
 import consulo.usage.UsageViewContentManager;
 import consulo.usage.UsageViewSettings;
-import consulo.usage.rule.UsageFilteringRuleProvider;
+import consulo.usage.rule.UsageFilteringRuleListener;
 import consulo.util.dataholder.Key;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -74,7 +74,7 @@ public class UsageViewContentManagerImpl extends UsageViewContentManager {
       @Override
       public void setSelected(@Nonnull AnActionEvent e, boolean state) {
         UsageViewSettings.getInstance().setSortAlphabetically(state);
-        project.getMessageBus().syncPublisher(UsageFilteringRuleProvider.RULES_CHANGED).run();
+        project.getMessageBus().syncPublisher(UsageFilteringRuleListener.class).rulesChanged();
       }
     };
 

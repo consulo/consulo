@@ -122,7 +122,7 @@ public class HighlightingSettingsPerFile extends HighlightingLevelManager implem
       myHighlightSettings.put(virtualFile, defaults);
     }
 
-    myBus.syncPublisher(FileHighlightingSettingListener.SETTING_CHANGE).settingChanged(root, setting);
+    myBus.syncPublisher(FileHighlightingSettingListener.class).settingChanged(root, setting);
   }
 
   @Override

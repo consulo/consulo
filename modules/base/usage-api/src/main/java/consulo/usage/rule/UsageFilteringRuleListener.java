@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * User: anna
- * Date: 16-Jan-2008
- */
-package consulo.content.scope;
+package consulo.usage.rule;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
-import consulo.project.Project;
-import javax.annotation.Nonnull;
+import consulo.annotation.component.TopicAPI;
 
-@ExtensionAPI(ComponentScope.APPLICATION)
-public interface ScopeDescriptorProvider {
-  ExtensionPointName<ScopeDescriptorProvider> EP_NAME = ExtensionPointName.create(ScopeDescriptorProvider.class);
-
-  @Nonnull
-  ScopeDescriptor[] getScopeDescriptors(Project project);
+/**
+ * @author VISTALL
+ * @since 28-Jun-22
+ */
+@TopicAPI(ComponentScope.PROJECT)
+public interface UsageFilteringRuleListener {
+  void rulesChanged();
 }

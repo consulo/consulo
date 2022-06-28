@@ -104,7 +104,7 @@ public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBa
       }
     });
 
-    myConnection.subscribe(FileHighlightingSettingListener.SETTING_CHANGE, (r, s) -> updateStatus());
+    myConnection.subscribe(FileHighlightingSettingListener.class, (r, s) -> updateStatus());
   }
 
   @Override

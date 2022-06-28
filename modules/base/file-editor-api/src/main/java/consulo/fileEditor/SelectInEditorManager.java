@@ -15,6 +15,8 @@
  */
 package consulo.fileEditor;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -22,6 +24,7 @@ import consulo.virtualFileSystem.VirtualFile;
  * @author MYakovlev
  * Date: Jul 1, 2002
  */
+@ServiceAPI(ComponentScope.PROJECT)
 public interface SelectInEditorManager {
   public static SelectInEditorManager getInstance(Project project) {
     return project.getInstance(SelectInEditorManager.class);

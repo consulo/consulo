@@ -15,25 +15,24 @@
  */
 package consulo.ide.impl.psi.impl.source.resolve.reference;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.util.*;
 import consulo.ide.impl.idea.openapi.paths.GlobalPathReferenceProvider;
-import consulo.language.psi.path.PathReferenceManager;
-import consulo.application.util.UserDataCache;
 import consulo.ide.impl.idea.openapi.vcs.IssueNavigationConfiguration;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
-import consulo.language.psi.PsiReferenceProvider;
-import consulo.application.util.CachedValue;
-import consulo.application.util.CachedValueProvider;
-import consulo.application.util.CachedValuesManager;
+import consulo.language.psi.PsiReferenceTypedProvider;
+import consulo.language.psi.ReferenceProviderType;
+import consulo.language.psi.path.PathReferenceManager;
 import consulo.language.util.ProcessingContext;
 import consulo.util.collection.SmartList;
-import consulo.application.util.BombedStringUtil;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class ArbitraryPlaceUrlReferenceProvider extends PsiReferenceProvider {
+@ExtensionImpl
+public class ArbitraryPlaceUrlReferenceProvider extends PsiReferenceTypedProvider {
   private static final UserDataCache<CachedValue<PsiReference[]>, PsiElement, Object> ourRefsCache = new UserDataCache<CachedValue<PsiReference[]>, PsiElement, Object>("psielement.url.refs") {
     private final AtomicReference<GlobalPathReferenceProvider> myReferenceProvider = new AtomicReference<>();
 
@@ -41,9 +40,6 @@ public class ArbitraryPlaceUrlReferenceProvider extends PsiReferenceProvider {
     protected CachedValue<PsiReference[]> compute(final PsiElement element, Object p) {
       return CachedValuesManager.getManager(element.getProject()).createCachedValue(() -> {
         IssueNavigationConfiguration navigationConfiguration = IssueNavigationConfiguration.getInstance(element.getProject());
-        if (navigationConfiguration == null) {
-          return CachedValueProvider.Result.create(PsiReference.EMPTY_ARRAY, element);
-        }
 
         List<PsiReference> refs = null;
         GlobalPathReferenceProvider provider = myReferenceProvider.get();
@@ -66,5 +62,11 @@ public class ArbitraryPlaceUrlReferenceProvider extends PsiReferenceProvider {
   @Override
   public PsiReference[] getReferencesByElement(@Nonnull final PsiElement element, @Nonnull ProcessingContext context) {
     return ourRefsCache.get(element, null).getValue();
+  }
+
+  @Nonnull
+  @Override
+  public ReferenceProviderType getReferenceProviderType() {
+    return CommentsReferenceContributor.COMMENTS_REFERENCE_PROVIDER_TYPE;
   }
 }

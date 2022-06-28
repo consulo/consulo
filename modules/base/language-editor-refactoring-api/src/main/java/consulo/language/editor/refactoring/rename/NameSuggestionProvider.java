@@ -16,6 +16,8 @@
 
 package consulo.language.editor.refactoring.rename;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 
@@ -26,8 +28,9 @@ import java.util.Set;
 /**
  * @author yole
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface NameSuggestionProvider {
-  ExtensionPointName<NameSuggestionProvider> EP_NAME = ExtensionPointName.create("consulo.nameSuggestionProvider");
+  ExtensionPointName<NameSuggestionProvider> EP_NAME = ExtensionPointName.create(NameSuggestionProvider.class);
 
   @Nullable
   SuggestedNameInfo getSuggestedNames(PsiElement element, @Nullable PsiElement nameSuggestionContext, Set<String> result);

@@ -20,6 +20,14 @@ import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.dataholder.UserDataHolderEx;
 
+/**
+ * @deprecated For recalculate-able caches, use {@link CachedValuesManager#getCachedValue},
+ * {@link CachedValuesManager#getProjectPsiDependentCache}
+ * or other similar methods, as a less verbose and often more correct alternative.
+ * For lazy values calculated just once, consider {@code *LazyValue} classes
+ * or explicit {@link UserDataHolder#getUserData} and {@link UserDataHolder#putUserData} calls for less verbosity.
+ */
+@Deprecated
 public abstract class UserDataCache<T, Owner extends UserDataHolder, Param> extends FieldCache<T, Owner, Key<T>, Param> {
   private static final RecursionGuard ourGuard = RecursionManager.createGuard("userDataCache");
   private final Key<T> myKey;

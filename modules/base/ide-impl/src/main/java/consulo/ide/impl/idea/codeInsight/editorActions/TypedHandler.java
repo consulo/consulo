@@ -98,9 +98,6 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
     }
   }
 
-  /**
-   * @deprecated use {@link QuoteHandlerEP}
-   */
   @Deprecated
   public static void registerQuoteHandler(@Nonnull FileType fileType, @Nonnull FileQuoteHandler quoteHandler) {
     ourCustomQuoterHandlers.put(fileType.getId(), quoteHandler);

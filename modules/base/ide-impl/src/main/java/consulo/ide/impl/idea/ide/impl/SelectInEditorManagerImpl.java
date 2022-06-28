@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorColors;
@@ -49,6 +50,7 @@ import java.awt.event.FocusListener;
  * Date: Jul 1, 2002
  */
 @Singleton
+@ServiceImpl
 public class SelectInEditorManagerImpl implements SelectInEditorManager, Disposable, FocusListener, CaretListener {
   private final Project myProject;
   private RangeHighlighter mySegmentHighlighter;

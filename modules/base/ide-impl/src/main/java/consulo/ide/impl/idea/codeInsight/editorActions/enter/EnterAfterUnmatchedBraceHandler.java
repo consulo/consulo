@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.codeInsight.editorActions.enter;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.CodeInsightSettings;
 import consulo.language.editor.highlight.BraceMatcher;
 import consulo.language.editor.action.BraceMatchingUtil;
@@ -46,6 +47,7 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import javax.annotation.Nonnull;
 
+@ExtensionImpl(id = "afterUnmatchedBrace", order = "after inLineComment")
 public class EnterAfterUnmatchedBraceHandler extends EnterHandlerDelegateAdapter {
   private static final Logger LOG = Logger.getInstance(EnterAfterUnmatchedBraceHandler.class);
 

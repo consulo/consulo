@@ -16,11 +16,13 @@
 
 package consulo.ide.impl.idea.refactoring.safeDelete;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
-import consulo.project.Project;
 import consulo.language.psi.PsiElement;
-import consulo.usage.UsageInfo;
 import consulo.language.util.IncorrectOperationException;
+import consulo.project.Project;
+import consulo.usage.UsageInfo;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -29,10 +31,12 @@ import java.util.List;
 /**
  * @author yole
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface SafeDeleteProcessorDelegate {
-  ExtensionPointName<SafeDeleteProcessorDelegate> EP_NAME = ExtensionPointName.create("consulo.refactoring.safeDeleteProcessor");
+  ExtensionPointName<SafeDeleteProcessorDelegate> EP_NAME = ExtensionPointName.create(SafeDeleteProcessorDelegate.class);
 
   boolean handlesElement(PsiElement element);
+
   @Nullable
   NonCodeUsageSearchInfo findUsages(final PsiElement element, final PsiElement[] allElementsToDelete, List<UsageInfo> result);
 
@@ -42,7 +46,7 @@ public interface SafeDeleteProcessorDelegate {
    * May show UI to ask the user if some additional elements should be deleted along with the
    * specified selected element.
    *
-   * @param element an element selected for deletion.
+   * @param element             an element selected for deletion.
    * @param allElementsToDelete all elements selected for deletion.
    * @return additional elements to search for usages, or null if the user has cancelled the refactoring.
    */
@@ -61,7 +65,7 @@ public interface SafeDeleteProcessorDelegate {
    * be excluded.
    *
    * @param project the project where the refactoring happens.
-   * @param usages all usages to be processed by the refactoring. 
+   * @param usages  all usages to be processed by the refactoring.
    * @return the filtered list of usages, or null if the user has cancelled the refactoring.
    */
   @Nullable
