@@ -89,7 +89,7 @@ public class CommittedChangesViewManager implements ChangesViewContentProvider {
   public JComponent initContent() {
     myVcsManager.addVcsListener(myVcsListener);
     myConnection = myBus.connect();
-    myConnection.subscribe(CommittedChangesCache.COMMITTED_TOPIC, new MyCommittedChangesListener());
+    myConnection.subscribe(CommittedChangesListener.class, new MyCommittedChangesListener());
     updateChangesContent();
     myComponent.refreshChanges(true);
     return myComponent;

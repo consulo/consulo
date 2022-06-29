@@ -5,21 +5,19 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
+import consulo.application.impl.internal.progress.CoreProgressManager;
+import consulo.application.impl.internal.progress.StandardProgressIndicatorBase;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
-import consulo.application.impl.internal.progress.CoreProgressManager;
-import consulo.ide.impl.idea.openapi.progress.util.BackgroundTaskUtil;
-import consulo.application.impl.internal.progress.StandardProgressIndicatorBase;
-import consulo.project.Project;
-import consulo.project.event.ProjectManagerListener;
-import consulo.project.startup.IdeaStartupActivity;
-import consulo.util.lang.function.Condition;
-import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
-import consulo.util.lang.TimeoutUtil;
 import consulo.application.util.concurrent.QueueProcessor;
+import consulo.ide.impl.idea.openapi.progress.util.BackgroundTaskUtil;
+import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.util.lang.TimeoutUtil;
+import consulo.util.lang.function.Condition;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
@@ -66,15 +64,9 @@ public final class VcsInitialization {
   @Inject
   VcsInitialization(@Nonnull Project project) {
     myProject = project;
-
-    //if (ApplicationManager.getApplication().isUnitTestMode()) {
-    //  // Fix "MessageBusImpl is already disposed: (disposed temporarily)" during LightPlatformTestCase
-    //  Disposable disposable = ((ProjectEx)project).getEarlyDisposable();
-    //  Disposer.register(disposable, () -> cancelBackgroundInitialization());
-    //}
   }
 
-  private void startInitialization() {
+  protected void startInitialization() {
     myFuture = ((CoreProgressManager)ProgressManager.getInstance()).runProcessWithProgressAsynchronously(new Task.Backgroundable(myProject, VcsBundle.message("impl.vcs.initialization")) {
       @Override
       public void run(@Nonnull ProgressIndicator indicator) {
@@ -164,7 +156,7 @@ public final class VcsInitialization {
     }
   }
 
-  private void cancelBackgroundInitialization() {
+  protected void cancelBackgroundInitialization() {
     myIndicator.cancel();
 
     // do not leave VCS initialization run in background when the project is closed
@@ -215,27 +207,6 @@ public final class VcsInitialization {
 
   private static boolean isInitActivity(@Nonnull VcsStartupActivity activity) {
     return activity.getOrder() < VcsInitObject.AFTER_COMMON.getOrder();
-  }
-
-  static final class StartUpActivity implements IdeaStartupActivity.DumbAware {
-    @Override
-    public void runActivity(@Nonnull Project project) {
-      if (project.isDefault()) return;
-      VcsInitialization vcsInitialization = project.getInstance(VcsInitialization.class);
-      vcsInitialization.startInitialization();
-    }
-  }
-
-  static final class ShutDownProjectListener implements ProjectManagerListener {
-    @Override
-    public void projectClosing(@Nonnull Project project) {
-      if (project.isDefault()) return;
-      VcsInitialization vcsInitialization = project.getInstanceIfCreated(VcsInitialization.class);
-      if (vcsInitialization != null) {
-        // Wait for the task to terminate, to avoid running it in background for closed project
-        vcsInitialization.cancelBackgroundInitialization();
-      }
-    }
   }
 
   private static final class ProxyVcsStartupActivity implements VcsStartupActivity {

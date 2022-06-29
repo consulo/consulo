@@ -23,8 +23,4 @@
       <add-to-group group-id="StructureViewPopupMenu" anchor="last" />
     </action>
   </actions>
-
-  <extensionPoints>
-    <extensionPoint name="graphProvider" interface="consulo.ide.impl.diagram.provider.GraphProvider" />
-  </extensionPoints>
 </consulo-plugin>

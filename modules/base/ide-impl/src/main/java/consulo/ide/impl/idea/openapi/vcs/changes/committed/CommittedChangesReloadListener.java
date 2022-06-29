@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,25 +17,10 @@ package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
-import consulo.ide.impl.idea.openapi.vcs.RepositoryLocation;
-import consulo.ide.impl.idea.openapi.vcs.VcsException;
-import consulo.ide.impl.idea.openapi.vcs.versionBrowser.CommittedChangeList;
 
-import javax.annotation.Nullable;
-import java.util.List;
-
-/**
- * @author yole
- */
 @TopicAPI(ComponentScope.PROJECT)
-public interface CommittedChangesListener {
-  void changesLoaded(RepositoryLocation location, List<CommittedChangeList> changes);
+public interface CommittedChangesReloadListener {
+  void itemsReloaded();
 
-  void incomingChangesUpdated(@Nullable final List<CommittedChangeList> receivedChanges);
-
-  void changesCleared();
-
-  void presentationChanged();
-
-  void refreshErrorStatusChanged(@Nullable VcsException lastError);
+  void emptyRefresh();
 }

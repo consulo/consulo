@@ -63,7 +63,7 @@ public class OutdatedVersionNotifier {
     myCache = cache;
     myProject = project;
     MessageBusConnection busConnection = project.getMessageBus().connect();
-    busConnection.subscribe(CommittedChangesCache.COMMITTED_TOPIC, new CommittedChangesAdapter() {
+    busConnection.subscribe(CommittedChangesListener.class, new CommittedChangesAdapter() {
       @Override
       public void incomingChangesUpdated(@Nullable final List<CommittedChangeList> receivedChanges) {
         if (myCache.getCachedIncomingChanges() == null) {

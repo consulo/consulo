@@ -21,6 +21,7 @@ import consulo.application.ui.event.UISettingsListener;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
+import consulo.fileEditor.event.FileEditorManagerBeforeListener;
 import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorManagerEx;
 import consulo.fileEditor.FileEditorWithProvider;
 import consulo.component.ProcessCanceledException;
@@ -82,7 +83,7 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentW
 
     connection.subscribe(UISettingsListener.class, this::trimToSize);
 
-    connection.subscribe(FileEditorManagerListener.Before.FILE_EDITOR_MANAGER, new FileEditorManagerListener.Before.Adapter() {
+    connection.subscribe(FileEditorManagerBeforeListener.class, new FileEditorManagerBeforeListener.Adapter() {
       @Override
       public void beforeFileClosed(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
         updateHistoryEntry(file, false);

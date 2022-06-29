@@ -26,8 +26,6 @@ import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
 import consulo.ide.impl.idea.openapi.vcs.FilePath;
 import consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager;
 import consulo.ide.impl.idea.openapi.vcs.VcsRoot;
-import consulo.ide.impl.idea.openapi.vcs.impl.VcsInitObject;
-import consulo.ide.impl.idea.openapi.vcs.impl.VcsStartupActivity;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -50,17 +48,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 @ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class VcsRepositoryManager implements Disposable {
-  static final class MyStartupActivity implements VcsStartupActivity {
-    @Override
-    public void runActivity(@Nonnull Project project) {
-      getInstance(project).checkAndUpdateRepositoriesCollection(null);
-    }
-
-    @Override
-    public int getOrder() {
-      return VcsInitObject.OTHER_INITIALIZATION.getOrder();
-    }
-  }
 
   @Nonnull
   public static VcsRepositoryManager getInstance(@Nonnull Project project) {
@@ -247,7 +234,7 @@ public class VcsRepositoryManager implements Disposable {
   }
 
   // note: we are not calling this method during the project startup - it is called anyway by f.e the GitRootTracker
-  private void checkAndUpdateRepositoriesCollection(@Nullable VirtualFile checkedRoot) {
+  protected void checkAndUpdateRepositoriesCollection(@Nullable VirtualFile checkedRoot) {
     Map<VirtualFile, Repository> repositories;
     try {
       MODIFY_LOCK.lock();

@@ -15,38 +15,36 @@
  */
 package consulo.ide.impl.idea.vcs.log.impl;
 
-import consulo.ide.impl.idea.ide.caches.CachesInvalidator;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
-import consulo.ide.ServiceManager;
-import consulo.project.Project;
-import consulo.project.startup.IdeaStartupActivity;
+import consulo.component.messagebus.MessageBus;
 import consulo.disposer.Disposer;
+import consulo.ide.ServiceManager;
+import consulo.ide.impl.idea.ide.caches.CachesInvalidator;
 import consulo.ide.impl.idea.openapi.vcs.CalledInAny;
 import consulo.ide.impl.idea.openapi.vcs.CalledInAwt;
 import consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager;
 import consulo.ide.impl.idea.openapi.vcs.VcsRoot;
-import consulo.component.messagebus.MessageBus;
-import consulo.component.messagebus.MessageBusConnection;
-import consulo.component.messagebus.TopicImpl;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogData;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogTabsProperties;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogPanel;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import consulo.project.Project;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.Arrays;
 import java.util.Collection;
 
 @Singleton
+@ServiceAPI(ComponentScope.PROJECT)
+@ServiceImpl
 public class VcsProjectLog {
-  public static final TopicImpl<ProjectLogListener> VCS_PROJECT_LOG_CHANGED =
-          TopicImpl.create("Project Vcs Log Created or Disposed", ProjectLogListener.class);
   @Nonnull
   private final Project myProject;
   @Nonnull
@@ -97,7 +95,7 @@ public class VcsProjectLog {
   }
 
   @CalledInAny
-  private void recreateLog() {
+  protected void recreateLog() {
     ApplicationManager.getApplication().invokeLater(() -> {
       disposeLog();
 
@@ -128,7 +126,7 @@ public class VcsProjectLog {
     }
   }
 
-  private boolean hasDvcsRoots() {
+  protected boolean hasDvcsRoots() {
     return !VcsLogManager.findLogProviders(getVcsRoots(), myProject).isEmpty();
   }
 
@@ -137,14 +135,15 @@ public class VcsProjectLog {
   }
 
   private class LazyVcsLogManager {
-    @Nullable private VcsLogManager myValue;
+    @Nullable
+    private VcsLogManager myValue;
 
     @Nonnull
     @CalledInAwt
     public synchronized VcsLogManager getValue() {
       if (myValue == null) {
         myValue = compute();
-        myMessageBus.syncPublisher(VCS_PROJECT_LOG_CHANGED).logCreated();
+        myMessageBus.syncPublisher(ProjectLogListener.class).logCreated();
       }
       return myValue;
     }
@@ -158,7 +157,7 @@ public class VcsProjectLog {
     @CalledInAwt
     public synchronized void drop() {
       if (myValue != null) {
-        myMessageBus.syncPublisher(VCS_PROJECT_LOG_CHANGED).logDisposed();
+        myMessageBus.syncPublisher(ProjectLogListener.class).logDisposed();
         Disposer.dispose(myValue);
       }
       myValue = null;
@@ -170,26 +169,4 @@ public class VcsProjectLog {
     }
   }
 
-  public static class InitLogStartupActivity implements IdeaStartupActivity {
-    @Override
-    public void runActivity(@Nonnull Project project) {
-      if (ApplicationManager.getApplication().isUnitTestMode() || ApplicationManager.getApplication().isHeadlessEnvironment()) return;
-
-      VcsProjectLog projectLog = getInstance(project);
-
-      MessageBusConnection connection = project.getMessageBus().connect(project);
-      connection.subscribe(ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED, projectLog::recreateLog);
-      if (projectLog.hasDvcsRoots()) {
-        ApplicationManager.getApplication().invokeLater(projectLog::createLog);
-      }
-    }
-  }
-
-  public interface ProjectLogListener {
-    @CalledInAwt
-    void logCreated();
-
-    @CalledInAwt
-    void logDisposed();
-  }
 }

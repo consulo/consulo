@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.component.messagebus;
 
+import consulo.annotation.component.TopicAPI;
 import consulo.disposer.Disposable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -9,9 +10,9 @@ import javax.annotation.Nullable;
  * Core of IntelliJ IDEA messaging infrastructure. Basic functions:
  * <pre>
  * <ul>
- *   <li>allows to {@link #syncPublisher(TopicImpl) push messages};</li>
+ *   <li>allows to {@link #syncPublisher(Class) push messages};</li>
  *   <li>
- *     allows to {@link #connect() create connections} for further {@link MessageBusConnection#subscribe(TopicImpl, Object) subscriptions};
+ *     allows to {@link #connect() create connections} for further {@link MessageBusConnection#subscribe(Class, Object) subscriptions};
  *   </li>
  * </ul>
  * </pre>
@@ -23,7 +24,7 @@ import javax.annotation.Nullable;
 public interface MessageBus {
 
   /**
-   * Messages buses can be organised into hierarchies. That allows facilities {@link TopicImpl#getBroadcastDirection() broadcasting}.
+   * Messages buses can be organised into hierarchies. That allows facilities {@link TopicAPI#direction()} () broadcasting}.
    * <p/>
    * Current method exposes parent bus (if any is defined).
    *
@@ -64,13 +65,13 @@ public interface MessageBus {
    * <ol>
    *   <li>
    *     Messaging clients create new {@link MessageBusConnection connections} within the target message bus and
-   *     {@link MessageBusConnection#subscribe(TopicImpl, Object) subscribe} to the target {@link TopicImpl topics};
+   *     {@link MessageBusConnection#subscribe(Class, Object) subscribe} to the target {@link Class topics};
    *   </li>
    *   <li>
    *     Every time somebody wants to send a message for particular topic, he or she calls current method and receives object
-   *     that conforms to the {@link TopicImpl#getListenerClass() business interface} of the target topic. Every method call on that
+   *     that conforms to the {@link Class business interface} of the target topic. Every method call on that
    *     object is dispatched by the messaging infrastructure to the subscribers.
-   *     {@link TopicImpl#getBroadcastDirection() broadcasting} is performed if necessary as well;
+   *     {@link TopicAPI#direction()} () broadcasting} is performed if necessary as well;
    *   </li>
    * </ol>
    * </pre>

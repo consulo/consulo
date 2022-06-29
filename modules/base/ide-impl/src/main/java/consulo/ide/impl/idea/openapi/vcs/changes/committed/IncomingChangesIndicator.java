@@ -62,7 +62,7 @@ public class IncomingChangesIndicator {
     }
 
     final MessageBusConnection connection = project.getMessageBus().connect();
-    connection.subscribe(CommittedChangesCache.COMMITTED_TOPIC, new CommittedChangesAdapter() {
+    connection.subscribe(CommittedChangesListener.class, new CommittedChangesAdapter() {
       @Override
       public void incomingChangesUpdated(@Nullable final List<CommittedChangeList> receivedChanges) {
         application.invokeLater(() -> refreshIndicator());

@@ -15,23 +15,22 @@
  */
 package consulo.ide.impl.vcs;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
-import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.project.Project;
-import consulo.project.ui.wm.ToolWindowId;
-import consulo.ui.ex.toolWindow.ToolWindowAnchor;
-import consulo.util.lang.Trinity;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentI;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentManager;
-import consulo.ide.impl.idea.openapi.vcs.impl.VcsInitObject;
-import consulo.ide.impl.idea.openapi.vcs.impl.VcsStartupActivity;
-import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowFactory;
+import consulo.project.ui.wm.ToolWindowId;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
-import consulo.localize.LocalizeValue;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.image.Image;
+import consulo.util.lang.Trinity;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -40,20 +39,8 @@ import java.util.List;
  * @author VISTALL
  * @since 2020-10-30
  */
+@ExtensionImpl
 public class VcsToolWindowFactory implements ToolWindowFactory, DumbAware {
-  public static class UpdateVcsStartupActivity implements VcsStartupActivity {
-    @Override
-    public void runActivity(@Nonnull Project project) {
-      ChangesViewContentManager manager = (ChangesViewContentManager)ChangesViewContentManager.getInstance(project);
-
-      manager.update();
-    }
-
-    @Override
-    public int getOrder() {
-      return VcsInitObject.AFTER_COMMON.getOrder();
-    }
-  }
 
   @Nonnull
   @Override

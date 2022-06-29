@@ -18,6 +18,7 @@ package consulo.ide.impl.fileEditor;
 import consulo.dataContext.DataManager;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.FileEditorWithProviderComposite;
+import consulo.fileEditor.event.FileEditorManagerBeforeListener;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;
 import consulo.fileEditor.event.FileEditorManagerListener;
@@ -191,7 +192,7 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
       try {
         final FileEditorWithProviderComposite editor = findFileComposite(file);
 
-        final FileEditorManagerListener.Before beforePublisher = editorManager.getProject().getMessageBus().syncPublisher(FileEditorManagerListener.Before.FILE_EDITOR_MANAGER);
+        final FileEditorManagerBeforeListener beforePublisher = editorManager.getProject().getMessageBus().syncPublisher(FileEditorManagerBeforeListener.class);
 
         beforePublisher.beforeFileClosed(editorManager, file);
 

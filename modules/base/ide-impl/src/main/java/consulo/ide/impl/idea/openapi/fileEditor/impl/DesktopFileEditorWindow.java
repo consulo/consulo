@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.fileEditor.impl;
 
+import consulo.fileEditor.event.FileEditorManagerBeforeListener;
 import consulo.ide.impl.fileEditor.FileEditorWindowBase;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorManagerEx;
@@ -177,7 +178,7 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
       try {
         final DesktopFileEditorWithProviderComposite editor = findFileComposite(file);
 
-        final FileEditorManagerListener.Before beforePublisher = editorManager.getProject().getMessageBus().syncPublisher(FileEditorManagerListener.Before.FILE_EDITOR_MANAGER);
+        final FileEditorManagerBeforeListener beforePublisher = editorManager.getProject().getMessageBus().syncPublisher(FileEditorManagerBeforeListener.class);
 
         beforePublisher.beforeFileClosed(editorManager, file);
 

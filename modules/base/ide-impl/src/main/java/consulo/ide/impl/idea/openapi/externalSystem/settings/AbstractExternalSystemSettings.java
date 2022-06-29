@@ -15,13 +15,12 @@
  */
 package consulo.ide.impl.idea.openapi.externalSystem.settings;
 
-import consulo.project.Project;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
-import consulo.component.messagebus.TopicImpl;
-import javax.annotation.Nonnull;
+import consulo.project.Project;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -41,18 +40,18 @@ public abstract class AbstractExternalSystemSettings<
 {
 
   @Nonnull
-  private final TopicImpl<L> myChangesTopic;
+  private final Class<L> myChangesTopic;
   
   private Project  myProject;
 
   @Nonnull
-  private final Map<String/* project path */, PS> myLinkedProjectsSettings = ContainerUtilRt.newHashMap();
+  private final Map<String/* project path */, PS> myLinkedProjectsSettings = new HashMap<String, PS>();
   
   @Nonnull
   private final Map<String/* project path */, PS> myLinkedProjectsSettingsView
     = Collections.unmodifiableMap(myLinkedProjectsSettings);
 
-  protected AbstractExternalSystemSettings(@Nonnull TopicImpl<L> topic, @Nonnull Project project) {
+  protected AbstractExternalSystemSettings(@Nonnull Class<L> topic, @Nonnull Project project) {
     myChangesTopic = topic;
     myProject = project;
     Disposer.register(project, this);
@@ -180,7 +179,7 @@ public abstract class AbstractExternalSystemSettings<
   protected abstract void checkSettings(@Nonnull PS old, @Nonnull PS current);
 
   @Nonnull
-  public TopicImpl<L> getChangesTopic() {
+  public Class<L> getChangesTopic() {
     return myChangesTopic;
   }
 
@@ -190,7 +189,7 @@ public abstract class AbstractExternalSystemSettings<
   }
 
   protected void fillState(@Nonnull State<PS> state) {
-    state.setLinkedExternalProjectsSettings(ContainerUtilRt.newTreeSet(myLinkedProjectsSettings.values()));
+    state.setLinkedExternalProjectsSettings(new TreeSet<PS>(myLinkedProjectsSettings.values()));
   }
 
   @SuppressWarnings("unchecked")

@@ -39,34 +39,6 @@
     </group>
   </actions>
 
-  <extensionPoints>
-    <extensionPoint name="vcsStartupActivity" interface="consulo.ide.impl.idea.openapi.vcs.impl.VcsStartupActivity"/>
-  </extensionPoints>
 
-  <applicationListeners>
-    <listener class="consulo.ide.impl.idea.openapi.vcs.impl.VcsInitialization$ShutDownProjectListener"
-              topic="consulo.project.event.ProjectManagerListener"/>
-  </applicationListeners>
-
-  <extensions defaultExtensionNs="consulo">
-    
-    <vcsStartupActivity implementation="consulo.ide.impl.idea.openapi.vcs.roots.VcsRootScanner$DetectRootsStartupActivity"/>
-
-    <vcsStartupActivity implementation="consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl$ActivateVcsesStartupActivity"/>
-
-
-    <postStartupActivity implementation="consulo.ide.impl.idea.openapi.vcs.impl.VcsInitialization$StartUpActivity"/>
-
-    <vcsStartupActivity implementation="consulo.ide.impl.vcs.VcsToolWindowFactory$UpdateVcsStartupActivity"/>
-
-    <vcsStartupActivity implementation="consulo.ide.impl.idea.dvcs.repo.VcsRepositoryManager$MyStartupActivity"/>
-
-    <toolWindow id="Version Control"
-                icon="consulo.platform.base.PlatformIconGroup@toolwindows.toolwindowchanges"
-                anchor="bottom"
-                canCloseContents="true"
-                displayName="Version Control"
-                factoryClass="consulo.ide.impl.vcs.VcsToolWindowFactory"/>
-  </extensions>
 </consulo-plugin>
 

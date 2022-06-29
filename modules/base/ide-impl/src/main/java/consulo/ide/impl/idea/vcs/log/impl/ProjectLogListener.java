@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.changes;
+package consulo.ide.impl.idea.vcs.log.impl;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
-
-import java.util.List;
+import consulo.ui.annotation.RequiredUIAccess;
 
 @TopicAPI(ComponentScope.PROJECT)
-public interface LocalChangeListsLoadedListener {
-  void processLoadedLists(final List<LocalChangeList> lists);
+public interface ProjectLogListener {
+  @RequiredUIAccess
+  void logCreated();
+
+  @RequiredUIAccess
+  void logDisposed();
 }

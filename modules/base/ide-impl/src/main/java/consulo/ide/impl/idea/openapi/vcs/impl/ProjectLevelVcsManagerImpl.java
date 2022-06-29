@@ -91,18 +91,6 @@ import java.util.*;
 @Singleton
 @ServiceImpl
 public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx implements PersistentStateComponent<Element>, Disposable {
-  static final class ActivateVcsesStartupActivity implements VcsStartupActivity {
-    @Override
-    public void runActivity(@Nonnull Project project) {
-      ProjectLevelVcsManagerImpl projectLevelVcsManager = (ProjectLevelVcsManagerImpl)getInstance(project);
-      projectLevelVcsManager.activateActiveVcses();
-    }
-
-    @Override
-    public int getOrder() {
-      return VcsInitObject.MAPPINGS.getOrder();
-    }
-  }
 
   private static final Logger LOG = Logger.getInstance(ProjectLevelVcsManagerImpl.class);
   @NonNls
@@ -679,7 +667,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
     myProject.getMessageBus().syncPublisher(VCS_CONFIGURATION_CHANGED).directoryMappingChanged();
   }
 
-  private void activateActiveVcses() {
+  protected void activateActiveVcses() {
     myMappings.activateActiveVcses();
   }
 

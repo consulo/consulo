@@ -75,7 +75,7 @@ public class IncomingChangesViewProvider implements ChangesViewContentProvider {
     myBrowser.setToolBar(toolbar.getComponent());
     myBrowser.setTableContextMenu(group, Collections.<AnAction>emptyList());
     myConnection = myBus.connect();
-    myConnection.subscribe(CommittedChangesCache.COMMITTED_TOPIC, new MyCommittedChangesListener());
+    myConnection.subscribe(CommittedChangesListener.class, new MyCommittedChangesListener());
     loadChangesToBrowser(false, true);
 
     JPanel contentPane = new JPanel(new BorderLayout());

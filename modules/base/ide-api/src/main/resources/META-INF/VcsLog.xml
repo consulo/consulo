@@ -26,7 +26,6 @@
     <applicationService serviceInterface="consulo.ide.impl.idea.vcs.log.graph.PermanentGraphBuilder"
                         serviceImplementation="consulo.ide.impl.idea.vcs.log.graph.PermanentGraphBuilderImpl"/>
 
-    <projectService serviceImplementation="consulo.ide.impl.idea.vcs.log.impl.VcsProjectLog"/>
     <projectService serviceInterface="consulo.ide.impl.idea.vcs.log.VcsLogObjectsFactory"
                     serviceImplementation="consulo.ide.impl.idea.vcs.log.impl.VcsLogObjectsFactoryImpl"/>
     <projectService serviceInterface="consulo.ide.impl.idea.vcs.log.data.VcsLogTabsProperties"
@@ -40,9 +39,6 @@
     <logHighlighterFactory implementation="consulo.ide.impl.idea.vcs.log.ui.MyCommitsHighlighter$Factory"/>
     <logHighlighterFactory implementation="consulo.ide.impl.idea.vcs.log.ui.MergeCommitsHighlighter$Factory"/>
     <logHighlighterFactory implementation="consulo.ide.impl.idea.vcs.log.ui.CurrentBranchHighlighter$Factory"/>
-
-    <postStartupActivity implementation="consulo.ide.impl.idea.vcs.log.impl.VcsProjectLog$InitLogStartupActivity"/>
-
   </extensions>
 
   <actions>

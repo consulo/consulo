@@ -4,25 +4,22 @@ package consulo.ide.impl.idea.openapi.vcs.roots;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
-import consulo.logging.Logger;
-import consulo.ide.impl.idea.openapi.progress.util.BackgroundTaskUtil;
-import consulo.project.Project;
-import consulo.module.content.ProjectFileIndex;
-import consulo.module.content.ProjectRootManager;
 import consulo.application.util.registry.Registry;
+import consulo.disposer.Disposable;
+import consulo.ide.impl.idea.openapi.progress.util.BackgroundTaskUtil;
 import consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager;
 import consulo.ide.impl.idea.openapi.vcs.VcsRootChecker;
-import consulo.ide.impl.idea.openapi.vcs.impl.VcsInitObject;
-import consulo.ide.impl.idea.openapi.vcs.impl.VcsStartupActivity;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.util.VirtualFileVisitor;
-import consulo.virtualFileSystem.event.VFileEvent;
+import consulo.logging.Logger;
+import consulo.module.content.ProjectFileIndex;
+import consulo.module.content.ProjectRootManager;
+import consulo.project.Project;
 import consulo.ui.ex.awt.util.Alarm;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.AsyncVfsEventsPostProcessor;
-import consulo.disposer.Disposable;
+import consulo.virtualFileSystem.event.VFileEvent;
+import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -182,16 +179,4 @@ public final class VcsRootScanner implements Disposable {
     }
   }
 
-  static final class DetectRootsStartupActivity implements VcsStartupActivity {
-    @Override
-    public void runActivity(@Nonnull Project project) {
-      if (ApplicationManager.getApplication().isUnitTestMode()) return;
-      getInstance(project).scheduleScan();
-    }
-
-    @Override
-    public int getOrder() {
-      return VcsInitObject.AFTER_COMMON.getOrder();
-    }
-  }
 }

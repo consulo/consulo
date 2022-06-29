@@ -25,8 +25,6 @@ import consulo.annotation.DeprecationInfo;
  */
 @TopicAPI(ComponentScope.APPLICATION)
 public interface AppLifecycleListener {
-  TopicImpl<AppLifecycleListener> TOPIC = TopicImpl.create("Application lifecycle notifications", AppLifecycleListener.class);
-
   default void projectFrameClosed() {
   }
 

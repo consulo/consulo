@@ -61,7 +61,7 @@ public class VcsLogContentProvider implements ChangesViewContentProvider {
     myProjectLog = projectLog;
 
     MessageBusConnection connection = project.getMessageBus().connect(project);
-    connection.subscribe(VcsProjectLog.VCS_PROJECT_LOG_CHANGED, new VcsProjectLog.ProjectLogListener() {
+    connection.subscribe(ProjectLogListener.class, new ProjectLogListener() {
       @Override
       public void logCreated() {
         addLogUi();

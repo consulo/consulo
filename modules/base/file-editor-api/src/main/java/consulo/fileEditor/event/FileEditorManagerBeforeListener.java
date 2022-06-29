@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package consulo.fileEditor.event;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 import consulo.annotation.component.TopicBroadcastDirection;
+import consulo.component.messagebus.TopicImpl;
 import consulo.fileEditor.FileEditorManager;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -25,15 +26,18 @@ import javax.annotation.Nonnull;
 import java.util.EventListener;
 
 @TopicAPI(value = ComponentScope.PROJECT, direction = TopicBroadcastDirection.TO_PARENT)
-public interface FileEditorManagerListener extends EventListener {
+public interface FileEditorManagerBeforeListener extends EventListener {
+  void beforeFileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file);
 
-  default void fileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
+  void beforeFileClosed(@Nonnull FileEditorManager source, @Nonnull VirtualFile file);
+
+  class Adapter implements FileEditorManagerBeforeListener {
+    @Override
+    public void beforeFileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
+    }
+
+    @Override
+    public void beforeFileClosed(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
+    }
   }
-
-  default void fileClosed(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
-  }
-
-  default void selectionChanged(@Nonnull FileEditorManagerEvent event) {
-  }
-
 }

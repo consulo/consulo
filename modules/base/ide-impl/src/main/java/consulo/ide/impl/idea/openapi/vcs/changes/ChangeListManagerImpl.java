@@ -16,12 +16,24 @@
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.ApplicationManager;
+import consulo.application.dumb.DumbAwareRunnable;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.project.ProjectComponent;
-import consulo.component.persist.StoragePathMacros;
 import consulo.application.progress.EmptyProgressIndicator;
-import consulo.ui.ex.awt.Messages;
-import consulo.util.lang.Couple;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
+import consulo.application.progress.Task;
+import consulo.application.util.Semaphore;
+import consulo.application.util.concurrent.AppExecutorUtil;
+import consulo.application.util.function.Computable;
+import consulo.application.util.function.Processor;
+import consulo.application.util.registry.Registry;
+import consulo.component.ProcessCanceledException;
+import consulo.component.persist.PersistentStateComponent;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
+import consulo.component.persist.StoragePathMacros;
+import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.openapi.util.Factory;
 import consulo.ide.impl.idea.openapi.util.Getter;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
@@ -34,32 +46,11 @@ import consulo.ide.impl.idea.openapi.vcs.checkin.CheckinEnvironment;
 import consulo.ide.impl.idea.openapi.vcs.impl.*;
 import consulo.ide.impl.idea.openapi.vcs.readOnlyHandler.ReadonlyStatusHandlerImpl;
 import consulo.ide.impl.idea.openapi.vcs.ui.VcsBalloonProblemNotifier;
-import consulo.util.lang.Pair;
-import consulo.util.lang.ThreeState;
-import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.ui.EditorNotifications;
 import consulo.ide.impl.idea.util.*;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcsUtil.VcsUtil;
-import consulo.application.ApplicationManager;
-import consulo.application.dumb.DumbAwareRunnable;
-import consulo.component.ProcessCanceledException;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.ProgressManager;
-import consulo.application.progress.Task;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.application.util.Semaphore;
-import consulo.application.util.concurrent.AppExecutorUtil;
-import consulo.application.util.function.Computable;
-import consulo.application.util.function.Processor;
-import consulo.application.util.registry.Registry;
-import consulo.component.messagebus.TopicImpl;
-import consulo.component.persist.PersistentStateComponent;
-import consulo.component.persist.State;
-import consulo.component.persist.Storage;
-import consulo.document.FileDocumentManager;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
@@ -67,12 +58,20 @@ import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.layer.DirectoryIndexExcludePolicy;
 import consulo.project.Project;
+import consulo.project.ProjectComponent;
 import consulo.project.ui.notification.NotificationType;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.MultiMap;
+import consulo.util.lang.Couple;
+import consulo.util.lang.Pair;
+import consulo.util.lang.ThreeState;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.ref.Ref;
 import consulo.util.xml.serializer.JDOMExternalizerUtil;
+import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.status.FileStatus;
@@ -136,8 +135,6 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
   private boolean myExcludedConvertedToIgnored;
   @Nonnull
   private volatile ProgressIndicator myUpdateChangesProgressIndicator = createProgressIndicator();
-
-  public static final TopicImpl<LocalChangeListsLoadedListener> LISTS_LOADED = new TopicImpl<>("LOCAL_CHANGE_LISTS_LOADED", LocalChangeListsLoadedListener.class);
 
   private boolean myShowLocalChangesInvalidated;
   private final AtomicReference<String> myFreezeName;
@@ -306,7 +303,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
       listCopy = getChangeListsCopy();
     }
     if (!myProject.isDisposed()) {
-      myProject.getMessageBus().syncPublisher(LISTS_LOADED).processLoadedLists(listCopy);
+      myProject.getMessageBus().syncPublisher(LocalChangeListsLoadedListener.class).processLoadedLists(listCopy);
     }
   }
 
@@ -331,7 +328,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
       }
     }
 
-    ProjectFileIndex fileIndex = ProjectFileIndex.SERVICE.getInstance(myProject);
+    ProjectFileIndex fileIndex = ProjectFileIndex.getInstance(myProject);
     VirtualFileManager virtualFileManager = VirtualFileManager.getInstance();
     for (Module module : ModuleManager.getInstance(myProject).getModules()) {
       for (String url : ModuleRootManager.getInstance(module).getExcludeRootUrls()) {

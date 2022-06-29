@@ -71,9 +71,6 @@ public class CommittedChangesTreeBrowser extends JPanel implements TypeSafeDataP
   private final TreeExpander myTreeExpander;
   private String myHelpId;
 
-  public static final TopicImpl<CommittedChangesReloadListener> ITEMS_RELOADED =
-          new TopicImpl<CommittedChangesReloadListener>("ITEMS_RELOADED", CommittedChangesReloadListener.class);
-
   private final List<CommittedChangeListDecorator> myDecorators;
 
   @NonNls public static final String ourHelpId = "reference.changesToolWindow.incoming";
@@ -126,7 +123,7 @@ public class CommittedChangesTreeBrowser extends JPanel implements TypeSafeDataP
     myDetailsView.getDiffAction().registerCustomShortcutSet(CommonShortcuts.getDiff(), myChangesTree);
 
     myConnection = myProject.getMessageBus().connect();
-    myConnection.subscribe(ITEMS_RELOADED, new CommittedChangesReloadListener() {
+    myConnection.subscribe(CommittedChangesReloadListener.class, new CommittedChangesReloadListener() {
       public void itemsReloaded() {
       }
 
@@ -222,7 +219,7 @@ public class CommittedChangesTreeBrowser extends JPanel implements TypeSafeDataP
     myDetailsView.setUseCase(useCase);
     myChangeLists = items;
     myFilteringStrategy.setFilterBase(items);
-    myProject.getMessageBus().syncPublisher(ITEMS_RELOADED).itemsReloaded();
+    myProject.getMessageBus().syncPublisher(CommittedChangesReloadListener.class).itemsReloaded();
     updateModel();
   }
 
@@ -461,7 +458,7 @@ public class CommittedChangesTreeBrowser extends JPanel implements TypeSafeDataP
     myChangesTree.setModel(buildTreeModel(myFilteringStrategy.filterChangeLists(myChangeLists)));
     state.applyTo(myChangesTree, (DefaultMutableTreeNode)myChangesTree.getModel().getRoot());
     TreeUtil.expandAll(myChangesTree);
-    myProject.getMessageBus().syncPublisher(ITEMS_RELOADED).itemsReloaded();
+    myProject.getMessageBus().syncPublisher(CommittedChangesReloadListener.class).itemsReloaded();
   }
 
   public static class MoreLauncher implements Runnable {
@@ -519,12 +516,6 @@ public class CommittedChangesTreeBrowser extends JPanel implements TypeSafeDataP
         }
       }
     }
-  }
-
-  public interface CommittedChangesReloadListener {
-    void itemsReloaded();
-
-    void emptyRefresh();
   }
 
   public void setLoading(final boolean value) {

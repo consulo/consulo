@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,27 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.fileEditor.event;
+package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 import consulo.annotation.component.TopicBroadcastDirection;
-import consulo.fileEditor.FileEditorManager;
-import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
-import java.util.EventListener;
-
-@TopicAPI(value = ComponentScope.PROJECT, direction = TopicBroadcastDirection.TO_PARENT)
-public interface FileEditorManagerListener extends EventListener {
-
-  default void fileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
-  }
-
-  default void fileClosed(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
-  }
-
-  default void selectionChanged(@Nonnull FileEditorManagerEvent event) {
-  }
-
+/**
+ * @author VISTALL
+ * @since 29-Jun-22
+ *
+ * FIXME [VISTALL] this topic is app&project level
+ */
+@TopicAPI(value = ComponentScope.APPLICATION, direction = TopicBroadcastDirection.TO_PARENT)
+public interface SeverityRegistrarChangeListener {
+  void severitiesChanged();
 }

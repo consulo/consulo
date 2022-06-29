@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.fileEditor.impl;
 
+import consulo.fileEditor.event.FileEditorManagerBeforeListener;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.ide.impl.idea.ide.plugins.PluginManagerCore;
@@ -817,7 +818,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
       compositeRef.set(window.findFileComposite(file));
       boolean newEditor = compositeRef.isNull();
       if (newEditor) {
-        getProject().getMessageBus().syncPublisher(FileEditorManagerListener.Before.FILE_EDITOR_MANAGER).beforeFileOpened(this, file);
+        getProject().getMessageBus().syncPublisher(FileEditorManagerBeforeListener.class).beforeFileOpened(this, file);
 
         FileEditor[] newEditors = new FileEditor[newProviders.length];
         for (int i = 0; i < newProviders.length; i++) {

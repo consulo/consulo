@@ -54,7 +54,6 @@ public class SeverityRegistrarImpl implements JDOMExternalizable, Comparator<Hig
 
   private final Map<String, SeverityBasedTextAttributes> myMap = new ConcurrentHashMap<>();
   private final Map<String, ColorValue> myRendererColors = new ConcurrentHashMap<>();
-  public static final TopicImpl<Runnable> SEVERITIES_CHANGED_TOPIC = TopicImpl.create("SEVERITIES_CHANGED_TOPIC", Runnable.class, TopicBroadcastDirection.TO_PARENT);
   @Nonnull
   private final MessageBus myMessageBus;
 
@@ -96,7 +95,7 @@ public class SeverityRegistrarImpl implements JDOMExternalizable, Comparator<Hig
   }
 
   private void severitiesChanged() {
-    myMessageBus.syncPublisher(SEVERITIES_CHANGED_TOPIC).run();
+    myMessageBus.syncPublisher(SeverityRegistrarChangeListener.class).severitiesChanged();
   }
 
   public SeverityBasedTextAttributes unregisterSeverity(@Nonnull HighlightSeverity severity) {

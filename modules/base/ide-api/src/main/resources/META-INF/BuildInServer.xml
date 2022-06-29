@@ -14,15 +14,5 @@
   - limitations under the License.
   -->
 <consulo-plugin>
-  <extensionPoints>
-    <extensionPoint name="customPortServerManager" interface="consulo.ide.impl.builtInServer.custom.CustomPortServerManager"/>
-    <extensionPoint name="binaryRequestHandler" interface="consulo.ide.impl.builtInServer.binary.BinaryRequestHandler"/>
-    <extensionPoint name="webSocketAccepter" interface="consulo.ide.impl.builtInServer.websocket.WebSocketAccepter"/>
-  </extensionPoints>
 
-  <extensions defaultExtensionNs="consulo">
-    <httpRequestHandler implementation="consulo.ide.impl.builtInServer.impl.net.xml.XmlRpcServerImpl$XmlRpcRequestHandler"/>
-
-    <customPortServerManager implementation="consulo.ide.impl.builtInServer.impl.ide.BuiltInServerOptions$MyCustomPortServerManager"/>
-  </extensions>
 </consulo-plugin>

@@ -41,7 +41,6 @@ import consulo.component.ProcessCanceledException;
 import consulo.application.util.function.Computable;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.component.messagebus.TopicImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
@@ -132,8 +131,6 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
       myRefreshEnabled = refreshEnabled;
     }
   }
-
-  public static final TopicImpl<CommittedChangesListener> COMMITTED_TOPIC = new TopicImpl<CommittedChangesListener>("committed changes updates", CommittedChangesListener.class);
 
   public static CommittedChangesCache getInstance(Project project) {
     return project.getComponent(CommittedChangesCache.class);
@@ -524,7 +521,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
   }
 
   private void fireChangesLoaded(final RepositoryLocation location, final List<CommittedChangeList> changes) {
-    MessageBusUtil.invokeLaterIfNeededOnSyncPublisher(myProject, COMMITTED_TOPIC, new Consumer<CommittedChangesListener>() {
+    MessageBusUtil.invokeLaterIfNeededOnSyncPublisher(myProject, CommittedChangesListener.class, new Consumer<CommittedChangesListener>() {
       @Override
       public void consume(CommittedChangesListener listener) {
         listener.changesLoaded(location, changes);
@@ -533,7 +530,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
   }
 
   private void fireIncomingReloaded() {
-    MessageBusUtil.invokeLaterIfNeededOnSyncPublisher(myProject, COMMITTED_TOPIC, new Consumer<CommittedChangesListener>() {
+    MessageBusUtil.invokeLaterIfNeededOnSyncPublisher(myProject, CommittedChangesListener.class, new Consumer<CommittedChangesListener>() {
       @Override
       public void consume(CommittedChangesListener listener) {
         listener.incomingChangesUpdated(Collections.<CommittedChangeList>emptyList());
@@ -754,7 +751,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
         myCachesHolder.clearAllCaches();
         myCachedIncomingChangeLists = null;
         continuation.run();
-        MessageBusUtil.invokeLaterIfNeededOnSyncPublisher(myProject, COMMITTED_TOPIC, new Consumer<CommittedChangesListener>() {
+        MessageBusUtil.invokeLaterIfNeededOnSyncPublisher(myProject, CommittedChangesListener.class, new Consumer<CommittedChangesListener>() {
           @Override
           public void consume(CommittedChangesListener listener) {
             listener.changesCleared();
@@ -858,12 +855,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
   }
 
   private void fireIncomingChangesUpdated(final List<CommittedChangeList> lists) {
-    MessageBusUtil.invokeLaterIfNeededOnSyncPublisher(myProject, COMMITTED_TOPIC, new Consumer<CommittedChangesListener>() {
-      @Override
-      public void consume(CommittedChangesListener listener) {
-        listener.incomingChangesUpdated(new ArrayList<CommittedChangeList>(lists));
-      }
-    });
+    MessageBusUtil.invokeLaterIfNeededOnSyncPublisher(myProject, CommittedChangesListener.class, listener -> listener.incomingChangesUpdated(new ArrayList<CommittedChangeList>(lists)));
   }
 
   private void notifyIncomingChangesUpdated(@Nullable final Collection<CommittedChangeList> receivedChanges) {
@@ -890,12 +882,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
   }
 
   private void notifyRefreshError(final VcsException e) {
-    MessageBusUtil.invokeLaterIfNeededOnSyncPublisher(myProject, COMMITTED_TOPIC, new Consumer<CommittedChangesListener>() {
-      @Override
-      public void consume(CommittedChangesListener listener) {
-        listener.refreshErrorStatusChanged(e);
-      }
-    });
+    MessageBusUtil.invokeLaterIfNeededOnSyncPublisher(myProject, CommittedChangesListener.class, listener -> listener.refreshErrorStatusChanged(e));
   }
 
   private CommittedChangesListener getPublisher(final Consumer<CommittedChangesListener> listener) {
@@ -903,7 +890,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
       @Override
       public CommittedChangesListener compute() {
         if (myProject.isDisposed()) throw new ProcessCanceledException();
-        return myBus.syncPublisher(COMMITTED_TOPIC);
+        return myBus.syncPublisher(CommittedChangesListener.class);
       }
     });
   }
@@ -991,7 +978,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
                     notifyReloadIncomingChanges();
                   }
                   else {
-                    myProject.getMessageBus().syncPublisher(CommittedChangesTreeBrowser.ITEMS_RELOADED).emptyRefresh();
+                    myProject.getMessageBus().syncPublisher(CommittedChangesReloadListener.class).emptyRefresh();
                   }
                 }
               });

@@ -21,8 +21,5 @@
     </extensionPoint>
   </extensionPoints>
 
-  <extensions defaultExtensionNs="consulo">
-    <lang.substitutor language="TEXT" implementationClass="consulo.ide.impl.idea.ide.scratch.ScratchFileServiceImpl$Substitutor" order="first"/>
 
-  </extensions>
 </consulo-plugin>

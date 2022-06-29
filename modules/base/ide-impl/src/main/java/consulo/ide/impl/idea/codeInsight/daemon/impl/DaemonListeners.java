@@ -335,7 +335,7 @@ public final class DaemonListeners implements Disposable {
       }
     }, this);
 
-    connection.subscribe(SeverityRegistrarImpl.SEVERITIES_CHANGED_TOPIC, () -> stopDaemonAndRestartAllFiles("Severities changed"));
+    connection.subscribe(SeverityRegistrarChangeListener.class, () -> stopDaemonAndRestartAllFiles("Severities changed"));
 
     if (RefResolveService.ENABLED) {
       RefResolveService resolveService = RefResolveService.getInstance(project);
