@@ -14,16 +14,12 @@ If you can't describe issue, you can use our [forum](https://discuss.consulo.io/
 
 | JVM           | Github Actions|
 | ------------- |-----------------:|
-| Java 11       | ![jdk11](https://github.com/consulo/consulo/workflows/jdk11/badge.svg) |
-| Java 14       | ![jdk14](https://github.com/consulo/consulo/workflows/jdk14/badge.svg) |
-| Java 15       | ![jdk15](https://github.com/consulo/consulo/workflows/jdk15/badge.svg) |
-| Java 16       | ![jdk16](https://github.com/consulo/consulo/workflows/jdk16/badge.svg) |
 | Java 17       | ![jdk17](https://github.com/consulo/consulo/workflows/jdk17/badge.svg) |
 
 First of all, you need those tools:
 
  * Maven 3.3+
- * JDK 11+
+ * JDK 17+
 
 Then execute from command line:
 
