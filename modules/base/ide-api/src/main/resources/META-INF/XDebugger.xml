@@ -33,6 +33,5 @@
   </extensionPoints>
 
   <extensions defaultExtensionNs="consulo">
-    <copyPastePreProcessor implementation="consulo.ide.impl.idea.xdebugger.impl.ui.DebuggerCopyPastePreprocessor"/>
   </extensions>
 </consulo-plugin>

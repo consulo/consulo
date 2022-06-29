@@ -33,7 +33,6 @@ import consulo.fileEditor.event.FileEditorManagerAdapter;
 import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.ide.impl.idea.lang.PerFileMappingsBase;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.NonProjectFileWritingAccessExtension;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
@@ -41,16 +40,10 @@ import consulo.ide.impl.idea.util.PathUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.indexing.LightDirectoryIndex;
 import consulo.language.Language;
-import consulo.language.editor.highlight.SyntaxHighlighter;
-import consulo.language.editor.highlight.SyntaxHighlighterFactory;
-import consulo.language.editor.highlight.SyntaxHighlighterProvider;
 import consulo.language.editor.scratch.RootType;
 import consulo.language.editor.scratch.ScratchFileService;
-import consulo.language.editor.scratch.ScratchUtil;
 import consulo.language.file.FileTypeManager;
 import consulo.language.plain.PlainTextLanguage;
-import consulo.language.psi.LanguageSubstitutor;
-import consulo.language.psi.LanguageSubstitutors;
 import consulo.language.util.LanguageUtil;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
@@ -58,7 +51,6 @@ import consulo.project.event.ProjectManagerListener;
 import consulo.ui.UIAccess;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.util.PerFileMappings;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -206,24 +198,6 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
     }
   }
 
-  public static class Substitutor extends LanguageSubstitutor {
-    @Nullable
-    @Override
-    public Language getLanguage(@Nonnull VirtualFile file, @Nonnull Project project) {
-      return substituteLanguage(project, file);
-    }
-
-    @Nullable
-    public static Language substituteLanguage(@Nonnull Project project, @Nonnull VirtualFile file) {
-      RootType rootType = ScratchFileService.getInstance().getRootType(file);
-      if (rootType == null) return null;
-      Language language = rootType.substituteLanguage(project, file);
-      Language adjusted = language != null ? language : getLanguageByFileName(file);
-      Language result = adjusted != null && adjusted != PlainTextLanguage.INSTANCE ? LanguageSubstitutors.INSTANCE.substituteLanguage(adjusted, file, project) : adjusted;
-      return result == Language.ANY ? null : result;
-    }
-  }
-
   @Override
   public VirtualFile findFile(@Nonnull RootType rootType, @Nonnull String pathName, @Nonnull Option option) throws IOException {
     ApplicationManager.getApplication().assertReadAccessAllowed();
@@ -253,8 +227,7 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
   }
 
   @Nullable
-  private static Language getLanguageByFileName(@Nullable VirtualFile file) {
+  static Language getLanguageByFileName(@Nullable VirtualFile file) {
     return file == null ? null : LanguageUtil.getFileTypeLanguage(FileTypeManager.getInstance().getFileTypeByFileName(file.getName()));
   }
-
 }

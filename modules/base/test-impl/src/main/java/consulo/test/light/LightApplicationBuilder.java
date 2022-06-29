@@ -22,13 +22,10 @@ import consulo.application.macro.PathMacros;
 import consulo.application.progress.ProgressManager;
 import consulo.application.ui.UISettings;
 import consulo.component.impl.extension.ExtensionsAreaImpl;
-import consulo.component.macro.PathMacroFilter;
 import consulo.component.store.impl.internal.PathMacrosService;
 import consulo.disposer.Disposable;
 import consulo.document.FileDocumentManager;
 import consulo.injecting.InjectingContainerBuilder;
-import consulo.language.LanguageExtensionPoint;
-import consulo.language.file.LanguageFileViewProviders;
 import consulo.language.impl.ast.ASTCompositeFactory;
 import consulo.language.impl.ast.ASTLazyFactory;
 import consulo.language.impl.ast.ASTLeafFactory;
@@ -37,7 +34,6 @@ import consulo.language.impl.internal.ast.DefaultASTLazyFactory;
 import consulo.language.impl.internal.ast.DefaultASTLeafFactory;
 import consulo.language.impl.internal.parser.PsiBuilderFactoryImpl;
 import consulo.language.parser.PsiBuilderFactory;
-import consulo.language.psi.LanguageSubstitutors;
 import consulo.test.light.impl.*;
 import consulo.ui.ex.UiActivityMonitor;
 import consulo.ui.ex.awt.ExpandableItemsHandlerFactory;
@@ -65,13 +61,7 @@ public class LightApplicationBuilder {
       registerExtensionPoint(area, ASTCompositeFactory.EP.getExtensionPointName(), ASTCompositeFactory.class);
       registerExtension(area, ASTCompositeFactory.EP.getExtensionPointName(), new DefaultASTCompositeFactory());
 
-      //registerExtensionPoint(area, LanguageParserDefinitions.INSTANCE.getExtensionPointName(), LanguageExtensionPoint.class);
-      registerExtensionPoint(area, LanguageSubstitutors.INSTANCE.getExtensionPointName(), LanguageExtensionPoint.class);
-      //registerExtensionPoint(area, LanguageVersionResolvers.INSTANCE.getExtensionPointName(), LanguageExtensionPoint.class);
-      registerExtensionPoint(area, LanguageFileViewProviders.INSTANCE.getExtensionPointName(), LanguageExtensionPoint.class);
 
-      registerExtensionPoint(area, PathMacroFilter.EP_NAME, PathMacroFilter.class);
-      //registerExtensionPoint(area, ExtensionExtender.EP_NAME, KeyedLazyInstanceEP.class);
     }
 
     @Override

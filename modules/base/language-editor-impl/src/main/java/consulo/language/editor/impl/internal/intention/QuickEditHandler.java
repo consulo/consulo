@@ -21,7 +21,6 @@ import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionManager;
 import consulo.codeEditor.event.EditorFactoryAdapter;
 import consulo.codeEditor.event.EditorFactoryEvent;
-import consulo.component.extension.Extensions;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
@@ -35,7 +34,10 @@ import consulo.document.util.DocumentUtil;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
-import consulo.fileEditor.*;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorManager;
+import consulo.fileEditor.FileEditorWindow;
+import consulo.fileEditor.FileEditorWithProviderComposite;
 import consulo.language.Language;
 import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.codeStyle.PostprocessReformattingAspect;
@@ -455,7 +457,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
     // run preformat processors
     final int hostStartOffset = myAltFullRange.getStartOffset();
     myEditor.getCaretModel().moveToOffset(hostStartOffset);
-    for (CopyPastePreProcessor preProcessor : Extensions.getExtensions(CopyPastePreProcessor.EP_NAME)) {
+    for (CopyPastePreProcessor preProcessor : CopyPastePreProcessor.EP_NAME.getExtensionList()) {
       newText = preProcessor.preprocessOnPaste(myProject, origPsiFile, myEditor, newText, null);
     }
     myOrigDocument.replaceString(hostStartOffset, myAltFullRange.getEndOffset(), newText);

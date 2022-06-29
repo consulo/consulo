@@ -62,14 +62,14 @@ public final class LanguageUtil {
 
     if (fileLanguage == null) return null;
     // run generic file-level substitutors, e.g. for scratches
-    for (LanguageSubstitutor substitutor : LanguageSubstitutors.INSTANCE.forKey(Language.ANY)) {
+    for (LanguageSubstitutor substitutor : LanguageSubstitutor.forLanguage(Language.ANY)) {
       Language language = substitutor.getLanguage(file, project);
       if (language != null && language != Language.ANY) {
         fileLanguage = language;
         break;
       }
     }
-    return LanguageSubstitutors.INSTANCE.substituteLanguage(fileLanguage, file, project);
+    return LanguageSubstitutors.substituteLanguage(fileLanguage, file, project);
   }
 
   @Nullable

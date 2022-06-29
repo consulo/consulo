@@ -22,10 +22,6 @@
   </extensionPoints>
 
   <extensions defaultExtensionNs="consulo">
-    <nonProjectFileWritingAccessExtension implementation="consulo.ide.impl.idea.ide.scratch.ScratchFileServiceImpl$AccessExtension"/>
-    <usageTypeProvider implementation="consulo.ide.impl.idea.ide.scratch.ScratchFileServiceImpl$UsageTypeExtension" order="last"/>
-    <useScopeEnlarger implementation="consulo.ide.impl.idea.ide.scratch.ScratchFileServiceImpl$UseScopeExtension"/>
-    <syntaxHighlighter factoryClass="consulo.ide.impl.idea.ide.scratch.ScratchFileServiceImpl$Highlighter" order="first"/>
     <lang.substitutor language="TEXT" implementationClass="consulo.ide.impl.idea.ide.scratch.ScratchFileServiceImpl$Substitutor" order="first"/>
 
   </extensions>

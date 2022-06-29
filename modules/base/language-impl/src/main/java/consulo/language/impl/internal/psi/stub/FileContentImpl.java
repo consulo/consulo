@@ -131,7 +131,7 @@ public class FileContentImpl extends IndexedFileImpl implements PsiDependentFile
   @RequiredReadAction
   public static PsiFile createFileFromText(@Nonnull Project project, @Nonnull CharSequence text, @Nonnull LanguageFileType fileType, @Nonnull VirtualFile file, @Nonnull String fileName) {
     Language language = fileType.getLanguage();
-    Language substitutedLanguage = LanguageSubstitutors.INSTANCE.substituteLanguage(language, file, project);
+    Language substitutedLanguage = LanguageSubstitutors.substituteLanguage(language, file, project);
     LanguageVersion languageVersion = LanguageVersionResolver.forLanguage(substitutedLanguage).getLanguageVersion(substitutedLanguage, project, file);
     PsiFile psiFile = PsiFileFactory.getInstance(project).createFileFromText(fileName, languageVersion, text, false, false, false, file);
     if (psiFile == null) {

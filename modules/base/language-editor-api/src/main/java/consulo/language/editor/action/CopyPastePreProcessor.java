@@ -16,6 +16,8 @@
 
 package consulo.language.editor.action;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.RawText;
 import consulo.component.extension.ExtensionPointName;
@@ -27,8 +29,9 @@ import javax.annotation.Nullable;
 /**
  * @author yole
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface CopyPastePreProcessor {
-  ExtensionPointName<CopyPastePreProcessor> EP_NAME = ExtensionPointName.create("consulo.copyPastePreProcessor");
+  ExtensionPointName<CopyPastePreProcessor> EP_NAME = ExtensionPointName.create(CopyPastePreProcessor.class);
 
   /**
    * @param file

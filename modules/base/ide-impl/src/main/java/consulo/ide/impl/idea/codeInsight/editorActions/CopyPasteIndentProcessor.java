@@ -15,25 +15,25 @@
  */
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
-import consulo.language.editor.CodeInsightSettings;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ApplicationManager;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
-import consulo.document.RangeMarker;
 import consulo.codeEditor.action.EditorActionUtil;
+import consulo.document.Document;
+import consulo.document.RangeMarker;
 import consulo.document.impl.DocumentImpl;
-import consulo.component.extension.Extensions;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.project.Project;
-import consulo.util.lang.ref.Ref;
 import consulo.document.util.TextRange;
-import consulo.util.lang.CharFilter;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.language.codeStyle.CodeStyleSettingsManager;
+import consulo.language.editor.CodeInsightSettings;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import consulo.language.codeStyle.CodeStyleSettingsManager;
-import javax.annotation.Nonnull;
+import consulo.project.Project;
+import consulo.util.lang.CharFilter;
+import consulo.util.lang.ref.Ref;
+import consulo.virtualFileSystem.fileType.FileType;
 
+import javax.annotation.Nonnull;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -44,6 +44,7 @@ import java.util.List;
 /**
  * @author yole
  */
+@ExtensionImpl
 public class CopyPasteIndentProcessor extends CopyPastePostProcessor<IndentTransferableData> {
   @Nonnull
   @Override
@@ -58,7 +59,7 @@ public class CopyPasteIndentProcessor extends CopyPastePostProcessor<IndentTrans
   }
 
   private static boolean acceptFileType(FileType fileType) {
-    for(PreserveIndentOnPasteBean bean: Extensions.getExtensions(PreserveIndentOnPasteBean.EP_NAME)) {
+    for(PreserveIndentOnPasteBean bean: PreserveIndentOnPasteBean.EP_NAME.getExtensionList()) {
       if (fileType.getName().equals(bean.fileType)) {
         return true;
       }

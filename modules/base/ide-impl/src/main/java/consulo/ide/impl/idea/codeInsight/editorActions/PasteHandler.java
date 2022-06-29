@@ -159,7 +159,7 @@ public class PasteHandler extends EditorActionHandler implements EditorTextInser
     final Map<CopyPastePostProcessor, List<? extends TextBlockTransferableData>> extraData = new HashMap<CopyPastePostProcessor, List<? extends TextBlockTransferableData>>();
     final Collection<TextBlockTransferableData> allValues = new ArrayList<TextBlockTransferableData>();
 
-    for (CopyPastePostProcessor<? extends TextBlockTransferableData> processor : Extensions.getExtensions(CopyPastePostProcessor.EP_NAME)) {
+    for (CopyPastePostProcessor<? extends TextBlockTransferableData> processor : CopyPastePostProcessor.EP_NAME.getExtensionList()) {
       List<? extends TextBlockTransferableData> data = processor.extractTransferableData(content);
       if (!data.isEmpty()) {
         extraData.put(processor, data);
@@ -189,7 +189,7 @@ public class PasteHandler extends EditorActionHandler implements EditorTextInser
 
     RawText rawText = RawText.fromTransferable(content);
     String newText = text;
-    for (CopyPastePreProcessor preProcessor : Extensions.getExtensions(CopyPastePreProcessor.EP_NAME)) {
+    for (CopyPastePreProcessor preProcessor : CopyPastePreProcessor.EP_NAME.getExtensionList()) {
       newText = preProcessor.preprocessOnPaste(project, file, editor, newText, rawText);
     }
     int indentOptions = text.equals(newText) ? settings.REFORMAT_ON_PASTE : CodeInsightSettings.REFORMAT_BLOCK;

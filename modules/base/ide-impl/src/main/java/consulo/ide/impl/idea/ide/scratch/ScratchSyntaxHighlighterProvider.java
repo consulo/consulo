@@ -29,7 +29,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-@ExtensionImpl
+@ExtensionImpl(order = "first")
 public class ScratchSyntaxHighlighterProvider implements SyntaxHighlighterProvider {
   @Override
   @Nullable

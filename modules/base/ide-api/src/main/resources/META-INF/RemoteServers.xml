@@ -33,10 +33,5 @@
 
   <extensions defaultExtensionNs="consulo">
 
-
-    
-
-    <toolWindow id="Application Servers" icon="consulo.platform.base.PlatformIconGroup@remoteservers.serverstoolwindow" factoryClass="consulo.ide.impl.remoteServer.ui.ServersToolWindowFactory" anchor="bottom" />
-
   </extensions>
 </consulo-plugin>

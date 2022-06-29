@@ -16,6 +16,8 @@
 
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.codeEditor.Editor;
 import consulo.document.RangeMarker;
 import consulo.component.extension.ExtensionPointName;
@@ -31,8 +33,9 @@ import java.util.List;
 /**
  * @author yole
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class CopyPastePostProcessor<T extends TextBlockTransferableData> {
-  public static final ExtensionPointName<CopyPastePostProcessor<? extends TextBlockTransferableData>> EP_NAME = ExtensionPointName.create("consulo.copyPastePostProcessor");
+  public static final ExtensionPointName<CopyPastePostProcessor> EP_NAME = ExtensionPointName.create(CopyPastePostProcessor.class);
 
   @Nonnull
   public abstract List<T> collectTransferableData(final PsiFile file, final Editor editor, final int[] startOffsets, final int[] endOffsets);

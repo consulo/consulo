@@ -91,18 +91,5 @@
 
     <lang.documentationProvider language="TEXT" implementationClass="consulo.ide.impl.idea.tasks.doc.TaskDocumentationProvider"/>
 
-
-
-    <checkinHandlerFactory implementation="consulo.ide.impl.idea.tasks.impl.TaskCheckinHandlerFactory"/>
-
-
-
-
-    <toolWindow id="Time Tracking" anchor="right" secondary="false" icon="consulo.task.impl.TaskImplIconGroup@clock"
-                factoryClass="consulo.ide.impl.idea.tasks.timeTracking.TasksToolWindowFactory"
-                canCloseContents="false"
-                conditionClass="consulo.ide.impl.idea.tasks.timeTracking.TasksToolWindowFactory"/>
-
-    <changeListDecorator implementation="consulo.ide.impl.task.TaskChangeListDecorator"/>
   </extensions>
 </consulo-plugin>

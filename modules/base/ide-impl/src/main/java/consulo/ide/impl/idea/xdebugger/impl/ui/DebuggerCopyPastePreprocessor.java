@@ -15,19 +15,22 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.ui;
 
-import consulo.language.editor.action.CopyPastePreProcessor;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.RawText;
+import consulo.language.editor.action.CopyPastePreProcessor;
+import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.language.psi.PsiFile;
+import consulo.util.lang.StringUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
  * @author egor
  */
+@ExtensionImpl
 public class DebuggerCopyPastePreprocessor implements CopyPastePreProcessor {
   public static final Key<Boolean> REMOVE_NEWLINES_ON_PASTE = new Key<Boolean>("REMOVE_NEWLINES_ON_PASTE");
 

@@ -155,7 +155,7 @@ public class PsiFileFactoryImpl extends PsiFileFactory {
     final LightVirtualFile virtualFile = new LightVirtualFile(name, fileType, text, modificationStamp);
     if (fileType instanceof LanguageFileType) {
       final Language language =
-        LanguageSubstitutors.INSTANCE.substituteLanguage(((LanguageFileType)fileType).getLanguage(), virtualFile, myManager.getProject());
+        LanguageSubstitutors.substituteLanguage(((LanguageFileType)fileType).getLanguage(), virtualFile, myManager.getProject());
       final PsiFile file = trySetupPsiForFile(virtualFile, language, LanguageVersionUtil.findDefaultVersion(language), physical, markAsCopy);
       if (file != null) return file;
     }

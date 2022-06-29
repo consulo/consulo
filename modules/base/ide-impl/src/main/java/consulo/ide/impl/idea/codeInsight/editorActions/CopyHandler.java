@@ -16,24 +16,22 @@
 
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
-import consulo.codeEditor.*;
-import consulo.dataContext.DataManager;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
-import consulo.codeEditor.action.EditorActionHandler;
-import consulo.ide.impl.idea.openapi.editor.actions.CopyAction;
-import consulo.codeEditor.action.EditorActionUtil;
-import consulo.codeEditor.EditorEx;
-import consulo.ide.impl.idea.openapi.editor.impl.EditorCopyPasteHelperImpl;
-import consulo.component.extension.Extensions;
-import consulo.language.editor.action.CopyPastePreProcessor;
-import consulo.ui.ex.awt.CopyPasteManager;
-import consulo.project.Project;
 import consulo.application.util.registry.Registry;
+import consulo.codeEditor.*;
+import consulo.codeEditor.action.EditorActionHandler;
+import consulo.codeEditor.action.EditorActionUtil;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
+import consulo.ide.impl.idea.openapi.editor.actions.CopyAction;
+import consulo.ide.impl.idea.openapi.editor.impl.EditorCopyPasteHelperImpl;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.action.CopyPastePreProcessor;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-
+import consulo.project.Project;
+import consulo.ui.ex.awt.CopyPasteManager;
 import jakarta.inject.Inject;
+
 import java.awt.datatransfer.Transferable;
 import java.util.ArrayList;
 import java.util.List;
@@ -90,7 +88,7 @@ public class CopyHandler extends EditorActionHandler {
     final int[] endOffsets = selectionModel.getBlockSelectionEnds();
 
     List<TextBlockTransferableData> transferableDatas = new ArrayList<TextBlockTransferableData>();
-    for (CopyPastePostProcessor<? extends TextBlockTransferableData> processor : Extensions.getExtensions(CopyPastePostProcessor.EP_NAME)) {
+    for (CopyPastePostProcessor<? extends TextBlockTransferableData> processor : CopyPastePostProcessor.EP_NAME.getExtensionList()) {
       transferableDatas.addAll(processor.collectTransferableData(file, editor, startOffsets, endOffsets));
     }
 
@@ -99,7 +97,7 @@ public class CopyHandler extends EditorActionHandler {
                   : selectionModel.getSelectedText();
     String rawText = TextBlockTransferable.convertLineSeparators(text, "\n", transferableDatas);
     String escapedText = null;
-    for (CopyPastePreProcessor processor : Extensions.getExtensions(CopyPastePreProcessor.EP_NAME)) {
+    for (CopyPastePreProcessor processor : CopyPastePreProcessor.EP_NAME.getExtensionList()) {
       escapedText = processor.preprocessOnCopy(file, startOffsets, endOffsets, rawText);
       if (escapedText != null) {
         break;

@@ -729,7 +729,7 @@ public class InjectedLanguageUtil {
     if (containingFile == null || !containingFile.isValid()) return null;
     return InjectedLanguageManager.getInstance(containingFile.getProject()).getCachedInjectedDocumentsInRange(containingFile, element.getTextRange()).stream()
             .map(documentWindow -> PsiDocumentManager.getInstance(containingFile.getProject()).getPsiFile(documentWindow))
-            .filter(file -> file != null && file.getLanguage() == LanguageSubstitutors.INSTANCE.substituteLanguage(language, file.getVirtualFile(), file.getProject()))
+            .filter(file -> file != null && file.getLanguage() == LanguageSubstitutors.substituteLanguage(language, file.getVirtualFile(), file.getProject()))
             .max(Comparator.comparingInt(PsiElement::getTextLength)).orElse(null);
   }
 

@@ -16,10 +16,8 @@
 package consulo.language.psi;
 
 import consulo.application.Application;
-import consulo.container.plugin.PluginIds;
 import consulo.document.util.FileContentUtilCore;
 import consulo.language.Language;
-import consulo.language.OldLanguageExtension;
 import consulo.language.file.inject.VirtualFileWindow;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -32,19 +30,14 @@ import javax.annotation.Nonnull;
 /**
  * @author peter
  */
-public final class LanguageSubstitutors extends OldLanguageExtension<LanguageSubstitutor> {
-  public static final LanguageSubstitutors INSTANCE = new LanguageSubstitutors();
+public final class LanguageSubstitutors {
   private static final Logger LOG = Logger.getInstance(LanguageSubstitutors.class);
   private static final Key<Language> SUBSTITUTED_LANG_KEY = Key.create("SUBSTITUTED_LANG_KEY");
   private static final Key<Boolean> REPARSING_SCHEDULED = Key.create("REPARSING_SCHEDULED");
 
-  private LanguageSubstitutors() {
-    super(PluginIds.CONSULO_BASE + ".lang.substitutor");
-  }
-
   @Nonnull
-  public Language substituteLanguage(@Nonnull Language lang, @Nonnull VirtualFile file, @Nonnull Project project) {
-    for (LanguageSubstitutor substitutor : forKey(lang)) {
+  public static Language substituteLanguage(@Nonnull Language lang, @Nonnull VirtualFile file, @Nonnull Project project) {
+    for (LanguageSubstitutor substitutor : LanguageSubstitutor.forLanguage(lang)) {
       Language language = substitutor.getLanguage(file, project);
       if (language != null) {
         processLanguageSubstitution(file, lang, language);

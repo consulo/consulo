@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.tasks.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.vcs.CheckinProjectPanel;
 import consulo.ide.impl.idea.openapi.vcs.changes.CommitContext;
@@ -35,6 +36,7 @@ import java.util.Date;
  * @author Dmitry Avdeev
  *         Date: 12/29/11
  */
+@ExtensionImpl
 public class TaskCheckinHandlerFactory extends CheckinHandlerFactory {
 
   @Nonnull

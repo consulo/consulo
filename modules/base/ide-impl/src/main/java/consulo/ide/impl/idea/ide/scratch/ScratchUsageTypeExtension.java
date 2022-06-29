@@ -28,7 +28,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nullable;
 import java.util.concurrent.ConcurrentMap;
 
-@ExtensionImpl
+@ExtensionImpl(order = "last")
 public class ScratchUsageTypeExtension implements UsageTypeProvider {
   private static final ConcurrentMap<RootType, UsageType> ourUsageTypes = ConcurrentFactoryMap.createMap(key -> new UsageType("Usage in " + key.getDisplayName()));
 
