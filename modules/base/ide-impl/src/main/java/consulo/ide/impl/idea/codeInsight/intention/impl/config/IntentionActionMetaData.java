@@ -43,8 +43,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
-
 public final class IntentionActionMetaData {
   private static final Logger LOG = Logger.getInstance(IntentionActionMetaData.class);
   @Nonnull
@@ -163,11 +161,7 @@ public final class IntentionActionMetaData {
         URI uri = descriptionDirectory.toURI();
         children = uri.isOpaque()? null : ObjectUtil.notNull(new File(uri).list(), ArrayUtil.EMPTY_STRING_ARRAY);
       }
-      catch (URISyntaxException e) {
-        cause = e;
-        children = null;
-      }
-      catch (IllegalArgumentException e) {
+      catch (URISyntaxException | IllegalArgumentException e) {
         cause = e;
         children = null;
       }

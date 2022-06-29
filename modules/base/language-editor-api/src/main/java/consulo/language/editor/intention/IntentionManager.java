@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.intention;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
@@ -55,6 +56,8 @@ public abstract class IntentionManager  {
    *
    * @param action the intention action to register.
    */
+  @Deprecated(forRemoval = true)
+  @DeprecationInfo("Use @ExtensionImpl for it")
   public abstract void addAction(@Nonnull IntentionAction action);
 
   /**
@@ -90,18 +93,19 @@ public abstract class IntentionManager  {
    * @param category the name of the category or categories under which the intention will be shown
    *                 in the "Intention Settings" dialog.
    */
-  @Deprecated
+  @Deprecated(forRemoval = true)
   public abstract void registerIntentionAndMetaData(@Nonnull IntentionAction action, @Nonnull String... category);
 
   /**
    * @deprecated custom directory name causes problem with internationalization of intention descriptions.
    * Register intention class via extension point {@link IntentionManager#EP_INTENTION_ACTIONS} instead.
    */
-  @Deprecated
+  @Deprecated(forRemoval = true)
   public abstract void registerIntentionAndMetaData(@Nonnull IntentionAction action,
                                                     @Nonnull String[] category,
                                                     @Nonnull String descriptionDirectoryName);
 
+  @Deprecated(forRemoval = true)
   public abstract void registerIntentionAndMetaData(@Nonnull IntentionAction action,
                                                     @Nonnull String[] category,
                                                     @Nonnull String description,
@@ -109,7 +113,7 @@ public abstract class IntentionManager  {
                                                     @Nonnull String[] exampleTextBefore,
                                                     @Nonnull String[] exampleTextAfter);
 
-  @Deprecated
+  @Deprecated(forRemoval = true)
   public abstract void unregisterIntention(@Nonnull IntentionAction intentionAction);
 
   /**

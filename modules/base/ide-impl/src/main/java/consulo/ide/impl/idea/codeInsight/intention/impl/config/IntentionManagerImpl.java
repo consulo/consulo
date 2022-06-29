@@ -17,6 +17,7 @@
 package consulo.ide.impl.idea.codeInsight.intention.impl.config;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.CleanupOnScopeIntention;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.EditCleanupProfileIntentionAction;
@@ -33,7 +34,6 @@ import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.language.editor.intention.IntentionAction;
-import consulo.language.editor.intention.IntentionActionBean;
 import consulo.language.editor.intention.IntentionManager;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.psi.PsiElement;
@@ -62,24 +62,13 @@ public class IntentionManagerImpl extends IntentionManager implements Disposable
 
   private final Provider<IntentionManagerSettings> mySettingsProvider;
 
-  private ThreadLocal<Boolean> myInsideEpInitialization = ThreadLocal.withInitial(() -> Boolean.FALSE);
-
   @Inject
-  public IntentionManagerImpl(@Nonnull Provider<IntentionManagerSettings> settingsProvider) {
+  public IntentionManagerImpl(@Nonnull Application application, @Nonnull Provider<IntentionManagerSettings> settingsProvider) {
     mySettingsProvider = settingsProvider;
 
     addAction(new EditInspectionToolsSettingsInSuppressedPlaceIntention());
 
-    try {
-      myInsideEpInitialization.set(Boolean.TRUE);
-
-      for (IntentionActionBean bean : EP_INTENTION_ACTIONS.getExtensionList()) {
-        addAction(new IntentionActionWrapper(bean));
-      }
-    }
-    finally {
-      myInsideEpInitialization.set(Boolean.FALSE);
-    }
+    application.getExtensionPoint(IntentionAction.class).forEachExtensionSafe(this::addAction);
   }
 
   @Override
@@ -255,9 +244,6 @@ public class IntentionManagerImpl extends IntentionManager implements Disposable
 
   @Nonnull
   private IntentionManagerSettings getSettings() {
-    if(myInsideEpInitialization.get()) {
-      throw new IllegalArgumentException("Can't call settings here");
-    }
     return mySettingsProvider.get();
   }
 }

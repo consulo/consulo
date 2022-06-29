@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.intelliLang.inject;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.intention.LowPriorityAction;
 import consulo.language.Language;
@@ -43,6 +44,7 @@ import java.util.Set;
 /**
  * @author Dmitry Avdeev
  */
+@ExtensionImpl
 public class UnInjectLanguageAction implements IntentionAction, LowPriorityAction {
 
   @Nonnull

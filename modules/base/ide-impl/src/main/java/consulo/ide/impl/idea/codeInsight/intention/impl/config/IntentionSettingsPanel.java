@@ -16,12 +16,12 @@
 
 package consulo.ide.impl.idea.codeInsight.intention.impl.config;
 
+import consulo.configurable.SearchableConfigurable;
 import consulo.ide.impl.idea.ide.ui.search.SearchUtil;
 import consulo.ide.impl.idea.ide.ui.search.SearchableOptionsRegistrar;
-import consulo.configurable.SearchableConfigurable;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.OnePixelSplitter;
 import consulo.ui.ex.awt.util.Alarm;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;

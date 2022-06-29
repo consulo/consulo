@@ -52,6 +52,11 @@ public class ProjectInspectionToolsConfigurable extends InspectionToolsConfigura
   }
 
   @Override
+  public String getDisplayName() {
+    return "Code Inspections";
+  }
+
+  @Override
   protected InspectionProfileImpl getCurrentProfile() {
     return (InspectionProfileImpl)myProjectProfileManager.getProjectProfileImpl();
   }

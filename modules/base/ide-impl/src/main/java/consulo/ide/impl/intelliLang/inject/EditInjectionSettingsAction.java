@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.intelliLang.inject;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.intention.LowPriorityAction;
 import consulo.language.inject.InjectedLanguageManager;
@@ -38,6 +39,7 @@ import java.util.Collections;
 /**
  * @author Gregory.Shrago
  */
+@ExtensionImpl
 public class EditInjectionSettingsAction implements IntentionAction, LowPriorityAction {
   public static final String EDIT_INJECTION_TITLE = "Language Injection Settings";
 

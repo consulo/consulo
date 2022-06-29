@@ -31,13 +31,13 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.ide.ServiceManager;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.intention.IntentionActionBean;
 import consulo.language.editor.intention.IntentionManager;
 import consulo.logging.Logger;
 import consulo.util.interner.Interner;
 import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
@@ -51,7 +51,7 @@ import java.util.regex.Pattern;
 @ServiceImpl
 public class IntentionManagerSettings implements PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance(IntentionManagerSettings.class);
-  private static final Interner<String> ourStringInterner = consulo.util.interner.Interner.createStringInterner();
+  private static final Interner<String> ourStringInterner = Interner.createStringInterner();
 
   private static class MetaDataKey extends Pair<String, String> {
     private MetaDataKey(@Nonnull String[] categoryNames, @Nonnull final String familyName) {

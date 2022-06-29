@@ -15,6 +15,9 @@
  */
 package consulo.language.editor.intention;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.application.dumb.DumbAware;
@@ -39,6 +42,7 @@ import javax.annotation.Nonnull;
  * <p/>
  * Can be {@link DumbAware}.
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface IntentionAction extends FileModifier {
   IntentionAction[] EMPTY_ARRAY = new IntentionAction[0];
   /**
@@ -61,8 +65,16 @@ public interface IntentionAction extends FileModifier {
    * @return the intention family name.
    */
   @Nonnull
+  @Deprecated
+  @DeprecationInfo("Use IntentionMetaData#ignoreId()")
   @Nls(capitalization = Nls.Capitalization.Sentence)
-  String getFamilyName();
+  default String getFamilyName() {
+    IntentionMetaData annotation = getClass().getAnnotation(IntentionMetaData.class);
+    if (annotation != null) {
+      return annotation.ignoreId();
+    }
+    return getClass().getSimpleName();
+  }
 
   /**
    * Checks whether this intention is available at a caret offset in file.
@@ -95,5 +107,7 @@ public interface IntentionAction extends FileModifier {
    * @return true if the intention requires a write action, false otherwise.
    */
   @Override
-  boolean startInWriteAction();
+  default boolean startInWriteAction() {
+    return false;
+  }
 }

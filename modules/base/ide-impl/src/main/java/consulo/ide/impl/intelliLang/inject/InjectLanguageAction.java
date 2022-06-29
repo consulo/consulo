@@ -15,44 +15,45 @@
  */
 package consulo.ide.impl.intelliLang.inject;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.ApplicationManager;
+import consulo.application.util.function.Processor;
+import consulo.codeEditor.Editor;
+import consulo.configurable.Configurable;
+import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.ide.util.PropertiesComponent;
+import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.FileContentUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.intelliLang.Configuration;
+import consulo.ide.impl.intelliLang.references.InjectedReferencesContributor;
+import consulo.ide.impl.psi.injection.LanguageInjectionSupport;
+import consulo.ide.impl.ui.impl.PopupChooserBuilder;
+import consulo.language.Language;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.hint.QuestionAction;
-import consulo.language.editor.intention.IntentionAction;
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.language.editor.inject.EditorWindow;
-import consulo.language.inject.InjectedLanguageManager;
-import consulo.ui.ex.action.IdeActions;
-import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.ui.impl.PopupChooserBuilder;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.impl.internal.psi.PsiModificationTrackerImpl;
 import consulo.language.inject.Injectable;
+import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.inject.ReferenceInjector;
-import consulo.ui.ex.awt.ColoredListCellRenderer;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.awt.JBList;
-import consulo.ide.impl.idea.util.FileContentUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.application.ApplicationManager;
-import consulo.application.util.function.Processor;
-import consulo.configurable.Configurable;
-import consulo.document.util.TextRange;
-import consulo.language.Language;
 import consulo.language.psi.*;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
-import consulo.ide.impl.psi.injection.LanguageInjectionSupport;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
+import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.intelliLang.Configuration;
-import consulo.ide.impl.intelliLang.references.InjectedReferencesContributor;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -61,8 +62,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@ExtensionImpl
+@IntentionMetaData(ignoreId = "platform.inject.language", fileExtensions = "txt")
 public class InjectLanguageAction implements IntentionAction {
-  @NonNls private static final String INJECT_LANGUAGE_FAMILY = "Inject Language/Reference";
   public static final String LAST_INJECTED_LANGUAGE = "LAST_INJECTED_LANGUAGE";
   public static final Key<Processor<PsiLanguageInjectionHost>> FIX_KEY = Key.create("inject fix key");
 
@@ -77,16 +79,13 @@ public class InjectLanguageAction implements IntentionAction {
     return list;
   }
 
+  @Override
   @Nonnull
   public String getText() {
-    return INJECT_LANGUAGE_FAMILY;
+    return "Inject Language/Reference";
   }
 
-  @Nonnull
-  public String getFamilyName() {
-    return INJECT_LANGUAGE_FAMILY;
-  }
-
+  @Override
   public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
     final PsiLanguageInjectionHost host = findInjectionHost(editor, file);
     if (host == null) return false;
@@ -103,13 +102,16 @@ public class InjectLanguageAction implements IntentionAction {
     final int offset = editor.getCaretModel().getOffset();
     final PsiLanguageInjectionHost host = PsiTreeUtil.getParentOfType(file.findElementAt(offset), PsiLanguageInjectionHost.class, false);
     if (host == null) return null;
-    return host.isValidHost()? host : null;
+    return host.isValidHost() ? host : null;
   }
 
+  @Override
   public void invoke(@Nonnull final Project project, final Editor editor, final PsiFile file) throws IncorrectOperationException {
     doChooseLanguageToInject(editor, new Processor<Injectable>() {
+      @Override
       public boolean process(final Injectable injectable) {
         ApplicationManager.getApplication().runReadAction(new Runnable() {
+          @Override
           public void run() {
             if (!project.isDisposed()) {
               invokeImpl(project, editor, file, injectable);
@@ -139,17 +141,17 @@ public class InjectLanguageAction implements IntentionAction {
         String text = StringUtil.escapeXml(language.getDisplayName()) + " was temporarily injected.";
         if (data != null) {
           if (!ApplicationManager.getApplication().isUnitTestMode()) {
-            final SmartPsiElementPointer<PsiLanguageInjectionHost> pointer =
-              SmartPointerManager.getInstance(project).createSmartPsiElementPointer(host);
+            final SmartPsiElementPointer<PsiLanguageInjectionHost> pointer = SmartPointerManager.getInstance(project).createSmartPsiElementPointer(host);
             final TextRange range = host.getTextRange();
-            HintManager.getInstance().showQuestionHint(editor, text + "<br>Do you want to insert annotation? " + KeymapUtil
-              .getFirstKeyboardShortcutText(ActionManager.getInstance().getAction(IdeActions.ACTION_SHOW_INTENTION_ACTIONS)),
+            HintManager.getInstance().showQuestionHint(editor, text +
+                                                               "<br>Do you want to insert annotation? " +
+                                                               KeymapUtil.getFirstKeyboardShortcutText(ActionManager.getInstance().getAction(IdeActions.ACTION_SHOW_INTENTION_ACTIONS)),
                                                        range.getStartOffset(), range.getEndOffset(), new QuestionAction() {
-              @Override
-              public boolean execute() {
-                return data.process(pointer.getElement());
-              }
-            });
+                      @Override
+                      public boolean execute() {
+                        return data.process(pointer.getElement());
+                      }
+                    });
           }
         }
         else {
@@ -176,7 +178,7 @@ public class InjectLanguageAction implements IntentionAction {
     final List<Injectable> injectables = getAllInjectables();
 
     final JList<Injectable> list = new JBList<>(injectables);
-    list.setCellRenderer(new ColoredListCellRenderer<Injectable > () {
+    list.setCellRenderer(new ColoredListCellRenderer<Injectable>() {
       @Override
       protected void customizeCellRenderer(@Nonnull JList<? extends Injectable> list, Injectable value, int index, boolean selected, boolean hasFocus) {
         setIcon(value.getIcon());
@@ -188,6 +190,7 @@ public class InjectLanguageAction implements IntentionAction {
       }
     });
     JBPopup popup = new PopupChooserBuilder(list).setItemChoosenCallback(new Runnable() {
+      @Override
       public void run() {
         Injectable value = (Injectable)list.getSelectedValue();
         if (value != null) {
@@ -205,6 +208,7 @@ public class InjectLanguageAction implements IntentionAction {
     return true;
   }
 
+  @Override
   public boolean startInWriteAction() {
     return false;
   }
