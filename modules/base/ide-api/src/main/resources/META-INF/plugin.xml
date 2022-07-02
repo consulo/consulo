@@ -610,10 +610,8 @@
     <!-- please use localInspection or globalInspection instead-->
     <extensionPoint name="specialTool"
                     beanClass="consulo.language.editor.inspection.scheme.InspectionEP"/>
-    <extensionPoint name="inspectionToolProvider"
-                    interface="consulo.ide.impl.idea.codeInspection.InspectionToolProvider"/>
-    <extensionPoint name="inspectionToolsFactory"
-                    interface="consulo.ide.impl.idea.codeInspection.InspectionToolsFactory"/>
+
+
     <extensionPoint name="inspectionElementsMerger" interface="consulo.ide.impl.idea.codeInspection.ex.InspectionElementsMerger"/>
     <extensionPoint name="codeInspection.InspectionExtension" interface="consulo.language.editor.inspection.InspectionExtensionsFactory"/>
 
@@ -874,8 +872,7 @@
 
     <extensionPoint name="virtualFileQualifiedNameProvider" interface="consulo.language.editor.VirtualFileQualifiedNameProvider"/>
 
-    <extensionPoint name="completionData"
-                    beanClass="consulo.language.editor.impl.internal.completion.CompletionDataEP"/>
+
 
 
     <extensionPoint name="importFilteringRule"

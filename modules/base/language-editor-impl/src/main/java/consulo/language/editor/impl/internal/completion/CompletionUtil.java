@@ -65,11 +65,7 @@ public class CompletionUtil {
 
   @Nullable
   private static CompletionData getCompletionDataByFileType(FileType fileType) {
-    for (CompletionDataEP ep : CompletionDataEP.EP_NAME.getExtensionList()) {
-      if (ep.fileType.equals(fileType.getName())) {
-        return ep.getHandler();
-      }
-    }
+    // FIXME [VISTALL] not supported anymore, just remove it later
     return null;
   }
 

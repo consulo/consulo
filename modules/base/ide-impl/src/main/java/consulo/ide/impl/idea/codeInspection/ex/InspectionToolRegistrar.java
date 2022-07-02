@@ -19,21 +19,15 @@ package consulo.ide.impl.idea.codeInspection.ex;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.codeInspection.InspectionToolProvider;
-import consulo.ide.impl.idea.codeInspection.InspectionToolsFactory;
-import consulo.language.editor.inspection.scheme.LocalInspectionEP;
+import consulo.application.Application;
+import consulo.application.progress.ProgressManager;
 import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.openapi.util.Factory;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.application.Application;
-import consulo.application.progress.ProgressManager;
 import consulo.language.editor.inspection.GlobalInspectionTool;
 import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.editor.inspection.LocalInspectionTool;
-import consulo.language.editor.inspection.scheme.InspectionEP;
-import consulo.language.editor.inspection.scheme.InspectionProfileEntry;
-import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
-import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
+import consulo.language.editor.inspection.scheme.*;
 import consulo.logging.Logger;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
@@ -59,20 +53,12 @@ public class InspectionToolRegistrar {
 
   public void ensureInitialized() {
     if (!myInspectionComponentsLoaded.getAndSet(true)) {
-      registerTools(InspectionToolProvider.EXTENSION_POINT_NAME.getExtensionList());
-
       for (final LocalInspectionEP ep : LocalInspectionEP.LOCAL_INSPECTION.getExtensionList()) {
         myInspectionToolFactories.add(() -> new LocalInspectionToolWrapper(ep));
       }
 
       for (final InspectionEP ep : InspectionEP.GLOBAL_INSPECTION.getExtensionList()) {
         myInspectionToolFactories.add(() -> new GlobalInspectionToolWrapper(ep));
-      }
-
-      for (InspectionToolsFactory factory : InspectionToolsFactory.EXTENSION_POINT_NAME.getExtensionList()) {
-        for (final InspectionProfileEntry profileEntry : factory.createTools()) {
-          myInspectionToolFactories.add(() -> wrapTool(profileEntry));
-        }
       }
     }
   }
@@ -88,14 +74,6 @@ public class InspectionToolRegistrar {
     throw new RuntimeException("unknown inspection class: " + profileEntry + "; " + profileEntry.getClass());
   }
 
-  public void registerTools(@Nonnull List<InspectionToolProvider> providers) {
-    for (InspectionToolProvider provider : providers) {
-      Class[] classes = provider.getInspectionClasses();
-      for (Class aClass : classes) {
-        registerInspectionTool(aClass);
-      }
-    }
-  }
 
   @Nonnull
   private Factory<InspectionToolWrapper> registerInspectionTool(@Nonnull final Class aClass) {
