@@ -18,8 +18,8 @@ package consulo.ide.impl.idea.ide.actions;
 
 import consulo.ide.impl.idea.codeInsight.documentation.DocumentationManager;
 import consulo.ide.impl.idea.ide.BrowserUtil;
-import consulo.ide.impl.idea.lang.documentation.ExternalDocumentationHandler;
-import consulo.ide.impl.idea.lang.documentation.ExternalDocumentationProvider;
+import consulo.language.editor.documentation.ExternalDocumentationHandler;
+import consulo.language.editor.documentation.ExternalDocumentationProvider;
 import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;

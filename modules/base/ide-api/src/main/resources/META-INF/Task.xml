@@ -89,7 +89,5 @@
   <extensions defaultExtensionNs="consulo">
 
 
-    <lang.documentationProvider language="TEXT" implementationClass="consulo.ide.impl.idea.tasks.doc.TaskDocumentationProvider"/>
-
   </extensions>
 </consulo-plugin>

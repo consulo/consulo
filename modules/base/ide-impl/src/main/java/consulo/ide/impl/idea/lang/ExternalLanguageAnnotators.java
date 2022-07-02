@@ -19,25 +19,18 @@
  */
 package consulo.ide.impl.idea.lang;
 
-import consulo.language.editor.annotation.ExternalAnnotator;
-import consulo.language.OldLanguageExtension;
-import consulo.language.psi.PsiFile;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.container.plugin.PluginIds;
 import consulo.language.Language;
+import consulo.language.editor.annotation.ExternalAnnotator;
+import consulo.language.psi.PsiFile;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
-public class ExternalLanguageAnnotators extends OldLanguageExtension<ExternalAnnotator> {
-
-  private static final ExternalLanguageAnnotators INSTANCE = new ExternalLanguageAnnotators();
-
-  private ExternalLanguageAnnotators() {
-    super(PluginIds.CONSULO_BASE + ".externalAnnotator");
-  }
-
+public class ExternalLanguageAnnotators {
+  @Nonnull
   public static List<ExternalAnnotator> allForFile(Language language, final PsiFile file) {
-    List<ExternalAnnotator> annotators = INSTANCE.allForLanguage(language);
+    List<ExternalAnnotator> annotators = ExternalAnnotator.forLanguage(language);
     final List<ExternalAnnotatorsFilter> filters = ExternalAnnotatorsFilter.EXTENSION_POINT_NAME.getExtensionList();
     return ContainerUtil.findAll(annotators, annotator -> {
       for (ExternalAnnotatorsFilter filter : filters) {

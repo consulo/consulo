@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * @author peter
  */
-public class DocumentationProviderEx implements DocumentationProvider {
+public abstract class DocumentationProviderEx implements DocumentationProvider {
   @Nullable
   @Override
   public String getQuickNavigateInfo(PsiElement element, PsiElement originalElement) {
@@ -41,7 +41,7 @@ public class DocumentationProviderEx implements DocumentationProvider {
   }
 
   @Override
-  public String generateDoc(PsiElement element, @javax.annotation.Nullable PsiElement originalElement) {
+  public String generateDoc(PsiElement element, @Nullable PsiElement originalElement) {
     return null;
   }
 

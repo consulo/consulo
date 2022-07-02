@@ -16,8 +16,6 @@ import consulo.document.util.DocumentUtil;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.codeInsight.editorActions.enter.EnterHandlerDelegate;
 import consulo.ide.impl.idea.codeStyle.CodeStyleFacade;
-import consulo.ide.impl.idea.lang.LanguageDocumentation;
-import consulo.ide.impl.idea.lang.documentation.CompositeDocumentationProvider;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
@@ -37,7 +35,9 @@ import consulo.language.editor.action.CommentCompleteHandler;
 import consulo.language.editor.action.JavaLikeQuoteHandler;
 import consulo.language.editor.action.QuoteHandler;
 import consulo.language.editor.documentation.CodeDocumentationProvider;
+import consulo.language.editor.documentation.CompositeDocumentationProvider;
 import consulo.language.editor.documentation.DocumentationProvider;
+import consulo.language.editor.documentation.LanguageDocumentationProvider;
 import consulo.language.editor.internal.PsiUtilBase;
 import consulo.language.lexer.Lexer;
 import consulo.language.parser.ParserDefinition;
@@ -581,7 +581,7 @@ public class EnterHandler extends BaseEnterHandler {
     @Nullable
     private PsiComment createJavaDocStub(final CodeInsightSettings settings, final PsiComment comment, final Project project) {
       if (settings.JAVADOC_STUB_ON_ENTER) {
-        final DocumentationProvider langDocumentationProvider = LanguageDocumentation.INSTANCE.forLanguage(comment.getParent().getLanguage());
+        final DocumentationProvider langDocumentationProvider = LanguageDocumentationProvider.forLanguageComposite(comment.getParent().getLanguage());
 
         @Nullable final CodeDocumentationProvider docProvider;
         if (langDocumentationProvider instanceof CompositeDocumentationProvider) {

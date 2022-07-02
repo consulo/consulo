@@ -54,6 +54,7 @@ import consulo.ui.ex.popup.JBPopup;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
+import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -85,6 +86,13 @@ public class InjectLanguageAction implements IntentionAction {
     return "Inject Language/Reference";
   }
 
+  @Nls
+  @Nonnull
+  @Override
+  public String getFamilyName() {
+    return "platform.inject.language";
+  }
+
   @Override
   public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
     final PsiLanguageInjectionHost host = findInjectionHost(editor, file);
@@ -107,19 +115,13 @@ public class InjectLanguageAction implements IntentionAction {
 
   @Override
   public void invoke(@Nonnull final Project project, final Editor editor, final PsiFile file) throws IncorrectOperationException {
-    doChooseLanguageToInject(editor, new Processor<Injectable>() {
-      @Override
-      public boolean process(final Injectable injectable) {
-        ApplicationManager.getApplication().runReadAction(new Runnable() {
-          @Override
-          public void run() {
-            if (!project.isDisposed()) {
-              invokeImpl(project, editor, file, injectable);
-            }
-          }
-        });
-        return false;
-      }
+    doChooseLanguageToInject(editor, injectable -> {
+      ApplicationManager.getApplication().runReadAction(() -> {
+        if (!project.isDisposed()) {
+          invokeImpl(project, editor, file, injectable);
+        }
+      });
+      return false;
     });
   }
 

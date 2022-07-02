@@ -10,8 +10,6 @@ import consulo.codeEditor.impl.action.EditorAction;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.ide.impl.idea.codeInsight.documentation.DocCommentFixer;
-import consulo.ide.impl.idea.lang.LanguageDocumentation;
-import consulo.ide.impl.idea.lang.documentation.CompositeDocumentationProvider;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.CodeDocumentationAwareCommenter;
@@ -25,7 +23,9 @@ import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.FileModificationService;
 import consulo.language.editor.documentation.CodeDocumentationProvider;
+import consulo.language.editor.documentation.CompositeDocumentationProvider;
 import consulo.language.editor.documentation.DocumentationProvider;
+import consulo.language.editor.documentation.LanguageDocumentationProvider;
 import consulo.language.psi.*;
 import consulo.project.Project;
 import consulo.undoRedo.CommandProcessor;
@@ -91,7 +91,7 @@ public class FixDocCommentAction extends EditorAction {
   public static void generateOrFixComment(@Nonnull final PsiElement element, @Nonnull final Project project, @Nonnull final Editor editor) {
     Language language = element.getLanguage();
     final CodeDocumentationProvider docProvider;
-    final DocumentationProvider langDocumentationProvider = LanguageDocumentation.INSTANCE.forLanguage(language);
+    final DocumentationProvider langDocumentationProvider = LanguageDocumentationProvider.forLanguageComposite(language);
     if (langDocumentationProvider instanceof CompositeDocumentationProvider) {
       docProvider = ((CompositeDocumentationProvider)langDocumentationProvider).getFirstCodeDocumentationProvider();
     }

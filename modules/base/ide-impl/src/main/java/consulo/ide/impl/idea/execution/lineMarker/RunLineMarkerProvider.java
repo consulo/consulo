@@ -52,7 +52,7 @@ public class RunLineMarkerProvider extends LineMarkerProviderDescriptor {
   @Nullable
   @Override
   public LineMarkerInfo getLineMarkerInfo(@Nonnull PsiElement element) {
-    List<RunLineMarkerContributor> contributors = RunLineMarkerContributor.EXTENSION.allForLanguage(element.getLanguage());
+    List<RunLineMarkerContributor> contributors = RunLineMarkerContributor.forLanguage(element.getLanguage());
     DefaultActionGroup actionGroup = null;
     Image icon = null;
     final List<RunLineMarkerContributor.Info> infos = new ArrayList<>();

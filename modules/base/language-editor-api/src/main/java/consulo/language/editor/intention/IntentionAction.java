@@ -68,13 +68,7 @@ public interface IntentionAction extends FileModifier {
   @Deprecated
   @DeprecationInfo("Use IntentionMetaData#ignoreId()")
   @Nls(capitalization = Nls.Capitalization.Sentence)
-  default String getFamilyName() {
-    IntentionMetaData annotation = getClass().getAnnotation(IntentionMetaData.class);
-    if (annotation != null) {
-      return annotation.ignoreId();
-    }
-    return getClass().getSimpleName();
-  }
+  String getFamilyName();
 
   /**
    * Checks whether this intention is available at a caret offset in file.

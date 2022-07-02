@@ -15,15 +15,21 @@
  */
 package consulo.ide.impl.idea.execution.lineMarker;
 
-import consulo.dataContext.DataManager;
-import consulo.dataContext.DataContext;
-import consulo.language.OldLanguageExtension;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.psi.PsiElement;
-import consulo.ide.impl.idea.util.Function;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.container.plugin.PluginIds;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.application.Application;
+import consulo.component.extension.ExtensionPointCacheKey;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
+import consulo.ide.impl.idea.util.Function;
+import consulo.language.Language;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.extension.ByLanguageValue;
+import consulo.language.extension.LanguageExtension;
+import consulo.language.extension.LanguageOneToMany;
+import consulo.language.psi.PsiElement;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -32,9 +38,17 @@ import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
-public abstract class RunLineMarkerContributor {
-  static final OldLanguageExtension<RunLineMarkerContributor> EXTENSION = new OldLanguageExtension<>(PluginIds.CONSULO_BASE + ".runLineMarkerContributor");
+@ExtensionAPI(ComponentScope.APPLICATION)
+public abstract class RunLineMarkerContributor implements LanguageExtension {
+  private static final ExtensionPointCacheKey<RunLineMarkerContributor, ByLanguageValue<List<RunLineMarkerContributor>>> KEY =
+          ExtensionPointCacheKey.create("RunLineMarkerContributor", LanguageOneToMany.build(false));
+
+  @Nonnull
+  public static List<RunLineMarkerContributor> forLanguage(@Nonnull Language language) {
+    return Application.get().getExtensionPoint(RunLineMarkerContributor.class).getOrBuildCache(KEY).requiredGet(language);
+  }
 
   public static class Info {
     public final Image icon;
@@ -57,7 +71,6 @@ public abstract class RunLineMarkerContributor {
   public abstract Info getInfo(PsiElement element);
 
   /**
-   *
    * @param action
    * @param element
    * @return null means disabled

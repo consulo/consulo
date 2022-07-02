@@ -2,33 +2,31 @@
 
 package consulo.ide.impl.idea.codeInsight.hint;
 
-import consulo.language.editor.action.CodeInsightActionHandler;
+import consulo.application.ApplicationManager;
+import consulo.application.ReadAction;
+import consulo.application.dumb.IndexNotReadyException;
+import consulo.codeEditor.Editor;
+import consulo.ide.impl.idea.lang.parameterInfo.ParameterInfoHandler;
+import consulo.ide.impl.idea.openapi.editor.EditorActivityManager;
+import consulo.ide.impl.idea.ui.LightweightHint;
+import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.language.Language;
 import consulo.language.editor.CodeInsightBundle;
+import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.completion.lookup.Lookup;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupManager;
-import consulo.language.Language;
-import consulo.ide.impl.idea.lang.parameterInfo.LanguageParameterInfo;
-import consulo.ide.impl.idea.lang.parameterInfo.ParameterInfoHandler;
-import consulo.application.ApplicationManager;
-import consulo.application.ReadAction;
-import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.openapi.editor.EditorActivityManager;
 import consulo.language.editor.hint.HintManager;
-import consulo.project.DumbService;
-import consulo.application.dumb.IndexNotReadyException;
-import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
-import consulo.ide.impl.idea.ui.LightweightHint;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.project.DumbService;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -169,10 +167,10 @@ public class ShowParameterInfoHandler implements CodeInsightActionHandler {
     Set<ParameterInfoHandler> handlers = new LinkedHashSet<>();
     DumbService dumbService = DumbService.getInstance(project);
     for (final Language language : languages) {
-      handlers.addAll(dumbService.filterByDumbAwareness(LanguageParameterInfo.INSTANCE.allForLanguage(language)));
+      handlers.addAll(dumbService.filterByDumbAwareness(ParameterInfoHandler.forLanguage(language)));
     }
     if (handlers.isEmpty()) return null;
-    return handlers.toArray(new ParameterInfoHandler[0]);
+    return handlers.toArray(EMPTY_HANDLERS);
   }
 }
 

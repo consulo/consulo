@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
 /**
  * Defines support for JavaDoc-like documentation stub generation when invoked on "Enter within comment" actions in a custom language.
  * @author Maxim.Mossienko
- * @see consulo.ide.impl.idea.lang.LanguageDocumentation
+ * @see LanguageDocumentationProvider
  */
 public interface CodeDocumentationProvider extends DocumentationProvider {
   /**

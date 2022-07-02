@@ -15,8 +15,9 @@
  */
 package consulo.ide.impl.idea.tasks.doc;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.documentation.AbstractDocumentationProvider;
-import consulo.ide.impl.idea.lang.documentation.ExternalDocumentationProvider;
+import consulo.language.editor.documentation.ExternalDocumentationProvider;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
@@ -31,6 +32,7 @@ import java.util.List;
 /**
  * @author Dennis.Ushakov
  */
+@ExtensionImpl
 public class TaskDocumentationProvider extends AbstractDocumentationProvider implements ExternalDocumentationProvider {
 
   @Override

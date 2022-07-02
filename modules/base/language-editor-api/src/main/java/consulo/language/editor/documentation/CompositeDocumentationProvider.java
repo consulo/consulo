@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.lang.documentation;
+package consulo.language.editor.documentation;
 
+import consulo.application.Application;
 import consulo.codeEditor.Editor;
-import consulo.language.editor.documentation.CodeDocumentationProvider;
-import consulo.language.editor.documentation.DocumentationProvider;
-import consulo.language.editor.documentation.DocumentationProviderEx;
-import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.project.Project;
+import consulo.util.collection.ContainerUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -37,8 +35,8 @@ public class CompositeDocumentationProvider extends DocumentationProviderEx impl
 
   private final List<DocumentationProvider> myProviders;
 
-  public static DocumentationProvider wrapProviders(Collection<DocumentationProvider> providers) {
-    ArrayList<DocumentationProvider> list = new ArrayList<DocumentationProvider>();
+  public static DocumentationProvider wrapProviders(Collection<? extends DocumentationProvider> providers) {
+    ArrayList<DocumentationProvider> list = new ArrayList<>();
     for (DocumentationProvider provider : providers) {
       if (provider instanceof CompositeDocumentationProvider) {
         list.addAll(((CompositeDocumentationProvider)provider).getProviders());
@@ -58,7 +56,7 @@ public class CompositeDocumentationProvider extends DocumentationProviderEx impl
 
   @Nonnull
   public List<DocumentationProvider> getAllProviders() {
-    return ContainerUtil.concat(getProviders(), EP_NAME.getExtensionList());
+    return ContainerUtil.concat(getProviders(), Application.get().getExtensionList(DocumentationProvider.class));
   }
 
   @Nonnull
@@ -103,7 +101,7 @@ public class CompositeDocumentationProvider extends DocumentationProviderEx impl
 
   @Nonnull
   @Override
-  public String fetchExternalDocumentation(@Nonnull String link, @javax.annotation.Nullable PsiElement element) {
+  public String fetchExternalDocumentation(@Nonnull String link, @Nullable PsiElement element) {
     for (DocumentationProvider provider : getAllProviders()) {
       if (provider instanceof ExternalDocumentationHandler && ((ExternalDocumentationHandler)provider).canFetchDocumentationLink(link)) {
         return ((ExternalDocumentationHandler)provider).fetchExternalDocumentation(link, element);
@@ -176,7 +174,7 @@ public class CompositeDocumentationProvider extends DocumentationProviderEx impl
   }
 
 
-  @javax.annotation.Nullable
+  @Nullable
   public CodeDocumentationProvider getFirstCodeDocumentationProvider() {
     for (DocumentationProvider provider : getAllProviders()) {
       if (provider instanceof CodeDocumentationProvider) {
@@ -240,11 +238,11 @@ public class CompositeDocumentationProvider extends DocumentationProviderEx impl
     return false;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public PsiElement getCustomDocumentationElement(@Nonnull Editor editor,
                                                   @Nonnull PsiFile file,
-                                                  @javax.annotation.Nullable PsiElement contextElement) {
+                                                  @Nullable PsiElement contextElement) {
     for (DocumentationProvider provider : getAllProviders()) {
       if (provider instanceof DocumentationProviderEx) {
         PsiElement element = ((DocumentationProviderEx)provider).getCustomDocumentationElement(editor, file, contextElement);

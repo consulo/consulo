@@ -14,13 +14,31 @@
 
 package consulo.ide.impl.idea.lang.parameterInfo;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.application.Application;
+import consulo.component.extension.ExtensionPointCacheKey;
+import consulo.language.Language;
 import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.extension.ByLanguageValue;
+import consulo.language.extension.LanguageExtension;
+import consulo.language.extension.LanguageOneToMany;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
+import java.util.List;
 
-public interface ParameterInfoHandler<ParameterOwner, ParameterType> {
+@ExtensionAPI(ComponentScope.APPLICATION)
+public interface ParameterInfoHandler<ParameterOwner, ParameterType> extends LanguageExtension {
+  ExtensionPointCacheKey<ParameterInfoHandler, ByLanguageValue<List<ParameterInfoHandler>>> KEY =
+          ExtensionPointCacheKey.create("ParameterInfoHandler", LanguageOneToMany.build(false));
+
+  @Nonnull
+  static List<ParameterInfoHandler> forLanguage(@Nonnull Language language) {
+    return Application.get().getExtensionPoint(ParameterInfoHandler.class).getOrBuildCache(KEY).requiredGet(language);
+  }
+
   boolean couldShowInLookup();
 
   @Nullable

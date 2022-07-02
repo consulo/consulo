@@ -15,33 +15,35 @@
  */
 package consulo.ide.impl.idea.execution.testframework.sm.runner.history.actions;
 
-import consulo.ide.impl.idea.execution.*;
+import consulo.execution.DefaultExecutionTarget;
+import consulo.execution.ExecutionTarget;
+import consulo.execution.ExecutionTargetProvider;
+import consulo.execution.RunnerRegistry;
 import consulo.execution.configuration.*;
 import consulo.execution.executor.DefaultRunExecutor;
-import consulo.ide.impl.idea.execution.impl.RunManagerImpl;
-import consulo.ide.impl.idea.execution.impl.RunnerAndConfigurationSettingsImpl;
-import consulo.execution.*;
 import consulo.execution.executor.Executor;
 import consulo.execution.executor.ExecutorRegistry;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.ExecutionEnvironmentBuilder;
 import consulo.execution.runner.ProgramRunner;
+import consulo.ide.impl.idea.execution.TestStateStorage;
+import consulo.ide.impl.idea.execution.impl.RunManagerImpl;
+import consulo.ide.impl.idea.execution.impl.RunnerAndConfigurationSettingsImpl;
 import consulo.ide.impl.idea.execution.testframework.sm.runner.SMRunnerConsolePropertiesProvider;
 import consulo.ide.impl.idea.execution.testframework.sm.runner.SMTRunnerConsoleProperties;
 import consulo.ide.impl.idea.execution.testframework.sm.runner.history.ImportedTestRunnableState;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.process.ExecutionException;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.logging.Logger;
+import consulo.process.ExecutionException;
+import consulo.project.Project;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.image.Image;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jdom.Document;
 import org.jdom.Element;
 
@@ -86,7 +88,7 @@ public abstract class AbstractImportTestsAction extends AnAction {
 
   @Override
   public void update(AnActionEvent e) {
-    e.getPresentation().setEnabledAndVisible(e.getData(CommonDataKeys.PROJECT) != null);
+    e.getPresentation().setEnabledAndVisible(e.getData(Project.KEY) != null);
   }
 
   @Nullable
@@ -94,7 +96,7 @@ public abstract class AbstractImportTestsAction extends AnAction {
 
   @Override
   public void actionPerformed(AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     LOG.assertTrue(project != null);
     final VirtualFile file = getFile(project);
     if (file != null) {

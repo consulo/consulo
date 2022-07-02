@@ -4,13 +4,21 @@ package consulo.ide.impl.idea.codeInsight.documentation;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.language.editor.impl.internal.completion.CompletionUtil;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.application.ReadAction;
+import consulo.application.dumb.IndexNotReadyException;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.codeEditor.Editor;
+import consulo.content.scope.NamedScope;
+import consulo.content.scope.NamedScopesHolder;
+import consulo.content.scope.PackageSet;
+import consulo.content.scope.PackageSetBase;
+import consulo.dataContext.DataContext;
+import consulo.disposer.Disposer;
+import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.codeInsight.hint.ParameterInfoController;
-import consulo.language.editor.completion.lookup.Lookup;
-import consulo.language.editor.completion.lookup.LookupElement;
-import consulo.language.editor.completion.lookup.LookupEx;
-import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.ide.impl.idea.ide.BrowserUtil;
 import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.ide.impl.idea.ide.actions.BaseNavigateToSourceAction;
@@ -18,23 +26,17 @@ import consulo.ide.impl.idea.ide.actions.WindowAction;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNameBase;
 import consulo.ide.impl.idea.ide.util.gotoByName.QuickSearchComponent;
-import consulo.ide.impl.idea.lang.LanguageDocumentation;
-import consulo.ide.impl.idea.lang.documentation.*;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.ide.ServiceManager;
+import consulo.ide.impl.idea.lang.documentation.DocumentationMarkup;
 import consulo.ide.impl.idea.openapi.roots.libraries.LibraryUtil;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.ProjectSettingsService;
 import consulo.ide.impl.idea.openapi.util.DimensionService;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.status.FileStatus;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManager;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
 import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
-import consulo.language.psi.util.SymbolPresentationUtil;
 import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.ide.impl.idea.ui.FileColorManager;
-import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.PopupUpdateProcessor;
 import consulo.ide.impl.idea.ui.tabs.FileColorManagerImpl;
@@ -42,25 +44,19 @@ import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.text.DateFormatUtil;
-import consulo.application.ApplicationManager;
-import consulo.application.ReadAction;
-import consulo.application.dumb.IndexNotReadyException;
-import consulo.codeEditor.Editor;
-import consulo.language.editor.TargetElementUtil;
-import consulo.dataContext.DataContext;
-import consulo.disposer.Disposer;
-import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.language.Language;
 import consulo.language.editor.CodeInsightBundle;
-import consulo.language.editor.documentation.DocumentationProvider;
-import consulo.language.editor.documentation.DocumentationProviderEx;
+import consulo.language.editor.TargetElementUtil;
+import consulo.language.editor.completion.lookup.Lookup;
+import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.editor.completion.lookup.LookupEx;
+import consulo.language.editor.completion.lookup.LookupManager;
+import consulo.language.editor.documentation.*;
+import consulo.language.editor.impl.internal.completion.CompletionUtil;
 import consulo.language.plain.PlainTextFileType;
 import consulo.language.psi.*;
-import consulo.content.scope.NamedScope;
-import consulo.content.scope.NamedScopesHolder;
-import consulo.content.scope.PackageSet;
-import consulo.content.scope.PackageSetBase;
 import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.psi.util.SymbolPresentationUtil;
 import consulo.logging.Logger;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.Project;
@@ -73,10 +69,12 @@ import consulo.ui.ex.action.event.AnActionListener;
 import consulo.ui.ex.awt.ScrollingUtil;
 import consulo.ui.ex.awt.SwingActionDelegate;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.ex.toolWindow.ToolWindowType;
@@ -91,6 +89,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
+import consulo.virtualFileSystem.status.FileStatus;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
@@ -836,10 +835,10 @@ public final class DocumentationManager extends DockablePopupManager<Documentati
     Set<DocumentationProvider> result = new LinkedHashSet<>();
 
     Language containingFileLanguage = containingFile != null ? containingFile.getLanguage() : null;
-    DocumentationProvider originalProvider = containingFile != null ? LanguageDocumentation.INSTANCE.forLanguage(containingFileLanguage) : null;
+    DocumentationProvider originalProvider = containingFile != null ? LanguageDocumentationProvider.forLanguageComposite(containingFileLanguage) : null;
 
     Language elementLanguage = element != null ? element.getLanguage() : null;
-    DocumentationProvider elementProvider = element == null || elementLanguage.is(containingFileLanguage) ? null : LanguageDocumentation.INSTANCE.forLanguage(elementLanguage);
+    DocumentationProvider elementProvider = element == null || elementLanguage.is(containingFileLanguage) ? null : LanguageDocumentationProvider.forLanguageComposite(elementLanguage);
 
     ContainerUtil.addIfNotNull(result, elementProvider);
     ContainerUtil.addIfNotNull(result, originalProvider);
@@ -847,7 +846,7 @@ public final class DocumentationManager extends DockablePopupManager<Documentati
     if (containingFile != null) {
       Language baseLanguage = containingFile.getViewProvider().getBaseLanguage();
       if (!baseLanguage.is(containingFileLanguage)) {
-        ContainerUtil.addIfNotNull(result, LanguageDocumentation.INSTANCE.forLanguage(baseLanguage));
+        ContainerUtil.addIfNotNull(result, LanguageDocumentationProvider.forLanguageComposite(baseLanguage));
       }
     }
     else if (element instanceof PsiDirectory) {
@@ -857,7 +856,7 @@ public final class DocumentationManager extends DockablePopupManager<Documentati
         Language baseLanguage = file.getViewProvider().getBaseLanguage();
         if (!set.contains(baseLanguage)) {
           set.add(baseLanguage);
-          ContainerUtil.addIfNotNull(result, LanguageDocumentation.INSTANCE.forLanguage(baseLanguage));
+          ContainerUtil.addIfNotNull(result, LanguageDocumentationProvider.forLanguageComposite(baseLanguage));
         }
       }
     }
@@ -913,7 +912,7 @@ public final class DocumentationManager extends DockablePopupManager<Documentati
       DocumentationProvider provider = getProviderFromElement(psiElement);
       PsiElement targetElement = provider.getDocumentationElementForLink(manager, refText, psiElement);
       if (targetElement == null) {
-        for (DocumentationProvider documentationProvider : DocumentationProvider.EP_NAME.getExtensionList()) {
+        for (DocumentationProvider documentationProvider : Application.get().getExtensionList(DocumentationProvider.class)) {
           targetElement = documentationProvider.getDocumentationElementForLink(manager, refText, psiElement);
           if (targetElement != null) {
             break;
@@ -922,7 +921,7 @@ public final class DocumentationManager extends DockablePopupManager<Documentati
       }
       if (targetElement == null) {
         for (Language language : Language.getRegisteredLanguages()) {
-          DocumentationProvider documentationProvider = LanguageDocumentation.INSTANCE.forLanguage(language);
+          DocumentationProvider documentationProvider = LanguageDocumentationProvider.forLanguageComposite(language);
           if (documentationProvider != null) {
             targetElement = documentationProvider.getDocumentationElementForLink(manager, refText, psiElement);
             if (targetElement != null) {

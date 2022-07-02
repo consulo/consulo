@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.documentation;
+package consulo.language.editor.documentation;
 
 import org.jetbrains.annotations.NonNls;
 
@@ -26,20 +26,17 @@ public interface DocumentationManagerProtocol {
    *
    * @see DocumentationManagerUtil
    */
-  @NonNls
   String PSI_ELEMENT_PROTOCOL = "psi_element://";
 
   /**
    * Separator between PSI element link and a reference to specific text fragment, which should be scrolled to on navigation. Can be used
    * with {@link #PSI_ELEMENT_PROTOCOL} links, full link should look like {@code psi_element://link###ref}.
    */
-  @NonNls
   String PSI_ELEMENT_PROTOCOL_REF_SEPARATOR = "###";
 
   /**
    * A special 'ref' value (see {@link #PSI_ELEMENT_PROTOCOL_REF_SEPARATOR}) which can be used to request keeping the scrolling position
    * unchanged. This can be useful e.g. if navigation over some link just appends some content to already displayed content.
    */
-  @NonNls
   String KEEP_SCROLLING_POSITION_REF = "$keepScrollingPosition$";
 }

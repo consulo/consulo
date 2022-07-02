@@ -15,10 +15,20 @@
  */
 package consulo.language.editor.annotation;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.application.Application;
 import consulo.codeEditor.Editor;
+import consulo.component.extension.ExtensionPointCacheKey;
+import consulo.language.Language;
+import consulo.language.extension.ByLanguageValue;
+import consulo.language.extension.LanguageExtension;
+import consulo.language.extension.LanguageOneToMany;
 import consulo.language.psi.PsiFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * Implemented by a custom language plugin to process the files in a language by an
@@ -26,9 +36,16 @@ import javax.annotation.Nullable;
  * after the regular annotator has completed its work.
  *
  * @author ven
- * @see consulo.ide.impl.idea.lang.ExternalLanguageAnnotators
  */
-public abstract class ExternalAnnotator<InitialInfoType, AnnotationResultType> {
+@ExtensionAPI(ComponentScope.APPLICATION)
+public abstract class ExternalAnnotator<InitialInfoType, AnnotationResultType> implements LanguageExtension {
+  private static final ExtensionPointCacheKey<ExternalAnnotator, ByLanguageValue<List<ExternalAnnotator>>> KEY = ExtensionPointCacheKey.create("ExternalAnnotator", LanguageOneToMany.build(false));
+
+  @Nonnull
+  public static List<ExternalAnnotator> forLanguage(@Nonnull Language language) {
+    return Application.get().getExtensionPoint(ExternalAnnotator.class).getOrBuildCache(KEY).requiredGet(language);
+  }
+
   /**
    * Collects initial information required for annotation. Expected to run within read action.
    * See {@link ExternalAnnotator#collectInformation(PsiFile, Editor, boolean)} for details.
@@ -45,6 +62,7 @@ public abstract class ExternalAnnotator<InitialInfoType, AnnotationResultType> {
    * Collects initial information required for annotation. This method is called within read action during annotation pass.
    * Default implementation returns the result of {@link ExternalAnnotator#collectInformation(PsiFile)}
    * if file has no errors or {@code null} otherwise.
+   *
    * @param file      file to annotate
    * @param editor    editor in which file's document reside
    * @param hasErrors indicates if file has errors detected by preceding analyses
@@ -58,6 +76,7 @@ public abstract class ExternalAnnotator<InitialInfoType, AnnotationResultType> {
   /**
    * Collects full information required for annotation. This method is intended for long-running activities
    * and will be called outside read/write actions during annotation pass.
+   *
    * @param collectedInfo initial information gathered by {@link ExternalAnnotator#collectInformation(PsiFile, Editor, boolean)}
    * @return annotation result to pass to {@link ExternalAnnotator#apply(PsiFile, AnnotationResultType, AnnotationHolder)}
    */
@@ -68,9 +87,10 @@ public abstract class ExternalAnnotator<InitialInfoType, AnnotationResultType> {
 
   /**
    * Applies results of annotation. This method is called within read action during annotation pass.
-   * @param file file to annotate
+   *
+   * @param file             file to annotate
    * @param annotationResult annotation result acquired through {@link ExternalAnnotator#doAnnotate(InitialInfoType)}
-   * @param holder container which receives annotations
+   * @param holder           container which receives annotations
    */
   public void apply(@Nonnull PsiFile file, AnnotationResultType annotationResult, @Nonnull AnnotationHolder holder) {
   }

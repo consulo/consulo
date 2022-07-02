@@ -47,6 +47,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.PaintEvent;
 import java.util.List;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -63,9 +64,9 @@ class ActionUpdater {
   private final boolean myToolbarAction;
   private final Project myProject;
 
-  private final Map<AnAction, Presentation> myUpdatedPresentations = ContainerUtil.newConcurrentMap();
-  private final Map<ActionGroup, List<AnAction>> myGroupChildren = ContainerUtil.newConcurrentMap();
-  private final Map<ActionGroup, Boolean> myCanBePerformedCache = ContainerUtil.newConcurrentMap();
+  private final Map<AnAction, Presentation> myUpdatedPresentations = new ConcurrentHashMap<>();
+  private final Map<ActionGroup, List<AnAction>> myGroupChildren = new ConcurrentHashMap<>();
+  private final Map<ActionGroup, Boolean> myCanBePerformedCache = new ConcurrentHashMap<>();
   private final UpdateStrategy myRealUpdateStrategy;
   private final UpdateStrategy myCheapStrategy;
   private final Utils.ActionGroupVisitor myVisitor;
@@ -83,7 +84,7 @@ class ActionUpdater {
                 boolean isContextMenuAction,
                 boolean isToolbarAction,
                 Utils.ActionGroupVisitor visitor) {
-    myProject = dataContext.getData(CommonDataKeys.PROJECT);
+    myProject = dataContext.getData(Project.KEY);
     myModalContext = isInModalContext;
     myFactory = presentationFactory;
     myDataContext = dataContext;

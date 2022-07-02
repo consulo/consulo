@@ -13,8 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.lang;
+package consulo.language.editor;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.application.Application;
+import consulo.component.extension.ExtensionPointCacheKey;
+import consulo.language.Language;
+import consulo.language.extension.ByLanguageValue;
+import consulo.language.extension.LanguageExtension;
+import consulo.language.extension.LanguageOneToMany;
 import consulo.language.psi.PsiElement;
 
 import javax.annotation.Nonnull;
@@ -22,13 +30,22 @@ import java.util.List;
 
 /**
  * @author gregsh
- * @see consulo.ide.impl.idea.codeInsight.hint.actions.ShowExpressionTypeAction
+ * @see ShowExpressionTypeAction
  */
-public abstract class ExpressionTypeProvider<T extends PsiElement> {
+@ExtensionAPI(ComponentScope.APPLICATION)
+public abstract class ExpressionTypeProvider<T extends PsiElement> implements LanguageExtension {
+  private static final ExtensionPointCacheKey<ExpressionTypeProvider, ByLanguageValue<List<ExpressionTypeProvider>>> KEY =
+          ExtensionPointCacheKey.create("ExpressionTypeProvider", LanguageOneToMany.build(false));
+
+  @Nonnull
+  public static List<ExpressionTypeProvider> forLanguage(@Nonnull Language language) {
+    return Application.get().getExtensionPoint(ExpressionTypeProvider.class).getOrBuildCache(KEY).requiredGet(language);
+  }
+
   /**
    * Returns HTML string for type info hint.
    *
-   * @see consulo.ide.impl.idea.openapi.util.text.StringUtil#escapeXmlEntities(String)
+   * @see consulo.util.lang.StringUtil#escapeXmlEntities(String)
    */
   @Nonnull
   public abstract String getInformationHint(@Nonnull T element);

@@ -33,7 +33,6 @@ import consulo.execution.ui.RunContentDescriptor;
 import consulo.ide.impl.idea.execution.actions.RunContextAction;
 import consulo.ide.impl.idea.execution.impl.ExecutionManagerImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.logging.Logger;
 import consulo.process.ProcessHandler;
 import consulo.project.DumbService;
@@ -107,9 +106,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistry implements Disposable
       }
     });
 
-    for (Executor executor : Executor.EP_NAME.getExtensionList()) {
-      initExecutor(executor);
-    }
+    Executor.EP_NAME.forEachExtensionSafe(this::initExecutor);
   }
 
   synchronized void initExecutor(@Nonnull final Executor executor) {
@@ -211,7 +208,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistry implements Disposable
     @Override
     public void update(@Nonnull final AnActionEvent e) {
       final Presentation presentation = e.getPresentation();
-      final Project project = e.getData(CommonDataKeys.PROJECT);
+      final Project project = e.getData(Project.KEY);
 
       if (project == null || project.isDisposed()) {
         presentation.setEnabledAndVisible(false);
@@ -287,7 +284,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistry implements Disposable
     @RequiredUIAccess
     @Override
     public void actionPerformed(@Nonnull final AnActionEvent e) {
-      final Project project = e.getData(CommonDataKeys.PROJECT);
+      final Project project = e.getData(Project.KEY);
       if (project == null || project.isDisposed()) {
         return;
       }

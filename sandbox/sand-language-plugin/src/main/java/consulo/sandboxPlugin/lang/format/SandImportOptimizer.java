@@ -15,8 +15,11 @@
  */
 package consulo.sandboxPlugin.lang.format;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.Language;
 import consulo.language.editor.refactoring.ImportOptimizer;
 import consulo.language.psi.PsiFile;
+import consulo.sandboxPlugin.lang.SandLanguage;
 import consulo.sandboxPlugin.lang.psi.SandFile;
 
 import javax.annotation.Nonnull;
@@ -26,6 +29,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 2019-02-25
  */
+@ExtensionImpl
 public class SandImportOptimizer implements ImportOptimizer {
   @Override
   public boolean supports(PsiFile file) {
@@ -53,5 +57,11 @@ public class SandImportOptimizer implements ImportOptimizer {
 
       }
     };
+  }
+
+  @Nonnull
+  @Override
+  public Language getLanguage() {
+    return SandLanguage.INSTANCE;
   }
 }

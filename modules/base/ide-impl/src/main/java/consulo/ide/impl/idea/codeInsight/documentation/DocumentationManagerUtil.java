@@ -4,6 +4,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.ServiceManager;
+import consulo.language.editor.documentation.DocumentationManagerProtocol;
 import consulo.language.psi.PsiElement;
 import jakarta.inject.Singleton;
 

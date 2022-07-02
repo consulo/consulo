@@ -1,9 +1,9 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.lang.documentation;
+package consulo.language.editor.documentation;
 
-import consulo.language.editor.documentation.DocumentationProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -35,7 +35,7 @@ public interface ExternalDocumentationHandler {
    * This method can supply a target (HTML reference), which will be navigated to on showing of
    * {@link #fetchExternalDocumentation(String, PsiElement)}) result.
    *
-   * @see consulo.ide.impl.idea.codeInsight.documentation.DocumentationManagerProtocol
+   * @see DocumentationManagerProtocol
    */
   @Nullable
   default String extractRefFromLink(@Nonnull String link) {

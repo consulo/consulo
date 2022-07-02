@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.navigation;
 
-import consulo.ide.impl.idea.codeInsight.documentation.DocumentationManagerProtocol;
+import consulo.language.editor.documentation.DocumentationManagerProtocol;
 import consulo.language.editor.documentation.DocumentationProvider;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;

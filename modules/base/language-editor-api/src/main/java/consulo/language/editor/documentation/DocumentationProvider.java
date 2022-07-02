@@ -3,7 +3,6 @@ package consulo.language.editor.documentation;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
 import consulo.project.Project;
@@ -15,21 +14,15 @@ import java.util.List;
 /**
  * Provides documentation for PSI elements.
  * <p>
- * Extend {@link AbstractDocumentationProvider}.
+ * For providing documentation provider per language use {@link LanguageDocumentationProvider}
  *
- * @see consulo.ide.impl.idea.lang.LanguageDocumentation
  * @see DocumentationProviderEx
  * @see ExternalDocumentationProvider
  * @see ExternalDocumentationHandler
+ * @see LanguageDocumentationProvider
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface DocumentationProvider {
-
-  /**
-   * Please use {@link consulo.ide.impl.idea.lang.LanguageDocumentation} instead of this for language-specific documentation
-   */
-  ExtensionPointName<DocumentationProvider> EP_NAME = ExtensionPointName.create(DocumentationProvider.class);
-
   /**
    * Returns the text to show in the Ctrl-hover popup for the specified element.
    *

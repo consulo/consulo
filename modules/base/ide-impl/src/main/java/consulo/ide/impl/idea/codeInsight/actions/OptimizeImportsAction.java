@@ -23,7 +23,6 @@ import consulo.language.editor.PlatformDataKeys;
 import consulo.ui.ex.action.ActionsBundle;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.refactoring.ImportOptimizer;
-import consulo.ide.impl.idea.lang.LanguageImportStatements;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
@@ -55,7 +54,7 @@ public class OptimizeImportsAction extends AnAction {
   private static boolean myProcessVcsChangedFilesInTests;
 
   public OptimizeImportsAction(@Nonnull Application application) {
-    List<ImportOptimizer> extensions = LanguageImportStatements.INSTANCE.getExtensions(application);
+    List<ImportOptimizer> extensions = application.getExtensionPoint(ImportOptimizer.class).getExtensionList();
 
     updatePresentation(getTemplatePresentation(), extensions);
   }
@@ -84,7 +83,7 @@ public class OptimizeImportsAction extends AnAction {
 
     List<ImportOptimizer> importOptimizers = new ArrayList<>(files.size());
     for (PsiFile file : files) {
-      importOptimizers.addAll(LanguageImportStatements.INSTANCE.forFile(file));
+      importOptimizers.addAll(ImportOptimizer.forFile(file));
     }
 
     updatePresentation(presentation, importOptimizers);
@@ -206,7 +205,7 @@ public class OptimizeImportsAction extends AnAction {
   @Override
   public void update(@Nonnull AnActionEvent event) {
     Presentation presentation = event.getPresentation();
-    if (!LanguageImportStatements.INSTANCE.hasAnyExtensions()) {
+    if (!Application.get().getExtensionPoint(ImportOptimizer.class).hasAnyExtensions()) {
       presentation.setVisible(false);
       return;
     }
@@ -276,7 +275,7 @@ public class OptimizeImportsAction extends AnAction {
 
   @RequiredUIAccess
   private static boolean isOptimizeImportsAvailable(final PsiFile file) {
-    return !LanguageImportStatements.INSTANCE.forFile(file).isEmpty();
+    return !ImportOptimizer.forFile(file).isEmpty();
   }
 
   private static Boolean isProcessVcsChangedText(Project project, String text, boolean hasChanges) {

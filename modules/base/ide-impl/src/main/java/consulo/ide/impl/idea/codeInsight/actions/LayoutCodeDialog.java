@@ -18,8 +18,8 @@ package consulo.ide.impl.idea.codeInsight.actions;
 
 import consulo.language.editor.CodeInsightBundle;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.ide.impl.idea.lang.LanguageImportStatements;
 import consulo.application.HelpManager;
+import consulo.language.editor.refactoring.ImportOptimizer;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.language.psi.PsiFile;
@@ -119,7 +119,7 @@ public class LayoutCodeDialog extends DialogWrapper {
   }
 
   private void setUpActions() {
-    boolean canOptimizeImports = !LanguageImportStatements.INSTANCE.forFile(myFile).isEmpty();
+    boolean canOptimizeImports = !ImportOptimizer.forFile(myFile).isEmpty();
     myOptimizeImportsCb.setVisible(canOptimizeImports);
     if (canOptimizeImports) {
       myOptimizeImportsCb.setSelected(myLastRunOptions.getLastOptimizeImports());

@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.codeInsight.actions;
 
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.refactoring.ImportOptimizer;
-import consulo.ide.impl.idea.lang.LanguageImportStatements;
 import consulo.module.Module;
 import consulo.project.DumbService;
 import consulo.project.Project;
@@ -82,7 +81,7 @@ public class OptimizeImportsProcessor extends AbstractLayoutCodeProcessor {
       return new FutureTask<>(EmptyRunnable.INSTANCE, true);
     }
 
-    final Set<ImportOptimizer> optimizers = LanguageImportStatements.INSTANCE.forFile(file);
+    final Set<ImportOptimizer> optimizers = ImportOptimizer.forFile(file);
     final List<Runnable> runnables = new ArrayList<>();
     List<PsiFile> files = file.getViewProvider().getAllFiles();
     for (ImportOptimizer optimizer : optimizers) {

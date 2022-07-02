@@ -18,13 +18,12 @@
  * User: anna
  * Date: 02-Mar-2010
  */
-package consulo.ide.impl.idea.lang.documentation;
+package consulo.language.editor.documentation;
 
-import consulo.language.editor.documentation.DocumentationProvider;
-import consulo.project.Project;
 import consulo.language.psi.PsiElement;
-import javax.annotation.Nullable;
+import consulo.project.Project;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public interface ExternalDocumentationProvider {

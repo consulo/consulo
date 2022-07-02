@@ -2,19 +2,18 @@
 
 package consulo.ide.impl.idea.codeInsight.hint;
 
-import consulo.language.editor.action.CodeInsightActionHandler;
-import consulo.ide.impl.idea.lang.ExpressionTypeProvider;
-import consulo.ide.impl.idea.lang.LanguageExpressionTypes;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ide.impl.idea.refactoring.IntroduceTargetChooser;
-import consulo.ide.impl.idea.ui.LightweightHint;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
+import consulo.ide.impl.idea.refactoring.IntroduceTargetChooser;
+import consulo.ide.impl.idea.ui.LightweightHint;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.Language;
+import consulo.language.editor.ExpressionTypeProvider;
 import consulo.language.editor.TargetElementUtil;
+import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.language.psi.PsiElement;
@@ -131,7 +130,7 @@ public class ShowExpressionTypeHandler implements CodeInsightActionHandler {
   @Nonnull
   public static Set<ExpressionTypeProvider> getHandlers(final Project project, Language... languages) {
     DumbService dumbService = DumbService.getInstance(project);
-    return JBIterable.of(languages).flatten(language -> dumbService.filterByDumbAwareness(LanguageExpressionTypes.INSTANCE.allForLanguage(language))).addAllTo(new LinkedHashSet<>());
+    return JBIterable.of(languages).flatten(language -> dumbService.filterByDumbAwareness(ExpressionTypeProvider.forLanguage(language))).addAllTo(new LinkedHashSet<>());
   }
 
   static final class DisplayedTypeInfo {

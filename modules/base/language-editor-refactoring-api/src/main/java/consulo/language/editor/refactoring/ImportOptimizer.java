@@ -16,19 +16,54 @@
 
 package consulo.language.editor.refactoring;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
+import consulo.component.extension.ExtensionPointCacheKey;
+import consulo.language.Language;
 import consulo.language.editor.CodeInsightBundle;
+import consulo.language.extension.ByLanguageValue;
+import consulo.language.extension.LanguageExtension;
+import consulo.language.extension.LanguageOneToMany;
 import consulo.language.psi.PsiFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Implementers of the interface encapsulate optimize imports process for the language.
  *
  * @author max
  */
-public interface ImportOptimizer {
+@ExtensionAPI(ComponentScope.APPLICATION)
+public interface ImportOptimizer extends LanguageExtension {
+  ExtensionPointCacheKey<ImportOptimizer, ByLanguageValue<List<ImportOptimizer>>> KEY = ExtensionPointCacheKey.create("ImportOptimizer", LanguageOneToMany.build(false));
+
+  @Nonnull
+  public static List<ImportOptimizer> forLanguage(@Nonnull Language language) {
+    return Application.get().getExtensionPoint(ImportOptimizer.class).getOrBuildCache(KEY).requiredGet(language);
+  }
+
+  @Nonnull
+  @RequiredReadAction
+  public static Set<ImportOptimizer> forFile(PsiFile file) {
+    Set<ImportOptimizer> optimizers = new HashSet<>();
+    for (PsiFile psiFile : file.getViewProvider().getAllFiles()) {
+      List<ImportOptimizer> langOptimizers = ImportOptimizer.forLanguage(psiFile.getLanguage());
+      for (ImportOptimizer optimizer : langOptimizers) {
+        if (optimizer != null && optimizer.supports(psiFile)) {
+          optimizers.add(optimizer);
+          break;
+        }
+      }
+    }
+    return optimizers;
+  }
+
   /**
    * Call to this method is made before the <code>processFile()</code> call to ensure implementation can process the file given
    *
