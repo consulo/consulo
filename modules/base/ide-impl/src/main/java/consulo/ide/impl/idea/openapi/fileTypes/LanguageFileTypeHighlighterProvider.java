@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
 /**
  * @author yole
  */
-@ExtensionImpl
+@ExtensionImpl(order = "last")
 public class LanguageFileTypeHighlighterProvider implements SyntaxHighlighterProvider {
   @Override
   @Nullable
