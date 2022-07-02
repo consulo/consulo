@@ -15,5 +15,10 @@
  */
 package consulo.language.editor.inspection;
 
+/**
+ * Marker interface for inspections which can be executed as part of "Code Cleanup" action.
+ * Such inspections need to provide some quickfixes which can run without user input and
+ * are generally safe to apply.
+ */
 public interface CleanupLocalInspectionTool {
 }

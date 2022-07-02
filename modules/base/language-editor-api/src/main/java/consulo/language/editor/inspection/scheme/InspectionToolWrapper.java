@@ -15,7 +15,11 @@
  */
 package consulo.language.editor.inspection.scheme;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
+import consulo.component.bind.InjectingBinding;
+import consulo.component.internal.InjectingBindingLoader;
 import consulo.language.Language;
 import consulo.language.editor.inspection.CleanupLocalInspectionTool;
 import consulo.language.editor.inspection.GlobalInspectionContext;
@@ -28,10 +32,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Dmitry Avdeev
- *         Date: 9/28/11
+ * Date: 9/28/11
  */
 public abstract class InspectionToolWrapper<T extends InspectionProfileEntry> {
   private static final Logger LOG = Logger.getInstance(InspectionToolWrapper.class);
@@ -42,12 +48,30 @@ public abstract class InspectionToolWrapper<T extends InspectionProfileEntry> {
     myTool = tool;
   }
 
-  /** Copy ctor */
+  @SuppressWarnings("unchecked")
   protected InspectionToolWrapper(@Nonnull InspectionToolWrapper<T> other) {
-    // we need to create a copy for buffering
-    //noinspection unchecked
-    myTool = other.myTool == null ? null : (T)Application.get().getUnbindedInstance(other.myTool.getClass());
+    // find injecting binding and create new instance
+    Map<Class, List<InjectingBinding>> bindings = InjectingBindingLoader.INSTANCE.getHolder(ExtensionAPI.class, ComponentScope.APPLICATION).getBindings();
+    List<InjectingBinding> injectingBindings = bindings.get(getToolClass());
+
+    InjectingBinding binding = null;
+    for (InjectingBinding injectingBinding : injectingBindings) {
+      if (injectingBinding.getImplClass() == other.myTool.getClass())  {
+        binding = injectingBinding;
+        break;
+      }
+    }
+
+    if (binding == null) {
+      throw new IllegalArgumentException("Can't find injecting binding for " + other.myTool.getClass());
+    }
+
+    final InjectingBinding finalBinding = binding;
+    myTool = (T)Application.get().getUnbindedInstance((Class)other.myTool.getClass(), binding.getParameterTypes(), args -> (T)finalBinding.create(args));
   }
+
+  @Nonnull
+  protected abstract Class<? extends InspectionProfileEntry> getToolClass();
 
   public void initialize(@Nonnull GlobalInspectionContext context) {
   }
@@ -84,7 +108,7 @@ public abstract class InspectionToolWrapper<T extends InspectionProfileEntry> {
 
   @Nonnull
   public String getDisplayName() {
-      return getTool().getDisplayName();
+    return getTool().getDisplayName();
   }
 
   @Nonnull
@@ -126,7 +150,8 @@ public abstract class InspectionToolWrapper<T extends InspectionProfileEntry> {
       if (descriptionUrl == null) return null;
       return ResourceUtil.loadText(descriptionUrl);
     }
-    catch (IOException ignored) { }
+    catch (IOException ignored) {
+    }
 
     return getTool().loadDescription();
   }

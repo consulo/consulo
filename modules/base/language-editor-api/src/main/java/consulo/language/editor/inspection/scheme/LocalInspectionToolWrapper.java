@@ -18,6 +18,8 @@ package consulo.language.editor.inspection.scheme;
 
 import consulo.language.editor.inspection.GlobalInspectionContext;
 import consulo.language.editor.inspection.LocalInspectionTool;
+import consulo.language.editor.inspection.PairedUnfairLocalInspectionTool;
+import consulo.language.editor.inspection.UnfairLocalInspectionTool;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 
@@ -34,6 +36,12 @@ public class LocalInspectionToolWrapper extends InspectionToolWrapper<LocalInspe
 
   private LocalInspectionToolWrapper(@Nonnull LocalInspectionToolWrapper other) {
     super(other);
+  }
+
+  @Nonnull
+  @Override
+  protected Class<? extends InspectionProfileEntry> getToolClass() {
+    return LocalInspectionTool.class;
   }
 
   @Nonnull

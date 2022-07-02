@@ -13,12 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.editor.inspection.scheme;
+package consulo.language.editor.inspection;
 
-/**
- * User: anna
- * Date: 4/17/13
- */
+import javax.annotation.Nonnull;
+
 public interface PairedUnfairLocalInspectionTool extends UnfairLocalInspectionTool {
+  /**
+   * @return {@link LocalInspectionTool#getShortName()} of
+   * a tool to be run instead of this tool in batch mode.
+   * The returned value can be a short name of this inspection tool, in this case
+   * this unfair tool will be run in batch mode.
+   */
+  @Nonnull
   String getInspectionForBatchShortName();
 }

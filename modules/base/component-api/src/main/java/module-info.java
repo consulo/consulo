@@ -47,7 +47,8 @@ module consulo.component.api {
           consulo.application.impl,
           // TODO [VISTALL] replace it by consulo.project.impl when ready
           consulo.ide.impl,
-          consulo.module.impl;
+          consulo.module.impl,
+          consulo.language.editor.api;
 
   opens consulo.component.internal to consulo.util.xml.serializer, consulo.injecting.pico.impl;
 
