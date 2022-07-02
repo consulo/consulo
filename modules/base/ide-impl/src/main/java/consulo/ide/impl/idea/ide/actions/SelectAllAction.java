@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.ide.IdeBundle;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
@@ -43,6 +44,7 @@ public class SelectAllAction extends TextComponentEditorAction implements DumbAw
     }
   }
 
+  @RequiredUIAccess
   public void update(AnActionEvent event){
     Presentation presentation = event.getPresentation();
     Editor editor = TextComponentEditorAction.getEditorFromContext(event.getDataContext());

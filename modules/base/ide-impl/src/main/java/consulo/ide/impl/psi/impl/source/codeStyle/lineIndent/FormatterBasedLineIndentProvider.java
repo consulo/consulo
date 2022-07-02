@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.psi.impl.source.codeStyle.lineIndent;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.codeStyle.FormattingMode;
 import consulo.language.Language;
 import consulo.document.Document;
@@ -30,6 +31,7 @@ import javax.annotation.Nullable;
 /**
  * Formatter-based line indent provider which calculates indent using formatting model.
  */
+@ExtensionImpl(order = "last")
 public class FormatterBasedLineIndentProvider implements LineIndentProvider {
   @Nullable
   @Override

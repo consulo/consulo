@@ -1,17 +1,21 @@
 // Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.editorActions.enter;
 
-import consulo.language.Language;
-import consulo.language.OldLanguageExtension;
+import consulo.application.Application;
 import consulo.codeEditor.Editor;
+import consulo.component.extension.ExtensionPointCacheKey;
+import consulo.language.Language;
+import consulo.language.codeStyle.CodeStyleManager;
+import consulo.language.extension.ByLanguageValue;
+import consulo.language.extension.LanguageExtension;
+import consulo.language.extension.LanguageOneToOne;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
-import consulo.container.plugin.PluginIds;
 import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -21,9 +25,14 @@ import javax.annotation.Nullable;
  * The procedure can skip parsing during typing only if the language-specific implementation is inherited
  * from <code>{@link EnterBetweenBracesNoCommitDelegate}</code>.
  */
-public class EnterBetweenBracesDelegate {
+public abstract class EnterBetweenBracesDelegate implements LanguageExtension {
   private static final Logger LOG = Logger.getInstance(EnterBetweenBracesDelegate.class);
-  static final OldLanguageExtension<EnterBetweenBracesDelegate> EP_NAME = new OldLanguageExtension<>(PluginIds.CONSULO_BASE + ".enterBetweenBracesDelegate");
+  private static final ExtensionPointCacheKey<EnterBetweenBracesDelegate, ByLanguageValue<EnterBetweenBracesDelegate>> KEY = ExtensionPointCacheKey.create("EnterBetweenBracesDelegate", LanguageOneToOne.build());
+
+  @Nullable
+  public static EnterBetweenBracesDelegate forLanguage(@Nonnull Language language) {
+    return Application.get().getExtensionPoint(EnterBetweenBracesDelegate.class).getOrBuildCache(KEY).get(language);
+  }
 
   /**
    * Checks that the braces belong to the same syntax element, and whether there is a need to calculate indentation or it can be simplified.

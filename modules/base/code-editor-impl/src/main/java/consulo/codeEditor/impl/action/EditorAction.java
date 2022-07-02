@@ -15,9 +15,11 @@
  */
 package consulo.codeEditor.impl.action;
 
+import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
+import consulo.codeEditor.action.ExtensionEditorActionHandler;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -62,11 +64,12 @@ public abstract class EditorAction extends AnAction implements DumbAware, Update
     if (!myHandlersLoaded) {
       myHandlersLoaded = true;
       final String id = ActionManager.getInstance().getId(this);
-      List<EditorActionHandlerBean> extensions = EditorActionHandlerBean.EP_NAME.getExtensionList();
+      List<ExtensionEditorActionHandler> extensions = Application.get().getExtensionList(ExtensionEditorActionHandler.class);
       for (int i = extensions.size() - 1; i >= 0; i--) {
-        final EditorActionHandlerBean handlerBean = extensions.get(i);
-        if (handlerBean.action.equals(id)) {
-          myHandler = handlerBean.getHandler(myHandler);
+        final ExtensionEditorActionHandler handler = extensions.get(i);
+        if (handler.getActionId().equals(id)) {
+          handler.init(myHandler);
+          myHandler = (EditorActionHandler)handler;
           myHandler.setWorksInInjected(isInInjectedContext());
         }
       }

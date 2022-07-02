@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi.codeStyle;
+package consulo.codeEditor.action;
 
-public interface ProviderForCommittedDocument {
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+/**
+ * @author VISTALL
+ * @since 02-Jul-22
+ *
+ * Must extend {@link EditorActionHandler}
+ */
+@ExtensionAPI(ComponentScope.APPLICATION)
+public interface ExtensionEditorActionHandler {
+  void init(@Nullable EditorActionHandler originalHandler);
+
+  @Nonnull
+  String getActionId();
 }

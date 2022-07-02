@@ -16,24 +16,25 @@
 
 package consulo.ide.impl.idea.codeInsight.lookup.impl;
 
-import consulo.language.editor.completion.lookup.LookupManager;
-import consulo.dataContext.DataContext;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
+import consulo.codeEditor.action.ExtensionEditorActionHandler;
+import consulo.dataContext.DataContext;
+import consulo.language.editor.completion.lookup.LookupManager;
+import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.ScrollingUtil;
-import jakarta.inject.Inject;
 
-public class HomeHandler extends EditorActionHandler {
-  private final EditorActionHandler myOriginalHandler;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-  @Inject
-  public HomeHandler(EditorActionHandler originalHandler){
-    myOriginalHandler = originalHandler;
-  }
+@ExtensionImpl
+public class HomeHandler extends EditorActionHandler implements ExtensionEditorActionHandler {
+  private EditorActionHandler myOriginalHandler;
 
   @Override
-  public void doExecute(Editor editor, Caret caret, DataContext dataContext){
+  public void doExecute(Editor editor, Caret caret, DataContext dataContext) {
     LookupImpl lookup = (LookupImpl)LookupManager.getActiveLookup(editor);
     if (lookup == null || !lookup.isFocused()) {
       myOriginalHandler.execute(editor, caret, dataContext);
@@ -42,5 +43,16 @@ public class HomeHandler extends EditorActionHandler {
 
     lookup.markSelectionTouched();
     ScrollingUtil.moveHome(lookup.getList());
+  }
+
+  @Override
+  public void init(@Nullable EditorActionHandler originalHandler) {
+    myOriginalHandler = originalHandler;
+  }
+
+  @Nonnull
+  @Override
+  public String getActionId() {
+    return IdeActions.ACTION_EDITOR_MOVE_LINE_START;
   }
 }

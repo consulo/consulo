@@ -15,6 +15,10 @@
  */
 package consulo.ide.impl.psi.codeStyle.lineIndent;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.application.Application;
+import consulo.component.extension.ExtensionPoint;
 import consulo.language.Language;
 import consulo.codeEditor.Editor;
 import consulo.project.Project;
@@ -28,7 +32,14 @@ import javax.annotation.Nullable;
  * current editor and language context OR if a line indent provider can't calculate the indent (returns {@code null}), the document is
  * committed and a formatter-based line indent calculation is performed.
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface LineIndentProvider {
+  @Nullable
+  public static LineIndentProvider findLineIndentProvider(@Nullable Language language) {
+    ExtensionPoint<LineIndentProvider> point = Application.get().getExtensionPoint(LineIndentProvider.class);
+    return point.findFirstSafe(it -> it.isSuitableFor(language));
+  }
+
   /**
    * Marker object to indicate that no further formatter-based indent adjustment must be made.
    */

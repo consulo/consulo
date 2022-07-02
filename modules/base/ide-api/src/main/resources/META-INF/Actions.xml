@@ -1947,8 +1947,8 @@
     </group>
 
 
-    <action id="EditorLookupUp" class="consulo.ide.impl.idea.codeInsight.lookup.impl.LookupActionHandler$UpAction"/>
-    <action id="EditorLookupDown" class="consulo.ide.impl.idea.codeInsight.lookup.impl.LookupActionHandler$DownAction"/>
+    <!--<action id="EditorLookupUp" class="consulo.ide.impl.idea.codeInsight.lookup.impl.LookupActionHandler$UpAction"/>-->
+    <!--<action id="EditorLookupDown" class="consulo.ide.impl.idea.codeInsight.lookup.impl.LookupActionHandler$DownAction"/>-->
 
     <action id="RerunFailedTests" class="consulo.ide.impl.idea.execution.testframework.actions.RerunFailedTestsAction"
             icon="consulo.platform.base.PlatformIconGroup@runconfigurations.rerunfailedtests"/>

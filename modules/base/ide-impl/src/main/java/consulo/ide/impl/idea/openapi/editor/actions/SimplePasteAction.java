@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
@@ -29,6 +30,7 @@ public class SimplePasteAction extends EditorAction {
     super(new BasePasteHandler());
   }
 
+  @RequiredUIAccess
   @Override
   public void update(AnActionEvent e) {
     super.update(e);

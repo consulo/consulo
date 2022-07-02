@@ -15,16 +15,16 @@
  */
 package consulo.ide.impl.idea.codeInsight.lookup.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ui.UISettings;
 import consulo.codeEditor.Caret;
-import consulo.codeEditor.action.EditorActionHandler;
 import consulo.dataContext.DataContext;
+import consulo.ui.ex.action.IdeActions;
 
+import javax.annotation.Nonnull;
+
+@ExtensionImpl
 public class LookupActionUpHandler extends LookupActionHandler {
-  public LookupActionUpHandler(EditorActionHandler originalHandler) {
-    super(originalHandler);
-  }
-
   @Override
   protected void executeInLookup(final LookupImpl lookup, DataContext context, Caret caret) {
     if (!UISettings.getInstance().getCycleScrolling() && !lookup.isFocused() && lookup.getList().getSelectedIndex() == 0) {
@@ -34,4 +34,9 @@ public class LookupActionUpHandler extends LookupActionHandler {
     executeUpOrDown(lookup, true);
   }
 
+  @Nonnull
+  @Override
+  public String getActionId() {
+    return IdeActions.ACTION_EDITOR_MOVE_CARET_UP;
+  }
 }

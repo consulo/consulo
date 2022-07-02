@@ -15,23 +15,12 @@
  */
 package consulo.ide.impl.idea.codeInsight.lookup.impl;
 
-import consulo.annotation.component.ExtensionImpl;
-import consulo.codeEditor.Caret;
-import consulo.dataContext.DataContext;
-import consulo.ui.ex.action.IdeActions;
+import consulo.annotation.component.ActionImpl;
+import consulo.codeEditor.impl.action.EditorAction;
 
-import javax.annotation.Nonnull;
-
-@ExtensionImpl
-public class LookupActionDownHandler extends LookupActionHandler {
-  @Override
-  protected void executeInLookup(final LookupImpl lookup, DataContext context, Caret caret) {
-    executeUpOrDown(lookup, false);
-  }
-
-  @Nonnull
-  @Override
-  public String getActionId() {
-    return IdeActions.ACTION_EDITOR_MOVE_CARET_DOWN;
+@ActionImpl(id = "EditorLookupUp")
+public class LookupHandlerUpAction extends EditorAction {
+  public LookupHandlerUpAction() {
+    super(new LookupActionHandler.UpDownInEditorHandler(true));
   }
 }

@@ -75,7 +75,7 @@ public class EnterBetweenBracesFinalHandler extends EnterHandlerDelegateAdapter 
   @Nonnull
   protected EnterBetweenBracesDelegate getLanguageImplementation(@Nullable Language language) {
     if (language != null) {
-      final EnterBetweenBracesDelegate helper = EnterBetweenBracesDelegate.EP_NAME.forLanguage(language);
+      final EnterBetweenBracesDelegate helper = EnterBetweenBracesDelegate.forLanguage(language);
       if (helper != null) {
         return helper;
       }
@@ -83,7 +83,13 @@ public class EnterBetweenBracesFinalHandler extends EnterHandlerDelegateAdapter 
     return ourDefaultBetweenDelegate;
   }
 
-  protected static EnterBetweenBracesDelegate ourDefaultBetweenDelegate = new EnterBetweenBracesDelegate();
+  protected static EnterBetweenBracesDelegate ourDefaultBetweenDelegate = new EnterBetweenBracesDelegate() {
+    @Nonnull
+    @Override
+    public Language getLanguage() {
+      return Language.ANY;
+    }
+  };
 
   protected static boolean isValidOffset(int offset, CharSequence text) {
     return offset >= 0 && offset < text.length();

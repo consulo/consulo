@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
@@ -42,6 +43,7 @@ public class PasteFromX11Action extends EditorAction {
     super(new Handler());
   }
 
+  @RequiredUIAccess
   @Override
   public void update(AnActionEvent e) {
     Presentation presentation = e.getPresentation();

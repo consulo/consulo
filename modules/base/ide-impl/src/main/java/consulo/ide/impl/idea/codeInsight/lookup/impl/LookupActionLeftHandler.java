@@ -23,15 +23,24 @@ import consulo.ui.ex.action.IdeActions;
 import javax.annotation.Nonnull;
 
 @ExtensionImpl
-public class LookupActionDownHandler extends LookupActionHandler {
+public class LookupActionLeftHandler extends LookupActionHandler {
   @Override
   protected void executeInLookup(final LookupImpl lookup, DataContext context, Caret caret) {
-    executeUpOrDown(lookup, false);
+    if (!lookup.isCompletion()) {
+      myOriginalHandler.execute(lookup.getEditor(), caret, context);
+      return;
+    }
+
+    if (!lookup.performGuardedChange(() -> lookup.getEditor().getSelectionModel().removeSelection())) {
+      return;
+    }
+
+    BackspaceHandler.truncatePrefix(context, lookup, myOriginalHandler, lookup.getLookupStart() - 1, caret);
   }
 
   @Nonnull
   @Override
   public String getActionId() {
-    return IdeActions.ACTION_EDITOR_MOVE_CARET_DOWN;
+    return IdeActions.ACTION_EDITOR_MOVE_CARET_LEFT;
   }
 }

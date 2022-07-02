@@ -165,10 +165,6 @@
       <with attribute="implementationClass" implements="consulo.codeEditor.action.EditorActionHandler"/>
     </extensionPoint>
 
-    <extensionPoint name="editorTypedHandler" beanClass="consulo.codeEditor.action.EditorTypedHandlerBean">
-      <with attribute="implementationClass" implements="consulo.codeEditor.action.TypedActionHandler"/>
-    </extensionPoint>
-
 
     <extensionPoint name="customFileDropHandler" area="PROJECT" interface="consulo.ide.impl.idea.openapi.editor.CustomFileDropHandler"/>
 
@@ -375,9 +371,6 @@
     <extensionPoint name="backspaceHandlerDelegate" interface="consulo.language.editor.action.BackspaceHandlerDelegate"/>
     <extensionPoint name="editor.backspaceModeOverride" beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="consulo.codeEditor.action.BackspaceModeOverride"/>
-    </extensionPoint>
-    <extensionPoint name="enterBetweenBracesDelegate" beanClass="consulo.language.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="consulo.ide.impl.idea.codeInsight.editorActions.enter.EnterBetweenBracesDelegate"/>
     </extensionPoint>
 
     <extensionPoint name="codeStyleSettingsProvider"
@@ -1324,7 +1317,7 @@
     </intentionAction>
 
     <!-- CodeInsightSettings -->
-    <editorActionHandler action="EditorEnter" implementationClass="consulo.ide.impl.idea.codeInsight.editorActions.EnterHandler" id="editorEnter"/>
+    <!--<editorActionHandler action="EditorEnter" implementationClass="consulo.ide.impl.idea.codeInsight.editorActions.EnterHandler" id="editorEnter"/>-->
     <editorActionHandler action="EditorLineEnd" implementationClass="consulo.ide.impl.idea.codeInsight.editorActions.EndHandler"/>
     <editorActionHandler action="EditorSelectWord" implementationClass="consulo.ide.impl.idea.codeInsight.editorActions.SelectWordHandler"/>
     <editorActionHandler action="EditorUnSelectWord" implementationClass="consulo.ide.impl.idea.codeInsight.editorActions.UnSelectWordHandler"/>
@@ -1335,22 +1328,21 @@
     <editorActionHandler action="EditorBackSpace" implementationClass="consulo.ide.impl.idea.codeInsight.editorActions.BackspaceHandler"/>
     <editorActionHandler action="EditorDeleteToWordStart"
                          implementationClass="consulo.ide.impl.idea.codeInsight.editorActions.BackspaceToWordStartHandler"/>
-    <editorTypedHandler implementationClass="consulo.ide.impl.idea.codeInsight.editorActions.TypedHandler" order="first"/>
 
     <editorActionHandler action="EditorDuplicate" implementationClass="consulo.ide.impl.idea.openapi.editor.actions.NamedElementDuplicateHandler"/>
 
     <!-- LookupManagerActions -->
-    <editorActionHandler action="EditorUp" implementationClass="consulo.ide.impl.idea.codeInsight.lookup.impl.LookupActionUpHandler"/>
-    <editorActionHandler action="EditorDown" implementationClass="consulo.ide.impl.idea.codeInsight.lookup.impl.LookupActionDownHandler"/>
-    <editorActionHandler action="EditorPageUp"
-                         implementationClass="consulo.ide.impl.idea.codeInsight.lookup.impl.LookupActionHandler$PageUpHandler"/>
-    <editorActionHandler action="EditorPageDown"
-                         implementationClass="consulo.ide.impl.idea.codeInsight.lookup.impl.LookupActionHandler$PageDownHandler"/>
-    <editorActionHandler action="EditorLeft" implementationClass="consulo.ide.impl.idea.codeInsight.lookup.impl.LookupActionHandler$LeftHandler"/>
-    <editorActionHandler action="EditorRight" implementationClass="consulo.ide.impl.idea.codeInsight.lookup.impl.LookupActionHandler$RightHandler"/>
-    <editorActionHandler action="EditorLineStart" implementationClass="consulo.ide.impl.idea.codeInsight.lookup.impl.HomeHandler"/>
-    <editorActionHandler action="EditorLineEnd" implementationClass="consulo.ide.impl.idea.codeInsight.lookup.impl.EndHandler"/>
-    <editorActionHandler action="EditorBackSpace" implementationClass="consulo.ide.impl.idea.codeInsight.lookup.impl.BackspaceHandler"/>
+    <!--<editorActionHandler action="EditorUp" implementationClass="consulo.ide.impl.idea.codeInsight.lookup.impl.LookupActionUpHandler"/>-->
+    <!--<editorActionHandler action="EditorDown" implementationClass="consulo.ide.impl.idea.codeInsight.lookup.impl.LookupActionDownHandler"/>-->
+    <!--<editorActionHandler action="EditorPageUp"-->
+                         <!--implementationClass="consulo.ide.impl.idea.codeInsight.lookup.impl.LookupActionHandler$PageUpHandler"/>-->
+    <!--<editorActionHandler action="EditorPageDown"-->
+                         <!--implementationClass="consulo.ide.impl.idea.codeInsight.lookup.impl.LookupActionHandler$PageDownHandler"/>-->
+    <!--<editorActionHandler action="EditorLeft" implementationClass="consulo.ide.impl.idea.codeInsight.lookup.impl.LookupActionHandler$LeftHandler"/>-->
+    <!--<editorActionHandler action="EditorRight" implementationClass="consulo.ide.impl.idea.codeInsight.lookup.impl.LookupActionHandler$RightHandler"/>-->
+    <!--<editorActionHandler action="EditorLineStart" implementationClass="consulo.ide.impl.idea.codeInsight.lookup.impl.HomeHandler"/>-->
+    <!--<editorActionHandler action="EditorLineEnd" implementationClass="consulo.ide.impl.idea.codeInsight.lookup.impl.EndHandler"/>-->
+    <!--<editorActionHandler action="EditorBackSpace" implementationClass="consulo.ide.impl.idea.codeInsight.lookup.impl.BackspaceHandler"/>-->
 
     <!-- TemplateManagerActions -->
     <editorActionHandler action="EditorEscape" implementationClass="consulo.ide.impl.idea.codeInsight.template.impl.editorActions.EscapeHandler"
@@ -1484,11 +1476,6 @@
 
 
     <bidiRegionsSeparator language="" implementationClass="consulo.ide.impl.idea.openapi.editor.bidi.PlainTextBidiRegionsSeparator"/>
-
-
-    <lineIndentProvider
-        implementation="consulo.ide.impl.psi.impl.source.codeStyle.lineIndent.FormatterBasedLineIndentProvider"
-        order="last"/>
 
 
 

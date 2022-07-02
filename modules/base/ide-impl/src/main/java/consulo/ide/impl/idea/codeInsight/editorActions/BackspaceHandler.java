@@ -16,22 +16,21 @@
 
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
-import consulo.language.editor.action.BraceMatchingUtil;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
-import consulo.ide.impl.idea.openapi.editor.actionSystem.EditorWriteActionHandler;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.codeEditor.*;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.dataContext.DataContext;
 import consulo.document.util.TextRange;
-import consulo.language.editor.internal.PsiUtilBase;
+import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
+import consulo.ide.impl.idea.openapi.editor.actionSystem.EditorWriteActionHandler;
 import consulo.language.ast.IElementType;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.editor.action.BackspaceHandlerDelegate;
+import consulo.language.editor.action.BraceMatchingUtil;
 import consulo.language.editor.action.QuoteHandler;
 import consulo.language.editor.highlight.BraceMatcher;
 import consulo.language.editor.inject.EditorWindow;
+import consulo.language.editor.internal.PsiUtilBase;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
@@ -61,7 +60,7 @@ public class BackspaceHandler extends EditorWriteActionHandler {
   }
 
   protected boolean handleBackspace(Editor editor, Caret caret, DataContext dataContext, boolean toWordStart) {
-    Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    Project project = dataContext.getData(Project.KEY);
     if (project == null) return false;
 
     PsiFile file = PsiUtilBase.getPsiFileInEditor(editor, project);

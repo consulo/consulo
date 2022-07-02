@@ -2,11 +2,13 @@
 
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.CaretModel;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.action.EditorActionHandler;
+import consulo.codeEditor.action.ExtensionEditorActionHandler;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataContextWrapper;
 import consulo.dataContext.DataManager;
@@ -30,7 +32,6 @@ import consulo.language.codeStyle.FormatterUtil;
 import consulo.language.codeStyle.PostprocessReformattingAspect;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.CodeInsightSettings;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.action.CommentCompleteHandler;
 import consulo.language.editor.action.JavaLikeQuoteHandler;
 import consulo.language.editor.action.QuoteHandler;
@@ -47,6 +48,7 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.ex.action.IdeActions;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
@@ -55,15 +57,26 @@ import consulo.util.lang.ref.Ref;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class EnterHandler extends BaseEnterHandler {
+@ExtensionImpl(id = "editorEnter")
+public class EnterHandler extends BaseEnterHandler implements ExtensionEditorActionHandler {
   private static final Logger LOG = Logger.getInstance(EnterHandler.class);
 
-  private final EditorActionHandler myOriginalHandler;
   private final static Key<Language> CONTEXT_LANGUAGE = Key.create("EnterHandler.Language");
+  private EditorActionHandler myOriginalHandler;
 
-  public EnterHandler(EditorActionHandler originalHandler) {
+  public EnterHandler() {
     super(true);
+  }
+
+  @Override
+  public void init(@Nullable EditorActionHandler originalHandler) {
     myOriginalHandler = originalHandler;
+  }
+
+  @Nonnull
+  @Override
+  public String getActionId() {
+    return IdeActions.ACTION_EDITOR_ENTER;
   }
 
   @Override
@@ -73,7 +86,7 @@ public class EnterHandler extends BaseEnterHandler {
 
   @Override
   public void executeWriteAction(final Editor editor, final Caret caret, final DataContext dataContext) {
-    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final Project project = dataContext.getData(Project.KEY);
     if (project != null && !project.isDefault()) {
       PostprocessReformattingAspect.getInstance(project).disablePostprocessFormattingInside(() -> executeWriteActionInner(editor, caret, getExtendedContext(dataContext, project, caret), project));
     }

@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * {@link #getModificationCount()} will be changed if plugins reloaded, and cache was changed.
@@ -109,6 +110,43 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
 
       consumer.accept(extension, plugin);
     }
+  }
+
+  @Nullable
+  default E findFirstSafe(@Nonnull Predicate<E> predicate) {
+    for (E extension : getExtensionList()) {
+      try {
+        if (predicate.test(extension)) {
+          return extension;
+        }
+      }
+      catch (Throwable e) {
+        if (e instanceof ControlFlowException) {
+          throw ControlFlowException.rethrow(e);
+        }
+        PluginExceptionUtil.logPluginError(Logger.getInstance(ExtensionPoint.class), e.getMessage(), e, extension.getClass());
+      }
+    }
+    return null;
+  }
+
+  @Nullable
+  default <R> R computeSafeIfAny(@Nonnull Function<? super E, ? extends R> processor) {
+    for (E extension : getExtensionList()) {
+      try {
+        R result = processor.apply(extension);
+        if (result != null) {
+          return result;
+        }
+      }
+      catch (Throwable e) {
+        if (e instanceof ControlFlowException) {
+          throw ControlFlowException.rethrow(e);
+        }
+        PluginExceptionUtil.logPluginError(Logger.getInstance(ExtensionPoint.class), e.getMessage(), e, extension.getClass());
+      }
+    }
+    return null;
   }
 
   default void forEachExtensionSafe(@Nonnull Consumer<E> consumer) {

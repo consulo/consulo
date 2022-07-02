@@ -18,20 +18,23 @@ package consulo.ide.impl.idea.codeInsight.lookup.impl;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Caret;
 import consulo.dataContext.DataContext;
+import consulo.language.editor.completion.lookup.LookupFocusDegree;
 import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.awt.ScrollingUtil;
 
 import javax.annotation.Nonnull;
 
 @ExtensionImpl
-public class LookupActionDownHandler extends LookupActionHandler {
+public class LookupActionPageUpHandler extends LookupActionHandler {
   @Override
   protected void executeInLookup(final LookupImpl lookup, DataContext context, Caret caret) {
-    executeUpOrDown(lookup, false);
+    lookup.setFocusDegree(LookupFocusDegree.FOCUSED);
+    ScrollingUtil.movePageUp(lookup.getList());
   }
 
   @Nonnull
   @Override
   public String getActionId() {
-    return IdeActions.ACTION_EDITOR_MOVE_CARET_DOWN;
+    return IdeActions.ACTION_EDITOR_MOVE_CARET_PAGE_UP;
   }
 }

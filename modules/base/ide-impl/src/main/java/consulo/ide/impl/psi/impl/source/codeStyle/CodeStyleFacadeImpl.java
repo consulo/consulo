@@ -19,19 +19,18 @@
  */
 package consulo.ide.impl.psi.impl.source.codeStyle;
 
-import consulo.language.codeStyle.CodeStyle;
-import consulo.ide.impl.idea.codeStyle.CodeStyleFacade;
-import consulo.language.Language;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.project.Project;
-import consulo.language.psi.PsiDocumentManager;
-import consulo.language.codeStyle.CodeStyleManager;
+import consulo.document.Document;
+import consulo.ide.impl.idea.codeStyle.CodeStyleFacade;
 import consulo.ide.impl.psi.codeStyle.lineIndent.LineIndentProvider;
-import consulo.ide.impl.psi.codeStyle.lineIndent.LineIndentProviderEP;
-import javax.annotation.Nonnull;
+import consulo.language.Language;
+import consulo.language.codeStyle.CodeStyle;
+import consulo.language.codeStyle.CodeStyleManager;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.project.Project;
+import consulo.virtualFileSystem.fileType.FileType;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public abstract class CodeStyleFacadeImpl implements CodeStyleFacade {
@@ -63,7 +62,7 @@ public abstract class CodeStyleFacadeImpl implements CodeStyleFacade {
   @Override
   public String getLineIndent(@Nonnull Editor editor, @Nullable Language language, int offset, boolean allowDocCommit) {
     if (myProject == null) return null;
-    LineIndentProvider lineIndentProvider = LineIndentProviderEP.findLineIndentProvider(language);
+    LineIndentProvider lineIndentProvider = LineIndentProvider.findLineIndentProvider(language);
     String indent = lineIndentProvider != null ? lineIndentProvider.getLineIndent(myProject, editor, language, offset) : null;
     if (indent == LineIndentProvider.DO_NOT_ADJUST) {
       return allowDocCommit ? null : indent;
