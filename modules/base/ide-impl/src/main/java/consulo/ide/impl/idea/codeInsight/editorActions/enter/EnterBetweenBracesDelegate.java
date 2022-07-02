@@ -1,6 +1,8 @@
 // Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.editorActions.enter;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.component.extension.ExtensionPointCacheKey;
@@ -25,6 +27,7 @@ import javax.annotation.Nullable;
  * The procedure can skip parsing during typing only if the language-specific implementation is inherited
  * from <code>{@link EnterBetweenBracesNoCommitDelegate}</code>.
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class EnterBetweenBracesDelegate implements LanguageExtension {
   private static final Logger LOG = Logger.getInstance(EnterBetweenBracesDelegate.class);
   private static final ExtensionPointCacheKey<EnterBetweenBracesDelegate, ByLanguageValue<EnterBetweenBracesDelegate>> KEY = ExtensionPointCacheKey.create("EnterBetweenBracesDelegate", LanguageOneToOne.build());

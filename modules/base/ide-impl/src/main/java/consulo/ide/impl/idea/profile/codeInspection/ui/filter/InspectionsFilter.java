@@ -154,8 +154,7 @@ public abstract class InspectionsFilter {
     if(mySuitableLanguages.isEmpty()) {
       return true;
     }
-    final String languageId = tools.getDefaultState().getTool().getLanguage();
-    Language language  = languageId == null ? null : Language.findLanguageByID(languageId);
+    final Language language = tools.getDefaultState().getTool().getLanguage();
     return language != null && mySuitableLanguages.contains(language);
   }
 

@@ -544,13 +544,7 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
       final String shortName = toolWrapper.getShortName();
       HighlightDisplayKey key = HighlightDisplayKey.find(shortName);
       if (key == null) {
-        final InspectionEP extension = toolWrapper.getExtension();
-        Computable<String> computable = extension == null ? new Computable.PredefinedValueComputable<String>(toolWrapper.getDisplayName()) : new Computable<String>() {
-          @Override
-          public String compute() {
-            return extension.getDisplayName();
-          }
-        };
+        Computable<String> computable = () -> toolWrapper.getDisplayName();
         if (toolWrapper instanceof LocalInspectionToolWrapper) {
           key = HighlightDisplayKey.register(shortName, computable, ((LocalInspectionToolWrapper)toolWrapper).getID(), ((LocalInspectionToolWrapper)toolWrapper).getAlternativeID());
         }
@@ -689,7 +683,6 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
     for (final ToolsImpl toolList : myTools.values()) {
       if (toolList.isEnabled()) {
         for (InspectionToolWrapper toolWrapper : toolList.getAllTools()) {
-          toolWrapper.projectClosed(project);
           toolWrapper.cleanup(project);
         }
       }

@@ -94,7 +94,7 @@ public class InspectionListCellRenderer extends DefaultListCellRenderer implemen
   @Nonnull
   private static Image getIcon(@Nonnull InspectionToolWrapper tool) {
     Image icon = null;
-    final Language language = Language.findLanguageByID(tool.getLanguage());
+    final Language language = tool.getLanguage();
     if (language != null) {
       final LanguageFileType fileType = language.getAssociatedFileType();
       if (fileType != null) {

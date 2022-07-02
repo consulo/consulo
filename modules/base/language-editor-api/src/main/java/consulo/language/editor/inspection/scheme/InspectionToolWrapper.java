@@ -16,7 +16,6 @@
 package consulo.language.editor.inspection.scheme;
 
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.language.Language;
 import consulo.language.editor.inspection.CleanupLocalInspectionTool;
 import consulo.language.editor.inspection.GlobalInspectionContext;
@@ -34,139 +33,89 @@ import java.net.URL;
  * @author Dmitry Avdeev
  *         Date: 9/28/11
  */
-public abstract class InspectionToolWrapper<T extends InspectionProfileEntry, E extends InspectionEP> {
+public abstract class InspectionToolWrapper<T extends InspectionProfileEntry> {
   private static final Logger LOG = Logger.getInstance(InspectionToolWrapper.class);
 
-  protected T myTool;
-  protected final E myEP;
-
-  protected InspectionToolWrapper(@Nonnull E ep) {
-    this(null, ep);
-  }
+  protected final T myTool;
 
   protected InspectionToolWrapper(@Nonnull T tool) {
-    this(tool, null);
-  }
-
-  protected InspectionToolWrapper(@Nullable T tool, @Nullable E ep) {
-    assert tool != null || ep != null : "must not be both null";
-    myEP = ep;
     myTool = tool;
   }
 
   /** Copy ctor */
-  protected InspectionToolWrapper(@Nonnull InspectionToolWrapper<T, E> other) {
-    myEP = other.myEP;
+  protected InspectionToolWrapper(@Nonnull InspectionToolWrapper<T> other) {
     // we need to create a copy for buffering
     //noinspection unchecked
     myTool = other.myTool == null ? null : (T)Application.get().getUnbindedInstance(other.myTool.getClass());
   }
 
   public void initialize(@Nonnull GlobalInspectionContext context) {
-    projectOpened(context.getProject());
   }
 
   @Nonnull
-  public abstract InspectionToolWrapper<T, E> createCopy();
+  public abstract InspectionToolWrapper<T> createCopy();
 
   @Nonnull
   public T getTool() {
-    if (myTool == null) {
-      //noinspection unchecked
-      myTool = (T)myEP.instantiateTool();
-      if (!myTool.getShortName().equals(myEP.getShortName())) {
-        LOG.error("Short name not matched for " + myTool.getClass() + ": getShortName() = " + myTool.getShortName() + "; ep.shortName = " + myEP.getShortName());
-      }
-    }
     return myTool;
-  }
-
-  public E getEP() {
-    return myEP;
   }
 
   public boolean isInitialized() {
     return myTool != null;
   }
 
-  /**
-   * @see #isApplicable(Language)
-   */
   @Nullable
-  public String getLanguage() {
-    return myEP == null ? null : myEP.language;
+  public Language getLanguage() {
+    return getTool().getLanguage();
   }
 
   public boolean isApplicable(@Nonnull Language language) {
-    String langId = getLanguage();
-    return langId == null || language.getID().equals(langId);
+    return getLanguage() == language;
   }
 
   public boolean isCleanupTool() {
-    return myEP != null ? myEP.cleanupTool : getTool() instanceof CleanupLocalInspectionTool;
+    return getTool() instanceof CleanupLocalInspectionTool;
   }
 
   @Nonnull
   public String getShortName() {
-    return myEP != null ? myEP.getShortName() : getTool().getShortName();
+    return getTool().getShortName();
   }
 
   @Nonnull
   public String getDisplayName() {
-    if (myEP == null) {
       return getTool().getDisplayName();
-    }
-    else {
-      String name = myEP.getDisplayName();
-      return name == null ? getTool().getDisplayName() : name;
-    }
   }
 
   @Nonnull
   public String getGroupDisplayName() {
-    if (myEP == null) {
-      return getTool().getGroupDisplayName();
-    }
-    else {
-      String groupDisplayName = myEP.getGroupDisplayName();
-      return groupDisplayName == null ? getTool().getGroupDisplayName() : groupDisplayName;
-    }
+    return getTool().getGroupDisplayName();
   }
 
   public boolean isEnabledByDefault() {
-    return myEP == null ? getTool().isEnabledByDefault() : myEP.enabledByDefault;
+    return getTool().isEnabledByDefault();
   }
 
   @Nonnull
   public HighlightDisplayLevel getDefaultLevel() {
-    return myEP == null ? getTool().getDefaultLevel() : myEP.getDefaultLevel();
+    return getTool().getDefaultLevel();
   }
 
   @Nonnull
   public String[] getGroupPath() {
-    if (myEP == null) {
-      return getTool().getGroupPath();
-    }
-    else {
-      String[] path = myEP.getGroupPath();
-      return path == null ? getTool().getGroupPath() : path;
-    }
+    return getTool().getGroupPath();
   }
 
   public void projectOpened(@Nonnull Project project) {
-    if (myEP == null) {
-      getTool().projectOpened(project);
-    }
+
   }
 
   public void projectClosed(@Nonnull Project project) {
-    if (myEP == null) {
-      getTool().projectClosed(project);
-    }
+
   }
 
   public String getStaticDescription() {
-    return myEP == null || myEP.hasStaticDescription ? getTool().getStaticDescription() : null;
+    return getTool().getStaticDescription();
   }
 
   public String loadDescription() {
@@ -183,12 +132,7 @@ public abstract class InspectionToolWrapper<T extends InspectionProfileEntry, E 
   }
 
   protected URL getDescriptionUrl() {
-    Application app = ApplicationManager.getApplication();
-    if (myEP == null || app.isUnitTestMode() || app.isHeadlessEnvironment()) {
-      return superGetDescriptionUrl();
-    }
-    String fileName = getDescriptionFileName();
-    return myEP.getLoaderForClass().getResource("/inspectionDescriptions/" + fileName);
+    return superGetDescriptionUrl();
   }
 
   @Nullable
@@ -214,10 +158,6 @@ public abstract class InspectionToolWrapper<T extends InspectionProfileEntry, E 
 
   public String getMainToolId() {
     return getTool().getMainToolId();
-  }
-
-  public E getExtension() {
-    return myEP;
   }
 
   @Override

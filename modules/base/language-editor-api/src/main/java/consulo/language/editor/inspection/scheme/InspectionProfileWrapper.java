@@ -25,7 +25,6 @@ import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 
@@ -83,12 +82,6 @@ public class InspectionProfileWrapper {
   }
 
   public void init(@Nonnull Project project) {
-    final List<Tools> profileEntries = myProfile.getAllEnabledInspectionTools(project);
-    for (Tools profileEntry : profileEntries) {
-      for (ScopeToolState toolState : profileEntry.getTools()) {
-        toolState.getTool().projectOpened(project);
-      }
-    }
   }
 
   public void cleanup(@Nonnull Project project) {

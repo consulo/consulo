@@ -15,8 +15,9 @@
  */
 package consulo.language.editor.inspection.scheme;
 
-import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
+import consulo.language.Language;
 import consulo.language.editor.inspection.*;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.psi.PsiElement;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -24,7 +25,6 @@ import consulo.util.io.ResourceUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.*;
 import org.jdom.Element;
-import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -42,7 +42,6 @@ import java.util.Set;
  * @author anna
  * @since 28-Nov-2005
  */
-@SuppressWarnings("JavadocReference")
 public abstract class InspectionProfileEntry implements BatchSuppressableTool {
   public static final String GENERAL_GROUP_NAME = InspectionsBundle.message("inspection.general.tools.group.name");
 
@@ -53,7 +52,11 @@ public abstract class InspectionProfileEntry implements BatchSuppressableTool {
   private static final Object BLACK_LIST_LOCK = new Object();
   private Boolean myUseNewSerializer = null;
 
-  @NonNls
+  @Nullable
+  public Language getLanguage() {
+    return null;
+  }
+
   @Nullable
   public String getAlternativeID() {
     return null;
@@ -90,43 +93,11 @@ public abstract class InspectionProfileEntry implements BatchSuppressableTool {
   }
 
   public void cleanup(Project project) {
-
   }
 
-  public interface DefaultNameProvider {
-    @Nullable
-    String getDefaultShortName();
-
-    @Nullable
-    String getDefaultDisplayName();
-
-    @Nullable
-    String getDefaultGroupDisplayName();
-  }
-
-  protected volatile DefaultNameProvider myNameProvider = null;
-
-  /**
-   * @see consulo.ide.impl.idea.codeInspection.InspectionEP#groupDisplayName
-   * @see consulo.ide.impl.idea.codeInspection.InspectionEP#groupKey
-   * @see consulo.ide.impl.idea.codeInspection.InspectionEP#groupBundle
-   */
-  @Nls
   @Nonnull
-  public String getGroupDisplayName() {
-    if (myNameProvider != null) {
-      final String name = myNameProvider.getDefaultGroupDisplayName();
-      if (name != null) {
-        return name;
-      }
-    }
-    LOG.error(getClass() + ": group display name should be overridden or configured via XML " + getClass());
-    return "";
-  }
+  public abstract String getGroupDisplayName();
 
-  /**
-   * @see consulo.ide.impl.idea.codeInspection.InspectionEP#groupPath
-   */
   @Nonnull
   public String[] getGroupPath() {
     String groupDisplayName = getGroupDisplayName();
@@ -136,38 +107,12 @@ public abstract class InspectionProfileEntry implements BatchSuppressableTool {
     return new String[]{groupDisplayName};
   }
 
-  /**
-   * @see consulo.ide.impl.idea.codeInspection.InspectionEP#displayName
-   * @see consulo.ide.impl.idea.codeInspection.InspectionEP#key
-   * @see consulo.ide.impl.idea.codeInspection.InspectionEP#bundle
-   */
-  @Nls
   @Nonnull
-  public String getDisplayName() {
-    if (myNameProvider != null) {
-      final String name = myNameProvider.getDefaultDisplayName();
-      if (name != null) {
-        return name;
-      }
-    }
-    LOG.error(getClass() + ": display name should be overridden or configured via XML " + getClass());
-    return "";
-  }
+  public abstract String getDisplayName();
 
-  /**
-   * DO NOT OVERRIDE this method.
-   *
-   * @see consulo.ide.impl.idea.codeInspection.InspectionEP#shortName
-   */
   @NonNls
   @Nonnull
   public String getShortName() {
-    if (myNameProvider != null) {
-      final String name = myNameProvider.getDefaultShortName();
-      if (name != null) {
-        return name;
-      }
-    }
     return getShortName(getClass().getSimpleName());
   }
 
@@ -176,24 +121,10 @@ public abstract class InspectionProfileEntry implements BatchSuppressableTool {
     return StringUtil.trimEnd(StringUtil.trimEnd(className, "Inspection"), "InspectionBase");
   }
 
-  /**
-   * DO NOT OVERRIDE this method.
-   *
-   * @see consulo.ide.impl.idea.codeInspection.InspectionEP#level
-   */
   @Nonnull
-  public HighlightDisplayLevel getDefaultLevel() {
-    return HighlightDisplayLevel.WARNING;
-  }
+  public abstract HighlightDisplayLevel getDefaultLevel();
 
-  /**
-   * DO NOT OVERRIDE this method.
-   *
-   * @see consulo.ide.impl.idea.codeInspection.InspectionEP#enabledByDefault
-   */
-  public boolean isEnabledByDefault() {
-    return false;
-  }
+  public abstract boolean isEnabledByDefault();
 
   /**
    * This method is called each time UI is shown.
@@ -265,16 +196,12 @@ public abstract class InspectionProfileEntry implements BatchSuppressableTool {
     }
 
     try {
-      final BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
-      try {
+      try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()))) {
         String line;
         while ((line = reader.readLine()) != null) {
           line = line.trim();
           if (!line.isEmpty()) ourBlackList.add(line);
         }
-      }
-      finally {
-        reader.close();
       }
     }
     catch (IOException e) {
@@ -302,24 +229,6 @@ public abstract class InspectionProfileEntry implements BatchSuppressableTool {
   @Nullable
   protected SerializationFilter getSerializationFilter() {
     return DEFAULT_FILTER;
-  }
-
-  /**
-   * Initialize inspection with project. Is called on project opened for all profiles as well as on profile creation.
-   *
-   * @param project to be associated with this entry
-   * @deprecated this won't work for inspections configured via {@link consulo.ide.impl.idea.codeInspection.InspectionEP}
-   */
-  public void projectOpened(@Nonnull Project project) {
-  }
-
-  /**
-   * Cleanup inspection settings corresponding to the project. Is called on project closed for all profiles as well as on profile deletion.
-   *
-   * @param project to be disassociated from this entry
-   * @deprecated this won't work for inspections configured via {@link consulo.ide.impl.idea.codeInspection.InspectionEP}
-   */
-  public void projectClosed(@Nonnull Project project) {
   }
 
   /**

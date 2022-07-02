@@ -27,16 +27,17 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.inspection.GlobalInspectionTool;
 import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.editor.inspection.LocalInspectionTool;
-import consulo.language.editor.inspection.scheme.*;
+import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
+import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.logging.Logger;
 import jakarta.inject.Singleton;
-import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Supplier;
 
 /**
  * @author max
@@ -47,43 +48,21 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class InspectionToolRegistrar {
   private static final Logger LOG = Logger.getInstance(InspectionToolRegistrar.class);
 
-  private final List<Factory<InspectionToolWrapper>> myInspectionToolFactories = new ArrayList<Factory<InspectionToolWrapper>>();
+  private final List<Supplier<InspectionToolWrapper>> myInspectionToolFactories = new ArrayList<>();
 
   private final AtomicBoolean myInspectionComponentsLoaded = new AtomicBoolean(false);
 
   public void ensureInitialized() {
     if (!myInspectionComponentsLoaded.getAndSet(true)) {
-      for (final LocalInspectionEP ep : LocalInspectionEP.LOCAL_INSPECTION.getExtensionList()) {
-        myInspectionToolFactories.add(() -> new LocalInspectionToolWrapper(ep));
+      Application application = Application.get();
+      for (final LocalInspectionTool tool : application.getExtensionList(LocalInspectionTool.class)) {
+        myInspectionToolFactories.add(() -> new LocalInspectionToolWrapper(tool));
       }
 
-      for (final InspectionEP ep : InspectionEP.GLOBAL_INSPECTION.getExtensionList()) {
-        myInspectionToolFactories.add(() -> new GlobalInspectionToolWrapper(ep));
+      for (final GlobalInspectionTool tool : application.getExtensionList(GlobalInspectionTool.class)) {
+        myInspectionToolFactories.add(() -> new GlobalInspectionToolWrapper(tool));
       }
     }
-  }
-
-  @Nonnull
-  public static InspectionToolWrapper wrapTool(@Nonnull InspectionProfileEntry profileEntry) {
-    if (profileEntry instanceof LocalInspectionTool) {
-      return new LocalInspectionToolWrapper((LocalInspectionTool)profileEntry);
-    }
-    if (profileEntry instanceof GlobalInspectionTool) {
-      return new GlobalInspectionToolWrapper((GlobalInspectionTool)profileEntry);
-    }
-    throw new RuntimeException("unknown inspection class: " + profileEntry + "; " + profileEntry.getClass());
-  }
-
-
-  @Nonnull
-  private Factory<InspectionToolWrapper> registerInspectionTool(@Nonnull final Class aClass) {
-    if (LocalInspectionTool.class.isAssignableFrom(aClass)) {
-      return registerLocalInspection(aClass, true);
-    }
-    if (GlobalInspectionTool.class.isAssignableFrom(aClass)) {
-      return registerGlobalInspection(aClass, true);
-    }
-    throw new RuntimeException("unknown inspection class: " + aClass);
   }
 
   public static InspectionToolRegistrar getInstance() {
@@ -112,15 +91,14 @@ public class InspectionToolRegistrar {
   }
 
   @Nonnull
-  @TestOnly
   public List<InspectionToolWrapper> createTools() {
     ensureInitialized();
 
     final List<InspectionToolWrapper> tools = ContainerUtil.newArrayListWithCapacity(myInspectionToolFactories.size());
-    final Set<Factory<InspectionToolWrapper>> broken = ContainerUtil.newHashSet();
-    for (final Factory<InspectionToolWrapper> factory : myInspectionToolFactories) {
+    final Set<Supplier<InspectionToolWrapper>> broken = ContainerUtil.newHashSet();
+    for (final Supplier<InspectionToolWrapper> factory : myInspectionToolFactories) {
       ProgressManager.checkCanceled();
-      final InspectionToolWrapper toolWrapper = factory.create();
+      final InspectionToolWrapper toolWrapper = factory.get();
       if (toolWrapper != null && checkTool(toolWrapper) == null) {
         tools.add(toolWrapper);
       }

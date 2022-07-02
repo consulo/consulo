@@ -82,18 +82,11 @@ public class InspectionFilterAction extends DefaultActionGroup implements Toggle
     }
     addSeparator();
 
-    final Set<String> languageIds = new HashSet<String>();
+    final Set<Language> languages = new TreeSet<>(LanguageUtil.LANGUAGE_COMPARATOR);
     for (ScopeToolState state : profile.getDefaultStates(project)) {
-      ContainerUtil.addIfNotNull(languageIds, state.getTool().getLanguage());
+      ContainerUtil.addIfNotNull(languages, state.getTool().getLanguage());
     }
 
-    final Set<Language> languages = new TreeSet<Language>(LanguageUtil.LANGUAGE_COMPARATOR);
-    for (String id : languageIds) {
-      final Language language = Language.findLanguageByID(id);
-      if (language != null) {
-        languages.add(language);
-      }
-    }
     // if we dont have inspections for this languages, show it anyway
     languages.addAll(myInspectionsFilter.getSuitableLanguages());
 

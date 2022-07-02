@@ -108,7 +108,7 @@ public class InspectionManagerEx extends InspectionManagerBase {
     }
     final List<LocalQuickFix> actions = new ArrayList<LocalQuickFix>(Arrays.asList(tool.getBatchSuppressActions(null)));
     if (actions.isEmpty()) {
-      final Language language = Language.findLanguageByID(toolWrapper.getLanguage());
+      final Language language = toolWrapper.getLanguage();
       if (language != null) {
         final List<InspectionSuppressor> suppressors = LanguageInspectionSuppressors.INSTANCE.allForLanguage(language);
         for (InspectionSuppressor suppressor : suppressors) {

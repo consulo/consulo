@@ -59,7 +59,7 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-public class DuplicatesInspectionBase extends LocalInspectionTool {
+public abstract class DuplicatesInspectionBase extends LocalInspectionTool {
   public boolean myFilterOutGeneratedCode;
   private static final int MIN_FRAGMENT_SIZE = 3; // todo 3 statements constant
 

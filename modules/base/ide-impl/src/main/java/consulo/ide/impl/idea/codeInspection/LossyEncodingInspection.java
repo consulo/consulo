@@ -22,11 +22,7 @@
  */
 package consulo.ide.impl.idea.codeInspection;
 
-import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.vfs.encoding.ChangeFileEncodingAction;
-import consulo.ide.impl.idea.openapi.vfs.encoding.EncodingUtil;
-import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.bootstrap.charset.Native2AsciiCharset;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
@@ -34,10 +30,16 @@ import consulo.dataContext.DataManager;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.vfs.encoding.ChangeFileEncodingAction;
+import consulo.ide.impl.idea.openapi.vfs.encoding.EncodingUtil;
+import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.internal.PsiUtilBase;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.file.FileViewProvider;
 import consulo.language.impl.internal.psi.LoadTextUtil;
 import consulo.language.inject.InjectedLanguageManager;
@@ -49,7 +51,6 @@ import consulo.ui.ex.popup.ListPopup;
 import consulo.util.collection.SmartList;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -62,6 +63,7 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
 
+@ExtensionImpl
 public class LossyEncodingInspection extends LocalInspectionTool {
   private static final Logger LOG = Logger.getInstance(LossyEncodingInspection.class);
 
@@ -75,6 +77,17 @@ public class LossyEncodingInspection extends LocalInspectionTool {
     return InspectionsBundle.message("group.names.internationalization.issues");
   }
 
+  @Nonnull
+  @Override
+  public HighlightDisplayLevel getDefaultLevel() {
+    return HighlightDisplayLevel.WARNING;
+  }
+
+  @Override
+  public boolean isEnabledByDefault() {
+    return true;
+  }
+
   @Override
   @Nls
   @Nonnull
@@ -83,7 +96,6 @@ public class LossyEncodingInspection extends LocalInspectionTool {
   }
 
   @Override
-  @NonNls
   @Nonnull
   public String getShortName() {
     return "LossyEncoding";

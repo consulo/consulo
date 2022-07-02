@@ -15,8 +15,11 @@
  */
 package consulo.ide.impl.intelliLang.references;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.editor.inspection.LocalInspectionTool;
 import consulo.language.editor.inspection.ProblemsHolder;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiElementVisitor;
 import consulo.language.psi.PsiReference;
@@ -26,6 +29,7 @@ import javax.annotation.Nonnull;
  * @author Dmitry Avdeev
  *         Date: 05.08.13
  */
+@ExtensionImpl
 public class InjectedReferencesInspection extends LocalInspectionTool {
 
   @Nonnull
@@ -47,5 +51,28 @@ public class InjectedReferencesInspection extends LocalInspectionTool {
         super.visitElement(element);
       }
     };
+  }
+
+  @Nonnull
+  @Override
+  public HighlightDisplayLevel getDefaultLevel() {
+    return HighlightDisplayLevel.ERROR;
+  }
+
+  @Override
+  public boolean isEnabledByDefault() {
+    return true;
+  }
+
+  @Nonnull
+  @Override
+  public String getGroupDisplayName() {
+    return InspectionsBundle.message("inspection.general.tools.group.name");
+  }
+
+  @Nonnull
+  @Override
+  public String getDisplayName() {
+    return "Injected References";
   }
 }

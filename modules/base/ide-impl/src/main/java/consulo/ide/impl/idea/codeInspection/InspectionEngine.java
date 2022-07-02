@@ -297,21 +297,11 @@ public class InspectionEngine {
    */
   @Nullable
   public static Set<String> getDialectIdsSpecifiedForTool(@Nonnull LocalInspectionToolWrapper wrapper) {
-    String langId = wrapper.getLanguage();
-    if (langId == null) {
+    Language language = wrapper.getLanguage();
+    if (language == null) {
       return null;
     }
-    Language language = Language.findLanguageByID(langId);
-    Set<String> result;
-    if (language != null) {
-      result = new SmartHashSet<String>();
-      result.add(langId);
-    }
-    else {
-      // unknown language in plugin.xml, ignore
-      result = Collections.singleton(langId);
-    }
-    return result;
+    return Set.of(language.getID());
   }
 
   @Nonnull

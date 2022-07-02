@@ -15,10 +15,10 @@
  */
 package consulo.ide.impl.idea.codeStyle;
 
-import consulo.language.editor.inspection.LocalInspectionTool;
-import consulo.language.editor.inspection.LocalQuickFix;
-import consulo.language.editor.inspection.ProblemDescriptor;
-import consulo.language.editor.inspection.ProblemsHolder;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.ide.impl.idea.codeInsight.daemon.GroupNames;
+import consulo.language.editor.inspection.*;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.impl.internal.psi.LoadTextUtil;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
@@ -31,8 +31,31 @@ import javax.annotation.Nonnull;
 /**
  * @author Nikolay Matveev
  */
+@ExtensionImpl
 public class InconsistentLineSeparatorsInspection extends LocalInspectionTool {
-  
+  @Nonnull
+  @Override
+  public HighlightDisplayLevel getDefaultLevel() {
+    return HighlightDisplayLevel.WARNING;
+  }
+
+  @Override
+  public boolean isEnabledByDefault() {
+    return false;
+  }
+
+  @Nonnull
+  @Override
+  public String getGroupDisplayName() {
+    return GroupNames.PORTABILITY_GROUP_NAME;
+  }
+
+  @Nonnull
+  @Override
+  public String getDisplayName() {
+    return InspectionsBundle.message("inconsistent.line.separators");
+  }
+
   @Nonnull
   @Override
   public PsiElementVisitor buildVisitor(@Nonnull final ProblemsHolder holder, boolean isOnTheFly) {

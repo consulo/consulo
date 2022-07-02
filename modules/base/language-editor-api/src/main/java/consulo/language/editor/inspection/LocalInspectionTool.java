@@ -15,13 +15,14 @@
  */
 package consulo.language.editor.inspection;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.inspection.scheme.InspectionProfileEntry;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
 import org.intellij.lang.annotations.Language;
 import org.intellij.lang.annotations.Pattern;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -30,23 +31,15 @@ import java.util.List;
 /**
  * @author max
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class LocalInspectionTool extends InspectionProfileEntry {
   public static final LocalInspectionTool[] EMPTY_ARRAY = new LocalInspectionTool[0];
 
   private static final Logger LOG = Logger.getInstance(LocalInspectionTool.class);
 
-  public interface LocalDefaultNameProvider extends DefaultNameProvider {
-    @Nullable
-    String getDefaultID();
-
-    @Nullable
-    String getDefaultAlternativeID();
-  }
-
   /**
    * Pattern used for inspection ID validation.
    */
-  @NonNls
   @Language("RegExp")
   public static final String VALID_ID_PATTERN = "[a-zA-Z_0-9.-]+";
 
@@ -62,24 +55,14 @@ public abstract class LocalInspectionTool extends InspectionProfileEntry {
    * @return inspection tool ID.
    */
   @Pattern(VALID_ID_PATTERN)
-  @NonNls
   @Nonnull
   public String getID() {
-    if (myNameProvider instanceof LocalDefaultNameProvider) {
-      final String id = ((LocalDefaultNameProvider)myNameProvider).getDefaultID();
-      if (id != null) {
-        return id;
-      }
-    }
     return getShortName();
   }
 
-  @NonNls
+  @Override
   @Nullable
   public String getAlternativeID() {
-    if (myNameProvider instanceof LocalDefaultNameProvider) {
-      return ((LocalDefaultNameProvider)myNameProvider).getDefaultAlternativeID();
-    }
     return null;
   }
 
@@ -198,6 +181,4 @@ public abstract class LocalInspectionTool extends InspectionProfileEntry {
 
     return holder.getResults();
   }
-
-
 }

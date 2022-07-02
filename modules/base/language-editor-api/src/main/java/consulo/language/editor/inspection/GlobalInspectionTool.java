@@ -15,6 +15,8 @@
  */
 package consulo.language.editor.inspection;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.editor.inspection.reference.RefEntity;
 import consulo.language.editor.inspection.reference.RefGraphAnnotator;
@@ -42,6 +44,7 @@ import javax.annotation.Nullable;
  * @see LocalInspectionTool
  * @since 6.0
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class GlobalInspectionTool extends InspectionProfileEntry {
   @Nonnull
   @Override

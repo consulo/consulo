@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.codeInspection.ex;
 
 import consulo.language.editor.inspection.GlobalInspectionContext;
 import consulo.language.editor.inspection.GlobalInspectionTool;
-import consulo.language.editor.inspection.scheme.InspectionEP;
 import consulo.language.editor.inspection.LocalInspectionTool;
 import consulo.language.editor.inspection.reference.RefGraphAnnotator;
 import consulo.ide.impl.idea.codeInspection.reference.RefManagerImpl;
@@ -32,17 +31,9 @@ import javax.annotation.Nonnull;
  * User: anna
  * Date: 28-Dec-2005
  */
-public class GlobalInspectionToolWrapper extends InspectionToolWrapper<GlobalInspectionTool, InspectionEP> {
+public class GlobalInspectionToolWrapper extends InspectionToolWrapper<GlobalInspectionTool> {
   public GlobalInspectionToolWrapper(@Nonnull GlobalInspectionTool globalInspectionTool) {
     super(globalInspectionTool);
-  }
-
-  public GlobalInspectionToolWrapper(@Nonnull GlobalInspectionTool tool, @Nonnull InspectionEP ep) {
-    super(tool, ep);
-  }
-
-  public GlobalInspectionToolWrapper(@Nonnull InspectionEP ep) {
-    super(ep);
   }
 
   private GlobalInspectionToolWrapper(@Nonnull GlobalInspectionToolWrapper other) {

@@ -16,25 +16,6 @@
 
 package consulo.ide.impl.idea.codeInspection.ex;
 
-import consulo.ide.impl.idea.analysis.AnalysisUIOptions;
-import consulo.ide.impl.idea.analysis.PerformAnalysisInBackgroundOption;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.HighlightInfoProcessor;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.LocalInspectionsPass;
-import consulo.ide.impl.idea.codeInspection.GlobalSimpleInspectionTool;
-import consulo.ide.impl.idea.codeInspection.reference.RefManagerImpl;
-import consulo.ide.impl.idea.codeInspection.ui.DefaultInspectionToolPresentation;
-import consulo.ide.impl.idea.codeInspection.ui.InspectionResultsView;
-import consulo.ide.impl.idea.codeInspection.ui.InspectionToolPresentation;
-import consulo.ide.impl.idea.concurrency.JobLauncherImpl;
-import consulo.ide.impl.idea.openapi.components.impl.ProjectPathMacroManager;
-import consulo.ide.impl.idea.openapi.util.JDOMUtil;
-import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.content.event.ContentManagerAdapter;
-import consulo.ide.impl.idea.util.ConcurrencyUtil;
-import consulo.ide.impl.idea.util.SequentialModalProgressTask;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
@@ -53,6 +34,23 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.analysis.AnalysisUIOptions;
+import consulo.ide.impl.idea.analysis.PerformAnalysisInBackgroundOption;
+import consulo.ide.impl.idea.codeInsight.daemon.impl.HighlightInfoProcessor;
+import consulo.ide.impl.idea.codeInsight.daemon.impl.LocalInspectionsPass;
+import consulo.ide.impl.idea.codeInspection.GlobalSimpleInspectionTool;
+import consulo.ide.impl.idea.codeInspection.reference.RefManagerImpl;
+import consulo.ide.impl.idea.codeInspection.ui.DefaultInspectionToolPresentation;
+import consulo.ide.impl.idea.codeInspection.ui.InspectionResultsView;
+import consulo.ide.impl.idea.codeInspection.ui.InspectionToolPresentation;
+import consulo.ide.impl.idea.concurrency.JobLauncherImpl;
+import consulo.ide.impl.idea.openapi.components.impl.ProjectPathMacroManager;
+import consulo.ide.impl.idea.openapi.util.JDOMUtil;
+import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.util.ConcurrencyUtil;
+import consulo.ide.impl.idea.util.SequentialModalProgressTask;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.FileModificationService;
 import consulo.language.editor.annotation.ProblemGroup;
 import consulo.language.editor.inspection.*;
@@ -82,6 +80,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;
+import consulo.ui.ex.content.event.ContentManagerAdapter;
 import consulo.ui.ex.content.event.ContentManagerEvent;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.io.CharsetToolkit;
@@ -801,16 +800,7 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
   public InspectionToolPresentation getPresentation(@Nonnull InspectionToolWrapper toolWrapper) {
     InspectionToolPresentation presentation = myPresentationMap.get(toolWrapper);
     if (presentation == null) {
-      Class<?> presentationClass = null;
-
-      if (toolWrapper.getEP() != null && !StringUtil.isEmpty(toolWrapper.getEP().presentation)) {
-        presentationClass = toolWrapper.getEP().findClassNoExceptions(toolWrapper.getEP().presentation);
-      }
-
-      if (presentationClass == null) {
-        presentationClass = DefaultInspectionToolPresentation.class;
-      }
-
+      Class<?> presentationClass = DefaultInspectionToolPresentation.class;
       try {
         Constructor<?> constructor = presentationClass.getConstructor(InspectionToolWrapper.class, GlobalInspectionContextImpl.class);
         presentation = (InspectionToolPresentation)constructor.newInstance(toolWrapper, this);

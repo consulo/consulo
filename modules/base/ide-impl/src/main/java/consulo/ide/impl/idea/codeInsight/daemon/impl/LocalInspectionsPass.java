@@ -648,10 +648,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
         wrapper = globalInspectionToolWrapper.getSharedLocalInspectionToolWrapper();
       }
       if (wrapper == null) continue;
-      String language = wrapper.getLanguage();
-      if (language != null && Language.findLanguageByID(language) == null) {
-        continue; // filter out at least unknown languages
-      }
+
       if (myIgnoreSuppressed && SuppressionUtil.inspectionResultSuppressed(getFile(), wrapper.getTool())) {
         continue;
       }

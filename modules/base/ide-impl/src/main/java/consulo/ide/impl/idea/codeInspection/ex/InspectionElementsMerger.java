@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.codeInspection.ex;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.editor.annotation.HighlightSeverity;
@@ -26,8 +28,9 @@ import java.util.*;
 /**
  * Merges multiple inspections settings {@link #getSourceToolNames()} into another one {@link #getMergedToolName()}
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class InspectionElementsMerger {
-  public static final ExtensionPointName<InspectionElementsMerger> EP_NAME = ExtensionPointName.create("consulo.inspectionElementsMerger");
+  public static final ExtensionPointName<InspectionElementsMerger> EP_NAME = ExtensionPointName.create(InspectionElementsMerger.class);
 
   protected abstract String getMergedToolName();
 
