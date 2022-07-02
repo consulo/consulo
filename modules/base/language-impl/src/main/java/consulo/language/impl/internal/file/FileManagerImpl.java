@@ -10,10 +10,7 @@ import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.language.Language;
 import consulo.language.content.FileIndexFacade;
-import consulo.language.file.FileViewProvider;
-import consulo.language.file.FileViewProviderFactory;
-import consulo.language.file.LanguageFileViewProviders;
-import consulo.language.file.VirtualFileViewProviderFactory;
+import consulo.language.file.*;
 import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.language.impl.DebugUtil;
@@ -257,7 +254,7 @@ public final class FileManagerImpl implements FileManager {
   public FileViewProvider createFileViewProvider(@Nonnull final VirtualFile file, boolean eventSystemEnabled) {
     FileType fileType = file.getFileType();
     Language language = LanguageUtil.getLanguageForPsi(myManager.getProject(), file);
-    FileViewProviderFactory factory = language == null ? VirtualFileViewProviderFactory.forFileType(fileType) : LanguageFileViewProviders.INSTANCE.forLanguage(language);
+    FileViewProviderFactory factory = language == null ? VirtualFileViewProviderFactory.forFileType(fileType) : LanguageFileViewProviderFactory.forLanguage(language);
     FileViewProvider viewProvider = factory == null ? null : factory.createFileViewProvider(file, language, myManager, eventSystemEnabled);
 
     return viewProvider == null ? new SingleRootFileViewProvider(myManager, file, eventSystemEnabled) : viewProvider;

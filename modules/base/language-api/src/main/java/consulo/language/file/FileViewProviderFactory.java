@@ -22,10 +22,10 @@ import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 
 /**
- * Register in extension point {@code com.intellij.fileType.fileViewProviderFactory}
- * or {@code consulo.ide.impl.idea.lang.fileViewProviderFactory}.
- *
  * @author yole
+ *
+ * @see VirtualFileViewProviderFactory
+ * @see LanguageFileViewProviderFactory
  */
 public interface FileViewProviderFactory {
   FileViewProvider createFileViewProvider(@Nonnull VirtualFile file, Language language, @Nonnull PsiManager manager, boolean eventSystemEnabled);

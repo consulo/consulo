@@ -138,8 +138,8 @@ public class InjectedLanguageManagerImpl extends InjectedLanguageManager impleme
     Map<Class<?>, MultiHostInjector[]> injectors = new HashMap<>();
 
     MultiMap<Class<? extends PsiElement>, MultiHostInjector> allInjectors = new MultiMap<>();
-    for (MultiHostInjectorExtensionPoint extensionPoint : MultiHostInjector.EP_NAME.getExtensionList(myProject)) {
-      allInjectors.putValue(extensionPoint.getKey(), extensionPoint.getInstance(myProject));
+    for (MultiHostInjector multiHostInjector : myProject.getExtensionList(MultiHostInjector.class)) {
+      allInjectors.putValue(multiHostInjector.getElementClass(), multiHostInjector);
     }
     if (LanguageInjector.EXTENSION_POINT_NAME.hasAnyExtensions()) {
       allInjectors.putValue(PsiLanguageInjectionHost.class, PsiManagerRegisteredInjectorsAdapter.INSTANCE);
@@ -419,6 +419,12 @@ public class InjectedLanguageManagerImpl extends InjectedLanguageManager impleme
 
   private static class PsiManagerRegisteredInjectorsAdapter implements MultiHostInjector {
     public static final PsiManagerRegisteredInjectorsAdapter INSTANCE = new PsiManagerRegisteredInjectorsAdapter();
+
+    @Nonnull
+    @Override
+    public Class<? extends PsiElement> getElementClass() {
+      return PsiLanguageInjectionHost.class;
+    }
 
     @Override
     public void injectLanguages(@Nonnull final MultiHostRegistrar injectionPlacesRegistrar, @Nonnull PsiElement context) {

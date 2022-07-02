@@ -33,7 +33,7 @@ import java.util.List;
 public final class ConcatenationInjectorManager extends SimpleModificationTracker {
   @Nonnull
   public static ConcatenationInjectorManager getInstance(@Nonnull Project project) {
-    return project.getComponent(ConcatenationInjectorManager.class);
+    return project.getInstance(ConcatenationInjectorManager.class);
   }
 
   private final List<ConcatenationAwareInjector> myConcatenationInjectors = Lists.newLockFreeCopyOnWriteList();
@@ -72,6 +72,12 @@ public final class ConcatenationInjectorManager extends SimpleModificationTracke
 
     public BaseConcatenation2InjectorAdapter(@Nonnull Project project) {
       myProject = project;
+    }
+
+    @Nonnull
+    @Override
+    public Class<? extends PsiElement> getElementClass() {
+      throw new UnsupportedOperationException();
     }
 
     @Override

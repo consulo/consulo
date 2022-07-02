@@ -23,10 +23,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
-import consulo.language.file.FileViewProvider;
-import consulo.language.file.FileViewProviderFactory;
-import consulo.language.file.LanguageFileType;
-import consulo.language.file.LanguageFileViewProviders;
+import consulo.language.file.*;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.language.impl.ast.FileElement;
 import consulo.language.impl.ast.TreeElement;
@@ -171,7 +168,7 @@ public class PsiFileFactoryImpl extends PsiFileFactory {
                                     @Nonnull LanguageVersion languageVersion,
                                     final boolean physical,
                                     final boolean markAsCopy) {
-    final FileViewProviderFactory factory = LanguageFileViewProviders.INSTANCE.forLanguage(language);
+    final FileViewProviderFactory factory = LanguageFileViewProviderFactory.forLanguage(language);
     FileViewProvider viewProvider = factory != null ? factory.createFileViewProvider(virtualFile, language, myManager, physical) : null;
     if (viewProvider == null) viewProvider = new SingleRootFileViewProvider(myManager, virtualFile, physical);
 
@@ -202,7 +199,7 @@ public class PsiFileFactoryImpl extends PsiFileFactory {
     final LightVirtualFile virtualFile = new LightVirtualFile(name, fileType, text, modificationStamp);
 
     final ParserDefinition parserDefinition = ParserDefinition.forLanguage(language);
-    final FileViewProviderFactory factory = LanguageFileViewProviders.INSTANCE.forLanguage(language);
+    final FileViewProviderFactory factory = LanguageFileViewProviderFactory.forLanguage(language);
     FileViewProvider viewProvider = factory != null ? factory.createFileViewProvider(virtualFile, language, myManager, physical) : null;
     if (viewProvider == null) viewProvider = new SingleRootFileViewProvider(myManager, virtualFile, physical);
 

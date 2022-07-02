@@ -191,7 +191,7 @@ public class FoldingUpdate {
   private static boolean supportsDumbModeFolding(@Nonnull PsiFile file) {
     final FileViewProvider viewProvider = file.getViewProvider();
     for (final Language language : viewProvider.getLanguages()) {
-      final FoldingBuilder foldingBuilder = LanguageFolding.INSTANCE.forLanguage(language);
+      final FoldingBuilder foldingBuilder = FoldingBuilder.forLanguageComposite(language);
       if (foldingBuilder != null && !DumbService.isDumbAware(foldingBuilder)) return false;
     }
     return true;
@@ -217,7 +217,7 @@ public class FoldingUpdate {
 
     for (Language language : languages) {
       final PsiFile psi = viewProvider.getPsi(language);
-      final FoldingBuilder foldingBuilder = LanguageFolding.INSTANCE.forLanguage(language);
+      final FoldingBuilder foldingBuilder = FoldingBuilder.forLanguageComposite(language);
       if (psi != null && foldingBuilder != null) {
         for (FoldingDescriptor descriptor : LanguageFolding.buildFoldingDescriptors(foldingBuilder, psi, document, quick)) {
           PsiElement psiElement = descriptor.getElement().getPsi();

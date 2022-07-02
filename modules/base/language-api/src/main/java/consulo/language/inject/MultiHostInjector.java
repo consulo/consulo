@@ -22,6 +22,8 @@
  */
 package consulo.language.inject;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiLanguageInjectionHost;
@@ -31,8 +33,10 @@ import javax.annotation.Nonnull;
 /**
  * @see PsiLanguageInjectionHost
  */
+@ExtensionAPI(ComponentScope.PROJECT)
 public interface MultiHostInjector {
-  ExtensionPointName<MultiHostInjectorExtensionPoint> EP_NAME = ExtensionPointName.create("consulo.multiHostInjector");
+  @Nonnull
+  Class<? extends PsiElement> getElementClass();
 
   void injectLanguages(@Nonnull MultiHostRegistrar registrar, @Nonnull PsiElement context);
 }

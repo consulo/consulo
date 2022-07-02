@@ -22,6 +22,9 @@
  */
 package consulo.ide.impl.idea.openapi.vcs;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.TopicAPI;
+
 import java.util.EventListener;
 
 /**
@@ -30,6 +33,7 @@ import java.util.EventListener;
  * @see ProjectLevelVcsManager#addVcsListener
  * @since 6.0
  */
+@TopicAPI(ComponentScope.PROJECT)
 public interface VcsListener extends EventListener {
   /**
    * Notifies that the per-directory VCS mapping has changed.

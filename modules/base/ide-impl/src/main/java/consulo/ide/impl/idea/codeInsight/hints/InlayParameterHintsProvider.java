@@ -16,10 +16,15 @@
  */
 package consulo.ide.impl.idea.codeInsight.hints;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.application.Application;
+import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.language.Language;
-import consulo.language.OldLanguageExtension;
+import consulo.language.extension.ByLanguageValue;
+import consulo.language.extension.LanguageExtension;
+import consulo.language.extension.LanguageOneToOne;
 import consulo.language.psi.PsiElement;
-import consulo.container.plugin.PluginIds;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,8 +34,14 @@ import java.util.Set;
 /**
  * convert from kotlin
  */
-public interface InlayParameterHintsProvider {
-  OldLanguageExtension<InlayParameterHintsProvider> EP = new OldLanguageExtension<>(PluginIds.CONSULO_BASE + ".codeInsight.parameterNameHints");
+@ExtensionAPI(ComponentScope.APPLICATION)
+public interface InlayParameterHintsProvider extends LanguageExtension {
+  ExtensionPointCacheKey<InlayParameterHintsProvider, ByLanguageValue<InlayParameterHintsProvider>> KEY = ExtensionPointCacheKey.create("InlayParameterHintsProvider", LanguageOneToOne.build());
+
+  @Nullable
+  static InlayParameterHintsProvider forLanguage(@Nonnull Language language) {
+    return Application.get().getExtensionPoint(InlayParameterHintsProvider.class).getOrBuildCache(KEY).get(language);
+  }
 
   /**
    * Hints for params to be shown

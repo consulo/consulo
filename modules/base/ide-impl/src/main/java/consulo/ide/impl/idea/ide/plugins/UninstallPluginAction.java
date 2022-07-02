@@ -16,23 +16,24 @@
 package consulo.ide.impl.idea.ide.plugins;
 
 import consulo.application.AllIcons;
-import consulo.ide.IdeBundle;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
-import consulo.ui.ex.awt.Messages;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginIds;
+import consulo.ide.IdeBundle;
 import consulo.ide.impl.plugins.InstalledPluginsState;
 import consulo.ide.impl.plugins.PluginActionListener;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.awt.Messages;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -96,6 +97,7 @@ public class UninstallPluginAction extends AnAction implements DumbAware {
     }
     if (Messages.showYesNoDialog(host.getMainPanel(), message, IdeBundle.message("title.plugin.uninstall"), Messages.getQuestionIcon()) != Messages.YES) return;
 
+    List<PluginId> uninstalledPluginIds = new ArrayList<>();
     for (PluginDescriptor descriptor : selection) {
 
       boolean actualDelete = true;
@@ -108,16 +110,18 @@ public class UninstallPluginAction extends AnAction implements DumbAware {
         actualDelete = (Messages.showYesNoDialog(host.getMainPanel(), message, IdeBundle.message("title.plugin.uninstall"), Messages.getQuestionIcon()) == Messages.YES);
       }
 
-      if (actualDelete) {
-        uninstallPlugin(descriptor, host);
+      if (actualDelete && uninstallPlugin(descriptor, host)) {
+        uninstalledPluginIds.add(descriptor.getPluginId());
       }
+    }
+
+    if (!uninstalledPluginIds.isEmpty()) {
+      Application.get().getMessageBus().syncPublisher(PluginActionListener.class).pluginsUninstalled(uninstalledPluginIds.toArray(PluginId[]::new));
     }
   }
 
-  public static void uninstallPlugin(PluginDescriptor descriptor, @Nullable PluginManagerMain host) {
+  public static boolean uninstallPlugin(PluginDescriptor descriptor, @Nullable PluginManagerMain host) {
     PluginId pluginId = descriptor.getPluginId();
-
-    Application.get().getMessageBus().syncPublisher(PluginActionListener.class).pluginUninstalled(pluginId);
 
     try {
       PluginInstallUtil.prepareToUninstall(pluginId);
@@ -131,9 +135,13 @@ public class UninstallPluginAction extends AnAction implements DumbAware {
       if (host != null) {
         host.setRequireShutdown(descriptor.isEnabled());
       }
+
+      return true;
     }
     catch (IOException e) {
       PluginManagerMain.LOG.error(e);
     }
+
+    return false;
   }
 }

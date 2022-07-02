@@ -15,45 +15,47 @@
  */
 package consulo.ide.impl.idea.ide;
 
-import consulo.annotation.component.ExtensionImpl;
-import consulo.application.impl.internal.JobScheduler;
-import consulo.ide.impl.idea.diagnostic.VMOptions;
-import consulo.ide.impl.idea.ide.plugins.UninstallPluginAction;
-import consulo.application.ui.RemoteDesktopService;
-import consulo.ide.IdeBundle;
-import consulo.project.ui.notification.*;
-import consulo.project.ui.notification.event.NotificationListener;
-import consulo.util.jna.JnaLoader;
-import consulo.ide.impl.idea.notification.*;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.ApplicationNamesInfo;
-import consulo.ide.impl.idea.openapi.application.PreloadingActivity;
-import consulo.application.progress.ProgressIndicator;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ui.ex.awt.Messages;
-import consulo.application.util.SystemInfo;
-import consulo.application.util.function.ThrowableComputable;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.awt.HyperlinkAdapter;
-import consulo.util.lang.SystemProperties;
-import consulo.util.lang.TimeoutUtil;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
 import com.sun.jna.Library;
 import com.sun.jna.Memory;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AccessRule;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.application.ApplicationPropertiesComponent;
+import consulo.application.impl.internal.ApplicationNamesInfo;
+import consulo.application.impl.internal.JobScheduler;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.ui.RemoteDesktopService;
+import consulo.application.util.SystemInfo;
+import consulo.application.util.function.ThrowableComputable;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
+import consulo.ide.IdeBundle;
+import consulo.ide.impl.idea.diagnostic.VMOptions;
+import consulo.ide.impl.idea.ide.plugins.UninstallPluginAction;
+import consulo.ide.impl.idea.notification.NotificationsConfiguration;
+import consulo.ide.impl.idea.openapi.application.PreloadingActivity;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.plugins.PluginActionListener;
 import consulo.ide.impl.updateSettings.impl.UpdateHistory;
 import consulo.logging.Logger;
+import consulo.project.ui.notification.*;
+import consulo.project.ui.notification.event.NotificationListener;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.application.ApplicationPropertiesComponent;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.awt.HyperlinkAdapter;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.util.jna.JnaLoader;
+import consulo.util.lang.SystemProperties;
+import consulo.util.lang.TimeoutUtil;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import org.jetbrains.annotations.PropertyKey;
@@ -62,6 +64,7 @@ import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -108,7 +111,7 @@ public class SystemHealthMonitor extends PreloadingActivity {
     }
     else {
       builder.append(" are ");
-    } 
+    }
     builder.append(" obsolete. You can uninstall without consequences.");
 
     Application app = Application.get();
@@ -120,8 +123,15 @@ public class SystemHealthMonitor extends PreloadingActivity {
         public void actionPerformed(@Nonnull AnActionEvent e) {
           notification.expire();
 
+          List<PluginId> pluginIds = new ArrayList<>();
           for (PluginDescriptor plugin : plugins) {
-            UninstallPluginAction.uninstallPlugin(plugin, null);
+            if (UninstallPluginAction.uninstallPlugin(plugin, null)) {
+              pluginIds.add(plugin.getPluginId());
+            }
+          }
+
+          if (!pluginIds.isEmpty()) {
+            Application.get().getMessageBus().syncPublisher(PluginActionListener.class).pluginsUninstalled(pluginIds.toArray(PluginId[]::new));
           }
         }
       });

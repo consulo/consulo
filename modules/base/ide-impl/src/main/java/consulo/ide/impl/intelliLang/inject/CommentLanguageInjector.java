@@ -1,23 +1,25 @@
 package consulo.ide.impl.intelliLang.inject;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
+import consulo.annotation.component.ExtensionImpl;
+import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.ide.impl.intelliLang.inject.config.BaseInjection;
 import consulo.ide.impl.psi.injection.AbstractLanguageInjectionSupport;
 import consulo.ide.impl.psi.injection.LanguageInjectionSupport;
-import consulo.ide.impl.intelliLang.inject.config.BaseInjection;
 import consulo.language.inject.MultiHostInjector;
 import consulo.language.inject.MultiHostRegistrar;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiLanguageInjectionHost;
-import consulo.ide.impl.idea.util.ArrayUtil;
+import jakarta.inject.Inject;
+
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author gregsh
  */
+@ExtensionImpl
 public class CommentLanguageInjector implements MultiHostInjector {
 
   private final LanguageInjectionSupport[] mySupports;
@@ -40,13 +42,20 @@ public class CommentLanguageInjector implements MultiHostInjector {
     }
   };
 
-
+  @Inject
   public CommentLanguageInjector() {
     List<LanguageInjectionSupport> supports = new ArrayList<LanguageInjectionSupport>(InjectorUtils.getActiveInjectionSupports());
     supports.add(myInjectorSupport);
     mySupports = ArrayUtil.toObjectArray(supports, LanguageInjectionSupport.class);
   }
 
+  @Nonnull
+  @Override
+  public Class<? extends PsiElement> getElementClass() {
+    return PsiLanguageInjectionHost.class;
+  }
+
+  @Override
   public void injectLanguages(@Nonnull final MultiHostRegistrar registrar, @Nonnull final PsiElement context) {
     if (!(context instanceof PsiLanguageInjectionHost) || context instanceof PsiComment) return;
     if (!((PsiLanguageInjectionHost)context).isValidHost()) return;

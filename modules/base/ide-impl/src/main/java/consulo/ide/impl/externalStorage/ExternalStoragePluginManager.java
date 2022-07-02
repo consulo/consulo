@@ -76,13 +76,17 @@ public class ExternalStoragePluginManager implements PluginActionListener {
   }
 
   @Override
-  public void pluginInstalled(@Nonnull PluginId pluginId) {
-    sendAction("/plugins/add", pluginId, StoragePluginState.ENABLED);
+  public void pluginsInstalled(@Nonnull PluginId[] pluginIds) {
+    for (PluginId pluginId : pluginIds) {
+      sendAction("/plugins/add", pluginId, StoragePluginState.ENABLED);
+    }
   }
 
   @Override
-  public void pluginUninstalled(@Nonnull PluginId pluginId) {
-    sendAction("/plugins/delete", pluginId, StoragePluginState.UNINSTALLED);
+  public void pluginsUninstalled(@Nonnull PluginId[] pluginIds) {
+    for (PluginId pluginId : pluginIds) {
+      sendAction("/plugins/delete", pluginId, StoragePluginState.UNINSTALLED);
+    }
   }
 
   private void sendAction(String action, PluginId pluginId, StoragePluginState state) {

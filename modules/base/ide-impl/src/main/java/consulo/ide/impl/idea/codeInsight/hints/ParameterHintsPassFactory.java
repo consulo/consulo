@@ -83,7 +83,7 @@ public class ParameterHintsPassFactory implements TextEditorHighlightingPassFact
       if (!isEnabled()) return;
 
       Language language = myFile.getLanguage();
-      InlayParameterHintsProvider provider = InlayParameterHintsProvider.EP.forLanguage(language);
+      InlayParameterHintsProvider provider = InlayParameterHintsProvider.forLanguage(language);
       if (provider == null) return;
 
       Set<String> blackList = getBlackList(language);
@@ -98,7 +98,7 @@ public class ParameterHintsPassFactory implements TextEditorHighlightingPassFact
     }
 
     private static Set<String> getBlackList(Language language) {
-      InlayParameterHintsProvider provider = InlayParameterHintsProvider.EP.forLanguage(language);
+      InlayParameterHintsProvider provider = InlayParameterHintsProvider.forLanguage(language);
       if (provider != null) {
         ParameterNameHintsSettings settings = ParameterNameHintsSettings.getInstance();
         Diff diff = settings.getBlackListDiff(language);

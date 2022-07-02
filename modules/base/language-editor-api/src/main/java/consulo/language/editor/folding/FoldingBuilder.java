@@ -2,11 +2,21 @@
 package consulo.language.editor.folding;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.application.Application;
+import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.document.Document;
+import consulo.language.Language;
 import consulo.language.ast.ASTNode;
+import consulo.language.editor.internal.CompositeFoldingBuilder;
+import consulo.language.extension.ByLanguageValue;
+import consulo.language.extension.LanguageExtension;
+import consulo.language.extension.LanguageOneToMany;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * Allows a custom language plugin to define rules for folding code in the language handled
@@ -14,8 +24,27 @@ import javax.annotation.Nullable;
  *
  * @author max
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
+public interface FoldingBuilder extends LanguageExtension {
+  ExtensionPointCacheKey<FoldingBuilder, ByLanguageValue<List<FoldingBuilder>>> KEY = ExtensionPointCacheKey.create("FoldingBuilder", LanguageOneToMany.build(false));
 
-public interface FoldingBuilder {
+  @Nonnull
+  public static List<FoldingBuilder> forLanguage(@Nonnull Language language) {
+    return Application.get().getExtensionPoint(FoldingBuilder.class).getOrBuildCache(KEY).requiredGet(language);
+  }
+
+  @Nullable
+  public static FoldingBuilder forLanguageComposite(@Nonnull Language language) {
+    List<FoldingBuilder> foldingBuilders = Application.get().getExtensionPoint(FoldingBuilder.class).getOrBuildCache(KEY).requiredGet(language);
+    if (foldingBuilders.isEmpty()) {
+      return null;
+    }
+    if (foldingBuilders.size() == 1) {
+      return foldingBuilders.get(0);
+    }
+    return new CompositeFoldingBuilder(foldingBuilders);
+  }
+
   /**
    * Builds the folding regions for the specified node in the AST tree and its children.
    * Note that you can have several folding regions for one AST node, i.e. several {@link FoldingDescriptor} with similar AST node.

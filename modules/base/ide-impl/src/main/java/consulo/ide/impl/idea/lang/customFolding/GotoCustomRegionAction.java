@@ -105,7 +105,7 @@ public class GotoCustomRegionAction extends AnAction implements DumbAware, Popup
       final FileViewProvider viewProvider = file.getViewProvider();
       for (final Language language : viewProvider.getLanguages()) {
         final PsiFile psi = viewProvider.getPsi(language);
-        final FoldingBuilder foldingBuilder = LanguageFolding.INSTANCE.forLanguage(language);
+        final FoldingBuilder foldingBuilder = FoldingBuilder.forLanguageComposite(language);
         if (psi != null) {
           for (FoldingDescriptor descriptor : LanguageFolding.buildFoldingDescriptors(foldingBuilder, psi, document, false)) {
             CustomFoldingBuilder customFoldingBuilder = getCustomFoldingBuilder(foldingBuilder, descriptor);

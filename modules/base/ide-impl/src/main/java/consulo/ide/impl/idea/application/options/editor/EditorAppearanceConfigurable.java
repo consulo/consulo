@@ -17,6 +17,7 @@
 package consulo.ide.impl.idea.application.options.editor;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.Application;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.component.extension.ExtensionPointName;
 import consulo.configurable.*;
@@ -69,7 +70,7 @@ public class EditorAppearanceConfigurable extends CompositeConfigurable<UnnamedC
   }
 
   private void initInlaysPanel() {
-    boolean isInlayProvidersAvailable = InlayParameterHintsProvider.EP.hasAnyExtensions();
+    boolean isInlayProvidersAvailable = Application.get().getExtensionPoint(InlayParameterHintsProvider.class).hasAnyExtensions();
     myParameterHintsSettingsPanel.setVisible(isInlayProvidersAvailable);
     if (!isInlayProvidersAvailable) return;
 

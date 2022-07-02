@@ -141,7 +141,7 @@ class DocumentFoldingInfo implements CodeFoldingState {
 
   @Nonnull
   private static Map<PsiElement, FoldingDescriptor> buildRanges(@Nonnull Editor editor, @Nonnull PsiFile psiFile) {
-    final FoldingBuilder foldingBuilder = LanguageFolding.INSTANCE.forLanguage(psiFile.getLanguage());
+    final FoldingBuilder foldingBuilder = FoldingBuilder.forLanguageComposite(psiFile.getLanguage());
     final ASTNode node = psiFile.getNode();
     if (node == null) return Collections.emptyMap();
     final FoldingDescriptor[] descriptors = LanguageFolding.buildFoldingDescriptors(foldingBuilder, psiFile, editor.getDocument(), true);

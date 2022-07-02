@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
  */
 @TopicAPI(ComponentScope.APPLICATION)
 public interface PluginActionListener {
-  void pluginInstalled(@Nonnull PluginId pluginId);
+  void pluginsInstalled(@Nonnull PluginId[] pluginIds);
 
-  void pluginUninstalled(@Nonnull PluginId pluginId);
+  void pluginsUninstalled(@Nonnull PluginId[] pluginIds);
 }

@@ -15,40 +15,32 @@
  */
 package consulo.ide.impl.updateSettings.impl;
 
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.actions.SettingsEntryPointAction;
-import consulo.ide.impl.idea.ide.plugins.*;
 import consulo.application.Application;
 import consulo.application.impl.internal.ApplicationInfo;
 import consulo.application.progress.Task;
-import consulo.project.Project;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.updateSettings.impl.PluginDownloader;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.status.FileStatus;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.awt.CustomLineBorder;
-import consulo.ui.ex.awt.JBLabel;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.ColumnInfo;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.BorderLayoutPanel;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
+import consulo.ide.IdeBundle;
+import consulo.ide.impl.idea.ide.actions.SettingsEntryPointAction;
+import consulo.ide.impl.idea.ide.plugins.*;
+import consulo.ide.impl.idea.openapi.updateSettings.impl.PluginDownloader;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.plugins.InstalledPluginsState;
 import consulo.ide.impl.plugins.PluginActionListener;
 import consulo.ide.impl.updateSettings.UpdateSettings;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.IdeLocalize;
+import consulo.project.Project;
 import consulo.ui.Alerts;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.virtualFileSystem.status.FileStatus;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -281,8 +273,6 @@ public class PlatformOrPluginDialog extends DialogWrapper {
           if (pluginDescriptor instanceof PluginNode) {
             ((PluginNode)pluginDescriptor).setStatus(PluginNode.STATUS_DOWNLOADED);
 
-            application.getMessageBus().syncPublisher(PluginActionListener.class).pluginInstalled(pluginDescriptor.getPluginId());
-
             if (myType == PlatformOrPluginUpdateResult.Type.PLUGIN_INSTALL && pluginDescriptor.isExperimental()) {
               updateHistory.setShowExperimentalWarning(true);
             }
@@ -295,6 +285,9 @@ public class PlatformOrPluginDialog extends DialogWrapper {
           return;
         }
       }
+
+      application.getMessageBus().syncPublisher(PluginActionListener.class)
+              .pluginsInstalled(installed.stream().filter(it -> it instanceof PluginNode).map(PluginDescriptor::getPluginId).toArray(PluginId[]::new));
 
       Map<String, String> pluginHistory = new HashMap<>();
       for (PluginDescriptor descriptor : PluginManager.getPlugins()) {

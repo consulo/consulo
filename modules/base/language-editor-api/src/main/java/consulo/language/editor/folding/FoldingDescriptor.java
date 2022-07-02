@@ -234,7 +234,7 @@ public class FoldingDescriptor {
   protected String calcPlaceholderText() {
     PsiElement psiElement = myElement.getPsi();
     if (psiElement == null) return null;
-    FoldingBuilder foldingBuilder = LanguageFolding.INSTANCE.forLanguage(psiElement.getLanguage());
+    FoldingBuilder foldingBuilder = FoldingBuilder.forLanguageComposite(psiElement.getLanguage());
     if (foldingBuilder == null) return null;
     return foldingBuilder instanceof FoldingBuilderEx ? ((FoldingBuilderEx)foldingBuilder).getPlaceholderText(myElement, myRange) : foldingBuilder.getPlaceholderText(myElement);
   }

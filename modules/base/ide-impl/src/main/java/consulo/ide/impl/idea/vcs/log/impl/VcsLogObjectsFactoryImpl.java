@@ -1,25 +1,26 @@
 package consulo.ide.impl.idea.vcs.log.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.ide.impl.idea.openapi.vcs.changes.Change;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.vcs.log.*;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-
 import java.util.Collection;
 import java.util.List;
 
 @Singleton
+@ServiceImpl
 public class VcsLogObjectsFactoryImpl implements VcsLogObjectsFactory {
 
   @Nonnull
   private final VcsUserRegistry myUserRegistry;
 
   @Inject
-  private VcsLogObjectsFactoryImpl(@Nonnull VcsUserRegistry userRegistry) {
+  VcsLogObjectsFactoryImpl(@Nonnull VcsUserRegistry userRegistry) {
     myUserRegistry = userRegistry;
   }
 
@@ -37,10 +38,16 @@ public class VcsLogObjectsFactoryImpl implements VcsLogObjectsFactory {
 
   @Nonnull
   @Override
-  public VcsShortCommitDetails createShortDetails(@Nonnull Hash hash, @Nonnull List<Hash> parents, long commitTime,
-                                                  @Nonnull VirtualFile root, @Nonnull String subject,
-                                                  @Nonnull String authorName, String authorEmail,
-                                                  @Nonnull String committerName, @Nonnull String committerEmail, long authorTime) {
+  public VcsShortCommitDetails createShortDetails(@Nonnull Hash hash,
+                                                  @Nonnull List<Hash> parents,
+                                                  long commitTime,
+                                                  @Nonnull VirtualFile root,
+                                                  @Nonnull String subject,
+                                                  @Nonnull String authorName,
+                                                  String authorEmail,
+                                                  @Nonnull String committerName,
+                                                  @Nonnull String committerEmail,
+                                                  long authorTime) {
     VcsUser author = createUser(authorName, authorEmail);
     VcsUser committer = createUser(committerName, committerEmail);
     return new VcsShortCommitDetailsImpl(hash, parents, commitTime, root, subject, author, committer, authorTime);
@@ -48,10 +55,17 @@ public class VcsLogObjectsFactoryImpl implements VcsLogObjectsFactory {
 
   @Nonnull
   @Override
-  public VcsCommitMetadata createCommitMetadata(@Nonnull Hash hash, @Nonnull List<Hash> parents, long commitTime, @Nonnull VirtualFile root,
-                                                @Nonnull String subject, @Nonnull String authorName, @Nonnull String authorEmail,
-                                                @Nonnull String message, @Nonnull String committerName,
-                                                @Nonnull String committerEmail, long authorTime) {
+  public VcsCommitMetadata createCommitMetadata(@Nonnull Hash hash,
+                                                @Nonnull List<Hash> parents,
+                                                long commitTime,
+                                                @Nonnull VirtualFile root,
+                                                @Nonnull String subject,
+                                                @Nonnull String authorName,
+                                                @Nonnull String authorEmail,
+                                                @Nonnull String message,
+                                                @Nonnull String committerName,
+                                                @Nonnull String committerEmail,
+                                                long authorTime) {
     VcsUser author = createUser(authorName, authorEmail);
     VcsUser committer = createUser(committerName, committerEmail);
     return new VcsCommitMetadataImpl(hash, parents, commitTime, root, subject, author, message, committer, authorTime);
@@ -59,15 +73,21 @@ public class VcsLogObjectsFactoryImpl implements VcsLogObjectsFactory {
 
   @Nonnull
   @Override
-  public VcsFullCommitDetails createFullDetails(@Nonnull Hash hash, @Nonnull List<Hash> parents, long commitTime, VirtualFile root,
-                                                @Nonnull String subject, @Nonnull String authorName, @Nonnull String authorEmail,
-                                                @Nonnull String message, @Nonnull String committerName, @Nonnull String committerEmail,
+  public VcsFullCommitDetails createFullDetails(@Nonnull Hash hash,
+                                                @Nonnull List<Hash> parents,
+                                                long commitTime,
+                                                VirtualFile root,
+                                                @Nonnull String subject,
+                                                @Nonnull String authorName,
+                                                @Nonnull String authorEmail,
+                                                @Nonnull String message,
+                                                @Nonnull String committerName,
+                                                @Nonnull String committerEmail,
                                                 long authorTime,
                                                 @Nonnull ThrowableComputable<Collection<Change>, ? extends Exception> changesGetter) {
     VcsUser author = createUser(authorName, authorEmail);
     VcsUser committer = createUser(committerName, committerEmail);
-    return new VcsChangesLazilyParsedDetails(hash, parents, commitTime, root, subject, author, message, committer, authorTime,
-                                             changesGetter);
+    return new VcsChangesLazilyParsedDetails(hash, parents, commitTime, root, subject, author, message, committer, authorTime, changesGetter);
   }
 
   @Nonnull

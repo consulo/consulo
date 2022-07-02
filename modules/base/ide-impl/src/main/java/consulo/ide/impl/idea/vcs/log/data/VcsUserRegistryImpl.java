@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.vcs.log.data;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.io.Page;
 import consulo.ide.impl.idea.util.io.PersistentBTreeEnumerator;
@@ -42,10 +43,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 
-/**
- *
- */
 @Singleton
+@ServiceImpl
 public class VcsUserRegistryImpl implements Disposable, VcsUserRegistry {
 
   private static final File USER_CACHE_APP_DIR = new File(ContainerPathManager.get().getSystemPath(), "vcs-users");

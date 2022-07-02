@@ -20,6 +20,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.application.dumb.DumbAware;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
+import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.editor.folding.FoldingBuilder;
 import consulo.language.editor.folding.FoldingBuilderEx;
@@ -88,5 +89,11 @@ public class CompositeFoldingBuilder extends FoldingBuilderEx implements DumbAwa
   public boolean isCollapsedByDefault(@Nonnull ASTNode node) {
     final FoldingBuilder builder = node.getUserData(FOLDING_BUILDER);
     return builder != null && builder.isCollapsedByDefault(node);
+  }
+
+  @Nonnull
+  @Override
+  public Language getLanguage() {
+    throw new UnsupportedOperationException();
   }
 }

@@ -10,8 +10,6 @@ import consulo.language.ast.ASTNode;
 import consulo.language.editor.folding.CustomFoldingBuilder;
 import consulo.language.editor.folding.CustomFoldingProvider;
 import consulo.language.editor.folding.FoldingBuilder;
-import consulo.language.editor.folding.LanguageFolding;
-import consulo.language.psi.PsiFileEx;
 import consulo.language.psi.*;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
@@ -134,7 +132,7 @@ public class CustomRegionStructureUtil {
   private static boolean isCustomRegionCommentCandidate(@Nonnull PsiElement element) {
     Language language = element.getLanguage();
     if (!Language.ANY.is(language)) {
-      for (FoldingBuilder builder : LanguageFolding.INSTANCE.allForLanguage(language)) {
+      for (FoldingBuilder builder : FoldingBuilder.forLanguage(language)) {
         if (builder instanceof CustomFoldingBuilder) {
           return ((CustomFoldingBuilder)builder).isCustomFoldingCandidate(element);
         }

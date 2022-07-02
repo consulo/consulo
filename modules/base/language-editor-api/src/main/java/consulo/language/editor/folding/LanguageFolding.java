@@ -16,65 +16,17 @@
 
 package consulo.language.editor.folding;
 
-import consulo.language.ast.ASTNode;
-import consulo.language.Language;
-import consulo.language.OldLanguageExtension;
-import consulo.document.Document;
-import consulo.language.editor.internal.CompositeFoldingBuilder;
-import consulo.project.DumbService;
-import consulo.language.psi.PsiElement;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.container.plugin.PluginIds;
-
-import javax.annotation.Nonnull;
-
-import java.util.Collections;
-import java.util.List;
+import consulo.document.Document;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
+import consulo.project.DumbService;
 
 /**
  * @author yole
  * @author Konstantin Bulenkov
  */
-public class LanguageFolding extends OldLanguageExtension<FoldingBuilder> {
-  public static final LanguageFolding INSTANCE = new LanguageFolding();
-
-  private LanguageFolding() {
-    super(PluginIds.CONSULO_BASE + ".lang.foldingBuilder");
-  }
-
-  @Override
-  public FoldingBuilder forLanguage(@Nonnull Language l) {
-    FoldingBuilder cached = l.getUserData(getLanguageCache());
-    if (cached != null) return cached;
-
-    List<FoldingBuilder> extensions = forKey(l);
-    FoldingBuilder result;
-    if (extensions.isEmpty()) {
-
-      Language base = l.getBaseLanguage();
-      if (base != null) {
-        result = forLanguage(base);
-      }
-      else {
-        result = getDefaultImplementation();
-      }
-    }
-    else {
-      return extensions.size() == 1 ? extensions.get(0) : new CompositeFoldingBuilder(extensions);
-    }
-
-    l.putUserData(getLanguageCache(), result);
-    return result;
-  }
-
-  @Nonnull
-  @Override
-  public List<FoldingBuilder> allForLanguage(@Nonnull Language l) {
-    FoldingBuilder result = forLanguage(l);
-    if (result == null) return Collections.emptyList();
-    return result instanceof CompositeFoldingBuilder ? ((CompositeFoldingBuilder)result).getAllBuilders() : Collections.singletonList(result);
-  }
-
+public class LanguageFolding {
   @RequiredReadAction
   public static FoldingDescriptor[] buildFoldingDescriptors(FoldingBuilder builder, PsiElement root, Document document, boolean quick) {
     if (!DumbService.isDumbAware(builder) && DumbService.getInstance(root.getProject()).isDumb()) {

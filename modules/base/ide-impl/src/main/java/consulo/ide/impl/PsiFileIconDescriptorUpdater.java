@@ -15,18 +15,17 @@
  */
 package consulo.ide.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.virtualFileSystem.VFileProperty;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
-import consulo.annotation.access.RequiredReadAction;
+import consulo.language.LanguageElementIconProvider;
 import consulo.language.icon.IconDescriptor;
 import consulo.language.icon.IconDescriptorUpdater;
-import consulo.language.LanguageElementIcons;
-import consulo.ui.image.Image;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.virtualFileSystem.VFileProperty;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;
 
@@ -51,12 +50,11 @@ public class PsiFileIconDescriptorUpdater implements IconDescriptorUpdater {
       }
     }
     else {
-      Image languageElementIcon = LanguageElementIcons.INSTANCE.forLanguage(element.getLanguage());
-      if (languageElementIcon == null) {
-        return;
-      }
+      LanguageElementIconProvider iconProvider = LanguageElementIconProvider.forLanguage(element.getLanguage());
+      if (iconProvider != null) {
+        iconDescriptor.addLayerIcon(iconProvider.getImage());
 
-      iconDescriptor.addLayerIcon(languageElementIcon);
+      }
     }
   }
 }

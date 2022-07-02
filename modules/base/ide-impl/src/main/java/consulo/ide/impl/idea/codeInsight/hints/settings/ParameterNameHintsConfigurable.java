@@ -116,7 +116,7 @@ public class ParameterNameHintsConfigurable extends DialogWrapper {
             .filter((e) -> !e.trim().isEmpty())
             .collect(Collectors.toCollection(LinkedHashSet::new));
 
-    InlayParameterHintsProvider provider = InlayParameterHintsProvider.EP.forLanguage(language);
+    InlayParameterHintsProvider provider = InlayParameterHintsProvider.forLanguage(language);
     Set<String> defaultBlackList = provider.getDefaultBlackList();
     Diff diff = Diff.build(defaultBlackList, updatedBlackList);
     ParameterNameHintsSettings.getInstance().setBlackListDiff(language, diff);
@@ -187,7 +187,7 @@ public class ParameterNameHintsConfigurable extends DialogWrapper {
 
   @Nonnull
   private static String getLanguageBlackList(@Nonnull Language language) {
-    InlayParameterHintsProvider hintsProvider = InlayParameterHintsProvider.EP.forLanguage(language);
+    InlayParameterHintsProvider hintsProvider = InlayParameterHintsProvider.forLanguage(language);
     if (hintsProvider == null) {
       return "";
     }
@@ -201,7 +201,7 @@ public class ParameterNameHintsConfigurable extends DialogWrapper {
     return Language.getRegisteredLanguages()
             .stream()
             .filter(lang -> lang.getBaseLanguage() == null)
-            .filter(lang -> InlayParameterHintsProvider.EP.forLanguage(lang) != null)
+            .filter(lang -> InlayParameterHintsProvider.forLanguage(lang) != null)
             .sorted(Comparator.comparingInt(l -> l.getDisplayName().length()))
             .collect(Collectors.toList());
   }

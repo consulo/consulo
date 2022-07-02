@@ -134,18 +134,7 @@
     <extensionPoint name="undoProvider" interface="consulo.ide.impl.idea.openapi.command.impl.UndoProvider"/>
     <extensionPoint name="projectUndoProvider" interface="consulo.ide.impl.idea.openapi.command.impl.UndoProvider" area="PROJECT"/>
 
-    <extensionPoint name="syntaxHighlighter"
-                    beanClass="consulo.component.extension.KeyedFactoryEPBean">
-      <with attribute="implementationClass" implements="consulo.language.editor.highlight.SyntaxHighlighter"/>
-    </extensionPoint>
 
-    <extensionPoint name="lang.syntaxHighlighterFactory" beanClass="consulo.language.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="consulo.language.editor.highlight.SyntaxHighlighterFactory"/>
-    </extensionPoint>
-
-    <extensionPoint name="lang.elementIcon" beanClass="consulo.language.LanguageElementIcon"/>
-
-    <extensionPoint name="gutterMarkPreprocessor" interface="consulo.ide.impl.idea.openapi.editor.GutterMarkPreprocessor"/>
 
     <extensionPoint name="breadcrumbsInfoProvider" interface="consulo.ide.impl.idea.ui.breadcrumbs.BreadcrumbsProvider"/>
     <extensionPoint name="breadcrumbsPresentationProvider" interface="consulo.ide.impl.idea.ui.breadcrumbs.BreadcrumbsPresentationProvider"/>
@@ -156,9 +145,7 @@
       <with attribute="handlerClass" implements="consulo.ide.impl.idea.codeInsight.highlighting.TooltipLinkHandler"/>
     </extensionPoint>
 
-    <extensionPoint name="codeInsight.parameterNameHints" beanClass="consulo.language.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="consulo.ide.impl.idea.codeInsight.hints.InlayParameterHintsProvider"/>
-    </extensionPoint>
+
 
     <extensionPoint name="applicationLoadListener" interface="consulo.application.event.ApplicationLoadListener"/>
 
@@ -422,12 +409,6 @@
 
     <extensionPoint name="languageInjector" interface="consulo.language.inject.LanguageInjector"/>
     <extensionPoint name="concatenationAwareInjector" interface="consulo.language.inject.ConcatenationAwareInjector" area="PROJECT"/>
-    <extensionPoint name="multiHostInjector"
-                    beanClass="consulo.language.inject.MultiHostInjectorExtensionPoint"
-                    area="PROJECT">
-      <with attribute="forClass" implements="consulo.language.psi.PsiElement"/>
-      <with attribute="implementationClass" implements="consulo.language.inject.MultiHostInjector"/>
-    </extensionPoint>
 
     <extensionPoint name="annotator"
                     beanClass="consulo.language.LanguageExtensionPoint">

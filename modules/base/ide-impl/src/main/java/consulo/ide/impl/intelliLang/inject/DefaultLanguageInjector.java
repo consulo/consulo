@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.intelliLang.inject;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.inject.MultiHostInjector;
 import consulo.language.inject.MultiHostRegistrar;
 import consulo.language.psi.PsiElement;
@@ -24,17 +25,26 @@ import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.psi.injection.LanguageInjectionSupport;
 import consulo.ide.impl.psi.injection.impl.ProjectInjectionConfiguration;
 import consulo.ide.impl.intelliLang.inject.config.BaseInjection;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 
+@ExtensionImpl(order = "last")
 public final class DefaultLanguageInjector implements MultiHostInjector {
 
   private final ProjectInjectionConfiguration myInjectionConfiguration;
   private final LanguageInjectionSupport[] mySupports;
 
+  @Inject
   public DefaultLanguageInjector(ProjectInjectionConfiguration configuration) {
     myInjectionConfiguration = configuration;
     mySupports = ArrayUtil.toObjectArray(InjectorUtils.getActiveInjectionSupports(), LanguageInjectionSupport.class);
+  }
+
+  @Nonnull
+  @Override
+  public Class<? extends PsiElement> getElementClass() {
+    return PsiLanguageInjectionHost.class;
   }
 
   @Override

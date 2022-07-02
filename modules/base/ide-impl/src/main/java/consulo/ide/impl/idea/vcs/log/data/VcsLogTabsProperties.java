@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.vcs.log.data;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
@@ -28,6 +31,8 @@ import java.util.Map;
 
 @Singleton
 @State(name = "Vcs.Log.Tabs.Properties", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
+@ServiceAPI(ComponentScope.PROJECT)
+@ServiceImpl
 public class VcsLogTabsProperties implements PersistentStateComponent<VcsLogTabsProperties.State> {
   public static final String MAIN_LOG_ID = "MAIN";
   private State myState = new State();

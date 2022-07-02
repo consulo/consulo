@@ -29,7 +29,6 @@ import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.editor.folding.CustomFoldingBuilder;
 import consulo.language.editor.folding.CustomFoldingProvider;
 import consulo.language.editor.folding.FoldingBuilder;
-import consulo.language.editor.folding.LanguageFolding;
 import consulo.language.editor.surroundWith.SurroundDescriptor;
 import consulo.language.editor.surroundWith.Surrounder;
 import consulo.language.psi.PsiDocumentManager;
@@ -168,7 +167,7 @@ public class CustomFoldingSurroundDescriptor implements SurroundDescriptor {
     @Override
     public boolean isApplicable(@Nonnull PsiElement[] elements) {
       if (elements.length == 0) return false;
-      for (FoldingBuilder each : LanguageFolding.INSTANCE.allForLanguage(elements[0].getLanguage())) {
+      for (FoldingBuilder each : FoldingBuilder.forLanguage(elements[0].getLanguage())) {
         if (each instanceof CustomFoldingBuilder) return true;
       }
       return false;

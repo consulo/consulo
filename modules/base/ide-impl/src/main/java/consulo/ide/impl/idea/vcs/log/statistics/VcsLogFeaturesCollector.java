@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.vcs.log.statistics;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.internal.statistic.AbstractApplicationUsagesCollector;
 import consulo.ide.impl.idea.internal.statistic.CollectUsagesException;
 import consulo.ide.impl.idea.internal.statistic.StatisticsUtilKt;
@@ -35,6 +36,7 @@ import java.util.Set;
 import static consulo.ide.impl.idea.vcs.log.data.MainVcsLogUiProperties.*;
 import static consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl.LOG_HIGHLIGHTER_FACTORY_EP;
 
+@ExtensionImpl
 public class VcsLogFeaturesCollector extends AbstractApplicationUsagesCollector {
   @Nonnull
   @Override

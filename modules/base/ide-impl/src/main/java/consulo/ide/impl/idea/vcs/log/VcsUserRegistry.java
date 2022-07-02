@@ -15,15 +15,14 @@
  */
 package consulo.ide.impl.idea.vcs.log;
 
-import javax.annotation.Nonnull;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
 
+import javax.annotation.Nonnull;
 import java.util.Set;
 
-/**
- *
- */
+@ServiceAPI(ComponentScope.PROJECT)
 public interface VcsUserRegistry {
-
   @Nonnull
   Set<VcsUser> getUsers();
 
