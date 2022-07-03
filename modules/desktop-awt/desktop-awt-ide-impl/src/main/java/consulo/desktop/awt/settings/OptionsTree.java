@@ -22,7 +22,7 @@ import consulo.configurable.Configurable;
 import consulo.configurable.SearchableConfigurable;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.ide.impl.idea.openapi.options.ex.ConfigurableWrapper;
-import consulo.ide.impl.idea.ui.CellRendererPanel;
+import consulo.ui.ex.awt.CellRendererPanel;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ide.impl.idea.ui.treeStructure.filtered.FilteringTreeBuilder;

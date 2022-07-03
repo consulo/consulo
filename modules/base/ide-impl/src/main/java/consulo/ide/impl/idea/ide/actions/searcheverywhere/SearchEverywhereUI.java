@@ -36,7 +36,7 @@ import consulo.ide.impl.idea.openapi.progress.util.ProgressWindowListener;
 import consulo.ide.impl.idea.openapi.progress.util.TooManyUsagesStatus;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
 import consulo.ide.impl.idea.ui.AppUIUtil;
-import consulo.ide.impl.idea.ui.CellRendererPanel;
+import consulo.ui.ex.awt.CellRendererPanel;
 import consulo.ide.impl.idea.ui.IdeUICustomization;
 import consulo.ide.impl.idea.ui.SeparatorComponent;
 import consulo.ide.impl.idea.ui.popup.PopupUpdateProcessor;

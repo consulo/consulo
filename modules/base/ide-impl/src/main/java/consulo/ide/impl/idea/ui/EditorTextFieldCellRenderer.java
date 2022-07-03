@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.ui;
 
 import consulo.codeEditor.EditorEx;
 import consulo.language.editor.ui.awt.EditorTextField;
+import consulo.ui.ex.awt.CellRendererPanel;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.codeEditor.SelectionModel;

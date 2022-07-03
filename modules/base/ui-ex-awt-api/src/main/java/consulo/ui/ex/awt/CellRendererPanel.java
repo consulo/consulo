@@ -1,8 +1,7 @@
 // Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.ui;
+package consulo.ui.ex.awt;
 
 import consulo.awt.hacking.AWTAccessorHacking;
-import consulo.ui.ex.awt.JBInsets;
 
 import javax.swing.*;
 import java.awt.*;
