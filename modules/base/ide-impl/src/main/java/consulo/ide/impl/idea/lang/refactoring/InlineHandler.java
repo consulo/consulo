@@ -17,14 +17,14 @@
 package consulo.ide.impl.idea.lang.refactoring;
 
 import consulo.codeEditor.Editor;
-import consulo.component.extension.ExtensionPointName;
+import consulo.language.Language;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
 import consulo.usage.UsageInfo;
 import consulo.util.collection.MultiMap;
-import consulo.language.Language;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Interface that should be implemented by the language in order to provide inline functionality and possibly
@@ -33,8 +33,6 @@ import javax.annotation.Nonnull;
  * @see InlineHandlers#getInlineHandlers(Language)
  */
 public interface InlineHandler {
-
-  ExtensionPointName<InlineHandler> EP_NAME = ExtensionPointName.create("consulo.refactoring.inlineHandler");
 
   interface Settings {
     /**
@@ -61,8 +59,8 @@ public interface InlineHandler {
    * @return <code>Settings</code> object in case refactoring should be performed or null otherwise
 
    */
-  @javax.annotation.Nullable
-  Settings prepareInlineElement(@Nonnull PsiElement element, @javax.annotation.Nullable Editor editor, boolean invokedOnReference);
+  @Nullable
+  Settings prepareInlineElement(@Nonnull PsiElement element, @Nullable Editor editor, boolean invokedOnReference);
 
   /**
    * @param element inlined element
@@ -74,7 +72,7 @@ public interface InlineHandler {
    * @param settings
    * @return Inliner instance to be used for inlining references in this language
    */
-  @javax.annotation.Nullable
+  @Nullable
   Inliner createInliner(@Nonnull PsiElement element, @Nonnull Settings settings);
 
   interface Inliner {
@@ -84,7 +82,7 @@ public interface InlineHandler {
      * @return set of conflicts inline of this element to the place denoted by reference would incur
      * or null if no conflicts detected.
      */
-    @javax.annotation.Nullable
+    @Nullable
     MultiMap<PsiElement, String> getConflicts(@Nonnull PsiReference reference, @Nonnull PsiElement referenced);
 
     /**

@@ -15,21 +15,21 @@
  */
 package consulo.ide.impl.idea.refactoring.util;
 
-import consulo.language.Language;
-import consulo.language.editor.refactoring.LanguageNamesValidation;
-import consulo.project.Project;
 import consulo.ide.impl.idea.refactoring.extractMethod.AbstractVariableData;
+import consulo.language.Language;
+import consulo.language.editor.refactoring.NamesValidator;
+import consulo.project.Project;
 import consulo.ui.ex.awt.BooleanTableCellRenderer;
-import consulo.ui.ex.awt.util.TableUtil;
-import consulo.ui.ex.awt.ToolbarDecorator;
-import consulo.ui.ex.awt.table.JBTable;
 import consulo.ui.ex.awt.ColumnInfo;
 import consulo.ui.ex.awt.EditableModel;
+import consulo.ui.ex.awt.ToolbarDecorator;
+import consulo.ui.ex.awt.table.JBTable;
 import consulo.ui.ex.awt.table.ListTableModel;
+import consulo.ui.ex.awt.util.TableUtil;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
@@ -155,7 +155,7 @@ public abstract class AbstractParameterTablePanel<P extends AbstractVariableData
 
     public NameColumnInfo(Language lang, Project project) {
       super("Name");
-      myNameValidator = (paramName) -> LanguageNamesValidation.INSTANCE.forLanguage(lang).isIdentifier(paramName, project);
+      myNameValidator = (paramName) -> NamesValidator.forLanguage(lang).isIdentifier(paramName, project);
     }
 
     @Nullable

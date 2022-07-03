@@ -25,7 +25,7 @@ import consulo.document.util.TextRange;
 import consulo.language.Language;
 import consulo.language.editor.CodeInsightUtilCore;
 import consulo.language.editor.QualifiedNameProviderUtil;
-import consulo.language.editor.refactoring.LanguageNamesValidation;
+import consulo.language.editor.refactoring.NamesValidator;
 import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.refactoring.event.RefactoringElementListener;
 import consulo.language.editor.refactoring.event.UndoRefactoringElementListener;
@@ -358,7 +358,7 @@ public class RenameUtil {
     final Language fileLanguage = file == null ? null : file.getLanguage();
     Language language = fileLanguage == null ? elementLanguage : fileLanguage.isKindOf(elementLanguage) ? fileLanguage : elementLanguage;
 
-    return LanguageNamesValidation.INSTANCE.forLanguage(language).isIdentifier(newName.trim(), project);
+    return NamesValidator.forLanguage(language).isIdentifier(newName.trim(), project);
   }
 
   private static class UsageOffset implements Comparable<UsageOffset> {

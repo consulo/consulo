@@ -49,7 +49,7 @@ public class ChangeSignaturePassFactory implements TextEditorHighlightingPassFac
   @Override
   public TextEditorHighlightingPass createHighlightingPass(@Nonnull final PsiFile file, @Nonnull final Editor editor) {
     LanguageChangeSignatureDetector<ChangeInfo> detector =
-            LanguageChangeSignatureDetectors.INSTANCE.forLanguage(file.getLanguage());
+            LanguageChangeSignatureDetector.forLanguage(file.getLanguage());
     if (detector == null) return null;
 
     return new ChangeSignaturePass(file.getProject(), file, editor);
@@ -83,7 +83,7 @@ public class ChangeSignaturePassFactory implements TextEditorHighlightingPassFac
         if (element == null || !element.isValid()) return;
         final TextRange elementTextRange = element.getTextRange();
         if (elementTextRange == null || !elementTextRange.contains(offset)) return;
-        final LanguageChangeSignatureDetector<ChangeInfo> detector = LanguageChangeSignatureDetectors.INSTANCE.forLanguage(changeInfo.getLanguage());
+        final LanguageChangeSignatureDetector<ChangeInfo> detector = LanguageChangeSignatureDetector.forLanguage(changeInfo.getLanguage());
         TextRange range = detector.getHighlightingRange(changeInfo);
         TextAttributes attributes = new TextAttributes(null, null,
                                                        myEditor.getColorsScheme().getAttributes(CodeInsightColors.WEAK_WARNING_ATTRIBUTES)

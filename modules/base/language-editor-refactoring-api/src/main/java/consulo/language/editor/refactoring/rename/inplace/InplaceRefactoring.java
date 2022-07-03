@@ -17,8 +17,8 @@ package consulo.language.editor.refactoring.rename.inplace;
 
 import consulo.application.ApplicationManager;
 import consulo.application.Result;
-import consulo.application.util.query.Query;
 import consulo.application.util.function.CommonProcessors;
+import consulo.application.util.query.Query;
 import consulo.codeEditor.*;
 import consulo.codeEditor.internal.RealEditor;
 import consulo.codeEditor.markup.RangeHighlighter;
@@ -32,7 +32,6 @@ import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
-import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.fileEditor.TextEditor;
 import consulo.language.Language;
 import consulo.language.editor.DaemonCodeAnalyzer;
@@ -42,7 +41,6 @@ import consulo.language.editor.completion.lookup.LookupFocusDegree;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.highlight.HighlightManager;
 import consulo.language.editor.inject.EditorWindow;
-import consulo.language.editor.refactoring.LanguageNamesValidation;
 import consulo.language.editor.refactoring.NamesValidator;
 import consulo.language.editor.refactoring.RefactoringActionHandler;
 import consulo.language.editor.refactoring.RefactoringBundle;
@@ -60,6 +58,7 @@ import consulo.language.psi.search.ReferencesSearch;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.logging.Logger;
 import consulo.module.content.ProjectRootManager;
+import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
 import consulo.project.content.scope.ProjectScopes;
 import consulo.ui.color.ColorValue;
@@ -694,7 +693,7 @@ public abstract class InplaceRefactoring {
   }
 
   protected boolean isIdentifier(final String newName, final Language language) {
-    final NamesValidator namesValidator = LanguageNamesValidation.INSTANCE.forLanguage(language);
+    final NamesValidator namesValidator = NamesValidator.forLanguage(language);
     return namesValidator == null || namesValidator.isIdentifier(newName, myProject);
   }
 

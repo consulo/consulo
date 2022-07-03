@@ -15,22 +15,43 @@
  */
 package consulo.ide.impl.idea.refactoring.changeSignature.inplace;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.application.Application;
 import consulo.codeEditor.Editor;
-import consulo.virtualFileSystem.fileType.FileType;
+import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.document.util.TextRange;
-import consulo.language.psi.PsiElement;
 import consulo.ide.impl.idea.refactoring.changeSignature.ChangeInfo;
+import consulo.language.Language;
+import consulo.language.extension.ByLanguageValue;
+import consulo.language.extension.LanguageExtension;
+import consulo.language.extension.LanguageOneToOne;
+import consulo.language.file.FileTypeManager;
+import consulo.language.psi.PsiElement;
+import consulo.virtualFileSystem.fileType.FileType;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
 
-public interface LanguageChangeSignatureDetector<C extends ChangeInfo> {
+@ExtensionAPI(ComponentScope.APPLICATION)
+public interface LanguageChangeSignatureDetector<C extends ChangeInfo> extends LanguageExtension {
+  ExtensionPointCacheKey<LanguageChangeSignatureDetector, ByLanguageValue<LanguageChangeSignatureDetector>> KEY =
+          ExtensionPointCacheKey.create("LanguageChangeSignatureDetector", LanguageOneToOne.build());
+
+  @Nullable
+  @SuppressWarnings("unchecked")
+  static LanguageChangeSignatureDetector<ChangeInfo> forLanguage(@Nonnull Language language) {
+    return Application.get().getExtensionPoint(LanguageChangeSignatureDetector.class).getOrBuildCache(KEY).get(language);
+  }
 
   @Nonnull
   C createInitialChangeInfo(final @Nonnull PsiElement element);
+
   boolean ignoreChanges(PsiElement element);
-  @Nullable C createNextChangeInfo(String signature, @Nonnull C currentInfo, boolean delegate);
+
+  @Nullable
+  C createNextChangeInfo(String signature, @Nonnull C currentInfo, boolean delegate);
 
   void performChange(C changeInfo, Editor editor, @Nonnull String oldText);
 
@@ -38,7 +59,8 @@ public interface LanguageChangeSignatureDetector<C extends ChangeInfo> {
 
   TextRange getHighlightingRange(@Nonnull C changeInfo);
 
-  default @Nonnull
+  default
+  @Nonnull
   String extractSignature(@Nonnull C initialChangeInfo) {
     final TextRange signatureRange = getHighlightingRange(initialChangeInfo);
     return signatureRange.shiftRight(-signatureRange.getStartOffset()).substring(initialChangeInfo.getMethod().getText());
@@ -48,5 +70,8 @@ public interface LanguageChangeSignatureDetector<C extends ChangeInfo> {
     return extractSignature(info);
   }
 
-  FileType getFileType();
+  @Nonnull
+  default FileType getFileType() {
+    return FileTypeManager.getInstance().findFileTypeByLanguage(getLanguage());
+  }
 }

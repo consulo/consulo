@@ -15,19 +15,19 @@
  */
 package consulo.ide.impl.idea.codeInsight.daemon.impl.quickfix;
 
+import consulo.codeEditor.Editor;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.FileModificationService;
 import consulo.language.editor.inspection.LocalQuickFixAndIntentionActionOnPsiElement;
-import consulo.language.editor.refactoring.LanguageNamesValidation;
 import consulo.language.editor.refactoring.NamesValidator;
-import consulo.logging.Logger;
-import consulo.codeEditor.Editor;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.editor.refactoring.rename.RenameProcessor;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiNamedElement;
-import consulo.language.editor.refactoring.rename.RenameProcessor;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -88,7 +88,7 @@ public class RenameElementFix extends LocalQuickFixAndIntentionActionOnPsiElemen
     if (!startElement.isValid()) {
       return false;
     }
-    final NamesValidator namesValidator = LanguageNamesValidation.INSTANCE.forLanguage(file.getLanguage());
+    final NamesValidator namesValidator = NamesValidator.forLanguage(file.getLanguage());
     return namesValidator != null && namesValidator.isIdentifier(myNewName, project);
   }
 

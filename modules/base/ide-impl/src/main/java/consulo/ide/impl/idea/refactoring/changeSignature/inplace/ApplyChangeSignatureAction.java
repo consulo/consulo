@@ -48,7 +48,7 @@ public class ApplyChangeSignatureAction extends BaseRefactoringIntentionAction {
 
   @Override
   public boolean isAvailable(@Nonnull Project project, Editor editor, @Nonnull PsiElement element) {
-    final LanguageChangeSignatureDetector<ChangeInfo> detector = LanguageChangeSignatureDetectors.INSTANCE.forLanguage(element.getLanguage());
+    final LanguageChangeSignatureDetector<ChangeInfo> detector = LanguageChangeSignatureDetector.forLanguage(element.getLanguage());
     if (detector != null) {
       InplaceChangeSignature changeSignature = InplaceChangeSignature.getCurrentRefactoring(editor);
       ChangeInfo currentInfo = changeSignature != null ? changeSignature.getCurrentInfo() : null;
@@ -66,7 +66,7 @@ public class ApplyChangeSignatureAction extends BaseRefactoringIntentionAction {
     final ChangeInfo currentInfo = signatureGestureDetector.getCurrentInfo();
     signatureGestureDetector.detach();
 
-    final LanguageChangeSignatureDetector<ChangeInfo> detector = LanguageChangeSignatureDetectors.INSTANCE.forLanguage(element.getLanguage());
+    final LanguageChangeSignatureDetector<ChangeInfo> detector = LanguageChangeSignatureDetector.forLanguage(element.getLanguage());
 
     detector.performChange(currentInfo, editor, initialSignature);
   }

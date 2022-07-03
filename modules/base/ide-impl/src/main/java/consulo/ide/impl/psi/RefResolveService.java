@@ -32,7 +32,7 @@ public abstract class RefResolveService {
   public static final boolean ENABLED = /*ApplicationManager.getApplication().isUnitTestMode() ||*/ Boolean.getBoolean("ref.back");
 
   public static RefResolveService getInstance(Project project) {
-    return project.getComponent(RefResolveService.class);
+    return project.getInstance(RefResolveService.class);
   }
 
   /**

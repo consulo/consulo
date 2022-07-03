@@ -102,7 +102,7 @@ public class InplaceChangeSignature implements DocumentListener {
 
 
     myEditor = editor;
-    myDetector = LanguageChangeSignatureDetectors.INSTANCE.forLanguage(element.getLanguage());
+    myDetector = LanguageChangeSignatureDetector.forLanguage(element.getLanguage());
     myStableChange = myDetector.createInitialChangeInfo(element);
     myInitialSignature = myDetector.extractSignature(myStableChange);
     myInitialName = DescriptiveNameUtil.getDescriptiveName(myStableChange.getMethod());
