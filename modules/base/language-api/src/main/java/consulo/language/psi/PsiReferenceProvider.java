@@ -22,11 +22,11 @@ import javax.annotation.Nonnull;
 
 /**
  * Allows to inject additional references into an element that supports reference contributors.
- * Register it via {@link PsiReferenceContributor} or {@link PsiReferenceProviderBean#EP_NAME}
+ * Register it via {@link PsiReferenceContributor} or {@link PsiReferenceProviderByPattern}
  * <p>
  * Note that, if you're implementing a custom language, it won't by default support references registered through PsiReferenceContributor.
  * If you want to support that, you need to call
- * {@link com.intellij.psi.impl.source.resolve.reference.ReferenceProvidersRegistry#getReferencesFromProviders(PsiElement)} from your implementation
+ * {@link ReferenceProvidersRegistry#getReferencesFromProviders(PsiElement)} from your implementation
  * of PsiElement.getReferences().
  *
  * @author ik

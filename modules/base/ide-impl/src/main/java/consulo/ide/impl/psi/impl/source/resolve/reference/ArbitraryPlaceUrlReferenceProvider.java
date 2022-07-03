@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.openapi.paths.GlobalPathReferenceProvider;
 import consulo.ide.impl.idea.openapi.vcs.IssueNavigationConfiguration;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
-import consulo.language.psi.PsiReferenceTypedProvider;
+import consulo.language.psi.PsiReferenceProviderByType;
 import consulo.language.psi.ReferenceProviderType;
 import consulo.language.psi.path.PathReferenceManager;
 import consulo.language.util.ProcessingContext;
@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 @ExtensionImpl
-public class ArbitraryPlaceUrlReferenceProvider extends PsiReferenceTypedProvider {
+public class ArbitraryPlaceUrlReferenceProvider extends PsiReferenceProviderByType {
   private static final UserDataCache<CachedValue<PsiReference[]>, PsiElement, Object> ourRefsCache = new UserDataCache<CachedValue<PsiReference[]>, PsiElement, Object>("psielement.url.refs") {
     private final AtomicReference<GlobalPathReferenceProvider> myReferenceProvider = new AtomicReference<>();
 

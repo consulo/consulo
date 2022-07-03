@@ -748,7 +748,6 @@
       <with attribute="implementation" implements="consulo.language.psi.PsiReferenceContributor"/>
     </extensionPoint>
 
-    <extensionPoint name="psi.referenceProvider" beanClass="consulo.ide.impl.psi.PsiReferenceProviderBean"/>
     <extensionPoint name="psi.packageSupportProvider" interface="consulo.language.psi.PsiPackageSupportProvider"/>
     <extensionPoint name="psi.directoryMethodProxy" interface="consulo.language.psi.PsiDirectoryMethodProxy"/>
     <extensionPoint name="patterns.patternClass" beanClass="consulo.ide.impl.idea.patterns.compiler.PatternClassBean"/>

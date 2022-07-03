@@ -19,25 +19,29 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
 import consulo.component.extension.ExtensionPointCacheKey;
+import consulo.language.Language;
+import consulo.language.extension.ByLanguageValue;
+import consulo.language.extension.LanguageExtension;
+import consulo.language.extension.LanguageOneToMany;
+import consulo.language.pattern.ElementPattern;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Map;
+import java.util.List;
 
 /**
  * @author VISTALL
- * @since 28-Jun-22
+ * @since 03-Jul-22
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
-public abstract class PsiReferenceTypedProvider extends PsiReferenceProvider {
-  private static final ExtensionPointCacheKey<PsiReferenceTypedProvider, Map<ReferenceProviderType, PsiReferenceTypedProvider>> KEY =
-          ExtensionPointCacheKey.groupBy("PsiReferenceTypedProvider", PsiReferenceTypedProvider::getReferenceProviderType);
+public abstract class PsiReferenceProviderByPattern extends PsiReferenceProvider implements LanguageExtension {
+  private static final ExtensionPointCacheKey<PsiReferenceProviderByPattern, ByLanguageValue<List<PsiReferenceProviderByPattern>>> KEY =
+          ExtensionPointCacheKey.create("PsiReferenceProviderByPattern", LanguageOneToMany.build(false));
 
-  @Nullable
-  public static PsiReferenceTypedProvider forType(@Nonnull ReferenceProviderType type) {
-    return Application.get().getExtensionPoint(PsiReferenceTypedProvider.class).getOrBuildCache(KEY).get(type);
+  @Nonnull
+  public static List<PsiReferenceProviderByPattern> forLanguage(@Nonnull Language language) {
+    return Application.get().getExtensionPoint(PsiReferenceProviderByPattern.class).getOrBuildCache(KEY).requiredGet(language);
   }
 
   @Nonnull
-  public abstract ReferenceProviderType getReferenceProviderType();
+  public abstract ElementPattern<PsiElement> getElementPattern();
 }

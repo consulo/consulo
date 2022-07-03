@@ -30,7 +30,7 @@ public final class ReferenceProviderType {
 
   @Nonnull
   public PsiReferenceProvider getProvider() {
-    return Objects.requireNonNull(PsiReferenceTypedProvider.forType(this), () -> "ReferenceProvider for " + myId + " is not registered");
+    return Objects.requireNonNull(PsiReferenceProviderByType.forType(this), () -> "ReferenceProvider for " + myId + " is not registered");
   }
 
   @Override

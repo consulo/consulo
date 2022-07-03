@@ -19,9 +19,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.psi.PsiReferenceProviderBean;
 import consulo.language.Language;
-import consulo.language.OldLanguageExtension;
 import consulo.language.pattern.ElementPattern;
 import consulo.language.psi.*;
 import consulo.language.util.ProcessingContext;
@@ -34,8 +32,6 @@ import java.util.*;
 @Singleton
 @ServiceImpl
 public class ReferenceProvidersRegistryImpl extends ReferenceProvidersRegistry {
-  private static final OldLanguageExtension<PsiReferenceProviderBean> REFERENCE_PROVIDER_EXTENSION = new OldLanguageExtension<PsiReferenceProviderBean>(PsiReferenceProviderBean.EP_NAME.getName());
-
   private static final Comparator<ProviderBinding.ProviderInfo<PsiReferenceProvider, ProcessingContext>> PRIORITY_COMPARATOR = (o1, o2) -> Comparing.compare(o2.priority, o1.priority);
 
   private final Map<Language, PsiReferenceRegistrarImpl> myRegistrars = FactoryMap.create(language -> {
@@ -44,28 +40,16 @@ public class ReferenceProvidersRegistryImpl extends ReferenceProvidersRegistry {
       contributor.registerReferenceProviders(registrar);
     }
 
-    List<PsiReferenceProviderBean> referenceProviderBeans = REFERENCE_PROVIDER_EXTENSION.allForLanguage(language);
-    for (final PsiReferenceProviderBean providerBean : referenceProviderBeans) {
-      final ElementPattern<PsiElement> pattern = providerBean.createElementPattern();
-      if (pattern != null) {
-        registrar.registerReferenceProvider(pattern, new PsiReferenceProvider() {
-
-          PsiReferenceProvider myProvider;
-
-          @Nonnull
-          @Override
-          public PsiReference[] getReferencesByElement(@Nonnull PsiElement element, @Nonnull ProcessingContext context) {
-            if (myProvider == null) {
-
-              myProvider = providerBean.instantiate();
-              if (myProvider == null) {
-                myProvider = NULL_REFERENCE_PROVIDER;
-              }
-            }
-            return myProvider.getReferencesByElement(element, context);
-          }
-        });
-      }
+    List<PsiReferenceProviderByPattern> referenceProviderBeans = PsiReferenceProviderByPattern.forLanguage(language);
+    for (final PsiReferenceProviderByPattern provider : referenceProviderBeans) {
+      final ElementPattern<PsiElement> pattern = provider.getElementPattern();
+      registrar.registerReferenceProvider(pattern, new PsiReferenceProvider() {
+        @Nonnull
+        @Override
+        public PsiReference[] getReferencesByElement(@Nonnull PsiElement element, @Nonnull ProcessingContext context) {
+          return provider.getReferencesByElement(element, context);
+        }
+      });
     }
     return registrar;
   });

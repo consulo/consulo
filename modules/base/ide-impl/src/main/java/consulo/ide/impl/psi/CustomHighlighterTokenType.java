@@ -16,7 +16,6 @@
 package consulo.ide.impl.psi;
 
 import consulo.language.ast.IElementType;
-import org.jetbrains.annotations.NonNls;
 
 
 /**
@@ -25,7 +24,7 @@ import org.jetbrains.annotations.NonNls;
  */
 public interface CustomHighlighterTokenType {
   class CustomElementType extends IElementType {
-    public CustomElementType(@NonNls String debugName) {
+    public CustomElementType(String debugName) {
       super(debugName, null);
     }
   }
