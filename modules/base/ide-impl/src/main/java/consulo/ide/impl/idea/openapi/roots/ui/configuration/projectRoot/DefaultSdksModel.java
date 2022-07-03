@@ -138,7 +138,7 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
   }
 
   @Override
-  public void disposeUIResources() {
+  public void dispose() {
     mySdks.clear();
     myInitialized = false;
   }

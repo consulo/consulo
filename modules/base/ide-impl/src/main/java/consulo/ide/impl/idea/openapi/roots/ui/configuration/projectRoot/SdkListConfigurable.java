@@ -22,6 +22,7 @@ import consulo.configurable.ConfigurationException;
 import consulo.configurable.MasterDetailsConfigurable;
 import consulo.content.bundle.*;
 import consulo.content.impl.internal.bundle.SdkImpl;
+import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.projectRoots.impl.SdkConfigurationUtil;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.SdkProjectStructureElement;
@@ -56,7 +57,6 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
   public static final Predicate<SdkTypeId> ADD_SDK_FILTER = sdkTypeId -> sdkTypeId instanceof SdkType && ((SdkType)sdkTypeId).supportsUserAdd();
 
   private static final UnknownSdkType ourUnknownSdkType = UnknownSdkType.getInstance("UNKNOWN_BUNDLE");
-  private final SettingsSdksModel mySdksModel;
   private final SdkModel.Listener myListener = new SdkModel.Listener() {
     @RequiredUIAccess
     @Override
@@ -99,14 +99,16 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
     @RequiredUIAccess
     @Override
     public void actionPerformed(final AnActionEvent e) {
+      SettingsSdksModel sdksModel = myShowSettingsUtil.getSdksModel();
+
       final Object o = getSelectedObject();
       if (o instanceof SdkImpl) {
         final SdkImpl selected = (SdkImpl)o;
-        String defaultNewName = SdkConfigurationUtil.createUniqueSdkName(selected.getName(), mySdksModel.getSdks());
+        String defaultNewName = SdkConfigurationUtil.createUniqueSdkName(selected.getName(), sdksModel.getSdks());
         final String newName = Messages.showInputDialog("Enter bundle name:", "Copy Bundle", null, defaultNewName, new NonEmptyInputValidator() {
           @Override
           public boolean checkInput(String inputString) {
-            return super.checkInput(inputString) && mySdksModel.findSdk(inputString) == null;
+            return super.checkInput(inputString) && sdksModel.findSdk(inputString) == null;
           }
         });
         if (newName == null) return;
@@ -115,7 +117,7 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
         sdk.setName(newName);
         sdk.setPredefined(false);
 
-        mySdksModel.doAdd(sdk, sdk1 -> addSdkNode(sdk1, true));
+        sdksModel.doAdd(sdk, sdk1 -> addSdkNode(sdk1, true));
       }
     }
 
@@ -132,10 +134,13 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
     }
   }
 
+  private final ShowSettingsUtil myShowSettingsUtil;
+
+  private Disposable myListenerDisposable;
+
   @Inject
   public SdkListConfigurable(ShowSettingsUtil showSettingsUtil) {
-    mySdksModel = showSettingsUtil.getSdksModel();
-    mySdksModel.addListener(myListener);
+    myShowSettingsUtil = showSettingsUtil;
   }
 
   @Override
@@ -152,6 +157,7 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
     return false;
   }
 
+  @Nonnull
   @Override
   @Nls
   public String getDisplayName() {
@@ -172,9 +178,18 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
 
   @Override
   protected void loadTree() {
+    if (myListenerDisposable != null) {
+      myListenerDisposable.dispose();
+      myListenerDisposable = null;
+    }
+
+    SettingsSdksModel sdksModel = myShowSettingsUtil.getSdksModel();
+    myListenerDisposable = Disposable.newDisposable();
+    sdksModel.addListener(myListener, myListenerDisposable);
+
     final Map<SdkType, List<Sdk>> map = new HashMap<>();
 
-    for (Sdk sdk : mySdksModel.getModifiedSdksMap().values()) {
+    for (Sdk sdk : sdksModel.getModifiedSdksMap().values()) {
       SdkType sdkType = (SdkType)sdk.getSdkType();
       if (sdkType instanceof UnknownSdkType) {
         sdkType = ourUnknownSdkType;
@@ -197,7 +212,7 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
       addNode(groupNode, myRoot);
 
       for (Sdk sdk : value) {
-        final SdkConfigurable configurable = new SdkConfigurable((SdkImpl)sdk, mySdksModel, TREE_UPDATER);
+        final SdkConfigurable configurable = new SdkConfigurable((SdkImpl)sdk, sdksModel, TREE_UPDATER);
 
         addNode(new MyNode(configurable), groupNode);
       }
@@ -218,8 +233,9 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
   @Nonnull
   @Override
   protected Collection<? extends ProjectStructureElement> getProjectStructureElements() {
+    SettingsSdksModel sdksModel = myShowSettingsUtil.getSdksModel();
     final List<ProjectStructureElement> result = new ArrayList<>();
-    for (Sdk sdk : mySdksModel.getModifiedSdksMap().values()) {
+    for (Sdk sdk : sdksModel.getModifiedSdksMap().values()) {
       result.add(new SdkProjectStructureElement(sdk));
     }
     return result;
@@ -227,9 +243,11 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
 
   public boolean addSdkNode(final Sdk sdk, final boolean selectInTree) {
     if (!myUiDisposed) {
+      SettingsSdksModel sdksModel = myShowSettingsUtil.getSdksModel();
+
       // todo myContext.getDaemonAnalyzer().queueUpdate(new SdkProjectStructureElement(sdk));
 
-      MyNode newSdkNode = new MyNode(new SdkConfigurable((SdkImpl)sdk, mySdksModel, TREE_UPDATER));
+      MyNode newSdkNode = new MyNode(new SdkConfigurable((SdkImpl)sdk, sdksModel, TREE_UPDATER));
 
       final MyNode groupNode = MasterDetailsComponent.findNodeByObject(myRoot, sdk.getSdkType());
       if (groupNode != null) {
@@ -278,20 +296,31 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
   public void disposeUIResources() {
     super.disposeUIResources();
 
-    mySdksModel.removeListener(myListener);
-    mySdksModel.disposeUIResources();
+    SettingsSdksModel sdksModel = myShowSettingsUtil.getSdksModel();
+
+    if (myListenerDisposable != null) {
+      myListenerDisposable.dispose();
+    }
+
+    sdksModel.dispose();
   }
 
   @RequiredUIAccess
   @Override
   public void reset() {
     super.reset();
+    SettingsSdksModel sdksModel = myShowSettingsUtil.getSdksModel();
+
+    sdksModel.reset();
+
     myTree.setRootVisible(false);
   }
 
   @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
+    SettingsSdksModel sdksModel = myShowSettingsUtil.getSdksModel();
+
     boolean modifiedSdks = false;
     for (int i = 0; i < myRoot.getChildCount(); i++) {
       final TreeNode groupNode = myRoot.getChildAt(i);
@@ -306,13 +335,15 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
       }
     }
 
-    if (mySdksModel.isModified() || modifiedSdks) mySdksModel.apply(this);
+    if (sdksModel.isModified() || modifiedSdks) sdksModel.apply(this);
   }
 
   @RequiredUIAccess
   @Override
   public boolean isModified() {
-    return super.isModified() || mySdksModel.isModified();
+    SettingsSdksModel sdksModel = myShowSettingsUtil.getSdksModel();
+
+    return super.isModified() || sdksModel.isModified();
   }
 
   @Nonnull
@@ -327,8 +358,10 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
       @Nonnull
       @Override
       public AnAction[] getChildren(@Nullable final AnActionEvent e) {
+        SettingsSdksModel sdksModel = myShowSettingsUtil.getSdksModel();
+
         DefaultActionGroup group = new DefaultActionGroup(ProjectBundle.message("add.action.name"), true);
-        mySdksModel.createAddActions(group, myTree, sdk -> addSdkNode(sdk, true), ADD_SDK_FILTER);
+        sdksModel.createAddActions(group, myTree, sdk -> addSdkNode(sdk, true), ADD_SDK_FILTER);
         return group.getChildren(null);
       }
     };
@@ -336,7 +369,8 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
 
   @Override
   protected void removeSdk(final Sdk jdk) {
-    mySdksModel.removeSdk(jdk);
+    SettingsSdksModel sdksModel = myShowSettingsUtil.getSdksModel();
+    sdksModel.removeSdk(jdk);
     // todo myContext.getDaemonAnalyzer().removeElement(new SdkProjectStructureElement(jdk));
   }
 

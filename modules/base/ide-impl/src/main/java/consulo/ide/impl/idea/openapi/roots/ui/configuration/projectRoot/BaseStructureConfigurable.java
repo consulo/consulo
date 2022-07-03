@@ -194,7 +194,6 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent i
 
   protected abstract void loadTree();
 
-
   @Override
   @Nonnull
   protected ArrayList<AnAction> createActions(final boolean fromPopup) {

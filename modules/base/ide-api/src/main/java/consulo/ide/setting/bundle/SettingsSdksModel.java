@@ -41,7 +41,7 @@ public interface SettingsSdksModel extends SdkModel {
 
   void apply(MasterDetailsComponent masterDetailsComponent) throws ConfigurationException;
 
-  void disposeUIResources();
+  void dispose();
 
   void doAdd(Sdk newSdk, @Nullable Consumer<Sdk> updateTree);
 
