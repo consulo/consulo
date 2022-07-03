@@ -16,6 +16,8 @@
 package consulo.language.codeStyle;
 
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.Language;
 
@@ -24,9 +26,8 @@ import javax.annotation.Nonnull;
 /**
  * @author Rustam Vishnyakov
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class PredefinedCodeStyle {
-  public static final ExtensionPointName<PredefinedCodeStyle> EP_NAME = ExtensionPointName.create("consulo.predefinedCodeStyle");
-
   public final static PredefinedCodeStyle[] EMPTY_ARRAY = new PredefinedCodeStyle[]{};
   private final String myName;
   private final Language myLanguage;

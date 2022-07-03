@@ -16,37 +16,42 @@
 
 package consulo.ide.impl.idea.refactoring.move.moveFilesOrDirectories;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.application.Application;
 import consulo.component.extension.ExtensionPointName;
-import consulo.component.extension.Extensions;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.usage.UsageInfo;
 import consulo.language.util.IncorrectOperationException;
+import consulo.usage.UsageInfo;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
 import java.util.Map;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Sep 18, 2008
- *         Time: 3:40:48 PM
+ * Date: Sep 18, 2008
+ * Time: 3:40:48 PM
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class MoveFileHandler {
-  private static final ExtensionPointName<MoveFileHandler> EP_NAME = ExtensionPointName.create("consulo.moveFileHandler");
-
   public abstract boolean canProcessElement(PsiFile element);
+
   public abstract void prepareMovedFile(PsiFile file, PsiDirectory moveDestination, Map<PsiElement, PsiElement> oldToNewMap);
+
   @Nullable
   public abstract List<UsageInfo> findUsages(PsiFile psiFile, PsiDirectory newParent, boolean searchInComments, boolean searchInNonJavaFiles);
-  public abstract void retargetUsages(List<UsageInfo> usageInfos, Map<PsiElement, PsiElement> oldToNewMap) ;
+
+  public abstract void retargetUsages(List<UsageInfo> usageInfos, Map<PsiElement, PsiElement> oldToNewMap);
+
   public abstract void updateMovedFile(PsiFile file) throws IncorrectOperationException;
 
   @Nonnull
   public static MoveFileHandler forElement(PsiFile element) {
-    for(MoveFileHandler processor: Extensions.getExtensions(EP_NAME)) {
+    for (MoveFileHandler processor : Application.get().getExtensionList(MoveFileHandler.class)) {
       if (processor.canProcessElement(element)) {
         return processor;
       }
@@ -80,7 +85,6 @@ public abstract class MoveFileHandler {
 
     }
   };
-
 
 
 }

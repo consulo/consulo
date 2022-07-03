@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.module.Module;
 import consulo.project.Project;
@@ -31,9 +33,10 @@ import java.util.List;
 /**
  * User: ksafonov
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class ProjectStructureValidator {
 
-  private static final ExtensionPointName<ProjectStructureValidator> EP_NAME = ExtensionPointName.create("consulo.projectStructureValidator");
+  private static final ExtensionPointName<ProjectStructureValidator> EP_NAME = ExtensionPointName.create(ProjectStructureValidator.class);
 
   public static List<ProjectStructureElementUsage> getUsagesInElement(final ProjectStructureElement element) {
     for (ProjectStructureValidator validator : EP_NAME.getExtensionList()) {

@@ -1,6 +1,8 @@
 // Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.editor.template.context;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.codeEditor.EditorFactory;
 import consulo.component.extension.ExtensionPointName;
 import consulo.document.Document;
@@ -17,8 +19,9 @@ import java.util.function.Supplier;
  * Implement this class to describe some particular context that the user may associate with a live template, e.g., "Java String Start".
  * Contexts are available for the user in the Live Template management UI.
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class TemplateContextType {
-  public static final ExtensionPointName<TemplateContextType> EP_NAME = ExtensionPointName.create("consulo.liveTemplateContext");
+  public static final ExtensionPointName<TemplateContextType> EP_NAME = ExtensionPointName.create(TemplateContextType.class);
 
   @Nonnull
   private final String myContextId;

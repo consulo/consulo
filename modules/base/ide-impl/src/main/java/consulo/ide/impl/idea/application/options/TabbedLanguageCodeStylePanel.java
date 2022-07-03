@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.application.options;
 
+import consulo.application.Application;
 import consulo.ide.impl.idea.application.options.codeStyle.CodeStyleBlankLinesPanel;
 import consulo.ide.impl.idea.application.options.codeStyle.CodeStyleSchemesModel;
 import consulo.ide.impl.idea.application.options.codeStyle.CodeStyleSpacesPanel;
@@ -355,7 +356,7 @@ public abstract class TabbedLanguageCodeStylePanel extends CodeStyleAbstractPane
     final Language language = getDefaultLanguage();
     final List<PredefinedCodeStyle> result = new ArrayList<>();
 
-    for (PredefinedCodeStyle codeStyle : PredefinedCodeStyle.EP_NAME.getExtensions()) {
+    for (PredefinedCodeStyle codeStyle : Application.get().getExtensionList(PredefinedCodeStyle.class)) {
       if (codeStyle.getLanguage().equals(language)) {
         result.add(codeStyle);
       }

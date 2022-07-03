@@ -16,11 +16,14 @@
 
 package consulo.language.editor.template.context;
 
+import consulo.annotation.component.ExtensionImpl;
+
 import javax.annotation.Nonnull;
 
 /**
  * @author yole
  */
+@ExtensionImpl(id = "OTHER", order = "last")
 public class EverywhereContextType extends TemplateContextType {
   public EverywhereContextType() {
     super("OTHER", "Everywhere", null);

@@ -1,6 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.FileModificationService;
 import consulo.ide.IdeBundle;
 import consulo.language.editor.QualifiedNameProvider;
@@ -25,6 +26,7 @@ import javax.annotation.Nullable;
 
 import java.awt.datatransfer.Transferable;
 
+@ExtensionImpl
 public class PasteReferenceProvider implements PasteProvider {
   @Override
   public void performPaste(@Nonnull DataContext dataContext) {

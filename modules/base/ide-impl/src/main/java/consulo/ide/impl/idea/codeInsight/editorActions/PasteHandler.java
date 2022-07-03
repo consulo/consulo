@@ -15,55 +15,53 @@
  */
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
-import consulo.language.editor.CodeInsightSettings;
-import consulo.ide.impl.idea.codeInsight.CodeInsightUtilBase;
-import consulo.ui.ex.PasteProvider;
-import consulo.language.codeStyle.LanguageFormatting;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.document.Document;
-import consulo.document.RangeMarker;
-import consulo.document.ReadOnlyFragmentModificationException;
 import consulo.codeEditor.*;
-import consulo.language.editor.action.CopyPastePreProcessor;
-import consulo.logging.Logger;
-import consulo.ide.impl.idea.openapi.editor.*;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionManager;
+import consulo.component.extension.ExtensionPointName;
+import consulo.dataContext.DataContext;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
+import consulo.document.RangeMarker;
+import consulo.document.ReadOnlyFragmentModificationException;
+import consulo.document.util.DocumentUtil;
+import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.codeInsight.CodeInsightUtilBase;
+import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.ide.impl.idea.openapi.editor.actionSystem.EditorTextInsertHandler;
 import consulo.ide.impl.idea.openapi.editor.actions.PasteAction;
-import consulo.codeEditor.EditorEx;
-import consulo.component.extension.ExtensionPointName;
-import consulo.component.extension.Extensions;
-import consulo.document.FileDocumentManager;
-import consulo.ui.ex.awt.CopyPasteManager;
-import consulo.project.DumbService;
-import consulo.project.Project;
-import consulo.util.dataholder.Key;
-import consulo.util.lang.ref.Ref;
-import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiDocumentManager;
-import consulo.language.psi.PsiFile;
-import consulo.language.impl.file.SingleRootFileViewProvider;
-import consulo.language.codeStyle.CodeStyleManager;
-import consulo.document.util.DocumentUtil;
-import consulo.language.util.IncorrectOperationException;
 import consulo.ide.impl.idea.util.Producer;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
+import consulo.language.codeStyle.CodeStyleManager;
+import consulo.language.codeStyle.LanguageFormatting;
+import consulo.language.editor.CodeInsightSettings;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.action.CopyPastePreProcessor;
+import consulo.language.impl.file.SingleRootFileViewProvider;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
+import consulo.language.util.IncorrectOperationException;
+import consulo.logging.Logger;
+import consulo.project.DumbService;
+import consulo.project.Project;
+import consulo.ui.ex.PasteProvider;
+import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.util.dataholder.Key;
+import consulo.util.lang.ref.Ref;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.util.*;
 
 public class PasteHandler extends EditorActionHandler implements EditorTextInsertHandler {
   private static final Logger LOG = Logger.getInstance(PasteHandler.class);
-  private static final ExtensionPointName<PasteProvider> EP_NAME = ExtensionPointName.create("consulo.customPasteProvider");
 
   private final EditorActionHandler myOriginalHandler;
 
@@ -121,7 +119,7 @@ public class PasteHandler extends EditorActionHandler implements EditorTextInser
     DumbService.getInstance(project).setAlternativeResolveEnabled(true);
     document.startGuardedBlockChecking();
     try {
-      for (PasteProvider provider : Extensions.getExtensions(EP_NAME)) {
+      for (PasteProvider provider : Application.get().getExtensionList(PasteProvider.class)) {
         if (provider.isPasteEnabled(context)) {
           provider.performPaste(context);
           return;

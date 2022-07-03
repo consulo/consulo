@@ -16,24 +16,20 @@
 
 package consulo.ide.impl.idea.ide;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.dnd.FileCopyPasteUtil;
 import consulo.ide.impl.idea.ide.dnd.LinuxDragAndDropSupport;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
-import consulo.ui.ex.PasteProvider;
-import consulo.ui.ex.awt.CopyPasteManager;
-import consulo.project.Project;
-import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiDirectory;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFileSystemItem;
-import consulo.language.psi.PsiManager;
-import consulo.language.psi.PsiUtilCore;
 import consulo.ide.impl.idea.refactoring.copy.CopyFilesOrDirectoriesHandler;
 import consulo.ide.impl.idea.refactoring.move.moveFilesOrDirectories.MoveFilesOrDirectoriesHandler;
-import javax.annotation.Nonnull;
+import consulo.language.psi.*;
+import consulo.project.Project;
+import consulo.ui.ex.PasteProvider;
+import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.VirtualFile;
 
+import javax.annotation.Nonnull;
 import java.awt.datatransfer.Transferable;
 import java.io.File;
 import java.util.ArrayList;
@@ -42,10 +38,11 @@ import java.util.List;
 /**
  * @author yole
  */
+@ExtensionImpl
 public class FileListPasteProvider implements PasteProvider {
   @Override
   public void performPaste(@Nonnull DataContext dataContext) {
-    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final Project project = dataContext.getData(Project.KEY);
     final IdeView ideView = dataContext.getData(IdeView.KEY);
     if (project == null || ideView == null) return;
 

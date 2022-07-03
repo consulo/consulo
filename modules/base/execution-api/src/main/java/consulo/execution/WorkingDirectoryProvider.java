@@ -15,11 +15,14 @@
  */
 package consulo.execution;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.module.Module;
 import org.jetbrains.annotations.SystemIndependent;
 
 import javax.annotation.Nullable;
 
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface WorkingDirectoryProvider {
   @Nullable
   @SystemIndependent String getWorkingDirectoryPath(Module module);

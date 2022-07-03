@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.builtInServer.impl.net.http;
 
+import consulo.application.Application;
 import consulo.logging.Logger;
 import consulo.ide.impl.idea.openapi.util.AtomicNotNullLazyValue;
 import io.netty.buffer.ByteBuf;
@@ -168,7 +169,7 @@ class PortUnificationServerHandler extends Decoder {
       }
 
       UUID uuid = new UUID(buffer.readLong(), buffer.readLong());
-      for (BinaryRequestHandler customHandler : BinaryRequestHandler.EP_NAME.getExtensionList()) {
+      for (BinaryRequestHandler customHandler : Application.get().getExtensionList(BinaryRequestHandler.class)) {
         if (uuid.equals(customHandler.getId())) {
           ChannelPipeline pipeline = context.pipeline();
           pipeline.addLast(customHandler.getInboundHandler(context));

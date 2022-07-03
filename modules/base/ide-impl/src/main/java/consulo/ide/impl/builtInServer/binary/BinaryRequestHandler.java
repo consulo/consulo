@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.builtInServer.binary;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -22,9 +24,8 @@ import javax.annotation.Nonnull;
 
 import java.util.UUID;
 
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class BinaryRequestHandler {
-  public static final ExtensionPointName<BinaryRequestHandler> EP_NAME = ExtensionPointName.create("consulo.binaryRequestHandler");
-
   /**
    * uuidgen on Mac OS X could be used to generate UUID
    */

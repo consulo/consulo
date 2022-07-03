@@ -41,8 +41,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ProgramParametersConfigurator {
-  private static final ExtensionPointName<WorkingDirectoryProvider> WORKING_DIRECTORY_PROVIDER_EP_NAME = ExtensionPointName.create("consulo.module.workingDirectoryProvider");
-
   public void configureConfiguration(SimpleProgramParameters parameters, CommonProgramRunConfigurationParameters configuration) {
     Project project = configuration.getProject();
     Module module = getModule(configuration);
@@ -101,7 +99,7 @@ public class ProgramParametersConfigurator {
 
   @Nullable
   protected String getDefaultWorkingDir(@Nonnull Module module) {
-    for (WorkingDirectoryProvider provider : WORKING_DIRECTORY_PROVIDER_EP_NAME.getExtensionList()) {
+    for (WorkingDirectoryProvider provider : module.getApplication().getExtensionList(WorkingDirectoryProvider.class)) {
       @SystemIndependent String path = provider.getWorkingDirectoryPath(module);
       if (path != null) return path;
     }

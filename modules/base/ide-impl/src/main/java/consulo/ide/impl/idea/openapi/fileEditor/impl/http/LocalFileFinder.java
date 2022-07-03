@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.fileEditor.impl.http;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
@@ -24,8 +26,9 @@ import javax.annotation.Nullable;
 /**
  * @author nik
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class LocalFileFinder {
-  public static final ExtensionPointName<LocalFileFinder> EP_NAME = ExtensionPointName.create("consulo.http.localFileFinder");
+  public static final ExtensionPointName<LocalFileFinder> EP_NAME = ExtensionPointName.create(LocalFileFinder.class);
 
   @Nullable
   public abstract VirtualFile findLocalFile(@Nonnull String url, @Nonnull Project project);

@@ -1275,10 +1275,6 @@
 
 
 
-    <gotoRelatedProvider implementation="consulo.ide.impl.idea.ide.actions.RelatedItemLineMarkerGotoAdapter"/>
-
-    <customPasteProvider implementation="consulo.ide.impl.idea.ide.actions.PasteReferenceProvider"/>
-
 
     <statementUpDownMover implementation="consulo.ide.impl.idea.codeInsight.editorActions.moveUpDown.LineMover" id="line" order="last"/>
 
@@ -1363,9 +1359,6 @@
     <!--<editorTypedHandler implementationClass="consulo.ide.impl.idea.codeInsight.lookup.impl.LookupTypedHandler" id="lookup"/>-->
 
 
-    <liveTemplateContext id="OTHER" implementation="consulo.language.editor.template.context.EverywhereContextType" order="last"/>
-
-
 
     <toolWindow id="Project"
                 anchor="left"
@@ -1401,7 +1394,6 @@
                             <!--order="first"/>-->
 
 
-    <filePasteProvider implementation="consulo.ide.impl.idea.ide.FileListPasteProvider"/>
 
 
 
