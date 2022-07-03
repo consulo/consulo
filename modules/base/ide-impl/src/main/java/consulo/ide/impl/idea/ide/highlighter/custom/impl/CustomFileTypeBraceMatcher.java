@@ -55,11 +55,6 @@ public class CustomFileTypeBraceMatcher implements PairedBraceMatcher {
            isRBraceToken(contextType);
   }
 
-  @Override
-  public int getCodeConstructStart(final PsiFile file, final int openingBraceOffset) {
-    return openingBraceOffset;
-  }
-
   private static boolean isRBraceToken(IElementType type) {
     for (BracePair pair : PAIRS) {
       if (type == pair.getRightBraceType()) return true;
