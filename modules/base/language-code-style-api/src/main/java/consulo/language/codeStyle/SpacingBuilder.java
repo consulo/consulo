@@ -1,14 +1,9 @@
-package consulo.ide.impl.idea.formatting;
+package consulo.language.codeStyle;
 
 import consulo.language.Language;
 import consulo.document.util.TextRange;
-import consulo.language.codeStyle.CodeStyleSettings;
-import consulo.language.codeStyle.ASTBlock;
-import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
-import consulo.language.codeStyle.Block;
-import consulo.language.codeStyle.Spacing;
 
 import javax.annotation.Nonnull;
 

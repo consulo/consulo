@@ -13,25 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.completion;
+package consulo.language.editor.completion;
 
-import consulo.language.editor.completion.CompletionParameters;
+import consulo.application.Application;
+import consulo.component.extension.ExtensionPointCacheKey;
+import consulo.language.Language;
+import consulo.language.extension.ByLanguageValue;
+import consulo.language.extension.LanguageExtension;
+import consulo.language.extension.LanguageOneToMany;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.util.lang.ThreeState;
+
 import javax.annotation.Nonnull;
+import java.util.List;
 
 /**
  * @author peter
  */
-public abstract class CompletionConfidence {
+public abstract class CompletionConfidence implements LanguageExtension {
+  private static final ExtensionPointCacheKey<CompletionConfidence, ByLanguageValue<List<CompletionConfidence>>> KEY =
+          ExtensionPointCacheKey.create("CompletionConfidence", LanguageOneToMany.build(false));
 
-  /**
-   * @deprecated not used anymore, only the user controls whether the lookup will be focused
-   */
   @Nonnull
-  public ThreeState shouldFocusLookup(@Nonnull CompletionParameters parameters) {
-    return ThreeState.UNSURE;
+  public static List<CompletionConfidence> forLanguage(@Nonnull Language language) {
+    return Application.get().getExtensionPoint(CompletionConfidence.class).getOrBuildCache(KEY).requiredGet(language);
   }
 
   /**

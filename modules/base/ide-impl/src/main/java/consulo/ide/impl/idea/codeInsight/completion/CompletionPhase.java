@@ -18,6 +18,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.SelectionModel;
 import consulo.codeEditor.EditorEx;
 import consulo.ide.impl.idea.openapi.editor.ex.FocusChangeListenerImpl;
+import consulo.language.editor.completion.CompletionConfidence;
 import consulo.language.editor.completion.CompletionContributor;
 import consulo.language.editor.completion.CompletionType;
 import consulo.project.Project;
@@ -162,7 +163,7 @@ public abstract class CompletionPhase implements Disposable {
 
       Language language = PsiUtilCore.findLanguageFromElement(elementAt);
 
-      for (CompletionConfidence confidence : CompletionConfidenceEP.forLanguage(language)) {
+      for (CompletionConfidence confidence : CompletionConfidence.forLanguage(language)) {
         final ThreeState result = confidence.shouldSkipAutopopup(elementAt, psiFile, offset);
         if (result != ThreeState.UNSURE) {
           LOG.debug(confidence + " has returned shouldSkipAutopopup=" + result);

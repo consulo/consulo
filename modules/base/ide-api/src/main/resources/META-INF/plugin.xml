@@ -729,17 +729,7 @@
       <with attribute="implementationClass" implements="consulo.language.Weigher"/>
     </extensionPoint>
 
-    <extensionPoint name="completion.contributor" beanClass="consulo.language.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="consulo.language.editor.completion.CompletionContributor"/>
-    </extensionPoint>
 
-    <extensionPoint name="completion.confidence" beanClass="consulo.ide.impl.idea.codeInsight.completion.CompletionConfidenceEP">
-      <with attribute="implementationClass" implements="consulo.ide.impl.idea.codeInsight.completion.CompletionConfidence"/>
-    </extensionPoint>
-
-    <extensionPoint name="completion.skip" interface="consulo.ide.impl.idea.codeInsight.completion.CompletionPreselectSkipper"/>
-    <extensionPoint name="lookup.charFilter" interface="consulo.ide.impl.idea.codeInsight.lookup.CharFilter"/>
-    <extensionPoint name="lookup.actionProvider" interface="consulo.ide.impl.idea.codeInsight.lookup.LookupActionProvider"/>
 
     <extensionPoint name="highlightRangeExtension" interface="consulo.ide.impl.idea.codeInsight.daemon.impl.HighlightRangeExtension"/>
 

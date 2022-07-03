@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.codeInsight.template.impl;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.CodeInsightSettings;
-import consulo.ide.impl.idea.codeInsight.lookup.CharFilter;
+import consulo.language.editor.completion.lookup.CharFilter;
 import consulo.language.editor.completion.lookup.Lookup;
 import consulo.language.editor.completion.lookup.LookupElement;
 

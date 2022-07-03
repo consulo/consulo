@@ -16,20 +16,21 @@
 package consulo.ide.impl.idea.codeInsight.template.postfix.completion;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.language.editor.completion.lookup.Lookup;
-import consulo.ide.impl.idea.codeInsight.lookup.LookupActionProvider;
-import consulo.language.editor.completion.lookup.LookupElement;
-import consulo.ide.impl.idea.codeInsight.lookup.LookupElementAction;
+import consulo.application.AllIcons;
+import consulo.application.ApplicationManager;
+import consulo.ide.impl.codeInsight.template.postfix.settings.PostfixTemplatesChildConfigurable;
 import consulo.ide.impl.idea.codeInsight.template.postfix.settings.PostfixTemplatesConfigurable;
 import consulo.ide.impl.idea.codeInsight.template.postfix.settings.PostfixTemplatesSettings;
 import consulo.ide.impl.idea.codeInsight.template.postfix.templates.PostfixTemplate;
-import consulo.application.AllIcons;
-import consulo.application.ApplicationManager;
-import consulo.ide.setting.ShowSettingsUtil;
-import consulo.project.Project;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.IconUtil;
-import consulo.ide.impl.codeInsight.template.postfix.settings.PostfixTemplatesChildConfigurable;
+import consulo.ide.setting.ShowSettingsUtil;
+import consulo.language.editor.completion.lookup.Lookup;
+import consulo.language.editor.completion.lookup.LookupActionProvider;
+import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.editor.completion.lookup.LookupElementAction;
+import consulo.project.Project;
+
+import java.util.function.Consumer;
 
 @ExtensionImpl
 public class PostfixTemplateLookupActionProvider implements LookupActionProvider {
@@ -39,7 +40,7 @@ public class PostfixTemplateLookupActionProvider implements LookupActionProvider
       final PostfixTemplateLookupElement templateLookupElement = (PostfixTemplateLookupElement)element;
       final PostfixTemplate template = templateLookupElement.getPostfixTemplate();
 
-      consumer.consume(new LookupElementAction(IconUtil.getEditIcon(), "Edit postfix templates settings") {
+      consumer.accept(new LookupElementAction(IconUtil.getEditIcon(), "Edit postfix templates settings") {
         @Override
         public Result performLookupAction() {
           final Project project = lookup.getEditor().getProject();
@@ -62,8 +63,8 @@ public class PostfixTemplateLookupActionProvider implements LookupActionProvider
       });
 
       final PostfixTemplatesSettings settings = PostfixTemplatesSettings.getInstance();
-      if (settings != null && settings.isTemplateEnabled(template, templateLookupElement.getProvider())) {
-        consumer.consume(new LookupElementAction(AllIcons.Actions.Cancel, String.format("Disable '%s' template", template.getKey())) {
+      if (settings.isTemplateEnabled(template, templateLookupElement.getProvider())) {
+        consumer.accept(new LookupElementAction(AllIcons.Actions.Cancel, String.format("Disable '%s' template", template.getKey())) {
           @Override
           public Result performLookupAction() {
             ApplicationManager.getApplication().invokeLater(new Runnable() {

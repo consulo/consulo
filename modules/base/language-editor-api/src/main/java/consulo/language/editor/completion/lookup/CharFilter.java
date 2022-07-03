@@ -22,12 +22,11 @@
  * To change template for new interface use 
  * Code Style | Class Templates options (Tools | IDE Options).
  */
-package consulo.ide.impl.idea.codeInsight.lookup;
+package consulo.language.editor.completion.lookup;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
-import consulo.language.editor.completion.lookup.Lookup;
 
 import javax.annotation.Nullable;
 
@@ -44,7 +43,7 @@ public abstract class CharFilter {
    * @param c character being inserted
    * @param prefixLength
    * @param lookup
-   * @return further action or null, which indicates that some other {@link consulo.ide.impl.idea.codeInsight.lookup.CharFilter}
+   * @return further action or null, which indicates that some other {@link CharFilter}
    * should handle this char. Default char filter handles common cases like finishing with ' ', '(', ';', etc.  
    */
   @Nullable

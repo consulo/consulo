@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.codeInsight.lookup.impl;
 
 import consulo.language.editor.completion.lookup.Lookup;
 import consulo.language.editor.completion.lookup.LookupElement;
-import consulo.ide.impl.idea.codeInsight.lookup.LookupElementAction;
+import consulo.language.editor.completion.lookup.LookupElementAction;
 import consulo.undoRedo.CommandProcessor;
 import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.ex.popup.BaseListPopupStep;

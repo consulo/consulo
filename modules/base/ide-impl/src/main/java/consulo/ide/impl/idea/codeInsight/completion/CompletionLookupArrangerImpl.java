@@ -7,6 +7,7 @@ import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionSorterImpl;
 import consulo.ide.impl.idea.codeInsight.lookup.impl.EmptyLookupItem;
 import consulo.ide.impl.idea.codeInsight.template.impl.LiveTemplateLookupElement;
 import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.language.editor.completion.CompletionPreselectSkipper;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.ApplicationManager;

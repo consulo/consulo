@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.refactoring;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.codeInsight.lookup.CharFilter;
+import consulo.language.editor.completion.lookup.CharFilter;
 import consulo.language.editor.completion.lookup.Lookup;
 
 /**

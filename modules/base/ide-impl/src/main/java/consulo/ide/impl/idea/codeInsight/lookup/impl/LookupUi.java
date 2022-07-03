@@ -6,7 +6,7 @@ import consulo.ide.impl.idea.codeInsight.completion.CodeCompletionFeatures;
 import consulo.ide.impl.idea.codeInsight.completion.ShowHideIntentionIconLookupAction;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.language.editor.completion.lookup.LookupElement;
-import consulo.ide.impl.idea.codeInsight.lookup.LookupElementAction;
+import consulo.language.editor.completion.lookup.LookupElementAction;
 import consulo.application.statistic.FeatureUsageTracker;
 import consulo.application.AllIcons;
 import consulo.ide.impl.idea.ide.IdeEventQueue;

@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.completion;
+package consulo.language.editor.completion;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.language.editor.completion.CompletionLocation;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.component.extension.ExtensionPointName;
 

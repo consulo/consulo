@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.util.textCompletion;
 
 import consulo.language.editor.completion.CompletionParameters;
 import consulo.language.editor.completion.CompletionResultSet;
-import consulo.ide.impl.idea.codeInsight.lookup.CharFilter;
+import consulo.language.editor.completion.lookup.CharFilter;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

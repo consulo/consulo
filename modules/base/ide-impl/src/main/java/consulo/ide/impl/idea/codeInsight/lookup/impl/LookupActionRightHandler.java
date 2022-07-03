@@ -22,7 +22,7 @@ import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.codeInsight.completion.CompletionProgressIndicator;
 import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionServiceImpl;
-import consulo.ide.impl.idea.codeInsight.lookup.CharFilter;
+import consulo.language.editor.completion.lookup.CharFilter;
 import consulo.ui.ex.action.IdeActions;
 
 import javax.annotation.Nonnull;

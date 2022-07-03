@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,11 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.completion;
+package consulo.language.editor.completion.lookup;
+
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.component.extension.ExtensionPointName;
+
+import java.util.function.Consumer;
 
 /**
  * @author peter
  */
-@Deprecated
-public class UnfocusedComments extends CompletionConfidence {
+@ExtensionAPI(ComponentScope.APPLICATION)
+public interface LookupActionProvider {
+  ExtensionPointName<LookupActionProvider> EP_NAME = ExtensionPointName.create(LookupActionProvider.class);
+
+  void fillActions(LookupElement element, Lookup lookup, Consumer<LookupElementAction> consumer);
 }

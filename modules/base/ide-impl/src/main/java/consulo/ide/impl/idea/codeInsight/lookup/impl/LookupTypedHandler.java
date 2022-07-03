@@ -16,7 +16,7 @@ import consulo.ide.impl.idea.codeInsight.completion.CompletionProgressIndicator;
 import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionServiceImpl;
 import consulo.ide.impl.idea.codeInsight.editorActions.AutoHardWrapHandler;
 import consulo.ide.impl.idea.codeInsight.editorActions.TypedHandler;
-import consulo.ide.impl.idea.codeInsight.lookup.CharFilter;
+import consulo.language.editor.completion.lookup.CharFilter;
 import consulo.ide.impl.idea.codeInsight.lookup.impl.actions.ChooseItemAction;
 import consulo.ide.impl.idea.codeInsight.template.impl.TemplateSettings;
 import consulo.ide.impl.idea.codeInsight.template.impl.editorActions.TypedActionHandlerBase;

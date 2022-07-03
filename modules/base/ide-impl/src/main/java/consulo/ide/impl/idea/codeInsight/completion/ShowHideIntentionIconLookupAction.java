@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.completion;
 
-import consulo.ide.impl.idea.codeInsight.lookup.LookupElementAction;
+import consulo.language.editor.completion.lookup.LookupElementAction;
 import consulo.application.AllIcons;
 import consulo.application.util.registry.Registry;
 

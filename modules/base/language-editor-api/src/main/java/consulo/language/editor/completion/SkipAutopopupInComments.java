@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.completion;
+package consulo.language.editor.completion;
 
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 /**
  * @author peter
  */
-public class SkipAutopopupInComments extends CompletionConfidence {
+public abstract class SkipAutopopupInComments extends CompletionConfidence {
 
   @Nonnull
   @Override
@@ -37,5 +37,4 @@ public class SkipAutopopupInComments extends CompletionConfidence {
 
     return ThreeState.UNSURE;
   }
-
 }

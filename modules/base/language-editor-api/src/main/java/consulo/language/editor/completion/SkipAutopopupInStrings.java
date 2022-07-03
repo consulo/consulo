@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.completion;
+package consulo.language.editor.completion;
 
 import consulo.language.parser.ParserDefinition;
 import consulo.language.pattern.PlatformPatterns;
@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
 /**
  * @author peter
  */
-public class SkipAutopopupInStrings extends CompletionConfidence {
+public abstract class SkipAutopopupInStrings extends CompletionConfidence {
   @Nonnull
   @Override
   public ThreeState shouldSkipAutopopup(@Nonnull PsiElement contextElement, @Nonnull PsiFile psiFile, int offset) {

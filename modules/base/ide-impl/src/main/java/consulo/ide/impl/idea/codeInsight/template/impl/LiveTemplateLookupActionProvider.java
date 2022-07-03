@@ -16,16 +16,17 @@
 package consulo.ide.impl.idea.codeInsight.template.impl;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.language.editor.completion.lookup.Lookup;
-import consulo.ide.impl.idea.codeInsight.lookup.LookupActionProvider;
-import consulo.language.editor.completion.lookup.LookupElement;
-import consulo.ide.impl.idea.codeInsight.lookup.LookupElementAction;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
-import consulo.ide.setting.ShowSettingsUtil;
-import consulo.project.Project;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.IconUtil;
+import consulo.ide.setting.ShowSettingsUtil;
+import consulo.language.editor.completion.lookup.Lookup;
+import consulo.language.editor.completion.lookup.LookupActionProvider;
+import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.editor.completion.lookup.LookupElementAction;
+import consulo.project.Project;
+
+import java.util.function.Consumer;
 
 /**
  * @author peter
@@ -39,7 +40,7 @@ public class LiveTemplateLookupActionProvider implements LookupActionProvider {
       final TemplateImpl templateFromSettings = TemplateSettings.getInstance().getTemplate(template.getKey(), template.getGroupName());
 
       if (templateFromSettings != null) {
-        consumer.consume(new LookupElementAction(IconUtil.getEditIcon(), "Edit live template settings") {
+        consumer.accept(new LookupElementAction(IconUtil.getEditIcon(), "Edit live template settings") {
           @Override
           public Result performLookupAction() {
             final Project project = lookup.getEditor().getProject();
@@ -63,7 +64,7 @@ public class LiveTemplateLookupActionProvider implements LookupActionProvider {
         });
 
 
-        consumer.consume(new LookupElementAction(AllIcons.Actions.Cancel, String.format("Disable '%s' template", template.getKey())) {
+        consumer.accept(new LookupElementAction(AllIcons.Actions.Cancel, String.format("Disable '%s' template", template.getKey())) {
           @Override
           public Result performLookupAction() {
             ApplicationManager.getApplication().invokeLater(new Runnable() {

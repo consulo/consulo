@@ -8,8 +8,8 @@ import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.hint.HintManager;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.language.editor.completion.lookup.DeferredUserLookupValue;
-import consulo.ide.impl.idea.codeInsight.lookup.LookupActionProvider;
-import consulo.ide.impl.idea.codeInsight.lookup.LookupElementAction;
+import consulo.language.editor.completion.lookup.LookupActionProvider;
+import consulo.language.editor.completion.lookup.LookupElementAction;
 import consulo.ide.impl.idea.codeInsight.lookup.impl.actions.ChooseItemAction;
 import consulo.ide.impl.idea.codeInsight.template.impl.actions.NextVariableAction;
 import consulo.application.statistic.FeatureUsageTracker;
@@ -322,9 +322,7 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable,
 
   public Collection<LookupElementAction> getActionsFor(LookupElement element) {
     final CollectConsumer<LookupElementAction> consumer = new CollectConsumer<>();
-    for (LookupActionProvider provider : LookupActionProvider.EP_NAME.getExtensions()) {
-      provider.fillActions(element, this, consumer);
-    }
+    LookupActionProvider.EP_NAME.forEachExtensionSafe(it -> it.fillActions(element, this, consumer));
     if (!consumer.getResult().isEmpty()) {
       consumer.consume(new ShowHideIntentionIconLookupAction());
     }
