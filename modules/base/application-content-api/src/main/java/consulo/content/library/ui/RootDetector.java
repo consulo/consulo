@@ -15,6 +15,8 @@
  */
 package consulo.content.library.ui;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.content.OrderRootType;
 import consulo.application.progress.ProgressIndicator;
 import consulo.virtualFileSystem.VirtualFile;
@@ -30,6 +32,7 @@ import java.util.Collection;
  * @see FileTypeBasedRootFilter
  * @author nik
 */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class RootDetector {
   private final OrderRootType myRootType;
   private final boolean myJarDirectory;

@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.roots.libraries.ui;
+package consulo.content.library.ui;
 
-import consulo.content.library.ui.RootDetector;
 import consulo.application.progress.ProgressIndicator;
 import consulo.content.OrderRootType;
 import consulo.virtualFileSystem.VirtualFile;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Collections;
 

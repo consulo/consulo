@@ -25,6 +25,7 @@ import consulo.util.io.URLUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.*;
+import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -38,7 +39,9 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
@@ -561,6 +564,57 @@ public final class VirtualFileUtil {
       if (parent == null) return false;
       if (parent.equals(ancestor)) return true;
       parent = parent.getParent();
+    }
+  }
+
+  public static void processFileRecursivelyWithoutIgnored(@Nonnull final VirtualFile root, @Nonnull final Predicate<VirtualFile> processor) {
+    final FileTypeRegistry ftm = FileTypeRegistry.getInstance();
+    processFilesRecursively(root, processor, vf -> !ftm.isFileIgnored(vf));
+  }
+
+  public static boolean processFilesRecursively(@Nonnull VirtualFile root, @Nonnull Predicate<VirtualFile> processor) {
+    if (!processor.test(root)) return false;
+
+    if (root.isDirectory()) {
+      final LinkedList<VirtualFile[]> queue = new LinkedList<>();
+
+      queue.add(root.getChildren());
+
+      do {
+        final VirtualFile[] files = queue.removeFirst();
+
+        for (VirtualFile file : files) {
+          if (!processor.test(file)) return false;
+          if (file.isDirectory()) {
+            queue.add(file.getChildren());
+          }
+        }
+      }
+      while (!queue.isEmpty());
+    }
+
+    return true;
+  }
+
+  public static void processFilesRecursively(@Nonnull VirtualFile root, @Nonnull Predicate<VirtualFile> processor, @Nonnull Function<VirtualFile, Boolean> directoryFilter) {
+    if (!processor.test(root)) return;
+
+    if (root.isDirectory() && directoryFilter.apply(root)) {
+      final LinkedList<VirtualFile[]> queue = new LinkedList<>();
+
+      queue.add(root.getChildren());
+
+      do {
+        final VirtualFile[] files = queue.removeFirst();
+
+        for (VirtualFile file : files) {
+          if (!processor.test(file)) return;
+          if (file.isDirectory() && directoryFilter.apply(file)) {
+            queue.add(file.getChildren());
+          }
+        }
+      }
+      while (!queue.isEmpty());
     }
   }
 

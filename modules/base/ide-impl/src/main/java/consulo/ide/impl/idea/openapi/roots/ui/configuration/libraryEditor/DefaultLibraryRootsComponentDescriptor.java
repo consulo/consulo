@@ -15,13 +15,13 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.libraryEditor;
 
-import consulo.ide.impl.idea.openapi.projectRoots.ui.Util;
-import consulo.ide.impl.idea.openapi.roots.ui.OrderRootTypeUIFactory;
-import consulo.component.extension.ExtensionPointName;
+import consulo.application.Application;
 import consulo.content.OrderRootType;
 import consulo.content.base.DocumentationOrderRootType;
 import consulo.content.library.ui.*;
 import consulo.dataContext.DataContext;
+import consulo.ide.impl.idea.openapi.projectRoots.ui.Util;
+import consulo.ide.impl.idea.openapi.roots.ui.OrderRootTypeUIFactory;
 import consulo.project.ProjectBundle;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -35,8 +35,6 @@ import java.util.List;
  * @author nik
  */
 public class DefaultLibraryRootsComponentDescriptor extends LibraryRootsComponentDescriptor {
-  public static final ExtensionPointName<RootDetector> EP_NAME = ExtensionPointName.create("consulo.defaultLibraryRootDetector");
-
   @Override
   public OrderRootTypePresentation getRootTypePresentation(@Nonnull OrderRootType type) {
     return getDefaultPresentation(type);
@@ -51,7 +49,7 @@ public class DefaultLibraryRootsComponentDescriptor extends LibraryRootsComponen
   @Nonnull
   @Override
   public List<? extends RootDetector> getRootDetectors() {
-    return EP_NAME.getExtensionList();
+    return Application.get().getExtensionList(RootDetector.class);
   }
 
   public static OrderRootTypePresentation getDefaultPresentation(OrderRootType type) {

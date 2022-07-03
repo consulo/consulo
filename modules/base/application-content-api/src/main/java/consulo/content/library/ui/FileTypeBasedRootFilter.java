@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.roots.libraries.ui;
+package consulo.content.library.ui;
 
-import consulo.content.library.ui.RootDetector;
-import consulo.virtualFileSystem.archive.ArchiveFileType;
-import consulo.virtualFileSystem.fileType.FileType;
 import consulo.application.progress.ProgressIndicator;
 import consulo.content.OrderRootType;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
-import consulo.application.util.function.Processor;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -62,16 +61,13 @@ public class FileTypeBasedRootFilter extends RootFilter {
   }
 
   private boolean containsFileOfType(VirtualFile rootCandidate, final ProgressIndicator progressIndicator) {
-    return !VfsUtil.processFilesRecursively(rootCandidate, new Processor<VirtualFile>() {
-      @Override
-      public boolean process(VirtualFile virtualFile) {
-        progressIndicator.checkCanceled();
-        if (virtualFile.isDirectory()) {
-          progressIndicator.setText2(virtualFile.getPath());
-          return true;
-        }
-        return !isFileAccepted(virtualFile);
+    return !VirtualFileUtil.processFilesRecursively(rootCandidate, virtualFile -> {
+      progressIndicator.checkCanceled();
+      if (virtualFile.isDirectory()) {
+        progressIndicator.setText2(virtualFile.getPath());
+        return true;
       }
+      return !isFileAccepted(virtualFile);
     });
   }
 
