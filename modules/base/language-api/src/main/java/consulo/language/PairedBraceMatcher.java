@@ -62,7 +62,9 @@ public interface PairedBraceMatcher extends LanguageExtension {
    * @param contextType token type that follows lbrace
    * @return true / false as described
    */
-  boolean isPairedBracesAllowedBeforeType(@Nonnull IElementType lbraceType, @Nullable IElementType contextType);
+  default boolean isPairedBracesAllowedBeforeType(@Nonnull IElementType lbraceType, @Nullable IElementType contextType) {
+    return false;
+  }
 
   /**
    * Returns the start offset of the code construct which owns the opening structural brace at the specified offset. For example,
@@ -72,5 +74,7 @@ public interface PairedBraceMatcher extends LanguageExtension {
    * @param openingBraceOffset the offset of an opening structural brace.
    * @return the offset of corresponding code construct, or the same offset if not defined.
    */
-  int getCodeConstructStart(final PsiFile file, int openingBraceOffset);
+  default int getCodeConstructStart(final PsiFile file, int openingBraceOffset) {
+    return openingBraceOffset;
+  }
 }
