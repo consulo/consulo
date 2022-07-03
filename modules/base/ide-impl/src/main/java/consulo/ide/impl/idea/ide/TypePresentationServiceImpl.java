@@ -97,12 +97,6 @@ public class TypePresentationServiceImpl extends TypePresentationService {
   }
 
   public TypePresentationServiceImpl() {
-    for (TypeIconEP ep : TypeIconEP.EP_NAME.getExtensionList()) {
-      myIcons.put(ep.className, ep.getIcon());
-    }
-    for (TypeNameEP ep : TypeNameEP.EP_NAME.getExtensionList()) {
-      myNames.put(ep.className, ep.getTypeName());
-    }
   }
 
   @Nullable
@@ -111,36 +105,9 @@ public class TypePresentationServiceImpl extends TypePresentationService {
     if (presentation != null) {
       return new PresentationTemplateImpl(presentation);
     }
-    final NullableLazyValue<Image> icon = myIcons.get(type.getName());
-    final NullableLazyValue<String> typeName = myNames.get(type.getName());
-    if (icon != null || typeName != null) {
-      return new PresentationTemplate() {
-        @Override
-        public Image getIcon(Object o, int flags) {
-          return icon == null ? null : icon.getValue();
-        }
-
-        @Override
-        public String getName(Object o) {
-          return null;
-        }
-
-        @Override
-        public String getTypeName() {
-          return typeName == null ? null : typeName.getValue();
-        }
-
-        @Override
-        public String getTypeName(Object o) {
-          return getTypeName();
-        }
-      };
-    }
     return null;
   }
 
-  private final Map<String, NullableLazyValue<Image>> myIcons = new HashMap<>();
-  private final Map<String, NullableLazyValue<String>> myNames = new HashMap<>();
 
   private final ConcurrentMap<Class, Set<PresentationTemplate>> mySuperClasses = ConcurrentFactoryMap.createMap(key -> {
     LinkedHashSet<PresentationTemplate> templates = new LinkedHashSet<>();

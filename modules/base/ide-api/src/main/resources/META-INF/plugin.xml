@@ -1034,10 +1034,6 @@
       <with attribute="implementation" implements="consulo.language.sem.SemContributor"/>
     </extensionPoint>
 
-    <extensionPoint name="typeName" beanClass="consulo.ide.impl.idea.ide.TypeNameEP"/>
-
-    <extensionPoint name="typeIcon" beanClass="consulo.ide.impl.idea.ide.TypeIconEP"/>
-
     <extensionPoint name="analyzeStacktraceFilter" interface="consulo.execution.ui.console.Filter" area="PROJECT"/>
 
     <extensionPoint name="stacktrace.fold" beanClass="consulo.ide.impl.idea.execution.console.CustomizableConsoleFoldingBean"/>
@@ -1386,8 +1382,7 @@
                      groupKey="group.names.internationalization.issues" enabledByDefault="true" level="WARNING"
                      implementationClass="consulo.ide.impl.idea.codeInspection.LossyEncodingInspection"/>
 
-    <applicationService serviceInterface="consulo.language.editor.template.TemplateBuilderFactory"
-                        serviceImplementation="consulo.language.editor.impl.internal.template.TemplateBuilderFactoryImpl"/>
+
 
     <!--<completion.contributor language="any"-->
                             <!--implementationClass="consulo.ide.impl.idea.refactoring.rename.inplace.CompletionContributorForInplaceRename"-->

@@ -16,6 +16,7 @@
 
 package consulo.language.editor.impl.internal.template;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.language.editor.template.TemplateBuilder;
 import consulo.language.editor.template.TemplateBuilderFactory;
 import consulo.language.psi.PsiElement;
@@ -27,6 +28,7 @@ import javax.annotation.Nonnull;
  * @author yole
  */
 @Singleton
+@ServiceImpl
 public class TemplateBuilderFactoryImpl extends TemplateBuilderFactory {
   @Override
   public TemplateBuilder createTemplateBuilder(@Nonnull PsiElement element) {

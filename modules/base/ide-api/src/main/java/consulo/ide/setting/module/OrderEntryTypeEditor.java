@@ -57,7 +57,7 @@ public abstract interface OrderEntryTypeEditor<T extends OrderEntry> {
       return editor;
     }
 
-    return Objects.requireNonNull(map.get(""), "can't find unknown order entry type");
+    return Objects.requireNonNull(map.get(""), "can't find unknown order entry type. Id: " + id);
   }
 
   @Nonnull

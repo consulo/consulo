@@ -15,6 +15,8 @@
  */
 package consulo.content.library;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.image.Image;
@@ -26,6 +28,7 @@ import java.util.List;
 /**
  * @author nik
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class LibraryPresentationProvider<P extends LibraryProperties> {
   public static final ExtensionPointName<LibraryPresentationProvider> EP_NAME = ExtensionPointName.create(LibraryPresentationProvider.class);
   private final LibraryKind myKind;

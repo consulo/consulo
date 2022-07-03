@@ -15,12 +15,13 @@
  */
 package consulo.ide.impl.roots.orderEntry;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.impl.internal.library.LibraryEx;
 import consulo.content.library.Library;
-import consulo.ide.setting.module.ClasspathTableItem;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.classpath.LibraryClasspathTableItem;
 import consulo.ide.setting.ShowSettingsUtil;
+import consulo.ide.setting.module.ClasspathTableItem;
 import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ide.setting.module.ModulesConfigurator;
 import consulo.ide.setting.module.OrderEntryTypeEditor;
@@ -41,6 +42,7 @@ import java.util.function.Consumer;
  * @author VISTALL
  * @since 06-Jun-16
  */
+@ExtensionImpl
 public class ModuleLibraryOrderEntryTypeEditor implements OrderEntryTypeEditor<ModuleLibraryOrderEntryImpl> {
   private final Provider<FileAppearanceService> myFileAppearanceService;
   private final Provider<OrderEntryAppearanceService> myOrderEntryAppearanceService;

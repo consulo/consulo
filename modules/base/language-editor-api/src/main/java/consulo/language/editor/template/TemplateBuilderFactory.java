@@ -16,12 +16,15 @@
 
 package consulo.language.editor.template;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.language.psi.PsiElement;
 
 /**
  * @author yole
  */
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class TemplateBuilderFactory {
   public static TemplateBuilderFactory getInstance() {
     return Application.get().getInstance(TemplateBuilderFactory.class);
