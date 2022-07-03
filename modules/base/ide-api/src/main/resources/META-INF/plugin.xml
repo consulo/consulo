@@ -157,16 +157,6 @@
     <extensionPoint name="http.fileEditorActionProvider"
                     interface="consulo.ide.impl.idea.openapi.fileEditor.impl.http.RemoteFileEditorActionProvider"/>
 
-    <extensionPoint name="filetype.decompiler" beanClass="consulo.virtualFileSystem.extension.FileTypeExtensionPoint">
-      <with attribute="implementationClass" implements="consulo.virtualFileSystem.BinaryFileDecompiler"/>
-    </extensionPoint>
-
-    <extensionPoint name="editorActionHandler" beanClass="consulo.codeEditor.impl.action.EditorActionHandlerBean">
-      <with attribute="implementationClass" implements="consulo.codeEditor.action.EditorActionHandler"/>
-    </extensionPoint>
-
-
-    <extensionPoint name="customFileDropHandler" area="PROJECT" interface="consulo.ide.impl.idea.openapi.editor.CustomFileDropHandler"/>
 
     <extensionPoint name="toolWindow" beanClass="consulo.ide.impl.idea.openapi.wm.ToolWindowEP">
       <with attribute="factoryClass" implements="consulo.project.ui.wm.ToolWindowFactory"/>
@@ -340,11 +330,6 @@
     <extensionPoint name="codeInsight.unresolvedReferenceQuickFixProvider"
                     interface="consulo.language.editor.intention.UnresolvedReferenceQuickFixProvider"/>
 
-
-    <extensionPoint name="braceMatcher"
-                    beanClass="consulo.virtualFileSystem.extension.FileTypeExtensionPoint">
-      <with attribute="implementationClass" implements="consulo.language.editor.highlight.BraceMatcher"/>
-    </extensionPoint>
 
     <extensionPoint name="bidiRegionsSeparator"
                     beanClass="consulo.language.LanguageExtensionPoint">
@@ -532,16 +517,6 @@
     </extensionPoint>
 
 
-    <extensionPoint name="lang.fileViewProviderFactory" beanClass="consulo.language.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="consulo.language.file.FileViewProviderFactory"/>
-    </extensionPoint>
-
-    <extensionPoint name="fileType.fileViewProviderFactory" beanClass="consulo.virtualFileSystem.extension.FileTypeExtensionPoint">
-      <with attribute="implementationClass" implements="consulo.language.file.FileViewProviderFactory"/>
-    </extensionPoint>
-
-    <extensionPoint name="multiLangCommenter"
-                    interface="consulo.ide.impl.psi.templateLanguages.MultipleLangCommentProvider"/>
 
 
 
@@ -744,10 +719,6 @@
     <extensionPoint name="psi.fileReferenceHelper"
                     interface="consulo.language.psi.path.FileReferenceHelper"/>
 
-    <extensionPoint name="psi.referenceContributor" beanClass="consulo.language.impl.internal.psi.PsiReferenceContributorEP">
-      <with attribute="implementation" implements="consulo.language.psi.PsiReferenceContributor"/>
-    </extensionPoint>
-
     <extensionPoint name="psi.packageSupportProvider" interface="consulo.language.psi.PsiPackageSupportProvider"/>
     <extensionPoint name="psi.directoryMethodProxy" interface="consulo.language.psi.PsiDirectoryMethodProxy"/>
     <extensionPoint name="patterns.patternClass" beanClass="consulo.ide.impl.idea.patterns.compiler.PatternClassBean"/>
@@ -921,10 +892,6 @@
       <with attribute="implementationClass" implements="consulo.language.psi.LanguageSubstitutor"/>
     </extensionPoint>
 
-    <extensionPoint name="filetype.stubBuilder"
-                    beanClass="consulo.virtualFileSystem.extension.FileTypeExtensionPoint">
-      <with attribute="implementationClass" implements="consulo.language.psi.stub.BinaryFileStubBuilder"/>
-    </extensionPoint>
 
     <extensionPoint name="stubElementTypeHolder"
                     beanClass="consulo.language.psi.stub.StubElementTypeHolderEP"/>
@@ -988,13 +955,6 @@
 
     <extensionPoint name="fileLookupInfoProvider" interface="consulo.ide.impl.psi.file.FileLookupInfoProvider"/>
 
-    <extensionPoint name="idIndexer" beanClass="consulo.virtualFileSystem.extension.FileTypeExtensionPoint">
-      <with attribute="implementationClass" implements="consulo.ide.impl.psi.impl.cache.impl.id.IdIndexer"/>
-    </extensionPoint>
-
-    <extensionPoint name="todoIndexer" beanClass="consulo.virtualFileSystem.extension.FileTypeExtensionPoint">
-      <with attribute="implementationClass" implements="consulo.index.io.DataIndexer"/>
-    </extensionPoint>
 
     <extensionPoint name="refactoring.elementListenerProvider"
                     interface="consulo.language.editor.refactoring.event.RefactoringElementListenerProvider"

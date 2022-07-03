@@ -23,7 +23,6 @@ import consulo.application.impl.internal.PlatformComponentManagerImpl;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.component.impl.extension.ExtensionAreaId;
 import consulo.component.store.impl.internal.StoreUtil;
 import consulo.ide.impl.components.impl.stores.DefaultProjectStoreImpl;
 import consulo.ide.impl.components.impl.stores.IProjectStore;
@@ -35,9 +34,7 @@ import consulo.injecting.InjectingContainerBuilder;
 import consulo.logging.Logger;
 import consulo.module.impl.internal.ModuleManagerImpl;
 import consulo.project.Project;
-import consulo.project.ProjectComponent;
 import consulo.project.ProjectManager;
-import consulo.project.event.ProjectManagerAdapter;
 import consulo.project.internal.ProjectEx;
 import consulo.project.internal.ProjectExListener;
 import consulo.project.internal.ProjectManagerEx;
@@ -57,10 +54,6 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ProjectImpl extends PlatformComponentManagerImpl implements ProjectEx {
@@ -72,8 +65,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   @Nonnull
   private final String myDirPath;
 
-  private MyProjectManagerListener myProjectManagerListener;
-
   private final AtomicBoolean mySavingInProgress = new AtomicBoolean(false);
 
   public boolean myOptimiseTestLoadSpeed;
@@ -83,10 +74,8 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   public static Key<Long> CREATION_TIME = Key.create("ProjectImpl.CREATION_TIME");
   public static final Key<String> CREATION_TRACE = Key.create("ProjectImpl.CREATION_TRACE");
 
-  private final List<ProjectComponent> myProjectComponents = new CopyOnWriteArrayList<>();
-
   protected ProjectImpl(@Nonnull Application application, @Nonnull ProjectManager manager, @Nonnull String dirPath, boolean isOptimiseTestLoadSpeed, String projectName, boolean noUIThread) {
-    super(application, "Project " + (projectName == null ? dirPath : projectName), ExtensionAreaId.PROJECT);
+    super(application, "Project " + (projectName == null ? dirPath : projectName), ComponentScope.PROJECT);
     myDirPath = dirPath;
 
     putUserData(CREATION_TIME, System.nanoTime());
@@ -120,12 +109,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   @Nonnull
   public Application getApplication() {
     return (Application)myParent;
-  }
-
-  @Nonnull
-  @Override
-  public ComponentScope getComponentScope() {
-    return ComponentScope.PROJECT;
   }
 
   @Override
@@ -164,7 +147,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   @Nonnull
   @Override
   public IProjectStore getStateStore() {
-    return getComponent(IProjectStore.class);
+    return getInstance(IProjectStore.class);
   }
 
   @Override
@@ -262,10 +245,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     super.initNotLazyServices();
 //    ProfilingUtil.captureCPUSnapshot();
     long time = System.currentTimeMillis() - start;
-    LOG.info(getNotLazyServicesCount() + " project components initialized in " + time + " ms");
-
-    myProjectManagerListener = new MyProjectManagerListener();
-    myManager.addProjectManagerListener(this, myProjectManagerListener);
+    LOG.info(getNotLazyServicesCount() + " project not-lazy servicers initialized in " + time + " ms");
   }
 
   @Override
@@ -374,53 +354,10 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     LOG.assertTrue(application.isUnitTestMode() || !myManager.isProjectOpened(this));
 
     LOG.assertTrue(!isDisposed());
-    if (myProjectManagerListener != null) {
-      myManager.removeProjectManagerListener(this, myProjectManagerListener);
-    }
-
-    myProjectManagerListener = null;
 
     super.dispose();
 
     TimedReference.disposeTimed();
-  }
-
-  private void projectOpened() {
-    for (ProjectComponent component : myProjectComponents) {
-      try {
-        component.projectOpened();
-      }
-      catch (Throwable e) {
-        LOG.error(component.toString(), e);
-      }
-    }
-  }
-
-  private void projectClosed() {
-    List<ProjectComponent> components = new ArrayList<>(myProjectComponents);
-    Collections.reverse(components);
-    for (ProjectComponent component : components) {
-      try {
-        component.projectClosed();
-      }
-      catch (Throwable e) {
-        LOG.error(e);
-      }
-    }
-  }
-
-  private class MyProjectManagerListener extends ProjectManagerAdapter {
-    @Override
-    public void projectOpened(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
-      LOG.assertTrue(project == ProjectImpl.this);
-      ProjectImpl.this.projectOpened();
-    }
-
-    @Override
-    public void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
-      LOG.assertTrue(project == ProjectImpl.this);
-      ProjectImpl.this.projectClosed();
-    }
   }
 
   @Override

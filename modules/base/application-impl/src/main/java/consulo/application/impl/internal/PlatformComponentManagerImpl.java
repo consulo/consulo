@@ -15,6 +15,7 @@
  */
 package consulo.application.impl.internal;
 
+import consulo.annotation.component.ComponentScope;
 import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.ApplicationProperties;
@@ -24,7 +25,6 @@ import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.component.ComponentManager;
 import consulo.component.bind.InjectingBinding;
 import consulo.component.impl.BaseComponentManager;
-import consulo.component.impl.extension.ExtensionAreaId;
 import consulo.component.store.impl.internal.IComponentStore;
 import consulo.component.store.impl.internal.StateComponentInfo;
 import consulo.logging.Logger;
@@ -40,7 +40,7 @@ public abstract class PlatformComponentManagerImpl extends BaseComponentManager 
 
   private AtomicInteger myCreatedNotLazyServicesCount = new AtomicInteger();
 
-  protected PlatformComponentManagerImpl(@Nullable ComponentManager parent, @Nonnull String name, @Nullable ExtensionAreaId areaId) {
+  protected PlatformComponentManagerImpl(@Nullable ComponentManager parent, @Nonnull String name, @Nonnull ComponentScope areaId) {
     super(parent, name, areaId, true);
   }
 

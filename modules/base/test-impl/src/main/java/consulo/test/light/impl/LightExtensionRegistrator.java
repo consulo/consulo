@@ -15,10 +15,6 @@
  */
 package consulo.test.light.impl;
 
-import consulo.component.extension.ExtensionPoint;
-import consulo.component.extension.ExtensionPointName;
-import consulo.component.impl.extension.ExtensionPointImpl;
-import consulo.component.impl.extension.ExtensionsAreaImpl;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginDescriptorStub;
 import consulo.container.plugin.PluginId;
@@ -26,7 +22,6 @@ import consulo.container.plugin.PluginIds;
 import consulo.injecting.InjectingContainerBuilder;
 
 import javax.annotation.Nonnull;
-import java.lang.reflect.Modifier;
 
 /**
  * @author VISTALL
@@ -55,17 +50,17 @@ public abstract class LightExtensionRegistrator {
 
   private final PluginDescriptorImpl myDescriptor = new PluginDescriptorImpl(getClass().getClassLoader());
 
-  protected <T> void registerExtension(ExtensionsAreaImpl area, ExtensionPointName<T> extensionPointName, T value) {
-    ExtensionPointImpl<T> point = area.getExtensionPointImpl(extensionPointName.getId());
-    point.registerExtensionAdapter(new SimpleInstanceComponentAdapter<>(area.getComponentManager(), value));
-  }
+  //protected <T> void registerExtension(ExtensionsAreaImpl area, ExtensionPointName<T> extensionPointName, T value) {
+  //  //ExtensionPointImpl<T> point = area.getExtensionPointImpl(extensionPointName.getId());
+  //  //point.registerExtensionAdapter(new SimpleInstanceComponentAdapter<>(area.getComponentManager(), value));
+  //}
+  //
+  //protected void registerExtensionPoint(ExtensionsAreaImpl area, ExtensionPointName<?> name, Class aClass) {
+  //  //ExtensionPoint.Kind kind = aClass.isInterface() || (aClass.getModifiers() & Modifier.ABSTRACT) != 0 ? ExtensionPoint.Kind.INTERFACE : ExtensionPoint.Kind.BEAN_CLASS;
+  //  //area.registerExtensionPoint(name.getName(), aClass.getName(), myDescriptor, kind);
+  //}
 
-  protected void registerExtensionPoint(ExtensionsAreaImpl area, ExtensionPointName<?> name, Class aClass) {
-    ExtensionPoint.Kind kind = aClass.isInterface() || (aClass.getModifiers() & Modifier.ABSTRACT) != 0 ? ExtensionPoint.Kind.INTERFACE : ExtensionPoint.Kind.BEAN_CLASS;
-    area.registerExtensionPoint(name.getName(), aClass.getName(), myDescriptor, kind);
-  }
-
-  public abstract void registerExtensionPointsAndExtensions(@Nonnull ExtensionsAreaImpl area);
+  //public abstract void registerExtensionPointsAndExtensions(@Nonnull ExtensionsAreaImpl area);
 
   public abstract void registerServices(@Nonnull InjectingContainerBuilder builder);
 }

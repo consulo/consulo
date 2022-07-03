@@ -19,7 +19,6 @@ import consulo.application.ApplicationProperties;
 import consulo.application.impl.internal.ApplicationInfo;
 import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.application.util.SystemInfo;
-import consulo.component.impl.extension.PluginExtensionInitializationException;
 import consulo.container.ExitCodes;
 import consulo.container.StartupError;
 import consulo.container.boot.ContainerPathManager;
@@ -256,11 +255,6 @@ public class StartupUtil {
     }
     if (pluginId == null || PluginIds.CONSULO_BASE.equals(pluginId)) {
       pluginId = componentClass == null ? null : PluginManager.getPluginId(componentClass);
-    }
-    if (pluginId == null || PluginIds.CONSULO_BASE.equals(pluginId)) {
-      if (t instanceof PluginExtensionInitializationException) {
-        pluginId = ((PluginExtensionInitializationException)t).getPluginId();
-      }
     }
 
     if (pluginId != null && !PluginIds.isPlatformPlugin(pluginId)) {

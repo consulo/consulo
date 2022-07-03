@@ -39,7 +39,7 @@ import java.util.function.Predicate;
 public class ExtensionPointName<T> {
   private static final Logger LOG = Logger.getInstance(ExtensionPointName.class);
 
-  private final ExtensionPointId<T> myId;
+  private final String myId;
   private final Class<? extends T> myIdClass;
 
 
@@ -56,29 +56,25 @@ public class ExtensionPointName<T> {
   @Deprecated
   @DeprecationInfo("Use #create()")
   public ExtensionPointName(@Nonnull String name) {
-    myId = ExtensionPointId.of(name);
+    myId = name;
     myIdClass = null;
   }
 
   @Deprecated
   @DeprecationInfo("Use #create()")
   public ExtensionPointName(@Nonnull String name, @Nonnull Class<? extends T> idClass) {
-    myId = ExtensionPointId.of(name);
+    myId = name;
     myIdClass = idClass;
   }
 
-  public String getName() {
-    return myId.toString();
-  }
-
   @Nonnull
-  public ExtensionPointId<T> getId() {
+  public String getName() {
     return myId;
   }
 
   @Override
   public String toString() {
-    return myId.toString();
+    return myId;
   }
 
   @Nonnull

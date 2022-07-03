@@ -59,12 +59,6 @@ public final class EmptyExtensionPoint<T> implements ExtensionPoint<T> {
 
   @Nonnull
   @Override
-  public Kind getKind() {
-    return Kind.INTERFACE;
-  }
-
-  @Nonnull
-  @Override
   public String getClassName() {
     return Object.class.getName();
   }

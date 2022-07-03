@@ -21,9 +21,8 @@ import consulo.annotation.component.TopicAPI;
 import consulo.component.ComponentManager;
 import consulo.component.bind.InjectingBinding;
 import consulo.component.extension.ExtensionPoint;
-import consulo.component.extension.ExtensionPointId;
+import consulo.component.extension.ExtensionPointName;
 import consulo.component.impl.extension.EmptyExtensionPoint;
-import consulo.component.impl.extension.ExtensionAreaId;
 import consulo.component.impl.extension.NewExtensionAreaImpl;
 import consulo.component.impl.messagebus.MessageBusFactory;
 import consulo.component.impl.messagebus.MessageBusImpl;
@@ -84,9 +83,12 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
 
   private NewExtensionAreaImpl myNewExtensionArea;
 
-  protected BaseComponentManager(@Nullable ComponentManager parent, @Nonnull String name, @Nullable ExtensionAreaId extensionAreaId, boolean buildInjectionContainer) {
+  private final ComponentScope myComponentScope;
+
+  protected BaseComponentManager(@Nullable ComponentManager parent, @Nonnull String name, @Nullable ComponentScope componentScope, boolean buildInjectionContainer) {
     myParent = parent;
     myName = name;
+    myComponentScope = componentScope;
 
     if (buildInjectionContainer) {
       buildInjectingContainer();
@@ -222,8 +224,8 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
   }
 
   @Nonnull
-  public ComponentScope getComponentScope() {
-    throw new UnsupportedOperationException();
+  public final ComponentScope getComponentScope() {
+    return myComponentScope;
   }
 
   public boolean initializeIfStorableComponent(@Nonnull Object component, boolean service, boolean lazy) {
@@ -323,12 +325,12 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
     return myNewExtensionArea.getExtensionPoints();
   }
 
-  private static final Set<ExtensionPointId> ourLogSet = ConcurrentHashMap.newKeySet();
+  private static final Set<String> ourLogSet = ConcurrentHashMap.newKeySet();
 
   @Nonnull
   @Override
-  public <T> ExtensionPoint<T> getExtensionPoint(@Nonnull ExtensionPointId<T> extensionPointId) {
-    if (ourLogSet.add(extensionPointId)) {
+  public <T> ExtensionPoint<T> getExtensionPoint(@Nonnull ExtensionPointName<T> extensionPointId) {
+    if (ourLogSet.add(extensionPointId.getName())) {
       LOG.error("Calling old extension point: " + extensionPointId);
     }
     return new EmptyExtensionPoint<>();

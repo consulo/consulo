@@ -22,7 +22,6 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.logging.Logger;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.ControlFlowException;
 
 import javax.annotation.Nonnull;
@@ -37,18 +36,13 @@ import java.util.function.Predicate;
 
 /**
  * {@link #getModificationCount()} will be changed if plugins reloaded, and cache was changed.
- * Also when count count changed all cache {@link #getOrBuildCache(Key, Function)} & {@link #findExtension(Class)} will be dropped
- *
- * @author AKireyev
+ * Also when count count changed all cache {@link #getOrBuildCache(ExtensionPointCacheKey, Function)} & {@link #findExtension(Class)} will be dropped
  */
 public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
-  enum Kind {
-    INTERFACE,
-    BEAN_CLASS
-  }
-
   @Nonnull
-  String getName();
+  default String getName() {
+    return getClassName();
+  }
 
   @Nonnull
   @SuppressWarnings("unchecked")
@@ -68,9 +62,6 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
 
   @Nonnull
   Class<E> getExtensionClass();
-
-  @Nonnull
-  Kind getKind();
 
   @Nonnull
   default String getClassName() {

@@ -16,11 +16,10 @@
 package consulo.test.light.impl;
 
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.annotation.component.ComponentScope;
 import consulo.application.Application;
 import consulo.component.bind.InjectingBinding;
 import consulo.component.impl.BaseComponentManager;
-import consulo.component.impl.extension.ExtensionAreaId;
-import consulo.component.impl.extension.ExtensionsAreaImpl;
 import consulo.injecting.InjectingContainer;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.project.Project;
@@ -45,7 +44,7 @@ public class LightProject extends BaseComponentManager implements Project {
   private final LightExtensionRegistrator myRegistrator;
 
   public LightProject(@Nonnull Application application, @Nonnull String name, @Nonnull LightExtensionRegistrator registrator) {
-    super(application, name, ExtensionAreaId.PROJECT, false);
+    super(application, name, ComponentScope.PROJECT, false);
     myApplication = application;
     myName = name;
     myRegistrator = registrator;

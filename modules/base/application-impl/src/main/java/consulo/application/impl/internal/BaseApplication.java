@@ -44,7 +44,6 @@ import consulo.application.util.concurrent.PooledThreadExecutor;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
-import consulo.component.impl.extension.ExtensionAreaId;
 import consulo.component.store.impl.internal.StateStorageException;
 import consulo.component.store.impl.internal.StoreUtil;
 import consulo.container.boot.ContainerPathManager;
@@ -198,7 +197,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   private ProgressManager myProgressManager;
 
   public BaseApplication(@Nonnull SimpleReference<? extends StartupProgress> splashRef) {
-    super(null, "Application", ExtensionAreaId.APPLICATION);
+    super(null, "Application", ComponentScope.APPLICATION);
     mySplashRef = splashRef;
     myStartTime = System.currentTimeMillis();
   }
@@ -238,12 +237,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     builder.bind(FileTypeRegistry.class).to(FileTypeManager::getInstance);
     builder.bind(ProgressIndicatorProvider.class).to(this::getProgressManager);
     builder.bind(EncodingRegistry.class).to(EncodingManager::getInstance);
-  }
-
-  @Nonnull
-  @Override
-  public ComponentScope getComponentScope() {
-    return ComponentScope.APPLICATION;
   }
 
   protected void fireApplicationExiting() {

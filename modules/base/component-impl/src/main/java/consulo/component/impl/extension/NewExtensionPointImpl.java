@@ -305,12 +305,6 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
 
   @Nonnull
   @Override
-  public String getName() {
-    return myApiClass.getName();
-  }
-
-  @Nonnull
-  @Override
   public List<T> getExtensionList() {
     CacheValue<T> cacheValue = myCacheValue;
 
@@ -328,11 +322,5 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
   @Override
   public Class<T> getExtensionClass() {
     return myApiClass;
-  }
-
-  @Nonnull
-  @Override
-  public Kind getKind() {
-    return myApiClass.isInterface() ? Kind.INTERFACE : Kind.BEAN_CLASS;
   }
 }

@@ -16,16 +16,15 @@
 package consulo.test.light;
 
 import consulo.application.Application;
-import consulo.component.impl.extension.ExtensionsAreaImpl;
-import consulo.project.Project;
+import consulo.injecting.InjectingContainerBuilder;
 import consulo.language.content.FileIndexFacade;
-import consulo.language.psi.PsiFileFactory;
-import consulo.language.psi.PsiManager;
 import consulo.language.impl.internal.psi.PsiFileFactoryImpl;
 import consulo.language.impl.internal.psi.PsiManagerImpl;
 import consulo.language.impl.internal.psi.PsiModificationTrackerImpl;
+import consulo.language.psi.PsiFileFactory;
+import consulo.language.psi.PsiManager;
 import consulo.language.psi.PsiModificationTracker;
-import consulo.injecting.InjectingContainerBuilder;
+import consulo.project.Project;
 import consulo.test.light.impl.LightExtensionRegistrator;
 import consulo.test.light.impl.LightFileIndexFacade;
 import consulo.test.light.impl.LightProject;
@@ -38,10 +37,10 @@ import javax.annotation.Nonnull;
  */
 public class LightProjectBuilder {
   public static class DefaultRegistrator extends LightExtensionRegistrator {
-    @Override
-    public void registerExtensionPointsAndExtensions(@Nonnull ExtensionsAreaImpl area) {
-
-    }
+    //@Override
+    //public void registerExtensionPointsAndExtensions(@Nonnull ExtensionsAreaImpl area) {
+    //
+    //}
 
     @Override
     public void registerServices(@Nonnull InjectingContainerBuilder builder) {

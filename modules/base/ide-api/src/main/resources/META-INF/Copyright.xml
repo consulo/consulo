@@ -14,15 +14,5 @@
   - limitations under the License.
   -->
 <consulo-plugin>
-  <extensions defaultExtensionNs="consulo">
-
-  </extensions>
-
-  <extensionPoints>
-    <extensionPoint name="copyright.updater" beanClass="consulo.virtualFileSystem.extension.FileTypeExtensionPoint">
-      <with attribute="implementationClass" implements="consulo.language.copyright.UpdateCopyrightsProvider"/>
-    </extensionPoint>
-    <extensionPoint name="predefinedCopyright" beanClass="consulo.ide.impl.copyright.impl.PredefinedCopyrightTextEP"/>
-  </extensionPoints>
 
 </consulo-plugin>

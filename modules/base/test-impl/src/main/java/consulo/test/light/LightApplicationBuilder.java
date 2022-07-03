@@ -21,17 +21,10 @@ import consulo.application.internal.concurrency.JobLauncher;
 import consulo.application.macro.PathMacros;
 import consulo.application.progress.ProgressManager;
 import consulo.application.ui.UISettings;
-import consulo.component.impl.extension.ExtensionsAreaImpl;
 import consulo.component.store.impl.internal.PathMacrosService;
 import consulo.disposer.Disposable;
 import consulo.document.FileDocumentManager;
 import consulo.injecting.InjectingContainerBuilder;
-import consulo.language.impl.ast.ASTCompositeFactory;
-import consulo.language.impl.ast.ASTLazyFactory;
-import consulo.language.impl.ast.ASTLeafFactory;
-import consulo.language.impl.internal.ast.DefaultASTCompositeFactory;
-import consulo.language.impl.internal.ast.DefaultASTLazyFactory;
-import consulo.language.impl.internal.ast.DefaultASTLeafFactory;
 import consulo.language.impl.internal.parser.PsiBuilderFactoryImpl;
 import consulo.language.parser.PsiBuilderFactory;
 import consulo.test.light.impl.*;
@@ -50,19 +43,19 @@ import javax.annotation.Nonnull;
  */
 public class LightApplicationBuilder {
   public static class DefaultRegistrator extends LightExtensionRegistrator {
-    @Override
-    public void registerExtensionPointsAndExtensions(@Nonnull ExtensionsAreaImpl area) {
-      registerExtensionPoint(area, ASTLazyFactory.EP.getExtensionPointName(), ASTLazyFactory.class);
-      registerExtension(area, ASTLazyFactory.EP.getExtensionPointName(), new DefaultASTLazyFactory());
-
-      registerExtensionPoint(area, ASTLeafFactory.EP.getExtensionPointName(), ASTLeafFactory.class);
-      registerExtension(area, ASTLeafFactory.EP.getExtensionPointName(), new DefaultASTLeafFactory());
-
-      registerExtensionPoint(area, ASTCompositeFactory.EP.getExtensionPointName(), ASTCompositeFactory.class);
-      registerExtension(area, ASTCompositeFactory.EP.getExtensionPointName(), new DefaultASTCompositeFactory());
-
-
-    }
+    //@Override
+    //public void registerExtensionPointsAndExtensions(@Nonnull ExtensionsAreaImpl area) {
+    //  registerExtensionPoint(area, ASTLazyFactory.EP.getExtensionPointName(), ASTLazyFactory.class);
+    //  registerExtension(area, ASTLazyFactory.EP.getExtensionPointName(), new DefaultASTLazyFactory());
+    //
+    //  registerExtensionPoint(area, ASTLeafFactory.EP.getExtensionPointName(), ASTLeafFactory.class);
+    //  registerExtension(area, ASTLeafFactory.EP.getExtensionPointName(), new DefaultASTLeafFactory());
+    //
+    //  registerExtensionPoint(area, ASTCompositeFactory.EP.getExtensionPointName(), ASTCompositeFactory.class);
+    //  registerExtension(area, ASTCompositeFactory.EP.getExtensionPointName(), new DefaultASTCompositeFactory());
+    //
+    //
+    //}
 
     @Override
     public void registerServices(@Nonnull InjectingContainerBuilder builder) {

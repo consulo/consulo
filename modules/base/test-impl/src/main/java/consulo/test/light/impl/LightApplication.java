@@ -17,6 +17,7 @@ package consulo.test.light.impl;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.annotation.component.ComponentScope;
 import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
@@ -24,8 +25,6 @@ import consulo.application.event.ApplicationListener;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.component.bind.InjectingBinding;
 import consulo.component.impl.BaseComponentManager;
-import consulo.component.impl.extension.ExtensionAreaId;
-import consulo.component.impl.extension.ExtensionsAreaImpl;
 import consulo.disposer.Disposable;
 import consulo.injecting.InjectingContainer;
 import consulo.injecting.InjectingContainerBuilder;
@@ -51,7 +50,7 @@ public class LightApplication extends BaseComponentManager implements Applicatio
   private final LightExtensionRegistrator myRegistrator;
 
   public LightApplication(Disposable lastDisposable, LightExtensionRegistrator registrator) {
-    super(null, "LightApplication", ExtensionAreaId.APPLICATION, false);
+    super(null, "LightApplication", ComponentScope.APPLICATION, false);
     myLastDisposable = lastDisposable;
     myRegistrator = registrator;
 

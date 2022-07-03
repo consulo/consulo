@@ -16,7 +16,6 @@
 package consulo.component;
 
 import consulo.component.extension.ExtensionPoint;
-import consulo.component.extension.ExtensionPointId;
 import consulo.component.extension.ExtensionPointName;
 import consulo.component.messagebus.MessageBus;
 import consulo.disposer.Disposable;
@@ -99,17 +98,12 @@ public interface ComponentManager extends UserDataHolder, Disposable, InjectingC
   @Nonnull
   @Deprecated
   default <T> ExtensionPoint<T> getExtensionPoint(@Nonnull ExtensionPointName<T> extensionPointName) {
-    return getExtensionPoint(extensionPointName.getId());
+    throw new UnsupportedOperationException();
   }
 
   @Nonnull
   default <T> List<T> getExtensionList(@Nonnull Class<T> extensionPointName) {
     return getExtensionPoint(extensionPointName).getExtensionList();
-  }
-
-  @Nonnull
-  default <T> ExtensionPoint<T> getExtensionPoint(@Nonnull ExtensionPointId<T> extensionPointId) {
-    throw new UnsupportedOperationException();
   }
 
   @Nonnull
