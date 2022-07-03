@@ -37,7 +37,5 @@ public abstract class PredefinedBundlesProvider {
     }
   }
 
-  public static final ExtensionPointName<PredefinedBundlesProvider> EP_NAME = ExtensionPointName.create(PredefinedBundlesProvider.class);
-
   public abstract void createBundles(@Nonnull Context context);
 }

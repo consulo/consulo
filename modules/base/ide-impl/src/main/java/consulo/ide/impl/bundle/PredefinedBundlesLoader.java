@@ -16,24 +16,21 @@
 package consulo.ide.impl.bundle;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.openapi.application.PreloadingActivity;
+import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
-import consulo.content.bundle.Sdk;
-import consulo.content.bundle.SdkTable;
-import consulo.content.bundle.SdkType;
-import consulo.ide.impl.idea.openapi.projectRoots.impl.SdkConfigurationUtil;
+import consulo.content.bundle.*;
 import consulo.content.impl.internal.bundle.SdkImpl;
-import consulo.content.impl.internal.bundle.SdkTableImpl;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.util.lang.SystemProperties;
-import consulo.content.bundle.PredefinedBundlesProvider;
-import consulo.content.bundle.SdkPointerManager;
-import consulo.logging.Logger;
 import consulo.content.impl.internal.bundle.SdkPointerManagerImpl;
-
-import javax.annotation.Nonnull;
+import consulo.content.impl.internal.bundle.SdkTableImpl;
+import consulo.ide.impl.idea.openapi.application.PreloadingActivity;
+import consulo.ide.impl.idea.openapi.projectRoots.impl.SdkConfigurationUtil;
+import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.logging.Logger;
+import consulo.util.lang.SystemProperties;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
+
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,12 +67,14 @@ public class PredefinedBundlesLoader extends PreloadingActivity {
     }
   }
 
+  private final Application myApplication;
   private final Provider<SdkTable> mySdkTable;
   private final Provider<SdkPointerManager> mySdkPointerManager;
 
   @Inject
-  public PredefinedBundlesLoader(Provider<SdkTable> sdkTable, Provider<SdkPointerManager> sdkPointerManager) {
+  public PredefinedBundlesLoader(Application application, Provider<SdkTable> sdkTable, Provider<SdkPointerManager> sdkPointerManager) {
     mySdkTable = sdkTable;
+    myApplication = application;
     mySdkPointerManager = sdkPointerManager;
   }
 
@@ -88,14 +87,8 @@ public class PredefinedBundlesLoader extends PreloadingActivity {
     SdkTable sdkTable = mySdkTable.get();
 
     ContextImpl context = new ContextImpl(sdkTable);
-    for (PredefinedBundlesProvider provider : PredefinedBundlesProvider.EP_NAME.getExtensionList()) {
-      try {
-        provider.createBundles(context);
-      }
-      catch (Error e) {
-        LOG.error(e);
-      }
-    }
+
+    myApplication.getExtensionPoint(PredefinedBundlesProvider.class).forEachExtensionSafe(provider -> provider.createBundles(context));
 
     List<Sdk> bundles = context.myBundles;
 
