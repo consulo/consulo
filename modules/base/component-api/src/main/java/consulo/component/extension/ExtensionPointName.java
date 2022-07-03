@@ -19,10 +19,8 @@ package consulo.component.extension;
 import consulo.annotation.DeprecationInfo;
 import consulo.component.ComponentManager;
 import consulo.component.internal.RootComponentHolder;
-import consulo.component.util.PluginExceptionUtil;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.logging.Logger;
-import consulo.util.lang.ControlFlowException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -37,7 +35,7 @@ import java.util.function.Predicate;
  * <p>
  */
 @Deprecated
-@DeprecationInfo("Prefer ExtensionList")
+@DeprecationInfo("Prefer ComponentManager.getExtensionPoint() methods")
 public class ExtensionPointName<T> {
   private static final Logger LOG = Logger.getInstance(ExtensionPointName.class);
 
@@ -141,11 +139,7 @@ public class ExtensionPointName<T> {
 
   @Nonnull
   public <V extends T> V findExtensionOrFail(@Nonnull ComponentManager componentManager, @Nonnull Class<V> instanceOf) {
-    V extension = getExtensionPoint(componentManager).findExtension(instanceOf);
-    if (extension == null) {
-      throw new IllegalArgumentException("Extension point: " + getName() + " not contains extension of type: " + instanceOf);
-    }
-    return extension;
+    return getExtensionPoint(componentManager).findExtensionOrFail(instanceOf);
   }
 
   public void forEachExtensionSafe(@Nonnull Consumer<T> consumer) {
@@ -153,17 +147,7 @@ public class ExtensionPointName<T> {
   }
 
   public void forEachExtensionSafe(@Nonnull ComponentManager manager, @Nonnull Consumer<T> consumer) {
-    processWithPluginDescriptor(manager, (value, pluginDescriptor) -> {
-      try {
-        consumer.accept(value);
-      }
-      catch (Throwable e) {
-        if (e instanceof ControlFlowException) {
-          throw ControlFlowException.rethrow(e);
-        }
-        PluginExceptionUtil.logPluginError(LOG, e.getMessage(), e, value.getClass());
-      }
-    });
+    getExtensionPoint(manager).forEachExtensionSafe(consumer);
   }
 
   @Nullable
@@ -173,39 +157,12 @@ public class ExtensionPointName<T> {
 
   @Nullable
   public <R> R computeSafeIfAny(@Nonnull ComponentManager componentManager, @Nonnull Function<? super T, ? extends R> processor) {
-    for (T extension : getExtensionList(componentManager)) {
-      try {
-        R result = processor.apply(extension);
-        if (result != null) {
-          return result;
-        }
-      }
-      catch (Throwable e) {
-        if (e instanceof ControlFlowException) {
-          throw ControlFlowException.rethrow(e);
-        }
-        PluginExceptionUtil.logPluginError(LOG, e.getMessage(), e, extension.getClass());
-      }
-    }
-    return null;
+    return getExtensionPoint(componentManager).computeSafeIfAny(processor);
   }
 
   @Nullable
   public T findFirstSafe(@Nonnull ComponentManager componentManager, @Nonnull Predicate<T> predicate) {
-    for (T extension : getExtensionList(componentManager)) {
-      try {
-        if (predicate.test(extension)) {
-          return extension;
-        }
-      }
-      catch (Throwable e) {
-        if (e instanceof ControlFlowException) {
-          throw ControlFlowException.rethrow(e);
-        }
-        PluginExceptionUtil.logPluginError(LOG, e.getMessage(), e, extension.getClass());
-      }
-    }
-    return null;
+    return getExtensionPoint(componentManager).findFirstSafe(predicate);
   }
 
   @Nullable

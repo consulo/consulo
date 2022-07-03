@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 @Deprecated
-@DeprecationInfo("Use consulo.ide.impl.idea.openapi.extensions.ExtensionPointName")
+@DeprecationInfo("Prefer ComponentManager.getExtensionPoint() methods")
 public class Extensions {
   private Extensions() {
   }
