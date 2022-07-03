@@ -15,22 +15,22 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.actions.handlers;
 
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.codeEditor.Editor;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.execution.debug.XBreakpointManager;
 import consulo.execution.debug.XDebuggerManager;
 import consulo.execution.debug.XDebuggerUtil;
 import consulo.execution.debug.XSourcePosition;
-import consulo.execution.debug.XBreakpointManager;
 import consulo.execution.debug.breakpoint.XLineBreakpointType;
+import consulo.execution.debug.breakpoint.XLineBreakpointTypeResolver;
 import consulo.ide.impl.idea.xdebugger.impl.XDebuggerUtilImpl;
 import consulo.ide.impl.idea.xdebugger.impl.actions.DebuggerActionHandler;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XBreakpointUtil;
-import consulo.execution.debug.breakpoint.XLineBreakpointResolverTypeExtension;
-import javax.annotation.Nonnull;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.virtualFileSystem.VirtualFile;
 
+import javax.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -46,6 +46,7 @@ public class XToggleLineBreakpointActionHandler extends DebuggerActionHandler {
   }
 
   @Override
+  @RequiredUIAccess
   public boolean isEnabled(@Nonnull final Project project, final AnActionEvent event) {
     XLineBreakpointType<?>[] breakpointTypes = XDebuggerUtil.getInstance().getLineBreakpointTypes();
     final XBreakpointManager breakpointManager = XDebuggerManager.getInstance(project).getBreakpointManager();
@@ -53,8 +54,7 @@ public class XToggleLineBreakpointActionHandler extends DebuggerActionHandler {
       for (XLineBreakpointType<?> breakpointType : breakpointTypes) {
         final VirtualFile file = position.getFile();
         final int line = position.getLine();
-        if (XLineBreakpointResolverTypeExtension.INSTANCE.resolveBreakpointType(project, file, line) != null ||
-            breakpointManager.findBreakpointAtLine(breakpointType, file, line) != null) {
+        if (XLineBreakpointTypeResolver.forFile(project, file, line) != null || breakpointManager.findBreakpointAtLine(breakpointType, file, line) != null) {
           return true;
         }
       }
@@ -64,7 +64,7 @@ public class XToggleLineBreakpointActionHandler extends DebuggerActionHandler {
 
   @Override
   public void perform(@Nonnull final Project project, final AnActionEvent event) {
-    Editor editor = event.getData(CommonDataKeys.EDITOR);
+    Editor editor = event.getData(Editor.KEY);
     // do not toggle more than once on the same line
     Set<Integer> processedLines = new HashSet<>();
     for (XSourcePosition position : XDebuggerUtilImpl.getAllCaretsPositions(project, event.getDataContext())) {

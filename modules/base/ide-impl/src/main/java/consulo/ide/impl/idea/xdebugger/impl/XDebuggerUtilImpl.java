@@ -15,45 +15,27 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.AllIcons;
-import consulo.execution.debug.*;
-import consulo.execution.debug.breakpoint.*;
-import consulo.language.Language;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
-import consulo.ui.ex.action.IdeActions;
 import consulo.application.ApplicationManager;
 import consulo.application.WriteAction;
+import consulo.application.util.function.Computable;
+import consulo.application.util.function.Processor;
 import consulo.codeEditor.Caret;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
-import consulo.colorScheme.EditorColorsManager;
-import consulo.colorScheme.EditorColorsScheme;
 import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.codeEditor.markup.RangeHighlighter;
+import consulo.colorScheme.EditorColorsManager;
+import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
+import consulo.dataContext.DataContext;
+import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.fileEditor.FileEditorManager;
-import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
-import consulo.language.internal.InternalStdFileTypes;
-import consulo.language.psi.*;
-import consulo.project.Project;
-import consulo.ui.ex.popup.PopupStep;
-import consulo.ui.ex.popup.BaseListPopupStep;
-import consulo.util.concurrent.AsyncResult;
-import consulo.application.util.function.Computable;
-import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.navigation.Navigatable;
-import consulo.navigation.NonNavigatable;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
-import consulo.language.psi.util.PsiTreeUtil;
-import consulo.ui.ex.RelativePoint;
-import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.document.util.DocumentUtil;
-import consulo.application.util.function.Processor;
+import consulo.document.util.TextRange;
+import consulo.execution.debug.*;
+import consulo.execution.debug.breakpoint.*;
 import consulo.execution.debug.breakpoint.ui.XBreakpointGroupingRule;
 import consulo.execution.debug.evaluation.EvaluationMode;
 import consulo.execution.debug.evaluation.XDebuggerEvaluator;
@@ -61,6 +43,12 @@ import consulo.execution.debug.frame.XExecutionStack;
 import consulo.execution.debug.frame.XStackFrame;
 import consulo.execution.debug.frame.XSuspendContext;
 import consulo.execution.debug.frame.XValueContainer;
+import consulo.execution.debug.setting.XDebuggerSettings;
+import consulo.execution.debug.ui.DebuggerColors;
+import consulo.fileEditor.FileEditorManager;
+import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XBreakpointUtil;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XExpressionImpl;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.grouping.XBreakpointFileGroupingRule;
@@ -68,13 +56,24 @@ import consulo.ide.impl.idea.xdebugger.impl.evaluate.quick.common.ValueLookupMan
 import consulo.ide.impl.idea.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
 import consulo.ide.impl.idea.xdebugger.impl.ui.DebuggerUIUtil;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.actions.XDebuggerTreeActionBase;
-import consulo.execution.debug.setting.XDebuggerSettings;
-import consulo.execution.debug.ui.DebuggerColors;
-import consulo.annotation.access.RequiredReadAction;
+import consulo.language.Language;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.inject.impl.internal.InjectedLanguageUtil;
+import consulo.language.internal.InternalStdFileTypes;
+import consulo.language.psi.*;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.navigation.Navigatable;
+import consulo.navigation.NonNavigatable;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.popup.BaseListPopupStep;
+import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.image.Image;
-import consulo.execution.debug.breakpoint.XLineBreakpointResolverTypeExtension;
+import consulo.util.concurrent.AsyncResult;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
@@ -110,7 +109,7 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
 
   @Override
   public void toggleLineBreakpoint(@Nonnull final Project project, @Nonnull final VirtualFile file, final int line, boolean temporary) {
-    XLineBreakpointType<?> breakpointType = XLineBreakpointResolverTypeExtension.INSTANCE.resolveBreakpointType(project, file, line);
+    XLineBreakpointType<?> breakpointType = XLineBreakpointTypeResolver.forFile(project, file, line);
     if (breakpointType != null) {
       toggleLineBreakpoint(project, breakpointType, file, line, temporary);
     }
@@ -118,7 +117,7 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
 
   @Override
   public boolean canPutBreakpointAt(@Nonnull Project project, @Nonnull VirtualFile file, int line) {
-    return XLineBreakpointResolverTypeExtension.INSTANCE.resolveBreakpointType(project, file, line) != null;
+    return XLineBreakpointTypeResolver.forFile(project, file, line) != null;
   }
 
   @Override

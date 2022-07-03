@@ -15,31 +15,30 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.breakpoints;
 
-import consulo.ide.impl.idea.codeInsight.folding.impl.FoldingUtil;
-import consulo.ide.impl.idea.codeInsight.folding.impl.actions.ExpandRegionAction;
-import consulo.execution.debug.XBreakpointManager;
-import consulo.execution.debug.breakpoint.*;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.markup.GutterIconRenderer;
-import consulo.project.Project;
-import consulo.util.concurrent.AsyncResult;
-import consulo.util.lang.Pair;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.document.Document;
+import consulo.execution.debug.XBreakpointManager;
 import consulo.execution.debug.XDebuggerManager;
 import consulo.execution.debug.XDebuggerUtil;
 import consulo.execution.debug.XSourcePosition;
+import consulo.execution.debug.breakpoint.*;
+import consulo.ide.impl.idea.codeInsight.folding.impl.FoldingUtil;
+import consulo.ide.impl.idea.codeInsight.folding.impl.actions.ExpandRegionAction;
 import consulo.ide.impl.idea.xdebugger.impl.DebuggerSupport;
 import consulo.ide.impl.idea.xdebugger.impl.XDebuggerUtilImpl;
 import consulo.ide.impl.idea.xdebugger.impl.XSourcePositionImpl;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.BreakpointItem;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.BreakpointPanelProvider;
-import consulo.execution.debug.breakpoint.XLineBreakpointResolverTypeExtension;
+import consulo.project.Project;
+import consulo.util.concurrent.AsyncResult;
+import consulo.util.lang.Pair;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -167,7 +166,7 @@ public class XBreakpointUtil {
         }
       }
 
-      XLineBreakpointType<?> breakpointType = XLineBreakpointResolverTypeExtension.INSTANCE.resolveBreakpointType(project, file, line);
+      XLineBreakpointType<?> breakpointType = XLineBreakpointTypeResolver.forFile(project, file, line);
       if(breakpointType != null) {
         typeWinner = breakpointType;
         lineWinner = line;

@@ -24,9 +24,7 @@
   <extensionPoints>
     <extensionPoint name="xdebugger.settings" interface="consulo.execution.debug.setting.XDebuggerSettings"/>
     <extensionPoint name="xdebugger.breakpointType" interface="consulo.execution.debug.breakpoint.XBreakpointType"/>
-    <extensionPoint name="xdebugger.lineBreakpointTypeResolver" beanClass="consulo.virtualFileSystem.extension.FileTypeExtensionPoint">
-      <with attribute="implementationClass" implements="consulo.execution.debug.breakpoint.XLineBreakpointTypeResolver"/>
-    </extensionPoint>
+
     <extensionPoint name="xdebugger.localAttachDebuggerProvider" interface="consulo.execution.debug.attach.XLocalAttachDebuggerProvider"/>
     <extensionPoint name="xdebugger.attachDebuggerProvider" interface="consulo.execution.debug.attach.XAttachDebuggerProvider"/>
     <extensionPoint name="xdebugger.attachHostProvider" interface="consulo.execution.debug.attach.XAttachHostProvider"/>

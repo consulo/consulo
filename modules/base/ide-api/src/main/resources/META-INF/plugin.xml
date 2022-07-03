@@ -59,10 +59,6 @@
     <extensionPoint name="projectService" beanClass="consulo.component.internal.ServiceDescriptor" area="PROJECT"/>
     <extensionPoint name="moduleService" beanClass="consulo.component.internal.ServiceDescriptor" area="MODULE"/>
 
-    <extensionPoint name="extensionExtender" beanClass="consulo.component.extension.KeyedLazyInstanceEP">
-      <with attribute="implementationClass" implements="consulo.component.extension.ExtensionExtender"/>
-    </extensionPoint>
-
     <extensionPoint name="dateTimeFormatter" beanClass="consulo.ide.impl.idea.util.text.DateTimeFormatterBean"/>
 
     <extensionPoint name="editorFactoryDocumentListener" interface="consulo.document.event.DocumentListener"/>
@@ -744,7 +740,6 @@
     <extensionPoint name="completion.skip" interface="consulo.ide.impl.idea.codeInsight.completion.CompletionPreselectSkipper"/>
     <extensionPoint name="lookup.charFilter" interface="consulo.ide.impl.idea.codeInsight.lookup.CharFilter"/>
     <extensionPoint name="lookup.actionProvider" interface="consulo.ide.impl.idea.codeInsight.lookup.LookupActionProvider"/>
-    <extensionPoint name="originInfoProvider" interface="consulo.ide.impl.idea.codeInsight.completion.originInfo.OriginInfoProvider"/>
 
     <extensionPoint name="highlightRangeExtension" interface="consulo.ide.impl.idea.codeInsight.daemon.impl.HighlightRangeExtension"/>
 
@@ -810,8 +805,6 @@
     <extensionPoint name="readWriteAccessDetector" interface="consulo.language.editor.highlight.ReadWriteAccessDetector"/>
 
     <extensionPoint name="scopeParserExtension" interface="consulo.ide.impl.psi.search.scope.packageSet.PackageSetParserExtension"/>
-
-    <extensionPoint name="referenceProviderType" beanClass="consulo.component.extension.KeyedLazyInstanceEP"/>
 
     <extensionPoint name="colorSettingsPage" interface="consulo.language.editor.colorScheme.setting.ColorSettingsPage"/>
     <extensionPoint name="colorAndFontPanelFactory" interface="consulo.ide.impl.idea.application.options.colors.ColorAndFontPanelFactory"/>

@@ -43,5 +43,4 @@ public interface XAttachHostProvider<T extends XAttachHost> {
    */
   @Nonnull
   List<T> getAvailableHosts(@Nullable Project project);
-
 }
