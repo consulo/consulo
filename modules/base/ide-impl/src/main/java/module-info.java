@@ -490,7 +490,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.ide.highlighter;
   exports consulo.ide.impl.idea.ide.highlighter.custom;
   exports consulo.ide.impl.idea.ide.highlighter.custom.impl;
-  exports consulo.ide.impl.idea.ide.highlighter.custom.tokens;
   exports consulo.ide.impl.idea.ide.impl;
   exports consulo.ide.impl.idea.ide.impl.dataRules;
   exports consulo.ide.impl.idea.ide.impl.util;

@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.ide.highlighter.custom.impl;
 
 import consulo.application.CommonBundle;
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.highlighter.custom.SyntaxTable;
+import consulo.language.internal.custom.SyntaxTable;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.AbstractFileType;
 import consulo.configurable.ConfigurationException;
 import consulo.execution.configuration.ui.SettingsEditor;

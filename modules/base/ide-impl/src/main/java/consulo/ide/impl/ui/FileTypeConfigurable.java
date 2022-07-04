@@ -18,7 +18,7 @@ package consulo.ide.impl.ui;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.CommonBundle;
 import consulo.configurable.*;
-import consulo.ide.impl.idea.ide.highlighter.custom.SyntaxTable;
+import consulo.language.internal.custom.SyntaxTable;
 import consulo.language.file.FileTypeManager;
 import consulo.ui.ex.awt.*;
 import consulo.language.Language;

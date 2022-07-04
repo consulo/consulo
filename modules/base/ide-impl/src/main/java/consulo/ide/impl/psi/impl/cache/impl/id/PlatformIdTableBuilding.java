@@ -17,15 +17,15 @@ package consulo.ide.impl.psi.impl.cache.impl.id;
 
 import consulo.codeEditor.EditorHighlighter;
 import consulo.codeEditor.HighlighterIterator;
-import consulo.ide.impl.idea.openapi.fileTypes.impl.CustomSyntaxTableFileType;
+import consulo.language.internal.custom.CustomSyntaxTableFileType;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.psi.CustomHighlighterTokenType;
-import consulo.ide.impl.psi.impl.cache.impl.BaseFilterLexer;
-import consulo.ide.impl.psi.impl.cache.impl.IndexPatternUtil;
-import consulo.ide.impl.psi.impl.cache.impl.OccurrenceConsumer;
-import consulo.ide.impl.psi.impl.cache.impl.todo.TodoIndexEntry;
-import consulo.ide.impl.psi.impl.cache.impl.todo.TodoIndexer;
-import consulo.ide.impl.psi.impl.cache.impl.todo.VersionedTodoIndexer;
+import consulo.language.internal.custom.CustomHighlighterTokenType;
+import consulo.language.psi.stub.BaseFilterLexer;
+import consulo.language.psi.stub.IndexPatternUtil;
+import consulo.language.psi.stub.OccurrenceConsumer;
+import consulo.language.psi.stub.todo.TodoIndexEntry;
+import consulo.language.psi.stub.todo.TodoIndexer;
+import consulo.language.psi.stub.todo.VersionedTodoIndexer;
 import consulo.index.io.DataIndexer;
 import consulo.language.Language;
 import consulo.language.ast.IElementType;
@@ -55,7 +55,7 @@ import java.util.Map;
 /**
  * Author: dmitrylomov
  */
-public abstract class PlatformIdTableBuilding {
+public class PlatformIdTableBuilding {
   public static final Key<EditorHighlighter> EDITOR_HIGHLIGHTER = Key.create("Editor");
   private static final TokenSet ABSTRACT_FILE_COMMENT_TOKENS = TokenSet.create(CustomHighlighterTokenType.LINE_COMMENT, CustomHighlighterTokenType.MULTI_LINE_COMMENT);
 

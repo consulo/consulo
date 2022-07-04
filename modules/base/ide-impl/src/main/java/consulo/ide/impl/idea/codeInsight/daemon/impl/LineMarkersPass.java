@@ -253,15 +253,6 @@ public class LineMarkersPass extends TextEditorHighlightingPass {
     return pass.myMarkers;
   }
 
-  @Nonnull
-  public static LineMarkerInfo<PsiElement> createMethodSeparatorLineMarker(@Nonnull PsiElement startFrom, @Nonnull EditorColorsManager colorsManager) {
-    LineMarkerInfo<PsiElement> info = new LineMarkerInfo<>(startFrom, startFrom.getTextRange(), null, Pass.LINE_MARKERS, FunctionUtil.<Object, String>nullConstant(), null, GutterIconRenderer.Alignment.RIGHT);
-    EditorColorsScheme scheme = colorsManager.getGlobalScheme();
-    info.separatorColor = scheme.getColor(CodeInsightColors.METHOD_SEPARATORS_COLOR);
-    info.separatorPlacement = SeparatorPlacement.TOP;
-    return info;
-  }
-
   @Override
   public String toString() {
     return super.toString() + "; myBounds: " + myPriorityBounds;

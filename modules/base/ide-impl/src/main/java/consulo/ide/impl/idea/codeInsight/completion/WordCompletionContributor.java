@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.codeInsight.completion;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.psi.impl.cache.impl.id.IdTableBuilding;
+import consulo.language.psi.stub.IdTableBuilding;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;

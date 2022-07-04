@@ -17,7 +17,7 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.util.text.TrigramBuilder;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.psi.impl.cache.CacheManager;
+import consulo.language.cacheBuilder.CacheManager;
 import consulo.application.util.function.Processors;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.psi.stub.DumbModeAccessType;

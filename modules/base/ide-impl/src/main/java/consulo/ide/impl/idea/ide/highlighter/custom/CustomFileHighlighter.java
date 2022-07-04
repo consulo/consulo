@@ -15,14 +15,17 @@
  */
 package consulo.ide.impl.idea.ide.highlighter.custom;
 
+import consulo.language.internal.custom.CustomFileTypeLexer;
 import consulo.language.lexer.Lexer;
 import consulo.language.lexer.LayeredLexer;
 import consulo.language.lexer.StringLiteralLexer;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.language.editor.highlight.SyntaxHighlighterBase;
-import consulo.ide.impl.psi.CustomHighlighterTokenType;
+import consulo.language.internal.custom.CustomHighlighterTokenType;
 import consulo.language.ast.StringEscapesTokenTypes;
 import consulo.language.ast.IElementType;
+import consulo.language.internal.custom.SyntaxTable;
+
 import javax.annotation.Nonnull;
 
 import java.util.HashMap;

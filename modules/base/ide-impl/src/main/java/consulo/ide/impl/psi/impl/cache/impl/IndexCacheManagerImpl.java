@@ -26,9 +26,9 @@ import consulo.application.util.function.CommonProcessors;
 import consulo.application.util.function.Computable;
 import consulo.application.util.function.Processor;
 import consulo.component.ProcessCanceledException;
-import consulo.ide.impl.psi.impl.cache.CacheManager;
+import consulo.language.cacheBuilder.CacheManager;
 import consulo.ide.impl.psi.impl.cache.impl.id.IdIndex;
-import consulo.ide.impl.psi.impl.cache.impl.id.IdIndexEntry;
+import consulo.language.psi.stub.IdIndexEntry;
 import consulo.language.content.FileIndexFacade;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
@@ -49,7 +49,7 @@ import java.util.List;
  */
 @Singleton
 @ServiceImpl
-public class IndexCacheManagerImpl extends CacheManager{
+public class IndexCacheManagerImpl extends CacheManager {
   private final Project myProject;
   private final PsiManager myPsiManager;
 

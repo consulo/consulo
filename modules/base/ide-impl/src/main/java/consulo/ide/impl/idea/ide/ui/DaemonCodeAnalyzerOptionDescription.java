@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.ui;
 
-import consulo.ide.impl.idea.codeInsight.daemon.DaemonCodeAnalyzerSettings;
+import consulo.language.editor.DaemonCodeAnalyzerSettings;
 
 /**
  * @author Konstantin Bulenkov

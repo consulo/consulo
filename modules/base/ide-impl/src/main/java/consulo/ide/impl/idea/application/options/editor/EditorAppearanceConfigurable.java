@@ -21,7 +21,7 @@ import consulo.application.Application;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.component.extension.ExtensionPointName;
 import consulo.configurable.*;
-import consulo.ide.impl.idea.codeInsight.daemon.DaemonCodeAnalyzerSettings;
+import consulo.language.editor.DaemonCodeAnalyzerSettings;
 import consulo.ide.impl.idea.codeInsight.hints.InlayParameterHintsProvider;
 import consulo.ide.impl.idea.codeInsight.hints.settings.ParameterNameHintsConfigurable;
 import consulo.ide.impl.idea.openapi.options.CompositeConfigurable;

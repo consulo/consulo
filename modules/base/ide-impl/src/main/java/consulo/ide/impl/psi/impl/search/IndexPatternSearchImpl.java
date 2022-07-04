@@ -3,7 +3,7 @@ package consulo.ide.impl.psi.impl.search;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.language.psi.PsiFile;
-import consulo.ide.impl.psi.impl.cache.TodoCacheManager;
+import consulo.language.psi.stub.todo.TodoCacheManager;
 import consulo.language.psi.search.IndexPattern;
 import consulo.language.psi.search.IndexPatternProvider;
 import consulo.language.psi.search.IndexPatternSearch;

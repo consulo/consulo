@@ -30,6 +30,9 @@ import consulo.language.psi.search.IndexPatternChangeListener;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.language.psi.stub.FileBasedIndexExtension;
 import consulo.language.psi.stub.FileContent;
+import consulo.language.psi.stub.todo.TodoIndexEntry;
+import consulo.language.psi.stub.todo.TodoIndexer;
+import consulo.language.psi.stub.todo.VersionedTodoIndexer;
 import consulo.module.content.ProjectFileIndex;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
@@ -65,8 +68,8 @@ public class TodoIndex extends FileBasedIndexExtension<TodoIndexEntry, Integer> 
   private final KeyDescriptor<TodoIndexEntry> myKeyDescriptor = new KeyDescriptor<>() {
     @Override
     public void save(@Nonnull final DataOutput out, final TodoIndexEntry value) throws IOException {
-      out.writeUTF(value.pattern);
-      out.writeBoolean(value.caseSensitive);
+      out.writeUTF(value.getPattern());
+      out.writeBoolean(value.isCaseSensitive());
     }
 
     @Override

@@ -20,7 +20,7 @@ import consulo.codeEditor.Editor;
 import consulo.colorScheme.EditorFontType;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.application.util.matcher.NameUtil;
-import consulo.ide.impl.psi.impl.cache.impl.id.IdTableBuilding;
+import consulo.language.psi.stub.IdTableBuilding;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.JBList;

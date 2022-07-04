@@ -27,6 +27,7 @@ import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.TargetElementUtil;
 import consulo.language.editor.TargetElementUtilExtender;
 import consulo.language.editor.action.CodeInsightActionHandler;
+import consulo.language.editor.action.TypeDeclarationProvider;
 import consulo.language.editor.ui.PopupNavigationUtil;
 import consulo.language.psi.*;
 import consulo.project.Project;

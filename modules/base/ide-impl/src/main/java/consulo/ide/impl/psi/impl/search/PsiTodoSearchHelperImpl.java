@@ -19,7 +19,7 @@ package consulo.ide.impl.psi.impl.search;
 import consulo.annotation.component.ServiceImpl;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.ide.todo.TodoIndexPatternProvider;
-import consulo.ide.impl.psi.impl.cache.TodoCacheManager;
+import consulo.language.psi.stub.todo.TodoCacheManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.search.*;

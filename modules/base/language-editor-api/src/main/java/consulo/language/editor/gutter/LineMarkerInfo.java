@@ -16,15 +16,19 @@
 
 package consulo.language.editor.gutter;
 
-import consulo.document.util.TextRange;
+import consulo.application.dumb.IndexNotReadyException;
+import consulo.codeEditor.CodeInsightColors;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.codeEditor.markup.MarkupEditorFilter;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.codeEditor.markup.SeparatorPlacement;
+import consulo.colorScheme.EditorColorsManager;
+import consulo.colorScheme.EditorColorsScheme;
+import consulo.document.util.TextRange;
+import consulo.language.editor.Pass;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.SmartPointerManager;
 import consulo.language.psi.SmartPsiElementPointer;
-import consulo.application.dumb.IndexNotReadyException;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.image.Image;
@@ -35,6 +39,15 @@ import javax.annotation.Nullable;
 import java.util.function.Function;
 
 public class LineMarkerInfo<T extends PsiElement> {
+  @Nonnull
+  public static LineMarkerInfo<PsiElement> createMethodSeparatorLineMarker(@Nonnull PsiElement startFrom, @Nonnull EditorColorsManager colorsManager) {
+    LineMarkerInfo<PsiElement> info = new LineMarkerInfo<>(startFrom, startFrom.getTextRange(), null, Pass.LINE_MARKERS, null, null, GutterIconRenderer.Alignment.RIGHT);
+    EditorColorsScheme scheme = colorsManager.getGlobalScheme();
+    info.separatorColor = scheme.getColor(CodeInsightColors.METHOD_SEPARATORS_COLOR);
+    info.separatorPlacement = SeparatorPlacement.TOP;
+    return info;
+  }
+
   protected final Image myIcon;
   private final SmartPsiElementPointer<T> elementRef;
   public final int startOffset;

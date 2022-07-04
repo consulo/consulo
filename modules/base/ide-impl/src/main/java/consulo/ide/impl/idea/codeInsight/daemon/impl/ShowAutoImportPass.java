@@ -7,7 +7,7 @@ import consulo.language.editor.Pass;
 import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPass;
 import consulo.language.editor.DaemonBundle;
 import consulo.language.editor.DaemonCodeAnalyzer;
-import consulo.ide.impl.idea.codeInsight.daemon.DaemonCodeAnalyzerSettings;
+import consulo.language.editor.DaemonCodeAnalyzerSettings;
 import consulo.ide.impl.idea.codeInsight.daemon.ReferenceImporter;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.intention.HintAction;

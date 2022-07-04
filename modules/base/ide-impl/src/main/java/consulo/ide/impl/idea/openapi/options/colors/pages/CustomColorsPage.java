@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.options.colors.pages;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.ide.highlighter.custom.CustomFileHighlighter;
 import consulo.ide.impl.idea.ide.highlighter.custom.CustomHighlighterColors;
-import consulo.ide.impl.idea.ide.highlighter.custom.SyntaxTable;
+import consulo.language.internal.custom.SyntaxTable;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.configurable.OptionsBundle;

@@ -20,7 +20,7 @@ import consulo.configurable.ApplicationConfigurable;
 import consulo.configurable.StandardConfigurableIds;
 import consulo.language.editor.CodeInsightSettings;
 import consulo.language.editor.DaemonCodeAnalyzer;
-import consulo.ide.impl.idea.codeInsight.daemon.DaemonCodeAnalyzerSettings;
+import consulo.language.editor.DaemonCodeAnalyzerSettings;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.IdentifierHighlighterPass;
 import consulo.application.ui.UISettings;
 import consulo.application.ApplicationBundle;

@@ -24,12 +24,11 @@ import consulo.language.ast.IElementType;
 import consulo.language.editor.action.PairedBraceMatcherAdapter;
 import consulo.language.plain.PlainTextFileType;
 import consulo.language.plain.PlainTextLanguage;
-import consulo.language.psi.PsiFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static consulo.ide.impl.psi.CustomHighlighterTokenType.*;
+import static consulo.language.internal.custom.CustomHighlighterTokenType.*;
 
 /**
  * @author Maxim.Mossienko

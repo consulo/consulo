@@ -17,7 +17,7 @@ import consulo.container.PluginException;
 import consulo.container.plugin.PluginId;
 import consulo.disposer.Disposable;
 import consulo.document.util.FileContentUtilCore;
-import consulo.ide.impl.idea.ide.highlighter.custom.SyntaxTable;
+import consulo.language.internal.custom.SyntaxTable;
 import consulo.ide.impl.idea.ide.plugins.PluginManagerCore;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.fileTypes.*;

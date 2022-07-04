@@ -4,7 +4,7 @@ package consulo.ide.impl.psi.impl.search;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.ide.impl.psi.impl.cache.impl.todo.LexerBasedTodoIndexer;
+import consulo.language.psi.stub.todo.LexerBasedTodoIndexer;
 import consulo.language.lexer.Lexer;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiFile;

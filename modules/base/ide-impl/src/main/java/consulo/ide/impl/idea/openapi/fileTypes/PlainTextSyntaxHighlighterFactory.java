@@ -20,8 +20,7 @@
 package consulo.ide.impl.idea.openapi.fileTypes;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.ide.highlighter.custom.AbstractCustomLexer;
-import consulo.ide.impl.idea.ide.highlighter.custom.tokens.*;
+import consulo.language.internal.custom.*;
 import consulo.language.Language;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighterBase;
@@ -32,7 +31,6 @@ import consulo.colorScheme.TextAttributesKey;
 import consulo.language.plain.PlainTextLanguage;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.psi.CustomHighlighterTokenType;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 import javax.annotation.Nonnull;

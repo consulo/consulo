@@ -23,6 +23,7 @@ import consulo.component.persist.Storage;
 import consulo.ide.impl.idea.codeInspection.ex.InspectionProfileImpl;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.ide.impl.idea.profile.codeInspection.InspectionProfileManagerImpl;
+import consulo.language.editor.DaemonCodeAnalyzerSettings;
 import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import consulo.logging.Logger;
 import consulo.util.xml.serializer.DefaultJDOMExternalizer;
@@ -31,16 +32,14 @@ import consulo.util.xml.serializer.WriteExternalException;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
 @Singleton
 @State(name = "DaemonCodeAnalyzerSettings", storages = {@Storage("editor.codeinsight.xml")})
 @ServiceImpl
 public class DaemonCodeAnalyzerSettingsImpl extends DaemonCodeAnalyzerSettings implements PersistentStateComponent<Element>, Cloneable {
   private static final Logger LOG = Logger.getInstance(DaemonCodeAnalyzerSettingsImpl.class);
-  @NonNls
+
   private static final String ROOT_TAG = "root";
-  @NonNls
   private static final String PROFILE_ATT = "profile";
   private final InspectionProfileManagerImpl myManager;
 

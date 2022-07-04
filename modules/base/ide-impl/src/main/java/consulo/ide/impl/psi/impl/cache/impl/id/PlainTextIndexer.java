@@ -16,10 +16,9 @@
 package consulo.ide.impl.psi.impl.cache.impl.id;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.util.indexing.IdDataConsumer;
+import consulo.language.psi.stub.*;
 import consulo.language.plain.PlainTextFileType;
 import consulo.language.psi.search.UsageSearchContext;
-import consulo.language.psi.stub.FileContent;
 import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;

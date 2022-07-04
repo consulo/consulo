@@ -17,11 +17,13 @@ package consulo.ide.impl.psi.impl.cache.impl.todo;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.pattern.StringPattern;
-import consulo.ide.impl.psi.impl.cache.impl.IndexPatternUtil;
-import consulo.ide.impl.psi.impl.cache.impl.OccurrenceConsumer;
+import consulo.language.psi.stub.IndexPatternUtil;
+import consulo.language.psi.stub.OccurrenceConsumer;
 import consulo.language.plain.PlainTextFileType;
 import consulo.language.psi.search.IndexPattern;
 import consulo.language.psi.stub.FileContent;
+import consulo.language.psi.stub.todo.TodoIndexEntry;
+import consulo.language.psi.stub.todo.VersionedTodoIndexer;
 import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;

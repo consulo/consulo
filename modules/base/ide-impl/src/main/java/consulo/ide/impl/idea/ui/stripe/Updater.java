@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.ui.stripe;
 
-import consulo.ide.impl.idea.codeInsight.daemon.DaemonCodeAnalyzerSettings;
+import consulo.language.editor.DaemonCodeAnalyzerSettings;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.ex.action.ShortcutSet;
 import consulo.ui.ex.keymap.KeymapManager;

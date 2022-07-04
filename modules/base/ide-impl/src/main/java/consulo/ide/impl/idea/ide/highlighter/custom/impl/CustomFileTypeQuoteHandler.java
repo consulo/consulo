@@ -20,7 +20,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.HighlighterIterator;
 import consulo.document.Document;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.AbstractFileType;
-import consulo.ide.impl.psi.CustomHighlighterTokenType;
+import consulo.language.internal.custom.CustomHighlighterTokenType;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.action.FileQuoteHandler;
 import consulo.virtualFileSystem.fileType.FileType;

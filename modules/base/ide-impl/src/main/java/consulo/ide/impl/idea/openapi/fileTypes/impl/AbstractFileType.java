@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.openapi.fileTypes.impl;
 
 import consulo.ide.impl.idea.ide.highlighter.FileTypeRegistrator;
-import consulo.ide.impl.idea.ide.highlighter.custom.SyntaxTable;
+import consulo.language.internal.custom.SyntaxTable;
 import consulo.ide.impl.idea.ide.highlighter.custom.impl.CustomFileTypeEditor;
 import consulo.language.Commenter;
 import consulo.ide.impl.idea.openapi.fileTypes.*;
@@ -18,6 +18,7 @@ import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.util.ArrayUtilRt;
 import consulo.util.collection.SmartList;
 import consulo.ide.impl.idea.util.text.StringTokenizer;
+import consulo.language.internal.custom.CustomSyntaxTableFileType;
 import consulo.virtualFileSystem.fileType.FileNameMatcher;
 import org.jdom.Element;
 import org.jdom.output.XMLOutputter;

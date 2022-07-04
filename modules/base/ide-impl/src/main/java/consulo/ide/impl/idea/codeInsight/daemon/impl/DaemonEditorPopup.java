@@ -7,7 +7,7 @@ package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.DaemonCodeAnalyzer;
-import consulo.ide.impl.idea.codeInsight.daemon.DaemonCodeAnalyzerSettings;
+import consulo.language.editor.DaemonCodeAnalyzerSettings;
 import consulo.ide.IdeBundle;
 import consulo.application.ui.UISettings;
 import consulo.application.ApplicationManager;

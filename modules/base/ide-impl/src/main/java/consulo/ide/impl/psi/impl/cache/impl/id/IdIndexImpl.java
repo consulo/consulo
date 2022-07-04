@@ -3,6 +3,9 @@ package consulo.ide.impl.psi.impl.cache.impl.id;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.cacheBuilder.CacheBuilderRegistry;
+import consulo.language.psi.stub.IdIndexEntry;
+import consulo.language.psi.stub.IdIndexer;
+import consulo.language.psi.stub.IdTableBuilding;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.ide.impl.idea.openapi.util.Comparing;

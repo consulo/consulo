@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInspection.reference;
 
-import consulo.ide.impl.idea.codeInsight.daemon.ImplicitUsageProvider;
+import consulo.language.editor.ImplicitUsageProvider;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.language.editor.inspection.reference.RefEntity;
 import consulo.language.psi.PsiElement;
