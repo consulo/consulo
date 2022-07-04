@@ -210,7 +210,7 @@ public class IdeEventQueue extends EventQueue {
 
   public static IdeEventQueue getInstance() {
     if (ourInstance == null) {
-      throw new IllegalArgumentException("IdeEventQueue is not initialed. Probably wrote application frontend");
+      throw new IllegalArgumentException("IdeEventQueue is not initialed. Probably wrong application frontend");
     }
     return ourInstance;
   }
