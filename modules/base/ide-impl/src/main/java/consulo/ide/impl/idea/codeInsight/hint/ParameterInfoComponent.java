@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.codeInsight.hint;
 
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.inject.EditorWindow;
-import consulo.ide.impl.idea.lang.parameterInfo.ParameterInfoHandler;
+import consulo.language.editor.parameterInfo.ParameterInfoHandler;
 import consulo.ide.impl.idea.lang.parameterInfo.ParameterInfoUIContextEx;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.ui.ex.action.IdeActions;

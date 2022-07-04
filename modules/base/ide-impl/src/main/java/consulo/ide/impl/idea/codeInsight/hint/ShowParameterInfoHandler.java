@@ -6,7 +6,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.lang.parameterInfo.ParameterInfoHandler;
+import consulo.language.editor.parameterInfo.ParameterInfoHandler;
 import consulo.ide.impl.idea.openapi.editor.EditorActivityManager;
 import consulo.ide.impl.idea.ui.LightweightHint;
 import consulo.ide.impl.idea.util.ObjectUtils;

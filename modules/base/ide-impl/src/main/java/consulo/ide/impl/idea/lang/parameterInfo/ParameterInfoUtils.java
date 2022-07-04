@@ -15,6 +15,7 @@
 package consulo.ide.impl.idea.lang.parameterInfo;
 
 import consulo.language.ast.ASTNode;
+import consulo.language.editor.parameterInfo.ParameterInfoHandlerWithTabActionSupport;
 import consulo.util.lang.function.Conditions;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;

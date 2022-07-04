@@ -1,8 +1,8 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.hint;
 
-import consulo.ide.impl.idea.lang.parameterInfo.CreateParameterInfoContext;
-import consulo.ide.impl.idea.lang.parameterInfo.ParameterInfoHandler;
+import consulo.language.editor.parameterInfo.CreateParameterInfoContext;
+import consulo.language.editor.parameterInfo.ParameterInfoHandler;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;

@@ -14,23 +14,21 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.lang.parameterInfo;
+package consulo.language.editor.parameterInfo;
 
-import consulo.language.psi.PsiElement;
+import consulo.codeEditor.Editor;
+import consulo.language.psi.PsiFile;
+import consulo.project.Project;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 
-public interface CreateParameterInfoContext extends ParameterInfoContext {
-  @Nullable
-  Object[] getItemsToShow();
+public interface ParameterInfoContext {
+  Project getProject();
 
-  void setItemsToShow(Object[] items);
+  PsiFile getFile();
 
-  void showHint(PsiElement element, int offset, ParameterInfoHandler handler);
+  int getOffset();
 
-  int getParameterListStart();
-
-  Object getHighlightedElement();
-
-  void setHighlightedElement(Object elements);
+  @Nonnull
+  Editor getEditor();
 }

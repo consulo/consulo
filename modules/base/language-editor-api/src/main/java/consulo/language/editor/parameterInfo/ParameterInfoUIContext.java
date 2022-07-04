@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.lang.parameterInfo;
+package consulo.language.editor.parameterInfo;
 
 import consulo.language.psi.PsiElement;
 

@@ -3,6 +3,10 @@
 package consulo.ide.impl.idea.codeInsight.hint;
 
 import consulo.language.editor.hint.HintManager;
+import consulo.language.editor.parameterInfo.DeleteParameterInfoContext;
+import consulo.language.editor.parameterInfo.ParameterInfoHandler;
+import consulo.language.editor.parameterInfo.ParameterInfoHandlerWithTabActionSupport;
+import consulo.language.editor.parameterInfo.UpdateParameterInfoContext;
 import consulo.undoRedo.ProjectUndoManager;
 import consulo.language.editor.AutoPopupController;
 import consulo.language.editor.CodeInsightBundle;
