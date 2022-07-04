@@ -13,17 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.completion.util;
+package consulo.language.editor.completion.lookup;
 
-import consulo.language.editor.completion.lookup.InsertHandler;
-import consulo.language.editor.completion.lookup.InsertionContext;
-import consulo.language.editor.completion.lookup.LookupElement;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.document.Document;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiWhiteSpace;
+import consulo.util.lang.StringUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

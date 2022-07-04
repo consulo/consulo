@@ -97,7 +97,7 @@ public class CodeFormatterFacade {
     final PsiFile fileToFormat = elementToFormat.getContainingFile();
 
     RangeMarker rangeMarker = null;
-    final FormattingModelBuilder builder = LanguageFormatting.INSTANCE.forContext(fileToFormat);
+    final FormattingModelBuilder builder = FormattingModelBuilder.forContext(fileToFormat);
     if (builder != null) {
       if (document != null && endOffset < document.getTextLength()) {
         rangeMarker = document.createRangeMarker(startOffset, endOffset);
@@ -158,7 +158,7 @@ public class CodeFormatterFacade {
       document = documentWindow.getDelegate();
     }
 
-    final FormattingModelBuilder builder = LanguageFormatting.INSTANCE.forContext(file);
+    final FormattingModelBuilder builder = FormattingModelBuilder.forContext(file);
     if (builder != null) {
       if (file.getTextLength() > 0) {
         LOG.assertTrue(document != null);

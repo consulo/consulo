@@ -17,7 +17,6 @@ package consulo.language.codeStyle;
 
 import consulo.document.util.TextRange;
 import consulo.language.ast.ASTNode;
-import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 
 import javax.annotation.Nonnull;
@@ -32,7 +31,7 @@ import javax.annotation.Nonnull;
  * {@link FormattingModelProvider#createFormattingModelForPsiFile(PsiFile, Block, CodeStyleSettings)}
  * or implement the necessary extra features and delegate the rest to the factory implementation.
  *
- * @see FormattingModelBuilder#createModel(PsiElement, CodeStyleSettings)
+ * @see FormattingModelBuilder#createModel(FormattingContext)
  * @see FormattingModelProvider#createFormattingModelForPsiFile(PsiFile, Block, CodeStyleSettings)
  */
 
@@ -40,7 +39,7 @@ public interface FormattingModel {
   /**
    * Returns the root block of the formatting model. The root block corresponds to the
    * top-level element passed to
-   * {@link FormattingModelBuilder#createModel(PsiElement, CodeStyleSettings)}.
+   * {@link FormattingModelBuilder#createModel(FormattingContext)}.
    *
    * @return the root block of the model.
    */

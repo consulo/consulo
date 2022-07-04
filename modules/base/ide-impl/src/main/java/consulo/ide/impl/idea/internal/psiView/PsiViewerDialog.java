@@ -786,10 +786,10 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
 
   @Nullable
   private static Block buildBlocks(@Nonnull PsiElement rootElement) {
-    FormattingModelBuilder formattingModelBuilder = LanguageFormatting.INSTANCE.forContext(rootElement);
+    FormattingModelBuilder formattingModelBuilder = FormattingModelBuilder.forContext(rootElement);
     CodeStyleSettings settings = CodeStyleSettingsManager.getSettings(rootElement.getProject());
     if (formattingModelBuilder != null) {
-      FormattingModel formattingModel = formattingModelBuilder.createModel(rootElement, settings);
+      FormattingModel formattingModel = formattingModelBuilder.createModel(FormattingContext.create(rootElement, settings));
       return formattingModel.getRootBlock();
     }
     else {

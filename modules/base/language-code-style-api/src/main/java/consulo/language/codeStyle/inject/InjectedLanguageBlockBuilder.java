@@ -112,7 +112,7 @@ public abstract class InjectedLanguageBlockBuilder {
 
     if  (injectedFile[0] != null) {
       final Language childLanguage = injectedFile[0].getLanguage();
-      final FormattingModelBuilder builder = LanguageFormatting.INSTANCE.forContext(childLanguage, injectionHost.getPsi());
+      final FormattingModelBuilder builder = FormattingModelBuilder.forContext(childLanguage, injectionHost.getPsi());
 
       if (builder != null) {
         final int startOffset = injectedRangeInsideHost.get().getStartOffset();
@@ -153,9 +153,9 @@ public abstract class InjectedLanguageBlockBuilder {
     
     final PsiElement childPsi = injectedNode.getPsi();
     final Language childLanguage = childPsi.getLanguage();
-    final FormattingModelBuilder builder = LanguageFormatting.INSTANCE.forContext(childLanguage, childPsi);
+    final FormattingModelBuilder builder = FormattingModelBuilder.forContext(childLanguage, childPsi);
     LOG.assertTrue(builder != null);
-    final FormattingModel childModel = builder.createModel(childPsi, getSettings());
+    final FormattingModel childModel = builder.createModel(FormattingContext.create(childPsi, getSettings()));
     Block original = childModel.getRootBlock();
 
     if ((original.isLeaf() && injectedNode.getText().trim().length() > 0) || original.getSubBlocks().size() != 0) {

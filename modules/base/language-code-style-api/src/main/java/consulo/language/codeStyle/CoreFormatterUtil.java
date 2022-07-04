@@ -39,12 +39,7 @@ public class CoreFormatterUtil {
                                            @Nonnull TextRange range,
                                            @Nonnull CodeStyleSettings settings,
                                            @Nonnull FormattingMode mode) {
-    if (builder instanceof FormattingModelBuilderEx) {
-      return ((FormattingModelBuilderEx)builder).createModel(element, range, settings, mode);
-    }
-    else {
-      return builder.createModel(element, settings);
-    }
+    return builder.createModel(FormattingContext.create(element, range, settings, mode));
   }
 
   @Nonnull

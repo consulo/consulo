@@ -338,9 +338,9 @@ public class JoinLinesHandler extends EditorActionHandler {
       int[] spacesToAdd = new int[size];
       Arrays.fill(spacesToAdd, -1);
       CharSequence text = myDoc.getCharsSequence();
-      FormattingModelBuilder builder = LanguageFormatting.INSTANCE.forContext(myFile);
+      FormattingModelBuilder builder = FormattingModelBuilder.forContext(myFile);
       CodeStyleSettings settings = CodeStyle.getSettings(myFile);
-      FormattingModel model = builder == null ? null : builder.createModel(myFile, settings);
+      FormattingModel model = builder == null ? null : builder.createModel(FormattingContext.create(myFile, settings));
       FormatterEx formatter = FormatterEx.getInstance();
       for (int i = 0; i < size; i++) {
         myIndicator.checkCanceled();

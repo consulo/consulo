@@ -22,7 +22,6 @@ import consulo.language.codeStyle.FormattingModel;
 import consulo.language.codeStyle.FormattingModelBuilder;
 import consulo.language.file.inject.DocumentWindow;
 import consulo.language.ast.ASTNode;
-import consulo.language.codeStyle.LanguageFormatting;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
@@ -93,8 +92,8 @@ abstract class CodeStyleManagerRunnable<T> {
       }
     }
 
-    final FormattingModelBuilder builder = LanguageFormatting.INSTANCE.forContext(file);
-    FormattingModelBuilder elementBuilder = element != null ? LanguageFormatting.INSTANCE.forContext(element) : builder;
+    final FormattingModelBuilder builder = FormattingModelBuilder.forContext(file);
+    FormattingModelBuilder elementBuilder = element != null ? FormattingModelBuilder.forContext(element) : builder;
     if (builder != null && elementBuilder != null) {
       mySettings = CodeStyle.getSettings(file);
 
@@ -160,7 +159,7 @@ abstract class CodeStyleManagerRunnable<T> {
       return new TextRange(Math.max(significantRangeStart, 0), offset);
     }
 
-    final FormattingModelBuilder builder = LanguageFormatting.INSTANCE.forContext(file);
+    final FormattingModelBuilder builder = FormattingModelBuilder.forContext(file);
     if (builder != null) {
       final TextRange textRange = builder.getRangeAffectingIndent(file, offset, elementAtOffset);
       if (textRange != null) {

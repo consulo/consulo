@@ -19,13 +19,8 @@
  */
 package consulo.language.codeStyle;
 
-import consulo.language.OldLanguageExtension;
-import consulo.language.psi.PsiElement;
 import consulo.container.plugin.PluginIds;
-import consulo.language.Language;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import consulo.language.OldLanguageExtension;
 
 public class LanguageFormatting extends OldLanguageExtension<FormattingModelBuilder> {
   public static final LanguageFormatting INSTANCE = new LanguageFormatting();
@@ -34,22 +29,4 @@ public class LanguageFormatting extends OldLanguageExtension<FormattingModelBuil
     super(PluginIds.CONSULO_BASE + ".lang.formatter");
   }
 
-  @Nullable
-  public FormattingModelBuilder forContext(@Nonnull PsiElement context) {
-    return forContext(context.getLanguage(), context);
-  }
-
-  @Nullable
-  public FormattingModelBuilder forContext(@Nonnull Language language, @Nonnull PsiElement context) {
-    for (LanguageFormattingRestriction each : LanguageFormattingRestriction.EXTENSION.getExtensionList()) {
-      if (!each.isFormatterAllowed(context)) return null;
-    }
-    for (FormattingModelBuilder builder : allForLanguage(language)) {
-      if (builder instanceof CustomFormattingModelBuilder) {
-        final CustomFormattingModelBuilder custom = (CustomFormattingModelBuilder)builder;
-        if (custom.isEngagedToFormat(context)) return builder;
-      }
-    }
-    return forLanguage(language);
-  }
 }

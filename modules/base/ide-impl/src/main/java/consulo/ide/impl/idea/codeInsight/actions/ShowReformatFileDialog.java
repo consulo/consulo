@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.actions;
 
-import consulo.language.codeStyle.LanguageFormatting;
+import consulo.language.codeStyle.FormattingModelBuilder;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
@@ -48,7 +48,7 @@ public class ShowReformatFileDialog extends AnAction implements DumbAware {
       return;
     }
 
-    if (LanguageFormatting.INSTANCE.forContext(file) != null) {
+    if (FormattingModelBuilder.forContext(file) != null) {
       presentation.setEnabled(true);
     }
   }

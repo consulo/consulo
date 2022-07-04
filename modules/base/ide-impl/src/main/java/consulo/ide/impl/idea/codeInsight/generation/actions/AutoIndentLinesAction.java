@@ -16,21 +16,22 @@
 
 package consulo.ide.impl.idea.codeInsight.generation.actions;
 
-import consulo.language.editor.action.CodeInsightActionHandler;
-import consulo.ide.impl.idea.codeInsight.actions.BaseCodeInsightAction;
-import consulo.ide.impl.idea.codeInsight.generation.AutoIndentLinesHandler;
-import consulo.language.codeStyle.LanguageFormatting;
+import consulo.application.dumb.DumbAware;
+import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.virtualFileSystem.fileType.FileType;
+import consulo.document.util.DocumentUtil;
+import consulo.ide.impl.idea.codeInsight.actions.BaseCodeInsightAction;
+import consulo.ide.impl.idea.codeInsight.generation.AutoIndentLinesHandler;
+import consulo.language.codeStyle.FormattingModelBuilder;
+import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.file.LanguageFileType;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
+import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
-import consulo.document.util.DocumentUtil;
+import consulo.project.Project;
+import consulo.virtualFileSystem.fileType.FileType;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -58,6 +59,6 @@ public class AutoIndentLinesAction extends BaseCodeInsightAction implements Dumb
   @Override
   protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull final PsiFile file) {
     final FileType fileType = file.getFileType();
-    return fileType instanceof LanguageFileType && LanguageFormatting.INSTANCE.forContext(((LanguageFileType)fileType).getLanguage(), file) != null;
+    return fileType instanceof LanguageFileType && FormattingModelBuilder.forContext(((LanguageFileType)fileType).getLanguage(), file) != null;
   }
 }

@@ -20,7 +20,6 @@ import consulo.language.editor.CodeInsightBundle;
 import consulo.ide.impl.idea.find.impl.FindInProjectUtil;
 import consulo.language.codeStyle.FormattingModelBuilder;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.language.codeStyle.LanguageFormatting;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
@@ -285,7 +284,7 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
         return;
       }
 
-      if (LanguageFormatting.INSTANCE.forContext(file)  != null) {
+      if (FormattingModelBuilder.forContext(file) != null) {
         presentation.setEnabled(true);
         return;
       }
@@ -302,7 +301,7 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
           presentation.setEnabled(false);
           return;
         }
-        final FormattingModelBuilder builder = LanguageFormatting.INSTANCE.forContext(psiFile);
+        final FormattingModelBuilder builder = FormattingModelBuilder.forContext(psiFile);
         if (builder != null) {
           anyFormatters = true;
         }
@@ -325,7 +324,7 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
         }
         if (!(element instanceof PsiDirectory)) {
           PsiFile file = element.getContainingFile();
-          if (file == null || LanguageFormatting.INSTANCE.forContext(file) == null) {
+          if (file == null || FormattingModelBuilder.forContext(file) == null) {
             presentation.setEnabled(false);
             return;
           }

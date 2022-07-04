@@ -15,30 +15,27 @@
  */
 package consulo.ide.impl.idea.codeInsight.editorActions.enter;
 
-import consulo.language.Language;
-import consulo.language.codeStyle.LanguageFormatting;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
-import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
-import consulo.codeEditor.LogicalPosition;
+import consulo.codeEditor.*;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionUtil;
-import consulo.codeEditor.EditorEx;
+import consulo.dataContext.DataContext;
+import consulo.document.Document;
+import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.codeEditor.EditorHighlighter;
-import consulo.codeEditor.HighlighterIterator;
-import consulo.project.Project;
-import consulo.util.lang.ref.Ref;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.language.psi.PsiDocumentManager;
-import consulo.language.psi.PsiFile;
+import consulo.language.Language;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
-import consulo.language.ast.IElementType;
-import consulo.language.ast.TokenSet;
+import consulo.language.codeStyle.FormattingModelBuilder;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
+import consulo.project.Project;
+import consulo.util.lang.ref.Ref;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -157,7 +154,7 @@ public class BaseIndentEnterHandler extends EnterHandlerDelegateAdapter {
       }
     }
 
-    if (!myWorksWithFormatter && LanguageFormatting.INSTANCE.forLanguage(myLanguage) != null) {
+    if (!myWorksWithFormatter && FormattingModelBuilder.forLanguage(myLanguage) != null) {
       return Result.Continue;
     }
     else {

@@ -316,7 +316,7 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
       textRange = ((DocumentWindow)document).injectedToHost(textRange);
     }
 
-    final FormattingModelBuilder builder = LanguageFormatting.INSTANCE.forContext(containingFile);
+    final FormattingModelBuilder builder = FormattingModelBuilder.forContext(containingFile);
     if (builder != null) {
       final FormattingModel model = CoreFormatterUtil.buildModel(builder, containingFile, getSettings(containingFile), FormattingMode.REFORMAT);
       FormatterEx.getInstanceEx().formatAroundRange(model, getSettings(containingFile), containingFile, textRange);
@@ -333,7 +333,7 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
   @Nullable
   static PsiElement findElementInTreeWithFormatterEnabled(final PsiFile file, final int offset) {
     final PsiElement bottomost = file.findElementAt(offset);
-    if (bottomost != null && LanguageFormatting.INSTANCE.forContext(bottomost) != null) {
+    if (bottomost != null && FormattingModelBuilder.forContext(bottomost) != null) {
       return bottomost;
     }
 
@@ -894,10 +894,10 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
 
   @Nullable
   private static FormattingModel createFormattingModel(@Nonnull PsiFile file) {
-    FormattingModelBuilder builder = LanguageFormatting.INSTANCE.forContext(file);
+    FormattingModelBuilder builder = FormattingModelBuilder.forContext(file);
     if (builder == null) return null;
     CodeStyleSettings settings = CodeStyle.getSettings(file);
-    return builder.createModel(file, settings);
+    return builder.createModel(FormattingContext.create(file, settings));
   }
 
   @Override

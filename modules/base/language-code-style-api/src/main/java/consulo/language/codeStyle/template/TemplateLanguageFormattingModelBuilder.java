@@ -23,6 +23,7 @@ import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.template.TemplateLanguageFileViewProvider;
+import consulo.util.collection.ContainerUtil;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
@@ -40,10 +41,11 @@ public abstract class TemplateLanguageFormattingModelBuilder implements Delegati
 
   @Override
   @Nonnull
-  public FormattingModel createModel(PsiElement element, CodeStyleSettings settings) {
-    final PsiFile file = element.getContainingFile();
+  public FormattingModel createModel(FormattingContext context) {
+    final PsiFile file = context.getContainingFile();
+    CodeStyleSettings settings = context.getCodeStyleSettings();
     Block rootBlock = getRootBlock(file, file.getViewProvider(), settings);
-    return new DocumentBasedFormattingModel(rootBlock, element.getProject(), settings, file.getFileType(), file);
+    return new DocumentBasedFormattingModel(rootBlock, file.getProject(), settings, file.getFileType(), file);
   }
 
   protected Block getRootBlock(PsiElement element, FileViewProvider viewProvider, CodeStyleSettings settings) {
@@ -53,12 +55,12 @@ public abstract class TemplateLanguageFormattingModelBuilder implements Delegati
     }
     if (viewProvider instanceof TemplateLanguageFileViewProvider) {
       final Language dataLanguage = ((TemplateLanguageFileViewProvider)viewProvider).getTemplateDataLanguage();
-      final FormattingModelBuilder builder = LanguageFormatting.INSTANCE.forLanguage(dataLanguage);
+      final FormattingModelBuilder builder = ContainerUtil.getFirstItem(FormattingModelBuilder.forLanguage(dataLanguage));
       if (builder instanceof DelegatingFormattingModelBuilder && ((DelegatingFormattingModelBuilder)builder).dontFormatMyModel()) {
         return createDummyBlock(node);
       }
       if (builder != null) {
-        final FormattingModel model = builder.createModel(viewProvider.getPsi(dataLanguage), settings);
+        final FormattingModel model = builder.createModel(FormattingContext.create(viewProvider.getPsi(dataLanguage), settings));
         List<DataLanguageBlockWrapper> childWrappers = buildChildWrappers(model.getRootBlock());
         if (childWrappers.size() == 1) {
           childWrappers = buildChildWrappers(childWrappers.get(0).getOriginal());

@@ -20,7 +20,6 @@ import consulo.application.ApplicationManager;
 import consulo.codeEditor.*;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionManager;
-import consulo.component.extension.ExtensionPointName;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
@@ -36,7 +35,7 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.Producer;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.codeStyle.CodeStyleManager;
-import consulo.language.codeStyle.LanguageFormatting;
+import consulo.language.codeStyle.FormattingModelBuilder;
 import consulo.language.editor.CodeInsightSettings;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.action.CopyPastePreProcessor;
@@ -193,7 +192,7 @@ public class PasteHandler extends EditorActionHandler implements EditorTextInser
     int indentOptions = text.equals(newText) ? settings.REFORMAT_ON_PASTE : CodeInsightSettings.REFORMAT_BLOCK;
     text = newText;
 
-    if (LanguageFormatting.INSTANCE.forContext(file) == null && indentOptions != CodeInsightSettings.NO_REFORMAT) {
+    if (FormattingModelBuilder.forContext(file) == null && indentOptions != CodeInsightSettings.NO_REFORMAT) {
       indentOptions = CodeInsightSettings.INDENT_BLOCK;
     }
 
@@ -277,7 +276,7 @@ public class PasteHandler extends EditorActionHandler implements EditorTextInser
       return;
     }
 
-    if (LanguageFormatting.INSTANCE.forContext(file) != null) {
+    if (FormattingModelBuilder.forContext(file) != null) {
       indentBlockWithFormatter(project, document, startOffset, endOffset, file);
     }
     else {

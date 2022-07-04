@@ -2,50 +2,50 @@
 
 package consulo.ide.impl.idea.codeInsight.actions;
 
-import consulo.language.editor.CodeInsightBundle;
-import consulo.language.codeStyle.LanguageFormatting;
-import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.NotificationType;
 import consulo.application.ApplicationBundle;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ReadAction;
-import consulo.undoRedo.CommandProcessor;
-import consulo.language.editor.WriteCommandAction;
-import consulo.document.Document;
-import consulo.codeEditor.SelectionModel;
-import consulo.document.FileDocumentManager;
-import consulo.module.Module;
-import consulo.component.ProcessCanceledException;
+import consulo.application.dumb.IndexNotReadyException;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.progress.ProgressManager;
-import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
-import consulo.ide.impl.idea.openapi.project.*;
-import consulo.project.content.GeneratedSourcesFilter;
-import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.ui.ex.MessagesEx;
-import consulo.util.lang.ref.Ref;
+import consulo.application.util.diff.FilesTooBigForDiffException;
+import consulo.codeEditor.SelectionModel;
+import consulo.component.ProcessCanceledException;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
 import consulo.document.util.TextRange;
-import consulo.project.DumbService;
-import consulo.application.dumb.IndexNotReadyException;
-import consulo.project.Project;
-import consulo.project.ProjectCoreUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileFilter;
+import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
+import consulo.ide.impl.idea.openapi.project.ProjectUtil;
+import consulo.ide.impl.idea.openapi.ui.ex.MessagesEx;
+import consulo.ide.impl.idea.util.ExceptionUtil;
+import consulo.ide.impl.idea.util.SequentialTask;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.codeStyle.FormattingModelBuilder;
+import consulo.language.editor.CodeInsightBundle;
+import consulo.language.editor.WriteCommandAction;
 import consulo.language.psi.PsiBundle;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import consulo.ide.impl.idea.util.ExceptionUtil;
 import consulo.language.util.IncorrectOperationException;
-import consulo.ide.impl.idea.util.SequentialTask;
-import consulo.util.collection.SmartList;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.application.util.diff.FilesTooBigForDiffException;
 import consulo.logging.Logger;
-import javax.annotation.Nonnull;
+import consulo.module.Module;
+import consulo.project.DumbService;
+import consulo.project.Project;
+import consulo.project.ProjectCoreUtil;
+import consulo.project.content.GeneratedSourcesFilter;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationType;
+import consulo.ui.ex.awt.Messages;
+import consulo.undoRedo.CommandProcessor;
+import consulo.util.collection.SmartList;
+import consulo.util.lang.ref.Ref;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileFilter;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -330,7 +330,7 @@ public abstract class AbstractLayoutCodeProcessor {
 
   private static boolean canBeFormatted(PsiFile file) {
     if (!file.isValid()) return false;
-    if (LanguageFormatting.INSTANCE.forContext(file) == null) {
+    if (FormattingModelBuilder.forContext(file) == null) {
       return false;
     }
     VirtualFile virtualFile = file.getVirtualFile();

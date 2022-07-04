@@ -265,7 +265,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.codeInsight.completion;
   exports consulo.ide.impl.idea.codeInsight.completion.actions;
   exports consulo.ide.impl.idea.codeInsight.completion.impl;
-  exports consulo.ide.impl.idea.codeInsight.completion.util;
   exports consulo.ide.impl.idea.codeInsight.controlflow;
   exports consulo.ide.impl.idea.codeInsight.controlflow.impl;
   exports consulo.ide.impl.idea.codeInsight.daemon;

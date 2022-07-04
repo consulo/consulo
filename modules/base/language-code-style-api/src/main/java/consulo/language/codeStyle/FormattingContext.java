@@ -14,18 +14,14 @@ import java.util.Objects;
  * Represents a context of current formatting operation
  */
 public class FormattingContext {
-  private final
   @Nonnull
-  PsiElement myPsiElement;
-  private final
+  private final PsiElement myPsiElement;
   @Nonnull
-  TextRange myFormattingRange;
-  private final
+  private final TextRange myFormattingRange;
   @Nonnull
-  CodeStyleSettings myCodeStyleSettings;
-  private final
+  private final CodeStyleSettings myCodeStyleSettings;
   @Nonnull
-  FormattingMode myFormattingMode;
+  private final FormattingMode myFormattingMode;
 
   private FormattingContext(@Nonnull PsiElement psiElement, @Nonnull TextRange formattingRange, @Nonnull CodeStyleSettings codeStyleSettings, @Nonnull FormattingMode formattingMode) {
     myPsiElement = psiElement;
@@ -98,10 +94,14 @@ public class FormattingContext {
   @Override
   public String toString() {
     return "FormattingContext{" +
-           "myPsiElement=" + myPsiElement +
-           ", myFormattingRange=" + myFormattingRange +
-           ", myCodeStyleSettings=" + myCodeStyleSettings +
-           ", myFormattingMode=" + myFormattingMode +
+           "myPsiElement=" +
+           myPsiElement +
+           ", myFormattingRange=" +
+           myFormattingRange +
+           ", myCodeStyleSettings=" +
+           myCodeStyleSettings +
+           ", myFormattingMode=" +
+           myFormattingMode +
            '}';
   }
 

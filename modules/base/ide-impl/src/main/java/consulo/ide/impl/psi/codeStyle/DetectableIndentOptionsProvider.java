@@ -13,10 +13,7 @@ import consulo.language.codeStyle.*;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.scratch.ScratchUtil;
 import consulo.language.file.light.LightVirtualFile;
-import consulo.language.psi.PsiBinaryFile;
-import consulo.language.psi.PsiCompiledFile;
-import consulo.language.psi.PsiDocumentManager;
-import consulo.language.psi.PsiFile;
+import consulo.language.psi.*;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationDisplayType;
@@ -106,7 +103,7 @@ public class DetectableIndentOptionsProvider extends FileIndentOptionsProvider {
     }
     VirtualFile vFile = file.getVirtualFile();
     if (vFile == null || vFile instanceof LightVirtualFile || myDiscardedOptions.containsKey(vFile)) return false;
-    return LanguageFormatting.INSTANCE.forContext(file) != null && settings.AUTODETECT_INDENTS;
+    return FormattingModelBuilder.forContext(file) != null && settings.AUTODETECT_INDENTS;
   }
 
   @TestOnly

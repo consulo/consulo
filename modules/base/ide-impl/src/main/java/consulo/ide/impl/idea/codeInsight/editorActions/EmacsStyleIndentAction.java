@@ -16,12 +16,12 @@
 
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
+import consulo.language.codeStyle.FormattingModelBuilder;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.ide.impl.idea.codeInsight.CodeInsightUtilBase;
 import consulo.ide.impl.idea.codeInsight.actions.BaseCodeInsightAction;
 import consulo.ide.impl.idea.codeInsight.editorActions.emacs.EmacsProcessingHandler;
 import consulo.ide.impl.idea.codeInsight.editorActions.emacs.LanguageEmacsExtension;
-import consulo.language.codeStyle.LanguageFormatting;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
@@ -52,7 +52,7 @@ public class EmacsStyleIndentAction extends BaseCodeInsightAction implements Dum
   @Override
   protected boolean isValidForFile(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull final PsiFile file) {
     final PsiElement context = file.findElementAt(editor.getCaretModel().getOffset());
-    return context != null && LanguageFormatting.INSTANCE.forContext(context) != null;
+    return context != null && FormattingModelBuilder.forContext(context) != null;
   }
 
   //----------------------------------------------------------------------

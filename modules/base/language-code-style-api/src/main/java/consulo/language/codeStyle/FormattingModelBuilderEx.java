@@ -15,60 +15,9 @@
  */
 package consulo.language.codeStyle;
 
-import consulo.document.util.TextRange;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 /**
  * @author Denis Zhdanov
  */
+@Deprecated(forRemoval = true)
 public interface FormattingModelBuilderEx extends FormattingModelBuilder {
-
-  /**
-   * Requests building the formatting model for a section of the file containing
-   * the specified PSI element and its children.
-   *
-   * @param element  the top element for which formatting is requested.
-   * @param settings the code style settings used for formatting.
-   * @param mode     formatting mode
-   * @return the formatting model for the file.
-   * @see FormattingModelBuilderEx#createModel(PsiElement, TextRange, CodeStyleSettings, FormattingMode)
-   */
-  @Nonnull
-  FormattingModel createModel(@Nonnull final PsiElement element, @Nonnull final CodeStyleSettings settings, @Nonnull FormattingMode mode);
-
-  /**
-   * Requests building the formatting model for a section of the file containing
-   * the specified PSI element and its children.
-   *
-   * @param element  the top element for which formatting is requested.
-   * @param range    the range for which a model should be built.
-   * @param settings the code style settings used for formatting.
-   * @param mode     formatting mode.
-   * @return the formatting model for the file.
-   */
-  @Nonnull
-  default FormattingModel createModel(@Nonnull final PsiElement element, @Nonnull final TextRange range, @Nonnull final CodeStyleSettings settings, @Nonnull final FormattingMode mode) {
-    return createModel(element, settings, mode); // just for compatibility with old implementations
-  }
-
-  /**
-   * Allows to adjust indent options to used during performing formatting operation on the given ranges of the given file.
-   * <p/>
-   * Default algorithm is to query given settings for indent options using given file's language as a key.
-   *
-   * @param file     target file which content is going to be reformatted
-   * @param ranges   given file's ranges to reformat
-   * @param settings code style settings holder
-   * @return indent options to use for the target formatting operation (if any adjustment is required);
-   * {@code null} to trigger default algorithm usage
-   * @see FileIndentOptionsProvider
-   * @deprecated Use {@link FileIndentOptionsProvider} instead.
-   */
-  @Nullable
-  @Deprecated
-  CommonCodeStyleSettings.IndentOptions getIndentOptionsToUse(@Nonnull PsiFile file, @Nonnull FormatTextRanges ranges, @Nonnull CodeStyleSettings settings);
 }

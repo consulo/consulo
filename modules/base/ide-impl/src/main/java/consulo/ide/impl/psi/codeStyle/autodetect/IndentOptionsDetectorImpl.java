@@ -6,7 +6,6 @@ import consulo.language.codeStyle.Block;
 import consulo.language.codeStyle.FormattingContext;
 import consulo.language.codeStyle.FormattingModel;
 import consulo.language.codeStyle.FormattingModelBuilder;
-import consulo.language.codeStyle.LanguageFormatting;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.application.progress.ProgressIndicator;
@@ -79,7 +78,7 @@ public class IndentOptionsDetectorImpl implements IndentOptionsDetector {
     }
 
     CodeStyleSettings settings = CodeStyle.getSettings(myFile);
-    FormattingModelBuilder modelBuilder = LanguageFormatting.INSTANCE.forContext(myFile);
+    FormattingModelBuilder modelBuilder = FormattingModelBuilder.forContext(myFile);
     if (modelBuilder == null) return null;
 
     FormattingModel model = modelBuilder.createModel(FormattingContext.create(myFile, settings));

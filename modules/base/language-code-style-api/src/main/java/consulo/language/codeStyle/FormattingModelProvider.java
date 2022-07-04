@@ -15,7 +15,6 @@
  */
 package consulo.language.codeStyle;
 
-import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 
 import javax.annotation.Nonnull;
@@ -23,7 +22,7 @@ import javax.annotation.Nonnull;
 /**
  * Allows plugins to create an instance of the standard {@link FormattingModel} implementation.
  *
- * @see FormattingModelBuilder#createModel(PsiElement, CodeStyleSettings)
+ * @see FormattingModelBuilder#createModel(FormattingContext)
  */
 public final class FormattingModelProvider {
   /**
