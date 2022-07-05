@@ -680,7 +680,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.openapi.progress.util;
   exports consulo.ide.impl.idea.openapi.project;
   exports consulo.ide.impl.idea.openapi.project.impl;
-  exports consulo.ide.impl.idea.openapi.projectRoots;
   exports consulo.ide.impl.idea.openapi.projectRoots.impl;
   exports consulo.ide.impl.idea.openapi.projectRoots.ui;
   exports consulo.ide.impl.idea.openapi.roots;
