@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,85 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util.net;
+package consulo.ide.util;
 
-import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
-import consulo.ide.util.ProgressStreamUtil;
-import consulo.util.io.NetUtil;
+import consulo.component.ProcessCanceledException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.security.MessageDigest;
 
-@Deprecated
-public class NetUtils {
-  private NetUtils() {
-  }
-
-  public static InetSocketAddress loopbackSocketAddress() throws IOException {
-    return NetUtil.loopbackSocketAddress();
-  }
-
-  public static InetSocketAddress loopbackSocketAddress(int port) throws IOException {
-    return NetUtil.loopbackSocketAddress(port);
-  }
-
-  public static boolean canConnectToSocket(String host, int port) {
-    return NetUtil.canConnectToSocket(host, port);
-  }
-
-  public static boolean canConnectToSocketOpenedByJavaProcess(String host, int port) {
-    return NetUtil.canConnectToRemoteSocket(host, port);
-  }
-
-  public static InetAddress getLoopbackAddress() {
-    return NetUtil.getLoopbackAddress();
-  }
-
-  public static boolean isLocalhost(@Nonnull String host) {
-    return NetUtil.isLocalhost(host);
-  }
-
-  public static boolean canConnectToRemoteSocket(String host, int port) {
-    return NetUtil.canConnectToRemoteSocket(host, port);
-  }
-
-  public static int findAvailableSocketPort() throws IOException {
-    return NetUtil.findAvailableSocketPort();
-  }
-
-  public static int tryToFindAvailableSocketPort(int defaultPort) {
-    return NetUtil.tryToFindAvailableSocketPort(defaultPort);
-  }
-
-  public static int tryToFindAvailableSocketPort() {
-    return NetUtil.tryToFindAvailableSocketPort();
-  }
-
-  public static int[] findAvailableSocketPorts(int capacity) throws IOException {
-    return NetUtil.findAvailableSocketPorts(capacity);
-  }
-
-  public static String getLocalHostString() {
-    return NetUtil.getLocalHostString();
-  }
-
+/**
+ * @author VISTALL
+ * @since 05-Jul-22
+ */
+public class ProgressStreamUtil {
   /**
    * @param indicator           Progress indicator.
    * @param inputStream         source stream
    * @param outputStream        destination stream
    * @param expectedContentSize expected content size, used in progress indicator. can be -1.
    * @return bytes copied
-   * @throws IOException                                            if IO error occur
+   * @throws IOException              if IO error occur
    * @throws ProcessCanceledException if process was canceled.
    */
-  @Deprecated(forRemoval = true)
   public static int copyStreamContent(@Nullable ProgressIndicator indicator, @Nonnull InputStream inputStream, @Nonnull OutputStream outputStream, int expectedContentSize)
           throws IOException, ProcessCanceledException {
     return copyStreamContent(indicator, null, inputStream, outputStream, expectedContentSize);
@@ -104,15 +51,43 @@ public class NetUtils {
    * @param outputStream        destination stream
    * @param expectedContentSize expected content size, used in progress indicator. can be -1.
    * @return bytes copied
-   * @throws IOException                                            if IO error occur
+   * @throws IOException              if IO error occur
    * @throws ProcessCanceledException if process was canceled.
    */
-  @Deprecated(forRemoval = true)
   public static int copyStreamContent(@Nullable ProgressIndicator indicator,
                                       @Nullable MessageDigest digest,
                                       @Nonnull InputStream inputStream,
                                       @Nonnull OutputStream outputStream,
                                       int expectedContentSize) throws IOException, ProcessCanceledException {
-    return ProgressStreamUtil.copyStreamContent(indicator, digest, inputStream, outputStream, expectedContentSize);
+    if (indicator != null) {
+      indicator.checkCanceled();
+      indicator.setIndeterminate(expectedContentSize < 0);
+    }
+
+    final byte[] buffer = new byte[8 * 1024];
+    int count;
+    int total = 0;
+    while ((count = inputStream.read(buffer)) > 0) {
+      outputStream.write(buffer, 0, count);
+      if (digest != null) {
+        digest.update(buffer, 0, count);
+      }
+
+      total += count;
+
+      if (indicator != null) {
+        indicator.checkCanceled();
+
+        if (expectedContentSize > 0) {
+          indicator.setFraction((double)total / expectedContentSize);
+        }
+      }
+    }
+
+    if (indicator != null) {
+      indicator.checkCanceled();
+    }
+
+    return total;
   }
 }

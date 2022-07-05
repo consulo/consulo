@@ -1,4 +1,4 @@
-package consulo.ide.impl.idea.util.io;
+package consulo.ide.util;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -7,7 +7,6 @@ import javax.annotation.Nullable;
  * @author Sergey Simonchik
  */
 public class Outcome<V> {
-
   private final V myData;
   private final boolean myCancelled;
   private final Exception myException;

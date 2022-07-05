@@ -36,6 +36,7 @@ import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
+import consulo.ide.impl.idea.util.net.HttpProxyManagerImpl;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
@@ -49,7 +50,6 @@ import consulo.ui.ex.awt.JBCheckBox;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.JBTabbedPane;
 import consulo.ide.impl.idea.util.Consumer;
-import consulo.ide.impl.idea.util.net.HttpConfigurable;
 import consulo.ide.impl.idea.util.net.HttpProxyConfigurable;
 
 /**
@@ -186,8 +186,8 @@ public class BaseRepositoryEditor<T extends BaseRepository> extends TaskReposito
   }
 
   protected void enableButtons() {
-    myUseProxy.setEnabled(HttpConfigurable.getInstance().USE_HTTP_PROXY);
-    if (!HttpConfigurable.getInstance().USE_HTTP_PROXY) {
+    myUseProxy.setEnabled(HttpProxyManagerImpl.getInstance().USE_HTTP_PROXY);
+    if (!HttpProxyManagerImpl.getInstance().USE_HTTP_PROXY) {
       myUseProxy.setSelected(false);
     }
   }

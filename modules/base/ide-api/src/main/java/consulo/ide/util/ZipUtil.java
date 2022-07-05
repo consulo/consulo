@@ -1,23 +1,21 @@
-package consulo.ide.impl.idea.platform.templates.github;
+package consulo.ide.util;
 
-import consulo.logging.Logger;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
+import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.NullableFunction;
-import consulo.ide.impl.idea.util.Producer;
-import consulo.ide.impl.idea.util.io.DownloadUtil;
-import consulo.ide.impl.idea.util.io.Outcome;
+import consulo.util.io.FileUtil;
+import consulo.util.io.StreamUtil;
+import consulo.util.lang.StringUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.concurrent.Callable;
+import java.util.function.Function;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -30,50 +28,39 @@ public class ZipUtil {
   private static final Logger LOG = Logger.getInstance(ZipUtil.class);
 
   public interface ContentProcessor {
-    /** Return null to skip the file */
+    /**
+     * Return null to skip the file
+     */
     @Nullable
     byte[] processContent(byte[] content, File file) throws IOException;
   }
 
-  public static void unzipWithProgressSynchronously(
-    @Nullable Project project,
-    @Nonnull String progressTitle,
-    @Nonnull final File zipArchive,
-    @Nonnull final File extractToDir) throws GeneratorException
-  {
-    Outcome<Boolean> outcome = DownloadUtil.provideDataWithProgressSynchronously(
-      project, progressTitle, "Unpacking ...",
-      new Callable<Boolean>() {
-        @Override
-        public Boolean call() throws IOException {
-          ProgressIndicator progress = ProgressManager.getInstance().getProgressIndicator();
-          ZipInputStream stream = new ZipInputStream(new FileInputStream(zipArchive));
-          unzip(progress, extractToDir, stream, null, null);
-          return true;
-        }
-      },
-      new Producer<Boolean>() {
-        @Override
-        public Boolean produce() {
-          return false;
-        }
+  public static void unzipWithProgressSynchronously(@Nullable Project project, @Nonnull String progressTitle, @Nonnull final File zipArchive, @Nonnull final File extractToDir)
+          throws ZipUnpackException {
+    Outcome<Boolean> outcome = DownloadUtil.provideDataWithProgressSynchronously(project, progressTitle, "Unpacking ...", new Callable<Boolean>() {
+      @Override
+      public Boolean call() throws IOException {
+        ProgressIndicator progress = ProgressManager.getInstance().getProgressIndicator();
+        ZipInputStream stream = new ZipInputStream(new FileInputStream(zipArchive));
+        unzip(progress, extractToDir, stream, null, null);
+        return true;
       }
-    );
+    }, () -> false);
+
     Boolean result = outcome.get();
     if (result == null) {
-      @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
       Exception e = outcome.getException();
       if (e != null) {
-        throw new GeneratorException("Unpacking failed, downloaded archive is broken");
+        throw new ZipUnpackException("Unpacking failed, downloaded archive is broken", e);
       }
-      throw new GeneratorException("Unpacking was cancelled");
+      throw new ZipUnpackException("Unpacking was cancelled");
     }
   }
 
   public static void unzip(@Nullable ProgressIndicator progress,
                            File extractToDir,
                            ZipInputStream stream,
-                           @Nullable NullableFunction<String, String> pathConvertor,
+                           @Nullable Function<String, String> pathConvertor,
                            @Nullable ContentProcessor contentProcessor) throws IOException {
     if (progress != null) {
       progress.setText("Extracting...");
@@ -83,7 +70,8 @@ public class ZipUtil {
       while ((entry = stream.getNextEntry()) != null) {
         unzipEntryToDir(progress, entry, extractToDir, stream, pathConvertor, contentProcessor);
       }
-    } finally {
+    }
+    finally {
       stream.close();
     }
   }
@@ -92,12 +80,12 @@ public class ZipUtil {
                                       @Nonnull final ZipEntry zipEntry,
                                       @Nonnull final File extractToDir,
                                       ZipInputStream stream,
-                                      @Nullable NullableFunction<String, String> pathConvertor,
+                                      @Nullable Function<String, String> pathConvertor,
                                       @Nullable ContentProcessor contentProcessor) throws IOException {
 
     String relativeExtractPath = createRelativeExtractPath(zipEntry);
     if (pathConvertor != null) {
-      relativeExtractPath = pathConvertor.fun(relativeExtractPath);
+      relativeExtractPath = pathConvertor.apply(relativeExtractPath);
       if (relativeExtractPath == null) {
         // should be skipped
         return;
@@ -121,13 +109,14 @@ public class ZipUtil {
         FileUtil.copy(stream, fileOutputStream);
       }
       else {
-        byte[] content = contentProcessor.processContent(FileUtil.loadBytes(stream), child);
+        byte[] content = contentProcessor.processContent(StreamUtil.loadFromStream(stream), child);
         if (content != null) {
           fileOutputStream = new FileOutputStream(child);
           fileOutputStream.write(content);
         }
       }
-    } finally {
+    }
+    finally {
       if (fileOutputStream != null) {
         fileOutputStream.close();
       }
@@ -143,5 +132,4 @@ public class ZipUtil {
     }
     return StringUtil.trimEnd(name, "/");
   }
-
 }

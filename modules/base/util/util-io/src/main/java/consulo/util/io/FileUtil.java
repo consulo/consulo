@@ -1254,4 +1254,23 @@ public class FileUtil {
     }
     return true;
   }
+
+  public static boolean rename(@Nonnull File source, @Nonnull String newName, @Nonnull FilePermissionCopier permissionCopier) throws IOException {
+    File target = new File(source.getParent(), newName);
+    if (!OSInfo.isFileSystemCaseSensitive && newName.equalsIgnoreCase(source.getName())) {
+      File intermediate = createTempFile(source.getParentFile(), source.getName(), ".tmp", false, false);
+      return source.renameTo(intermediate) && intermediate.renameTo(target);
+    }
+    else {
+      return source.renameTo(target);
+    }
+  }
+
+  public static void rename(@Nonnull File source, @Nonnull File target, @Nonnull FilePermissionCopier permissionCopier) throws IOException {
+    if (source.renameTo(target)) return;
+    if (!source.exists()) return;
+
+    copy(source, target, permissionCopier);
+    delete(source);
+  }
 }

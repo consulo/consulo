@@ -19,24 +19,25 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.ApplicationConfigurable;
 import consulo.configurable.IdeaConfigurableBase;
 import consulo.configurable.StandardConfigurableIds;
+import consulo.ide.HttpProxyManager;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 @ExtensionImpl
-public class HttpProxyConfigurable extends IdeaConfigurableBase<HttpProxySettingsUi, HttpConfigurable> implements ApplicationConfigurable {
-  private final HttpConfigurable settings;
+public class HttpProxyConfigurable extends IdeaConfigurableBase<HttpProxySettingsUi, HttpProxyManagerImpl> implements ApplicationConfigurable {
+  private final HttpProxyManagerImpl settings;
 
   public HttpProxyConfigurable() {
-    this(HttpConfigurable.getInstance());
+    this(HttpProxyManager.getInstance());
   }
 
   @Inject
-  public HttpProxyConfigurable(@Nonnull HttpConfigurable settings) {
+  public HttpProxyConfigurable(@Nonnull HttpProxyManager settings) {
     super("http.proxy", "HTTP Proxy", "http.proxy");
 
-    this.settings = settings;
+    this.settings = (HttpProxyManagerImpl)settings;
   }
 
   @Nullable
@@ -47,7 +48,7 @@ public class HttpProxyConfigurable extends IdeaConfigurableBase<HttpProxySetting
 
   @Nonnull
   @Override
-  protected HttpConfigurable getSettings() {
+  protected HttpProxyManagerImpl getSettings() {
     return settings;
   }
 

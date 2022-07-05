@@ -15,22 +15,23 @@
  */
 package consulo.ide.impl.idea.util.io;
 
-import consulo.application.util.Patches;
-import consulo.ide.IdeBundle;
 import consulo.application.Application;
-import consulo.application.impl.internal.ApplicationInfo;
 import consulo.application.ApplicationManager;
+import consulo.application.impl.internal.ApplicationInfo;
 import consulo.application.progress.ProgressIndicator;
-import consulo.util.io.BufferExposingByteArrayOutputStream;
+import consulo.application.util.Patches;
+import consulo.ide.HttpProxyManager;
+import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.io.StreamUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.util.lang.SystemProperties;
-import consulo.ide.impl.idea.util.net.HttpConfigurable;
+import consulo.ide.impl.idea.util.net.HttpProxyManagerImpl;
 import consulo.ide.impl.idea.util.net.NetUtils;
 import consulo.ide.impl.idea.util.net.ssl.CertificateManager;
 import consulo.logging.Logger;
+import consulo.util.io.BufferExposingByteArrayOutputStream;
+import consulo.util.lang.SystemProperties;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -165,9 +166,9 @@ public final class HttpRequests {
 
   private static class RequestBuilderImpl extends RequestBuilder {
     private final String myUrl;
-    private int myConnectTimeout = HttpConfigurable.CONNECTION_TIMEOUT;
-    private int myTimeout = HttpConfigurable.READ_TIMEOUT;
-    private int myRedirectLimit = HttpConfigurable.REDIRECT_LIMIT;
+    private int myConnectTimeout = HttpProxyManagerImpl.CONNECTION_TIMEOUT;
+    private int myTimeout = HttpProxyManagerImpl.READ_TIMEOUT;
+    private int myRedirectLimit = HttpProxyManagerImpl.REDIRECT_LIMIT;
     private boolean myGzip = true;
     private boolean myForceHttps;
     private boolean myUseProxy = true;
@@ -445,7 +446,7 @@ public final class HttpRequests {
         connection = new URL(url).openConnection();
       }
       else {
-        connection = HttpConfigurable.getInstance().openConnection(url);
+        connection = HttpProxyManager.getInstance().openConnection(url);
       }
 
       connection.setConnectTimeout(builder.myConnectTimeout);

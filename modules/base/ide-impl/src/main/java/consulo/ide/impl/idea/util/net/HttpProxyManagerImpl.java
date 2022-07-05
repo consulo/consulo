@@ -15,39 +15,40 @@
  */
 package consulo.ide.impl.idea.util.net;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.ProgressManager;
-import consulo.ui.ex.awt.DialogWrapper;
+import consulo.container.boot.ContainerPathManager;
+import consulo.disposer.Disposable;
+import consulo.ide.HttpProxyManager;
 import consulo.ide.impl.idea.openapi.ui.popup.util.PopupUtil;
-import consulo.ide.impl.idea.openapi.util.*;
+import consulo.ide.impl.idea.openapi.util.Getter;
+import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
+import consulo.ide.impl.idea.openapi.util.StaticGetter;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.process.cmd.ParametersList;
-import consulo.util.lang.Pair;
-import consulo.util.lang.SystemProperties;
 import consulo.ide.impl.idea.util.WaitForProgressToShow;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.proxy.CommonProxy;
 import consulo.ide.impl.idea.util.proxy.JavaProxyProperty;
 import consulo.ide.impl.idea.util.proxy.PropertiesEncryptionSupport;
 import consulo.ide.impl.idea.util.proxy.SharedProxyConfig;
+import consulo.logging.Logger;
+import consulo.process.cmd.ParametersList;
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.util.lang.Pair;
+import consulo.util.lang.SystemProperties;
+import consulo.util.lang.ref.Ref;
 import consulo.util.xml.serializer.SkipDefaultsSerializationFilter;
 import consulo.util.xml.serializer.XmlSerializer;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.util.xml.serializer.annotation.Transient;
-import consulo.container.boot.ContainerPathManager;
-import consulo.disposer.Disposable;
-import consulo.logging.Logger;
-import consulo.util.lang.ref.Ref;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
@@ -64,10 +65,9 @@ import java.util.stream.Collectors;
 
 @State(name = "HttpConfigurable", storages = @Storage("proxy.settings.xml"))
 @Singleton
-@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
-public class HttpConfigurable implements PersistentStateComponent<HttpConfigurable>, Disposable {
-  private static final Logger LOG = Logger.getInstance(HttpConfigurable.class);
+public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyManagerImpl>, Disposable, HttpProxyManager {
+  private static final Logger LOG = Logger.getInstance(HttpProxyManagerImpl.class);
   private static final File PROXY_CREDENTIALS_FILE = new File(ContainerPathManager.get().getOptionsPath(), "proxy.settings.pwd");
   public static final int CONNECTION_TIMEOUT = SystemProperties.getIntProperty("idea.connection.timeout", 10000);
   public static final int READ_TIMEOUT = SystemProperties.getIntProperty("idea.read.timeout", 60000);
@@ -113,15 +113,15 @@ public class HttpConfigurable implements PersistentStateComponent<HttpConfigurab
   public transient Getter<PasswordAuthentication> myTestAuthRunnable = new StaticGetter<>(null);
   public transient Getter<PasswordAuthentication> myTestGenericAuthRunnable = new StaticGetter<>(null);
 
-  public static HttpConfigurable getInstance() {
-    return ApplicationManager.getApplication().getComponent(HttpConfigurable.class);
+  public static HttpProxyManagerImpl getInstance() {
+    return (HttpProxyManagerImpl) ApplicationManager.getApplication().getInstance(HttpProxyManager.class);
   }
 
   @Override
-  public HttpConfigurable getState() {
+  public HttpProxyManagerImpl getState() {
     CommonProxy.isInstalledAssertion();
 
-    HttpConfigurable state = new HttpConfigurable();
+    HttpProxyManagerImpl state = new HttpProxyManagerImpl();
     XmlSerializerUtil.copyBean(this, state);
     if (!KEEP_PROXY_PASSWORD) {
       removeSecure("proxy.password");
@@ -132,7 +132,7 @@ public class HttpConfigurable implements PersistentStateComponent<HttpConfigurab
 
   @Override
   public void afterLoadState() {
-    final HttpConfigurable currentState = getState();
+    final HttpProxyManagerImpl currentState = getState();
     if (currentState != null) {
       final Element serialized = XmlSerializer.serializeIfNotDefault(currentState, new SkipDefaultsSerializationFilter());
       if (serialized == null) {
@@ -175,7 +175,7 @@ public class HttpConfigurable implements PersistentStateComponent<HttpConfigurab
     CommonProxy.getInstance().removeCustomAuth(name);
   }
 
-  private void correctPasswords(@Nonnull HttpConfigurable to) {
+  private void correctPasswords(@Nonnull HttpProxyManagerImpl to) {
     synchronized (myLock) {
       Iterator<ProxyInfo> iterator = to.myGenericPasswords.values().iterator();
       while (iterator.hasNext()) {
@@ -189,7 +189,7 @@ public class HttpConfigurable implements PersistentStateComponent<HttpConfigurab
   }
 
   @Override
-  public void loadState(@Nonnull HttpConfigurable state) {
+  public void loadState(@Nonnull HttpProxyManagerImpl state) {
     XmlSerializerUtil.copyBean(state, this);
     if (!KEEP_PROXY_PASSWORD) {
       removeSecure("proxy.password");
@@ -384,6 +384,7 @@ public class HttpConfigurable implements PersistentStateComponent<HttpConfigurab
     }
   }
 
+  @Override
   @Nonnull
   public URLConnection openConnection(@Nonnull String location) throws IOException {
     final URL url = new URL(location);
@@ -414,24 +415,7 @@ public class HttpConfigurable implements PersistentStateComponent<HttpConfigurab
     return urlConnection;
   }
 
-  /**
-   * Opens HTTP connection to a given location using configured http proxy settings.
-   *
-   * @param location url to connect to
-   * @return instance of {@link HttpURLConnection}
-   * @throws IOException in case of any I/O troubles or if created connection isn't instance of HttpURLConnection.
-   */
-  @Nonnull
-  public HttpURLConnection openHttpConnection(@Nonnull String location) throws IOException {
-    URLConnection urlConnection = openConnection(location);
-    if (urlConnection instanceof HttpURLConnection) {
-      return (HttpURLConnection)urlConnection;
-    }
-    else {
-      throw new IOException("Expected " + HttpURLConnection.class + ", but got " + urlConnection.getClass());
-    }
-  }
-
+  @Override
   public boolean isHttpProxyEnabledForUrl(@Nullable String url) {
     if (!USE_HTTP_PROXY) return false;
     URI uri = url != null ? VfsUtil.toUri(url) : null;
@@ -579,7 +563,7 @@ public class HttpConfigurable implements PersistentStateComponent<HttpConfigurab
 
   private String getSecure(String key) {
     try {
-      //return PasswordSafe.getInstance().getPassword(null, HttpConfigurable.class, key);
+      //return PasswordSafe.getInstance().getPassword(null, HttpProxyManagerImpl.class, key);
       synchronized (myProxyCredentials) {
         final Properties props = myProxyCredentials.getValue();
         return props.getProperty(key, null);
@@ -598,7 +582,7 @@ public class HttpConfigurable implements PersistentStateComponent<HttpConfigurab
     }
 
     try {
-      //PasswordSafe.getInstance().storePassword(null, HttpConfigurable.class, key, value);
+      //PasswordSafe.getInstance().storePassword(null, HttpProxyManagerImpl.class, key, value);
       synchronized (myProxyCredentials) {
         final Properties props = myProxyCredentials.getValue();
         props.setProperty(key, value);
@@ -612,7 +596,7 @@ public class HttpConfigurable implements PersistentStateComponent<HttpConfigurab
 
   private void removeSecure(String key) {
     try {
-      //PasswordSafe.getInstance().removePassword(null, HttpConfigurable.class, key);
+      //PasswordSafe.getInstance().removePassword(null, HttpProxyManagerImpl.class, key);
       synchronized (myProxyCredentials) {
         final Properties props = myProxyCredentials.getValue();
         props.remove(key);

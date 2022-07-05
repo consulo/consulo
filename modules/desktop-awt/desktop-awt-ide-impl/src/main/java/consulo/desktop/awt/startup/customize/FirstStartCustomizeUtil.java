@@ -18,7 +18,7 @@ package consulo.desktop.awt.startup.customize;
 import consulo.ide.impl.idea.ide.plugins.RepositoryHelper;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.util.io.DownloadUtil;
+import consulo.ide.util.DownloadUtil;
 import consulo.ide.impl.idea.util.io.URLUtil;
 import consulo.ide.impl.idea.util.io.UnsyncByteArrayInputStream;
 import consulo.application.Application;

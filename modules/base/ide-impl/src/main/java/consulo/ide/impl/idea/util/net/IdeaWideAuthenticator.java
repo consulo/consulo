@@ -26,9 +26,9 @@ import java.net.PasswordAuthentication;
 
 public class IdeaWideAuthenticator extends NonStaticAuthenticator {
   private final static Logger LOG = Logger.getInstance(IdeaWideAuthenticator.class);
-  private final HttpConfigurable myHttpConfigurable;
+  private final HttpProxyManagerImpl myHttpConfigurable;
 
-  public IdeaWideAuthenticator(HttpConfigurable configurable) {
+  public IdeaWideAuthenticator(HttpProxyManagerImpl configurable) {
     myHttpConfigurable = configurable;
   }
 

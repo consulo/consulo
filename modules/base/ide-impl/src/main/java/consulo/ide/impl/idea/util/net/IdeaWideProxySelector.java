@@ -41,10 +41,10 @@ import java.util.regex.Pattern;
 public class IdeaWideProxySelector extends ProxySelector {
   private final static Logger LOG = Logger.getInstance(IdeaWideProxySelector.class);
 
-  private final HttpConfigurable myHttpConfigurable;
+  private final HttpProxyManagerImpl myHttpConfigurable;
   private final AtomicReference<ProxySelector> myPacProxySelector = new AtomicReference<ProxySelector>();
 
-  public IdeaWideProxySelector(HttpConfigurable configurable) {
+  public IdeaWideProxySelector(HttpProxyManagerImpl configurable) {
     myHttpConfigurable = configurable;
   }
 

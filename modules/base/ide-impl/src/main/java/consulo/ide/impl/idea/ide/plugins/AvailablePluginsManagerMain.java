@@ -68,7 +68,7 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
     httpProxySettingsButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        if (HttpConfigurable.editConfigurable(getMainPanel())) {
+        if (HttpProxyManagerImpl.editConfigurable(getMainPanel())) {
           loadAvailablePlugins();
         }
       }

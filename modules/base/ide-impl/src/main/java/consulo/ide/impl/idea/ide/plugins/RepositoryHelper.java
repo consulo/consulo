@@ -16,19 +16,19 @@
 package consulo.ide.impl.idea.ide.plugins;
 
 import com.google.gson.Gson;
-import consulo.ide.IdeBundle;
+import consulo.application.eap.EarlyAccessProgramManager;
 import consulo.application.impl.internal.ApplicationInfo;
 import consulo.application.progress.ProgressIndicator;
-import consulo.util.lang.SystemProperties;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.net.HttpConfigurable;
 import consulo.container.plugin.PluginDescriptor;
-import consulo.application.eap.EarlyAccessProgramManager;
+import consulo.ide.HttpProxyManager;
+import consulo.ide.IdeBundle;
 import consulo.ide.impl.eap.plugins.ExperimentalPluginsDescriptor;
+import consulo.ide.impl.externalService.impl.WebServiceApi;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.plugins.PluginJsonNode;
 import consulo.ide.impl.updateSettings.UpdateChannel;
 import consulo.ide.impl.updateSettings.impl.PlatformOrPluginUpdateChecker;
-import consulo.ide.impl.externalService.impl.WebServiceApi;
+import consulo.util.lang.SystemProperties;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -123,7 +123,7 @@ public class RepositoryHelper {
       indicator.setText2(IdeBundle.message("progress.connecting.to.plugin.manager", WebServiceApi.REPOSITORY_API.buildUrl()));
     }
 
-    HttpURLConnection connection = HttpConfigurable.getInstance().openHttpConnection(url);
+    HttpURLConnection connection = HttpProxyManager.getInstance().openHttpConnection(url);
     connection.setRequestProperty("Accept-Encoding", "gzip");
 
     if (indicator != null) {

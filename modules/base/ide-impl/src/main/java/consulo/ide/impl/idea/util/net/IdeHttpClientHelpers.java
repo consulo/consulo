@@ -34,8 +34,8 @@ public class IdeHttpClientHelpers {
   }
 
   @Nonnull
-  private static HttpConfigurable getHttpConfigurable() {
-    return HttpConfigurable.getInstance();
+  private static HttpProxyManagerImpl getHttpConfigurable() {
+    return HttpProxyManagerImpl.getInstance();
   }
 
   private static boolean isHttpProxyEnabled() {
@@ -68,7 +68,7 @@ public class IdeHttpClientHelpers {
   public static final class ApacheHttpClient4 {
 
     /**
-     * Install headers for IDE-wide proxy if usage of proxy was enabled in {@link HttpConfigurable}.
+     * Install headers for IDE-wide proxy if usage of proxy was enabled in {@link HttpProxyManagerImpl}.
      *
      * @param builder HttpClient's request builder used to configure new client
      * @see #setProxyForUrlIfEnabled(RequestConfig.Builder, String)
@@ -80,7 +80,7 @@ public class IdeHttpClientHelpers {
     }
 
     /**
-     * Install credentials for IDE-wide proxy if usage of proxy and proxy authentication were enabled in {@link HttpConfigurable}.
+     * Install credentials for IDE-wide proxy if usage of proxy and proxy authentication were enabled in {@link HttpProxyManagerImpl}.
      *
      * @param provider HttpClient's credentials provider used to configure new client
      * @see #setProxyCredentialsForUrlIfEnabled(CredentialsProvider, String)
@@ -97,7 +97,7 @@ public class IdeHttpClientHelpers {
 
     /**
      * Install headers for IDE-wide proxy if usage of proxy was enabled AND host of the given url was not added to exclude list
-     * in {@link HttpConfigurable}.
+     * in {@link HttpProxyManagerImpl}.
      *
      * @param builder HttpClient's request builder used to configure new client
      * @param url     URL to access (only host part is checked)
@@ -110,7 +110,7 @@ public class IdeHttpClientHelpers {
 
     /**
      * Install credentials for IDE-wide proxy if usage of proxy was enabled AND host of the given url was not added to exclude list
-     * in {@link HttpConfigurable}.
+     * in {@link HttpProxyManagerImpl}.
      *
      * @param provider HttpClient's credentials provider used to configure new client
      * @param url      URL to access (only host part is checked)

@@ -1,23 +1,24 @@
-package consulo.ide.impl.idea.util.io;
+package consulo.ide.util;
 
-import consulo.logging.Logger;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
+import consulo.ide.HttpProxyManager;
+import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.util.io.FilePermissionCopier;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.ref.Ref;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.util.Producer;
-import consulo.ide.impl.idea.util.net.HttpConfigurable;
-import consulo.ide.impl.idea.util.net.NetUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.nio.file.Files;
 import java.util.Locale;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
  * @author Sergey Simonchik
@@ -32,39 +33,36 @@ public class DownloadUtil {
    * {@code outputFile} isn't modified if an I/O error occurs or {@code contentChecker} is provided and returns false on the downloaded content.
    * More formally, the steps are:
    * <ol>
-   *   <li>Download {@code url} to {@code tempFile}. Stop in case of any I/O errors.</li>
-   *   <li>Stop if {@code contentChecker} is provided, and it returns false on the downloaded content.</li>
-   *   <li>Move {@code tempFile} to {@code outputFile}. On most OS this operation is done atomically.</li>
+   * <li>Download {@code url} to {@code tempFile}. Stop in case of any I/O errors.</li>
+   * <li>Stop if {@code contentChecker} is provided, and it returns false on the downloaded content.</li>
+   * <li>Move {@code tempFile} to {@code outputFile}. On most OS this operation is done atomically.</li>
    * </ol>
-   *
+   * <p>
    * Motivation: some web filtering products return pure HTML with HTTP 200 OK status instead of
    * the asked content.
    *
-   * @param indicator   progress indicator
-   * @param url         url to download
-   * @param outputFile  output file
-   * @param tempFile    temporary file to download to. This file is deleted on method exit.
+   * @param indicator      progress indicator
+   * @param url            url to download
+   * @param outputFile     output file
+   * @param tempFile       temporary file to download to. This file is deleted on method exit.
    * @param contentChecker checks whether the downloaded content is OK or not
-   * @returns true if no {@code contentChecker} is provided or the provided one returned true
    * @throws IOException if an I/O error occurs
+   * @returns true if no {@code contentChecker} is provided or the provided one returned true
    */
-  public static boolean downloadAtomically(@Nullable ProgressIndicator indicator,
-                                           @Nonnull String url,
-                                           @Nonnull File outputFile,
-                                           @Nonnull File tempFile,
-                                           @Nullable Predicate<String> contentChecker) throws IOException
-  {
+  public static boolean downloadAtomically(@Nullable ProgressIndicator indicator, @Nonnull String url, @Nonnull File outputFile, @Nonnull File tempFile, @Nullable Predicate<String> contentChecker)
+          throws IOException {
     try {
       downloadContentToFile(indicator, url, tempFile);
       if (contentChecker != null) {
-        String content = FileUtil.loadFile(tempFile);
+        String content = Files.readString(tempFile.toPath());
         if (!contentChecker.test(content)) {
           return false;
         }
       }
-      FileUtil.rename(tempFile, outputFile);
+      FileUtil.rename(tempFile, outputFile, FilePermissionCopier.BY_NIO2);
       return true;
-    } finally {
+    }
+    finally {
       FileUtil.delete(tempFile);
     }
   }
@@ -73,28 +71,22 @@ public class DownloadUtil {
    * Downloads content of {@code url} to {@code outputFile} atomically.
    * {@code outputFile} won't be modified in case of any I/O download errors.
    *
-   * @param indicator   progress indicator
-   * @param url         url to download
-   * @param outputFile  output file
-   * @param tempFile    temporary file to download to. This file is deleted on method exit.
+   * @param indicator  progress indicator
+   * @param url        url to download
+   * @param outputFile output file
+   * @param tempFile   temporary file to download to. This file is deleted on method exit.
    */
-  public static void downloadAtomically(@Nullable ProgressIndicator indicator,
-                                        @Nonnull String url,
-                                        @Nonnull File outputFile,
-                                        @Nonnull File tempFile) throws IOException
-  {
+  public static void downloadAtomically(@Nullable ProgressIndicator indicator, @Nonnull String url, @Nonnull File outputFile, @Nonnull File tempFile) throws IOException {
     downloadAtomically(indicator, url, outputFile, tempFile, null);
   }
 
 
   @Nonnull
-  public static <V> Outcome<V> provideDataWithProgressSynchronously(
-          @Nullable Project project,
-          @Nonnull String progressTitle,
-          @Nonnull final String actionShortDescription,
-          @Nonnull final Callable<V> supplier,
-          @Nullable Producer<Boolean> tryAgainProvider)
-  {
+  public static <V> Outcome<V> provideDataWithProgressSynchronously(@Nullable Project project,
+                                                                    @Nonnull String progressTitle,
+                                                                    @Nonnull final String actionShortDescription,
+                                                                    @Nonnull final Callable<V> supplier,
+                                                                    @Nullable Supplier<Boolean> tryAgainProvider) {
     int attemptNumber = 1;
     while (true) {
       final Ref<V> dataRef = Ref.create(null);
@@ -123,7 +115,7 @@ public class DownloadUtil {
       LOG.warn("[attempt#" + attemptNumber + "] Can not '" + actionShortDescription + "'", latestInnerException);
       boolean onceMore = false;
       if (tryAgainProvider != null) {
-        onceMore = Boolean.TRUE.equals(tryAgainProvider.produce());
+        onceMore = Boolean.TRUE.equals(tryAgainProvider.get());
       }
       if (!onceMore) {
         return Outcome.createAsException(latestInnerException);
@@ -132,9 +124,7 @@ public class DownloadUtil {
     }
   }
 
-  public static void downloadContentToFile(@Nullable ProgressIndicator progress,
-                                           @Nonnull String url,
-                                           @Nonnull File outputFile) throws IOException {
+  public static void downloadContentToFile(@Nullable ProgressIndicator progress, @Nonnull String url, @Nonnull File outputFile) throws IOException {
     boolean parentDirExists = FileUtil.createParentDirs(outputFile);
     if (!parentDirExists) {
       throw new IOException("Parent dir of '" + outputFile.getAbsolutePath() + "' can not be created!");
@@ -144,37 +134,38 @@ public class DownloadUtil {
     }
   }
 
-  private static void download(@Nullable ProgressIndicator progress,
-                               @Nonnull String location,
-                               @Nonnull OutputStream output) throws IOException {
+  private static void download(@Nullable ProgressIndicator progress, @Nonnull String location, @Nonnull OutputStream output) throws IOException {
     String originalText = progress != null ? progress.getText() : null;
     substituteContentLength(progress, originalText, -1);
     if (progress != null) {
       progress.setText2("Downloading " + location);
     }
-    HttpURLConnection urlConnection = HttpConfigurable.getInstance().openHttpConnection(location);
+    HttpURLConnection urlConnection = HttpProxyManager.getInstance().openHttpConnection(location);
     try {
-      int timeout = (int) TimeUnit.MINUTES.toMillis(2);
+      int timeout = (int)TimeUnit.MINUTES.toMillis(2);
       urlConnection.setConnectTimeout(timeout);
       urlConnection.setReadTimeout(timeout);
       urlConnection.connect();
       InputStream in = urlConnection.getInputStream();
       int contentLength = urlConnection.getContentLength();
       substituteContentLength(progress, originalText, contentLength);
-      NetUtils.copyStreamContent(progress, in, output, contentLength);
-    } catch (IOException e) {
-      throw new IOException(
-              "Can not download '" + location
-              + "', response code: " + urlConnection.getResponseCode()
-              + ", response message: " + urlConnection.getResponseMessage()
-              + ", headers: " + urlConnection.getHeaderFields(),
-              e
-      );
+      ProgressStreamUtil.copyStreamContent(progress, in, output, contentLength);
+    }
+    catch (IOException e) {
+      throw new IOException("Can not download '" +
+                            location +
+                            "', response code: " +
+                            urlConnection.getResponseCode() +
+                            ", response message: " +
+                            urlConnection.getResponseMessage() +
+                            ", headers: " +
+                            urlConnection.getHeaderFields(), e);
     }
     finally {
       try {
         urlConnection.disconnect();
-      } catch (Exception e) {
+      }
+      catch (Exception e) {
         LOG.warn("Exception at disconnect()", e);
       }
     }

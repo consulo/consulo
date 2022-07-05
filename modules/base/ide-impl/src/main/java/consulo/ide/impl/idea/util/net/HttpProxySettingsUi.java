@@ -43,7 +43,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicReference;
 
-class HttpProxySettingsUi implements IdeaConfigurableUi<HttpConfigurable> {
+class HttpProxySettingsUi implements IdeaConfigurableUi<HttpProxyManagerImpl> {
   private JPanel myMainPanel;
 
   private JTextField myProxyLoginTextField;
@@ -75,7 +75,7 @@ class HttpProxySettingsUi implements IdeaConfigurableUi<HttpConfigurable> {
   private volatile boolean myConnectionCheckInProgress;
 
   @Override
-  public boolean isModified(@Nonnull HttpConfigurable settings) {
+  public boolean isModified(@Nonnull HttpProxyManagerImpl settings) {
     if (!isValid()) {
       return false;
     }
@@ -94,7 +94,7 @@ class HttpProxySettingsUi implements IdeaConfigurableUi<HttpConfigurable> {
            !Comparing.strEqual(settings.PROXY_HOST, myProxyHostTextField.getText());
   }
 
-  public HttpProxySettingsUi(@Nonnull final HttpConfigurable settings) {
+  public HttpProxySettingsUi(@Nonnull final HttpProxyManagerImpl settings) {
     ButtonGroup group = new ButtonGroup();
     group.add(myUseHTTPProxyRb);
     group.add(myAutoDetectProxyRb);
@@ -149,7 +149,7 @@ class HttpProxySettingsUi implements IdeaConfigurableUi<HttpConfigurable> {
   }
 
   private void configureCheckButton() {
-    if (HttpConfigurable.getInstance() == null) {
+    if (HttpProxyManagerImpl.getInstance() == null) {
       myCheckButton.setVisible(false);
       return;
     }
@@ -164,7 +164,7 @@ class HttpProxySettingsUi implements IdeaConfigurableUi<HttpConfigurable> {
           return;
         }
 
-        final HttpConfigurable settings = HttpConfigurable.getInstance();
+        final HttpProxyManagerImpl settings = HttpProxyManagerImpl.getInstance();
         apply(settings);
         final AtomicReference<IOException> exceptionReference = new AtomicReference<>();
         myCheckButton.setEnabled(false);
@@ -222,7 +222,7 @@ class HttpProxySettingsUi implements IdeaConfigurableUi<HttpConfigurable> {
   }
 
   @Override
-  public void reset(@Nonnull HttpConfigurable settings) {
+  public void reset(@Nonnull HttpProxyManagerImpl settings) {
     myNoProxyRb.setSelected(true);  // default
     myAutoDetectProxyRb.setSelected(settings.USE_PROXY_PAC);
     myPacUrlCheckBox.setSelected(settings.USE_PAC_URL);
@@ -296,7 +296,7 @@ class HttpProxySettingsUi implements IdeaConfigurableUi<HttpConfigurable> {
   }
 
   @Override
-  public void apply(@Nonnull HttpConfigurable settings) {
+  public void apply(@Nonnull HttpProxyManagerImpl settings) {
     if (!isValid()) {
       return;
     }

@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.errorreport;
 
 import com.google.common.reflect.TypeToken;
 import consulo.application.progress.Task;
+import consulo.ide.impl.idea.util.net.HttpProxyManagerImpl;
 import consulo.project.Project;
-import consulo.ide.impl.idea.util.net.HttpConfigurable;
 import consulo.ide.impl.external.api.ErrorReportBean;
 import consulo.ide.impl.externalService.AuthorizationFailedException;
 import consulo.ide.impl.externalService.UpdateAvailableException;
@@ -51,7 +51,7 @@ public class ErrorReportSender {
   public static void sendReport(Project project, ErrorReportBean errorBean, long assignUserId, Consumer<String> callback,  Consumer<Exception> errback) {
     Task.Backgroundable.queue(project, DiagnosticLocalize.titleSubmittingErrorReport().get(), indicator -> {
       try {
-        HttpConfigurable.getInstance().prepareURL(WebServiceApi.MAIN.buildUrl());
+        HttpProxyManagerImpl.getInstance().prepareURL(WebServiceApi.MAIN.buildUrl());
 
         String id = sendAndHandleResult(errorBean, assignUserId);
 
