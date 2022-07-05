@@ -26,7 +26,7 @@ import consulo.language.version.LanguageVersion;
 
 import javax.annotation.Nonnull;
 
-class DefaultWordCompletionFilter implements WordCompletionElementFilter {
+public class DefaultWordCompletionFilter implements WordCompletionElementFilter {
   @Override
   public boolean isWordCompletionEnabledIn(final IElementType element, LanguageVersion languageVersion) {
     final ParserDefinition parserDefinition = ParserDefinition.forLanguage(element.getLanguage());
