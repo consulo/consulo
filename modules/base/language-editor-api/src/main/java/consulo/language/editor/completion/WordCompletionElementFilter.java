@@ -30,6 +30,7 @@ import consulo.language.ast.IElementType;
 import consulo.language.extension.ByLanguageValue;
 import consulo.language.extension.LanguageExtension;
 import consulo.language.extension.LanguageOneToOne;
+import consulo.language.parser.ParserDefinition;
 import consulo.language.psi.PsiElement;
 import consulo.language.version.LanguageVersion;
 import consulo.language.version.LanguageVersionUtil;
@@ -56,5 +57,8 @@ public interface WordCompletionElementFilter extends LanguageExtension {
     return forLanguage(psi.getLanguage()).isWordCompletionEnabledIn(elementType, LanguageVersionUtil.findLanguageVersion(elementType.getLanguage(), psi));
   }
 
-  boolean isWordCompletionEnabledIn(IElementType element, LanguageVersion languageVersion);
+  default boolean isWordCompletionEnabledIn(final IElementType element, LanguageVersion languageVersion) {
+    final ParserDefinition parserDefinition = ParserDefinition.forLanguage(element.getLanguage());
+    return parserDefinition != null && parserDefinition.getCommentTokens(languageVersion).contains(element);
+  }
 }
