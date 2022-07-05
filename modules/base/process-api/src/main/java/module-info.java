@@ -4,6 +4,7 @@
  */
 module consulo.process.api {
   requires transitive consulo.application.api;
+  requires transitive consulo.virtual.file.system.api;
   requires transitive consulo.util.dataholder;
 
   requires consulo.util.jna;

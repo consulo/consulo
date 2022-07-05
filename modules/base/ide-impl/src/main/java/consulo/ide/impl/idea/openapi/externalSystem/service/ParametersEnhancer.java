@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.externalSystem.service;
 
 import consulo.process.ExecutionException;
-import consulo.ide.impl.idea.execution.configurations.SimpleJavaParameters;
+import consulo.process.cmd.SimpleJavaParameters;
 import javax.annotation.Nonnull;
 
 import java.net.URL;

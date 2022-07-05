@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.execution.configurations;
+package consulo.process.cmd;
 
 import consulo.process.local.EnvironmentUtil;
-import consulo.process.cmd.ParametersList;
 
 import java.io.File;
 import java.util.HashMap;

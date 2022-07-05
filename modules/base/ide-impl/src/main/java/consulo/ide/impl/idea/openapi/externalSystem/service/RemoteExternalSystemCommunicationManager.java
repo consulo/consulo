@@ -19,21 +19,17 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.CommonBundle;
+import consulo.component.extension.ExtensionPointName;
+import consulo.container.boot.ContainerPathManager;
 import consulo.execution.DefaultExecutionResult;
-import consulo.process.ExecutionException;
 import consulo.execution.ExecutionResult;
-import consulo.execution.executor.Executor;
 import consulo.execution.configuration.CommandLineState;
-import consulo.process.cmd.GeneralCommandLine;
 import consulo.execution.configuration.RunProfileState;
-import consulo.ide.impl.idea.execution.configurations.SimpleJavaParameters;
-import consulo.process.local.OSProcessHandler;
-import consulo.process.ProcessHandler;
+import consulo.execution.executor.Executor;
 import consulo.execution.process.ProcessTerminatedListener;
-import consulo.ide.impl.idea.execution.rmi.RemoteProcessSupport;
 import consulo.execution.runner.ProgramRunner;
+import consulo.ide.impl.idea.execution.rmi.RemoteProcessSupport;
 import consulo.ide.impl.idea.ide.actions.OpenProjectFileChooserDescriptor;
-import consulo.ui.ex.action.AnAction;
 import consulo.ide.impl.idea.openapi.application.PathManager;
 import consulo.ide.impl.idea.openapi.externalSystem.ExternalSystemManager;
 import consulo.ide.impl.idea.openapi.externalSystem.model.ProjectSystemId;
@@ -43,26 +39,25 @@ import consulo.ide.impl.idea.openapi.externalSystem.service.remote.ExternalSyste
 import consulo.ide.impl.idea.openapi.externalSystem.service.remote.RemoteExternalSystemProgressNotificationManager;
 import consulo.ide.impl.idea.openapi.externalSystem.service.remote.wrapper.ExternalSystemFacadeWrapper;
 import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemApiUtil;
-import consulo.ide.impl.idea.openapi.projectRoots.JdkUtil;
-import consulo.ide.impl.idea.openapi.projectRoots.SimpleJavaSdkType;
-import consulo.util.lang.ShutDownTracker;
-import consulo.ui.ex.awt.util.Alarm;
 import consulo.ide.impl.idea.util.PathUtil;
-import consulo.util.lang.SystemProperties;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.component.extension.ExtensionPointName;
-import consulo.container.boot.ContainerPathManager;
-import consulo.content.bundle.Sdk;
 import consulo.language.psi.PsiBundle;
 import consulo.logging.Logger;
 import consulo.module.content.layer.orderEntry.DependencyScope;
+import consulo.process.ExecutionException;
+import consulo.process.ProcessHandler;
+import consulo.process.cmd.SimpleJavaParameters;
+import consulo.process.local.OSProcessHandler;
 import consulo.project.ProjectBundle;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.awt.util.Alarm;
+import consulo.util.lang.ShutDownTracker;
+import consulo.util.lang.SystemProperties;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.nio.charset.Charset;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
@@ -129,24 +124,24 @@ public class RemoteExternalSystemCommunicationManager implements ExternalSystemC
       private SimpleJavaParameters createJavaParameters() throws ExecutionException {
 
         final SimpleJavaParameters params = new SimpleJavaParameters();
-        params.setJdk(new SimpleJavaSdkType().createJdk("tmp", SystemProperties.getJavaHome()));
+        params.setJdkHome(SystemProperties.getJavaHome());
 
         params.setWorkingDirectory(ContainerPathManager.get().getBinPath());
         final List<String> classPath = new ArrayList<>();
 
         // IDE jars.
         classPath.addAll(PathManager.getUtilClassPath());
-        ContainerUtil.addIfNotNull(PathUtil.getJarPathForClass(ProjectBundle.class), classPath);
+        ContainerUtil.addIfNotNull(classPath, PathUtil.getJarPathForClass(ProjectBundle.class));
         ExternalSystemApiUtil.addBundle(params.getClassPath(), "messages.ProjectBundle", ProjectBundle.class);
-        ContainerUtil.addIfNotNull(PathUtil.getJarPathForClass(PsiBundle.class), classPath);
-        ContainerUtil.addIfNotNull(PathUtil.getJarPathForClass(Alarm.class), classPath);
-        ContainerUtil.addIfNotNull(PathUtil.getJarPathForClass(DependencyScope.class), classPath);
-        ContainerUtil.addIfNotNull(PathUtil.getJarPathForClass(ExtensionPointName.class), classPath);
-        ContainerUtil.addIfNotNull(PathUtil.getJarPathForClass(OpenProjectFileChooserDescriptor.class), classPath);
-        ContainerUtil.addIfNotNull(PathUtil.getJarPathForClass(ExternalSystemTaskNotificationListener.class), classPath);
+        ContainerUtil.addIfNotNull(classPath, PathUtil.getJarPathForClass(PsiBundle.class));
+        ContainerUtil.addIfNotNull(classPath, PathUtil.getJarPathForClass(Alarm.class));
+        ContainerUtil.addIfNotNull(classPath, PathUtil.getJarPathForClass(DependencyScope.class));
+        ContainerUtil.addIfNotNull(classPath, PathUtil.getJarPathForClass(ExtensionPointName.class));
+        ContainerUtil.addIfNotNull(classPath, PathUtil.getJarPathForClass(OpenProjectFileChooserDescriptor.class));
+        ContainerUtil.addIfNotNull(classPath, PathUtil.getJarPathForClass(ExternalSystemTaskNotificationListener.class));
 
         // External system module jars
-        ContainerUtil.addIfNotNull(PathUtil.getJarPathForClass(getClass()), classPath);
+        ContainerUtil.addIfNotNull(classPath, PathUtil.getJarPathForClass(getClass()));
         ExternalSystemApiUtil.addBundle(params.getClassPath(), "messages.CommonBundle", CommonBundle.class);
         params.getClassPath().addAll(classPath);
 
@@ -182,23 +177,17 @@ public class RemoteExternalSystemCommunicationManager implements ExternalSystemC
         return new DefaultExecutionResult(null, processHandler, AnAction.EMPTY_ARRAY);
       }
 
+      @Override
       @Nonnull
       protected OSProcessHandler startProcess() throws ExecutionException {
         SimpleJavaParameters params = createJavaParameters();
-        Sdk sdk = params.getJdk();
+        String sdk = params.getJdkHome();
         if (sdk == null) {
           throw new ExecutionException("No sdk is defined. Params: " + params);
         }
-
-        final GeneralCommandLine commandLine = JdkUtil.setupJVMCommandLine(sdk, params, false);
-        final OSProcessHandler processHandler = new OSProcessHandler(commandLine.createProcess(), commandLine.getCommandLineString()) {
-          @Override
-          public Charset getCharset() {
-            return commandLine.getCharset();
-          }
-        };
-        ProcessTerminatedListener.attach(processHandler);
-        return processHandler;
+        ProcessHandler handler = params.createProcessHandler();
+        ProcessTerminatedListener.attach(handler);
+        return (OSProcessHandler)handler;
       }
     };
   }
