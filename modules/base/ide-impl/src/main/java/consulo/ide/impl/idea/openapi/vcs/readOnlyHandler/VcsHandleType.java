@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.openapi.vcs.readOnlyHandler;
 
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.ui.ex.awt.Messages;
 import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
 import consulo.ide.impl.idea.openapi.vcs.EditFileProvider;
 import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
@@ -27,10 +26,10 @@ import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManager;
 import consulo.ide.impl.idea.openapi.vcs.changes.InvokeAfterUpdateMode;
 import consulo.ide.impl.idea.openapi.vcs.changes.LocalChangeList;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.Function;
-import consulo.ide.impl.idea.util.NullableFunction;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ui.ex.awt.Messages;
+import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.Collection;
 import java.util.List;
@@ -39,12 +38,7 @@ import java.util.List;
  * @author yole
  */
 public class VcsHandleType extends HandleType {
-  private static final Function<LocalChangeList,String> FUNCTION = new Function<LocalChangeList, String>() {
-    @Override
-    public String fun(LocalChangeList list) {
-      return list.getName();
-    }
-  };
+  private static final Function<LocalChangeList,String> FUNCTION = LocalChangeList::getName;
   private final AbstractVcs myVcs;
   private final ChangeListManager myChangeListManager;
   private final Function<VirtualFile,Change> myChangeFunction;
@@ -53,12 +47,7 @@ public class VcsHandleType extends HandleType {
     super(VcsBundle.message("handle.ro.file.status.type.using.vcs", vcs.getDisplayName()), true);
     myVcs = vcs;
     myChangeListManager = ChangeListManager.getInstance(myVcs.getProject());
-    myChangeFunction = new NullableFunction<VirtualFile, Change>() {
-      @Override
-      public Change fun(VirtualFile file) {
-        return myChangeListManager.getChange(file);
-      }
-    };
+    myChangeFunction = myChangeListManager::getChange;
   }
 
   public void processFiles(final Collection<VirtualFile> files, @javax.annotation.Nullable final String changelist) {

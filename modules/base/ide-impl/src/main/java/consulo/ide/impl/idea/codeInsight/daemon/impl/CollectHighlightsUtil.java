@@ -16,16 +16,15 @@
 
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.component.extension.ExtensionPointName;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.ProgressIndicatorProvider;
-import consulo.util.lang.function.Condition;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.psi.PsiUtilCore;
-import consulo.util.collection.primitive.ints.IntStack;
-import consulo.util.collection.Stack;
+import consulo.language.psi.util.PsiTreeUtil;
 import consulo.logging.Logger;
+import consulo.util.collection.Stack;
+import consulo.util.collection.primitive.ints.IntStack;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -33,24 +32,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CollectHighlightsUtil {
-  public static final ExtensionPointName<Condition<PsiElement>> EP_NAME = ExtensionPointName.create("consulo.elementsToHighlightFilter");
-
   private static final Logger LOG = Logger.getInstance(CollectHighlightsUtil.class);
 
-  private CollectHighlightsUtil() { }
+  private CollectHighlightsUtil() {
+  }
 
   @Nonnull
+  @RequiredReadAction
   public static List<PsiElement> getElementsInRange(@Nonnull PsiElement root, final int startOffset, final int endOffset) {
     return getElementsInRange(root, startOffset, endOffset, false);
   }
 
   @Nonnull
-  public static List<PsiElement> getElementsInRange(@Nonnull PsiElement root,
-                                                    final int startOffset,
-                                                    final int endOffset,
-                                                    boolean includeAllParents) {
+  @RequiredReadAction
+  public static List<PsiElement> getElementsInRange(@Nonnull PsiElement root, final int startOffset, final int endOffset, boolean includeAllParents) {
     PsiElement commonParent = findCommonParent(root, startOffset, endOffset);
-    if (commonParent == null) return new ArrayList<PsiElement>();
+    if (commonParent == null) return new ArrayList<>();
     final List<PsiElement> list = getElementsToHighlight(commonParent, startOffset, endOffset);
 
     PsiElement parent = commonParent;
@@ -67,29 +64,20 @@ public class CollectHighlightsUtil {
   private static final int STARTING_TREE_HEIGHT = 100;
 
   @Nonnull
+  @RequiredReadAction
   private static List<PsiElement> getElementsToHighlight(@Nonnull PsiElement commonParent, final int startOffset, final int endOffset) {
-    final List<PsiElement> result = new ArrayList<PsiElement>();
-    final int currentOffset = commonParent.getTextRange().getStartOffset();
-    final List<Condition<PsiElement>> filters = EP_NAME.getExtensionList();
+    final List<PsiElement> result = new ArrayList<>();
 
-    int offset = currentOffset;
+    int offset = commonParent.getTextRange().getStartOffset();
 
     final IntStack starts = new IntStack(STARTING_TREE_HEIGHT);
-    final Stack<PsiElement> elements = new Stack<PsiElement>(STARTING_TREE_HEIGHT);
-    final Stack<PsiElement> children = new Stack<PsiElement>(STARTING_TREE_HEIGHT);
+    final Stack<PsiElement> elements = new Stack<>(STARTING_TREE_HEIGHT);
+    final Stack<PsiElement> children = new Stack<>(STARTING_TREE_HEIGHT);
     PsiElement element = commonParent;
 
     PsiElement child = PsiUtilCore.NULL_PSI_ELEMENT;
     while (true) {
       ProgressIndicatorProvider.checkCanceled();
-
-      for (Condition<PsiElement> filter : filters) {
-        if (!filter.value(element)) {
-          assert child == PsiUtilCore.NULL_PSI_ELEMENT;
-          child = null; // do not want to process children
-          break;
-        }
-      }
 
       boolean startChildrenVisiting;
       if (child == PsiUtilCore.NULL_PSI_ELEMENT) {
@@ -141,7 +129,7 @@ public class CollectHighlightsUtil {
 
     PsiElement commonParent = PsiTreeUtil.findCommonParent(left, right);
     if (commonParent == null) {
-      LOG.error("No common parent for "+left+" and "+right+"; root: "+root+"; startOffset: "+startOffset+"; endOffset: "+endOffset);
+      LOG.error("No common parent for " + left + " and " + right + "; root: " + root + "; startOffset: " + startOffset + "; endOffset: " + endOffset);
     }
     LOG.assertTrue(commonParent.getTextRange() != null, commonParent);
 

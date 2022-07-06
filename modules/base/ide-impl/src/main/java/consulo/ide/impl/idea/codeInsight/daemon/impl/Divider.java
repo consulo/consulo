@@ -113,8 +113,6 @@ public class Divider {
     int startOffset = restrictRange.getStartOffset();
     int endOffset = restrictRange.getEndOffset();
 
-    final List<Condition<PsiElement>> filters = CollectHighlightsUtil.EP_NAME.getExtensionList();
-
     final IntStack starts = new IntStack(STARTING_TREE_HEIGHT);
     starts.push(startOffset);
     final Stack<PsiElement> elements = new Stack<>(STARTING_TREE_HEIGHT);
@@ -125,14 +123,6 @@ public class Divider {
     int offset = 0;
     while (true) {
       ProgressManager.checkCanceled();
-
-      for (Condition<PsiElement> filter : filters) {
-        if (!filter.value(element)) {
-          assert child == HAVE_TO_GET_CHILDREN;
-          child = null; // do not want to process children
-          break;
-        }
-      }
 
       boolean startChildrenVisiting;
       if (child == HAVE_TO_GET_CHILDREN) {
