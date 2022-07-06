@@ -18,13 +18,13 @@ package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.vcs.versionBrowser.CommittedChangeList;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.component.messagebus.TopicImpl;
+import consulo.component.messagebus.Topic;
 
 import java.util.List;
 
 public interface VcsConfigurationChangeListener {
-  TopicImpl<Notification> BRANCHES_CHANGED = new TopicImpl<Notification>("branch mapping changed", Notification.class);
-  TopicImpl<DetailedNotification> BRANCHES_CHANGED_RESPONSE = new TopicImpl<DetailedNotification>("branch mapping changed (detailed)", DetailedNotification.class);
+  Topic<Notification> BRANCHES_CHANGED = new Topic<Notification>("branch mapping changed", Notification.class);
+  Topic<DetailedNotification> BRANCHES_CHANGED_RESPONSE = new Topic<DetailedNotification>("branch mapping changed (detailed)", DetailedNotification.class);
 
   interface Notification {
     void execute(final Project project, final VirtualFile vcsRoot);

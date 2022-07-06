@@ -33,21 +33,21 @@ import javax.annotation.Nonnull;
  * @param <L>  type of the interface that defines contract for working with the particular topic instance
  */
 @Deprecated
-@DeprecationInfo("Use class")
-public class TopicImpl<L> {
+@DeprecationInfo("Use listener class")
+public class Topic<L> {
   private final String myDisplayName;
   private final Class<L> myListenerClass;
   private final TopicBroadcastDirection myBroadcastDirection;
 
-  public TopicImpl(@Nonnull Class<L> listenerClass) {
+  public Topic(@Nonnull Class<L> listenerClass) {
     this(listenerClass.getSimpleName(), listenerClass, TopicBroadcastDirection.TO_CHILDREN);
   }
 
-  public TopicImpl(@Nonnull String displayName, @Nonnull Class<L> listenerClass) {
+  public Topic(@Nonnull String displayName, @Nonnull Class<L> listenerClass) {
     this(displayName, listenerClass, TopicBroadcastDirection.TO_CHILDREN);
   }
 
-  public TopicImpl(@Nonnull String displayName, @Nonnull Class<L> listenerClass, final TopicBroadcastDirection broadcastDirection) {
+  public Topic(@Nonnull String displayName, @Nonnull Class<L> listenerClass, final TopicBroadcastDirection broadcastDirection) {
     myDisplayName = displayName;
     myListenerClass = listenerClass;
     myBroadcastDirection = broadcastDirection;
@@ -65,11 +65,11 @@ public class TopicImpl<L> {
    * Allows to retrieve class that defines contract for working with the current topic. Either publishers or subscribers use it:
    * <ul>
    *   <li>
-   *     publisher {@link MessageBus#syncPublisher(TopicImpl) receives} object that IS-A target interface from the messaging infrastructure.
+   *     publisher {@link MessageBus#syncPublisher(Topic) receives} object that IS-A target interface from the messaging infrastructure.
    *     It calls target method with the target arguments on it then (method of the interface returned by the current method);
    *   </li>
    *   <li>
-   *     the same method is called on handlers of all {@link MessageBusConnection#subscribe(TopicImpl, Object) subscribers} that
+   *     the same method is called on handlers of all {@link MessageBusConnection#subscribe(Topic, Object) subscribers} that
    *     should receive the message;
    *   </li>
    * </ul>
@@ -85,12 +85,12 @@ public class TopicImpl<L> {
     return myDisplayName;
   }
 
-  public static <L> TopicImpl<L> create(@Nonnull String displayName, @Nonnull Class<L> listenerClass) {
-    return new TopicImpl<>(displayName, listenerClass);
+  public static <L> Topic<L> create(@Nonnull String displayName, @Nonnull Class<L> listenerClass) {
+    return new Topic<>(displayName, listenerClass);
   }
 
-  public static <L> TopicImpl<L> create(@Nonnull String displayName, @Nonnull Class<L> listenerClass, TopicBroadcastDirection direction) {
-    return new TopicImpl<>(displayName, listenerClass, direction);
+  public static <L> Topic<L> create(@Nonnull String displayName, @Nonnull Class<L> listenerClass, TopicBroadcastDirection direction) {
+    return new Topic<>(displayName, listenerClass, direction);
   }
 
   /**

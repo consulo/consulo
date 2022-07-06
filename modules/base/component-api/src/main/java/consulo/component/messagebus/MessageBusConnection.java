@@ -30,12 +30,12 @@ import javax.annotation.Nullable;
 public interface MessageBusConnection {
 
   @Deprecated
-  default <L> void subscribe(@Nonnull TopicImpl<L> topic, @Nonnull L handler) throws IllegalStateException {
+  default <L> void subscribe(@Nonnull Topic<L> topic, @Nonnull L handler) throws IllegalStateException {
     subscribe(topic.getListenerClass(), handler);
   }
 
   @Deprecated
-  default <L> void subscribe(@Nonnull TopicImpl<L> topic) throws IllegalStateException {
+  default <L> void subscribe(@Nonnull Topic<L> topic) throws IllegalStateException {
     subscribe(topic.getListenerClass());
   }
 

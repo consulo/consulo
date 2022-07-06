@@ -34,7 +34,7 @@ package consulo.ide.impl.idea.codeInsight.daemon.impl.analysis;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 import consulo.language.psi.PsiElement;
-import consulo.component.messagebus.TopicImpl;
+
 import javax.annotation.Nonnull;
 
 /**

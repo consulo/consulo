@@ -18,7 +18,6 @@ package consulo.usage.rule;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
-import consulo.component.messagebus.TopicImpl;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.usage.UsageView;

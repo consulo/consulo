@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.ide;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
-import consulo.component.messagebus.TopicImpl;
 import consulo.annotation.DeprecationInfo;
 
 /**

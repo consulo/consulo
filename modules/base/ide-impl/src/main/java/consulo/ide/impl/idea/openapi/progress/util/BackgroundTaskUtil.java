@@ -35,7 +35,6 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.util.lang.function.PairConsumer;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.component.messagebus.MessageBus;
-import consulo.component.messagebus.TopicImpl;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.application.AccessRule;

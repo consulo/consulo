@@ -53,7 +53,7 @@ public interface MessageBus {
 
   @Deprecated
   @Nonnull
-  default <L> L syncPublisher(@Nonnull TopicImpl<L> topic) {
+  default <L> L syncPublisher(@Nonnull Topic<L> topic) {
     return syncPublisher(topic.getListenerClass());
   }
 

@@ -16,10 +16,8 @@
 
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.annotation.component.TopicBroadcastDirection;
 import consulo.colorScheme.TextAttributes;
 import consulo.component.messagebus.MessageBus;
-import consulo.component.messagebus.TopicImpl;
 import consulo.ide.impl.idea.util.concurrency.AtomicFieldUpdater;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.annotation.HighlightSeverity;

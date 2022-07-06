@@ -32,7 +32,6 @@ import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.tree.action.CollapseAllAction;
 import consulo.ui.ex.awt.tree.action.ExpandAllAction;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.component.messagebus.TopicImpl;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

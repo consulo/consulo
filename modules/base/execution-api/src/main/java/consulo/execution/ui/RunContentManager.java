@@ -15,11 +15,9 @@
  */
 package consulo.execution.ui;
 
-import consulo.component.messagebus.TopicImpl;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.executor.Executor;
 import consulo.execution.runner.ExecutionEnvironment;
-import consulo.execution.ui.event.RunContentWithExecutorListener;
 import consulo.process.ProcessHandler;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.toolWindow.ToolWindow;
