@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.vcsUtil;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.CustomComponentAction;
+import consulo.ui.ex.awt.action.CustomComponentAction;
 import consulo.ui.ex.awt.UIUtil;
 
 import javax.swing.*;
@@ -61,7 +61,7 @@ public abstract class MoreAction  extends AnAction implements CustomComponentAct
   }
 
   @Override
-  public JComponent createCustomComponent(Presentation presentation) {
+  public JComponent createCustomComponent(Presentation presentation, String place) {
     return myPanel;
   }
 

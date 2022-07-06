@@ -2,10 +2,10 @@
 package consulo.ide.impl.idea.ui.tree;
 
 import consulo.ui.ex.awt.tree.TreeVisitor;
+import consulo.util.lang.ref.SimpleReference;
 
 import javax.annotation.Nonnull;
-
-import javax.swing.JTree;
+import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreePath;
@@ -31,8 +31,8 @@ public final class RestoreSelectionListener implements TreeSelectionListener {
               // restore selection later, because nodes are removed before they are inserted
               if (tree.getSelectionModel().isSelectionEmpty()) {
                 // restore a path selection only if nothing is selected now
-                Reference<TreePath> reference = new Reference<>();
-                TreeVisitor visitor = new TreeVisitor.ByTreePath<Object>(path, o -> o) {
+                SimpleReference<TreePath> reference = new SimpleReference<>();
+                TreeVisitor visitor = new TreeVisitor.ByTreePath<>(path, o -> o) {
                   @Nonnull
                   @Override
                   protected Action visit(@Nonnull TreePath path, Object component) {

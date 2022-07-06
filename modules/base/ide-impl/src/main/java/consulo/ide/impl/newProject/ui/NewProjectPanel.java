@@ -29,7 +29,7 @@ import consulo.ide.impl.idea.ui.JBCardLayout;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.tree.AsyncTreeModel;
-import consulo.ide.impl.idea.ui.tree.StructureTreeModel;
+import consulo.ui.ex.awt.tree.StructureTreeModel;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;

@@ -27,7 +27,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.Toggleable;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.CheckboxAction;
+import consulo.ui.ex.awt.action.CheckboxAction;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
@@ -39,7 +39,6 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 
 import javax.annotation.Nonnull;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;

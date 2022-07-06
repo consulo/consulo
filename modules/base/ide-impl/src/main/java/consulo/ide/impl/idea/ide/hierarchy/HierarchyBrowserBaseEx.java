@@ -35,7 +35,7 @@ import consulo.ui.ex.awt.dnd.DnDSource;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.dataContext.DataContext;
 import consulo.language.OldLanguageExtension;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ComboBoxAction;
+import consulo.ui.ex.awt.action.ComboBoxAction;
 import consulo.application.ApplicationManager;
 import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.language.psi.*;
@@ -737,11 +737,11 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
 
     @Nonnull
     @Override
-    public final JComponent createCustomComponent(final Presentation presentation) {
+    public final JComponent createCustomComponent(final Presentation presentation, String place) {
       final JPanel panel = new JPanel(new GridBagLayout());
       panel.add(new JLabel(IdeBundle.message("label.scope")),
                 new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(0, 5, 0, 0), 0, 0));
-      panel.add(super.createCustomComponent(presentation),
+      panel.add(super.createCustomComponent(presentation, place),
                 new GridBagConstraints(1, 0, 1, 1, 1, 1, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
       return panel;
     }

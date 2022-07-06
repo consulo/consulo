@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.actionSystem.ex;
+package consulo.ui.ex.awt.action;
 
-import consulo.ide.impl.actionSystem.ex.ComboBoxButton;
-import consulo.ide.impl.actionSystem.ex.ComboBoxButtonImpl;
 import consulo.dataContext.DataContext;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
@@ -45,7 +43,7 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    ComboBoxButton button = (ComboBoxButton)e.getPresentation().getClientProperty(COMPONENT_KEY);
+    ComboBoxButton button = (ComboBoxButton)e.getPresentation().getClientProperty(CustomComponentAction.COMPONENT_KEY);
     if (button == null) {
       Component contextComponent = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
       JRootPane rootPane = UIUtil.getParentOfType(JRootPane.class, contextComponent);
@@ -61,7 +59,7 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
 
   @Nonnull
   @Override
-  public JComponent createCustomComponent(Presentation presentation) {
+  public JComponent createCustomComponent(Presentation presentation, String place) {
     JPanel panel = new JPanel(new GridBagLayout());
     ComboBoxButton button = createComboBoxButton(presentation);
     panel.add(button.getComponent(), new GridBagConstraints(0, 0, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, JBUI.insets(0, 3, 0, 3), 0, 0));

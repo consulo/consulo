@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.find.editorHeaderActions;
 import consulo.ide.impl.idea.find.SearchSession;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.CheckboxAction;
+import consulo.ui.ex.awt.action.CheckboxAction;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.image.Image;
 import javax.annotation.Nonnull;

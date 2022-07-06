@@ -37,7 +37,7 @@ import consulo.ui.ex.awt.JBCheckBox;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.PopupUpdateProcessor;
 import consulo.ide.impl.idea.ui.speedSearch.ElementFilter;
-import consulo.ide.impl.idea.ui.tree.StructureTreeModel;
+import consulo.ui.ex.awt.tree.StructureTreeModel;
 import consulo.ide.impl.idea.ui.treeStructure.filtered.FilteringTreeStructure;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.Function;

@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.ui;
 import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.Presentation;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.CustomComponentAction;
+import consulo.ui.ex.awt.action.CustomComponentAction;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.SearchTextField;
 import consulo.ui.ex.awt.UIUtil;
@@ -89,7 +89,7 @@ public abstract class SearchFieldAction extends AnAction implements CustomCompon
   }
 
   @Override
-  public JComponent createCustomComponent(Presentation presentation) {
+  public JComponent createCustomComponent(Presentation presentation, String place) {
     return myComponent;
   }
 

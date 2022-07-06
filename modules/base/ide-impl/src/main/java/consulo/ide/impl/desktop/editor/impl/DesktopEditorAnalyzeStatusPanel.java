@@ -20,7 +20,7 @@ import consulo.application.impl.internal.performance.ActivityTracker;
 import consulo.ui.ex.action.ActionButtonComponent;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionManagerEx;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.CustomComponentAction;
+import consulo.ui.ex.awt.action.CustomComponentAction;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButton;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionToolbarImpl;
 import consulo.codeEditor.EditorBundle;

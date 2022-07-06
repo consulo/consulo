@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.openapi.vcs.actions;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.Presentation;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.CustomComponentAction;
+import consulo.ui.ex.awt.action.CustomComponentAction;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ToolbarLabelAction;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager;

@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.ide.util.scopeChooser;
 
 import consulo.application.AllIcons;
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ComboBoxAction;
+import consulo.ui.ex.awt.action.ComboBoxAction;
 import consulo.application.ApplicationManager;
 import consulo.content.scope.*;
 import consulo.execution.ui.awt.RawCommandLineEditor;

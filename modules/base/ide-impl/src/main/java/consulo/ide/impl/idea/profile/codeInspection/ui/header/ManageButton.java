@@ -15,12 +15,13 @@
  */
 package consulo.ide.impl.idea.profile.codeInspection.ui.header;
 
+import consulo.application.dumb.DumbAware;
+import consulo.ui.ex.awt.action.CheckboxAction;
+import consulo.ui.ex.awt.action.ComboBoxAction;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.CheckboxAction;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ComboBoxAction;
-import consulo.application.dumb.DumbAware;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -38,7 +39,7 @@ public class ManageButton extends ComboBoxAction implements DumbAware {
   }
 
   public JComponent build() {
-    return createCustomComponent(getTemplatePresentation());
+    return createCustomComponent(getTemplatePresentation(), ActionPlaces.UNKNOWN);
   }
 
   @Nonnull

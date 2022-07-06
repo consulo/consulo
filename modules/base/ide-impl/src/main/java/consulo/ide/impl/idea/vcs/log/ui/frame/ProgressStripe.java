@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.vcs.log.ui.frame;
 
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.openapi.ui.LoadingDecorator;
+import consulo.ui.ex.awt.LoadingDecorator;
 import consulo.ide.impl.idea.openapi.util.NotNullComputable;
 import consulo.ui.ex.awt.JBPanel;
 import consulo.ui.ex.awt.NonOpaquePanel;

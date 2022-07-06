@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2013-2018 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ui.switcher;
+package consulo.ui.ex.awt.action;
 
-import consulo.ui.ex.action.AnAction;
-import consulo.util.dataholder.Key;
+import javax.annotation.Nonnull;
+import javax.swing.*;
 
-import java.util.List;
+/**
+ * @author VISTALL
+ * @since 2018-07-12
+ */
+public interface ComboBoxButton {
+  String LIKE_BUTTON = "ComboBoxButton.likeButton";
 
-public interface QuickActionProvider extends QuickAccessProvider {
-  Key<QuickActionProvider> KEY = Key.create("QuickActionProvider");
+  @Nonnull
+  default JComponent getComponent() {
+    return (JComponent)this;
+  }
 
-  String getName();
+  void showPopup();
 
-  List<AnAction> getActions(boolean originalProvider);
+  @Nonnull
+  ComboBoxAction getComboBoxAction();
 }

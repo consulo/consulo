@@ -13,7 +13,7 @@ import consulo.find.FindModel;
 import consulo.find.FindResult;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.CustomComponentAction;
+import consulo.ui.ex.awt.action.CustomComponentAction;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.DefaultCustomComponentAction;
 import consulo.application.ApplicationBundle;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;

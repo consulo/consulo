@@ -16,7 +16,7 @@
 package consulo.ide.impl.desktop.editor.impl;
 
 import consulo.ide.impl.idea.openapi.editor.impl.DesktopEditorImpl;
-import consulo.ide.impl.idea.ui.components.JBLayeredPane;
+import consulo.ui.ex.awt.JBLayeredPane;
 import consulo.ui.ex.awt.JBUI;
 
 import javax.annotation.Nonnull;

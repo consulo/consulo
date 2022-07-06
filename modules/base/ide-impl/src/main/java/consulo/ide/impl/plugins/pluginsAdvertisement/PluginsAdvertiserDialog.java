@@ -24,7 +24,7 @@ import consulo.ui.ex.awt.util.TableUtil;
 import consulo.ui.ex.awt.CustomLineBorder;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.BorderLayoutPanel;
-import consulo.ide.impl.application.WholeWestDialogWrapper;
+import consulo.ui.ex.awt.WholeWestDialogWrapper;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.ide.impl.plugins.PluginDescriptionPanel;

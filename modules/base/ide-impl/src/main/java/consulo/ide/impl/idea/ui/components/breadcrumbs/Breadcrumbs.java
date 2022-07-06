@@ -9,7 +9,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.application.util.registry.Registry;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.util.ColorUtil;
-import consulo.ide.impl.idea.ui.components.JBPanelWithEmptyText;
+import consulo.ui.ex.awt.JBPanelWithEmptyText;
 import consulo.ide.impl.idea.ui.paint.EffectPainter;
 import consulo.ui.ex.awt.paint.RectanglePainter;
 import consulo.ui.ex.awt.JBUIScale;

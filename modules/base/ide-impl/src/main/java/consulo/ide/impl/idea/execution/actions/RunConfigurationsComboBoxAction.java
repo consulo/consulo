@@ -25,7 +25,7 @@ import consulo.execution.ui.RunContentDescriptor;
 import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
 import consulo.ui.ex.action.ActionsBundle;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ComboBoxAction;
+import consulo.ui.ex.awt.action.ComboBoxAction;
 import consulo.application.dumb.DumbAware;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -33,7 +33,7 @@ import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.NonOpaquePanel;
-import consulo.ide.impl.actionSystem.ex.ComboBoxButton;
+import consulo.ui.ex.awt.action.ComboBoxButton;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.ExecutionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -130,7 +130,7 @@ public class RunConfigurationsComboBoxAction extends ComboBoxAction implements D
 
   @Nonnull
   @Override
-  public JComponent createCustomComponent(final Presentation presentation) {
+  public JComponent createCustomComponent(final Presentation presentation, String place) {
     ComboBoxButton button = createComboBoxButton(presentation);
     NonOpaquePanel panel = new NonOpaquePanel(new BorderLayout());
     panel.setBorder(IdeBorderFactory.createEmptyBorder(0, 0, 0, 2));

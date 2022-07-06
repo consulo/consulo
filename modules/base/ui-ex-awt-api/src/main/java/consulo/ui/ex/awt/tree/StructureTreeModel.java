@@ -1,19 +1,16 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.ui.tree;
+package consulo.ui.ex.awt.tree;
 
-import consulo.project.ui.view.tree.AbstractTreeNode;
-import consulo.ui.ex.tree.AbstractTreeStructure;
-import consulo.ui.ex.tree.LeafState;
-import consulo.ui.ex.tree.NodeDescriptor;
-import consulo.ui.ex.awt.tree.*;
-import consulo.ui.ex.awt.tree.ValidateableNode;
 import consulo.application.progress.ProgressManager;
-import consulo.ide.impl.idea.util.concurrency.InvokerImpl;
-import consulo.ui.ex.util.InvokerSupplier;
-import consulo.ui.ex.awt.tree.AbstractTreeModel;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
+import consulo.ui.ex.tree.AbstractTreeStructure;
+import consulo.ui.ex.tree.LeafState;
+import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.ui.ex.util.Invoker;
+import consulo.ui.ex.util.InvokerFactory;
+import consulo.ui.ex.util.InvokerSupplier;
 import consulo.util.concurrent.AsyncPromise;
 import consulo.util.concurrent.Promise;
 
@@ -28,8 +25,8 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import static java.util.Collections.*;
 import static consulo.util.concurrent.Promises.rejectedPromise;
+import static java.util.Collections.*;
 
 /**
  * @author Sergey.Malenkov
@@ -40,7 +37,7 @@ public class StructureTreeModel<Structure extends AbstractTreeStructure> extends
   private static final Logger LOG = Logger.getInstance(StructureTreeModel.class);
   private final Reference<Node> root = new Reference<>();
   private final String description;
-  private final InvokerImpl invoker;
+  private final Invoker invoker;
   private final Structure structure;
   private volatile Comparator<? super Node> comparator;
 
@@ -49,10 +46,10 @@ public class StructureTreeModel<Structure extends AbstractTreeStructure> extends
   }
 
   public StructureTreeModel(@Nonnull Structure structure, @Nullable Comparator<? super NodeDescriptor> comparator, @Nonnull Disposable parent) {
-    this(structure, comparator, InvokerImpl.forBackgroundThreadWithReadAction(parent), parent);
+    this(structure, comparator, InvokerFactory.getInstance().forBackgroundThreadWithReadAction(parent), parent);
   }
 
-  public StructureTreeModel(@Nonnull Structure structure, @Nullable Comparator<? super NodeDescriptor> comparator, @Nonnull InvokerImpl invoker, @Nonnull Disposable parent) {
+  public StructureTreeModel(@Nonnull Structure structure, @Nullable Comparator<? super NodeDescriptor> comparator, @Nonnull Invoker invoker, @Nonnull Disposable parent) {
     this.structure = structure;
     this.description = format(structure.toString());
     this.invoker = invoker;
@@ -92,7 +89,7 @@ public class StructureTreeModel<Structure extends AbstractTreeStructure> extends
 
   @Nonnull
   @Override
-  public final InvokerImpl getInvoker() {
+  public final Invoker getInvoker() {
     return invoker;
   }
 
@@ -342,8 +339,8 @@ public class StructureTreeModel<Structure extends AbstractTreeStructure> extends
 
   private static boolean isValid(@Nonnull AbstractTreeStructure structure, Object element) {
     if (element == null) return false;
-    if (element instanceof AbstractTreeNode) {
-      AbstractTreeNode node = (AbstractTreeNode)element;
+    if (element instanceof consulo.ui.ex.awt.tree.TreeNode) {
+      consulo.ui.ex.awt.tree.TreeNode node = (consulo.ui.ex.awt.tree.TreeNode)element;
       if (null == node.getValue()) return false;
     }
     if (element instanceof ValidateableNode) {

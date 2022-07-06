@@ -34,7 +34,7 @@ import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
 import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.ui.ex.AppIcon;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchBase;
-import consulo.ide.impl.idea.ui.components.JBLayeredPane;
+import consulo.ui.ex.awt.JBLayeredPane;
 import consulo.ui.ex.awt.IJSwingUtilities;
 import consulo.ide.impl.idea.util.ui.OwnerOptional;
 import consulo.application.Application;

@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.ide.todo;
 import consulo.application.AllIcons;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.todo.configurable.TodoConfigurable;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.CustomComponentAction;
+import consulo.ui.ex.awt.action.CustomComponentAction;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButton;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
@@ -58,7 +58,7 @@ public class SetTodoFilterAction extends AnAction implements CustomComponentActi
   }
 
   @Override
-  public JComponent createCustomComponent(Presentation presentation) {
+  public JComponent createCustomComponent(Presentation presentation, String place) {
     ActionButton button = new ActionButton(
             this,
             presentation,

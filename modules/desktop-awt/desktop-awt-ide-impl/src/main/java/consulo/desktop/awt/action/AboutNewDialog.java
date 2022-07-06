@@ -21,7 +21,7 @@ import consulo.application.impl.internal.ApplicationInfo;
 import consulo.application.impl.internal.JobScheduler;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
-import consulo.ide.impl.application.WholeWestDialogWrapper;
+import consulo.ui.ex.awt.WholeWestDialogWrapper;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.text.DateFormatUtil;
 import consulo.ide.impl.idea.util.ui.TextTransferable;

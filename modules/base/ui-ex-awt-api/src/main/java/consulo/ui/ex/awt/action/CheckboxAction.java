@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.openapi.actionSystem.ex;
+package consulo.ui.ex.awt.action;
 
 import consulo.dataContext.DataManager;
 import consulo.ui.ex.action.*;

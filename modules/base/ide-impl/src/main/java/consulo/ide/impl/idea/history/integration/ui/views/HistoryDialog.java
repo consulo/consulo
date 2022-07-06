@@ -53,7 +53,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
 import consulo.ide.impl.idea.ui.*;
 import consulo.ui.ex.RelativePoint;
-import consulo.ide.impl.idea.ui.components.JBLayeredPane;
+import consulo.ui.ex.awt.JBLayeredPane;
 import consulo.ide.impl.idea.util.Consumer;
 import consulo.ui.ex.awt.internal.ImageLoader;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;

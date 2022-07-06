@@ -39,7 +39,7 @@ import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.EmptyAction;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ComboBoxAction;
+import consulo.ui.ex.awt.action.ComboBoxAction;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
 import consulo.ui.ex.awt.HintHint;

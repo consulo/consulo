@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.ide.HelpTooltip;
 import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.ide.impl.idea.ide.actions.searcheverywhere.SearchEverywhereManager;
 import consulo.ide.impl.idea.ide.actions.searcheverywhere.SearchEverywhereManagerImpl;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.CustomComponentAction;
+import consulo.ui.ex.awt.action.CustomComponentAction;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButton;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.keymap.KeymapManager;

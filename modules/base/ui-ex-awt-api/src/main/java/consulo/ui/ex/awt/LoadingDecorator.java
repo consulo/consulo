@@ -1,17 +1,11 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.openapi.ui;
+package consulo.ui.ex.awt;
 
 import consulo.application.CommonBundle;
 import consulo.application.ui.RemoteDesktopService;
-import consulo.ide.impl.idea.ui.components.JBLayeredPane;
-import consulo.ui.ex.awt.NonOpaquePanel;
-import consulo.ui.ex.awt.util.Alarm;
-import consulo.ui.ex.awt.Animator;
-import consulo.ui.ex.awt.AsyncProcessIcon;
-import consulo.ui.ex.awt.ImageUtil;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ui.ex.awt.util.Alarm;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

@@ -13,17 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.ui;
+package consulo.ui.ex.awt;
 
+import consulo.dataContext.DataProvider;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.AnAction;
-import consulo.dataContext.DataProvider;
-import consulo.ide.impl.idea.ui.components.JBPanelWithEmptyText;
-import consulo.ui.ex.awt.Wrapper;
-import consulo.ide.impl.idea.ui.switcher.QuickActionProvider;
+import consulo.ui.ex.action.QuickActionProvider;
 import consulo.util.collection.JBIterable;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;

@@ -31,7 +31,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.diff.util.DiffUtil;
-import consulo.ide.impl.idea.openapi.ui.SimpleToolWindowPanel;
+import consulo.ui.ex.awt.SimpleToolWindowPanel;
 import consulo.ide.impl.idea.openapi.util.Factory;
 import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;

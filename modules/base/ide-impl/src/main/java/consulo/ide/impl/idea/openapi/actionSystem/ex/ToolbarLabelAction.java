@@ -8,6 +8,7 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.action.CustomComponentAction;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 

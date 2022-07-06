@@ -21,7 +21,7 @@ import consulo.application.util.registry.Registry;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.application.util.matcher.NameUtil;
 import consulo.application.util.matcher.WordPrefixMatcher;
-import consulo.ide.impl.idea.ui.switcher.QuickActionProvider;
+import consulo.ui.ex.action.QuickActionProvider;
 import consulo.ide.impl.idea.util.CollectConsumer;
 import consulo.application.util.function.Processor;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

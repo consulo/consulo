@@ -30,7 +30,7 @@ import consulo.ide.impl.base.BaseShowSettingsUtil;
 import consulo.logging.Logger;
 import consulo.ide.setting.ConfigurableUIMigrationUtil;
 import consulo.platform.base.localize.CommonLocalize;
-import consulo.ide.impl.application.WholeWestDialogWrapper;
+import consulo.ui.ex.awt.WholeWestDialogWrapper;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 

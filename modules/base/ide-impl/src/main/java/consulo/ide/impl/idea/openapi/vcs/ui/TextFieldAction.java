@@ -12,11 +12,10 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.ui;
 
+import consulo.ui.ex.awt.action.CustomComponentAction;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.CustomComponentAction;
-import consulo.application.util.SystemInfo;
 import consulo.ui.ex.awt.ClickListener;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -55,7 +54,7 @@ public abstract class TextFieldAction extends AnAction implements CustomComponen
   @Override
   public abstract void actionPerformed(@Nullable AnActionEvent e);
 
-  public JComponent createCustomComponent(Presentation presentation) {
+  public JComponent createCustomComponent(Presentation presentation, String place) {
     // honestly borrowed from SearchTextField
     
     final JPanel panel = new JPanel(new BorderLayout());
@@ -67,13 +66,7 @@ public abstract class TextFieldAction extends AnAction implements CustomComponen
     panel.add(label, BorderLayout.EAST);
     myField.setToolTipText(myDescription);
     label.setToolTipText(myDescription);
-    final Border originalBorder;
-    if (SystemInfo.isMac) {
-      originalBorder = BorderFactory.createLoweredBevelBorder();
-    }
-    else {
-      originalBorder = myField.getBorder();
-    }
+    final Border originalBorder = myField.getBorder();
 
     panel.setBorder(new CompoundBorder(IdeBorderFactory.createEmptyBorder(4, 0, 4, 0), originalBorder));
 

@@ -13,20 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.actionSystem.ex;
+package consulo.ui.ex.awt.action;
 
-import consulo.dataContext.DataManager;
-import consulo.dataContext.DataContext;
-import consulo.ui.ex.action.Presentation;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ComboBoxAction;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ui.ex.popup.JBPopup;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.awt.ColoredListCellRenderer;
-import consulo.ide.impl.idea.util.ObjectUtil;
 import consulo.awt.hacking.BasicComboBoxUIHacking;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
 import consulo.localize.LocalizeValue;
+import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.internal.SwingUIDecorator;
+import consulo.ui.ex.keymap.util.KeymapUtil;
+import consulo.ui.ex.popup.JBPopup;
+import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.StringUtil;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 

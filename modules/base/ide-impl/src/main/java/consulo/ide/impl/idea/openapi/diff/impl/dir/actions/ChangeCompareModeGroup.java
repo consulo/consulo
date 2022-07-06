@@ -16,11 +16,11 @@
 package consulo.ide.impl.idea.openapi.diff.impl.dir.actions;
 
 import consulo.ide.impl.idea.ide.diff.DirDiffSettings;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ComboBoxAction;
+import consulo.ui.ex.awt.action.ComboBoxAction;
 import consulo.ide.impl.idea.openapi.diff.impl.dir.DirDiffTableModel;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.IdeBorderFactory;
-import consulo.ide.impl.actionSystem.ex.ComboBoxButton;
+import consulo.ui.ex.awt.action.ComboBoxButton;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
@@ -68,12 +68,12 @@ public class ChangeCompareModeGroup extends ComboBoxAction implements ShortcutPr
 
   @Nonnull
   @Override
-  public JComponent createCustomComponent(Presentation presentation) {
+  public JComponent createCustomComponent(Presentation presentation, String place) {
     JPanel panel = new JPanel(new BorderLayout());
     final JLabel label = new JLabel("Compare by:");
     label.setDisplayedMnemonicIndex(0);
     panel.add(label, BorderLayout.WEST);
-    myButton = (ComboBoxButton)super.createCustomComponent(presentation).getComponent(0);
+    myButton = (ComboBoxButton)super.createCustomComponent(presentation, place).getComponent(0);
     panel.add(myButton.getComponent(), BorderLayout.CENTER);
     panel.setBorder(IdeBorderFactory.createEmptyBorder(2, 6, 2, 0));
     return panel;

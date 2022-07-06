@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.tasks.timeTracking;
 import consulo.application.AllIcons;
 import consulo.disposer.Disposable;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.ui.SimpleToolWindowPanel;
+import consulo.ui.ex.awt.SimpleToolWindowPanel;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.*;

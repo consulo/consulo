@@ -35,7 +35,7 @@ import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemBundle;
 import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemUiUtil;
 import consulo.language.plain.PlainTextFileType;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.ui.SimpleToolWindowPanel;
+import consulo.ui.ex.awt.SimpleToolWindowPanel;
 import consulo.util.dataholder.Key;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiFile;

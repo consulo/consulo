@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.actionSystem.impl;
 import consulo.ide.impl.idea.ide.HelpTooltip;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionManagerEx;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.CustomComponentAction;
+import consulo.ui.ex.awt.action.CustomComponentAction;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.TooltipDescriptionProvider;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.annotation.DeprecationInfo;

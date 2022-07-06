@@ -13,7 +13,7 @@ import consulo.language.editor.CommonDataKeys;
 import consulo.navigation.NavigationItem;
 import consulo.ui.ex.awt.MnemonicHelper;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionManagerEx;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.CustomComponentAction;
+import consulo.ui.ex.awt.action.CustomComponentAction;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButtonWithText;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.dataContext.DataContext;

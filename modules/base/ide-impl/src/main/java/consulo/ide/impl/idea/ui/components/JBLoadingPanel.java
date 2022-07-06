@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.ui.components;
 
-import consulo.ide.impl.idea.openapi.ui.LoadingDecorator;
+import consulo.ui.ex.awt.LoadingDecorator;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ide.impl.idea.util.NotNullFunction;

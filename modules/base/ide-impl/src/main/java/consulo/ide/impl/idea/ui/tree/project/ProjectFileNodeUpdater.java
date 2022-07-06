@@ -1,25 +1,25 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ui.tree.project;
 
+import consulo.component.messagebus.MessageBusConnection;
+import consulo.ide.impl.idea.util.concurrency.InvokerImpl;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.PsiWhiteSpace;
 import consulo.language.psi.event.PsiTreeChangeAdapter;
 import consulo.language.psi.event.PsiTreeChangeEvent;
 import consulo.logging.Logger;
-import consulo.project.Project;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
+import consulo.project.Project;
+import consulo.ui.ex.concurrent.EdtExecutorService;
+import consulo.ui.ex.util.Invoker;
+import consulo.util.collection.SmartHashSet;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.*;
-import consulo.ui.ex.concurrent.EdtExecutorService;
-import consulo.ide.impl.idea.util.concurrency.InvokerImpl;
-import consulo.util.collection.SmartHashSet;
-import consulo.component.messagebus.MessageBusConnection;
 
 import javax.annotation.Nonnull;
-
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
@@ -29,12 +29,12 @@ import static consulo.language.psi.PsiUtilCore.getVirtualFile;
 public abstract class ProjectFileNodeUpdater {
   private static final Logger LOG = Logger.getInstance(ProjectFileNodeUpdater.class);
   private final Ref<Set<VirtualFile>> reference = new Ref<>();
-  private final InvokerImpl invoker;
+  private final Invoker invoker;
   private volatile boolean root;
   private volatile long time;
   private volatile int size;
 
-  public ProjectFileNodeUpdater(@Nonnull Project project, @Nonnull InvokerImpl invoker) {
+  public ProjectFileNodeUpdater(@Nonnull Project project, @Nonnull Invoker invoker) {
     this.invoker = invoker;
     MessageBusConnection connection = project.getMessageBus().connect(invoker);
     connection.subscribe(ModuleRootListener.class, new ModuleRootListener() {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2010 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ui.components;
+package consulo.ui.ex.action;
 
+import consulo.util.dataholder.Key;
+
+import javax.annotation.Nullable;
 import javax.swing.*;
-import java.awt.*;
+import java.util.List;
 
-/**
- * User: Vassiliy.Kudryashov
- */
-public class JBLayeredPane extends JLayeredPane {
+public interface QuickActionProvider {
+  Key<QuickActionProvider> KEY = Key.create(QuickActionProvider.class);
 
-  private static final Dimension EMPTY = new Dimension(0, 0);
+  String getName();
 
-  @Override
-  public Dimension getMinimumSize() {
-    if (!isMinimumSizeSet())
-      return EMPTY;
-    return super.getMinimumSize();
+  List<AnAction> getActions(boolean originalProvider);
+
+  default boolean isCycleRoot() {
+    return false;
   }
+
+  @Nullable
+  JComponent getComponent();
 }

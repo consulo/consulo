@@ -19,7 +19,7 @@ import consulo.fileTemplate.FileTemplatesScheme;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ComboBoxAction;
+import consulo.ui.ex.awt.action.ComboBoxAction;
 import consulo.application.dumb.DumbAware;
 import consulo.util.lang.function.Condition;
 import consulo.ui.annotation.RequiredUIAccess;

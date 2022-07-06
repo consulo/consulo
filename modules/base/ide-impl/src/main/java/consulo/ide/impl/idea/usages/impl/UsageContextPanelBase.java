@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.usages.impl;
 
 import consulo.application.AppUIExecutor;
 import consulo.project.Project;
-import consulo.ide.impl.idea.ui.components.JBPanelWithEmptyText;
+import consulo.ui.ex.awt.JBPanelWithEmptyText;
 import consulo.usage.UsageInfo;
 import consulo.usage.UsageContextPanel;
 import consulo.usage.UsageViewPresentation;

@@ -46,7 +46,7 @@ import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
 import consulo.ui.ex.tree.IndexComparator;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.util.dataholder.Key;
-import consulo.ide.impl.idea.ui.components.JBPanelWithEmptyText;
+import consulo.ui.ex.awt.JBPanelWithEmptyText;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ide.impl.idea.util.ObjectUtils;
 import org.jetbrains.annotations.NonNls;

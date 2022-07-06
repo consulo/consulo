@@ -21,7 +21,7 @@ import consulo.ui.ex.action.CloseTabToolbarAction;
 import consulo.ui.ex.action.ContextHelpAction;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
-import consulo.ide.impl.idea.openapi.ui.SimpleToolWindowPanel;
+import consulo.ui.ex.awt.SimpleToolWindowPanel;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.application.progress.ProgressIndicator;
 import consulo.dataContext.DataProvider;

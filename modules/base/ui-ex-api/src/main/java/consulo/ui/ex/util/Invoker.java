@@ -27,10 +27,49 @@ import javax.annotation.Nonnull;
 public interface Invoker extends Disposable {
   CancellablePromise<?> runOrInvokeLater(@Nonnull Runnable task);
 
+  /**
+   * Invokes the specified task immediately if the current thread is valid,
+   * or asynchronously after all pending tasks have been processed.
+   *
+   * @param task a task to execute on the valid thread
+   * @return an object to control task processing
+   */
+  @Nonnull
+  CancellablePromise<?> invoke(@Nonnull Runnable task);
+
+  /**
+   * Invokes the specified task asynchronously on the valid thread.
+   * Even if this method is called from the valid thread
+   * the specified task will still be deferred
+   * until all pending events have been processed.
+   *
+   * @param task a task to execute asynchronously on the valid thread
+   * @return an object to control task processing
+   */
   @Nonnull
   CancellablePromise<?> invokeLater(@Nonnull Runnable task);
 
+  /**
+   * Invokes the specified task on the valid thread after the specified delay.
+   *
+   * @param task  a task to execute asynchronously on the valid thread
+   * @param delay milliseconds for the initial delay
+   * @return an object to control task processing
+   */
+  @Nonnull
+  CancellablePromise<?> invokeLater(@Nonnull Runnable task, int delay);
+
+  /**
+   * Returns a workload of the task queue.
+   *
+   * @return amount of tasks, which are executing or waiting for execution
+   */
   int getTaskCount();
 
+  /**
+   * Returns {@code true} if the current thread allows to process a task.
+   *
+   * @return {@code true} if the current thread is valid, or {@code false} otherwise
+   */
   boolean isValidThread();
 }

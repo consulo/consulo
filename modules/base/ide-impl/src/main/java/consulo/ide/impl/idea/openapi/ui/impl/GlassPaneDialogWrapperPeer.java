@@ -38,7 +38,7 @@ import consulo.project.ui.wm.WindowManager;
 import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
 import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneEx;
 import consulo.ui.ex.awt.util.ScreenUtil;
-import consulo.ide.impl.idea.ui.components.JBLayeredPane;
+import consulo.ui.ex.awt.JBLayeredPane;
 import consulo.ui.ex.awt.JBInsets;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;

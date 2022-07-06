@@ -19,7 +19,7 @@ import consulo.application.impl.internal.IdeaModalityState;
 import consulo.ui.ex.awt.*;
 import consulo.ide.impl.idea.openapi.ui.ShadowAction;
 import consulo.ide.impl.idea.openapi.util.Getter;
-import consulo.ide.impl.idea.ui.switcher.QuickActionProvider;
+import consulo.ui.ex.action.QuickActionProvider;
 import consulo.ide.impl.idea.ui.tabs.*;
 import consulo.ide.impl.idea.ui.tabs.impl.singleRow.SingleRowLayout;
 import consulo.ide.impl.idea.ui.tabs.impl.singleRow.SingleRowPassInfo;

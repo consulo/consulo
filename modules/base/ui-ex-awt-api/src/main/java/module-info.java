@@ -25,6 +25,7 @@ module consulo.ui.ex.awt.api {
   requires static com.sun.jna.platform;
 
   exports consulo.ui.ex.awt;
+  exports consulo.ui.ex.awt.action;
   exports consulo.ui.ex.awt.accessibility;
   exports consulo.ui.ex.awt.event;
   exports consulo.ui.ex.awt.html;

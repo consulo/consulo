@@ -15,14 +15,13 @@
  */
 package consulo.ide.impl.idea.openapi.keymap;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.AllIcons;
 import consulo.application.util.registry.Registry;
 import consulo.application.util.registry.RegistryValue;
 import consulo.application.util.registry.RegistryValueListener;
 import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.util.ShortcutUtil;
 import consulo.ui.ex.keymap.Keymap;
@@ -297,21 +296,12 @@ public class KeymapUtil {
 
   @Nonnull
   public static String createTooltipText(@Nonnull String tooltipText, @Nonnull String actionId) {
-    String text = getFirstKeyboardShortcutText(actionId);
-    return text.isEmpty() ? tooltipText : tooltipText + " (" + text + ")";
+    return consulo.ui.ex.keymap.util.KeymapUtil.createTooltipText(tooltipText, actionId);
   }
 
   @Nonnull
   public static String createTooltipText(@Nullable String name, @Nonnull AnAction action) {
-    String toolTipText = name == null ? "" : name;
-    while (StringUtil.endsWithChar(toolTipText, '.')) {
-      toolTipText = toolTipText.substring(0, toolTipText.length() - 1);
-    }
-    String shortcutsText = getFirstKeyboardShortcutText(action);
-    if (!shortcutsText.isEmpty()) {
-      toolTipText += " (" + shortcutsText + ")";
-    }
-    return toolTipText;
+    return consulo.ui.ex.keymap.util.KeymapUtil.createTooltipText(name, action);
   }
 
   /**

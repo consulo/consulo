@@ -34,7 +34,7 @@ import consulo.ide.impl.idea.ide.ui.search.SearchUtil;
 import consulo.ide.impl.idea.ide.ui.search.SearchableOptionsRegistrar;
 import consulo.ide.impl.idea.openapi.options.ex.ConfigurableWrapper;
 import consulo.ide.impl.idea.openapi.options.ex.GlassPanel;
-import consulo.ide.impl.idea.openapi.ui.LoadingDecorator;
+import consulo.ui.ex.awt.LoadingDecorator;
 import consulo.ide.impl.idea.openapi.util.EdtRunnable;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.ui.speedSearch.ElementFilter;

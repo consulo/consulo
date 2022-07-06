@@ -21,7 +21,7 @@ package consulo.ide.impl.idea.ide.impl;
 
 import consulo.dataContext.DataProvider;
 import consulo.module.Module;
-import consulo.ide.impl.idea.openapi.ui.SimpleToolWindowPanel;
+import consulo.ui.ex.awt.SimpleToolWindowPanel;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;

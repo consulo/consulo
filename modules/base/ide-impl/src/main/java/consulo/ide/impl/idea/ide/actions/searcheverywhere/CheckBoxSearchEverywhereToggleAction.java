@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.CheckboxAction;
+import consulo.ui.ex.awt.action.CheckboxAction;
 import consulo.application.dumb.DumbAware;
 import javax.annotation.Nonnull;
 

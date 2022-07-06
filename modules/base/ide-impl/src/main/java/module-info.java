@@ -894,7 +894,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.ui.roots;
   exports consulo.ide.impl.idea.ui.speedSearch;
   exports consulo.ide.impl.idea.ui.stripe;
-  exports consulo.ide.impl.idea.ui.switcher;
   exports consulo.ide.impl.idea.ui.tabs;
   exports consulo.ide.impl.idea.ui.tabs.impl;
   exports consulo.ide.impl.idea.ui.tabs.impl.singleRow;

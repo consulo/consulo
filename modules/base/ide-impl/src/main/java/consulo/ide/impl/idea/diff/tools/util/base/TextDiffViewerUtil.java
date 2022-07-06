@@ -29,7 +29,7 @@ import consulo.application.AllIcons;
 import consulo.ide.impl.idea.internal.statistic.UsageTrigger;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ComboBoxAction;
+import consulo.ui.ex.awt.action.ComboBoxAction;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorPopupHandler;
 import consulo.codeEditor.ContextMenuPopupHandler;

@@ -16,23 +16,22 @@
 
 package consulo.ide.impl.idea.tasks.actions;
 
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ComboBoxAction;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.CustomComponentAction;
-import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
-import consulo.language.editor.CommonDataKeys;
-import consulo.project.Project;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
-import consulo.ui.ex.popup.JBPopup;
+import consulo.dataContext.DataContext;
+import consulo.ui.ex.awt.action.ComboBoxButtonImpl;
+import consulo.ui.ex.awt.action.ComboBoxAction;
+import consulo.ui.ex.awt.action.CustomComponentAction;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.tasks.LocalTask;
 import consulo.ide.impl.idea.tasks.TaskManager;
 import consulo.ide.impl.idea.tasks.config.TaskSettings;
-import consulo.ide.impl.actionSystem.ex.ComboBoxButtonImpl;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.popup.JBPopup;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -40,71 +39,59 @@ import javax.swing.*;
 /**
  * @author Dmitry Avdeev
  */
-public class SwitchTaskCombo extends ComboBoxAction implements DumbAware
-{
-	@Nonnull
-	public JComponent createCustomComponent(final Presentation presentation)
-	{
-		ComboBoxButtonImpl button = new ComboBoxButtonImpl(this, presentation);
-		return button;
-	}
+public class SwitchTaskCombo extends ComboBoxAction implements DumbAware {
+  @Nonnull
+  public JComponent createCustomComponent(final Presentation presentation, String place) {
+    return new ComboBoxButtonImpl(this, presentation);
+  }
 
-	@Nonnull
-	@Override
-	public JBPopup createPopup(@Nonnull JComponent component, @Nonnull DataContext context, @Nonnull Runnable onDispose)
-	{
-		return SwitchTaskAction.createPopup(context, onDispose, false);
-	}
+  @Nonnull
+  @Override
+  public JBPopup createPopup(@Nonnull JComponent component, @Nonnull DataContext context, @Nonnull Runnable onDispose) {
+    return SwitchTaskAction.createPopup(context, onDispose, false);
+  }
 
-	@RequiredUIAccess
-	@Override
-	public void update(@Nonnull AnActionEvent e)
-	{
-		Presentation presentation = e.getPresentation();
-		Project project = e.getData(CommonDataKeys.PROJECT);
-		ComboBoxButtonImpl button = (ComboBoxButtonImpl) presentation.getClientProperty(CustomComponentAction.COMPONENT_KEY);
-		if(project == null || project.isDefault() || project.isDisposed() || button == null)
-		{
-			presentation.setEnabled(false);
-			presentation.setText("");
-			presentation.setIcon(null);
-		}
-		else
-		{
-			TaskManager taskManager = TaskManager.getManager(project);
-			LocalTask activeTask = taskManager.getActiveTask();
-			presentation.setVisible(true);
-			presentation.setEnabled(true);
+  @RequiredUIAccess
+  @Override
+  public void update(@Nonnull AnActionEvent e) {
+    Presentation presentation = e.getPresentation();
+    Project project = e.getData(Project.KEY);
+    ComboBoxButtonImpl button = (ComboBoxButtonImpl)presentation.getClientProperty(CustomComponentAction.COMPONENT_KEY);
+    if (project == null || project.isDefault() || project.isDisposed() || button == null) {
+      presentation.setEnabled(false);
+      presentation.setText("");
+      presentation.setIcon(null);
+    }
+    else {
+      TaskManager taskManager = TaskManager.getManager(project);
+      LocalTask activeTask = taskManager.getActiveTask();
+      presentation.setVisible(true);
+      presentation.setEnabled(true);
 
-			if(isImplicit(activeTask) && taskManager.getAllRepositories().length == 0 && !TaskSettings.getInstance().ALWAYS_DISPLAY_COMBO)
-			{
-				presentation.setVisible(false);
-			}
-			else
-			{
-				String s = getText(activeTask);
-				presentation.setText(s);
-				presentation.setIcon(activeTask.getIcon());
-				presentation.setDescription(activeTask.getSummary());
-			}
-		}
-	}
+      if (isImplicit(activeTask) && taskManager.getAllRepositories().length == 0 && !TaskSettings.getInstance().ALWAYS_DISPLAY_COMBO) {
+        presentation.setVisible(false);
+      }
+      else {
+        String s = getText(activeTask);
+        presentation.setText(s);
+        presentation.setIcon(activeTask.getIcon());
+        presentation.setDescription(activeTask.getSummary());
+      }
+    }
+  }
 
-	@Nonnull
-	@Override
-	protected DefaultActionGroup createPopupActionGroup(JComponent button)
-	{
-		throw new IllegalArgumentException();
-	}
+  @Nonnull
+  @Override
+  protected DefaultActionGroup createPopupActionGroup(JComponent button) {
+    throw new IllegalArgumentException();
+  }
 
-	private static boolean isImplicit(LocalTask activeTask)
-	{
-		return activeTask.isDefault() && Comparing.equal(activeTask.getCreated(), activeTask.getUpdated());
-	}
+  private static boolean isImplicit(LocalTask activeTask) {
+    return activeTask.isDefault() && Comparing.equal(activeTask.getCreated(), activeTask.getUpdated());
+  }
 
-	private static String getText(LocalTask activeTask)
-	{
-		String text = activeTask.getPresentableName();
-		return StringUtil.first(text, 50, true);
-	}
+  private static String getText(LocalTask activeTask) {
+    String text = activeTask.getPresentableName();
+    return StringUtil.first(text, 50, true);
+  }
 }

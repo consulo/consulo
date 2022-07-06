@@ -54,7 +54,7 @@ import consulo.navigation.NonNavigatable;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.ide.impl.idea.ui.*;
 import consulo.ui.ex.awt.tree.AsyncTreeModel;
-import consulo.ide.impl.idea.ui.tree.StructureTreeModel;
+import consulo.ui.ex.awt.tree.StructureTreeModel;
 import consulo.ui.ex.awt.tree.TreePathUtil;
 import consulo.ui.ex.awt.tree.TreeVisitor;
 import consulo.ui.ex.awt.tree.Tree;

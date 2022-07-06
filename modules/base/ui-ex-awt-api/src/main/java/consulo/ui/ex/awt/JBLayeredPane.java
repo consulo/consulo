@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ui.switcher;
+package consulo.ui.ex.awt;
 
 import javax.swing.*;
+import java.awt.*;
 
-@Deprecated
-public interface QuickAccessProvider {
-  default JComponent getComponent() {
-    throw new AbstractMethodError();
-  }
+/**
+ * User: Vassiliy.Kudryashov
+ */
+public class JBLayeredPane extends JLayeredPane {
 
-  default boolean isCycleRoot() {
-    return false;
+  private static final Dimension EMPTY = new Dimension(0, 0);
+
+  @Override
+  public Dimension getMinimumSize() {
+    if (!isMinimumSizeSet())
+      return EMPTY;
+    return super.getMinimumSize();
   }
 }

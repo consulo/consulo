@@ -42,7 +42,7 @@ import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.PrevNextActionsDescriptor;
 import consulo.ui.ex.awt.SideBorder;
 import consulo.ui.ex.awt.TabbedPaneWrapper;
-import consulo.ide.impl.idea.ui.components.JBPanelWithEmptyText;
+import consulo.ui.ex.awt.JBPanelWithEmptyText;
 import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ui.ex.awt.Wrapper;
 import consulo.ide.impl.idea.ui.tabs.UiDecorator;

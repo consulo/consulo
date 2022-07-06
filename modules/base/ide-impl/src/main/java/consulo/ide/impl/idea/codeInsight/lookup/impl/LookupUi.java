@@ -21,7 +21,7 @@ import consulo.ui.ex.action.DumbAwareAction;
 import consulo.application.util.registry.Registry;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ide.impl.idea.ui.components.JBLayeredPane;
+import consulo.ui.ex.awt.JBLayeredPane;
 import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.JBScrollPane;
 import consulo.ui.ex.awt.NonOpaquePanel;

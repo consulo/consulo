@@ -22,7 +22,7 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.ui.ex.awt.CopyPasteManager;
-import consulo.ide.impl.idea.openapi.ui.LoadingDecorator;
+import consulo.ui.ex.awt.LoadingDecorator;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.*;
 import consulo.util.dataholder.Key;

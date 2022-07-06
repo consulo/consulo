@@ -19,7 +19,7 @@ import consulo.ide.impl.idea.openapi.ui.ThreeComponentsSplitter;
 import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.wm.impl.WindowInfoImpl;
 import consulo.ide.impl.idea.reference.SoftReference;
-import consulo.ide.impl.idea.ui.components.JBLayeredPane;
+import consulo.ui.ex.awt.JBLayeredPane;
 import consulo.application.ui.RemoteDesktopService;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;

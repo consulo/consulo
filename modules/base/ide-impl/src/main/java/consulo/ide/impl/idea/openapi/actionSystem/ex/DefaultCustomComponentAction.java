@@ -4,6 +4,8 @@ package consulo.ide.impl.idea.openapi.actionSystem.ex;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.awt.action.CustomComponentAction;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

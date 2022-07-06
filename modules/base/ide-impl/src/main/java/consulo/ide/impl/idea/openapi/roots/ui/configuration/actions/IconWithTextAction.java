@@ -15,12 +15,11 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.actions;
 
-import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.awt.action.CustomComponentAction;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButtonWithText;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.Presentation;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.CustomComponentAction;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButtonWithText;
 import consulo.ui.image.Image;
 
 import javax.swing.*;
@@ -39,11 +38,7 @@ public abstract class IconWithTextAction extends AnAction implements CustomCompo
     super(text, description, icon);
   }
 
-  public JComponent createCustomComponent(final Presentation presentation) {
-    return createCustomComponentImpl(this, presentation);
-  }
-
-  public static JComponent createCustomComponentImpl(final AnAction action, final Presentation presentation) {
-    return new ActionButtonWithText(action, presentation, ActionPlaces.UNKNOWN, ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE);
+  public JComponent createCustomComponent(final Presentation presentation, String place) {
+    return new ActionButtonWithText(this, presentation, place, ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE);
   }
 }

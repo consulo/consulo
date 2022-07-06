@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.execution.ui.layout.actions.MinimizeViewAction;
 import consulo.ide.impl.idea.execution.ui.layout.actions.RestoreViewAction;
 import consulo.ide.impl.idea.ide.actions.CloseAction;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.ui.switcher.QuickActionProvider;
+import consulo.ui.ex.action.QuickActionProvider;
 import consulo.ide.impl.idea.ui.tabs.JBTabs;
 import consulo.ide.impl.idea.ui.tabs.TabInfo;
 import consulo.ide.impl.idea.ui.tabs.TabsListener;

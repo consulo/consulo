@@ -45,7 +45,7 @@ import consulo.language.psi.search.PsiTodoSearchHelper;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.file.light.LightVirtualFile;
-import consulo.ide.impl.idea.ui.tree.StructureTreeModel;
+import consulo.ui.ex.awt.tree.StructureTreeModel;
 import consulo.usage.UsageTreeColorsScheme;
 import consulo.application.util.function.Processor;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

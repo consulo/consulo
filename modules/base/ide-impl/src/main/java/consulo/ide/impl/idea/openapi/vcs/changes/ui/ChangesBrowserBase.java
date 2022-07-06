@@ -24,7 +24,7 @@ import consulo.language.editor.PlatformDataKeys;
 import consulo.ui.ex.DeleteProvider;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.CheckboxAction;
+import consulo.ui.ex.awt.action.CheckboxAction;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.logging.Logger;
 import consulo.ide.impl.idea.openapi.fileChooser.actions.VirtualFileDeleteProvider;

@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.CustomComponentAction;
+import consulo.ui.ex.awt.action.CustomComponentAction;
 
 import javax.swing.*;
 import java.awt.*;
@@ -42,7 +42,7 @@ public abstract class LabeledComboBoxAction extends AnAction implements CustomCo
   public void actionPerformed(AnActionEvent e) {
   }
 
-  public JComponent createCustomComponent(Presentation presentation) {
+  public JComponent createCustomComponent(Presentation presentation, String place) {
     if (myPanel == null) {
       myPanel = new JPanel(new BorderLayout());
       myPanel.setBorder(BorderFactory.createEmptyBorder(0, 4, 0, 4));

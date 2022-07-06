@@ -22,7 +22,7 @@ import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.awt.tree.NodeRenderer;
 import consulo.ui.ex.tree.PresentableNodeDescriptor;
 import consulo.ui.ex.awt.tree.AsyncTreeModel;
-import consulo.ide.impl.idea.ui.tree.StructureTreeModel;
+import consulo.ui.ex.awt.tree.StructureTreeModel;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.facade.DesktopAWTTargetAWTImpl;

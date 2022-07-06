@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.execution.ui.layout.impl;
 
-import consulo.ide.impl.idea.ui.switcher.QuickActionProvider;
+import consulo.ui.ex.action.QuickActionProvider;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

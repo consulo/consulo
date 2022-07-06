@@ -16,42 +16,24 @@
 
 package consulo.ide.impl.idea.profile.codeInspection.ui;
 
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
-import consulo.language.editor.rawHighlight.HighlightDisplayKey;
-import consulo.language.editor.rawHighlight.HighlightInfoType;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.SeverityRegistrarImpl;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.SeverityUtil;
-import consulo.language.editor.ui.awt.HintUtil;
-import consulo.language.editor.inspection.scheme.*;
-import consulo.language.editor.inspection.InspectionsBundle;
-import consulo.ide.impl.idea.codeInspection.ex.*;
 import consulo.application.AllIcons;
-import consulo.ui.ex.awt.HintHint;
-import consulo.ui.ex.action.CommonActionsManager;
-import consulo.ide.impl.idea.ide.DefaultTreeExpander;
-import consulo.ui.ex.TreeExpander;
-import consulo.ide.impl.idea.ide.ui.search.SearchUtil;
-import consulo.ide.impl.idea.ide.ui.search.SearchableOptionsRegistrar;
-import consulo.language.editor.annotation.HighlightSeverity;
-import consulo.ui.ex.awt.*;
+import consulo.colorScheme.TextAttributes;
+import consulo.colorScheme.TextAttributesKey;
+import consulo.configurable.ConfigurationException;
+import consulo.content.scope.NamedScope;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.logging.Logger;
-import consulo.colorScheme.TextAttributesKey;
-import consulo.colorScheme.TextAttributes;
-import consulo.configurable.ConfigurationException;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
+import consulo.ide.impl.idea.codeInsight.daemon.impl.SeverityRegistrarImpl;
+import consulo.ide.impl.idea.codeInsight.daemon.impl.SeverityUtil;
+import consulo.ide.impl.idea.codeInspection.ex.*;
+import consulo.ide.impl.idea.ide.DefaultTreeExpander;
+import consulo.ide.impl.idea.ide.ui.search.SearchUtil;
+import consulo.ide.impl.idea.ide.ui.search.SearchableOptionsRegistrar;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.language.editor.inspection.scheme.ApplicationProfileManager;
 import consulo.ide.impl.idea.profile.DefaultProjectProfileManager;
-import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
-import consulo.language.editor.rawHighlight.SeverityProvider;
 import consulo.ide.impl.idea.profile.codeInspection.ui.filter.InspectionFilterAction;
 import consulo.ide.impl.idea.profile.codeInspection.ui.filter.InspectionsFilter;
 import consulo.ide.impl.idea.profile.codeInspection.ui.inspectionsTree.InspectionConfigTreeNode;
@@ -59,24 +41,34 @@ import consulo.ide.impl.idea.profile.codeInspection.ui.inspectionsTree.Inspectio
 import consulo.ide.impl.idea.profile.codeInspection.ui.inspectionsTree.InspectionsConfigTreeRenderer;
 import consulo.ide.impl.idea.profile.codeInspection.ui.inspectionsTree.InspectionsConfigTreeTable;
 import consulo.ide.impl.idea.profile.codeInspection.ui.table.ScopesAndSeveritiesTable;
-import consulo.content.scope.NamedScope;
-import consulo.ui.ex.awt.internal.GuiUtils;
-import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
-import consulo.ui.ex.awt.util.Alarm;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.config.StorageAccessors;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.Convertor;
-import consulo.ui.ex.awt.tree.TreeUtil;
-import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.annotation.HighlightSeverity;
+import consulo.language.editor.inspection.InspectionsBundle;
+import consulo.language.editor.inspection.scheme.*;
+import consulo.language.editor.rawHighlight.HighlightDisplayKey;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
+import consulo.language.editor.rawHighlight.HighlightInfoType;
+import consulo.language.editor.rawHighlight.SeverityProvider;
+import consulo.language.editor.ui.awt.HintUtil;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.ui.ex.TreeExpander;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.internal.GuiUtils;
+import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
+import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.TableUtil;
 import consulo.ui.ex.event.UserActivityListener;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.FocusManager;
 import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;
@@ -91,8 +83,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * User: anna
@@ -896,20 +888,10 @@ public class SingleInspectionProfilePanel extends JPanel {
                   }
                 };
         final HighlightSeverity severity =
-                ScopesAndSeveritiesTable.getSeverity(ContainerUtil.map(nodes, new Function<InspectionConfigTreeNode, ScopeToolState>() {
-                  @Override
-                  public ScopeToolState fun(InspectionConfigTreeNode node) {
-                    return node.getDefaultDescriptor().getState();
-                  }
-                }));
+                ScopesAndSeveritiesTable.getSeverity(ContainerUtil.map(nodes, node -> node.getDefaultDescriptor().getState()));
         severityLevelChooser.setChosen(severity);
 
-        final ScopesChooser scopesChooser = new ScopesChooser(ContainerUtil.map(nodes, new Function<InspectionConfigTreeNode, Descriptor>() {
-          @Override
-          public Descriptor fun(final InspectionConfigTreeNode node) {
-            return node.getDefaultDescriptor();
-          }
-        }), mySelectedProfile, project, null) {
+        final ScopesChooser scopesChooser = new ScopesChooser(ContainerUtil.map(nodes, node -> node.getDefaultDescriptor()), mySelectedProfile, project, null) {
           @Override
           protected void onScopesOrderChanged() {
             myTreeTable.updateUI();
@@ -926,11 +908,11 @@ public class SingleInspectionProfilePanel extends JPanel {
         severityPanel.add(new JLabel(InspectionsBundle.message("inspection.severity")),
                           new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL,
                                                  new Insets(10, 0, 10, 0), 0, 0));
-        final JComponent severityLevelChooserComponent = severityLevelChooser.createCustomComponent(severityLevelChooser.getTemplatePresentation());
+        final JComponent severityLevelChooserComponent = severityLevelChooser.createCustomComponent(severityLevelChooser.getTemplatePresentation(), ActionPlaces.UNKNOWN);
         severityPanel.add(severityLevelChooserComponent,
                           new GridBagConstraints(1, 0, 1, 1, 0, 1, GridBagConstraints.WEST, GridBagConstraints.BOTH,
                                                  new Insets(10, 0, 10, 0), 0, 0));
-        final JComponent scopesChooserComponent = scopesChooser.createCustomComponent(scopesChooser.getTemplatePresentation());
+        final JComponent scopesChooserComponent = scopesChooser.createCustomComponent(scopesChooser.getTemplatePresentation(), ActionPlaces.UNKNOWN);
         severityPanel.add(scopesChooserComponent,
                           new GridBagConstraints(2, 0, 1, 1, 0, 1, GridBagConstraints.WEST, GridBagConstraints.BOTH,
                                                  new Insets(10, 0, 10, 0), 0, 0));

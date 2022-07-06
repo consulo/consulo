@@ -19,7 +19,7 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.Presentation;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.CustomComponentAction;
+import consulo.ui.ex.awt.action.CustomComponentAction;
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
@@ -214,7 +214,7 @@ public class VcsLogClassicFilterUi implements VcsLogFilterUi {
     }
 
     @Override
-    public JComponent createCustomComponent(Presentation presentation) {
+    public JComponent createCustomComponent(Presentation presentation, String place) {
       return myComponentCreator.compute();
     }
 

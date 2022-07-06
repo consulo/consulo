@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.ide.actions.runAnything;
 
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.CustomComponentAction;
+import consulo.ui.ex.awt.action.CustomComponentAction;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButtonWithText;
 import consulo.ide.impl.idea.ui.ErrorLabel;
 import consulo.ide.impl.idea.ui.popup.ActionPopupStep;

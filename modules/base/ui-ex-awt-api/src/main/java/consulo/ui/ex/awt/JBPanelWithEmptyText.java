@@ -13,13 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ui.components;
+package consulo.ui.ex.awt;
 
-import consulo.ui.ex.awt.ComponentWithEmptyText;
 import consulo.ui.ex.awt.util.JBSwingUtilities;
-import consulo.ui.ex.awt.StatusText;
-import consulo.ui.ex.awt.JBPanel;
-import consulo.ui.ex.awt.UIUtil;
+
 import javax.annotation.Nonnull;
 
 import java.awt.*;

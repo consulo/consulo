@@ -23,7 +23,7 @@ import consulo.ui.ex.action.ExporterToTextFile;
 import consulo.ui.ex.action.ContextHelpAction;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ComboBoxAction;
+import consulo.ui.ex.awt.action.ComboBoxAction;
 import consulo.ide.impl.idea.openapi.components.impl.ProjectPathMacroManager;
 import consulo.ui.ex.awt.Messages;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;

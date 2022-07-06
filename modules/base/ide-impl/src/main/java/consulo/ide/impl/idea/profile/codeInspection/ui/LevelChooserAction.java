@@ -23,7 +23,7 @@ import consulo.ide.impl.idea.codeInsight.daemon.impl.SeverityUtil;
 import consulo.ide.impl.idea.codeInspection.ex.InspectionProfileImpl;
 import consulo.ide.impl.idea.codeInspection.ex.SeverityEditorDialog;
 import consulo.language.editor.annotation.HighlightSeverity;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ComboBoxAction;
+import consulo.ui.ex.awt.action.ComboBoxAction;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.language.editor.rawHighlight.SeverityProvider;

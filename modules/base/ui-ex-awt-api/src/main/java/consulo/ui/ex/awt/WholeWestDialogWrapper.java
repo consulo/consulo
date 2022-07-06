@@ -13,24 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.application;
+package consulo.ui.ex.awt;
 
-import consulo.dataContext.DataManager;
-import consulo.language.editor.CommonDataKeys;
-import consulo.project.Project;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.util.lang.Couple;
-import consulo.application.ui.WindowStateService;
-import consulo.ui.ex.awt.JBSplitter;
-import consulo.ui.ex.awt.OnePixelSplitter;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.application.ui.ApplicationWindowStateService;
+import consulo.application.ui.WindowStateService;
+import consulo.dataContext.DataManager;
+import consulo.project.Project;
 import consulo.project.ui.ProjectWindowStateService;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.lang.Couple;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
-import java.awt.Component;
 import java.awt.*;
 
 /**
@@ -128,7 +123,7 @@ public abstract class WholeWestDialogWrapper extends DialogWrapper {
 
     String dimensionKey = getDimensionKey();
     if (dimensionKey != null) {
-      final Project projectGuess = DataManager.getInstance().getDataContext(rightComponent).getData(CommonDataKeys.PROJECT);
+      final Project projectGuess = DataManager.getInstance().getDataContext(rightComponent).getData(Project.KEY);
       WindowStateService stateService = projectGuess == null ? ApplicationWindowStateService.getInstance() : ProjectWindowStateService.getInstance(projectGuess);
       Dimension size = stateService.getSize(dimensionKey);
       if (size == null) {

@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.codeInsight.hint;
 
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.ide.impl.idea.openapi.ui.LoadingDecorator;
+import consulo.ui.ex.awt.LoadingDecorator;
 import consulo.ide.impl.idea.ui.components.JBLoadingPanel;
 import consulo.application.NonBlockingReadAction;
 import consulo.application.util.concurrent.AppExecutorUtil;
