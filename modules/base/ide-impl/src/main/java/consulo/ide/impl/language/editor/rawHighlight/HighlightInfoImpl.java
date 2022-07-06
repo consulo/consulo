@@ -3,7 +3,7 @@ package consulo.ide.impl.language.editor.rawHighlight;
 
 import consulo.ide.impl.idea.codeInsight.daemon.impl.DefaultHighlightVisitorBasedInspection;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.SeverityRegistrarImpl;
-import consulo.ide.impl.idea.codeInspection.CustomSuppressableInspectionTool;
+import consulo.language.editor.inspection.CustomSuppressableInspectionTool;
 import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionToolWrapper;
 import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;

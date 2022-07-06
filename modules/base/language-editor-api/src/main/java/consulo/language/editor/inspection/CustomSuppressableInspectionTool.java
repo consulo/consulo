@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInspection;
+package consulo.language.editor.inspection;
 
 import consulo.language.editor.inspection.GlobalInspectionTool;
 import consulo.language.editor.inspection.LocalInspectionTool;

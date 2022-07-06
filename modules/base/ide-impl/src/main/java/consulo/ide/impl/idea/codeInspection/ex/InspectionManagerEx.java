@@ -26,13 +26,11 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.ide.impl.idea.codeInspection.CustomSuppressableInspectionTool;
 import consulo.ide.impl.idea.codeInspection.InspectionManagerBase;
 import consulo.ide.impl.idea.ide.ui.search.SearchableOptionsRegistrar;
 import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
 import consulo.ide.impl.idea.profile.codeInspection.ui.header.InspectionToolsConfigurable;
 import consulo.ide.impl.idea.ui.content.TabbedPaneContentUI;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.Language;
 import consulo.language.editor.inspection.*;
@@ -110,19 +108,14 @@ public class InspectionManagerEx extends InspectionManagerBase {
     if (actions.isEmpty()) {
       final Language language = toolWrapper.getLanguage();
       if (language != null) {
-        final List<InspectionSuppressor> suppressors = LanguageInspectionSuppressors.INSTANCE.allForLanguage(language);
+        final List<InspectionSuppressor> suppressors = InspectionSuppressor.forLanguage(language);
         for (InspectionSuppressor suppressor : suppressors) {
           final SuppressQuickFix[] suppressActions = suppressor.getSuppressActions(null, tool.getShortName());
           Collections.addAll(actions, suppressActions);
         }
       }
     }
-    return ContainerUtil.map2Array(actions, SuppressIntentionAction.class, new Function<LocalQuickFix, SuppressIntentionAction>() {
-      @Override
-      public SuppressIntentionAction fun(final LocalQuickFix fix) {
-        return SuppressIntentionActionFromFix.convertBatchToSuppressIntentionAction((SuppressQuickFix)fix);
-      }
-    });
+    return ContainerUtil.map2Array(actions, SuppressIntentionAction.class, fix -> SuppressIntentionActionFromFix.convertBatchToSuppressIntentionAction((SuppressQuickFix)fix));
   }
 
   private static void processText(@Nonnull @NonNls String descriptionText,

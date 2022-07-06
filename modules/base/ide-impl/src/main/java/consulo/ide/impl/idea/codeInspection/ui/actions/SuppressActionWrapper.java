@@ -4,41 +4,41 @@
  */
 package consulo.ide.impl.idea.codeInspection.ui.actions;
 
+import consulo.application.ApplicationManager;
 import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionContextImpl;
 import consulo.ide.impl.idea.codeInspection.ex.InspectionManagerEx;
-import consulo.language.editor.inspection.InspectionsBundle;
-import consulo.language.editor.inspection.SuppressIntentionActionFromFix;
-import consulo.language.editor.inspection.scheme.InspectionManager;
-import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
-import consulo.language.editor.inspection.reference.RefElement;
-import consulo.language.editor.inspection.reference.RefEntity;
 import consulo.ide.impl.idea.codeInspection.ui.InspectionTreeNode;
 import consulo.ide.impl.idea.codeInspection.ui.ProblemDescriptionNode;
 import consulo.ide.impl.idea.codeInspection.ui.RefElementNode;
 import consulo.language.editor.inspection.CommonProblemDescriptor;
+import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.editor.inspection.ProblemDescriptor;
+import consulo.language.editor.inspection.SuppressIntentionActionFromFix;
+import consulo.language.editor.inspection.reference.RefElement;
+import consulo.language.editor.inspection.reference.RefEntity;
+import consulo.language.editor.inspection.scheme.InspectionManager;
+import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.language.editor.intention.SuppressIntentionAction;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.CompactActionGroup;
-import consulo.application.ApplicationManager;
-import consulo.undoRedo.CommandProcessor;
-import consulo.logging.Logger;
-import consulo.project.Project;
-import consulo.util.lang.Pair;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.PsiModificationTracker;
 import consulo.language.util.IncorrectOperationException;
-import java.util.HashSet;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.CompactActionGroup;
 import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.undoRedo.CommandProcessor;
+import consulo.util.lang.Pair;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
+import java.util.HashSet;
 import java.util.Set;
 
 public class SuppressActionWrapper extends ActionGroup implements CompactActionGroup {
@@ -55,15 +55,12 @@ public class SuppressActionWrapper extends ActionGroup implements CompactActionG
     for (TreePath path : paths) {
       final Object node = path.getLastPathComponent();
       if (!(node instanceof TreeNode)) continue;
-      TreeUtil.traverse((TreeNode)node, new TreeUtil.Traverse() {
-        @Override
-        public boolean accept(final Object node) {    //fetch leaves
-          final InspectionTreeNode n = (InspectionTreeNode)node;
-          if (n.isLeaf()) {
-            myNodesToSuppress.add(n);
-          }
-          return true;
+      TreeUtil.traverse((TreeNode)node, node1 -> {    //fetch leaves
+        final InspectionTreeNode n = (InspectionTreeNode)node1;
+        if (n.isLeaf()) {
+          myNodesToSuppress.add(n);
         }
+        return true;
       });
     }
     myToolWrapper = toolWrapper;

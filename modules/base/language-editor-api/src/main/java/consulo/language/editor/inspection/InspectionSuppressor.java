@@ -15,18 +15,36 @@
  */
 package consulo.language.editor.inspection;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.application.Application;
+import consulo.component.extension.ExtensionPointCacheKey;
+import consulo.language.Language;
+import consulo.language.extension.ByLanguageValue;
+import consulo.language.extension.LanguageExtension;
+import consulo.language.extension.LanguageOneToMany;
 import consulo.language.psi.PsiElement;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
 
-public interface InspectionSuppressor {
+@ExtensionAPI(ComponentScope.APPLICATION)
+public interface InspectionSuppressor extends LanguageExtension {
+  ExtensionPointCacheKey<InspectionSuppressor, ByLanguageValue<List<InspectionSuppressor>>> KEY = ExtensionPointCacheKey.create("InspectionSuppressor", LanguageOneToMany.build(false));
+
+  @Nonnull
+  static List<InspectionSuppressor> forLanguage(@Nonnull Language language) {
+    return Application.get().getExtensionPoint(InspectionSuppressor.class).getOrBuildCache(KEY).requiredGet(language);
+  }
+
   /**
-   * @see consulo.ide.impl.idea.codeInspection.CustomSuppressableInspectionTool#isSuppressedFor(PsiElement)
+   * @see CustomSuppressableInspectionTool#isSuppressedFor(PsiElement)
    */
   boolean isSuppressedFor(@Nonnull PsiElement element, String toolId);
 
   /**
    * @see BatchSuppressableTool#getBatchSuppressActions(PsiElement)
    */
-  SuppressQuickFix[] getSuppressActions(@Nonnull PsiElement element, String toolShortName);
+  SuppressQuickFix[] getSuppressActions(@Nullable PsiElement element, String toolShortName);
 }
