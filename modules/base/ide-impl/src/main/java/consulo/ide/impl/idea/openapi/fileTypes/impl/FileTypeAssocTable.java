@@ -7,7 +7,7 @@ import consulo.virtualFileSystem.fileType.FileNameMatcher;
 import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
 import consulo.ide.impl.idea.util.ArrayUtilRt;
-import consulo.ide.impl.idea.util.text.CharSequenceHashingStrategy;
+import consulo.util.collection.CharSequenceHashingStrategy;
 import consulo.util.collection.Maps;
 import org.jetbrains.annotations.NonNls;
 

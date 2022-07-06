@@ -28,7 +28,7 @@ import consulo.ide.impl.idea.util.*;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.MostlySingularMultiMap;
 import consulo.ide.impl.idea.util.io.ReplicatorInputStream;
-import consulo.ide.impl.idea.util.text.CharSequenceHashingStrategy;
+import consulo.util.collection.CharSequenceHashingStrategy;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.util.LowMemoryWatcher;

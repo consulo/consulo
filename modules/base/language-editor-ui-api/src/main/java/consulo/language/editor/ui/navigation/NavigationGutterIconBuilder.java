@@ -15,7 +15,7 @@
  */
 package consulo.language.editor.ui.navigation;
 
-import consulo.application.util.TypePresentationService;
+import consulo.application.presentation.TypePresentationService;
 import consulo.application.util.function.Computable;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.language.editor.Pass;
@@ -52,7 +52,7 @@ public class NavigationGutterIconBuilder<T> {
   private static final String PATTERN = "&nbsp;&nbsp;&nbsp;&nbsp;{0}";
   protected static final Function<PsiElement, Collection<? extends PsiElement>> DEFAULT_PSI_CONVERTOR = element -> ContainerUtil.createMaybeSingletonList(element);
 
-  protected static final Function DEFAULT_NAMER = dom -> TypePresentationService.getInstance().getTypePresentableName(dom.getClass());
+  protected static final Function DEFAULT_NAMER = dom -> TypePresentationService.getInstance().getTypeNameOrStub(dom);
 
   private final Image myIcon;
   private final Function<T, Collection<? extends PsiElement>> myConverter;

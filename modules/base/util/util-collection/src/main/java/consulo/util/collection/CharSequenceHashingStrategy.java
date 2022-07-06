@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util.text;
+package consulo.util.collection;
 
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.util.collection.HashingStrategy;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 
 /**
  * @author max
@@ -25,12 +24,8 @@ import consulo.util.collection.HashingStrategy;
 public final class CharSequenceHashingStrategy implements HashingStrategy<CharSequence> {
   public static final CharSequenceHashingStrategy CASE_SENSITIVE = new CharSequenceHashingStrategy(true);
   public static final CharSequenceHashingStrategy CASE_INSENSITIVE = new CharSequenceHashingStrategy(false);
-  private final boolean myCaseSensitive;
 
-  @Deprecated
-  public CharSequenceHashingStrategy() {
-    this(true);
-  }
+  private final boolean myCaseSensitive;
 
   private CharSequenceHashingStrategy(boolean caseSensitive) {
     myCaseSensitive = caseSensitive;

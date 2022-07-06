@@ -38,7 +38,7 @@ import java.util.function.Function;
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ElementManipulator<T extends PsiElement> {
   ExtensionPointCacheKey<ElementManipulator, Function<Class, ElementManipulator>> KEY =
-          ExtensionPointCacheKey.create("ItemPresentationProvider", ByClassGrouper.build(ElementManipulator::getElementClass));
+          ExtensionPointCacheKey.create("ElementManipulator", ByClassGrouper.build(ElementManipulator::getElementClass));
 
   @Nullable
   @SuppressWarnings("unchecked")

@@ -17,7 +17,7 @@ package consulo.language.impl.internal.psi;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
-import consulo.application.util.TypePresentationService;
+import consulo.application.presentation.TypePresentationService;
 import consulo.language.Language;
 import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.language.impl.psi.RenameableFakePsiElement;

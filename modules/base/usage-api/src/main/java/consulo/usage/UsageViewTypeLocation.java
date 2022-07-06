@@ -16,7 +16,7 @@
 
 package consulo.usage;
 
-import consulo.application.util.TypePresentationService;
+import consulo.application.presentation.TypePresentationService;
 import consulo.language.LangBundle;
 import consulo.language.Language;
 import consulo.language.findUsage.FindUsagesProvider;
@@ -68,7 +68,7 @@ public class UsageViewTypeLocation extends ElementDescriptionLocation {
         return type;
       }
 
-      return TypePresentationService.getInstance().getTypePresentableName(psiElement.getClass());
+      return TypePresentationService.getInstance().getTypeNameOrStub(psiElement);
     }
   };
 }

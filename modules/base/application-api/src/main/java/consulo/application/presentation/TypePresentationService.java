@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.application.util;
+package consulo.application.presentation;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
@@ -45,11 +45,13 @@ public abstract class TypePresentationService {
   public abstract Image getTypeIcon(Class type);
 
   @Nullable
-  public abstract String getTypePresentableName(Class type);
-
-  @Nullable
   public abstract String getTypeName(Object o);
 
+  @Nonnull
+  public String getTypeNameOrStub(Object o) {
+    String typeName = getTypeName(o);
+    return typeName != null ? typeName : getDefaultTypeName(o.getClass());
+  }
 
   public static String getDefaultTypeName(final Class aClass) {
     String simpleName = aClass.getSimpleName();

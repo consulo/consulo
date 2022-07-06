@@ -16,7 +16,7 @@
 package consulo.ide.impl.psi.impl;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.util.TypePresentationService;
+import consulo.application.presentation.TypePresentationService;
 import consulo.language.editor.highlight.HighlightUsagesDescriptionLocation;
 import consulo.language.pom.PomDescriptionProvider;
 import consulo.language.pom.PomNamedTarget;
@@ -51,8 +51,6 @@ public class DefaultPomTargetDescriptionProvider extends PomDescriptionProvider 
   }
 
   private static String getTypeName(PomTarget element) {
-
-    final String s = TypePresentationService.getInstance().getTypePresentableName(element.getClass());
-    return s == null ? "Element" : s;
+    return TypePresentationService.getInstance().getTypeNameOrStub(element);
   }
 }

@@ -31,6 +31,7 @@ module consulo.application.api {
   exports consulo.application.extension;
   exports consulo.application.progress;
   exports consulo.application.macro;
+  exports consulo.application.presentation;
 
   exports consulo.application.internal to
           consulo.ide.impl,

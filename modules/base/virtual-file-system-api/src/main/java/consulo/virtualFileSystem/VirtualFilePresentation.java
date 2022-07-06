@@ -1,7 +1,7 @@
 package consulo.virtualFileSystem;
 
 import consulo.application.AllIcons;
-import consulo.application.util.TypePresentationService;
+import consulo.application.presentation.TypePresentationService;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

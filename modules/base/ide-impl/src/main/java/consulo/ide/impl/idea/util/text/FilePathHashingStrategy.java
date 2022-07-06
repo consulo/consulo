@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.util.text;
 
 import consulo.application.util.SystemInfo;
+import consulo.util.collection.CharSequenceHashingStrategy;
 import consulo.util.collection.HashingStrategy;
 
 import javax.annotation.Nonnull;

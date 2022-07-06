@@ -16,7 +16,7 @@ import consulo.ide.impl.idea.util.concurrency.AtomicFieldUpdater;
 import consulo.ide.impl.idea.util.containers.ConcurrentBitSet;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.lang.ByteArrayCharSequence;
-import consulo.ide.impl.idea.util.text.CharSequenceHashingStrategy;
+import consulo.util.collection.CharSequenceHashingStrategy;
 import consulo.logging.Logger;
 import consulo.util.collection.Sets;
 import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;

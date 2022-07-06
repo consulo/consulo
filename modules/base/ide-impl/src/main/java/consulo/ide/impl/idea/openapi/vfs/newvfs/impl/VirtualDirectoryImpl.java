@@ -23,7 +23,7 @@ import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.ObjectUtil;
 import consulo.util.lang.function.PairConsumer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.text.CharSequenceHashingStrategy;
+import consulo.util.collection.CharSequenceHashingStrategy;
 import consulo.logging.Logger;
 import consulo.util.collection.Sets;
 import consulo.util.collection.primitive.ints.IntList;
