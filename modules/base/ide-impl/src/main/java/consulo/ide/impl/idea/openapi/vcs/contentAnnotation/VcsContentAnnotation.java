@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.contentAnnotation;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.vcs.RichTextItem;
 import consulo.ide.impl.idea.openapi.vcs.history.VcsRevisionNumber;
@@ -29,6 +31,7 @@ import java.util.List;
  * Date: 8/3/11
  * Time: 12:50 PM
  */
+@ServiceAPI(ComponentScope.PROJECT)
 public interface VcsContentAnnotation {
   @Nullable
   VcsRevisionNumber fileRecentlyChanged(final VirtualFile vf);

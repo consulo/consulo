@@ -70,7 +70,7 @@ public class NotificationProjectTracker implements Disposable {
       printNotification(notification);
     }
 
-    project.getMessageBus().connect(project).subscribe(Notifications.TOPIC, new NotificationsAdapter() {
+    project.getMessageBus().connect(project).subscribe(Notifications.class, new NotificationsAdapter() {
       @Override
       public void notify(@Nonnull Notification notification) {
         printNotification(notification);

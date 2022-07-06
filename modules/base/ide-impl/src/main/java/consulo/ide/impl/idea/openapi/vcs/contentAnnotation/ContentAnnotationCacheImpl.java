@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.contentAnnotation;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.vcs.VcsKey;
 import consulo.ide.impl.idea.openapi.vcs.actions.VcsContextFactory;
@@ -34,12 +35,12 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 /**
-* Created by IntelliJ IDEA.
 * User: Irina.Chernushina
 * Date: 8/8/11
 * Time: 8:26 PM
 */
 @Singleton
+@ServiceImpl
 public class ContentAnnotationCacheImpl implements ContentAnnotationCache {
   private final SLRUMap<HistoryCacheWithRevisionKey, TreeMap<Integer, Long>> myCache;
   private final Object myLock;

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.contentAnnotation;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
@@ -34,12 +35,12 @@ import jakarta.inject.Singleton;
 import java.util.Date;
 
 /**
- * Created by IntelliJ IDEA.
  * User: Irina.Chernushina
  * Date: 8/3/11
  * Time: 1:04 PM
  */
 @Singleton
+@ServiceImpl
 public class VcsContentAnnotationImpl implements VcsContentAnnotation {
   private final Project myProject;
   private final VcsContentAnnotationSettings mySettings;

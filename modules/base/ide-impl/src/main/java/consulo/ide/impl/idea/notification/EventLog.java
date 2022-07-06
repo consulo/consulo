@@ -83,7 +83,7 @@ public class EventLog {
   public EventLog(Application application) {
     myModel = new LogModel(null, application);
 
-    application.getMessageBus().connect().subscribe(Notifications.TOPIC, new NotificationsAdapter() {
+    application.getMessageBus().connect().subscribe(Notifications.class, new NotificationsAdapter() {
       @Override
       public void notify(@Nonnull Notification notification) {
         final Project[] openProjects = ProjectManager.getInstance().getOpenProjects();

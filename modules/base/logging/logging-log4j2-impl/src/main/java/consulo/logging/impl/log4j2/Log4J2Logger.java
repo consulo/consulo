@@ -16,19 +16,19 @@
 package consulo.logging.impl.log4j2;
 
 import consulo.application.Application;
-import consulo.application.impl.internal.ApplicationInfo;
 import consulo.application.ApplicationManager;
-import consulo.undoRedo.CommandProcessor;
+import consulo.application.impl.internal.ApplicationInfo;
 import consulo.application.util.logging.IdeaLoggingEvent;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
+import consulo.ide.impl.actionSystem.impl.LastActionTracker;
 import consulo.logging.Logger;
 import consulo.logging.LoggerLevel;
 import consulo.platform.Platform;
-import consulo.ide.impl.actionSystem.impl.LastActionTracker;
+import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.ControlFlowException;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.ThreeState;
 import consulo.util.lang.reflect.ReflectionUtil;
 import org.apache.logging.log4j.Level;
@@ -106,12 +106,7 @@ public class Log4J2Logger implements Logger {
     org.apache.logging.log4j.Logger logger = logger();
     
     if (t instanceof ControlFlowException) {
-      logger.error(new Throwable("Do not log ProcessCanceledException").initCause(t));
-      throw (RuntimeException)t;
-    }
-
-    if (t != null && t.getClass().getName().contains("ReparsedSuccessfullyException")) {
-      logger.error(new Throwable("Do not log ReparsedSuccessfullyException").initCause(t));
+      logger.error(new Throwable("Do not log " + t).initCause(t));
       throw (RuntimeException)t;
     }
 

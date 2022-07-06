@@ -20,7 +20,6 @@ import consulo.annotation.component.TopicAPI;
 import consulo.annotation.component.TopicBroadcastDirection;
 import consulo.application.Application;
 import consulo.application.util.concurrent.AppExecutorUtil;
-import consulo.component.messagebus.TopicImpl;
 import consulo.project.Project;
 
 import javax.annotation.Nonnull;
@@ -33,8 +32,6 @@ import java.util.concurrent.TimeUnit;
 // FIXME [VISTALL] this topic is App&Project level
 @TopicAPI(value = ComponentScope.APPLICATION, direction = TopicBroadcastDirection.NONE)
 public interface Notifications {
-  TopicImpl<Notifications> TOPIC = TopicImpl.create("Notifications", Notifications.class, TopicBroadcastDirection.NONE);
-
   String SYSTEM_MESSAGES_GROUP_ID = "System Messages";
 
   void notify(@Nonnull Notification notification);
@@ -53,7 +50,7 @@ public interface Notifications {
       Application application = Application.get();
       application.getLastUIAccess().give(() -> {
         if (!application.isDisposed()) {
-          application.getMessageBus().syncPublisher(TOPIC).register(group_id, defaultDisplayType);
+          application.getMessageBus().syncPublisher(Notifications.class).register(group_id, defaultDisplayType);
         }
       });
     }
@@ -68,12 +65,12 @@ public interface Notifications {
 
     private static void doNotify(Notification notification, @Nullable Project project) {
       if (project != null && !project.isDisposed()) {
-        project.getMessageBus().syncPublisher(TOPIC).notify(notification);
+        project.getMessageBus().syncPublisher(Notifications.class).notify(notification);
       }
       else {
         Application app = Application.get();
         if (!app.isDisposed()) {
-          app.getMessageBus().syncPublisher(TOPIC).notify(notification);
+          app.getMessageBus().syncPublisher(Notifications.class).notify(notification);
         }
       }
     }

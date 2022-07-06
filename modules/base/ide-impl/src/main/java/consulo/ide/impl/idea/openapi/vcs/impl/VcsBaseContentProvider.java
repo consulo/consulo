@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.impl;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.ide.impl.idea.openapi.vcs.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.VirtualFile;
@@ -26,8 +28,9 @@ import javax.annotation.Nullable;
  *         Date: 2/28/11
  *         Time: 1:12 PM
  */
+@ExtensionAPI(ComponentScope.PROJECT)
 public interface VcsBaseContentProvider {
-  ExtensionPointName<VcsBaseContentProvider> EP_NAME = ExtensionPointName.create("consulo.vcs.baseContentProvider");
+  ExtensionPointName<VcsBaseContentProvider> EP_NAME = ExtensionPointName.create(VcsBaseContentProvider.class);
 
   @Nullable
   BaseContent getBaseRevision(@Nonnull VirtualFile file);

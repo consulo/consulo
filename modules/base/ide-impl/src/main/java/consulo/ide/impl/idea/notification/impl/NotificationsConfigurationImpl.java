@@ -16,16 +16,17 @@
 package consulo.ide.impl.idea.notification.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.project.ui.notification.NotificationDisplayType;
-import consulo.project.ui.notification.NotificationGroup;
-import consulo.ide.impl.idea.notification.NotificationsConfiguration;
 import consulo.application.Application;
+import consulo.component.messagebus.MessageBus;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import consulo.component.messagebus.MessageBus;
 import consulo.disposer.Disposable;
+import consulo.ide.impl.idea.notification.NotificationsConfiguration;
 import consulo.logging.Logger;
+import consulo.project.ui.notification.NotificationDisplayType;
+import consulo.project.ui.notification.NotificationGroup;
+import consulo.project.ui.notification.Notifications;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -122,7 +123,7 @@ public class NotificationsConfigurationImpl extends NotificationsConfiguration i
 
   @Override
   public void afterLoadState() {
-    myMessageBus.connect().subscribe(TOPIC, this);
+    myMessageBus.connect().subscribe(Notifications.class, this);
   }
 
   @Override

@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.contentAnnotation;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.vcs.VcsKey;
 import consulo.ide.impl.idea.openapi.vcs.annotate.FileAnnotation;
@@ -22,15 +24,16 @@ import consulo.ide.impl.idea.openapi.vcs.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.util.lang.ThreeState;
 
+import javax.annotation.Nullable;
+
 /**
- * Created by IntelliJ IDEA.
  * User: Irina.Chernushina
  * Date: 8/8/11
  * Time: 8:14 PM
- * To change this template use File | Settings | File Templates.
  */
+@ServiceAPI(ComponentScope.PROJECT)
 public interface ContentAnnotationCache {
-  @javax.annotation.Nullable
+  @Nullable
   ThreeState isRecent(VirtualFile vf, VcsKey vcsKey, VcsRevisionNumber number, TextRange range, long boundTime);
 
   void register(VirtualFile vf, VcsKey vcsKey, VcsRevisionNumber number, FileAnnotation fa);

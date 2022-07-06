@@ -16,61 +16,52 @@
 package consulo.ide.impl.idea.notification.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.ide.FrameStateManager;
-import consulo.ide.impl.idea.notification.*;
-import consulo.ide.impl.idea.notification.impl.ui.NotificationsUtil;
-import consulo.project.ui.notification.*;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.project.ui.notification.event.NotificationListener;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.internal.ApplicationEx;
-import consulo.ui.ex.awt.internal.DialogWrapperDialog;
-import consulo.ui.ex.popup.BalloonBuilder;
-import consulo.ui.ex.awt.*;
-import consulo.ui.ex.awt.util.ColorUtil;
-import consulo.ui.ex.popup.event.JBPopupAdapter;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.ui.*;
-import consulo.ide.impl.idea.ui.components.GradientViewport;
-import consulo.ui.ex.awt.LinkLabel;
-import consulo.ui.ex.awt.LinkListener;
-import consulo.ide.impl.idea.ui.components.panels.HorizontalLayout;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.Function;
-import consulo.ide.impl.idea.util.IconUtil;
-import consulo.ui.ex.awt.AbstractLayoutManager;
-import consulo.ui.ex.awt.JBHtmlEditorKit;
 import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAwareRunnable;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.internal.ApplicationEx;
 import consulo.application.util.SystemInfo;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.ide.FrameStateManager;
+import consulo.ide.impl.idea.notification.EventLog;
+import consulo.ide.impl.idea.notification.NotificationsAdapter;
+import consulo.ide.impl.idea.notification.impl.ui.NotificationsUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.ui.*;
+import consulo.ide.impl.idea.ui.components.GradientViewport;
+import consulo.ide.impl.idea.ui.components.panels.HorizontalLayout;
+import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.ide.impl.idea.util.Function;
+import consulo.ide.impl.idea.util.IconUtil;
+import consulo.ide.impl.start.WelcomeFrameManager;
+import consulo.ide.impl.ui.impl.BalloonLayoutEx;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.startup.StartupManager;
+import consulo.project.ui.notification.*;
+import consulo.project.ui.notification.event.NotificationListener;
 import consulo.project.ui.wm.BalloonLayout;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.WindowManager;
-import consulo.ide.impl.start.WelcomeFrameManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
-import consulo.ui.ex.awt.JBCurrentTheme;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.ActionPopupMenu;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.internal.DialogWrapperDialog;
+import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ide.impl.ui.impl.BalloonLayoutEx;
 import consulo.ui.ex.popup.Balloon;
+import consulo.ui.ex.popup.BalloonBuilder;
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ui.ex.popup.event.JBPopupAdapter;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
+import consulo.util.lang.Pair;
 import consulo.util.lang.ref.Ref;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -102,8 +93,9 @@ public class NotificationsManagerImpl extends NotificationsManager {
   public static final Color FILL_COLOR = JBColor.namedColor("Notification.background", new JBColor(Gray._242, new Color(0x4E5052)));
   public static final Color BORDER_COLOR = JBColor.namedColor("Notification.borderColor", new JBColor(0xCDB2B2B2, 0xCD565A5C));
 
-  public NotificationsManagerImpl() {
-    ApplicationManager.getApplication().getMessageBus().connect().subscribe(Notifications.TOPIC, new MyNotificationListener(null));
+  @Inject
+  public NotificationsManagerImpl(Application application) {
+    application.getMessageBus().connect().subscribe(Notifications.class, new MyNotificationListener(null));
   }
 
   @Override
@@ -126,7 +118,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
     return ArrayUtil.toObjectArray(result, klass);
   }
 
-  private static void doNotify(@Nonnull final Notification notification, @Nullable NotificationDisplayType displayType, @Nullable final Project project) {
+  static void doNotify(@Nonnull final Notification notification, @Nullable NotificationDisplayType displayType, @Nullable final Project project) {
     final NotificationsConfigurationImpl configuration = NotificationsConfigurationImpl.getInstanceImpl();
     if (!configuration.isRegistered(notification.getGroupId())) {
       configuration.register(notification.getGroupId(), displayType == null ? NotificationDisplayType.BALLOON : displayType);
@@ -953,17 +945,6 @@ public class NotificationsManagerImpl extends NotificationsManager {
   private static boolean isDummyEnvironment() {
     final Application application = ApplicationManager.getApplication();
     return application.isUnitTestMode() || application.isCommandLine();
-  }
-
-  @Singleton
-  public static class ProjectNotificationsComponent {
-    @Inject
-    public ProjectNotificationsComponent(@Nonnull final Project project) {
-      if (isDummyEnvironment() || !project.getApplication().isSwingApplication()) {
-        return;
-      }
-      project.getMessageBus().connect().subscribe(Notifications.TOPIC, new MyNotificationListener(project));
-    }
   }
 
   private static class DropDownAction extends LinkLabel<Void> {
