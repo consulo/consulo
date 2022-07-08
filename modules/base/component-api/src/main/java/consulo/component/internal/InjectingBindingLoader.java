@@ -56,39 +56,68 @@ public class InjectingBindingLoader {
       // and when load META-INF service loader will skip class, if it from named module (and we have all named)
       // that why load only from module-info
       if (moduleLayer != null) {
-        loader = ServiceLoader.load(moduleLayer, InjectingBinding.class);
+        loadInModuleMode(moduleLayer, pluginDescriptor, processed);
       }
       else {
-        loader = ServiceLoader.load(InjectingBinding.class, pluginDescriptor.getPluginClassLoader());
-      }
-
-      Iterator<ServiceLoader.Provider<InjectingBinding>> iterator = loader.stream().iterator();
-      while (iterator.hasNext()) {
-        ServiceLoader.Provider<InjectingBinding> provider = iterator.next();
-
-        ClassLoader classLoader = provider.type().getClassLoader();
-
-        // if we loaded binding by another plugin - stop it, since we it will be called #getParent()
-        if (classLoader != pluginDescriptor.getPluginClassLoader()) {
-          break;
-        }
-
-        if (!processed.add(provider.type())) {
-          throw new IllegalArgumentException("Duplicate registration of binding: " + provider.type());
-        }
-
-        InjectingBinding binding = provider.get();
-        try {
-          getHolder(binding.getComponentAnnotationClass(), binding.getComponentScope()).addBinding(binding);
-        }
-        catch (Error e) {
-          // TODO [VISTALL] log may not initialized here
-          e.printStackTrace();
-        }
+        loadInLegacyMode(pluginDescriptor, processed);
       }
     }
 
     myLocked.set(true);
+  }
+
+  private void loadInLegacyMode(@Nonnull PluginDescriptor pluginDescriptor, @Nonnull Set<Class> processed) {
+    ServiceLoader<InjectingBinding> loader = ServiceLoader.load(InjectingBinding.class, pluginDescriptor.getPluginClassLoader());
+
+    for (InjectingBinding binding : loader) {
+      ClassLoader classLoader = binding.getClass().getClassLoader();
+
+      // if we loaded binding by another plugin - stop it, since we it will be called #getParent()
+      if (classLoader != pluginDescriptor.getPluginClassLoader()) {
+        continue;
+      }
+
+      if (!processed.add(binding.getClass())) {
+        throw new IllegalArgumentException("Duplicate registration of binding: " + binding.getClass());
+      }
+
+      try {
+        getHolder(binding.getComponentAnnotationClass(), binding.getComponentScope()).addBinding(binding);
+      }
+      catch (Error e) {
+        // TODO [VISTALL] log may not initialized here
+        e.printStackTrace();
+      }
+    }
+  }
+
+  private void loadInModuleMode(@Nonnull ModuleLayer moduleLayer, @Nonnull PluginDescriptor pluginDescriptor, @Nonnull Set<Class> processed) {
+    ServiceLoader<InjectingBinding> loader = ServiceLoader.load(moduleLayer, InjectingBinding.class);
+
+    Iterator<ServiceLoader.Provider<InjectingBinding>> iterator = loader.stream().iterator();
+    while (iterator.hasNext()) {
+      ServiceLoader.Provider<InjectingBinding> provider = iterator.next();
+
+      ClassLoader classLoader = provider.type().getClassLoader();
+
+      // if we loaded binding by another plugin - stop it, since we it will be called #getParent()
+      if (classLoader != pluginDescriptor.getPluginClassLoader()) {
+        break;
+      }
+
+      if (!processed.add(provider.type())) {
+        throw new IllegalArgumentException("Duplicate registration of binding: " + provider.type());
+      }
+
+      InjectingBinding binding = provider.get();
+      try {
+        getHolder(binding.getComponentAnnotationClass(), binding.getComponentScope()).addBinding(binding);
+      }
+      catch (Error e) {
+        // TODO [VISTALL] log may not initialized here
+        e.printStackTrace();
+      }
+    }
   }
 
   @Nonnull
