@@ -65,6 +65,9 @@ module consulo.ide.api {
   exports consulo.ide.setting.bundle;
   exports consulo.ide.setting.ui;
   exports consulo.ide.setting.module.event;
+  exports consulo.ide.moduleImport;
+  exports consulo.ide.newModule;
+  exports consulo.ide.newModule.ui;
   exports consulo.ide.ui;
   exports consulo.ide.ui.popup;
   exports consulo.ide.util;

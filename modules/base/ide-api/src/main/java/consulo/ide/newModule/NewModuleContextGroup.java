@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.newProject.node;
+package consulo.ide.newModule;
 
-import consulo.ide.impl.newProject.NewModuleBuilderProcessor;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 

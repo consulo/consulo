@@ -13,21 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl;
+package consulo.ide.newModule;
 
-import consulo.module.content.layer.ModifiableRootModel;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.io.ZipUtil;
-import consulo.ide.impl.newProject.NewModuleBuilderProcessor;
-import consulo.ide.impl.wizard.newModule.NewModuleWizardContext;
+import consulo.ide.util.ZipUtil;
 import consulo.logging.Logger;
+import consulo.module.content.layer.ModifiableRootModel;
+import consulo.util.io.FileUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 /**
  * @author VISTALL
@@ -50,10 +50,10 @@ public abstract class UnzipNewModuleBuilderProcessor<C extends NewModuleWizardCo
     }
     try {
       File tempFile = FileUtil.createTempFile("template", "zip");
-      FileUtil.writeToFile(tempFile, FileUtil.loadBytes(resourceAsStream));
+      Files.copy(resourceAsStream, tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
       final VirtualFile moduleDir = model.getModule().getModuleDir();
 
-      File outputDir = VfsUtil.virtualToIoFile(moduleDir);
+      File outputDir = VirtualFileUtil.virtualToIoFile(moduleDir);
 
       ZipUtil.extract(tempFile, outputDir, null);
     }

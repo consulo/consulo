@@ -13,19 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.moduleImport;
+package consulo.ide.moduleImport;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
+import consulo.ide.newModule.ui.UnifiedProjectOrModuleNameStep;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.annotation.access.RequiredReadAction;
-import consulo.ide.impl.newProject.ui.UnifiedProjectOrModuleNameStep;
+import consulo.ui.ex.wizard.WizardStep;
 import consulo.ui.image.Image;
-import consulo.ide.impl.ui.wizard.WizardStep;
+import consulo.virtualFileSystem.VirtualFile;
 import org.intellij.lang.annotations.Language;
 
 import javax.annotation.Nonnull;

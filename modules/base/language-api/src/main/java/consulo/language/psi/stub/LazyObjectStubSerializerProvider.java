@@ -62,10 +62,6 @@ class LazyObjectStubSerializerProvider implements ObjectStubSerializerProvider {
       catch (IllegalAccessException e) {
         throw new RuntimeException(e);
       }
-      if (!delegate.getExternalId().equals(myExternalIdPrefix)) {
-        throw new IllegalStateException(
-                "External id mismatch in " + this + ". " + "Judging by extension declaration it should be " + myExternalIdPrefix + " but " + delegate.getExternalId() + " is returned.");
-      }
     }
     return delegate;
   }

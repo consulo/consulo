@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,47 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.wizard.newModule;
+package consulo.ide.moduleImport;
+
+import consulo.disposer.Disposable;
+import consulo.ide.newModule.NewModuleWizardContext;
+import consulo.project.Project;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 2019-08-20
+ * @since 30-Jan-17
  */
-public class NewModuleWizardContextBase implements NewModuleWizardContext {
+public class ModuleImportContext implements NewModuleWizardContext, Disposable {
+  @Nullable
+  private final Project myProject;
+  private String myFileToImport;
+
   private String myName;
   private String myPath;
 
-  private final boolean myIsNewProject;
+  public ModuleImportContext(@Nullable Project project) {
+    myProject = project;
+  }
 
-  public NewModuleWizardContextBase(boolean isNewProject) {
-    myIsNewProject = isNewProject;
+  public void setFileToImport(String fileToImport) {
+    myFileToImport = fileToImport;
+  }
+
+  public String getFileToImport() {
+    return myFileToImport;
+  }
+
+  @Override
+  @Nullable
+  public Project getProject() {
+    return myProject;
+  }
+
+  @Override
+  public void dispose() {
   }
 
   @Override
@@ -55,6 +80,6 @@ public class NewModuleWizardContextBase implements NewModuleWizardContext {
 
   @Override
   public boolean isNewProject() {
-    return myIsNewProject;
+    return myProject == null;
   }
 }

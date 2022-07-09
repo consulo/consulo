@@ -18,6 +18,8 @@ package consulo.ide.impl.moduleImport;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.impl.ProjectUtil;
 import consulo.ide.impl.idea.ide.impl.util.NewOrImportModuleUtil;
+import consulo.ide.moduleImport.ModuleImportContext;
+import consulo.ide.moduleImport.ModuleImportProvider;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;

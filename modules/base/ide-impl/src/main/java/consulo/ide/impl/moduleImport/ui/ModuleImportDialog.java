@@ -21,13 +21,13 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.ui.JBCardLayout;
-import consulo.ide.impl.moduleImport.ModuleImportContext;
-import consulo.ide.impl.moduleImport.ModuleImportProvider;
+import consulo.ide.moduleImport.ModuleImportContext;
+import consulo.ide.moduleImport.ModuleImportProvider;
 import consulo.ide.impl.start.WelcomeFrameManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.Size;
-import consulo.ide.impl.ui.wizard.WizardSession;
-import consulo.ide.impl.ui.wizard.WizardStep;
+import consulo.ui.ex.wizard.WizardSession;
+import consulo.ui.ex.wizard.WizardStep;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

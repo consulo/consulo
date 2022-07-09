@@ -1017,9 +1017,7 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.language.psi.search.scope;
   exports consulo.ide.impl.moduleImport;
   exports consulo.ide.impl.moduleImport.ui;
-  exports consulo.ide.impl.newProject;
   exports consulo.ide.impl.newProject.actions;
-  exports consulo.ide.impl.newProject.node;
   exports consulo.ide.impl.newProject.ui;
   exports consulo.ide.impl.options;
   exports consulo.ide.impl.options.impl;
@@ -1119,7 +1117,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.ui.laf;
   exports consulo.ide.impl.ui.popup;
   exports consulo.ide.impl.ui.tree.impl;
-  exports consulo.ide.impl.ui.wizard;
   exports consulo.ide.impl.updateSettings;
   exports consulo.ide.impl.updateSettings.impl;
   exports consulo.ide.impl.usage;
@@ -1131,7 +1128,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.vfs.newvfs.persistent;
   exports consulo.ide.impl.webBrowser;
   exports consulo.ide.impl.welcomeScreen;
-  exports consulo.ide.impl.wizard.newModule;
   exports consulo.ide.impl.wm.impl;
   exports consulo.ide.impl.wm.impl.layout;
   exports consulo.ide.impl.wm.impl.status;

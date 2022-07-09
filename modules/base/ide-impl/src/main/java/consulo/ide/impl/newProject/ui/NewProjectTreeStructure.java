@@ -20,9 +20,9 @@ import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.tree.PresentableNodeDescriptor;
 import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ide.impl.newProject.NewModuleContext;
-import consulo.ide.impl.newProject.node.NewModuleContextGroup;
-import consulo.ide.impl.newProject.node.NewModuleContextNode;
+import consulo.ide.newModule.NewModuleContext;
+import consulo.ide.newModule.NewModuleContextGroup;
+import consulo.ide.newModule.NewModuleContextNode;
 import consulo.util.collection.ArrayUtil;
 
 import javax.annotation.Nonnull;

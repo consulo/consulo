@@ -28,8 +28,8 @@ import consulo.ui.ex.awt.TextFieldWithBrowseButton;
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ide.impl.ui.wizard.WizardStep;
-import consulo.ide.impl.ui.wizard.WizardStepValidationException;
+import consulo.ui.ex.wizard.WizardStep;
+import consulo.ui.ex.wizard.WizardStepValidationException;
 import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;

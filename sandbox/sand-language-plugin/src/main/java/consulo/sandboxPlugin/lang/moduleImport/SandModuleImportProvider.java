@@ -25,8 +25,8 @@ import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.ModuleRootManager;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.ide.impl.moduleImport.ModuleImportContext;
-import consulo.ide.impl.moduleImport.ModuleImportProvider;
+import consulo.ide.moduleImport.ModuleImportContext;
+import consulo.ide.moduleImport.ModuleImportProvider;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

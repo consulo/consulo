@@ -25,11 +25,11 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.JBUI;
 import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.wizard.newModule.NewModuleWizardContext;
+import consulo.ide.newModule.NewModuleWizardContext;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ide.impl.ui.wizard.WizardStep;
-import consulo.ide.impl.ui.wizard.WizardStepValidationException;
+import consulo.ui.ex.wizard.WizardStep;
+import consulo.ui.ex.wizard.WizardStepValidationException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

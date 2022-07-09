@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.wizard.newModule;
+package consulo.ide.newModule;
 
 import consulo.ide.IdeBundle;
 import consulo.project.Project;

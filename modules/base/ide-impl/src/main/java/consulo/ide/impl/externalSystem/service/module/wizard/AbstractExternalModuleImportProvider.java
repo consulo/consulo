@@ -51,10 +51,10 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.logging.Logger;
-import consulo.ide.impl.moduleImport.ModuleImportProvider;
+import consulo.ide.moduleImport.ModuleImportProvider;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ide.impl.ui.wizard.WizardStep;
-import consulo.ide.impl.ui.wizard.WizardStepValidationException;
+import consulo.ui.ex.wizard.WizardStep;
+import consulo.ui.ex.wizard.WizardStepValidationException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

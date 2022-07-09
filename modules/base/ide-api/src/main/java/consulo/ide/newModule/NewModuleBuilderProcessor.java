@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.newProject;
+package consulo.ide.newModule;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.ide.newModule.ui.UnifiedProjectOrModuleNameStep;
 import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ModifiableRootModel;
-import consulo.annotation.access.RequiredReadAction;
-import consulo.ide.impl.newProject.ui.UnifiedProjectOrModuleNameStep;
-import consulo.ide.impl.wizard.newModule.NewModuleWizardContext;
-import consulo.ide.impl.ui.wizard.WizardStep;
+import consulo.ui.ex.wizard.WizardStep;
 
 import javax.annotation.Nonnull;
 import java.util.function.Consumer;

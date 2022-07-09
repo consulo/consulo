@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2020 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.newProject;
+package consulo.ide.newModule;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ExtensionAPI;
+import consulo.localize.LocalizeValue;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 05.06.14
+ * @since 2020-06-02
  */
-@ExtensionAPI(ComponentScope.APPLICATION)
-public interface NewModuleBuilder {
-  void setupContext(@Nonnull NewModuleContext context);
+public class NewModuleContextNode {
+  private final LocalizeValue myName;
+  private final Image myImage;
+
+  public NewModuleContextNode(@Nonnull LocalizeValue name, @Nullable Image image) {
+    myName = name;
+    myImage = image;
+  }
+
+  @Nonnull
+  public LocalizeValue getName() {
+    return myName;
+  }
+
+  @Nullable
+  public Image getImage() {
+    return myImage;
+  }
 }

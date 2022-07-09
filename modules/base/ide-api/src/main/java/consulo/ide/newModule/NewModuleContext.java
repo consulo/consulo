@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.newProject;
+package consulo.ide.newModule;
 
-import consulo.ide.impl.newProject.node.NewModuleContextGroup;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 
@@ -25,7 +24,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 05.06.14
  */
-public class NewModuleContext extends NewModuleContextGroup  {
+public class NewModuleContext extends NewModuleContextGroup {
   @Deprecated
   public static final String UGROUPED = "ungrouped";
 
@@ -100,7 +99,7 @@ public class NewModuleContext extends NewModuleContextGroup  {
 
   @Nonnull
   public Group get(@Nonnull String id) {
-    if(UGROUPED.equals(id)) {
+    if (UGROUPED.equals(id)) {
       return new Group(this);
     }
     NewModuleContextGroup group = findGroup(id);
@@ -110,7 +109,7 @@ public class NewModuleContext extends NewModuleContextGroup  {
   @Nonnull
   @Deprecated
   public Group createGroup(@Nonnull String id, @Nonnull String name) {
-    if(UGROUPED.equals(id)) {
+    if (UGROUPED.equals(id)) {
       return new Group(this);
     }
     NewModuleContextGroup group = addGroup(id, LocalizeValue.of(name));

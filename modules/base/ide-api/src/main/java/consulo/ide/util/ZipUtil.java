@@ -10,13 +10,12 @@ import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.util.Enumeration;
 import java.util.concurrent.Callable;
 import java.util.function.Function;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 /**
@@ -131,5 +130,52 @@ public class ZipUtil {
       name = name.substring(ind + 1);
     }
     return StringUtil.trimEnd(name, "/");
+  }
+
+  public static void extract(@Nonnull File file, @Nonnull File outputDir, @Nullable FilenameFilter filenameFilter) throws IOException {
+    extract(file, outputDir, filenameFilter, true);
+  }
+
+  public static void extract(@Nonnull File file, @Nonnull File outputDir, @Nullable FilenameFilter filenameFilter, boolean overwrite) throws IOException {
+    try (ZipFile zipFile = new ZipFile(file)) {
+      extract(zipFile, outputDir, filenameFilter, overwrite);
+    }
+  }
+
+  public static void extract(final @Nonnull ZipFile zipFile, @Nonnull File outputDir, @Nullable FilenameFilter filenameFilter) throws IOException {
+    extract(zipFile, outputDir, filenameFilter, true);
+  }
+
+  public static void extract(final @Nonnull ZipFile zipFile, @Nonnull File outputDir, @Nullable FilenameFilter filenameFilter, boolean overwrite) throws IOException {
+    final Enumeration entries = zipFile.entries();
+    while (entries.hasMoreElements()) {
+      ZipEntry entry = (ZipEntry)entries.nextElement();
+      final File file = new File(outputDir, entry.getName());
+      if (filenameFilter == null || filenameFilter.accept(file.getParentFile(), file.getName())) {
+        extractEntry(entry, zipFile.getInputStream(entry), outputDir, overwrite);
+      }
+    }
+  }
+
+  public static void extractEntry(ZipEntry entry, final InputStream inputStream, File outputDir) throws IOException {
+    extractEntry(entry, inputStream, outputDir, true);
+  }
+
+  public static void extractEntry(ZipEntry entry, final InputStream inputStream, File outputDir, boolean overwrite) throws IOException {
+    final boolean isDirectory = entry.isDirectory();
+    final String relativeName = entry.getName();
+    final File file = new File(outputDir, relativeName);
+    file.setLastModified(entry.getTime());
+    if (file.exists() && !overwrite) return;
+
+    FileUtil.createParentDirs(file);
+    if (isDirectory) {
+      file.mkdir();
+    }
+    else {
+      try (BufferedInputStream is = new BufferedInputStream(inputStream); BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream(file))) {
+        FileUtil.copy(is, os);
+      }
+    }
   }
 }

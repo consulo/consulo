@@ -13,19 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.newProject.ui;
+package consulo.ide.newModule.ui;
 
-import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.disposer.Disposable;
-import consulo.ui.ex.FileChooserTextBoxBuilder;
-import consulo.ui.ex.TextComponentAccessor;
-import consulo.ide.impl.wizard.newModule.NewModuleWizardContext;
+import consulo.fileChooser.FileChooserDescriptorFactory;
+import consulo.ide.newModule.NewModuleWizardContext;
 import consulo.platform.base.localize.IdeLocalize;
 import consulo.ui.Component;
 import consulo.ui.TextBox;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.FileChooserTextBoxBuilder;
+import consulo.ui.ex.TextComponentAccessor;
+import consulo.ui.ex.wizard.WizardStep;
 import consulo.ui.util.FormBuilder;
-import consulo.ide.impl.ui.wizard.WizardStep;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -34,8 +34,6 @@ import java.io.File;
 /**
  * @author VISTALL
  * @since 08/01/2021
- * <p>
- * Unified variant of {@link ProjectOrModuleNameStep}
  */
 public class UnifiedProjectOrModuleNameStep<C extends NewModuleWizardContext> implements WizardStep<C> {
   private final C myContext;
@@ -74,7 +72,7 @@ public class UnifiedProjectOrModuleNameStep<C extends NewModuleWizardContext> im
 
     FileChooserTextBoxBuilder builder = FileChooserTextBoxBuilder.create(myContext.getProject());
     builder.uiDisposable(uiDisposable);
-    builder.textBoxAccessor(new TextComponentAccessor<TextBox>() {
+    builder.textBoxAccessor(new TextComponentAccessor<>() {
       @RequiredUIAccess
       @Override
       public String getValue(TextBox component) {
@@ -86,10 +84,10 @@ public class UnifiedProjectOrModuleNameStep<C extends NewModuleWizardContext> im
       public void setValue(TextBox component, String path, boolean fireListeners) {
         component.setValue(path, fireListeners);
 
-        if(fireListeners) {
+        if (fireListeners) {
           myUserPathEntered = true;
 
-          if(!myUserNameEntered) {
+          if (!myUserNameEntered) {
             final int lastSeparatorIndex = path.lastIndexOf(File.separator);
             if (lastSeparatorIndex >= 0 && (lastSeparatorIndex + 1) < path.length()) {
               myNameTextBox.setValue(path.substring(lastSeparatorIndex + 1), false);
@@ -112,10 +110,10 @@ public class UnifiedProjectOrModuleNameStep<C extends NewModuleWizardContext> im
     myFileChooserController.setValue(projectOrModulePath, false);
 
     myNameTextBox.addValueListener(event -> {
-      if(myUserPathEntered) {
+      if (myUserPathEntered) {
         return;
       }
-      
+
       final String name = myNameTextBox.getValue();
       final String path = myFileChooserController.getValue().trim();
       final int lastSeparatorIndex = path.lastIndexOf(File.separator);

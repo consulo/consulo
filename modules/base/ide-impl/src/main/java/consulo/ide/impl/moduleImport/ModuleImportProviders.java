@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.moduleImport;
 
+import consulo.ide.moduleImport.ModuleImportProvider;
+
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;

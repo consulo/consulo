@@ -145,12 +145,8 @@ public class ZipUtil {
   }
 
   public static void extract(@Nonnull File file, @Nonnull File outputDir, @Nullable FilenameFilter filenameFilter, boolean overwrite) throws IOException {
-    ZipFile zipFile = new ZipFile(file);
-    try {
+    try (ZipFile zipFile = new ZipFile(file)) {
       extract(zipFile, outputDir, filenameFilter, overwrite);
-    }
-    finally {
-      zipFile.close();
     }
   }
 
