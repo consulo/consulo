@@ -39,8 +39,6 @@
 
     <applicationService serviceInterface="consulo.project.ui.wm.WindowManager" serviceImplementation="consulo.desktop.swt.wm.impl.DesktopSwtWindowManagerImpl"/>
 
-    <applicationService serviceInterface="consulo.ide.impl.tipOfDay.TipOfDayManager" serviceImplementation="consulo.ide.impl.tipOfDay.UnifiedTipOfDayManager"/>
-
     <applicationService serviceInterface="consulo.ide.impl.start.WelcomeFrameManager" serviceImplementation="consulo.ide.impl.start.UnifiedWelcomeFrameManager"/>
 
     <applicationService serviceInterface="consulo.dataContext.DataManager" serviceImplementation="consulo.ide.impl.UnifiedDataManagerImpl"/>

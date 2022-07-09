@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.tipOfDay;
 
+import consulo.ide.tipOfDay.TipOfDayManager;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;

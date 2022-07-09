@@ -58,7 +58,6 @@
     <applicationService serviceInterface="consulo.project.ui.wm.WindowManager" serviceImplementation="consulo.web.wm.impl.WebWindowManagerImpl"/>
     <applicationService serviceInterface="consulo.dataContext.DataManager" serviceImplementation="consulo.ide.impl.UnifiedDataManagerImpl"/>
     <applicationService serviceInterface="consulo.ide.impl.actions.AboutManager" serviceImplementation="consulo.ide.impl.actions.impl.UnifiedAboutManager"/>
-    <applicationService serviceInterface="consulo.ide.impl.tipOfDay.TipOfDayManager" serviceImplementation="consulo.ide.impl.tipOfDay.UnifiedTipOfDayManager"/>
     <applicationService serviceInterface="consulo.ide.impl.startup.customize.StartupCustomizeManager" serviceImplementation="consulo.web.startup.customize.WebStartupCustomizeManager"/>
 
     <projectService serviceInterface="consulo.fileEditor.FileEditorManager" serviceImplementation="consulo.ide.impl.fileEditor.UnifiedPsiAwareFileEditorManagerImpl" lazy="false"/>

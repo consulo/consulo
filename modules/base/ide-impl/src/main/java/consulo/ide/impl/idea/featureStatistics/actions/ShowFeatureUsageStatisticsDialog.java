@@ -15,31 +15,28 @@
  */
 package consulo.ide.impl.idea.featureStatistics.actions;
 
-import consulo.application.CommonBundle;
-import consulo.ide.impl.idea.featureStatistics.*;
-import consulo.ide.impl.idea.ide.util.TipUIUtil;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.application.CommonBundle;
+import consulo.application.HelpManager;
 import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.application.statistic.FeatureUsageTracker;
-import consulo.logging.Logger;
-import consulo.application.HelpManager;
-import consulo.project.Project;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.Splitter;
-import consulo.ui.ex.awt.VerticalFlowLayout;
-import consulo.ui.ex.awt.ScrollPaneFactory;
+import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginManager;
+import consulo.ide.impl.idea.featureStatistics.*;
+import consulo.ide.impl.idea.ide.util.TipUIUtil;
 import consulo.ide.impl.idea.ui.TableViewSpeedSearch;
-import consulo.ui.ex.awt.table.TableView;
 import consulo.ide.impl.idea.util.text.DateFormatUtil;
-import consulo.ui.ex.awt.ColumnInfo;
+import consulo.ide.impl.tipOfDay.DefaultTipOfDayProvider;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.table.ListTableModel;
-import consulo.ui.ex.awt.UIUtil;
-import javax.annotation.Nonnull;
+import consulo.ui.ex.awt.table.TableView;
+import consulo.util.lang.Pair;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.io.IOException;
 import java.io.StringReader;
@@ -128,7 +125,7 @@ public class ShowFeatureUsageStatisticsDialog extends DialogWrapper {
 
   @Nonnull
   protected Action[] createActions() {
-    return new Action[] {getCancelAction(), getHelpAction()};
+    return new Action[]{getCancelAction(), getHelpAction()};
   }
 
   protected void doHelpAction() {
@@ -159,27 +156,27 @@ public class ShowFeatureUsageStatisticsDialog extends DialogWrapper {
     long uptime = System.currentTimeMillis() - app.getStartTime();
     long idleTime = app.getIdleTime();
 
-    final String uptimeS = FeatureStatisticsBundle.message("feature.statistics.application.uptime",
-                                                           ApplicationNamesInfo.getInstance().getFullProductName(),
-                                                           DateFormatUtil.formatDuration(uptime));
+    final String uptimeS = FeatureStatisticsBundle.message("feature.statistics.application.uptime", ApplicationNamesInfo.getInstance().getFullProductName(), DateFormatUtil.formatDuration(uptime));
 
-    final String idleTimeS = FeatureStatisticsBundle.message("feature.statistics.application.idle.time",
-                                                             DateFormatUtil.formatDuration(idleTime));
+    final String idleTimeS = FeatureStatisticsBundle.message("feature.statistics.application.idle.time", DateFormatUtil.formatDuration(idleTime));
 
     String labelText = uptimeS + ", " + idleTimeS;
     CompletionStatistics stats = ((FeatureUsageTrackerImpl)FeatureUsageTracker.getInstance()).getCompletionStatistics();
     if (stats.dayCount > 0 && stats.sparedCharacters > 0) {
       String total = formatCharacterCount(stats.sparedCharacters, true);
       String perDay = formatCharacterCount(stats.sparedCharacters / stats.dayCount, false);
-      labelText += "<br>Code completion has saved you from typing at least " + total + " since " + DateFormatUtil.formatDate(stats.startDate) +
-                   " (~" + perDay + " per working day)";
+      labelText += "<br>Code completion has saved you from typing at least " + total + " since " + DateFormatUtil.formatDate(stats.startDate) + " (~" + perDay + " per working day)";
     }
 
     CumulativeStatistics fstats = ((FeatureUsageTrackerImpl)FeatureUsageTracker.getInstance()).getFixesStats();
     if (fstats.dayCount > 0 && fstats.invocations > 0) {
-      labelText +=
-        "<br>Quick fixes have saved you from " + fstats.invocations + " possible bugs since " + DateFormatUtil.formatDate(fstats.startDate) +
-        " (~" + fstats.invocations / fstats.dayCount + " per working day)";
+      labelText += "<br>Quick fixes have saved you from " +
+                   fstats.invocations +
+                   " possible bugs since " +
+                   DateFormatUtil.formatDate(fstats.startDate) +
+                   " (~" +
+                   fstats.invocations / fstats.dayCount +
+                   " per working day)";
     }
 
     controlsPanel.add(new JLabel("<html><body>" + labelText + "</body></html>"), BorderLayout.NORTH);
@@ -195,21 +192,29 @@ public class ShowFeatureUsageStatisticsDialog extends DialogWrapper {
     splitter.setSecondComponent(ScrollPaneFactory.createScrollPane(browser));
 
     table.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-    table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-      public void valueChanged(ListSelectionEvent e) {
-        Collection selection = table.getSelection();
-        try {
-          if (selection.isEmpty()) {
-            browser.read(new StringReader(""), null);
+    table.getSelectionModel().addListSelectionListener(e -> {
+      Collection selection = table.getSelection();
+      try {
+        if (selection.isEmpty()) {
+          browser.read(new StringReader(""), null);
+        }
+        else {
+          FeatureDescriptor feature = (FeatureDescriptor)selection.iterator().next();
+          String tipFileName = feature.getTipFileName();
+          PluginDescriptor pluginDescriptor;
+          Class<? extends ProductivityFeaturesProvider> provider = feature.getProvider();
+          if (provider != null) {
+            pluginDescriptor = PluginManager.getPlugin(provider);
           }
           else {
-            FeatureDescriptor feature = (FeatureDescriptor)selection.iterator().next();
-            TipUIUtil.openTipInBrowser(feature.getTipFileName(), browser, feature.getProvider());
+            pluginDescriptor = PluginManager.getPlugin(DefaultTipOfDayProvider.class);
           }
+
+          TipUIUtil.openTipInBrowser(Pair.create("/tips/" + tipFileName, pluginDescriptor), browser);
         }
-        catch (IOException ex) {
-          LOG.info(ex);
-        }
+      }
+      catch (IOException ex) {
+        LOG.info(ex);
       }
     });
 
@@ -218,9 +223,7 @@ public class ShowFeatureUsageStatisticsDialog extends DialogWrapper {
 
   private static String formatCharacterCount(int count, boolean full) {
     DecimalFormat oneDigit = new DecimalFormat("0.0");
-    String result = count > 1024 * 1024 ? oneDigit.format((double)count / 1024 / 1024) + "M" :
-               count > 1024 ? oneDigit.format((double)count / 1024) + "K" :
-               String.valueOf(count);
+    String result = count > 1024 * 1024 ? oneDigit.format((double)count / 1024 / 1024) + "M" : count > 1024 ? oneDigit.format((double)count / 1024) + "K" : String.valueOf(count);
     if (full) {
       return result + " characters";
     }
@@ -228,7 +231,7 @@ public class ShowFeatureUsageStatisticsDialog extends DialogWrapper {
   }
 
   private static String getGroupName(FeatureDescriptor featureDescriptor) {
-    final ProductivityFeaturesRegistry registry = ProductivityFeaturesRegistry.getInstance();    
+    final ProductivityFeaturesRegistry registry = ProductivityFeaturesRegistry.getInstance();
     final GroupDescriptor groupDescriptor = registry.getGroupDescriptor(featureDescriptor.getGroupId());
     return groupDescriptor != null ? groupDescriptor.getDisplayName() : "";
   }

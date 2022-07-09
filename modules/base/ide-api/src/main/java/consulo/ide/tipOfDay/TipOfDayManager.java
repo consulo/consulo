@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2020 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,30 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.actions;
+package consulo.ide.tipOfDay;
 
-import consulo.annotation.component.ActionImpl;
-import consulo.application.dumb.DumbAware;
-import consulo.ide.tipOfDay.TipOfDayManager;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 
-@ActionImpl(id = "ShowTips")
-public class ShowTipsAction extends AnAction implements DumbAware {
-  private final TipOfDayManager myManager;
+/**
+ * @author VISTALL
+ * @since 2020-06-23
+ */
+@ServiceAPI(ComponentScope.APPLICATION)
+public interface TipOfDayManager {
+  /**
+   * Schedule show tips dialog. Will open one time, per app start (even if mupliple projects open)
+   */
+  void scheduleShow(@Nonnull UIAccess uiAccess, @Nonnull Project project);
 
-  @Inject
-  public ShowTipsAction(TipOfDayManager manager) {
-    myManager = manager;
-  }
-
+  /**
+   * Force show tip dialog without any checks
+   */
   @RequiredUIAccess
-  @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
-    myManager.showAsync();
-  }
+  void showAsync();
 }

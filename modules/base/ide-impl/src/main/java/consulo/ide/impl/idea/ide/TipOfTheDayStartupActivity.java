@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.ide;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.tipOfDay.TipOfDayManager;
+import consulo.ide.tipOfDay.TipOfDayManager;
 import consulo.project.Project;
 import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;

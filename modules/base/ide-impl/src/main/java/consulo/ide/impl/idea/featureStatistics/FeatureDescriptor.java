@@ -19,12 +19,13 @@ import consulo.application.ApplicationManager;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-public class FeatureDescriptor{
+
+public class FeatureDescriptor {
   @Nonnull
   private String myId;
   private String myGroupId;
@@ -42,16 +43,17 @@ public class FeatureDescriptor{
   private long myLastTimeUsed;
   private int myShownCount;
   private ProductivityFeaturesProvider myProvider;
-  @NonNls private static final String ATTRIBUTE_COUNT = "count";
-  @NonNls private static final String ATTRIBUTE_LAST_SHOWN = "last-shown";
-  @NonNls private static final String ATTRIBUTE_LAST_USED = "last-used";
-  @NonNls private static final String ATTRIBUTE_SHOWN_COUNT = "shown-count";
-  @NonNls private static final String ATTRIBUTE_ID = "id";
-  @NonNls private static final String ATTRIBUTE_TIP_FILE = "tip-file";
-  @NonNls private static final String ATTRIBUTE_FIRST_SHOW = "first-show";
-  @NonNls private static final String ATTRIBUTE_SUCCESSIVE_SHOW = "successive-show";
-  @NonNls private static final String ATTRIBUTE_MIN_USAGE_COUNT = "min-usage-count";
-  @NonNls private static final String ELEMENT_DEPENDENCY = "dependency";
+
+  private static final String ATTRIBUTE_COUNT = "count";
+  private static final String ATTRIBUTE_LAST_SHOWN = "last-shown";
+  private static final String ATTRIBUTE_LAST_USED = "last-used";
+  private static final String ATTRIBUTE_SHOWN_COUNT = "shown-count";
+  private static final String ATTRIBUTE_ID = "id";
+  private static final String ATTRIBUTE_TIP_FILE = "tip-file";
+  private static final String ATTRIBUTE_FIRST_SHOW = "first-show";
+  private static final String ATTRIBUTE_SUCCESSIVE_SHOW = "successive-show";
+  private static final String ATTRIBUTE_MIN_USAGE_COUNT = "min-usage-count";
+  private static final String ELEMENT_DEPENDENCY = "dependency";
 
   FeatureDescriptor(GroupDescriptor group) {
     myGroupId = group.getId();
@@ -68,14 +70,14 @@ public class FeatureDescriptor{
   }
 
   public FeatureDescriptor(@NonNls String id,
-                       @NonNls String groupId,
-                       @NonNls String tipFileName,
-                       String displayName,
-                       int daysBeforeFirstShowUp,
-                       int daysBetweenSuccessiveShowUps,
-                       Set<String> dependencies,
-                       int minUsageCount,
-                       ProductivityFeaturesProvider provider) {
+                           @NonNls String groupId,
+                           @NonNls String tipFileName,
+                           String displayName,
+                           int daysBeforeFirstShowUp,
+                           int daysBetweenSuccessiveShowUps,
+                           Set<String> dependencies,
+                           int minUsageCount,
+                           ProductivityFeaturesProvider provider) {
     myId = id;
     myGroupId = groupId;
     myTipFileName = tipFileName;
@@ -129,7 +131,7 @@ public class FeatureDescriptor{
   }
 
   public Class<? extends ProductivityFeaturesProvider> getProvider() {
-    if (myProvider == null){
+    if (myProvider == null) {
       return null;
     }
     return myProvider.getClass();
@@ -196,7 +198,7 @@ public class FeatureDescriptor{
     return myShownCount;
   }
 
-  void copyStatistics(FeatureDescriptor statistics){
+  void copyStatistics(FeatureDescriptor statistics) {
     myUsageCount = statistics.getUsageCount();
     myLastTimeShown = statistics.getLastTimeShown();
     myLastTimeUsed = statistics.getLastTimeUsed();

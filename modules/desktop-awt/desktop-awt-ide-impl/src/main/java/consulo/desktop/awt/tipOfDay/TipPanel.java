@@ -15,20 +15,24 @@
  */
 package consulo.desktop.awt.tipOfDay;
 
-import consulo.ide.impl.idea.ide.GeneralSettings;
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.util.TipAndTrickBean;
-import consulo.ide.impl.idea.ide.util.TipUIUtil;
+import consulo.application.Application;
 import consulo.application.impl.internal.ApplicationNamesInfo;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.ScrollPaneFactory;
+import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginManager;
+import consulo.ide.IdeBundle;
+import consulo.ide.impl.idea.ide.GeneralSettings;
+import consulo.ide.impl.idea.ide.util.TipUIUtil;
+import consulo.ide.tipOfDay.TipOfDayProvider;
 import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.awt.JBLabel;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.JBDimension;
+import consulo.ui.ex.awt.JBLabel;
+import consulo.ui.ex.awt.ScrollPaneFactory;
+import consulo.util.lang.Pair;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TipPanel extends JPanel implements DialogWrapper.DoNotAskOption {
@@ -37,7 +41,7 @@ public class TipPanel extends JPanel implements DialogWrapper.DoNotAskOption {
 
   private final JEditorPane myBrowser;
   private final JLabel myPoweredByLabel;
-  private final List<TipAndTrickBean> myTips = ContainerUtil.newArrayList();
+  private final List<Pair<String, PluginDescriptor>> myTips = new ArrayList<>();
 
   public TipPanel() {
     setLayout(new BorderLayout());
@@ -54,7 +58,13 @@ public class TipPanel extends JPanel implements DialogWrapper.DoNotAskOption {
     southPanel.add(myPoweredByLabel, BorderLayout.EAST);
     add(southPanel, BorderLayout.SOUTH);
 
-    myTips.addAll(TipAndTrickBean.EP_NAME.getExtensionList());
+    for (TipOfDayProvider provider : Application.get().getExtensionList(TipOfDayProvider.class)) {
+      PluginDescriptor plugin = PluginManager.getPlugin(provider.getClass());
+      
+      for (String tipFile : provider.getTipFiles()) {
+        myTips.add(Pair.create(tipFile, plugin));
+      }
+    }
   }
 
   @Override
@@ -64,13 +74,13 @@ public class TipPanel extends JPanel implements DialogWrapper.DoNotAskOption {
 
   public void prevTip() {
     if (myTips.size() == 0) {
-      myBrowser.setText(IdeBundle.message("error.tips.not.found", ApplicationNamesInfo.getInstance().getFullProductName()));
+      myBrowser.setText(IdeBundle.message("error.tips.not.found", Application.get().getName().toString()));
       return;
     }
     final GeneralSettings settings = GeneralSettings.getInstance();
     int lastTip = settings.getLastTip();
 
-    final TipAndTrickBean tip;
+    final Pair<String, PluginDescriptor> tip;
     lastTip--;
     if (lastTip <= 0) {
       tip = myTips.get(myTips.size() - 1);
@@ -83,7 +93,7 @@ public class TipPanel extends JPanel implements DialogWrapper.DoNotAskOption {
     setTip(tip, lastTip, myBrowser, settings);
   }
 
-  private void setTip(TipAndTrickBean tip, int lastTip, JEditorPane browser, GeneralSettings settings) {
+  private void setTip(Pair<String, PluginDescriptor> tip, int lastTip, JEditorPane browser, GeneralSettings settings) {
     TipUIUtil.openTipInBrowser(tip, browser);
     myPoweredByLabel.setText(TipUIUtil.getPoweredByText(tip));
     settings.setLastTip(lastTip);
@@ -96,7 +106,7 @@ public class TipPanel extends JPanel implements DialogWrapper.DoNotAskOption {
     }
     GeneralSettings settings = GeneralSettings.getInstance();
     int lastTip = settings.getLastTip();
-    TipAndTrickBean tip;
+    Pair<String, PluginDescriptor> tip;
     lastTip++;
     if (lastTip - 1 >= myTips.size()) {
       tip = myTips.get(0);

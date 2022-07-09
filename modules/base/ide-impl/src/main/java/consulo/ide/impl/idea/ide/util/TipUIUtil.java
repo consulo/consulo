@@ -15,32 +15,31 @@
  */
 package consulo.ide.impl.idea.ide.util;
 
+import consulo.application.Application;
 import consulo.application.CommonBundle;
-import consulo.ide.impl.idea.ide.BrowserUtil;
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.plugins.PluginManagerCore;
-import consulo.ide.impl.idea.ide.ui.LafManager;
-import consulo.ui.ex.action.KeyboardShortcut;
-import consulo.ui.ex.action.Shortcut;
 import consulo.application.impl.internal.ApplicationInfo;
-import consulo.application.impl.internal.ApplicationNamesInfo;
-import consulo.ui.ex.keymap.Keymap;
-import consulo.ui.ex.keymap.KeymapManager;
+import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginIds;
+import consulo.ide.IdeBundle;
+import consulo.ide.impl.idea.ide.BrowserUtil;
+import consulo.ide.impl.idea.ide.ui.LafManager;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.keymap.impl.DefaultKeymap;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.util.URLDictionatyLoader;
+import consulo.logging.Logger;
 import consulo.project.ui.wm.IdeFrame;
-import consulo.ide.impl.idea.util.ObjectUtils;
-import consulo.util.io.ResourceUtil;
+import consulo.project.ui.wm.IdeFrameUtil;
+import consulo.ui.ex.action.KeyboardShortcut;
+import consulo.ui.ex.action.Shortcut;
 import consulo.ui.ex.awt.JBHtmlEditorKit;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.container.plugin.PluginDescriptor;
-import consulo.ide.impl.util.URLDictionatyLoader;
-import consulo.logging.Logger;
+import consulo.ui.ex.keymap.Keymap;
+import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.style.StyleManager;
-import consulo.project.ui.wm.IdeFrameUtil;
+import consulo.util.io.ResourceUtil;
+import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -67,37 +66,31 @@ public class TipUIUtil {
   }
 
   @Nonnull
-  public static String getPoweredByText(@Nonnull TipAndTrickBean tip) {
-    PluginDescriptor descriptor = tip.getPluginDescriptor();
-    return !PluginManagerCore.CORE_PLUGIN_ID.equals(descriptor.getPluginId().getIdString()) ? descriptor.getName() : "";
+  public static String getPoweredByText(@Nonnull Pair<String, PluginDescriptor> tipInfo) {
+    PluginDescriptor descriptor = tipInfo.getSecond();
+    return !PluginIds.isPlatformPlugin(descriptor.getPluginId()) ? descriptor.getName() : "";
   }
 
-  public static void openTipInBrowser(String tipFileName, JEditorPane browser, Class providerClass) {
-    TipAndTrickBean tip = TipAndTrickBean.findByFileName(tipFileName);
-    if (tip == null && StringUtil.isNotEmpty(tipFileName)) {
-      tip = new TipAndTrickBean();
-      tip.fileName = tipFileName;
-    }
-    openTipInBrowser(tip, browser);
-  }
-
-  public static void openTipInBrowser(@Nullable TipAndTrickBean tip, JEditorPane browser) {
-    if (tip == null) return;
+  public static void openTipInBrowser(@Nullable Pair<String, PluginDescriptor> tipInfo, JEditorPane browser) {
+    if (tipInfo == null) return;
     try {
-      PluginDescriptor pluginDescriptor = tip.getPluginDescriptor();
-      ClassLoader tipLoader = pluginDescriptor == null ? TipUIUtil.class.getClassLoader() : ObjectUtils.notNull(pluginDescriptor.getPluginClassLoader(), TipUIUtil.class.getClassLoader());
-
-      URL url = ResourceUtil.getResource(tipLoader, "/tips/", tip.fileName);
+      URL url = null;
+      try {
+        url = tipInfo.getSecond().getPluginClassLoader().getResource(tipInfo.getFirst());
+      }
+      catch (Exception e) {
+        LOG.warn(e);
+      }
 
       if (url == null) {
-        setCantReadText(browser, tip);
+        setCantReadText(browser, tipInfo);
         return;
       }
 
       StringBuilder text = new StringBuilder(ResourceUtil.loadText(url));
       updateShortcuts(text);
-      updateImages(text, tipLoader, browser);
-      String replaced = text.toString().replace("&productName;", ApplicationNamesInfo.getInstance().getFullProductName());
+      updateImages(text, tipInfo.getSecond().getPluginClassLoader(), browser);
+      String replaced = text.toString().replace("&productName;", Application.get().getName().get());
       String major = ApplicationInfo.getInstance().getMajorVersion();
       replaced = replaced.replace("&majorVersion;", major);
       String minor = ApplicationInfo.getInstance().getMinorVersion();
@@ -119,18 +112,18 @@ public class TipUIUtil {
       browser.read(new StringReader(replaced), url);
     }
     catch (IOException e) {
-      setCantReadText(browser, tip);
+      setCantReadText(browser, tipInfo);
     }
   }
 
-  private static void setCantReadText(JEditorPane browser, TipAndTrickBean bean) {
+  private static void setCantReadText(JEditorPane browser, Pair<String, PluginDescriptor> tipInfo) {
     try {
-      String plugin = getPoweredByText(bean);
-      String product = ApplicationNamesInfo.getInstance().getFullProductName();
+      String plugin = getPoweredByText(tipInfo);
+      String product = Application.get().getName().get();
       if (!plugin.isEmpty()) {
         product += " and " + plugin + " plugin";
       }
-      String message = IdeBundle.message("error.unable.to.read.tip.of.the.day", bean.fileName, product);
+      String message = IdeBundle.message("error.unable.to.read.tip.of.the.day", tipInfo.getFirst(), product);
       browser.read(new StringReader(message), null);
     }
     catch (IOException ignored) {

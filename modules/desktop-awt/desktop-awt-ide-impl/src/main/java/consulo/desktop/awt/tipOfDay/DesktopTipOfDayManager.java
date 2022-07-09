@@ -20,7 +20,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.project.Project;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.tipOfDay.TipOfDayManager;
+import consulo.ide.tipOfDay.TipOfDayManager;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Singleton;
