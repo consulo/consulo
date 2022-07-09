@@ -15,6 +15,7 @@
  */
 package consulo.execution.ui.awt;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.execution.CommonProgramRunConfigurationParameters;
 import consulo.execution.ExecutionBundle;
 import consulo.fileChooser.FileChooserDescriptorFactory;
@@ -36,6 +37,8 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
+@Deprecated
+@DeprecationInfo("Use CommonProgramParametersLayout")
 public class CommonProgramParametersPanel extends JPanel implements PanelWithAnchor {
   private LabeledComponent<RawCommandLineEditor> myProgramParametersComponent;
   private LabeledComponent<JComponent> myWorkingDirectoryComponent;
