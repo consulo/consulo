@@ -22,7 +22,7 @@ package consulo.ide.impl.idea.openapi.keymap.impl.ui;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.QuickList;
 import consulo.ide.impl.idea.packageDependencies.ui.TreeExpansionMonitor;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.ui.FormBuilder;
+import consulo.ui.ex.awt.FormBuilder;
 import consulo.application.AllIcons;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.TreeExpander;

@@ -22,7 +22,7 @@ import consulo.content.library.LibraryTable;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryEditingUtil;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.util.ui.FormBuilder;
+import consulo.ui.ex.awt.FormBuilder;
 import consulo.disposer.Disposer;
 
 import javax.annotation.Nullable;

@@ -33,7 +33,7 @@ import consulo.ide.impl.idea.ui.components.panels.VerticalLayout;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ui.ex.awt.FontUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.ui.FormBuilder;
+import consulo.ui.ex.awt.FormBuilder;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.BorderLayoutPanel;
 import consulo.ui.ex.awtUnsafe.TargetAWT;

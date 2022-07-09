@@ -17,10 +17,7 @@
 /*
  * @author max
  */
-package consulo.ide.impl.idea.util.ui;
-
-import consulo.ui.ex.awt.JBLabel;
-import consulo.ui.ex.awt.UIUtil;
+package consulo.ui.ex.awt;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

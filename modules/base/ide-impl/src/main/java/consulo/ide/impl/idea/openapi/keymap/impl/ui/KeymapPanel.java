@@ -36,7 +36,7 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.packageDependencies.ui.TreeExpansionMonitor;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.FilterComponent;
-import consulo.ide.impl.idea.util.ui.FormBuilder;
+import consulo.ui.ex.awt.FormBuilder;
 import consulo.application.AllIcons;
 import consulo.application.CommonBundle;
 import consulo.application.ui.wm.FocusableFrame;

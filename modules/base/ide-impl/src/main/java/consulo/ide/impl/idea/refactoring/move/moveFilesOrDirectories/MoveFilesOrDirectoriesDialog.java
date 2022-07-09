@@ -47,7 +47,7 @@ import consulo.ide.impl.idea.ui.RecentsManager;
 import consulo.ide.impl.idea.ui.TextFieldWithHistoryWithBrowseButton;
 import consulo.ide.impl.idea.ui.components.JBLabelDecorator;
 import consulo.language.util.IncorrectOperationException;
-import consulo.ide.impl.idea.util.ui.FormBuilder;
+import consulo.ui.ex.awt.FormBuilder;
 import consulo.ui.ex.awt.UIUtil;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

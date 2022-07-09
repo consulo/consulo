@@ -2,7 +2,7 @@ package consulo.ide.impl.idea.util.net.ssl;
 
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.JBLabel;
-import consulo.ide.impl.idea.util.ui.FormBuilder;
+import consulo.ui.ex.awt.FormBuilder;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;

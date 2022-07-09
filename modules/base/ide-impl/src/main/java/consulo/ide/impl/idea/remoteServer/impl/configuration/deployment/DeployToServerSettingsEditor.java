@@ -35,7 +35,7 @@ import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.ComboboxWithBrowseButton;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ide.impl.idea.ui.SortedComboBoxModel;
-import consulo.ide.impl.idea.util.ui.FormBuilder;
+import consulo.ui.ex.awt.FormBuilder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -41,7 +41,7 @@ import consulo.virtualFileSystem.VirtualFileWrapper;
 import consulo.virtualFileSystem.encoding.EncodingProjectManager;
 import consulo.ui.ex.JBColor;
 import consulo.ide.impl.idea.util.ObjectUtils;
-import consulo.ide.impl.idea.util.ui.FormBuilder;
+import consulo.ui.ex.awt.FormBuilder;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

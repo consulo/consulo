@@ -33,7 +33,7 @@ import consulo.ide.impl.idea.ui.RecentsManager;
 import consulo.ide.impl.idea.ui.TextFieldWithHistoryWithBrowseButton;
 import consulo.ide.impl.idea.ui.components.JBLabelDecorator;
 import consulo.ide.impl.idea.util.PathUtil;
-import consulo.ide.impl.idea.util.ui.FormBuilder;
+import consulo.ui.ex.awt.FormBuilder;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.application.ApplicationManager;
 import consulo.fileChooser.FileChooserDescriptor;

@@ -28,7 +28,7 @@ import consulo.ide.impl.idea.remoteServer.configuration.deployment.DeploymentCon
 import consulo.ide.impl.idea.remoteServer.configuration.deployment.DeploymentSource;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ide.impl.idea.ui.SortedComboBoxModel;
-import consulo.ide.impl.idea.util.ui.FormBuilder;
+import consulo.ui.ex.awt.FormBuilder;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
