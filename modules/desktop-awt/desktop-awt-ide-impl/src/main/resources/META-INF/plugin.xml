@@ -120,37 +120,10 @@
     </group>
   </actions>
 
-  <application-components>
-    <component>
-      <interface-class>consulo.ide.impl.idea.ide.ui.LafManager</interface-class>
-      <implementation-class>consulo.desktop.awt.ui.plaf.LafManagerImpl</implementation-class>
-      <headless-implementation-class>consulo.desktop.awt.ui.plaf.HeadlessLafManagerImpl</headless-implementation-class>
-    </component>
-  </application-components>
-
-  <project-components>
-    <component>
-      <interface-class>consulo.ide.impl.idea.openapi.vcs.changes.ChangesViewI</interface-class>
-      <implementation-class>consulo.ide.impl.idea.openapi.vcs.changes.ChangesViewManager</implementation-class>
-      <headless-implementation-class>consulo.ide.impl.idea.openapi.vcs.changes.DummyChangesView</headless-implementation-class>
-      <skipForDefaultProject/>
-    </component>
-  </project-components>
 
   <extensions defaultExtensionNs="consulo">
-
-    <uiDebuggerExtension implementation="consulo.desktop.awt.uiOld.debugger.extensions.PlaybackDebugger"/>
-
     <applicationService serviceImplementation="consulo.desktop.awt.uiOld.debugger.extensions.PlaybackDebugger$PlaybackDebuggerState"/>
 
-    <applicationService serviceInterface="consulo.ide.impl.idea.ui.ColorChooserService"
-                        serviceImplementation="consulo.desktop.awt.uiOld.DesktopColorChooserServiceImpl"/>
-
     <applicationService serviceInterface="consulo.ui.ex.awt.internal.MacMessages" serviceImplementation="consulo.desktop.awt.uiOld.messages.JBMacMessages"/>
-
-    <projectService serviceInterface="consulo.ide.impl.idea.codeInsight.daemon.impl.EditorTracker" serviceImplementation="consulo.desktop.awt.daemon.impl.DesktopEditorTrackerImpl"/>
-
-    <applicationService serviceInterface="consulo.ui.ex.errorTreeView.NewErrorTreeViewPanelFactory"
-                        serviceImplementation="consulo.desktop.awt.ui.errorTreeView.DesktopAwtNewErrorTreeViewPanelFactoryImpl"/>
   </extensions>
 </consulo-plugin>

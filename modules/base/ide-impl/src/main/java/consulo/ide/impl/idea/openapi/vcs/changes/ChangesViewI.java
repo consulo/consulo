@@ -25,9 +25,14 @@ import consulo.virtualFileSystem.VirtualFile;
 @ServiceAPI(ComponentScope.PROJECT)
 public interface ChangesViewI {
   void scheduleRefresh();
+
   void selectFile(VirtualFile vFile);
+
   void refreshChangesViewNodeAsync(VirtualFile file);
+
   void updateProgressText(final String text, final boolean isError);
+
   void setBusy(boolean b);
+
   void setShowFlattenMode(boolean state);
 }

@@ -15,11 +15,12 @@
  */
 package consulo.desktop.awt.uiOld;
 
-import javax.annotation.Nonnull;
-
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.ui.ColorChooserService;
 import consulo.ide.impl.idea.ui.ColorPickerListener;
 import jakarta.inject.Singleton;
+
+import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.function.Consumer;
 
@@ -27,6 +28,7 @@ import java.util.function.Consumer;
  * @author Konstantin Bulenkov
  */
 @Singleton
+@ServiceImpl
 public class DesktopColorChooserServiceImpl extends ColorChooserService {
   @Override
   public void showDialog(Component parent,

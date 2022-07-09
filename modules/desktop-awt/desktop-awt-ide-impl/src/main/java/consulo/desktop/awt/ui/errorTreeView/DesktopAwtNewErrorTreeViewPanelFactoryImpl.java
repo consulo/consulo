@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.ui.errorTreeView;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.ide.errorTreeView.NewErrorTreeViewPanelImpl;
 import consulo.component.ComponentManager;
 import consulo.project.Project;
@@ -30,6 +31,7 @@ import javax.annotation.Nullable;
  * @since 28-Apr-22
  */
 @Singleton
+@ServiceImpl
 public class DesktopAwtNewErrorTreeViewPanelFactoryImpl implements NewErrorTreeViewPanelFactory {
   @Nonnull
   @Override

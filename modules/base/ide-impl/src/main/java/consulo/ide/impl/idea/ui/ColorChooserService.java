@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.ui;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
 import consulo.ide.ServiceManager;
 
 import javax.annotation.Nonnull;
@@ -24,6 +26,7 @@ import java.util.function.Consumer;
 /**
  * @author Konstantin Bulenkov
  */
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class ColorChooserService {
   public static ColorChooserService getInstance() {
     return ServiceManager.getService(ColorChooserService.class);

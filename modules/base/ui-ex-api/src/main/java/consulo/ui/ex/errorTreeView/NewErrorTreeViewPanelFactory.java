@@ -15,6 +15,8 @@
  */
 package consulo.ui.ex.errorTreeView;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
 import consulo.component.ComponentManager;
 
 import javax.annotation.Nonnull;
@@ -24,6 +26,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 28-Apr-22
  */
+@ServiceAPI(ComponentScope.APPLICATION)
 public interface NewErrorTreeViewPanelFactory {
   @Nonnull
   default NewErrorTreeViewPanel createPanel(ComponentManager project, String helpId) {
