@@ -23,6 +23,8 @@ import consulo.ide.impl.idea.openapi.vcs.CheckinProjectPanel;
 import consulo.ide.impl.idea.openapi.vcs.changes.CommitContext;
 import consulo.project.Project;
 
+import javax.annotation.Nullable;
+
 /**
  * Factory which provides callbacks to run before and after checkin operations.
  * !! This factory is loaded on first commit
@@ -49,7 +51,7 @@ public abstract class CheckinHandlerFactory implements BaseCheckinHandlerFactory
    * @return the handler instance.
    */
   @Override
-  @javax.annotation.Nullable
+  @Nullable
   public abstract CheckinHandler createHandler(final CheckinProjectPanel panel, CommitContext commitContext);
 
   @Override

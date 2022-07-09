@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.refactoring.rename;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
 import consulo.language.editor.refactoring.rename.RenameDialog;
 import consulo.language.editor.refactoring.rename.RenamePsiElementProcessor;
@@ -32,6 +33,7 @@ import java.util.Collections;
 /**
  * @author yole
  */
+@ExtensionImpl(order = "last")
 public class RenamePsiFileProcessor extends RenamePsiElementProcessor {
   @Override
   public boolean canProcessElement(@Nonnull PsiElement element) {

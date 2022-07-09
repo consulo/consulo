@@ -42,7 +42,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@ExtensionImpl
+@ExtensionImpl(id = "copyright", order = "after code-cleanup")
 public class UpdateCopyrightCheckinHandlerFactory extends CheckinHandlerFactory {
   @Nonnull
   public CheckinHandler createHandler(final CheckinProjectPanel panel, CommitContext commitContext) {

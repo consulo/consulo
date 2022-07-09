@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.openapi.vcs.checkin;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.openapi.vcs.CheckinProjectPanel;
 import consulo.ide.impl.idea.openapi.vcs.changes.CommitContext;
 import javax.annotation.Nonnull;
@@ -23,6 +24,7 @@ import javax.annotation.Nonnull;
 /**
  * @author oleg
  */
+@ExtensionImpl(id = "optimize-imports", order = "after rearrange")
 public class OptimizeOptionsCheckinHandlerFactory extends CheckinHandlerFactory {
   @Override
   @Nonnull

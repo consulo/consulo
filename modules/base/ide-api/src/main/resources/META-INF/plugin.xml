@@ -1341,19 +1341,9 @@
     <statistics.usagesCollector implementation="consulo.ide.impl.idea.execution.impl.statistics.TemporaryRunConfigurationTypeUsagesCollector"/>
     <statistics.usagesCollector implementation="consulo.ide.impl.idea.openapi.fileTypes.FileTypeUsagesCollector"/>
 
-    <renamePsiElementProcessor implementation="consulo.ide.impl.idea.refactoring.rename.RenamePsiFileProcessor" order="last"/>
-
-
 
     <refactoring.moveDirectoryWithClassesHelper
 			implementation="consulo.ide.impl.idea.refactoring.move.moveClassesOrPackages.MoveDirectoryWithClassesHelper$Default" order="last"/>
-
-    <checkinHandlerFactory implementation="consulo.ide.impl.idea.openapi.vcs.checkin.ReformatCheckinHandlerFactory"/>
-    <checkinHandlerFactory implementation="consulo.ide.impl.idea.openapi.vcs.checkin.RearrangeCheckinHandlerFactory"/>
-    <checkinHandlerFactory implementation="consulo.ide.impl.idea.openapi.vcs.checkin.OptimizeOptionsCheckinHandlerFactory"/>
-    <checkinHandlerFactory implementation="consulo.ide.impl.idea.openapi.vcs.checkin.CodeAnalysisCheckinHandlerFactory"/>
-    <checkinHandlerFactory implementation="consulo.ide.impl.idea.openapi.vcs.checkin.TodoCheckinHandlerFactory"/>
-    <checkinHandlerFactory implementation="consulo.ide.impl.idea.openapi.vcs.checkin.CodeCleanupCheckinHandlerFactory"/>
 
 
 
@@ -1369,12 +1359,6 @@
 
 
 
-    <refactoring.copyHandler implementation="consulo.ide.impl.idea.refactoring.copy.CopyFilesOrDirectoriesHandler"/>
-    <refactoring.moveHandler implementation="consulo.ide.impl.idea.refactoring.move.moveFilesOrDirectories.MoveFilesOrDirectoriesHandler"
-                             id="moveFileOrDir"/>
-
-
-
 
     <weigher key="proximity" implementationClass="consulo.ide.impl.psi.util.proximity.SameDirectoryWeigher" id="sameDirectory"
              order="after openedInEditor"/>
@@ -1384,14 +1368,11 @@
     <compiler implementation="consulo.ide.impl.idea.compiler.impl.resourceCompiler.ResourceCompiler" id="resourceCompiler"/>
 
 
-
-    <consoleFilterProvider implementation="consulo.ide.impl.idea.execution.filters.UrlFilter$UrlFilterProvider"/>
-
     <schemeOwner serviceInterface="consulo.language.editor.inspection.scheme.InspectionProfileManager"/>
 
 
 
-    <pathMacroExpendableProtocol protocol="zip"/>
+
 
 
 

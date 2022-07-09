@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.openapi.vcs.checkin;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionContextBase;
 import consulo.project.DumbService;
@@ -33,7 +34,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
-
+@ExtensionImpl(id = "code-cleanup", order = "after todo")
 public class CodeCleanupCheckinHandlerFactory extends CheckinHandlerFactory  {
   @Override
   @Nonnull

@@ -16,8 +16,9 @@
 
 package consulo.language.editor.refactoring.rename;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.codeEditor.Editor;
-import consulo.component.extension.ExtensionPointName;
 import consulo.content.scope.SearchScope;
 import consulo.language.editor.refactoring.RefactoringSettings;
 import consulo.language.editor.refactoring.event.RefactoringElementListener;
@@ -44,9 +45,8 @@ import java.util.function.Consumer;
 /**
  * @author yole
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class RenamePsiElementProcessor {
-  protected static final ExtensionPointName<RenamePsiElementProcessor> EP_NAME = ExtensionPointName.create("consulo.renamePsiElementProcessor");
-
   public abstract boolean canProcessElement(@Nonnull PsiElement element);
 
   public RenameDialog createRenameDialog(Project project, PsiElement element, PsiElement nameSuggestionContext, Editor editor) {
@@ -104,8 +104,8 @@ public abstract class RenamePsiElementProcessor {
   }
 
   public static List<RenamePsiElementProcessor> allForElement(@Nonnull PsiElement element) {
-    final List<RenamePsiElementProcessor> result = new ArrayList<RenamePsiElementProcessor>();
-    for (RenamePsiElementProcessor processor : EP_NAME.getExtensionList()) {
+    final List<RenamePsiElementProcessor> result = new ArrayList<>();
+    for (RenamePsiElementProcessor processor : element.getProject().getApplication().getExtensionList(RenamePsiElementProcessor.class)) {
       if (processor.canProcessElement(element)) {
         result.add(processor);
       }
@@ -115,7 +115,7 @@ public abstract class RenamePsiElementProcessor {
 
   @Nonnull
   public static RenamePsiElementProcessor forElement(@Nonnull PsiElement element) {
-    for(RenamePsiElementProcessor processor: EP_NAME.getExtensionList()) {
+    for (RenamePsiElementProcessor processor : element.getProject().getApplication().getExtensionList(RenamePsiElementProcessor.class)) {
       if (processor.canProcessElement(element)) {
         return processor;
       }

@@ -15,13 +15,16 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.checkin;
 
-import consulo.ide.impl.idea.openapi.vcs.changes.CommitContext;
-import javax.annotation.Nonnull;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.openapi.vcs.CheckinProjectPanel;
+import consulo.ide.impl.idea.openapi.vcs.changes.CommitContext;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
  */
+@ExtensionImpl(id = "code-analysis", order = "after optimize-imports")
 public class CodeAnalysisCheckinHandlerFactory extends CheckinHandlerFactory {
   @Override
   @Nonnull

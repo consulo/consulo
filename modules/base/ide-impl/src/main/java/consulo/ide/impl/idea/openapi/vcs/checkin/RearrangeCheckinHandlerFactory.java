@@ -16,10 +16,13 @@
 
 package consulo.ide.impl.idea.openapi.vcs.checkin;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.openapi.vcs.CheckinProjectPanel;
 import consulo.ide.impl.idea.openapi.vcs.changes.CommitContext;
+
 import javax.annotation.Nonnull;
 
+@ExtensionImpl(id = "rearrange", order = "after reformat")
 public class RearrangeCheckinHandlerFactory extends CheckinHandlerFactory {
   @Override
   @Nonnull
