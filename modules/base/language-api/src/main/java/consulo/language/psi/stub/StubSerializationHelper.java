@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.psi.stub;
 
-import consulo.application.util.function.Computable;
 import consulo.disposer.Disposable;
 import consulo.index.io.AbstractStringEnumerator;
 import consulo.index.io.data.DataEnumeratorEx;
@@ -34,7 +33,7 @@ public class StubSerializationHelper {
 
   private final IntObjectMap<String> myIdToName = IntMaps.newIntObjectHashMap();
   private final ObjectIntMap<String> myNameToId = ObjectMaps.newObjectIntHashMap();
-  private final Map<String, Computable<ObjectStubSerializer>> myNameToLazySerializer = new HashMap<>();
+  private final Map<String, ObjectStubSerializerProvider> myNameToLazySerializer = new HashMap<>();
 
   private final ConcurrentIntObjectMap<ObjectStubSerializer> myIdToSerializer = IntMaps.newConcurrentIntObjectHashMap();
   private final Map<ObjectStubSerializer, Integer> mySerializerToId = new ConcurrentHashMap<>();
@@ -48,11 +47,11 @@ public class StubSerializationHelper {
     myStringInterner = new RecentStringInterner(parentDisposable);
   }
 
-  public void assignId(@Nonnull Computable<ObjectStubSerializer> serializer, String name) throws IOException {
-    Computable<ObjectStubSerializer> old = myNameToLazySerializer.put(name, serializer);
+  public void assignId(@Nonnull ObjectStubSerializerProvider serializer, String name) throws IOException {
+    ObjectStubSerializerProvider old = myNameToLazySerializer.put(name, serializer);
     if (old != null) {
-      ObjectStubSerializer existing = old.compute();
-      ObjectStubSerializer computed = serializer.compute();
+      ObjectStubSerializer existing = old.getObjectStubSerializer();
+      ObjectStubSerializer computed = serializer.getObjectStubSerializer();
       if (existing != computed) {
         throw new AssertionError("ID: " + name + " is not unique, but found in both " + existing.getClass().getName() + " and " + computed.getClass().getName());
       }
@@ -338,8 +337,8 @@ public class StubSerializationHelper {
   @Nonnull
   private ObjectStubSerializer instantiateSerializer(int id, @Nullable Stub parentStub) throws SerializerNotFoundException {
     String name = myIdToName.get(id);
-    Computable<ObjectStubSerializer> lazy = name == null ? null : myNameToLazySerializer.get(name);
-    ObjectStubSerializer serializer = lazy == null ? null : lazy.compute();
+    ObjectStubSerializerProvider lazy = name == null ? null : myNameToLazySerializer.get(name);
+    ObjectStubSerializer serializer = lazy == null ? null : lazy.getObjectStubSerializer();
     if (serializer == null) {
       throw reportMissingSerializer(id, parentStub);
     }

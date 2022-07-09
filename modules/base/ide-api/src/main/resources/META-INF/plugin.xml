@@ -290,6 +290,7 @@
     <extensionPoint name="fileBasedIndex.providedLocator"
                     interface="consulo.ide.impl.idea.util.indexing.provided.ProvidedIndexExtensionLocator"/>
 
+
     <extensionPoint name="globalIndexFilter"
                     interface="consulo.ide.impl.idea.util.indexing.GlobalIndexFilter"/>
 
@@ -876,8 +877,6 @@
     </extensionPoint>
 
 
-    <extensionPoint name="stubElementTypeHolder"
-                    beanClass="consulo.language.psi.stub.StubElementTypeHolderEP"/>
 
 
     <extensionPoint name="filePasteProvider"

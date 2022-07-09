@@ -4,7 +4,6 @@ package consulo.language.psi.stub;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.ApplicationManager;
-import consulo.application.util.function.Computable;
 import consulo.language.ast.IElementType;
 
 import java.util.List;
@@ -14,22 +13,23 @@ public abstract class SerializationManager {
   private volatile boolean mySerializersLoaded;
 
   public static SerializationManager getInstance() {
-    return ApplicationManager.getApplication().getComponent(SerializationManager.class);
+    return ApplicationManager.getApplication().getInstance(SerializationManager.class);
   }
 
   public void registerSerializer(ObjectStubSerializer serializer) {
-    registerSerializer(serializer.getExternalId(), new Computable.PredefinedValueComputable<>(serializer));
+    registerSerializer(serializer.getExternalId(), new NotLazyObjectStubSerializerProvider(serializer));
   }
 
-  protected abstract void registerSerializer(String externalId, Computable<ObjectStubSerializer> lazySerializer);
+  protected abstract void registerSerializer(String externalId, ObjectStubSerializerProvider provider);
 
   public void initSerializers() {
     if (mySerializersLoaded) return;
     //noinspection SynchronizeOnThis
     synchronized (this) {
       if (mySerializersLoaded) return;
-      List<StubFieldAccessor> lazySerializers = IStubElementType.loadRegisteredStubElementTypes();
+      List<ObjectStubSerializerProvider> lazySerializers = IStubElementType.loadRegisteredStubElementTypes();
       final IElementType[] stubElementTypes = IElementType.enumerate(type -> type instanceof StubSerializer);
+
       for (IElementType type : stubElementTypes) {
         if (type instanceof StubFileElementType && StubFileElementType.DEFAULT_EXTERNAL_ID.equals(((StubFileElementType)type).getExternalId())) {
           continue;
@@ -37,8 +37,9 @@ public abstract class SerializationManager {
 
         registerSerializer((StubSerializer)type);
       }
-      for (StubFieldAccessor lazySerializer : lazySerializers) {
-        registerSerializer(lazySerializer.externalId, lazySerializer);
+
+      for (ObjectStubSerializerProvider serializerProvider : lazySerializers) {
+        registerSerializer(serializerProvider.getExternalId(), serializerProvider);
       }
       mySerializersLoaded = true;
     }

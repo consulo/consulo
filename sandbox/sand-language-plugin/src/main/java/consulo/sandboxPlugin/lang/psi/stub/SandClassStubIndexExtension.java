@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,27 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.sandboxPlugin.lang.psi.stub;
 
-package consulo.ide.navigation;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.psi.stub.StringStubIndexExtension;
+import consulo.language.psi.stub.StubIndexKey;
+import consulo.sandboxPlugin.lang.psi.SandClass;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ExtensionAPI;
-import consulo.navigation.NavigationItem;
-
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 
 /**
- * @author yole
+ * @author VISTALL
+ * @since 09-Jul-22
  */
-@ExtensionAPI(ComponentScope.APPLICATION)
-public interface GotoClassOrTypeContributor extends ChooseByNameContributorEx {
-  @Nullable
-  default String getQualifiedName(NavigationItem item) {
-    return null;
-  }
-
-  @Nullable
-  default String getQualifiedNameSeparator() {
-    return null;
+@ExtensionImpl
+public class SandClassStubIndexExtension extends StringStubIndexExtension<SandClass> {
+  @Nonnull
+  @Override
+  public StubIndexKey<String, SandClass> getKey() {
+    return SandIndexKeys.SAND_CLASSES;
   }
 }

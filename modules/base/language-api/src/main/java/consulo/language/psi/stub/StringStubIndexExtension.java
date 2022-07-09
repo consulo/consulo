@@ -19,18 +19,19 @@
  */
 package consulo.language.psi.stub;
 
-import consulo.language.psi.PsiElement;
 import consulo.index.io.EnumeratorStringDescriptor;
 import consulo.index.io.KeyDescriptor;
-import consulo.language.psi.stub.AbstractStubIndex;
+import consulo.language.psi.PsiElement;
 
 import javax.annotation.Nonnull;
 
 public abstract class StringStubIndexExtension<Psi extends PsiElement> extends AbstractStubIndex<String, Psi> {
+  @Override
   public int getVersion() {
     return 2;
   }
 
+  @Override
   @Nonnull
   public KeyDescriptor<String> getKeyDescriptor() {
     return new EnumeratorStringDescriptor();

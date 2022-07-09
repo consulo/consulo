@@ -35,7 +35,7 @@ class RecentStringInterner {
     myStripeLocks = new Lock[myInterns.length];
     int capacity = 8192;
     for (int i = 0; i < myInterns.length; ++i) {
-      myInterns[i] = new SLRUCache<String, String>(capacity / stripes, capacity / stripes) {
+      myInterns[i] = new SLRUCache<>(capacity / stripes, capacity / stripes) {
         @Nonnull
         @Override
         public String createValue(String key) {

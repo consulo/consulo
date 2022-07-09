@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2021 consulo.io
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,27 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.security.impl;
-
-import consulo.container.impl.securityManager.impl.ConsuloSecurityManager;
+package consulo.language.psi.stub;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 07/11/2021
- *
- * This class & package will be exported only to impl modules of Consulo. Never for plugins!
+ * @since 09-Jul-22
  */
-public final class PrivilegedAction {
-  public static void runPrivilegedAction(@Nonnull Runnable runnable) {
-    ConsuloSecurityManager.runPrivilegedAction(runnable);
+class NotLazyObjectStubSerializerProvider implements ObjectStubSerializerProvider {
+  private final ObjectStubSerializer myObjectStubSerializer;
+
+  NotLazyObjectStubSerializerProvider(ObjectStubSerializer objectStubSerializer) {
+    myObjectStubSerializer = objectStubSerializer;
+  }
+
+  @Nonnull
+  @Override
+  public String getExternalId() {
+    return myObjectStubSerializer.getExternalId();
+  }
+
+  @Override
+  public boolean isLazy() {
+    return false;
   }
 
   @Nullable
-  public static <T> T runPrivilegedAction(@Nonnull Supplier<T> getter) {
-    return ConsuloSecurityManager.runPrivilegedAction(getter::get);
+  @Override
+  public ObjectStubSerializer getObjectStubSerializer() {
+    return myObjectStubSerializer;
   }
 }

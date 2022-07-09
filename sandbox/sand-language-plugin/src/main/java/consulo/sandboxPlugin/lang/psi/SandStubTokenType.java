@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.sandboxPlugin.lang.psi;
 
-/*
- * @author max
+import consulo.sandboxPlugin.lang.psi.stub.SandClassStubElementType;
+
+/**
+ * @author VISTALL
+ * @since 09-Jul-22
  */
-package consulo.ide.impl.psi.stubs;
-
-import consulo.language.psi.stub.StubSerializer;
-
-import java.lang.annotation.*;
-
-@Inherited
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface SerializerClass {
-  Class<? extends StubSerializer> value();
+public interface SandStubTokenType {
+  SandClassStubElementType CLASS = new SandClassStubElementType();
 }

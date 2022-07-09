@@ -1,27 +1,23 @@
-package consulo.ide.impl.psi.stubs;
-
-import consulo.language.Language;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.stub.IStubElementType;
-import consulo.language.psi.stub.IndexSink;
-import consulo.language.psi.stub.StubElement;
-import consulo.language.psi.stub.StubInputStream;
-import consulo.language.psi.stub.StubOutputStream;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
+package consulo.language.psi.stub;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.language.Language;
+import consulo.language.psi.PsiElement;
+import org.jetbrains.annotations.NonNls;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.IOException;
 
 /**
  * @author peter
  */
 public abstract class EmptyStubElementType<T extends PsiElement> extends IStubElementType<EmptyStub, T> {
-  protected EmptyStubElementType(@Nonnull @NonNls String debugName, @javax.annotation.Nullable Language language) {
+  protected EmptyStubElementType(@Nonnull @NonNls String debugName, @Nullable Language language) {
     super(debugName, language);
   }
 
+  @Nonnull
   @RequiredReadAction
   @Override
   public final EmptyStub createStub(@Nonnull T psi, StubElement parentStub) {

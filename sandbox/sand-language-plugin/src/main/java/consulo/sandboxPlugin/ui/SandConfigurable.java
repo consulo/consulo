@@ -19,7 +19,7 @@ import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
-import consulo.ide.impl.security.impl.PrivilegedAction;
+import consulo.application.impl.internal.PrivilegedAction;
 import consulo.ui.Alerts;
 import consulo.ui.Button;
 import consulo.ui.Component;

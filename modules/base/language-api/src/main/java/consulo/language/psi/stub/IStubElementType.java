@@ -5,10 +5,11 @@
  */
 package consulo.language.psi.stub;
 
-import consulo.language.ast.ASTNode;
+import consulo.application.Application;
 import consulo.language.Language;
-import consulo.language.psi.PsiElement;
+import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiElement;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
@@ -30,8 +31,11 @@ public abstract class IStubElementType<StubT extends StubElement, PsiT extends P
   public static void checkNotInstantiatedTooLate() {
     if (ourInitializedStubs) {
       LOG.error("All stub element types should be created before index initialization is complete.\n" +
-                "Please add the class containing stub element type constants to \"stubElementTypeHolder\" extension.\n" +
-                "Registered extensions: " + Arrays.toString(StubElementTypeHolderEP.EP_NAME.getExtensions()));
+                "Please add the class containing stub element type constants to '" +
+                StubElementTypeHolder.class +
+                "' extension.\n" +
+                "Registered extensions: " +
+                Application.get().getExtensionList(StubElementTypeHolder.class));
     }
   }
 
@@ -42,21 +46,31 @@ public abstract class IStubElementType<StubT extends StubElement, PsiT extends P
     catch (Throwable e) {
       // "getExternalId" might throw when called from constructor, if it accesses subclass fields
       // Lazily-registered types have a contract that their "getExternalId" doesn't throw like this,
-      // so getting an exception here is a sign that someone indeed creates their stub type after StubElementTypeHolderEP initialization.
+      // so getting an exception here is a sign that someone indeed creates their stub type after StubElementTypeHolder initialization.
       return false;
     }
   }
 
-  public static List<StubFieldAccessor> loadRegisteredStubElementTypes() {
-    List<StubFieldAccessor> result = new ArrayList<>();
-    for (StubElementTypeHolderEP bean : StubElementTypeHolderEP.EP_NAME.getExtensionList()) {
-      result.addAll(bean.initializeOptimized());
-    }
-
+  @Nonnull
+  @SuppressWarnings("unchecked")
+  public static List<ObjectStubSerializerProvider> loadRegisteredStubElementTypes() {
+    List<ObjectStubSerializerProvider> result = new ArrayList<>();
     Set<String> lazyIds = new HashSet<>();
-    for (StubFieldAccessor accessor : result) {
-      lazyIds.add(accessor.externalId);
-    }
+
+    Application.get().getExtensionPoint(StubElementTypeHolder.class).forEachExtensionSafe(holder -> {
+      String externalPrefixId = holder.getExternalIdPrefix();
+      if (externalPrefixId != null) {
+        lazyIds.add(externalPrefixId);
+      }
+
+      // just invoke for registering not lazy element types
+      List<ObjectStubSerializerProvider> serializers = holder.loadSerializers();
+      // add only lazy stubs, others will be registered by class initialize, and registering to IElementType registry
+      if (externalPrefixId != null) {
+        result.addAll(serializers);
+      }
+    });
+
     ourLazyExternalIds = lazyIds;
     ourInitializedStubs = true;
     return result;

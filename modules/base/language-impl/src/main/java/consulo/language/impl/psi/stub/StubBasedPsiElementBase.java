@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.extapi.psi;
+package consulo.language.impl.psi.stub;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ApplicationManager;
+import consulo.application.impl.internal.PrivilegedAction;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.RecursionManager;
-import consulo.ide.impl.idea.openapi.diagnostic.Attachment;
-import consulo.ide.impl.idea.openapi.diagnostic.RuntimeExceptionWithAttachments;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.security.impl.PrivilegedAction;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
@@ -43,8 +41,12 @@ import consulo.language.psi.StubBasedPsiElement;
 import consulo.language.psi.internal.PsiFileWithStubSupport;
 import consulo.language.psi.stub.*;
 import consulo.language.psi.util.PsiTreeUtil;
+import consulo.logging.attachment.Attachment;
+import consulo.logging.attachment.AttachmentFactory;
+import consulo.logging.attachment.RuntimeExceptionWithAttachments;
 import consulo.project.Project;
 import consulo.util.collection.ArrayFactory;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NonNls;
@@ -127,6 +129,7 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
    * this causes AST to be loaded for the whole file and all stub-based PSI elements in this file (including the current one)
    * to be switched from stub to AST. So, after this call {@link #getStub()} will return null.
    */
+  @RequiredReadAction
   @Override
   @Nonnull
   public ASTNode getNode() {
@@ -162,13 +165,13 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
 
     List<Attachment> attachments = new ArrayList<>();
     if (stubString != null) {
-      attachments.add(new Attachment("stubTree.txt", stubString));
+      attachments.add(AttachmentFactory.get().create("stubTree.txt", stubString));
     }
     if (astString != null) {
-      attachments.add(new Attachment("ast.txt", astString));
+      attachments.add(AttachmentFactory.get().create("ast.txt", astString));
     }
     if (creationTraces != null) {
-      attachments.add(new Attachment("creationTraces.txt", creationTraces));
+      attachments.add(AttachmentFactory.get().create("creationTraces.txt", creationTraces));
     }
 
     throw new RuntimeExceptionWithAttachments(message, attachments.toArray(Attachment.EMPTY_ARRAY));

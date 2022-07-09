@@ -1101,7 +1101,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.roots.ui.configuration.projectRoot.moduleLayerActions;
   exports consulo.ide.impl.roots.ui.configuration.session.internal;
   exports consulo.ide.impl.script;
-  exports consulo.ide.impl.security.impl;
   exports consulo.ide.impl.settings.impl;
   exports consulo.ide.impl.start;
   exports consulo.ide.impl.startup.customize;

@@ -23,6 +23,7 @@ import java.util.List;
  */
 public interface ReadonlyList<T> {
   T get(final int idx);
+
   int getSize();
 
   ReadonlyList EMPTY = new ReadonlyList() {

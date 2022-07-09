@@ -23,5 +23,5 @@ import consulo.annotation.component.ExtensionAPI;
  * @since 27-Jun-22
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
-public interface GotoSymbolContributor extends ChooseByNameContributor {
+public interface GotoSymbolContributor extends ChooseByNameContributorEx {
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2017 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.psi.stub;
 
-import consulo.component.extension.AbstractExtensionPointBean;
-import consulo.component.extension.ExtensionPointName;
-import consulo.util.xml.serializer.annotation.Attribute;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.logging.Logger;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -38,13 +35,13 @@ import java.util.List;
  *
  * @author yole
  */
-public class StubElementTypeHolderEP extends AbstractExtensionPointBean {
-  private static final Logger LOG = Logger.getInstance(StubElementTypeHolderEP.class);
+@ExtensionAPI(ComponentScope.APPLICATION)
+public abstract class StubElementTypeHolder<T> {
+  private static final Logger LOG = Logger.getInstance(StubElementTypeHolder.class);
 
-  public static final ExtensionPointName<StubElementTypeHolderEP> EP_NAME = ExtensionPointName.create("consulo.stubElementTypeHolder");
-
-  @Attribute("class")
-  public String holderClass;
+  protected interface FieldValueGetter {
+    Object get(Field field, Object obj) throws IllegalArgumentException, IllegalAccessException;
+  }
 
   /**
    * Allows to avoid class initialization by declaring that the stub element type holder obeys the following contract:
@@ -62,42 +59,30 @@ public class StubElementTypeHolderEP extends AbstractExtensionPointBean {
    * <li>For all other fields, if any, the same {@code prefix+debugName} concatenation doesn't produce an external id used by any other stub element type</li>
    * </ul>
    */
-  @Attribute("externalIdPrefix")
   @Nullable
-  public String externalIdPrefix;
-
-  List<StubFieldAccessor> initializeOptimized() {
-    try {
-      if (externalIdPrefix != null) {
-        List<StubFieldAccessor> result = new ArrayList<>();
-        Class<?> aClass = Class.forName(holderClass, false, getLoaderForClass());
-        assert aClass.isInterface();
-        for (Field field : aClass.getDeclaredFields()) {
-          result.add(new StubFieldAccessor(externalIdPrefix + field.getName(), field));
-        }
-        return result;
-      }
-      else {
-        findClass(holderClass);
-      }
-    }
-    catch (ClassNotFoundException e) {
-      LOG.error(e);
-    }
-    return Collections.emptyList();
-  }
+  public abstract String getExternalIdPrefix();
 
   /**
-   * @deprecated please don't use this extension to ensure something is initialized as a side effect of stub element type loading,
-   * create your own narrow-scoped extension instead
+   * Load serializer. By default use {@link #allFromStaticFields(Class, FieldValueGetter)}
    */
-  @Deprecated
-  public void initialize() {
-    findClassNoExceptions(holderClass);
-  }
+  @Nonnull
+  public abstract List<ObjectStubSerializerProvider> loadSerializers();
 
-  @Override
-  public String toString() {
-    return holderClass;
+  @Nonnull
+  protected final List<ObjectStubSerializerProvider> allFromStaticFields(@Nonnull Class<T> clazz, @Nonnull FieldValueGetter fieldGetter) {
+    String externalIdPrefix = getExternalIdPrefix();
+    boolean isLazy = externalIdPrefix != null;
+    Field[] fields = clazz.getFields();
+    List<ObjectStubSerializerProvider> serializers = new ArrayList<>(fields.length);
+    for (Field field : fields) {
+      LazyObjectStubSerializerProvider accessor = new LazyObjectStubSerializerProvider(externalIdPrefix, field, fieldGetter);
+      if (!isLazy) {
+        // initialize value due it's not lazy serializer types
+        accessor.getObjectStubSerializer();
+      }
+      serializers.add(accessor);
+    }
+
+    return serializers;
   }
 }

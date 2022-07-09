@@ -24,6 +24,6 @@ import consulo.sandboxPlugin.lang.SandLanguage;
  * @since 19.03.14
  */
 public interface SandElements {
-  IElementType CLASS = new ElementTypeAsPsiFactory("CLASS", SandLanguage.INSTANCE, SandClass::new);
+  IElementType CLASS = SandStubTokenType.CLASS;
   IElementType DEF = new ElementTypeAsPsiFactory("DEF", SandLanguage.INSTANCE, SandDef::new);
 }

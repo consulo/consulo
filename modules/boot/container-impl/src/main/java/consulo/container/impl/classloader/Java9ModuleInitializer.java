@@ -82,7 +82,7 @@ public class Java9ModuleInitializer {
     Module applicationImpl = controller.layer().findModule("consulo.application.impl").get();
     Module componentImpl = controller.layer().findModule("consulo.component.impl").get();
 
-    containerImpl.addExports("consulo.container.impl.securityManager.impl", ideImpl);
+    containerImpl.addExports("consulo.container.impl.securityManager.impl", applicationImpl);
 
     containerImpl.addExports("consulo.container.impl", applicationImpl);
     containerImpl.addExports("consulo.container.impl", componentImpl);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,27 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.language.psi.stub;
 
-package consulo.ide.navigation;
-
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ExtensionAPI;
-import consulo.navigation.NavigationItem;
-
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * @author yole
+ * @author VISTALL
+ * @since 09-Jul-22
  */
-@ExtensionAPI(ComponentScope.APPLICATION)
-public interface GotoClassOrTypeContributor extends ChooseByNameContributorEx {
-  @Nullable
-  default String getQualifiedName(NavigationItem item) {
-    return null;
-  }
+public interface ObjectStubSerializerProvider {
+  @Nonnull
+  String getExternalId();
+
+  boolean isLazy();
 
   @Nullable
-  default String getQualifiedNameSeparator() {
-    return null;
-  }
+  ObjectStubSerializer getObjectStubSerializer();
 }

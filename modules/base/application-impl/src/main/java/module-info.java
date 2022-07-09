@@ -26,7 +26,14 @@ module consulo.application.impl {
   requires args4j;
   requires org.slf4j;
 
-  exports consulo.application.impl.internal to consulo.ide.impl, consulo.logging.log4j2.impl, consulo.desktop.awt.ide.impl, consulo.proxy, consulo.test.impl, consulo.module.impl;
+  exports consulo.application.impl.internal to consulo.ide.impl,
+          consulo.logging.log4j2.impl,
+          consulo.desktop.awt.ide.impl,
+          consulo.proxy,
+          consulo.test.impl,
+          consulo.module.impl,
+          consulo.sand.language.plugin,
+          consulo.language.impl;
   exports consulo.application.impl.internal.macro to consulo.ide.impl, consulo.injecting.pico.impl, consulo.module.impl;
   exports consulo.application.impl.internal.progress to consulo.ide.impl, consulo.desktop.awt.ide.impl, consulo.test.impl;
   exports consulo.application.impl.internal.performance to consulo.ide.impl, consulo.proxy, consulo.injecting.pico.impl;
