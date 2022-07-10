@@ -15,9 +15,13 @@
  */
 package consulo.ide.impl.idea.util.containers;
 
+import consulo.annotation.DeprecationInfo;
+
 import java.util.function.Function;
 
 @FunctionalInterface
+@Deprecated
+@DeprecationInfo("Use java.util.function.Function")
 public interface Convertor<Src, Dst> extends Function<Src, Dst> {
   IntoSelf SELF = new IntoSelf();
 
