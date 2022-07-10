@@ -41,7 +41,6 @@ import consulo.ide.impl.idea.util.FunctionUtil;
 import consulo.language.impl.DebugUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.project.ProjectComponent;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.TreeExpander;
 import consulo.ui.ex.action.*;
@@ -81,7 +80,7 @@ import static java.util.stream.Collectors.toList;
 @State(name = "ChangesViewManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 @Singleton
 @ServiceImpl
-public class ChangesViewManager implements ChangesViewI, ProjectComponent, PersistentStateComponent<ChangesViewManager.State> {
+public class ChangesViewManager implements ChangesViewI, Disposable, PersistentStateComponent<ChangesViewManager.State> {
 
   private static final Logger LOG = Logger.getInstance(ChangesViewManager.class);
 
@@ -158,12 +157,8 @@ public class ChangesViewManager implements ChangesViewI, ProjectComponent, Persi
   public void projectOpened() {
     final ChangeListManager changeListManager = ChangeListManager.getInstance(myProject);
     changeListManager.addChangeListListener(myListener);
-    Disposer.register(myProject, new Disposable() {
-      public void dispose() {
-        changeListManager.removeChangeListListener(myListener);
-      }
-    });
-    if (ApplicationManager.getApplication().isHeadlessEnvironment()) return;
+    Disposer.register(myProject, () -> changeListManager.removeChangeListListener(myListener));
+
     myContent = new MyChangeViewContent(createChangeViewComponent(), ChangesViewContentManager.LOCAL_CHANGES, false);
     myContent.setCloseable(false);
     myContentManager.addContent(myContent);
@@ -183,7 +178,8 @@ public class ChangesViewManager implements ChangesViewI, ProjectComponent, Persi
     changeDetails();
   }
 
-  public void projectClosed() {
+  @Override
+  public void dispose() {
     myView.removeTreeSelectionListener(myTsl);
     myDisposed = true;
     myRepaintAlarm.cancelAllRequests();

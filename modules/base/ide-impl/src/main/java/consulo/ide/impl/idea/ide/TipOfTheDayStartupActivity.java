@@ -25,7 +25,7 @@ import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 
-@ExtensionImpl
+@ExtensionImpl(order = "last")
 public class TipOfTheDayStartupActivity implements PostStartupActivity, DumbAware {
   private final TipOfDayManager myManager;
   private final GeneralSettings myGeneralSettings;

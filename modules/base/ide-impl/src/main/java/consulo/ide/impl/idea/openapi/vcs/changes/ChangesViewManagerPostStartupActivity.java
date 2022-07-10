@@ -13,31 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.impl;
+package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
-import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 29-Jun-22
+ * @since 10-Jul-22
  */
-@ExtensionImpl(id = "vcs", order = "last")
-final class VcsPostStartUpActivity implements PostStartupActivity, DumbAware {
-  @Inject
-  VcsPostStartUpActivity() {
-  }
-
+@ExtensionImpl(order = "after changelist-manager")
+public class ChangesViewManagerPostStartupActivity implements PostStartupActivity, DumbAware {
   @Override
   public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
-    if (project.isDefault()) return;
-    VcsInitialization vcsInitialization = project.getInstance(VcsInitialization.class);
-    vcsInitialization.startInitialization();
+    ChangesViewManager changesViewManager = (ChangesViewManager)ChangesViewManager.getInstance(project);
+
+    changesViewManager.projectOpened();
   }
 }

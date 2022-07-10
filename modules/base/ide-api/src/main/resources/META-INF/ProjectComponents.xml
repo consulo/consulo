@@ -14,20 +14,5 @@
   - limitations under the License.
   -->
 <consulo-plugin>
-  <project-components>
 
-
-    <component>
-      <implementation-class>consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelveChangesManager</implementation-class>
-      <option name="workspace" value="true"/>
-    </component>
-    <component>
-      <implementation-class>consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelvedChangesViewManager</implementation-class>
-      <headless-implementation-class></headless-implementation-class>
-      <option name="workspace" value="true"/>
-      <skipForDefaultProject/>
-    </component>
-
-
-  </project-components>
 </consulo-plugin>

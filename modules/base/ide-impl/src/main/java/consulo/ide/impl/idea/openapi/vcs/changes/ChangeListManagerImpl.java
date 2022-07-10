@@ -33,6 +33,7 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
+import consulo.disposer.Disposable;
 import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.openapi.util.Getter;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
@@ -52,7 +53,6 @@ import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.ui.EditorNotifications;
 import consulo.ide.impl.idea.util.*;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.vcs.util.VcsUtil;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
@@ -60,7 +60,6 @@ import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.layer.DirectoryIndexExcludePolicy;
 import consulo.project.Project;
-import consulo.project.ProjectComponent;
 import consulo.project.ui.notification.NotificationType;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
@@ -76,6 +75,7 @@ import consulo.vcs.*;
 import consulo.vcs.change.*;
 import consulo.vcs.checkin.CheckinEnvironment;
 import consulo.vcs.internal.ContentRevisionCache;
+import consulo.vcs.util.VcsUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
@@ -101,7 +101,7 @@ import static consulo.vcs.ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED;
 @State(name = "ChangeListManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 @Singleton
 @ServiceImpl
-public class ChangeListManagerImpl extends ChangeListManagerEx implements ProjectComponent, ChangeListOwner, PersistentStateComponent<Element> {
+public class ChangeListManagerImpl extends ChangeListManagerEx implements ChangeListOwner, Disposable, PersistentStateComponent<Element> {
   static class Scheduler {
     private final AtomicReference<Future> myLastTask = new AtomicReference<>();
     private final ScheduledExecutorService myExecutor = AppExecutorUtil.createBoundedScheduledExecutorService("ChangeListManagerImpl pool", 1);
@@ -284,24 +284,17 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
     myListsToBeDeleted.clear();
   }
 
-  @Override
   public void projectOpened() {
     initializeForNewProject();
 
     final ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(myProject);
-    if (ApplicationManager.getApplication().isUnitTestMode()) {
+    ((ProjectLevelVcsManagerImpl)vcsManager).addInitializationRequest(VcsInitObject.CHANGE_LIST_MANAGER, (DumbAwareRunnable)() -> {
       myUpdater.initialized();
+      broadcastStateAfterLoad();
       myProject.getMessageBus().connect().subscribe(VCS_CONFIGURATION_CHANGED, myVcsListener);
-    }
-    else {
-      ((ProjectLevelVcsManagerImpl)vcsManager).addInitializationRequest(VcsInitObject.CHANGE_LIST_MANAGER, (DumbAwareRunnable)() -> {
-        myUpdater.initialized();
-        broadcastStateAfterLoad();
-        myProject.getMessageBus().connect().subscribe(VCS_CONFIGURATION_CHANGED, myVcsListener);
-      });
+    });
 
-      myConflictTracker.startTracking();
-    }
+    myConflictTracker.startTracking();
   }
 
   private void broadcastStateAfterLoad() {
@@ -350,7 +343,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
   }
 
   @Override
-  public void projectClosed() {
+  public void dispose() {
     synchronized (myDataLock) {
       myUpdateChangesProgressIndicator.cancel();
     }

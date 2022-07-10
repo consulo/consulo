@@ -86,10 +86,10 @@ public abstract class ChangeListManager implements ChangeListModification {
   @Nonnull
   public abstract Collection<Change> getAllChanges();
 
-  @javax.annotation.Nullable
+  @Nullable
   public abstract LocalChangeList findChangeList(final String name);
 
-  @javax.annotation.Nullable
+  @Nullable
   public abstract LocalChangeList getChangeList(String id);
 //  public abstract LocalChangeList addChangeList(@NotNull String name, final String comment);
 //  public abstract void setDefaultChangeList(@NotNull LocalChangeList list);
@@ -112,13 +112,13 @@ public abstract class ChangeListManager implements ChangeListModification {
   @Nonnull
   public abstract Runnable prepareForChangeDeletion(final Collection<Change> changes);
 
-  @javax.annotation.Nullable
+  @Nullable
   public abstract Change getChange(@Nonnull VirtualFile file);
 
-  @javax.annotation.Nullable
+  @Nullable
   public abstract LocalChangeList getChangeList(@Nonnull VirtualFile file);
 
-  @javax.annotation.Nullable
+  @Nullable
   public abstract Change getChange(FilePath file);
 
   public abstract boolean isUnversioned(VirtualFile file);
@@ -132,7 +132,7 @@ public abstract class ChangeListManager implements ChangeListModification {
   @Nonnull
   public abstract Collection<Change> getChangesIn(FilePath path);
 
-  @javax.annotation.Nullable
+  @Nullable
   public abstract AbstractVcs getVcsFor(@Nonnull Change change);
 
 //  public abstract void removeChangeList(final LocalChangeList list);
@@ -168,7 +168,7 @@ public abstract class ChangeListManager implements ChangeListModification {
 
   public abstract boolean isIgnoredFile(@Nonnull VirtualFile file);
 
-  @javax.annotation.Nullable
+  @Nullable
   public abstract String getSwitchedBranch(VirtualFile file);
 
   public abstract String getDefaultListName();
@@ -178,7 +178,7 @@ public abstract class ChangeListManager implements ChangeListModification {
 
   public abstract String isFreezed();
 
-  public abstract boolean isFreezedWithNotification(@javax.annotation.Nullable String modalTitle);
+  public abstract boolean isFreezedWithNotification(@Nullable String modalTitle);
 
 
   public abstract List<VirtualFile> getModifiedWithoutEditing();

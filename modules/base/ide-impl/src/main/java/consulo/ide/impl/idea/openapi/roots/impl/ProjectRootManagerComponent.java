@@ -15,47 +15,45 @@
  */
 package consulo.ide.impl.idea.openapi.roots.impl;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.event.ApplicationListener;
 import consulo.application.ApplicationManager;
-import consulo.disposer.Disposable;
-import consulo.module.content.layer.event.ModuleRootListener;
-import consulo.module.impl.internal.ProjectRootManagerImpl;
-import consulo.project.ProjectComponent;
-import consulo.language.file.event.FileTypeEvent;
-import consulo.language.file.event.FileTypeListener;
-import consulo.module.Module;
-import consulo.module.ModuleManager;
-import consulo.module.content.scope.ModuleScopeProvider;
-import consulo.ide.impl.idea.openapi.module.impl.scopes.ModuleScopeProviderImpl;
-import consulo.project.DumbModeTask;
-import consulo.ide.impl.idea.openapi.project.DumbServiceImpl;
-import consulo.project.Project;
-import consulo.module.content.ModuleRootManager;
-import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.application.event.ApplicationListener;
+import consulo.component.messagebus.MessageBusConnection;
+import consulo.component.store.impl.internal.BatchUpdateListener;
 import consulo.content.OrderRootType;
-import consulo.project.content.WatchedRootsProvider;
-import consulo.project.startup.StartupManager;
-import consulo.util.lang.Pair;
+import consulo.disposer.Disposable;
+import consulo.ide.impl.idea.openapi.module.impl.scopes.ModuleScopeProviderImpl;
+import consulo.ide.impl.idea.openapi.project.DumbServiceImpl;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.vfs.*;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.openapi.vfs.ex.VirtualFileManagerAdapter;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.NewVirtualFile;
-import consulo.virtualFileSystem.*;
-import consulo.virtualFileSystem.pointer.VirtualFilePointer;
-import consulo.virtualFileSystem.pointer.VirtualFilePointerListener;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.psi.stub.FileBasedIndex;
 import consulo.ide.impl.idea.util.indexing.FileBasedIndexImpl;
 import consulo.ide.impl.idea.util.indexing.FileBasedIndexProjectHandler;
 import consulo.ide.impl.idea.util.indexing.UnindexedFilesUpdater;
-import consulo.component.messagebus.MessageBusConnection;
-import consulo.annotation.access.RequiredWriteAction;
-import consulo.component.store.impl.internal.BatchUpdateListener;
-import consulo.logging.Logger;
 import consulo.language.content.LanguageContentFolderScopes;
+import consulo.language.file.event.FileTypeEvent;
+import consulo.language.file.event.FileTypeListener;
+import consulo.language.psi.stub.FileBasedIndex;
+import consulo.logging.Logger;
+import consulo.module.Module;
+import consulo.module.ModuleManager;
+import consulo.module.content.ModuleRootManager;
+import consulo.module.content.layer.event.ModuleRootListener;
+import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntryWithTracking;
+import consulo.module.content.scope.ModuleScopeProvider;
+import consulo.module.impl.internal.ProjectRootManagerImpl;
+import consulo.project.DumbModeTask;
+import consulo.project.Project;
+import consulo.project.content.WatchedRootsProvider;
+import consulo.util.lang.Pair;
+import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
+import consulo.virtualFileSystem.pointer.VirtualFilePointer;
+import consulo.virtualFileSystem.pointer.VirtualFilePointerListener;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -71,24 +69,22 @@ import java.util.Set;
  */
 @Singleton
 @ServiceImpl
-public class ProjectRootManagerComponent extends ProjectRootManagerImpl implements ProjectComponent, Disposable {
+public class ProjectRootManagerComponent extends ProjectRootManagerImpl implements Disposable {
   private static final Logger LOG = Logger.getInstance(ProjectRootManagerComponent.class);
   private static final boolean LOG_CACHES_UPDATE = ApplicationManager.getApplication().isInternal() && !ApplicationManager.getApplication().isUnitTestMode();
 
   private boolean myPointerChangesDetected = false;
   private int myInsideRefresh = 0;
-  private final BatchUpdateListener myHandler;
-  private final MessageBusConnection myConnection;
 
   private Set<LocalFileSystem.WatchRequest> myRootsToWatch = new HashSet<LocalFileSystem.WatchRequest>();
   private final boolean myDoLogCachesUpdate;
 
   @Inject
-  public ProjectRootManagerComponent(Project project, StartupManager startupManager) {
+  public ProjectRootManagerComponent(Project project) {
     super(project);
 
-    myConnection = project.getMessageBus().connect(project);
-    myConnection.subscribe(FileTypeListener.class, new FileTypeListener() {
+    MessageBusConnection connection = project.getMessageBus().connect(project);
+    connection.subscribe(FileTypeListener.class, new FileTypeListener() {
       @Override
       public void beforeFileTypesChanged(@Nonnull FileTypeEvent event) {
         beforeRootsChange(true);
@@ -107,11 +103,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
       }
     }, project);
 
-    if (!project.isDefault()) {
-      startupManager.registerStartupActivity(() -> myStartupActivityPerformed = true);
-    }
-
-    myHandler = new BatchUpdateListener() {
+    BatchUpdateListener handler = new BatchUpdateListener() {
       @Override
       public void onBatchUpdateStarted() {
         myRootsChanged.levelUp();
@@ -126,16 +118,16 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
       }
     };
 
-    myConnection.subscribe(VirtualFilePointerListener.class, new MyVirtualFilePointerListener());
+    connection.subscribe(VirtualFilePointerListener.class, new MyVirtualFilePointerListener());
     myDoLogCachesUpdate = ApplicationManager.getApplication().isInternal() && !ApplicationManager.getApplication().isUnitTestMode();
 
-    myConnection.subscribe(BatchUpdateListener.class, myHandler);
+    connection.subscribe(BatchUpdateListener.class, handler);
   }
 
-  @Override
   public void projectOpened() {
     addRootsToWatch();
     ApplicationManager.getApplication().addApplicationListener(new AppListener(), myProject);
+    myStartupActivityPerformed = true;
   }
 
   @Override
