@@ -8,7 +8,7 @@ import consulo.application.Application;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import consulo.util.lang.StringUtil;
+import consulo.logging.Logger;
 import consulo.util.xml.serializer.XmlSerializer;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import jakarta.inject.Singleton;
@@ -18,9 +18,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * @author Konstantin Bulenkov
@@ -30,8 +27,18 @@ import java.util.stream.Collectors;
 @ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class DateTimeFormatManager implements PersistentStateComponent<Element> {
+  private static final Logger LOG = Logger.getInstance(DateTimeFormatManager.class);
+
+  @Nonnull
+  public static DateTimeFormatManager getInstance() {
+    return Application.get().getInstance(DateTimeFormatManager.class);
+  }
+
+  public static final String DEFAULT_DATE_FORMAT = "dd MMM yyyy";
   private boolean myPrettyFormattingAllowed = true;
-  private HashMap<String, String> myPatterns = new HashMap<>();
+  private String myPattern = DEFAULT_DATE_FORMAT;
+  private boolean myOverrideSystemDateFormat = false;
+  private boolean myUse24HourTime = true;
 
   @Nullable
   @Override
@@ -45,66 +52,52 @@ public class DateTimeFormatManager implements PersistentStateComponent<Element> 
     XmlSerializerUtil.copyBean(loaded, this);
   }
 
+  public boolean isOverrideSystemDateFormat() {
+    return myOverrideSystemDateFormat;
+  }
+
+  public void setOverrideSystemDateFormat(boolean overrideSystemDateFormat) {
+    myOverrideSystemDateFormat = overrideSystemDateFormat;
+  }
+
+  public boolean isUse24HourTime() {
+    return myUse24HourTime;
+  }
+
+  public void setUse24HourTime(boolean use24HourTime) {
+    myUse24HourTime = use24HourTime;
+  }
+
   public void setPrettyFormattingAllowed(boolean prettyFormattingAllowed) {
     myPrettyFormattingAllowed = prettyFormattingAllowed;
-  }
-
-  @Nullable
-  public DateFormat getDateFormat(@Nonnull String formatterID) {
-    String pattern = myPatterns.get(formatterID);
-    if (pattern == null) {
-      for (DateTimeFormatterBean formatterBean : DateTimeFormatterBean.EP_NAME.getExtensionList()) {
-        if (formatterBean.id.equals(formatterID)) {
-          if (!StringUtil.isEmpty(formatterBean.format)) {
-            pattern = formatterBean.format;
-          }
-        }
-      }
-    }
-
-    if (pattern != null) {
-      try {
-        return new SimpleDateFormat(pattern);
-      }
-      catch (IllegalArgumentException e) {
-        e.printStackTrace();
-      }
-    }
-    return null;
-  }
-
-  public Set<String> getIds() {
-    return DateTimeFormatterBean.EP_NAME.getExtensionList().stream().map(bean -> bean.id).collect(Collectors.toSet());
-  }
-
-  @Nullable
-  public String getDateFormatPattern(String formatterID) {
-    return myPatterns.get(formatterID);
-  }
-
-  public void setDateFormatPattern(String formatterID, @Nullable String pattern) {
-    //assert myPatterns.containsKey(formatterID) : "Unknown formatterID: " + formatterID
-    if (StringUtil.isEmpty(pattern)) {
-      myPatterns.remove(formatterID);
-    }
-    else {
-      myPatterns.put(formatterID, pattern);
-    }
   }
 
   public boolean isPrettyFormattingAllowed() {
     return myPrettyFormattingAllowed;
   }
 
-  public static DateTimeFormatManager getInstance() {
-    return Application.get().getInstance(DateTimeFormatManager.class);
+  @Nullable
+  public DateFormat getDateFormat() {
+    try {
+      return new SimpleDateFormat(myPattern);
+    }
+    catch (IllegalArgumentException e) {
+      LOG.warn(e);
+    }
+    return null;
   }
 
-  public HashMap<String, String> getPatterns() {
-    return myPatterns;
+  @Nonnull
+  public String getDateFormatPattern() {
+    return myPattern;
   }
 
-  public void setPatterns(HashMap<String, String> patterns) {
-    myPatterns = patterns;
+  public void setDateFormatPattern(@Nonnull String pattern) {
+    try {
+      new SimpleDateFormat(pattern);
+      myPattern = pattern;
+    }
+    catch (Exception ignored) {
+    }
   }
 }

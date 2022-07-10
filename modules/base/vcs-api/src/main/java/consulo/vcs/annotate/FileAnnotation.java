@@ -256,7 +256,7 @@ public abstract class FileAnnotation {
 
   @Nonnull
   public static String formatDate(@Nonnull Date date) {
-    return JBDateFormat.getFormatter("vcs.annotate").formatPrettyDate(date);
+    return JBDateFormat.getFormatter().formatPrettyDate(date);
   }
 
   @Nullable

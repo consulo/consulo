@@ -35,7 +35,7 @@ public class DesktopFontManagerImpl implements FontManager {
 
   @Nonnull
   @Override
-  public Set<String> getAvaliableFontNames() {
+  public Set<String> getAvailableFontNames() {
     GraphicsEnvironment environment = GraphicsEnvironment.getLocalGraphicsEnvironment();
     Set<String> fontNames = new TreeSet<>();
     try {

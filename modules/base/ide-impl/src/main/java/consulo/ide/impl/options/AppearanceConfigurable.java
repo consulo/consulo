@@ -119,7 +119,7 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
 
       HorizontalLayout useCustomFontLine = HorizontalLayout.create();
       useCustomFontLine.add(myOverrideLAFFonts = CheckBox.create(IdeLocalize.checkboxOverrideDefaultLafFonts()));
-      Set<String> avaliableFontNames = FontManager.get().getAvaliableFontNames();
+      Set<String> avaliableFontNames = FontManager.get().getAvailableFontNames();
       useCustomFontLine.add(myFontCombo = ComboBox.create(avaliableFontNames));
       useCustomFontLine.add(LabeledBuilder.simple(IdeLocalize.labelFontSize(), myFontSizeCombo = TextBoxWithHistory.create().setHistory(UIUtil.getStandardFontSizes())));
       uiOptions.add(useCustomFontLine);

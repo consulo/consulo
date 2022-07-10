@@ -91,7 +91,7 @@ public abstract class SimpleConfigurableByProperties extends SimpleConfigurable<
 
   @RequiredUIAccess
   @Nonnull
-  protected abstract Component createLayout(@Nonnull PropertyBuilder propertyBuilder, @Nonnull Disposable uiDisposabl);
+  protected abstract Component createLayout(@Nonnull PropertyBuilder propertyBuilder, @Nonnull Disposable uiDisposable);
 
   @RequiredUIAccess
   @Nonnull

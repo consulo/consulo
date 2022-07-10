@@ -220,7 +220,7 @@ public class WhatsNewVirtualFileEditor extends UserDataHolderBase implements Fil
           children.add(HtmlChunk.nbsp());
 
           if (pluginHistoryEntry.commitTimestamp != 0) {
-            String date = JBDateFormat.getDefaultFormatter().formatPrettyDateTime(pluginHistoryEntry.commitTimestamp);
+            String date = JBDateFormat.getFormatter().formatPrettyDateTime(pluginHistoryEntry.commitTimestamp);
 
             children.add(HtmlChunk.tag("code").addText("[" + date + "]"));
             children.add(HtmlChunk.nbsp());

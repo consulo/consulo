@@ -47,7 +47,7 @@
                   <forms/>
                 </constraints>
                 <properties>
-                  <text resource-bundle="messages/VcsBundle" key="checkbox.show.changes.before.date"/>
+                  <text resource-bundle="consulo/vcs/VcsBundle" key="checkbox.show.changes.before.date"/>
                 </properties>
               </component>
               <component id="3b7e7" class="com.michaelbaranov.microba.calendar.DatePicker" binding="myDateAfter">

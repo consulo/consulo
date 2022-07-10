@@ -2,7 +2,6 @@
 package consulo.application.util;
 
 import javax.annotation.Nonnull;
-import java.text.DateFormat;
 
 /**
  * @author Konstantin Bulenkov
@@ -10,13 +9,13 @@ import java.text.DateFormat;
 public class JBDateFormat {
   private static final JBDateTimeFormatter DEFAULT_FORMATTER = new DefaultJBDateTimeFormatter();
 
-  public static JBDateTimeFormatter getDefaultFormatter() {
-    return DEFAULT_FORMATTER;
-  }
+  @Nonnull
+  public static JBDateTimeFormatter getFormatter() {
+    DateTimeFormatManager formatManager = DateTimeFormatManager.getInstance();
+    if (formatManager.isOverrideSystemDateFormat()) {
+      return new CustomJBDateTimeFormatter(formatManager.getDateFormatPattern(), formatManager.isUse24HourTime());
+    }
 
-  public static JBDateTimeFormatter getFormatter(@Nonnull String formatterID) {
-    DateFormat format = DateTimeFormatManager.getInstance().getDateFormat(formatterID);
-    if (format == null) return DEFAULT_FORMATTER;
-    return new CustomJBDateTimeFormatter(formatterID);
+    return DEFAULT_FORMATTER;
   }
 }

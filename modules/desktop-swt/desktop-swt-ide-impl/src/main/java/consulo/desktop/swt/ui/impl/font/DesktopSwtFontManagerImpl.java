@@ -34,7 +34,7 @@ public class DesktopSwtFontManagerImpl implements FontManager {
 
   @Nonnull
   @Override
-  public Set<String> getAvaliableFontNames() {
+  public Set<String> getAvailableFontNames() {
     FontData[] fontList = DesktopSwtUIAccess.INSTANCE.getDisplay().getFontList(null, true);
     return Arrays.stream(fontList).map(FontData::getName).collect(Collectors.toSet());
   }

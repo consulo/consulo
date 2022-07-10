@@ -6,7 +6,7 @@ import javax.annotation.Nonnull;
 /**
  * @author Konstantin Bulenkov
  */
-public class DefaultJBDateTimeFormatter extends JBDateTimeFormatter {
+class DefaultJBDateTimeFormatter extends JBDateTimeFormatter {
 
   @Override
   protected boolean isPrettyFormattingSupported() {

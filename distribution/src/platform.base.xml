@@ -28,6 +28,7 @@
         <include>consulo:consulo-disposer-api</include>
         <include>consulo:consulo-disposer-impl</include>
         <include>consulo:consulo-injecting-api</include>
+        <include>consulo:consulo-injecting-api</include>
         <include>consulo:consulo-injecting-pico-impl</include>
         <include>consulo:consulo-localize-api</include>
         <include>consulo:consulo-localize-impl</include>
@@ -54,6 +55,7 @@
         <include>consulo:consulo-module-content-api</include>
         <include>consulo:consulo-project-ui-api</include>
         <include>consulo:consulo-application-ui-api</include>
+        <include>consulo:consulo-application-ui-impl</include>
         <include>consulo:consulo-ui-ex-api</include>
         <include>consulo:consulo-configurable-api</include>
         <include>consulo:consulo-language-api</include>

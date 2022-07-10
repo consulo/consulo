@@ -164,6 +164,10 @@ public class DateFormatUtil {
     return doFormatPretty(time, true);
   }
 
+  public static boolean isPrettyFormattingPossible(long time) {
+    return doFormatPretty(time, true) != null;
+  }
+
   @Nonnull
   private static String doFormatPretty(long time, boolean formatTime) {
     long currentTime = Clock.getTime();

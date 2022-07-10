@@ -33,7 +33,7 @@ public class WebFontManagerImpl implements FontManager {
 
   @Nonnull
   @Override
-  public Set<String> getAvaliableFontNames() {
+  public Set<String> getAvailableFontNames() {
     return Collections.singleton(DEFAULT_FONT);
   }
 
