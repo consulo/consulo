@@ -19,7 +19,9 @@ package consulo.ide.impl.idea.openapi.vcs.checkin;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
+import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
 import consulo.ide.impl.idea.openapi.vcs.CheckinProjectPanel;
+import consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager;
 import consulo.ide.impl.idea.openapi.vcs.changes.CommitContext;
 import consulo.project.Project;
 
@@ -30,10 +32,8 @@ import javax.annotation.Nullable;
  * !! This factory is loaded on first commit
  * should NOT be used from VCS plugins
  * use {@link VcsCheckinHandlerFactory} implementations instead, define through EP "com.intellij.checkinHandlerFactory"
- * they would automatically would be registered in {@link consulo.ide.impl.idea.openapi.vcs.AbstractVcs#activate()}
- * and unregistered in {@link consulo.ide.impl.idea.openapi.vcs.AbstractVcs#deactivate()}
- *
- * @see consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager#registerCheckinHandlerFactory(BaseCheckinHandlerFactory)
+ * they would automatically would be registered in {@link AbstractVcs#activate()}
+ * and unregistered in {@link AbstractVcs#deactivate()}
  * @author lesya
  * @since 5.1
  */

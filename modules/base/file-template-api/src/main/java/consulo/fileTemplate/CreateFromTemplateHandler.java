@@ -19,10 +19,16 @@ package consulo.fileTemplate;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
+import consulo.language.codeStyle.CodeStyleManager;
+import consulo.language.file.FileTypeManager;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiFileFactory;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
@@ -36,16 +42,50 @@ public interface CreateFromTemplateHandler {
 
   boolean handlesTemplate(FileTemplate template);
 
-  PsiElement createFromTemplate(Project project, PsiDirectory directory, final String fileName, FileTemplate template, String templateText, Map<String, Object> props)
-          throws IncorrectOperationException;
+  default PsiElement createFromTemplate(Project project, PsiDirectory directory, String fileName, FileTemplate template, String templateText, Map<String, Object> props)
+          throws IncorrectOperationException {
+    String newFileName = checkAppendExtension(fileName, template);
 
-  boolean canCreate(final PsiDirectory[] dirs);
+    if (FileTypeManager.getInstance().isFileIgnored(newFileName)) {
+      throw new IncorrectOperationException("This filename is ignored (Settings | File Types | Ignore files and folders)");
+    }
 
-  boolean isNameRequired();
+    directory.checkCreateFile(newFileName);
+    FileType type = FileTypeRegistry.getInstance().getFileTypeByFileName(newFileName);
+    PsiFile file = PsiFileFactory.getInstance(project).createFileFromText(newFileName, type, templateText);
 
-  String getErrorMessage();
+    if (template.isReformatCode()) {
+      CodeStyleManager.getInstance(project).reformat(file);
+    }
 
-  void prepareProperties(Map<String, Object> props);
+    file = (PsiFile)directory.add(file);
+    return file;
+  }
+
+  @Nonnull
+  default String checkAppendExtension(String fileName, final FileTemplate template) {
+    final String suggestedFileNameEnd = "." + template.getExtension();
+
+    if (!fileName.endsWith(suggestedFileNameEnd)) {
+      fileName += suggestedFileNameEnd;
+    }
+    return fileName;
+  }
+
+  default boolean canCreate(final PsiDirectory[] dirs) {
+    return true;
+  }
+
+  default boolean isNameRequired() {
+    return true;
+  }
+
+  default String getErrorMessage() {
+    return FileTemplateBundle.message("title.cannot.create.file");
+  }
+
+  default void prepareProperties(Map<String, Object> props) {
+  }
 
   @Nonnull
   default String commandName(@Nonnull FileTemplate template) {
