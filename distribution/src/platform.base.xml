@@ -106,6 +106,7 @@
         <include>consulo:consulo-module-ui-api</include>
         <include>consulo:consulo-web-browser-api</include>
         <include>consulo:consulo-vcs-api</include>
+        <include>consulo:consulo-vcs-impl</include>
 
         <include>consulo:consulo-base-localize-library</include>
         <include>consulo:consulo-base-icon-library</include>

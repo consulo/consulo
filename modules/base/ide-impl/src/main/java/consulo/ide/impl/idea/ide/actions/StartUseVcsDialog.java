@@ -15,19 +15,14 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.vcs.AllVcses;
 import consulo.project.Project;
-import consulo.ui.ex.awt.ComboBox;
-import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.internal.laf.MultiLineLabelUI;
+import consulo.util.lang.ObjectUtil;
 import consulo.vcs.AbstractVcs;
 import consulo.vcs.VcsBundle;
-import consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman.AllVcses;
-import consulo.ui.ex.awt.CollectionComboBoxModel;
-import consulo.ui.ex.awt.ColoredListCellRenderer;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.lang.ObjectUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

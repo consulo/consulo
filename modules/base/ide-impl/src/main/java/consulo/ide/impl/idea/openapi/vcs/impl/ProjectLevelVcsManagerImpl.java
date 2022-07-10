@@ -185,14 +185,14 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
   }
 
   @Deprecated
-  @DeprecationInfo("Use own AllVcsesI impl, or use extension extender")
+  @DeprecationInfo("Use own AllVcses impl, or use extension extender")
   public void registerVcs(AbstractVcs vcs) {
     // FIXME [VISTALL] nothing since this impl used only for tests
     throw new UnsupportedOperationException();
   }
 
   @Deprecated
-  @DeprecationInfo("Use own AllVcsesI impl, or use extension extender")
+  @DeprecationInfo("Use own AllVcses impl, or use extension extender")
   public void unregisterVcs(@Nonnull AbstractVcs vcs) {
     // FIXME [VISTALL] nothing since this impl used only for tests
     throw new UnsupportedOperationException();

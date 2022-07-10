@@ -200,11 +200,6 @@
     <extensionPoint name="changeListDecorator"
 					interface="consulo.ide.impl.idea.openapi.vcs.changes.ChangeListDecorator" area="PROJECT"/>
 
-    <extensionPoint name="vcs"
-                    beanClass="consulo.ide.impl.idea.openapi.vcs.impl.VcsEP"
-                    area="PROJECT">
-      <with attribute="vcsClass" implements="consulo.ide.impl.idea.openapi.vcs.AbstractVcs"/>
-    </extensionPoint>
 
     <extensionPoint name="vcsCheckinHandlerFactory"
                     interface="consulo.ide.impl.idea.openapi.vcs.checkin.VcsCheckinHandlerFactory"/>

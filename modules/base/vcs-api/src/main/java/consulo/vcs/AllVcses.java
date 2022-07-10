@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman;
+package consulo.vcs;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.vcs.AbstractVcs;
-import consulo.vcs.VcsDescriptor;
+import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -28,7 +27,11 @@ import java.util.Collection;
  * @author Irina.Chernushina
  */
 @ServiceAPI(ComponentScope.PROJECT)
-public interface AllVcsesI {
+public interface AllVcses {
+  static AllVcses getInstance(@Nonnull Project project) {
+    return project.getInstance(AllVcses.class);
+  }
+
   @Nullable
   AbstractVcs getByName(String name);
 

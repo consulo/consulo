@@ -22,10 +22,7 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.impl.DefaultVcsRootPolicy;
 import consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
 import consulo.ide.impl.idea.openapi.vcs.ui.VcsBalloonProblemNotifier;
-import consulo.vcs.AbstractVcs;
-import consulo.vcs.ProjectLevelVcsManager;
-import consulo.vcs.VcsDirectoryMapping;
-import consulo.vcs.VcsException;
+import consulo.vcs.*;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.Functions;
@@ -366,7 +363,7 @@ public class NewMappings implements Disposable {
   // todo area for optimization
   private void removeRedundantMappings() {
     final LocalFileSystem lfs = LocalFileSystem.getInstance();
-    final AllVcsesI allVcses = AllVcses.getInstance(myProject);
+    final AllVcses allVcses = AllVcses.getInstance(myProject);
 
     for (Iterator<String> iterator = myVcsToPaths.keySet().iterator(); iterator.hasNext(); ) {
       final String vcsName = iterator.next();
@@ -454,7 +451,7 @@ public class NewMappings implements Disposable {
       myOld = old;
     }
 
-    public void activate(final Set<String> newOne, final AllVcsesI vcsesI) {
+    public void activate(final Set<String> newOne, final AllVcses vcsesI) {
       final Set<String> toAdd = notInBottom(newOne, myOld);
       final Set<String> toRemove = notInBottom(myOld, newOne);
       if (toAdd != null) {

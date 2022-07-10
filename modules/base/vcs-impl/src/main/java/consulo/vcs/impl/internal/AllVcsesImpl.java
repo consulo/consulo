@@ -13,17 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman;
+package consulo.vcs.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.disposer.Disposable;
-import consulo.ide.ServiceManager;
-import consulo.vcs.AbstractVcs;
-import consulo.vcs.VcsException;
-import consulo.vcs.VcsDescriptor;
-import consulo.ide.impl.idea.openapi.vcs.impl.VcsEP;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.vcs.*;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -34,30 +31,20 @@ import java.util.stream.Collectors;
 
 @Singleton
 @ServiceImpl
-public class AllVcses implements AllVcsesI, Disposable {
-  private final Logger LOG = Logger.getInstance(AllVcses.class);
+public class AllVcsesImpl implements AllVcses, Disposable {
+  private static final ExtensionPointCacheKey<VcsFactory, Map<String, VcsFactory>> BY_ID = ExtensionPointCacheKey.groupBy("BY_ID", VcsFactory::getId);
+
+  private final Logger LOG = Logger.getInstance(AllVcsesImpl.class);
   private final Map<String, AbstractVcs> myVcses;
 
   private final Object myLock;
   private final Project myProject;
-  private final Map<String, VcsEP> myExtensions;    // +-
 
   @Inject
-  AllVcses(final Project project) {
+  AllVcsesImpl(final Project project) {
     myProject = project;
     myVcses = new HashMap<>();
     myLock = new Object();
-
-    final List<VcsEP> vcsEPs = VcsEP.EP_NAME.getExtensionList(myProject);
-    final HashMap<String, VcsEP> map = new HashMap<>();
-    for (VcsEP vcsEP : vcsEPs) {
-      map.put(vcsEP.name, vcsEP);
-    }
-    myExtensions = Collections.unmodifiableMap(map);
-  }
-
-  public static AllVcsesI getInstance(final Project project) {
-    return ServiceManager.getService(project, AllVcsesI.class);
   }
 
   private void addVcs(final AbstractVcs vcs) {
@@ -85,14 +72,14 @@ public class AllVcses implements AllVcsesI, Disposable {
       }
     }
 
-    // unmodifiable map => no sync needed
-    final VcsEP ep = myExtensions.get(name);
+    Map<String, VcsFactory> byIdMap = myProject.getExtensionPoint(VcsFactory.class).getOrBuildCache(BY_ID);
+    final VcsFactory ep = byIdMap.get(name);
     if (ep == null) {
       return null;
     }
 
-    // VcsEP guarantees to always return the same vcs value
-    final AbstractVcs newVcs = ep.getVcs(myProject);
+    // guarantees to always return the same vcs value
+    final AbstractVcs newVcs = ep.createVcs();
 
     newVcs.setupEnvironments();
 
@@ -107,7 +94,8 @@ public class AllVcses implements AllVcsesI, Disposable {
   @Nullable
   @Override
   public VcsDescriptor getDescriptor(String name) {
-    final VcsEP ep = myExtensions.get(name);
+    Map<String, VcsFactory> byIdMap = myProject.getExtensionPoint(VcsFactory.class).getOrBuildCache(BY_ID);
+    VcsFactory ep = byIdMap.get(name);
     return ep == null ? null : ep.createDescriptor();
   }
 
@@ -131,13 +119,13 @@ public class AllVcses implements AllVcsesI, Disposable {
 
   @Override
   public boolean isEmpty() {
-    return myExtensions.isEmpty();
+    return myProject.getExtensionPoint(VcsFactory.class).hasAnyExtensions();
   }
 
   @Override
   public VcsDescriptor[] getAll() {
-    final List<VcsDescriptor> result = new ArrayList<>(myExtensions.size());
-    for (VcsEP vcsEP : myExtensions.values()) {
+    final List<VcsDescriptor> result = new ArrayList<>();
+    for (VcsFactory vcsEP : myProject.getExtensionPoint(VcsFactory.class)) {
       result.add(vcsEP.createDescriptor());
     }
     Collections.sort(result);
