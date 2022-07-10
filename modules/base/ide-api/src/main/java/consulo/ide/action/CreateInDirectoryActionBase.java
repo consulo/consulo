@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.ide.actions;
+package consulo.ide.action;
 
-import consulo.ide.impl.idea.ide.IdeView;
 import consulo.dataContext.DataContext;
+import consulo.ide.IdeView;
 import consulo.language.editor.CommonDataKeys;
 import consulo.localize.LocalizeValue;
 import consulo.project.DumbService;

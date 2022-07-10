@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.refactoring.move.moveFilesOrDirectories;
 
-import consulo.language.editor.impl.util.EditorHelper;
+import consulo.language.editor.util.EditorHelper;
 import consulo.application.ApplicationManager;
 import consulo.language.psi.path.PsiDynaReference;
 import consulo.project.DumbService;

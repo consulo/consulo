@@ -3,7 +3,7 @@
  */
 package consulo.ide.impl.idea.ide.scratch;
 
-import consulo.ide.impl.idea.ide.IdeView;
+import consulo.ide.IdeView;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.WriteCommandAction;
 import consulo.ide.impl.idea.openapi.util.Factory;

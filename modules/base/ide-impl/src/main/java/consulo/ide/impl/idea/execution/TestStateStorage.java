@@ -15,25 +15,27 @@
  */
 package consulo.ide.impl.idea.execution;
 
-import consulo.ide.ServiceManager;
-import consulo.project.Project;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.util.function.ThrowableComputable;
+import consulo.container.boot.ContainerPathManager;
+import consulo.disposer.Disposable;
+import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.FlushingDaemon;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.index.io.data.DataExternalizer;
-import consulo.index.io.EnumeratorStringDescriptor;
-import consulo.index.io.data.IOUtil;
 import consulo.ide.impl.idea.util.io.PersistentHashMap;
-import consulo.container.boot.ContainerPathManager;
-import consulo.disposer.Disposable;
+import consulo.index.io.EnumeratorStringDescriptor;
+import consulo.index.io.data.DataExternalizer;
+import consulo.index.io.data.IOUtil;
 import consulo.logging.Logger;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import consulo.project.Project;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.File;
@@ -46,6 +48,8 @@ import java.util.concurrent.ScheduledFuture;
  * @author Dmitry Avdeev
  */
 @Singleton
+@ServiceAPI(ComponentScope.PROJECT)
+@ServiceImpl
 public class TestStateStorage implements Disposable {
 
   private static final File TEST_HISTORY_PATH = new File(ContainerPathManager.get().getSystemPath(), "testHistory");
@@ -88,7 +92,8 @@ public class TestStateStorage implements Disposable {
 
     try {
       myMap = initializeMap();
-    } catch (IOException e) {
+    }
+    catch (IOException e) {
       LOG.error(e);
     }
     myMapFlusher = FlushingDaemon.everyFiveSeconds(this::flushMap);

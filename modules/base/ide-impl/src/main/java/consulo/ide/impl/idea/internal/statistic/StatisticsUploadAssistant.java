@@ -15,14 +15,14 @@
  */
 package consulo.ide.impl.idea.internal.statistic;
 
+import consulo.application.Application;
 import consulo.ide.impl.idea.internal.statistic.beans.PatchedUsage;
 import consulo.ide.impl.idea.internal.statistic.beans.UsageDescriptor;
-import consulo.project.Project;
-import consulo.util.lang.function.Condition;
-import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
-import consulo.component.util.PluginExceptionUtil;
+import consulo.project.Project;
+import consulo.util.lang.Pair;
+import consulo.util.lang.function.Condition;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -103,24 +103,19 @@ public class StatisticsUploadAssistant {
   public static Map<String, Set<UsageDescriptor>> getAllUsages(@Nullable Project project, @Nonnull Set<String> disabledGroups) {
     Map<String, Set<UsageDescriptor>> usageDescriptors = new LinkedHashMap<>();
 
-    for (UsagesCollector usagesCollector : UsagesCollector.EP_NAME.getExtensionList()) {
-      try {
-        final String groupDescriptor = usagesCollector.getGroupId();
+    Application.get().getExtensionPoint(UsagesCollector.class).forEachExtensionSafe(usagesCollector -> {
+      final String groupDescriptor = usagesCollector.getGroupId();
 
-        if (!disabledGroups.contains(groupDescriptor)) {
-          try {
-            final Set<UsageDescriptor> usages = usagesCollector.getUsages(project);
-            usageDescriptors.put(groupDescriptor, usages);
-          }
-          catch (CollectUsagesException e) {
-            LOG.info(e);
-          }
+      if (!disabledGroups.contains(groupDescriptor)) {
+        try {
+          final Set<UsageDescriptor> usages = usagesCollector.getUsages(project);
+          usageDescriptors.put(groupDescriptor, usages);
+        }
+        catch (CollectUsagesException e) {
+          LOG.info(e);
         }
       }
-      catch (Throwable e) {
-        PluginExceptionUtil.logPluginError(LOG, "Error processing: " + usagesCollector.getClass().getName(), e, usageDescriptors.getClass());
-      }
-    }
+    });
 
     return usageDescriptors;
   }

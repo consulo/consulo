@@ -26,7 +26,6 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.FileEditorManager;
 import consulo.ide.impl.idea.ide.actions.ActivateToolWindowAction;
-import consulo.ide.impl.idea.internal.statistic.UsageTrigger;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
 import consulo.ide.impl.idea.openapi.wm.impl.ToolWindowActiveStack;
@@ -35,6 +34,7 @@ import consulo.ide.impl.idea.openapi.wm.impl.ToolWindowSideStack;
 import consulo.ide.impl.idea.openapi.wm.impl.WindowInfoImpl;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.EventDispatcher;
+import consulo.ide.statistic.UsageTrigger;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.extension.event.ModuleExtensionChangeListener;
@@ -1342,7 +1342,8 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     }
     info.setShowStripeButton(visibleOnPanel);
 
-    UsageTrigger.trigger("StripeButton[" + id + "]." + (visibleOnPanel ? "shown" : "hidden"));
+    String feature = "StripeButton[" + id + "]." + (visibleOnPanel ? "shown" : "hidden");
+    UsageTrigger.trigger(feature);
 
     applyWindowInfo(info);
 

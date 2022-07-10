@@ -11,8 +11,6 @@ module consulo.language.editor.impl {
   requires consulo.language.inject.impl;
 
   exports consulo.language.editor.impl.intention;
-  exports consulo.language.editor.impl.fileTemplate;
-  exports consulo.language.editor.impl.util;
 
   exports consulo.language.editor.impl.internal.completion to consulo.ide.impl, consulo.desktop.awt.ide.impl;
   exports consulo.language.editor.impl.internal.intention to consulo.ide.impl;

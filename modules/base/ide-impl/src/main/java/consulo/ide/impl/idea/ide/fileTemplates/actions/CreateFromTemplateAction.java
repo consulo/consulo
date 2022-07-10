@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.ide.fileTemplates.actions;
 
 import consulo.fileTemplate.FileTemplate;
 import consulo.fileTemplate.FileTemplateUtil;
+import consulo.ide.action.CreateFromTemplateActionBase;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.project.Project;

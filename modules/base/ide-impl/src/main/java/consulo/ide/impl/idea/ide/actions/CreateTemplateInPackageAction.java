@@ -16,7 +16,9 @@
 
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ide.impl.idea.ide.IdeView;
+import consulo.ide.action.CreateFileAction;
+import consulo.ide.action.CreateFromTemplateAction;
+import consulo.ide.IdeView;
 import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.LangDataKeys;

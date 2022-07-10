@@ -16,8 +16,8 @@
 
 package consulo.ide.impl.idea.openapi.fileEditor.impl.text;
 
-import consulo.ide.impl.idea.ide.IdeView;
-import consulo.language.editor.impl.util.EditorHelper;
+import consulo.ide.IdeView;
+import consulo.language.editor.util.EditorHelper;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.language.Language;
 import consulo.codeEditor.Caret;

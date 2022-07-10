@@ -75,10 +75,11 @@ public class ApplicationStatisticsListeners {
 
   private static void doPersistProjectUsages(@Nonnull Project project) {
     if (DumbService.isDumb(project)) return;
-    for (UsagesCollector usagesCollector : UsagesCollector.EP_NAME.getExtensionList()) {
+    
+    project.getApplication().getExtensionPoint(UsagesCollector.class).forEachExtensionSafe(usagesCollector -> {
       if (usagesCollector instanceof AbstractApplicationUsagesCollector) {
         ((AbstractApplicationUsagesCollector)usagesCollector).persistProjectUsages(project);
       }
-    }
+    });
   }
 }

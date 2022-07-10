@@ -16,7 +16,7 @@
 package consulo.desktop.awt.welcomeScreen;
 
 import consulo.dataContext.DataManager;
-import consulo.ide.impl.idea.internal.statistic.UsageTrigger;
+import consulo.ide.statistic.UsageTrigger;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;

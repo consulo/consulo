@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.ide.fileTemplates.ui;
+package consulo.ide.action.ui;
 
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.actions.CreateFileAction;
-import consulo.ide.impl.idea.ide.fileTemplates.actions.AttributesDefaults;
+import consulo.ide.action.CreateFileAction;
+import consulo.fileTemplate.AttributesDefaults;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
 import consulo.annotation.DeprecationInfo;

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.ide.action.CreateFileAction;
 import consulo.ui.ex.action.*;
 
 /**

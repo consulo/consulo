@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.ide.navigationToolbar;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.ide.CopyPasteDelegator;
 import consulo.ide.impl.idea.ide.CopyPasteSupport;
-import consulo.ide.impl.idea.ide.IdeView;
+import consulo.ide.IdeView;
 import consulo.ide.impl.idea.ide.dnd.TransferableWrapper;
 import consulo.ide.impl.idea.ide.navigationToolbar.ui.NavBarUI;
 import consulo.ide.impl.idea.ide.navigationToolbar.ui.NavBarUIManager;

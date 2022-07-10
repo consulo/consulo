@@ -18,12 +18,14 @@ package consulo.virtualFileSystem.util;
 import consulo.application.WriteAction;
 import consulo.application.util.SystemInfo;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.util.io.BufferExposingByteArrayInputStream;
 import consulo.util.io.CharsetToolkit;
 import consulo.util.io.FileUtil;
 import consulo.util.io.URLUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.SystemProperties;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 
@@ -38,6 +40,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Set;
@@ -53,6 +56,11 @@ public final class VirtualFileUtil {
   public static final char VFS_SEPARATOR_CHAR = '/';
   private static final String PROTOCOL_DELIMITER = ":";
 
+  @Nullable
+  public static VirtualFile getUserHomeDir() {
+    final Path path = Platform.current().user().homePath();
+    return LocalFileSystem.getInstance().findFileByNioFile(path);
+  }
 
   /**
    * Searches for the file specified by given java,net.URL.

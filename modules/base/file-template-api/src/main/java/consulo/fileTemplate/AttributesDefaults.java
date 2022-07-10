@@ -14,34 +14,33 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.ide.fileTemplates.actions;
+package consulo.fileTemplate;
 
-import consulo.util.lang.Pair;
 import consulo.document.util.TextRange;
+import consulo.util.lang.Pair;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @author Roman Chernyatchik
-*/
+ */
 public class AttributesDefaults {
   private final String myDefaultName;
   private final TextRange myDefaultRange;
-  private final Map<String, Pair<String, TextRange>> myNamesToValueAndRangeMap = new HashMap<String, Pair<String, TextRange>>();
+  private final Map<String, Pair<String, TextRange>> myNamesToValueAndRangeMap = new HashMap<>();
   private Map<String, Object> myDefaultProperties = null;
   private boolean myFixedName;
 
-  public AttributesDefaults(@NonNls @Nullable final String defaultName,
-                            @Nullable final TextRange defaultRange) {
+  public AttributesDefaults(@Nullable final String defaultName, @Nullable final TextRange defaultRange) {
     myDefaultName = defaultName;
     myDefaultRange = defaultRange;
   }
 
-  public AttributesDefaults(@NonNls @Nullable final String defaultName) {
+  public AttributesDefaults(@Nullable final String defaultName) {
     this(defaultName, null);
   }
 
@@ -53,19 +52,17 @@ public class AttributesDefaults {
   public String getDefaultFileName() {
     return myDefaultName;
   }
+
   @Nullable
   public TextRange getDefaultFileNameSelection() {
     return myDefaultRange;
   }
 
-  public void add(@NonNls @Nonnull final String attributeKey,
-                  @NonNls @Nonnull final String value,
-                  @Nullable final TextRange selectionRange) {
-    myNamesToValueAndRangeMap.put(attributeKey, new Pair<String, TextRange>(value, selectionRange));
+  public void add(@NonNls @Nonnull final String attributeKey, @NonNls @Nonnull final String value, @Nullable final TextRange selectionRange) {
+    myNamesToValueAndRangeMap.put(attributeKey, new Pair<>(value, selectionRange));
   }
 
-  public void add(@NonNls @Nonnull final String attributeKey,
-                  @NonNls @Nonnull final String value) {
+  public void add(@NonNls @Nonnull final String attributeKey, @NonNls @Nonnull final String value) {
     add(attributeKey, value, null);
   }
 

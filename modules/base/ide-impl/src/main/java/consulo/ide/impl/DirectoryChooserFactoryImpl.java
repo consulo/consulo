@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.internal.statistic;
+package consulo.ide.impl;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ExtensionAPI;
-import consulo.ide.impl.idea.internal.statistic.beans.UsageDescriptor;
+import consulo.annotation.component.ServiceImpl;
+import consulo.ide.impl.idea.ide.util.DirectoryChooser;
+import consulo.ide.internal.DirectoryChooserDialog;
+import consulo.ide.internal.DirectoryChooserFactory;
 import consulo.project.Project;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Set;
 
-@ExtensionAPI(ComponentScope.APPLICATION)
-public abstract class UsagesCollector {
+/**
+ * @author VISTALL
+ * @since 10-Jul-22
+ */
+@ServiceImpl
+public class DirectoryChooserFactoryImpl implements DirectoryChooserFactory {
   @Nonnull
-  public abstract Set<UsageDescriptor> getUsages(@Nullable Project project) throws CollectUsagesException;
-
-  @Nonnull
-  public abstract String getGroupId();
+  @Override
+  public DirectoryChooserDialog create(@Nonnull Project project) {
+    return new DirectoryChooser(project);
+  }
 }

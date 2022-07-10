@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.refactoring.move.moveFilesOrDirectories;
 
-import consulo.ide.impl.idea.ide.util.DirectoryChooserUtil;
+import consulo.ide.util.DirectoryChooserUtil;
 import consulo.application.ApplicationManager;
 import consulo.undoRedo.CommandProcessor;
 import consulo.language.psi.*;

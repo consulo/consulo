@@ -1,17 +1,14 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.ui;
+package consulo.ui.ex.awt;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.awt.ColoredListCellRenderer;
-import consulo.ui.ex.awt.JBLabel;
-import consulo.ide.impl.idea.util.Function;
-import consulo.ui.ex.awt.JBUI;
 import consulo.awt.hacking.DefaultLookupHacking;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicHTML;
 import java.awt.*;
+import java.util.function.Function;
 
 /**
  * JBLabel-based (text and icon) list cell renderer.
@@ -26,7 +23,7 @@ public abstract class SimpleListCellRenderer<T> extends JBLabel implements ListC
     return new SimpleListCellRenderer<T>() {
       @Override
       public void customize(@Nonnull JList<? extends T> list, T value, int index, boolean selected, boolean hasFocus) {
-        setText(value == null ? nullValue : getText.fun(value));
+        setText(value == null ? nullValue : getText.apply(value));
       }
     };
   }

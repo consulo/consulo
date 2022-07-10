@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.language.editor.impl.util;
+package consulo.language.editor.util;
 
 import consulo.application.ui.UISettings;
 import consulo.codeEditor.Editor;
@@ -55,7 +55,7 @@ public class EditorHelper {
       file = element.getContainingFile();
       offset = element.getTextOffset();
     }
-    if (file == null) return null;//SCR44414
+    if (file == null) return null;
     VirtualFile virtualFile = file.getVirtualFile();
     if (virtualFile == null) return null;
     OpenFileDescriptor descriptor = OpenFileDescriptorFactory.getInstance(element.getProject()).builder(virtualFile).offset(offset).build();

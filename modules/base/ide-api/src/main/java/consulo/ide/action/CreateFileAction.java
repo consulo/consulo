@@ -14,38 +14,37 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.ide.actions;
+package consulo.ide.action;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.ui.newItemPopup.NewItemPopupUtil;
-import consulo.ide.impl.idea.ide.ui.newItemPopup.NewItemSimplePopupPanel;
-import consulo.ide.impl.idea.internal.statistic.UsageTrigger;
-import consulo.language.LangBundle;
 import consulo.application.ApplicationManager;
 import consulo.application.WriteAction;
-import consulo.language.file.FileTypeManager;
-import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeChooser;
 import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
-import consulo.ui.ex.InputValidatorEx;
-import consulo.ui.ex.popup.JBPopup;
 import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.ide.IdeBundle;
+import consulo.ide.action.ui.NewItemPopupUtil;
+import consulo.ide.action.ui.NewItemSimplePopupPanel;
+import consulo.ide.statistic.UsageTrigger;
+import consulo.language.LangBundle;
+import consulo.language.file.FileTypeManager;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
-import consulo.annotation.access.RequiredReadAction;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.IdeLocalize;
+import consulo.project.Project;
 import consulo.ui.TextBox;
 import consulo.ui.ValidableComponent;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.InputValidatorEx;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.image.Image;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -146,7 +145,7 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
         boolean firstToken = true;
         for (String dir : subDirs) {
           if (firstToken && "~".equals(dir)) {
-            final VirtualFile userHomeDir = VfsUtil.getUserHomeDir();
+            final VirtualFile userHomeDir = VirtualFileUtil.getUserHomeDir();
             if (userHomeDir == null) throw new IncorrectOperationException("User home directory not found");
             final PsiDirectory directory1 = directory.getManager().findDirectory(userHomeDir);
             if (directory1 == null) throw new IncorrectOperationException("User home directory not found");
@@ -185,7 +184,7 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
   }
 
   protected String getFileName(String newName) {
-    if (getDefaultExtension() == null || FileUtilRt.getExtension(newName).length() > 0) {
+    if (getDefaultExtension() == null || FileUtil.getExtension(newName).length() > 0) {
       return newName;
     }
     return newName + "." + getDefaultExtension();
@@ -217,7 +216,7 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
         }
         if (vFile != null) {
           if (firstToken && "~".equals(token)) {
-            final VirtualFile userHomeDir = VfsUtil.getUserHomeDir();
+            final VirtualFile userHomeDir = VirtualFileUtil.getUserHomeDir();
             if (userHomeDir == null) {
               myErrorText = "User home directory not found";
               return false;
@@ -265,22 +264,6 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
     public PsiElement[] create(String newName) throws Exception {
       UsageTrigger.trigger("CreateFile." + CreateFileAction.this.getClass().getSimpleName());
       return super.create(newName);
-    }
-
-    @RequiredUIAccess
-    @Override
-    public boolean canClose(final String inputString) {
-      if (inputString.length() == 0) {
-        return super.canClose(inputString);
-      }
-
-      final PsiDirectory psiDirectory = getDirectory();
-
-      final Project project = psiDirectory.getProject();
-      final boolean[] result = {false};
-      FileTypeChooser.getKnownFileTypeOrAssociate(psiDirectory.getVirtualFile(), getFileName(inputString), project);
-      result[0] = super.canClose(getFileName(inputString));
-      return result[0];
     }
   }
 }

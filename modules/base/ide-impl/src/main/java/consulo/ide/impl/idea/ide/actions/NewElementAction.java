@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.IdeView;
+import consulo.ide.IdeView;
 import consulo.ide.impl.idea.openapi.actionSystem.*;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;

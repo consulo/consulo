@@ -1,5 +1,5 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.ide.ui.newItemPopup;
+package consulo.ide.action.ui;
 
 import consulo.ui.ex.awt.ScrollingUtil;
 import consulo.ui.ex.awt.JBList;
@@ -75,7 +75,7 @@ public class NewItemWithTemplatesPopupPanel<T> extends NewItemSimplePopupPanel {
     MouseAdapter mouseListener = new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
-        if (myApplyAction != null && e.getClickCount() > 1) myApplyAction.consume(e);
+        if (myApplyAction != null && e.getClickCount() > 1) myApplyAction.accept(e);
       }
     };
 

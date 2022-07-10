@@ -58,6 +58,8 @@ module consulo.ide.api {
   requires transitive consulo.web.browser.api;
 
   exports consulo.ide;
+  exports consulo.ide.action;
+  exports consulo.ide.action.ui;
   exports consulo.ide.navigation;
   exports consulo.ide.tipOfDay;
   exports consulo.ide.setting;
@@ -67,8 +69,11 @@ module consulo.ide.api {
   exports consulo.ide.setting.module.event;
   exports consulo.ide.moduleImport;
   exports consulo.ide.newModule;
+  exports consulo.ide.statistic;
   exports consulo.ide.newModule.ui;
   exports consulo.ide.ui;
   exports consulo.ide.ui.popup;
   exports consulo.ide.util;
+
+  exports consulo.ide.internal to consulo.ide.impl;
 }

@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.ide.fileTemplates.ui;
+package consulo.ide.action.ui;
 
 import consulo.ide.IdeBundle;
 import consulo.fileTemplate.FileTemplate;
-import consulo.ide.impl.idea.ide.fileTemplates.actions.AttributesDefaults;
+import consulo.fileTemplate.AttributesDefaults;
 import consulo.ui.ex.awt.internal.DialogWrapperPeer;
 import consulo.document.util.TextRange;
 import consulo.ui.ex.awt.util.ScreenUtil;
@@ -36,7 +36,6 @@ import java.util.*;
 /*
  * @author: MYakovlev
  */
-
 public class CreateFromTemplatePanel {
   private JPanel myMainPanel;
   private JPanel myAttrPanel;

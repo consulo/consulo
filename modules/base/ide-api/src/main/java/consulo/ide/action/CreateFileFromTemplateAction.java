@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.actions;
+package consulo.ide.action;
 
-import consulo.fileTemplate.FileTemplate;
-import consulo.fileTemplate.FileTemplateManager;
-import consulo.fileTemplate.FileTemplateUtil;
-import consulo.ide.impl.idea.ide.fileTemplates.actions.CreateFromTemplateActionBase;
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.application.Application;
 import consulo.application.WriteAction;
 import consulo.fileEditor.FileEditorManager;
+import consulo.fileTemplate.FileTemplate;
+import consulo.fileTemplate.FileTemplateManager;
+import consulo.fileTemplate.FileTemplateParseException;
+import consulo.fileTemplate.FileTemplateUtil;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -32,11 +31,11 @@ import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.project.Project;
+import consulo.project.ProjectPropertiesComponent;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import org.apache.velocity.runtime.parser.ParseException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -95,13 +94,13 @@ public abstract class CreateFileFromTemplateAction extends CreateFromTemplateAct
           }
         }
         if (defaultTemplateProperty != null) {
-          PropertiesComponent.getInstance(project).setValue(defaultTemplateProperty, template.getName());
+          ProjectPropertiesComponent.getInstance(project).setValue(defaultTemplateProperty, template.getName());
         }
         return psiFile;
       }
     }
-    catch (ParseException e) {
-      throw new IncorrectOperationException("Error parsing Velocity template: " + e.getMessage(), (Throwable)e);
+    catch (FileTemplateParseException e) {
+      throw new IncorrectOperationException("Error parsing Velocity template: " + e.getMessage(), e);
     }
     catch (IncorrectOperationException e) {
       throw e;

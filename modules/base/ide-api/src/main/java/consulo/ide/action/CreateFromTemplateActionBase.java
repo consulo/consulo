@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.fileTemplates.actions;
+package consulo.ide.action;
 
-import consulo.ide.impl.idea.ide.IdeView;
-import consulo.ide.impl.idea.ide.fileTemplates.ui.CreateFromTemplateDialog;
-import consulo.ide.impl.idea.ide.util.DirectoryChooserUtil;
 import consulo.dataContext.DataContext;
+import consulo.fileTemplate.AttributesDefaults;
 import consulo.fileTemplate.FileTemplate;
 import consulo.fileTemplate.FileTemplateManager;
-import consulo.language.editor.impl.fileTemplate.EditorFileTemplateUtil;
+import consulo.ide.IdeView;
+import consulo.ide.action.ui.CreateFromTemplateDialog;
+import consulo.ide.util.DirectoryChooserUtil;
+import consulo.language.editor.template.EditorFileTemplateUtil;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -30,13 +31,12 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
+import consulo.util.lang.ObjectUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.Map;
-
-import static consulo.ide.impl.idea.util.ObjectUtils.notNull;
 
 public abstract class CreateFromTemplateActionBase extends AnAction {
   public CreateFromTemplateActionBase(final String title, final String description, final Image icon) {
@@ -70,7 +70,7 @@ public abstract class CreateFromTemplateActionBase extends AnAction {
           view.selectElement(createdElement);
           if (selectedTemplate.isLiveTemplateEnabled() && createdElement instanceof PsiFile) {
             Map<String, String> defaultValues = getLiveTemplateDefaults(dataContext, ((PsiFile)createdElement));
-            startLiveTemplate((PsiFile)createdElement, notNull(defaultValues, Collections.emptyMap()));
+            startLiveTemplate((PsiFile)createdElement, ObjectUtil.notNull(defaultValues, Collections.emptyMap()));
           }
         }
       }

@@ -65,7 +65,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 @Deprecated
-@DeprecationInfo("Use Alert/Alerts from ui-api")
+@DeprecationInfo("Use Alert/Alerts class from ui-api")
 public class Messages {
   public static final int OK = 0;
   public static final int YES = 0;

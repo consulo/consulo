@@ -15,54 +15,38 @@
  */
 package consulo.ide.impl.idea.internal.statistic;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.internal.statistic.beans.ConvertUsagesUtil;
-import consulo.ide.impl.idea.internal.statistic.beans.UsageDescriptor;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.project.Project;
+import consulo.ide.statistic.UsageTrigger;
 import consulo.util.xml.serializer.annotation.MapAnnotation;
 import consulo.util.xml.serializer.annotation.Tag;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * User: ksafonov
  */
 @Singleton
-@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 @State(name = "UsageTrigger", storages = @Storage(value = "statistics.application.usages.xml", roamingType = RoamingType.DISABLED))
-public class UsageTrigger implements PersistentStateComponent<UsageTrigger.State> {
+public class UsageTriggerImpl implements UsageTrigger, PersistentStateComponent<UsageTriggerImpl.State> {
 
   public static class State {
     @Tag("counts")
     @MapAnnotation(surroundWithTag = false, keyAttributeName = "feature", valueAttributeName = "count")
-    public Map<String, Integer> myValues = new HashMap<String, Integer>();
+    public Map<String, Integer> myValues = new HashMap<>();
   }
 
   private State myState = new State();
 
-  public static void trigger(@Nonnull String feature) {
-    getInstance().doTrigger(feature);
-  }
-
-  private static UsageTrigger getInstance() {
-    return ServiceManager.getService(UsageTrigger.class);
-  }
-
-  private void doTrigger(String feature) {
+  @Override
+  public void doTrigger(String feature) {
     ConvertUsagesUtil.assertDescriptorName(feature);
     final Integer count = myState.myValues.get(feature);
     if (count == null) {
@@ -81,20 +65,5 @@ public class UsageTrigger implements PersistentStateComponent<UsageTrigger.State
   @Override
   public void loadState(final State state) {
     myState = state;
-  }
-
-  public static class MyCollector extends UsagesCollector {
-    @Override
-    @Nonnull
-    public Set<UsageDescriptor> getUsages(@Nullable final Project project) {
-      final State state = UsageTrigger.getInstance().getState();
-      return ContainerUtil.map2Set(state.myValues.entrySet(), e -> new UsageDescriptor(e.getKey(), e.getValue()));
-    }
-
-    @Override
-    @Nonnull
-    public String getGroupId() {
-      return "consulo.platform.base:features.count";
-    }
   }
 }

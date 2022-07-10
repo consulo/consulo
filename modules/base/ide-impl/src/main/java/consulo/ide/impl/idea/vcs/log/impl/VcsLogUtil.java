@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.vcs.log.impl;
 
-import consulo.ide.impl.idea.internal.statistic.UsageTrigger;
 import consulo.ide.impl.idea.internal.statistic.beans.ConvertUsagesUtil;
+import consulo.ide.statistic.UsageTrigger;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;

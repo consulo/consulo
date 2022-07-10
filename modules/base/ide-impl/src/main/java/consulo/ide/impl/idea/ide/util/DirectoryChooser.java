@@ -16,41 +16,42 @@
 
 package consulo.ide.impl.idea.ide.util;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.util.SystemInfo;
+import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNamePanel;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNamePopupComponent;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoClassModel2;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.language.util.ModuleUtilCore;
-import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.project.ProjectUtil;
-import consulo.module.content.layer.ContentFolder;
-import consulo.module.content.ProjectFileIndex;
-import consulo.module.content.ProjectRootManager;
-import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.disposer.Disposer;
-import consulo.application.util.SystemInfo;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
+import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.roots.ContentFoldersSupportUtil;
-import consulo.ui.ex.action.*;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.ide.internal.DirectoryChooserDialog;
+import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import consulo.language.editor.refactoring.RefactoringBundle;
+import consulo.language.util.ModuleUtilCore;
+import consulo.module.content.ProjectFileIndex;
+import consulo.module.content.ProjectRootManager;
+import consulo.module.content.layer.ContentFolder;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.TabbedPaneWrapper;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.annotation.DeprecationInfo;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.annotation.access.RequiredReadAction;
 import consulo.ui.image.Image;
+import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -64,7 +65,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class DirectoryChooser extends DialogWrapper {
+public class DirectoryChooser extends DialogWrapper implements DirectoryChooserDialog {
   @NonNls private static final String FILTER_NON_EXISTING = "filter_non_existing";
   private static final String DEFAULT_SELECTION = "last_directory_selection";
   private final DirectoryChooserView myView;
@@ -141,13 +142,7 @@ public class DirectoryChooser extends DialogWrapper {
     toolbarComponent.setBorder(null);
     panel.add(toolbarComponent, BorderLayout.NORTH);
 
-    final Runnable runnable = new Runnable() {
-      @Override
-      public void run() {
-        enableButtons();
-      }
-    };
-    myView.onSelectionChange(runnable);
+    myView.onSelectionChange(this::enableButtons);
     final JComponent component = myView.getComponent();
     final JScrollPane jScrollPane = ScrollPaneFactory.createScrollPane(component);
     //noinspection HardCodedStringLiteral

@@ -14,26 +14,26 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.ide.actions;
+package consulo.ide.action;
 
 import consulo.application.CommonBundle;
-import consulo.localHistory.LocalHistory;
-import consulo.localHistory.LocalHistoryAction;
 import consulo.ide.IdeBundle;
-import consulo.undoRedo.CommandProcessor;
-import consulo.undoRedo.UndoConfirmationPolicy;
-import consulo.logging.Logger;
-import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
-import consulo.util.lang.ref.Ref;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.SmartPointerManager;
 import consulo.language.psi.SmartPsiElementPointer;
+import consulo.localHistory.LocalHistory;
+import consulo.localHistory.LocalHistoryAction;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.ui.ex.awt.Messages;
+import consulo.undoRedo.CommandProcessor;
+import consulo.undoRedo.UndoConfirmationPolicy;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.function.ThrowableRunnable;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.lang.ref.Ref;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
 
 /**

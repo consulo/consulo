@@ -42,7 +42,6 @@ import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.dataContext.DataProvider;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
-import consulo.ide.impl.idea.ui.*;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;

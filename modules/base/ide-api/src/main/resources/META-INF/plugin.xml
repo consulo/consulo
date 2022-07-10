@@ -53,7 +53,6 @@
     <extensionPoint name="contentFolderTypeProvider" interface="consulo.content.ContentFolderTypeProvider"/>
     <extensionPoint name="contentFolderPropertyProvider" interface="consulo.module.content.layer.ContentFolderPropertyProvider"/>
     <extensionPoint name="contentFolderSupportPatcher" interface="consulo.module.content.layer.ContentFolderSupportPatcher"/>
-    <extensionPoint name="createFromTemplateActionModuleResolver" interface="consulo.ide.impl.idea.ide.actions.CreateFileFromTemplateAction$ModuleResolver"/>
 
     <extensionPoint name="applicationService" beanClass="consulo.component.internal.ServiceDescriptor"/>
     <extensionPoint name="projectService" beanClass="consulo.component.internal.ServiceDescriptor" area="PROJECT"/>
@@ -1068,8 +1067,6 @@
 
 
 
-    <projectService serviceImplementation="consulo.ide.impl.idea.execution.TestStateStorage"/>
-
     <projectService serviceInterface="consulo.ide.impl.idea.execution.testframework.sm.TestHistoryConfiguration"
                     serviceImplementation="consulo.ide.impl.idea.execution.testframework.sm.TestHistoryConfiguration"/>
 
@@ -1087,13 +1084,6 @@
     <editorActionHandler action="EditorDelete" implementationClass="consulo.ide.impl.idea.openapi.editor.actions.DeleteInColumnModeHandler"
                          id="delete.in.column.mode"/>
 
-    <statistics.usagesCollector implementation="consulo.ide.impl.idea.internal.statistic.UsageTrigger$MyCollector"/>
-
-    <toolWindow id="Event Log" anchor="bottom" secondary="true"
-                icon="consulo.platform.base.PlatformIconGroup@ide.notification.noevents"
-                factoryClass="consulo.ide.impl.idea.notification.EventLogToolWindowFactory"/>
-
-    <projectService serviceImplementation="consulo.ide.impl.idea.notification.EventLog$ProjectTracker" lazy="false"/>
 
     <patch.extension implementation="consulo.ide.impl.idea.openapi.diff.impl.patch.BaseRevisionTextPatchEP"/>
     <patch.extension implementation="consulo.ide.impl.idea.openapi.diff.impl.patch.CharsetEP"/>

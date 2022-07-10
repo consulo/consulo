@@ -30,6 +30,7 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import org.apache.velocity.VelocityContext;
+import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.VelocityException;
 import org.apache.velocity.runtime.parser.ParseException;
 import org.apache.velocity.runtime.parser.Token;
@@ -95,6 +96,9 @@ public class FileTemplateImplUtil {
     final StringWriter stringWriter = new StringWriter();
     try {
       VelocityWrapper.evaluate(null, context, stringWriter, templateContent);
+    }
+    catch (ParseErrorException e) {
+      throw new FileTemplateParseException(e);
     }
     catch (final VelocityException e) {
       LOG.error("Error evaluating template:\n" + templateContent, e);

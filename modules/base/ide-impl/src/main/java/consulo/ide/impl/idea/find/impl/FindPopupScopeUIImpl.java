@@ -18,7 +18,7 @@ import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiBundle;
 import consulo.content.scope.SearchScope;
-import consulo.ide.impl.idea.ui.SimpleListCellRenderer;
+import consulo.ui.ex.awt.SimpleListCellRenderer;
 import consulo.ui.ex.awt.JBUIScale;
 import consulo.ide.impl.idea.util.Functions;
 import consulo.ide.impl.idea.util.ObjectUtils;

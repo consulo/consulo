@@ -1,26 +1,26 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.ide.ui.newItemPopup;
+package consulo.ide.action.ui;
 
-import consulo.ide.IdeBundle;
 import consulo.disposer.Disposable;
-import consulo.ui.ex.popup.JBPopup;
-import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.awt.JBPanel;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.Disposer;
+import consulo.ide.IdeBundle;
 import consulo.ui.TextBoxWithExtensions;
 import consulo.ui.ValidableComponent;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
+import consulo.ui.border.BorderStyle;
 import consulo.ui.event.KeyEvent;
 import consulo.ui.event.KeyListener;
-import consulo.ui.border.BorderStyle;
+import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.awt.JBPanel;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.layout.WrappedLayout;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
 import java.awt.event.InputEvent;
+import java.util.function.Consumer;
 
 public class NewItemSimplePopupPanel extends JBPanel implements Disposable {
   protected final TextBoxWithExtensions myTextField;
@@ -101,7 +101,7 @@ public class NewItemSimplePopupPanel extends JBPanel implements Disposable {
             return;
           }
 
-          if (myApplyAction != null) myApplyAction.consume(null); // todo null ??
+          if (myApplyAction != null) myApplyAction.accept(null); // todo null ??
         }
       }
     });

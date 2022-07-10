@@ -14,19 +14,22 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.ide.util;
+package consulo.ide.util;
 
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.IdeView;
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.project.Project;
+import consulo.ide.IdeBundle;
+import consulo.ide.IdeView;
+import consulo.ide.internal.DirectoryChooserDialog;
+import consulo.ide.internal.DirectoryChooserFactory;
+import consulo.language.editor.refactoring.RefactoringBundle;
+import consulo.language.psi.PsiDirectory;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
-import consulo.language.psi.PsiDirectory;
-import consulo.language.editor.refactoring.RefactoringBundle;
+import consulo.project.Project;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -48,10 +51,7 @@ public class DirectoryChooserUtil {
   }
 
   @Nullable
-  public static PsiDirectory selectDirectory(Project project,
-                                             PsiDirectory[] packageDirectories,
-                                             PsiDirectory defaultDirectory,
-                                             String postfixToShow) {
+  public static PsiDirectory selectDirectory(Project project, PsiDirectory[] packageDirectories, PsiDirectory defaultDirectory, String postfixToShow) {
     ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
 
     ArrayList<PsiDirectory> possibleDirs = new ArrayList<PsiDirectory>();
@@ -68,7 +68,7 @@ public class DirectoryChooserUtil {
 
     if (ApplicationManager.getApplication().isUnitTestMode()) return possibleDirs.get(0);
 
-    DirectoryChooser chooser = new DirectoryChooser(project);
+    DirectoryChooserDialog chooser = Application.get().getInstance(DirectoryChooserFactory.class).create(project);
     chooser.setTitle(IdeBundle.message("title.choose.destination.directory"));
     chooser.fillList(possibleDirs.toArray(new PsiDirectory[possibleDirs.size()]), defaultDirectory, project, postfixToShow);
     chooser.show();
@@ -76,19 +76,10 @@ public class DirectoryChooserUtil {
   }
 
   @Nullable
-  public static
-  PsiDirectory chooseDirectory(PsiDirectory[] targetDirectories,
-                               @Nullable PsiDirectory initialDirectory,
-                               @Nonnull Project project,
-                               Map<PsiDirectory, String> relativePathsToCreate) {
-    final DirectoryChooser chooser = new DirectoryChooser(project, new DirectoryChooserModuleTreeView(project));
+  public static PsiDirectory chooseDirectory(PsiDirectory[] targetDirectories, @Nullable PsiDirectory initialDirectory, @Nonnull Project project, Map<PsiDirectory, String> relativePathsToCreate) {
+    DirectoryChooserDialog chooser = Application.get().getInstance(DirectoryChooserFactory.class).create(project);
     chooser.setTitle(RefactoringBundle.message("choose.destination.directory"));
-    chooser.fillList(
-      targetDirectories,
-      initialDirectory,
-      project,
-      relativePathsToCreate
-    );
+    chooser.fillList(targetDirectories, initialDirectory, project, relativePathsToCreate);
     chooser.show();
     if (!chooser.isOK()) return null;
     return chooser.getSelectedDirectory();

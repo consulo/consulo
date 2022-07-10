@@ -16,7 +16,8 @@
 
 package consulo.ide.impl.idea.ide.fileTemplates.actions;
 
-import consulo.ide.impl.idea.ide.IdeView;
+import consulo.ide.IdeView;
+import consulo.ide.action.CreateFromTemplateActionBase;
 import consulo.ide.impl.idea.ide.actions.EditFileTemplatesAction;
 import consulo.ide.impl.idea.ide.fileTemplates.ui.SelectTemplateDialog;
 import consulo.application.dumb.DumbAware;

@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.editor.impl.fileTemplate;
+package consulo.language.editor.template;
 
 import consulo.codeEditor.Editor;
 import consulo.language.editor.WriteCommandAction;
-import consulo.language.editor.impl.util.EditorHelper;
-import consulo.language.editor.template.Template;
-import consulo.language.editor.template.TemplateManager;
+import consulo.language.editor.util.EditorHelper;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 

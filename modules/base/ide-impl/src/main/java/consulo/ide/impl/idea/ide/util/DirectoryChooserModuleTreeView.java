@@ -19,30 +19,26 @@ package consulo.ide.impl.idea.ide.util;
 import consulo.application.AllIcons;
 import consulo.ide.impl.idea.ide.projectView.impl.ModuleGroup;
 import consulo.ide.impl.idea.ide.projectView.impl.ModuleGroupUtil;
-import consulo.module.Module;
-import consulo.module.ModuleManager;
-import consulo.project.Project;
-import consulo.module.content.ProjectFileIndex;
-import consulo.module.content.ProjectRootManager;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiDirectory;
-import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
-import consulo.ui.ex.awt.tree.Tree;
 import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.Function;
-import consulo.ide.impl.idea.util.containers.Convertor;
-import java.util.HashMap;
+import consulo.language.psi.PsiDirectory;
 import consulo.logging.Logger;
+import consulo.module.Module;
+import consulo.module.ModuleManager;
+import consulo.module.content.ProjectFileIndex;
+import consulo.module.content.ProjectRootManager;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
+import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
+import consulo.ui.ex.awt.tree.Tree;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.*;
 import java.util.*;
 
@@ -70,17 +66,14 @@ public class DirectoryChooserModuleTreeView implements DirectoryChooserView {
     myTree.setRootVisible(false);
     myTree.setShowsRootHandles(true);
     myTree.setCellRenderer(new MyTreeCellRenderer());
-    new TreeSpeedSearch(myTree, new Convertor<TreePath, String>() {
-      @Override
-      public String convert(final TreePath o) {
-        final Object userObject = ((DefaultMutableTreeNode)o.getLastPathComponent()).getUserObject();
-        if (userObject instanceof Module) {
-          return ((Module)userObject).getName();
-        }
-        else {
-          if (userObject == null) return "";
-          return userObject.toString();
-        }
+    new TreeSpeedSearch(myTree, o -> {
+      final Object userObject = ((DefaultMutableTreeNode)o.getLastPathComponent()).getUserObject();
+      if (userObject instanceof Module) {
+        return ((Module)userObject).getName();
+      }
+      else {
+        if (userObject == null) return "";
+        return userObject.toString();
       }
     }, true);
   }
@@ -103,12 +96,7 @@ public class DirectoryChooserModuleTreeView implements DirectoryChooserView {
 
   @Override
   public void onSelectionChange(final Runnable runnable) {
-    myTree.getSelectionModel().addTreeSelectionListener(new TreeSelectionListener() {
-      @Override
-      public void valueChanged(TreeSelectionEvent e) {
-        runnable.run();
-      }
-    });
+    myTree.getSelectionModel().addTreeSelectionListener(e -> runnable.run());
   }
 
   @Override

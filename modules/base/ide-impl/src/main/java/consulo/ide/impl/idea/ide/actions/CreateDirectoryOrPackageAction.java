@@ -16,10 +16,10 @@
 
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ide.impl.idea.ide.IdeView;
-import consulo.ide.impl.idea.ide.ui.newItemPopup.NewItemPopupUtil;
-import consulo.ide.impl.idea.ide.ui.newItemPopup.NewItemSimplePopupPanel;
-import consulo.ide.impl.idea.ide.util.DirectoryChooserUtil;
+import consulo.ide.IdeView;
+import consulo.ide.action.ui.NewItemPopupUtil;
+import consulo.ide.action.ui.NewItemSimplePopupPanel;
+import consulo.ide.util.DirectoryChooserUtil;
 import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
 import consulo.content.ContentFolderTypeProvider;

@@ -20,7 +20,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.util.SystemInfo;
 import consulo.fileTemplate.FileTemplate;
 import consulo.fileTemplate.FileTemplateManager;
-import consulo.language.editor.impl.fileTemplate.EditorFileTemplateUtil;
+import consulo.language.editor.template.EditorFileTemplateUtil;
 import consulo.language.editor.impl.intention.CreateFileFix;
 import consulo.language.editor.impl.intention.RenameFileFix;
 import consulo.language.editor.impl.internal.intention.RenameFileReferenceIntentionAction;

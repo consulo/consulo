@@ -1,7 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.scratch;
 
-import consulo.ide.impl.idea.ide.IdeView;
+import consulo.ide.IdeView;
 import consulo.ide.impl.idea.ide.actions.NewActionGroup;
 import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;

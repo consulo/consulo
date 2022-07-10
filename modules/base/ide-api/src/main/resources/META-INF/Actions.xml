@@ -1345,7 +1345,7 @@
     </group>
 
     <group id="NewGroup" popup="true">
-      <action id="NewFile" class="consulo.ide.impl.idea.ide.actions.CreateFileAction"/>
+      <action id="NewFile" class="consulo.ide.action.CreateFileAction"/>
       <action id="NewScratchFile" class="consulo.ide.impl.idea.ide.scratch.ScratchFileActions$NewFileAction"/>
       <action id="NewDir" class="consulo.ide.impl.idea.ide.actions.CreateDirectoryOrPackageAction"/>
       <separator/>

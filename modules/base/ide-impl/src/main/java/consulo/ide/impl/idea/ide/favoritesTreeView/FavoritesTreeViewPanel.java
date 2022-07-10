@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.ide.favoritesTreeView;
 
+import consulo.ide.IdeView;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.localHistory.LocalHistory;
@@ -38,8 +39,8 @@ import consulo.ide.impl.idea.ide.projectView.impl.nodes.LibraryGroupElement;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.NamedLibraryElement;
 import consulo.ide.impl.idea.ide.ui.customization.CustomizationUtil;
 import consulo.ide.impl.idea.ide.util.DeleteHandler;
-import consulo.ide.impl.idea.ide.util.DirectoryChooserUtil;
-import consulo.language.editor.impl.util.EditorHelper;
+import consulo.ide.util.DirectoryChooserUtil;
+import consulo.language.editor.util.EditorHelper;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.ex.awt.tree.NodeRenderer;
 import consulo.navigation.ItemPresentation;

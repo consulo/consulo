@@ -13,16 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.actions;
+package consulo.ide.action;
 
-import consulo.ide.impl.idea.ide.IdeView;
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.application.CommonBundle;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.document.FileDocumentManager;
 import consulo.fileEditor.FileEditorManager;
-import consulo.language.editor.CommonDataKeys;
+import consulo.ide.IdeView;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNameIdentifierOwner;
@@ -30,6 +28,7 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.extension.ModuleExtension;
 import consulo.project.Project;
+import consulo.project.ProjectPropertiesComponent;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -72,7 +71,7 @@ public abstract class CreateFromTemplateAction<T extends PsiElement> extends AnA
       return;
     }
 
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
 
     final PsiDirectory dir = view.getOrChooseDirectory();
     if (dir == null || project == null) return;
@@ -111,7 +110,7 @@ public abstract class CreateFromTemplateAction<T extends PsiElement> extends AnA
   @Nullable
   protected String getDefaultTemplateName(@Nonnull PsiDirectory dir) {
     String property = getDefaultTemplateProperty();
-    return property == null ? null : PropertiesComponent.getInstance(dir.getProject()).getValue(property);
+    return property == null ? null : ProjectPropertiesComponent.getInstance(dir.getProject()).getValue(property);
   }
 
   @Nullable
@@ -140,7 +139,7 @@ public abstract class CreateFromTemplateAction<T extends PsiElement> extends AnA
   }
 
   protected boolean isAvailable(DataContext dataContext) {
-    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final Project project = dataContext.getData(Project.KEY);
     final IdeView view = dataContext.getData(IdeView.KEY);
     return project != null && view != null && view.getDirectories().length != 0;
   }

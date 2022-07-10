@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.ide;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.DataContext;
+import consulo.ide.IdeView;
 import consulo.ide.impl.idea.ide.dnd.FileCopyPasteUtil;
 import consulo.ide.impl.idea.ide.dnd.LinuxDragAndDropSupport;
 import consulo.ide.impl.idea.refactoring.copy.CopyFilesOrDirectoriesHandler;

@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.ide.actions;
+package consulo.ide.action;
 
-import consulo.ide.impl.idea.ide.actions.newclass.CreateWithTemplatesDialogPanel;
-import consulo.ide.impl.idea.ide.ui.newItemPopup.NewItemPopupUtil;
-import consulo.language.LangBundle;
-import consulo.project.Project;
-import consulo.ui.ex.InputValidator;
-import consulo.ui.ex.InputValidatorEx;
-import consulo.ui.ex.popup.JBPopup;
-import consulo.util.lang.Trinity;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.language.psi.PsiElement;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.Disposer;
+import consulo.ide.action.ui.CreateWithTemplatesDialogPanel;
+import consulo.ide.action.ui.NewItemPopupUtil;
+import consulo.language.LangBundle;
+import consulo.language.psi.PsiElement;
+import consulo.project.Project;
 import consulo.ui.ValidableComponent;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.InputValidator;
+import consulo.ui.ex.InputValidatorEx;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.image.Image;
+import consulo.util.lang.StringUtil;
+import consulo.util.lang.Trinity;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

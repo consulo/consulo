@@ -456,7 +456,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.ide.actions;
   exports consulo.ide.impl.idea.ide.actions.bigPopup;
   exports consulo.ide.impl.idea.ide.actions.exclusion;
-  exports consulo.ide.impl.idea.ide.actions.newclass;
   exports consulo.ide.impl.idea.ide.actions.runAnything;
   exports consulo.ide.impl.idea.ide.actions.runAnything.activity;
   exports consulo.ide.impl.idea.ide.actions.runAnything.commands;
@@ -525,7 +524,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.ide.todo.nodes;
   exports consulo.ide.impl.idea.ide.ui;
   exports consulo.ide.impl.idea.ide.ui.customization;
-  exports consulo.ide.impl.idea.ide.ui.newItemPopup;
   exports consulo.ide.impl.idea.ide.ui.search;
   exports consulo.ide.impl.idea.ide.util;
   exports consulo.ide.impl.idea.ide.util.gotoByName;

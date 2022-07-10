@@ -1,16 +1,15 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.ide.actions.newclass;
+package consulo.ide.action.ui;
 
-import consulo.ide.impl.idea.ide.ui.newItemPopup.NewItemWithTemplatesPopupPanel;
-import consulo.util.lang.Trinity;
-import consulo.ide.impl.idea.ui.SimpleListCellRenderer;
-import consulo.ui.ex.awt.JBUIScale;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.TextBoxWithExtensions;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.JBUIScale;
+import consulo.ui.ex.awt.SimpleListCellRenderer;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
-import javax.annotation.Nonnull;
+import consulo.util.lang.Trinity;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;

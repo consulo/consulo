@@ -16,7 +16,6 @@
  */
 package consulo.desktop.awt.welcomeScreen;
 
-import consulo.ide.impl.idea.internal.statistic.UsageTrigger;
 import consulo.ide.impl.idea.notification.impl.IdeNotificationArea;
 import consulo.ide.impl.idea.ui.components.labels.ActionLink;
 import consulo.application.AllIcons;
@@ -28,6 +27,7 @@ import consulo.desktop.awt.startup.splash.AnimatedLogoLabel;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.welcomeScreen.BaseWelcomeScreenPanel;
 import consulo.ide.impl.welcomeScreen.WelcomeScreenConstants;
+import consulo.ide.statistic.UsageTrigger;
 import consulo.project.ui.notification.NotificationType;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;

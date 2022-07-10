@@ -16,6 +16,8 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.application.CommonBundle;
+import consulo.ide.action.CreateElementActionBase;
+import consulo.ide.action.CreateFileAction;
 import consulo.localHistory.LocalHistory;
 import consulo.localHistory.LocalHistoryAction;
 import consulo.ide.IdeBundle;

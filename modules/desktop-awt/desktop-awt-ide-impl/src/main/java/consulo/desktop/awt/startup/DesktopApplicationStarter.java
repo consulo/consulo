@@ -17,7 +17,6 @@ package consulo.desktop.awt.startup;
 
 import com.google.gson.Gson;
 import consulo.ide.impl.idea.ide.*;
-import consulo.ide.impl.idea.internal.statistic.UsageTrigger;
 import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
 import consulo.ide.impl.idea.openapi.wm.impl.SystemDock;
 import consulo.ide.impl.idea.openapi.wm.impl.X11UiUtil;
@@ -47,6 +46,7 @@ import consulo.desktop.awt.wm.impl.TopMenuInitializer;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.plugins.PluginsConfigurable;
 import consulo.ide.setting.ShowSettingsUtil;
+import consulo.ide.statistic.UsageTrigger;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.project.Project;
