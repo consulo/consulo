@@ -20,7 +20,7 @@ import consulo.project.Project;
 import consulo.project.event.ProjectManagerListener;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.RefreshQueue;
+import consulo.virtualFileSystem.RefreshQueue;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;

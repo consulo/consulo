@@ -19,8 +19,10 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
-import consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager;
+import consulo.vcs.AbstractVcs;
+import consulo.vcs.ProjectLevelVcsManager;
+import consulo.vcs.action.VcsContext;
+
 import javax.annotation.Nonnull;
 
 import java.util.Collection;

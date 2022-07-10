@@ -17,10 +17,14 @@ import consulo.application.util.registry.Registry;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.*;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManager;
+import consulo.vcs.ProjectLevelVcsManager;
+import consulo.vcs.VcsBundle;
+import consulo.vcs.VcsConfiguration;
+import consulo.vcs.VcsDirectoryMapping;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.Function;
-import consulo.ide.impl.idea.vcsUtil.VcsUtil;
+import consulo.vcs.util.VcsUtil;
 import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;

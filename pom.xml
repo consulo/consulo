@@ -124,6 +124,7 @@
     <module>modules/base/language-copyright-api</module>
     <module>modules/base/web-browser-api</module>
     <module>modules/base/injecting-binding-processor</module>
+    <module>modules/base/vcs-api</module>
 
     <module>modules/base/proxy</module>
     <module>modules/base/xcoverage-data</module>

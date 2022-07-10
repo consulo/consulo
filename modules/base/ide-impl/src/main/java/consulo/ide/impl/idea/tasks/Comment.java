@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.tasks;
 
-import consulo.ide.impl.idea.util.text.DateFormatUtil;
+import consulo.application.util.DateFormatUtil;
 import javax.annotation.Nullable;
 
 import java.util.Date;

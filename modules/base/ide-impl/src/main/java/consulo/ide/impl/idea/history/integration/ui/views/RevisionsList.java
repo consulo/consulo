@@ -22,14 +22,14 @@ import consulo.ide.impl.idea.history.integration.ui.models.HistoryDialogModel;
 import consulo.ide.impl.idea.history.integration.ui.models.RevisionItem;
 import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
+import consulo.vcs.VcsBundle;
 import consulo.ui.ex.ExpandableItemsHandler;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.SeparatorWithText;
 import consulo.ui.ex.TableCell;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.table.JBTable;
-import consulo.ide.impl.idea.util.text.DateFormatUtil;
+import consulo.application.util.DateFormatUtil;
 import consulo.ui.ex.awt.AbstractLayoutManager;
 import consulo.ui.ex.awt.UIUtil;
 

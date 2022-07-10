@@ -16,10 +16,12 @@
 
 package consulo.ide.impl.idea.openapi.vcs.versionBrowser;
 
-import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
+import consulo.vcs.VcsBundle;
 import consulo.ui.ex.awt.IdeBorderFactory;
-import consulo.ide.impl.idea.util.text.DateFormatUtil;
+import consulo.application.util.DateFormatUtil;
 import com.michaelbaranov.microba.calendar.DatePicker;
+import consulo.vcs.versionBrowser.ChangeBrowserSettings;
+
 import javax.annotation.Nullable;
 
 import javax.swing.*;

@@ -16,6 +16,9 @@
 
 package consulo.ide.impl.idea.openapi.vcs;
 
+import consulo.vcs.RepositoryLocation;
+import consulo.vcs.VcsException;
+
 /**
  * @author yole
  */

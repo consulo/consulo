@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.tasks;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
-import consulo.ide.impl.idea.openapi.vcs.changes.LocalChangeList;
+import consulo.vcs.AbstractVcs;
+import consulo.vcs.change.LocalChangeList;
 import consulo.application.progress.ProgressIndicator;
 import consulo.disposer.Disposable;
 import consulo.project.Project;

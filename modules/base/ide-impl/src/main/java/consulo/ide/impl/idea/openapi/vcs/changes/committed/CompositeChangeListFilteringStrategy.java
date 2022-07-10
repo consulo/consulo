@@ -15,7 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
-import consulo.ide.impl.idea.openapi.vcs.versionBrowser.CommittedChangeList;
+import consulo.vcs.change.commited.ChangeListFilteringStrategy;
+import consulo.vcs.change.commited.CommittedChangesFilterKey;
+import consulo.vcs.versionBrowser.CommittedChangeList;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.impl;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.virtualFileSystem.fileType.FileTypeFactory;
 import consulo.virtualFileSystem.fileType.FileTypeConsumer;
-import consulo.ide.impl.idea.openapi.vcs.VcsConfiguration;
+import consulo.vcs.VcsConfiguration;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.PatchFileType;
 import javax.annotation.Nonnull;
 

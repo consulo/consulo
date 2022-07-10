@@ -15,9 +15,11 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.versionBrowser;
 
-import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
+import consulo.vcs.VcsBundle;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.awt.IdeBorderFactory;
+import consulo.vcs.versionBrowser.ChangeBrowserSettings;
+import consulo.vcs.versionBrowser.ChangesBrowserSettingsEditor;
 
 import javax.swing.*;
 import java.awt.*;

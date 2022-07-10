@@ -15,10 +15,13 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
-import consulo.ide.impl.idea.openapi.vcs.ChangeListColumn;
-import consulo.ide.impl.idea.openapi.vcs.CommittedChangesProvider;
-import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
-import consulo.ide.impl.idea.openapi.vcs.versionBrowser.CommittedChangeList;
+import consulo.vcs.ChangeListColumn;
+import consulo.vcs.CommittedChangesProvider;
+import consulo.vcs.VcsBundle;
+import consulo.vcs.change.commited.ChangeListFilteringStrategy;
+import consulo.vcs.change.commited.CommittedChangesFilterKey;
+import consulo.vcs.change.commited.CommittedChangesFilterPriority;
+import consulo.vcs.versionBrowser.CommittedChangeList;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.SimpleTextAttributes;

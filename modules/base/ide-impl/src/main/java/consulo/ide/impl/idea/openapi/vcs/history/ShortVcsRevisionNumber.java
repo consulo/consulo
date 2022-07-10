@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.history;
 
+import consulo.vcs.history.VcsRevisionNumber;
+
 /**
  * User: spLeaner
  */

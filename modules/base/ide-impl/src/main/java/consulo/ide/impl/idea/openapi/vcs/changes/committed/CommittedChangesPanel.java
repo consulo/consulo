@@ -39,11 +39,13 @@ import consulo.util.dataholder.Key;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.*;
 import consulo.ide.impl.idea.openapi.vcs.changes.BackgroundFromStartOption;
-import consulo.ide.impl.idea.openapi.vcs.versionBrowser.ChangeBrowserSettings;
-import consulo.ide.impl.idea.openapi.vcs.versionBrowser.CommittedChangeList;
+import consulo.vcs.*;
+import consulo.vcs.change.commited.*;
+import consulo.vcs.versionBrowser.ChangeBrowserSettings;
+import consulo.vcs.versionBrowser.CommittedChangeList;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.FilterComponent;
-import consulo.ide.impl.idea.util.AsynchConsumer;
+import consulo.application.util.function.AsynchConsumer;
 import consulo.ide.impl.idea.util.BufferedListConsumer;
 import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.WaitForProgressToShow;
@@ -161,7 +163,7 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
             }
 
             @Override
-            public void consume(final List<CommittedChangeList> list) {
+            public void accept(final List<CommittedChangeList> list) {
               new AbstractCalledLater((Project)myProject, IdeaModalityState.stateForComponent(myBrowser)) {
                 @Override
                 public void run() {
@@ -178,7 +180,7 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
               bufferedListConsumer.flush();
             }
             @Override
-            public void consume(CommittedChangeList committedChangeList) {
+            public void accept(CommittedChangeList committedChangeList) {
               if (myDisposed) {
                 indicator.cancel();
               }

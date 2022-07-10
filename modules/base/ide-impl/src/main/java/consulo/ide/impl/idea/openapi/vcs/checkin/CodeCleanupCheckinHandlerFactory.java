@@ -21,11 +21,13 @@ import consulo.language.editor.scope.AnalysisScope;
 import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionContextBase;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.vcs.CheckinProjectPanel;
-import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
-import consulo.ide.impl.idea.openapi.vcs.VcsConfiguration;
-import consulo.ide.impl.idea.openapi.vcs.changes.CommitContext;
-import consulo.ide.impl.idea.openapi.vcs.ui.RefreshableOnComponent;
+import consulo.vcs.checkin.CheckinHandlerFactory;
+import consulo.vcs.checkin.CheckinProjectPanel;
+import consulo.vcs.VcsBundle;
+import consulo.vcs.VcsConfiguration;
+import consulo.vcs.change.CommitContext;
+import consulo.vcs.ui.RefreshableOnComponent;
+import consulo.vcs.checkin.CheckinHandler;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.NonFocusableCheckBox;
 import javax.annotation.Nonnull;
@@ -35,7 +37,7 @@ import java.awt.*;
 import java.util.List;
 
 @ExtensionImpl(id = "code-cleanup", order = "after todo")
-public class CodeCleanupCheckinHandlerFactory extends CheckinHandlerFactory  {
+public class CodeCleanupCheckinHandlerFactory extends CheckinHandlerFactory {
   @Override
   @Nonnull
   public CheckinHandler createHandler(@Nonnull final CheckinProjectPanel panel, @Nonnull CommitContext commitContext) {

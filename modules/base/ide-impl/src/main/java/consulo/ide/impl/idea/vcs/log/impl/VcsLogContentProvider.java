@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.vcs.log.impl;
 
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.vcs.CalledInAwt;
-import consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager;
+import consulo.vcs.ProjectLevelVcsManager;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentProvider;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.ToolWindowId;

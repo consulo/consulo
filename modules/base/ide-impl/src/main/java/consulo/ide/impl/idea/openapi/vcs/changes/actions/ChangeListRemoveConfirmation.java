@@ -16,10 +16,10 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
-import consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager;
+import consulo.vcs.AbstractVcs;
+import consulo.vcs.ProjectLevelVcsManager;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManager;
-import consulo.ide.impl.idea.openapi.vcs.changes.LocalChangeList;
+import consulo.vcs.change.LocalChangeList;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.lang.ThreeState;
 

@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.diff.impl.patch.formove;
 
 import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.openapi.vcs.FilePath;
+import consulo.vcs.FilePath;
 import consulo.ide.impl.idea.openapi.vcs.FilePathImpl;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.RelativePathCalculator;
 import consulo.virtualFileSystem.LocalFileSystem;

@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.vcs.*;
+import consulo.vcs.*;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.NotNullFunction;
 import consulo.util.lang.function.PairProcessor;

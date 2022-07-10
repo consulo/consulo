@@ -1,6 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.todo;
 
+import consulo.application.ui.util.TodoPanelSettings;
 import consulo.find.FindModel;
 import consulo.ide.impl.idea.find.impl.FindInProjectUtil;
 import consulo.application.AllIcons;

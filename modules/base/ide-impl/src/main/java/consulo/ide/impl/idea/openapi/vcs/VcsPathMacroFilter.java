@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.component.macro.PathMacroFilter;
+import consulo.vcs.VcsConfiguration;
 import org.jdom.Attribute;
 import org.jdom.Element;
 

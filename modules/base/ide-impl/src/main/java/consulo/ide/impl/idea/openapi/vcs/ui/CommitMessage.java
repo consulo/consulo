@@ -38,6 +38,9 @@ import consulo.ide.impl.idea.openapi.vcs.*;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ide.impl.idea.ui.*;
 import consulo.ide.impl.idea.util.Consumer;
+import consulo.vcs.CommitMessageI;
+import consulo.vcs.VcsBundle;
+import consulo.vcs.VcsConfiguration;
 
 import javax.swing.*;
 import java.awt.*;
@@ -118,7 +121,7 @@ public class CommitMessage extends AbstractDataProviderPanel implements Disposab
    * Creates a text editor appropriate for creating commit messages.
    *
    * @param project project this commit message editor is intended for
-   * @param forceSpellCheckOn if false, {@link consulo.ide.impl.idea.openapi.vcs.VcsConfiguration#CHECK_COMMIT_MESSAGE_SPELLING} will control
+   * @param forceSpellCheckOn if false, {@link VcsConfiguration#CHECK_COMMIT_MESSAGE_SPELLING} will control
    *                          whether or not the editor has spell check enabled
    * @return a commit message editor
    */

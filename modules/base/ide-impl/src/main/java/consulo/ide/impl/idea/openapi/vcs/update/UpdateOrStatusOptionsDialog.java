@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.openapi.vcs.update;
 
 import consulo.application.HelpManager;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
-import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
+import consulo.vcs.AbstractVcs;
+import consulo.vcs.VcsBundle;
 import consulo.ui.ex.awt.JBTabbedPane;
 import consulo.ide.impl.idea.util.ui.OptionsDialog;
 import consulo.configurable.Configurable;

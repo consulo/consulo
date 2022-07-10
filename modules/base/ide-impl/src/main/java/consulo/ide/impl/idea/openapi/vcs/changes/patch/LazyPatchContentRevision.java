@@ -19,9 +19,9 @@ import consulo.ide.impl.idea.openapi.diff.impl.patch.TextFilePatch;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.GenericPatchApplier;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.ide.impl.idea.openapi.vcs.FilePath;
-import consulo.ide.impl.idea.openapi.vcs.changes.ContentRevision;
-import consulo.ide.impl.idea.openapi.vcs.history.VcsRevisionNumber;
+import consulo.vcs.FilePath;
+import consulo.vcs.change.ContentRevision;
+import consulo.vcs.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.application.AccessRule;
 

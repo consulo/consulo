@@ -16,7 +16,8 @@
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
+import consulo.vcs.AbstractVcs;
+import consulo.vcs.change.LogicalLock;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.Collections;

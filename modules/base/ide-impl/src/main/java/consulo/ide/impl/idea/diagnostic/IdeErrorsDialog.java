@@ -27,7 +27,7 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.ui.HeaderlessTabbedPane;
 import consulo.ui.ex.awt.HyperlinkLabel;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.text.DateFormatUtil;
+import consulo.application.util.DateFormatUtil;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.application.*;
 import consulo.application.dumb.DumbAware;

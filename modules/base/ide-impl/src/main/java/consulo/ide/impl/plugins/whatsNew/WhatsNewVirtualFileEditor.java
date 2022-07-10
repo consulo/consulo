@@ -29,7 +29,7 @@ import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ide.impl.idea.ui.components.JBLoadingPanel;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.util.collection.MultiMap;
-import consulo.ide.impl.idea.util.text.JBDateFormat;
+import consulo.application.util.JBDateFormat;
 import consulo.ui.ex.awt.JBHtmlEditorKit;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.update.UiNotifyConnector;

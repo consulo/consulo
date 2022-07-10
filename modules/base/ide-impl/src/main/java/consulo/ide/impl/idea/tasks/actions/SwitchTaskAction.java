@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.tasks.actions;
 import consulo.ide.impl.idea.openapi.ui.playback.commands.ActionCommand;
 import consulo.ide.impl.idea.openapi.ui.popup.MultiSelectionListPopupStep;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManager;
-import consulo.ide.impl.idea.openapi.vcs.changes.LocalChangeList;
+import consulo.vcs.change.LocalChangeList;
 import consulo.ide.impl.idea.tasks.ChangeListInfo;
 import consulo.ide.impl.idea.tasks.LocalTask;
 import consulo.ide.impl.idea.tasks.TaskManager;

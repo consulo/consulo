@@ -16,8 +16,10 @@
 
 package consulo.ide.impl.idea.openapi.vcs.rollback;
 
-import consulo.ide.impl.idea.openapi.vcs.VcsException;
-import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
+import consulo.vcs.VcsException;
+import consulo.vcs.VcsBundle;
+import consulo.vcs.rollback.RollbackEnvironment;
+import consulo.vcs.rollback.RollbackProgressListener;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.List;

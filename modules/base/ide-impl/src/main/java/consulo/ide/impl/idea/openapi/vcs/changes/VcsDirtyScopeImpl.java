@@ -21,27 +21,27 @@ import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.application.util.function.Computable;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
-import consulo.ide.impl.idea.openapi.vcs.FilePath;
-import consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager;
-import consulo.ide.impl.idea.openapi.vcs.VcsRoot;
+import consulo.vcs.AbstractVcs;
+import consulo.vcs.FilePath;
+import consulo.vcs.ProjectLevelVcsManager;
+import consulo.vcs.root.VcsRoot;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.util.lang.function.PairProcessor;
 import consulo.application.util.function.Processor;
 import consulo.util.collection.SmartList;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.Convertor;
 import consulo.util.collection.MultiMap;
-import consulo.ide.impl.idea.vcsUtil.VcsUtil;
+import consulo.vcs.util.VcsUtil;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Sets;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * @author max
@@ -484,7 +484,7 @@ public class VcsDirtyScopeImpl extends VcsModifiableDirtyScope {
     if (myProject.isDisposed()) return false;
     final VcsRoot rootObject = myVcsManager.getVcsRootObjectFor(path);
     if (vcsConsumer != null && rootObject != null) {
-      vcsConsumer.consume(rootObject.getVcs());
+      vcsConsumer.accept(rootObject.getVcs());
     }
     if (rootObject == null || rootObject.getVcs() != myVcs) {
       return false;

@@ -1,6 +1,7 @@
 package consulo.ide.impl.idea.openapi.vcs.diff;
 
-import consulo.ide.impl.idea.openapi.vcs.history.VcsRevisionNumber;
+import consulo.vcs.diff.DiffProvider;
+import consulo.vcs.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 

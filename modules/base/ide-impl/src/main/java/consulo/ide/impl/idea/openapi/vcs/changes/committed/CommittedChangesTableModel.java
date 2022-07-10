@@ -22,9 +22,9 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
-import consulo.ide.impl.idea.openapi.vcs.ChangeListColumn;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangeList;
-import consulo.ide.impl.idea.openapi.vcs.versionBrowser.CommittedChangeList;
+import consulo.vcs.ChangeListColumn;
+import consulo.vcs.change.ChangeList;
+import consulo.vcs.versionBrowser.CommittedChangeList;
 import consulo.ui.ex.awt.ColumnInfo;
 import consulo.ui.ex.awt.table.ListTableModel;
 

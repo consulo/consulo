@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
-import consulo.ide.impl.idea.openapi.vcs.VcsException;
+import consulo.vcs.VcsException;
 
 public interface CommittedChangesNavigation {
   boolean canGoBack();

@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.history.integration.ui.views.SelectionHistoryDialog
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.vcs.actions.VcsContext;
+import consulo.vcs.action.VcsContext;
 import consulo.ide.impl.idea.openapi.vcs.actions.VcsContextWrapper;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.vcsUtil.VcsSelection;

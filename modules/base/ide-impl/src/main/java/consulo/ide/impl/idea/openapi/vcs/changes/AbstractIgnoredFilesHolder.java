@@ -17,9 +17,10 @@ package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
+import consulo.vcs.AbstractVcs;
 import consulo.ide.impl.idea.openapi.vcs.FilePathImpl;
-import consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager;
+import consulo.vcs.ProjectLevelVcsManager;
+import consulo.vcs.change.VcsDirtyScope;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.Consumer;
 

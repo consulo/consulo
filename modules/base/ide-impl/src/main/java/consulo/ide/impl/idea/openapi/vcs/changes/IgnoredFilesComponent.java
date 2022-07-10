@@ -17,7 +17,8 @@ package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.vcs.FilePath;
+import consulo.vcs.FilePath;
+import consulo.vcs.change.FilePathsHelper;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileContentChangeEvent;

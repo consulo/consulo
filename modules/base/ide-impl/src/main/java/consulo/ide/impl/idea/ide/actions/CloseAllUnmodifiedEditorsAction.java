@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.ide.IdeBundle;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager;
+import consulo.vcs.ProjectLevelVcsManager;
 import consulo.fileEditor.FileEditorComposite;
 import consulo.fileEditor.FileEditorWindow;
 

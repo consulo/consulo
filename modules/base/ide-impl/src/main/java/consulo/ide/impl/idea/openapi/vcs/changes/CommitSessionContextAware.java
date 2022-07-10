@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
+import consulo.vcs.change.CommitContext;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Irina.Chernushina

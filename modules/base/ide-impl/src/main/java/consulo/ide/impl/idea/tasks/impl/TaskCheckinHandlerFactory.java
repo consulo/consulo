@@ -17,10 +17,10 @@ package consulo.ide.impl.idea.tasks.impl;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.vcs.CheckinProjectPanel;
-import consulo.ide.impl.idea.openapi.vcs.changes.CommitContext;
-import consulo.ide.impl.idea.openapi.vcs.checkin.CheckinHandler;
-import consulo.ide.impl.idea.openapi.vcs.checkin.CheckinHandlerFactory;
+import consulo.vcs.checkin.CheckinProjectPanel;
+import consulo.vcs.change.CommitContext;
+import consulo.vcs.checkin.CheckinHandler;
+import consulo.vcs.checkin.CheckinHandlerFactory;
 import consulo.ide.impl.idea.tasks.LocalTask;
 import consulo.ide.impl.idea.tasks.Task;
 import consulo.ide.impl.idea.tasks.TaskManager;

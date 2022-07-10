@@ -28,13 +28,13 @@ import consulo.language.editor.CommonDataKeys;
 import consulo.application.progress.ProgressManager;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
-import consulo.ide.impl.idea.openapi.vcs.AbstractVcsHelper;
-import consulo.ide.impl.idea.openapi.vcs.FilePath;
-import consulo.ide.impl.idea.openapi.vcs.VcsException;
+import consulo.vcs.AbstractVcs;
+import consulo.vcs.AbstractVcsHelper;
+import consulo.vcs.FilePath;
+import consulo.vcs.VcsException;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangesUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangesViewManager;
-import consulo.ide.impl.idea.openapi.vcs.changes.VcsDirtyScopeManager;
+import consulo.vcs.change.VcsDirtyScopeManager;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesListView;
 
 import java.util.ArrayList;

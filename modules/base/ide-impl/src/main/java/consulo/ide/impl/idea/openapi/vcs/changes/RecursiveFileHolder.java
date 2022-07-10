@@ -1,13 +1,14 @@
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
-import consulo.ide.impl.idea.openapi.diff.impl.patch.formove.FilePathComparator;
+import consulo.vcs.FilePathComparator;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
-import consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager;
+import consulo.vcs.AbstractVcs;
+import consulo.vcs.ProjectLevelVcsManager;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.vcs.change.VcsDirtyScope;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.vcsUtil.VcsUtil;
+import consulo.vcs.util.VcsUtil;
 import javax.annotation.Nonnull;
 
 import java.util.*;

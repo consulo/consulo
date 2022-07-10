@@ -21,7 +21,7 @@ import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeManagerEx;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.text.DateFormatUtil;
+import consulo.application.util.DateFormatUtil;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.component.extension.Extensions;

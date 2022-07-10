@@ -16,11 +16,11 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
 import consulo.application.progress.ProgressIndicator;
-import consulo.ide.impl.idea.openapi.vcs.FilePath;
-import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
-import consulo.ide.impl.idea.openapi.vcs.changes.Change;
+import consulo.vcs.FilePath;
+import consulo.vcs.VcsBundle;
+import consulo.vcs.change.Change;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangesUtil;
-import consulo.ide.impl.idea.openapi.vcs.rollback.RollbackProgressListener;
+import consulo.vcs.rollback.RollbackProgressListener;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 

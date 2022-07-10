@@ -21,13 +21,13 @@ import consulo.ide.impl.idea.openapi.diff.impl.patch.PatchReader;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.formove.PathMerger;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.util.lang.Couple;
-import consulo.ide.impl.idea.openapi.vcs.FilePath;
+import consulo.vcs.FilePath;
 import consulo.virtualFileSystem.status.FileStatus;
-import consulo.ide.impl.idea.openapi.vcs.changes.Change;
-import consulo.ide.impl.idea.openapi.vcs.changes.ContentRevision;
+import consulo.vcs.change.Change;
+import consulo.vcs.change.ContentRevision;
 import consulo.ide.impl.idea.openapi.vcs.changes.CurrentContentRevision;
 import consulo.ide.impl.idea.util.PathUtil;
-import consulo.ide.impl.idea.vcsUtil.VcsUtil;
+import consulo.vcs.util.VcsUtil;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 

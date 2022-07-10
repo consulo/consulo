@@ -23,7 +23,7 @@ import consulo.ide.impl.idea.history.integration.IdeaGateway;
 import consulo.ide.impl.idea.history.integration.ui.models.DirectoryHistoryDialogModel;
 import consulo.application.AllIcons;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.vcs.changes.Change;
+import consulo.vcs.change.Change;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ShowDiffAction;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ShowDiffContext;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangeNodeDecorator;

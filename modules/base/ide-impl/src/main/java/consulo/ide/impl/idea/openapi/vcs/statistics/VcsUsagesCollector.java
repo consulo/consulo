@@ -19,7 +19,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.internal.statistic.AbstractApplicationUsagesCollector;
 import consulo.ide.impl.idea.internal.statistic.beans.UsageDescriptor;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager;
+import consulo.vcs.ProjectLevelVcsManager;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 
 import javax.annotation.Nonnull;

@@ -22,12 +22,12 @@ package consulo.ide.impl.copyright.impl.actions;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.document.FileDocumentManager;
-import consulo.ide.impl.idea.openapi.vcs.CheckinProjectPanel;
-import consulo.ide.impl.idea.openapi.vcs.changes.CommitContext;
-import consulo.ide.impl.idea.openapi.vcs.changes.CommitExecutor;
-import consulo.ide.impl.idea.openapi.vcs.checkin.CheckinHandler;
-import consulo.ide.impl.idea.openapi.vcs.checkin.CheckinHandlerFactory;
-import consulo.ide.impl.idea.openapi.vcs.ui.RefreshableOnComponent;
+import consulo.vcs.checkin.CheckinProjectPanel;
+import consulo.vcs.change.CommitContext;
+import consulo.vcs.change.CommitExecutor;
+import consulo.vcs.checkin.CheckinHandler;
+import consulo.vcs.checkin.CheckinHandlerFactory;
+import consulo.vcs.ui.RefreshableOnComponent;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;

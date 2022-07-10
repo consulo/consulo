@@ -19,6 +19,8 @@ import consulo.ide.impl.idea.ui.dualView.DualView;
 import consulo.ide.impl.idea.ui.dualView.DualViewColumnInfo;
 import consulo.ui.ex.awt.table.TableView;
 import consulo.ui.ex.awt.ColumnInfo;
+import consulo.vcs.history.VcsFileRevision;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

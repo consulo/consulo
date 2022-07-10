@@ -20,6 +20,7 @@
  */
 package consulo.ide.impl.idea.ide.todo;
 
+import consulo.application.ui.util.TodoPanelSettings;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ui.ex.awt.scopeChooser.ScopeChooserCombo;
 import consulo.project.Project;

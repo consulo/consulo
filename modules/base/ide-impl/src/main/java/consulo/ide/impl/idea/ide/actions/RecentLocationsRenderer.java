@@ -12,7 +12,7 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.JBCheckBox;
 import consulo.ui.ex.awt.speedSearch.SpeedSearch;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
-import consulo.ide.impl.idea.util.text.DateFormatUtil;
+import consulo.application.util.DateFormatUtil;
 import consulo.application.ui.UISettings;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;

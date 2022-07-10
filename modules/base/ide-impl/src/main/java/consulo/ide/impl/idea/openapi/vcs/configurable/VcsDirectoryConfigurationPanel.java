@@ -26,7 +26,7 @@ import consulo.application.util.registry.Registry;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.*;
 import consulo.ide.impl.idea.openapi.vcs.impl.DefaultVcsRootPolicy;
-import consulo.ide.impl.idea.openapi.vcs.impl.VcsDescriptor;
+import consulo.vcs.*;
 import consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman.NewMappings;
 import consulo.ide.impl.idea.openapi.vcs.roots.VcsRootErrorsFinder;
 import consulo.virtualFileSystem.VirtualFile;
@@ -55,8 +55,8 @@ import java.io.File;
 import java.util.List;
 import java.util.*;
 
-import static consulo.ide.impl.idea.openapi.vcs.VcsConfiguration.getInstance;
-import static consulo.ide.impl.idea.openapi.vcs.VcsConfiguration.ourMaximumFileForBaseRevisionSize;
+import static consulo.vcs.VcsConfiguration.getInstance;
+import static consulo.vcs.VcsConfiguration.ourMaximumFileForBaseRevisionSize;
 import static consulo.ui.ex.awt.UIUtil.DEFAULT_HGAP;
 import static consulo.ui.ex.awt.UIUtil.DEFAULT_VGAP;
 

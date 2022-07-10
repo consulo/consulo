@@ -16,9 +16,9 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
-import consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager;
-import consulo.ide.impl.idea.openapi.vcs.VcsType;
+import consulo.vcs.AbstractVcs;
+import consulo.vcs.ProjectLevelVcsManager;
+import consulo.vcs.VcsType;
 import consulo.ide.impl.idea.util.NotNullFunction;
 import javax.annotation.Nonnull;
 

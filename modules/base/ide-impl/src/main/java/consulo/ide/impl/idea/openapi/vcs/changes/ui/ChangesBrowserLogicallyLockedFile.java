@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.vcs.changes.LogicalLock;
+import consulo.vcs.change.LogicalLock;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.SimpleTextAttributes;
 

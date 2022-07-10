@@ -35,7 +35,7 @@ import consulo.ide.impl.idea.openapi.editor.ex.EditorMarkupModel;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.RefreshQueue;
+import consulo.virtualFileSystem.RefreshQueue;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.AllIcons;

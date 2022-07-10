@@ -26,7 +26,7 @@ import consulo.container.plugin.PluginManager;
 import consulo.ide.impl.idea.featureStatistics.*;
 import consulo.ide.impl.idea.ide.util.TipUIUtil;
 import consulo.ide.impl.idea.ui.TableViewSpeedSearch;
-import consulo.ide.impl.idea.util.text.DateFormatUtil;
+import consulo.application.util.DateFormatUtil;
 import consulo.ide.impl.tipOfDay.DefaultTipOfDayProvider;
 import consulo.logging.Logger;
 import consulo.project.Project;

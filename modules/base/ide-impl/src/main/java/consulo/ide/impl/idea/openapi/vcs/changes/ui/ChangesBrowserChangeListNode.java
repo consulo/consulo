@@ -17,8 +17,11 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
+import consulo.vcs.VcsBundle;
 import consulo.ide.impl.idea.openapi.vcs.changes.*;
+import consulo.vcs.change.Change;
+import consulo.vcs.change.ChangeList;
+import consulo.vcs.change.LocalChangeList;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.SimpleTextAttributes;
 

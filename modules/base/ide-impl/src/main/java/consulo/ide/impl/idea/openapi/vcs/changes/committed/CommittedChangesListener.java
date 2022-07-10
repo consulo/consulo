@@ -17,9 +17,9 @@ package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
-import consulo.ide.impl.idea.openapi.vcs.RepositoryLocation;
-import consulo.ide.impl.idea.openapi.vcs.VcsException;
-import consulo.ide.impl.idea.openapi.vcs.versionBrowser.CommittedChangeList;
+import consulo.vcs.RepositoryLocation;
+import consulo.vcs.VcsException;
+import consulo.vcs.versionBrowser.CommittedChangeList;
 
 import javax.annotation.Nullable;
 import java.util.List;

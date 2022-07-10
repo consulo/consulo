@@ -24,15 +24,16 @@ import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
+import consulo.vcs.VcsBundle;
 import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
-import consulo.ide.impl.idea.openapi.vcs.VcsException;
+import consulo.vcs.VcsException;
 import consulo.ide.impl.idea.openapi.vcs.changes.*;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.CreatePatchCommitExecutor;
 import consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelvedChangeList;
 import consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelvedChangesViewManager;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.SessionDialog;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.vcs.change.*;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -19,7 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.vcs.RichTextItem;
-import consulo.ide.impl.idea.openapi.vcs.history.VcsRevisionNumber;
+import consulo.vcs.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nullable;
 

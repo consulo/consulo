@@ -16,9 +16,9 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
 import consulo.logging.Logger;
-import consulo.ide.impl.idea.openapi.vcs.FilePath;
+import consulo.vcs.FilePath;
 import consulo.virtualFileSystem.status.FileStatus;
-import consulo.ide.impl.idea.openapi.vcs.changes.Change;
+import consulo.vcs.change.Change;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangesUtil;
 
 public class IncomingChangeState {

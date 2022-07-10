@@ -30,7 +30,7 @@ import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.NewVirtualFile;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.RefreshQueue;
+import consulo.virtualFileSystem.RefreshQueue;
 import consulo.ui.ex.awt.tree.AsyncTreeModel;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

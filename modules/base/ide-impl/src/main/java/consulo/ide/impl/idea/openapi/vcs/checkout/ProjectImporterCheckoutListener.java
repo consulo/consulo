@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.checkout;
 import consulo.ide.impl.idea.ide.impl.ProjectUtil;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
+import consulo.vcs.VcsBundle;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.projectImport.ProjectOpenProcessor;

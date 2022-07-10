@@ -17,7 +17,7 @@ package consulo.ide.impl.configurationStore.vcs;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.vcs.FilePath;
+import consulo.vcs.FilePath;
 import consulo.ide.impl.idea.openapi.vcs.changes.IgnoredFileProvider;
 import consulo.ide.impl.components.impl.stores.IProjectStore;
 import consulo.project.Project;

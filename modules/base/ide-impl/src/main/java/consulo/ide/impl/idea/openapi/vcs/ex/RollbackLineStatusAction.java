@@ -19,7 +19,7 @@ import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
+import consulo.vcs.VcsBundle;
 import consulo.ide.impl.idea.openapi.vcs.impl.LineStatusTrackerManager;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

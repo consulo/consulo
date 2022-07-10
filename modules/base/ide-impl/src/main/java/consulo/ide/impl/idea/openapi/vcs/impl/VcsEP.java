@@ -20,8 +20,9 @@ import consulo.component.extension.AbstractExtensionPointBean;
 import consulo.component.extension.ExtensionPointName;
 import consulo.component.ProcessCanceledException;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
+import consulo.vcs.AbstractVcs;
 import consulo.util.xml.serializer.annotation.Attribute;
+import consulo.vcs.VcsDescriptor;
 
 import javax.annotation.Nonnull;
 

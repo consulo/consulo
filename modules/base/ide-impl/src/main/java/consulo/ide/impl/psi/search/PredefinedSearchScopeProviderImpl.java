@@ -30,7 +30,7 @@ import consulo.usage.Usage;
 import consulo.usage.UsageView;
 import consulo.usage.UsageViewManager;
 import consulo.usage.rule.PsiElementUsage;
-import consulo.ide.impl.idea.util.TreeItem;
+import consulo.util.lang.TreeItem;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.AccessRule;
 import consulo.application.ApplicationManager;

@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.vcs.log.ui.filter;
 
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
-import consulo.ide.impl.idea.openapi.diff.impl.patch.formove.FilePathComparator;
+import consulo.vcs.FilePathComparator;
 import consulo.ui.ex.awt.*;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.ide.impl.idea.openapi.fileChooser.ex.FileNodeDescriptor;
@@ -28,7 +28,7 @@ import consulo.project.Project;
 import consulo.module.content.ModuleRootManager;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.application.util.function.Computable;
-import consulo.ide.impl.idea.openapi.vcs.FilePath;
+import consulo.vcs.FilePath;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManager;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.PlusMinus;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.VirtualFileListCellRenderer;

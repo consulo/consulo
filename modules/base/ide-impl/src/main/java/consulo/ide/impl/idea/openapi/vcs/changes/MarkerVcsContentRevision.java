@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
-import consulo.ide.impl.idea.openapi.vcs.VcsKey;
+import consulo.vcs.VcsKey;
 
 /**
  * Created with IntelliJ IDEA.

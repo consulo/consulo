@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.history.integration.ui.views;
 
 import consulo.ide.impl.idea.history.core.revisions.Difference;
 import consulo.ide.impl.idea.history.integration.ui.models.DirectoryChangeModel;
-import consulo.ide.impl.idea.openapi.vcs.changes.Change;
+import consulo.vcs.change.Change;
 
 public class DirectoryChange extends Change {
   private final DirectoryChangeModel myModel;

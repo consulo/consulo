@@ -24,10 +24,10 @@ import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.vcs.*;
-import consulo.ide.impl.idea.openapi.vcs.actions.VcsContextFactory;
+import consulo.vcs.*;
+import consulo.vcs.action.VcsContextFactory;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesFilterDialog;
-import consulo.ide.impl.idea.openapi.vcs.versionBrowser.ChangeBrowserSettings;
+import consulo.vcs.versionBrowser.ChangeBrowserSettings;
 import consulo.virtualFileSystem.VirtualFile;
 
 /**
@@ -50,10 +50,10 @@ public class BrowseChangesAction extends AnAction implements DumbAware {
     int maxCount = 0;
     if (!settings.isAnyFilterSpecified()) {
       int rc = Messages.showYesNoCancelDialog(project, VcsBundle.message("browse.changes.no.filter.prompt"), VcsBundle.message("browse.changes.title"),
-                                     VcsBundle.message("browse.changes.show.recent.button"),
-                                     VcsBundle.message("browse.changes.show.all.button"),
-                                     CommonBundle.getCancelButtonText(),
-                                    Messages.getQuestionIcon());
+                                              VcsBundle.message("browse.changes.show.recent.button"),
+                                              VcsBundle.message("browse.changes.show.all.button"),
+                                              CommonBundle.getCancelButtonText(),
+                                              Messages.getQuestionIcon());
       if (rc == 2) {
         return;
       }

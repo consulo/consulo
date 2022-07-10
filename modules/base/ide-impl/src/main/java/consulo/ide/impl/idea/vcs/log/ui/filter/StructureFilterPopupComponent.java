@@ -22,7 +22,7 @@ import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import consulo.application.util.SystemInfo;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.vcs.FilePath;
+import consulo.vcs.FilePath;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.*;
 import consulo.virtualFileSystem.VirtualFile;

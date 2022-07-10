@@ -25,12 +25,15 @@ import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.vcs.*;
 import consulo.ide.impl.idea.openapi.vcs.changes.*;
 import consulo.ide.impl.idea.openapi.vcs.rollback.DefaultRollbackEnvironment;
-import consulo.ide.impl.idea.openapi.vcs.rollback.RollbackEnvironment;
+import consulo.vcs.*;
+import consulo.vcs.change.VcsDirtyScopeManager;
+import consulo.vcs.rollback.RollbackEnvironment;
 import consulo.ide.impl.idea.openapi.vcs.update.RefreshVFsSynchronously;
 import consulo.ide.impl.idea.util.WaitForProgressToShow;
+import consulo.vcs.change.Change;
+import consulo.vcs.change.ContentRevision;
 
 import javax.annotation.Nonnull;
 

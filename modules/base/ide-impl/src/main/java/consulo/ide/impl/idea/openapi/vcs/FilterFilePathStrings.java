@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.vcs;
 
+import consulo.vcs.AbstractFilterChildren;
+
 import java.util.Collections;
 import java.util.List;
 

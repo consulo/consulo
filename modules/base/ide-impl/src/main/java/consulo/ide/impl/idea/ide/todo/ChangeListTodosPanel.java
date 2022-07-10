@@ -20,10 +20,11 @@
  */
 package consulo.ide.impl.idea.ide.todo;
 
+import consulo.application.ui.util.TodoPanelSettings;
 import consulo.ide.IdeBundle;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.vcs.changes.Change;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangeList;
+import consulo.vcs.change.Change;
+import consulo.vcs.change.ChangeList;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListAdapter;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManager;
 import consulo.ide.impl.idea.ui.AppUIUtil;
@@ -37,7 +38,7 @@ import java.util.Collection;
 public abstract class ChangeListTodosPanel extends TodoPanel{
   private final Alarm myAlarm;
 
-  public ChangeListTodosPanel(Project project,TodoPanelSettings settings, Content content){
+  public ChangeListTodosPanel(Project project, TodoPanelSettings settings, Content content){
     super(project,settings,false,content);
     ChangeListManager changeListManager = ChangeListManager.getInstance(project);
     final MyChangeListManagerListener myChangeListManagerListener = new MyChangeListManagerListener();

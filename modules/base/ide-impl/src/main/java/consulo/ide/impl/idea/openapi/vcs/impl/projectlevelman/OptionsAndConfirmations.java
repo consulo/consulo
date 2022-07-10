@@ -18,6 +18,8 @@ package consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman;
 import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.ide.impl.idea.openapi.vcs.*;
 import consulo.ide.impl.idea.util.containers.Convertor;
+import consulo.vcs.*;
+
 import javax.annotation.Nonnull;
 
 import java.util.LinkedHashMap;
@@ -43,10 +45,10 @@ public class OptionsAndConfirmations {
     createSettingFor(VcsConfiguration.StandardOption.EDIT);
 
     myConfirmations.put(VcsConfiguration.StandardConfirmation.ADD.getId(), new VcsShowConfirmationOptionImpl(
-      VcsConfiguration.StandardConfirmation.ADD.getId(),
-      VcsBundle.message("label.text.when.files.created.with.idea", ApplicationNamesInfo.getInstance().getProductName()),
-      VcsBundle.message("radio.after.creation.do.not.add"), VcsBundle.message("radio.after.creation.show.options"),
-      VcsBundle.message("radio.after.creation.add.silently")));
+            VcsConfiguration.StandardConfirmation.ADD.getId(),
+            VcsBundle.message("label.text.when.files.created.with.idea", ApplicationNamesInfo.getInstance().getProductName()),
+            VcsBundle.message("radio.after.creation.do.not.add"), VcsBundle.message("radio.after.creation.show.options"),
+            VcsBundle.message("radio.after.creation.add.silently")));
 
     myConfirmations.put(VcsConfiguration.StandardConfirmation.REMOVE.getId(), new VcsShowConfirmationOptionImpl(
       VcsConfiguration.StandardConfirmation.REMOVE.getId(),

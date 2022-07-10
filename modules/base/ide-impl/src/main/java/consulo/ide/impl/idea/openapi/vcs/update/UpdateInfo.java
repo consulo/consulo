@@ -16,12 +16,13 @@
 package consulo.ide.impl.idea.openapi.vcs.update;
 
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Clock;
+import consulo.util.lang.Clock;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.WriteExternalException;
-import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
-import consulo.ide.impl.idea.util.text.DateFormatUtil;
+import consulo.vcs.VcsBundle;
+import consulo.application.util.DateFormatUtil;
+import consulo.vcs.update.UpdatedFiles;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 

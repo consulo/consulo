@@ -32,7 +32,7 @@ import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.util.dataholder.Key;
-import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
+import consulo.vcs.VcsBundle;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesBrowserBase;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesBrowserNode;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesListView;

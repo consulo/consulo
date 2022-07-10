@@ -21,7 +21,7 @@ import consulo.content.scope.SearchScope;
 import consulo.content.scope.SearchScopeProvider;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManager;
 import consulo.ide.impl.idea.ide.projectView.impl.AbstractUrl;
-import consulo.ide.impl.idea.util.TreeItem;
+import consulo.util.lang.TreeItem;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.module.Module;
 import consulo.project.Project;

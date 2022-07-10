@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.openapi.diff.impl.patch.PatchEP;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.UnifiedDiffWriter;
 import consulo.component.extension.Extensions;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.vcs.changes.CommitContext;
+import consulo.vcs.change.CommitContext;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

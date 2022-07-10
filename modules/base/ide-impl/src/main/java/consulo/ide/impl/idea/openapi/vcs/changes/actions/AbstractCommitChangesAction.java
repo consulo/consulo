@@ -19,13 +19,13 @@ package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.Presentation;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.vcs.FilePath;
+import consulo.vcs.FilePath;
 import consulo.virtualFileSystem.status.FileStatus;
-import consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager;
+import consulo.vcs.ProjectLevelVcsManager;
 import consulo.ide.impl.idea.openapi.vcs.actions.AbstractCommonCheckinAction;
-import consulo.ide.impl.idea.openapi.vcs.actions.VcsContext;
-import consulo.ide.impl.idea.openapi.vcs.changes.Change;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangeList;
+import consulo.vcs.action.VcsContext;
+import consulo.vcs.change.Change;
+import consulo.vcs.change.ChangeList;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManager;
 
 /**

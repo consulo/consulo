@@ -24,9 +24,9 @@ package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
-import consulo.ide.impl.idea.openapi.vcs.versionBrowser.ChangeBrowserSettings;
-import consulo.ide.impl.idea.openapi.vcs.versionBrowser.ChangesBrowserSettingsEditor;
+import consulo.vcs.VcsBundle;
+import consulo.vcs.versionBrowser.ChangeBrowserSettings;
+import consulo.vcs.versionBrowser.ChangesBrowserSettingsEditor;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.ui.ex.awt.util.Alarm;
 import org.jetbrains.annotations.NonNls;

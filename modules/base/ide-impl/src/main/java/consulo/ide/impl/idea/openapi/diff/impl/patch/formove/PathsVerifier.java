@@ -22,6 +22,7 @@ import consulo.ide.impl.idea.openapi.diff.impl.patch.TextFilePatch;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.ApplyFilePatchBase;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.ApplyFilePatchFactory;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.ApplyTextFilePatch;
+import consulo.vcs.*;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeChooser;
@@ -40,7 +41,7 @@ import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.vcsUtil.VcsUtil;
+import consulo.vcs.util.VcsUtil;
 import javax.annotation.Nonnull;
 
 import java.io.File;

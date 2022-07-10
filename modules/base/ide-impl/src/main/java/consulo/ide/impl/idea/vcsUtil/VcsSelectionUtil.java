@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.vcsUtil;
 
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.SelectionModel;
-import consulo.ide.impl.idea.openapi.vcs.actions.VcsContext;
+import consulo.vcs.action.VcsContext;
 
 import javax.annotation.Nullable;
 import java.util.List;

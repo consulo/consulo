@@ -46,24 +46,27 @@ import consulo.ui.ex.awt.Messages;
 import consulo.ide.impl.idea.openapi.util.Getter;
 import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.vcs.*;
 import consulo.ide.impl.idea.openapi.vcs.actions.AnnotateToggleAction;
-import consulo.ide.impl.idea.openapi.vcs.annotate.AnnotationProvider;
-import consulo.ide.impl.idea.openapi.vcs.annotate.FileAnnotation;
-import consulo.ide.impl.idea.openapi.vcs.changes.Change;
-import consulo.ide.impl.idea.openapi.vcs.changes.CommitResultHandler;
-import consulo.ide.impl.idea.openapi.vcs.changes.LocalChangeList;
+import consulo.vcs.annotate.AnnotationProvider;
+import consulo.vcs.annotate.FileAnnotation;
+import consulo.vcs.*;
+import consulo.vcs.change.Change;
+import consulo.vcs.change.CommitResultHandler;
+import consulo.vcs.change.LocalChangeList;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.*;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.*;
 import consulo.ide.impl.idea.openapi.vcs.history.*;
-import consulo.ide.impl.idea.openapi.vcs.merge.MergeDialogCustomizer;
-import consulo.ide.impl.idea.openapi.vcs.merge.MergeProvider;
+import consulo.vcs.merge.MergeDialogCustomizer;
+import consulo.vcs.merge.MergeProvider;
 import consulo.ide.impl.idea.openapi.vcs.merge.MultipleFileMergeDialog;
-import consulo.ide.impl.idea.openapi.vcs.versionBrowser.ChangeBrowserSettings;
-import consulo.ide.impl.idea.openapi.vcs.versionBrowser.ChangesBrowserSettingsEditor;
-import consulo.ide.impl.idea.openapi.vcs.versionBrowser.CommittedChangeList;
+import consulo.vcs.versionBrowser.ChangeBrowserSettings;
+import consulo.vcs.versionBrowser.ChangesBrowserSettingsEditor;
+import consulo.vcs.history.VcsFileRevision;
+import consulo.vcs.history.VcsHistoryProvider;
+import consulo.vcs.versionBrowser.CommittedChangeList;
 import consulo.ide.impl.idea.openapi.vcs.vfs.VcsFileSystem;
 import consulo.ide.impl.idea.openapi.vcs.vfs.VcsVirtualFile;
+import consulo.vcs.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -75,7 +78,7 @@ import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.project.ui.view.MessageView;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.AsynchConsumer;
+import consulo.application.util.function.AsynchConsumer;
 import consulo.ide.impl.idea.util.BufferedListConsumer;
 import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -83,7 +86,7 @@ import consulo.ide.impl.idea.util.ui.ConfirmationDialog;
 import consulo.ui.ex.errorTreeView.ErrorTreeView;
 import consulo.ui.ex.MessageCategory;
 import consulo.ide.impl.idea.vcs.history.VcsHistoryProviderEx;
-import consulo.ide.impl.idea.vcsUtil.VcsUtil;
+import consulo.vcs.util.VcsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
@@ -811,7 +814,7 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
       try {
         myProvider.loadCommittedChanges(mySettings, myLocation, 0, new AsynchConsumer<CommittedChangeList>() {
           @Override
-          public void consume(CommittedChangeList committedChangeList) {
+          public void accept(CommittedChangeList committedChangeList) {
             myRevisionsReturned = true;
             bufferedListConsumer.consumeOne(committedChangeList);
             if (myCanceled) {

@@ -48,7 +48,7 @@ import consulo.language.editor.internal.PsiUtilBase;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.EventDispatcher;
-import consulo.ide.impl.idea.util.TreeItem;
+import consulo.util.lang.TreeItem;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.Convertor;
 import consulo.disposer.Disposable;

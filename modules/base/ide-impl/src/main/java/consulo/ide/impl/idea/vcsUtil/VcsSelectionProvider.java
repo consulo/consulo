@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.vcsUtil;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
-import consulo.ide.impl.idea.openapi.vcs.actions.VcsContext;
+import consulo.vcs.action.VcsContext;
 
 import javax.annotation.Nullable;
 

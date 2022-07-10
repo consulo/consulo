@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.diff;
 
-import consulo.ide.impl.idea.openapi.vcs.history.VcsRevisionDescription;
+import consulo.vcs.history.VcsRevisionDescription;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nullable;

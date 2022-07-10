@@ -18,9 +18,9 @@ package consulo.ide.impl.idea.openapi.vcs.contentAnnotation;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.vcs.VcsKey;
-import consulo.ide.impl.idea.openapi.vcs.annotate.FileAnnotation;
-import consulo.ide.impl.idea.openapi.vcs.history.VcsRevisionNumber;
+import consulo.vcs.VcsKey;
+import consulo.vcs.annotate.FileAnnotation;
+import consulo.vcs.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.util.lang.ThreeState;
 

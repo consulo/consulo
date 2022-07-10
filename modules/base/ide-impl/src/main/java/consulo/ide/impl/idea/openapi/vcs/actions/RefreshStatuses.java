@@ -20,8 +20,8 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager;
-import consulo.ide.impl.idea.openapi.vcs.changes.VcsDirtyScopeManager;
+import consulo.vcs.ProjectLevelVcsManager;
+import consulo.vcs.change.VcsDirtyScopeManager;
 
 public class RefreshStatuses extends AnAction implements DumbAware {
   public void actionPerformed(AnActionEvent e) {

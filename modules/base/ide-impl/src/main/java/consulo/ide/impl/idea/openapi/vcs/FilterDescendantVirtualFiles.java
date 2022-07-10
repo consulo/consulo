@@ -15,7 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.vcs;
 
-import consulo.ide.impl.idea.openapi.diff.impl.patch.formove.FilePathComparator;
+import consulo.vcs.FilePathComparator;
+import consulo.vcs.AbstractFilterChildren;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 

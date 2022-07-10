@@ -22,8 +22,10 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.versionBrowser;
 
-import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
-import consulo.ide.impl.idea.openapi.vcs.changes.Change;
+import consulo.vcs.AbstractVcs;
+import consulo.vcs.change.Change;
+import consulo.vcs.versionBrowser.CommittedChangeList;
+
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;

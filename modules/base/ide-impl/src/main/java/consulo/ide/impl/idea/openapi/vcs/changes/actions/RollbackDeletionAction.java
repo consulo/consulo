@@ -25,13 +25,13 @@ package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
-import consulo.ide.impl.idea.openapi.vcs.FilePath;
-import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
-import consulo.ide.impl.idea.openapi.vcs.VcsException;
+import consulo.vcs.AbstractVcs;
+import consulo.vcs.FilePath;
+import consulo.vcs.VcsBundle;
+import consulo.vcs.VcsException;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangesUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.RollbackProgressModifier;
-import consulo.ide.impl.idea.openapi.vcs.rollback.RollbackEnvironment;
+import consulo.vcs.rollback.RollbackEnvironment;
 import consulo.virtualFileSystem.LocalFileSystem;
 
 import java.util.ArrayList;

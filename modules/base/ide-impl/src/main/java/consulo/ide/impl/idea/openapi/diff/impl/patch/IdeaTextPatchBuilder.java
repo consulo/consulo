@@ -18,14 +18,17 @@ package consulo.ide.impl.idea.openapi.diff.impl.patch;
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.openapi.vcs.FilePath;
-import consulo.ide.impl.idea.openapi.vcs.VcsException;
-import consulo.ide.impl.idea.openapi.vcs.VcsOutgoingChangesProvider;
-import consulo.ide.impl.idea.openapi.vcs.VcsRoot;
+import consulo.vcs.FilePath;
+import consulo.vcs.VcsException;
+import consulo.vcs.VcsOutgoingChangesProvider;
+import consulo.vcs.root.VcsRoot;
 import consulo.ide.impl.idea.openapi.vcs.changes.*;
 import consulo.ide.impl.idea.util.BeforeAfter;
 import consulo.ide.impl.idea.util.containers.Convertor;
 import consulo.util.collection.MultiMap;
+import consulo.vcs.change.Change;
+import consulo.vcs.change.ContentRevision;
+
 import javax.annotation.Nonnull;
 
 import java.nio.charset.Charset;

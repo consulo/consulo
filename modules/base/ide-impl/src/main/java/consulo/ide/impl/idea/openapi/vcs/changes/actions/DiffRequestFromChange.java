@@ -16,8 +16,8 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
 import consulo.ide.impl.idea.openapi.diff.DiffContent;
-import consulo.ide.impl.idea.openapi.vcs.VcsException;
-import consulo.ide.impl.idea.openapi.vcs.changes.Change;
+import consulo.vcs.VcsException;
+import consulo.vcs.change.Change;
 import consulo.ide.impl.idea.util.BeforeAfter;
 
 import java.util.List;

@@ -17,6 +17,8 @@ package consulo.ide.impl.idea.openapi.vcs.update;
 
 import consulo.util.lang.Couple;
 import consulo.ide.impl.idea.util.Consumer;
+import consulo.vcs.update.FileGroup;
+import consulo.vcs.update.UpdatedFiles;
 
 import java.util.List;
 

@@ -15,9 +15,11 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
-import consulo.ide.impl.idea.openapi.vcs.FilePath;
-import consulo.ide.impl.idea.openapi.vcs.actions.VcsContextFactory;
-import consulo.ide.impl.idea.openapi.vcs.history.VcsRevisionNumber;
+import consulo.vcs.FilePath;
+import consulo.vcs.action.VcsContextFactory;
+import consulo.vcs.history.VcsRevisionNumber;
+import consulo.vcs.change.ContentRevision;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

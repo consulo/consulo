@@ -16,24 +16,23 @@
 package consulo.ide.impl.idea.peer.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.vcs.FilePath;
 import consulo.ide.impl.idea.openapi.vcs.LocalFilePath;
 import consulo.ide.impl.idea.openapi.vcs.RemoteFilePath;
-import consulo.ide.impl.idea.openapi.vcs.actions.VcsContext;
-import consulo.ide.impl.idea.openapi.vcs.actions.VcsContextFactory;
 import consulo.ide.impl.idea.openapi.vcs.actions.VcsContextWrapper;
-import consulo.ide.impl.idea.openapi.vcs.changes.LocalChangeList;
 import consulo.ide.impl.idea.openapi.vcs.changes.LocalChangeListImpl;
+import consulo.project.Project;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.vcs.FilePath;
+import consulo.vcs.action.VcsContext;
+import consulo.vcs.action.VcsContextFactory;
+import consulo.vcs.change.LocalChangeList;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.NotNullFunction;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-
 import java.io.File;
+import java.util.function.Function;
 
 @Singleton
 @ServiceImpl
@@ -66,12 +65,12 @@ public class VcsContextFactoryImpl implements VcsContextFactory {
 
   @Override
   @Nonnull
-  public FilePath createFilePathOn(@Nonnull final File file, @Nonnull final NotNullFunction<File, Boolean> detector) {
+  public FilePath createFilePathOn(@Nonnull final File file, @Nonnull final Function<File, Boolean> detector) {
     VirtualFile virtualFile = LocalFileSystem.getInstance().findFileByIoFile(file);
     if (virtualFile != null) {
       return createFilePathOn(virtualFile);
     }
-    return createFilePathOn(file, detector.fun(file).booleanValue());
+    return createFilePathOn(file, detector.apply(file));
   }
 
   @Override

@@ -23,7 +23,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManager;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangesViewRefresher;
-import consulo.ide.impl.idea.openapi.vcs.changes.VcsDirtyScopeManager;
+import consulo.vcs.change.VcsDirtyScopeManager;
 import consulo.virtualFileSystem.VirtualFileManager;
 import javax.annotation.Nonnull;
 import java.util.List;

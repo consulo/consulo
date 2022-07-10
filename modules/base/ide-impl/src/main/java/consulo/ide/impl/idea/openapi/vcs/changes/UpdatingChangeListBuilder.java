@@ -16,21 +16,22 @@
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.application.ApplicationManager;
-import consulo.logging.Logger;
-import consulo.language.file.FileTypeManager;
-import consulo.component.ProcessCanceledException;
 import consulo.application.util.function.Computable;
-import consulo.ide.impl.idea.openapi.util.Factory;
+import consulo.component.ProcessCanceledException;
 import consulo.ide.impl.idea.openapi.util.Getter;
-import consulo.ide.impl.idea.openapi.vcs.FilePath;
-import consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager;
-import consulo.ide.impl.idea.openapi.vcs.VcsKey;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.ObjectUtils;
-import consulo.ide.impl.idea.vcsUtil.VcsUtil;
-import javax.annotation.Nullable;
+import consulo.vcs.util.VcsUtil;
+import consulo.language.file.FileTypeManager;
+import consulo.logging.Logger;
+import consulo.vcs.FilePath;
+import consulo.vcs.ProjectLevelVcsManager;
+import consulo.vcs.VcsKey;
+import consulo.vcs.change.*;
+import consulo.virtualFileSystem.VirtualFile;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
+import java.util.function.Supplier;
 
 class UpdatingChangeListBuilder implements ChangelistBuilder {
   private static final Logger LOG = Logger.getInstance(UpdatingChangeListBuilder.class);
@@ -43,7 +44,7 @@ class UpdatingChangeListBuilder implements ChangelistBuilder {
   private final ChangeListManager myСhangeListManager;
   private final ProjectLevelVcsManager myVcsManager;
   private final ChangeListManagerGate myGate;
-  private Factory<JComponent> myAdditionalInfo;
+  private Supplier<JComponent> myAdditionalInfo;
 
   UpdatingChangeListBuilder(final ChangeListWorker changeListWorker,
                             final FileHolderComposite composite,
@@ -239,13 +240,13 @@ class UpdatingChangeListBuilder implements ChangelistBuilder {
   }
 
   @Override
-  public void reportAdditionalInfo(Factory<JComponent> infoComponent) {
+  public void reportAdditionalInfo(Supplier<JComponent> infoComponent) {
     if (myAdditionalInfo == null) {
       myAdditionalInfo = infoComponent;
     }
   }
 
-  public Factory<JComponent> getAdditionalInfo() {
+  public Supplier<JComponent> getAdditionalInfo() {
     return myAdditionalInfo;
   }
 }

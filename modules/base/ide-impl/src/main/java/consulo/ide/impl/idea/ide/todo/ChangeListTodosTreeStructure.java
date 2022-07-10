@@ -23,7 +23,7 @@ package consulo.ide.impl.idea.ide.todo;
 import consulo.ide.impl.idea.ide.todo.nodes.ToDoRootNode;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.vcs.changes.Change;
+import consulo.vcs.change.Change;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManager;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.language.psi.PsiFile;

@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.tasks;
 
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.vcs.changes.LocalChangeList;
+import consulo.vcs.change.LocalChangeList;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.util.xml.serializer.annotation.Tag;
 import javax.annotation.Nonnull;

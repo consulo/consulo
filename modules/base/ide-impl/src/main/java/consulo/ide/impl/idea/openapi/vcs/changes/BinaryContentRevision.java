@@ -17,7 +17,8 @@
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import javax.annotation.Nullable;
-import consulo.ide.impl.idea.openapi.vcs.VcsException;
+import consulo.vcs.VcsException;
+import consulo.vcs.change.ContentRevision;
 
 /**
  * @author yole
@@ -29,7 +30,7 @@ public interface BinaryContentRevision extends ContentRevision {
    * Might return null in case if file path denotes a directory or content is impossible to retreive.
    *
    * @return content of the revision
-   * @throws consulo.ide.impl.idea.openapi.vcs.VcsException in case when content retrieval fails
+   * @throws VcsException in case when content retrieval fails
    */
   @Nullable
   byte[] getBinaryContent() throws VcsException;

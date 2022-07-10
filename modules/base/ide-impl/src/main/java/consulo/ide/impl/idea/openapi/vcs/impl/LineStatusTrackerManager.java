@@ -40,7 +40,7 @@ import consulo.fileEditor.FileEditorManager;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.VcsApplicationSettings;
 import consulo.ide.impl.idea.openapi.vcs.ex.LineStatusTracker;
-import consulo.ide.impl.idea.openapi.vcs.history.VcsRevisionNumber;
+import consulo.vcs.history.VcsRevisionNumber;
 import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.concurrency.QueueProcessorRemovePartner;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

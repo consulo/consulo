@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.util.ui;
 
 import consulo.application.CommonBundle;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.vcs.VcsShowConfirmationOption;
+import consulo.vcs.VcsShowConfirmationOption;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

@@ -20,7 +20,7 @@ import consulo.codeEditor.Editor;
 import consulo.colorScheme.EditorColorKey;
 import consulo.colorScheme.EditorFontType;
 import consulo.ide.impl.idea.openapi.localVcs.UpToDateLineNumberProvider;
-import consulo.ide.impl.idea.openapi.vcs.annotate.AnnotationSource;
+import consulo.vcs.annotate.AnnotationSource;
 import consulo.ui.color.ColorValue;
 
 import java.awt.*;

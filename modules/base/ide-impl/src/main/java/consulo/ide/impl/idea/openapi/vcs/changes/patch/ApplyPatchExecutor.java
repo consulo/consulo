@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes.patch;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.FilePatch;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.PatchSyntaxException;
 import consulo.application.util.function.ThrowableComputable;
-import consulo.ide.impl.idea.openapi.vcs.changes.LocalChangeList;
+import consulo.vcs.change.LocalChangeList;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.util.collection.MultiMap;
 import org.jetbrains.annotations.Nls;

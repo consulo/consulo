@@ -7,7 +7,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.openapi.vcs.VcsException;
+import consulo.vcs.VcsException;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

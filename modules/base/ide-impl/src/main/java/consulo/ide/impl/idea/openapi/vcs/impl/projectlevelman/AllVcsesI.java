@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
-import consulo.ide.impl.idea.openapi.vcs.impl.VcsDescriptor;
+import consulo.vcs.AbstractVcs;
+import consulo.vcs.VcsDescriptor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

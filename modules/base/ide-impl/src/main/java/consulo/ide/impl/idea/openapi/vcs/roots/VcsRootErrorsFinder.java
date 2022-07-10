@@ -5,6 +5,10 @@ import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.*;
+import consulo.vcs.ProjectLevelVcsManager;
+import consulo.vcs.VcsDirectoryMapping;
+import consulo.vcs.root.VcsRoot;
+import consulo.vcs.root.VcsRootDetector;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 

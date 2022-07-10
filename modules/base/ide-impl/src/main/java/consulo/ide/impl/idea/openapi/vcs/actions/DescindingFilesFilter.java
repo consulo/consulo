@@ -16,10 +16,10 @@
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
-import consulo.ide.impl.idea.openapi.vcs.FilePath;
-import consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager;
-import consulo.ide.impl.idea.openapi.vcs.VcsKey;
+import consulo.vcs.AbstractVcs;
+import consulo.vcs.FilePath;
+import consulo.vcs.ProjectLevelVcsManager;
+import consulo.vcs.VcsKey;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import javax.annotation.Nonnull;
 

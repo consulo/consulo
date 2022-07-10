@@ -15,7 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
-import consulo.ide.impl.idea.openapi.vcs.FilePath;
+import consulo.vcs.FilePath;
+import consulo.vcs.change.VcsDirtyScopeManager;
+import consulo.vcs.change.VcsInvalidated;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

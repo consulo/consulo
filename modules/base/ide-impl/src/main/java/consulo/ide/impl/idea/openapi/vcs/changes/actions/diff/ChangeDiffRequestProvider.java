@@ -22,7 +22,7 @@ import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.diff.chain.DiffRequestProducerException;
 import consulo.diff.request.DiffRequest;
-import consulo.ide.impl.idea.openapi.vcs.changes.Change;
+import consulo.vcs.change.Change;
 import consulo.util.lang.ThreeState;
 
 import javax.annotation.Nonnull;

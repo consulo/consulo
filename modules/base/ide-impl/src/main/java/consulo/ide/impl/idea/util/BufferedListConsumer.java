@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.util;
 
 import consulo.application.ApplicationManager;
 import javax.annotation.Nonnull;
+import java.util.function.Consumer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +52,8 @@ public class BufferedListConsumer<T> implements Consumer<List<T>> {
     }
   }
 
-  public void consume(List<T> list) {
+  @Override
+  public void accept(List<T> list) {
     synchronized (myFlushLock) {
       myCnt += list.size();
       myBuffer.addAll(list);
@@ -94,7 +96,7 @@ public class BufferedListConsumer<T> implements Consumer<List<T>> {
           list = myBuffer;
           myBuffer = new ArrayList<T>(mySize);
         }
-        myConsumer.consume(list);
+        myConsumer.accept(list);
       }
     };
   }
@@ -113,11 +115,6 @@ public class BufferedListConsumer<T> implements Consumer<List<T>> {
   }
 
   public Consumer<T> asConsumer() {
-    return new Consumer<T>() {
-      @Override
-      public void consume(T t) {
-        consumeOne(t);
-      }
-    };
+    return t -> consumeOne(t);
   }
 }

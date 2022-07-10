@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.vcs.log;
 
 import consulo.application.util.function.ThrowableComputable;
-import consulo.ide.impl.idea.openapi.vcs.changes.Change;
+import consulo.vcs.change.Change;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 

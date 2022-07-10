@@ -18,9 +18,11 @@ package consulo.ide.impl.idea.openapi.vcs.history;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
+import consulo.vcs.VcsBundle;
 import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.vcs.history.VcsFileRevision;
+import consulo.vcs.history.VcsRevisionNumber;
 
 import java.awt.datatransfer.StringSelection;
 

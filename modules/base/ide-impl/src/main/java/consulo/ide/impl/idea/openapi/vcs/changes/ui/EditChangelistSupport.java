@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
-import consulo.ide.impl.idea.openapi.vcs.changes.LocalChangeList;
+import consulo.vcs.change.LocalChangeList;
 import consulo.ide.impl.idea.util.Consumer;
 import consulo.language.editor.ui.awt.EditorTextField;
 

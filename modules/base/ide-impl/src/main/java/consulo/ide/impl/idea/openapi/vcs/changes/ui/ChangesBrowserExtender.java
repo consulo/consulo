@@ -16,8 +16,8 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
-import consulo.ide.impl.idea.openapi.vcs.changes.Change;
+import consulo.vcs.AbstractVcs;
+import consulo.vcs.change.Change;
 
 import java.util.Collection;
 import java.util.List;

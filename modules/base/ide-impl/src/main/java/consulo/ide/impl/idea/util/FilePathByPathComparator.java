@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.util;
 
-import consulo.ide.impl.idea.openapi.vcs.FilePath;
+import consulo.vcs.FilePath;
 
 import java.util.Comparator;
 

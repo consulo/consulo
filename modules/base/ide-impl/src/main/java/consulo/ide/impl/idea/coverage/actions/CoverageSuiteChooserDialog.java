@@ -6,7 +6,7 @@ import consulo.ide.impl.idea.ui.CheckboxTree;
 import consulo.ide.impl.idea.ui.CheckedTreeNode;
 import consulo.ide.impl.idea.util.IconUtil;
 import consulo.ide.impl.idea.util.containers.Convertor;
-import consulo.ide.impl.idea.util.text.DateFormatUtil;
+import consulo.application.util.DateFormatUtil;
 import consulo.execution.coverage.*;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.IdeaFileChooser;

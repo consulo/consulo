@@ -19,7 +19,7 @@ import consulo.diff.DiffContentFactory;
 import consulo.diff.content.DiffContent;
 import consulo.diff.content.DocumentContent;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.vcs.FilePath;
+import consulo.vcs.FilePath;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

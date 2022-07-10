@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.history.core.changes.ChangeSet;
 import consulo.ide.impl.idea.history.core.changes.ChangeVisitor;
 import consulo.ide.impl.idea.history.utils.LocalHistoryLog;
 import consulo.application.ApplicationManager;
-import consulo.ide.impl.idea.openapi.util.Clock;
+import consulo.util.lang.Clock;
 import consulo.ide.impl.idea.util.Consumer;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;

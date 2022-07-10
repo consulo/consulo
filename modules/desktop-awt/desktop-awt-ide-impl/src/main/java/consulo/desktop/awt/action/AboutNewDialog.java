@@ -23,7 +23,7 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.ui.ex.awt.WholeWestDialogWrapper;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.text.DateFormatUtil;
+import consulo.application.util.DateFormatUtil;
 import consulo.ide.impl.idea.util.ui.TextTransferable;
 import consulo.platform.Platform;
 import consulo.ui.annotation.RequiredUIAccess;

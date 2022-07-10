@@ -14,4 +14,5 @@ module consulo.application.ui.api {
   exports consulo.application.ui.action;
   exports consulo.application.ui.event;
   exports consulo.application.ui.wm;
+  exports consulo.application.ui.util;
 }

@@ -18,6 +18,9 @@ package consulo.ide.impl.idea.openapi.vcs.changes;
 import consulo.logging.Logger;
 import consulo.ide.impl.idea.openapi.vcs.changes.local.ChangeListCommand;
 import consulo.ide.impl.idea.util.EventDispatcher;
+import consulo.vcs.change.Change;
+import consulo.vcs.change.ChangeList;
+
 import javax.annotation.Nonnull;
 
 import java.util.Collection;

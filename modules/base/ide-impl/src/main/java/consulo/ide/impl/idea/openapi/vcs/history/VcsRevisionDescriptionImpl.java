@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.history;
 
+import consulo.vcs.history.VcsRevisionDescription;
+import consulo.vcs.history.VcsRevisionNumber;
+
 import java.util.Date;
 
 /**

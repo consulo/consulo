@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.configurable;
 
-import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
+import consulo.vcs.AbstractVcs;
 
 import java.util.Collection;
 

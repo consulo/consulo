@@ -21,7 +21,7 @@ import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.Presentation;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
+import consulo.vcs.VcsBundle;
 
 public class DeleteAlreadyUnshelvedAction extends AnAction {
   private final String myText;

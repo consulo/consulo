@@ -27,7 +27,7 @@ import consulo.language.editor.WriteCommandAction;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.application.util.diff.FilesTooBigForDiffException;
-import consulo.ide.impl.idea.util.text.DateFormatUtil;
+import consulo.application.util.DateFormatUtil;
 
 import java.io.IOException;
 import java.util.*;

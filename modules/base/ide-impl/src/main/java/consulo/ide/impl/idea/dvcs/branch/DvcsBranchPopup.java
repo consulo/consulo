@@ -28,7 +28,7 @@ import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.util.lang.function.Condition;
-import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
+import consulo.vcs.AbstractVcs;
 import consulo.ide.impl.idea.openapi.vcs.VcsNotifier;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

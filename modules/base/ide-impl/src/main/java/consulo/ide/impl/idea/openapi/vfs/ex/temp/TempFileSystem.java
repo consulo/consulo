@@ -25,7 +25,7 @@ import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.VirtualFilePointerCapableFileSystem;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.ManagingFS;
 import consulo.virtualFileSystem.NewVirtualFileSystem;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.RefreshQueue;
+import consulo.virtualFileSystem.RefreshQueue;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.VfsImplUtil;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.FakeVirtualFile;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.FSRecords;

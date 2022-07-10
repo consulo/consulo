@@ -28,8 +28,12 @@ import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.vcs.*;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangesUtil;
-import consulo.ide.impl.idea.openapi.vcs.changes.VcsDirtyScopeManager;
+import consulo.vcs.change.VcsDirtyScopeManager;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
+import consulo.vcs.AbstractVcsHelper;
+import consulo.vcs.EditFileProvider;
+import consulo.vcs.VcsBundle;
+import consulo.vcs.VcsException;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatusManager;
 

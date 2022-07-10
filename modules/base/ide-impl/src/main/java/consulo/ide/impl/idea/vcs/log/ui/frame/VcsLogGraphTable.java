@@ -34,7 +34,7 @@ import consulo.ide.impl.idea.ui.*;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.text.DateFormatUtil;
+import consulo.application.util.DateFormatUtil;
 import consulo.ide.impl.idea.vcs.log.VcsCommitStyleFactory;
 import consulo.ide.impl.idea.vcs.log.VcsLogHighlighter;
 import consulo.ide.impl.idea.vcs.log.VcsShortCommitDetails;

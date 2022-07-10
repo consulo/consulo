@@ -51,7 +51,7 @@ import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.ide.impl.idea.openapi.ui.PanelWithActionsAndCloseButton;
-import consulo.ide.impl.idea.openapi.util.Clock;
+import consulo.util.lang.Clock;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.Getter;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
@@ -64,10 +64,15 @@ import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.IssueLinkRenderer;
 import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.TableLinkMouseListener;
 import consulo.ide.impl.idea.openapi.vcs.impl.AbstractVcsHelperImpl;
 import consulo.ide.impl.idea.openapi.vcs.ui.ReplaceFileConfirmationDialog;
-import consulo.ide.impl.idea.openapi.vcs.versionBrowser.CommittedChangeList;
+import consulo.vcs.*;
+import consulo.vcs.change.VcsDirtyScopeManager;
+import consulo.vcs.history.*;
+import consulo.vcs.versionBrowser.CommittedChangeList;
 import consulo.ide.impl.idea.openapi.vcs.vfs.VcsFileSystem;
 import consulo.ide.impl.idea.openapi.vcs.vfs.VcsVirtualFile;
 import consulo.ide.impl.idea.openapi.vcs.vfs.VcsVirtualFolder;
+import consulo.vcs.change.Change;
+import consulo.vcs.change.ContentRevision;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.ui.ex.action.*;
 import consulo.virtualFileSystem.VirtualFile;
@@ -80,11 +85,11 @@ import consulo.ide.impl.idea.ui.dualView.DualViewColumnInfo;
 import consulo.ide.impl.idea.ui.dualView.TreeTableView;
 import consulo.ui.ex.awt.table.TableView;
 import consulo.ui.ex.awt.util.Alarm;
-import consulo.ide.impl.idea.util.AsynchConsumer;
+import consulo.application.util.function.AsynchConsumer;
 import consulo.ide.impl.idea.util.Consumer;
-import consulo.ide.impl.idea.util.TreeItem;
+import consulo.util.lang.TreeItem;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.text.DateFormatUtil;
+import consulo.application.util.DateFormatUtil;
 import consulo.ui.ex.awt.ColumnInfo;
 import consulo.ui.ex.awt.table.TableViewModel;
 import consulo.disposer.Disposer;
@@ -146,7 +151,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
   @Nullable
   private final JComponent myAdditionalDetails;
   @Nullable
-  private final Consumer<VcsFileRevision> myRevisionSelectionListener;
+  private final java.util.function.Consumer<VcsFileRevision> myRevisionSelectionListener;
   private VcsHistorySession myHistorySession;
   private VcsFileRevision myBottomRevisionForShowDiff;
   private volatile boolean myInRefresh;
@@ -236,7 +241,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
         mySplitter.repaint();
       }
 
-      public void consume(VcsHistorySession vcsHistorySession) {
+      public void accept(VcsHistorySession vcsHistorySession) {
         FileHistoryPanelImpl.this.refresh(vcsHistorySession);
       }
     };
@@ -426,7 +431,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
       return;
     }
     if (myRevisionSelectionListener != null) {
-      myRevisionSelectionListener.consume(selection.get(0).getRevision());
+      myRevisionSelectionListener.accept(selection.get(0).getRevision());
     }
   }
 

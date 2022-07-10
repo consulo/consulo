@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.dvcs.actions;
 
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
+import consulo.vcs.AbstractVcs;
 import consulo.ide.impl.idea.openapi.vcs.actions.VcsQuickListContentProvider;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;

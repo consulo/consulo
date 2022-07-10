@@ -23,7 +23,7 @@ import consulo.ide.impl.idea.ide.projectView.impl.AbstractUrl;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.project.Project;
 import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.util.TreeItem;
+import consulo.util.lang.TreeItem;
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;

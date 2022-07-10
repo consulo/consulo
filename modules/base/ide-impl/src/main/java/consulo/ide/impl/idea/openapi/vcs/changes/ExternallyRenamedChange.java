@@ -17,8 +17,11 @@ package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.vcs.FilePath;
-import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
+import consulo.vcs.FilePath;
+import consulo.vcs.VcsBundle;
+import consulo.vcs.change.Change;
+import consulo.vcs.change.ContentRevision;
+
 import javax.annotation.Nullable;
 
 public class ExternallyRenamedChange extends Change {

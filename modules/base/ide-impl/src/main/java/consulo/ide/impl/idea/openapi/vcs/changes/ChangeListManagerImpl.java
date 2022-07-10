@@ -34,23 +34,25 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.document.FileDocumentManager;
-import consulo.ide.impl.idea.openapi.util.Factory;
 import consulo.ide.impl.idea.openapi.util.Getter;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.vcs.*;
+import consulo.ide.impl.idea.openapi.vcs.CalledInAwt;
+import consulo.ide.impl.idea.openapi.vcs.VcsConnectionProblem;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.ChangeListRemoveConfirmation;
 import consulo.ide.impl.idea.openapi.vcs.changes.conflicts.ChangelistConflictTracker;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.CommitHelper;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.PlusMinusModify;
-import consulo.ide.impl.idea.openapi.vcs.checkin.CheckinEnvironment;
-import consulo.ide.impl.idea.openapi.vcs.impl.*;
+import consulo.ide.impl.idea.openapi.vcs.impl.AbstractVcsHelperImpl;
+import consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
+import consulo.ide.impl.idea.openapi.vcs.impl.VcsInitObject;
+import consulo.ide.impl.idea.openapi.vcs.impl.VcsRootIterator;
 import consulo.ide.impl.idea.openapi.vcs.readOnlyHandler.ReadonlyStatusHandlerImpl;
 import consulo.ide.impl.idea.openapi.vcs.ui.VcsBalloonProblemNotifier;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.ui.EditorNotifications;
 import consulo.ide.impl.idea.util.*;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.vcsUtil.VcsUtil;
+import consulo.vcs.util.VcsUtil;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
@@ -70,6 +72,10 @@ import consulo.util.lang.ThreeState;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.ref.Ref;
 import consulo.util.xml.serializer.JDOMExternalizerUtil;
+import consulo.vcs.*;
+import consulo.vcs.change.*;
+import consulo.vcs.checkin.CheckinEnvironment;
+import consulo.vcs.internal.ContentRevisionCache;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
@@ -88,8 +94,9 @@ import java.io.File;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Supplier;
 
-import static consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED;
+import static consulo.vcs.ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED;
 
 @State(name = "ChangeListManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 @Singleton
@@ -123,7 +130,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
 
   private ChangeListWorker myWorker;
   private VcsException myUpdateException;
-  private Factory<JComponent> myAdditionalInfo;
+  private Supplier<JComponent> myAdditionalInfo;
 
   private final EventDispatcher<ChangeListListener> myListeners = EventDispatcher.create(ChangeListListener.class);
 
@@ -904,7 +911,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
     }
   }
 
-  Factory<JComponent> getAdditionalUpdateInfo() {
+  Supplier<JComponent> getAdditionalUpdateInfo() {
     synchronized (myDataLock) {
       return myAdditionalInfo;
     }

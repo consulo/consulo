@@ -29,7 +29,7 @@ import consulo.ide.impl.idea.tasks.Task;
 import consulo.ide.impl.idea.tasks.TaskRepository;
 import consulo.ide.impl.idea.tasks.TaskState;
 import consulo.ide.impl.idea.tasks.impl.httpclient.ResponseUtil;
-import consulo.ide.impl.idea.util.text.DateFormatUtil;
+import consulo.application.util.DateFormatUtil;
 import org.apache.http.HttpResponse;
 import org.jdom.Element;
 import org.jetbrains.annotations.Contract;

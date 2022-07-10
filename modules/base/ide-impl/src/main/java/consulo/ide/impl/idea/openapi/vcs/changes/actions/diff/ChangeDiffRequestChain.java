@@ -4,7 +4,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.ide.impl.idea.diff.actions.impl.GoToChangePopupBuilder;
 import consulo.diff.chain.DiffRequestChain;
-import consulo.ide.impl.idea.openapi.vcs.changes.Change;
+import consulo.vcs.change.Change;
 import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

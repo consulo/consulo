@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.todo;
 
+import consulo.application.ui.util.TodoPanelSettings;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.fileEditor.event.FileEditorManagerListener;

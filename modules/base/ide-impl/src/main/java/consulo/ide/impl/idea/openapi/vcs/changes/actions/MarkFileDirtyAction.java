@@ -22,7 +22,7 @@ import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.openapi.vcs.changes.VcsDirtyScopeManager;
+import consulo.vcs.change.VcsDirtyScopeManager;
 import consulo.virtualFileSystem.VirtualFile;
 
 /**

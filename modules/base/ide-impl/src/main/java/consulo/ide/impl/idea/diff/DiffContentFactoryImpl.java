@@ -34,7 +34,7 @@ import consulo.ide.impl.idea.diff.util.DiffUserDataKeysEx;
 import consulo.ide.impl.idea.diff.util.DiffUtil;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.vcs.FilePath;
+import consulo.vcs.FilePath;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.util.LineSeparator;
 import consulo.ide.impl.idea.util.PathUtil;

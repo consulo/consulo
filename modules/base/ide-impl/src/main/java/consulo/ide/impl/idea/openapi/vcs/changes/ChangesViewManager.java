@@ -31,14 +31,9 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.diff.util.DiffUtil;
-import consulo.ui.ex.awt.SimpleToolWindowPanel;
 import consulo.ide.impl.idea.openapi.util.Factory;
 import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager;
-import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
-import consulo.ide.impl.idea.openapi.vcs.VcsConfiguration;
-import consulo.ide.impl.idea.openapi.vcs.VcsException;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.IgnoredSettingsAction;
 import consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelveChangesManager;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.*;
@@ -56,6 +51,12 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.content.Content;
 import consulo.util.xml.serializer.annotation.Attribute;
+import consulo.vcs.ProjectLevelVcsManager;
+import consulo.vcs.VcsBundle;
+import consulo.vcs.VcsConfiguration;
+import consulo.vcs.VcsException;
+import consulo.vcs.change.Change;
+import consulo.vcs.change.ChangeList;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -73,6 +74,7 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Supplier;
 
 import static java.util.stream.Collectors.toList;
 
@@ -278,15 +280,13 @@ public class ChangesViewManager implements ChangesViewI, ProjectComponent, Persi
     return SystemInfo.isMac ? InputEvent.META_DOWN_MASK : InputEvent.CTRL_DOWN_MASK;
   }
 
-  private void updateProgressComponent(@Nonnull final Factory<JComponent> progress) {
+  private void updateProgressComponent(@Nonnull final Supplier<JComponent> progress) {
     //noinspection SSBasedInspection
-    SwingUtilities.invokeLater(new Runnable() {
-      public void run() {
-        if (myProgressLabel != null) {
-          myProgressLabel.removeAll();
-          myProgressLabel.add(progress.create());
-          myProgressLabel.setMinimumSize(JBUI.emptySize());
-        }
+    SwingUtilities.invokeLater(() -> {
+      if (myProgressLabel != null) {
+        myProgressLabel.removeAll();
+        myProgressLabel.add(progress.get());
+        myProgressLabel.setMinimumSize(JBUI.emptySize());
       }
     });
   }
@@ -444,7 +444,7 @@ public class ChangesViewManager implements ChangesViewI, ProjectComponent, Persi
       VcsException updateException = changeListManager.getUpdateException();
       setBusy(false);
       if (updateException == null) {
-        Factory<JComponent> additionalUpdateInfo = changeListManager.getAdditionalUpdateInfo();
+        Supplier<JComponent> additionalUpdateInfo = changeListManager.getAdditionalUpdateInfo();
 
         if (additionalUpdateInfo != null) {
           updateProgressComponent(additionalUpdateInfo);

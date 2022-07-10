@@ -1,7 +1,7 @@
 package consulo.ide.impl.idea.vcs.log.data;
 
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.openapi.vcs.VcsException;
+import consulo.vcs.VcsException;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.vcs.log.VcsLogProvider;
 import consulo.ide.impl.idea.vcs.log.VcsShortCommitDetails;

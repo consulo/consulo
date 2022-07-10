@@ -30,7 +30,7 @@
             </constraints>
             <properties>
               <margin top="2" left="2" bottom="2" right="2"/>
-              <text resource-bundle="messages/VcsBundle" key="radio.after.creation.show.options"/>
+              <text resource-bundle="consulo/vcs/VcsBundle" key="radio.after.creation.show.options"/>
             </properties>
           </component>
           <component id="3cc74" class="javax.swing.JRadioButton" binding="myPerformActionOnAddingFile">

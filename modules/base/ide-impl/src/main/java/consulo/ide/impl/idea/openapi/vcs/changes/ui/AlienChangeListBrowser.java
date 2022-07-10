@@ -18,9 +18,9 @@ package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
-import consulo.ide.impl.idea.openapi.vcs.changes.Change;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangeList;
+import consulo.vcs.AbstractVcs;
+import consulo.vcs.change.Change;
+import consulo.vcs.change.ChangeList;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 

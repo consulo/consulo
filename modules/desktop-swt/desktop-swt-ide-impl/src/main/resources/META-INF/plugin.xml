@@ -57,7 +57,7 @@
 
     <applicationService serviceInterface="consulo.ide.impl.progress.util.ProgressDialogFactory" serviceImplementation="consulo.ide.impl.progress.util.impl.UnifiedProgressDialogFactory"/>
 
-    <applicationService serviceInterface="consulo.ide.impl.idea.openapi.vfs.newvfs.RefreshQueue" serviceImplementation="consulo.ide.impl.vfs.newvfs.AsyncRefreshQueueImpl"/>
+    <applicationService serviceInterface="consulo.virtualFileSystem.RefreshQueue" serviceImplementation="consulo.ide.impl.vfs.newvfs.AsyncRefreshQueueImpl"/>
 
     <applicationService serviceInterface="consulo.application.ui.wm.ApplicationIdeFocusManager" serviceImplementation="consulo.desktop.swt.wm.impl.DesktopSwtApplicationIdeFocusManagerImpl" lazy="false"/>
 

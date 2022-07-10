@@ -18,12 +18,13 @@ package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
-import consulo.ide.impl.idea.openapi.vcs.FilePath;
+import consulo.vcs.AbstractVcs;
+import consulo.vcs.FilePath;
 import consulo.ide.impl.idea.util.Consumer;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.project.Project;
 import consulo.util.lang.ThreeState;
+import consulo.vcs.change.*;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
 import org.jetbrains.annotations.TestOnly;

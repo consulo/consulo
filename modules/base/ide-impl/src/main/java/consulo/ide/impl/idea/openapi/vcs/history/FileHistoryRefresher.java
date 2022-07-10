@@ -15,10 +15,13 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.history;
 
-import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
-import consulo.ide.impl.idea.openapi.vcs.FilePath;
-import consulo.ide.impl.idea.openapi.vcs.VcsKey;
+import consulo.vcs.AbstractVcs;
+import consulo.vcs.FilePath;
+import consulo.vcs.VcsKey;
 import consulo.ide.impl.idea.vcs.history.VcsHistoryProviderEx;
+import consulo.vcs.history.VcsHistoryProvider;
+import consulo.vcs.history.VcsRevisionNumber;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

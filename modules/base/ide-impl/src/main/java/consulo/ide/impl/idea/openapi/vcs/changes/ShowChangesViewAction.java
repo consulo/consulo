@@ -25,7 +25,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ide.impl.idea.openapi.vcs.actions.AbstractVcsAction;
-import consulo.ide.impl.idea.openapi.vcs.actions.VcsContext;
+import consulo.vcs.action.VcsContext;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentManager;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.toolWindow.ToolWindow;

@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.history.integration.ui.models;
 import consulo.ide.impl.idea.history.core.revisions.Difference;
 import consulo.ide.impl.idea.history.core.tree.Entry;
 import consulo.ide.impl.idea.history.integration.IdeaGateway;
-import consulo.ide.impl.idea.openapi.vcs.changes.ContentRevision;
+import consulo.vcs.change.ContentRevision;
 
 public class DirectoryChangeModel {
   private final Difference myDiff;

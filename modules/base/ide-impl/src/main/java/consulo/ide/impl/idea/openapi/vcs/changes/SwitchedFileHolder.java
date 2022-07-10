@@ -18,9 +18,10 @@ package consulo.ide.impl.idea.openapi.vcs.changes;
 import consulo.project.Project;
 import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.vcs.change.VcsDirtyScope;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.util.collection.MultiMap;
-import consulo.ide.impl.idea.vcsUtil.VcsUtil;
+import consulo.vcs.util.VcsUtil;
 
 import java.util.HashMap;
 import java.util.Map;

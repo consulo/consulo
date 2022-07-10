@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
 import consulo.dataContext.DataSink;
 import consulo.ide.impl.idea.openapi.fileChooser.actions.VirtualFileDeleteProvider;
-import consulo.ide.impl.idea.openapi.vcs.VcsShowConfirmationOption;
+import consulo.vcs.VcsShowConfirmationOption;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.DeleteUnversionedFilesAction;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.language.editor.CommonDataKeys;

@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.patch;
 
 import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
+import consulo.vcs.VcsBundle;
 import javax.annotation.Nonnull;
 
 import java.io.File;

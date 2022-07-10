@@ -24,7 +24,7 @@ import consulo.document.FileDocumentManager;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
-import consulo.ide.impl.idea.openapi.vcs.changes.Change;
+import consulo.vcs.change.Change;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesBrowserBase;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.RollbackChangesDialog;
 import consulo.ide.impl.idea.vcsUtil.RollbackUtil;

@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
+import consulo.vcs.change.CommitExecutor;
+
 public abstract class CommitExecutorBase implements CommitExecutor {
 
   public boolean areChangesRequired() {

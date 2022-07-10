@@ -16,10 +16,10 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
-import consulo.ide.impl.idea.openapi.vcs.CachingCommittedChangesProvider;
-import consulo.ide.impl.idea.openapi.vcs.CommittedChangesProvider;
-import consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager;
+import consulo.vcs.AbstractVcs;
+import consulo.vcs.CachingCommittedChangesProvider;
+import consulo.vcs.CommittedChangesProvider;
+import consulo.vcs.ProjectLevelVcsManager;
 import consulo.ide.impl.idea.util.NotNullFunction;
 import javax.annotation.Nonnull;
 

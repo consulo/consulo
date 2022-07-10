@@ -16,10 +16,10 @@
 package consulo.ide.impl.idea.vcsUtil;
 
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
-import consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager;
+import consulo.vcs.AbstractVcs;
+import consulo.vcs.ProjectLevelVcsManager;
 import consulo.ide.impl.idea.openapi.vcs.rollback.DefaultRollbackEnvironment;
-import consulo.ide.impl.idea.openapi.vcs.rollback.RollbackEnvironment;
+import consulo.vcs.rollback.RollbackEnvironment;
 import javax.annotation.Nonnull;
 
 import java.util.Collection;

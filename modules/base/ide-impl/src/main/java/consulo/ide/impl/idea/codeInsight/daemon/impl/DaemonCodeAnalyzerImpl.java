@@ -27,7 +27,7 @@ import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorManagerEx;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.text.AsyncEditorLoader;
 import consulo.language.file.FileTypeManager;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.FileTypeManagerImpl;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.RefreshQueue;
+import consulo.virtualFileSystem.RefreshQueue;
 import consulo.ide.impl.idea.packageDependencies.DependencyValidationManager;
 import consulo.ide.impl.psi.RefResolveService;
 import consulo.application.impl.internal.performance.HeavyProcessLatch;

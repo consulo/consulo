@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.vcs.history.ShortVcsRevisionNumber;
-import consulo.ide.impl.idea.openapi.vcs.history.VcsRevisionNumber;
+import consulo.vcs.history.VcsRevisionNumber;
 import javax.annotation.Nonnull;
 
 public class TextRevisionNumber implements ShortVcsRevisionNumber {

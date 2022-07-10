@@ -28,6 +28,11 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.content.ContentManager;
+import consulo.vcs.AbstractVcs;
+import consulo.vcs.FilePath;
+import consulo.vcs.VcsBundle;
+import consulo.vcs.VcsException;
+import consulo.vcs.history.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -71,7 +76,7 @@ public class FileHistorySessionPartner implements VcsAppendableHistorySessionPar
       // TODO: Logic should be revised to just append some revisions to history panel instead of creating and showing new history session
       mySession.getRevisionList().addAll(vcsFileRevisions);
       VcsHistorySession copy = mySession.copyWithCachedRevision();
-      ApplicationManager.getApplication().invokeAndWait(() -> ensureHistoryPanelCreated().getHistoryPanelRefresh().consume(copy));
+      ApplicationManager.getApplication().invokeAndWait(() -> ensureHistoryPanelCreated().getHistoryPanelRefresh().accept(copy));
     };
     myBuffer = new BufferedListConsumer<VcsFileRevision>(5, sessionRefresher, 1000) {
       @Override
@@ -128,7 +133,7 @@ public class FileHistorySessionPartner implements VcsAppendableHistorySessionPar
         createOrSelectContentIfNeeded();
       }
       else if (session != null && !session.getRevisionList().isEmpty()){
-        myFileHistoryPanel.getHistoryPanelRefresh().consume(copy);
+        myFileHistoryPanel.getHistoryPanelRefresh().accept(copy);
       }
     });
   }

@@ -20,7 +20,7 @@ import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.table.TableView;
 import consulo.ide.impl.idea.util.IconUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.text.DateFormatUtil;
+import consulo.application.util.DateFormatUtil;
 import consulo.ui.ex.awt.ColumnInfo;
 import consulo.ui.ex.awt.table.ListTableModel;
 import consulo.ui.ex.awt.UIUtil;

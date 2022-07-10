@@ -13,7 +13,7 @@ import consulo.ide.impl.idea.openapi.vfs.impl.win32.Win32LocalFileSystem;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.ChildInfoImpl;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.NewVirtualFile;
 import consulo.virtualFileSystem.NewVirtualFileSystem;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.RefreshQueue;
+import consulo.virtualFileSystem.RefreshQueue;
 import consulo.virtualFileSystem.event.ChildInfo;
 import consulo.virtualFileSystem.event.VFileCreateEvent;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.FSRecords;

@@ -38,7 +38,7 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.ExceptionUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
 import consulo.ide.impl.idea.util.net.NetUtils;
-import consulo.ide.impl.idea.util.text.DateFormatUtil;
+import consulo.application.util.DateFormatUtil;
 import consulo.util.xml.serializer.XmlSerializer;
 import org.jdom.Element;
 

@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.diff.impl.dir;
 
 import consulo.ide.impl.idea.ide.diff.*;
-import consulo.ide.impl.idea.util.text.DateFormatUtil;
+import consulo.application.util.DateFormatUtil;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

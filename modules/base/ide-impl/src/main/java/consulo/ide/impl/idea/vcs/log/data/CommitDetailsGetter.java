@@ -1,6 +1,6 @@
 package consulo.ide.impl.idea.vcs.log.data;
 
-import consulo.ide.impl.idea.openapi.vcs.VcsException;
+import consulo.vcs.VcsException;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.vcs.log.VcsFullCommitDetails;
 import consulo.ide.impl.idea.vcs.log.VcsLogProvider;

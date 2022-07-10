@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.vcsUtil;
 
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.vcs.VcsException;
+import consulo.vcs.VcsException;
 import org.jetbrains.annotations.NonNls;
 
 import java.io.File;

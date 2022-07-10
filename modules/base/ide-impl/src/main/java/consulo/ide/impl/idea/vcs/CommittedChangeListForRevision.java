@@ -15,9 +15,9 @@
  */
 package consulo.ide.impl.idea.vcs;
 
-import consulo.ide.impl.idea.openapi.vcs.changes.Change;
-import consulo.ide.impl.idea.openapi.vcs.history.LongRevisionNumber;
-import consulo.ide.impl.idea.openapi.vcs.history.VcsRevisionNumber;
+import consulo.vcs.change.Change;
+import consulo.vcs.history.LongRevisionNumber;
+import consulo.vcs.history.VcsRevisionNumber;
 import consulo.ide.impl.idea.openapi.vcs.versionBrowser.CommittedChangeListImpl;
 import consulo.ide.impl.idea.openapi.vcs.versionBrowser.VcsRevisionNumberAware;
 import javax.annotation.Nonnull;

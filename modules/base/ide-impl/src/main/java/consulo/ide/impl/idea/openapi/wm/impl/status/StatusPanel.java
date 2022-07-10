@@ -33,7 +33,7 @@ import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.awt.ClickListener;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.util.Alarm;
-import consulo.ide.impl.idea.util.text.DateFormatUtil;
+import consulo.application.util.DateFormatUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.logging.Logger;
 

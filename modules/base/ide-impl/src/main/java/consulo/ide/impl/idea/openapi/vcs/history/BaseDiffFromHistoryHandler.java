@@ -16,9 +16,9 @@
 package consulo.ide.impl.idea.openapi.vcs.history;
 
 import consulo.ui.ex.awt.DialogBuilder;
-import consulo.ide.impl.idea.openapi.vcs.FilePath;
-import consulo.ide.impl.idea.openapi.vcs.VcsException;
-import consulo.ide.impl.idea.openapi.vcs.changes.Change;
+import consulo.vcs.FilePath;
+import consulo.vcs.VcsException;
+import consulo.vcs.change.Change;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesBrowser;
 import consulo.ide.impl.idea.openapi.vcs.ui.VcsBalloonProblemNotifier;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -28,6 +28,8 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationType;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.vcs.history.DiffFromHistoryHandler;
+import consulo.vcs.history.VcsFileRevision;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

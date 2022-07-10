@@ -16,7 +16,9 @@
 
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
-import consulo.ide.impl.idea.openapi.vcs.VcsException;
+import consulo.vcs.VcsException;
+import consulo.vcs.change.ContentRevision;
+
 import javax.annotation.Nullable;
 
 public interface ByteBackedContentRevision extends ContentRevision {

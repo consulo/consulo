@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.dvcs.cherrypick;
 
 import consulo.component.extension.ExtensionPointName;
-import consulo.ide.impl.idea.openapi.vcs.VcsKey;
+import consulo.vcs.VcsKey;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.vcs.log.Hash;
 import consulo.ide.impl.idea.vcs.log.VcsFullCommitDetails;

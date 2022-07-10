@@ -39,6 +39,7 @@ import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ChangeDiffRequestP
 import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
+import consulo.vcs.change.Change;
 import org.jetbrains.annotations.Contract;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

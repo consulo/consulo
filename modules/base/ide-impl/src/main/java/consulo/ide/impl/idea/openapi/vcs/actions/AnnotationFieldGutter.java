@@ -20,10 +20,10 @@ import consulo.codeEditor.Editor;
 import consulo.colorScheme.EditorColorKey;
 import consulo.colorScheme.EditorFontType;
 import consulo.util.lang.Couple;
-import consulo.ide.impl.idea.openapi.vcs.annotate.FileAnnotation;
+import consulo.vcs.annotate.FileAnnotation;
 import consulo.ide.impl.idea.openapi.vcs.annotate.TextAnnotationPresentation;
-import consulo.ide.impl.idea.openapi.vcs.history.VcsRevisionNumber;
-import consulo.ide.impl.idea.vcsUtil.VcsUtil;
+import consulo.vcs.history.VcsRevisionNumber;
+import consulo.vcs.util.VcsUtil;
 import consulo.ui.color.ColorValue;
 
 import javax.annotation.Nonnull;

@@ -15,7 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.annotate;
 
-import consulo.ide.impl.idea.openapi.vcs.history.VcsRevisionNumber;
+import consulo.vcs.annotate.VcsLineAnnotationData;
+import consulo.vcs.history.VcsRevisionNumber;
 
 import java.util.HashMap;
 import java.util.Map;

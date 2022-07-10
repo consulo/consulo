@@ -17,16 +17,16 @@ package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.vcs.FilePath;
-import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
-import consulo.ide.impl.idea.openapi.vcs.actions.VcsContext;
-import consulo.ide.impl.idea.openapi.vcs.changes.Change;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangeList;
+import consulo.vcs.FilePath;
+import consulo.vcs.VcsBundle;
+import consulo.vcs.action.VcsContext;
+import consulo.vcs.change.Change;
+import consulo.vcs.change.ChangeList;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangesUtil;
 import consulo.ide.impl.idea.openapi.vcs.update.AbstractCommonUpdateAction;
 import consulo.ide.impl.idea.openapi.vcs.update.ActionInfo;
 import consulo.ide.impl.idea.openapi.vcs.update.ScopeInfo;
-import consulo.ide.impl.idea.openapi.vcs.versionBrowser.CommittedChangeList;
+import consulo.vcs.versionBrowser.CommittedChangeList;
 import javax.annotation.Nonnull;
 
 import java.util.*;

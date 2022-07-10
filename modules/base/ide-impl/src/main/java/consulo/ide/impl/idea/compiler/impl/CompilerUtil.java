@@ -35,7 +35,7 @@ import consulo.util.io.CharsetToolkit;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.RefreshQueue;
+import consulo.virtualFileSystem.RefreshQueue;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.content.LanguageContentFolderScopes;

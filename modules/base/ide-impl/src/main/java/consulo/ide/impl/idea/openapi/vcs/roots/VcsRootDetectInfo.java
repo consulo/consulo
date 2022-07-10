@@ -1,6 +1,6 @@
 package consulo.ide.impl.idea.openapi.vcs.roots;
 
-import consulo.ide.impl.idea.openapi.vcs.VcsRoot;
+import consulo.vcs.root.VcsRoot;
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;

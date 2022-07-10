@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.vcs.diff.DiffProvider;
+import consulo.vcs.diff.DiffProvider;
 import consulo.ide.impl.idea.openapi.vcs.impl.VcsBackgroundableActions;
 import consulo.virtualFileSystem.VirtualFile;
 

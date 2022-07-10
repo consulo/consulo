@@ -33,7 +33,7 @@ import consulo.ui.ex.awt.TextFieldWithBrowseButton;
 import consulo.ui.ex.awt.ValidationInfo;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
+import consulo.vcs.VcsBundle;
 import consulo.util.io.CharsetToolkit;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;

@@ -43,7 +43,7 @@ import consulo.ide.impl.idea.ui.tabs.FileColorManagerImpl;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.text.DateFormatUtil;
+import consulo.application.util.DateFormatUtil;
 import consulo.language.Language;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.TargetElementUtil;

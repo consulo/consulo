@@ -19,21 +19,22 @@ import consulo.ui.ex.action.Presentation;
 import consulo.document.FileDocumentManager;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
-import consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager;
-import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
-import consulo.ide.impl.idea.openapi.vcs.history.VcsHistoryProvider;
+import consulo.vcs.AbstractVcs;
+import consulo.vcs.ProjectLevelVcsManager;
+import consulo.vcs.VcsBundle;
+import consulo.vcs.history.VcsHistoryProvider;
 import consulo.ide.impl.idea.openapi.vcs.history.VcsHistoryProviderBackgroundableProxy;
-import consulo.ide.impl.idea.openapi.vcs.history.VcsHistorySession;
+import consulo.vcs.history.VcsHistorySession;
 import consulo.ide.impl.idea.openapi.vcs.history.impl.VcsSelectionHistoryDialog;
 import consulo.ide.impl.idea.openapi.vcs.impl.BackgroundableActionEnabledHandler;
 import consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
 import consulo.ide.impl.idea.openapi.vcs.impl.VcsBackgroundableActions;
+import consulo.vcs.action.VcsContext;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.vcsUtil.VcsSelection;
 import consulo.ide.impl.idea.vcsUtil.VcsSelectionUtil;
-import consulo.ide.impl.idea.vcsUtil.VcsUtil;
+import consulo.vcs.util.VcsUtil;
 import javax.annotation.Nonnull;
 
 public class SelectedBlockHistoryAction extends AbstractVcsAction {

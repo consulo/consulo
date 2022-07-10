@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.vcs.VcsConfiguration;
+import consulo.vcs.VcsConfiguration;
 import consulo.ide.impl.idea.openapi.vcs.VcsShowOptionsSettingImpl;
 import consulo.ide.impl.idea.openapi.vcs.changes.RemoteRevisionsCache;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.CacheSettingsPanel;

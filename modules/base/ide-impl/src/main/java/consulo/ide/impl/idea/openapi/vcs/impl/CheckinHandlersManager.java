@@ -18,9 +18,9 @@ package consulo.ide.impl.idea.openapi.vcs.impl;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.ide.ServiceManager;
-import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
-import consulo.ide.impl.idea.openapi.vcs.checkin.BaseCheckinHandlerFactory;
-import consulo.ide.impl.idea.openapi.vcs.checkin.VcsCheckinHandlerFactory;
+import consulo.vcs.AbstractVcs;
+import consulo.vcs.checkin.BaseCheckinHandlerFactory;
+import consulo.vcs.checkin.VcsCheckinHandlerFactory;
 import javax.annotation.Nonnull;
 
 import java.util.List;

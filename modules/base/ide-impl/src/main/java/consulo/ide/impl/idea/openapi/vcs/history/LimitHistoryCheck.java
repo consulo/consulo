@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.history;
 
-import consulo.ide.impl.idea.openapi.vcs.VcsConfiguration;
+import consulo.vcs.VcsConfiguration;
 import consulo.ide.impl.idea.openapi.vcs.ui.VcsBalloonProblemNotifier;
 import consulo.component.ProcessCanceledException;
 import consulo.project.Project;

@@ -65,7 +65,7 @@ import consulo.ui.ex.RelativePoint;
 import consulo.ide.impl.idea.util.Function;
 import consulo.application.util.function.Processor;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.text.DateFormatUtil;
+import consulo.application.util.DateFormatUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.UIAccess;
 import consulo.ui.color.ColorValue;

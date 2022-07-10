@@ -16,11 +16,11 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.vcs.FilePath;
-import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
-import consulo.ide.impl.idea.openapi.vcs.changes.Change;
+import consulo.vcs.FilePath;
+import consulo.vcs.VcsBundle;
+import consulo.vcs.change.Change;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListOwner;
-import consulo.ide.impl.idea.openapi.vcs.changes.LocallyDeletedChange;
+import consulo.vcs.change.LocallyDeletedChange;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.SimpleTextAttributes;

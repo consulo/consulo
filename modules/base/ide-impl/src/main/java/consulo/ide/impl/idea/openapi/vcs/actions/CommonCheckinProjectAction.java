@@ -18,6 +18,11 @@ package consulo.ide.impl.idea.openapi.vcs.actions;
 import consulo.ui.ex.action.Presentation;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.vcs.*;
+import consulo.vcs.AbstractVcs;
+import consulo.vcs.FilePath;
+import consulo.vcs.ProjectLevelVcsManager;
+import consulo.vcs.VcsBundle;
+import consulo.vcs.action.VcsContext;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.ArrayList;

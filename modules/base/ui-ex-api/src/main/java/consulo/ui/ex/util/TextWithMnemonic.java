@@ -127,7 +127,7 @@ public final class TextWithMnemonic {
   @Nonnull
   @Contract(pure = true)
   public static TextWithMnemonic parse(@Nullable String text) {
-    if(StringUtil.isEmpty(text)) {
+    if (StringUtil.isEmpty(text)) {
       return ourNull;
     }
 

@@ -18,8 +18,8 @@ package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 import consulo.application.CommonBundle;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.internal.laf.MultiLineLabelUI;
-import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
-import consulo.ide.impl.idea.openapi.vcs.VcsConfiguration;
+import consulo.vcs.VcsBundle;
+import consulo.vcs.VcsConfiguration;
 import consulo.ide.impl.idea.util.ui.OptionsDialog;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 

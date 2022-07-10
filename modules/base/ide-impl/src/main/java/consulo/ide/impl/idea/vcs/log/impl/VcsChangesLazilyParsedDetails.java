@@ -19,7 +19,7 @@ import consulo.logging.Logger;
 import consulo.util.lang.Couple;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.ide.impl.idea.openapi.vcs.LocalFilePath;
-import consulo.ide.impl.idea.openapi.vcs.changes.Change;
+import consulo.vcs.change.Change;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.Hash;

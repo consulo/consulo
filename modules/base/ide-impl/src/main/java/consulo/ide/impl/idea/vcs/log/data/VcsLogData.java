@@ -27,7 +27,7 @@ import consulo.application.progress.Task;
 import consulo.project.Project;
 import consulo.disposer.Disposer;
 import consulo.application.util.registry.Registry;
-import consulo.ide.impl.idea.openapi.vcs.VcsException;
+import consulo.vcs.VcsException;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.Consumer;
 import consulo.util.lang.function.ThrowableConsumer;

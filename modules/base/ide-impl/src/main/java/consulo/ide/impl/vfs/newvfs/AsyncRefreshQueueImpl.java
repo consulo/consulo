@@ -16,12 +16,12 @@
 package consulo.ide.impl.vfs.newvfs;
 
 import consulo.application.Application;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.RefreshQueue;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.RefreshQueueImpl;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.RefreshSession;
-import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.disposer.Disposable;
+import consulo.ide.impl.idea.openapi.vfs.newvfs.RefreshQueueImpl;
+import consulo.ui.ModalityState;
+import consulo.virtualFileSystem.RefreshQueue;
+import consulo.virtualFileSystem.RefreshSession;
+import consulo.virtualFileSystem.event.VFileEvent;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -47,7 +47,7 @@ public class AsyncRefreshQueueImpl extends RefreshQueue implements Disposable {
 
   @Nonnull
   @Override
-  public RefreshSession createSession(boolean async, boolean recursively, @Nullable Runnable finishRunnable, @Nonnull IdeaModalityState state) {
+  public RefreshSession createSession(boolean async, boolean recursively, @Nullable Runnable finishRunnable, @Nonnull ModalityState state) {
     return new AsyncRefreshSessionImpl(async, recursively, finishRunnable, state);
   }
 

@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes;
 import consulo.application.util.SystemInfo;
 import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.vcs.FilePath;
+import consulo.vcs.FilePath;
 import javax.annotation.Nonnull;
 
 import java.util.Comparator;

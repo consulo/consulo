@@ -24,7 +24,7 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.ui.ex.awt.JBList;
-import consulo.ide.impl.idea.util.text.DateFormatUtil;
+import consulo.application.util.DateFormatUtil;
 import consulo.ui.ex.awt.UIUtil;
 
 import javax.swing.*;

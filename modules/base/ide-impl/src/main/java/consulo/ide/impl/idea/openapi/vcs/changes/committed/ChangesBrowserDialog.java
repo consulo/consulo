@@ -20,9 +20,9 @@ import consulo.application.CommonBundle;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
-import consulo.ide.impl.idea.openapi.vcs.versionBrowser.CommittedChangeList;
-import consulo.ide.impl.idea.util.AsynchConsumer;
+import consulo.vcs.VcsBundle;
+import consulo.vcs.versionBrowser.CommittedChangeList;
+import consulo.application.util.function.AsynchConsumer;
 import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.ui.AdjustComponentWhenShown;
 import javax.annotation.Nonnull;
@@ -79,7 +79,7 @@ public class ChangesBrowserDialog extends DialogWrapper {
         });
       }
 
-      public void consume(final List<CommittedChangeList> committedChangeLists) {
+      public void accept(final List<CommittedChangeList> committedChangeLists) {
         SwingUtilities.invokeLater(new Runnable() {
           @Override
           public void run() {

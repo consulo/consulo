@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.vcsUtil;
 import consulo.document.Document;
 import consulo.codeEditor.SelectionModel;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
+import consulo.vcs.VcsBundle;
 
 public class VcsSelection {
   private final Document myDocument;

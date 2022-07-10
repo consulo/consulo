@@ -18,7 +18,8 @@ package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.vcs.FilePath;
+import consulo.vcs.FilePath;
+import consulo.vcs.change.*;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.ide.impl.idea.openapi.vcs.changes.*;
 import consulo.virtualFileSystem.VirtualFile;
@@ -29,7 +30,7 @@ import consulo.ide.impl.idea.util.containers.Convertor;
 import consulo.util.collection.FactoryMap;
 import consulo.util.collection.MultiMap;
 import consulo.ui.ex.awt.tree.TreeUtil;
-import consulo.ide.impl.idea.vcsUtil.VcsUtil;
+import consulo.vcs.util.VcsUtil;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

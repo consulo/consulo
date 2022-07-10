@@ -27,6 +27,7 @@ import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.project.Project;
 import consulo.project.ProjectComponent;
+import consulo.vcs.change.VcsDirtyScopeManager;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

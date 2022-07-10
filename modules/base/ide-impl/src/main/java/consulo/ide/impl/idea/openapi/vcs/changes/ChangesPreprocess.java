@@ -15,8 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
-import consulo.ide.impl.idea.openapi.vcs.FilePath;
+import consulo.vcs.FilePath;
 import consulo.logging.Logger;
+import consulo.vcs.change.Change;
 
 import java.util.ArrayList;
 import java.util.HashMap;

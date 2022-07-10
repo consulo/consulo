@@ -56,6 +56,7 @@ module consulo.ide.api {
   requires transitive consulo.module.ui.api;
   requires transitive consulo.language.editor.refactoring.api;
   requires transitive consulo.web.browser.api;
+  requires transitive consulo.vcs.api;
 
   exports consulo.ide;
   exports consulo.ide.action;

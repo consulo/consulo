@@ -27,7 +27,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.JBScrollPane;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.text.DateFormatUtil;
+import consulo.application.util.DateFormatUtil;
 import consulo.ide.impl.idea.util.ui.*;
 import consulo.ide.impl.idea.vcs.log.VcsFullCommitDetails;
 import consulo.ide.impl.idea.vcs.log.VcsRef;

@@ -22,13 +22,13 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.patch;
 
-import consulo.virtualFileSystem.fileType.FileType;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
-import consulo.vcs.api.localize.VcsApiLocalize;
+import consulo.vcs.localize.VcsLocalize;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -46,7 +46,7 @@ public class PatchFileType implements FileType {
   @Override
   @Nonnull
   public LocalizeValue getDescription() {
-    return VcsApiLocalize.patchFileTypeDescription();
+    return VcsLocalize.patchFileTypeDescription();
   }
 
   @Override

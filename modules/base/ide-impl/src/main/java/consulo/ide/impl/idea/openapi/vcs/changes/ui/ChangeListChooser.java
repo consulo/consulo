@@ -17,9 +17,9 @@ package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangeList;
+import consulo.vcs.change.ChangeList;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListEditHandler;
-import consulo.ide.impl.idea.openapi.vcs.changes.LocalChangeList;
+import consulo.vcs.change.LocalChangeList;
 import consulo.ide.impl.idea.openapi.vcs.changes.LocalChangeListImpl;
 import consulo.ide.impl.idea.util.NullableConsumer;
 import javax.annotation.Nonnull;

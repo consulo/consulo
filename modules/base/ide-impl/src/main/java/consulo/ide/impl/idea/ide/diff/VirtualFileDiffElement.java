@@ -31,7 +31,7 @@ import consulo.project.Project;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.*;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.RefreshQueue;
+import consulo.virtualFileSystem.RefreshQueue;
 import consulo.navigation.Navigatable;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.LocalFileSystem;

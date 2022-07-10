@@ -20,7 +20,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.ide.actions.SettingsEntryPointAction;
 import consulo.application.util.concurrent.AppExecutorUtil;
-import consulo.ide.impl.idea.util.text.DateFormatUtil;
+import consulo.application.util.DateFormatUtil;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.updateSettings.UpdateSettings;
 import consulo.ide.impl.updateSettings.impl.PlatformOrPluginUpdateChecker;

@@ -26,7 +26,7 @@ import consulo.configurable.Configurable;
 import consulo.configurable.SearchableConfigurable;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
+import consulo.vcs.VcsBundle;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl;
 import consulo.ide.impl.idea.openapi.vcs.changes.IgnoreSettingsType;
 import consulo.ide.impl.idea.openapi.vcs.changes.IgnoredFileBean;

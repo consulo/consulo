@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
+import consulo.vcs.VcsKey;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -53,7 +53,7 @@ import consulo.index.io.EnumeratorStringDescriptor;
 import consulo.ide.impl.idea.util.io.PersistentHashMap;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.ide.impl.idea.util.text.DateFormatUtil;
+import consulo.application.util.DateFormatUtil;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.text.TextEditorProvider;
 import consulo.logging.Logger;

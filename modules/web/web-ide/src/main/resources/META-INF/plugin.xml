@@ -43,7 +43,7 @@
     <applicationService serviceInterface="consulo.ui.ex.IconDeferrer"
                         serviceImplementation="consulo.ide.impl.idea.ui.DummyIconDeferrer"/>
 
-    <applicationService serviceInterface="consulo.ide.impl.idea.openapi.vfs.newvfs.RefreshQueue"
+    <applicationService serviceInterface="consulo.virtualFileSystem.RefreshQueue"
                         serviceImplementation="consulo.ide.impl.vfs.newvfs.AsyncRefreshQueueImpl"/>
 
     <applicationService serviceInterface="consulo.ui.ex.action.ActionToolbarFactory"

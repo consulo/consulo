@@ -5,8 +5,12 @@ import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.application.util.registry.Registry;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager;
-import consulo.ide.impl.idea.openapi.vcs.history.VcsRevisionNumber;
+import consulo.vcs.ProjectLevelVcsManager;
+import consulo.vcs.change.LocalChangeList;
+import consulo.vcs.change.VcsDirtyScope;
+import consulo.vcs.history.VcsRevisionNumber;
+import consulo.vcs.change.Change;
+import consulo.vcs.change.ContentRevision;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.logging.Logger;
 

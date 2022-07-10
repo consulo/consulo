@@ -25,7 +25,7 @@ import consulo.ide.impl.idea.history.integration.LocalHistoryBundle;
 import consulo.document.Document;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.util.text.DateFormatUtil;
+import consulo.application.util.DateFormatUtil;
 
 public abstract class FileDifferenceModel {
   protected final Project myProject;

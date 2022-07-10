@@ -17,11 +17,11 @@ package consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman;
 
 import consulo.application.ApplicationManager;
 import consulo.ide.ServiceManager;
-import consulo.ide.impl.idea.openapi.diff.impl.patch.formove.FilePathComparator;
+import consulo.vcs.FilePathComparator;
 import consulo.project.Project;
 import consulo.language.content.FileIndexFacade;
-import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
-import consulo.ide.impl.idea.openapi.vcs.VcsDirectoryMapping;
+import consulo.vcs.AbstractVcs;
+import consulo.vcs.VcsDirectoryMapping;
 import consulo.ide.impl.idea.openapi.vcs.impl.DefaultVcsRootPolicy;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;

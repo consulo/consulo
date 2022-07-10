@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
+import consulo.vcs.AbstractVcs;
 import javax.annotation.Nonnull;
 
 import java.util.HashMap;

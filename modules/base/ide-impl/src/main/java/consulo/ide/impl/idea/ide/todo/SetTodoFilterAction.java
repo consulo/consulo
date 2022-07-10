@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.ide.todo;
 
 import consulo.application.AllIcons;
+import consulo.application.ui.util.TodoPanelSettings;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.todo.configurable.TodoConfigurable;
 import consulo.ui.ex.awt.action.CustomComponentAction;

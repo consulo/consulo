@@ -15,11 +15,11 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.shelf;
 
-import consulo.ide.impl.idea.openapi.vcs.FilePath;
-import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
-import consulo.ide.impl.idea.openapi.vcs.VcsException;
+import consulo.vcs.FilePath;
+import consulo.vcs.VcsBundle;
+import consulo.vcs.VcsException;
 import consulo.ide.impl.idea.openapi.vcs.changes.BinaryContentRevision;
-import consulo.ide.impl.idea.openapi.vcs.history.VcsRevisionNumber;
+import consulo.vcs.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.RawFileLoader;
 
 import javax.annotation.Nonnull;

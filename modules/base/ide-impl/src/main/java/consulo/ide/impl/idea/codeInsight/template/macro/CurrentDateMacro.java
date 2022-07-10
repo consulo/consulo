@@ -21,8 +21,8 @@ import consulo.language.editor.template.Expression;
 import consulo.language.editor.template.ExpressionContext;
 import consulo.language.editor.template.Result;
 import consulo.logging.Logger;
-import consulo.ide.impl.idea.openapi.util.Clock;
-import consulo.ide.impl.idea.util.text.DateFormatUtil;
+import consulo.util.lang.Clock;
+import consulo.application.util.DateFormatUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

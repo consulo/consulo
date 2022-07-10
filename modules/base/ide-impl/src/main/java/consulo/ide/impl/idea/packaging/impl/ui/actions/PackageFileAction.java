@@ -13,14 +13,14 @@ import consulo.document.FileDocumentManager;
 import consulo.project.Project;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
-import consulo.ide.impl.idea.openapi.util.Clock;
+import consulo.util.lang.Clock;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.wm.WindowManager;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactManager;
 import consulo.ide.impl.idea.packaging.impl.artifacts.ArtifactBySourceFileFinder;
-import consulo.ide.impl.idea.util.text.SyncDateFormat;
+import consulo.util.lang.SyncDateFormat;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

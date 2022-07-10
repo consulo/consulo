@@ -17,8 +17,8 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.vcs.FilePath;
-import consulo.ide.impl.idea.openapi.vcs.VcsShowConfirmationOption;
+import consulo.vcs.FilePath;
+import consulo.vcs.VcsShowConfirmationOption;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

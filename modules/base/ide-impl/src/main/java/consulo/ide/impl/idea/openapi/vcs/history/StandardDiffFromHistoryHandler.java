@@ -17,7 +17,10 @@ package consulo.ide.impl.idea.openapi.vcs.history;
 
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.vcs.FilePath;
+import consulo.vcs.FilePath;
+import consulo.vcs.history.DiffFromHistoryHandler;
+import consulo.vcs.history.VcsFileRevision;
+
 import javax.annotation.Nonnull;
 
 public class StandardDiffFromHistoryHandler implements DiffFromHistoryHandler {

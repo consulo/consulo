@@ -20,13 +20,16 @@ import consulo.dataContext.GetDataRule;
 import consulo.dataContext.DataProvider;
 import consulo.util.dataholder.Key;
 import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangeList;
+import consulo.vcs.change.ChangeList;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangeListByDateComparator;
-import consulo.ide.impl.idea.openapi.vcs.versionBrowser.CommittedChangeList;
+import consulo.vcs.history.VcsFileRevision;
+import consulo.vcs.versionBrowser.CommittedChangeList;
 import consulo.ide.impl.idea.openapi.vcs.versionBrowser.VcsRevisionNumberAware;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.vcs.history.VcsRevisionNumber;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -17,9 +17,9 @@ package consulo.ide.impl.idea.ide.todo;
 
 import consulo.project.Project;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.vcs.changes.Change;
+import consulo.vcs.change.Change;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManager;
-import consulo.ide.impl.idea.openapi.vcs.changes.LocalChangeList;
+import consulo.vcs.change.LocalChangeList;
 import consulo.ide.impl.idea.openapi.vcs.checkin.TodoCheckinHandlerWorker;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFile;

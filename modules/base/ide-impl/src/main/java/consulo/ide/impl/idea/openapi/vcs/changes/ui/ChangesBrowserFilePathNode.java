@@ -19,8 +19,8 @@ package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 import consulo.application.AllIcons;
 import consulo.ide.impl.idea.openapi.util.SystemInfoRt;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.vcs.FilePath;
-import consulo.ide.impl.idea.openapi.vcs.changes.Change;
+import consulo.vcs.FilePath;
+import consulo.vcs.change.Change;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangesUtil;
 import consulo.ui.ex.SimpleTextAttributes;
 

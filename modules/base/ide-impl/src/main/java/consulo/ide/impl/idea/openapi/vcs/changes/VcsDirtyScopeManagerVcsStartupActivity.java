@@ -19,6 +19,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.openapi.vcs.impl.VcsInitObject;
 import consulo.ide.impl.idea.openapi.vcs.impl.VcsStartupActivity;
 import consulo.project.Project;
+import consulo.vcs.change.VcsDirtyScopeManager;
 
 import javax.annotation.Nonnull;
 

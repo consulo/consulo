@@ -1,28 +1,26 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.vfs.newvfs;
 
-import consulo.ide.impl.idea.codeInsight.daemon.impl.FileStatusMap;
-import consulo.application.WriteAction;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.virtualFileSystem.event.AsyncFileListener;
-import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileManager;
-import consulo.ide.impl.idea.openapi.vfs.ex.VirtualFileManagerEx;
-import consulo.ide.impl.idea.openapi.vfs.impl.local.LocalFileSystemImpl;
-import consulo.virtualFileSystem.event.VFileEvent;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.RefreshWorker;
-import consulo.application.util.Semaphore;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
 import consulo.application.TransactionId;
+import consulo.application.WriteAction;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.internal.TransactionGuardEx;
+import consulo.application.util.Semaphore;
+import consulo.ide.impl.idea.codeInsight.daemon.impl.FileStatusMap;
+import consulo.ide.impl.idea.openapi.vfs.ex.VirtualFileManagerEx;
+import consulo.ide.impl.idea.openapi.vfs.impl.local.LocalFileSystemImpl;
+import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.RefreshWorker;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
+import consulo.ui.ModalityState;
+import consulo.virtualFileSystem.*;
+import consulo.virtualFileSystem.event.AsyncFileListener;
+import consulo.virtualFileSystem.event.VFileEvent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -51,7 +49,7 @@ public class RefreshSessionImpl extends RefreshSession {
   private final TransactionId myTransaction;
   private boolean myLaunched;
 
-  public RefreshSessionImpl(boolean async, boolean recursive, @Nullable Runnable finishRunnable, @Nonnull IdeaModalityState context) {
+  public RefreshSessionImpl(boolean async, boolean recursive, @Nullable Runnable finishRunnable, @Nonnull ModalityState context) {
     myIsAsync = async;
     myIsRecursive = recursive;
     myFinishRunnable = finishRunnable;

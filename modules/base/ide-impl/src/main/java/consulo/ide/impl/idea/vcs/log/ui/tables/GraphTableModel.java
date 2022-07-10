@@ -5,7 +5,7 @@ import consulo.util.lang.EmptyRunnable;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.NotNullFunction;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.text.DateFormatUtil;
+import consulo.application.util.DateFormatUtil;
 import consulo.ide.impl.idea.vcs.log.*;
 import consulo.ide.impl.idea.vcs.log.data.*;
 import consulo.ide.impl.idea.vcs.log.impl.VcsLogUtil;

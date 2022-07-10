@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.checkin;
 
+import consulo.application.ui.util.TodoPanelSettings;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.todo.*;
 import consulo.ui.ex.action.ActionManager;
@@ -33,12 +34,12 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.util.lang.ref.Ref;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.vcs.CheckinProjectPanel;
-import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
-import consulo.ide.impl.idea.openapi.vcs.VcsConfiguration;
-import consulo.ide.impl.idea.openapi.vcs.changes.Change;
-import consulo.ide.impl.idea.openapi.vcs.changes.CommitExecutor;
-import consulo.ide.impl.idea.openapi.vcs.ui.RefreshableOnComponent;
+import consulo.vcs.checkin.CheckinProjectPanel;
+import consulo.vcs.VcsBundle;
+import consulo.vcs.VcsConfiguration;
+import consulo.vcs.change.Change;
+import consulo.vcs.change.CommitExecutor;
+import consulo.vcs.ui.RefreshableOnComponent;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.awt.LinkLabel;
@@ -47,7 +48,9 @@ import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ide.impl.idea.util.Consumer;
 import consulo.util.lang.function.PairConsumer;
-import consulo.ide.impl.idea.util.text.DateFormatUtil;
+import consulo.application.util.DateFormatUtil;
+import consulo.vcs.checkin.CheckinHandler;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

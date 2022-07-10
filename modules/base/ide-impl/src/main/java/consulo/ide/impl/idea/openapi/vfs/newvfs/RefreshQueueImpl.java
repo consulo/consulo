@@ -10,6 +10,9 @@ import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
 import consulo.application.util.registry.Registry;
+import consulo.ui.ModalityState;
+import consulo.virtualFileSystem.RefreshQueue;
+import consulo.virtualFileSystem.RefreshSession;
 import consulo.virtualFileSystem.event.AsyncFileListener;
 import consulo.virtualFileSystem.VfsBundle;
 import consulo.virtualFileSystem.VirtualFile;
@@ -205,7 +208,7 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
 
   @Nonnull
   @Override
-  public RefreshSession createSession(boolean async, boolean recursively, @Nullable Runnable finishRunnable, @Nonnull IdeaModalityState state) {
+  public RefreshSession createSession(boolean async, boolean recursively, @Nullable Runnable finishRunnable, @Nonnull ModalityState state) {
     return new RefreshSessionImpl(async, recursively, finishRunnable, state);
   }
 

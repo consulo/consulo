@@ -24,10 +24,11 @@ import consulo.project.Project;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.application.util.function.Computable;
-import consulo.ide.impl.idea.openapi.vcs.FilePath;
-import consulo.ide.impl.idea.openapi.vcs.changes.ContentRevision;
+import consulo.vcs.FilePath;
+import consulo.vcs.change.ContentRevision;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.RelativePathCalculator;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.vcs.internal.VcsPathPresenter;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -52,25 +53,22 @@ public class ModuleVcsPathPresenter extends VcsPathPresenter {
   @Override
   public String getPresentableRelativePathFor(final VirtualFile file) {
     if (file == null) return "";
-    return ApplicationManager.getApplication().runReadAction(new Computable<String>() {
-      @Override
-      public String compute() {
-        ProjectFileIndex fileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
-        Module module = fileIndex.getModuleForFile(file, false);
-        VirtualFile contentRoot = fileIndex.getContentRootForFile(file, false);
-        if (module == null || contentRoot == null) return file.getPresentableUrl();
-        StringBuilder result = new StringBuilder();
-        result.append("[");
-        result.append(module.getName());
-        result.append("] ");
-        result.append(contentRoot.getName());
-        String relativePath = VfsUtilCore.getRelativePath(file, contentRoot, File.separatorChar);
-        if (!relativePath.isEmpty()) {
-          result.append(File.separatorChar);
-          result.append(relativePath);
-        }
-        return result.toString();
+    return ApplicationManager.getApplication().runReadAction((Computable<String>)() -> {
+      ProjectFileIndex fileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
+      Module module = fileIndex.getModuleForFile(file, false);
+      VirtualFile contentRoot = fileIndex.getContentRootForFile(file, false);
+      if (module == null || contentRoot == null) return file.getPresentableUrl();
+      StringBuilder result = new StringBuilder();
+      result.append("[");
+      result.append(module.getName());
+      result.append("] ");
+      result.append(contentRoot.getName());
+      String relativePath = VfsUtilCore.getRelativePath(file, contentRoot, File.separatorChar);
+      if (!relativePath.isEmpty()) {
+        result.append(File.separatorChar);
+        result.append(relativePath);
       }
+      return result.toString();
     });
   }
 

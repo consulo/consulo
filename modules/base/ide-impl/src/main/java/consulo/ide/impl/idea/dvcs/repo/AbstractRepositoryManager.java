@@ -1,8 +1,8 @@
 package consulo.ide.impl.idea.dvcs.repo;
 
 import consulo.application.util.function.ThrowableComputable;
-import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
-import consulo.ide.impl.idea.openapi.vcs.FilePath;
+import consulo.vcs.AbstractVcs;
+import consulo.vcs.FilePath;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangesUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

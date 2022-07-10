@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.impl;
 
-import consulo.ide.impl.idea.openapi.vcs.FilePath;
+import consulo.vcs.FilePath;
 import consulo.virtualFileSystem.VirtualFile;
 
 public enum VcsBackgroundableActions {

@@ -65,7 +65,7 @@ import consulo.util.lang.SystemProperties;
 import consulo.ide.impl.idea.util.concurrency.InvokerImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.SmartHashSet;
-import consulo.ide.impl.idea.util.text.DateFormatUtil;
+import consulo.application.util.DateFormatUtil;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

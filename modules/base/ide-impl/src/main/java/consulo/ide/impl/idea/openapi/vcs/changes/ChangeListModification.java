@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
+import consulo.vcs.change.Change;
+import consulo.vcs.change.LocalChangeList;
+
 import javax.annotation.Nonnull;
 
 public interface ChangeListModification {

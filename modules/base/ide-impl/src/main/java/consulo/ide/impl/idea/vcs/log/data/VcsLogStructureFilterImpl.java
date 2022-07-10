@@ -17,16 +17,16 @@ package consulo.ide.impl.idea.vcs.log.data;
 
 import consulo.util.lang.function.Condition;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.vcs.FilePath;
-import consulo.ide.impl.idea.openapi.vcs.changes.Change;
-import consulo.ide.impl.idea.openapi.vcs.changes.ContentRevision;
+import consulo.vcs.FilePath;
+import consulo.vcs.change.Change;
+import consulo.vcs.change.ContentRevision;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.VcsCommitMetadata;
 import consulo.ide.impl.idea.vcs.log.VcsFullCommitDetails;
 import consulo.ide.impl.idea.vcs.log.VcsLogDetailsFilter;
 import consulo.ide.impl.idea.vcs.log.VcsLogStructureFilter;
-import consulo.ide.impl.idea.vcsUtil.VcsUtil;
+import consulo.vcs.util.VcsUtil;
 import javax.annotation.Nonnull;
 
 import java.util.Collection;

@@ -24,7 +24,7 @@ import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.JBTextArea;
 import consulo.ide.impl.idea.ui.components.panels.HorizontalLayout;
 import consulo.ide.impl.idea.ui.components.panels.VerticalLayout;
-import consulo.ide.impl.idea.util.text.DateFormatUtil;
+import consulo.application.util.DateFormatUtil;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.BorderLayoutPanel;

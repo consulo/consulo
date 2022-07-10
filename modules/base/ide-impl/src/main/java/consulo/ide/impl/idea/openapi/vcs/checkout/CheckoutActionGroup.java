@@ -19,7 +19,7 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.openapi.vcs.CheckoutProvider;
+import consulo.vcs.CheckoutProvider;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

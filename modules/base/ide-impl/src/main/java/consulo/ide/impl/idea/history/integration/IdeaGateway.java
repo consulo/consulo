@@ -34,7 +34,7 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
-import consulo.ide.impl.idea.openapi.util.Clock;
+import consulo.util.lang.Clock;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;

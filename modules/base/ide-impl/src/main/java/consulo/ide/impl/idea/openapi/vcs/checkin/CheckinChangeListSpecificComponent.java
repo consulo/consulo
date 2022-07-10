@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.checkin;
 
-import consulo.ide.impl.idea.openapi.vcs.changes.LocalChangeList;
-import consulo.ide.impl.idea.openapi.vcs.ui.RefreshableOnComponent;
+import consulo.vcs.change.LocalChangeList;
+import consulo.vcs.ui.RefreshableOnComponent;
 
 public interface CheckinChangeListSpecificComponent extends RefreshableOnComponent {
   void onChangeListSelected(final LocalChangeList list);

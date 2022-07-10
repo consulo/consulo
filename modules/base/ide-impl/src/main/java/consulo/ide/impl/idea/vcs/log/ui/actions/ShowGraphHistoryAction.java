@@ -21,14 +21,14 @@ import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import consulo.application.util.registry.Registry;
-import consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager;
+import consulo.vcs.ProjectLevelVcsManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogData;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogStructureFilterImpl;
 import consulo.ide.impl.idea.vcs.log.impl.VcsLogContentProvider;
 import consulo.ide.impl.idea.vcs.log.impl.VcsLogManager;
 import consulo.ide.impl.idea.vcs.log.impl.VcsProjectLog;
-import consulo.ide.impl.idea.vcsUtil.VcsUtil;
+import consulo.vcs.util.VcsUtil;
 
 import java.util.Collections;
 

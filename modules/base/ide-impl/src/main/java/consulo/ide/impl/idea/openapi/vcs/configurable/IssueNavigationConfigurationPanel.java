@@ -23,7 +23,7 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.ide.impl.idea.openapi.vcs.IssueNavigationConfiguration;
 import consulo.ide.impl.idea.openapi.vcs.IssueNavigationLink;
-import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
+import consulo.vcs.VcsBundle;
 import consulo.ui.ex.awt.AnActionButton;
 import consulo.ui.ex.awt.AnActionButtonRunnable;
 import consulo.ui.ex.awt.ToolbarDecorator;

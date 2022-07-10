@@ -29,7 +29,7 @@ import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
+import consulo.vcs.VcsBundle;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

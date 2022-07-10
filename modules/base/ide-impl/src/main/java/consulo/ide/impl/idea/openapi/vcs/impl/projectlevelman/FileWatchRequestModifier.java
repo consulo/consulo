@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman;
 
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.vcs.VcsDirectoryMapping;
+import consulo.vcs.VcsDirectoryMapping;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.logging.Logger;
 import consulo.util.collection.Maps;

@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
-import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
-import consulo.ide.impl.idea.openapi.vcs.versionBrowser.CommittedChangeList;
+import consulo.vcs.VcsBundle;
+import consulo.vcs.versionBrowser.CommittedChangeList;
 
 import java.util.Comparator;
 

@@ -16,23 +16,27 @@
 
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
-import consulo.ide.impl.idea.openapi.util.Factory;
-import consulo.ide.impl.idea.openapi.vcs.FilePath;
-import consulo.ide.impl.idea.openapi.vcs.VcsKey;
+import consulo.vcs.FilePath;
+import consulo.vcs.VcsKey;
+import consulo.vcs.change.*;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.swing.*;
+import java.util.function.Supplier;
 
 /**
  * @author yole
  */
 public class EmptyChangelistBuilder implements ChangelistBuilder {
+  @Override
   public void processChange(final Change change, VcsKey vcsKey) {
   }
 
+  @Override
   public void processChangeInList(final Change change, @javax.annotation.Nullable final ChangeList changeList, VcsKey vcsKey) {
   }
 
+  @Override
   public void processChangeInList(final Change change, final String changeListName, VcsKey vcsKey) {
   }
 
@@ -40,33 +44,43 @@ public class EmptyChangelistBuilder implements ChangelistBuilder {
   public void removeRegisteredChangeFor(FilePath path) {
   }
 
+  @Override
   public void processUnversionedFile(final VirtualFile file) {
   }
 
+  @Override
   public void processLocallyDeletedFile(final FilePath file) {
   }
 
+  @Override
   public void processLocallyDeletedFile(LocallyDeletedChange locallyDeletedChange) {
   }
 
+  @Override
   public void processModifiedWithoutCheckout(final VirtualFile file) {
   }
 
+  @Override
   public void processIgnoredFile(final VirtualFile file) {
   }
 
+  @Override
   public void processLockedFolder(final VirtualFile file) {
   }
 
+  @Override
   public void processLogicallyLockedFolder(VirtualFile file, LogicalLock logicalLock) {
   }
 
+  @Override
   public void processSwitchedFile(final VirtualFile file, final String branch, final boolean recursive) {
   }
 
+  @Override
   public void processRootSwitch(VirtualFile file, String branch) {
   }
 
+  @Override
   public boolean reportChangesOutsideProject() {
     return false;
   }
@@ -76,7 +90,7 @@ public class EmptyChangelistBuilder implements ChangelistBuilder {
   }
 
   @Override
-  public void reportAdditionalInfo(Factory<JComponent> infoComponent) {
+  public void reportAdditionalInfo(Supplier<JComponent> infoComponent) {
   }
 
   public void reportWarningMessage(final String message) {

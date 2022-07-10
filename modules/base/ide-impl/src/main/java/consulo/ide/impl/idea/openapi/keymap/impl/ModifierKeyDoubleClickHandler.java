@@ -25,7 +25,7 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.event.AnActionListener;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.ide.impl.idea.openapi.util.Clock;
+import consulo.util.lang.Clock;
 import consulo.util.lang.Couple;
 import consulo.application.util.SystemInfo;
 import consulo.dataContext.DataContext;

@@ -19,8 +19,9 @@ import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.openapi.vcs.*;
 import consulo.component.messagebus.MessageBusConnection;
+import consulo.vcs.*;
+
 import javax.annotation.Nonnull;
 
 import java.util.Collections;

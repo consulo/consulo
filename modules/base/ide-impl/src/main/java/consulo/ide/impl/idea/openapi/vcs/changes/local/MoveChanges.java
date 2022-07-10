@@ -15,10 +15,10 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.local;
 
-import consulo.ide.impl.idea.openapi.vcs.changes.Change;
+import consulo.vcs.change.Change;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListListener;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListWorker;
-import consulo.ide.impl.idea.openapi.vcs.changes.LocalChangeList;
+import consulo.vcs.change.LocalChangeList;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.util.collection.MultiMap;
 

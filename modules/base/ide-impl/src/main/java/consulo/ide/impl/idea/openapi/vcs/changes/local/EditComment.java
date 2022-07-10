@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes.local;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListListener;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListWorker;
-import consulo.ide.impl.idea.openapi.vcs.changes.LocalChangeList;
+import consulo.vcs.change.LocalChangeList;
 import consulo.ide.impl.idea.util.EventDispatcher;
 
 public class EditComment implements ChangeListCommand {
