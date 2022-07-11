@@ -23,6 +23,7 @@
 package consulo.ide.impl.idea.openapi.fileTypes.ex;
 
 import consulo.ui.image.Image;
+import consulo.virtualFileSystem.fileType.FileTypeIdentifiableByVirtualFile;
 
 import javax.annotation.Nonnull;
 

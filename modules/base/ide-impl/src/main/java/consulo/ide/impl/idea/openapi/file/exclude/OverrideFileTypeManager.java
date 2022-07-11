@@ -12,7 +12,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.plain.PlainTextFileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.ide.impl.idea.openapi.fileTypes.ex.FakeFileType;
-import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeIdentifiableByVirtualFile;
+import consulo.virtualFileSystem.fileType.FileTypeIdentifiableByVirtualFile;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.UIUtil;
 import jakarta.inject.Singleton;

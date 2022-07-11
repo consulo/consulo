@@ -17,7 +17,7 @@
 package consulo.ide.impl.intelliLang.inject;
 
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeIdentifiableByVirtualFile;
+import consulo.virtualFileSystem.fileType.FileTypeIdentifiableByVirtualFile;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.NullableFunction;

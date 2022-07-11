@@ -23,7 +23,7 @@ import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.fileTypes.*;
 import consulo.ide.impl.idea.openapi.fileTypes.ex.ExternalizableFileType;
 import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeChooser;
-import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeIdentifiableByVirtualFile;
+import consulo.virtualFileSystem.fileType.FileTypeIdentifiableByVirtualFile;
 import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeManagerEx;
 import consulo.ide.impl.idea.openapi.options.BaseSchemeProcessor;
 import consulo.ide.impl.idea.openapi.options.SchemesManager;

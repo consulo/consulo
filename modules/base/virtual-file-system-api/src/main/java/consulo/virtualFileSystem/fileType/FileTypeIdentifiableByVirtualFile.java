@@ -20,11 +20,10 @@
  * Date: 29.01.2004
  * Time: 21:10:56
  */
-package consulo.ide.impl.idea.openapi.fileTypes.ex;
+package consulo.virtualFileSystem.fileType;
 
 import consulo.util.collection.ArrayFactory;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.fileType.FileType;
 
 public interface FileTypeIdentifiableByVirtualFile extends FileType {
   public static final FileTypeIdentifiableByVirtualFile[] EMPTY_ARRAY = new FileTypeIdentifiableByVirtualFile[0];
