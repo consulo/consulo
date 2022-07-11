@@ -170,7 +170,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.codeInsight;
   exports consulo.ide.impl.codeInsight.daemon.impl;
   exports consulo.ide.impl.codeInsight.navigation.actions;
-  exports consulo.ide.impl.codeInsight.template.impl;
   exports consulo.ide.impl.codeInsight.template.postfix.settings;
   exports consulo.ide.impl.codeInspection.ui;
   exports consulo.ide.impl.command;

@@ -14,8 +14,5 @@
   - limitations under the License.
   -->
 <consulo-plugin>
-  <extensionPoints>
-    <extensionPoint name="bundledQuickListsProvider" interface="consulo.ide.impl.idea.openapi.actionSystem.impl.BundledQuickListsProvider"/>
-    <extensionPoint name="bundleLiveTemplateSet" beanClass="consulo.ide.impl.codeInsight.template.impl.BundleLiveTemplateSetEP"/>
-  </extensionPoints>
+
 </consulo-plugin>

@@ -18,13 +18,12 @@ package consulo.ide.impl.idea.codeInsight.template.impl;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.component.ProcessCanceledException;
 import consulo.component.persist.*;
 import consulo.component.util.localize.AbstractBundle;
 import consulo.container.classloader.PluginClassLoader;
 import consulo.ide.ServiceManager;
-import consulo.ide.impl.codeInsight.template.impl.BundleLiveTemplateSetEP;
-import consulo.ide.impl.idea.openapi.application.ex.DecodeDefaultsUtil;
 import consulo.ide.impl.idea.openapi.options.BaseSchemeProcessor;
 import consulo.ide.impl.idea.openapi.options.SchemesManager;
 import consulo.ide.impl.idea.openapi.options.SchemesManagerFactory;
@@ -280,7 +279,7 @@ public class TemplateSettings implements PersistentStateComponent<TemplateSettin
       }
     }
 
-    loadTemplates();
+    loadDefaultLiveTemplates();
   }
 
   public static TemplateSettings getInstance() {
@@ -444,17 +443,19 @@ public class TemplateSettings implements PersistentStateComponent<TemplateSettin
     TemplateImpl template = new TemplateImpl(key, string, group);
     template.setId(id);
     template.setDescription(description);
-    if (TAB.equals(shortcut)) {
-      template.setShortcutChar(TAB_CHAR);
-    }
-    else if (ENTER.equals(shortcut)) {
-      template.setShortcutChar(ENTER_CHAR);
-    }
-    else if (SPACE.equals(shortcut)) {
-      template.setShortcutChar(SPACE_CHAR);
-    }
-    else {
-      template.setShortcutChar(DEFAULT_CHAR);
+    switch (shortcut) {
+      case TAB:
+        template.setShortcutChar(TAB_CHAR);
+        break;
+      case ENTER:
+        template.setShortcutChar(ENTER_CHAR);
+        break;
+      case SPACE:
+        template.setShortcutChar(SPACE_CHAR);
+        break;
+      default:
+        template.setShortcutChar(DEFAULT_CHAR);
+        break;
     }
     if (isDefault) {
       myDefaultTemplates.put(TemplateKey.keyOf(template), template);
@@ -462,75 +463,50 @@ public class TemplateSettings implements PersistentStateComponent<TemplateSettin
     return template;
   }
 
-  private void loadTemplates() {
-    loadBundledLiveTemplateSets();
-    loadDefaultLiveTemplates();
-  }
-
-  private void loadBundledLiveTemplateSets() {
-    try {
-      for (BundleLiveTemplateSetEP it : BundleLiveTemplateSetEP.EP_NAME.getExtensionList()) {
-        ClassLoader loaderForClass = it.getLoaderForClass();
-        InputStream inputStream = loaderForClass.getResourceAsStream(it.path + ".xml");
-        if (inputStream != null) {
-          TemplateGroup group = readTemplateFile(JDOMUtil.loadDocument(inputStream), it.path, true, it.register, loaderForClass);
-          if (group != null && group.getReplace() != null) {
-            Collection<TemplateImpl> templates = myTemplates.get(group.getReplace());
-            for (TemplateImpl template : templates) {
-              removeTemplate(template);
-            }
-          }
-        }
-        else {
-          LOG.warn("Cannot find path for '" + it.path + "'. Plugin: " + it.getPluginDescriptor().getPluginId());
-        }
-      }
-    }
-    catch (ProcessCanceledException e) {
-      throw e;
-    }
-    catch (Exception e) {
-      LOG.error(e);
-    }
-  }
-
   private void loadDefaultLiveTemplates() {
-    try {
-      for (DefaultLiveTemplatesProvider provider : DefaultLiveTemplatesProvider.EP_NAME.getExtensionList()) {
+    Application.get().getExtensionPoint(DefaultLiveTemplatesProvider.class).forEachExtensionSafe(provider -> {
+      try {
         for (String defTemplate : provider.getDefaultLiveTemplateFiles()) {
           readDefTemplate(provider, defTemplate, true);
         }
-        try {
-          String[] hidden = provider.getHiddenLiveTemplateFiles();
-          if (hidden != null) {
-            for (String s : hidden) {
-              readDefTemplate(provider, s, false);
-            }
+        
+        String[] hidden = provider.getHiddenLiveTemplateFiles();
+        if (hidden != null) {
+          for (String s : hidden) {
+            readDefTemplate(provider, s, false);
           }
         }
-        catch (AbstractMethodError ignore) {
-        }
       }
-    }
-    catch (ProcessCanceledException e) {
-      throw e;
-    }
-    catch (Exception e) {
-      LOG.error(e);
-    }
+      catch (ProcessCanceledException e) {
+        throw e;
+      }
+      catch (Exception e) {
+        LOG.error(e);
+      }
+    });
+
   }
 
-  @Deprecated
-  @SuppressWarnings("deprecation")
   private void readDefTemplate(DefaultLiveTemplatesProvider provider, String defTemplate, boolean registerTemplate) throws JDOMException, InvalidDataException, IOException {
-    InputStream inputStream = DecodeDefaultsUtil.getDefaultsInputStream(provider, defTemplate);
-    if (inputStream != null) {
-      TemplateGroup group = readTemplateFile(JDOMUtil.loadDocument(inputStream), defTemplate, true, registerTemplate, provider.getClass().getClassLoader());
-      if (group != null && group.getReplace() != null) {
-        Collection<TemplateImpl> templates = myTemplates.get(group.getReplace());
-        for (TemplateImpl template : templates) {
-          removeTemplate(template);
-        }
+    String xmlFilePath = defTemplate;
+    if (!xmlFilePath.endsWith(".xml")) {
+      xmlFilePath = xmlFilePath + ".xml";
+    }
+
+    InputStream inputStream;
+    try {
+      inputStream = provider.getClass().getResourceAsStream(xmlFilePath);
+    }
+    catch (Exception e) {
+      LOG.warn(e);
+      return;
+    }
+
+    TemplateGroup group = readTemplateFile(JDOMUtil.loadDocument(inputStream), defTemplate, true, registerTemplate, provider.getClass().getClassLoader());
+    if (group != null && group.getReplace() != null) {
+      Collection<TemplateImpl> templates = myTemplates.get(group.getReplace());
+      for (TemplateImpl template : templates) {
+        removeTemplate(template);
       }
     }
   }

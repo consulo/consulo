@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.actionSystem.impl;
+package consulo.ui.ex.action;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
@@ -26,8 +26,6 @@ import javax.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface BundledQuickListsProvider {
-  ExtensionPointName<BundledQuickListsProvider> EP_NAME = ExtensionPointName.create(BundledQuickListsProvider.class);
-
   /**
    * Provides custom bundled actions quick lists.
    *

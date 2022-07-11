@@ -18,22 +18,19 @@ package consulo.ide.impl.idea.openapi.actionSystem.ex;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.StoragePathMacros;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.actions.QuickSwitchSchemeAction;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.BundledQuickListsProvider;
 import consulo.ide.impl.idea.openapi.options.BaseSchemeProcessor;
 import consulo.ide.impl.idea.openapi.options.SchemesManager;
 import consulo.ide.impl.idea.openapi.options.SchemesManagerFactory;
-import consulo.ide.impl.idea.openapi.util.JDOMUtil;
-import consulo.ide.impl.idea.util.PathUtil;
 import consulo.project.Project;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.action.*;
+import consulo.util.io.PathUtil;
+import consulo.util.jdom.JDOMUtil;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -59,7 +56,7 @@ public class QuickListsManager {
   private final SchemesManager<QuickList, QuickList> mySchemesManager;
 
   @Inject
-  public QuickListsManager(@Nonnull ActionManager actionManager, @Nonnull SchemesManagerFactory schemesManagerFactory) {
+  public QuickListsManager(@Nonnull Application application, @Nonnull ActionManager actionManager, @Nonnull SchemesManagerFactory schemesManagerFactory) {
     myActionManager = actionManager;
     mySchemesManager = schemesManagerFactory.createSchemesManager(FILE_SPEC, new BaseSchemeProcessor<QuickList, QuickList>() {
       @Nonnull
@@ -82,7 +79,7 @@ public class QuickListsManager {
       }
     }, RoamingType.DEFAULT);
 
-    for (BundledQuickListsProvider provider : BundledQuickListsProvider.EP_NAME.getExtensionList()) {
+    application.getExtensionPoint(BundledQuickListsProvider.class).forEachExtensionSafe(provider -> {
       for (final String path : provider.getBundledListsRelativePaths()) {
         mySchemesManager.loadBundledScheme(path, provider, element -> {
           QuickList item = createItem(element);
@@ -92,7 +89,7 @@ public class QuickListsManager {
           return item;
         });
       }
-    }
+    });
     mySchemesManager.loadSchemes();
     registerActions();
   }

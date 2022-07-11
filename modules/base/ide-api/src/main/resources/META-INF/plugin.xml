@@ -153,13 +153,6 @@
                     interface="consulo.ide.impl.idea.openapi.fileEditor.impl.http.RemoteFileEditorActionProvider"/>
 
 
-    <extensionPoint name="toolWindow" beanClass="consulo.ide.impl.idea.openapi.wm.ToolWindowEP">
-      <with attribute="factoryClass" implements="consulo.project.ui.wm.ToolWindowFactory"/>
-      <with attribute="conditionClass" implements="consulo.util.lang.function.Condition"/>
-    </extensionPoint>
-
-    <extensionPoint name="tipAndTrick" beanClass="consulo.ide.impl.idea.ide.util.TipAndTrickBean"/>
-
     <extensionPoint name="checkinHandlerFactory" interface="consulo.ide.impl.idea.openapi.vcs.checkin.CheckinHandlerFactory"/>
 
     <extensionPoint name="writingAccessProvider" area="PROJECT" interface="consulo.virtualFileSystem.WritingAccessProvider"/>
@@ -965,10 +958,7 @@
 
     <extensionPoint name="predefinedCodeStyle" interface="consulo.language.codeStyle.PredefinedCodeStyle"/>
 
-    <extensionPoint name="semContributor"
-                    beanClass="consulo.language.sem.SemContributorEP" area="PROJECT">
-      <with attribute="implementation" implements="consulo.language.sem.SemContributor"/>
-    </extensionPoint>
+
 
     <extensionPoint name="analyzeStacktraceFilter" interface="consulo.execution.ui.console.Filter" area="PROJECT"/>
 

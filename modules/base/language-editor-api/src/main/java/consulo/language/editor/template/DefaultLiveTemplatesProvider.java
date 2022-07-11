@@ -18,8 +18,8 @@ package consulo.language.editor.template;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -27,13 +27,14 @@ import javax.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface DefaultLiveTemplatesProvider {
-  ExtensionPointName<DefaultLiveTemplatesProvider> EP_NAME = ExtensionPointName.create(DefaultLiveTemplatesProvider.class);
-
+  @Nonnull
   String[] getDefaultLiveTemplateFiles();
 
   /**
-   * @return paths to resources, without .xml extension (e.g. /templates/foo)
+   * @return paths to resources (e.g. /templates/foo.xml)
    */
   @Nullable
-  String[] getHiddenLiveTemplateFiles();
+  default String[] getHiddenLiveTemplateFiles() {
+    return null;
+  }
 }
