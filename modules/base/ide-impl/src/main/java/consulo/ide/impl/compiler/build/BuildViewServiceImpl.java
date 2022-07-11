@@ -11,7 +11,7 @@ import consulo.ide.impl.idea.compiler.impl.CompilerPropertiesAction;
 import consulo.compiler.ExitStatus;
 import consulo.ide.impl.idea.compiler.progress.BuildViewService;
 import consulo.ide.impl.idea.compiler.progress.ModuleLinkFilter;
-import consulo.ide.impl.idea.execution.filters.RegexpFilter;
+import consulo.execution.ui.console.RegexpFilter;
 import consulo.ide.impl.idea.execution.filters.UrlFilter;
 import consulo.compiler.CompilerMessage;
 import consulo.compiler.CompilerMessageCategory;

@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.execution.filters;
+package consulo.execution.ui.console;
 
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.NullableLazyValue;
+import consulo.util.lang.lazy.LazyValue;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -30,16 +30,16 @@ import javax.annotation.Nullable;
  * from kotlin
  */
 public class LazyFileHyperlinkInfo extends FileHyperlinkInfoBase {
-  private final NullableLazyValue<VirtualFile> myFile;
+  private final LazyValue<VirtualFile> myFile;
 
   public LazyFileHyperlinkInfo(@Nonnull Project project, String filePath, int line, int column) {
     super(project, line, column);
-    myFile = NullableLazyValue.createValue(() -> LocalFileSystem.getInstance().refreshAndFindFileByPath(filePath));
+    myFile = LazyValue.nullable(() -> LocalFileSystem.getInstance().refreshAndFindFileByPath(filePath));
   }
 
   @Nullable
   @Override
   protected VirtualFile getVirtualFile() {
-    return myFile.getValue();
+    return myFile.get();
   }
 }

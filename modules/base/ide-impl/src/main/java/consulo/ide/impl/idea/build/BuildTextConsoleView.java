@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.build;
 
 import consulo.ide.impl.idea.build.events.*;
 import consulo.execution.ui.console.Filter;
-import consulo.ide.impl.idea.execution.filters.LazyFileHyperlinkInfo;
+import consulo.execution.ui.console.LazyFileHyperlinkInfo;
 import consulo.ide.impl.idea.execution.impl.ConsoleViewImpl;
 import consulo.execution.process.AnsiEscapeDecoder;
 import consulo.process.ProcessOutputTypes;

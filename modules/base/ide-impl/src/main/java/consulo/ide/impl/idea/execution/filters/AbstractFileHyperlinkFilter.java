@@ -5,6 +5,7 @@ import consulo.application.ReadAction;
 import consulo.application.WriteAction;
 import consulo.execution.ui.console.Filter;
 import consulo.execution.ui.console.HyperlinkInfo;
+import consulo.execution.ui.console.OpenFileHyperlinkInfo;
 import consulo.project.Project;
 import consulo.module.content.ProjectFileIndex;
 import consulo.util.lang.ref.Ref;

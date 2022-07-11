@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.execution.filters;
+package consulo.execution.ui.console;
 
-import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.navigation.OpenFileDescriptor;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -25,8 +25,8 @@ import javax.annotation.Nullable;
 public final class OpenFileHyperlinkInfo extends FileHyperlinkInfoBase {
   private final VirtualFile myVirtualFile;
 
-  public OpenFileHyperlinkInfo(@Nonnull OpenFileDescriptorImpl descriptor) {
-    this(descriptor.getProject(), descriptor.getFile(), descriptor.getLine(), descriptor.getColumn());
+  public OpenFileHyperlinkInfo(@Nonnull OpenFileDescriptor descriptor) {
+    this((Project)descriptor.getProject(), descriptor.getFile(), descriptor.getLine(), descriptor.getColumn());
   }
 
   public OpenFileHyperlinkInfo(@Nonnull Project project, @Nonnull final VirtualFile file, final int line) {

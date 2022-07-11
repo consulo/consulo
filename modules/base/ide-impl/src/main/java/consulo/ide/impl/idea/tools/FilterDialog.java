@@ -19,8 +19,8 @@
  */
 package consulo.ide.impl.idea.tools;
 
-import consulo.ide.impl.idea.execution.filters.InvalidExpressionException;
-import consulo.ide.impl.idea.execution.filters.RegexpFilter;
+import consulo.execution.ui.console.InvalidExpressionException;
+import consulo.execution.ui.console.RegexpFilter;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.JBPopupMenu;
 import consulo.ui.ex.awt.Messages;

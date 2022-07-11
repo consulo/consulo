@@ -13,27 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.execution.filters;
+package consulo.execution.ui.console;
 
 import consulo.application.Application;
-import consulo.application.util.function.Computable;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.execution.ui.console.FileHyperlinkInfo;
 import consulo.fileEditor.FileEditorManager;
-import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.navigation.OpenFileDescriptor;
+import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
  * @since 14/01/2021
  * <p>
- * extract part of consulo.ide.impl.idea.execution.filters.OpenFileHyperlinkInfo
+ * extract part of {@link OpenFileHyperlinkInfo}
  */
 public abstract class FileHyperlinkInfoBase implements FileHyperlinkInfo {
   private static final int UNDEFINED_OFFSET = -1;
@@ -62,7 +61,7 @@ public abstract class FileHyperlinkInfoBase implements FileHyperlinkInfo {
   protected abstract VirtualFile getVirtualFile();
 
   @Override
-  public OpenFileDescriptorImpl getDescriptor() {
+  public OpenFileDescriptor getDescriptor() {
     VirtualFile file = getVirtualFile();
     if (file == null || !file.isValid()) {
       return null;
@@ -80,10 +79,10 @@ public abstract class FileHyperlinkInfoBase implements FileHyperlinkInfo {
 
     int offset = calculateOffset(file, line, myDocumentColumn);
     if (offset != UNDEFINED_OFFSET) {
-      return new OpenFileDescriptorImpl(myProject, file, offset);
+      return OpenFileDescriptorFactory.getInstance(myProject).builder(file).offset(offset).build();
     }
     // although document position != logical position, it seems better than returning 'null'
-    return new OpenFileDescriptorImpl(myProject, file, line, myDocumentColumn);
+    return OpenFileDescriptorFactory.getInstance(myProject).builder(file).line(line).column(myDocumentColumn).build();
   }
 
   @Override
@@ -110,7 +109,7 @@ public abstract class FileHyperlinkInfoBase implements FileHyperlinkInfo {
    * @return calculated offset or UNDEFINED_OFFSET if it's impossible to calculate
    */
   private static int calculateOffset(@Nonnull final VirtualFile file, final int documentLine, final int documentColumn) {
-    return Application.get().runReadAction((Computable<Integer>)() -> {
+    return Application.get().runReadAction((Supplier<Integer>)() -> {
       Document document = FileDocumentManager.getInstance().getDocument(file);
       if (document != null) {
         int lineCount = document.getLineCount();

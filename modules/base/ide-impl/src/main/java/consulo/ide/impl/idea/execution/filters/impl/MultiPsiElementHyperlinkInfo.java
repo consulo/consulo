@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.execution.filters.impl;
 
 import consulo.execution.ExecutionBundle;
 import consulo.execution.ui.console.HyperlinkInfoBase;
-import consulo.ide.impl.idea.execution.filters.OpenFileHyperlinkInfo;
+import consulo.execution.ui.console.OpenFileHyperlinkInfo;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoFileCellRenderer;
 import consulo.document.Document;
 import consulo.project.Project;

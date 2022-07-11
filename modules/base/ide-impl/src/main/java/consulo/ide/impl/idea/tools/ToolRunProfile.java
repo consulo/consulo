@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.tools;
 
-import consulo.ide.impl.idea.execution.filters.RegexpFilter;
+import consulo.execution.ui.console.RegexpFilter;
 import consulo.ide.impl.idea.execution.process.ColoredProcessHandler;
 import consulo.dataContext.DataContext;
 import consulo.execution.ExecutionManager;

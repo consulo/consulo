@@ -1,7 +1,7 @@
 // Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.execution.filters;
 
-import consulo.execution.ui.console.HyperlinkWithPopupMenuInfo;
+import consulo.execution.ui.console.*;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.browsers.OpenUrlHyperlinkInfo;
 import consulo.ui.ex.awt.Messages;
@@ -9,12 +9,7 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.ide.impl.idea.util.io.URLUtil;
 import consulo.application.dumb.DumbAware;
-import consulo.content.scope.SearchScope;
 import consulo.execution.ExecutionBundle;
-import consulo.execution.ui.console.ConsoleFilterProviderEx;
-import consulo.execution.ui.console.Filter;
-import consulo.execution.ui.console.HyperlinkInfo;
-import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.project.Project;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.virtualFileSystem.VirtualFile;
@@ -26,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 
 public class UrlFilter implements Filter, DumbAware {
   private final Project myProject;

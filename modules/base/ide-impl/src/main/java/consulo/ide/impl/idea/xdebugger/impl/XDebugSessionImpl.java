@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.xdebugger.impl;
 
 import consulo.execution.debug.event.XDebuggerManagerListener;
-import consulo.ide.impl.idea.execution.filters.OpenFileHyperlinkInfo;
+import consulo.execution.ui.console.OpenFileHyperlinkInfo;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.ui.AppUIUtil;
 import consulo.ide.impl.idea.util.EventDispatcher;

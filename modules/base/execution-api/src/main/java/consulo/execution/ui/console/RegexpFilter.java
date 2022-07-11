@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.execution.filters;
+package consulo.execution.ui.console;
 
-import consulo.execution.ui.console.Filter;
-import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
@@ -34,11 +33,11 @@ import java.util.regex.Pattern;
  * @version 1.0
  */
 public class RegexpFilter implements Filter {
-  @NonNls public static final String FILE_PATH_MACROS = "$FILE_PATH$";
-  @NonNls public static final String LINE_MACROS = "$LINE$";
-  @NonNls public static final String COLUMN_MACROS = "$COLUMN$";
+  public static final String FILE_PATH_MACROS = "$FILE_PATH$";
+  public static final String LINE_MACROS = "$LINE$";
+  public static final String COLUMN_MACROS = "$COLUMN$";
 
-  @NonNls private static final String FILE_PATH_REGEXP = "((?:\\p{Alpha}\\:)?[0-9 a-z_A-Z\\-\\\\./]+)";
+  private static final String FILE_PATH_REGEXP = "((?:\\p{Alpha}\\:)?[0-9 a-z_A-Z\\-\\\\./]+)";
   private static final String NUMBER_REGEXP = "([0-9]+)";
 
   private final int myFileRegister;
@@ -47,15 +46,15 @@ public class RegexpFilter implements Filter {
 
   private final Pattern myPattern;
   private final Project myProject;
-  @NonNls private static final String FILE_STR = "file";
-  @NonNls private static final String LINE_STR = "line";
-  @NonNls private static final String COLUMN_STR = "column";
+  private static final String FILE_STR = "file";
+  private static final String LINE_STR = "line";
+  private static final String COLUMN_STR = "column";
 
-  public RegexpFilter(Project project, @NonNls String expression) {
+  public RegexpFilter(Project project, @Nonnull String expression) {
     myProject = project;
     validate(expression);
 
-    if (expression == null || expression.trim().isEmpty()) {
+    if (expression.trim().isEmpty()) {
       throw new InvalidExpressionException("expression == null or empty");
     }
 
@@ -67,20 +66,20 @@ public class RegexpFilter implements Filter {
       throw new InvalidExpressionException("Expression must contain " + FILE_PATH_MACROS + " macros.");
     }
 
-    final TreeMap<Integer,String> map = new TreeMap<Integer, String>();
+    final TreeMap<Integer, String> map = new TreeMap<Integer, String>();
 
-    map.put(new Integer(filePathIndex), FILE_STR);
+    map.put(filePathIndex, FILE_STR);
 
     expression = StringUtil.replace(expression, FILE_PATH_MACROS, FILE_PATH_REGEXP);
 
     if (lineIndex != -1) {
       expression = StringUtil.replace(expression, LINE_MACROS, NUMBER_REGEXP);
-      map.put(new Integer(lineIndex), LINE_STR);
+      map.put(lineIndex, LINE_STR);
     }
 
     if (columnIndex != -1) {
       expression = StringUtil.replace(expression, COLUMN_MACROS, NUMBER_REGEXP);
-      map.put(new Integer(columnIndex), COLUMN_STR);
+      map.put(columnIndex, COLUMN_STR);
     }
 
     // The block below determines the registers based on the sorted map.
@@ -167,7 +166,8 @@ public class RegexpFilter implements Filter {
     try {
       line = Integer.parseInt(lineNumber);
       column = Integer.parseInt(columnNumber);
-    } catch (NumberFormatException e) {
+    }
+    catch (NumberFormatException e) {
       // Do nothing, so that line and column will remain at their initial
       // zero values.
     }
@@ -191,6 +191,6 @@ public class RegexpFilter implements Filter {
   }
 
   public static String[] getMacrosName() {
-    return new String[] {FILE_PATH_MACROS, LINE_MACROS, COLUMN_MACROS};
+    return new String[]{FILE_PATH_MACROS, LINE_MACROS, COLUMN_MACROS};
   }
 }
