@@ -51,7 +51,6 @@ import java.util.*;
 public class ResourceCompiler implements TranslatingCompiler {
   private static final Logger LOG = Logger.getInstance(ResourceCompiler.class);
 
-  private final List<ResourceCompilerExtension> myResourceCompilerExtensions = ResourceCompilerExtension.EP_NAME.getExtensionList();
   private final ResourceCompilerConfiguration myResourceCompilerConfiguration;
   private final ProjectFileIndex myProjectFileIndex;
 
@@ -184,7 +183,7 @@ public class ResourceCompiler implements TranslatingCompiler {
   }
 
   private boolean skipStandardResourceCompiler(final Module module) {
-    for (ResourceCompilerExtension extension : myResourceCompilerExtensions) {
+    for (ResourceCompilerExtension extension : module.getApplication().getExtensionPoint(ResourceCompilerExtension.class)) {
       if (extension.skipStandardResourceCompiler(module)) {
         return true;
       }

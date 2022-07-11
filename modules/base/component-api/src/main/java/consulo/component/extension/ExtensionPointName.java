@@ -37,8 +37,6 @@ import java.util.function.Predicate;
 @Deprecated
 @DeprecationInfo("Prefer ComponentManager.getExtensionPoint() methods")
 public class ExtensionPointName<T> {
-  private static final Logger LOG = Logger.getInstance(ExtensionPointName.class);
-
   private final String myId;
   private final Class<? extends T> myIdClass;
 
