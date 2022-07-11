@@ -1912,8 +1912,8 @@ CompilerManagerImpl.addDeletedPath(outputPath.getPath());
     final ProgressIndicator progressIndicator = context.getProgressIndicator();
     progressIndicator.pushState();
     try {
-      CompileTask[] tasks = beforeTasks ? manager.getBeforeTasks() : manager.getAfterTasks();
-      if (tasks.length > 0) {
+      List<? extends CompileTask> tasks = beforeTasks ? manager.getBeforeTasks() : manager.getAfterTasks();
+      if (!tasks.isEmpty()) {
         progressIndicator.setText(beforeTasks ? CompilerBundle.message("progress.executing.precompile.tasks") : CompilerBundle.message("progress.executing.postcompile.tasks"));
         for (CompileTask task : tasks) {
           if (!task.execute(context)) {

@@ -15,7 +15,6 @@
  */
 package consulo.compiler;
 
-import consulo.component.extension.ExtensionPointName;
 import consulo.util.lang.Pair;
 import consulo.util.lang.Trinity;
 import consulo.util.lang.ref.Ref;
@@ -32,9 +31,6 @@ import java.util.function.Function;
  * @since 23:35/25.05.13
  */
 public interface DependencyCache {
-
-  ExtensionPointName<DependencyCacheEP> EP_NAME = ExtensionPointName.create("consulo.compiler.dependencyCache");
-
   void findDependentFiles(CompileContext context,
                           Ref<CacheCorruptedException> exceptionRef,
                           Function<Pair<int[], Set<VirtualFile>>, Pair<int[], Set<VirtualFile>>> filter,

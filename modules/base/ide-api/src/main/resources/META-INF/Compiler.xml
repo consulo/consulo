@@ -14,15 +14,5 @@
   - limitations under the License.
   -->
 <consulo-plugin>
-  <extensionPoints>
-    <extensionPoint name="compiler.dependencyCache" beanClass="consulo.compiler.DependencyCacheEP">
-      <with attribute="implementationClass" implements="consulo.compiler.DependencyCache"/>
-    </extensionPoint>
 
-    <extensionPoint name="compiler.moduleScopeFactory" interface="consulo.compiler.scope.CompileModuleScopeFactory"/>
-    <extensionPoint name="compiler.sorter" interface="consulo.compiler.CompilerSorter"/>
-
-    <extensionPoint name="compiler.beforeTask" interface="consulo.compiler.CompileTask"/>
-    <extensionPoint name="compiler.afterTask" interface="consulo.compiler.CompileTask"/>
-  </extensionPoints>
 </consulo-plugin>

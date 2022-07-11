@@ -16,6 +16,7 @@
 package consulo.ide.impl.compiler;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.ide.impl.idea.compiler.impl.*;
 import consulo.application.ApplicationManager;
 import consulo.compiler.*;
@@ -225,14 +226,14 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
 
   @Override
   @Nonnull
-  public CompileTask[] getBeforeTasks() {
-    return CompileTask.BEFORE_EP_NAME.getExtensions();
+  public List<? extends CompileTask> getBeforeTasks() {
+    return Application.get().getExtensionList(BeforeCompileTask.class);
   }
 
   @Override
   @Nonnull
-  public CompileTask[] getAfterTasks() {
-    return CompileTask.AFTER_EP_NAME.getExtensions();
+  public List<? extends CompileTask> getAfterTasks() {
+    return Application.get().getExtensionList(AfterCompilerTask.class);
   }
 
   @Override

@@ -34,6 +34,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -98,7 +99,7 @@ public abstract class CompilerManager {
    * @return all tasks to be executed before compilation.
    */
   @Nonnull
-  public abstract CompileTask[] getBeforeTasks();
+  public abstract List<? extends CompileTask> getBeforeTasks();
 
   /**
    * Returns the list of all tasks to be executed after compilation.
@@ -106,7 +107,7 @@ public abstract class CompilerManager {
    * @return all tasks to be executed after compilation.
    */
   @Nonnull
-  public abstract CompileTask[] getAfterTasks();
+  public abstract List<? extends CompileTask> getAfterTasks();
 
   /**
    * Compile a set of files.

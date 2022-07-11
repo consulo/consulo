@@ -35,15 +35,10 @@ import java.util.function.Function;
  * @since 14:45/20.10.13
  */
 public class CompositeDependencyCache implements DependencyCache {
-  private final DependencyCache[] myDependencyCaches;
+  private final List<DependencyCache> myDependencyCaches = new ArrayList<>();
 
   public CompositeDependencyCache(Project project, String cacheDir) {
-    List<DependencyCacheEP> extensions = EP_NAME.getExtensionList();
-    List<DependencyCache> list = new ArrayList<>(extensions.size());
-    for (DependencyCacheEP extension : extensions) {
-      list.add(extension.create(project, cacheDir));
-    }
-    myDependencyCaches = list.toArray(new DependencyCache[list.size()]);
+    project.getExtensionPoint(DependencyCacheFactory.class).forEachExtensionSafe(factory -> myDependencyCaches.add(factory.create(cacheDir)));
   }
 
   @Override
