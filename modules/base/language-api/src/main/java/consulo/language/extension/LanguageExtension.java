@@ -23,7 +23,8 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 24-Jun-22
  */
-public interface LanguageExtension {
+public interface
+LanguageExtension {
   @Nonnull
   Language getLanguage();
 }

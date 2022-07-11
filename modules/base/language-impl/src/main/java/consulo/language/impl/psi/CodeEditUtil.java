@@ -18,15 +18,11 @@ package consulo.language.impl.psi;
 import consulo.document.Document;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
+import consulo.language.ast.TokenSeparatorGenerator;
 import consulo.language.ast.TokenType;
-import consulo.language.impl.ast.ASTFactory;
-import consulo.language.impl.ast.LeafElement;
-import consulo.language.impl.ast.TreeElement;
-import consulo.language.impl.ast.Factory;
+import consulo.language.impl.ast.*;
 import consulo.language.impl.internal.psi.GeneratedMarkerVisitor;
 import consulo.language.impl.internal.psi.IndentHelper;
-import consulo.language.impl.internal.psi.LanguageTokenSeparatorGenerators;
-import consulo.language.impl.ast.TreeUtil;
 import consulo.language.psi.*;
 import consulo.language.util.CommentUtilCore;
 import consulo.util.dataholder.Key;
@@ -310,10 +306,10 @@ public class CodeEditUtil {
 
     ASTNode generatedWhitespace = null;
     if (leftLang != null && leftLang.isKindOf(rightLang)) {
-      generatedWhitespace = LanguageTokenSeparatorGenerators.INSTANCE.forLanguage(leftLang).generateWhitespaceBetweenTokens(left, right);
+      generatedWhitespace = TokenSeparatorGenerator.forLanguage(leftLang).generateWhitespaceBetweenTokens(left, right);
     }
     else if (rightLang.isKindOf(leftLang)) {
-      generatedWhitespace = LanguageTokenSeparatorGenerators.INSTANCE.forLanguage(rightLang).generateWhitespaceBetweenTokens(left, right);
+      generatedWhitespace = TokenSeparatorGenerator.forLanguage(rightLang).generateWhitespaceBetweenTokens(left, right);
     }
 
     if (generatedWhitespace != null) {

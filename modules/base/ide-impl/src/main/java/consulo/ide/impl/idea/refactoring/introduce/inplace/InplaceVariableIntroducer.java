@@ -23,6 +23,7 @@ import consulo.ide.impl.idea.codeInsight.template.impl.TemplateManagerImpl;
 import consulo.ide.impl.idea.codeInsight.template.impl.TemplateStateImpl;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.language.ast.ASTNode;
+import consulo.language.ast.TokenSeparatorGenerator;
 import consulo.language.editor.WriteCommandAction;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementBuilder;
@@ -33,7 +34,6 @@ import consulo.language.editor.refactoring.rename.inplace.InplaceRefactoring;
 import consulo.language.editor.refactoring.rename.inplace.MyLookupExpression;
 import consulo.language.editor.template.ExpressionContext;
 import consulo.language.editor.template.TextResult;
-import consulo.language.impl.internal.psi.LanguageTokenSeparatorGenerators;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.SmartPointerManager;
@@ -53,7 +53,7 @@ import java.util.List;
  * Date: 3/15/11
  */
 public abstract class InplaceVariableIntroducer<E extends PsiElement> extends InplaceRefactoring {
- 
+
 
   protected E myExpr;
   protected RangeMarker myExprMarker;
@@ -61,20 +61,14 @@ public abstract class InplaceVariableIntroducer<E extends PsiElement> extends In
   protected E[] myOccurrences;
   protected List<RangeMarker> myOccurrenceMarkers;
 
- 
 
-  public InplaceVariableIntroducer(PsiNamedElement elementToRename,
-                                   Editor editor,
-                                   Project project,
-                                   String title, E[] occurrences, 
-                                   @Nullable E expr) {
+  public InplaceVariableIntroducer(PsiNamedElement elementToRename, Editor editor, Project project, String title, E[] occurrences, @Nullable E expr) {
     super(editor, elementToRename, project);
     myTitle = title;
     myOccurrences = occurrences;
     if (expr != null) {
       final ASTNode node = expr.getNode();
-      final ASTNode astNode = LanguageTokenSeparatorGenerators.INSTANCE.forLanguage(expr.getLanguage())
-        .generateWhitespaceBetweenTokens(node.getTreePrev(), node);
+      final ASTNode astNode = TokenSeparatorGenerator.forLanguage(expr.getLanguage()).generateWhitespaceBetweenTokens(node.getTreePrev(), node);
       if (astNode != null) {
         new WriteCommandAction<Object>(project, "Normalize declaration") {
           @Override
@@ -99,7 +93,7 @@ public abstract class InplaceVariableIntroducer<E extends PsiElement> extends In
     return null;
   }
 
-  
+
   public void setOccurrenceMarkers(List<RangeMarker> occurrenceMarkers) {
     myOccurrenceMarkers = occurrenceMarkers;
   }
@@ -167,7 +161,6 @@ public abstract class InplaceVariableIntroducer<E extends PsiElement> extends In
     }
   }
 
- 
 
   @Override
   protected MyLookupExpression createLookupExpression(PsiElement selectedElement) {
@@ -200,8 +193,7 @@ public abstract class InplaceVariableIntroducer<E extends PsiElement> extends In
     private LookupElement[] createLookupItems(String name, Editor editor, PsiNamedElement psiVariable) {
       TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
       if (psiVariable != null) {
-        final TextResult insertedValue =
-          templateState != null ? templateState.getVariableValue(PRIMARY_VARIABLE_NAME) : null;
+        final TextResult insertedValue = templateState != null ? templateState.getVariableValue(PRIMARY_VARIABLE_NAME) : null;
         if (insertedValue != null) {
           final String text = insertedValue.getText();
           if (!text.isEmpty() && !Comparing.strEqual(text, name)) {
@@ -209,9 +201,7 @@ public abstract class InplaceVariableIntroducer<E extends PsiElement> extends In
             names.add(text);
             for (NameSuggestionProvider provider : NameSuggestionProvider.EP_NAME.getExtensionList()) {
               final SuggestedNameInfo suggestedNameInfo = provider.getSuggestedNames(psiVariable, psiVariable, names);
-              if (suggestedNameInfo != null &&
-                  provider instanceof PreferrableNameSuggestionProvider &&
-                  !((PreferrableNameSuggestionProvider)provider).shouldCheckOthers()) {
+              if (suggestedNameInfo != null && provider instanceof PreferrableNameSuggestionProvider && !((PreferrableNameSuggestionProvider)provider).shouldCheckOthers()) {
                 break;
               }
             }
