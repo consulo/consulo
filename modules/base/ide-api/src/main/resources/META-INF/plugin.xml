@@ -1339,15 +1339,7 @@
              order="after openedInEditor"/>
 
 
-    <compiler implementation="consulo.ide.impl.idea.packaging.impl.compiler.ArtifactsCompiler" id="artifactsCompiler" order="last"/>
-    <compiler implementation="consulo.ide.impl.idea.compiler.impl.resourceCompiler.ResourceCompiler" id="resourceCompiler"/>
-
-
     <schemeOwner serviceInterface="consulo.language.editor.inspection.scheme.InspectionProfileManager"/>
-
-
-
-
 
 
 

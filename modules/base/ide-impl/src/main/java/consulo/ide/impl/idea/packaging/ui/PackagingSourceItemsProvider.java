@@ -15,21 +15,21 @@
  */
 package consulo.ide.impl.idea.packaging.ui;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.artifact.ui.PackagingSourceItem;
-import consulo.component.extension.ExtensionPointName;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collection;
 
 /**
  * @author nik
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class PackagingSourceItemsProvider {
-  public static final ExtensionPointName<PackagingSourceItemsProvider> EP_NAME = ExtensionPointName.create("consulo.packaging.sourceItemProvider");
-
   @Nonnull
   public abstract Collection<? extends PackagingSourceItem> getSourceItems(@Nonnull ArtifactEditorContext editorContext, @Nonnull Artifact artifact,
                                                                            @Nullable PackagingSourceItem parent);

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems;
 
+import consulo.application.Application;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.component.extension.Extensions;
@@ -61,16 +62,15 @@ public abstract class SourceItemNodeBase extends ArtifactsTreeNode {
 
   @Override
   protected SimpleNode[] buildChildren() {
-    final PackagingSourceItemsProvider[] providers = Extensions.getExtensions(PackagingSourceItemsProvider.EP_NAME);
-    List<SimpleNode> children = new ArrayList<SimpleNode>();
-    for (PackagingSourceItemsProvider provider : providers) {
+    List<SimpleNode> children = new ArrayList<>();
+    Application.get().getExtensionPoint(PackagingSourceItemsProvider.class).forEachExtensionSafe(provider -> {
       final Collection<? extends PackagingSourceItem> items = provider.getSourceItems(myContext, myArtifact, getSourceItem());
       for (PackagingSourceItem item : items) {
         if (myArtifact.getArtifactType().isSuitableItem(item)) {
           children.add(new SourceItemNode(myContext, this, item, myArtifactEditor));
         }
       }
-    }
+    });
     return children.isEmpty() ? NO_CHILDREN : children.toArray(new SimpleNode[children.size()]);
   }
 

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.compiler.artifact.Artifact;
@@ -36,6 +37,7 @@ import java.util.List;
 /**
  * @author nik
  */
+@ExtensionImpl(order = "last")
 public class ArtifactsSourceItemsProvider extends PackagingSourceItemsProvider {
   @Override
   @Nonnull

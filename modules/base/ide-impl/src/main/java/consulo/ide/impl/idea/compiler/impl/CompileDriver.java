@@ -51,7 +51,7 @@ import consulo.compiler.Compiler;
 import consulo.compiler.*;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactManager;
-import consulo.compiler.event.SourceInstrumentingCompiler;
+import consulo.compiler.SourceInstrumentingCompiler;
 import consulo.compiler.generic.GenericCompiler;
 import consulo.ide.impl.compiler.make.CompositeDependencyCache;
 import consulo.compiler.scope.CompileScope;

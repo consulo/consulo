@@ -17,6 +17,7 @@
 
 package consulo.ide.impl.idea.compiler.impl.resourceCompiler;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.compiler.impl.CompilerUtil;
 import consulo.ide.impl.idea.compiler.make.MakeUtil;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
@@ -46,8 +47,9 @@ import java.util.*;
  * Date: Jan 17, 2003
  * Time: 3:48:26 PM
  */
+@ExtensionImpl(id = "resourceCompiler")
 public class ResourceCompiler implements TranslatingCompiler {
-  public static final Logger LOGGER = Logger.getInstance(ResourceCompiler.class);
+  private static final Logger LOG = Logger.getInstance(ResourceCompiler.class);
 
   private final List<ResourceCompilerExtension> myResourceCompilerExtensions = ResourceCompilerExtension.EP_NAME.getExtensionList();
   private final ResourceCompilerConfiguration myResourceCompilerConfiguration;
@@ -213,8 +215,8 @@ public class ResourceCompiler implements TranslatingCompiler {
     }
 
     public MyOutputItem copy(List<File> filesToRefresh) throws IOException {
-      if (LOGGER.isDebugEnabled()) {
-        LOGGER.debug("Copying " + myFromPath + " to " + myToPath);
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Copying " + myFromPath + " to " + myToPath);
       }
       final File targetFile = new File(myToPath);
       FileUtil.copyContent(new File(myFromPath), targetFile);

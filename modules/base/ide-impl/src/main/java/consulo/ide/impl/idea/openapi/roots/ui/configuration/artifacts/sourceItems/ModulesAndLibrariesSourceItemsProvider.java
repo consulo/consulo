@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.content.library.Library;
@@ -48,6 +49,7 @@ import java.util.*;
 /**
  * @author nik
  */
+@ExtensionImpl(order = "first")
 public class ModulesAndLibrariesSourceItemsProvider extends PackagingSourceItemsProvider {
 
   @Override

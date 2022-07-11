@@ -15,16 +15,10 @@
  */
 package consulo.compiler;
 
-import consulo.component.extension.ExtensionPointName;
-
 /**
  * Describes a task to be executed before or after compilation.
  */
-@FunctionalInterface
 public interface CompileTask {
-  ExtensionPointName<CompileTask> BEFORE_EP_NAME = ExtensionPointName.create("consulo.compiler.beforeTask");
-  ExtensionPointName<CompileTask> AFTER_EP_NAME = ExtensionPointName.create("consulo.compiler.afterTask");
-
   /**
    * Executes the task.
    *

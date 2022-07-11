@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.packaging.impl.compiler;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.compiler.CompileContext;
 import consulo.compiler.CompilerManager;
 import consulo.compiler.generic.CompileItem;
@@ -35,6 +36,7 @@ import java.util.Set;
 /**
  * @author nik
  */
+@ExtensionImpl(id = "artifactCompiler", order = "last")
 public class ArtifactsCompiler extends GenericCompiler<String, VirtualFilePersistentState, ArtifactPackagingItemOutputState> {
   private static final Key<Set<String>> WRITTEN_PATHS_KEY = Key.create("artifacts_written_paths");
   private static final Key<Set<Artifact>> CHANGED_ARTIFACTS = Key.create("affected_artifacts");
@@ -43,7 +45,7 @@ public class ArtifactsCompiler extends GenericCompiler<String, VirtualFilePersis
     super("artifacts_compiler", 0, GenericCompiler.CompileOrderPlace.PACKAGING);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public static ArtifactsCompiler getInstance(@Nonnull Project project) {
     final ArtifactsCompiler[] compilers = CompilerManager.getInstance(project).getCompilers(ArtifactsCompiler.class);
     return compilers.length == 1 ? compilers[0] : null;

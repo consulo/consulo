@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems;
 
 import consulo.application.AllIcons;
+import consulo.application.Application;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.artifact.ui.PackagingSourceItem;
@@ -64,24 +65,24 @@ public class ModuleSourceItemGroup extends PackagingSourceItem {
   @Override
   @Nonnull
   public List<? extends PackagingElement<?>> createElements(@Nonnull ArtifactEditorContext context) {
-    final Set<Module> modules = new LinkedHashSet<Module>();
+    final Set<Module> modules = new LinkedHashSet<>();
     collectDependentModules(myModule, modules, context);
 
     final Artifact artifact = context.getArtifact();
     final ArtifactType artifactType = artifact.getArtifactType();
-    Set<PackagingSourceItem> items = new LinkedHashSet<PackagingSourceItem>();
+    Set<PackagingSourceItem> items = new LinkedHashSet<>();
     for (Module module : modules) {
-      for (PackagingSourceItemsProvider provider : PackagingSourceItemsProvider.EP_NAME.getExtensions()) {
+      Application.get().getExtensionPoint(PackagingSourceItemsProvider.class).forEachExtensionSafe(provider -> {
         final ModuleSourceItemGroup parent = new ModuleSourceItemGroup(module);
         for (PackagingSourceItem sourceItem : provider.getSourceItems(context, artifact, parent)) {
           if (artifactType.isSuitableItem(sourceItem) && sourceItem.isProvideElements()) {
             items.add(sourceItem);
           }
         }
-      }
+      });
     }
 
-    List<PackagingElement<?>> result = new ArrayList<PackagingElement<?>>();
+    List<PackagingElement<?>> result = new ArrayList<>();
     final PackagingElementFactory factory = PackagingElementFactory.getInstance(context.getProject());
     for (PackagingSourceItem item : items) {
       final String path = artifactType.getDefaultPathFor(item.getKindOfProducedElements());
