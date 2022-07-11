@@ -2,22 +2,13 @@
 
 package consulo.ide.impl.idea.codeInsight.completion;
 
-import consulo.language.editor.CodeInsightSettings;
-import consulo.ide.impl.idea.codeInsight.completion.CompletionAssertions.WatchingInsertionContext;
-import consulo.ide.impl.idea.codeInsight.completion.actions.BaseCodeCompletionAction;
-import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionServiceImpl;
-import consulo.ide.impl.idea.codeInsight.editorActions.smartEnter.SmartEnterProcessor;
-import consulo.ide.impl.idea.codeInsight.editorActions.smartEnter.SmartEnterProcessors;
-import consulo.ide.impl.idea.codeInsight.lookup.impl.LookupImpl;
-import consulo.application.statistic.FeatureUsageTracker;
-import consulo.ide.impl.idea.openapi.application.impl.ApplicationInfoImpl;
-import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.application.AppUIExecutor;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
 import consulo.application.WriteAction;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
+import consulo.application.statistic.FeatureUsageTracker;
 import consulo.application.util.function.Computable;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Caret;
@@ -28,13 +19,21 @@ import consulo.dataContext.DataManager;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.internal.DocumentEx;
+import consulo.ide.impl.idea.codeInsight.completion.CompletionAssertions.WatchingInsertionContext;
+import consulo.ide.impl.idea.codeInsight.completion.actions.BaseCodeCompletionAction;
+import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionServiceImpl;
+import consulo.ide.impl.idea.codeInsight.lookup.impl.LookupImpl;
+import consulo.ide.impl.idea.openapi.application.impl.ApplicationInfoImpl;
+import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.ide.impl.psi.impl.source.PostprocessReformattingAspectImpl;
 import consulo.ide.impl.psi.stubs.StubTextInconsistencyException;
-import consulo.language.editor.internal.PsiUtilBase;
 import consulo.language.Language;
 import consulo.language.codeStyle.PostprocessReformattingAspect;
+import consulo.language.editor.CodeInsightSettings;
+import consulo.language.editor.action.SmartEnterProcessor;
 import consulo.language.editor.completion.*;
 import consulo.language.editor.completion.lookup.*;
+import consulo.language.editor.internal.PsiUtilBase;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
@@ -640,7 +639,7 @@ public class CodeCompletionHandlerBase {
     if (context.getCompletionChar() == Lookup.COMPLETE_STATEMENT_SELECT_CHAR) {
       Language language = PsiUtilBase.getLanguageInEditor(context.getEditor(), context.getFile().getProject());
       if (language != null) {
-        for (SmartEnterProcessor processor : SmartEnterProcessors.INSTANCE.allForLanguage(language)) {
+        for (SmartEnterProcessor processor : SmartEnterProcessor.forLanguage(language)) {
           if (processor.processAfterCompletion(context.getEditor(), context.getFile())) break;
         }
       }

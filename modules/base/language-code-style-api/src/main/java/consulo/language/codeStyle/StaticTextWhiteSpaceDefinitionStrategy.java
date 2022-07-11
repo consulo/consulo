@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi.formatter;
+package consulo.language.codeStyle;
 
-import consulo.ide.impl.idea.util.text.CharArrayUtil;
-import consulo.language.codeStyle.AbstractWhiteSpaceFormattingStrategy;
+import consulo.util.lang.CharArrayUtil;
 
 import javax.annotation.Nonnull;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -28,7 +26,7 @@ import java.util.Set;
  * @author Denis Zhdanov
  * @since Sep 21, 2010 2:49:43 PM
  */
-public class StaticTextWhiteSpaceDefinitionStrategy extends AbstractWhiteSpaceFormattingStrategy {
+public abstract class StaticTextWhiteSpaceDefinitionStrategy extends AbstractWhiteSpaceFormattingStrategy {
 
   private final Set<CharSequence> myWhiteSpaces = new HashSet<CharSequence>();
 

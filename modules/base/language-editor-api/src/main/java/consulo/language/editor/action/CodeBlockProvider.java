@@ -15,9 +15,19 @@
  */
 package consulo.language.editor.action;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.application.Application;
 import consulo.codeEditor.Editor;
+import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.document.util.TextRange;
+import consulo.language.Language;
+import consulo.language.extension.ByLanguageValue;
+import consulo.language.extension.LanguageExtension;
+import consulo.language.extension.LanguageOneToOne;
 import consulo.language.psi.PsiFile;
+
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -25,7 +35,15 @@ import javax.annotation.Nullable;
  *
  * @author yole
  */
-public interface CodeBlockProvider {
+@ExtensionAPI(ComponentScope.APPLICATION)
+public interface CodeBlockProvider extends LanguageExtension {
+  ExtensionPointCacheKey<CodeBlockProvider, ByLanguageValue<CodeBlockProvider>> KEY = ExtensionPointCacheKey.create("CodeBlockProvider", LanguageOneToOne.build());
+
+  @Nullable
+  static CodeBlockProvider forLanguage(@Nonnull Language language) {
+    return Application.get().getExtensionPoint(CodeBlockProvider.class).getOrBuildCache(KEY).get(language);
+  }
+
   @Nullable
   TextRange getCodeBlockRange(Editor editor, PsiFile psiFile);
 }

@@ -58,7 +58,7 @@ public class CodeBlockUtil {
     if (file == null) return;
 
     IdeDocumentHistory.getInstance(project).includeCurrentCommandAsNavigation();
-    final CodeBlockProvider provider = CodeBlockProviders.INSTANCE.forLanguage(file.getLanguage());
+    final CodeBlockProvider provider = CodeBlockProvider.forLanguage(file.getLanguage());
     if (provider != null) {
       final TextRange range = provider.getCodeBlockRange(editor, file);
       if (range != null) {
@@ -96,7 +96,7 @@ public class CodeBlockUtil {
 
     IdeDocumentHistory.getInstance(project).includeCurrentCommandAsNavigation();
 
-    final CodeBlockProvider provider = CodeBlockProviders.INSTANCE.forLanguage(file.getLanguage());
+    final CodeBlockProvider provider = CodeBlockProvider.forLanguage(file.getLanguage());
     if (provider != null) {
       final TextRange range = provider.getCodeBlockRange(editor, file);
       if (range != null) {

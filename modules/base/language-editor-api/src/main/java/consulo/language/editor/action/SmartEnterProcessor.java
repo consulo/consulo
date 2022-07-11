@@ -14,26 +14,45 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.editorActions.smartEnter;
+package consulo.language.editor.action;
 
-import consulo.document.Document;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.application.Application;
 import consulo.codeEditor.Editor;
+import consulo.component.extension.ExtensionPointCacheKey;
+import consulo.document.Document;
 import consulo.document.RangeMarker;
-import consulo.project.Project;
 import consulo.document.util.TextRange;
+import consulo.language.Language;
+import consulo.language.codeStyle.CodeStyleManager;
+import consulo.language.extension.ByLanguageValue;
+import consulo.language.extension.LanguageExtension;
+import consulo.language.extension.LanguageOneToMany;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.util.IncorrectOperationException;
-import consulo.ide.impl.idea.util.text.CharArrayUtil;
+import consulo.project.Project;
+import consulo.util.lang.CharArrayUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * @author max
  */
-public abstract class SmartEnterProcessor {
+@ExtensionAPI(ComponentScope.APPLICATION)
+public abstract class SmartEnterProcessor implements LanguageExtension {
+  private static final ExtensionPointCacheKey<SmartEnterProcessor, ByLanguageValue<List<SmartEnterProcessor>>> KEY =
+          ExtensionPointCacheKey.create("SmartEnterProcessor", LanguageOneToMany.build(false));
+
+  @Nonnull
+  public static List<SmartEnterProcessor> forLanguage(@Nonnull Language language) {
+    return Application.get().getExtensionPoint(SmartEnterProcessor.class).getOrBuildCache(KEY).requiredGet(language);
+  }
+
   public abstract boolean process(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull final PsiFile psiFile);
 
   public boolean processAfterCompletion(@Nonnull final Editor editor, @Nonnull final PsiFile psiFile) {
@@ -79,5 +98,4 @@ public abstract class SmartEnterProcessor {
     //some psi operations may block the document, unblock here
     PsiDocumentManager.getInstance(project).doPostponedOperationsAndUnblockDocument(editor.getDocument());
   }
-
 }

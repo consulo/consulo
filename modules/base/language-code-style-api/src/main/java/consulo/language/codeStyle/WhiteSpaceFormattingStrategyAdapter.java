@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi.formatter;
+package consulo.language.codeStyle;
 
+import consulo.language.Language;
 import consulo.language.ast.ASTNode;
-import consulo.language.codeStyle.CodeStyleSettings;
-import consulo.language.codeStyle.StaticSymbolWhiteSpaceDefinitionStrategy;
-import consulo.language.codeStyle.WhiteSpaceFormattingStrategy;
 import consulo.language.psi.PsiElement;
 
 import javax.annotation.Nonnull;
@@ -27,9 +25,15 @@ import javax.annotation.Nonnull;
  * @author Denis Zhdanov
  * @since 12/6/11 3:58 PM
  */
-public class WhiteSpaceFormattingStrategyAdapter implements WhiteSpaceFormattingStrategy {
+public abstract class WhiteSpaceFormattingStrategyAdapter implements WhiteSpaceFormattingStrategy {
 
-  private final WhiteSpaceFormattingStrategy DELEGATE = new StaticSymbolWhiteSpaceDefinitionStrategy(' ', '\t', '\n');
+  private final WhiteSpaceFormattingStrategy DELEGATE = new StaticSymbolWhiteSpaceDefinitionStrategy(' ', '\t', '\n') {
+    @Nonnull
+    @Override
+    public Language getLanguage() {
+      return WhiteSpaceFormattingStrategyAdapter.this.getLanguage();
+    }
+  };
 
   @Override
   public int check(@Nonnull CharSequence text, int start, int end) {

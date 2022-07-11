@@ -16,26 +16,27 @@
 
 package consulo.ide.impl.idea.codeInsight.editorActions.smartEnter;
 
-import consulo.ide.impl.idea.codeInsight.editorActions.enter.EnterAfterUnmatchedBraceHandler;
-import consulo.language.editor.completion.lookup.LookupManager;
-import consulo.ide.impl.idea.codeInsight.template.impl.TemplateManagerImpl;
-import consulo.ide.impl.idea.codeInsight.template.impl.TemplateStateImpl;
-import consulo.language.Language;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
-import consulo.ui.ex.action.IdeActions;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.impl.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionManager;
+import consulo.codeEditor.impl.action.EditorAction;
+import consulo.dataContext.DataContext;
+import consulo.ide.impl.idea.codeInsight.editorActions.enter.EnterAfterUnmatchedBraceHandler;
+import consulo.ide.impl.idea.codeInsight.template.impl.TemplateManagerImpl;
+import consulo.ide.impl.idea.codeInsight.template.impl.TemplateStateImpl;
 import consulo.ide.impl.idea.openapi.editor.actionSystem.EditorWriteActionHandler;
-import consulo.project.Project;
-import consulo.language.psi.PsiFile;
+import consulo.language.Language;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.action.SmartEnterProcessor;
+import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.internal.PsiUtilBase;
-import javax.annotation.Nonnull;
-import consulo.annotation.access.RequiredWriteAction;
+import consulo.language.psi.PsiFile;
+import consulo.project.Project;
+import consulo.ui.ex.action.IdeActions;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -90,7 +91,7 @@ public class SmartEnterAction extends EditorAction {
       final Language language = PsiUtilBase.getLanguageInEditor(editor, project);
       boolean processed = false;
       if (language != null) {
-        final List<SmartEnterProcessor> processors = SmartEnterProcessors.INSTANCE.allForLanguage(language);
+        final List<SmartEnterProcessor> processors = SmartEnterProcessor.forLanguage(language);
         if (!processors.isEmpty()) {
           for (SmartEnterProcessor processor : processors) {
             if (processor.process(project, editor, psiFile)) {

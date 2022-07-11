@@ -36,19 +36,26 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public class WhiteSpaceFormattingStrategyFactory {
 
-  private static final List<WhiteSpaceFormattingStrategy> SHARED_STRATEGIES = Arrays.<WhiteSpaceFormattingStrategy>asList(new StaticSymbolWhiteSpaceDefinitionStrategy(' ', '\t', '\n'));
-
-  private static final AtomicReference<PatchedWeakReference<Collection<WhiteSpaceFormattingStrategy>>> myCachedStrategies =
-          new AtomicReference<PatchedWeakReference<Collection<WhiteSpaceFormattingStrategy>>>();
+  private static final AtomicReference<PatchedWeakReference<Collection<WhiteSpaceFormattingStrategy>>> myCachedStrategies = new AtomicReference<>();
 
   private WhiteSpaceFormattingStrategyFactory() {
+  }
+
+  private static List<WhiteSpaceFormattingStrategy> getSharedStrategies(@Nonnull Language language) {
+    return List.of(new StaticSymbolWhiteSpaceDefinitionStrategy(' ', '\t', '\n') {
+      @Nonnull
+      @Override
+      public Language getLanguage() {
+        return language;
+      }
+    });
   }
 
   /**
    * @return default language-agnostic white space strategy
    */
   public static WhiteSpaceFormattingStrategy getStrategy() {
-    return new CompositeWhiteSpaceFormattingStrategy(SHARED_STRATEGIES);
+    return new CompositeWhiteSpaceFormattingStrategy(Language.ANY, getSharedStrategies(Language.ANY));
   }
 
   /**
@@ -59,8 +66,8 @@ public class WhiteSpaceFormattingStrategyFactory {
    * @throws IllegalStateException if white space strategies configuration is invalid
    */
   public static WhiteSpaceFormattingStrategy getStrategy(@Nonnull Language language) throws IllegalStateException {
-    CompositeWhiteSpaceFormattingStrategy result = new CompositeWhiteSpaceFormattingStrategy(SHARED_STRATEGIES);
-    WhiteSpaceFormattingStrategy strategy = LanguageWhiteSpaceFormattingStrategy.INSTANCE.forLanguage(language);
+    CompositeWhiteSpaceFormattingStrategy result = new CompositeWhiteSpaceFormattingStrategy(language, getSharedStrategies(language));
+    WhiteSpaceFormattingStrategy strategy = WhiteSpaceFormattingStrategy.forLanguage(language);
     if (strategy != null) {
       result.addStrategy(strategy);
     }
@@ -80,21 +87,15 @@ public class WhiteSpaceFormattingStrategyFactory {
       }
     }
     final Collection<Language> languages = Language.getRegisteredLanguages();
-    if (languages == null) {
-      final List<WhiteSpaceFormattingStrategy> result = Collections.emptyList();
-      myCachedStrategies.set(new PatchedWeakReference<Collection<WhiteSpaceFormattingStrategy>>(result));
-      return result;
-    }
 
-    Set<WhiteSpaceFormattingStrategy> result = new HashSet<WhiteSpaceFormattingStrategy>(SHARED_STRATEGIES);
-    final LanguageWhiteSpaceFormattingStrategy languageStrategy = LanguageWhiteSpaceFormattingStrategy.INSTANCE;
+    Set<WhiteSpaceFormattingStrategy> result = new HashSet<>(getSharedStrategies(Language.ANY));
     for (Language language : languages) {
-      final WhiteSpaceFormattingStrategy strategy = languageStrategy.forLanguage(language);
+      final WhiteSpaceFormattingStrategy strategy = WhiteSpaceFormattingStrategy.forLanguage(language);
       if (strategy != null) {
         result.add(strategy);
       }
     }
-    myCachedStrategies.set(new PatchedWeakReference<Collection<WhiteSpaceFormattingStrategy>>(result));
+    myCachedStrategies.set(new PatchedWeakReference<>(result));
     return result;
   }
 

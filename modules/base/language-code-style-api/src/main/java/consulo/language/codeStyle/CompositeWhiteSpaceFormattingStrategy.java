@@ -15,6 +15,7 @@
  */
 package consulo.language.codeStyle;
 
+import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
 
@@ -33,15 +34,21 @@ import java.util.List;
  */
 public class CompositeWhiteSpaceFormattingStrategy implements WhiteSpaceFormattingStrategy {
 
-  private final List<WhiteSpaceFormattingStrategy> myStrategies = new ArrayList<WhiteSpaceFormattingStrategy>();
+  private final List<WhiteSpaceFormattingStrategy> myStrategies = new ArrayList<>();
+  private final Language myLanguage;
   private boolean myReplaceDefaultStrategy;
 
-  public CompositeWhiteSpaceFormattingStrategy(@Nonnull Collection<WhiteSpaceFormattingStrategy> strategies)
-          throws IllegalArgumentException
-  {
+  public CompositeWhiteSpaceFormattingStrategy(@Nonnull Language language, @Nonnull Collection<WhiteSpaceFormattingStrategy> strategies) throws IllegalArgumentException {
+    myLanguage = language;
     for (WhiteSpaceFormattingStrategy strategy : strategies) {
       addStrategy(strategy);
     }
+  }
+
+  @Nonnull
+  @Override
+  public Language getLanguage() {
+    return myLanguage;
   }
 
   @Override
@@ -69,10 +76,8 @@ public class CompositeWhiteSpaceFormattingStrategy implements WhiteSpaceFormatti
 
   public void addStrategy(@Nonnull WhiteSpaceFormattingStrategy strategy) throws IllegalArgumentException {
     if (myReplaceDefaultStrategy && strategy.replaceDefaultStrategy()) {
-      throw new IllegalArgumentException(String.format(
-              "Can't combine strategy '%s' with already registered strategies (%s). Reason: given strategy is marked to replace "
-              + "all existing strategies but strategy with such characteristics is already registered", strategy, myStrategies
-      ));
+      throw new IllegalArgumentException(String.format("Can't combine strategy '%s' with already registered strategies (%s). Reason: given strategy is marked to replace " +
+                                                       "all existing strategies but strategy with such characteristics is already registered", strategy, myStrategies));
     }
     myStrategies.add(strategy);
     myReplaceDefaultStrategy |= strategy.replaceDefaultStrategy();
@@ -83,8 +88,9 @@ public class CompositeWhiteSpaceFormattingStrategy implements WhiteSpaceFormatti
   public CharSequence adjustWhiteSpaceIfNecessary(@Nonnull CharSequence whiteSpaceText,
                                                   @Nonnull CharSequence text,
                                                   int startOffset,
-                                                  int endOffset, CodeStyleSettings codeStyleSettings, ASTNode nodeAfter)
-  {
+                                                  int endOffset,
+                                                  CodeStyleSettings codeStyleSettings,
+                                                  ASTNode nodeAfter) {
     CharSequence result = whiteSpaceText;
     for (WhiteSpaceFormattingStrategy strategy : myStrategies) {
       result = strategy.adjustWhiteSpaceIfNecessary(result, text, startOffset, endOffset, codeStyleSettings, nodeAfter);
@@ -93,11 +99,7 @@ public class CompositeWhiteSpaceFormattingStrategy implements WhiteSpaceFormatti
   }
 
   @Override
-  public CharSequence adjustWhiteSpaceIfNecessary(@Nonnull CharSequence whiteSpaceText,
-                                                  @Nonnull PsiElement startElement,
-                                                  int startOffset,
-                                                  int endOffset, CodeStyleSettings codeStyleSettings)
-  {
+  public CharSequence adjustWhiteSpaceIfNecessary(@Nonnull CharSequence whiteSpaceText, @Nonnull PsiElement startElement, int startOffset, int endOffset, CodeStyleSettings codeStyleSettings) {
     CharSequence result = whiteSpaceText;
     for (WhiteSpaceFormattingStrategy strategy : myStrategies) {
       result = strategy.adjustWhiteSpaceIfNecessary(result, startElement, startOffset, endOffset, codeStyleSettings);

@@ -15,10 +15,19 @@
  */
 package consulo.language.codeStyle;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.application.Application;
+import consulo.component.extension.ExtensionPointCacheKey;
+import consulo.language.Language;
 import consulo.language.ast.ASTNode;
+import consulo.language.extension.ByLanguageValue;
+import consulo.language.extension.LanguageExtension;
+import consulo.language.extension.LanguageOneToOne;
 import consulo.language.psi.PsiElement;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Defines common contract for strategy that determines if particular symbol or sequence of symbols may be treated as
@@ -30,7 +39,14 @@ import javax.annotation.Nonnull;
  * @author Denis Zhdanov
  * @since Sep 20, 2010 5:05:08 PM
  */
-public interface WhiteSpaceFormattingStrategy {
+@ExtensionAPI(ComponentScope.APPLICATION)
+public interface WhiteSpaceFormattingStrategy extends LanguageExtension {
+  ExtensionPointCacheKey<WhiteSpaceFormattingStrategy, ByLanguageValue<WhiteSpaceFormattingStrategy>> KEY = ExtensionPointCacheKey.create("WhiteSpaceFormattingStrategy", LanguageOneToOne.build());
+
+  @Nullable
+  static WhiteSpaceFormattingStrategy forLanguage(@Nonnull Language language) {
+    return Application.get().getExtensionPoint(WhiteSpaceFormattingStrategy.class).getOrBuildCache(KEY).get(language);
+  }
 
   /**
    * Checks if given sub-sequence of the given text contains symbols that may be treated as white spaces.

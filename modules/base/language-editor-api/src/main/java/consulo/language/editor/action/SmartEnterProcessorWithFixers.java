@@ -1,25 +1,23 @@
-package consulo.ide.impl.idea.lang;
+package consulo.language.editor.action;
 
-import consulo.ide.impl.idea.codeInsight.editorActions.smartEnter.SmartEnterProcessor;
-import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.application.statistic.FeatureUsageTracker;
-import consulo.ui.ex.action.IdeActions;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionManager;
-import consulo.codeEditor.EditorEx;
-import consulo.project.Project;
-import consulo.util.dataholder.Key;
+import consulo.document.Document;
+import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.util.collection.OrderedSet;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.ui.ex.action.IdeActions;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.OrderedSet;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
-
 import java.util.ArrayList;
 import java.util.List;
 

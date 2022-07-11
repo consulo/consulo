@@ -32,7 +32,7 @@ import javax.annotation.Nonnull;
  * @author Denis Zhdanov
  * @since Sep 20, 2010 5:11:49 PM
  */
-public class StaticSymbolWhiteSpaceDefinitionStrategy extends AbstractWhiteSpaceFormattingStrategy {
+public abstract class StaticSymbolWhiteSpaceDefinitionStrategy extends AbstractWhiteSpaceFormattingStrategy {
 
   private final IntSet myWhiteSpaceSymbols = IntSets.newHashSet();
 
