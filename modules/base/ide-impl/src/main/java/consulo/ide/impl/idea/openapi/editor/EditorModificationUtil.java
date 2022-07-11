@@ -15,10 +15,10 @@
  */
 package consulo.ide.impl.idea.openapi.editor;
 
-import consulo.ide.impl.idea.util.Producer;
 import consulo.application.util.LineTokenizer;
 import consulo.codeEditor.*;
 import consulo.document.FileDocumentManager;
+import consulo.ide.impl.idea.util.Producer;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.util.LanguageEditorUtil;
 import consulo.ui.ex.awt.CopyPasteManager;
@@ -30,6 +30,7 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class EditorModificationUtil {
   private EditorModificationUtil() {
@@ -93,13 +94,13 @@ public class EditorModificationUtil {
   }
 
   @Nullable
-  public static Transferable getContentsToPasteToEditor(@Nullable Producer<Transferable> producer) {
+  public static Transferable getContentsToPasteToEditor(@Nullable Supplier<Transferable> producer) {
     if (producer == null) {
       CopyPasteManager manager = CopyPasteManager.getInstance();
       return manager.areDataFlavorsAvailable(DataFlavor.stringFlavor) ? manager.getContents() : null;
     }
     else {
-      return producer.produce();
+      return producer.get();
     }
   }
 

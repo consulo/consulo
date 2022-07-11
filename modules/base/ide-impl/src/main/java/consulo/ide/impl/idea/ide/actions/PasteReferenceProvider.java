@@ -2,29 +2,29 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.language.editor.FileModificationService;
-import consulo.ide.IdeBundle;
-import consulo.language.editor.QualifiedNameProvider;
-import consulo.language.editor.QualifiedNameProviderUtil;
-import consulo.ui.ex.PasteProvider;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;
-import consulo.undoRedo.CommandProcessor;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
+import consulo.dataContext.DataContext;
+import consulo.document.Document;
+import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.ide.impl.idea.openapi.editor.actions.PasteAction;
-import consulo.ui.ex.awt.CopyPasteManager;
-import consulo.project.Project;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.FileModificationService;
+import consulo.language.editor.QualifiedNameProvider;
+import consulo.language.editor.QualifiedNameProviderUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.ide.impl.idea.util.Producer;
+import consulo.project.Project;
+import consulo.ui.ex.PasteProvider;
+import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.undoRedo.CommandProcessor;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.datatransfer.Transferable;
+import java.util.function.Supplier;
 
 @ExtensionImpl
 public class PasteReferenceProvider implements PasteProvider {
@@ -86,10 +86,10 @@ public class PasteReferenceProvider implements PasteProvider {
 
   @Nullable
   private static String getCopiedFqn(final DataContext context) {
-    Producer<Transferable> producer = context.getData(PasteAction.TRANSFERABLE_PROVIDER);
+    Supplier<Transferable> producer = context.getData(PasteAction.TRANSFERABLE_PROVIDER);
 
     if (producer != null) {
-      Transferable transferable = producer.produce();
+      Transferable transferable = producer.get();
       if (transferable != null) {
         try {
           return (String)transferable.getTransferData(CopyReferenceAction.ourFlavor);

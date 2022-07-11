@@ -16,40 +16,50 @@
 
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.*;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionUtil;
+import consulo.codeEditor.action.ExtensionEditorActionHandler;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.openapi.editor.actions.CopyAction;
 import consulo.ide.impl.idea.openapi.editor.impl.EditorCopyPasteHelperImpl;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.action.CopyPastePreProcessor;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.CopyPasteManager;
-import jakarta.inject.Inject;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.awt.datatransfer.Transferable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CopyHandler extends EditorActionHandler {
-  private final EditorActionHandler myOriginalAction;
+@ExtensionImpl
+public class CopyHandler extends EditorActionHandler implements ExtensionEditorActionHandler {
+  private EditorActionHandler myOriginalAction;
 
-  @Inject
-  public CopyHandler(final EditorActionHandler originalHandler) {
+  @Override
+  public void init(@Nullable EditorActionHandler originalHandler) {
     myOriginalAction = originalHandler;
+  }
+
+  @Nonnull
+  @Override
+  public String getActionId() {
+    return IdeActions.ACTION_EDITOR_COPY;
   }
 
   @Override
   public void doExecute(final Editor editor, Caret caret, final DataContext dataContext) {
     assert caret == null : "Invocation of 'copy' operation for specific caret is not supported";
-    final Project project = DataManager.getInstance().getDataContext(editor.getComponent()).getData(CommonDataKeys.PROJECT);
-    if (project == null){
-      if (myOriginalAction != null){
+    final Project project = DataManager.getInstance().getDataContext(editor.getComponent()).getData(Project.KEY);
+    if (project == null) {
+      if (myOriginalAction != null) {
         myOriginalAction.execute(editor, null, dataContext);
       }
       return;
@@ -67,19 +77,9 @@ public class CopyHandler extends EditorActionHandler {
       if (Registry.is(CopyAction.SKIP_COPY_AND_CUT_FOR_EMPTY_SELECTION_KEY)) {
         return;
       }
-      editor.getCaretModel().runForEachCaret(new CaretAction() {
-        @Override
-        public void perform(Caret caret) {
-          selectionModel.selectLineAtCaret();
-        }
-      });
+      editor.getCaretModel().runForEachCaret(caret1 -> selectionModel.selectLineAtCaret());
       if (!selectionModel.hasSelection(true)) return;
-      editor.getCaretModel().runForEachCaret(new CaretAction() {
-        @Override
-        public void perform(Caret caret) {
-          EditorActionUtil.moveCaretToLineStartIgnoringSoftWraps(editor);
-        }
-      });
+      editor.getCaretModel().runForEachCaret(caret12 -> EditorActionUtil.moveCaretToLineStartIgnoringSoftWraps(editor));
     }
 
     PsiDocumentManager.getInstance(project).commitAllDocuments();
@@ -92,9 +92,7 @@ public class CopyHandler extends EditorActionHandler {
       transferableDatas.addAll(processor.collectTransferableData(file, editor, startOffsets, endOffsets));
     }
 
-    String text = editor.getCaretModel().supportsMultipleCarets()
-                  ? EditorCopyPasteHelperImpl.getSelectedTextForClipboard(editor, transferableDatas)
-                  : selectionModel.getSelectedText();
+    String text = editor.getCaretModel().supportsMultipleCarets() ? EditorCopyPasteHelperImpl.getSelectedTextForClipboard(editor, transferableDatas) : selectionModel.getSelectedText();
     String rawText = TextBlockTransferable.convertLineSeparators(text, "\n", transferableDatas);
     String escapedText = null;
     for (CopyPastePreProcessor processor : CopyPastePreProcessor.EP_NAME.getExtensionList()) {
@@ -103,9 +101,7 @@ public class CopyHandler extends EditorActionHandler {
         break;
       }
     }
-    final Transferable transferable = new TextBlockTransferable(escapedText != null ? escapedText : rawText,
-                                                                transferableDatas,
-                                                                escapedText != null ? new RawText(rawText) : null);
+    final Transferable transferable = new TextBlockTransferable(escapedText != null ? escapedText : rawText, transferableDatas, escapedText != null ? new RawText(rawText) : null);
     CopyPasteManager.getInstance().setContents(transferable);
     if (editor instanceof EditorEx) {
       EditorEx ex = (EditorEx)editor;

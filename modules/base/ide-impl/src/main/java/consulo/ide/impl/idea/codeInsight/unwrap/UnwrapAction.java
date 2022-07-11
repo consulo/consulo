@@ -16,9 +16,11 @@
 
 package consulo.ide.impl.idea.codeInsight.unwrap;
 
-import consulo.language.editor.action.CodeInsightActionHandler;
-import consulo.ide.impl.idea.codeInsight.actions.BaseCodeInsightAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
+import consulo.ide.impl.idea.codeInsight.actions.BaseCodeInsightAction;
+import consulo.language.editor.action.CodeInsightActionHandler;
+import consulo.language.editor.refactoring.unwrap.UnwrapDescriptor;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 
@@ -37,7 +39,8 @@ public class UnwrapAction extends BaseCodeInsightAction{
   }
 
   @Override
+  @RequiredReadAction
   protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
-    return !LanguageUnwrappers.INSTANCE.allForLanguage(file.getLanguage()).isEmpty();
+    return !UnwrapDescriptor.forLanguage(file.getLanguage()).isEmpty();
   }
 }

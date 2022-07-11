@@ -17,10 +17,11 @@
 package consulo.ide.impl.idea.testIntegration;
 
 import consulo.codeEditor.Editor;
-import consulo.project.Project;
 import consulo.language.psi.PsiFile;
+import consulo.project.Project;
 
 public interface TestCreator {
   boolean isAvailable(Project project, Editor editor, PsiFile file);
+
   void createTest(Project project, Editor editor, PsiFile file);
 }

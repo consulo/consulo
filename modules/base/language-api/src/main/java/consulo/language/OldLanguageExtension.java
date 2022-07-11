@@ -19,6 +19,7 @@
  */
 package consulo.language;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.extension.KeyedExtensionCollector;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
@@ -27,6 +28,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
+@Deprecated(forRemoval = true)
+@DeprecationInfo("Not worked with new extensions")
 public class OldLanguageExtension<T> extends KeyedExtensionCollector<T, Language> {
   private final T myDefaultImplementation;
   private final /* non static!!! */ Key<T> IN_LANGUAGE_CACHE;

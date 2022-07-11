@@ -25,7 +25,6 @@ import consulo.ide.impl.idea.refactoring.safeDelete.usageInfo.SafeDeleteReferenc
 import consulo.ide.impl.idea.refactoring.safeDelete.usageInfo.SafeDeleteUsageInfo;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.language.editor.refactoring.BaseRefactoringProcessor;
-import consulo.language.editor.refactoring.LanguageRefactoringSupport;
 import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.refactoring.RefactoringSupportProvider;
 import consulo.language.editor.refactoring.event.RefactoringEventData;
@@ -451,7 +450,7 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
   public static boolean validElement(@Nonnull PsiElement element) {
     if (element instanceof PsiFile) return true;
     if (!element.isPhysical()) return false;
-    final RefactoringSupportProvider provider = LanguageRefactoringSupport.INSTANCE.forLanguage(element.getLanguage());
+    final RefactoringSupportProvider provider = RefactoringSupportProvider.forLanguage(element.getLanguage());
     return provider.isSafeDeleteAvailable(element);
   }
 

@@ -22,7 +22,6 @@ import consulo.codeEditor.ScrollType;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.completion.lookup.LookupManager;
-import consulo.language.editor.refactoring.LanguageRefactoringSupport;
 import consulo.language.editor.refactoring.RefactoringSupportProvider;
 import consulo.language.editor.refactoring.rename.PsiElementRenameHandler;
 import consulo.language.editor.refactoring.rename.RenameHandler;
@@ -61,7 +60,7 @@ public class VariableInplaceRenameHandler implements RenameHandler {
     final PsiElement nameSuggestionContext = file.findElementAt(editor.getCaretModel().getOffset());
 
     RefactoringSupportProvider supportProvider =
-            element == null ? null : LanguageRefactoringSupport.INSTANCE.forLanguage(element.getLanguage());
+            element == null ? null : RefactoringSupportProvider.forLanguage(element.getLanguage());
     return supportProvider != null &&
            editor.getSettings().isVariableInplaceRenameEnabled() &&
            supportProvider.isInplaceRenameAvailable(element, nameSuggestionContext);

@@ -1236,9 +1236,9 @@
     <editorActionHandler action="EditorLineEnd" implementationClass="consulo.ide.impl.idea.codeInsight.editorActions.EndHandler"/>
     <editorActionHandler action="EditorSelectWord" implementationClass="consulo.ide.impl.idea.codeInsight.editorActions.SelectWordHandler"/>
     <editorActionHandler action="EditorUnSelectWord" implementationClass="consulo.ide.impl.idea.codeInsight.editorActions.UnSelectWordHandler"/>
-    <editorActionHandler action="EditorPaste" implementationClass="consulo.ide.impl.idea.codeInsight.editorActions.PasteHandler"/>
-    <editorActionHandler action="EditorCopy" implementationClass="consulo.ide.impl.idea.codeInsight.editorActions.CopyHandler"/>
-    <editorActionHandler action="EditorCut" implementationClass="consulo.ide.impl.idea.codeInsight.editorActions.CutHandler"/>
+    <!--<editorActionHandler action="EditorPaste" implementationClass="consulo.ide.impl.idea.codeInsight.editorActions.PasteHandler"/>-->
+    <!--<editorActionHandler action="EditorCopy" implementationClass="consulo.ide.impl.idea.codeInsight.editorActions.CopyHandler"/>-->
+    <!--<editorActionHandler action="EditorCut" implementationClass="consulo.ide.impl.idea.codeInsight.editorActions.CutHandler"/>-->
     <editorActionHandler action="EditorJoinLines" implementationClass="consulo.ide.impl.idea.codeInsight.editorActions.JoinLinesHandler"/>
     <editorActionHandler action="EditorBackSpace" implementationClass="consulo.ide.impl.idea.codeInsight.editorActions.BackspaceHandler"/>
     <editorActionHandler action="EditorDeleteToWordStart"

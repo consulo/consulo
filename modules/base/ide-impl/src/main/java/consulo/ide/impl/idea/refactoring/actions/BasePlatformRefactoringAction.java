@@ -15,24 +15,21 @@
  */
 package consulo.ide.impl.idea.refactoring.actions;
 
-import consulo.language.Language;
-import consulo.language.editor.refactoring.LanguageRefactoringSupport;
-import consulo.language.editor.refactoring.RefactoringSupportProvider;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
-import consulo.language.editor.LangDataKeys;
 import consulo.codeEditor.Editor;
+import consulo.dataContext.DataContext;
+import consulo.ide.impl.idea.refactoring.lang.ElementsHandler;
+import consulo.language.Language;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.LangDataKeys;
+import consulo.language.editor.refactoring.RefactoringActionHandler;
+import consulo.language.editor.refactoring.RefactoringSupportProvider;
 import consulo.language.editor.refactoring.action.BaseRefactoringAction;
-import consulo.util.lang.function.Condition;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.editor.refactoring.RefactoringActionHandler;
-import consulo.ide.impl.idea.refactoring.lang.ElementsHandler;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.lang.function.Condition;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
 
 /**
  * @author yole
@@ -91,13 +88,9 @@ public abstract class BasePlatformRefactoringAction extends BaseRefactoringActio
 
   @Nullable
   protected RefactoringActionHandler getHandler(@Nonnull Language language, PsiElement element) {
-    List<RefactoringSupportProvider> providers = LanguageRefactoringSupport.INSTANCE.allForLanguage(language);
-    if (providers.isEmpty()) return null;
-    if (element == null) return getRefactoringHandler(providers.get(0));
-    for (RefactoringSupportProvider provider : providers) {
-      if (provider.isAvailable(element)) {
-        return getRefactoringHandler(provider, element);
-      }
+    RefactoringSupportProvider provider = RefactoringSupportProvider.forLanguage(language);
+    if (provider.isAvailable(element)) {
+      return getRefactoringHandler(provider, element);
     }
     return null;
   }
@@ -109,8 +102,9 @@ public abstract class BasePlatformRefactoringAction extends BaseRefactoringActio
 
   @Override
   protected boolean isAvailableForLanguage(final Language language) {
-    List<RefactoringSupportProvider> providers = LanguageRefactoringSupport.INSTANCE.allForLanguage(language);
-    return ContainerUtil.find(providers, myCondition) != null;
+    RefactoringSupportProvider refactoringSupportProvider = RefactoringSupportProvider.forLanguage(language);
+    // any language mean default provider
+    return refactoringSupportProvider.getLanguage() != Language.ANY;
   }
 
   @Override
@@ -140,7 +134,7 @@ public abstract class BasePlatformRefactoringAction extends BaseRefactoringActio
   }
 
   private boolean calcHidden() {
-    for(Language l: Language.getRegisteredLanguages()) {
+    for (Language l : Language.getRegisteredLanguages()) {
       if (isAvailableForLanguage(l)) {
         return false;
       }

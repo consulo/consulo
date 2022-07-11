@@ -15,11 +15,13 @@
  */
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.*;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionManager;
+import consulo.codeEditor.action.ExtensionEditorActionHandler;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
@@ -37,7 +39,6 @@ import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.codeStyle.FormattingModelBuilder;
 import consulo.language.editor.CodeInsightSettings;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.action.CopyPastePreProcessor;
 import consulo.language.impl.file.SingleRootFileViewProvider;
 import consulo.language.psi.PsiDocumentManager;
@@ -47,25 +48,34 @@ import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.ex.PasteProvider;
+import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.util.*;
+import java.util.function.Supplier;
 
-public class PasteHandler extends EditorActionHandler implements EditorTextInsertHandler {
+@ExtensionImpl
+public class PasteHandler extends EditorActionHandler implements EditorTextInsertHandler, ExtensionEditorActionHandler {
   private static final Logger LOG = Logger.getInstance(PasteHandler.class);
 
-  private final EditorActionHandler myOriginalHandler;
+  private EditorActionHandler myOriginalHandler;
 
-  public PasteHandler(EditorActionHandler originalAction) {
+  @Override
+  public void init(EditorActionHandler originalAction) {
     myOriginalHandler = originalAction;
+  }
+
+  @Nonnull
+  @Override
+  public String getActionId() {
+    return IdeActions.ACTION_EDITOR_PASTE;
   }
 
   @Override
@@ -82,17 +92,17 @@ public class PasteHandler extends EditorActionHandler implements EditorTextInser
     if (!CodeInsightUtilBase.prepareEditorForWrite(editor)) return;
 
     final Document document = editor.getDocument();
-    if (!FileDocumentManager.getInstance().requestWriting(document, dataContext.getData(CommonDataKeys.PROJECT))) {
+    if (!FileDocumentManager.getInstance().requestWriting(document, dataContext.getData(Project.KEY))) {
       return;
     }
 
     DataContext context = new DataContext() {
       @Override
-      public Object getData(@NonNls Key dataId) {
-        return PasteAction.TRANSFERABLE_PROVIDER == dataId ? new Producer<Transferable>() {
+      public Object getData(Key dataId) {
+        return PasteAction.TRANSFERABLE_PROVIDER == dataId ? new Supplier<Transferable>() {
           @Nullable
           @Override
-          public Transferable produce() {
+          public Transferable get() {
             return transferable;
           }
         } : dataContext.getData(dataId);
@@ -135,11 +145,7 @@ public class PasteHandler extends EditorActionHandler implements EditorTextInser
     }
   }
 
-  private static void doPaste(final Editor editor,
-                              final Project project,
-                              final PsiFile file,
-                              final Document document,
-                              @Nonnull final Transferable content) {
+  private static void doPaste(final Editor editor, final Project project, final PsiFile file, final Document document, @Nonnull final Transferable content) {
     CopyPasteManager.getInstance().stopKillRings();
 
     String text = null;
@@ -197,14 +203,12 @@ public class PasteHandler extends EditorActionHandler implements EditorTextInser
     }
 
     final String _text = text;
-    ApplicationManager.getApplication().runWriteAction(
-            new Runnable() {
-              @Override
-              public void run() {
-                EditorModificationUtil.insertStringAtCaret(editor, _text, false, true);
-              }
-            }
-    );
+    ApplicationManager.getApplication().runWriteAction(new Runnable() {
+      @Override
+      public void run() {
+        EditorModificationUtil.insertStringAtCaret(editor, _text, false, true);
+      }
+    });
 
     int length = text.length();
     int offset = caretModel.getOffset() - length;
@@ -224,39 +228,36 @@ public class PasteHandler extends EditorActionHandler implements EditorTextInser
       e.getKey().processTransferableData(project, editor, bounds, caretOffset, indented, e.getValue());
     }
 
-    boolean pastedTextContainsWhiteSpacesOnly =
-            CharArrayUtil.shiftForward(document.getCharsSequence(), bounds.getStartOffset(), " \n\t") >= bounds.getEndOffset();
+    boolean pastedTextContainsWhiteSpacesOnly = CharArrayUtil.shiftForward(document.getCharsSequence(), bounds.getStartOffset(), " \n\t") >= bounds.getEndOffset();
 
     VirtualFile virtualFile = file.getVirtualFile();
     if (!pastedTextContainsWhiteSpacesOnly && (virtualFile == null || !SingleRootFileViewProvider.isTooLargeForIntelligence(virtualFile))) {
       final int indentOptions1 = indentOptions;
 
-      ApplicationManager.getApplication().runWriteAction(
-              new Runnable() {
-                @Override
-                public void run() {
-                  PsiDocumentManager.getInstance(project).doPostponedOperationsAndUnblockDocument(document);
-                  switch (indentOptions1) {
-                    case CodeInsightSettings.INDENT_BLOCK:
-                      if (!indented.get()) {
-                        indentBlock(project, editor, bounds.getStartOffset(), bounds.getEndOffset(), blockIndentAnchorColumn);
-                      }
-                      break;
-
-                    case CodeInsightSettings.INDENT_EACH_LINE:
-                      if (!indented.get()) {
-                        indentEachLine(project, editor, bounds.getStartOffset(), bounds.getEndOffset());
-                      }
-                      break;
-
-                    case CodeInsightSettings.REFORMAT_BLOCK:
-                      indentEachLine(project, editor, bounds.getStartOffset(), bounds.getEndOffset()); // this is needed for example when inserting a comment before method
-                      reformatBlock(project, editor, bounds.getStartOffset(), bounds.getEndOffset());
-                      break;
-                  }
-                }
+      ApplicationManager.getApplication().runWriteAction(new Runnable() {
+        @Override
+        public void run() {
+          PsiDocumentManager.getInstance(project).doPostponedOperationsAndUnblockDocument(document);
+          switch (indentOptions1) {
+            case CodeInsightSettings.INDENT_BLOCK:
+              if (!indented.get()) {
+                indentBlock(project, editor, bounds.getStartOffset(), bounds.getEndOffset(), blockIndentAnchorColumn);
               }
-      );
+              break;
+
+            case CodeInsightSettings.INDENT_EACH_LINE:
+              if (!indented.get()) {
+                indentEachLine(project, editor, bounds.getStartOffset(), bounds.getEndOffset());
+              }
+              break;
+
+            case CodeInsightSettings.REFORMAT_BLOCK:
+              indentEachLine(project, editor, bounds.getStartOffset(), bounds.getEndOffset()); // this is needed for example when inserting a comment before method
+              reformatBlock(project, editor, bounds.getStartOffset(), bounds.getEndOffset());
+              break;
+          }
+        }
+      });
     }
 
     if (bounds.isValid()) {

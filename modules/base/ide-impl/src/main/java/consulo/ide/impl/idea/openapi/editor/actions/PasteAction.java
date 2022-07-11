@@ -15,25 +15,25 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
-import consulo.dataContext.DataContext;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorCopyPasteHelper;
-import consulo.codeEditor.impl.action.EditorAction;
 import consulo.codeEditor.EditorEx;
-import consulo.util.dataholder.Key;
+import consulo.codeEditor.impl.action.EditorAction;
+import consulo.dataContext.DataContext;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.util.Producer;
-import consulo.annotation.access.RequiredWriteAction;
+import consulo.util.dataholder.Key;
 
 import java.awt.datatransfer.Transferable;
+import java.util.function.Supplier;
 
 /**
  * @author max
  * @since May 13, 2002
  */
 public class PasteAction extends EditorAction {
-  public static final Key<Producer<Transferable>> TRANSFERABLE_PROVIDER = Key.create("PasteTransferableProvider");
+  public static final Key<Supplier<Transferable>> TRANSFERABLE_PROVIDER = Key.create("PasteTransferableProvider");
 
   public PasteAction() {
     super(new Handler());

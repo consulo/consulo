@@ -16,42 +16,50 @@
 
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
-import consulo.dataContext.DataManager;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
-import consulo.ui.ex.action.IdeActions;
-import consulo.ide.impl.idea.openapi.editor.*;
+import consulo.annotation.access.RequiredWriteAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.util.registry.Registry;
+import consulo.codeEditor.*;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionManager;
+import consulo.codeEditor.action.ExtensionEditorActionHandler;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
+import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.ide.impl.idea.openapi.editor.actionSystem.EditorWriteActionHandler;
 import consulo.ide.impl.idea.openapi.editor.actions.CopyAction;
-import consulo.codeEditor.*;
-import consulo.project.Project;
-import consulo.document.util.TextRange;
-import consulo.application.util.registry.Registry;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import consulo.annotation.access.RequiredWriteAction;
-import jakarta.inject.Inject;
+import consulo.project.Project;
+import consulo.ui.ex.action.IdeActions;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-public class CutHandler extends EditorWriteActionHandler {
-  private final EditorActionHandler myOriginalHandler;
+@ExtensionImpl
+public class CutHandler extends EditorWriteActionHandler implements ExtensionEditorActionHandler {
+  private EditorActionHandler myOriginalHandler;
 
-  @Inject
-  public CutHandler(EditorActionHandler originalHandler) {
+  @Override
+  public void init(EditorActionHandler originalHandler) {
     myOriginalHandler = originalHandler;
+  }
+
+  @Nonnull
+  @Override
+  public String getActionId() {
+    return IdeActions.ACTION_EDITOR_CUT;
   }
 
   @RequiredWriteAction
   @Override
   public void executeWriteAction(final Editor editor, Caret caret, DataContext dataContext) {
     assert caret == null : "Invocation of 'cut' operation for specific caret is not supported";
-    Project project = DataManager.getInstance().getDataContext(editor.getContentComponent()).getData(CommonDataKeys.PROJECT);
+    Project project = DataManager.getInstance().getDataContext(editor.getContentComponent()).getData(Project.KEY);
     if (project == null) {
       if (myOriginalHandler != null) {
         myOriginalHandler.execute(editor, null, dataContext);

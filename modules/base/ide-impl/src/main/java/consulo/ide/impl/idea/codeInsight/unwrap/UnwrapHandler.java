@@ -44,10 +44,12 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -82,8 +84,9 @@ public class UnwrapHandler implements CodeInsightActionHandler {
     return result;
   }
 
+  @Nullable
   private static UnwrapDescriptor getUnwrapDescription(PsiFile file) {
-    return LanguageUnwrappers.INSTANCE.forLanguage(file.getLanguage());
+    return ContainerUtil.getFirstItem(UnwrapDescriptor.forLanguage(file.getLanguage()));
   }
 
   private AnAction createUnwrapAction(Unwrapper u, PsiElement el, Editor ed, Project p) {

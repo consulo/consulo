@@ -20,7 +20,6 @@ import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.inject.EditorWindow;
-import consulo.language.editor.refactoring.LanguageRefactoringSupport;
 import consulo.language.editor.refactoring.RefactoringSupportProvider;
 import consulo.language.editor.refactoring.rename.RenamePsiElementProcessor;
 import consulo.language.editor.template.TemplateManager;
@@ -48,7 +47,7 @@ public class MemberInplaceRenameHandler extends VariableInplaceRenameHandler {
       element = PsiTreeUtil.getParentOfType(nameSuggestionContext, PsiNamedElement.class);
     }
     final RefactoringSupportProvider
-      supportProvider = element != null ? LanguageRefactoringSupport.INSTANCE.forLanguage(element.getLanguage()) : null;
+      supportProvider = element != null ? RefactoringSupportProvider.forLanguage(element.getLanguage()) : null;
     return editor.getSettings().isVariableInplaceRenameEnabled()
            && supportProvider != null
            && supportProvider.isMemberInplaceRenameAvailable(element, nameSuggestionContext);

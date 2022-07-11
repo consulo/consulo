@@ -15,19 +15,19 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
-import consulo.dataContext.DataContext;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorCopyPasteHelper;
+import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.ide.impl.idea.openapi.editor.actionSystem.EditorWriteActionHandler;
-import consulo.ide.impl.idea.util.Producer;
+import consulo.ui.annotation.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.annotation.access.RequiredWriteAction;
-
 import java.awt.datatransfer.Transferable;
+import java.util.function.Supplier;
 
 public class BasePasteHandler extends EditorWriteActionHandler {
   protected Transferable myTransferable;
@@ -60,7 +60,7 @@ public class BasePasteHandler extends EditorWriteActionHandler {
   }
 
   protected Transferable getContentsToPaste(Editor editor, DataContext dataContext) {
-    Producer<Transferable> producer = dataContext.getData(PasteAction.TRANSFERABLE_PROVIDER);
+    Supplier<Transferable> producer = dataContext.getData(PasteAction.TRANSFERABLE_PROVIDER);
     return EditorModificationUtil.getContentsToPasteToEditor(producer);
   }
 
