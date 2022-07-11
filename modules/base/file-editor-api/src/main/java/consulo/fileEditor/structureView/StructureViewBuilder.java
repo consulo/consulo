@@ -15,8 +15,6 @@
  */
 package consulo.fileEditor.structureView;
 
-import consulo.component.extension.ExtensionPointName;
-import consulo.component.extension.KeyedFactoryEPBean;
 import consulo.fileEditor.FileEditor;
 import consulo.project.Project;
 

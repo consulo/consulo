@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.psi.util.proximity;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.openapi.util.NullableLazyKey;
 import consulo.ide.impl.psi.util.ProximityLocation;
 import consulo.language.psi.PsiElement;
@@ -27,6 +28,7 @@ import javax.annotation.Nonnull;
 /**
  * @author peter
  */
+@ExtensionImpl(id = "sameLogicalRoot", order = "after openedInEditor")
 public class SameSourceRootWeigher extends ProximityWeigher {
   private static final NullableLazyKey<VirtualFile, ProximityLocation> SOURCE_ROOT_KEY = NullableLazyKey.create("sourceRoot", proximityLocation -> findSourceRoot(proximityLocation.getPosition()));
 

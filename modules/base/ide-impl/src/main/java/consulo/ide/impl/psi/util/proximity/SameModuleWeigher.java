@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.psi.util.proximity;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.module.Module;
 import consulo.ide.impl.idea.openapi.module.ModuleUtil;
 import consulo.language.psi.PsiElement;
@@ -24,6 +25,7 @@ import javax.annotation.Nonnull;
 /**
  * @author peter
 */
+@ExtensionImpl(id = "sameModule", order = "after sameLogicalRoot")
 public class SameModuleWeigher extends ProximityWeigher {
 
   @Override

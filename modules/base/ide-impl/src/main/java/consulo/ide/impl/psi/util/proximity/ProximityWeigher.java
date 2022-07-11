@@ -15,9 +15,11 @@
  */
 package consulo.ide.impl.psi.util.proximity;
 
-import consulo.language.psi.PsiElement;
-import consulo.language.Weigher;
 import consulo.ide.impl.psi.util.ProximityLocation;
+import consulo.language.Weigher;
+import consulo.language.psi.PsiElement;
+import consulo.util.dataholder.Key;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -27,4 +29,10 @@ public abstract class ProximityWeigher extends Weigher<PsiElement, ProximityLoca
 
   @Override
   public abstract Comparable weigh(@Nonnull final PsiElement element, @Nonnull final ProximityLocation location);
+
+  @Nonnull
+  @Override
+  public Key<?> getKey() {
+    return PsiProximityComparator.WEIGHER_KEY;
+  }
 }

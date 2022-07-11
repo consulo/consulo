@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.completion;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.psi.statistics.StatisticsInfo;
 import consulo.ide.impl.psi.statistics.StatisticsManager;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -37,6 +38,7 @@ import java.util.*;
 /**
  * @author peter
  */
+@ExtensionImpl(id = "stats", order = "after priority")
 public class StatisticsWeigher extends CompletionWeigher {
   public static final Key<CompletionStatistician> STATISTICS_KEY = Key.create("completion");
 

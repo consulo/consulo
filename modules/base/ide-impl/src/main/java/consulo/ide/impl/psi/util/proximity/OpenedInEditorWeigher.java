@@ -15,19 +15,22 @@
  */
 package consulo.ide.impl.psi.util.proximity;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.fileEditor.FileEditorManager;
-import consulo.util.dataholder.NotNullLazyKey;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
-import consulo.ide.impl.psi.util.ProximityLocation;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.NotNullFunction;
+import consulo.ide.impl.psi.util.ProximityLocation;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.util.dataholder.NotNullLazyKey;
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 
 /**
  * @author peter
 */
+@ExtensionImpl(id = "openedInEditor", order = "first")
 public class OpenedInEditorWeigher extends ProximityWeigher {
   private static final NotNullLazyKey<VirtualFile[], ProximityLocation> OPENED_EDITORS = NotNullLazyKey.create("openedEditors", new NotNullFunction<ProximityLocation, VirtualFile[]>() {
     @Nonnull

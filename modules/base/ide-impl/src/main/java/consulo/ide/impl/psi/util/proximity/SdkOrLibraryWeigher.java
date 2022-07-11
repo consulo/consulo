@@ -15,21 +15,23 @@
  */
 package consulo.ide.impl.psi.util.proximity;
 
-import consulo.project.Project;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.ide.impl.psi.util.ProximityLocation;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiUtilCore;
+import consulo.module.content.ProjectRootManager;
 import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
-import consulo.module.content.ProjectRootManager;
+import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiElement;
-import consulo.ide.impl.psi.util.ProximityLocation;
-import consulo.language.psi.PsiUtilCore;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
  * @author peter
 */
+@ExtensionImpl(id = "sdkOrLibrary", order = "after sameModule")
 public class SdkOrLibraryWeigher extends ProximityWeigher {
 
   @Override

@@ -245,10 +245,7 @@
 
     <extensionPoint name="compiler.additionalOutputDirectoriesProvider"
                     interface="consulo.compiler.AdditionalOutputDirectoriesProvider"/>
-    <extensionPoint name="orderRootTypeEditor"
-                    beanClass="consulo.component.extension.KeyedFactoryEPBean">
-      <with attribute="implementationClass" implements="consulo.ide.impl.idea.openapi.roots.ui.OrderRootTypeUIFactory"/>
-    </extensionPoint>
+
 
     <extensionPoint name="packaging.elementType" interface="consulo.compiler.artifact.element.PackagingElementType"/>
     <extensionPoint name="packaging.artifactPropertiesProvider" interface="consulo.compiler.artifact.ArtifactPropertiesProvider"/>
@@ -527,9 +524,7 @@
 
     <extensionPoint name="orderRootType" interface="consulo.content.OrderRootType"/>
     <extensionPoint name="orderEntryType" interface="consulo.module.content.layer.orderEntry.OrderEntryType" internal="true"/>
-    <extensionPoint name="orderEntryTypeEditor" beanClass="consulo.component.extension.KeyedFactoryEPBean">
-      <with attribute="implementationClass" implements="consulo.ide.setting.module.OrderEntryTypeEditor"/>
-    </extensionPoint>
+
     <extensionPoint name="orderEnumerationHandlerFactory" interface="consulo.module.impl.internal.layer.OrderEnumerationHandler$Factory"/>
     <extensionPoint name="directoryIndexExcludePolicy" interface="consulo.module.content.layer.DirectoryIndexExcludePolicy"
                     area="PROJECT"/>
@@ -639,11 +634,6 @@
 
     <extensionPoint name="elementDescriptionProvider" interface="consulo.language.psi.ElementDescriptionProvider"/>
 
-    <extensionPoint name="structureViewBuilder"
-                    beanClass="consulo.component.extension.KeyedFactoryEPBean">
-      <with attribute="implementationClass" implements="consulo.fileEditor.structureView.StructureViewBuilder"/>
-    </extensionPoint>
-
     <extensionPoint name="macro" interface="consulo.pathMacro.Macro"/>
     <extensionPoint name="printOption" interface="consulo.ide.impl.idea.codeEditor.printing.PrintOption"/>
 
@@ -712,11 +702,6 @@
     <extensionPoint name="statistician" beanClass="consulo.ide.impl.psi.statistics.StatisticsExtensionPoint">
       <with attribute="implementationClass" implements="consulo.ide.impl.psi.statistics.Statistician"/>
     </extensionPoint>
-
-    <extensionPoint name="weigher" beanClass="consulo.ide.impl.psi.WeigherExtensionPoint">
-      <with attribute="implementationClass" implements="consulo.language.Weigher"/>
-    </extensionPoint>
-
 
 
     <extensionPoint name="highlightRangeExtension" interface="consulo.ide.impl.idea.codeInsight.daemon.impl.HighlightRangeExtension"/>
@@ -1148,25 +1133,19 @@
 				  id="decorator"/>
     <statistician key="completion" implementationClass="consulo.ide.impl.idea.codeInsight.completion.DefaultCompletionStatistician" order="last"/>
 
-    <weigher key="proximity" implementationClass="consulo.ide.impl.psi.util.proximity.OpenedInEditorWeigher" id="openedInEditor"/>
-    <weigher key="proximity" implementationClass="consulo.ide.impl.psi.util.proximity.SameSourceRootWeigher" id="sameLogicalRoot"
-             order="after openedInEditor"/>
-    <weigher key="proximity" implementationClass="consulo.ide.impl.psi.util.proximity.SameModuleWeigher" id="sameModule"
-             order="after sameLogicalRoot"/>
-    <weigher key="proximity" implementationClass="consulo.ide.impl.psi.util.proximity.SdkOrLibraryWeigher" id="sdkOrLibrary"
-             order="after sameModule"/>
 
-    <weigher key="completion" implementationClass="consulo.ide.impl.idea.codeInsight.completion.PriorityWeigher" id="priority" order="first"/>
-    <weigher key="completion" implementationClass="consulo.ide.impl.idea.codeInsight.completion.StatisticsWeigher" id="stats"
-			 order="after priority"/>
-    <weigher key="completion" implementationClass="consulo.ide.impl.idea.codeInsight.completion.PrefixMatchingWeigher" id="prefix"
-			 order="after stats"/>
-    <weigher key="completion" implementationClass="consulo.ide.impl.idea.codeInsight.completion.ExplicitProximityWeigher" id="explicitProximity"
-			 order="after prefix"/>
-    <weigher key="completion" implementationClass="consulo.ide.impl.idea.codeInsight.completion.LookupElementProximityWeigher" id="proximity"
-			 order="after explicitProximity"/>
-    <weigher key="completion" implementationClass="consulo.ide.impl.idea.codeInsight.completion.GroupingWeigher" id="grouping"
-			 order="last"/>
+
+    <!--<weigher key="completion" implementationClass="consulo.ide.impl.idea.codeInsight.completion.PriorityWeigher" id="priority" order="first"/>-->
+    <!--<weigher key="completion" implementationClass="consulo.ide.impl.idea.codeInsight.completion.StatisticsWeigher" id="stats"-->
+			 <!--order="after priority"/>-->
+    <!--<weigher key="completion" implementationClass="consulo.ide.impl.idea.codeInsight.completion.PrefixMatchingWeigher" id="prefix"-->
+			 <!--order="after stats"/>-->
+    <!--<weigher key="completion" implementationClass="consulo.ide.impl.idea.codeInsight.completion.ExplicitProximityWeigher" id="explicitProximity"-->
+			 <!--order="after prefix"/>-->
+    <!--<weigher key="completion" implementationClass="consulo.ide.impl.idea.codeInsight.completion.LookupElementProximityWeigher" id="proximity"-->
+			 <!--order="after explicitProximity"/>-->
+    <!--<weigher key="completion" implementationClass="consulo.ide.impl.idea.codeInsight.completion.GroupingWeigher" id="grouping"-->
+			 <!--order="last"/>-->
 
     <!--<completion.contributor language="any" implementationClass="consulo.ide.impl.idea.codeInsight.completion.DefaultCompletionContributor"-->
                             <!--id="default"-->
@@ -1295,9 +1274,6 @@
     <globalInspection shortName="SyntaxError" displayName="Syntax error" groupKey="inspection.general.tools.group.name" groupBundle="consulo.language.editor.inspection.InspectionsBundle"
                       enabledByDefault="true" level="ERROR"
                       implementationClass="consulo.ide.impl.idea.codeInsight.daemon.impl.DefaultHighlightVisitorBasedInspection$SyntaxErrorInspection"/>
-    <localInspection shortName="LossyEncoding" bundle="consulo.language.editor.inspection.InspectionsBundle" key="lossy.encoding"
-                     groupKey="group.names.internationalization.issues" enabledByDefault="true" level="WARNING"
-                     implementationClass="consulo.ide.impl.idea.codeInspection.LossyEncodingInspection"/>
 
 
 
@@ -1311,7 +1287,6 @@
 
 
 
-    <copyPastePostProcessor implementation="consulo.ide.impl.idea.codeInsight.editorActions.CopyPasteIndentProcessor"/>
     <statistics.usagesCollector implementation="consulo.ide.impl.idea.execution.impl.statistics.RunConfigurationTypeUsagesCollector"/>
     <statistics.usagesCollector implementation="consulo.ide.impl.idea.execution.impl.statistics.TemporaryRunConfigurationTypeUsagesCollector"/>
     <statistics.usagesCollector implementation="consulo.ide.impl.idea.openapi.fileTypes.FileTypeUsagesCollector"/>
@@ -1335,8 +1310,8 @@
 
 
 
-    <weigher key="proximity" implementationClass="consulo.ide.impl.psi.util.proximity.SameDirectoryWeigher" id="sameDirectory"
-             order="after openedInEditor"/>
+    <!--<weigher key="proximity" implementationClass="consulo.ide.impl.psi.util.proximity.SameDirectoryWeigher" id="sameDirectory"-->
+             <!--order="after openedInEditor"/>-->
 
 
     <schemeOwner serviceInterface="consulo.language.editor.inspection.scheme.InspectionProfileManager"/>

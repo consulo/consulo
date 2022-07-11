@@ -15,10 +15,9 @@
  */
 package consulo.language;
 
-import consulo.application.util.function.Computable;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Supplier;
 
 /**
  * @author peter
@@ -37,11 +36,11 @@ public class WeighingComparable<T, Loc> implements Comparable<WeighingComparable
   };
   @Nonnull
   private Comparable[] myComputedWeighs;
-  private final Computable<? extends T> myElement;
+  private final Supplier<? extends T> myElement;
   private final Loc myLocation;
   private final Weigher<T, Loc>[] myWeighers;
 
-  public WeighingComparable(final Computable<? extends T> element, @Nullable final Loc location, final Weigher<T, Loc>[] weighers) {
+  public WeighingComparable(final Supplier<? extends T> element, @Nullable final Loc location, final Weigher<T, Loc>[] weighers) {
     myElement = element;
     myLocation = location;
     myWeighers = weighers;
@@ -84,7 +83,7 @@ public class WeighingComparable<T, Loc> implements Comparable<WeighingComparable
   private Comparable getWeight(final int index) {
     Comparable weight = myComputedWeighs[index];
     if (weight == null) {
-      T element = myElement.compute();
+      T element = myElement.get();
       weight = element == null ? NULL : myWeighers[index].weigh(element, myLocation);
       if (weight == null) weight = NULL;
       myComputedWeighs[index] = weight;
@@ -92,6 +91,7 @@ public class WeighingComparable<T, Loc> implements Comparable<WeighingComparable
     return weight == NULL ? null : weight;
   }
 
+  @Override
   public String toString() {
     final StringBuilder builder = new StringBuilder("[");
     for (int i = 0; i < myComputedWeighs.length; i++) {

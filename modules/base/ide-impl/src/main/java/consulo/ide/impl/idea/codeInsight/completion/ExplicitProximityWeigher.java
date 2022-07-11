@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.completion;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.completion.CompletionLocation;
 import consulo.language.editor.completion.CompletionWeigher;
 import consulo.language.editor.completion.lookup.LookupElement;
@@ -25,6 +26,7 @@ import javax.annotation.Nonnull;
 /**
  * @author peter
 */
+@ExtensionImpl(id = "explicitProximity", order = "after prefix")
 public class ExplicitProximityWeigher extends CompletionWeigher {
 
   @Override

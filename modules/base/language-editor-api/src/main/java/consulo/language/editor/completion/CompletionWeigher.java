@@ -17,6 +17,7 @@ package consulo.language.editor.completion;
 
 import consulo.language.Weigher;
 import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 
@@ -27,4 +28,10 @@ public abstract class CompletionWeigher extends Weigher<LookupElement, Completio
 
   @Override
   public abstract Comparable weigh(@Nonnull final LookupElement element, @Nonnull final CompletionLocation location);
+
+  @Nonnull
+  @Override
+  public Key<?> getKey() {
+    return CompletionService.RELEVANCE_KEY;
+  }
 }

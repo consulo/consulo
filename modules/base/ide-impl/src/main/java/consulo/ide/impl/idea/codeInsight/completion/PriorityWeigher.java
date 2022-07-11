@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.codeInsight.completion;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.completion.CompletionLocation;
 import consulo.language.editor.completion.CompletionWeigher;
 import consulo.language.editor.completion.lookup.LookupElement;
@@ -27,6 +28,7 @@ import javax.annotation.Nonnull;
 /**
  * @author peter
  */
+@ExtensionImpl(id = "priority", order = "first")
 public class PriorityWeigher extends CompletionWeigher {
   @Override
   public Double weigh(@Nonnull LookupElement element, @Nonnull CompletionLocation location) {
@@ -41,12 +43,4 @@ public class PriorityWeigher extends CompletionWeigher {
     }
     return 0.0;
   }
-
-  public static class Negative extends PriorityWeigher {
-    @Override
-    public Double weigh(@Nonnull LookupElement element, @Nonnull CompletionLocation location) {
-      return -super.weigh(element, location);
-    }
-  }
-
 }

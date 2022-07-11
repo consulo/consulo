@@ -15,27 +15,18 @@
  */
 package consulo.language;
 
-import consulo.application.extension.KeyedExtensionCollector;
 import consulo.application.util.function.Computable;
-import consulo.container.plugin.PluginIds;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * @author peter
  */
 public class WeighingService {
-  private static final KeyedExtensionCollector<Weigher,Key> COLLECTOR = new KeyedExtensionCollector<Weigher, Key>(PluginIds.CONSULO_BASE + ".weigher") {
-    @Nonnull
-    @Override
-    protected String keyToString(final Key key) {
-      return key.toString();
-    }
-  };
-
   private WeighingService() {
   }
 
@@ -45,12 +36,12 @@ public class WeighingService {
   }
 
   @Nonnull
-  public static <T,Loc> WeighingComparable<T,Loc> weigh(final Key<? extends Weigher<T,Loc>> key, final Computable<T> element, @Nullable final Loc location) {
+  public static <T,Loc> WeighingComparable<T,Loc> weigh(final Key<? extends Weigher<T,Loc>> key, final Supplier<T> element, @Nullable final Loc location) {
     final List<Weigher> weighers = getWeighers(key);
-    return new WeighingComparable<T,Loc>(element, location, weighers.toArray(new Weigher[weighers.size()]));
+    return new WeighingComparable<>(element, location, weighers.toArray(new Weigher[weighers.size()]));
   }
 
   public static <T,Loc> List<Weigher> getWeighers(Key<? extends Weigher<T, Loc>> key) {
-    return COLLECTOR.forKey(key);
+    return Weigher.forKey(key);
   }
 }
