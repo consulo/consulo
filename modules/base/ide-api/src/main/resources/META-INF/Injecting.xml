@@ -18,15 +18,5 @@
     </intentionAction>
 
 
-
-    <!--<projectConfigurable displayName="Language Injections" id="IntelliLang.Configuration" parentId="editor" instance="consulo.ide.impl.intelliLang.InjectionsSettingsUI" nonDefaultProject="true"/>-->
-
-
-
-
-
-    <localInspection implementationClass="consulo.ide.impl.intelliLang.references.InjectedReferencesInspection"
-                     enabledByDefault="true" level="ERROR"
-                     displayName="Injected References" groupBundle="consulo.language.editor.inspection.InspectionsBundle" groupKey="inspection.general.tools.group.name"/>
   </extensions>
 </consulo-plugin>

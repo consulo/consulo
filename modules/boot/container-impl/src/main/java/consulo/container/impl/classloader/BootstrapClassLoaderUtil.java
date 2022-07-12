@@ -82,14 +82,20 @@ public class BootstrapClassLoaderUtil {
     PluginLoadStatistics.initialize(false);
 
     for (PluginDescriptor pluginDescriptor : PluginHolderModificator.getPlugins()) {
-      ServiceLoader<ContainerStartup> loader = ServiceLoader.load(ContainerStartup.class, pluginDescriptor.getPluginClassLoader());
+      ServiceLoader<ContainerStartup> loader;
+      ModuleLayer moduleLayer = pluginDescriptor.getModuleLayer();
+      if (moduleLayer != null) {
+        loader = ServiceLoader.load(moduleLayer, ContainerStartup.class);
+      }
+      else {
+        loader= ServiceLoader.load(ContainerStartup.class, pluginDescriptor.getPluginClassLoader());
+      }
 
-      Iterator<ContainerStartup> iterator = loader.iterator();
+      Optional<ContainerStartup> first = loader.findFirst();
+      if (first.isPresent()) {
+        ContainerStartup startup = first.get();
 
-      if (iterator.hasNext()) {
         bootInitialize.run();
-
-        ContainerStartup startup = iterator.next();
 
         PathManagerHolder.setInstance(startup.createPathManager(args));
 
@@ -106,7 +112,7 @@ public class BootstrapClassLoaderUtil {
     PluginDescriptorImpl platformBasePlugin = PluginDescriptorLoader.loadDescriptor(platformBaseDirectory, false, true, containerLogger);
 
     if (platformBasePlugin == null) {
-      throw new StartupError("No base module. Broken installation");
+      throw new StartupError("No base module. Broken installation. Path: " + platformBaseDirectory);
     }
 
     ClassLoader parent = BootstrapClassLoaderUtil.class.getClassLoader();

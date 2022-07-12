@@ -15,13 +15,7 @@
  */
 package consulo.desktop.awt.data.impl;
 
-import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.ide.IdeEventQueue;
-import consulo.ide.impl.idea.ide.ProhibitAWTEvents;
-import consulo.ide.impl.idea.ide.impl.TypeSafeDataProviderAdapter;
-import consulo.ide.impl.idea.openapi.keymap.impl.IdeKeyEventDispatcher;
-import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
 import consulo.application.AccessToken;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ui.wm.FocusableFrame;
@@ -34,6 +28,11 @@ import consulo.dataContext.TypeSafeDataProvider;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.facade.FromSwingWindowWrapper;
 import consulo.ide.impl.base.BaseDataManager;
+import consulo.ide.impl.idea.ide.IdeEventQueue;
+import consulo.ide.impl.idea.ide.ProhibitAWTEvents;
+import consulo.ide.impl.idea.ide.impl.TypeSafeDataProviderAdapter;
+import consulo.ide.impl.idea.openapi.keymap.impl.IdeKeyEventDispatcher;
+import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.logging.Logger;
@@ -53,7 +52,7 @@ import javax.swing.*;
 import java.awt.*;
 
 @Singleton
-@ServiceImpl(profiles = {ComponentProfiles.PROD, ComponentProfiles.AWT})
+@ServiceImpl
 public class DesktopDataManagerImpl extends BaseDataManager {
   private static final Logger LOG = Logger.getInstance(DesktopDataManagerImpl.class);
 
@@ -87,7 +86,7 @@ public class DesktopDataManagerImpl extends BaseDataManager {
     @Override
     @Nullable
     @SuppressWarnings("unchecked")
-    protected  <T> T doGetData(@Nonnull Key<T> dataId) {
+    protected <T> T doGetData(@Nonnull Key<T> dataId) {
       Component component = getComponent();
       if (PlatformDataKeys.IS_MODAL_CONTEXT == dataId) {
         if (component == null) {

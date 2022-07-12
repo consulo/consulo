@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.start;
 
+import consulo.annotation.component.ComponentProfiles;
+import consulo.annotation.component.ServiceImpl;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.ide.RecentProjectsManager;
 import consulo.ide.impl.idea.ide.ReopenProjectAction;
@@ -44,6 +46,7 @@ import java.util.List;
  * @since 23-Sep-17
  */
 @Singleton
+@ServiceImpl(profiles = ComponentProfiles.UNIFIED)
 public class UnifiedWelcomeFrameManager extends WelcomeFrameManager {
   private final ProjectManager myProjectManager;
   private final RecentProjectsManager myRecentProjectsManager;

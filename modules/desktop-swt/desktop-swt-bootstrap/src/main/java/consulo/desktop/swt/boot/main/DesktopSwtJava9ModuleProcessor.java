@@ -31,6 +31,6 @@ public class DesktopSwtJava9ModuleProcessor implements Java9ModuleProcessor {
 
   @Override
   public boolean isEnabledModules() {
-    return false;
+    return System.getProperty("jdk.module.path") != null;
   }
 }

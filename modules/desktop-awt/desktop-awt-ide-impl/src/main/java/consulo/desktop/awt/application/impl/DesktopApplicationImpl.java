@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.application.impl;
 
+import consulo.annotation.component.ComponentProfiles;
 import consulo.ide.impl.idea.diagnostic.LogEventException;
 import consulo.ide.impl.idea.ide.*;
 import consulo.ide.impl.idea.openapi.diagnostic.Attachment;
@@ -163,6 +164,11 @@ public class DesktopApplicationImpl extends BaseApplication {
     }
 
     NoSwingUnderWriteAction.watchForEvents(this);
+  }
+
+  @Override
+  public int getProfiles() {
+    return super.getProfiles() | ComponentProfiles.AWT;
   }
 
   private DesktopTransactionGuardImpl transactionGuard() {

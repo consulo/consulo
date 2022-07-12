@@ -15,6 +15,7 @@
  */
 package consulo.component;
 
+import consulo.annotation.component.ComponentProfiles;
 import consulo.component.extension.ExtensionPoint;
 import consulo.component.extension.ExtensionPointName;
 import consulo.component.messagebus.MessageBus;
@@ -141,5 +142,9 @@ public interface ComponentManager extends UserDataHolder, Disposable, InjectingC
 
   default boolean isInitialized() {
     return true;
+  }
+
+  default int getProfiles() {
+    return ComponentProfiles.ANY;
   }
 }

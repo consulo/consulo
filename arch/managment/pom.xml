@@ -45,6 +45,7 @@
     <vaadin.version>8.12-SNAPSHOT</vaadin.version>
     <jaxb.version>3.0.1</jaxb.version>
     <jetty.version>9.4.31.v20200723</jetty.version>
+    <swt.version>3.120.0</swt.version>
 
     <build.number>SNAPSHOT</build.number>
     <dev.mode>true</dev.mode>
@@ -54,6 +55,7 @@
     <maven.compile.plugin>3.9.0</maven.compile.plugin>
     <maven.surefire.plugin>3.0.0-M6</maven.surefire.plugin>
     <maven.source.plugin>3.2.0</maven.source.plugin>
+
 
     <java.level>17</java.level>
   </properties>

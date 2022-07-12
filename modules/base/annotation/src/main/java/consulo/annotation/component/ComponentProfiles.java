@@ -20,9 +20,19 @@ package consulo.annotation.component;
  * @since 13-Jun-22
  */
 public final class ComponentProfiles {
-  public static final String PROD = "prod";
+  public static final int ANY = 0;
 
-  public static final String AWT = "awt";
+  public static final int PRODUCTION = 1 << 1;
+
+  /**
+   * Marker for AWT profile implementation, if service inside base impl code, do not conflict with unified impl
+   */
+  public static final int AWT = 1 << 2;
+
+  /**
+   * Marker for Unified profile implementation, used of SWT & Web
+   */
+  public static final int UNIFIED = 1 << 3;
 
   private ComponentProfiles() {
   }

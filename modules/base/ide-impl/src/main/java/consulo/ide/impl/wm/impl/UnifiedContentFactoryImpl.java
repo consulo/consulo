@@ -15,8 +15,10 @@
  */
 package consulo.ide.impl.wm.impl;
 
-import consulo.ide.impl.idea.ui.content.TabbedPaneContentUI;
+import consulo.annotation.component.ComponentProfiles;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.ComponentManager;
+import consulo.ide.impl.idea.ui.content.TabbedPaneContentUI;
 import consulo.project.Project;
 import consulo.ui.Component;
 import consulo.ui.ex.content.Content;
@@ -33,6 +35,7 @@ import javax.annotation.Nullable;
  * @since 14-Oct-17
  */
 @Singleton
+@ServiceImpl(profiles = ComponentProfiles.UNIFIED)
 public class UnifiedContentFactoryImpl implements ContentFactory {
   @Nonnull
   @Override

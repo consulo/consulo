@@ -33,12 +33,9 @@
   </project-components>
 
   <extensions defaultExtensionNs="consulo">
-    <applicationService serviceInterface="consulo.ide.impl.start.WelcomeFrameManager" serviceImplementation="consulo.ide.impl.start.UnifiedWelcomeFrameManager"/>
 
     <applicationService serviceInterface="consulo.ide.impl.progress.util.ProgressDialogFactory" serviceImplementation="consulo.ide.impl.progress.util.impl.UnifiedProgressDialogFactory"/>
 
-    <applicationService serviceInterface="consulo.ui.ex.content.ContentFactory"
-                        serviceImplementation="consulo.ide.impl.wm.impl.UnifiedContentFactoryImpl"/>
 
     <applicationService serviceInterface="consulo.ui.ex.IconDeferrer"
                         serviceImplementation="consulo.ide.impl.idea.ui.DummyIconDeferrer"/>
@@ -46,8 +43,6 @@
     <applicationService serviceInterface="consulo.virtualFileSystem.RefreshQueue"
                         serviceImplementation="consulo.ide.impl.vfs.newvfs.AsyncRefreshQueueImpl"/>
 
-    <applicationService serviceInterface="consulo.ui.ex.action.ActionToolbarFactory"
-                        serviceImplementation="consulo.ide.impl.actionSystem.impl.UnifiedActionToolbarFactoryImpl"/>
 
     <applicationService serviceInterface="consulo.ide.impl.idea.openapi.wm.impl.SystemDock" serviceImplementation="consulo.web.wm.impl.WebSystemDockImpl"/>
     <applicationService serviceInterface="consulo.application.ui.RemoteDesktopService" serviceImplementation="consulo.web.wm.impl.WebRemoteDesktopServiceImpl"/>
@@ -56,9 +51,6 @@
 
     <applicationService serviceInterface="consulo.application.ui.wm.ApplicationIdeFocusManager" serviceImplementation="consulo.web.wm.impl.WebApplicationIdeFocusManagerImpl" lazy="false"/>
     <applicationService serviceInterface="consulo.project.ui.wm.WindowManager" serviceImplementation="consulo.web.wm.impl.WebWindowManagerImpl"/>
-    <applicationService serviceInterface="consulo.dataContext.DataManager" serviceImplementation="consulo.ide.impl.UnifiedDataManagerImpl"/>
-    <applicationService serviceInterface="consulo.ide.impl.actions.AboutManager" serviceImplementation="consulo.ide.impl.actions.impl.UnifiedAboutManager"/>
-    <applicationService serviceInterface="consulo.ide.impl.startup.customize.StartupCustomizeManager" serviceImplementation="consulo.web.startup.customize.WebStartupCustomizeManager"/>
 
     <projectService serviceInterface="consulo.fileEditor.FileEditorManager" serviceImplementation="consulo.ide.impl.fileEditor.UnifiedPsiAwareFileEditorManagerImpl" lazy="false"/>
     <projectService serviceInterface="consulo.project.ui.wm.internal.ProjectIdeFocusManager" serviceImplementation="consulo.ide.impl.wm.impl.UnifiedProjectIdeFocusManagerImpl" lazy="false"/>
@@ -67,7 +59,5 @@
 
     <projectService serviceInterface="consulo.ide.impl.idea.codeInsight.daemon.impl.EditorTracker" serviceImplementation="consulo.ide.impl.codeInsight.daemon.impl.UnifiedEditorTrackerImpl"/>
     <applicationService serviceInterface="consulo.application.impl.internal.progress.ProgressActivityFactory" serviceImplementation="consulo.web.progress.WebProgressActivityFactory"/>
-    <applicationService serviceInterface="consulo.ui.ex.dialog.DialogService" serviceImplementation="consulo.ide.impl.ui.dialog.impl.UnifiedDialogServiceImpl"/>
-    <applicationService serviceInterface="consulo.application.ui.UISettings" serviceImplementation="consulo.application.ui.UISettings"/>
   </extensions>
 </consulo-plugin>

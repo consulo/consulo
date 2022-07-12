@@ -10,5 +10,5 @@ module consulo.platform.impl {
   requires com.sun.jna;
   requires com.sun.jna.platform;
 
-  exports consulo.platform.impl to consulo.desktop.awt.ide.impl;
+  exports consulo.platform.impl to consulo.desktop.awt.ide.impl, consulo.desktop.swt.ide.impl;
 }

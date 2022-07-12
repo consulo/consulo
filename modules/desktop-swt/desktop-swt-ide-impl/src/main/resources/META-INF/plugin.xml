@@ -17,33 +17,16 @@
   <id>consulo.desktop.swt</id>
   <name>Consulo [desktop] [SWT]</name>
 
-  <project-components>
-    <component>
-      <interface-class>consulo.ide.impl.idea.openapi.vcs.changes.ChangesViewI</interface-class>
-      <implementation-class>consulo.ide.impl.idea.openapi.vcs.changes.DummyChangesView</implementation-class>
-      <skipForDefaultProject/>
-    </component>
-  </project-components>
-
   <extensions defaultExtensionNs="consulo">
-    <applicationService serviceInterface="consulo.ui.ex.action.ActionToolbarFactory" serviceImplementation="consulo.ide.impl.actionSystem.impl.UnifiedActionToolbarFactoryImpl"/>
-
-    <applicationService serviceInterface="consulo.application.ui.RemoteDesktopService" serviceImplementation="consulo.desktop.swt.ide.DesktopSwtRemoteDesktopService"/>
 
 
-    <applicationService serviceInterface="consulo.ide.setting.ShowSettingsUtil" serviceImplementation="consulo.ide.impl.options.impl.UnifiedShowSettingsUtil"/>
 
-    <projectService serviceInterface="consulo.project.ui.wm.ToolWindowManager" serviceImplementation="consulo.desktop.swt.wm.impl.DesktopSwtToolWindowManagerImpl" lazy="false"/>
 
-    <applicationService serviceInterface="consulo.ide.impl.actions.AboutManager" serviceImplementation="consulo.ide.impl.actions.impl.UnifiedAboutManager"/>
+
 
     <applicationService serviceInterface="consulo.project.ui.wm.WindowManager" serviceImplementation="consulo.desktop.swt.wm.impl.DesktopSwtWindowManagerImpl"/>
 
-    <applicationService serviceInterface="consulo.ide.impl.start.WelcomeFrameManager" serviceImplementation="consulo.ide.impl.start.UnifiedWelcomeFrameManager"/>
 
-    <applicationService serviceInterface="consulo.dataContext.DataManager" serviceImplementation="consulo.ide.impl.UnifiedDataManagerImpl"/>
-
-    <applicationService serviceInterface="consulo.ide.impl.startup.customize.StartupCustomizeManager" serviceImplementation="consulo.desktop.swt.startup.customize.DesktopSwtStartupCustomizeManager"/>
 
     <fileChooseDialogProvider implementation="consulo.desktop.swt.fileChooser.impl.system.DesktopSwtSystemFileChooseDialogProvider"/>
 
@@ -71,8 +54,6 @@
 
     <applicationService
 			serviceInterface="consulo.ide.impl.fileEditor.text.TextEditorComponentContainerFactory" serviceImplementation="consulo.ide.impl.fileEditor.text.UnifiedTextEditorComponentContainerFactory"/>
-
-    <applicationService serviceInterface="consulo.ui.ex.content.ContentFactory" serviceImplementation="consulo.ide.impl.wm.impl.UnifiedContentFactoryImpl"/>
 
     <projectService serviceInterface="consulo.ide.impl.idea.ide.projectView.ProjectView" serviceImplementation="consulo.ide.impl.projectView.UnifiedProjectViewImpl"/>
 

@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.actionSystem.impl;
 
+import consulo.annotation.component.ComponentProfiles;
+import consulo.annotation.component.ServiceImpl;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.ActionToolbarFactory;
@@ -27,6 +29,7 @@ import javax.annotation.Nonnull;
  * @since 2020-05-11
  */
 @Singleton
+@ServiceImpl(profiles = ComponentProfiles.UNIFIED)
 public class UnifiedActionToolbarFactoryImpl implements ActionToolbarFactory {
   @Nonnull
   @Override

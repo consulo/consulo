@@ -15,6 +15,7 @@
  */
 package consulo.component.impl;
 
+import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.TopicAPI;
@@ -121,6 +122,11 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
     myInjectingContainer = builder.build();
   }
 
+  @Override
+  public int getProfiles() {
+    return ComponentProfiles.PRODUCTION;
+  }
+
   @Nonnull
   @Override
   public Supplier<ThreeState> getDisposeState() {
@@ -157,9 +163,9 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
 
     for (List<InjectingBinding> bindings : holder.getBindings().values()) {
       for (InjectingBinding binding : bindings) {
-        // TODO [VISTALL] filter by profiles
-
-        mapByTopic.put(binding.getApiClass(), bindings);
+        if (holder.isValid(binding, getProfiles())) {
+          mapByTopic.put(binding.getApiClass(), bindings);
+        }
       }
     }
   }
@@ -175,9 +181,14 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
   private void loadServices(List<Class> notLazyServices, InjectingContainerBuilder builder) {
     InjectingBindingHolder holder = InjectingBindingLoader.INSTANCE.getHolder(ServiceAPI.class, getComponentScope());
 
+    int profiles = getProfiles();
+
     for (List<InjectingBinding> listOfBindings : holder.getBindings().values()) {
-      // TODO [VISTALL] filter by profiles, and throw if two or more
-      InjectingBinding injectingBinding = listOfBindings.get(0);
+      InjectingBinding injectingBinding = holder.findValid(listOfBindings, profiles);
+      if (injectingBinding == null) {
+        LOG.warn("There no valid binding " + listOfBindings);
+        continue;
+      }
 
       InjectingKey<Object> key = InjectingKey.of(injectingBinding.getApiClass());
       InjectingKey<Object> implKey = InjectingKey.of(injectingBinding.getImplClass());

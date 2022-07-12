@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2021 consulo.io
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.startup.customize;
+package consulo.application.ui.impl.internal;
 
+import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.startup.customize.StartupCustomizeManager;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.application.ui.UISettings;
 
 /**
  * @author VISTALL
- * @since 27/04/2021
+ * @since 12-Jul-22
  */
-@ServiceImpl
-public class WebStartupCustomizeManager implements StartupCustomizeManager {
-  @RequiredUIAccess
-  @Override
-  public void showAsync(boolean firstShow) {
-  }
+@ServiceImpl(profiles = ComponentProfiles.UNIFIED)
+public class UnifiedUISettings extends UISettings {
 }

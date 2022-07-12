@@ -15,6 +15,7 @@
  */
 package consulo.desktop.swt.wm.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.StoragePathMacros;
 import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorManagerEx;
 import consulo.ide.impl.idea.openapi.wm.ex.IdeFrameEx;
@@ -56,6 +57,7 @@ import javax.annotation.Nullable;
  * @since 29/04/2021
  */
 @Singleton
+@ServiceImpl
 @State(name = ToolWindowManagerBase.ID, storages = @Storage(value = StoragePathMacros.WORKSPACE_FILE, roamingType = RoamingType.DISABLED))
 public class DesktopSwtToolWindowManagerImpl extends ToolWindowManagerBase {
   private IdeFrameEx myFrame;

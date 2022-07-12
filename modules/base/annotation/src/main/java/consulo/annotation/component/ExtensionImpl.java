@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface ExtensionImpl {
-  String[] profiles() default ComponentProfiles.PROD;
+  int profiles() default ComponentProfiles.ANY;
 
   /**
    * If value is empty used className

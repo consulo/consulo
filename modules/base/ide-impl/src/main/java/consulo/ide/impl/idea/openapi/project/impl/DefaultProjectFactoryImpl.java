@@ -58,7 +58,7 @@ public class DefaultProjectFactoryImpl extends DefaultProjectFactory implements 
 
   @TestOnly
   public boolean isDefaultProjectInitialized() {
-    return myDefaultProject != null;
+    return myDefaultProject != null;                                                                  
   }
 
   @Override

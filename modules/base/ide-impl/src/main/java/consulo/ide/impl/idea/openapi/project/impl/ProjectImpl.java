@@ -23,6 +23,7 @@ import consulo.application.impl.internal.PlatformComponentManagerImpl;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
+import consulo.component.impl.BaseComponentManager;
 import consulo.component.store.impl.internal.StoreUtil;
 import consulo.ide.impl.components.impl.stores.DefaultProjectStoreImpl;
 import consulo.ide.impl.components.impl.stores.IProjectStore;
@@ -98,6 +99,11 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     myManager = (ProjectManagerEx)manager;
 
     myName = projectName;
+  }
+
+  @Override
+  public int getProfiles() {
+    return ((BaseComponentManager)myParent).getProfiles();
   }
 
   @Nullable

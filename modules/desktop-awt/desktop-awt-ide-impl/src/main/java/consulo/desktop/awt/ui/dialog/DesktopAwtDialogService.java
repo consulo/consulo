@@ -15,7 +15,6 @@
  */
 package consulo.desktop.awt.ui.dialog;
 
-import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ButtonToolbarImpl;
@@ -48,7 +47,7 @@ import java.awt.*;
  * @since 13/12/2021
  */
 @Singleton
-@ServiceImpl(profiles = {ComponentProfiles.PROD, ComponentProfiles.AWT})
+@ServiceImpl
 public class DesktopAwtDialogService implements DialogService {
   private static class DialogImpl<V> implements Dialog<V> {
     private final DialogWrapperImpl myDialogWrapper;

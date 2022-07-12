@@ -15,17 +15,16 @@
  */
 package consulo.desktop.swt.starter;
 
-import consulo.application.impl.internal.start.StartupProgress;
-import consulo.application.impl.internal.start.ApplicationStarter;
 import consulo.application.Application;
 import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.impl.internal.start.ApplicationStarter;
+import consulo.application.impl.internal.start.CommandLineArgs;
+import consulo.application.impl.internal.start.StartupProgress;
 import consulo.application.internal.ApplicationEx;
-import consulo.container.impl.classloader.PluginLoadStatistics;
 import consulo.container.util.StatCollector;
 import consulo.desktop.swt.application.impl.DesktopSwtApplicationImpl;
-import consulo.logging.Logger;
-import consulo.application.impl.internal.start.CommandLineArgs;
 import consulo.ide.impl.start.WelcomeFrameManager;
+import consulo.logging.Logger;
 import consulo.util.lang.ref.SimpleReference;
 
 import javax.annotation.Nonnull;
@@ -60,7 +59,7 @@ public class DesktopSwtApplicationStarter extends ApplicationStarter {
 
     stat.dump("Startup statistics", LOG::info);
 
-    PluginLoadStatistics.get().dumpPluginClassStatistics(LOG::info);
+    dumpPluginClassStatistics();
 
     //SwingUtilities.invokeLater(() -> {
     //  StartupProgress desktopSplash = mySplashRef.get();

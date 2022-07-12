@@ -127,7 +127,7 @@ import java.util.*;
 import java.util.function.Supplier;
 
 @Singleton
-@ServiceImpl(profiles = {ComponentProfiles.PROD, ComponentProfiles.AWT})
+@ServiceImpl(profiles = ComponentProfiles.PRODUCTION | ComponentProfiles.AWT)
 @State(name = "ProjectView", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<Element>, Disposable, QuickActionProvider, BusyObject {
   private static final Logger LOG = Logger.getInstance(ProjectViewImpl.class);

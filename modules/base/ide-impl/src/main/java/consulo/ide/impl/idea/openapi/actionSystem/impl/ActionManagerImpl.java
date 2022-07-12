@@ -149,10 +149,12 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
   private ActionToolbarFactory myToolbarFactory;
 
   @Inject
-  ActionManagerImpl(ActionToolbarFactory toolbarFactory) {
+  ActionManagerImpl(Application application, ActionToolbarFactory toolbarFactory) {
     myToolbarFactory = toolbarFactory;
 
     List<InjectingBindingActionStubBase> bindings = new ArrayList<>();
+
+    int profiles = application.getProfiles();
 
     StatCollector injectStat = new StatCollector();
     injectStat.markWith("register", () -> {
@@ -160,6 +162,10 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
       for (List<InjectingBinding> bindingList : holder.getBindings().values()) {
         for (InjectingBinding binding : bindingList) {
+          if (!InjectingBindingHolder.isValid(binding, profiles)){
+            continue;
+          }
+          
           Class<?> actionImplClass = binding.getImplClass();
           ActionImpl actionImpl = actionImplClass.getAnnotation(ActionImpl.class);
 

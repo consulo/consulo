@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.options.impl;
 
+import consulo.annotation.component.ComponentProfiles;
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.DefaultSdksModel;
 import consulo.configurable.Configurable;
 import consulo.configurable.UnnamedConfigurable;
@@ -38,6 +40,7 @@ import java.util.function.Consumer;
  * @since 2019-02-02
  */
 @Singleton
+@ServiceImpl(profiles = ComponentProfiles.UNIFIED)
 public class UnifiedShowSettingsUtil extends BaseProjectStructureShowSettingsUtil {
   private DefaultProjectFactory myDefaultProjectFactory;
 

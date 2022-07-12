@@ -16,6 +16,7 @@
 package consulo.desktop.swt.application.impl;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ComponentProfiles;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
 import consulo.ide.impl.application.UnifiedTransactionGuardImpl;
@@ -48,6 +49,11 @@ public class DesktopSwtApplicationImpl extends BaseApplication {
     myLock = new ReadMostlyRWLock(null);
 
     ApplicationManager.setApplication(this);
+  }
+
+  @Override
+  public int getProfiles() {
+    return super.getProfiles() | ComponentProfiles.UNIFIED;
   }
 
   @Override

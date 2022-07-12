@@ -35,4 +35,6 @@ public @interface ActionImpl {
    * Action references for actions groups
    */
   String[] references() default {};
+
+  int profiles() default ComponentProfiles.ANY;
 }

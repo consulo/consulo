@@ -18,6 +18,7 @@ package consulo.component.internal;
 import consulo.component.bind.InjectingBinding;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -44,5 +45,23 @@ public class InjectingBindingHolder {
   @Nonnull
   public Map<Class, List<InjectingBinding>> getBindings() {
     return Collections.unmodifiableMap(myBindings);
+  }
+
+  public static boolean isValid(InjectingBinding binding, int componentProfiles) {
+    return (componentProfiles & binding.getComponentProfiles()) == binding.getComponentProfiles();
+  }
+
+  @Nullable
+  public static InjectingBinding findValid(List<InjectingBinding> bindings, int componentProfiles) {
+    //noinspection ForLoopReplaceableByForEach
+    for (int i = 0; i < bindings.size(); i++) {
+      InjectingBinding binding = bindings.get(i);
+
+      if (isValid(binding, componentProfiles)) {
+        return binding;
+      }
+    }
+
+    return null;
   }
 }

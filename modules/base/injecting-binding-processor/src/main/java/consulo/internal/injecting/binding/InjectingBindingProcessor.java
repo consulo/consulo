@@ -79,6 +79,14 @@ public class InjectingBindingProcessor extends AbstractProcessor {
         processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "@" + annotation.getQualifiedName() + " not supported");
       }
 
+      Class<? extends Annotation> annotationClazz = null;
+      try {
+        annotationClazz = (Class<? extends Annotation>)Class.forName(annotation.getQualifiedName().toString());
+      }
+      catch (ClassNotFoundException e) {
+        throw new Error(e);
+      }
+
       for (Element element : elementsAnnotatedWith) {
         if (!(element instanceof TypeElement)) {
           continue;
@@ -115,10 +123,11 @@ public class InjectingBindingProcessor extends AbstractProcessor {
           if (apiInfo.annotation() instanceof TopicAPI) {
             TopicImpl topicImpl = typeElement.getAnnotation(TopicImpl.class);
             scope = topicImpl.value();
-          } else {
+          }
+          else {
             scope = getScope(apiInfo.annotation());
           }
-          
+
           bindBuilder.addMethod(
                   MethodSpec.methodBuilder("getComponentScope").addModifiers(Modifier.PUBLIC).returns(ComponentScope.class).addCode(CodeBlock.of("return $T.$L;", ComponentScope.class, scope.name()))
                           .build());
@@ -167,8 +176,10 @@ public class InjectingBindingProcessor extends AbstractProcessor {
             return false;
           }
 
-          // TODO stub
-          bindBuilder.addMethod(MethodSpec.methodBuilder("getComponentProfiles").addModifiers(Modifier.PUBLIC).returns(String[].class).addCode(CodeBlock.of("return new String[0];")).build());
+          Annotation implAnnotation = typeElement.getAnnotation(annotationClazz);
+          int componentProfiles = getComponentProfiles(implAnnotation);
+
+          bindBuilder.addMethod(MethodSpec.methodBuilder("getComponentProfiles").addModifiers(Modifier.PUBLIC).returns(int.class).addCode(CodeBlock.of("return $L;", componentProfiles)).build());
 
           bindBuilder.addMethod(MethodSpec.methodBuilder("getParametersCount").addModifiers(Modifier.PUBLIC).returns(int.class).addCode(CodeBlock.of("return $L;", injectParameters.size())).build());
 
@@ -350,6 +361,26 @@ public class InjectingBindingProcessor extends AbstractProcessor {
     if (annotation instanceof ActionAPI) {
       // actions always bind in application injecting scope
       return ComponentScope.APPLICATION;
+    }
+
+    throw new UnsupportedOperationException(annotation.getClass().getName());
+  }
+
+  private static int getComponentProfiles(Annotation annotation) {
+    if (annotation instanceof ServiceImpl) {
+      return ((ServiceImpl)annotation).profiles();
+    }
+
+    if (annotation instanceof ExtensionImpl) {
+      return ((ExtensionImpl)annotation).profiles();
+    }
+
+    if (annotation instanceof TopicImpl) {
+      return ((TopicImpl)annotation).profiles();
+    }
+
+    if (annotation instanceof ActionImpl) {
+      return ((ActionImpl)annotation).profiles();
     }
 
     throw new UnsupportedOperationException(annotation.getClass().getName());

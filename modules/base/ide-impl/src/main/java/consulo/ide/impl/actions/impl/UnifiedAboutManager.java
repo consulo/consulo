@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.actions.impl;
 
+import consulo.annotation.component.ComponentProfiles;
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.actions.AboutManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.Window;
@@ -27,6 +29,7 @@ import javax.annotation.Nullable;
  * @since 2019-05-09
  */
 @Singleton
+@ServiceImpl(profiles = ComponentProfiles.UNIFIED)
 public class UnifiedAboutManager implements AboutManager {
   @RequiredUIAccess
   @Override

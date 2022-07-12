@@ -24,6 +24,7 @@ import consulo.component.bind.InjectingBinding;
 import consulo.component.extension.ExtensionExtender;
 import consulo.component.extension.ExtensionPoint;
 import consulo.component.extension.ExtensionPointCacheKey;
+import consulo.component.internal.InjectingBindingHolder;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.injecting.InjectingContainer;
@@ -193,6 +194,10 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
 
     List<Pair<T, PluginDescriptor>> extensions = new ArrayList<>(injectingBindings.size());
     for (InjectingBinding binding : injectingBindings) {
+      if (!InjectingBindingHolder.isValid(binding, myComponentManager.getProfiles())) {
+        continue;
+      }
+
       T extension;
       try {
         myCheckCanceled.run();

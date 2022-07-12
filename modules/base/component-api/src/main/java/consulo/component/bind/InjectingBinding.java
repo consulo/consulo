@@ -39,8 +39,7 @@ public interface InjectingBinding {
   @Nonnull
   ComponentScope getComponentScope();
 
-  @Nonnull
-  String[] getComponentProfiles();
+  int getComponentProfiles();
 
   default int getParametersCount() {
     return getParameterTypes().length;
