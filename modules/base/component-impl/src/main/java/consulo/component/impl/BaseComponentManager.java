@@ -186,7 +186,7 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
     for (List<InjectingBinding> listOfBindings : holder.getBindings().values()) {
       InjectingBinding injectingBinding = holder.findValid(listOfBindings, profiles);
       if (injectingBinding == null) {
-        LOG.warn("There no valid binding " + listOfBindings);
+        LOG.error("There no valid binding " + listOfBindings);
         continue;
       }
 

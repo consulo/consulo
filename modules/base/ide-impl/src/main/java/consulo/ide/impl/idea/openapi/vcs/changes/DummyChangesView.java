@@ -15,13 +15,20 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
+import consulo.annotation.component.ComponentProfiles;
+import consulo.annotation.component.ServiceImpl;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 /**
  * @author irengrig
  */
+@Singleton
+@ServiceImpl(profiles = ComponentProfiles.UNIFIED)
 public class DummyChangesView implements ChangesViewI {
+  @Inject
   public DummyChangesView(Project project) {
   }
 

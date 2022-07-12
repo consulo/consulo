@@ -48,7 +48,11 @@ public class InjectingBindingHolder {
   }
 
   public static boolean isValid(InjectingBinding binding, int componentProfiles) {
-    return (componentProfiles & binding.getComponentProfiles()) == binding.getComponentProfiles();
+    int bindingComponentProfiles = binding.getComponentProfiles();
+    if (bindingComponentProfiles == 0) {
+      return true;
+    }
+    return (componentProfiles & bindingComponentProfiles) == bindingComponentProfiles;
   }
 
   @Nullable

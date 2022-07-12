@@ -15,6 +15,7 @@
  */
 package consulo.web.wm.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.ui.wm.FocusableFrame;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.component.ComponentManager;
@@ -36,6 +37,7 @@ import java.awt.*;
  * @since 2018-08-24
  */
 @Singleton
+@ServiceImpl
 public class WebApplicationIdeFocusManagerImpl implements ApplicationIdeFocusManager {
   @Override
   @Nonnull

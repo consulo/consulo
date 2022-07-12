@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.progress;
 
+import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.ui.mac.foundation.MacUtil;
 import consulo.application.impl.internal.progress.ProgressActivityFactory;
@@ -28,7 +29,7 @@ import javax.annotation.Nullable;
  * @since 23-Mar-22
  */
 @Singleton
-@ServiceImpl
+@ServiceImpl(profiles = ComponentProfiles.AWT)
 public class DesktopProgressActivityFactory implements ProgressActivityFactory {
   private boolean myShouldStartActivity = SystemInfo.isMac && Boolean.parseBoolean(System.getProperty("consulo.mac.prevent.app.nap", "true"));
 

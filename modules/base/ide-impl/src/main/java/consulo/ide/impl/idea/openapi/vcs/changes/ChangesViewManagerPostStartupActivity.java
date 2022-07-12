@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
+import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
@@ -27,7 +28,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 10-Jul-22
  */
-@ExtensionImpl(order = "after changelist-manager")
+@ExtensionImpl(order = "after changelist-manager", profiles = ComponentProfiles.AWT)
 public class ChangesViewManagerPostStartupActivity implements PostStartupActivity, DumbAware {
   @Override
   public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {

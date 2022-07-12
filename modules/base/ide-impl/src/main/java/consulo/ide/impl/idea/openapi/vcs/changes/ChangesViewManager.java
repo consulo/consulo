@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
+import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
@@ -79,7 +80,7 @@ import static java.util.stream.Collectors.toList;
 
 @State(name = "ChangesViewManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 @Singleton
-@ServiceImpl
+@ServiceImpl(profiles = ComponentProfiles.AWT)
 public class ChangesViewManager implements ChangesViewI, Disposable, PersistentStateComponent<ChangesViewManager.State> {
 
   private static final Logger LOG = Logger.getInstance(ChangesViewManager.class);

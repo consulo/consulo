@@ -16,35 +16,4 @@
 <consulo-plugin>
   <id>consulo.web</id>
   <name>Platform: web</name>
-
-  <application-components>
-    <component>
-      <interface-class>consulo.codeEditor.EditorFactory</interface-class>
-      <implementation-class>consulo.web.editor.impl.WebEditorFactoryImpl</implementation-class>
-    </component>
-  </application-components>
-
-  <project-components>
-    <component>
-      <interface-class>consulo.ide.impl.idea.openapi.vcs.changes.ChangesViewI</interface-class>
-      <implementation-class>consulo.ide.impl.idea.openapi.vcs.changes.DummyChangesView</implementation-class>
-      <skipForDefaultProject/>
-    </component>
-  </project-components>
-
-  <extensions defaultExtensionNs="consulo">
-
-
-    <applicationService serviceInterface="consulo.ide.impl.idea.openapi.wm.impl.SystemDock" serviceImplementation="consulo.web.wm.impl.WebSystemDockImpl"/>
-    <applicationService serviceInterface="consulo.application.ui.RemoteDesktopService" serviceImplementation="consulo.web.wm.impl.WebRemoteDesktopServiceImpl"/>
-
-    <fileChooseDialogProvider implementation="consulo.ide.impl.fileChooser.UnifiedFileChooseDialogProvider" order="last"/>
-
-    <applicationService serviceInterface="consulo.application.ui.wm.ApplicationIdeFocusManager" serviceImplementation="consulo.web.wm.impl.WebApplicationIdeFocusManagerImpl" lazy="false"/>
-    <applicationService serviceInterface="consulo.project.ui.wm.WindowManager" serviceImplementation="consulo.web.wm.impl.WebWindowManagerImpl"/>
-
-
-
-    <applicationService serviceInterface="consulo.application.impl.internal.progress.ProgressActivityFactory" serviceImplementation="consulo.web.progress.WebProgressActivityFactory"/>
-  </extensions>
 </consulo-plugin>

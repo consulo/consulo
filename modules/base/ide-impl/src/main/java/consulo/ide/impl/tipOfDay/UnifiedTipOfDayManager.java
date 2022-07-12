@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.tipOfDay;
 
+import consulo.annotation.component.ComponentProfiles;
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.tipOfDay.TipOfDayManager;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
@@ -28,6 +30,7 @@ import javax.annotation.Nonnull;
  * @since 2020-06-23
  */
 @Singleton
+@ServiceImpl(profiles = ComponentProfiles.UNIFIED)
 public class UnifiedTipOfDayManager implements TipOfDayManager {
   @Override
   public void scheduleShow(@Nonnull UIAccess uiAccess, @Nonnull Project project) {

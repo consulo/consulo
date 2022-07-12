@@ -15,9 +15,12 @@
  */
 package consulo.web.codeInsight.daemon.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.IntentionsUI;
 import consulo.ide.impl.idea.codeInsight.intention.impl.CachedIntentions;
 import consulo.project.Project;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 
@@ -25,7 +28,10 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 17/08/2021
  */
+@ServiceImpl
+@Singleton
 public class WebIntentionsUIImpl extends IntentionsUI {
+  @Inject
   public WebIntentionsUIImpl(Project project) {
     super(project);
   }
