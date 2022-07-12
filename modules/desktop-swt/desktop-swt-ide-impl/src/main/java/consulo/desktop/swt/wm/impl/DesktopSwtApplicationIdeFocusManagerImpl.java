@@ -15,6 +15,7 @@
  */
 package consulo.desktop.swt.wm.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.ui.wm.FocusableFrame;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.component.ComponentManager;
@@ -36,6 +37,7 @@ import java.awt.*;
  * @since 11/12/2021
  */
 @Singleton
+@ServiceImpl
 public class DesktopSwtApplicationIdeFocusManagerImpl implements ApplicationIdeFocusManager {
   @Override
   @Nonnull

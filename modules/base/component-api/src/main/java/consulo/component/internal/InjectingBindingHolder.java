@@ -53,15 +53,20 @@ public class InjectingBindingHolder {
 
   @Nullable
   public static InjectingBinding findValid(List<InjectingBinding> bindings, int componentProfiles) {
+    InjectingBinding result = null;
     //noinspection ForLoopReplaceableByForEach
     for (int i = 0; i < bindings.size(); i++) {
       InjectingBinding binding = bindings.get(i);
 
       if (isValid(binding, componentProfiles)) {
-        return binding;
+        // do not allow override services
+        if (result != null) {
+          return null;
+        }
+        result = binding;
       }
     }
 
-    return null;
+    return result;
   }
 }

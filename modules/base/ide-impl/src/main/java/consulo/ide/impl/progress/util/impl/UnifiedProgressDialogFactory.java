@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.progress.util.impl;
 
+import consulo.annotation.component.ComponentProfiles;
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
 import consulo.project.Project;
 import consulo.ide.impl.progress.util.ProgressDialog;
@@ -28,6 +30,7 @@ import javax.swing.*;
  * @author VISTALL
  * @since 2020-05-11
  */
+@ServiceImpl(profiles = ComponentProfiles.UNIFIED)
 @Singleton
 public class UnifiedProgressDialogFactory implements ProgressDialogFactory {
   @Nonnull

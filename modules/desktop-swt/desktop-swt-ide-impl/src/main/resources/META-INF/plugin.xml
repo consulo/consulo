@@ -16,47 +16,4 @@
 <consulo-plugin>
   <id>consulo.desktop.swt</id>
   <name>Consulo [desktop] [SWT]</name>
-
-  <extensions defaultExtensionNs="consulo">
-
-
-
-
-
-
-    <applicationService serviceInterface="consulo.project.ui.wm.WindowManager" serviceImplementation="consulo.desktop.swt.wm.impl.DesktopSwtWindowManagerImpl"/>
-
-
-
-    <fileChooseDialogProvider implementation="consulo.desktop.swt.fileChooser.impl.system.DesktopSwtSystemFileChooseDialogProvider"/>
-
-    <fileSaveDialogProvider implementation="consulo.ide.impl.fileChooser.UnifiedFileSaveDialogProvider" order="last"/>
-
-    <fileChooseDialogProvider implementation="consulo.ide.impl.fileChooser.UnifiedFileChooseDialogProvider" order="last"/>
-
-    <applicationService serviceInterface="consulo.ui.ex.IconDeferrer" serviceImplementation="consulo.ide.impl.idea.ui.DummyIconDeferrer"/>
-
-    <applicationService serviceInterface="consulo.fileChooser.FileChooserFactory" serviceImplementation="consulo.ide.impl.fileChooser.FileChooserFactoryImpl"/>
-
-    <applicationService serviceInterface="consulo.ide.impl.progress.util.ProgressDialogFactory" serviceImplementation="consulo.ide.impl.progress.util.impl.UnifiedProgressDialogFactory"/>
-
-    <applicationService serviceInterface="consulo.virtualFileSystem.RefreshQueue" serviceImplementation="consulo.ide.impl.vfs.newvfs.AsyncRefreshQueueImpl"/>
-
-    <applicationService serviceInterface="consulo.application.ui.wm.ApplicationIdeFocusManager" serviceImplementation="consulo.desktop.swt.wm.impl.DesktopSwtApplicationIdeFocusManagerImpl" lazy="false"/>
-
-    <applicationService serviceInterface="consulo.ide.impl.idea.openapi.wm.impl.SystemDock" serviceImplementation="consulo.desktop.swt.wm.impl.DesktopSwtSystemDockImpl"/>
-
-    <projectService serviceInterface="consulo.project.ui.wm.internal.ProjectIdeFocusManager" serviceImplementation="consulo.ide.impl.wm.impl.UnifiedProjectIdeFocusManagerImpl" lazy="false"/>
-
-    <projectService serviceInterface="consulo.project.ui.wm.dock.DockManager" serviceImplementation="consulo.ide.impl.ui.docking.impl.UnifiedDockManagerImpl"/>
-
-    <projectService serviceInterface="consulo.fileEditor.FileEditorManager" serviceImplementation="consulo.ide.impl.fileEditor.UnifiedPsiAwareFileEditorManagerImpl" lazy="false"/>
-
-    <applicationService
-			serviceInterface="consulo.ide.impl.fileEditor.text.TextEditorComponentContainerFactory" serviceImplementation="consulo.ide.impl.fileEditor.text.UnifiedTextEditorComponentContainerFactory"/>
-
-    <projectService serviceInterface="consulo.ide.impl.idea.ide.projectView.ProjectView" serviceImplementation="consulo.ide.impl.projectView.UnifiedProjectViewImpl"/>
-
-    <projectService serviceInterface="consulo.ide.impl.idea.codeInsight.daemon.impl.EditorTracker" serviceImplementation="consulo.ide.impl.codeInsight.daemon.impl.UnifiedEditorTrackerImpl"/>
-  </extensions>
 </consulo-plugin>

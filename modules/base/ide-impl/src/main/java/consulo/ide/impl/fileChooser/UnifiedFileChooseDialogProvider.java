@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.fileChooser;
 
+import consulo.annotation.component.ComponentProfiles;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.component.ComponentManager;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDialog;
@@ -30,6 +32,7 @@ import java.awt.*;
  * @author VISTALL
  * @since 2018-06-28
  */
+@ExtensionImpl(order = "last", profiles = ComponentProfiles.UNIFIED)
 public class UnifiedFileChooseDialogProvider implements FileChooseDialogProvider {
   @Nonnull
   @Override

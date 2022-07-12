@@ -34,15 +34,6 @@
 
   <extensions defaultExtensionNs="consulo">
 
-    <applicationService serviceInterface="consulo.ide.impl.progress.util.ProgressDialogFactory" serviceImplementation="consulo.ide.impl.progress.util.impl.UnifiedProgressDialogFactory"/>
-
-
-    <applicationService serviceInterface="consulo.ui.ex.IconDeferrer"
-                        serviceImplementation="consulo.ide.impl.idea.ui.DummyIconDeferrer"/>
-
-    <applicationService serviceInterface="consulo.virtualFileSystem.RefreshQueue"
-                        serviceImplementation="consulo.ide.impl.vfs.newvfs.AsyncRefreshQueueImpl"/>
-
 
     <applicationService serviceInterface="consulo.ide.impl.idea.openapi.wm.impl.SystemDock" serviceImplementation="consulo.web.wm.impl.WebSystemDockImpl"/>
     <applicationService serviceInterface="consulo.application.ui.RemoteDesktopService" serviceImplementation="consulo.web.wm.impl.WebRemoteDesktopServiceImpl"/>
@@ -52,12 +43,8 @@
     <applicationService serviceInterface="consulo.application.ui.wm.ApplicationIdeFocusManager" serviceImplementation="consulo.web.wm.impl.WebApplicationIdeFocusManagerImpl" lazy="false"/>
     <applicationService serviceInterface="consulo.project.ui.wm.WindowManager" serviceImplementation="consulo.web.wm.impl.WebWindowManagerImpl"/>
 
-    <projectService serviceInterface="consulo.fileEditor.FileEditorManager" serviceImplementation="consulo.ide.impl.fileEditor.UnifiedPsiAwareFileEditorManagerImpl" lazy="false"/>
-    <projectService serviceInterface="consulo.project.ui.wm.internal.ProjectIdeFocusManager" serviceImplementation="consulo.ide.impl.wm.impl.UnifiedProjectIdeFocusManagerImpl" lazy="false"/>
-    <projectService serviceInterface="consulo.project.ui.wm.dock.DockManager" serviceImplementation="consulo.ide.impl.ui.docking.impl.UnifiedDockManagerImpl"/>
 
 
-    <projectService serviceInterface="consulo.ide.impl.idea.codeInsight.daemon.impl.EditorTracker" serviceImplementation="consulo.ide.impl.codeInsight.daemon.impl.UnifiedEditorTrackerImpl"/>
     <applicationService serviceInterface="consulo.application.impl.internal.progress.ProgressActivityFactory" serviceImplementation="consulo.web.progress.WebProgressActivityFactory"/>
   </extensions>
 </consulo-plugin>

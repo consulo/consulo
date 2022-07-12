@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.codeInsight.daemon.impl;
 
+import consulo.annotation.component.ComponentProfiles;
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.EditorTracker;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.event.EditorFactoryEvent;
@@ -42,6 +44,7 @@ import java.util.List;
  * @since 07/12/2020
  */
 @Singleton
+@ServiceImpl(profiles = ComponentProfiles.UNIFIED)
 public class UnifiedEditorTrackerImpl extends EditorTracker {
   private static final Logger LOG = Logger.getInstance(UnifiedEditorTrackerImpl.class);
 

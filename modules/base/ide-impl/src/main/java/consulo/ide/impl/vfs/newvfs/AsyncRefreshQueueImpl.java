@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.vfs.newvfs;
 
+import consulo.annotation.component.ComponentProfiles;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.RefreshQueueImpl;
@@ -36,6 +38,7 @@ import java.util.Collections;
  * Implementation of {@link RefreshQueueImpl} without sync write version
  */
 @Singleton
+@ServiceImpl(profiles = ComponentProfiles.UNIFIED)
 public class AsyncRefreshQueueImpl extends RefreshQueue implements Disposable {
   @Nonnull
   private final Application myApplication;

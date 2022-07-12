@@ -749,7 +749,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   public void invokeLaterOnWriteThread(@Nonnull Runnable action, @Nonnull consulo.ui.ModalityState modal, @Nonnull BooleanSupplier expired) {
     Runnable r = wrapLaterInvocation(action, (IdeaModalityState)modal);
     // EDT == Write Thread in legacy mode
-    LaterInvocator.invokeLaterWithCallback(() -> runIntendedWriteActionOnCurrentThread(r), (IdeaModalityState)modal, expired, null, !USE_SEPARATE_WRITE_THREAD);
+    LaterInvocator.invokeLaterWithCallback(() -> runIntendedWriteActionOnCurrentThread(r), modal, expired, null, !USE_SEPARATE_WRITE_THREAD);
   }
 
   @Nonnull

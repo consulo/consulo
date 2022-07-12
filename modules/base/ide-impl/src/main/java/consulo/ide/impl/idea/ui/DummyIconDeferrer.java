@@ -19,6 +19,8 @@
  */
 package consulo.ide.impl.idea.ui;
 
+import consulo.annotation.component.ComponentProfiles;
+import consulo.annotation.component.ServiceImpl;
 import consulo.ui.ex.IconDeferrer;
 import consulo.ui.image.Image;
 import jakarta.inject.Singleton;
@@ -27,6 +29,7 @@ import javax.annotation.Nonnull;
 import java.util.function.Function;
 
 @Singleton
+@ServiceImpl(profiles = ComponentProfiles.UNIFIED)
 public class DummyIconDeferrer extends IconDeferrer {
   @Override
   public <T> Image defer(Image base, T param, @Nonnull Function<T, Image> f) {

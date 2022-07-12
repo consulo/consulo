@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.fileChooser;
 
+import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.macro.PathMacros;
@@ -46,7 +47,7 @@ import java.util.function.Function;
  * @since 2020-05-30
  */
 @Singleton
-@ServiceImpl
+@ServiceImpl(profiles = ComponentProfiles.UNIFIED)
 public class FileChooserFactoryImpl extends FileChooserFactory {
   @Nonnull
   @Override

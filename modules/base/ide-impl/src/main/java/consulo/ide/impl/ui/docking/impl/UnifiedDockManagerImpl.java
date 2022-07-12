@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.ui.docking.impl;
 
+import consulo.annotation.component.ComponentProfiles;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
@@ -37,6 +39,7 @@ import java.awt.event.MouseEvent;
  */
 @Singleton
 @State(name = "DockManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
+@ServiceImpl(profiles = ComponentProfiles.UNIFIED)
 public class UnifiedDockManagerImpl extends BaseDockManager {
   @Inject
   public UnifiedDockManagerImpl(Project project) {

@@ -15,11 +15,14 @@
  */
 package consulo.ide.impl.wm.impl;
 
+import consulo.annotation.component.ComponentProfiles;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.ui.wm.ExpirableRunnable;
 import consulo.application.ui.wm.FocusableFrame;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.component.ComponentManager;
 import consulo.dataContext.DataContext;
+import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
 import consulo.ui.ModalityState;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
@@ -35,7 +38,8 @@ import java.awt.*;
  * @since 12-Oct-17
  */
 @Singleton
-public class UnifiedProjectIdeFocusManagerImpl implements IdeFocusManager {
+@ServiceImpl(profiles = ComponentProfiles.UNIFIED)
+public class UnifiedProjectIdeFocusManagerImpl implements ProjectIdeFocusManager {
   @Override
   @Nonnull
   public AsyncResult<Void> requestFocus(@Nonnull final Component c, final boolean forced) {

@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.fileEditor;
 
+import consulo.annotation.component.ComponentProfiles;
+import consulo.annotation.component.ServiceImpl;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorProvider;
 import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorManagerEx;
@@ -37,6 +39,7 @@ import javax.annotation.Nonnull;
  * @since 2018-05-09
  */
 @Singleton
+@ServiceImpl(profiles = ComponentProfiles.UNIFIED)
 public class UnifiedPsiAwareFileEditorManagerImpl extends PsiAwareFileEditorManagerImpl {
   @Inject
   public UnifiedPsiAwareFileEditorManagerImpl(Project project, PsiManager psiManager, Provider<WolfTheProblemSolver> problemSolver, DockManager dockManager) {

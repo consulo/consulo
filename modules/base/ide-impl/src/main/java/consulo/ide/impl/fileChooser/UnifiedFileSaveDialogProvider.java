@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.fileChooser;
 
+import consulo.annotation.component.ComponentProfiles;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.component.ComponentManager;
 import consulo.fileChooser.FileSaverDescriptor;
 import consulo.fileChooser.FileSaverDialog;
@@ -28,6 +30,7 @@ import java.awt.*;
  * @author VISTALL
  * @since 10/07/2021
  */
+@ExtensionImpl(order = "last", profiles = ComponentProfiles.UNIFIED)
 public class UnifiedFileSaveDialogProvider implements FileSaveDialogProvider {
   @Nonnull
   @Override

@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.fileEditor.text;
 
+import consulo.annotation.component.ComponentProfiles;
+import consulo.annotation.component.ServiceImpl;
 import consulo.dataContext.DataProvider;
 import consulo.codeEditor.Editor;
 import consulo.disposer.Disposable;
@@ -25,6 +27,7 @@ import jakarta.inject.Singleton;
  * @since 07/08/2021
  */
 @Singleton
+@ServiceImpl(profiles = ComponentProfiles.UNIFIED)
 public class UnifiedTextEditorComponentContainerFactory implements TextEditorComponentContainerFactory {
 
   @Override

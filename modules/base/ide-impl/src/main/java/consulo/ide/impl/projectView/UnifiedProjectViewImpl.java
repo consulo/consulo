@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.projectView;
 
+import consulo.annotation.component.ComponentProfiles;
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.SelectInTarget;
 import consulo.ide.impl.idea.ide.projectView.HelpID;
@@ -64,6 +66,7 @@ import java.util.function.Function;
  * @since 23-Oct-17
  */
 @Singleton
+@ServiceImpl(profiles = ComponentProfiles.UNIFIED)
 public class UnifiedProjectViewImpl implements ProjectViewEx {
   private final class MyDataProvider implements Function<Key<?>, Object> {
     @Nullable
