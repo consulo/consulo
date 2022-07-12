@@ -25,7 +25,7 @@ import consulo.desktop.awt.wm.impl.content.DesktopToolWindowContentUi;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.PopupHandler;
 import consulo.ui.ex.UIBundle;
-import consulo.ide.impl.idea.ui.components.panels.HorizontalLayout;
+import consulo.ui.ex.awt.HorizontalLayout;
 import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ide.impl.idea.ui.tabs.TabsUtil;
 import consulo.ide.impl.idea.util.NotNullProducer;

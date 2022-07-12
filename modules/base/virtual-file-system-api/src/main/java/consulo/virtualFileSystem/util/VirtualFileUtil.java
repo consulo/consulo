@@ -343,6 +343,21 @@ public final class VirtualFileUtil {
     return file;
   }
 
+  /**
+   * Gets relative path of <code>file</code> to <code>root</code> when it's possible
+   * This method is designed to be used for file descriptions (in trees, lists etc.)
+   *
+   * @param file the file
+   * @param root candidate to be parent file (Project base dir, any content roots etc.)
+   * @return relative path of {@code file} or full path if {@code root} is not actual ancestor of {@code file}
+   */
+  @Nullable
+  public static String getRelativeLocation(@Nullable VirtualFile file, @Nonnull VirtualFile root) {
+    if (file == null) return null;
+    String path = getRelativePath(file, root);
+    return path != null ? path : file.getPresentableUrl();
+  }
+
   @Nullable
   public static String getRelativePath(@Nonnull VirtualFile file, @Nonnull VirtualFile ancestor) {
     return getRelativePath(file, ancestor, VFS_SEPARATOR_CHAR);

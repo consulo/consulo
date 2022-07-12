@@ -37,7 +37,7 @@ import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.ui.components.panels.HorizontalLayout;
+import consulo.ui.ex.awt.HorizontalLayout;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchBase;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;

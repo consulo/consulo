@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
  */
 public class DesktopHorizontalLayoutImpl extends DesktopLayoutBase implements HorizontalLayout {
   public DesktopHorizontalLayoutImpl(int gapInPixesl) {
-    initDefaultPanel(new consulo.ide.impl.idea.ui.components.panels.HorizontalLayout(JBUI.scale(gapInPixesl)));
+    initDefaultPanel(new consulo.ui.ex.awt.HorizontalLayout(JBUI.scale(gapInPixesl)));
   }
 
   @RequiredUIAccess

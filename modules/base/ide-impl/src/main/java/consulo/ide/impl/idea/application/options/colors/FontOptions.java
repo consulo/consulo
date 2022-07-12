@@ -34,7 +34,7 @@ import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.JBCheckBox;
 import consulo.ui.ex.awt.LinkLabel;
 import consulo.ui.ex.awt.LinkListener;
-import consulo.ide.impl.idea.ui.components.panels.HorizontalLayout;
+import consulo.ui.ex.awt.HorizontalLayout;
 import consulo.ui.ex.awt.Wrapper;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ui.ex.awt.JBUI;

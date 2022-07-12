@@ -33,7 +33,7 @@ import consulo.ide.impl.idea.ui.InplaceButton;
 import consulo.ui.ex.awt.TabbedPaneWrapper;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.LinkLabel;
-import consulo.ide.impl.idea.ui.components.panels.HorizontalLayout;
+import consulo.ui.ex.awt.HorizontalLayout;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;

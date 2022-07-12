@@ -61,7 +61,7 @@ import consulo.language.file.light.LightVirtualFile;
 import consulo.ui.ex.awt.BrowserHyperlinkListener;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.SeparatorFactory;
-import consulo.ide.impl.idea.ui.components.panels.HorizontalLayout;
+import consulo.ui.ex.awt.HorizontalLayout;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.JBHtmlEditorKit;
 import consulo.ui.ex.awt.JBUI;

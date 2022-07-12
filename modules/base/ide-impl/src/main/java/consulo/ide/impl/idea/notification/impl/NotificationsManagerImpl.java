@@ -32,7 +32,7 @@ import consulo.ide.impl.idea.notification.impl.ui.NotificationsUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.ui.*;
 import consulo.ide.impl.idea.ui.components.GradientViewport;
-import consulo.ide.impl.idea.ui.components.panels.HorizontalLayout;
+import consulo.ui.ex.awt.HorizontalLayout;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.IconUtil;

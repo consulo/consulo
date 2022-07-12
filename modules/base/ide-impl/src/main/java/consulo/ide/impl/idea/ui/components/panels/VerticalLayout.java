@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ui.components.panels;
 
+import consulo.ui.ex.awt.HorizontalLayout;
 import consulo.ui.ex.awt.JBInsets;
 
 import javax.swing.SwingConstants;

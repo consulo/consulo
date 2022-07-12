@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ui.components.panels;
+package consulo.ui.ex.awt;
 
 import javax.swing.SwingConstants;
 import java.awt.Component;
@@ -38,9 +38,9 @@ public final class HorizontalLayout implements LayoutManager2 {
   public static final String RIGHT = "RIGHT";
   public static final String CENTER = "CENTER";
 
-  private final ArrayList<Component> myLeft = new ArrayList<Component>();
-  private final ArrayList<Component> myRight = new ArrayList<Component>();
-  private final ArrayList<Component> myCenter = new ArrayList<Component>();
+  private final ArrayList<Component> myLeft = new ArrayList<>();
+  private final ArrayList<Component> myRight = new ArrayList<>();
+  private final ArrayList<Component> myCenter = new ArrayList<>();
   private final int myAlignment;
   private final int myGap;
 

@@ -28,7 +28,7 @@ import consulo.ui.ex.awt.CollectionComboBoxModel;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.HyperlinkAdapter;
 import consulo.ui.ex.awt.JBCheckBox;
-import consulo.ide.impl.idea.ui.components.panels.HorizontalLayout;
+import consulo.ui.ex.awt.HorizontalLayout;
 import consulo.ide.impl.idea.ui.components.panels.VerticalLayout;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ui.ex.awt.FontUtil;

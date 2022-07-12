@@ -103,9 +103,7 @@ public class VfsUtilCore {
    */
   @Nullable
   public static String getRelativeLocation(@Nullable VirtualFile file, @Nonnull VirtualFile root) {
-    if (file == null) return null;
-    String path = getRelativePath(file, root);
-    return path != null ? path : file.getPresentableUrl();
+    return VirtualFileUtil.getRelativeLocation(file, root);
   }
 
   @Nullable

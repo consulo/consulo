@@ -22,7 +22,7 @@ import consulo.ui.ex.awt.VerticalFlowLayout;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.JBTextArea;
-import consulo.ide.impl.idea.ui.components.panels.HorizontalLayout;
+import consulo.ui.ex.awt.HorizontalLayout;
 import consulo.ide.impl.idea.ui.components.panels.VerticalLayout;
 import consulo.application.util.DateFormatUtil;
 import consulo.ui.ex.awt.JBUI;
