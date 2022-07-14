@@ -15,13 +15,14 @@
  */
 package consulo.ide.impl.idea.openapi.editor;
 
+import consulo.container.plugin.PluginIds;
 import consulo.language.Language;
 import consulo.language.OldLanguageExtension;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.container.plugin.PluginIds;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Rustam Vishnyakov
@@ -35,8 +36,8 @@ public class LanguageIndentStrategy extends OldLanguageExtension<IndentStrategy>
     super(PluginIds.CONSULO_BASE + ".lang.indentStrategy", DEFAULT_INDENT_STRATEGY);
   }
 
-  public static @Nonnull
-  IndentStrategy getIndentStrategy(@javax.annotation.Nullable PsiFile file) {
+  @Nonnull
+  public static IndentStrategy getIndentStrategy(@Nullable PsiFile file) {
     if (file != null) {
       Language language = file.getLanguage();
       IndentStrategy strategy = INSTANCE.forLanguage(language);

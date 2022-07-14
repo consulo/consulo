@@ -19,6 +19,8 @@ package consulo.ide.impl.idea.codeInsight.intention.impl.config;
 import consulo.configurable.SearchableConfigurable;
 import consulo.ide.impl.idea.ide.ui.search.SearchUtil;
 import consulo.ide.impl.idea.ide.ui.search.SearchableOptionsRegistrar;
+import consulo.language.editor.internal.intention.IntentionActionMetaData;
+import consulo.language.editor.internal.intention.TextDescriptor;
 import consulo.ui.ex.awt.OnePixelSplitter;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.util.lang.StringUtil;

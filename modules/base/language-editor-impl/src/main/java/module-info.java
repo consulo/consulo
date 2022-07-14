@@ -5,6 +5,7 @@
 module consulo.language.editor.impl {
   // TODO remove this dependency in future
   requires java.desktop;
+  requires forms.rt;
 
   requires transitive consulo.language.editor.api;
   requires transitive consulo.file.template.api;

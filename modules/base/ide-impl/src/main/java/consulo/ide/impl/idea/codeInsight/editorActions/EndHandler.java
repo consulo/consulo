@@ -16,16 +16,17 @@
 
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
+import consulo.application.Application;
 import consulo.language.editor.CodeInsightSettings;
 import consulo.dataContext.DataManager;
 import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;
 import consulo.application.WriteAction;
-import consulo.ide.impl.idea.openapi.editor.*;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.document.FileDocumentManager;
 import consulo.codeEditor.*;
+import consulo.language.editor.EditorNavigationDelegate;
 import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
@@ -70,7 +71,7 @@ public class EndHandler extends EditorActionHandler {
       return;
     }
 
-    for (EditorNavigationDelegate delegate : EditorNavigationDelegate.EP_NAME.getExtensionList()) {
+    for (EditorNavigationDelegate delegate : Application.get().getExtensionPoint(EditorNavigationDelegate.class)) {
       if (delegate.navigateToLineEnd(editor, dataContext) == EditorNavigationDelegate.Result.STOP) {
         return;
       }

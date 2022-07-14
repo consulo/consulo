@@ -30,6 +30,7 @@ import consulo.ide.impl.idea.openapi.options.SchemesManagerFactory;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.language.editor.internal.TemplateConstants;
 import consulo.language.editor.template.DefaultLiveTemplatesProvider;
 import consulo.language.editor.template.Template;
 import consulo.logging.Logger;
@@ -60,13 +61,9 @@ import java.util.*;
 public class TemplateSettings implements PersistentStateComponent<TemplateSettings.State> {
   private static final Logger LOG = Logger.getInstance(TemplateSettings.class);
 
-  @NonNls
   public static final String USER_GROUP_NAME = "user";
-  @NonNls
   private static final String TEMPLATE_SET = "templateSet";
-  @NonNls
   private static final String GROUP = "group";
-  @NonNls
   private static final String TEMPLATE = "template";
 
   public static final char SPACE_CHAR = TemplateConstants.SPACE_CHAR;
@@ -76,22 +73,14 @@ public class TemplateSettings implements PersistentStateComponent<TemplateSettin
   public static final char CUSTOM_CHAR = TemplateConstants.CUSTOM_CHAR;
   public static final char NONE_CHAR = TemplateConstants.NONE_CHAR;
 
-  @NonNls
   private static final String SPACE = "SPACE";
-  @NonNls
   private static final String TAB = "TAB";
-  @NonNls
   private static final String ENTER = "ENTER";
-  @NonNls
   private static final String CUSTOM = "CUSTOM";
 
-  @NonNls
   private static final String NAME = "name";
-  @NonNls
   private static final String VALUE = "value";
-  @NonNls
   private static final String DESCRIPTION = "description";
-  @NonNls
   private static final String SHORTCUT = "shortcut";
 
   @NonNls
@@ -469,7 +458,7 @@ public class TemplateSettings implements PersistentStateComponent<TemplateSettin
         for (String defTemplate : provider.getDefaultLiveTemplateFiles()) {
           readDefTemplate(provider, defTemplate, true);
         }
-        
+
         String[] hidden = provider.getHiddenLiveTemplateFiles();
         if (hidden != null) {
           for (String s : hidden) {

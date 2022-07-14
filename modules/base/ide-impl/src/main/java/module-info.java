@@ -170,7 +170,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.codeInsight;
   exports consulo.ide.impl.codeInsight.daemon.impl;
   exports consulo.ide.impl.codeInsight.navigation.actions;
-  exports consulo.ide.impl.codeInsight.template.postfix.settings;
   exports consulo.ide.impl.codeInspection.ui;
   exports consulo.ide.impl.command;
   exports consulo.ide.impl.compiler;
@@ -317,7 +316,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.codeInsight.template.impl.editorActions;
   exports consulo.ide.impl.idea.codeInsight.template.macro;
   exports consulo.ide.impl.idea.codeInsight.template.postfix.completion;
-  exports consulo.ide.impl.idea.codeInsight.template.postfix.settings;
   exports consulo.ide.impl.idea.codeInsight.template.postfix.templates;
   exports consulo.ide.impl.idea.codeInsight.unwrap;
   exports consulo.ide.impl.idea.codeInspection;
@@ -597,7 +595,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.openapi.editor;
   exports consulo.ide.impl.idea.openapi.editor.actionSystem;
   exports consulo.ide.impl.idea.openapi.editor.actions;
-  exports consulo.ide.impl.idea.openapi.editor.bidi;
   exports consulo.ide.impl.idea.openapi.editor.colors.impl;
   exports consulo.ide.impl.idea.openapi.editor.event;
   exports consulo.ide.impl.idea.openapi.editor.ex;

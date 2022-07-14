@@ -18,16 +18,13 @@ package consulo.ide.impl.idea.codeInsight.template.postfix.completion;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
-import consulo.ide.impl.codeInsight.template.postfix.settings.PostfixTemplatesChildConfigurable;
-import consulo.ide.impl.idea.codeInsight.template.postfix.settings.PostfixTemplatesConfigurable;
-import consulo.ide.impl.idea.codeInsight.template.postfix.settings.PostfixTemplatesSettings;
-import consulo.ide.impl.idea.codeInsight.template.postfix.templates.PostfixTemplate;
 import consulo.ide.impl.idea.util.IconUtil;
-import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.editor.completion.lookup.Lookup;
 import consulo.language.editor.completion.lookup.LookupActionProvider;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementAction;
+import consulo.language.editor.postfixTemplate.PostfixTemplate;
+import consulo.language.editor.postfixTemplate.PostfixTemplatesSettings;
 import consulo.project.Project;
 
 import java.util.function.Consumer;
@@ -50,12 +47,13 @@ public class PostfixTemplateLookupActionProvider implements LookupActionProvider
             public void run() {
               if (project.isDisposed()) return;
 
-              PostfixTemplatesConfigurable configurable = new PostfixTemplatesConfigurable();
-              PostfixTemplatesChildConfigurable childConfigurable = configurable.findConfigurable(templateLookupElement.getProvider());
-              if(childConfigurable == null) {
-                return;
-              }
-              ShowSettingsUtil.getInstance().editConfigurable(project, childConfigurable, () -> childConfigurable.focusTemplate(template));
+              // TODO show correct settings
+              //PostfixTemplatesConfigurable configurable = new PostfixTemplatesConfigurable();
+              //PostfixTemplatesChildConfigurable childConfigurable = configurable.findConfigurable(templateLookupElement.getProvider());
+              //if(childConfigurable == null) {
+              //  return;
+              //}
+              //ShowSettingsUtil.getInstance().editConfigurable(project, childConfigurable, () -> childConfigurable.focusTemplate(template));
             }
           });
           return Result.HIDE_LOOKUP;

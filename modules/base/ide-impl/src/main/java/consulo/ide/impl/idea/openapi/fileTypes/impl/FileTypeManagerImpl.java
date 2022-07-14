@@ -1281,7 +1281,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
   @Override
   @Nonnull
   public String getExtension(@Nonnull String fileName) {
-    return FileUtilRt.getExtension(fileName);
+    return FileUtil.getExtension(fileName);
   }
 
   @Nonnull

@@ -20,6 +20,7 @@
 package consulo.ide.impl.idea.codeInsight.intention.impl.config;
 
 import consulo.ide.impl.idea.ide.ui.search.SearchUtil;
+import consulo.language.editor.internal.intention.IntentionActionMetaData;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.FilterComponent;
 import consulo.ui.ex.awt.ScrollPaneFactory;

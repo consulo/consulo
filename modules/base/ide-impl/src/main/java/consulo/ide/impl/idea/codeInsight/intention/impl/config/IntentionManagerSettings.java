@@ -34,6 +34,7 @@ import consulo.ide.ServiceManager;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.intention.IntentionActionBean;
 import consulo.language.editor.intention.IntentionManager;
+import consulo.language.editor.internal.intention.IntentionActionMetaData;
 import consulo.logging.Logger;
 import consulo.util.interner.Interner;
 import consulo.util.lang.Pair;

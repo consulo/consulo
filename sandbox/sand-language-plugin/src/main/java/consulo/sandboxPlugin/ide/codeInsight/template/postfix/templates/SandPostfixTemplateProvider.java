@@ -15,29 +15,27 @@
  */
 package consulo.sandboxPlugin.ide.codeInsight.template.postfix.templates;
 
-import consulo.ide.impl.idea.codeInsight.template.postfix.templates.PostfixTemplate;
-import consulo.ide.impl.idea.codeInsight.template.postfix.templates.PostfixTemplateProvider;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
+import consulo.language.Language;
+import consulo.language.editor.postfixTemplate.PostfixTemplate;
+import consulo.language.editor.postfixTemplate.PostfixTemplateProvider;
 import consulo.language.psi.PsiFile;
-import java.util.HashSet;
-import javax.annotation.Nonnull;
+import consulo.sandboxPlugin.lang.SandLanguage;
 
+import javax.annotation.Nonnull;
 import java.util.Set;
 
 /**
  * @author VISTALL
  * @since 16.08.14
  */
-public class SandPostfixTemplateProvider implements PostfixTemplateProvider {
+@ExtensionImpl
+public class SandPostfixTemplateProvider extends PostfixTemplateProvider {
   @Nonnull
   @Override
-  public Set<PostfixTemplate> getTemplates() {
-    return new HashSet<PostfixTemplate>() {
-      {
-        add(new TestTemplate());
-        add(new DDTemplate());
-      }
-    };
+  public Set<PostfixTemplate> buildTemplates() {
+    return Set.of(new TestTemplate(), new DDTemplate());
   }
 
   @Override
@@ -61,4 +59,9 @@ public class SandPostfixTemplateProvider implements PostfixTemplateProvider {
     return copyFile;
   }
 
+  @Nonnull
+  @Override
+  public Language getLanguage() {
+    return SandLanguage.INSTANCE;
+  }
 }

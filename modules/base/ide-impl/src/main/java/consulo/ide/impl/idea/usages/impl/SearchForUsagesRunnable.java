@@ -24,7 +24,7 @@ import consulo.ui.ex.awt.HyperlinkAdapter;
 import consulo.usage.UsageInfo2UsageAdapter;
 import consulo.ide.impl.idea.usages.UsageLimitUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.ui.RangeBlinker;
+import consulo.codeEditor.util.RangeBlinker;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.application.AccessRule;
 import consulo.application.AllIcons;

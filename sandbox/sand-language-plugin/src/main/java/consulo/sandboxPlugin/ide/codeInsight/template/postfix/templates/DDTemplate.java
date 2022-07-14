@@ -15,7 +15,7 @@
  */
 package consulo.sandboxPlugin.ide.codeInsight.template.postfix.templates;
 
-import consulo.ide.impl.idea.codeInsight.template.postfix.templates.PostfixTemplate;
+import consulo.language.editor.postfixTemplate.PostfixTemplate;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiElement;

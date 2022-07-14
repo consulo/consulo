@@ -6,8 +6,6 @@ import consulo.codeEditor.impl.FontInfo;
 import consulo.codeEditor.impl.IterationState;
 import consulo.document.Document;
 import consulo.document.util.DocumentUtil;
-import consulo.ide.impl.idea.openapi.editor.bidi.BidiRegionsSeparator;
-import consulo.ide.impl.idea.openapi.editor.bidi.LanguageBidiRegionsSeparator;
 import consulo.ide.impl.idea.openapi.editor.impl.FontFallbackIterator;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
@@ -17,6 +15,7 @@ import consulo.language.Language;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.StringEscapesTokenTypes;
 import consulo.language.ast.TokenType;
+import consulo.language.editor.bidi.BidiRegionsSeparator;
 import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;
 import consulo.util.collection.SmartList;
@@ -206,8 +205,7 @@ abstract class LineLayout {
     if (token1 != TokenType.WHITE_SPACE && token2 != TokenType.WHITE_SPACE && !token1.getLanguage().is(token2.getLanguage())) return true;
     Language language = token1.getLanguage();
     if (language == Language.ANY) language = token2.getLanguage();
-    BidiRegionsSeparator separator = LanguageBidiRegionsSeparator.INSTANCE.forLanguage(language);
-    return separator.createBorderBetweenTokens(token1, token2);
+    return BidiRegionsSeparator.forLanguage(language).createBorderBetweenTokens(token1, token2);
   }
 
   private static void addRuns(List<BidiRun> runs, char[] text, int start, int end, int flags) {

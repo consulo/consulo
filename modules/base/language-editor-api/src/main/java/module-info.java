@@ -16,6 +16,7 @@ module consulo.language.editor.api {
   
   exports consulo.language.editor;
   exports consulo.language.editor.annotation;
+  exports consulo.language.editor.bidi;
   exports consulo.language.editor.action;
   exports consulo.language.editor.colorScheme.setting;
   exports consulo.language.editor.completion;
@@ -38,9 +39,10 @@ module consulo.language.editor.api {
   exports consulo.language.editor.inspection.scheme.event;
   exports consulo.language.editor.intention;
   exports consulo.language.editor.structureView;
-  exports consulo.language.editor.internal to consulo.ide.impl;
+  exports consulo.language.editor.internal to consulo.ide.impl, consulo.language.editor.impl;
   exports consulo.language.editor.scope;
   exports consulo.language.editor.template;
+  exports consulo.language.editor.postfixTemplate;
   exports consulo.language.editor.template.macro;
   exports consulo.language.editor.template.context;
   exports consulo.language.editor.template.event;
@@ -50,6 +52,8 @@ module consulo.language.editor.api {
   exports consulo.language.editor.util;
   exports consulo.language.editor.internal.matcher to consulo.language.editor.ui.api, consulo.language.editor.impl, consulo.ide.impl, consulo.desktop.awt.ide.impl;
   exports consulo.language.editor.rawHighlight.internal to consulo.ide.impl, consulo.injecting.pico.impl;
+  exports consulo.language.editor.internal.intention to consulo.ide.impl, consulo.language.editor.impl;
+  exports consulo.language.editor.internal.postfixTemplate to consulo.ide.impl, consulo.language.editor.impl;
 
   opens consulo.language.editor.inspection.scheme to consulo.util.xml.serializer;
   opens consulo.language.editor to consulo.util.xml.serializer;

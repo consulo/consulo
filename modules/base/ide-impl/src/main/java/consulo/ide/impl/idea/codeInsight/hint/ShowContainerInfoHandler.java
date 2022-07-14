@@ -22,6 +22,7 @@ import consulo.fileEditor.structureView.TreeBasedStructureViewBuilder;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
+import consulo.language.editor.hint.DeclarationRangeUtil;
 import consulo.language.editor.structureView.PsiStructureViewFactory;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;

@@ -35,7 +35,7 @@ import consulo.codeEditor.LogicalPosition;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.document.util.Segment;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.ui.RangeBlinker;
+import consulo.codeEditor.util.RangeBlinker;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;

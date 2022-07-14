@@ -37,7 +37,6 @@
   <extensions defaultExtensionNs="consulo">
 
 
-    <lang.syntaxHighlighterFactory language="SAND" implementationClass="consulo.sandboxPlugin.ide.highlight.SandHighlighterFactory"/>
 
 
     <codeInsight.template.postfixTemplateProvider language="SAND"
@@ -52,7 +51,6 @@
                              name="Sand 2"
                              immutableClass="consulo.sandboxPlugin.ide.module.extension.Sand2ModuleExtension"
                              mutableClass="consulo.sandboxPlugin.ide.module.extension.Sand2MutableModuleExtension"/>
-    <lang.importOptimizer language="SAND" implementationClass="consulo.sandboxPlugin.lang.format.SandImportOptimizer"/>
 
     <projectConfigurable id="sand.editor" parentId="editor" displayName="Sand Editor" instance="consulo.sandboxPlugin.ui.SandConfigurable"/>
   </extensions>

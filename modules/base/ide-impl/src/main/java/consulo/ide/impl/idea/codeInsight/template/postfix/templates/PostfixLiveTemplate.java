@@ -14,11 +14,14 @@ import consulo.ide.impl.idea.codeInsight.template.CustomLiveTemplateBase;
 import consulo.ide.impl.idea.codeInsight.template.CustomTemplateCallback;
 import consulo.ide.impl.idea.codeInsight.template.impl.CustomLiveTemplateLookupElement;
 import consulo.ide.impl.idea.codeInsight.template.postfix.completion.PostfixTemplateLookupElement;
-import consulo.ide.impl.idea.codeInsight.template.postfix.settings.PostfixTemplatesSettings;
 import consulo.ide.impl.idea.openapi.diagnostic.Logger;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.Language;
 import consulo.language.editor.CodeInsightBundle;
+import consulo.language.editor.postfixTemplate.PostfixTemplate;
+import consulo.language.editor.postfixTemplate.PostfixTemplateProvider;
+import consulo.language.editor.postfixTemplate.PostfixTemplatesSettings;
+import consulo.language.editor.postfixTemplate.PostfixTemplatesUtils;
 import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.psi.*;
 import consulo.language.template.TemplateLanguageUtil;
@@ -31,7 +34,6 @@ import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -41,16 +43,14 @@ import java.util.Set;
 
 @ExtensionImpl
 public class PostfixLiveTemplate extends CustomLiveTemplateBase {
-  public static final
-  @NonNls
-  String POSTFIX_TEMPLATE_ID = "POSTFIX_TEMPLATE_ID";
+  public static final String POSTFIX_TEMPLATE_ID = "POSTFIX_TEMPLATE_ID";
   private static final Logger LOG = Logger.getInstance(PostfixLiveTemplate.class);
 
   @Nonnull
   public Set<String> getAllTemplateKeys(PsiFile file, int offset) {
     Set<String> keys = new HashSet<>();
     Language language = PsiUtilCore.getLanguageAtOffset(file, offset);
-    for (PostfixTemplateProvider provider : LanguagePostfixTemplate.LANG_EP.allForLanguage(language)) {
+    for (PostfixTemplateProvider provider : PostfixTemplateProvider.forLanguage(language)) {
       ProgressManager.checkCanceled();
       keys.addAll(getKeys(provider));
     }
@@ -85,7 +85,7 @@ public class PostfixLiveTemplate extends CustomLiveTemplateBase {
     Editor editor = callback.getEditor();
     CharSequence charsSequence = editor.getDocument().getCharsSequence();
     int offset = editor.getCaretModel().getOffset();
-    for (PostfixTemplateProvider provider : LanguagePostfixTemplate.LANG_EP.allForLanguage(getLanguage(callback))) {
+    for (PostfixTemplateProvider provider : PostfixTemplateProvider.forLanguage(getLanguage(callback))) {
       String key = computeTemplateKeyWithoutContextChecking(provider, charsSequence, offset);
       if (key != null && isApplicableTemplate(provider, key, callback.getFile(), editor)) {
         return key;
@@ -99,7 +99,7 @@ public class PostfixLiveTemplate extends CustomLiveTemplateBase {
   public String computeTemplateKeyWithoutContextChecking(@Nonnull CustomTemplateCallback callback) {
     Editor editor = callback.getEditor();
     int currentOffset = editor.getCaretModel().getOffset();
-    for (PostfixTemplateProvider provider : LanguagePostfixTemplate.LANG_EP.allForLanguage(getLanguage(callback))) {
+    for (PostfixTemplateProvider provider : PostfixTemplateProvider.forLanguage(getLanguage(callback))) {
       ProgressManager.checkCanceled();
       String key = computeTemplateKeyWithoutContextChecking(provider, editor.getDocument().getCharsSequence(), currentOffset);
       if (key != null) return key;
@@ -118,7 +118,7 @@ public class PostfixLiveTemplate extends CustomLiveTemplateBase {
 
     Editor editor = callback.getEditor();
     PsiFile file = callback.getContext().getContainingFile();
-    for (PostfixTemplateProvider provider : LanguagePostfixTemplate.LANG_EP.allForLanguage(getLanguage(callback))) {
+    for (PostfixTemplateProvider provider : PostfixTemplateProvider.forLanguage(getLanguage(callback))) {
       PostfixTemplate postfixTemplate = findApplicableTemplate(provider, key, editor, file);
       if (postfixTemplate != null) {
         expandTemplate(key, callback, editor, provider, postfixTemplate);
@@ -166,7 +166,7 @@ public class PostfixLiveTemplate extends CustomLiveTemplateBase {
     PsiFile contextFile = callback.getFile();
     Language language = PsiUtilCore.getLanguageAtOffset(contextFile, offset);
     CharSequence fileText = callback.getEditor().getDocument().getImmutableCharSequence();
-    for (PostfixTemplateProvider provider : LanguagePostfixTemplate.LANG_EP.allForLanguage(language)) {
+    for (PostfixTemplateProvider provider : PostfixTemplateProvider.forLanguage(language)) {
       if (StringUtil.isNotEmpty(computeTemplateKeyWithoutContextChecking(provider, fileText, offset + 1))) {
         return true;
       }
@@ -207,7 +207,7 @@ public class PostfixLiveTemplate extends CustomLiveTemplateBase {
     CustomTemplateCallback callback = new CustomTemplateCallback(editor, file);
     Disposable parentDisposable = Disposable.newDisposable();
     try {
-      for (PostfixTemplateProvider provider : LanguagePostfixTemplate.LANG_EP.allForLanguage(getLanguage(callback))) {
+      for (PostfixTemplateProvider provider : PostfixTemplateProvider.forLanguage(getLanguage(callback))) {
         ProgressManager.checkCanceled();
         String key = computeTemplateKeyWithoutContextChecking(callback);
         if (key != null && editor.getCaretModel().getCaretCount() == 1) {

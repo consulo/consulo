@@ -20,7 +20,7 @@
  */
 package consulo.ide.impl.idea.internal;
 
-import consulo.ide.impl.idea.codeInsight.intention.impl.config.IntentionActionMetaData;
+import consulo.language.editor.internal.intention.IntentionActionMetaData;
 import consulo.ide.impl.idea.codeInsight.intention.impl.config.IntentionManagerSettings;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
