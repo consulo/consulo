@@ -358,14 +358,7 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
     }
   }
 
-  /**
-   * todo [all] It is NOT necessary to call anything if you obey common IDEA proxy settings;
-   * todo if you want to define your own behaviour, refer to {@link CommonProxy}
-   * <p>
-   * also, this method is useful in a way that it test connection to the host [through proxy]
-   *
-   * @param url URL for HTTP connection
-   */
+  @Override
   public void prepareURL(@Nonnull String url) throws IOException {
     URLConnection connection = openConnection(url);
     try {
