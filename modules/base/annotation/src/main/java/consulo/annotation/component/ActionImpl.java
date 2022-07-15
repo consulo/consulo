@@ -36,5 +36,5 @@ public @interface ActionImpl {
    */
   String[] references() default {};
 
-  int profiles() default ComponentProfiles.ANY;
+  int profiles() default ComponentProfiles.DEFAULT;
 }

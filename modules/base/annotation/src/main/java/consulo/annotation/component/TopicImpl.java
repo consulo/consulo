@@ -29,5 +29,5 @@ import java.lang.annotation.Target;
 public @interface TopicImpl {
   ComponentScope value();
 
-  int profiles() default ComponentProfiles.ANY;
+  int profiles() default ComponentProfiles.DEFAULT;
 }

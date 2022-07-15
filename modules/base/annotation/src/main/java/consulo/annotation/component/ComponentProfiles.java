@@ -20,7 +20,7 @@ package consulo.annotation.component;
  * @since 13-Jun-22
  */
 public final class ComponentProfiles {
-  public static final int ANY = 0;
+  public static final int DEFAULT = 0;
 
   public static final int PRODUCTION = 1 << 1;
 

@@ -27,5 +27,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface ServiceImpl {
-  int profiles() default ComponentProfiles.ANY;
+  int profiles() default ComponentProfiles.DEFAULT;
 }

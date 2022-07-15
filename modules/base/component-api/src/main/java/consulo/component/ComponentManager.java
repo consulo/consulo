@@ -145,6 +145,6 @@ public interface ComponentManager extends UserDataHolder, Disposable, InjectingC
   }
 
   default int getProfiles() {
-    return ComponentProfiles.ANY;
+    return ComponentProfiles.DEFAULT;
   }
 }
