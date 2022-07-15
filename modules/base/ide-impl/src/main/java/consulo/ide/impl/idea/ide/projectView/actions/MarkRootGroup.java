@@ -15,13 +15,13 @@
  */
 package consulo.ide.impl.idea.ide.projectView.actions;
 
-import consulo.ide.impl.idea.openapi.actionSystem.*;
 import consulo.language.editor.LangDataKeys;
 import consulo.module.Module;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.util.ActionGroupUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

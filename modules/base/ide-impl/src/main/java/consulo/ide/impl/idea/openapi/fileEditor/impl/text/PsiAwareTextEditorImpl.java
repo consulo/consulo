@@ -23,7 +23,7 @@ import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
 import consulo.fileEditor.text.CodeFoldingState;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.TextEditorBackgroundHighlighter;
-import consulo.ide.impl.idea.codeInsight.folding.CodeFoldingManager;
+import consulo.language.editor.folding.CodeFoldingManager;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.ide.impl.idea.codeInsight.lookup.impl.LookupImpl;
 import consulo.language.editor.LangDataKeys;

@@ -22,7 +22,7 @@ package consulo.ide.impl.idea.openapi.fileEditor.impl.text;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.TextEditorBackgroundHighlighter;
-import consulo.ide.impl.idea.codeInsight.folding.CodeFoldingManager;
+import consulo.language.editor.folding.CodeFoldingManager;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.document.FileDocumentManager;

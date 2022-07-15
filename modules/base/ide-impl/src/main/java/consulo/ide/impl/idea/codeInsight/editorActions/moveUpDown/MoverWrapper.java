@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.codeInsight.editorActions.moveUpDown;
 
-import consulo.ide.impl.idea.codeInsight.folding.CodeFoldingManager;
+import consulo.language.editor.folding.CodeFoldingManager;
 import consulo.codeEditor.*;
 import consulo.project.Project;
 import consulo.document.Document;

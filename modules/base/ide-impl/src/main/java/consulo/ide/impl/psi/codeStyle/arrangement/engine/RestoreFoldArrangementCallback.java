@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.psi.codeStyle.arrangement.engine;
 
-import consulo.ide.impl.idea.codeInsight.folding.CodeFoldingManager;
+import consulo.language.editor.folding.CodeFoldingManager;
 import consulo.codeEditor.Editor;
 import consulo.fileEditor.text.CodeFoldingState;
 import consulo.project.Project;
