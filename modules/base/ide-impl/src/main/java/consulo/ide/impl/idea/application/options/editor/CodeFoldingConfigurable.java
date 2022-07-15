@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.application.options.editor;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.ApplicationConfigurable;
 import consulo.configurable.StandardConfigurableIds;
-import consulo.ide.impl.idea.codeInsight.folding.CodeFoldingManager;
+import consulo.language.editor.folding.CodeFoldingManager;
 import consulo.application.ApplicationBundle;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
