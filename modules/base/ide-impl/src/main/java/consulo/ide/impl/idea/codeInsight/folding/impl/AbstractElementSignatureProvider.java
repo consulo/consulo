@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.codeInsight.folding.impl;
 
 import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.language.editor.folding.ElementSignatureProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiNamedElement;

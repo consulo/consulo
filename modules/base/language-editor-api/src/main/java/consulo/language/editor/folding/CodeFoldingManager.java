@@ -1,23 +1,22 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.codeInsight.folding;
+package consulo.language.editor.folding;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.ide.ServiceManager;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.FoldRegion;
+import consulo.document.Document;
 import consulo.fileEditor.text.CodeFoldingState;
-import consulo.language.editor.folding.FoldingBuilder;
 import consulo.project.Project;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class CodeFoldingManager {
   public static CodeFoldingManager getInstance(Project project) {
-    return ServiceManager.getService(project, CodeFoldingManager.class);
+    return project.getInstance(CodeFoldingManager.class);
   }
 
   public abstract void updateFoldRegions(@Nonnull Editor editor);
@@ -53,7 +52,7 @@ public abstract class CodeFoldingManager {
   public abstract Boolean isCollapsedByDefault(@Nonnull FoldRegion region);
 
   /**
-   * Schedules recalculation of foldings in editor ({@link consulo.ide.impl.idea.codeInsight.daemon.impl.CodeFoldingPass CodeFoldingPass}), which
+   * Schedules recalculation of foldings in editor ({@link CodeFoldingPass}), which
    * will happen even if document (and other dependencies declared by {@link FoldingBuilder FoldingBuilder})
    * haven't changed.
    */

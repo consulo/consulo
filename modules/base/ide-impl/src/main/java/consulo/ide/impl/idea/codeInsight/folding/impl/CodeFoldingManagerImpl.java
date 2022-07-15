@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.codeInsight.folding.impl;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.language.editor.DaemonCodeAnalyzer;
-import consulo.ide.impl.idea.codeInsight.folding.CodeFoldingManager;
+import consulo.language.editor.folding.CodeFoldingManager;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;

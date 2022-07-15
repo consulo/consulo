@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.ide.impl.idea.codeHighlighting.EditorBoundHighlightingPass;
-import consulo.ide.impl.idea.codeInsight.folding.CodeFoldingManager;
+import consulo.language.editor.folding.CodeFoldingManager;
 import consulo.ide.impl.idea.codeInsight.folding.impl.FoldingUpdate;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.codeEditor.Editor;

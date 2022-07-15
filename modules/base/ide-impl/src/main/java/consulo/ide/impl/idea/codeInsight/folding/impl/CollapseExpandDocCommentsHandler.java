@@ -19,7 +19,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.HighlighterIterator;
-import consulo.ide.impl.idea.codeInsight.folding.CodeFoldingManager;
+import consulo.language.editor.folding.CodeFoldingManager;
 import consulo.language.CodeDocumentationAwareCommenter;
 import consulo.language.Commenter;
 import consulo.language.editor.action.CodeInsightActionHandler;
