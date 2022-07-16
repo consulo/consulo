@@ -36,4 +36,9 @@ public @interface IntentionMetaData {
    * Extensions of files which intention operate - used for preview blocks inside settings
    */
   String[] fileExtensions();
+
+  /**
+   * Category of inspection, must be localized
+   */
+  String[] categories();
 }

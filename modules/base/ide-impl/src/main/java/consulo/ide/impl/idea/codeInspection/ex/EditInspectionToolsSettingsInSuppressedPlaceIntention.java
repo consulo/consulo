@@ -21,6 +21,7 @@ import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.editor.inspection.InspectionExtensionsFactory;
 import consulo.codeEditor.Editor;
+import consulo.language.editor.intention.IntentionMetaData;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
@@ -36,6 +37,7 @@ import java.util.List;
 /**
  * @author cdr
  */
+@IntentionMetaData(ignoreId = "platform.edit.intention.options", fileExtensions = "txt", categories = "General")
 public class EditInspectionToolsSettingsInSuppressedPlaceIntention implements IntentionAction {
   private String myId;
   private String myDisplayName;

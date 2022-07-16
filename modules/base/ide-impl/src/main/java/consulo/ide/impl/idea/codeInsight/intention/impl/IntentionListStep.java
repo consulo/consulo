@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.codeInsight.intention.impl;
 import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.ShowIntentionsPass;
 import consulo.language.editor.hint.HintManager;
-import consulo.ide.impl.idea.codeInsight.intention.AbstractEmptyIntentionAction;
+import consulo.language.editor.intention.AbstractEmptyIntentionAction;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.ide.impl.idea.codeInsight.intention.IntentionActionDelegate;
 import consulo.application.ApplicationManager;

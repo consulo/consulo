@@ -16,6 +16,7 @@
 package consulo.language.editor.impl.intention;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
@@ -23,6 +24,7 @@ import consulo.document.util.TextRange;
 import consulo.language.Language;
 import consulo.language.editor.impl.internal.intention.QuickEditHandler;
 import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.editor.intention.LowPriorityAction;
 import consulo.language.file.inject.DocumentWindow;
 import consulo.language.inject.InjectedLanguageManager;
@@ -57,6 +59,8 @@ import java.util.List;
  * @author Gregory Shrago
  * @author Konstantin Bulenkov
  */
+@ExtensionImpl
+@IntentionMetaData(ignoreId = "platform.inject.language", fileExtensions = "txt", categories = "Language Injection")
 public class QuickEditAction implements IntentionAction, LowPriorityAction {
   public static final Key<QuickEditHandler> QUICK_EDIT_HANDLER = Key.create("QUICK_EDIT_HANDLER");
   public static final Key<Boolean> EDIT_ACTION_AVAILABLE = Key.create("EDIT_ACTION_AVAILABLE");
@@ -122,10 +126,6 @@ public class QuickEditAction implements IntentionAction, LowPriorityAction {
       return handler;
     }
     handler = new QuickEditHandler(project, injectedFile, origFile, editor, this);
-    if (ApplicationManager.getApplication().isUnitTestMode()) {
-      // todo remove and hide QUICK_EDIT_HANDLER
-      injectedFile.putUserData(QUICK_EDIT_HANDLER, handler);
-    }
     return handler;
   }
 

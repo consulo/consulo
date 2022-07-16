@@ -16,112 +16,59 @@
 
 package consulo.ide.impl.idea.codeInsight.intention.impl.config;
 
-import consulo.language.editor.intention.IntentionAction;
-import consulo.language.editor.intention.IntentionActionBean;
-import consulo.ide.impl.idea.codeInsight.intention.IntentionActionDelegate;
-import consulo.ui.ex.action.ShortcutProvider;
-import consulo.ui.ex.action.ShortcutSet;
-import consulo.logging.Logger;
+import consulo.annotation.DeprecationInfo;
 import consulo.codeEditor.Editor;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.language.psi.PsiElement;
+import consulo.ide.impl.idea.codeInsight.intention.IntentionActionDelegate;
+import consulo.language.editor.intention.IntentionAction;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.ui.ex.action.ShortcutProvider;
+import consulo.ui.ex.action.ShortcutSet;
+import org.jetbrains.annotations.Nls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+@Deprecated
+@DeprecationInfo("We don't use beans")
 public class IntentionActionWrapper implements IntentionAction, ShortcutProvider, IntentionActionDelegate {
   private static final Logger LOG = Logger.getInstance(IntentionActionWrapper.class);
 
-  private IntentionAction myDelegate;
-  private final IntentionActionBean myExtension;
-  private String myFullFamilyName;
-
-  IntentionActionWrapper(@Nonnull IntentionActionBean extension) {
-    myExtension = extension;
+  @Nonnull
+  @Override
+  public IntentionAction getDelegate() {
+    throw new UnsupportedOperationException();
   }
 
-  @Override
+  @Nls
   @Nonnull
+  @Override
   public String getText() {
-    return getDelegate().getText();
+    throw new UnsupportedOperationException();
   }
 
-  @Override
+  @Nls
   @Nonnull
+  @Override
   public String getFamilyName() {
-    return getDelegate().getFamilyName();
+    throw new UnsupportedOperationException();
   }
 
   @Override
-  public boolean isAvailable(@Nonnull final Project project, final Editor editor, final PsiFile file) {
-    return getDelegate().isAvailable(project, editor, file);
+  public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
+    throw new UnsupportedOperationException();
   }
 
   @Override
-  public void invoke(@Nonnull final Project project, final Editor editor, final PsiFile file) throws IncorrectOperationException {
-    getDelegate().invoke(project, editor, file);
-  }
-
-  @Override
-  public boolean startInWriteAction() {
-    return getDelegate().startInWriteAction();
-  }
-
-  @Nullable
-  @Override
-  public PsiElement getElementToMakeWritable(@Nonnull PsiFile file) {
-    return getDelegate().getElementToMakeWritable(file);
-  }
-
-  @Nonnull
-  public String getFullFamilyName(){
-    String result = myFullFamilyName;
-    if (result == null) {
-      String[] categories = myExtension.getCategories();
-      myFullFamilyName = result = categories != null ? StringUtil.join(categories, "/") + "/" + getFamilyName() : getFamilyName();
-    }
-    return result;
-  }
-
-  @Nonnull
-  @Override
-  public synchronized IntentionAction getDelegate() {
-    if (myDelegate == null) {
-      try {
-        myDelegate = myExtension.instantiate();
-      }
-      catch (ClassNotFoundException e) {
-        LOG.error(e);
-      }
-    }
-    return myDelegate;
-  }
-
-  public String getImplementationClassName() {
-    return myExtension.className;
-  }
-
-  @Nonnull
-  ClassLoader getImplementationClassLoader() {
-    return myExtension.getLoaderForClass();
-  }
-
-  @Override
-  public String toString() {
-    return "Intention: ("+getDelegate().getClass()+"): '" + getText()+"'";
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    return super.equals(obj) || getDelegate().equals(obj);
+  public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+    throw new UnsupportedOperationException();
   }
 
   @Nullable
   @Override
   public ShortcutSet getShortcut() {
-    IntentionAction delegate = getDelegate();
-    return delegate instanceof ShortcutProvider ? ((ShortcutProvider)delegate).getShortcut() : null;
+    throw new UnsupportedOperationException();
   }
 }

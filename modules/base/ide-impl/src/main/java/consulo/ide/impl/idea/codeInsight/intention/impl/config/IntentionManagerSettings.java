@@ -27,23 +27,24 @@ package consulo.ide.impl.idea.codeInsight.intention.impl.config;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.ide.ServiceManager;
+import consulo.ide.impl.idea.codeInsight.intention.IntentionActionDelegate;
 import consulo.language.editor.intention.IntentionAction;
-import consulo.language.editor.intention.IntentionActionBean;
-import consulo.language.editor.intention.IntentionManager;
+import consulo.language.editor.intention.IntentionMetaData;
+import consulo.language.editor.intention.SyntheticIntentionAction;
 import consulo.language.editor.internal.intention.IntentionActionMetaData;
 import consulo.logging.Logger;
-import consulo.util.interner.Interner;
-import consulo.util.lang.Pair;
-import consulo.util.lang.StringUtil;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import java.util.*;
+import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.regex.Pattern;
 
 @Singleton
@@ -52,17 +53,9 @@ import java.util.regex.Pattern;
 @ServiceImpl
 public class IntentionManagerSettings implements PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance(IntentionManagerSettings.class);
-  private static final Interner<String> ourStringInterner = Interner.createStringInterner();
+  private final Set<String> myIgnoredActions = new ConcurrentSkipListSet<>();
 
-  private static class MetaDataKey extends Pair<String, String> {
-    private MetaDataKey(@Nonnull String[] categoryNames, @Nonnull final String familyName) {
-      super(StringUtil.join(categoryNames, ":"), ourStringInterner.intern(familyName));
-    }
-  }
-
-  private final Set<String> myIgnoredActions = new LinkedHashSet<>();
-
-  private final Map<MetaDataKey, IntentionActionMetaData> myMetaData = new LinkedHashMap<>();
+  private final Map<Class<?>, IntentionActionMetaData> myMetaData = new LinkedHashMap<>();
 
   private static final String IGNORE_ACTION_TAG = "ignoreAction";
   private static final String NAME_ATT = "name";
@@ -73,31 +66,29 @@ public class IntentionManagerSettings implements PersistentStateComponent<Elemen
   }
 
   public void registerIntentionMetaData(@Nonnull IntentionAction intentionAction, @Nonnull String[] category, @Nonnull String descriptionDirectoryName) {
-    registerMetaData(new IntentionActionMetaData(intentionAction, getClassLoader(intentionAction), category, descriptionDirectoryName));
+    registerMetaData(new IntentionActionMetaData(intentionAction, category, descriptionDirectoryName));
   }
 
-  protected static ClassLoader getClassLoader(@Nonnull IntentionAction intentionAction) {
-    return intentionAction instanceof IntentionActionWrapper ? ((IntentionActionWrapper)intentionAction).getImplementationClassLoader() : intentionAction.getClass().getClassLoader();
-  }
-
-  public IntentionManagerSettings() {
-    for (IntentionActionBean bean : IntentionManager.EP_INTENTION_ACTIONS.getExtensionList()) {
-      String[] categories = bean.getCategories();
-      if (categories != null) {
-        String descriptionDirectoryName = bean.getDescriptionDirectoryName();
-
-        IntentionActionWrapper intentionAction = new IntentionActionWrapper(bean);
-        if (descriptionDirectoryName == null) {
-          descriptionDirectoryName = IntentionManagerImpl.getDescriptionDirectoryName(intentionAction);
-        }
-
-        registerIntentionMetaData(intentionAction, categories, descriptionDirectoryName);
+  @Inject
+  public IntentionManagerSettings(Application application) {
+    for (IntentionAction intentionAction : application.getExtensionList(IntentionAction.class)) {
+      IntentionMetaData intentionMetaData = intentionAction.getClass().getAnnotation(IntentionMetaData.class);
+      if (intentionMetaData == null) {
+        LOG.error("@IntentionMetaData missed on intention " + intentionAction.getClass().getName());
+        continue;
       }
+
+      String descriptionDirectoryName = IntentionManagerImpl.getDescriptionDirectoryName(intentionAction);
+      registerIntentionMetaData(intentionAction, intentionMetaData.categories(), descriptionDirectoryName);
     }
   }
 
-  public synchronized boolean isShowLightBulb(@Nonnull IntentionAction action) {
-    return !myIgnoredActions.contains(action.getFamilyName());
+  public boolean isShowLightBulb(@Nonnull IntentionAction action) {
+    if (action instanceof SyntheticIntentionAction) {
+      return true;
+    }
+
+    return isEnabled(action);
   }
 
   @Override
@@ -123,51 +114,57 @@ public class IntentionManagerSettings implements PersistentStateComponent<Elemen
     return new ArrayList<>(myMetaData.values());
   }
 
-  public synchronized boolean isEnabled(@Nonnull IntentionActionMetaData metaData) {
-    return !myIgnoredActions.contains(getFamilyName(metaData));
+  public boolean isEnabled(@Nonnull IntentionActionMetaData metaData) {
+    if (metaData.getAction() instanceof SyntheticIntentionAction) {
+      return true;
+    }
+
+    return !myIgnoredActions.contains(getIgnoreId(metaData.getAction()));
   }
 
-  private static String getFamilyName(@Nonnull IntentionActionMetaData metaData) {
-    return StringUtil.join(metaData.myCategory, "/") + "/" + metaData.getFamily();
+  @Nonnull
+  private static String getIgnoreId(@Nonnull IntentionAction action) {
+    while (action instanceof IntentionActionDelegate) {
+      action = ((IntentionActionDelegate)action).getDelegate();
+    }
+
+    IntentionMetaData annotation = action.getClass().getAnnotation(IntentionMetaData.class);
+    if (annotation != null) {
+      return annotation.ignoreId();
+    }
+    throw new IllegalArgumentException("Missed @IntentionMetaData on " + action.getClass());
   }
 
-  private static String getFamilyName(@Nonnull IntentionAction action) {
-    return action instanceof IntentionActionWrapper ? ((IntentionActionWrapper)action).getFullFamilyName() : action.getFamilyName();
-  }
-
-  public synchronized void setEnabled(@Nonnull IntentionActionMetaData metaData, boolean enabled) {
+  public void setEnabled(@Nonnull IntentionActionMetaData metaData, boolean enabled) {
     if (enabled) {
-      myIgnoredActions.remove(getFamilyName(metaData));
+      myIgnoredActions.remove(getIgnoreId(metaData.getAction()));
     }
     else {
-      myIgnoredActions.add(getFamilyName(metaData));
+      myIgnoredActions.add(getIgnoreId(metaData.getAction()));
     }
   }
 
-  public synchronized boolean isEnabled(@Nonnull IntentionAction action) {
-    return !myIgnoredActions.contains(getFamilyName(action));
+  public boolean isEnabled(@Nonnull IntentionAction action) {
+    if (action instanceof SyntheticIntentionAction) {
+      return true;
+    }
+    return !myIgnoredActions.contains(getIgnoreId(action));
   }
 
-  public synchronized void setEnabled(@Nonnull IntentionAction action, boolean enabled) {
+  public void setEnabled(@Nonnull IntentionAction action, boolean enabled) {
     if (enabled) {
-      myIgnoredActions.remove(getFamilyName(action));
+      myIgnoredActions.remove(getIgnoreId(action));
     }
     else {
-      myIgnoredActions.add(getFamilyName(action));
+      myIgnoredActions.add(getIgnoreId(action));
     }
   }
 
   public synchronized void registerMetaData(@Nonnull IntentionActionMetaData metaData) {
-    myMetaData.put(new MetaDataKey(metaData.myCategory, metaData.getFamily()), metaData);
+    myMetaData.put(metaData.getAction().getClass(), metaData);
   }
 
   public synchronized void unregisterMetaData(@Nonnull IntentionAction intentionAction) {
-    for (Map.Entry<MetaDataKey, IntentionActionMetaData> entry : myMetaData.entrySet()) {
-      if (entry.getValue().getAction() == intentionAction) {
-        myMetaData.remove(entry.getKey());
-        break;
-      }
-    }
+    myMetaData.remove(intentionAction.getClass());
   }
-
 }

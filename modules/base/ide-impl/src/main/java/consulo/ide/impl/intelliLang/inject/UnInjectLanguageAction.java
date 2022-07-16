@@ -16,24 +16,25 @@
 package consulo.ide.impl.intelliLang.inject;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.language.editor.intention.IntentionAction;
-import consulo.language.editor.intention.LowPriorityAction;
-import consulo.language.Language;
-import consulo.language.inject.InjectedLanguageManager;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
-import consulo.project.Project;
 import consulo.document.util.TextRange;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.ide.impl.idea.util.FileContentUtil;
+import consulo.ide.impl.intelliLang.Configuration;
+import consulo.ide.impl.psi.injection.LanguageInjectionSupport;
+import consulo.language.Language;
+import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.intention.IntentionMetaData;
+import consulo.language.editor.intention.LowPriorityAction;
+import consulo.language.inject.InjectedLanguageManager;
+import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiLanguageInjectionHost;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
-import consulo.ide.impl.idea.util.FileContentUtil;
 import consulo.language.util.IncorrectOperationException;
-import consulo.ide.impl.psi.injection.LanguageInjectionSupport;
+import consulo.project.Project;
 import consulo.util.lang.Pair;
-import consulo.ide.impl.intelliLang.Configuration;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
@@ -45,8 +46,10 @@ import java.util.Set;
  * @author Dmitry Avdeev
  */
 @ExtensionImpl
+@IntentionMetaData(ignoreId = "platform.inject.language", fileExtensions = "txt", categories = "Language Injection")
 public class UnInjectLanguageAction implements IntentionAction, LowPriorityAction {
 
+  @Override
   @Nonnull
   public String getText() {
     return "Un-inject Language";
@@ -57,6 +60,7 @@ public class UnInjectLanguageAction implements IntentionAction, LowPriorityActio
     return getText();
   }
 
+  @Override
   public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
     final int offset = editor.getCaretModel().getOffset();
     final PsiFile psiFile = InjectedLanguageUtil.findInjectedPsiNoCommit(file, offset);
@@ -65,12 +69,9 @@ public class UnInjectLanguageAction implements IntentionAction, LowPriorityActio
     return support != null;
   }
 
+  @Override
   public void invoke(@Nonnull final Project project, final Editor editor, final PsiFile file) throws IncorrectOperationException {
-    ApplicationManager.getApplication().runReadAction(new Runnable() {
-      public void run() {
-        invokeImpl(project, editor, file);
-      }
-    });
+    ApplicationManager.getApplication().runReadAction(() -> invokeImpl(project, editor, file));
   }
 
   private static void invokeImpl(Project project, Editor editor, PsiFile file) {
@@ -111,6 +112,7 @@ public class UnInjectLanguageAction implements IntentionAction, LowPriorityActio
     return Configuration.getProjectInstance(host.getProject()).setHostInjectionEnabled(host, languages, false);
   }
 
+  @Override
   public boolean startInWriteAction() {
     return false;
   }

@@ -17,21 +17,22 @@
 package consulo.ide.impl.intelliLang.inject;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.language.editor.intention.IntentionAction;
-import consulo.language.editor.intention.LowPriorityAction;
-import consulo.language.inject.InjectedLanguageManager;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
+import consulo.ide.impl.idea.util.FileContentUtil;
+import consulo.ide.impl.intelliLang.InjectionsSettingsUI;
+import consulo.ide.impl.psi.injection.LanguageInjectionSupport;
 import consulo.ide.setting.ShowSettingsUtil;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.intention.IntentionMetaData;
+import consulo.language.editor.intention.LowPriorityAction;
+import consulo.language.inject.InjectedLanguageManager;
+import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiLanguageInjectionHost;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
-import consulo.ide.impl.idea.util.FileContentUtil;
 import consulo.language.util.IncorrectOperationException;
-import consulo.ide.impl.psi.injection.LanguageInjectionSupport;
-import consulo.ide.impl.intelliLang.InjectionsSettingsUI;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
@@ -40,14 +41,15 @@ import java.util.Collections;
  * @author Gregory.Shrago
  */
 @ExtensionImpl
+@IntentionMetaData(ignoreId = "platform.inject.language", fileExtensions = "txt", categories = "Language Injection")
 public class EditInjectionSettingsAction implements IntentionAction, LowPriorityAction {
-  public static final String EDIT_INJECTION_TITLE = "Language Injection Settings";
-
+  @Override
   @Nonnull
   public String getText() {
-    return EDIT_INJECTION_TITLE;
+    return "Edit Injection Settings";
   }
 
+  @Override
   @Nonnull
   public String getFamilyName() {
     return "Edit Injection Settings";
@@ -62,11 +64,7 @@ public class EditInjectionSettingsAction implements IntentionAction, LowPriority
   }
 
   public void invoke(@Nonnull final Project project, final Editor editor, final PsiFile file) throws IncorrectOperationException {
-    ApplicationManager.getApplication().runReadAction(new Runnable() {
-      public void run() {
-        invokeImpl(project, editor, file);
-      }
-    });
+    ApplicationManager.getApplication().runReadAction(() -> invokeImpl(project, editor, file));
   }
 
   private static void invokeImpl(Project project, Editor editor, PsiFile file) {

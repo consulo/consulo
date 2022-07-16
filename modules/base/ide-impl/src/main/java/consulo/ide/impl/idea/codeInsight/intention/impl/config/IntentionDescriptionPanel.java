@@ -72,12 +72,7 @@ public class IntentionDescriptionPanel {
       showUsages(myBeforePanel, myBeforeSeparator, myBeforeUsagePanels, actionMetaData.getExampleUsagesBefore());
       showUsages(myAfterPanel, myAfterSeparator, myAfterUsagePanels, actionMetaData.getExampleUsagesAfter());
 
-      SwingUtilities.invokeLater(new Runnable() {
-        @Override
-        public void run() {
-          myPanel.revalidate();
-        }
-      });
+      SwingUtilities.invokeLater(() -> myPanel.revalidate());
 
     }
     catch (IOException e) {

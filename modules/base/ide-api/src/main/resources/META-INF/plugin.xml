@@ -303,10 +303,6 @@
                     interface="consulo.language.psi.path.DynamicContextProvider"/>
 
 
-    <extensionPoint name="intentionAction"
-                    beanClass="consulo.language.editor.intention.IntentionActionBean">
-      <with tag="className" implements="consulo.language.editor.intention.IntentionAction"/>
-    </extensionPoint>
 
     <extensionPoint name="codeInsight.unresolvedReferenceQuickFixProvider"
                     interface="consulo.language.editor.intention.UnresolvedReferenceQuickFixProvider"/>
@@ -1191,14 +1187,6 @@
 <!--
     <postStartupActivity implementation="consulo.ide.impl.idea.openapi.vfs.encoding.EncodingProjectManagerImpl$EncodingProjectManagerStartUpActivity"/>
 -->
-
-    <intentionAction>
-      <className>consulo.ide.impl.idea.codeInsight.intention.impl.EditFoldingOptionsAction</className>
-    </intentionAction>
-    <intentionAction>
-      <className>consulo.language.editor.impl.intention.QuickEditAction</className>
-      <category>Language Injection</category>
-    </intentionAction>
 
     <!-- CodeInsightSettings -->
     <!--<editorActionHandler action="EditorEnter" implementationClass="consulo.ide.impl.idea.codeInsight.editorActions.EnterHandler" id="editorEnter"/>-->

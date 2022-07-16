@@ -64,14 +64,14 @@ import java.util.Collections;
 import java.util.List;
 
 @ExtensionImpl
-@IntentionMetaData(ignoreId = "platform.inject.language", fileExtensions = "txt")
+@IntentionMetaData(ignoreId = "platform.inject.language", fileExtensions = "txt", categories = "Language Injection")
 public class InjectLanguageAction implements IntentionAction {
   public static final String LAST_INJECTED_LANGUAGE = "LAST_INJECTED_LANGUAGE";
   public static final Key<Processor<PsiLanguageInjectionHost>> FIX_KEY = Key.create("inject fix key");
 
   public static List<Injectable> getAllInjectables() {
     Language[] languages = InjectedLanguage.getAvailableLanguages();
-    List<Injectable> list = new ArrayList<Injectable>();
+    List<Injectable> list = new ArrayList<>();
     for (Language language : languages) {
       list.add(Injectable.fromLanguage(language));
     }
@@ -180,7 +180,7 @@ public class InjectLanguageAction implements IntentionAction {
     final List<Injectable> injectables = getAllInjectables();
 
     final JList<Injectable> list = new JBList<>(injectables);
-    list.setCellRenderer(new ColoredListCellRenderer<Injectable>() {
+    list.setCellRenderer(new ColoredListCellRenderer<>() {
       @Override
       protected void customizeCellRenderer(@Nonnull JList<? extends Injectable> list, Injectable value, int index, boolean selected, boolean hasFocus) {
         setIcon(value.getIcon());

@@ -16,19 +16,25 @@
 
 package consulo.ide.impl.idea.codeInsight.intention.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.application.options.editor.CodeFoldingConfigurable;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.application.ApplicationBundle;
 import consulo.codeEditor.Editor;
 import consulo.ide.setting.ShowSettingsUtil;
+import consulo.language.editor.intention.IntentionMetaData;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
+import consulo.ui.UIAccess;
+
 import javax.annotation.Nonnull;
 
 /**
  * @author cdr
  */
+@ExtensionImpl
+@IntentionMetaData(ignoreId = "platform.edit.code.folding.settings", fileExtensions = "txt", categories = "Code Folding")
 public class EditFoldingOptionsAction implements IntentionAction {
   @Override
   @Nonnull
@@ -49,7 +55,8 @@ public class EditFoldingOptionsAction implements IntentionAction {
 
   @Override
   public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
-    ShowSettingsUtil.getInstance().editConfigurable(project, new CodeFoldingConfigurable());
+    UIAccess uiAccess = UIAccess.current();
+    uiAccess.give(() -> ShowSettingsUtil.getInstance().showAndSelect(project, CodeFoldingConfigurable.class));
   }
 
   @Override

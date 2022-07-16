@@ -16,14 +16,14 @@
 package consulo.language.editor.inspection;
 
 import consulo.codeEditor.Editor;
-import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.intention.SyntheticIntentionAction;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 
-public class LocalQuickFixAsIntentionAdapter implements IntentionAction {
+public class LocalQuickFixAsIntentionAdapter implements SyntheticIntentionAction {
   private final LocalQuickFix myFix;
   @Nonnull
   private final ProblemDescriptor myProblemDescriptor;

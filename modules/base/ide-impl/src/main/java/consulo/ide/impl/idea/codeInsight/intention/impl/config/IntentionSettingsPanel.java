@@ -68,13 +68,13 @@ public class IntentionSettingsPanel {
         List<Set<String>> keySetList = SearchUtil.findKeys(filter, quoted);
         List<IntentionActionMetaData> result = new ArrayList<IntentionActionMetaData>();
         for (IntentionActionMetaData metaData : list) {
-          if (isIntentionAccepted(metaData, filter, force, keySetList, quoted)){
+          if (isIntentionAccepted(metaData, filter, force, keySetList, quoted)) {
             result.add(metaData);
           }
         }
         final Set<String> filters = SearchableOptionsRegistrar.getInstance().getProcessedWords(filter);
-        if (force && result.isEmpty()){
-          if (filters.size() > 1){
+        if (force && result.isEmpty()) {
+          if (filters.size() > 1) {
             result = filterModel(filter, false);
           }
         }
@@ -113,7 +113,7 @@ public class IntentionSettingsPanel {
     return myComponent;
   }
 
-  public JTree getIntentionTree(){
+  public JTree getIntentionTree() {
     return myIntentionSettingsTree.getTree();
   }
 
@@ -130,9 +130,8 @@ public class IntentionSettingsPanel {
     myIntentionSettingsTree.selectIntention(familyName);
   }
 
-  private static boolean isIntentionAccepted(IntentionActionMetaData metaData, @NonNls String filter, boolean forceInclude,
-                                             final List<Set<String>> keySetList, final HashSet<String> quoted) {
-    if (StringUtil.containsIgnoreCase(metaData.getFamily(), filter)) {
+  private static boolean isIntentionAccepted(IntentionActionMetaData metaData, @NonNls String filter, boolean forceInclude, final List<Set<String>> keySetList, final HashSet<String> quoted) {
+    if (StringUtil.containsIgnoreCase(metaData.getActionText(), filter)) {
       return true;
     }
     for (String category : metaData.myCategory) {
@@ -141,7 +140,7 @@ public class IntentionSettingsPanel {
       }
     }
     for (String stripped : quoted) {
-      if (StringUtil.containsIgnoreCase(metaData.getFamily(), stripped)) {
+      if (StringUtil.containsIgnoreCase(metaData.getActionText(), stripped)) {
         return true;
       }
       for (String category : metaData.myCategory) {
@@ -152,9 +151,10 @@ public class IntentionSettingsPanel {
       try {
         final TextDescriptor description = metaData.getDescription();
         if (description != null) {
-          if (StringUtil.containsIgnoreCase(description.getText(), stripped)){
+          if (StringUtil.containsIgnoreCase(description.getText(), stripped)) {
             if (!forceInclude) return true;
-          } else if (forceInclude) return false;
+          }
+          else if (forceInclude) return false;
         }
       }
       catch (IOException e) {
@@ -162,7 +162,7 @@ public class IntentionSettingsPanel {
       }
     }
     for (Set<String> keySet : keySetList) {
-      if (keySet.contains(metaData.getFamily())) {
+      if (keySet.contains(metaData.getActionText())) {
         if (!forceInclude) {
           return true;
         }

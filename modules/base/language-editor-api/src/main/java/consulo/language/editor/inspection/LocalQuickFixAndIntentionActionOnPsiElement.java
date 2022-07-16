@@ -17,6 +17,7 @@ package consulo.language.editor.inspection;
 
 import consulo.codeEditor.Editor;
 import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.intention.SyntheticIntentionAction;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
@@ -25,7 +26,7 @@ import consulo.project.Project;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public abstract class LocalQuickFixAndIntentionActionOnPsiElement extends LocalQuickFixOnPsiElement implements IntentionAction {
+public abstract class LocalQuickFixAndIntentionActionOnPsiElement extends LocalQuickFixOnPsiElement implements IntentionAction, SyntheticIntentionAction {
   protected LocalQuickFixAndIntentionActionOnPsiElement(@Nullable PsiElement element) {
     this(element, element);
   }

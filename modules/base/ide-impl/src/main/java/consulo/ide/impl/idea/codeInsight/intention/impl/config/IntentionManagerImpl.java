@@ -35,9 +35,6 @@ import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.intention.IntentionManager;
-import consulo.language.editor.internal.intention.IntentionActionMetaData;
-import consulo.language.editor.internal.intention.PlainTextDescriptor;
-import consulo.language.editor.internal.intention.TextDescriptor;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -74,62 +71,13 @@ public class IntentionManagerImpl extends IntentionManager implements Disposable
     application.getExtensionPoint(IntentionAction.class).forEachExtensionSafe(this::addAction);
   }
 
-  @Override
-  public void registerIntentionAndMetaData(@Nonnull IntentionAction action, @Nonnull String... category) {
-    registerIntentionAndMetaData(action, category, getDescriptionDirectoryName(action));
-  }
-
   @Nonnull
   public static String getDescriptionDirectoryName(final IntentionAction action) {
-    if (action instanceof IntentionActionWrapper) {
-      final IntentionActionWrapper wrapper = (IntentionActionWrapper)action;
-      return getDescriptionDirectoryName(wrapper.getImplementationClassName());
-    }
-    else {
-      return getDescriptionDirectoryName(action.getClass().getName());
-    }
+    return getDescriptionDirectoryName(action.getClass().getName());
   }
 
   private static String getDescriptionDirectoryName(final String fqn) {
     return fqn.substring(fqn.lastIndexOf('.') + 1).replaceAll("\\$", "");
-  }
-
-  @Override
-  public void registerIntentionAndMetaData(@Nonnull IntentionAction action, @Nonnull String[] category, @Nonnull String descriptionDirectoryName) {
-    addAction(action);
-
-    getSettings().registerIntentionMetaData(action, category, descriptionDirectoryName);
-  }
-
-  @Override
-  public void registerIntentionAndMetaData(@Nonnull final IntentionAction action,
-                                           @Nonnull final String[] category,
-                                           @Nonnull final String description,
-                                           @Nonnull final String exampleFileExtension,
-                                           @Nonnull final String[] exampleTextBefore,
-                                           @Nonnull final String[] exampleTextAfter) {
-    addAction(action);
-
-    IntentionActionMetaData metaData =
-            new IntentionActionMetaData(action, category, new PlainTextDescriptor(description, "description.html"), mapToDescriptors(exampleTextBefore, "before." + exampleFileExtension),
-                                        mapToDescriptors(exampleTextAfter, "after." + exampleFileExtension));
-    getSettings().registerMetaData(metaData);
-  }
-
-  @Override
-  public void unregisterIntention(@Nonnull IntentionAction intentionAction) {
-    IntentionManagerSettings settings = getSettings();
-
-    myActions.remove(intentionAction);
-    settings.unregisterMetaData(intentionAction);
-  }
-
-  private static TextDescriptor[] mapToDescriptors(String[] texts, String fileName) {
-    TextDescriptor[] result = new TextDescriptor[texts.length];
-    for (int i = 0; i < texts.length; i++) {
-      result[i] = new PlainTextDescriptor(texts[i], fileName);
-    }
-    return result;
   }
 
   @Override

@@ -1,8 +1,8 @@
 package consulo.sandboxPlugin.lang.lexer;
 
 import java.util.*;
-import com.intellij.lexer.LexerBase;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.lexer.LexerBase;
+import consulo.language.ast.IElementType;
 import consulo.sandboxPlugin.lang.psi.SandTokens;
 
 %%
@@ -40,6 +40,8 @@ IDENTIFIER=[:jletter:] [:jletterdigit:]*
 <YYINITIAL>
 {
   "class"                   { return SandTokens.CLASS_KEYWORD; }
+  "{"                       { return SandTokens.LBRACE; }
+  "}"                       { return SandTokens.RBRACE; }
   {SINGLE_LINE_COMMENT}     { return SandTokens.LINE_COMMENT; }
   {IDENTIFIER}              { return SandTokens.IDENTIFIER; }
   {WHITE_SPACE}             { return SandTokens.WHITE_SPACE; }

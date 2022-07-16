@@ -1,7 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.intention.choice;
 
-import consulo.ide.impl.idea.codeInsight.intention.AbstractEmptyIntentionAction;
+import consulo.language.editor.intention.AbstractEmptyIntentionAction;
 import consulo.ide.impl.idea.codeInsight.intention.CustomizableIntentionAction;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.inspection.LocalQuickFix;

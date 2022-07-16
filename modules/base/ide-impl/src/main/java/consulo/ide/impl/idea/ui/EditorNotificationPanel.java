@@ -15,33 +15,36 @@
  */
 package consulo.ide.impl.idea.ui;
 
-import consulo.ide.impl.idea.codeInsight.intention.*;
 import consulo.application.AllIcons;
-import consulo.language.editor.intention.IntentionAction;
-import consulo.language.editor.intention.LowPriorityAction;
-import consulo.ui.ex.JBColor;
-import consulo.dataContext.DataManager;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorBundle;
 import consulo.codeEditor.EditorColors;
 import consulo.colorScheme.EditorColorsManager;
-import consulo.project.Project;
 import consulo.component.util.Iconable;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.dataContext.DataManager;
+import consulo.language.editor.intention.AbstractEmptyIntentionAction;
+import consulo.ide.impl.idea.codeInsight.intention.IntentionActionProvider;
+import consulo.ide.impl.idea.codeInsight.intention.IntentionActionWithOptions;
+import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.intention.LowPriorityAction;
+import consulo.language.editor.intention.SyntheticIntentionAction;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.ColorValue;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.HyperlinkAdapter;
 import consulo.ui.ex.awt.HyperlinkLabel;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;
@@ -150,7 +153,7 @@ public class EditorNotificationPanel extends JPanel implements IntentionActionPr
     return action.getOptions().isEmpty() ? null : action;
   }
 
-  private class MyIntentionAction extends AbstractEmptyIntentionAction implements IntentionActionWithOptions, Iconable {
+  private class MyIntentionAction extends AbstractEmptyIntentionAction implements IntentionActionWithOptions, Iconable, SyntheticIntentionAction {
     private final List<IntentionAction> myOptions = new ArrayList<>();
 
     private MyIntentionAction() {

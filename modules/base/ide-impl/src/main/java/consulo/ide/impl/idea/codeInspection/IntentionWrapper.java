@@ -29,6 +29,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -72,7 +73,7 @@ public class IntentionWrapper implements LocalQuickFix, IntentionAction, ActionC
   public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     myAction.invoke(project, editor, file);
   }
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public PsiElement getElementToMakeWritable(@Nonnull PsiFile file) {
     return myAction.getElementToMakeWritable(file);

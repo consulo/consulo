@@ -38,7 +38,7 @@ public abstract class CleanupIntention implements IntentionAction, LowPriorityAc
   @Override
   @Nonnull
   public String getText() {
-    return getFamilyName();
+    return InspectionsBundle.message("cleanup.in.scope");
   }
 
   @Override

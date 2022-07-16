@@ -1,16 +1,16 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.intention.impl;
 
-import consulo.language.editor.intention.IntentionAction;
-import consulo.ide.impl.idea.codeInsight.intention.impl.config.IntentionActionWrapper;
-import consulo.logging.Logger;
 import consulo.codeEditor.Editor;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.intention.SyntheticIntentionAction;
 import consulo.language.psi.PsiFile;
+import consulo.logging.Logger;
+import consulo.project.Project;
+
 import javax.annotation.Nonnull;
 
-abstract class AbstractEditIntentionSettingsAction implements IntentionAction {
+abstract class AbstractEditIntentionSettingsAction implements SyntheticIntentionAction {
   private static final Logger LOG = Logger.getInstance(AbstractEditIntentionSettingsAction.class);
 
   @Nonnull
@@ -22,7 +22,7 @@ abstract class AbstractEditIntentionSettingsAction implements IntentionAction {
     // needed for checking errors in user written actions
     //noinspection ConstantConditions
     LOG.assertTrue(myFamilyName != null, "action " + action.getClass() + " family returned null");
-    myEnabled = !(action instanceof IntentionActionWrapper) || !Comparing.equal(action.getFamilyName(), ((IntentionActionWrapper)action).getFullFamilyName());
+    myEnabled = true;
   }
 
   @Nonnull

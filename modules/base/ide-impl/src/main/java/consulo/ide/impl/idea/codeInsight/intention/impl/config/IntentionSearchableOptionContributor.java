@@ -16,14 +16,16 @@
 package consulo.ide.impl.idea.codeInsight.intention.impl.config;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.Application;
 import consulo.ide.impl.idea.ide.ui.search.SearchableOptionContributor;
 import consulo.ide.impl.idea.ide.ui.search.SearchableOptionProcessor;
 import consulo.language.editor.CodeInsightBundle;
-import consulo.language.editor.intention.IntentionActionBean;
-import consulo.language.editor.intention.IntentionManager;
+import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.editor.internal.intention.IntentionActionMetaData;
 import consulo.language.editor.internal.intention.TextDescriptor;
 import consulo.logging.Logger;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -33,22 +35,26 @@ import java.util.Set;
 public class IntentionSearchableOptionContributor extends SearchableOptionContributor {
   private static final Logger LOG = Logger.getInstance(IntentionSearchableOptionContributor.class);
 
+  private final Application myApplication;
+
+  @Inject
+  public IntentionSearchableOptionContributor(Application application) {
+    myApplication = application;
+  }
+
   @Override
   public void processOptions(@Nonnull SearchableOptionProcessor processor) {
-    for (IntentionActionBean bean : IntentionManager.EP_INTENTION_ACTIONS.getExtensionList()) {
-      String[] categories = bean.getCategories();
-
-      if (categories == null) {
+    for (IntentionAction action : myApplication.getExtensionList(IntentionAction.class)) {
+      IntentionMetaData intentionMetaData = action.getClass().getAnnotation(IntentionMetaData.class);
+      if (intentionMetaData == null) {
         continue;
       }
-      String descriptionDirectoryName = bean.getDescriptionDirectoryName();
 
-      IntentionActionWrapper intentionAction = new IntentionActionWrapper(bean);
-      if (descriptionDirectoryName == null) {
-        descriptionDirectoryName = IntentionManagerImpl.getDescriptionDirectoryName(intentionAction);
-      }
+      String[] categories = intentionMetaData.categories();
 
-      IntentionActionMetaData data = new IntentionActionMetaData(intentionAction, IntentionManagerSettings.getClassLoader(intentionAction), categories, descriptionDirectoryName);
+      String descriptionDirectoryName = IntentionManagerImpl.getDescriptionDirectoryName(action);
+
+      IntentionActionMetaData data = new IntentionActionMetaData(action, categories, descriptionDirectoryName);
 
       final TextDescriptor description = data.getDescription();
 
@@ -56,9 +62,9 @@ public class IntentionSearchableOptionContributor extends SearchableOptionContri
         String descriptionText = description.getText().toLowerCase();
         descriptionText = IntentionManagerSettings.HTML_PATTERN.matcher(descriptionText).replaceAll(" ");
         final Set<String> words = processor.getProcessedWordsWithoutStemming(descriptionText);
-        words.addAll(processor.getProcessedWords(data.getFamily()));
+        words.addAll(processor.getProcessedWords(data.getActionText()));
         for (String word : words) {
-          processor.addOption(word, data.getFamily(), data.getFamily(), "editor.code.intentions", CodeInsightBundle.message("intention.settings"));
+          processor.addOption(word, data.getActionText(), data.getActionText(), "editor.code.intentions", CodeInsightBundle.message("intention.settings"));
         }
       }
       catch (IOException e) {

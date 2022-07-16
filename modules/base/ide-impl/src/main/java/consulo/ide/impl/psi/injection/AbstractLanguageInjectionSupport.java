@@ -35,7 +35,6 @@ import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ide.impl.idea.util.Consumer;
 import consulo.ui.image.Image;
 import consulo.ide.impl.intelliLang.Configuration;
-import consulo.ide.impl.intelliLang.inject.EditInjectionSettingsAction;
 import consulo.ide.impl.intelliLang.inject.InjectorUtils;
 import consulo.ide.impl.intelliLang.inject.config.BaseInjection;
 import consulo.ide.impl.intelliLang.inject.config.ui.BaseInjectionPanel;
@@ -148,7 +147,7 @@ public abstract class AbstractLanguageInjectionSupport extends LanguageInjection
     builder.addCancelAction();
     builder.setDimensionServiceKey("#consulo.ide.impl.intelliLang.inject.config.ui.BaseInjectionDialog");
     builder.setCenterPanel(panel.getComponent());
-    builder.setTitle(EditInjectionSettingsAction.EDIT_INJECTION_TITLE);
+    builder.setTitle("Language Injection Settings");
     builder.setOkOperation(new Runnable() {
       @Override
       public void run() {

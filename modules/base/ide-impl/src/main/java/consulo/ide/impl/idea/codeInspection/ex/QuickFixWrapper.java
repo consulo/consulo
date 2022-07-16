@@ -59,7 +59,7 @@ public class QuickFixWrapper implements IntentionAction {
   @Override
   @Nonnull
   public String getText() {
-    return getFamilyName();
+    return myDescriptor.getFixes()[myFixNumber].getName();
   }
 
   @Override

@@ -20,18 +20,18 @@
  */
 package consulo.ide.impl.idea.internal;
 
-import consulo.language.editor.internal.intention.IntentionActionMetaData;
+import consulo.application.dumb.DumbAware;
+import consulo.fileChooser.FileChooserDescriptorFactory;
+import consulo.fileChooser.IdeaFileChooser;
 import consulo.ide.impl.idea.codeInsight.intention.impl.config.IntentionManagerSettings;
+import consulo.ide.impl.idea.openapi.util.JDOMUtil;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.internal.intention.IntentionActionMetaData;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.fileChooser.IdeaFileChooser;
-import consulo.fileChooser.FileChooserDescriptorFactory;
-import consulo.ide.impl.idea.openapi.util.JDOMUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.application.dumb.DumbAware;
 import org.jdom.Document;
 import org.jdom.Element;
 
@@ -59,7 +59,7 @@ public class DumpIntentionsAction extends AnAction implements DumbAware {
 
         try {
           Element metadataElement = new Element("intention");
-          metadataElement.setAttribute("family", metaData.getFamily());
+          metadataElement.setAttribute("text", metaData.getActionText());
           metadataElement.setAttribute("description", metaData.getDescription().getText());
 
           String key = StringUtil.join(metaData.myCategory, ".");

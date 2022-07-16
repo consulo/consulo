@@ -38,8 +38,6 @@ import java.util.List;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class IntentionManager  {
-  public static final ExtensionPointName<IntentionActionBean> EP_INTENTION_ACTIONS = ExtensionPointName.create("consulo.intentionAction");
-
   /**
    * Key to be used within {@link UserDataHolder} in order to check presence of explicit indication on if intentions sub-menu
    * should be shown.
@@ -76,45 +74,6 @@ public abstract class IntentionManager  {
    */
   @Nonnull
   public abstract IntentionAction[] getAvailableIntentionActions();
-
-  /**
-   * Registers an intention action which can be enabled or disabled through the "Intention
-   * Settings" dialog. To provide the description and the example code for the intention,
-   * the directory with the name equal to {@link IntentionAction#getFamilyName()} needs to
-   * be created under the <code>intentionDescriptions</code> directory of the resource root.
-   * The directory needs to contain three files. <code>description.html</code> provides the
-   * description of the intention, <code>before.java.template</code> provides the sample code
-   * before the intention is invoked, and <code>after.java.template</code> provides the sample
-   * code after invoking the intention. The templates can contain a fragment of code surrounded
-   * with <code>&lt;spot&gt;</code> and <code>&lt;/spot&gt;</code> markers. If present, that fragment
-   * will be surrounded by a blinking rectangle in the inspection preview pane.
-   *
-   * @param action   the intention action to register.
-   * @param category the name of the category or categories under which the intention will be shown
-   *                 in the "Intention Settings" dialog.
-   */
-  @Deprecated(forRemoval = true)
-  public abstract void registerIntentionAndMetaData(@Nonnull IntentionAction action, @Nonnull String... category);
-
-  /**
-   * @deprecated custom directory name causes problem with internationalization of intention descriptions.
-   * Register intention class via extension point {@link IntentionManager#EP_INTENTION_ACTIONS} instead.
-   */
-  @Deprecated(forRemoval = true)
-  public abstract void registerIntentionAndMetaData(@Nonnull IntentionAction action,
-                                                    @Nonnull String[] category,
-                                                    @Nonnull String descriptionDirectoryName);
-
-  @Deprecated(forRemoval = true)
-  public abstract void registerIntentionAndMetaData(@Nonnull IntentionAction action,
-                                                    @Nonnull String[] category,
-                                                    @Nonnull String description,
-                                                    @Nonnull String exampleFileExtension,
-                                                    @Nonnull String[] exampleTextBefore,
-                                                    @Nonnull String[] exampleTextAfter);
-
-  @Deprecated(forRemoval = true)
-  public abstract void unregisterIntention(@Nonnull IntentionAction intentionAction);
 
   /**
    * @return actions used as additional options for the given problem.

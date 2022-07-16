@@ -15,16 +15,16 @@
  */
 package consulo.sandboxPlugin.lang.parser;
 
-import consulo.util.lang.Pair;
-import consulo.language.ast.IElementType;
 import consulo.language.ast.ASTNode;
+import consulo.language.ast.IElementType;
 import consulo.language.parser.PsiBuilder;
 import consulo.language.parser.PsiBuilderUtil;
 import consulo.language.parser.PsiParser;
 import consulo.language.version.LanguageVersion;
-import javax.annotation.Nonnull;
 import consulo.sandboxPlugin.lang.psi.SandTokens;
+import consulo.util.lang.Pair;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -52,6 +52,10 @@ public class SandParser implements PsiParser {
           if (!PsiBuilderUtil.expect(builder, SandTokens.IDENTIFIER)) {
             builder.error("Identifier expected");
           }
+
+          PsiBuilderUtil.expect(builder, SandTokens.LBRACE);
+          PsiBuilderUtil.expect(builder, SandTokens.RBRACE);
+
           defMark.done(pair.getSecond());
           find = true;
         }

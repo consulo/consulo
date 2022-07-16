@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.intention;
+package consulo.language.editor.intention;
 
 import consulo.codeEditor.Editor;
-import consulo.language.editor.intention.IntentionAction;
-import consulo.project.Project;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
+import consulo.project.Project;
+
 import javax.annotation.Nonnull;
 
 public abstract class AbstractEmptyIntentionAction implements IntentionAction {

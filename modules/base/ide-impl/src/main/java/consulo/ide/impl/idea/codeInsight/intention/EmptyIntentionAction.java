@@ -19,6 +19,7 @@ package consulo.ide.impl.idea.codeInsight.intention;
 import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.application.AllIcons;
 import consulo.codeEditor.Editor;
+import consulo.language.editor.intention.AbstractEmptyIntentionAction;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.intention.LowPriorityAction;
 import consulo.project.Project;
@@ -68,12 +69,6 @@ public final class EmptyIntentionAction extends AbstractEmptyIntentionAction imp
 
   public int hashCode() {
     return myName.hashCode();
-  }
-
-  // used by TeamCity plugin
-  @Deprecated
-  public EmptyIntentionAction(@Nonnull final String name, @Nonnull List<IntentionAction> options) {
-    myName = name;
   }
 
   @Override

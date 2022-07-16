@@ -1,22 +1,2 @@
 <consulo-plugin>
-  <extensionPoints>
-    <extensionPoint name="injectionConfig" beanClass="consulo.ide.impl.intelliLang.inject.LanguageInjectionConfigBean"/>
-  </extensionPoints>
-
-  <extensions defaultExtensionNs="consulo">
-    <intentionAction>
-      <className>consulo.ide.impl.intelliLang.inject.InjectLanguageAction</className>
-      <category>Language Injection</category>
-    </intentionAction>
-    <intentionAction>
-      <className>consulo.ide.impl.intelliLang.inject.UnInjectLanguageAction</className>
-      <category>Language Injection</category>
-    </intentionAction>
-    <intentionAction>
-      <className>consulo.ide.impl.intelliLang.inject.EditInjectionSettingsAction</className>
-      <category>Language Injection</category>
-    </intentionAction>
-
-
-  </extensions>
 </consulo-plugin>
