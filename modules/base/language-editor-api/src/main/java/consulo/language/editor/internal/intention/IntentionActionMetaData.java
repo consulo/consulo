@@ -22,6 +22,7 @@ package consulo.language.editor.internal.intention;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
 import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.file.FileTypeManager;
 import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
@@ -128,16 +129,16 @@ public final class IntentionActionMetaData {
   }
 
   @Nonnull
-  private static TextDescriptor[] retrieveURLs(@Nullable URL descriptionDirectory, @Nonnull String prefix, @Nonnull String suffix) throws MalformedURLException {
+  private TextDescriptor[] retrieveURLs(@Nullable URL descriptionDirectory, @Nonnull String prefix, @Nonnull String suffix) throws MalformedURLException {
     if (descriptionDirectory == null) {
       return new TextDescriptor[0];
     }
 
-    List<TextDescriptor> urls = new ArrayList<TextDescriptor>();
-    final FileType[] fileTypes = FileTypeManager.getInstance().getRegisteredFileTypes();
-    for (FileType fileType : fileTypes) {
-      final String[] extensions = FileTypeManager.getInstance().getAssociatedExtensions(fileType);
-      for (String extension : extensions) {
+    List<TextDescriptor> urls = new ArrayList<>();
+
+    IntentionMetaData intentionMetaData = myAction.getClass().getAnnotation(IntentionMetaData.class);
+    if (intentionMetaData != null) {
+      for (String extension : intentionMetaData.fileExtensions()) {
         for (int i = 0; ; i++) {
           URL url = new URL(descriptionDirectory.toExternalForm() + "/" + prefix + "." + extension + (i == 0 ? "" : Integer.toString(i)) + suffix);
           try {
@@ -151,6 +152,26 @@ public final class IntentionActionMetaData {
         }
       }
     }
+    else {
+      final FileType[] fileTypes = FileTypeManager.getInstance().getRegisteredFileTypes();
+      for (FileType fileType : fileTypes) {
+        final String[] extensions = FileTypeManager.getInstance().getAssociatedExtensions(fileType);
+        for (String extension : extensions) {
+          for (int i = 0; ; i++) {
+            URL url = new URL(descriptionDirectory.toExternalForm() + "/" + prefix + "." + extension + (i == 0 ? "" : Integer.toString(i)) + suffix);
+            try {
+              InputStream inputStream = url.openStream();
+              inputStream.close();
+              urls.add(new ResourceTextDescriptor(url));
+            }
+            catch (IOException ioe) {
+              break;
+            }
+          }
+        }
+      }
+    }
+
     if (urls.isEmpty()) {
       String[] children;
       Exception cause = null;
