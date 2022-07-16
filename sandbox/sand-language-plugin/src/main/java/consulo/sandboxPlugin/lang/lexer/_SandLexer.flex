@@ -42,6 +42,7 @@ IDENTIFIER=[:jletter:] [:jletterdigit:]*
   "class"                   { return SandTokens.CLASS_KEYWORD; }
   "{"                       { return SandTokens.LBRACE; }
   "}"                       { return SandTokens.RBRACE; }
+  {STRING_LITERAL}          { return SandTokens.STRING_LITERAL; }
   {SINGLE_LINE_COMMENT}     { return SandTokens.LINE_COMMENT; }
   {IDENTIFIER}              { return SandTokens.IDENTIFIER; }
   {WHITE_SPACE}             { return SandTokens.WHITE_SPACE; }

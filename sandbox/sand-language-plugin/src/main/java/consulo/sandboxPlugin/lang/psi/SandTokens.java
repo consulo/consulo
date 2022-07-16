@@ -29,4 +29,5 @@ public interface SandTokens extends TokenType {
   IElementType LINE_COMMENT = new IElementType("LINE_COMMENT", SandLanguage.INSTANCE);
   IElementType LBRACE = new IElementType("LBRACE", SandLanguage.INSTANCE);
   IElementType RBRACE = new IElementType("RBRACE", SandLanguage.INSTANCE);
+  IElementType STRING_LITERAL = new IElementType("STRING_LITERAL", SandLanguage.INSTANCE);
 }

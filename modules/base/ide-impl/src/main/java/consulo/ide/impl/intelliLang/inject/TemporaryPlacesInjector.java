@@ -22,6 +22,7 @@ import consulo.language.Language;
 import consulo.language.inject.MultiHostInjector;
 import consulo.language.inject.MultiHostRegistrar;
 import consulo.language.psi.*;
+import consulo.logging.Logger;
 import consulo.util.lang.Trinity;
 import jakarta.inject.Inject;
 
@@ -34,6 +35,8 @@ import java.util.List;
  */
 @ExtensionImpl
 public class TemporaryPlacesInjector implements MultiHostInjector {
+  private static final Logger LOG = Logger.getInstance(TemporaryPlacesInjector.class);
+
   private final TemporaryPlacesRegistry myRegistry;
 
   @Inject
@@ -63,6 +66,7 @@ public class TemporaryPlacesInjector implements MultiHostInjector {
 
     final ElementManipulator<PsiLanguageInjectionHost> manipulator = ElementManipulators.getManipulator(host);
     if (manipulator == null) {
+      LOG.error("Registered inject language for host: " +  host.getClass().getSimpleName() + ", but ElementManipulator not registered");
       return;
     }
     List<Trinity<PsiLanguageInjectionHost, InjectedLanguage, TextRange>> trinities = Collections.singletonList(Trinity.create(host, injectedLanguage, manipulator.getRangeInElement(host)));

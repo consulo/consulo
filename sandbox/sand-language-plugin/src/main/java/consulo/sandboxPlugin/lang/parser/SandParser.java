@@ -21,6 +21,7 @@ import consulo.language.parser.PsiBuilder;
 import consulo.language.parser.PsiBuilderUtil;
 import consulo.language.parser.PsiParser;
 import consulo.language.version.LanguageVersion;
+import consulo.sandboxPlugin.lang.psi.SandElements;
 import consulo.sandboxPlugin.lang.psi.SandTokens;
 import consulo.util.lang.Pair;
 
@@ -54,6 +55,13 @@ public class SandParser implements PsiParser {
           }
 
           PsiBuilderUtil.expect(builder, SandTokens.LBRACE);
+
+          while (builder.getTokenType() == SandTokens.STRING_LITERAL) {
+            PsiBuilder.Marker stringExp = builder.mark();
+            builder.advanceLexer();
+            stringExp.done(SandElements.STRING_EXPRESSION);
+          }
+          
           PsiBuilderUtil.expect(builder, SandTokens.RBRACE);
 
           defMark.done(pair.getSecond());
@@ -61,7 +69,7 @@ public class SandParser implements PsiParser {
         }
       }
 
-      if(!find) {
+      if (!find) {
         builder.error("Expected start token");
         builder.advanceLexer();
       }
