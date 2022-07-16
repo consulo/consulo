@@ -15,17 +15,17 @@
  */
 package consulo.web.startup;
 
-import consulo.ide.impl.idea.ide.plugins.PluginManager;
-import consulo.application.impl.internal.start.ApplicationStarter;
-import consulo.application.impl.internal.start.StartupUtil;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.ide.impl.idea.util.ReflectionUtil;
+import consulo.application.impl.internal.start.ApplicationStarter;
+import consulo.application.impl.internal.start.StartupUtil;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.boot.ContainerStartup;
 import consulo.container.util.StatCollector;
 import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.util.ReflectionUtil;
+import consulo.logging.Logger;
 import consulo.ui.web.servlet.UIIconServlet;
 import consulo.ui.web.servlet.UIServlet;
 import consulo.web.main.WebApplicationStarter;
@@ -94,16 +94,14 @@ public class WebContainerStartup implements ContainerStartup {
   }
 
   private void startApplication(@Nonnull StatCollector stat, @Nonnull String[] args) {
-    PluginManager.installExceptionHandler();
+    ApplicationStarter.installExceptionHandler(() -> Logger.getInstance(WebContainerStartup.class));
 
     Runnable appInitializeMark = stat.mark(StatCollector.APP_INITIALIZE);
 
     StartupUtil.prepareAndStart(args, stat, WebImportantFolderLocker::new, (newConfigFolder, commandLineArgs) -> {
       ApplicationStarter starter = new WebApplicationStarter(commandLineArgs, stat);
 
-      AppExecutorUtil.getAppExecutorService().execute(() -> {
-        starter.run(stat, appInitializeMark, newConfigFolder);
-      });
+      AppExecutorUtil.getAppExecutorService().execute(() -> starter.run(stat, appInitializeMark, newConfigFolder));
     });
   }
 

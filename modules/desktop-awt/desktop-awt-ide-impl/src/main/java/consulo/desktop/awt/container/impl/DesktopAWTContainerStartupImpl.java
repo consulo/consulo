@@ -15,19 +15,18 @@
  */
 package consulo.desktop.awt.container.impl;
 
-import consulo.ide.impl.idea.ide.plugins.PluginManager;
-import consulo.ide.impl.idea.ide.startup.StartupActionScriptManager;
 import consulo.application.impl.internal.start.ApplicationStarter;
 import consulo.application.impl.internal.start.StartupAbortedException;
-import consulo.desktop.startup.DesktopImportantFolderLocker;
 import consulo.application.impl.internal.start.StartupUtil;
-import consulo.desktop.awt.startup.DesktopApplicationStarter;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.bootstrap.concurrent.IdeaForkJoinWorkerThreadFactory;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.boot.ContainerStartup;
 import consulo.container.util.StatCollector;
+import consulo.desktop.awt.startup.DesktopApplicationStarter;
 import consulo.desktop.container.impl.DesktopContainerPathManager;
+import consulo.desktop.startup.DesktopImportantFolderLocker;
+import consulo.ide.impl.idea.ide.startup.StartupActionScriptManager;
 import consulo.logging.Logger;
 import consulo.virtualFileSystem.impl.internal.mediator.FileSystemMediatorOverride;
 
@@ -37,7 +36,7 @@ import java.util.Map;
 
 /**
  * @author VISTALL
- * @see consulo.desktop.boot.main.Main
+ * @see consulo.desktop.awt.boot.main.Main
  * @since 2019-07-15
  */
 @SuppressWarnings("unused")
@@ -68,17 +67,8 @@ public class DesktopAWTContainerStartupImpl implements ContainerStartup {
       DesktopStartUIUtil.initSystemFontData();
     });
 
-    ThreadGroup threadGroup = new ThreadGroup("Consulo Thread Group") {
-      @Override
-      public void uncaughtException(Thread t, Throwable e) {
-        PluginManager.processException(e);
-      }
-    };
-
     Runnable runnable = () -> {
       try {
-        PluginManager.installExceptionHandler();
-
         start(stat, appInitializeMark, args);
       }
       catch (Throwable t) {
@@ -86,7 +76,7 @@ public class DesktopAWTContainerStartupImpl implements ContainerStartup {
       }
     };
 
-    new Thread(threadGroup, runnable, "Consulo Main Thread").start();
+    new Thread(runnable, "Consulo Main Thread").start();
   }
 
   @Nonnull
@@ -101,6 +91,8 @@ public class DesktopAWTContainerStartupImpl implements ContainerStartup {
   }
 
   private static void start(StatCollector stat, Runnable appInitalizeMark, String[] args) {
+    ApplicationStarter.installExceptionHandler(() -> Logger.getInstance(DesktopAWTContainerStartupImpl.class));
+
     try {
       StartupActionScriptManager.executeActionScript();
     }

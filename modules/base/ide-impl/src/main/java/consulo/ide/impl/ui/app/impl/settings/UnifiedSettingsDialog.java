@@ -17,6 +17,7 @@ package consulo.ide.impl.ui.app.impl.settings;
 
 import consulo.configurable.Configurable;
 import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ide.impl.ui.app.WholeLeftWindowWrapper;
@@ -36,6 +37,8 @@ import java.util.function.Function;
  * @since 25-Oct-17
  */
 public class UnifiedSettingsDialog extends WholeLeftWindowWrapper {
+  private static final Logger LOG = Logger.getInstance(UnifiedSettingsDialog.class);
+
   private final Map<Configurable, UnifiedConfigurableContext> myContexts = new ConcurrentHashMap<>();
 
   private Configurable[] myConfigurables;
@@ -119,8 +122,13 @@ public class UnifiedSettingsDialog extends WholeLeftWindowWrapper {
 
       UnifiedConfigurableContext context = myContexts.computeIfAbsent(configurable, c -> {
         UnifiedConfigurableContext co = new UnifiedConfigurableContext(c);
-        c.initialize();
-        c.reset();
+        try {
+          c.initialize();
+          c.reset();
+        }
+        catch (Throwable e) {
+          LOG.warn(e);
+        }
         return co;
       });
 

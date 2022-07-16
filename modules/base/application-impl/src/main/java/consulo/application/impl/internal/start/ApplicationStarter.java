@@ -27,16 +27,19 @@ import consulo.component.internal.InjectingBindingLoader;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.classloader.PluginClassLoader;
 import consulo.container.impl.classloader.PluginLoadStatistics;
+import consulo.container.internal.ShowError;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.container.util.StatCollector;
 import consulo.localize.LocalizeManager;
 import consulo.localize.impl.LocalizeManagerImpl;
 import consulo.logging.Logger;
+import consulo.logging.internal.LoggerFactoryInitializer;
 import consulo.platform.Platform;
 import consulo.ui.image.IconLibraryManager;
 import consulo.ui.impl.image.BaseIconLibraryManager;
 import consulo.util.io.URLUtil;
+import consulo.util.lang.ControlFlowException;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ref.SimpleReference;
 
@@ -45,6 +48,7 @@ import javax.annotation.Nullable;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
+import java.util.function.Supplier;
 
 public abstract class ApplicationStarter {
   private static final Logger LOG = Logger.getInstance(ApplicationStarter.class);
@@ -118,7 +122,7 @@ public abstract class ApplicationStarter {
     libraryStats.markWith("icon.initialize", () -> iconLibraryManager.initialize(filesWithMarkers.get(BaseIconLibraryManager.ICON_DIRECTORY)));
 
     libraryStats.dump("Libraries", LOG::info);
-    
+
     createApplication(isHeadlessMode, mySplashRef, args);
   }
 
@@ -191,5 +195,43 @@ public abstract class ApplicationStarter {
 
   public void setPerformProjectLoad(boolean performProjectLoad) {
     myPerformProjectLoad = performProjectLoad;
+  }
+
+  public static void installExceptionHandler(Supplier<Logger> logger) {
+    Thread.currentThread().setUncaughtExceptionHandler((t, e) -> processException(logger, e));
+  }
+
+  public static void processException(Supplier<Logger> logger, Throwable t) {
+    StartupAbortedException se = null;
+
+    if (t instanceof StartupAbortedException) {
+      se = (StartupAbortedException)t;
+    }
+    else if (t.getCause() instanceof StartupAbortedException) {
+      se = (StartupAbortedException)t.getCause();
+    }
+    else if (!ApplicationStarter.isLoaded()) {
+      se = new StartupAbortedException(t);
+    }
+
+    if (se != null) {
+      if (se.logError()) {
+        try {
+          if (LoggerFactoryInitializer.isInitialized() && !(t instanceof ControlFlowException)) {
+            logger.get().error(t);
+          }
+        }
+        catch (Throwable ignore) {
+        }
+
+        ShowError.showErrorDialog("Start Failed", t.getMessage(), t);
+      }
+
+      System.exit(se.exitCode());
+    }
+
+    if (!(t instanceof ControlFlowException)) {
+      logger.get().error(t);
+    }
   }
 }

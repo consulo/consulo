@@ -19,7 +19,7 @@ import consulo.container.classloader.PluginClassLoader;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
-import consulo.container.plugin.internal.PluginManagerInternal;
+import consulo.container.internal.PluginManagerInternal;
 
 import java.io.File;
 import java.util.List;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.container.boot.internal;
+package consulo.desktop.swt.ide;
 
-import consulo.container.boot.ContainerPathManager;
+import consulo.annotation.component.ServiceImpl;
+import consulo.application.impl.internal.progress.ProgressActivityFactory;
+
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 2019-12-06
+ * @since 16-Jul-22
  */
-public class PathManagerHolder {
-  private static ContainerPathManager ourInstance;
-
-  public static void setInstance(ContainerPathManager instance) {
-    ourInstance = instance;
-  }
-
-  public static ContainerPathManager getInstance() {
-    return ourInstance;
+@ServiceImpl
+public class DesktopSwtProgressActivityFactoryImpl implements ProgressActivityFactory {
+  @Nullable
+  @Override
+  public Runnable createActivity() {
+    return null;
   }
 }

@@ -23,9 +23,6 @@
       <includes>
         <include>consulo:consulo-desktop-ide-impl</include>
         <include>consulo:consulo-desktop-swt-ide-impl</include>
-        <include>org.eclipse.platform:org.eclipse.swt</include>
-
-        <include>org.eclipse.platform:org.eclipse.swt.win32.win32.x86_64</include>
       </includes>
     </dependencySet>
 
@@ -40,6 +37,9 @@
         <include>consulo:consulo-desktop-swt-bootstrap</include>
         <include>consulo:consulo-bootstrap</include>
         <include>consulo:consulo-util-nodep</include>
+
+        <include>org.eclipse.platform:org.eclipse.swt</include>
+        <include>org.eclipse.platform:org.eclipse.swt.win32.win32.x86_64</include>
       </includes>
     </dependencySet>
 

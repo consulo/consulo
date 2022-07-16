@@ -31,7 +31,7 @@ import java.util.Map;
  */
 public class Main {
   public static void main(String[] args) throws Exception {
-    // FIXME [VISTALL] we ned this?
+    // FIXME [VISTALL] we need this?
     System.setProperty("java.awt.headless", "true");
 
     // enable separate write thread

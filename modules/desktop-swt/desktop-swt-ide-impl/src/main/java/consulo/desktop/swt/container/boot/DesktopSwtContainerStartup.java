@@ -15,8 +15,6 @@
  */
 package consulo.desktop.swt.container.boot;
 
-import consulo.ide.impl.idea.ide.plugins.PluginManager;
-import consulo.ide.impl.idea.ide.startup.StartupActionScriptManager;
 import consulo.application.impl.internal.start.ApplicationStarter;
 import consulo.application.impl.internal.start.StartupAbortedException;
 import consulo.application.impl.internal.start.StartupUtil;
@@ -24,10 +22,12 @@ import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.bootstrap.concurrent.IdeaForkJoinWorkerThreadFactory;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.boot.ContainerStartup;
+import consulo.container.internal.ShowError;
 import consulo.container.util.StatCollector;
 import consulo.desktop.container.impl.DesktopContainerPathManager;
 import consulo.desktop.startup.DesktopImportantFolderLocker;
 import consulo.desktop.swt.starter.DesktopSwtApplicationStarter;
+import consulo.ide.impl.idea.ide.startup.StartupActionScriptManager;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
@@ -56,17 +56,8 @@ public class DesktopSwtContainerStartup implements ContainerStartup {
 
     Runnable appInitializeMark = stat.mark(StatCollector.APP_INITIALIZE);
 
-    ThreadGroup threadGroup = new ThreadGroup("Consulo Thread Group") {
-      @Override
-      public void uncaughtException(Thread t, Throwable e) {
-        PluginManager.processException(e);
-      }
-    };
-
     Runnable runnable = () -> {
       try {
-        PluginManager.installExceptionHandler();
-
         start(stat, appInitializeMark, args);
       }
       catch (Throwable t) {
@@ -75,7 +66,7 @@ public class DesktopSwtContainerStartup implements ContainerStartup {
       }
     };
 
-    new Thread(threadGroup, runnable, "Consulo Main Thread").start();
+    new Thread(runnable, "Consulo Main Thread").start();
   }
 
   @Override
@@ -84,13 +75,15 @@ public class DesktopSwtContainerStartup implements ContainerStartup {
   }
 
   private static void start(StatCollector stat, Runnable appInitalizeMark, String[] args) {
+    ApplicationStarter.installExceptionHandler(() -> Logger.getInstance(DesktopSwtContainerStartup.class));
+
     try {
       StartupActionScriptManager.executeActionScript();
     }
     catch (IOException e) {
       Logger.getInstance(DesktopSwtContainerStartup.class).error(e);
 
-      StartupUtil.showMessage("Plugin Installation Error", e);
+      ShowError.showErrorDialog("Plugin Installation Error", e.getMessage(), e);
       return;
     }
 

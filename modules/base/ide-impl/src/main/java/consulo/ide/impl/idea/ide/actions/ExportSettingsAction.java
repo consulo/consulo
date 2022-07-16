@@ -19,36 +19,36 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.language.editor.CommonDataKeys;
-import consulo.component.util.localize.AbstractBundle;
-import consulo.application.CommonBundle;
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.plugins.PluginManager;
-import consulo.ide.impl.idea.ide.plugins.PluginManagerCore;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.Application;
+import consulo.application.CommonBundle;
+import consulo.application.dumb.DumbAware;
+import consulo.application.impl.internal.store.IApplicationStore;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
-import consulo.configurable.OptionsBundle;
-import consulo.application.dumb.DumbAware;
-import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.util.collection.MultiMap;
-import consulo.ide.impl.idea.util.io.ZipUtil;
-import consulo.application.impl.internal.store.IApplicationStore;
 import consulo.component.store.impl.internal.StateStorageManager;
+import consulo.component.util.localize.AbstractBundle;
+import consulo.configurable.OptionsBundle;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.classloader.PluginClassLoader;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;
+import consulo.ide.IdeBundle;
+import consulo.ide.impl.idea.ide.plugins.PluginManager;
+import consulo.ide.impl.idea.ide.plugins.PluginManagerCore;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.io.ZipUtil;
 import consulo.injecting.key.InjectingKey;
+import consulo.language.editor.CommonDataKeys;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.awt.Messages;
+import consulo.util.collection.MultiMap;
 import consulo.util.collection.Sets;
+import consulo.util.lang.StringUtil;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
@@ -66,6 +66,8 @@ import java.util.Set;
 import java.util.zip.ZipOutputStream;
 
 public class ExportSettingsAction extends AnAction implements DumbAware {
+  public static final String INSTALLED_TXT = "installed.txt";
+
   private final Application myApplication;
   private final IApplicationStore myApplicationStore;
 
@@ -143,7 +145,7 @@ public class ExportSettingsAction extends AnAction implements DumbAware {
       final File tempFile = File.createTempFile("installed", "plugins");
       tempFile.deleteOnExit();
       Files.write(tempFile.toPath(), oldPlugins, StandardCharsets.UTF_8);
-      ZipUtil.addDirToZipRecursively(output, saveFile, tempFile, "/" + PluginManager.INSTALLED_TXT, null, writtenItemRelativePaths);
+      ZipUtil.addDirToZipRecursively(output, saveFile, tempFile, "/" + INSTALLED_TXT, null, writtenItemRelativePaths);
     }
   }
 

@@ -18,11 +18,9 @@ package consulo.container;
 import consulo.container.plugin.PluginId;
 
 /**
- * Created by IntelliJ IDEA.
  * User: stathik
  * Date: Jan 8, 2004
  * Time: 3:06:43 PM
- * To change this template use Options | File Templates.
  */
 public class PluginException extends RuntimeException {
   private final PluginId myPluginId;

@@ -1,3 +1,5 @@
+import consulo.container.internal.PluginManagerInternal;
+
 module consulo.container.impl {
   requires consulo.container.api;
   requires consulo.util.nodep;
@@ -21,5 +23,5 @@ module consulo.container.impl {
 
   uses consulo.container.boot.ContainerStartup;
 
-  provides consulo.container.plugin.internal.PluginManagerInternal with consulo.container.impl.PluginManagerInternalImpl;
+  provides PluginManagerInternal with consulo.container.impl.PluginManagerInternalImpl;
 }

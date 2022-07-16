@@ -17,11 +17,10 @@ package consulo.application.impl.internal.start;
 
 import consulo.application.ApplicationProperties;
 import consulo.application.impl.internal.ApplicationInfo;
-import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.application.util.SystemInfo;
 import consulo.container.ExitCodes;
-import consulo.container.StartupError;
 import consulo.container.boot.ContainerPathManager;
+import consulo.container.internal.ShowError;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
@@ -37,10 +36,7 @@ import consulo.virtualFileSystem.impl.internal.windows.WindowsFileSystemHelper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
-import java.awt.*;
 import java.io.File;
-import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.management.ManagementFactory;
@@ -135,7 +131,7 @@ public class StartupUtil {
       status = ourFolderLocker.lock(args);
     }
     catch (Exception e) {
-      showMessage("Cannot Lock System Folders", e);
+      ShowError.showErrorDialog("Cannot Lock System Folders", e.getMessage(), e);
       return ActivationResult.FAILED;
     }
 
@@ -155,8 +151,8 @@ public class StartupUtil {
       return ActivationResult.ACTIVATED;
     }
     else if (status == ImportantFolderLocker.ActivateStatus.CANNOT_ACTIVATE) {
-      String message = "Only one instance of " + ApplicationNamesInfo.getInstance().getFullProductName() + " can be run at a time.";
-      showMessage("Too Many Instances", message, true, false);
+      String message = "Only one instance of IDE can be run at a time.";
+      ShowError.showErrorDialog("Too Many Instances", message, null);
     }
 
     return ActivationResult.FAILED;
@@ -201,10 +197,9 @@ public class StartupUtil {
     log.info("Using logger factory: " + factory.getClass().getSimpleName());
 
     ApplicationInfo appInfo = ApplicationInfo.getInstance();
-    ApplicationNamesInfo namesInfo = ApplicationNamesInfo.getInstance();
     String buildDate = new SimpleDateFormat("dd MMM yyyy HH:ss", Locale.US).format(appInfo.getBuildDate().getTime());
-    log.info("IDE: " + namesInfo.getFullProductName() + " (build #" + appInfo.getBuild() + ", " + buildDate + ")");
-    log.info("OS: " + SystemInfo.OS_NAME + " (" + SystemInfo.OS_VERSION + ", " + SystemInfo.OS_ARCH + ")");
+    log.info("IDE: Consulo (build #" + appInfo.getBuild() + ", " + buildDate + ")");
+    log.info("OS: " + System.getProperty("os.name") + " (" + System.getProperty("os.version") + ", " + System.getProperty("os.arch") + ")");
     log.info("JRE: " + System.getProperty("java.runtime.version", "-") + " (" + System.getProperty("java.vendor", "-") + ")");
     log.info("JVM: " + System.getProperty("java.vm.version", "-") + " (" + System.getProperty("java.vm.name", "-") + ")");
 
@@ -213,36 +208,6 @@ public class StartupUtil {
       log.info("JVM Args: " + StringUtil.join(arguments, " "));
     }
   }
-
-  public static void showMessage(String title, Throwable t) {
-    StringWriter message = new StringWriter();
-    boolean graphError = false;
-    AWTError awtError = findGraphicsError(t);
-    if (awtError != null) {
-      message.append("Failed to initialize graphics environment\n\n");
-      graphError = true;
-      t = awtError;
-    }
-    else {
-      message.append("Internal error. Please post to ");
-      message.append("https://discuss.consulo.io");
-      message.append("\n\n");
-    }
-
-    t.printStackTrace(new PrintWriter(message));
-    showMessage(title, message.toString(), true, graphError);
-  }
-
-  private static AWTError findGraphicsError(Throwable t) {
-    while (t != null) {
-      if (t instanceof AWTError) {
-        return (AWTError)t;
-      }
-      t = t.getCause();
-    }
-    return null;
-  }
-
 
   public static void handleComponentError(@Nonnull Throwable t, @Nullable Class componentClass, @Nullable Object config) {
     if (t instanceof StartupAbortedException) {
@@ -266,60 +231,16 @@ public class StartupUtil {
 
       StringWriter message = new StringWriter();
       message.append("Plugin '").append(pluginId.getIdString()).append("' failed to initialize and will be disabled. ");
-      message.append(" Please restart ").append(ApplicationNamesInfo.getInstance().getFullProductName()).append('.');
+      message.append(" Please restart IDE").append('.');
       message.append("\n\n");
       t.printStackTrace(new PrintWriter(message));
-      StartupUtil.showMessage("Plugin Error", message.toString(), false, false);
+
+      ShowError.showErrorDialog("Plugin Error", message.toString(), null);
 
       throw new StartupAbortedException(t).exitCode(ExitCodes.PLUGIN_ERROR).logError(false);
     }
     else {
       throw new StartupAbortedException("Fatal error initializing '" + (componentClass == null ? null : componentClass.getName()) + "'", t);
-    }
-  }
-
-  // Copy&Paste from desktop Main
-  public static void showMessage(String title, String message, boolean error, boolean graphError) {
-    if (StartupError.hasStartupError) {
-      return;
-    }
-
-    PrintStream stream = error ? System.err : System.out;
-    stream.println("\n" + title + ": " + message);
-
-    boolean headless = GraphicsEnvironment.isHeadless() || graphError;
-    if (!headless) {
-      try {
-        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-      }
-      catch (Throwable ignore) {
-      }
-
-      StartupError.hasStartupError = true;
-
-      try {
-        JTextPane textPane = new JTextPane();
-        textPane.setEditable(false);
-        textPane.setText(message.replaceAll("\t", "    "));
-        textPane.setBackground(UIManager.getColor("Panel.background"));
-        textPane.setCaretPosition(0);
-        JScrollPane scrollPane = new JScrollPane(textPane, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setBorder(null);
-
-        int maxHeight = Toolkit.getDefaultToolkit().getScreenSize().height / 2;
-        int maxWidth = Toolkit.getDefaultToolkit().getScreenSize().width / 2;
-        Dimension component = scrollPane.getPreferredSize();
-        if (component.height > maxHeight || component.width > maxWidth) {
-          scrollPane.setPreferredSize(new Dimension(Math.min(maxWidth, component.width), Math.min(maxHeight, component.height)));
-        }
-
-        int type = error ? JOptionPane.ERROR_MESSAGE : JOptionPane.WARNING_MESSAGE;
-        JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), scrollPane, title, type);
-      }
-      catch (Throwable t) {
-        stream.println("\nAlso, an UI exception occurred on attempt to show above message:");
-        t.printStackTrace(stream);
-      }
     }
   }
 }

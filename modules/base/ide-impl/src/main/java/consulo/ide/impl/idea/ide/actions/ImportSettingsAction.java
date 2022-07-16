@@ -19,19 +19,18 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ide.impl.idea.ide.plugins.PluginManager;
-import consulo.ide.impl.idea.ide.startup.StartupActionScriptManager;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
-import consulo.ide.impl.idea.util.io.ZipUtil;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;
 import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.application.impl.internal.store.IApplicationStore;
-import consulo.application.internal.ApplicationEx;
 import consulo.container.boot.ContainerPathManager;
 import consulo.ide.IdeBundle;
+import consulo.ide.impl.idea.ide.plugins.PluginManager;
+import consulo.ide.impl.idea.ide.startup.StartupActionScriptManager;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
+import consulo.ide.impl.idea.util.io.ZipUtil;
 import consulo.ide.impl.updateSettings.UpdateSettings;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -109,7 +108,7 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
         }
       }
 
-      relativeNamesToExtract.add(PluginManager.INSTALLED_TXT);
+      relativeNamesToExtract.add(ExportSettingsAction.INSTALLED_TXT);
 
       final File tempFile = new File(ContainerPathManager.get().getPluginTempPath() + "/" + saveFile.getName());
       FileUtil.copy(saveFile, tempFile);
@@ -131,7 +130,7 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
               IdeBundle.message(key, ApplicationNamesInfo.getInstance().getProductName(), ApplicationNamesInfo.getInstance().getFullProductName()),
               IdeBundle.message("title.restart.needed"), Messages.getQuestionIcon());
       if (ret == Messages.OK) {
-        ((ApplicationEx)ApplicationManager.getApplication()).restart(true);
+        ApplicationManager.getApplication().restart(true);
       }
     }
     catch (ZipException e1) {

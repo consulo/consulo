@@ -71,5 +71,11 @@
       <version>${project.version}</version>
       <optional>true</optional>
     </dependency>
+
+    <dependency>
+      <groupId>org.eclipse.platform</groupId>
+      <artifactId>org.eclipse.swt.win32.win32.x86_64</artifactId>
+      <version>${swt.version}</version>
+    </dependency>
   </dependencies>
 </project>

@@ -10,6 +10,7 @@ import consulo.application.TransactionGuard;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.event.ApplicationListener;
 import consulo.application.impl.internal.performance.HeavyProcessLatch;
+import consulo.application.impl.internal.start.StartupUtil;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.function.Computable;
@@ -2235,7 +2236,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
             throw io;
           }
           catch (Throwable t) {
-            PluginManager.handleComponentError(t, extension.getClass(), null);
+            StartupUtil.handleComponentError(t, extension.getClass(), null);
           }
         });
       }

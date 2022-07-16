@@ -15,7 +15,7 @@
  */
 package consulo.container.plugin;
 
-import consulo.container.plugin.internal.PluginManagerInternal;
+import consulo.container.internal.PluginManagerInternal;
 import consulo.util.nodep.function.Condition;
 import consulo.util.nodep.function.Function;
 

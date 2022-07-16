@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.container.plugin.internal;
+package consulo.container.internal;
 
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;

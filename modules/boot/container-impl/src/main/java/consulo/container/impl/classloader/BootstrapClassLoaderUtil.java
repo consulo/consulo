@@ -17,7 +17,7 @@ package consulo.container.impl.classloader;
 
 import consulo.container.StartupError;
 import consulo.container.boot.ContainerStartup;
-import consulo.container.boot.internal.PathManagerHolder;
+import consulo.container.internal.PathManagerHolder;
 import consulo.container.impl.ContainerLogger;
 import consulo.container.impl.PluginDescriptorImpl;
 import consulo.container.impl.PluginDescriptorLoader;

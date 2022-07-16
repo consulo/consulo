@@ -15,54 +15,51 @@
  */
 package consulo.ide.impl.idea.ide;
 
-import consulo.ui.ex.awt.dnd.DnDManager;
-import consulo.ide.impl.idea.ide.dnd.DnDManagerImpl;
-import consulo.ide.impl.idea.ide.plugins.PluginManager;
-import consulo.application.impl.internal.performance.ActivityTracker;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.ui.UISettings;
-import consulo.application.impl.internal.start.ApplicationStarter;
-import consulo.ide.impl.idea.openapi.application.impl.InvocationUtil2;
-import consulo.application.impl.internal.LaterInvocator;
-import consulo.ide.ServiceManager;
-import consulo.ide.impl.idea.openapi.diagnostic.FrequentEventDetector;
-import consulo.ide.impl.idea.openapi.keymap.KeyboardSettingsExternalizable;
-import consulo.ide.impl.idea.openapi.keymap.impl.IdeKeyEventDispatcher;
-import consulo.ide.impl.idea.openapi.keymap.impl.IdeMouseEventDispatcher;
-import consulo.ide.impl.idea.openapi.keymap.impl.KeyState;
-import consulo.application.progress.ProgressManager;
-import consulo.ui.ex.awt.JBPopupMenu;
-import consulo.ide.impl.idea.openapi.util.*;
-import consulo.application.util.SystemInfo;
-import consulo.application.util.registry.Registry;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.application.ui.wm.IdeFocusManager;
-import consulo.project.ui.wm.IdeFrame;
-import consulo.project.ui.wm.WindowManager;
-import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
-import consulo.ide.impl.idea.openapi.wm.impl.FocusManagerImpl;
-import consulo.ui.ex.awt.util.Alarm;
-import consulo.ide.impl.idea.util.ReflectionUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.internal.EDT;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
-import consulo.application.internal.TransactionGuardEx;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.impl.internal.LaterInvocator;
+import consulo.application.impl.internal.performance.ActivityTracker;
+import consulo.application.impl.internal.start.ApplicationStarter;
 import consulo.application.internal.ApplicationWithIntentWriteLock;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.application.internal.TransactionGuardEx;
+import consulo.application.progress.ProgressManager;
+import consulo.application.ui.UISettings;
+import consulo.application.ui.wm.ExpirableRunnable;
+import consulo.application.ui.wm.IdeFocusManager;
+import consulo.application.util.SystemInfo;
+import consulo.application.util.registry.Registry;
 import consulo.awt.hacking.InvocationUtil;
 import consulo.awt.hacking.PostEventQueueHacking;
 import consulo.awt.hacking.SequencedEventNestedFieldHolder;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ide.ServiceManager;
+import consulo.ide.impl.idea.ide.dnd.DnDManagerImpl;
+import consulo.ide.impl.idea.openapi.application.impl.InvocationUtil2;
+import consulo.ide.impl.idea.openapi.diagnostic.FrequentEventDetector;
+import consulo.ide.impl.idea.openapi.keymap.KeyboardSettingsExternalizable;
+import consulo.ide.impl.idea.openapi.keymap.impl.IdeKeyEventDispatcher;
+import consulo.ide.impl.idea.openapi.keymap.impl.IdeMouseEventDispatcher;
+import consulo.ide.impl.idea.openapi.keymap.impl.KeyState;
+import consulo.ide.impl.idea.openapi.util.DisposerUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
+import consulo.ide.impl.idea.openapi.wm.impl.FocusManagerImpl;
+import consulo.ide.impl.idea.util.ReflectionUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
-import consulo.application.ui.wm.ExpirableRunnable;
+import consulo.project.ui.wm.IdeFrame;
+import consulo.project.ui.wm.WindowManager;
+import consulo.ui.ex.awt.JBPopupMenu;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.dnd.DnDManager;
+import consulo.ui.ex.awt.internal.EDT;
+import consulo.ui.ex.awt.util.Alarm;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.EmptyRunnable;
-import consulo.util.lang.ref.Ref;
-import sun.awt.SunToolkit;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -543,7 +540,7 @@ public class IdeEventQueue extends EventQueue {
 
   private void processException(@Nonnull Throwable t) {
     if (!myToolkitBugsProcessor.process(t)) {
-      PluginManager.processException(t);
+      ApplicationStarter.processException(() -> LOG, t);
     }
   }
 
@@ -1282,31 +1279,5 @@ public class IdeEventQueue extends EventQueue {
 
   public void addPostEventListener(@Nonnull PostEventHook listener, @Nonnull Disposable parentDisposable) {
     myPostEventListeners.addListener(listener, parentDisposable);
-  }
-
-  private static Ref<Method> unsafeNonBlockingExecuteRef;
-
-  /**
-   * Must be called on the Event Dispatching thread.
-   * Executes the runnable so that it can perform a non-blocking invocation on the toolkit thread.
-   * Not for general-purpose usage.
-   *
-   * @param r the runnable to execute
-   */
-  public static void unsafeNonblockingExecute(Runnable r) {
-    assert EventQueue.isDispatchThread();
-    if (unsafeNonBlockingExecuteRef == null) {
-      // The method is available in JBSDK.
-      unsafeNonBlockingExecuteRef = Ref.create(ReflectionUtil.getDeclaredMethod(SunToolkit.class, "unsafeNonblockingExecute", Runnable.class));
-    }
-    if (unsafeNonBlockingExecuteRef.get() != null) {
-      try {
-        unsafeNonBlockingExecuteRef.get().invoke(Toolkit.getDefaultToolkit(), r);
-        return;
-      }
-      catch (Exception ignore) {
-      }
-    }
-    r.run();
   }
 }
