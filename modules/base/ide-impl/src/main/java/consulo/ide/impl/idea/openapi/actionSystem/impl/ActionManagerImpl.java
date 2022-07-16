@@ -7,7 +7,6 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.impl.internal.performance.ActivityTracker;
 import consulo.application.internal.TransactionGuardEx;
 import consulo.application.progress.ProgressIndicator;
@@ -34,7 +33,7 @@ import consulo.ide.impl.idea.internal.statistic.collectors.fus.actions.persisten
 import consulo.ide.impl.idea.openapi.actionSystem.AbbreviationManager;
 import consulo.ide.impl.idea.openapi.actionSystem.DefaultCompactActionGroup;
 import consulo.ide.impl.idea.openapi.actionSystem.OverridingAction;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionManagerEx;
+import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionPopupMenuListener;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
@@ -1199,6 +1198,11 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     return myTransparentOnlyUpdate;
   }
 
+  @Override
+  public boolean performDumbAwareUpdate(@Nonnull AnAction action, @Nonnull AnActionEvent e, boolean beforeActionPerformed) {
+    return ActionUtil.performDumbAwareUpdate(action, e, beforeActionPerformed);
+  }
+
   //@Override
   public void addActionPopupMenuListener(@Nonnull ActionPopupMenuListener listener, @Nonnull Disposable parentDisposable) {
     myActionPopupMenuListeners.add(listener);
@@ -1374,7 +1378,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
       AnActionEvent event = new AnActionEvent(inputEvent, context, place != null ? place : ActionPlaces.UNKNOWN, presentation, this, inputEvent.getModifiersEx());
 
-      ActionUtil.performDumbAwareUpdate(LaterInvocator.isInModalContext(), action, event, false);
+      ActionUtil.performDumbAwareUpdate(action, event, false);
       if (!event.getPresentation().isEnabled()) {
         result.setRejected();
         return;

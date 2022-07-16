@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.openapi.actionSystem;
+package consulo.ui.ex.action;
 
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.logging.Logger;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 
@@ -65,6 +63,7 @@ public abstract class AsyncUpdateAction<T> extends AnAction {
   }
 
   // Sync update
+  @RequiredUIAccess
   @Override
   public final void beforeActionPerformedUpdate(@Nonnull AnActionEvent e) {
     performUpdate(e.getPresentation(), prepareDataFromContext(e));

@@ -23,7 +23,7 @@ import consulo.container.plugin.PluginManager;
 import consulo.ide.impl.idea.ide.actionMacro.ActionMacro;
 import consulo.ide.impl.idea.ide.plugins.PluginManagerCore;
 import consulo.ide.impl.idea.ide.ui.search.SearchUtil;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionManagerEx;
+import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.QuickList;
 import consulo.ide.impl.idea.openapi.keymap.KeymapExtension;
 import consulo.ide.impl.idea.openapi.keymap.ex.KeymapManagerEx;

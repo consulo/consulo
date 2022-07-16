@@ -188,7 +188,7 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
         @Override
         protected void customizeComponent(JList<? extends PopupFactoryImpl.ActionItem> list, PopupFactoryImpl.ActionItem actionItem, boolean isSelected) {
           AnActionEvent event = ActionUtil.createEmptyEvent();
-          ActionUtil.performDumbAwareUpdate(true, actionItem.getAction(), event, false);
+          ActionUtil.performDumbAwareUpdate(actionItem.getAction(), event, false);
 
           String description = event.getPresentation().getDescription();
           if (description != null) {

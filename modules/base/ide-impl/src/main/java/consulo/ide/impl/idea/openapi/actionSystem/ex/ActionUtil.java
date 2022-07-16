@@ -15,20 +15,18 @@
  */
 package consulo.ide.impl.idea.openapi.actionSystem.ex;
 
-import consulo.language.editor.CommonDataKeys;
-import consulo.application.impl.internal.ApplicationNamesInfo;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.ObjectUtils;
-import consulo.ide.impl.idea.util.PausesStat;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.TransactionGuard;
 import consulo.application.dumb.IndexNotReadyException;
+import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
+import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.ide.impl.idea.util.PausesStat;
+import consulo.language.editor.CommonDataKeys;
 import consulo.language.util.ModuleUtilCore;
 import consulo.logging.Logger;
 import consulo.module.Module;
@@ -38,7 +36,10 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.util.TextWithMnemonic;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
@@ -133,12 +134,6 @@ public class ActionUtil {
 
   private static int insidePerformDumbAwareUpdate;
 
-  @Deprecated
-  // Use #performDumbAwareUpdate with isModalContext instead
-  public static boolean performDumbAwareUpdate(@Nonnull AnAction action, @Nonnull AnActionEvent e, boolean beforeActionPerformed) {
-    return performDumbAwareUpdate(false, action, e, beforeActionPerformed);
-  }
-
   /**
    * @param action                action
    * @param e                     action event
@@ -148,10 +143,10 @@ public class ActionUtil {
    *                              {@link AnAction#update(AnActionEvent)}
    * @return true if update tried to access indices in dumb mode
    */
-  public static boolean performDumbAwareUpdate(boolean isInModalContext, @Nonnull AnAction action, @Nonnull AnActionEvent e, boolean beforeActionPerformed) {
+  public static boolean performDumbAwareUpdate(@Nonnull AnAction action, @Nonnull AnActionEvent e, boolean beforeActionPerformed) {
     final Presentation presentation = e.getPresentation();
     final Boolean wasEnabledBefore = (Boolean)presentation.getClientProperty(WAS_ENABLED_BEFORE_DUMB);
-    final boolean dumbMode = isDumbMode(e.getData(CommonDataKeys.PROJECT));
+    final boolean dumbMode = isDumbMode(e.getData(Project.KEY));
     if (wasEnabledBefore != null && !dumbMode) {
       presentation.putClientProperty(WAS_ENABLED_BEFORE_DUMB, null);
       presentation.setEnabled(wasEnabledBefore.booleanValue());
@@ -159,7 +154,7 @@ public class ActionUtil {
     }
     final boolean enabledBeforeUpdate = presentation.isEnabled();
 
-    final boolean notAllowed = dumbMode && !action.isDumbAware() || (Registry.is("actionSystem.honor.modal.context") && isInModalContext && !action.isEnabledInModalContext());
+    final boolean notAllowed = dumbMode && !action.isDumbAware();
 
     if (insidePerformDumbAwareUpdate++ == 0) {
       ActionPauses.STAT.started();
@@ -283,9 +278,9 @@ public class ActionUtil {
   }
 
   public static boolean lastUpdateAndCheckDumb(AnAction action, AnActionEvent e, boolean visibilityMatters) {
-    performDumbAwareUpdate(false, action, e, true);
+    performDumbAwareUpdate(action, e, true);
 
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     if (project != null && DumbService.getInstance(project).isDumb() && !action.isDumbAware()) {
       if (Boolean.FALSE.equals(e.getPresentation().getClientProperty(WOULD_BE_ENABLED_IF_NOT_DUMB_MODE))) {
         return false;
@@ -381,7 +376,7 @@ public class ActionUtil {
   public static void invokeAction(@Nonnull AnAction action, @Nonnull DataContext dataContext, @Nonnull String place, @Nullable InputEvent inputEvent, @Nullable Runnable onDone) {
     Presentation presentation = action.getTemplatePresentation().clone();
     AnActionEvent event = new AnActionEvent(inputEvent, dataContext, place, presentation, ActionManager.getInstance(), 0);
-    performDumbAwareUpdate(false, action, event, true);
+    performDumbAwareUpdate(action, event, true);
     final ActionManagerEx manager = ActionManagerEx.getInstanceEx();
     if (event.getPresentation().isEnabled() && event.getPresentation().isVisible()) {
       manager.fireBeforeActionPerformed(action, dataContext, event);

@@ -13,23 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.actions;
+package consulo.ui.ex.action;
 
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.action.Presentation;
 import consulo.application.dumb.DumbAware;
+import consulo.ui.annotation.RequiredUIAccess;
 
 public class NonEmptyActionGroup extends DefaultActionGroup implements DumbAware {
   public NonEmptyActionGroup() {
     super();
   }
 
+  @RequiredUIAccess
+  @Override
   public void update(AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     presentation.setVisible(getChildrenCount() > 0);
   }
 
+  @Override
   public boolean hideIfNoVisibleChildren() {
     return true;
   }

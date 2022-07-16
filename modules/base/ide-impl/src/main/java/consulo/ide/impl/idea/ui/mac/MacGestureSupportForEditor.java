@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.ui.mac;
 
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionManagerEx;
+import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.PresentationFactory;
 import consulo.ide.impl.idea.openapi.keymap.impl.IdeKeyEventDispatcher;
 import consulo.ide.impl.idea.openapi.keymap.impl.IdeMouseEventDispatcher;

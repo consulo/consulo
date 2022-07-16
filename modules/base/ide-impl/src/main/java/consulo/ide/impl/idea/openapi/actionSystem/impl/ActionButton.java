@@ -16,13 +16,12 @@
 package consulo.ide.impl.idea.openapi.actionSystem.impl;
 
 import consulo.ide.impl.idea.ide.HelpTooltip;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionManagerEx;
+import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ui.ex.awt.action.CustomComponentAction;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.TooltipDescriptionProvider;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.annotation.DeprecationInfo;
-import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.util.registry.Registry;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
@@ -278,7 +277,7 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
       myPresentation.addPropertyChangeListener(myPresentationListener = this::presentationPropertyChanded);
     }
     AnActionEvent e = AnActionEvent.createFromInputEvent(null, myPlace, myPresentation, getDataContext(), false, true);
-    ActionUtil.performDumbAwareUpdate(LaterInvocator.isInModalContext(), myAction, e, false);
+    ActionUtil.performDumbAwareUpdate(myAction, e, false);
     updateToolTipText();
     updateIcon();
   }
@@ -435,7 +434,7 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
 
   public void update() {
     AnActionEvent e = AnActionEvent.createFromInputEvent(null, myPlace, myPresentation, getDataContext(), false, true);
-    ActionUtil.performDumbAwareUpdate(LaterInvocator.isInModalContext(), myAction, e, false);
+    ActionUtil.performDumbAwareUpdate(myAction, e, false);
     updateToolTipText();
     updateIcon();
   }

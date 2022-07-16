@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.openapi.actionSystem.impl;
 
 import consulo.ui.ex.action.ActionButtonComponent;
 import consulo.ide.impl.idea.openapi.actionSystem.RightAlignedToolbarAction;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionManagerEx;
+import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.awt.action.CustomComponentAction;
 import consulo.application.impl.internal.LaterInvocator;
 import consulo.ide.impl.idea.openapi.keymap.ex.KeymapManagerEx;

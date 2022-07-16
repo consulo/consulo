@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.openapi.ui.playback.commands;
 
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.application.impl.internal.LaterInvocator;
 import consulo.ide.impl.idea.openapi.ui.playback.PlaybackContext;
 import consulo.ui.ex.action.*;
 import consulo.util.concurrent.ActionCallback;
@@ -96,7 +95,7 @@ public class ToggleActionCommand extends AbstractCommand {
                 .getDataContext(KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner()), ActionPlaces.UNKNOWN,
                               presentation, ActionManager.getInstance(), 0);
 
-        ActionUtil.performDumbAwareUpdate(LaterInvocator.isInModalContext(), action, event, false);
+        ActionUtil.performDumbAwareUpdate(action, event, false);
 
         Boolean state = (Boolean)event.getPresentation().getClientProperty(ToggleAction.SELECTED_PROPERTY);
         if (state.booleanValue() != on) {

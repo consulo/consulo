@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.keymap.impl;
 import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.ide.impl.idea.ide.ProhibitAWTEvents;
 import consulo.ide.impl.idea.openapi.actionSystem.ActionPromoter;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionManagerEx;
+import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.PresentationFactory;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
@@ -37,7 +37,6 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.internal.TransactionGuardEx;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
@@ -610,7 +609,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
       final AnActionEvent actionEvent = processor.createEvent(e, myContext.getDataContext(), ActionPlaces.MAIN_MENU, presentation, ActionManager.getInstance());
 
       try (AccessToken ignored = ProhibitAWTEvents.start("update")) {
-        ActionUtil.performDumbAwareUpdate(LaterInvocator.isInModalContext(), action, actionEvent, true);
+        ActionUtil.performDumbAwareUpdate(action, actionEvent, true);
       }
 
       if (dumb && !action.isDumbAware()) {
@@ -875,7 +874,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
         final Presentation presentation = action.getTemplatePresentation().clone();
         AnActionEvent event = new AnActionEvent(null, ctx, ActionPlaces.UNKNOWN, presentation, ActionManager.getInstance(), 0);
 
-        ActionUtil.performDumbAwareUpdate(LaterInvocator.isInModalContext(), action, event, true);
+        ActionUtil.performDumbAwareUpdate(action, event, true);
         return presentation.isEnabled() && presentation.isVisible();
       })) {
         @Override

@@ -15,12 +15,15 @@
  */
 package consulo.sandboxPlugin.ide.action;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.annotation.component.AddActionToGroup;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.internal.DefaultProjectFactory;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ide.impl.options.impl.UnifiedShowSettingsUtil;
 import consulo.ui.annotation.RequiredUIAccess;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 
@@ -28,9 +31,11 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 15/07/2021
  */
+@ActionImpl(id = "ShowUnifiedSettingsDialogAction", addToGroups = @AddActionToGroup(id = "ToolsMenu"))
 public class ShowUnifiedSettingsDialogAction extends DumbAwareAction {
   private final DefaultProjectFactory myDefaultProjectFactory;
 
+  @Inject
   public ShowUnifiedSettingsDialogAction(DefaultProjectFactory defaultProjectFactory) {
     myDefaultProjectFactory = defaultProjectFactory;
   }

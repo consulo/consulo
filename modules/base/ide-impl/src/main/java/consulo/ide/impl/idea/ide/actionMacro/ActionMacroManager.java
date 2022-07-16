@@ -21,7 +21,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.AllIcons;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.IdeEventQueue;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionManagerEx;
+import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.event.AnActionListener;
 import consulo.application.Application;

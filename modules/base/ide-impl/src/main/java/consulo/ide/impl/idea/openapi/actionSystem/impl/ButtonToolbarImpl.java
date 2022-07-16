@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.openapi.actionSystem.impl;
 
 import consulo.dataContext.DataManager;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionManagerEx;
+import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.ui.ex.action.*;

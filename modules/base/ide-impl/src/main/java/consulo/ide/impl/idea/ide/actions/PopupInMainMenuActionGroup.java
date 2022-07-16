@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.NonTrivialActionGroup;
 
 import javax.annotation.Nonnull;
 

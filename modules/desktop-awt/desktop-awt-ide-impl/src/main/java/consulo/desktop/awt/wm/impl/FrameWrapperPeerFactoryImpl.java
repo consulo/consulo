@@ -18,7 +18,7 @@ package consulo.desktop.awt.wm.impl;
 import consulo.annotation.component.ServiceImpl;
 import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
 import consulo.dataContext.DataManager;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionManagerEx;
+import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.awt.internal.MouseGestureManager;
 import consulo.project.Project;
 import consulo.ui.ex.awt.FrameWrapper;

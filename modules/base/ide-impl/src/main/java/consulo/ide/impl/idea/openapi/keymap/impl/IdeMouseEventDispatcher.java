@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.keymap.impl;
 
 import consulo.ide.impl.idea.ide.IdeEventQueue;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionManagerEx;
+import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.PresentationFactory;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.MouseShortcutPanel;

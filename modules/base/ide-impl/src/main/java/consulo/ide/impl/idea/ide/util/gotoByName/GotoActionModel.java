@@ -297,7 +297,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
     Presentation presentation = new Presentation();
     presentation.copyFrom(anAction.getTemplatePresentation());
     AnActionEvent event = AnActionEvent.createFromDataContext(ActionPlaces.ACTION_SEARCH, presentation, dataContext);
-    ActionUtil.performDumbAwareUpdate(false, anAction, event, false);
+    ActionUtil.performDumbAwareUpdate(anAction, event, false);
     return event;
   }
 

@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.keymap.impl;
 
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionManagerEx;
+import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.application.ApplicationManager;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;

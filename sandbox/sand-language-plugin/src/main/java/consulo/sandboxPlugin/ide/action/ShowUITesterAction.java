@@ -15,11 +15,14 @@
  */
 package consulo.sandboxPlugin.ide.action;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.annotation.component.AddActionToGroup;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.sandboxPlugin.ui.UITester;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.dialog.DialogService;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 
@@ -27,9 +30,11 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 2020-05-29
  */
+@ActionImpl(id = "ShowUITesterAction", addToGroups = @AddActionToGroup(id = "ToolsMenu"))
 public class ShowUITesterAction extends DumbAwareAction {
   private final DialogService myDialogService;
 
+  @Inject
   public ShowUITesterAction(DialogService dialogService) {
     myDialogService = dialogService;
   }

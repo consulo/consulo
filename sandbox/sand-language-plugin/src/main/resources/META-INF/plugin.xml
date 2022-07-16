@@ -5,8 +5,6 @@
   <localize>consulo.sandbox.SandboxLocalize</localize>
   <experimental>true</experimental>
 
-  <depends config-file="consulo.platform.desktop.xml" optional="true">consulo.platform.desktop.awt</depends>
-
   <tags>
     <tag>database</tag>
     <tag>custom.language</tag>
@@ -16,42 +14,16 @@
     <tag>software.framework</tag>
   </tags>
 
-  <actions>
-    <action id="ShowUITesterAction" class="consulo.sandboxPlugin.ide.action.ShowUITesterAction">
-      <add-to-group group-id="ToolsMenu"/>
-    </action>
-    <action id="ShowUnifiedSettingsDialogAction" class="consulo.sandboxPlugin.ide.action.ShowUnifiedSettingsDialogAction">
-      <add-to-group group-id="ToolsMenu"/>
-    </action>
-
-    <action id="ViewPackagesAction" class="consulo.sandboxPlugin.packageView.ViewPackagesAction">
-      <add-to-group group-id="ToolsMenu"/>
-    </action>
-  </actions>
-
   <permissions>
     <permission type="PROCESS_CREATE"/>
     <permission type="NATIVE_LIBRARY"/>
   </permissions>
 
   <extensions defaultExtensionNs="consulo">
-
-
-
-
-    <codeInsight.template.postfixTemplateProvider language="SAND"
-                                                  implementationClass="consulo.sandboxPlugin.ide.codeInsight.template.postfix.templates.SandPostfixTemplateProvider"/>
-    <moduleExtensionProvider key="sand"
-                             icon="consulo.platform.base.PlatformIconGroup@nodes.static"
-                             name="Sand"
-                             immutableClass="consulo.sandboxPlugin.ide.module.extension.SandModuleExtension"
-                             mutableClass="consulo.sandboxPlugin.ide.module.extension.SandMutableModuleExtension"/>
     <moduleExtensionProvider key="sand2"
                              icon="consulo.platform.base.PlatformIconGroup@nodes.static"
                              name="Sand 2"
                              immutableClass="consulo.sandboxPlugin.ide.module.extension.Sand2ModuleExtension"
                              mutableClass="consulo.sandboxPlugin.ide.module.extension.Sand2MutableModuleExtension"/>
-
-    <projectConfigurable id="sand.editor" parentId="editor" displayName="Sand Editor" instance="consulo.sandboxPlugin.ui.SandConfigurable"/>
   </extensions>
 </consulo-plugin>

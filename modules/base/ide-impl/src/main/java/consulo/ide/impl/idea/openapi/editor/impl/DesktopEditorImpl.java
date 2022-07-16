@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.openapi.editor.impl;
 import consulo.ide.impl.idea.codeInsight.hint.EditorFragmentComponent;
 import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.ui.ex.awt.dnd.DnDManager;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionManagerEx;
+import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.ide.impl.idea.openapi.editor.actionSystem.EditorTextInsertHandler;

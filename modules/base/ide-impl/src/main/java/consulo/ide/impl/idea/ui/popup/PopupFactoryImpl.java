@@ -18,7 +18,6 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.CommonBundle;
-import consulo.application.impl.internal.LaterInvocator;
 import consulo.codeEditor.CaretModel;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorPopupHelper;
@@ -222,7 +221,7 @@ public class PopupFactoryImpl extends JBPopupFactory {
 
       final AnActionEvent actionEvent = new AnActionEvent(null, DataManager.getInstance().getDataContext(myComponent), myActionPlace, presentation, ActionManager.getInstance(), 0);
       actionEvent.setInjectedContext(action.isInInjectedContext());
-      ActionUtil.performDumbAwareUpdate(LaterInvocator.isInModalContext(), action, actionEvent, false);
+      ActionUtil.performDumbAwareUpdate(action, actionEvent, false);
       return presentation;
     }
 

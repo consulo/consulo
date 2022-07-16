@@ -13,28 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.actions;
+package consulo.ui.ex.action;
 
-import consulo.ide.impl.idea.openapi.actionSystem.ActionGroupUtil;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.dumb.DumbAware;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.util.ActionGroupUtil;
 
 /**
  * This group hides itself when there's no enabled and visible child.
  *
- * @see consulo.ide.impl.idea.ide.actions.SmartPopupActionGroup
- * @see consulo.ide.impl.idea.ide.actions.NonEmptyActionGroup
- *
  * @author gregsh
+ * @see SmartPopupActionGroup
+ * @see NonEmptyActionGroup
  */
 public class NonTrivialActionGroup extends DefaultActionGroup implements DumbAware {
   public NonTrivialActionGroup() {
     super();
   }
 
+  @RequiredUIAccess
+  @Override
   public void update(AnActionEvent e) {
-    e.getPresentation().setVisible(!ActionGroupUtil.isGroupEmpty(this, e, LaterInvocator.isInModalContext()));
+    e.getPresentation().setVisible(!ActionGroupUtil.isGroupEmpty(this, e));
   }
 }

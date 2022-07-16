@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.actionSystem.ex;
+package consulo.ui.ex.internal;
 
 
 import consulo.dataContext.DataManager;
@@ -27,7 +27,6 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.util.Comparator;
-
 
 public abstract class ActionManagerEx extends ActionManager {
   public static ActionManagerEx getInstanceEx() {
@@ -93,6 +92,8 @@ public abstract class ActionManagerEx extends ActionManager {
   public abstract boolean isActionPopupStackEmpty();
 
   public abstract boolean isTransparentOnlyActionsUpdateNow();
+
+  public abstract boolean performDumbAwareUpdate(@Nonnull AnAction action, @Nonnull AnActionEvent e, boolean beforeActionPerformed);
 
   public void fireBeforeActionPerformed(String actionId, InputEvent event) {
     final AnAction action = getAction(actionId);

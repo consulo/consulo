@@ -17,10 +17,10 @@
 package consulo.ide.impl.idea.codeInsight.generation.actions;
 
 import consulo.language.editor.CodeInsightBundle;
-import consulo.ide.impl.idea.openapi.actionSystem.*;
 import consulo.codeEditor.Editor;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.util.ActionGroupUtil;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.dataContext.DataContext;
 import consulo.project.DumbService;

@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.history.integration.ui.actions;
 
-import consulo.ide.impl.idea.ide.actions.NonTrivialActionGroup;
+import consulo.ui.ex.action.NonTrivialActionGroup;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;

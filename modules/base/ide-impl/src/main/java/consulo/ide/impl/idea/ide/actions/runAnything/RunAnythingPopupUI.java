@@ -390,7 +390,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
     }
 
     AnActionEvent event = AnActionEvent.createFromDataContext(ActionPlaces.UNKNOWN, null, dataContext);
-    ActionUtil.performDumbAwareUpdate(false, myChooseContextAction, event, false);
+    ActionUtil.performDumbAwareUpdate(myChooseContextAction, event, false);
   }
 
   @Override

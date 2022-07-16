@@ -2,7 +2,7 @@
  * @author VISTALL
  * @since 16/01/2022
  */
-open module consulo.desktop.ide.impl {
+module consulo.desktop.ide.impl {
   requires consulo.ide.impl;
 
   requires com.sun.jna;
@@ -25,4 +25,6 @@ open module consulo.desktop.ide.impl {
   exports consulo.desktop.startup to consulo.ide.impl, consulo.desktop.awt.ide.impl, consulo.desktop.swt.ide.impl;
   exports consulo.desktop.util.windows to consulo.ide.impl, consulo.desktop.awt.ide.impl, consulo.desktop.swt.ide.impl;
   exports consulo.desktop.util.windows.defender to consulo.ide.impl, consulo.desktop.awt.ide.impl, consulo.desktop.swt.ide.impl;
+
+  opens consulo.desktop.util.windows to consulo.util.jna;
 }

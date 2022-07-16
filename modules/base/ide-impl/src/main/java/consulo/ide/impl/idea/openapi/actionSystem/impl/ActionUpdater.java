@@ -493,7 +493,7 @@ class ActionUpdater {
     long startTime = System.currentTimeMillis();
     final boolean result;
     try {
-      result = !ActionUtil.performDumbAwareUpdate(isInModalContext, action, e, false);
+      result = !ActionUtil.performDumbAwareUpdate(action, e, false);
     }
     catch (ProcessCanceledException ex) {
       throw ex;

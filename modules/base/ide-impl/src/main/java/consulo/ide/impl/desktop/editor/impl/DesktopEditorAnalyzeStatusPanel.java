@@ -18,7 +18,7 @@ package consulo.ide.impl.desktop.editor.impl;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.application.impl.internal.performance.ActivityTracker;
 import consulo.ui.ex.action.ActionButtonComponent;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionManagerEx;
+import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ui.ex.awt.action.CustomComponentAction;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButton;

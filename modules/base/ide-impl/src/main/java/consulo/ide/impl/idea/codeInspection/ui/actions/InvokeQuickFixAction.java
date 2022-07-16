@@ -22,7 +22,7 @@ import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.ide.impl.idea.codeInspection.ex.QuickFixAction;
 import consulo.ide.impl.idea.codeInspection.ui.InspectionResultsView;
 import consulo.application.AllIcons;
-import consulo.ide.impl.idea.openapi.actionSystem.*;
+import consulo.ui.ex.action.util.ActionGroupUtil;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.action.*;

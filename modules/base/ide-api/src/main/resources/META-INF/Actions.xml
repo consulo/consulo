@@ -268,7 +268,7 @@
           <action id="ShowSettings" class="consulo.ide.impl.idea.ide.actions.ShowSettingsAction"/>
           <action id="ShowProjectStructureSettings" class="consulo.ide.impl.idea.ide.actions.ShowStructureSettingsAction"
                   icon="consulo.platform.base.PlatformIconGroup@general.projectstructure"/>
-          <group id="FileOtherSettingsGroup" class="consulo.ide.impl.idea.ide.actions.SmartPopupActionGroup">
+          <group id="FileOtherSettingsGroup" class="consulo.ui.ex.action.SmartPopupActionGroup">
             <action id="TemplateProjectProperties" class="consulo.ide.impl.idea.ide.actions.TemplateProjectPropertiesAction"/>
             <action id="TemplateProjectStructure" class="consulo.ide.impl.idea.ide.actions.TemplateProjectStructureAction"/>
             <group id="FileSettingsGroup"/>
@@ -278,7 +278,7 @@
             <action id="AssociateWithFileType" class="consulo.ide.impl.idea.ide.actions.AssociateFileTypeAction"/>
             <action id="ToggleReadOnlyAttribute" class="consulo.ide.impl.idea.ide.actions.ToggleReadOnlyAttributeAction"/>
 
-            <group id="ChangeLineSeparators" popup="true" class="consulo.ide.impl.idea.ide.actions.NonTrivialActionGroup">
+            <group id="ChangeLineSeparators" popup="true" class="consulo.ui.ex.action.NonTrivialActionGroup">
               <action id="ConvertToWindowsLineSeparators" class="consulo.ide.impl.idea.codeStyle.ConvertToWindowsLineSeparatorsAction"/>
               <action id="ConvertToUnixLineSeparators" class="consulo.ide.impl.idea.codeStyle.ConvertToUnixLineSeparatorsAction"/>
               <action id="ConvertToMacLineSeparators" class="consulo.ide.impl.idea.codeStyle.ConvertToMacLineSeparatorsAction"/>
@@ -2387,7 +2387,7 @@
           <action id="Vcs.IntegrateProject" class="consulo.ide.impl.idea.openapi.vcs.update.CommonIntegrateProjectAction"/>
           <reference ref="ChangesView.Refresh"/>
           <separator/>
-          <group id="Vcs.Specific" class="consulo.ide.impl.idea.ide.actions.NonEmptyActionGroup"/>
+          <group id="Vcs.Specific" class="consulo.ui.ex.action.NonEmptyActionGroup"/>
           <separator/>
           <reference ref="ChangesView.CreatePatch"/>
           <reference ref="ChangesView.ApplyPatch"/>
@@ -2397,9 +2397,9 @@
 
         <separator/>
         <group id="Vcs.Checkout" class="consulo.ide.impl.idea.openapi.vcs.checkout.CheckoutActionGroup" popup="true"/>
-        <group id="Vcs.Browse" class="consulo.ide.impl.idea.ide.actions.NonEmptyActionGroup" popup="true"/>
+        <group id="Vcs.Browse" class="consulo.ui.ex.action.NonEmptyActionGroup" popup="true"/>
         <separator/>
-        <group id="Vcs.Import" class="consulo.ide.impl.idea.ide.actions.NonEmptyActionGroup"/>
+        <group id="Vcs.Import" class="consulo.ui.ex.action.NonEmptyActionGroup"/>
       </group>
 
       <add-to-group group-id="MainMenu" anchor="after" relative-to-action="ToolsMenu"/>

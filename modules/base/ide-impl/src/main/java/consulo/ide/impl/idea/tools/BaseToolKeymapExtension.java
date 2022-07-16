@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.tools;
 
 import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnAction;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionManagerEx;
+import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ide.impl.idea.openapi.keymap.KeymapExtension;
 import consulo.ide.impl.idea.openapi.keymap.KeymapGroup;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.Group;

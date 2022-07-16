@@ -15,22 +15,20 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.ide.impl.idea.openapi.actionSystem.*;
-import consulo.application.impl.internal.LaterInvocator;
-import consulo.dataContext.DataProvider;
 import consulo.application.dumb.DumbAware;
+import consulo.dataContext.DataProvider;
+import consulo.ide.impl.idea.ide.util.PropertiesComponent;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
-import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.util.ActionGroupUtil;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.content.event.ContentManagerAdapter;
 import consulo.ui.ex.content.event.ContentManagerEvent;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.action.*;
+import consulo.ui.ex.toolWindow.ToolWindow;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -126,7 +124,7 @@ public class ToggleToolbarAction extends ToggleAction implements DumbAware {
 
     @Override
     public void update(AnActionEvent e) {
-      e.getPresentation().setVisible(!ActionGroupUtil.isGroupEmpty(this, e, LaterInvocator.isInModalContext()));
+      e.getPresentation().setVisible(!ActionGroupUtil.isGroupEmpty(this, e));
     }
 
     @Nonnull
