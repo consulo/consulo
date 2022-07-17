@@ -1,16 +1,14 @@
-package consulo.ide.impl.idea.util.io.socketConnection;
+package consulo.util.socketConnection;
 
 import javax.annotation.Nonnull;
-
 import javax.annotation.Nullable;
-import javax.swing.event.HyperlinkListener;
 
 public class ConnectionState {
   private final String message;
   private final ConnectionStatus status;
-  private final HyperlinkListener messageLinkListener;
+  private final Object messageLinkListener;
 
-  public ConnectionState(@Nonnull ConnectionStatus status, @Nullable String message, @Nullable HyperlinkListener messageLinkListener) {
+  public ConnectionState(@Nonnull ConnectionStatus status, @Nullable String message, @Nullable Object messageLinkListener) {
     this.status = status;
     this.message = message;
     this.messageLinkListener = messageLinkListener;
@@ -31,7 +29,7 @@ public class ConnectionState {
   }
 
   @Nullable
-  public HyperlinkListener getMessageLinkListener() {
+  public Object getMessageLinkListener() {
     return messageLinkListener;
   }
 }

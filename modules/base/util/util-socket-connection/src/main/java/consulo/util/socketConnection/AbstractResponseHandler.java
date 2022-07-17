@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util.io.socketConnection;
+package consulo.util.socketConnection;
 
 /**
  * @author nik
  */
-public abstract class AbstractResponseToRequestHandler<R extends AbstractResponse> {
-  public abstract boolean processResponse(R response);
+public abstract class AbstractResponseHandler<R extends AbstractResponse> {
+  public abstract void processResponse(R response);
 }

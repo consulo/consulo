@@ -1,4 +1,4 @@
-package consulo.ide.impl.idea.util.io.socketConnection;
+package consulo.util.socketConnection;
 
 import java.util.EventListener;
 

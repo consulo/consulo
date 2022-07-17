@@ -13,33 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util.io.socketConnection.impl;
+package consulo.util.socketConnection.impl;
 
-import consulo.application.ApplicationManager;
-import consulo.ide.impl.idea.util.io.socketConnection.*;
-import consulo.logging.Logger;
+import consulo.util.socketConnection.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
-
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * @author nik
  */
-public class SocketConnectionImpl<Request extends AbstractRequest, Response extends AbstractResponse> extends SocketConnectionBase<Request, Response> implements ClientSocketConnection<Request, Response> {
-  private static final Logger LOG = Logger.getInstance(SocketConnectionImpl.class);
+public class SocketConnectionImpl<Request extends AbstractRequest, Response extends AbstractResponse> extends SocketConnectionBase<Request, Response>
+        implements ClientSocketConnection<Request, Response> {
+  private static final Logger LOG = LoggerFactory.getLogger(SocketConnectionImpl.class);
   private static final int MAX_CONNECTION_ATTEMPTS = 60;
   private static final int CONNECTION_ATTEMPT_DELAY = 500;
   private final InetAddress myHost;
   private final int myInitialPort;
   private final int myPortsNumberToTry;
+  private final Executor myExecutor;
 
-  public SocketConnectionImpl(InetAddress host, int initialPort,
-                              int portsNumberToTry,
-                              @Nonnull RequestResponseExternalizerFactory<Request, Response> requestResponseRequestResponseExternalizerFactory) {
-    super(requestResponseRequestResponseExternalizerFactory);
+  public SocketConnectionImpl(@Nonnull ScheduledExecutorService executor, InetAddress host, int initialPort, int portsNumberToTry, @Nonnull RequestResponseExternalizerFactory<Request, Response> factory) {
+    super(executor, factory);
+    myExecutor = executor;
     myHost = host;
     myInitialPort = initialPort;
     myPortsNumberToTry = portsNumberToTry;
@@ -49,13 +51,13 @@ public class SocketConnectionImpl<Request extends AbstractRequest, Response exte
   public void open() throws IOException {
     final Socket socket = createSocket();
     setPort(socket.getPort());
-    ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+    myExecutor.execute(new Runnable() {
       public void run() {
         try {
           attachToSocket(socket);
         }
         catch (IOException e) {
-          LOG.info(e);
+          LOG.info(e.getMessage(), e);
           setStatus(ConnectionStatus.CONNECTION_FAILED, "Connection failed: " + e.getMessage());
         }
       }
@@ -73,7 +75,7 @@ public class SocketConnectionImpl<Request extends AbstractRequest, Response exte
       }
       catch (IOException e) {
         exc = e;
-        LOG.debug(e);
+        LOG.debug(e.getMessage(), e);
       }
     }
     throw exc;
@@ -82,7 +84,7 @@ public class SocketConnectionImpl<Request extends AbstractRequest, Response exte
   @Override
   public void startPolling() {
     setStatus(ConnectionStatus.WAITING_FOR_CONNECTION, null);
-    ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+    myExecutor.execute(new Runnable() {
       @Override
       public void run() {
         addThreadToInterrupt();
@@ -93,7 +95,7 @@ public class SocketConnectionImpl<Request extends AbstractRequest, Response exte
               return;
             }
             catch (IOException e) {
-              LOG.debug(e);
+              LOG.debug(e.getMessage(), e);
             }
 
             //noinspection BusyWait

@@ -124,6 +124,7 @@
         <include>consulo:consulo-util-interner</include>
         <include>consulo:consulo-util-jna</include>
         <include>consulo:consulo-util-xml-fast-reader</include>
+        <include>consulo:consulo-util-socket-connection</include>
 
         <include>consulo:consulo-hacking-java-base</include>
 

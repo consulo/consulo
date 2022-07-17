@@ -1,41 +1,45 @@
-package consulo.ide.impl.idea.util.io.socketConnection.impl;
+package consulo.util.socketConnection.impl;
 
-import consulo.application.ApplicationManager;
 import consulo.util.collection.MultiValuesMap;
-import consulo.util.lang.ref.Ref;
-import consulo.ui.ex.awt.util.Alarm;
 import consulo.util.collection.SmartList;
-import consulo.ide.impl.idea.util.io.socketConnection.*;
-import consulo.logging.Logger;
-import gnu.trove.TIntObjectHashMap;
-import gnu.trove.TIntObjectProcedure;
-import gnu.trove.TObjectProcedure;
+import consulo.util.collection.primitive.ints.IntMaps;
+import consulo.util.collection.primitive.ints.IntObjectMap;
+import consulo.util.lang.ref.Ref;
+import consulo.util.socketConnection.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author nik
  */
 public class ResponseProcessor<R extends AbstractResponse> {
-  private static final Logger LOG = Logger.getInstance(ResponseProcessor.class);
-  private final TIntObjectHashMap<AbstractResponseToRequestHandler<?>> myHandlers = new TIntObjectHashMap<AbstractResponseToRequestHandler<?>>();
-  private final MultiValuesMap<Class<? extends R>, AbstractResponseHandler<? extends R>> myClassHandlers = new MultiValuesMap<Class<? extends R>, AbstractResponseHandler<? extends R>>();
-  private final TIntObjectHashMap<TimeoutHandler> myTimeoutHandlers = new TIntObjectHashMap<TimeoutHandler>();
+  private static final Logger LOG = LoggerFactory.getLogger(ResponseProcessor.class);
+  private final IntObjectMap<AbstractResponseToRequestHandler<?>> myHandlers = IntMaps.newIntObjectHashMap();
+  private final MultiValuesMap<Class<? extends R>, AbstractResponseHandler<? extends R>> myClassHandlers = new MultiValuesMap<>();
+  private final IntObjectMap<TimeoutHandler> myTimeoutHandlers = IntMaps.newIntObjectHashMap();
   private boolean myStopped;
   private final Object myLock = new Object();
   private Thread myThread;
-  private final Alarm myTimeoutAlarm;
 
-  public ResponseProcessor(@Nonnull SocketConnection<?, R> connection) {
-    myTimeoutAlarm = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, connection);
+  private final ScheduledExecutorService myScheduledExecutorService;
+
+  private Future<?> myTimeoutTask;
+
+  public ResponseProcessor(@Nonnull ScheduledExecutorService executor, @Nonnull SocketConnection<?, R> connection) {
+    myScheduledExecutorService = executor;
   }
 
   public void startReading(final ResponseReader<R> reader) {
-    ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+    myScheduledExecutorService.execute(new Runnable() {
       public void run() {
         myThread = Thread.currentThread();
         try {
@@ -54,7 +58,7 @@ public class ResponseProcessor<R extends AbstractResponse> {
         catch (InterruptedException ignored) {
         }
         catch (IOException e) {
-          LOG.info(e);
+          LOG.info(e.getMessage(), e);
         }
         finally {
           synchronized (myLock) {
@@ -93,7 +97,7 @@ public class ResponseProcessor<R extends AbstractResponse> {
     synchronized (myLock) {
       final Collection<AbstractResponseHandler<? extends R>> responseHandlers = myClassHandlers.get(responseClass);
       if (responseHandlers == null) return;
-      handlers = new SmartList<AbstractResponseHandler<?>>(responseHandlers);
+      handlers = new SmartList<>(responseHandlers);
     }
 
     for (AbstractResponseHandler handler : handlers) {
@@ -127,20 +131,22 @@ public class ResponseProcessor<R extends AbstractResponse> {
 
   public void checkTimeout() {
     LOG.debug("Checking timeout");
-    final List<TimeoutHandler> timedOut = new ArrayList<TimeoutHandler>();
+    final List<IntObjectMap.IntObjectEntry<TimeoutHandler>> timedOut = new ArrayList<>();
     synchronized (myLock) {
       final long time = System.currentTimeMillis();
-      myTimeoutHandlers.retainEntries(new TIntObjectProcedure<TimeoutHandler>() {
-        public boolean execute(int a, TimeoutHandler b) {
-          if (time > b.myLastTime) {
-            timedOut.add(b);
-            return false;
-          }
-          return true;
+
+      myTimeoutHandlers.entrySet().forEach(e -> {
+        if (time > e.getValue().myLastTime) {
+          timedOut.add(e);
         }
       });
+
+      for (IntObjectMap.IntObjectEntry<TimeoutHandler> entry : timedOut) {
+        myTimeoutHandlers.remove(entry.getKey());
+      }
     }
-    for (TimeoutHandler handler : timedOut) {
+    for (IntObjectMap.IntObjectEntry<TimeoutHandler> entry : timedOut) {
+      TimeoutHandler handler = entry.getValue();
       LOG.debug("performing timeout action: " + handler.myAction);
       handler.myAction.run();
     }
@@ -151,22 +157,17 @@ public class ResponseProcessor<R extends AbstractResponse> {
     final Ref<Long> nextTime = Ref.create(Long.MAX_VALUE);
     synchronized (myLock) {
       if (myTimeoutHandlers.isEmpty()) return;
-      myTimeoutHandlers.forEachValue(new TObjectProcedure<TimeoutHandler>() {
-        public boolean execute(TimeoutHandler handler) {
-          nextTime.set(Math.min(nextTime.get(), handler.myLastTime));
-          return true;
-        }
-      });
+
+      myTimeoutHandlers.forEach((param1, handler) -> nextTime.set(Math.min(nextTime.get(), handler.myLastTime)));
     }
     final int delay = (int)(nextTime.get() - System.currentTimeMillis() + 100);
     LOG.debug("schedule timeout check in " + delay + "ms");
     if (delay > 10) {
-      myTimeoutAlarm.cancelAllRequests();
-      myTimeoutAlarm.addRequest(new Runnable() {
-        public void run() {
-          checkTimeout();
-        }
-      }, delay);
+      if (myTimeoutTask != null) {
+        myTimeoutTask.cancel(false);
+      }
+
+      myTimeoutTask = myScheduledExecutorService.schedule(() -> checkTimeout(), delay, TimeUnit.MILLISECONDS);
     }
     else {
       checkTimeout();

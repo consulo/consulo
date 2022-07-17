@@ -922,8 +922,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.util.indexing.provided;
   exports consulo.ide.impl.idea.util.io;
   exports consulo.ide.impl.idea.util.io.fs;
-  exports consulo.ide.impl.idea.util.io.socketConnection;
-  exports consulo.ide.impl.idea.util.io.socketConnection.impl;
   exports consulo.ide.impl.idea.util.io.storage;
   exports consulo.ide.impl.idea.util.io.zip;
   exports consulo.ide.impl.idea.util.net;

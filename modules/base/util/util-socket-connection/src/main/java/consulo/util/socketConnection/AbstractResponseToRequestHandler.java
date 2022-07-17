@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util.io.socketConnection;
-
-import java.io.IOException;
+package consulo.util.socketConnection;
 
 /**
  * @author nik
  */
-public interface RequestWriter<R extends AbstractRequest> {
-  void writeRequest(R request) throws IOException;
+public abstract class AbstractResponseToRequestHandler<R extends AbstractResponse> {
+  public abstract boolean processResponse(R response);
 }

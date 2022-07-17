@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util.io.socketConnection.impl;
+package consulo.util.socketConnection.impl;
 
-import consulo.ide.impl.idea.util.EventDispatcher;
-import consulo.ide.impl.idea.util.io.socketConnection.*;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.logging.Logger;
+import consulo.util.collection.Lists;
 import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.collection.primitive.ints.IntObjectMap;
+import consulo.util.socketConnection.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -32,26 +31,27 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author nik
  */
 public abstract class SocketConnectionBase<Request extends AbstractRequest, Response extends AbstractResponse> implements SocketConnection<Request, Response> {
-  private static final Logger LOG = Logger.getInstance(SocketConnectionBase.class);
+  private static final Logger LOG = LoggerFactory.getLogger(SocketConnectionBase.class);
   private final Object myLock = new Object();
   private int myPort = -1;
-  private final AtomicReference<ConnectionState> myState = new AtomicReference<ConnectionState>(new ConnectionState(ConnectionStatus.NOT_CONNECTED));
+  private final AtomicReference<ConnectionState> myState = new AtomicReference<>(new ConnectionState(ConnectionStatus.NOT_CONNECTED));
   private boolean myStopping;
-  private final EventDispatcher<SocketConnectionListener> myDispatcher = EventDispatcher.create(SocketConnectionListener.class);
-  private List<Thread> myThreadsToInterrupt = new ArrayList<Thread>();
+  private final List<SocketConnectionListener> myDispatcher = Lists.newLockFreeCopyOnWriteList();
+  private List<Thread> myThreadsToInterrupt = new ArrayList<>();
   private final RequestResponseExternalizerFactory<Request, Response> myExternalizerFactory;
-  private final LinkedBlockingQueue<Request> myRequests = new LinkedBlockingQueue<Request>();
+  private final LinkedBlockingQueue<Request> myRequests = new LinkedBlockingQueue<>();
   private final IntObjectMap<TimeoutInfo> myTimeouts = IntMaps.newIntObjectHashMap();
   private final ResponseProcessor<Response> myResponseProcessor;
 
-  public SocketConnectionBase(@Nonnull RequestResponseExternalizerFactory<Request, Response> factory) {
-    myResponseProcessor = new ResponseProcessor<Response>(this);
+  public SocketConnectionBase(@Nonnull ScheduledExecutorService executor, @Nonnull RequestResponseExternalizerFactory<Request, Response> factory) {
+    myResponseProcessor = new ResponseProcessor<>(executor, this);
     myExternalizerFactory = factory;
   }
 
@@ -74,8 +74,7 @@ public abstract class SocketConnectionBase<Request extends AbstractRequest, Resp
   }
 
   @Override
-  public void sendRequest(@Nonnull Request request, @Nullable AbstractResponseToRequestHandler<? extends Response> handler,
-                          int timeout, @Nonnull Runnable onTimeout) {
+  public void sendRequest(@Nonnull Request request, @Nullable AbstractResponseToRequestHandler<? extends Response> handler, int timeout, @Nonnull Runnable onTimeout) {
     myTimeouts.put(request.getId(), new TimeoutInfo(timeout, onTimeout));
     sendRequest(request, handler);
   }
@@ -124,11 +123,6 @@ public abstract class SocketConnectionBase<Request extends AbstractRequest, Resp
   }
 
   @Override
-  public void dispose() {
-    LOG.debug("Firefox connection disposed");
-  }
-
-  @Override
   public int getPort() {
     return myPort;
   }
@@ -137,7 +131,15 @@ public abstract class SocketConnectionBase<Request extends AbstractRequest, Resp
     synchronized (myLock) {
       myState.set(new ConnectionState(status, message, null));
     }
-    myDispatcher.getMulticaster().statusChanged(status);
+
+    for (SocketConnectionListener listener : myDispatcher) {
+      try {
+        listener.statusChanged(status);
+      }
+      catch (Throwable e) {
+        LOG.error(e.getMessage(), e);
+      }
+    }
   }
 
   @Override
@@ -148,14 +150,11 @@ public abstract class SocketConnectionBase<Request extends AbstractRequest, Resp
     }
   }
 
+  @Nonnull
   @Override
-  public void addListener(@Nonnull SocketConnectionListener listener, @Nullable Disposable parentDisposable) {
-    if (parentDisposable != null) {
-      myDispatcher.addListener(listener, parentDisposable);
-    }
-    else {
-      myDispatcher.addListener(listener);
-    }
+  public Runnable addListener(@Nonnull SocketConnectionListener listener) {
+    myDispatcher.add(listener);
+    return () -> myDispatcher.remove(listener);
   }
 
   @Override
@@ -172,7 +171,6 @@ public abstract class SocketConnectionBase<Request extends AbstractRequest, Resp
     }
     onClosing();
     myResponseProcessor.stopReading();
-    Disposer.dispose(this);
   }
 
   protected void onClosing() {

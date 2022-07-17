@@ -13,25 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util.io.socketConnection;
-
-import consulo.disposer.Disposable;
+package consulo.util.socketConnection;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.IOException;
 
 /**
  * @author nik
  */
-public interface SocketConnection<Request extends AbstractRequest, Response extends AbstractResponse> extends Disposable {
+public interface SocketConnection<Request extends AbstractRequest, Response extends AbstractResponse> {
   @Nonnull
   ConnectionState getState();
 
   void open() throws IOException;
 
-  void addListener(@Nonnull SocketConnectionListener listener, @Nullable Disposable parentDisposable);
+  /**
+   * Return runnable for unregister this listener
+   */
+  @Nonnull
+  Runnable addListener(@Nonnull SocketConnectionListener listener);
 
   int getPort();
 
@@ -43,8 +44,7 @@ public interface SocketConnection<Request extends AbstractRequest, Response exte
 
   void close();
 
-  void sendRequest(@Nonnull Request request, @Nullable AbstractResponseToRequestHandler<? extends Response> handler,
-                   int timeout, @Nonnull Runnable onTimeout);
+  void sendRequest(@Nonnull Request request, @Nullable AbstractResponseToRequestHandler<? extends Response> handler, int timeout, @Nonnull Runnable onTimeout);
 
   boolean isStopping();
 }

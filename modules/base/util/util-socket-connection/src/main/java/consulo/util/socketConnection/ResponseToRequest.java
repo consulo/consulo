@@ -13,21 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util.io.socketConnection;
-
-import javax.annotation.Nonnull;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+package consulo.util.socketConnection;
 
 /**
  * @author nik
  */
-public abstract class RequestResponseExternalizerFactory<Request extends AbstractRequest, Response extends AbstractResponse> {
-  @Nonnull
-  public abstract RequestWriter<Request> createRequestWriter(@Nonnull OutputStream output) throws IOException;
-
-  @Nonnull
-  public abstract ResponseReader<Response> createResponseReader(@Nonnull InputStream input) throws IOException;
+public interface ResponseToRequest {
+  int getRequestId();
 }

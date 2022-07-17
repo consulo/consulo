@@ -149,6 +149,11 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-util-socket-connnection</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-util-concurrent</artifactId>
       <version>${project.version}</version>
     </dependency>
