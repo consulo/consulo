@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.language.editor.internal;
 
-package consulo.language.editor.action;
+import consulo.language.editor.template.Template;
 
-import consulo.codeEditor.Editor;
-import consulo.language.extension.LanguageExtension;
-import consulo.language.psi.PsiFile;
+/**
+ * Proxy for impl module, until real TemplateImpl moved to language-editor-impl module
+ *
+ * @author VISTALL
+ * @since 17-Jul-22
+ */
+public abstract class TemplateEx extends Template {
+  public abstract String getString();
 
-public interface LanguageCodeInsightActionHandler extends CodeInsightActionHandler, LanguageExtension {
-  boolean isValidFor(Editor editor, PsiFile file);
+  public abstract TemplateContext getTemplateContext();
 }

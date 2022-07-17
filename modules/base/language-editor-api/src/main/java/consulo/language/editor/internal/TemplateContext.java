@@ -14,33 +14,32 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.template.impl;
-
+package consulo.language.editor.internal;
 
 import consulo.language.editor.template.context.EverywhereContextType;
 import consulo.language.editor.template.context.TemplateContextType;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 public class TemplateContext {
-  private final Map<String, Boolean> myContextStates = ContainerUtil.newLinkedHashMap();
+  private final Map<String, Boolean> myContextStates = new LinkedHashMap<>();
 
-  public TemplateContext createCopy()  {
+  public TemplateContext createCopy() {
     TemplateContext cloneResult = new TemplateContext();
     cloneResult.myContextStates.putAll(myContextStates);
     return cloneResult;
   }
 
-  Map<TemplateContextType, Boolean> getDifference(@Nullable TemplateContext defaultContext) {
-    Map<TemplateContextType, Boolean> result = ContainerUtil.newLinkedHashMap();
+  public Map<TemplateContextType, Boolean> getDifference(@Nullable TemplateContext defaultContext) {
+    Map<TemplateContextType, Boolean> result = new LinkedHashMap<>();
     synchronized (myContextStates) {
       //noinspection NestedSynchronizedStatement
       synchronized (defaultContext == null ? myContextStates : defaultContext.myContextStates) {
@@ -88,14 +87,14 @@ public class TemplateContext {
     }
   }
 
-  void setDefaultContext(@Nonnull TemplateContext defContext) {
+  public void setDefaultContext(@Nonnull TemplateContext defContext) {
     HashMap<String, Boolean> copy = new HashMap<String, Boolean>(myContextStates);
     myContextStates.clear();
     myContextStates.putAll(defContext.myContextStates);
     myContextStates.putAll(copy);
   }
 
-  void readTemplateContext(Element element) throws InvalidDataException {
+  public void readTemplateContext(Element element) throws InvalidDataException {
     List options = element.getChildren("option");
     for (Object e : options) {
       if (e instanceof Element) {
@@ -109,7 +108,7 @@ public class TemplateContext {
     }
   }
 
-  void writeTemplateContext(Element element, @Nullable TemplateContext defaultContext) throws WriteExternalException {
+  public void writeTemplateContext(Element element, @Nullable TemplateContext defaultContext) throws WriteExternalException {
     Map<TemplateContextType, Boolean> diff = getDifference(defaultContext);
     for (TemplateContextType type : diff.keySet()) {
       Element optionElement = new Element("option");

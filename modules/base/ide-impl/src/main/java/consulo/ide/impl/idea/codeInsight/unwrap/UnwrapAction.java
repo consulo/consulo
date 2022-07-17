@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.codeInsight.unwrap;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.codeInsight.actions.BaseCodeInsightAction;
+import consulo.language.editor.impl.internal.action.BaseCodeInsightAction;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.refactoring.unwrap.UnwrapDescriptor;
 import consulo.language.psi.PsiFile;

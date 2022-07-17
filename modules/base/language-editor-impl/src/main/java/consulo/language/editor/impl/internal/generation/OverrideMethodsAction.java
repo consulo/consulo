@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2022 consulo.io
+ * Copyright 2000-2011 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.annotation.component;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+package consulo.language.editor.impl.internal.generation;
 
-/**
- * @author VISTALL
- * @since 25-Jun-22
- */
-@Retention(RetentionPolicy.RUNTIME)
-public @interface AddActionToGroup {
-  String id();
+import consulo.annotation.component.ActionImpl;
+import consulo.application.Application;
+import consulo.language.editor.generation.OverrideMethodHandler;
+import jakarta.inject.Inject;
 
-  ActionAnchor anchor() default ActionAnchor.LAST;
-
-  String relatedToActionId() default "";
+@ActionImpl(id = "OverrideMethods")
+public class OverrideMethodsAction extends MethodsBasedAction<OverrideMethodHandler> {
+  @Inject
+  public OverrideMethodsAction(Application application) {
+    super(application, OverrideMethodHandler.class, OverrideMethodHandler.KEY);
+  }
 }

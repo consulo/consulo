@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,15 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.generation.actions;
 
-import consulo.ui.ex.action.AnAction;
-import consulo.dataContext.DataContext;
+package consulo.language.editor.impl.internal.template;
 
-/**
- * Generate action could provide an action to edit corresponding file template. It would appear then in the subMenu of the Generate... popup
- */
-public interface GenerateActionPopupTemplateInjector {
-  @javax.annotation.Nullable
-  AnAction createEditTemplateAction(DataContext dataContext);
+import consulo.colorScheme.TextAttributesKey;
+
+public interface TemplateColors {
+  TextAttributesKey TEMPLATE_VARIABLE_ATTRIBUTES = TextAttributesKey.createTextAttributesKey("TEMPLATE_VARIABLE_ATTRIBUTES");
 }

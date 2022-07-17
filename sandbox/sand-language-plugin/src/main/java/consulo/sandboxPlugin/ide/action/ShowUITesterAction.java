@@ -15,8 +15,9 @@
  */
 package consulo.sandboxPlugin.ide.action;
 
+import consulo.annotation.component.ActionRef;
 import consulo.annotation.component.ActionImpl;
-import consulo.annotation.component.AddActionToGroup;
+import consulo.annotation.component.ActionParentRef;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.sandboxPlugin.ui.UITester;
@@ -30,7 +31,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 2020-05-29
  */
-@ActionImpl(id = "ShowUITesterAction", addToGroups = @AddActionToGroup(id = "ToolsMenu"))
+@ActionImpl(id = "ShowUITesterAction", parents = @ActionParentRef(@ActionRef(id = "ToolsMenu")))
 public class ShowUITesterAction extends DumbAwareAction {
   private final DialogService myDialogService;
 

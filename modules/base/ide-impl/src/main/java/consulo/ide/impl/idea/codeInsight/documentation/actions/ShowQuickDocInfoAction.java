@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.codeInsight.documentation.actions;
 
 import consulo.language.editor.action.CodeInsightActionHandler;
-import consulo.ide.impl.idea.codeInsight.actions.BaseCodeInsightAction;
+import consulo.language.editor.impl.internal.action.BaseCodeInsightAction;
 import consulo.ide.impl.idea.codeInsight.documentation.DocumentationManager;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.language.editor.CommonDataKeys;

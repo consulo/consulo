@@ -1,4 +1,4 @@
-package consulo.ide.impl.idea.codeInsight.generation;
+package consulo.language.editor.generation;
 
 import consulo.language.editor.template.Template;
 import consulo.dataContext.DataContext;

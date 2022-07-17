@@ -1210,7 +1210,7 @@
     <group id="CodeMenu" popup="true">
       <reference ref="OverrideMethods"/>
       <reference ref="ImplementMethods"/>
-      <action id="Generate" class="consulo.ide.impl.idea.codeInsight.generation.actions.GenerateAction"/>
+      <reference ref="Generate"/>
       <separator/>
       <action id="SurroundWith" class="consulo.ide.impl.idea.codeInsight.generation.actions.SurroundWithAction"/>
       <action id="Unwrap" class="consulo.ide.impl.idea.codeInsight.unwrap.UnwrapAction"/>

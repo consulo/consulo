@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.ide.fileTemplates.impl;
 
 import com.google.common.annotations.VisibleForTesting;
-import consulo.ide.impl.idea.codeInsight.template.impl.TemplateColors;
+import consulo.language.editor.impl.internal.template.TemplateColors;
 import consulo.ide.IdeBundle;
 import consulo.fileTemplate.FileTemplate;
 import consulo.fileTemplate.FileTemplateManager;

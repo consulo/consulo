@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.codeInsight.editorActions;
 import consulo.language.codeStyle.FormattingModelBuilder;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.ide.impl.idea.codeInsight.CodeInsightUtilBase;
-import consulo.ide.impl.idea.codeInsight.actions.BaseCodeInsightAction;
+import consulo.language.editor.impl.internal.action.BaseCodeInsightAction;
 import consulo.ide.impl.idea.codeInsight.editorActions.emacs.EmacsProcessingHandler;
 import consulo.ide.impl.idea.codeInsight.editorActions.emacs.LanguageEmacsExtension;
 import consulo.document.Document;

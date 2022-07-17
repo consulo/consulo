@@ -19,7 +19,6 @@ package consulo.ide.impl.idea.openapi.options;
 public interface SchemeElement {
   void setGroupName(final String name);
 
-
   String getKey();
 
   SchemeElement copy();

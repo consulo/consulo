@@ -1,11 +1,12 @@
 /* It's an automatically generated code. Do not modify it. */
-package consulo.ide.impl.idea.codeInsight.template.impl;
+package consulo.language.editor.impl.internal.template;
 
-import com.intellij.lexer.LexerBase;
-import consulo.ide.impl.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
+import consulo.language.lexer.LexerBase;
 
 %%
 
+%public
 %unicode
 %class TemplateTextLexer
 %extends LexerBase

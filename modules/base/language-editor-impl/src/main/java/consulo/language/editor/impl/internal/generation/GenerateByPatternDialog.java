@@ -1,21 +1,23 @@
-package consulo.ide.impl.idea.codeInsight.generation;
+package consulo.language.editor.impl.internal.generation;
 
-import consulo.language.editor.template.Template;
-import consulo.ide.impl.idea.codeInsight.template.impl.TemplateEditorUtil;
-import consulo.ide.impl.idea.codeInsight.template.impl.TemplateImpl;
-import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
+import consulo.dataContext.DataContext;
+import consulo.language.editor.generation.PatternDescriptor;
+import consulo.language.editor.impl.internal.template.TemplateEditorUtil;
+import consulo.language.editor.internal.TemplateEx;
+import consulo.language.editor.template.Template;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.Splitter;
 import consulo.ui.ex.awt.ScrollPaneFactory;
+import consulo.ui.ex.awt.Splitter;
 import consulo.ui.ex.awt.tree.SimpleTree;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.util.collection.MultiMap;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -115,18 +117,16 @@ public class GenerateByPatternDialog extends DialogWrapper {
     return null;
   }
 
+  @RequiredUIAccess
   private void updateDetails(final PatternDescriptor descriptor) {
-    ApplicationManager.getApplication().runWriteAction(new Runnable() {
-      @Override
-      public void run() {
-        final Template template = descriptor.getTemplate();
-        if (template instanceof TemplateImpl) {
-          String text = ((TemplateImpl)template).getString();
-          myEditor.getDocument().replaceString(0, myEditor.getDocument().getTextLength(), text);
-          TemplateEditorUtil.setHighlighter(myEditor, ((TemplateImpl)template).getTemplateContext());
-        } else {
-          myEditor.getDocument().replaceString(0, myEditor.getDocument().getTextLength(), "");
-        }
+    ApplicationManager.getApplication().runWriteAction(() -> {
+      final Template template = descriptor.getTemplate();
+      if (template instanceof TemplateEx) {
+        String text = ((TemplateEx)template).getString();
+        myEditor.getDocument().replaceString(0, myEditor.getDocument().getTextLength(), text);
+        TemplateEditorUtil.setHighlighter(myEditor, ((TemplateEx)template).getTemplateContext());
+      } else {
+        myEditor.getDocument().replaceString(0, myEditor.getDocument().getTextLength(), "");
       }
     });
   }

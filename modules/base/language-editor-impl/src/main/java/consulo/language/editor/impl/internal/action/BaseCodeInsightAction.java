@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.actions;
+package consulo.language.editor.impl.internal.action;
 
 import consulo.language.editor.action.CodeInsightAction;
 import consulo.language.editor.completion.lookup.Lookup;

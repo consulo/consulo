@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2012 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,17 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.template.impl;
+package consulo.language.editor.impl.internal.generation;
 
-import consulo.colorScheme.TextAttributesKey;
+import consulo.annotation.component.ActionImpl;
+import consulo.application.Application;
+import consulo.language.editor.generation.ImplementMethodHandler;
+import jakarta.inject.Inject;
 
-public interface TemplateColors {
-  TextAttributesKey TEMPLATE_VARIABLE_ATTRIBUTES = TextAttributesKey.createTextAttributesKey("TEMPLATE_VARIABLE_ATTRIBUTES");
+@ActionImpl(id = "ImplementMethods")
+public class ImplementMethodsAction extends MethodsBasedAction<ImplementMethodHandler> {
+  @Inject
+  public ImplementMethodsAction(Application application) {
+    super(application, ImplementMethodHandler.class, ImplementMethodHandler.KEY);
+  }
 }

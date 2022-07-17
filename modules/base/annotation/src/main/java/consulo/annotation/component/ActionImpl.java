@@ -29,12 +29,9 @@ import java.lang.annotation.Target;
 public @interface ActionImpl {
   String id();
 
-  AddActionToGroup[] addToGroups() default {};
+  ActionParentRef[] parents() default {};
 
-  /**
-   * Action references for actions groups
-   */
-  String[] childrenRefs() default {};
+  ActionRef[] children() default {};
 
   int profiles() default ComponentProfiles.DEFAULT;
 }

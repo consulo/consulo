@@ -15,7 +15,13 @@
  */
 package consulo.ide.impl.wm.impl.welcomeScreen;
 
+import consulo.annotation.component.ActionRef;
 import consulo.annotation.component.ActionImpl;
+import consulo.ide.impl.idea.ide.actions.HelpTopicsAction;
+import consulo.ide.impl.idea.ide.actions.RefCardAction;
+import consulo.ide.impl.idea.ide.actions.ShowTipsAction;
+import consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.DevelopPluginsAction;
+import consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.OpenYoutubeAction;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.IdeActions;
 
@@ -23,6 +29,13 @@ import consulo.ui.ex.action.IdeActions;
  * @author VISTALL
  * @since 26-Jun-22
  */
-@ActionImpl(id = IdeActions.GROUP_WELCOME_SCREEN_DOC, childrenRefs = {"HelpTopics", "ShowTips", "Help.KeymapReference", "Help.Youtube", "Help.JoinDiscordChannel", "WelcomeScreen.DevelopPlugins"})
+@ActionImpl(id = IdeActions.GROUP_WELCOME_SCREEN_DOC, children = {
+        @ActionRef(type = HelpTopicsAction.class),
+        @ActionRef(type = ShowTipsAction.class),
+        @ActionRef(type = RefCardAction.class),
+        @ActionRef(type = OpenYoutubeAction.class),
+        @ActionRef(type = JoinDiscordChannelAction.class),
+        @ActionRef(type = DevelopPluginsAction.class)
+})
 public class WelcomeScreenDocumentationGroup extends DefaultActionGroup {
 }

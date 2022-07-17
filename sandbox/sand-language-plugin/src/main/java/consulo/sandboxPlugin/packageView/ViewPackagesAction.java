@@ -15,8 +15,9 @@
  */
 package consulo.sandboxPlugin.packageView;
 
+import consulo.annotation.component.ActionRef;
 import consulo.annotation.component.ActionImpl;
-import consulo.annotation.component.AddActionToGroup;
+import consulo.annotation.component.ActionParentRef;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -30,7 +31,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 30/05/2021
  */
-@ActionImpl(id = "ViewPackagesAction", addToGroups = @AddActionToGroup(id = "ToolsMenu"))
+@ActionImpl(id = "ViewPackagesAction", parents = @ActionParentRef(@ActionRef(id = "ToolsMenu")))
 public class ViewPackagesAction extends DumbAwareAction {
   @RequiredUIAccess
   @Override

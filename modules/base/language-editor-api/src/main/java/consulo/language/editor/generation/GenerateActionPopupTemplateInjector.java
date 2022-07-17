@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2022 consulo.io
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,15 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.annotation.component;
+package consulo.language.editor.generation;
+
+import consulo.ui.ex.action.AnAction;
+import consulo.dataContext.DataContext;
+
+import javax.annotation.Nullable;
 
 /**
- * @author VISTALL
- * @since 26-Jun-22
+ * Generate action could provide an action to edit corresponding file template. It would appear then in the subMenu of the Generate... popup
  */
-public enum ActionAnchor {
-  BEFORE,
-  AFTER,
-  FIRST,
-  LAST
+public interface GenerateActionPopupTemplateInjector {
+  @Nullable
+  AnAction createEditTemplateAction(DataContext dataContext);
 }

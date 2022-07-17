@@ -21,7 +21,7 @@ import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.document.util.DocumentUtil;
-import consulo.ide.impl.idea.codeInsight.actions.BaseCodeInsightAction;
+import consulo.language.editor.impl.internal.action.BaseCodeInsightAction;
 import consulo.ide.impl.idea.codeInsight.generation.AutoIndentLinesHandler;
 import consulo.language.codeStyle.FormattingModelBuilder;
 import consulo.language.editor.action.CodeInsightActionHandler;

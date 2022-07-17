@@ -19,6 +19,10 @@ package consulo.ide.impl.idea.codeInsight.template.impl;
 import consulo.ide.impl.idea.openapi.options.SchemeElement;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.ast.IElementType;
+import consulo.language.editor.internal.TemplateContext;
+import consulo.language.editor.impl.internal.template.TemplateTextLexer;
+import consulo.language.editor.impl.internal.template.TemplateTokenType;
+import consulo.language.editor.internal.TemplateEx;
 import consulo.language.editor.template.Expression;
 import consulo.language.editor.template.Template;
 import consulo.language.editor.template.Variable;
@@ -31,7 +35,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class TemplateImpl extends Template implements SchemeElement {
+public class TemplateImpl extends TemplateEx implements SchemeElement {
   private String myKey;
   private String myString = null;
   private String myDescription;
@@ -42,6 +46,7 @@ public class TemplateImpl extends Template implements SchemeElement {
   private String myTemplateText = null;
   private String myId;
 
+  @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (!(o instanceof TemplateImpl)) return false;
@@ -64,6 +69,7 @@ public class TemplateImpl extends Template implements SchemeElement {
     return true;
   }
 
+  @Override
   public int hashCode() {
     if (myId != null) {
       return myId.hashCode();
@@ -219,6 +225,7 @@ public class TemplateImpl extends Template implements SchemeElement {
     return isDeactivated;
   }
 
+  @Override
   public TemplateContext getTemplateContext() {
     return myTemplateContext;
   }
@@ -360,6 +367,7 @@ public class TemplateImpl extends Template implements SchemeElement {
     myKey = key;
   }
 
+  @Override
   public String getString() {
     parseSegments();
     return myString;

@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.codeInsight.navigation.actions;
 
 import consulo.language.editor.action.CodeInsightActionHandler;
-import consulo.ide.impl.idea.codeInsight.actions.BaseCodeInsightAction;
+import consulo.language.editor.impl.internal.action.BaseCodeInsightAction;
 import consulo.ide.impl.idea.codeInsight.navigation.GotoImplementationHandler;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.dumb.DumbAware;

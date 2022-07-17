@@ -13,17 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.generation;
+package consulo.language.editor.impl.internal.generation;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
 import consulo.component.extension.ExtensionPoint;
-import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.language.editor.generation.PatternDescriptor;
+import consulo.language.editor.generation.PatternProvider;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.util.collection.ArrayUtil;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;

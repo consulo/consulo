@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.codeInsight.generation.actions;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.codeInsight.actions.BaseCodeInsightAction;
+import consulo.language.editor.impl.internal.action.BaseCodeInsightAction;
 import consulo.ide.impl.idea.codeInsight.generation.surroundWith.SurroundWithHandler;
 import consulo.ide.impl.idea.codeInsight.template.impl.TemplateManagerImpl;
 import consulo.language.Language;

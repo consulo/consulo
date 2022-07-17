@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.template.impl;
+package consulo.language.editor.impl.internal.template;
 
+import consulo.language.editor.internal.TemplateContext;
 import consulo.language.editor.template.context.TemplateContextType;
 import consulo.dataContext.DataManager;
 import consulo.language.lexer.CompositeLexer;
@@ -149,7 +150,7 @@ public class TemplateEditorUtil {
     @Nonnull
     public TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
       if (tokenType == TemplateTokenType.VARIABLE) {
-        return pack(myOriginalHighlighter.getTokenHighlights(tokenType), TemplateColors.TEMPLATE_VARIABLE_ATTRIBUTES);
+        return SyntaxHighlighterBase.pack(myOriginalHighlighter.getTokenHighlights(tokenType), TemplateColors.TEMPLATE_VARIABLE_ATTRIBUTES);
       }
 
       return myOriginalHighlighter.getTokenHighlights(tokenType);

@@ -3,6 +3,7 @@
 /* It's an automatically generated code. Do not modify it. */
 package consulo.ide.impl.idea.codeInsight.template.impl;
 
+import consulo.language.editor.impl.internal.template.TemplateTokenType;
 import consulo.language.lexer.LexerBase;
 import consulo.language.ast.IElementType;
 

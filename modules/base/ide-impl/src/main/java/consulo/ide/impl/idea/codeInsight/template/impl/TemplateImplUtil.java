@@ -16,6 +16,8 @@
 
 package consulo.ide.impl.idea.codeInsight.template.impl;
 
+import consulo.language.editor.impl.internal.template.TemplateTextLexer;
+import consulo.language.editor.impl.internal.template.TemplateTokenType;
 import consulo.language.editor.template.Expression;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.template.macro.MacroParser;

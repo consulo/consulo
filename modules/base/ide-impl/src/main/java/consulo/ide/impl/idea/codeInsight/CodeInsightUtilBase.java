@@ -16,28 +16,26 @@
 
 package consulo.ide.impl.idea.codeInsight;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ServiceImpl;
-import consulo.language.editor.CodeInsightUtilCore;
-import consulo.language.editor.hint.HintManager;
-import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
-import consulo.language.editor.ui.awt.HintUtil;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
-import consulo.language.editor.CodeInsightBundle;
-import consulo.project.Project;
-import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.editor.CodeInsightBundle;
+import consulo.language.editor.CodeInsightUtilCore;
+import consulo.language.editor.hint.HintManager;
+import consulo.language.editor.util.LanguageEditorUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.ide.impl.idea.ui.LightweightHint;
+import consulo.project.Project;
+import consulo.virtualFileSystem.ReadonlyStatusHandler;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -107,19 +105,9 @@ public class CodeInsightUtilBase extends CodeInsightUtilCore {
     return !status.hasReadonlyFiles();
   }
 
-  // returns true on success
+  @Deprecated
+  @DeprecationInfo("See LanguageEditorUtil#checkModificationAllowed")
   public static boolean prepareEditorForWrite(@Nonnull Editor editor) {
-    if (!editor.isViewer()) return true;
-    showReadOnlyViewWarning(editor);
-    return false;
-  }
-
-  public static void showReadOnlyViewWarning(Editor editor) {
-    if (ApplicationManager.getApplication().isHeadlessEnvironment()) return;
-
-    JComponent component = HintUtil.createInformationLabel("This view is read-only");
-    final LightweightHint hint = new LightweightHint(component);
-    HintManagerImpl.getInstanceImpl().showEditorHint(hint, editor, HintManager.UNDER,
-                                                     HintManager.HIDE_BY_ANY_KEY | HintManager.HIDE_BY_TEXT_CHANGE | HintManager.HIDE_BY_SCROLLING, 0, false);
+    return LanguageEditorUtil.checkModificationAllowed(editor);
   }
 }

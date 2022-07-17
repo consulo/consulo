@@ -15,8 +15,9 @@
  */
 package consulo.sandboxPlugin.ide.action;
 
+import consulo.annotation.component.ActionRef;
 import consulo.annotation.component.ActionImpl;
-import consulo.annotation.component.AddActionToGroup;
+import consulo.annotation.component.ActionParentRef;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.internal.DefaultProjectFactory;
@@ -31,7 +32,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 15/07/2021
  */
-@ActionImpl(id = "ShowUnifiedSettingsDialogAction", addToGroups = @AddActionToGroup(id = "ToolsMenu"))
+@ActionImpl(id = "ShowUnifiedSettingsDialogAction", parents = @ActionParentRef(@ActionRef(id = "ToolsMenu")))
 public class ShowUnifiedSettingsDialogAction extends DumbAwareAction {
   private final DefaultProjectFactory myDefaultProjectFactory;
 

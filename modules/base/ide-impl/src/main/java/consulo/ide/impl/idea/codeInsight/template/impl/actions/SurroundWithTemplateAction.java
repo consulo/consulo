@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.codeInsight.template.impl.actions;
 
 import consulo.language.editor.action.CodeInsightActionHandler;
-import consulo.ide.impl.idea.codeInsight.actions.BaseCodeInsightAction;
+import consulo.language.editor.impl.internal.action.BaseCodeInsightAction;
 import consulo.ide.impl.idea.codeInsight.template.impl.SurroundWithTemplateHandler;
 import javax.annotation.Nonnull;
 

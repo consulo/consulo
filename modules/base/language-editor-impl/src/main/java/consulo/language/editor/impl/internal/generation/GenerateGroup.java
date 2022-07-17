@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.impl.internal.generation;
 
+import consulo.annotation.component.ActionRef;
 import consulo.annotation.component.ActionImpl;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.IdeActions;
@@ -23,6 +24,11 @@ import consulo.ui.ex.action.IdeActions;
  * @author VISTALL
  * @since 17-Jul-22
  */
-@ActionImpl(id = IdeActions.GROUP_GENERATE, childrenRefs = {"OverrideMethods", "ImplementMethods", "DelegateMethods", "GeneratePattern"})
+@ActionImpl(id = IdeActions.GROUP_GENERATE, children = {
+        @ActionRef(type = OverrideMethodsAction.class),
+        @ActionRef(type = ImplementMethodsAction.class),
+        @ActionRef(type = DelegateMethodsAction.class),
+        @ActionRef(type = GenerateByPatternAction.class)
+})
 public class GenerateGroup extends DefaultActionGroup {
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.annotation.component;
 
-package consulo.language.editor.action;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-import consulo.codeEditor.Editor;
-import consulo.language.extension.LanguageExtension;
-import consulo.language.psi.PsiFile;
+/**
+ * @author VISTALL
+ * @since 25-Jun-22
+ */
+@Retention(RetentionPolicy.RUNTIME)
+public @interface ActionParentRef {
+  ActionRef value();
 
-public interface LanguageCodeInsightActionHandler extends CodeInsightActionHandler, LanguageExtension {
-  boolean isValidFor(Editor editor, PsiFile file);
+  ActionRefAnchor anchor() default ActionRefAnchor.LAST;
+
+  ActionRef relatedToAction() default @ActionRef;
 }

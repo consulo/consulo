@@ -16,9 +16,9 @@
 
 package consulo.ide.impl.copyright.impl.actions;
 
-import consulo.annotation.component.ActionAnchor;
+import consulo.annotation.component.ActionRef;
 import consulo.annotation.component.ActionImpl;
-import consulo.annotation.component.AddActionToGroup;
+import consulo.annotation.component.ActionParentRef;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.copyright.impl.ui.CopyrightProjectConfigurable;
@@ -41,7 +41,7 @@ import consulo.ui.ex.awt.Messages;
 
 import javax.annotation.Nullable;
 
-@ActionImpl(id = "GenerateCopyright", addToGroups = @AddActionToGroup(id = IdeActions.GROUP_GENERATE, anchor = ActionAnchor.LAST))
+@ActionImpl(id = "GenerateCopyright", parents = @ActionParentRef(@ActionRef(id = IdeActions.GROUP_GENERATE)))
 public class GenerateCopyrightAction extends AnAction {
   public GenerateCopyrightAction() {
     super("Copyright", "Generate/Update the copyright notice.", null);

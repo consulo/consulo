@@ -16,20 +16,21 @@
 
 package consulo.ide.impl.idea.codeInsight.navigation.actions;
 
-import consulo.language.editor.action.CodeInsightActionHandler;
-import consulo.ide.impl.idea.codeInsight.actions.BaseCodeInsightAction;
+import consulo.application.dumb.DumbAware;
+import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.lang.CodeInsightActions;
 import consulo.language.Language;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.codeEditor.Editor;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
+import consulo.language.editor.action.CodeInsightActionHandler;
+import consulo.language.editor.impl.internal.action.BaseCodeInsightAction;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
+import org.jetbrains.annotations.NonNls;
+
+import javax.annotation.Nonnull;
 
 public class GotoSuperAction extends BaseCodeInsightAction implements CodeInsightActionHandler, DumbAware {
 

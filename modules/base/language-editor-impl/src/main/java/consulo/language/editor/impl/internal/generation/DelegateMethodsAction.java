@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2010 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,17 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.template.impl;
+package consulo.language.editor.impl.internal.generation;
 
-import consulo.language.Language;
-import consulo.language.ast.IElementType;
+import consulo.annotation.component.ActionImpl;
+import consulo.application.Application;
+import consulo.language.editor.generation.DelegateMethodHandler;
+import jakarta.inject.Inject;
 
-interface TemplateTokenType {
-  IElementType TEXT = new IElementType("TEXT", Language.ANY);
-  IElementType VARIABLE = new IElementType("VARIABLE", Language.ANY);
-  IElementType ESCAPE_DOLLAR = new IElementType("ESCAPE_DOLLAR", Language.ANY);
+@ActionImpl(id = "DelegateMethods")
+public class DelegateMethodsAction extends MethodsBasedAction<DelegateMethodHandler> {
+  @Inject
+  public DelegateMethodsAction(Application application) {
+    super(application, DelegateMethodHandler.class, DelegateMethodHandler.KEY);
+  }
 }

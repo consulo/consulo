@@ -30,8 +30,6 @@ import javax.annotation.Nullable;
 public final class AnSeparator extends AnAction implements DumbAware {
   private static final AnSeparator ourInstance = new AnSeparator();
 
-  public static final String ID = "<separator>";
-
   @Nonnull
   public static AnSeparator getInstance() {
     return ourInstance;

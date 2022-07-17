@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package consulo.language.editor.action;
+package consulo.language.editor.impl.internal.template;
 
-import consulo.codeEditor.Editor;
-import consulo.language.extension.LanguageExtension;
-import consulo.language.psi.PsiFile;
+import consulo.language.Language;
+import consulo.language.ast.IElementType;
 
-public interface LanguageCodeInsightActionHandler extends CodeInsightActionHandler, LanguageExtension {
-  boolean isValidFor(Editor editor, PsiFile file);
+public interface TemplateTokenType {
+  IElementType TEXT = new IElementType("TEXT", Language.ANY);
+  IElementType VARIABLE = new IElementType("VARIABLE", Language.ANY);
+  IElementType ESCAPE_DOLLAR = new IElementType("ESCAPE_DOLLAR", Language.ANY);
 }

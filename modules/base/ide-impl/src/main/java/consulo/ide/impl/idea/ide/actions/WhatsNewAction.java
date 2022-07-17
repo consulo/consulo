@@ -15,9 +15,10 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.annotation.component.ActionAnchor;
+import consulo.annotation.component.ActionRefAnchor;
 import consulo.annotation.component.ActionImpl;
-import consulo.annotation.component.AddActionToGroup;
+import consulo.annotation.component.ActionParentRef;
+import consulo.annotation.component.ActionRef;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.fileEditor.FileEditorManager;
@@ -35,7 +36,9 @@ import javax.annotation.Nonnull;
 /**
  * @author max
  */
-@ActionImpl(id = "WhatsNewAction", addToGroups = @AddActionToGroup(id = "HelpMenu", anchor = ActionAnchor.AFTER, relatedToActionId = "OnlineDocAction"))
+@ActionImpl(id = "WhatsNewAction", parents = {
+        @ActionParentRef(value = @ActionRef(id = "HelpMenu"), anchor = ActionRefAnchor.AFTER, relatedToAction = @ActionRef(type = OnlineDocAction.class))
+})
 public class WhatsNewAction extends AnAction implements DumbAware {
   private final Application myApplication;
 
@@ -48,7 +51,7 @@ public class WhatsNewAction extends AnAction implements DumbAware {
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     Project project = e.getData(Project.KEY);
-    if(project == null) {
+    if (project == null) {
       return;
     }
 

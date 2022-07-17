@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.actionSystem.impl;
 
-import consulo.annotation.component.ActionAPI;
 import consulo.annotation.component.*;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
@@ -33,7 +32,6 @@ import consulo.ide.impl.idea.internal.statistic.collectors.fus.actions.persisten
 import consulo.ide.impl.idea.openapi.actionSystem.AbbreviationManager;
 import consulo.ide.impl.idea.openapi.actionSystem.DefaultCompactActionGroup;
 import consulo.ide.impl.idea.openapi.actionSystem.OverridingAction;
-import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionPopupMenuListener;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
@@ -62,6 +60,7 @@ import consulo.ui.style.StandardColors;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.MultiMap;
 import consulo.util.concurrent.ActionCallback;
+import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
 import gnu.trove.TObjectIntHashMap;
@@ -161,10 +160,10 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
       for (List<InjectingBinding> bindingList : holder.getBindings().values()) {
         for (InjectingBinding binding : bindingList) {
-          if (!InjectingBindingHolder.isValid(binding, profiles)){
+          if (!InjectingBindingHolder.isValid(binding, profiles)) {
             continue;
           }
-          
+
           Class<?> actionImplClass = binding.getImplClass();
           ActionImpl actionImpl = actionImplClass.getAnnotation(ActionImpl.class);
 
@@ -179,7 +178,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
             InjectingBindingActionStub actionStub = new InjectingBindingActionStub(actionImpl, binding);
             registerAction(actionImpl.id(), actionStub, actionStub.getPluginId());
 
-            if (actionImpl.addToGroups().length > 0) {
+            if (actionImpl.parents().length > 0) {
               bindings.add(actionStub);
             }
           }
@@ -203,25 +202,18 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
       for (InjectingBindingActionStubBase binding : bindings) {
         ActionImpl actionImpl = binding.getActionImpl();
 
-        String[] childrenRefs = actionImpl.childrenRefs();
-        if (childrenRefs.length > 0) {
+        ActionRef[] children = actionImpl.children();
+        if (children.length > 0) {
           if (!(binding instanceof DefaultActionGroup)) {
             LOG.error(actionImpl.id() + ": impossible use #references() with not DefaultActionGroup");
             return;
           }
 
-          for (String referenceActionId : childrenRefs) {
-            if (AnSeparator.ID.equals(referenceActionId)) {
-              ((DefaultActionGroup)binding).add(AnSeparator.create(), Constraints.LAST, this);
-            }
-            else {
-              AnAction refAction = myId2Action.get(referenceActionId);
-              if (refAction == null) {
-                LOG.error(actionImpl.id() + ": can't find reference action id: " + refAction);
-                continue;
-              }
+          for (ActionRef child : children) {
+            Pair<AnAction, String> ref = resolveActionRef(child, binding);
 
-              ((DefaultActionGroup)binding).addAction(refAction, Constraints.LAST, this);
+            if (ref != null) {
+              ((DefaultActionGroup)binding).addAction(ref.getFirst(), Constraints.LAST, this);
             }
           }
         }
@@ -231,21 +223,22 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
       for (InjectingBindingActionStubBase binding : bindings) {
         ActionImpl actionImpl = binding.getActionImpl();
 
-        AddActionToGroup[] addToGroups = actionImpl.addToGroups();
+        ActionParentRef[] parentRefs = actionImpl.parents();
 
-        for (AddActionToGroup addToGroup : addToGroups) {
-          Constraints constraints = convertConstraints(addToGroup, actionImpl.id());
+        for (ActionParentRef parentRef : parentRefs) {
+          Constraints constraints = convertConstraints(parentRef, binding);
 
-          AnAction group = myId2Action.get(addToGroup.id());
-          if (!(group instanceof ActionGroup)) {
-            LOG.error(actionImpl.id() + ": can't find group for @AddToGroup(id = " + addToGroup.id());
+          Pair<AnAction, String> ref = resolveActionRef(parentRef.value(), binding);
+          if (ref == null || !(ref.getFirst() instanceof ActionGroup)) {
+            LOG.error(actionImpl.id() + ": can't find group for " + parentRef.value());
+            continue;
           }
 
-          if (group instanceof DefaultActionGroup defaultActionGroup) {
+          if (ref.getFirst() instanceof DefaultActionGroup defaultActionGroup) {
             defaultActionGroup.add((AnAction)binding, constraints, this);
           }
           else {
-            LOG.error(actionImpl.id() + ": can't add to group which not instance of DefaultActionGroup: " + group.getClass().getName());
+            LOG.error(actionImpl.id() + ": can't add to group which not instance of DefaultActionGroup: " + ref.getFirst().getClass().getName());
           }
         }
       }
@@ -254,9 +247,42 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     injectStat.dump("ActionManager:injecting", LOG::info);
   }
 
-  private Constraints convertConstraints(AddActionToGroup group, String actionId) {
+  @Nullable
+  private Pair<AnAction, String> resolveActionRef(ActionRef actionRef, Object context) {
+    Class<?> type = actionRef.type();
+    if (type != Object.class) {
+      if (type == AnSeparator.class) {
+        return Pair.create(AnSeparator.create(), null);
+      }
+
+      ActionImpl actionImpl = actionRef.type().getAnnotation(ActionImpl.class);
+      if (actionImpl == null) {
+        LOG.error(context + ": " + actionRef.type().getSimpleName() + " is not annotated by @ActionImpl");
+        return null;
+      }
+
+      AnAction refAction = myId2Action.get(actionImpl.id());
+      if (refAction == null) {
+        LOG.error(context + ": can't find reference action id: " + actionImpl.id());
+        return null;
+      }
+
+      return Pair.create(refAction, actionImpl.id());
+    }
+    else {
+      AnAction refAction = myId2Action.get(actionRef.id());
+      if (refAction == null) {
+        LOG.error(context + ": can't find reference action id: " + actionRef.id());
+        return null;
+      }
+
+      return Pair.create(refAction, actionRef.id());
+    }
+  }
+
+  private Constraints convertConstraints(ActionParentRef parentRef, Object context) {
     Anchor anchor;
-    switch (group.anchor()) {
+    switch (parentRef.anchor()) {
       case BEFORE:
         anchor = Anchor.BEFORE;
         break;
@@ -270,7 +296,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         anchor = Anchor.LAST;
         break;
       default:
-        throw new IllegalArgumentException(group.anchor().name());
+        throw new IllegalArgumentException(parentRef.anchor().name());
     }
 
     if (anchor == Anchor.LAST) {
@@ -281,13 +307,8 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
       return Constraints.FIRST;
     }
 
-    String relatedToActionId = group.relatedToActionId();
-    if (StringUtil.isEmptyOrSpaces(relatedToActionId)) {
-      LOG.error(actionId + ": bad relatedToActionId, with anchor: " + anchor);
-      return Constraints.LAST;
-    }
-
-    return new Constraints(anchor, relatedToActionId);
+    Pair<AnAction, String> relatedToAction = resolveActionRef(parentRef.relatedToAction(), context);
+    return new Constraints(anchor, relatedToAction == null ? null : relatedToAction.getSecond());
   }
 
   @Nonnull
