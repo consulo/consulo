@@ -20,7 +20,7 @@ import consulo.ui.IntBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.Spinner;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,11 +29,13 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 29/04/2021
  */
-public class DesktopSwtIntBoxImpl extends SWTComponentDelegate<Text> implements IntBox {
-  private final int myValue;
+public class DesktopSwtIntBoxImpl extends SWTComponentDelegate<Spinner> implements IntBox {
+  private int myInitValue;
+  private int myInitMin;
+  private int myInitMax = Integer.MAX_VALUE;
 
-  public DesktopSwtIntBoxImpl(int value) {
-    myValue = value;
+  public DesktopSwtIntBoxImpl(int initValue) {
+    myInitValue = initValue;
   }
 
   @Override
@@ -43,7 +45,15 @@ public class DesktopSwtIntBoxImpl extends SWTComponentDelegate<Text> implements 
 
   @Override
   public void setRange(int min, int max) {
-
+    Spinner spinner = toSWTComponent();
+    if (spinner != null) {
+      spinner.setMinimum(min);
+      spinner.setMaximum(max);
+    }
+    else {
+      myInitMin = min;
+      myInitMax = max;
+    }
   }
 
   @Override
@@ -60,23 +70,39 @@ public class DesktopSwtIntBoxImpl extends SWTComponentDelegate<Text> implements 
   @RequiredUIAccess
   @Override
   public boolean validate() {
-    return false;
+    return true;
   }
 
   @Nullable
   @Override
   public Integer getValue() {
-    return null;
+    Spinner spinner = toSWTComponent();
+    return spinner.getSelection();
   }
 
   @RequiredUIAccess
   @Override
   public void setValue(Integer value, boolean fireListeners) {
-
+    Spinner spinner = toSWTComponent();
+    if (spinner != null) {
+      spinner.setSelection(value == null ? 0 : value);
+    }
+    else {
+      myInitValue = value;
+    }
   }
 
   @Override
-  protected Text createSWT(Composite parent) {
-    return new Text(parent, SWT.BORDER);
+  protected Spinner createSWT(Composite parent) {
+    return new Spinner(parent, SWT.BORDER);
+  }
+
+  @Override
+  protected void initialize(Spinner component) {
+    super.initialize(component);
+
+    component.setSelection(myInitValue);
+    component.setMinimum(myInitMin);
+    component.setMaximum(myInitMax);
   }
 }
