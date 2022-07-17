@@ -16,7 +16,8 @@
 
 package consulo.ide.impl.idea.codeInsight.intention;
 
-import consulo.ide.impl.idea.codeInsight.intention.impl.BaseIntentionAction;
+import consulo.language.editor.intention.BaseElementAtCaretIntentionAction;
+import consulo.language.editor.intention.BaseIntentionAction;
 import consulo.codeEditor.CaretModel;
 import consulo.codeEditor.Editor;
 import consulo.project.Project;

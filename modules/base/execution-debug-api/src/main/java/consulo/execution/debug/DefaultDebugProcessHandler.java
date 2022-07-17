@@ -17,8 +17,6 @@ package consulo.execution.debug;
 
 import consulo.process.NopProcessHandler;
 
-import java.io.OutputStream;
-
 /**
  * @author nik
  */

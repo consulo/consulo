@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.intention.impl;
+package consulo.language.editor.intention;
 
-import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.scratch.ScratchFileService;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
 import org.jetbrains.annotations.Nls;
+
 import javax.annotation.Nonnull;
 
 /**
