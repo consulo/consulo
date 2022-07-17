@@ -1014,13 +1014,6 @@
 
     <action id="ClassNameCompletion" class="consulo.ide.impl.idea.codeInsight.completion.actions.ClassNameCompletionAction"/>
 
-    <group id="GenerateGroup">
-      <action id="OverrideMethods" class="consulo.ide.impl.idea.codeInsight.generation.actions.OverrideMethodsAction"/>
-      <action id="ImplementMethods" class="consulo.ide.impl.idea.codeInsight.generation.actions.ImplementMethodsAction"/>
-      <action id="DelegateMethods" class="consulo.ide.impl.idea.codeInsight.generation.actions.DelegateMethodsAction"/>
-      <action id="GeneratePattern" class="consulo.ide.impl.idea.codeInsight.generation.GenerateByPatternAction" text="Generate by Pattern..."/>
-    </group>
-
     <action id="ShowIntentionActions" class="consulo.ide.impl.idea.codeInsight.intention.actions.ShowIntentionActionsAction" icon="consulo.platform.base.PlatformIconGroup@actions.intentionbulb"/>
 
     <group id="ShowIntentionsGroup" compact="true">

@@ -15,10 +15,11 @@
  */
 package consulo.ide.impl.idea.codeInsight.generation;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
 import consulo.component.extension.ExtensionPoint;
-import consulo.component.extension.Extensions;
 import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -30,11 +31,13 @@ import javax.annotation.Nonnull;
 /**
  * @author Dmitry Avdeev
  */
+@ActionImpl(id = "GeneratePattern")
 public class GenerateByPatternAction extends AnAction {
   private final Application myApplication;
 
   @Inject
   public GenerateByPatternAction(Application application) {
+    super(LocalizeValue.localizeTODO("Generate by Pattern..."));
     myApplication = application;
   }
 

@@ -34,18 +34,20 @@ import consulo.module.Module;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
 
 import javax.annotation.Nullable;
 
-@ActionImpl(id = "GenerateCopyright", addToGroups = @AddActionToGroup(id = "GenerateGroup", anchor = ActionAnchor.LAST))
+@ActionImpl(id = "GenerateCopyright", addToGroups = @AddActionToGroup(id = IdeActions.GROUP_GENERATE, anchor = ActionAnchor.LAST))
 public class GenerateCopyrightAction extends AnAction {
   public GenerateCopyrightAction() {
     super("Copyright", "Generate/Update the copyright notice.", null);
   }
 
+  @Override
   public void update(AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     DataContext context = event.getDataContext();
@@ -73,6 +75,7 @@ public class GenerateCopyrightAction extends AnAction {
     return file;
   }
 
+  @Override
   public void actionPerformed(AnActionEvent event) {
     DataContext context = event.getDataContext();
     Project project = context.getData(CommonDataKeys.PROJECT);

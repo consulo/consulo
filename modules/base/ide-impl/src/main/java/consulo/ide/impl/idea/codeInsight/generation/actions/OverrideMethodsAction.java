@@ -16,20 +16,23 @@
 
 package consulo.ide.impl.idea.codeInsight.generation.actions;
 
-import consulo.language.editor.action.CodeInsightActionHandler;
+import consulo.annotation.component.ActionImpl;
+import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.codeInsight.actions.BaseCodeInsightAction;
 import consulo.ide.impl.idea.codeInsight.generation.OverrideMethodsHandler;
 import consulo.ide.impl.idea.lang.CodeInsightActions;
 import consulo.language.Language;
+import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.action.LanguageCodeInsightActionHandler;
-import consulo.codeEditor.Editor;
-import consulo.project.Project;
-import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
-import javax.annotation.Nonnull;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
 
+import javax.annotation.Nonnull;
+
+@ActionImpl(id = "OverrideMethods")
 public class OverrideMethodsAction extends BaseCodeInsightAction {
 
   @Nonnull
