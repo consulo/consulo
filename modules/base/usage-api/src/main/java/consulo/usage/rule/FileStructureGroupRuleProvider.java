@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.usages.impl;
+package consulo.usage.rule;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
-import consulo.usage.rule.UsageGroupingRule;
 
 import javax.annotation.Nullable;
 

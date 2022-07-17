@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.usages.impl.rules;
 
 import consulo.project.Project;
-import consulo.ide.impl.idea.usages.impl.FileStructureGroupRuleProvider;
+import consulo.usage.rule.FileStructureGroupRuleProvider;
 import consulo.usage.rule.UsageGroupingRule;
 
 /**

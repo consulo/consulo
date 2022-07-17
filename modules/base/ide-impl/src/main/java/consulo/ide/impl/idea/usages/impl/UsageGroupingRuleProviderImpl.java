@@ -24,6 +24,7 @@ import consulo.usage.UsageViewBundle;
 import consulo.usage.UsageView;
 import consulo.usage.UsageViewSettings;
 import consulo.ide.impl.idea.usages.impl.rules.*;
+import consulo.usage.rule.FileStructureGroupRuleProvider;
 import consulo.usage.rule.UsageGroupingRule;
 import consulo.usage.rule.UsageGroupingRuleProvider;
 import javax.annotation.Nonnull;
