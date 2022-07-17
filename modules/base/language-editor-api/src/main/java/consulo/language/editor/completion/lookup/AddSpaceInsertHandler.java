@@ -1,16 +1,13 @@
-package consulo.ide.impl.idea.codeInsight.completion;
+package consulo.language.editor.completion.lookup;
 
 import consulo.annotation.UsedInPlugin;
-import consulo.language.editor.AutoPopupController;
-import consulo.language.editor.completion.lookup.InsertHandler;
-import consulo.language.editor.completion.lookup.InsertionContext;
-import consulo.language.editor.completion.lookup.LookupElement;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.codeEditor.util.EditorModificationUtil;
+import consulo.document.Document;
+import consulo.language.editor.AutoPopupController;
 import consulo.language.psi.PsiDocumentManager;
+import consulo.project.Project;
+import consulo.util.lang.StringUtil;
 
 /**
  * @author zolotov

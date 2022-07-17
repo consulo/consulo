@@ -35,7 +35,7 @@ import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awt.LabeledComponent;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.ui.MutableCollectionComboBoxModel;
+import consulo.ui.ex.awt.MutableCollectionComboBoxModel;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.BorderLayoutPanel;
 import consulo.disposer.Disposable;

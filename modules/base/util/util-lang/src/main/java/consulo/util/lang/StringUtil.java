@@ -1194,6 +1194,11 @@ public class StringUtil {
     return toUpperCase(s.charAt(0)) + s.substring(1);
   }
 
+  @Contract(value = "null -> false", pure = true)
+  public static boolean isCapitalized(@Nullable String s) {
+    return s != null && !s.isEmpty() && Character.isUpperCase(s.charAt(0));
+  }
+
   @Contract(value = "null -> null", pure = true)
   public static String decapitalize(@Nullable String name) {
     if (isEmpty(name)) {
