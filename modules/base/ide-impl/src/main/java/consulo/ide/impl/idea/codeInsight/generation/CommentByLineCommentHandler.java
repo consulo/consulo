@@ -28,6 +28,7 @@ import consulo.document.util.DocumentUtil;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.codeInsight.CommentUtil;
 import consulo.ide.impl.idea.codeInsight.actions.MultiCaretCodeInsightActionHandler;
+import consulo.language.IndentedCommenter;
 import consulo.language.internal.custom.SyntaxTable;
 import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;

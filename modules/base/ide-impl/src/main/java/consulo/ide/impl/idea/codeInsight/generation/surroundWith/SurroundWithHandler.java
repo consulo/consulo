@@ -6,6 +6,7 @@ import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.surroundWith.SurroundWithRangeAdjuster;
 import consulo.language.editor.template.TemplateManager;
 import consulo.ide.impl.idea.codeInsight.template.impl.SurroundWithTemplateHandler;
 import consulo.dataContext.DataManager;
