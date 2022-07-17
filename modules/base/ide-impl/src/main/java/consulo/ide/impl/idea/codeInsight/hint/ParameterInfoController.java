@@ -3,10 +3,7 @@
 package consulo.ide.impl.idea.codeInsight.hint;
 
 import consulo.language.editor.hint.HintManager;
-import consulo.language.editor.parameterInfo.DeleteParameterInfoContext;
-import consulo.language.editor.parameterInfo.ParameterInfoHandler;
-import consulo.language.editor.parameterInfo.ParameterInfoHandlerWithTabActionSupport;
-import consulo.language.editor.parameterInfo.UpdateParameterInfoContext;
+import consulo.language.editor.parameterInfo.*;
 import consulo.undoRedo.ProjectUndoManager;
 import consulo.language.editor.AutoPopupController;
 import consulo.language.editor.CodeInsightBundle;
@@ -21,7 +18,6 @@ import consulo.codeEditor.Inlay;
 import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.VisualPosition;
 import consulo.language.ast.ASTNode;
-import consulo.ide.impl.idea.lang.parameterInfo.*;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ReadAction;

@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.refactoring.lang;
 
-import consulo.ide.impl.idea.codeInsight.PsiEquivalenceUtil;
+import consulo.language.editor.PsiEquivalenceUtil;
 import consulo.language.editor.highlight.HighlightManager;
 import consulo.find.FindManager;
 import consulo.ide.impl.idea.ide.TitledHandler;

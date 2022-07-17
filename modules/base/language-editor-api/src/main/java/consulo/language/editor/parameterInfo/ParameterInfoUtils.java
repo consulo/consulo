@@ -12,22 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package consulo.ide.impl.idea.lang.parameterInfo;
+package consulo.language.editor.parameterInfo;
 
-import consulo.language.ast.ASTNode;
-import consulo.language.editor.parameterInfo.ParameterInfoHandlerWithTabActionSupport;
-import consulo.util.lang.function.Conditions;
 import consulo.document.util.TextRange;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.IElementType;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiWhiteSpace;
 import consulo.language.psi.SyntaxTraverser;
-import consulo.language.ast.IElementType;
 import consulo.language.psi.util.PsiTreeUtil;
-import consulo.ide.impl.idea.util.text.CharArrayUtil;
+import consulo.util.lang.CharArrayUtil;
+import consulo.util.lang.function.Conditions;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Set;
 
 /**

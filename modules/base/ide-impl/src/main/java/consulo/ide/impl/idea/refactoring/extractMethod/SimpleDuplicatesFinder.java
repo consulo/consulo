@@ -1,6 +1,6 @@
 package consulo.ide.impl.idea.refactoring.extractMethod;
 
-import consulo.ide.impl.idea.codeInsight.PsiEquivalenceUtil;
+import consulo.language.editor.PsiEquivalenceUtil;
 import consulo.application.progress.ProgressManager;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiComment;
