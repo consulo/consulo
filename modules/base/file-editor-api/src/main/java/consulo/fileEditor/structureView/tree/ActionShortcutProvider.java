@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.util;
+package consulo.fileEditor.structureView.tree;
 
-import consulo.fileEditor.structureView.tree.NodeProvider;
-import consulo.fileEditor.structureView.tree.TreeElement;
-import consulo.ui.ex.action.Shortcut;
+import javax.annotation.Nonnull;
 
-/**
- * @author Konstantin Bulenkov
- */
-public interface FileStructureNodeProvider<T extends TreeElement> extends NodeProvider<T> {
-  String getCheckBoxText();
-
-  Shortcut[] getShortcut();
+// used in the implementation of FileStructureNodeProvider to avoid dependency on KeyMapManager in FileStructureNodeProvider.getShortcut()
+public interface ActionShortcutProvider {
+  @Nonnull
+  String getActionIdForShortcut();
 }

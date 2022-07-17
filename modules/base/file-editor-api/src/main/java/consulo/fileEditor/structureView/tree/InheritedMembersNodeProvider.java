@@ -13,34 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.util;
+package consulo.fileEditor.structureView.tree;
 
 import consulo.application.AllIcons;
-import consulo.ide.IdeBundle;
-import consulo.fileEditor.structureView.tree.ActionPresentation;
-import consulo.fileEditor.structureView.tree.ActionPresentationData;
-import consulo.fileEditor.structureView.tree.TreeElement;
+import consulo.fileEditor.FileEditorBundle;
 import consulo.ui.ex.action.Shortcut;
-import consulo.language.util.IncorrectOperationException;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
  */
 public abstract class InheritedMembersNodeProvider<T extends TreeElement> implements FileStructureNodeProvider<T>, ActionShortcutProvider {
-  @NonNls public static final String ID = "SHOW_INHERITED";
+  public static final String ID = "SHOW_INHERITED";
 
   @Nonnull
   @Override
   public String getCheckBoxText() {
-    return IdeBundle.message("file.structure.toggle.show.inherited");
+    return FileEditorBundle.message("file.structure.toggle.show.inherited");
   }
 
   @Nonnull
   @Override
   public Shortcut[] getShortcut() {
-    throw new IncorrectOperationException("see getActionIdForShortcut()");
+    throw new UnsupportedOperationException("see getActionIdForShortcut()");
   }
 
   @Nonnull
@@ -52,7 +48,7 @@ public abstract class InheritedMembersNodeProvider<T extends TreeElement> implem
   @Override
   @Nonnull
   public ActionPresentation getPresentation() {
-    return new ActionPresentationData(IdeBundle.message("action.structureview.show.inherited"), null, AllIcons.Hierarchy.Supertypes);
+    return new ActionPresentationData(FileEditorBundle.message("action.structureview.show.inherited"), null, AllIcons.Hierarchy.Supertypes);
   }
 
   @Override
