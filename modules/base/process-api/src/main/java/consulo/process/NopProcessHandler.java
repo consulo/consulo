@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.execution.debug;
+package consulo.process;
 
-import consulo.process.NopProcessHandler;
-
+import javax.annotation.Nullable;
 import java.io.OutputStream;
 
-/**
- * @author nik
- */
-public class DefaultDebugProcessHandler extends NopProcessHandler {
+public class NopProcessHandler extends ProcessHandler {
+  @Override
+  protected void destroyProcessImpl() {
+    notifyProcessTerminated(0);
+  }
+
+  @Override
+  protected void detachProcessImpl() {
+    notifyProcessDetached();
+  }
+
+  @Override
+  public boolean detachIsDefault() {
+    return false;
+  }
+
+  @Nullable
+  @Override
+  public OutputStream getProcessInput() {
+    return null;
+  }
 }
