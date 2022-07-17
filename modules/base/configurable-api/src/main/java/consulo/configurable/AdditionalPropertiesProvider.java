@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2020 consulo.io
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.codeInspection.ui;
+package consulo.configurable;
 
-import consulo.application.ui.setting.AdditionalEditorGeneralSettingProvider;
+import consulo.ui.Component;
+
+import javax.annotation.Nonnull;
+import java.util.function.Consumer;
 
 /**
+ * Base extension interface for extending {@link SimpleConfigurableByProperties}, but it's depends to each implementation
+ *
  * @author VISTALL
- * @since 2020-04-25
+ * @since 17-Jul-22
  */
-@Deprecated
-public interface ErrorPropertiesProvider extends AdditionalEditorGeneralSettingProvider {
+public interface AdditionalPropertiesProvider {
+  void fillProperties(@Nonnull SimpleConfigurableByProperties.PropertyBuilder builder, Consumer<Component> layoutBuilder);
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2020 consulo.io
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.codeInspection.ui;
+package consulo.application.ui.setting;
 
-import consulo.application.ui.setting.AdditionalEditorGeneralSettingProvider;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.configurable.AdditionalPropertiesProvider;
 
 /**
  * @author VISTALL
- * @since 2020-04-25
+ * @since 17-Jul-22
  */
-@Deprecated
-public interface ErrorPropertiesProvider extends AdditionalEditorGeneralSettingProvider {
+@ExtensionAPI(ComponentScope.APPLICATION)
+public interface AdditionalEditorGeneralSettingProvider extends AdditionalPropertiesProvider {
 }

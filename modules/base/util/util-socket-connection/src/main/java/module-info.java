@@ -2,7 +2,7 @@
  * @author VISTALL
  * @since 17-Jul-22
  */
-module consulo.util.socket.connnection {
+module consulo.util.socket.connection {
   requires org.slf4j;
   requires consulo.util.collection;
   requires consulo.util.collection.primitive;

@@ -16,35 +16,36 @@
 package consulo.ide.impl.settings.impl;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.configurable.ApplicationConfigurable;
-import consulo.configurable.StandardConfigurableIds;
-import consulo.language.editor.CodeInsightSettings;
-import consulo.language.editor.DaemonCodeAnalyzer;
-import consulo.language.editor.DaemonCodeAnalyzerSettings;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.IdentifierHighlighterPass;
-import consulo.application.ui.UISettings;
+import consulo.application.Application;
 import consulo.application.ApplicationBundle;
-import consulo.document.Document;
+import consulo.application.ui.UISettings;
+import consulo.application.ui.setting.AdditionalEditorGeneralSettingProvider;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorFactory;
-import consulo.colorScheme.EditorColorsManager;
-import consulo.colorScheme.EditorColorsScheme;
 import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.codeEditor.impl.SoftWrapAppliancePlaces;
-import consulo.ide.impl.idea.openapi.editor.richcopy.settings.RichCopySettings;
+import consulo.colorScheme.EditorColorsManager;
+import consulo.colorScheme.EditorColorsScheme;
+import consulo.configurable.ApplicationConfigurable;
+import consulo.configurable.Configurable;
+import consulo.configurable.SimpleConfigurableByProperties;
+import consulo.configurable.StandardConfigurableIds;
+import consulo.disposer.Disposable;
+import consulo.document.Document;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
-import consulo.configurable.Configurable;
-import consulo.project.Project;
-import consulo.project.ProjectManager;
-import consulo.ide.impl.codeInspection.ui.ErrorPropertiesProvider;
-import consulo.disposer.Disposable;
+import consulo.ide.impl.idea.codeInsight.daemon.impl.IdentifierHighlighterPass;
+import consulo.ide.impl.idea.openapi.editor.richcopy.settings.RichCopySettings;
+import consulo.language.editor.CodeInsightSettings;
+import consulo.language.editor.DaemonCodeAnalyzer;
+import consulo.language.editor.DaemonCodeAnalyzerSettings;
 import consulo.localize.LocalizeValue;
-import consulo.configurable.SimpleConfigurableByProperties;
 import consulo.platform.Platform;
 import consulo.platform.base.localize.ApplicationLocalize;
+import consulo.project.Project;
+import consulo.project.ProjectManager;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
@@ -289,7 +290,7 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
             .add(nextErrorGoPriorityProblem, () -> daemonCodeAnalyzerSettings.NEXT_ERROR_ACTION_GOES_TO_ERRORS_FIRST, v -> daemonCodeAnalyzerSettings.NEXT_ERROR_ACTION_GOES_TO_ERRORS_FIRST = v);
     errorHighlightingLayout.add(nextErrorGoPriorityProblem);
 
-    ErrorPropertiesProvider.EP_NAME.forEachExtensionSafe(provider -> provider.fillProperties(errorHighlightingLayout::add, propertyBuilder));
+    Application.get().getExtensionPoint(AdditionalEditorGeneralSettingProvider.class).forEachExtensionSafe(provider -> provider.fillProperties(propertyBuilder, errorHighlightingLayout::add));
 
     layout.add(LabeledLayout.create(ApplicationLocalize.groupErrorHighlighting(), errorHighlightingLayout));
 

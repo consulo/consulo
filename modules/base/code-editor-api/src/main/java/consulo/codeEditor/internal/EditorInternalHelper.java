@@ -27,6 +27,7 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataContextWrapper;
 import consulo.document.Document;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -107,4 +108,19 @@ public interface EditorInternalHelper {
 
   @Nullable
   MarkupModelEx forDocument(@Nonnull Document document, @Nullable Project project, boolean create);
+
+  default boolean isShowMethodSeparators() {
+    return false;
+  }
+
+  default void setShowMethodSeparators(boolean value) {
+  }
+
+  @RequiredUIAccess
+  default void showParametersHitOptions() {
+  }
+
+  default boolean hasAnyInlayExtensions() {
+    return false;
+  }
 }

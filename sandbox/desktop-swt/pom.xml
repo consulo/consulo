@@ -180,7 +180,7 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-util-socket-connnection</artifactId>
+      <artifactId>consulo-util-socket-connection</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

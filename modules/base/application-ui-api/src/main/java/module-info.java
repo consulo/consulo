@@ -7,6 +7,7 @@ module consulo.application.ui.api {
   requires java.desktop;
 
   requires transitive consulo.application.api;
+  requires transitive consulo.configurable.api;
   requires transitive consulo.ui.ex.api;
   requires transitive kava.beans;
 
@@ -14,5 +15,6 @@ module consulo.application.ui.api {
   exports consulo.application.ui.action;
   exports consulo.application.ui.event;
   exports consulo.application.ui.wm;
+  exports consulo.application.ui.setting;
   exports consulo.application.ui.util;
 }

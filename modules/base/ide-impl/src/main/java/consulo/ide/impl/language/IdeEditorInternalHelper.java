@@ -16,6 +16,7 @@
 package consulo.ide.impl.language;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
@@ -27,19 +28,25 @@ import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.fileEditor.FileEditorManager;
+import consulo.ide.impl.idea.codeInsight.hints.InlayParameterHintsProvider;
+import consulo.ide.impl.idea.codeInsight.hints.settings.ParameterNameHintsConfigurable;
 import consulo.ide.impl.idea.codeStyle.CodeStyleFacade;
 import consulo.ide.impl.idea.openapi.editor.impl.EditorHighlighterCache;
 import consulo.ide.impl.idea.ui.EditorNotifications;
 import consulo.language.ast.IElementType;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
+import consulo.language.editor.DaemonCodeAnalyzerSettings;
 import consulo.language.editor.action.LanguageWordBoundaryFilter;
 import consulo.language.editor.highlight.EmptyEditorHighlighter;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
@@ -73,6 +80,13 @@ public class IdeEditorInternalHelper implements EditorInternalHelper {
       }
       return super.getData(dataId);
     }
+  }
+
+  private final Provider<DaemonCodeAnalyzerSettings> myDaemonCodeAnalyzerSettings;
+
+  @Inject
+  public IdeEditorInternalHelper(Provider<DaemonCodeAnalyzerSettings> daemonCodeAnalyzerSettings) {
+    myDaemonCodeAnalyzerSettings = daemonCodeAnalyzerSettings;
   }
 
   @Nullable
@@ -144,5 +158,27 @@ public class IdeEditorInternalHelper implements EditorInternalHelper {
   @Override
   public MarkupModelEx forDocument(@Nonnull Document document, @Nullable Project project, boolean create) {
     return DocumentMarkupModelImpl.forDocument(document, project, create);
+  }
+
+  @Override
+  public void setShowMethodSeparators(boolean value) {
+    myDaemonCodeAnalyzerSettings.get().SHOW_METHOD_SEPARATORS = value;
+  }
+
+  @Override
+  public boolean isShowMethodSeparators() {
+    return myDaemonCodeAnalyzerSettings.get().SHOW_METHOD_SEPARATORS;
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void showParametersHitOptions() {
+    ParameterNameHintsConfigurable configurable = new ParameterNameHintsConfigurable();
+    configurable.showAsync();
+  }
+
+  @Override
+  public boolean hasAnyInlayExtensions() {
+    return Application.get().getExtensionPoint(InlayParameterHintsProvider.class).hasAnyExtensions();
   }
 }
