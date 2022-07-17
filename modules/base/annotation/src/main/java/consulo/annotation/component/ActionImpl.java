@@ -34,7 +34,7 @@ public @interface ActionImpl {
   /**
    * Action references for actions groups
    */
-  String[] references() default {};
+  String[] childrenRefs() default {};
 
   int profiles() default ComponentProfiles.DEFAULT;
 }

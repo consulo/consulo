@@ -203,14 +203,14 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
       for (InjectingBindingActionStubBase binding : bindings) {
         ActionImpl actionImpl = binding.getActionImpl();
 
-        String[] references = actionImpl.references();
-        if (references.length > 0) {
+        String[] childrenRefs = actionImpl.childrenRefs();
+        if (childrenRefs.length > 0) {
           if (!(binding instanceof DefaultActionGroup)) {
             LOG.error(actionImpl.id() + ": impossible use #references() with not DefaultActionGroup");
             return;
           }
 
-          for (String referenceActionId : references) {
+          for (String referenceActionId : childrenRefs) {
             if (AnSeparator.ID.equals(referenceActionId)) {
               ((DefaultActionGroup)binding).add(AnSeparator.create(), Constraints.LAST, this);
             }

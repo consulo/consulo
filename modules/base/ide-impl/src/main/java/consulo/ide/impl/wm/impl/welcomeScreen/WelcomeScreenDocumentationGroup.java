@@ -23,6 +23,6 @@ import consulo.ui.ex.action.IdeActions;
  * @author VISTALL
  * @since 26-Jun-22
  */
-@ActionImpl(id = IdeActions.GROUP_WELCOME_SCREEN_DOC, references = {"HelpTopics", "ShowTips", "Help.KeymapReference", "Help.Youtube", "Help.JoinDiscordChannel", "WelcomeScreen.DevelopPlugins"})
+@ActionImpl(id = IdeActions.GROUP_WELCOME_SCREEN_DOC, childrenRefs = {"HelpTopics", "ShowTips", "Help.KeymapReference", "Help.Youtube", "Help.JoinDiscordChannel", "WelcomeScreen.DevelopPlugins"})
 public class WelcomeScreenDocumentationGroup extends DefaultActionGroup {
 }
