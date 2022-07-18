@@ -59,7 +59,7 @@ import consulo.project.Project;
 import consulo.project.event.ProjectManagerListener;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
-import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
+import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.*;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;

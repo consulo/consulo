@@ -10,7 +10,7 @@ import consulo.application.util.registry.Registry;
 import consulo.virtualFileSystem.VFileProperty;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.NewVirtualFile;
+import consulo.virtualFileSystem.internal.NewVirtualFile;
 import consulo.virtualFileSystem.NewVirtualFileSystem;
 import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.VirtualDirectoryImpl;

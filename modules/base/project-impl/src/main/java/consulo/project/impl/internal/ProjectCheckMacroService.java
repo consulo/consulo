@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.changes;
+package consulo.project.impl.internal;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
+import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
-import consulo.vcs.FilePath;
-import javax.annotation.Nonnull;
 
-@ExtensionAPI(ComponentScope.APPLICATION)
-public interface IgnoredFileProvider {
-  ExtensionPointName<IgnoredFileProvider> IGNORE_FILE = ExtensionPointName.create(IgnoredFileProvider.class);
+import java.util.Set;
 
-  boolean isIgnoredFile(@Nonnull Project project, @Nonnull FilePath filePath);
+/**
+ * @author VISTALL
+ * @since 18-Jul-22
+ */
+@ServiceAPI(ComponentScope.APPLICATION)
+public interface ProjectCheckMacroService {
+  boolean checkMacros(Project project, Set<String> usedMacros);
 }

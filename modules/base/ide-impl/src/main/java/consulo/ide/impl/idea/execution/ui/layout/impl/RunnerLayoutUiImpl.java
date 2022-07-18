@@ -22,7 +22,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.ui.layout.*;
 import consulo.project.Project;
-import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
+import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.ComponentWithActions;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;

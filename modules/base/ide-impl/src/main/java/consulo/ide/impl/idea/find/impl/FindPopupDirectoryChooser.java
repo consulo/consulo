@@ -31,7 +31,7 @@ import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.IdeaFileChooser;
 import consulo.project.Project;
-import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
+import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.ex.action.ToggleAction;

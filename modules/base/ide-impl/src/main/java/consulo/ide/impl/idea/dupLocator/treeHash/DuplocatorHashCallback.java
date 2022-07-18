@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.dupLocator.treeHash;
 import consulo.ide.impl.idea.dupLocator.*;
 import consulo.ide.impl.idea.dupLocator.util.DuplocatorUtil;
 import consulo.ide.impl.idea.dupLocator.util.PsiFragment;
-import consulo.ide.impl.idea.openapi.components.impl.ProjectPathMacroManager;
+import consulo.project.impl.internal.ProjectPathMacroManager;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.usage.UsageInfo;
 import consulo.component.macro.PathMacroManager;

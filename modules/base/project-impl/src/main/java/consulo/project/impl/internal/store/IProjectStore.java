@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.components.impl.stores;
+package consulo.project.impl.internal.store;
 
-import consulo.project.internal.ProjectEx;
-import consulo.ide.impl.idea.openapi.project.impl.ProjectImpl;
 import consulo.component.store.impl.internal.IComponentStore;
 import consulo.component.store.impl.internal.TrackingPathMacroSubstitutor;
+import consulo.project.impl.internal.ProjectImpl;
+import consulo.project.internal.ProjectEx;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;

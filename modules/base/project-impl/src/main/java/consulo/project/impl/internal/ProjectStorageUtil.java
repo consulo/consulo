@@ -13,24 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.components.impl.stores;
+package consulo.project.impl.internal;
 
 import consulo.application.ApplicationManager;
 import consulo.application.macro.PathMacros;
 import consulo.component.store.impl.internal.TrackingPathMacroSubstitutor;
 import consulo.project.Project;
+import consulo.project.impl.internal.store.IProjectStore;
 import consulo.project.internal.ProjectEx;
-import consulo.ide.impl.idea.openapi.project.impl.ProjectMacrosUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.project.ui.internal.UnknownMacroNotification;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
 import consulo.project.ui.notification.NotificationsManager;
-import consulo.project.ui.notification.event.NotificationListener;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.collection.ContainerUtil;
 
 import javax.annotation.Nonnull;
-import javax.swing.event.HyperlinkEvent;
 import java.io.File;
 import java.util.*;
 
@@ -41,16 +40,13 @@ public class ProjectStorageUtil {
     private final List<String> myFileNames;
 
     private UnableToSaveProjectNotification(@Nonnull final Project project, final Collection<File> readOnlyFiles) {
-      super("Project Settings", "Could not save project!", buildMessage(), NotificationType.ERROR, new NotificationListener() {
-        @Override
-        public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
-          final UnableToSaveProjectNotification unableToSaveProjectNotification = (UnableToSaveProjectNotification)notification;
-          final Project _project = unableToSaveProjectNotification.getProject();
-          notification.expire();
+      super("Project Settings", "Could not save project!", buildMessage(), NotificationType.ERROR, (notification, event) -> {
+        final UnableToSaveProjectNotification unableToSaveProjectNotification = (UnableToSaveProjectNotification)notification;
+        final Project _project = unableToSaveProjectNotification.getProject();
+        notification.expire();
 
-          if (_project != null && !_project.isDisposed()) {
-            _project.save();
-          }
+        if (_project != null && !_project.isDisposed()) {
+          _project.save();
         }
       });
 
@@ -89,7 +85,7 @@ public class ProjectStorageUtil {
     }
 
     if (!unknownMacros.isEmpty()) {
-      if (!showDialog || ProjectMacrosUtil.checkMacros(project, new HashSet<>(unknownMacros))) {
+      if (!showDialog || project.getApplication().getInstance(ProjectCheckMacroService.class).checkMacros(project, new HashSet<>(unknownMacros))) {
         final PathMacros pathMacros = PathMacros.getInstance();
         final Set<String> macros2invalidate = new HashSet<>(unknownMacros);
         for (Iterator it = macros2invalidate.iterator(); it.hasNext(); ) {

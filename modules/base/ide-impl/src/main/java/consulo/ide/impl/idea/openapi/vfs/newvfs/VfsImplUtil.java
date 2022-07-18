@@ -29,6 +29,7 @@ import consulo.util.collection.Maps;
 import consulo.ide.impl.vfs.impl.archive.ArchiveFileSystemBase;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.event.*;
+import consulo.virtualFileSystem.internal.NewVirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

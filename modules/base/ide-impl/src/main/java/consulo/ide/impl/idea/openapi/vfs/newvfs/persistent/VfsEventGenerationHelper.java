@@ -15,7 +15,7 @@ import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.ChildInfoImpl;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.NewVirtualFile;
+import consulo.virtualFileSystem.internal.NewVirtualFile;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

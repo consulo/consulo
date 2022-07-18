@@ -7,7 +7,7 @@ import consulo.ide.impl.idea.openapi.vfs.ex.temp.TempFileSystem;
 import consulo.ide.impl.idea.openapi.vfs.impl.local.DirectoryAccessChecker;
 import consulo.ide.impl.idea.openapi.vfs.impl.local.LocalFileSystemBase;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.ChildInfoImpl;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.NewVirtualFile;
+import consulo.virtualFileSystem.internal.NewVirtualFile;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.FakeVirtualFile;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.VirtualDirectoryImpl;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;

@@ -41,7 +41,7 @@ import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.ide.impl.idea.execution.impl.ConsoleViewUtil;
-import consulo.ide.impl.idea.ide.startup.StartupManagerEx;
+import consulo.project.internal.StartupManagerEx;
 import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ide.impl.idea.openapi.editor.event.EditorMouseMotionAdapter;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;

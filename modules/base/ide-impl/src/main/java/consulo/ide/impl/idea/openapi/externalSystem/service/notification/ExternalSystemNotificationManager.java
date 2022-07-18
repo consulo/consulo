@@ -31,7 +31,7 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.navigation.Navigatable;
-import consulo.ide.impl.idea.ui.EditorNotifications;
+import consulo.fileEditor.EditorNotifications;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.project.ui.view.MessageView;

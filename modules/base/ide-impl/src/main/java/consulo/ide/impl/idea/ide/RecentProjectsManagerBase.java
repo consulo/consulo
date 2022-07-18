@@ -22,7 +22,7 @@ import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.persist.PersistentStateComponent;
-import consulo.ide.impl.components.impl.stores.ProjectStoreImpl;
+import consulo.project.impl.internal.store.ProjectStoreImpl;
 import consulo.ide.impl.idea.ide.impl.ProjectUtil;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;

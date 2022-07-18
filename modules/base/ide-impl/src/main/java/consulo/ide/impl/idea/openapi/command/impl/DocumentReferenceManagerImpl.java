@@ -11,7 +11,7 @@ import consulo.document.FileDocumentManager;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.BulkFileListener;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.NewVirtualFile;
+import consulo.virtualFileSystem.internal.NewVirtualFile;
 import consulo.virtualFileSystem.event.VFileCreateEvent;
 import consulo.virtualFileSystem.event.VFileDeleteEvent;
 import consulo.virtualFileSystem.event.VFileEvent;

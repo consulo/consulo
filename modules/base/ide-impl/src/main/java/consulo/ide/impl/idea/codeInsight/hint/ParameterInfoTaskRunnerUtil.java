@@ -13,7 +13,7 @@ import consulo.codeEditor.internal.RealEditor;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.project.Project;
-import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
+import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.AsyncProcessIcon;
 import consulo.ui.ex.awt.JBLabel;

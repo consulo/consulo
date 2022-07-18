@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.application.options.pathMacros;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ApplicationBundle;
 import consulo.configurable.*;
-import consulo.ide.impl.components.impl.stores.ProjectStorageUtil;
+import consulo.project.impl.internal.ProjectStorageUtil;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.internal.ProjectEx;

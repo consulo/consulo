@@ -70,7 +70,7 @@ import consulo.logging.Logger;
 import consulo.navigation.LocationPresentation;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
-import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
+import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.PlaceProvider;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;

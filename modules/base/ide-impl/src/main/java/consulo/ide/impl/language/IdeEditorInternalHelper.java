@@ -32,7 +32,7 @@ import consulo.ide.impl.idea.codeInsight.hints.InlayParameterHintsProvider;
 import consulo.ide.impl.idea.codeInsight.hints.settings.ParameterNameHintsConfigurable;
 import consulo.ide.impl.idea.codeStyle.CodeStyleFacade;
 import consulo.ide.impl.idea.openapi.editor.impl.EditorHighlighterCache;
-import consulo.ide.impl.idea.ui.EditorNotifications;
+import consulo.fileEditor.EditorNotifications;
 import consulo.language.ast.IElementType;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.editor.DaemonCodeAnalyzerSettings;

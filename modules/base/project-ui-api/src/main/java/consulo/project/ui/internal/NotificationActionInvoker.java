@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.codeEditor;
+package consulo.project.ui.internal;
 
-import consulo.util.dataholder.Key;
-
-import javax.annotation.Nonnull;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.application.Application;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 
 /**
  * @author VISTALL
- * @since 2019-05-08
+ * @since 12-Feb-22
  */
-class EditorNotificationProviderKeyCache {
-  private static final Map<Class, Key> ourKeys = new ConcurrentHashMap<>();
-
-  @Nonnull
-  @SuppressWarnings("unchecked")
-  static <T> Key<T> getOrCreate(Class clazz) {
-    return ourKeys.computeIfAbsent(clazz, aClass -> Key.create(aClass.getName() + "$EditorNotificationProvider"));
+@ServiceAPI(ComponentScope.APPLICATION)
+public interface NotificationActionInvoker {
+  static NotificationActionInvoker getInstance() {
+    return Application.get().getInstance(NotificationActionInvoker.class);
   }
+
+  void invoke(AnAction action, AnActionEvent event);
 }

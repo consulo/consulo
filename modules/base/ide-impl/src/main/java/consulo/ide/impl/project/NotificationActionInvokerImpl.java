@@ -17,7 +17,7 @@ package consulo.ide.impl.project;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.project.ui.notification.internal.NotificationActionInvoker;
+import consulo.project.ui.internal.NotificationActionInvoker;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import jakarta.inject.Singleton;

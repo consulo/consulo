@@ -8,7 +8,7 @@ import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.openapi.vfs.impl.win32.Win32LocalFileSystem;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.ManagingFS;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.NewVirtualFile;
+import consulo.virtualFileSystem.internal.NewVirtualFile;
 import consulo.virtualFileSystem.NewVirtualFileSystem;
 import consulo.virtualFileSystem.event.VFileEvent;
 import org.intellij.lang.annotations.MagicConstant;

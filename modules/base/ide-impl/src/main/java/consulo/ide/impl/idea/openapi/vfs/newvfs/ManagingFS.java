@@ -7,6 +7,7 @@ import consulo.ide.ServiceManager;
 import consulo.virtualFileSystem.FileSystemInterface;
 import consulo.virtualFileSystem.NewVirtualFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.internal.NewVirtualFile;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;

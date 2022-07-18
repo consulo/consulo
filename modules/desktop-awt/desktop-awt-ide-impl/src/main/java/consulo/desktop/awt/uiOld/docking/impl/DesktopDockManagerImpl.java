@@ -45,7 +45,7 @@ import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.IdeRootPaneNorthExtension;
 import consulo.project.ui.wm.WindowManager;
-import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
+import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.UIAccess;
 import consulo.ide.impl.ui.docking.BaseDockManager;
 import consulo.ui.ex.RelativePoint;

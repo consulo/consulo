@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManager;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.ide.impl.codeEditor.EditorNotificationProvider;
+import consulo.fileEditor.EditorNotificationProvider;
 
 import jakarta.inject.Inject;
 

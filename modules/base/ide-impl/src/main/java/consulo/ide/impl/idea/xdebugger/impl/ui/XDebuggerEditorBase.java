@@ -42,7 +42,7 @@ import consulo.language.Language;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.LanguageUtil;
 import consulo.project.Project;
-import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
+import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.AnAction;

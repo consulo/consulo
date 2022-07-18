@@ -13,13 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.components.impl.stores;
+package consulo.project.impl.internal.store;
 
-import consulo.ide.impl.idea.openapi.components.impl.ProjectPathMacroManager;
-import consulo.ide.impl.idea.openapi.project.impl.ProjectImpl;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.application.AccessRule;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
@@ -27,19 +22,23 @@ import consulo.application.impl.internal.IdeaModalityState;
 import consulo.component.impl.internal.macro.BasePathMacroManager;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.persist.*;
-import consulo.component.store.impl.internal.BaseFileConfigurableStoreImpl;
 import consulo.component.store.impl.internal.*;
 import consulo.component.store.impl.internal.storage.StateStorage;
 import consulo.component.store.impl.internal.storage.StateStorage.SaveSession;
 import consulo.component.store.impl.internal.storage.VfsFileBasedStorage;
 import consulo.component.store.impl.internal.storage.XmlElementStorage;
-import consulo.ide.impl.components.impl.stores.storage.ProjectStateStorageManager;
 import consulo.project.Project;
+import consulo.project.impl.internal.ProjectImpl;
+import consulo.project.impl.internal.ProjectPathMacroManager;
+import consulo.project.impl.internal.ProjectStorageUtil;
 import consulo.project.ui.notification.NotificationsManager;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -49,6 +48,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -98,7 +98,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
 
     stateStorageManager.addMacro(StoragePathMacros.PROJECT_CONFIG_DIR, dirStore.getPath());
 
-    ApplicationManager.getApplication().invokeAndWait(() -> VfsUtil.markDirtyAndRefresh(false, true, true, fs.refreshAndFindFileByIoFile(dirStore)), IdeaModalityState.defaultModalityState());
+    ApplicationManager.getApplication().invokeAndWait(() -> VirtualFileUtil.markDirtyAndRefresh(false, true, true, fs.refreshAndFindFileByIoFile(dirStore)), IdeaModalityState.defaultModalityState());
 
     myPresentableUrl = null;
   }
@@ -121,7 +121,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
 
     stateStorageManager.addMacro(StoragePathMacros.PROJECT_CONFIG_DIR, dirStore.getPath());
 
-    VfsUtil.markDirtyAndRefresh(false, true, true, fs.refreshAndFindFileByIoFile(dirStore));
+    VirtualFileUtil.markDirtyAndRefresh(false, true, true, fs.refreshAndFindFileByIoFile(dirStore));
 
     myPresentableUrl = null;
   }
@@ -178,7 +178,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
       final File nameFile = new File(new File(file, Project.DIRECTORY_STORE_FOLDER), ProjectImpl.NAME_FILE);
       if (nameFile.exists()) {
         try {
-          return FileUtil.loadFile(nameFile, true);
+          return Files.readString(nameFile.toPath());
         }
         catch (IOException ignored) {
         }
@@ -282,7 +282,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
       });
 
       if (status.hasReadonlyFiles()) {
-        ProjectStorageUtil.dropUnableToSaveProjectNotification(myProject, VfsUtil.virtualToIoFiles(Arrays.asList(status.getReadonlyFiles())));
+        ProjectStorageUtil.dropUnableToSaveProjectNotification(myProject, VirtualFileUtil.virtualToIoFiles(Arrays.asList(status.getReadonlyFiles())));
         throw new SaveCancelledException();
       }
       else {

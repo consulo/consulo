@@ -36,7 +36,7 @@ import consulo.virtualFileSystem.status.FileStatusManager;
 import consulo.ide.impl.idea.openapi.vcs.changes.*;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.ui.EditorNotifications;
+import consulo.fileEditor.EditorNotifications;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ide.impl.idea.util.NullableFunction;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

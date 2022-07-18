@@ -30,11 +30,11 @@ import consulo.virtualFileSystem.VirtualFileSystem;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.ide.impl.idea.ui.EditorNotificationPanel;
-import consulo.ide.impl.idea.ui.EditorNotifications;
+import consulo.fileEditor.EditorNotifications;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.ide.impl.codeEditor.EditorNotificationProvider;
+import consulo.fileEditor.EditorNotificationProvider;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;

@@ -26,7 +26,7 @@ import consulo.vcs.VcsKey;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.NewVirtualFile;
+import consulo.virtualFileSystem.internal.NewVirtualFile;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 
 import javax.annotation.Nonnull;

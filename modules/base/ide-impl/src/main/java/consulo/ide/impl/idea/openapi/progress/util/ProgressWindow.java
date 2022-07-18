@@ -37,7 +37,7 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
+import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.lang.DeprecatedMethodException;
 import consulo.util.lang.EmptyRunnable;

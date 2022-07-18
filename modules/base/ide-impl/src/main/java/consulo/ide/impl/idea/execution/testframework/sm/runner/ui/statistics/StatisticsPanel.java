@@ -27,7 +27,7 @@ import consulo.application.ApplicationPropertiesComponent;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import consulo.project.Project;
-import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
+import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.PopupHandler;

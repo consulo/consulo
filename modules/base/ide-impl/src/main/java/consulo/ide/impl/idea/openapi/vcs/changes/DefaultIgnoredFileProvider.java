@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.vcs.FilePath;
 import consulo.project.Project;
+import consulo.vcs.change.IgnoredFileProvider;
 
 import javax.annotation.Nonnull;
 

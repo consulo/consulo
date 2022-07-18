@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.components.impl.stores;
+package consulo.project.ui.internal;
 
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.event.NotificationListener;

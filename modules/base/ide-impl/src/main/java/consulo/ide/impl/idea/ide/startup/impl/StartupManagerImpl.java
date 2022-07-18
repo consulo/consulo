@@ -2,53 +2,52 @@
 package consulo.ide.impl.idea.ide.startup.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.diagnostic.Activity;
-import consulo.ide.impl.idea.diagnostic.ActivityCategory;
+import consulo.application.AccessToken;
+import consulo.application.Application;
 import consulo.application.ApplicationBundle;
-import consulo.application.impl.internal.performance.PerformanceWatcher;
-import consulo.ide.impl.idea.diagnostic.StartUpMeasurer;
-import consulo.ide.impl.idea.diagnostic.StartUpMeasurer.Phases;
-import consulo.ide.impl.idea.ide.startup.ServiceNotReadyException;
-import consulo.ide.impl.idea.ide.startup.StartupManagerEx;
+import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.project.startup.BackgroundStartupActivity;
-import consulo.project.startup.PostStartupActivity;
-import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.event.NotificationListener;
-import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.notification.Notifications;
-import consulo.component.ProcessCanceledException;
+import consulo.application.impl.internal.performance.HeavyProcessLatch;
+import consulo.application.impl.internal.performance.PerformanceWatcher;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.progress.ProgressManager;
-import consulo.ide.impl.idea.openapi.progress.util.BackgroundTaskUtil;
-import consulo.project.DumbService;
-import consulo.project.Project;
-import consulo.module.content.ProjectRootManager;
 import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.application.util.registry.Registry;
-import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.openapi.vfs.impl.local.FileWatcher;
-import consulo.ide.impl.idea.openapi.vfs.impl.local.LocalFileSystemImpl;
-import consulo.ui.ex.awt.internal.GuiUtils;
-import consulo.util.collection.SmartList;
-import consulo.util.lang.TimeoutUtil;
 import consulo.application.util.concurrent.AppExecutorUtil;
-import consulo.application.impl.internal.performance.HeavyProcessLatch;
-import consulo.application.AccessToken;
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
+import consulo.application.util.registry.Registry;
+import consulo.component.ProcessCanceledException;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
 import consulo.disposer.Disposable;
+import consulo.ide.impl.idea.diagnostic.Activity;
+import consulo.ide.impl.idea.diagnostic.ActivityCategory;
+import consulo.ide.impl.idea.diagnostic.StartUpMeasurer;
+import consulo.ide.impl.idea.diagnostic.StartUpMeasurer.Phases;
+import consulo.ide.impl.idea.openapi.progress.util.BackgroundTaskUtil;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.vfs.impl.local.FileWatcher;
+import consulo.ide.impl.idea.openapi.vfs.impl.local.LocalFileSystemImpl;
 import consulo.logging.Logger;
+import consulo.module.content.ProjectRootManager;
+import consulo.project.DumbService;
+import consulo.project.Project;
+import consulo.project.internal.StartupManagerEx;
+import consulo.project.startup.BackgroundStartupActivity;
+import consulo.project.startup.PostStartupActivity;
 import consulo.project.startup.StartupActivity;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.Notifications;
+import consulo.project.ui.notification.event.NotificationListener;
 import consulo.ui.UIAccess;
+import consulo.ui.ex.awt.internal.GuiUtils;
+import consulo.util.collection.SmartList;
+import consulo.util.lang.TimeoutUtil;
+import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
@@ -224,9 +223,6 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
     long startTime = StartUpMeasurer.getCurrentTime();
     try {
       extension.runActivity(myProject, uiAccess);
-    }
-    catch (ServiceNotReadyException e) {
-      LOG.error(new Exception(e));
     }
     catch (ProcessCanceledException e) {
       throw e;
@@ -455,9 +451,6 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
     ProgressManager.checkCanceled();
     try {
       startupActivity.runActivity(myProject, uiAccess);
-    }
-    catch (ServiceNotReadyException e) {
-      LOG.error(new Exception(e));
     }
     catch (ProcessCanceledException e) {
       throw e;

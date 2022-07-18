@@ -24,7 +24,7 @@ import consulo.ui.ex.action.ContextHelpAction;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.ui.ex.awt.action.ComboBoxAction;
-import consulo.ide.impl.idea.openapi.components.impl.ProjectPathMacroManager;
+import consulo.project.impl.internal.ProjectPathMacroManager;
 import consulo.ui.ex.awt.Messages;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;

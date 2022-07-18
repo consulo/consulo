@@ -15,7 +15,7 @@
  */
 package consulo.virtualFileSystem.fileWatcher.impl.ui;
 
-import consulo.ide.impl.idea.ui.EditorNotifications;
+import consulo.fileEditor.EditorNotifications;
 import consulo.project.Project;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.popup.*;

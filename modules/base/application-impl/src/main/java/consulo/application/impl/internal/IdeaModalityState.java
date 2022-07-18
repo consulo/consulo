@@ -15,6 +15,7 @@
  */
 package consulo.application.impl.internal;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.project.DumbService;
@@ -47,6 +48,8 @@ import java.awt.*;
  * {@link javax.swing.SwingUtilities#invokeLater(Runnable)}, {@link #any()} and {@link UIUtil} convenience methods may be used in the
  * purely UI-related code, but not with anything that deals with PSI or VFS.
  */
+@Deprecated
+@DeprecationInfo("Use Application methods")
 public abstract class IdeaModalityState implements consulo.ui.ModalityState {
   @Nonnull
   public static final IdeaModalityState NON_MODAL = new IdeaModalityStateEx();

@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.openapi.fileTypes.impl;
 import consulo.application.ApplicationManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.BulkFileListener;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.NewVirtualFile;
+import consulo.virtualFileSystem.internal.NewVirtualFile;
 import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.event.VFilePropertyChangeEvent;
 import consulo.ide.impl.idea.util.containers.ConcurrentBitSet;

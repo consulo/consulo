@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.ide.util;
 
 import consulo.ui.ex.action.ExporterToTextFile;
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.openapi.components.impl.ProjectPathMacroManager;
+import consulo.project.impl.internal.ProjectPathMacroManager;
 import consulo.ide.impl.idea.openapi.editor.impl.EditorFactoryImpl;
 import consulo.ui.ex.awt.Messages;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;

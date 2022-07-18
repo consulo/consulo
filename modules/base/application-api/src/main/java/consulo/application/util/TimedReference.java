@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.util;
+package consulo.application.util;
 
 import consulo.disposer.Disposable;
 

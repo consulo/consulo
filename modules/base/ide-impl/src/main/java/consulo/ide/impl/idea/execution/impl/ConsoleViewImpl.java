@@ -43,7 +43,7 @@ import consulo.ide.impl.idea.execution.actions.EOFAction;
 import consulo.ide.impl.idea.execution.filters.BrowserHyperlinkInfo;
 import consulo.ide.impl.idea.execution.filters.CompositeFilter;
 import consulo.ide.impl.idea.execution.filters.CompositeInputFilter;
-import consulo.ide.impl.idea.ide.startup.StartupManagerEx;
+import consulo.project.internal.StartupManagerEx;
 import consulo.ide.impl.idea.openapi.editor.actions.ScrollToTheEndToolbarAction;
 import consulo.ide.impl.idea.openapi.editor.actions.ToggleUseSoftWrapsToolbarAction;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;

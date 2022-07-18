@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.components.impl.stores.storage;
+package consulo.project.impl.internal.store;
 
 import consulo.component.persist.StoragePathMacros;
 import consulo.component.store.impl.internal.PathMacrosService;

@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.util.ui;
 
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
-import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
+import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.awt.UIUtil;
 
 import javax.swing.*;

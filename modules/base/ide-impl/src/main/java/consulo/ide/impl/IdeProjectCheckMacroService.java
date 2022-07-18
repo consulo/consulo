@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.startup;
+package consulo.ide.impl;
 
+import consulo.annotation.component.ServiceImpl;
+import consulo.ide.impl.idea.openapi.project.impl.ProjectMacrosUtil;
 import consulo.project.Project;
-import consulo.project.startup.StartupManager;
+import consulo.project.impl.internal.ProjectCheckMacroService;
+
+import java.util.Set;
 
 /**
- * @author mike
+ * @author VISTALL
+ * @since 18-Jul-22
  */
-public abstract class StartupManagerEx extends StartupManager {
-  public abstract boolean startupActivityPassed();
-
-  public static StartupManagerEx getInstanceEx(Project project) {
-    return (StartupManagerEx)getInstance(project);
+@ServiceImpl
+public class IdeProjectCheckMacroService implements ProjectCheckMacroService {
+  @Override
+  public boolean checkMacros(Project project, Set<String> usedMacros) {
+    return ProjectMacrosUtil.checkMacros(project, usedMacros);
   }
 }

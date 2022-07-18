@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.ide.diff.*;
 import consulo.ide.impl.idea.openapi.diff.DirDiffManager;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.project.Project;
-import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
+import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 import jakarta.inject.Inject;

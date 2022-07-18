@@ -29,7 +29,7 @@ import consulo.ide.impl.idea.codeInspection.ui.InspectionToolPresentation;
 import consulo.ide.impl.idea.codeInspection.ui.InspectionTreeNode;
 import consulo.ide.impl.idea.codeInspection.util.RefEntityAlphabeticalComparator;
 import consulo.ide.impl.idea.ide.BrowserUtil;
-import consulo.ide.impl.idea.openapi.components.impl.ProjectPathMacroManager;
+import consulo.project.impl.internal.ProjectPathMacroManager;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ide.impl.idea.openapi.util.Comparing;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.project.impl;
+package consulo.project.impl.internal;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.application.AccessRule;
@@ -23,22 +23,21 @@ import consulo.application.impl.internal.PlatformComponentManagerImpl;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
+import consulo.application.util.TimedReference;
 import consulo.component.impl.internal.BaseComponentManager;
 import consulo.component.internal.inject.InjectingContainerBuilder;
 import consulo.component.store.impl.internal.StoreUtil;
-import consulo.ide.impl.components.impl.stores.DefaultProjectStoreImpl;
-import consulo.ide.impl.components.impl.stores.IProjectStore;
-import consulo.ide.impl.components.impl.stores.ProjectStoreImpl;
-import consulo.ide.impl.idea.ide.startup.StartupManagerEx;
-import consulo.ide.impl.idea.openapi.components.impl.ProjectPathMacroManager;
-import consulo.ide.impl.idea.util.TimedReference;
 import consulo.logging.Logger;
 import consulo.module.impl.internal.ModuleManagerImpl;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
+import consulo.project.impl.internal.store.DefaultProjectStoreImpl;
+import consulo.project.impl.internal.store.IProjectStore;
+import consulo.project.impl.internal.store.ProjectStoreImpl;
 import consulo.project.internal.ProjectEx;
 import consulo.project.internal.ProjectExListener;
 import consulo.project.internal.ProjectManagerEx;
+import consulo.project.internal.StartupManagerEx;
 import consulo.project.startup.StartupManager;
 import consulo.project.ui.wm.FrameTitleBuilder;
 import consulo.project.ui.wm.WindowManager;
@@ -75,7 +74,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   public static Key<Long> CREATION_TIME = Key.create("ProjectImpl.CREATION_TIME");
   public static final Key<String> CREATION_TRACE = Key.create("ProjectImpl.CREATION_TRACE");
 
-  protected ProjectImpl(@Nonnull Application application, @Nonnull ProjectManager manager, @Nonnull String dirPath, boolean isOptimiseTestLoadSpeed, String projectName, boolean noUIThread) {
+  public ProjectImpl(@Nonnull Application application, @Nonnull ProjectManager manager, @Nonnull String dirPath, boolean isOptimiseTestLoadSpeed, String projectName, boolean noUIThread) {
     super(application, "Project " + (projectName == null ? dirPath : projectName), ComponentScope.PROJECT);
     myDirPath = dirPath;
 

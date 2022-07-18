@@ -11,7 +11,7 @@ import consulo.dataContext.DataManager;
 import consulo.ide.impl.desktop.DesktopIdeFrameUtil;
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
-import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
+import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;

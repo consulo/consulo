@@ -8,7 +8,7 @@ import consulo.ide.impl.idea.execution.ui.BaseContentCloseListener;
 import consulo.ide.impl.idea.execution.ui.RunContentManagerImpl;
 import consulo.dataContext.DataManager;
 import consulo.ui.ex.toolWindow.ContentManagerWatcher;
-import consulo.ide.impl.idea.ide.startup.StartupManagerEx;
+import consulo.project.internal.StartupManagerEx;
 import consulo.language.LangBundle;
 import consulo.dataContext.DataProvider;
 import consulo.application.impl.internal.IdeaModalityState;

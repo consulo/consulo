@@ -36,7 +36,7 @@ import consulo.disposer.Disposer;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.ui.wm.*;
-import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
+import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.IdeGlassPane;
 import consulo.ui.ex.JBColor;

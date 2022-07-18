@@ -49,7 +49,7 @@ import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.WindowManager;
-import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
+import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.SimpleTextAttributes;

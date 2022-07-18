@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.execution.ui;
 
 import consulo.language.editor.LangDataKeys;
 import consulo.module.impl.internal.ModulePathMacroManager;
-import consulo.ide.impl.idea.openapi.components.impl.ProjectPathMacroManager;
+import consulo.project.impl.internal.ProjectPathMacroManager;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserFactory;
 import consulo.module.Module;

@@ -19,7 +19,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.fileEditor.FileEditor;
-import consulo.ide.impl.codeEditor.EditorNotificationProvider;
+import consulo.fileEditor.EditorNotificationProvider;
 import consulo.ide.impl.idea.ui.EditorNotificationPanel;
 import consulo.project.Project;
 import consulo.ui.ex.Gray;

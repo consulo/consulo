@@ -16,11 +16,10 @@
 package consulo.ide.impl.idea.util;
 
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
+import consulo.ui.ModalityState;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -30,11 +29,11 @@ public class WaitForProgressToShow {
   }
 
   public static void runOrInvokeAndWaitAboveProgress(final Runnable command) {
-    runOrInvokeAndWaitAboveProgress(command, IdeaModalityState.defaultModalityState());
+    runOrInvokeAndWaitAboveProgress(command, Application.get().getDefaultModalityState());
   }
 
-  public static void runOrInvokeAndWaitAboveProgress(final Runnable command, @Nullable final IdeaModalityState modalityState) {
-    final Application application = ApplicationManager.getApplication();
+  public static void runOrInvokeAndWaitAboveProgress(final Runnable command, @Nullable final ModalityState modalityState) {
+    final Application application = Application.get();
     if (application.isDispatchThread()) {
       command.run();
     }
@@ -45,14 +44,14 @@ public class WaitForProgressToShow {
         application.invokeAndWait(command, pi.getModalityState());
       }
       else {
-        final IdeaModalityState notNullModalityState = modalityState == null ? IdeaModalityState.NON_MODAL : modalityState;
+        final ModalityState notNullModalityState = modalityState == null ? application.getNoneModalityState() : modalityState;
         application.invokeAndWait(command, notNullModalityState);
       }
     }
   }
 
-  public static void runOrInvokeLaterAboveProgress(final Runnable command, @Nullable final consulo.ui.ModalityState modalityState, @Nonnull final Project project) {
-    final Application application = ApplicationManager.getApplication();
+  public static void runOrInvokeLaterAboveProgress(final Runnable command, @Nullable final ModalityState modalityState, @Nonnull final Project project) {
+    final Application application = Application.get();
     if (application.isDispatchThread()) {
       command.run();
     }
@@ -63,7 +62,7 @@ public class WaitForProgressToShow {
         application.invokeLater(command, pi.getModalityState(), () -> (!project.isOpen()) || project.isDisposed());
       }
       else {
-        final IdeaModalityState notNullModalityState = modalityState == null ? IdeaModalityState.NON_MODAL : (IdeaModalityState)modalityState;
+        final ModalityState notNullModalityState = modalityState == null ? application.getNoneModalityState() : modalityState;
         application.invokeLater(command, notNullModalityState, project.getDisposed());
       }
     }

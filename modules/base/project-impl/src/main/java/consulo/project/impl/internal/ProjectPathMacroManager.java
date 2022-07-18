@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.components.impl;
+package consulo.project.impl.internal;
 
 import consulo.application.impl.internal.macro.PathMacrosImpl;
 import consulo.application.macro.PathMacros;

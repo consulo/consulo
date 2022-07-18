@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.execution.util;
 import consulo.ide.impl.idea.execution.configurations.RuntimeConfigurationWarning;
 import consulo.process.cmd.SimpleProgramParameters;
 import consulo.module.impl.internal.ModulePathMacroManager;
-import consulo.ide.impl.idea.openapi.components.impl.ProjectPathMacroManager;
+import consulo.project.impl.internal.ProjectPathMacroManager;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.component.macro.PathMacroUtil;

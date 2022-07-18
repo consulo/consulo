@@ -5,7 +5,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.content.ContentIterator;
 import consulo.ide.impl.idea.openapi.vfs.*;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.ManagingFS;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.NewVirtualFile;
+import consulo.virtualFileSystem.internal.NewVirtualFile;
 import consulo.container.boot.ContainerPathManager;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;

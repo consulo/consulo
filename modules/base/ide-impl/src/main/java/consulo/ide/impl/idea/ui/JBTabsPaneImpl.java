@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.ui.tabs.impl.JBEditorTabs;
 import consulo.ide.impl.idea.ui.tabs.impl.JBTabsImpl;
 import consulo.disposer.Disposable;
 import consulo.project.Project;
-import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
+import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.PrevNextActionsDescriptor;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.awt.TabbedPane;

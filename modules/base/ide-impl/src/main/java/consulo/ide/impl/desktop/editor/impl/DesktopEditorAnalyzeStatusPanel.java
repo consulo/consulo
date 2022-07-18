@@ -54,7 +54,7 @@ import consulo.ide.impl.desktop.editor.DesktopEditorFloatPanel;
 import consulo.disposer.Disposable;
 import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
+import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.Size;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;

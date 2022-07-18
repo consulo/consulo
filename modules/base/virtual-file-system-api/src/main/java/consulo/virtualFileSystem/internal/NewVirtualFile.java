@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vfs.newvfs;
+package consulo.virtualFileSystem.internal;
 
 import consulo.application.ApplicationManager;
 import consulo.virtualFileSystem.NewVirtualFileSystem;
@@ -21,7 +21,6 @@ import consulo.virtualFileSystem.RefreshQueue;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWithId;
 import consulo.virtualFileSystem.encoding.EncodingRegistry;
-import consulo.util.lang.DeprecatedMethodException;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -76,14 +75,6 @@ public abstract class NewVirtualFile extends VirtualFile implements VirtualFileW
 
   @Override
   public abstract int getId();
-
-  @Nullable
-  @Deprecated
-  //@ApiStatus.ScheduledForRemoval(inVersion = "2020.1")
-  public NewVirtualFile findChildById(int id) {
-    DeprecatedMethodException.report("deprecated method");
-    return null;
-  }
 
   @Override
   public void refresh(final boolean asynchronous, final boolean recursive, final Runnable postRunnable) {

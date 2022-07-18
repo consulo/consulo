@@ -62,7 +62,7 @@ import consulo.module.content.layer.orderEntry.OrderEntryWithTracking;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowId;
-import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
+import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.color.RGBColor;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;

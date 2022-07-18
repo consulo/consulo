@@ -5,7 +5,7 @@ package consulo.ide.impl.psi.impl;
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.editor.impl.event.EditorEventMulticasterImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileDocumentManagerImpl;
-import consulo.ide.impl.idea.openapi.project.impl.ProjectImpl;
+import consulo.project.impl.internal.ProjectImpl;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.pom.core.impl.PomModelImpl;
 import consulo.ide.impl.idea.util.ArrayUtil;

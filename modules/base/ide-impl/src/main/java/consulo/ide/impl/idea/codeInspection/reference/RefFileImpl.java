@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInspection.reference;
 
-import consulo.ide.impl.idea.openapi.components.impl.ProjectPathMacroManager;
+import consulo.project.impl.internal.ProjectPathMacroManager;
 import consulo.application.ApplicationManager;
 import consulo.language.editor.inspection.reference.RefElement;
 import consulo.language.editor.inspection.reference.RefFile;

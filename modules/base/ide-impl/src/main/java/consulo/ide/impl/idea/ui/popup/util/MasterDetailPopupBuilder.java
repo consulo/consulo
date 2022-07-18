@@ -23,7 +23,7 @@ import consulo.application.util.SystemInfo;
 import consulo.ui.ex.popup.IconButton;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.project.Project;
-import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
+import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.ActiveComponent;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.action.*;

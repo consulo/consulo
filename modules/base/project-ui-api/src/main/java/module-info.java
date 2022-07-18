@@ -18,6 +18,5 @@ module consulo.project.ui.api {
   exports consulo.project.ui.notification;
   exports consulo.project.ui.notification.event;
 
-  exports consulo.project.ui.notification.internal to consulo.ide.impl;
-  exports consulo.project.ui.wm.internal to consulo.ide.impl, consulo.desktop.awt.ide.impl, consulo.ui.ex.awt.api;
+  exports consulo.project.ui.internal to consulo.ide.impl, consulo.desktop.awt.ide.impl, consulo.ui.ex.awt.api, consulo.project.impl;
 }

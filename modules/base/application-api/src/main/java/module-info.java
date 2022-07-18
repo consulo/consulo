@@ -40,6 +40,7 @@ module consulo.application.api {
           consulo.application.impl,
           consulo.test.impl,
           consulo.ui.ex.api,
+          consulo.project.impl,
           consulo.language.editor.refactoring.api;
 
   exports consulo.application.internal.util to consulo.language.api, consulo.application.impl;

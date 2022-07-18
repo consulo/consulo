@@ -11,7 +11,7 @@ import consulo.ide.impl.idea.openapi.diagnostic.Logger;
 import consulo.application.dumb.DumbAware;
 import consulo.util.io.CharsetToolkit;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.NewVirtualFile;
+import consulo.virtualFileSystem.internal.NewVirtualFile;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import javax.annotation.Nonnull;
 

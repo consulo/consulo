@@ -22,7 +22,7 @@ import consulo.container.plugin.PluginManager;
 import consulo.container.plugin.SimpleExtension;
 import consulo.ide.impl.idea.notification.NotificationAction;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.ui.EditorNotifications;
+import consulo.fileEditor.EditorNotifications;
 import consulo.ide.impl.plugins.pluginsAdvertisement.PluginsAdvertiserDialog;
 import consulo.ide.impl.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
 import consulo.ide.impl.updateSettings.UpdateSettings;

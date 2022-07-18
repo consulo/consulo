@@ -24,13 +24,12 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.macro.PathMacros;
-import consulo.logging.Logger;
 import consulo.ide.impl.idea.openapi.options.ex.SingleConfigurableEditor;
-import consulo.project.Project;
-import consulo.project.ProjectBundle;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.WaitForProgressToShow;
-import org.jetbrains.annotations.NonNls;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.ProjectBundle;
 
 import java.util.*;
 
@@ -46,16 +45,15 @@ public class ProjectMacrosUtil {
     if (application.isHeadlessEnvironment() || application.isUnitTestMode()) {
       throw new RuntimeException(text + ": " + StringUtil.join(undefinedMacros, ", "));
     }
-    final UndefinedMacrosConfigurable configurable =
-      new UndefinedMacrosConfigurable(text, undefinedMacros);
+    final UndefinedMacrosConfigurable configurable = new UndefinedMacrosConfigurable(text, undefinedMacros);
     final SingleConfigurableEditor editor = new SingleConfigurableEditor(project, configurable);
     editor.show();
     return editor.isOK();
   }
 
-  public static boolean checkNonIgnoredMacros(final Project project, final Set<String> usedMacros){
+  public static boolean checkNonIgnoredMacros(final Project project, final Set<String> usedMacros) {
     final PathMacros pathMacros = PathMacros.getInstance();
-    for (Iterator<String> iterator = usedMacros.iterator(); iterator.hasNext();) {
+    for (Iterator<String> iterator = usedMacros.iterator(); iterator.hasNext(); ) {
       if (pathMacros.isIgnoredMacroName(iterator.next())) {
         iterator.remove();
       }
@@ -68,16 +66,12 @@ public class ProjectMacrosUtil {
     usedMacros.removeAll(defined);
 
     // try to lookup values in System properties
-    @NonNls final String pathMacroSystemPrefix = "path.macro.";
-    for (Iterator it = usedMacros.iterator(); it.hasNext();) {
+    final String pathMacroSystemPrefix = "path.macro.";
+    for (Iterator it = usedMacros.iterator(); it.hasNext(); ) {
       final String macro = (String)it.next();
       final String value = System.getProperty(pathMacroSystemPrefix + macro, null);
       if (value != null) {
-        ApplicationManager.getApplication().runWriteAction(new Runnable() {
-          public void run() {
-            PathMacros.getInstance().setMacro(macro, value);
-          }
-        });
+        ApplicationManager.getApplication().runWriteAction(() -> PathMacros.getInstance().setMacro(macro, value));
         it.remove();
       }
     }
@@ -89,11 +83,7 @@ public class ProjectMacrosUtil {
     // there are undefined macros, need to define them before loading components
     final boolean[] result = new boolean[1];
 
-    final Runnable r = new Runnable() {
-      public void run() {
-        result[0] = showMacrosConfigurationDialog(project, usedMacros);
-      }
-    };
+    final Runnable r = () -> result[0] = showMacrosConfigurationDialog(project, usedMacros);
 
     WaitForProgressToShow.runOrInvokeAndWaitAboveProgress(r, IdeaModalityState.NON_MODAL);
     return result[0];

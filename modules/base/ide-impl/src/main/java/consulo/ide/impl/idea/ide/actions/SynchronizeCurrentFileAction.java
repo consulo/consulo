@@ -9,7 +9,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.vcs.change.VcsDirtyScopeManager;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.NewVirtualFile;
+import consulo.virtualFileSystem.internal.NewVirtualFile;
 import consulo.virtualFileSystem.RefreshQueue;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.WindowManager;

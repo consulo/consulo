@@ -19,15 +19,16 @@ import consulo.application.WriteAction;
 import consulo.application.util.SystemInfo;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.io.BufferExposingByteArrayInputStream;
 import consulo.util.io.CharsetToolkit;
 import consulo.util.io.FileUtil;
 import consulo.util.io.URLUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.SystemProperties;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
+import consulo.virtualFileSystem.internal.NewVirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -41,9 +42,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -644,5 +643,53 @@ public final class VirtualFileUtil {
   @Nonnull
   public static File virtualToIoFile(@Nonnull VirtualFile file) {
     return new File(VirtualFilePathUtil.toPresentableUrl(file.getUrl()));
+  }
+
+  @Nonnull
+  public static List<File> virtualToIoFiles(@Nonnull Collection<VirtualFile> scope) {
+    return ContainerUtil.map2List(scope, file -> virtualToIoFile(file));
+  }
+
+  @Nonnull
+  public static List<VirtualFile> markDirty(boolean recursive, boolean reloadChildren, @Nonnull VirtualFile... files) {
+    List<VirtualFile> list = ContainerUtil.filter(files, Objects::nonNull);
+    if (list.isEmpty()) {
+      return List.of();
+    }
+
+    for (VirtualFile file : list) {
+      if (reloadChildren) {
+        file.getChildren();
+      }
+
+      if (file instanceof NewVirtualFile) {
+        if (recursive) {
+          ((NewVirtualFile)file).markDirtyRecursively();
+        }
+        else {
+          ((NewVirtualFile)file).markDirty();
+        }
+      }
+    }
+    return list;
+  }
+
+  /**
+   * Refreshes the VFS information of the given files from the local file system.
+   * <p>
+   * This refresh is performed without help of the FileWatcher,
+   * which means that all given files will be refreshed even if the FileWatcher didn't report any changes in them.
+   * This method is slower, but more reliable, and should be preferred
+   * when it is essential to make sure all the given VirtualFiles are actually refreshed from disk.
+   * <p>
+   * NB: when invoking synchronous refresh from a thread other than the event dispatch thread, the current thread must
+   * NOT be in a read action.
+   *
+   * @see VirtualFile#refresh(boolean, boolean)
+   */
+  public static void markDirtyAndRefresh(boolean async, boolean recursive, boolean reloadChildren, @Nonnull VirtualFile... files) {
+    List<VirtualFile> list = markDirty(recursive, reloadChildren, files);
+    if (list.isEmpty()) return;
+    LocalFileSystem.getInstance().refreshFiles(list, async, recursive, null);
   }
 }

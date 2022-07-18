@@ -15,35 +15,32 @@
  */
 package consulo.ide.impl.idea.ui;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.fileEditor.FileEditor;
-import consulo.fileEditor.FileEditorManager;
-import consulo.fileEditor.event.FileEditorManagerListener;
-import consulo.fileEditor.TextEditor;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.text.AsyncEditorLoader;
-import consulo.component.ProcessCanceledException;
-import consulo.application.progress.ProgressIndicator;
 import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
 import consulo.application.impl.internal.progress.ReadTask;
-import consulo.project.event.DumbModeListener;
-import consulo.project.DumbService;
-import consulo.project.Project;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.util.concurrent.SequentialTaskExecutor;
+import consulo.component.ProcessCanceledException;
+import consulo.component.messagebus.MessageBusConnection;
+import consulo.fileEditor.*;
+import consulo.fileEditor.event.FileEditorManagerListener;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.text.AsyncEditorLoader;
+import consulo.ide.impl.idea.reference.SoftReference;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.reference.SoftReference;
-import consulo.application.util.concurrent.SequentialTaskExecutor;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.component.messagebus.MessageBusConnection;
+import consulo.project.DumbService;
+import consulo.project.Project;
+import consulo.project.event.DumbModeListener;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
-import consulo.annotation.access.RequiredReadAction;
-import consulo.ide.impl.codeEditor.EditorNotificationProvider;
 import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
@@ -125,8 +122,8 @@ public class EditorNotificationsImpl extends EditorNotifications {
 
   @Nullable
   private ReadTask createTask(@Nonnull final ProgressIndicator indicator, @Nonnull final VirtualFile file) {
-    List<FileEditor> editors = ContainerUtil.filter(FileEditorManager.getInstance(myProject).getAllEditors(file),
-                                                    editor -> !(editor instanceof TextEditor) || AsyncEditorLoader.isEditorLoaded(((TextEditor)editor).getEditor()));
+    List<FileEditor> editors = ContainerUtil
+            .filter(FileEditorManager.getInstance(myProject).getAllEditors(file), editor -> !(editor instanceof TextEditor) || AsyncEditorLoader.isEditorLoaded(((TextEditor)editor).getEditor()));
 
     if (editors.isEmpty()) return null;
 

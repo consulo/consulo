@@ -31,7 +31,7 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.IdeRootPaneNorthExtension;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.WindowManager;
-import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
+import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.action.CommonShortcuts;
 import consulo.ui.ex.action.util.ActionUtil;
 import consulo.ui.ex.awt.internal.*;

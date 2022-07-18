@@ -13,11 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.components.impl.stores;
+package consulo.project.impl.internal.store;
 
-import consulo.ide.impl.idea.openapi.components.impl.ProjectPathMacroManager;
-import consulo.ide.impl.idea.openapi.project.impl.DefaultProjectImpl;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.Application;
 import consulo.component.impl.internal.macro.BasePathMacroManager;
 import consulo.component.persist.RoamingType;
@@ -29,6 +26,9 @@ import consulo.component.store.impl.internal.storage.StorageData;
 import consulo.component.store.impl.internal.storage.VfsFileBasedStorage;
 import consulo.component.store.impl.internal.storage.XmlElementStorage;
 import consulo.project.Project;
+import consulo.project.impl.internal.DefaultProjectImpl;
+import consulo.project.impl.internal.ProjectPathMacroManager;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Couple;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;

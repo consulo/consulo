@@ -33,7 +33,7 @@ import consulo.fileEditor.TextEditor;
 import consulo.language.file.FileTypeManager;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
-import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
+import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;

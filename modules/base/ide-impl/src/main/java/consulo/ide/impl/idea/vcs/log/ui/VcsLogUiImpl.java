@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.vcs.log.ui.tables.GraphTableModel;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
+import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.lang.function.PairFunction;
 import consulo.virtualFileSystem.VirtualFile;

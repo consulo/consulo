@@ -21,7 +21,7 @@ import consulo.dataContext.DataManager;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.notification.event.NotificationListener;
-import consulo.project.ui.notification.internal.NotificationActionInvoker;
+import consulo.project.ui.internal.NotificationActionInvoker;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

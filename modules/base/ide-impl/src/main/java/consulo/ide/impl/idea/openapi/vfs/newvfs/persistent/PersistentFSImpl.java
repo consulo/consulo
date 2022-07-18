@@ -43,6 +43,7 @@ import consulo.util.collection.SmartList;
 import consulo.util.collection.primitive.ints.*;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.event.*;
+import consulo.virtualFileSystem.internal.NewVirtualFile;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 

@@ -2,7 +2,7 @@
 
 package consulo.ide.impl.idea.codeInspection.reference;
 
-import consulo.ide.impl.idea.openapi.components.impl.ProjectPathMacroManager;
+import consulo.project.impl.internal.ProjectPathMacroManager;
 import consulo.ide.impl.idea.openapi.diagnostic.Attachment;
 import consulo.ide.impl.idea.openapi.diagnostic.RuntimeExceptionWithAttachments;
 import consulo.ide.impl.idea.openapi.util.NullableFactory;

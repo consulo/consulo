@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.util;
+package consulo.application.util;
 
-import consulo.disposer.Disposable;
-import consulo.logging.Logger;
-import consulo.disposer.Disposer;
 import consulo.application.util.concurrent.AppExecutorUtil;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.logging.Logger;
 
 import javax.annotation.Nullable;
 import java.util.Collections;

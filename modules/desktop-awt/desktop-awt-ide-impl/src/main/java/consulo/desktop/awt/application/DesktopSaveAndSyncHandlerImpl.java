@@ -16,27 +16,27 @@
 package consulo.desktop.awt.application;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.ide.*;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.TransactionGuard;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.impl.internal.LaterInvocator;
+import consulo.application.progress.ProgressManager;
+import consulo.disposer.Disposable;
 import consulo.document.FileDocumentManager;
 import consulo.fileEditor.FileEditorManager;
+import consulo.ide.impl.idea.ide.*;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileDocumentManagerImpl;
-import consulo.application.progress.ProgressManager;
-import consulo.project.Project;
-import consulo.project.ProjectManager;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.ManagingFS;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.NewVirtualFile;
-import consulo.virtualFileSystem.RefreshQueue;
-import consulo.virtualFileSystem.RefreshSession;
 import consulo.ide.impl.idea.util.SingleAlarm;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.disposer.Disposable;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.ProjectManager;
+import consulo.virtualFileSystem.RefreshQueue;
+import consulo.virtualFileSystem.RefreshSession;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileWithId;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import kava.beans.PropertyChangeEvent;
@@ -127,9 +127,7 @@ public class DesktopSaveAndSyncHandlerImpl extends SaveAndSyncHandler implements
   @Override
   public void saveProjectsAndDocuments() {
     Application app = ApplicationManager.getApplication();
-    if (!app.isDisposed() &&
-        mySettings.isSaveOnFrameDeactivation() &&
-        myBlockSaveOnFrameDeactivationCount.get() == 0) {
+    if (!app.isDisposed() && mySettings.isSaveOnFrameDeactivation() && myBlockSaveOnFrameDeactivationCount.get() == 0) {
       app.saveAll();
     }
   }
@@ -158,8 +156,7 @@ public class DesktopSaveAndSyncHandlerImpl extends SaveAndSyncHandler implements
       LOG.debug("vfs refreshed");
     }
     else if (LOG.isDebugEnabled()) {
-      LOG.debug("vfs refresh rejected, blocked: " + (myBlockSyncOnFrameActivationCount.get() != 0)
-                + ", isSyncOnFrameActivation: " + mySettings.isSyncOnFrameActivation());
+      LOG.debug("vfs refresh rejected, blocked: " + (myBlockSyncOnFrameActivationCount.get() != 0) + ", isSyncOnFrameActivation: " + mySettings.isSyncOnFrameActivation());
     }
   }
 
@@ -169,7 +166,7 @@ public class DesktopSaveAndSyncHandlerImpl extends SaveAndSyncHandler implements
 
     for (Project project : ProjectManager.getInstance().getOpenProjects()) {
       for (VirtualFile file : FileEditorManager.getInstance(project).getSelectedFiles()) {
-        if (file instanceof NewVirtualFile) {
+        if (file instanceof VirtualFileWithId) {
           files.add(file);
         }
       }

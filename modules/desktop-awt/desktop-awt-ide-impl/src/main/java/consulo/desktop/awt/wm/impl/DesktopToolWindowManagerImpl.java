@@ -60,7 +60,7 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.project.ui.wm.WindowManager;
-import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
+import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.NotificationType;
 import consulo.ui.Rectangle2D;
 import consulo.ui.UIAccess;

@@ -30,7 +30,7 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
-import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
+import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awt.UIUtil;

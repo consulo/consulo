@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.project.impl;
+package consulo.project.impl.internal;
 
 import consulo.application.Application;
 import consulo.project.ProjectManager;

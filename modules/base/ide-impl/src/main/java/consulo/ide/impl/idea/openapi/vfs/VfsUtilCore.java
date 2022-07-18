@@ -15,15 +15,14 @@
  */
 package consulo.ide.impl.idea.openapi.vfs;
 
+import consulo.application.util.SystemInfo;
+import consulo.application.util.function.Processor;
+import consulo.content.ContentIterator;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.Convertor;
 import consulo.ide.impl.idea.util.containers.DistinctRootsCollection;
 import consulo.ide.impl.idea.util.io.URLUtil;
-import consulo.application.util.SystemInfo;
-import consulo.application.util.function.Processor;
-import consulo.content.ContentIterator;
 import consulo.logging.Logger;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
@@ -250,12 +249,7 @@ public class VfsUtilCore {
   }
 
   public static List<File> virtualToIoFiles(@Nonnull Collection<VirtualFile> scope) {
-    return ContainerUtil.map2List(scope, new Function<VirtualFile, File>() {
-      @Override
-      public File fun(VirtualFile file) {
-        return virtualToIoFile(file);
-      }
-    });
+    return ContainerUtil.map2List(scope, file -> virtualToIoFile(file));
   }
 
   @Nonnull

@@ -57,7 +57,7 @@ import consulo.module.content.layer.orderEntry.*;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.project.ui.wm.ToolWindowId;
-import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
+import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ide.setting.module.AddModuleDependencyActionProvider;
 import consulo.ide.setting.module.AddModuleDependencyContext;
 import consulo.ide.impl.roots.ui.configuration.classpath.AddModuleDependencyListPopupStep;

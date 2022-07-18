@@ -33,7 +33,7 @@ import consulo.compiler.artifact.element.RenameablePackagingElement;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
-import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
+import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.util.lang.Pair;

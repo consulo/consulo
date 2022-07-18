@@ -32,7 +32,7 @@ import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.util.lang.ref.Ref;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.*;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.NewVirtualFile;
+import consulo.virtualFileSystem.internal.NewVirtualFile;
 import consulo.logging.Logger;
 import consulo.util.collection.Sets;
 import consulo.util.collection.primitive.ints.IntList;

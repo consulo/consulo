@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.fileEditor.impl.text;
 
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.ide.impl.idea.ui.EditorNotifications;
+import consulo.fileEditor.EditorNotifications;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.application.progress.ProgressManager;
@@ -32,7 +32,7 @@ import consulo.fileEditor.text.TextEditorState;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
+import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 
