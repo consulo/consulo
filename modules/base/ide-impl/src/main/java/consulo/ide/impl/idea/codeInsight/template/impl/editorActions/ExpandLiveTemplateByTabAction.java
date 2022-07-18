@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.template.impl.editorActions;
 
-import consulo.ide.impl.idea.codeInsight.template.impl.TemplateSettings;
+import consulo.ide.impl.idea.codeInsight.template.impl.TemplateSettingsImpl;
 import consulo.codeEditor.impl.action.EditorAction;
 
 /**
@@ -23,7 +23,7 @@ import consulo.codeEditor.impl.action.EditorAction;
  */
 public class ExpandLiveTemplateByTabAction extends EditorAction {
   public ExpandLiveTemplateByTabAction() {
-    super(ExpandLiveTemplateCustomAction.createExpandTemplateHandler(TemplateSettings.TAB_CHAR));
+    super(ExpandLiveTemplateCustomAction.createExpandTemplateHandler(TemplateSettingsImpl.TAB_CHAR));
     setInjectedContext(true);
   }
 }

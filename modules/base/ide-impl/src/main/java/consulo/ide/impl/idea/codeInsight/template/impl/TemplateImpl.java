@@ -40,7 +40,7 @@ public class TemplateImpl extends TemplateEx implements SchemeElement {
   private String myString = null;
   private String myDescription;
   private String myGroupName;
-  private char myShortcutChar = TemplateSettings.DEFAULT_CHAR;
+  private char myShortcutChar = TemplateSettingsImpl.DEFAULT_CHAR;
   private final ArrayList<Variable> myVariables = new ArrayList<>();
   private ArrayList<Segment> mySegments = null;
   private String myTemplateText = null;

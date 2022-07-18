@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.codeInsight.template;
 
 import consulo.ide.impl.idea.codeInsight.template.impl.TemplateImpl;
 import consulo.ide.impl.idea.codeInsight.template.impl.TemplateManagerImpl;
-import consulo.ide.impl.idea.codeInsight.template.impl.TemplateSettings;
+import consulo.ide.impl.idea.codeInsight.template.impl.TemplateSettingsImpl;
 import consulo.language.editor.template.Template;
 import consulo.language.editor.template.context.TemplateActionContext;
 import consulo.language.editor.template.context.TemplateContextType;
@@ -116,7 +116,7 @@ public class CustomTemplateCallback {
 
   @Nonnull
   private static List<TemplateImpl> getMatchingTemplates(@Nonnull String templateKey) {
-    TemplateSettings settings = TemplateSettings.getInstance();
+    TemplateSettingsImpl settings = TemplateSettingsImpl.getInstanceImpl();
     List<TemplateImpl> candidates = new ArrayList<>();
     for (TemplateImpl template : settings.getTemplates(templateKey)) {
       if (!template.isDeactivated()) {

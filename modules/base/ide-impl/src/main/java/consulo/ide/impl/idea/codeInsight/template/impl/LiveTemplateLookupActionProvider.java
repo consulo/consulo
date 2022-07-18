@@ -37,7 +37,7 @@ public class LiveTemplateLookupActionProvider implements LookupActionProvider {
   public void fillActions(LookupElement element, final Lookup lookup, Consumer<LookupElementAction> consumer) {
     if (element instanceof LiveTemplateLookupElementImpl) {
       final TemplateImpl template = ((LiveTemplateLookupElementImpl)element).getTemplate();
-      final TemplateImpl templateFromSettings = TemplateSettings.getInstance().getTemplate(template.getKey(), template.getGroupName());
+      final TemplateImpl templateFromSettings = TemplateSettingsImpl.getInstanceImpl().getTemplate(template.getKey(), template.getGroupName());
 
       if (templateFromSettings != null) {
         consumer.accept(new LookupElementAction(IconUtil.getEditIcon(), "Edit live template settings") {

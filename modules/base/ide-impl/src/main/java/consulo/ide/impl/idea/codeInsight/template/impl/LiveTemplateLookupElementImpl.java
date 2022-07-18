@@ -41,7 +41,7 @@ public class LiveTemplateLookupElementImpl extends LiveTemplateLookupElement {
 
   @Override
   public char getTemplateShortcut() {
-    return TemplateSettings.getInstance().getShortcutChar(myTemplate);
+    return TemplateSettingsImpl.getInstanceImpl().getShortcutChar(myTemplate);
   }
 
   @Override

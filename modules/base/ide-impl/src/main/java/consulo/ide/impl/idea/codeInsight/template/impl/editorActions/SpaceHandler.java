@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.codeInsight.template.impl.editorActions;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.codeInsight.template.impl.TemplateSettings;
+import consulo.ide.impl.idea.codeInsight.template.impl.TemplateSettingsImpl;
 import consulo.language.editor.action.TypedHandlerDelegate;
 import consulo.language.editor.template.TemplateManager;
 import consulo.language.psi.PsiFile;
@@ -28,7 +28,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 public class SpaceHandler extends TypedHandlerDelegate {
   @Override
   public Result beforeCharTyped(char charTyped, Project project, Editor editor, PsiFile file, FileType fileType) {
-    if (charTyped == TemplateSettings.SPACE_CHAR && TemplateManager.getInstance(project).startTemplate(editor, TemplateSettings.SPACE_CHAR)) {
+    if (charTyped == TemplateSettingsImpl.SPACE_CHAR && TemplateManager.getInstance(project).startTemplate(editor, TemplateSettingsImpl.SPACE_CHAR)) {
       return Result.STOP;
     }
 

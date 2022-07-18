@@ -144,7 +144,7 @@ public class SaveAsTemplateAction extends AnAction {
       }
     }.execute();
 
-    final TemplateImpl template = new TemplateImpl(TemplateListPanel.ABBREVIATION, document.getText(), TemplateSettings.USER_GROUP_NAME);
+    final TemplateImpl template = new TemplateImpl(TemplateListPanel.ABBREVIATION, document.getText(), TemplateSettingsImpl.USER_GROUP_NAME);
     template.setToReformat(true);
 
     OffsetKey startKey = OffsetKey.create("pivot");

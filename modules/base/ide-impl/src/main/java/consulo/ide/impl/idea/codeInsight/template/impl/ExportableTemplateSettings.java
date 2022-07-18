@@ -31,7 +31,7 @@ import java.util.List;
         storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/template.settings.xml", roamingType = RoamingType.DISABLED)
 )
 public final class ExportableTemplateSettings implements PersistentStateComponent<ExportableTemplateSettings> {
-  public Collection<TemplateSettings.TemplateKey> deletedKeys = new SmartList<TemplateSettings.TemplateKey>();
+  public Collection<TemplateSettingsImpl.TemplateKey> deletedKeys = new SmartList<TemplateSettingsImpl.TemplateKey>();
 
   @Nullable
   @Override
@@ -41,8 +41,8 @@ public final class ExportableTemplateSettings implements PersistentStateComponen
 
   @Override
   public void loadState(ExportableTemplateSettings state) {
-    TemplateSettings templateSettings = TemplateSettings.getInstance();
-    List<TemplateSettings.TemplateKey> deletedTemplates = templateSettings.getDeletedTemplates();
+    TemplateSettingsImpl templateSettings = TemplateSettingsImpl.getInstanceImpl();
+    List<TemplateSettingsImpl.TemplateKey> deletedTemplates = templateSettings.getDeletedTemplates();
     deletedTemplates.clear();
     deletedTemplates.addAll(state.deletedKeys);
     templateSettings.applyNewDeletedTemplates();

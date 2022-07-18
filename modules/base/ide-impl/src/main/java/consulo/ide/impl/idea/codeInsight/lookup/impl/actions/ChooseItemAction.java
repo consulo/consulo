@@ -122,7 +122,7 @@ public abstract class ChooseItemAction extends EditorAction implements HintManag
 
       List<TemplateImpl> templates = SlowOperations.allowSlowOperations(() -> TemplateManagerImpl.listApplicableTemplateWithInsertingDummyIdentifier(TemplateActionContext.expanding(file, editor)));
       TemplateImpl template = LiveTemplateCompletionContributor.findFullMatchedApplicableTemplate(editor, offset, templates);
-      if (template != null && shortcutChar == TemplateSettings.getInstance().getShortcutChar(template)) {
+      if (template != null && shortcutChar == TemplateSettingsImpl.getInstanceImpl().getShortcutChar(template)) {
         return true;
       }
       return false;

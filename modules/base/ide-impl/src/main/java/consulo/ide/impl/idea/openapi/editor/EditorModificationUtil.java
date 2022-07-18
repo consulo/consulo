@@ -169,8 +169,7 @@ public class EditorModificationUtil {
   }
 
   public static void moveCaretRelatively(@Nonnull Editor editor, final int caretShift) {
-    CaretModel caretModel = editor.getCaretModel();
-    caretModel.moveToOffset(caretModel.getOffset() + caretShift);
+    consulo.codeEditor.util.EditorModificationUtil.moveCaretRelatively(editor, caretShift);
   }
 
   /**

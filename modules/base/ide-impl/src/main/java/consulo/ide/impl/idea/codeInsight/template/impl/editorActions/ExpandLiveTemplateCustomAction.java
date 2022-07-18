@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.codeInsight.template.impl.editorActions;
 
 import consulo.language.editor.template.TemplateManager;
 import consulo.ide.impl.idea.codeInsight.template.impl.TemplateManagerImpl;
-import consulo.ide.impl.idea.codeInsight.template.impl.TemplateSettings;
+import consulo.ide.impl.idea.codeInsight.template.impl.TemplateSettingsImpl;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
@@ -34,7 +34,7 @@ import javax.annotation.Nullable;
  */
 public class ExpandLiveTemplateCustomAction extends EditorAction {
   public ExpandLiveTemplateCustomAction() {
-    super(createExpandTemplateHandler(TemplateSettings.CUSTOM_CHAR));
+    super(createExpandTemplateHandler(TemplateSettingsImpl.CUSTOM_CHAR));
     setInjectedContext(true);
   }
 

@@ -246,16 +246,16 @@ public class LiveTemplateSettingsEditor extends JPanel {
       public void itemStateChanged(ItemEvent e) {
         Object selectedItem = myExpandByCombo.getSelectedItem();
         if(myDefaultShortcutItem.equals(selectedItem)) {
-          myTemplate.setShortcutChar(TemplateSettings.DEFAULT_CHAR);
+          myTemplate.setShortcutChar(TemplateSettingsImpl.DEFAULT_CHAR);
         }
         else if(TAB.equals(selectedItem)) {
-          myTemplate.setShortcutChar(TemplateSettings.TAB_CHAR);
+          myTemplate.setShortcutChar(TemplateSettingsImpl.TAB_CHAR);
         }
         else if(ENTER.equals(selectedItem)) {
-          myTemplate.setShortcutChar(TemplateSettings.ENTER_CHAR);
+          myTemplate.setShortcutChar(TemplateSettingsImpl.ENTER_CHAR);
         }
         else {
-          myTemplate.setShortcutChar(TemplateSettings.SPACE_CHAR);
+          myTemplate.setShortcutChar(TemplateSettingsImpl.SPACE_CHAR);
         }
         
       }
@@ -494,13 +494,13 @@ public class LiveTemplateSettingsEditor extends JPanel {
     myKeyField.setText(myTemplate.getKey());
     myDescription.setText(myTemplate.getDescription());
 
-    if(myTemplate.getShortcutChar() == TemplateSettings.DEFAULT_CHAR) {
+    if(myTemplate.getShortcutChar() == TemplateSettingsImpl.DEFAULT_CHAR) {
       myExpandByCombo.setSelectedItem(myDefaultShortcutItem);
     }
-    else if(myTemplate.getShortcutChar() == TemplateSettings.TAB_CHAR) {
+    else if(myTemplate.getShortcutChar() == TemplateSettingsImpl.TAB_CHAR) {
       myExpandByCombo.setSelectedItem(TAB);
     }
-    else if(myTemplate.getShortcutChar() == TemplateSettings.ENTER_CHAR) {
+    else if(myTemplate.getShortcutChar() == TemplateSettingsImpl.ENTER_CHAR) {
       myExpandByCombo.setSelectedItem(ENTER);
     }
     else {

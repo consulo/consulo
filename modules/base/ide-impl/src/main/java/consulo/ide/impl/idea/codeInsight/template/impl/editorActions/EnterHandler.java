@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.codeInsight.template.impl.editorActions;
 
 import consulo.ide.impl.idea.codeInsight.editorActions.BaseEnterHandler;
 import consulo.language.editor.template.TemplateManager;
-import consulo.ide.impl.idea.codeInsight.template.impl.TemplateSettings;
+import consulo.ide.impl.idea.codeInsight.template.impl.TemplateSettingsImpl;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
@@ -45,7 +45,7 @@ public class EnterHandler extends BaseEnterHandler {
   @Override
   public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
     final Project project = editor.getProject();
-    if (project != null && TemplateManager.getInstance(project).startTemplate(editor, TemplateSettings.ENTER_CHAR)) {
+    if (project != null && TemplateManager.getInstance(project).startTemplate(editor, TemplateSettingsImpl.ENTER_CHAR)) {
       return;
     }
 

@@ -15,6 +15,7 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.Language;
 import consulo.language.editor.completion.*;
+import consulo.language.editor.internal.TemplateConstants;
 import consulo.language.editor.internal.matcher.CamelHumpMatcher;
 import consulo.language.editor.template.context.TemplateActionContext;
 import consulo.language.editor.ui.awt.EditorTextField;
@@ -148,7 +149,7 @@ public class LiveTemplateCompletionContributor extends CompletionContributor imp
       }));
       for (final Map.Entry<TemplateImpl, String> entry : templates.entrySet()) {
         ProgressManager.checkCanceled();
-        if (isAutopopup && entry.getKey().getShortcutChar() == TemplateSettings.NONE_CHAR) continue;
+        if (isAutopopup && entry.getKey().getShortcutChar() == TemplateConstants.NONE_CHAR) continue;
         result.withPrefixMatcher(result.getPrefixMatcher().cloneWithPrefix(StringUtil.notNullize(entry.getValue()))).addElement(new LiveTemplateLookupElementImpl(entry.getKey(), false));
       }
     }

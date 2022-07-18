@@ -305,4 +305,9 @@ public class EditorModificationUtil {
 
     return buf.toString();
   }
+
+  public static void moveCaretRelatively(@Nonnull Editor editor, final int caretShift) {
+    CaretModel caretModel = editor.getCaretModel();
+    caretModel.moveToOffset(caretModel.getOffset() + caretShift);
+  }
 }

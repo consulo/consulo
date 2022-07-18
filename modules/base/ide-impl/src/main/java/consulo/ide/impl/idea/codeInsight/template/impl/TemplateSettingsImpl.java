@@ -15,27 +15,25 @@
  */
 package consulo.ide.impl.idea.codeInsight.template.impl;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.component.ProcessCanceledException;
 import consulo.component.persist.*;
 import consulo.component.util.localize.AbstractBundle;
 import consulo.container.classloader.PluginClassLoader;
-import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.openapi.options.BaseSchemeProcessor;
 import consulo.ide.impl.idea.openapi.options.SchemesManager;
 import consulo.ide.impl.idea.openapi.options.SchemesManagerFactory;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.editor.internal.TemplateConstants;
 import consulo.language.editor.template.DefaultLiveTemplatesProvider;
 import consulo.language.editor.template.Template;
+import consulo.language.editor.template.TemplateSettings;
 import consulo.logging.Logger;
 import consulo.util.collection.MultiMap;
 import consulo.util.collection.SmartList;
+import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.Converter;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
@@ -54,12 +52,11 @@ import java.io.InputStream;
 import java.util.*;
 
 @Singleton
-@State(name = "TemplateSettings", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml", deprecated = true),
-        @Storage(file = StoragePathMacros.APP_CONFIG + "/templates.xml")}, additionalExportFile = TemplateSettings.TEMPLATES_DIR_PATH)
-@ServiceAPI(ComponentScope.APPLICATION)
+@State(name = "TemplateSettingsImpl", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml", deprecated = true),
+        @Storage(file = StoragePathMacros.APP_CONFIG + "/templates.xml")}, additionalExportFile = TemplateSettingsImpl.TEMPLATES_DIR_PATH)
 @ServiceImpl
-public class TemplateSettings implements PersistentStateComponent<TemplateSettings.State> {
-  private static final Logger LOG = Logger.getInstance(TemplateSettings.class);
+public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSettingsImpl.State>, TemplateSettings {
+  private static final Logger LOG = Logger.getInstance(TemplateSettingsImpl.class);
 
   public static final String USER_GROUP_NAME = "user";
   private static final String TEMPLATE_SET = "templateSet";
@@ -115,8 +112,8 @@ public class TemplateSettings implements PersistentStateComponent<TemplateSettin
 
   private final MultiMap<String, TemplateImpl> myTemplates = MultiMap.createLinked();
 
-  private final Map<String, Template> myTemplatesById = new LinkedHashMap<String, Template>();
-  private final Map<TemplateKey, TemplateImpl> myDefaultTemplates = new LinkedHashMap<TemplateKey, TemplateImpl>();
+  private final Map<String, Template> myTemplatesById = new LinkedHashMap<>();
+  private final Map<TemplateKey, TemplateImpl> myDefaultTemplates = new LinkedHashMap<>();
 
   private int myMaxKeyLength = 0;
   private final SchemesManager<TemplateGroup, TemplateGroup> mySchemesManager;
@@ -141,7 +138,7 @@ public class TemplateSettings implements PersistentStateComponent<TemplateSettin
     @OptionTag(nameAttribute = "", valueAttribute = "shortcut", converter = ShortcutConverter.class)
     public char defaultShortcut = TAB_CHAR;
 
-    public List<TemplateSettings.TemplateKey> deletedKeys = new SmartList<TemplateKey>();
+    public List<TemplateSettingsImpl.TemplateKey> deletedKeys = new SmartList<>();
   }
 
   public static class TemplateKey {
@@ -201,7 +198,7 @@ public class TemplateSettings implements PersistentStateComponent<TemplateSettin
   private TemplateKey myLastSelectedTemplate;
 
   @Inject
-  public TemplateSettings(SchemesManagerFactory schemesManagerFactory) {
+  public TemplateSettingsImpl(SchemesManagerFactory schemesManagerFactory) {
     mySchemesManager = schemesManagerFactory.createSchemesManager(TEMPLATES_DIR_PATH, new BaseSchemeProcessor<TemplateGroup, TemplateGroup>() {
       @Override
       @Nullable
@@ -271,8 +268,8 @@ public class TemplateSettings implements PersistentStateComponent<TemplateSettin
     loadDefaultLiveTemplates();
   }
 
-  public static TemplateSettings getInstance() {
-    return ServiceManager.getService(TemplateSettings.class);
+  public static TemplateSettingsImpl getInstanceImpl() {
+    return (TemplateSettingsImpl)TemplateSettings.getInstance();
   }
 
   private boolean differsFromDefault(TemplateImpl t) {
@@ -300,7 +297,7 @@ public class TemplateSettings implements PersistentStateComponent<TemplateSettin
   void applyNewDeletedTemplates() {
     for (TemplateKey templateKey : myState.deletedKeys) {
       if (templateKey.groupName == null) {
-        for (TemplateImpl template : new ArrayList<TemplateImpl>(myTemplates.get(templateKey.key))) {
+        for (TemplateImpl template : new ArrayList<>(myTemplates.get(templateKey.key))) {
           removeTemplate(template);
         }
       }
@@ -337,6 +334,7 @@ public class TemplateSettings implements PersistentStateComponent<TemplateSettin
     return all.toArray(new TemplateImpl[all.size()]);
   }
 
+  @Override
   public char getDefaultShortcutChar() {
     return myState.defaultShortcut;
   }
@@ -360,7 +358,7 @@ public class TemplateSettings implements PersistentStateComponent<TemplateSettin
     return null;
   }
 
-  public Template getTemplateById(@NonNls String id) {
+  public Template getTemplateById(@Nonnull String id) {
     return myTemplatesById.get(id);
   }
 
@@ -522,7 +520,7 @@ public class TemplateSettings implements PersistentStateComponent<TemplateSettin
 
     TemplateGroup result = new TemplateGroup(groupName, root.getAttributeValue("REPLACE"));
 
-    Map<String, TemplateImpl> created = new LinkedHashMap<String, TemplateImpl>();
+    Map<String, TemplateImpl> created = new LinkedHashMap<>();
 
     for (final Element element : root.getChildren(TEMPLATE)) {
       TemplateImpl template = readTemplateFromElement(isDefault, groupName, element, classLoader);
@@ -695,7 +693,7 @@ public class TemplateSettings implements PersistentStateComponent<TemplateSettin
 
   public List<TemplateImpl> collectMatchingCandidates(String key, @Nullable Character shortcutChar, boolean hasArgument) {
     final Collection<TemplateImpl> templates = getTemplates(key);
-    List<TemplateImpl> candidates = new ArrayList<TemplateImpl>();
+    List<TemplateImpl> candidates = new ArrayList<>();
     for (TemplateImpl template : templates) {
       if (template.isDeactivated()) {
         continue;

@@ -65,7 +65,7 @@ import java.util.*;
 public class TemplateListPanel extends JPanel implements Disposable {
 
   private static final String NO_SELECTION = "NoSelection";
-  private static final String TEMPLATE_SETTINGS = "TemplateSettings";
+  private static final String TEMPLATE_SETTINGS = "TemplateSettingsImpl";
   private static final TemplateImpl MOCK_TEMPLATE = new TemplateImpl("mockTemplate-xxx", "mockTemplateGroup-yyy");
   public static final String ABBREVIATION = "<abbreviation>";
   public static final Comparator<TemplateImpl> TEMPLATE_COMPARATOR = new Comparator<TemplateImpl>() {
@@ -125,7 +125,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
     myTemplateOptions.clear();
     myTemplateContext.clear();
 
-    TemplateSettings templateSettings = TemplateSettings.getInstance();
+    TemplateSettingsImpl templateSettings = TemplateSettingsImpl.getInstanceImpl();
     List<TemplateGroup> groups = new ArrayList<TemplateGroup>(templateSettings.getTemplateGroups());
 
     Collections.sort(groups, new Comparator<TemplateGroup>() {
@@ -139,10 +139,10 @@ public class TemplateListPanel extends JPanel implements Disposable {
 
 
 
-    if (templateSettings.getDefaultShortcutChar() == TemplateSettings.TAB_CHAR) {
+    if (templateSettings.getDefaultShortcutChar() == TemplateSettingsImpl.TAB_CHAR) {
       myExpandByCombo.setSelectedItem(TAB);
     }
-    else if (templateSettings.getDefaultShortcutChar() == TemplateSettings.ENTER_CHAR) {
+    else if (templateSettings.getDefaultShortcutChar() == TemplateSettingsImpl.ENTER_CHAR) {
       myExpandByCombo.setSelectedItem(ENTER);
     }
     else {
@@ -186,7 +186,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
         template.applyContext(getTemplateContext(template));
       }
     }
-    TemplateSettings templateSettings = TemplateSettings.getInstance();
+    TemplateSettingsImpl templateSettings = TemplateSettingsImpl.getInstanceImpl();
     templateSettings.setTemplates(templateGroups);
     templateSettings.setDefaultShortcutChar(getDefaultShortcutChar());
 
@@ -195,7 +195,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
 
   private final boolean isTest = ApplicationManager.getApplication().isUnitTestMode();
   public boolean isModified() {
-    TemplateSettings templateSettings = TemplateSettings.getInstance();
+    TemplateSettingsImpl templateSettings = TemplateSettingsImpl.getInstanceImpl();
     if (templateSettings.getDefaultShortcutChar() != getDefaultShortcutChar()) {
       if (isTest) System.err.println("LiveTemplatesConfig: templateSettings.getDefaultShortcutChar()="+templateSettings.getDefaultShortcutChar()+"; getDefaultShortcutChar()="+getDefaultShortcutChar());
       return true;
@@ -302,13 +302,13 @@ public class TemplateListPanel extends JPanel implements Disposable {
   private char getDefaultShortcutChar() {
     Object selectedItem = myExpandByCombo.getSelectedItem();
     if (TAB.equals(selectedItem)) {
-      return TemplateSettings.TAB_CHAR;
+      return TemplateSettingsImpl.TAB_CHAR;
     }
     else if (ENTER.equals(selectedItem)) {
-      return TemplateSettings.ENTER_CHAR;
+      return TemplateSettingsImpl.ENTER_CHAR;
     }
     else {
-      return TemplateSettings.SPACE_CHAR;
+      return TemplateSettingsImpl.SPACE_CHAR;
     }
   }
 
@@ -326,10 +326,10 @@ public class TemplateListPanel extends JPanel implements Disposable {
         DefaultMutableTreeNode node = getNode(getSingleSelectedIndex());
         if (node != null) {
           ((DefaultTreeModel)myTree.getModel()).nodeChanged(node);
-          TemplateSettings.getInstance().setLastSelectedTemplate(template.getGroupName(), template.getKey());
+          TemplateSettingsImpl.getInstanceImpl().setLastSelectedTemplate(template.getGroupName(), template.getKey());
         }
       }
-    }, TemplateSettings.getInstance().getTemplate(template.getKey(), template.getGroupName()) != null);
+    }, TemplateSettingsImpl.getInstanceImpl().getTemplate(template.getKey(), template.getGroupName()) != null);
     for (Component component : myDetailsPanel.getComponents()) {
       if (component instanceof LiveTemplateSettingsEditor) {
         myDetailsPanel.remove(component);
@@ -447,7 +447,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
   }
 
   private void addRow() {
-    String defaultGroup = TemplateSettings.USER_GROUP_NAME;
+    String defaultGroup = TemplateSettingsImpl.USER_GROUP_NAME;
     final DefaultMutableTreeNode node = getNode(getSingleSelectedIndex());
     if (node != null) {
       if (node.getUserObject() instanceof TemplateImpl) {
@@ -590,7 +590,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
     myTree.getSelectionModel().addTreeSelectionListener(new TreeSelectionListener(){
       @Override
       public void valueChanged(final TreeSelectionEvent e) {
-        TemplateSettings templateSettings = TemplateSettings.getInstance();
+        TemplateSettingsImpl templateSettings = TemplateSettingsImpl.getInstanceImpl();
         TemplateImpl template = getTemplate(getSingleSelectedIndex());
         if (template != null) {
           templateSettings.setLastSelectedTemplate(template.getGroupName(), template.getKey());
@@ -745,7 +745,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
           Set<String> oldGroups = getAllGroups(templates);
 
           removeAll();
-          SchemesManager<TemplateGroup, TemplateGroup> schemesManager = TemplateSettings.getInstance().getSchemesManager();
+          SchemesManager<TemplateGroup, TemplateGroup> schemesManager = TemplateSettingsImpl.getInstanceImpl().getSchemesManager();
 
           for (TemplateGroup group : getTemplateGroups()) {
             final String newGroupName = group.getName();

@@ -261,7 +261,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
     PsiFile file = PsiUtilBase.getPsiFileInEditor(editor, myProject);
     if (file == null || file instanceof PsiCompiledElement) return null;
 
-    Map<TemplateImpl, String> template2argument = findMatchingTemplates(file, editor, shortcutChar, TemplateSettings.getInstance());
+    Map<TemplateImpl, String> template2argument = findMatchingTemplates(file, editor, shortcutChar, TemplateSettingsImpl.getInstanceImpl());
     TemplateActionContext templateActionContext = TemplateActionContext.expanding(file, editor);
     boolean multiCaretMode = editor.getCaretModel().getCaretCount() > 1;
     List<CustomLiveTemplate> customCandidates = ContainerUtil.findAll(CustomLiveTemplate.EP_NAME.getExtensionList(), customLiveTemplate -> shortcutChar == customLiveTemplate.getShortcut() &&
@@ -317,7 +317,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
     return templateStart;
   }
 
-  public Map<TemplateImpl, String> findMatchingTemplates(final PsiFile file, Editor editor, @Nullable Character shortcutChar, TemplateSettings templateSettings) {
+  public Map<TemplateImpl, String> findMatchingTemplates(final PsiFile file, Editor editor, @Nullable Character shortcutChar, TemplateSettingsImpl templateSettings) {
     final Document document = editor.getDocument();
     CharSequence text = document.getCharsSequence();
     final int caretOffset = editor.getCaretModel().getOffset();
@@ -371,7 +371,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
     };
   }
 
-  private static List<TemplateImpl> findMatchingTemplates(CharSequence text, int caretOffset, @Nullable Character shortcutChar, TemplateSettings settings, boolean hasArgument) {
+  private static List<TemplateImpl> findMatchingTemplates(CharSequence text, int caretOffset, @Nullable Character shortcutChar, TemplateSettingsImpl settings, boolean hasArgument) {
     List<TemplateImpl> candidates = Collections.emptyList();
     for (int i = settings.getMaxKeyLength(); i >= 1; i--) {
       int wordStart = caretOffset - i;
@@ -536,7 +536,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
     Set<TemplateContextType> contextTypes = getApplicableContextTypes(templateActionContext);
 
     final ArrayList<TemplateImpl> result = new ArrayList<>();
-    for (final TemplateImpl template : TemplateSettings.getInstance().getTemplates()) {
+    for (final TemplateImpl template : TemplateSettingsImpl.getInstanceImpl().getTemplates()) {
       if (!template.isDeactivated() && (!templateActionContext.isSurrounding() || template.isSelectionTemplate()) && isApplicable(template, contextTypes)) {
         result.add(template);
       }

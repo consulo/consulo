@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.psi.search;
 
+import consulo.content.scope.SearchScope;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.VirtualFile;
@@ -38,15 +39,15 @@ public class FileTypeIndex {
   public static final ID<FileType, Void> NAME = ID.create("filetypes");
 
   @Nonnull
-  public static Collection<VirtualFile> getFiles(@Nonnull FileType fileType, @Nonnull GlobalSearchScope scope) {
+  public static Collection<VirtualFile> getFiles(@Nonnull FileType fileType, @Nonnull SearchScope scope) {
     return FilenameIndex.getService().getFilesWithFileType(fileType, scope);
   }
 
-  public static boolean containsFileOfType(@Nonnull FileType type, @Nonnull GlobalSearchScope scope) {
+  public static boolean containsFileOfType(@Nonnull FileType type, @Nonnull SearchScope scope) {
     return !processFiles(type, CommonProcessors.alwaysFalse(), scope);
   }
 
-  public static boolean processFiles(@Nonnull FileType fileType, @Nonnull Processor<? super VirtualFile> processor, @Nonnull GlobalSearchScope scope) {
+  public static boolean processFiles(@Nonnull FileType fileType, @Nonnull Processor<? super VirtualFile> processor, @Nonnull SearchScope scope) {
     return FilenameIndex.getService().processFilesWithFileType(fileType, processor, scope);
   }
 }
