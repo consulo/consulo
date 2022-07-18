@@ -16,6 +16,9 @@
 
 package consulo.module.impl.internal;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.impl.internal.macro.PathMacrosImpl;
 import consulo.application.macro.PathMacros;
 import consulo.component.impl.internal.macro.BasePathMacroManager;
@@ -27,6 +30,8 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 @Singleton
+@ServiceAPI(ComponentScope.MODULE)
+@ServiceImpl
 public class ModulePathMacroManager extends BasePathMacroManager {
   public static ModulePathMacroManager getInstance(Module module) {
     return module.getInstance(ModulePathMacroManager.class);

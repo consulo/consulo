@@ -17,7 +17,9 @@ package consulo.component.store.impl.internal;
 
 import consulo.application.util.SystemInfo;
 import consulo.component.impl.internal.macro.BasePathMacroManager;
+import consulo.component.macro.PathMacroManager;
 import consulo.util.collection.FactoryMap;
+import jakarta.inject.Provider;
 import org.jdom.Element;
 
 import java.util.*;
@@ -31,9 +33,9 @@ public class TrackingPathMacroSubstitutorImpl implements TrackingPathMacroSubsti
 
   private final Map<String, Set<String>> myComponentNameToMacros = FactoryMap.create(k -> new HashSet<>());
 
-  private final BasePathMacroManager myPathMacroManager;
+  private final Provider<? extends PathMacroManager> myPathMacroManager;
 
-  public TrackingPathMacroSubstitutorImpl(BasePathMacroManager pathMacroManager) {
+  public TrackingPathMacroSubstitutorImpl(Provider<? extends PathMacroManager> pathMacroManager) {
     myPathMacroManager = pathMacroManager;
   }
 
@@ -45,26 +47,27 @@ public class TrackingPathMacroSubstitutorImpl implements TrackingPathMacroSubsti
 
   @Override
   public String expandPath(final String path) {
-    return myPathMacroManager.getExpandMacroMap().substitute(path, SystemInfo.isFileSystemCaseSensitive);
+    return ((BasePathMacroManager)myPathMacroManager.get()).getExpandMacroMap().substitute(path, SystemInfo.isFileSystemCaseSensitive);
   }
 
   @Override
   public String collapsePath(final String path) {
-    return myPathMacroManager.getReplacePathMap().substitute(path, SystemInfo.isFileSystemCaseSensitive);
+    return ((BasePathMacroManager)myPathMacroManager.get()).getReplacePathMap().substitute(path, SystemInfo.isFileSystemCaseSensitive);
   }
 
   @Override
   public void expandPaths(final Element element) {
-    myPathMacroManager.getExpandMacroMap().substitute(element, SystemInfo.isFileSystemCaseSensitive);
+    ((BasePathMacroManager)myPathMacroManager.get()).getExpandMacroMap().substitute(element, SystemInfo.isFileSystemCaseSensitive);
   }
 
   @Override
   public void collapsePaths(final Element element) {
-    myPathMacroManager.getReplacePathMap().substitute(element, SystemInfo.isFileSystemCaseSensitive);
+    ((BasePathMacroManager)myPathMacroManager.get()).getReplacePathMap().substitute(element, SystemInfo.isFileSystemCaseSensitive);
   }
 
+  @Override
   public int hashCode() {
-    return myPathMacroManager.getExpandMacroMap().hashCode();
+    return ((BasePathMacroManager)myPathMacroManager.get()).getExpandMacroMap().hashCode();
   }
 
   @Override

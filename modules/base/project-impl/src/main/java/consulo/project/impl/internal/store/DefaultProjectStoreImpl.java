@@ -15,8 +15,8 @@
  */
 package consulo.project.impl.internal.store;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.component.impl.internal.macro.BasePathMacroManager;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.Storage;
 import consulo.component.store.impl.internal.*;
@@ -27,6 +27,7 @@ import consulo.component.store.impl.internal.storage.VfsFileBasedStorage;
 import consulo.component.store.impl.internal.storage.XmlElementStorage;
 import consulo.project.Project;
 import consulo.project.impl.internal.DefaultProjectImpl;
+import consulo.project.impl.internal.ProjectImpl;
 import consulo.project.impl.internal.ProjectPathMacroManager;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Couple;
@@ -44,11 +45,12 @@ import java.util.Collections;
 import java.util.List;
 
 @Singleton
+@ServiceImpl(profiles = ProjectImpl.DEFAULT_PROJECT_PROFILE)
 public class DefaultProjectStoreImpl extends ProjectStoreImpl {
   private static final String ROOT_TAG_NAME = "defaultProject";
 
   @Inject
-  public DefaultProjectStoreImpl(@Nonnull Project project, @Nonnull ProjectPathMacroManager pathMacroManager, @Nonnull Provider<ApplicationDefaultStoreCache> applicationDefaultStoreCache) {
+  public DefaultProjectStoreImpl(@Nonnull Project project, @Nonnull Provider<ProjectPathMacroManager> pathMacroManager, @Nonnull Provider<ApplicationDefaultStoreCache> applicationDefaultStoreCache) {
     super(project, pathMacroManager, applicationDefaultStoreCache);
   }
 
@@ -67,33 +69,33 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
   @Nonnull
   @Override
   protected StateStorageManager createStateStorageManager() {
-    final XmlElementStorage storage = new XmlElementStorage("", RoamingType.DISABLED, new TrackingPathMacroSubstitutorImpl((BasePathMacroManager)myPathMacroManager), ROOT_TAG_NAME, null,
-                                                            Application.get().getInstance(PathMacrosService.class)) {
-      @Override
-      @Nullable
-      protected Element loadLocalData() {
-        return getStateCopy();
-      }
+    final XmlElementStorage storage =
+            new XmlElementStorage("", RoamingType.DISABLED, new TrackingPathMacroSubstitutorImpl(myPathMacroManager), ROOT_TAG_NAME, null, Application.get().getInstance(PathMacrosService.class)) {
+              @Override
+              @Nullable
+              protected Element loadLocalData() {
+                return getStateCopy();
+              }
 
-      @Override
-      protected XmlElementStorageSaveSession createSaveSession(@Nonnull StorageData storageData) {
-        return new XmlElementStorageSaveSession(storageData) {
-          @Override
-          protected void doSave(@Nullable Element element) {
-            // we must set empty element instead of null as indicator - ProjectManager state is ready to save
-            getProject().setStateElement(element == null ? new Element("empty") : element);
-          }
+              @Override
+              protected XmlElementStorageSaveSession createSaveSession(@Nonnull StorageData storageData) {
+                return new XmlElementStorageSaveSession(storageData) {
+                  @Override
+                  protected void doSave(@Nullable Element element) {
+                    // we must set empty element instead of null as indicator - ProjectManager state is ready to save
+                    getProject().setStateElement(element == null ? new Element("empty") : element);
+                  }
 
-          // we must not collapse paths here, because our solution is just a big hack
-          // by default, getElementToSave() returns collapsed paths -> setDefaultProjectRootElement -> project manager writeExternal -> save -> compare old and new - diff because old has expanded, but new collapsed
-          // -> needless save
-          @Override
-          protected boolean isCollapsePathsOnSave() {
-            return false;
-          }
-        };
-      }
-    };
+                  // we must not collapse paths here, because our solution is just a big hack
+                  // by default, getElementToSave() returns collapsed paths -> setDefaultProjectRootElement -> project manager writeExternal -> save -> compare old and new - diff because old has expanded, but new collapsed
+                  // -> needless save
+                  @Override
+                  protected boolean isCollapsePathsOnSave() {
+                    return false;
+                  }
+                };
+              }
+            };
 
     //noinspection deprecation
     return new StateStorageManager() {

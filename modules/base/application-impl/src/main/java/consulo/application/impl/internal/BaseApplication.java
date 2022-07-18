@@ -44,13 +44,14 @@ import consulo.application.util.concurrent.PooledThreadExecutor;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
+import consulo.component.bind.InjectingBinding;
+import consulo.component.internal.inject.InjectingContainerBuilder;
 import consulo.component.store.impl.internal.StateStorageException;
 import consulo.component.store.impl.internal.StoreUtil;
 import consulo.container.boot.ContainerPathManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.FileDocumentManager;
-import consulo.component.internal.inject.InjectingContainerBuilder;
 import consulo.language.file.FileTypeManager;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -230,9 +231,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     builder.bind(ApplicationEx.class).to(this);
     builder.bind(ApplicationInfo.class).to(ApplicationInfo::getInstance);
     builder.bind(ContainerPathManager.class).to(ContainerPathManager::get);
-
-    builder.bind(IApplicationStore.class).to(ApplicationStoreImpl.class).forceSingleton();
-    builder.bind(ApplicationPathMacroManager.class).to(ApplicationPathMacroManagerImpl.class).forceSingleton();
 
     builder.bind(FileTypeRegistry.class).to(FileTypeManager::getInstance);
     builder.bind(ProgressIndicatorProvider.class).to(this::getProgressManager);
@@ -459,7 +457,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   @Override
   @Nonnull
   public IApplicationStore getStateStore() {
-    return getComponent(IApplicationStore.class);
+    return getInstance(IApplicationStore.class);
   }
 
   @Nonnull

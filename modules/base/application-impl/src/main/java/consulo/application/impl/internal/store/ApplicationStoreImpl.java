@@ -15,10 +15,10 @@
  */
 package consulo.application.impl.internal.store;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.impl.internal.macro.PathMacrosImpl;
 import consulo.application.macro.ApplicationPathMacroManager;
-import consulo.component.impl.internal.macro.BasePathMacroManager;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.persist.StoragePathMacros;
 import consulo.component.store.impl.internal.*;
@@ -35,6 +35,7 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 
 @Singleton
+@ServiceImpl
 public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplicationStore {
   private static final Logger LOG = Logger.getInstance(ApplicationStoreImpl.class);
 
@@ -46,10 +47,10 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
   private String myConfigPath;
 
   @Inject
-  public ApplicationStoreImpl(Application application, ApplicationPathMacroManager pathMacroManager, Provider<ApplicationDefaultStoreCache> applicationDefaultStoreCache) {
+  public ApplicationStoreImpl(Application application, Provider<ApplicationPathMacroManager> pathMacroManager, Provider<ApplicationDefaultStoreCache> applicationDefaultStoreCache) {
     super(applicationDefaultStoreCache);
     myApplication = application;
-    myStateStorageManager = new StateStorageManagerImpl(new TrackingPathMacroSubstitutorImpl((BasePathMacroManager)pathMacroManager), ROOT_ELEMENT_NAME, application, () -> null,
+    myStateStorageManager = new StateStorageManagerImpl(new TrackingPathMacroSubstitutorImpl(pathMacroManager), ROOT_ELEMENT_NAME, application, () -> null,
                                                         () -> application.getInstance(PathMacrosService.class), StateStorageFacade.JAVA_IO) {
       @Nonnull
       @Override

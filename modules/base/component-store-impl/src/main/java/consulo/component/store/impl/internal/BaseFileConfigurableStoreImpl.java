@@ -18,7 +18,6 @@ package consulo.component.store.impl.internal;
 import consulo.component.macro.PathMacroManager;
 import consulo.component.store.impl.internal.storage.XmlElementStorage;
 import jakarta.inject.Provider;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -27,9 +26,9 @@ public abstract class BaseFileConfigurableStoreImpl extends ComponentStoreImpl {
   public static final String ATTRIBUTE_NAME = "name";
 
   private StateStorageManager myStateStorageManager;
-  protected final PathMacroManager myPathMacroManager;
+  protected final Provider<? extends PathMacroManager> myPathMacroManager;
 
-  protected BaseFileConfigurableStoreImpl(@Nonnull Provider<ApplicationDefaultStoreCache> applicationDefaultStoreCache, @Nonnull PathMacroManager pathMacroManager) {
+  protected BaseFileConfigurableStoreImpl(@Nonnull Provider<ApplicationDefaultStoreCache> applicationDefaultStoreCache, @Nonnull Provider<? extends PathMacroManager> pathMacroManager) {
     super(applicationDefaultStoreCache);
     myPathMacroManager = pathMacroManager;
   }
@@ -45,7 +44,7 @@ public abstract class BaseFileConfigurableStoreImpl extends ComponentStoreImpl {
   @Nonnull
   @Override
   protected final PathMacroManager getPathMacroManagerForDefaults() {
-    return myPathMacroManager;
+    return myPathMacroManager.get();
   }
 
   @Nonnull

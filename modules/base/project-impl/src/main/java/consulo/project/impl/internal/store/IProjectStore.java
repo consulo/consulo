@@ -15,18 +15,20 @@
  */
 package consulo.project.impl.internal.store;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
 import consulo.component.store.impl.internal.IComponentStore;
 import consulo.component.store.impl.internal.TrackingPathMacroSubstitutor;
 import consulo.project.impl.internal.ProjectImpl;
-import consulo.project.internal.ProjectEx;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * @see ProjectEx#getStateStore()
+ * @see ProjectImpl#getStateStore()
  */
+@ServiceAPI(ComponentScope.PROJECT)
 public interface IProjectStore extends IComponentStore {
   void setProjectFilePathNoUI(@Nonnull String filePath);
 

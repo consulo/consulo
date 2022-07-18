@@ -15,11 +15,11 @@
  */
 package consulo.project.impl.internal.store;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.AccessRule;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.component.impl.internal.macro.BasePathMacroManager;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.persist.*;
 import consulo.component.store.impl.internal.*;
@@ -55,12 +55,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Singleton
+@ServiceImpl(profiles = ProjectImpl.NORMAL_PROJECT_PROFILE)
 public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements IProjectStore {
   protected ProjectImpl myProject;
   private String myPresentableUrl;
 
   @Inject
-  ProjectStoreImpl(@Nonnull Project project, @Nonnull ProjectPathMacroManager pathMacroManager, @Nonnull Provider<ApplicationDefaultStoreCache> applicationDefaultStoreCache) {
+  ProjectStoreImpl(@Nonnull Project project, @Nonnull Provider<ProjectPathMacroManager> pathMacroManager, @Nonnull Provider<ApplicationDefaultStoreCache> applicationDefaultStoreCache) {
     super(applicationDefaultStoreCache, pathMacroManager);
     myProject = (ProjectImpl)project;
   }
@@ -247,7 +248,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
   @Nonnull
   @Override
   protected StateStorageManager createStateStorageManager() {
-    return new ProjectStateStorageManager(myProject, new TrackingPathMacroSubstitutorImpl((BasePathMacroManager)myPathMacroManager), Application.get().getInstance(PathMacrosService.class));
+    return new ProjectStateStorageManager(myProject, new TrackingPathMacroSubstitutorImpl(myPathMacroManager), Application.get().getInstance(PathMacrosService.class));
   }
 
   @Nonnull

@@ -18,7 +18,6 @@ package consulo.module.impl.internal;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.application.impl.internal.PlatformComponentManagerImpl;
-import consulo.component.impl.internal.BaseComponentManager;
 import consulo.component.internal.inject.InjectingContainerBuilder;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
@@ -50,7 +49,7 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
 
   @Override
   public int getProfiles() {
-    return ((BaseComponentManager)myParent).getProfiles();
+    return myParent.getProfiles();
   }
 
   @Override
@@ -58,7 +57,6 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
     super.bootstrapInjectingContainer(builder);
 
     builder.bind(Module.class).to(this);
-    builder.bind(ModulePathMacroManager.class).to(ModulePathMacroManager.class).forceSingleton();
   }
 
   @Override

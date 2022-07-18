@@ -24,16 +24,13 @@ import consulo.application.internal.ApplicationEx;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.TimedReference;
-import consulo.component.impl.internal.BaseComponentManager;
 import consulo.component.internal.inject.InjectingContainerBuilder;
 import consulo.component.store.impl.internal.StoreUtil;
 import consulo.logging.Logger;
 import consulo.module.impl.internal.ModuleManagerImpl;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import consulo.project.impl.internal.store.DefaultProjectStoreImpl;
 import consulo.project.impl.internal.store.IProjectStore;
-import consulo.project.impl.internal.store.ProjectStoreImpl;
 import consulo.project.internal.ProjectEx;
 import consulo.project.internal.ProjectExListener;
 import consulo.project.internal.ProjectManagerEx;
@@ -57,6 +54,9 @@ import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ProjectImpl extends PlatformComponentManagerImpl implements ProjectEx {
+  public static final int NORMAL_PROJECT_PROFILE = 1 << 30;
+  public static final int DEFAULT_PROJECT_PROFILE = 1 << 31;
+
   private static final Logger LOG = Logger.getInstance(ProjectImpl.class);
 
   public static final String NAME_FILE = ".name";
@@ -102,7 +102,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
   @Override
   public int getProfiles() {
-    return ((BaseComponentManager)myParent).getProfiles();
+    return myParent.getProfiles() | (isDefault() ? DEFAULT_PROJECT_PROFILE : NORMAL_PROJECT_PROFILE);
   }
 
   @Nullable
@@ -143,10 +143,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
     builder.bind(Project.class).to(this);
     builder.bind(ProjectEx.class).to(this);
-    builder.bind(ProjectPathMacroManager.class).to(ProjectPathMacroManager.class).forceSingleton();
-
-    final Class<? extends IProjectStore> storeClass = isDefault() ? DefaultProjectStoreImpl.class : ProjectStoreImpl.class;
-    builder.bind(IProjectStore.class).to(storeClass).forceSingleton();
   }
 
   @Nonnull

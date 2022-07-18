@@ -142,8 +142,8 @@ public class Log4J2Logger implements Logger {
         logger.error("Last Action: " + lastPreformedActionId);
       }
 
-      CommandProcessor commandProcessor = CommandProcessor.getInstance();
-      final String currentCommandName = commandProcessor.getCurrentCommandName();
+      CommandProcessor commandProcessor = application.getInstanceIfCreated(CommandProcessor.class);
+      final String currentCommandName = commandProcessor == null ? null : commandProcessor.getCurrentCommandName();
       if (currentCommandName != null) {
         logger.error("Current Command: " + currentCommandName);
       }

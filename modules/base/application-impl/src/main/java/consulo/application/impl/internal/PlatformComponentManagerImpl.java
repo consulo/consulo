@@ -54,16 +54,19 @@ public abstract class PlatformComponentManagerImpl extends BaseComponentManager 
     }
 
     boolean result = false;
-    IComponentStore stateStore = getStateStore();
-    if (stateStore != null) {
-      StateComponentInfo<Object> info = stateStore.loadStateIfStorable(component);
-      if (info != null) {
-        if (Application.get().isWriteAccessAllowed()) {
-          LOG.warn(new IllegalArgumentException("Getting service from write-action leads to possible deadlock. Service implementation " + component.getClass().getName()));
-        }
+    // do not try load state for store
+    if (!(component instanceof IComponentStore)) {
+      IComponentStore stateStore = getStateStore();
+      if (stateStore != null) {
+        StateComponentInfo<Object> info = stateStore.loadStateIfStorable(component);
+        if (info != null) {
+          if (Application.get().isWriteAccessAllowed()) {
+            LOG.warn(new IllegalArgumentException("Getting service from write-action leads to possible deadlock. Service implementation " + component.getClass().getName()));
+          }
 
-        info.getComponent().afterLoadState();
-        result = true;
+          info.getComponent().afterLoadState();
+          result = true;
+        }
       }
     }
 
