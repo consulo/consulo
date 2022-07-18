@@ -20,6 +20,7 @@ import consulo.ide.impl.idea.execution.testframework.sm.runner.events.*;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
+import consulo.util.collection.Lists;
 import consulo.util.lang.function.Condition;
 import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
@@ -49,7 +50,7 @@ public abstract class GeneralTestEventsProcessor implements Disposable {
   private final String myTestFrameworkName;
   private final Project myProject;
   private TransferToEDTQueue<Runnable> myTransferToEDTQueue;
-  protected List<SMTRunnerEventsListener> myListenerAdapters = new ArrayList<>();
+  protected List<SMTRunnerEventsListener> myListenerAdapters = Lists.newLockFreeCopyOnWriteList();
 
   protected boolean myTreeBuildBeforeStart = false;
 
