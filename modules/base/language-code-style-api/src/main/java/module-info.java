@@ -28,5 +28,4 @@ module consulo.language.code.style.api {
   exports consulo.language.codeStyle.inject;
 
   opens consulo.language.codeStyle to consulo.util.xml.serializer;
-  opens consulo.language.codeStyle.template to consulo.injecting.pico.impl;
 }

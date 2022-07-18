@@ -15,21 +15,20 @@
  */
 package consulo.virtualFileSystem.fileWatcher.impl;
 
-import consulo.component.macro.PathMacroProtocolProvider;
-import consulo.component.macro.ReplacePathToMacroMap;
-import consulo.ide.impl.idea.build.progress.BuildProgress;
-import consulo.ide.impl.idea.build.progress.BuildProgressDescriptor;
-import consulo.component.macro.ExpandMacroToPathMap;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.SystemInfo;
+import consulo.component.macro.ExpandMacroToPathMap;
+import consulo.component.macro.PathMacroProtocolProvider;
+import consulo.component.macro.ReplacePathToMacroMap;
+import consulo.ide.impl.idea.build.progress.BuildProgress;
+import consulo.ide.impl.idea.build.progress.BuildProgressDescriptor;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.logging.Logger;
 import consulo.process.ExecutionException;
 import consulo.process.ProcessHandler;
@@ -42,6 +41,7 @@ import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeProvider;
 import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeTask;
@@ -311,8 +311,7 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
   @Nonnull
   @Override
   public BackgroundTaskByVfsChangeTask clone() {
-    BackgroundTaskByVfsChangeTaskImpl task =
-            new BackgroundTaskByVfsChangeTaskImpl(myProject, myVirtualFilePointer, myParameters, myProviderName, myName, myProvider, myManager);
+    BackgroundTaskByVfsChangeTaskImpl task = new BackgroundTaskByVfsChangeTaskImpl(myProject, myVirtualFilePointer, myParameters, myProviderName, myName, myProvider, myManager);
     task.setEnabled(isEnabled());
     return task;
   }

@@ -16,7 +16,7 @@
 package consulo.application.impl.internal.macro;
 
 import consulo.application.macro.ApplicationPathMacroManager;
-import consulo.component.impl.macro.BasePathMacroManager;
+import consulo.component.impl.internal.macro.BasePathMacroManager;
 import jakarta.inject.Singleton;
 
 /**

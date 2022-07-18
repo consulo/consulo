@@ -15,21 +15,10 @@
  */
 package consulo.virtualFileSystem.fileWatcher.impl.ui;
 
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ui.ex.popup.BaseListPopupStep;
-import consulo.ui.ex.awt.CheckBoxList;
 import consulo.ide.impl.idea.ui.EditorNotifications;
-import consulo.ui.ex.awt.ScrollingUtil;
-import consulo.ui.ex.awt.ToolbarDecorator;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.VerticalFlowLayout;
 import consulo.project.Project;
-import consulo.ui.ex.popup.ListPopup;
-import consulo.ui.ex.popup.ListPopupStep;
-import consulo.ui.ex.popup.PopupStep;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.popup.*;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeManager;
 import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeProvider;

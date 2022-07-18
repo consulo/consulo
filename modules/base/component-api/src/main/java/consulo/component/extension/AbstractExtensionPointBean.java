@@ -17,7 +17,7 @@ package consulo.component.extension;
 
 import consulo.component.ComponentManager;
 import consulo.container.plugin.PluginDescriptor;
-import consulo.injecting.InjectingContainer;
+import consulo.component.internal.inject.InjectingContainer;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

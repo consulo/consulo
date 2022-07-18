@@ -16,7 +16,7 @@
 package consulo.test.light;
 
 import consulo.application.Application;
-import consulo.injecting.InjectingContainerBuilder;
+import consulo.component.internal.inject.InjectingContainerBuilder;
 import consulo.language.content.FileIndexFacade;
 import consulo.language.impl.internal.psi.PsiFileFactoryImpl;
 import consulo.language.impl.internal.psi.PsiManagerImpl;

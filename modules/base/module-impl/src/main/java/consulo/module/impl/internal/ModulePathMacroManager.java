@@ -18,7 +18,7 @@ package consulo.module.impl.internal;
 
 import consulo.application.impl.internal.macro.PathMacrosImpl;
 import consulo.application.macro.PathMacros;
-import consulo.component.impl.macro.BasePathMacroManager;
+import consulo.component.impl.internal.macro.BasePathMacroManager;
 import consulo.component.macro.ExpandMacroToPathMap;
 import consulo.component.macro.PathMacroUtil;
 import consulo.component.macro.ReplacePathToMacroMap;

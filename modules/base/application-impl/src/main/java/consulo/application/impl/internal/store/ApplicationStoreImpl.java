@@ -18,7 +18,7 @@ package consulo.application.impl.internal.store;
 import consulo.application.Application;
 import consulo.application.impl.internal.macro.PathMacrosImpl;
 import consulo.application.macro.ApplicationPathMacroManager;
-import consulo.component.impl.macro.BasePathMacroManager;
+import consulo.component.impl.internal.macro.BasePathMacroManager;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.persist.StoragePathMacros;
 import consulo.component.store.impl.internal.*;

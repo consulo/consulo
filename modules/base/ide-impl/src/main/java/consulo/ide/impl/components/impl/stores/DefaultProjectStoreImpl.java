@@ -19,7 +19,7 @@ import consulo.ide.impl.idea.openapi.components.impl.ProjectPathMacroManager;
 import consulo.ide.impl.idea.openapi.project.impl.DefaultProjectImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.Application;
-import consulo.component.impl.macro.BasePathMacroManager;
+import consulo.component.impl.internal.macro.BasePathMacroManager;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.Storage;
 import consulo.component.store.impl.internal.*;

@@ -18,8 +18,8 @@ package consulo.module.impl.internal;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.application.impl.internal.PlatformComponentManagerImpl;
-import consulo.component.impl.BaseComponentManager;
-import consulo.injecting.InjectingContainerBuilder;
+import consulo.component.impl.internal.BaseComponentManager;
+import consulo.component.internal.inject.InjectingContainerBuilder;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.extension.ModuleExtension;

@@ -23,7 +23,7 @@ import consulo.application.impl.internal.plugin.PluginsInitializeInfo;
 import consulo.application.impl.internal.plugin.PluginsLoader;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.internal.TransactionGuardEx;
-import consulo.component.internal.InjectingBindingLoader;
+import consulo.component.internal.inject.InjectingBindingLoader;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.classloader.PluginClassLoader;
 import consulo.container.impl.classloader.PluginLoadStatistics;

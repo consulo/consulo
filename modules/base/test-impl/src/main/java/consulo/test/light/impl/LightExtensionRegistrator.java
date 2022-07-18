@@ -19,7 +19,7 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginDescriptorStub;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginIds;
-import consulo.injecting.InjectingContainerBuilder;
+import consulo.component.internal.inject.InjectingContainerBuilder;
 
 import javax.annotation.Nonnull;
 

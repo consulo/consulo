@@ -24,7 +24,7 @@ import consulo.application.ui.UISettings;
 import consulo.component.store.impl.internal.PathMacrosService;
 import consulo.disposer.Disposable;
 import consulo.document.FileDocumentManager;
-import consulo.injecting.InjectingContainerBuilder;
+import consulo.component.internal.inject.InjectingContainerBuilder;
 import consulo.language.impl.internal.parser.PsiBuilderFactoryImpl;
 import consulo.language.parser.PsiBuilderFactory;
 import consulo.test.light.impl.*;

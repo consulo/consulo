@@ -19,31 +19,28 @@ package consulo.language.psi.meta;
 import consulo.language.pattern.ElementPattern;
 import consulo.language.psi.filter.ElementFilter;
 
+import java.util.function.Supplier;
+
 /**
  * Provides association for elements matching given filter with metadata class.
  *
  * @see MetaDataContributor
  */
-@Deprecated
 public interface MetaDataRegistrar {
   /**
    * Associates elements matching given filter with metadata class.
    *
    * @param filter                  on element for finding metadata matches
-   * @param metadataDescriptorClass class of metadata, should be instantiable without parameters
+   * @param metadataDescriptorFactory class of metadata, should be instantiable without parameters
    * @deprecated use {@link #registerMetaData(ElementPattern, Class)}
    */
-  <T extends PsiMetaData> void registerMetaData(ElementFilter filter, Class<T> metadataDescriptorClass);
+  <T extends PsiMetaData> void registerMetaData(ElementFilter filter, Supplier<T> metadataDescriptorFactory);
 
   /**
    * Associates elements matching given filter with metadata class.
    *
    * @param pattern                 on element for finding metadata matches
-   * @param metadataDescriptorClass class of metadata, should be instantiable without parameters
+   * @param metadataDescriptorFactory class of metadata, should be instantiable without parameters
    */
-  <T extends PsiMetaData> void registerMetaData(ElementPattern<?> pattern, Class<T> metadataDescriptorClass);
-
-  public static MetaDataRegistrar getInstance() {
-    return MetaDataService.getInstance();
-  }
+  <T extends PsiMetaData> void registerMetaData(ElementPattern<?> pattern, Supplier<T> metadataDescriptorFactory);
 }

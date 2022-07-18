@@ -40,7 +40,7 @@ import consulo.ide.impl.idea.ide.plugins.PluginManagerCore;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.io.ZipUtil;
-import consulo.injecting.key.InjectingKey;
+import consulo.component.internal.inject.InjectingKey;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;

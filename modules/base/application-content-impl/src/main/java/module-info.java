@@ -10,6 +10,4 @@ module consulo.application.content.impl {
   exports consulo.content.impl.internal to consulo.ide.impl, consulo.module.impl;
   exports consulo.content.impl.internal.bundle to consulo.ide.impl;
   exports consulo.content.impl.internal.library to consulo.ide.impl, consulo.module.impl;
-
-  opens consulo.content.impl.internal.bundle to consulo.injecting.pico.impl;
 }

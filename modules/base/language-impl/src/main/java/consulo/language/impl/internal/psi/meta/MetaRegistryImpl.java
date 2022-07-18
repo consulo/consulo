@@ -17,14 +17,11 @@
 package consulo.language.impl.internal.psi.meta;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.Application;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.util.CachedValue;
 import consulo.application.util.CachedValueProvider;
 import consulo.application.util.CachedValuesManager;
 import consulo.application.util.UserDataCache;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
 import consulo.language.pattern.ElementPattern;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.filter.ElementFilter;
@@ -40,6 +37,7 @@ import jakarta.inject.Singleton;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * User: ik
@@ -48,8 +46,9 @@ import java.util.List;
  */
 @Singleton
 @ServiceImpl
-public class MetaRegistryImpl implements MetaDataService {
-  private static final List<MyBinding> ourBindings = Lists.newLockFreeCopyOnWriteList();
+public class MetaRegistryImpl implements MetaDataService, MetaDataRegistrar {
+  private final List<MyBinding> myBindings = Lists.newLockFreeCopyOnWriteList();
+
   private static volatile boolean ourContributorsLoaded = false;
 
   private static final Key<CachedValue<PsiMetaData>> META_DATA_KEY = Key.create("META DATA KEY");
@@ -72,16 +71,16 @@ public class MetaRegistryImpl implements MetaDataService {
     return base != null ? base : null;
   }
 
-  private static final UserDataCache<CachedValue<PsiMetaData>, PsiElement, Object> ourCachedMetaCache = new UserDataCache<CachedValue<PsiMetaData>, PsiElement, Object>() {
+  private final UserDataCache<CachedValue<PsiMetaData>, PsiElement, Object> myCachedMetaCache = new UserDataCache<>() {
     @Override
     protected CachedValue<PsiMetaData> compute(final PsiElement element, Object p) {
       return CachedValuesManager.getManager(element.getProject()).createCachedValue(new CachedValueProvider<PsiMetaData>() {
         @Override
         public Result<PsiMetaData> compute() {
           ensureContributorsLoaded();
-          for (final MyBinding binding : ourBindings) {
+          for (final MyBinding binding : myBindings) {
             if (binding.myFilter.isClassAcceptable(element.getClass()) && binding.myFilter.isAcceptable(element, element.getParent())) {
-              final PsiMetaData data = Application.get().getInjectingContainer().getUnbindedInstance(binding.myDataClass);
+              final PsiMetaData data = binding.myFactory.get();
               data.init(element);
               return new Result<PsiMetaData>(data, data.getDependences());
             }
@@ -92,12 +91,12 @@ public class MetaRegistryImpl implements MetaDataService {
     }
   };
 
-  private static void ensureContributorsLoaded() {
+  private void ensureContributorsLoaded() {
     if (!ourContributorsLoaded) {
-      synchronized (ourBindings) {
+      synchronized (myBindings) {
         if (!ourContributorsLoaded) {
           for (MetaDataContributor contributor : MetaDataContributor.EP_NAME.getExtensionList()) {
-            contributor.contributeMetaData(MetaDataRegistrar.getInstance());
+            contributor.contributeMetaData(this);
           }
           ourContributorsLoaded = true;
         }
@@ -106,50 +105,36 @@ public class MetaRegistryImpl implements MetaDataService {
   }
 
   @Nullable
-  public static PsiMetaData getMetaBase(final PsiElement element) {
+  public PsiMetaData getMetaBase(final PsiElement element) {
     ProgressIndicatorProvider.checkCanceled();
-    return ourCachedMetaCache.get(META_DATA_KEY, element, null).getValue();
+    return myCachedMetaCache.get(META_DATA_KEY, element, null).getValue();
   }
 
-  /**
-   * @see MetaDataContributor
-   * @deprecated
-   */
-  public static <T extends PsiMetaData> void addMetadataBinding(ElementFilter filter, Class<T> aMetadataClass, Disposable parentDisposable) {
-    final MyBinding binding = new MyBinding(filter, aMetadataClass);
-    addBinding(binding);
-    Disposer.register(parentDisposable, () -> ourBindings.remove(binding));
-  }
-
-  /**
-   * @see MetaDataContributor
-   * @deprecated
-   */
-  public static <T extends PsiMetaData> void addMetadataBinding(ElementFilter filter, Class<T> aMetadataClass) {
+  public <T extends PsiMetaData> void addMetadataBinding(ElementFilter filter, Supplier<T> aMetadataClass) {
     addBinding(new MyBinding(filter, aMetadataClass));
   }
 
-  private static void addBinding(final MyBinding binding) {
-    ourBindings.add(0, binding);
+  private void addBinding(final MyBinding binding) {
+    myBindings.add(0, binding);
   }
 
   @Override
-  public <T extends PsiMetaData> void registerMetaData(ElementFilter filter, Class<T> metadataDescriptorClass) {
-    addMetadataBinding(filter, metadataDescriptorClass);
+  public <T extends PsiMetaData> void registerMetaData(ElementFilter filter, Supplier<T> metadataDescriptorFactory) {
+    addMetadataBinding(filter, metadataDescriptorFactory);
   }
 
   @Override
-  public <T extends PsiMetaData> void registerMetaData(ElementPattern<?> pattern, Class<T> metadataDescriptorClass) {
-    addMetadataBinding(new PatternFilter(pattern), metadataDescriptorClass);
+  public <T extends PsiMetaData> void registerMetaData(ElementPattern<?> pattern, Supplier<T> metadataDescriptorFactory) {
+    addMetadataBinding(new PatternFilter(pattern), metadataDescriptorFactory);
   }
 
   private static class MyBinding {
     private final ElementFilter myFilter;
-    private final Class<? extends PsiMetaData> myDataClass;
+    private final Supplier<? extends PsiMetaData> myFactory;
 
-    public MyBinding(@Nonnull ElementFilter filter, @Nonnull Class<? extends PsiMetaData> dataClass) {
+    public MyBinding(@Nonnull ElementFilter filter, @Nonnull Supplier<? extends PsiMetaData> factory) {
       myFilter = filter;
-      myDataClass = dataClass;
+      myFactory = factory;
     }
   }
 }

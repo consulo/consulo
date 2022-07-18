@@ -52,7 +52,7 @@ import consulo.desktop.boot.main.windows.WindowsCommandLineProcessor;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.IdeBundle;
-import consulo.injecting.InjectingContainerBuilder;
+import consulo.component.internal.inject.InjectingContainerBuilder;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectManager;

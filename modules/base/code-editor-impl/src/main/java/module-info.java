@@ -15,17 +15,14 @@ module consulo.code.editor.impl {
 
   requires consulo.desktop.awt.hacking;
 
-  requires consulo.injecting.api;
-
   exports consulo.codeEditor.impl to
           consulo.ide.impl,
           consulo.language.inject.impl,
           consulo.desktop.ide.impl,
-          consulo.injecting.pico.impl,
           consulo.util.xml.serializer,
           consulo.desktop.swt.ide.impl;
 
-  exports consulo.codeEditor.impl.action to consulo.ide.impl, consulo.injecting.pico.impl, consulo.util.xml.serializer;
+  exports consulo.codeEditor.impl.action to consulo.ide.impl, consulo.util.xml.serializer;
 
   exports consulo.codeEditor.impl.util to
           consulo.ide.impl,

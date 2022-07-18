@@ -54,10 +54,6 @@
     <extensionPoint name="contentFolderPropertyProvider" interface="consulo.module.content.layer.ContentFolderPropertyProvider"/>
     <extensionPoint name="contentFolderSupportPatcher" interface="consulo.module.content.layer.ContentFolderSupportPatcher"/>
 
-    <extensionPoint name="applicationService" beanClass="consulo.component.internal.ServiceDescriptor"/>
-    <extensionPoint name="projectService" beanClass="consulo.component.internal.ServiceDescriptor" area="PROJECT"/>
-    <extensionPoint name="moduleService" beanClass="consulo.component.internal.ServiceDescriptor" area="MODULE"/>
-
     <extensionPoint name="dateTimeFormatter" beanClass="consulo.ide.impl.idea.util.text.DateTimeFormatterBean"/>
 
     <extensionPoint name="editorFactoryDocumentListener" interface="consulo.document.event.DocumentListener"/>

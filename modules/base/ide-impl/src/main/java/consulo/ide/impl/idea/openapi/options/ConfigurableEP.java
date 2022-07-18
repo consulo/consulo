@@ -25,7 +25,7 @@ import consulo.util.xml.serializer.annotation.Tag;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurableProvider;
 import consulo.configurable.UnnamedConfigurable;
-import consulo.injecting.InjectingContainerOwner;
+import consulo.component.internal.inject.InjectingContainerOwner;
 import consulo.localize.LocalizeManager;
 import consulo.logging.Logger;
 

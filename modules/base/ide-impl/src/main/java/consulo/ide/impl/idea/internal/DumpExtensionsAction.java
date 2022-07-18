@@ -19,7 +19,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
 import consulo.application.Application;
 import consulo.component.ComponentManager;
-import consulo.component.impl.BaseComponentManager;
+import consulo.component.impl.internal.BaseComponentManager;
 import consulo.component.extension.ExtensionPoint;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
@@ -30,7 +30,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**

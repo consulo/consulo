@@ -16,20 +16,20 @@
 package consulo.virtualFileSystem.fileWatcher.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.component.macro.ReplacePathToMacroMap;
-import consulo.ide.impl.idea.build.BuildViewManager;
-import consulo.ide.impl.idea.build.DefaultBuildDescriptor;
-import consulo.ide.impl.idea.build.progress.BuildProgress;
-import consulo.ide.impl.idea.build.progress.BuildProgressDescriptor;
-import consulo.ide.impl.idea.execution.filters.UrlFilter;
-import consulo.component.macro.ExpandMacroToPathMap;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
+import consulo.component.macro.ExpandMacroToPathMap;
+import consulo.component.macro.ReplacePathToMacroMap;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.disposer.Disposable;
+import consulo.ide.impl.idea.build.BuildViewManager;
+import consulo.ide.impl.idea.build.DefaultBuildDescriptor;
+import consulo.ide.impl.idea.build.progress.BuildProgress;
+import consulo.ide.impl.idea.build.progress.BuildProgressDescriptor;
+import consulo.ide.impl.idea.execution.filters.UrlFilter;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;

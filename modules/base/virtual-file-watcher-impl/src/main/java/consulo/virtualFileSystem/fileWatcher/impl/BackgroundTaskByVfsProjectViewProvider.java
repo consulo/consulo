@@ -16,17 +16,17 @@
 package consulo.virtualFileSystem.fileWatcher.impl;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.project.ui.view.tree.SelectableTreeStructureProvider;
-import consulo.project.ui.view.tree.ViewSettings;
-import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.application.dumb.DumbAware;
-import consulo.virtualFileSystem.fileWatcher.impl.ui.BackgroundTaskPsiFileTreeNode;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.project.ui.view.tree.SelectableTreeStructureProvider;
+import consulo.project.ui.view.tree.ViewSettings;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeManager;
 import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeTask;
+import consulo.virtualFileSystem.fileWatcher.impl.ui.BackgroundTaskPsiFileTreeNode;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nullable;

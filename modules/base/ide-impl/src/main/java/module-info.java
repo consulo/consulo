@@ -19,7 +19,6 @@ open module consulo.ide.impl {
   requires consulo.desktop.awt.hacking;
   requires consulo.desktop.awt.eawt.wrapper;
 
-  requires transitive consulo.injecting.api;
   requires transitive consulo.annotation;
   requires transitive consulo.proxy;
   requires transitive consulo.platform.api;

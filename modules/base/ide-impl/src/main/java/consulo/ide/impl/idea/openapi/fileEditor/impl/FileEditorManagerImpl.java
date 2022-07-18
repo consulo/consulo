@@ -56,7 +56,7 @@ import consulo.application.util.function.ThrowableComputable;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.component.ProcessCanceledException;
-import consulo.component.impl.messagebus.MessageListenerList;
+import consulo.component.impl.internal.messagebus.MessageListenerList;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.persist.PersistentStateComponentWithUIState;
 import consulo.component.persist.State;

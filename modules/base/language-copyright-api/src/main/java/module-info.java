@@ -16,6 +16,4 @@ module consulo.language.copyright.api {
   exports consulo.language.copyright.ui;
   exports consulo.language.copyright.util;
   exports consulo.language.copyright.internal to consulo.ide.impl;
-
-  opens consulo.language.copyright.internal to consulo.injecting.pico.impl;
 }

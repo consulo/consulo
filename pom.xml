@@ -149,8 +149,6 @@
     <module>modules/base/util/util-xml-fast-reader</module>
     <module>modules/base/util/util-socket-connection</module>
 
-    <module>modules/base/injecting/injecting-api</module>
-    <module>modules/base/injecting/injecting-pico-impl</module>
     <module>modules/base/hacking-java-base</module>
 
     <module>modules/base/logging/logging-api</module>

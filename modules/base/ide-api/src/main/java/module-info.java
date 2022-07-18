@@ -13,7 +13,6 @@ module consulo.ide.api {
   requires transitive consulo.ui.ex.awt.api;
   requires transitive consulo.language.api;
   requires transitive consulo.code.editor.api;
-  requires transitive consulo.injecting.api;
   requires transitive consulo.annotation;
   requires transitive consulo.proxy;
   requires transitive consulo.platform.api;

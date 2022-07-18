@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.ide.util;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.component.impl.BasePropertiesComponent;
+import consulo.component.impl.internal.BasePropertiesComponent;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;

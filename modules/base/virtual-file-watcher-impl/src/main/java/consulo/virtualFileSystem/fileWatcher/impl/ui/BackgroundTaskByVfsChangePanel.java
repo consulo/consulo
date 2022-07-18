@@ -16,12 +16,12 @@
 package consulo.virtualFileSystem.fileWatcher.impl.ui;
 
 import consulo.execution.ui.awt.CommonProgramParametersPanel;
-import consulo.ui.ex.awt.TextFieldWithBrowseButton;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.project.Project;
+import consulo.ui.ex.awt.TextFieldWithBrowseButton;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsParameters;
 import consulo.virtualFileSystem.fileWatcher.impl.BackgroundTaskByVfsParametersImpl;
 

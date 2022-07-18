@@ -83,9 +83,8 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-injecting-api</artifactId>
-      <version>${project.version}</version>
+      <groupId>consulo.internal</groupId>
+      <artifactId>jakarta.inject-api</artifactId>
     </dependency>
     <dependency>
       <groupId>com.ibm.icu</groupId>

@@ -20,8 +20,8 @@ import consulo.component.extension.ExtensionPoint;
 import consulo.component.extension.ExtensionPointName;
 import consulo.component.messagebus.MessageBus;
 import consulo.disposer.Disposable;
-import consulo.injecting.InjectingContainer;
-import consulo.injecting.InjectingContainerOwner;
+import consulo.component.internal.inject.InjectingContainer;
+import consulo.component.internal.inject.InjectingContainerOwner;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.ThreeState;
 

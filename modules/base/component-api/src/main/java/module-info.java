@@ -18,11 +18,10 @@ module consulo.component.api {
   requires transitive consulo.platform.api;
   requires transitive consulo.util.jdom;
   requires transitive org.jdom;
+  requires transitive jakarta.inject;
 
   requires static consulo.hacking.java.base;
-  requires static com.ibm.icu;
-  
-  requires consulo.injecting.api;
+  requires static com.ibm.icu;                                                                     
 
   requires java.compiler;
 
@@ -39,18 +38,16 @@ module consulo.component.api {
   exports consulo.component.util.graph;
   exports consulo.component.util.config;
 
-  exports consulo.component.internal to
-          consulo.application.api,
-          consulo.virtual.file.system.api,
-          consulo.datacontext.api,
-          consulo.component.impl,
+  exports consulo.component.internal to consulo.application.api, consulo.datacontext.api, consulo.virtual.file.system.api;
+
+  exports consulo.component.internal.inject to consulo.component.impl,
           consulo.application.impl,
-          // TODO [VISTALL] replace it by consulo.project.impl when ready
-          consulo.ide.impl,
           consulo.module.impl,
+          consulo.ide.impl,
+          consulo.desktop.awt.ide.impl,
+          consulo.desktop.swt.ide.impl,
           consulo.language.editor.api;
 
-  opens consulo.component.internal to consulo.util.xml.serializer, consulo.injecting.pico.impl;
-
   uses consulo.component.bind.InjectingBinding;
+  uses consulo.component.internal.inject.RootInjectingContainerFactory;
 }

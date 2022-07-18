@@ -10,6 +10,4 @@ module consulo.path.macro.impl {
   requires transitive consulo.ui.ex.awt.api;
   requires transitive consulo.language.api;
   requires transitive consulo.compiler.api;
-
-  exports consulo.pathMacro.impl.internal to consulo.injecting.pico.impl;
 }

@@ -52,7 +52,7 @@ public final class PerApplicationInstance<V> implements Provider<V>, Supplier<V>
         oldValue = myValue;
         if (oldValue == null) {
           Application application = Application.get();
-          V newValue = application.getInjectingContainer().getInstance(myTargetClass);
+          V newValue = application.getInstance(myTargetClass);
           Disposer.register(application, () -> myValue = null);
           myValue = newValue;
           return newValue;

@@ -16,7 +16,6 @@
 
 package consulo.application.extension;
 
-import consulo.application.Application;
 import consulo.application.util.function.ThrowableComputable;
 
 import javax.annotation.Nonnull;
@@ -25,6 +24,7 @@ import java.util.function.Supplier;
 /**
  * @author peter
  */
+@Deprecated
 public abstract class LazyInstance<T> implements Supplier<T> {
   @Nonnull
   public static <T> LazyInstance<T> createInstance(@Nonnull final ThrowableComputable<Class<T>, ClassNotFoundException> value) {
@@ -59,13 +59,7 @@ public abstract class LazyInstance<T> implements Supplier<T> {
 
   @Nonnull
   protected final T compute() {
-    try {
-      Class<T> tClass = getInstanceClass();
-      return Application.get().getInjectingContainer().getUnbindedInstance(tClass);
-    }
-    catch (ClassNotFoundException e) {
-      throw new RuntimeException(e);
-    }
+    throw new UnsupportedOperationException("this class dead");
   }
 
   public T getValue() {

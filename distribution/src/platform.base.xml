@@ -27,9 +27,6 @@
         <include>consulo:consulo-ide-impl</include>
         <include>consulo:consulo-disposer-api</include>
         <include>consulo:consulo-disposer-impl</include>
-        <include>consulo:consulo-injecting-api</include>
-        <include>consulo:consulo-injecting-api</include>
-        <include>consulo:consulo-injecting-pico-impl</include>
         <include>consulo:consulo-localize-api</include>
         <include>consulo:consulo-localize-impl</include>
         <include>consulo:consulo-logging-api</include>

@@ -19,7 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
 import consulo.component.bind.InjectingBinding;
-import consulo.component.internal.InjectingBindingLoader;
+import consulo.component.internal.inject.InjectingBindingLoader;
 import consulo.language.Language;
 import consulo.language.editor.inspection.CleanupLocalInspectionTool;
 import consulo.language.editor.inspection.GlobalInspectionContext;

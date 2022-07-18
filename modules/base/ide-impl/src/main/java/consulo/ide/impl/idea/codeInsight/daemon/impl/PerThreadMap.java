@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.application.Application;
 import consulo.util.lang.Pair;
-import consulo.injecting.InjectingContainer;
+import consulo.component.internal.inject.InjectingContainer;
 import consulo.util.dataholder.UserDataHolder;
 
 import javax.annotation.Nonnull;

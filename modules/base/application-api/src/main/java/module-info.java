@@ -15,8 +15,6 @@ module consulo.application.api {
   requires transitive consulo.util.collection;
   requires transitive consulo.util.interner;
 
-  requires consulo.injecting.api;
-
   requires transitive jakarta.inject;
 
   requires com.sun.jna;

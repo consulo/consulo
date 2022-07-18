@@ -21,7 +21,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
 import consulo.application.impl.internal.start.StartupProgress;
 import consulo.component.ComponentManager;
-import consulo.injecting.InjectingContainerBuilder;
+import consulo.component.internal.inject.InjectingContainerBuilder;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;

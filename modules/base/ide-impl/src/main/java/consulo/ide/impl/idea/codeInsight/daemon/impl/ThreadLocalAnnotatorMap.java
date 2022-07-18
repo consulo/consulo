@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.application.ApplicationManager;
-import consulo.injecting.InjectingContainer;
+import consulo.component.internal.inject.InjectingContainer;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;

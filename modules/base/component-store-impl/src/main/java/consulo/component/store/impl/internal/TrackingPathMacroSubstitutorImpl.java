@@ -16,7 +16,7 @@
 package consulo.component.store.impl.internal;
 
 import consulo.application.util.SystemInfo;
-import consulo.component.impl.macro.BasePathMacroManager;
+import consulo.component.impl.internal.macro.BasePathMacroManager;
 import consulo.util.collection.FactoryMap;
 import org.jdom.Element;
 

@@ -18,9 +18,7 @@ package consulo.language.psi.meta;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
-import consulo.language.pattern.ElementPattern;
 import consulo.language.psi.PsiElement;
-import consulo.language.psi.filter.ElementFilter;
 
 import javax.annotation.Nullable;
 
@@ -30,24 +28,7 @@ import javax.annotation.Nullable;
  * @see MetaDataContributor
  */
 @ServiceAPI(ComponentScope.APPLICATION)
-public interface MetaDataService extends MetaDataRegistrar {
-  /**
-   * Associates elements matching given filter with metadata class.
-   *
-   * @param filter                  on element for finding metadata matches
-   * @param metadataDescriptorClass class of metadata, should be instantiable without parameters
-   * @deprecated use {@link #registerMetaData(ElementPattern, Class)}
-   */
-  <T extends PsiMetaData> void registerMetaData(ElementFilter filter, Class<T> metadataDescriptorClass);
-
-  /**
-   * Associates elements matching given filter with metadata class.
-   *
-   * @param pattern                 on element for finding metadata matches
-   * @param metadataDescriptorClass class of metadata, should be instantiable without parameters
-   */
-  <T extends PsiMetaData> void registerMetaData(ElementPattern<?> pattern, Class<T> metadataDescriptorClass);
-
+public interface MetaDataService {
   @Nullable
   PsiMetaData getMeta(final PsiElement element);
 

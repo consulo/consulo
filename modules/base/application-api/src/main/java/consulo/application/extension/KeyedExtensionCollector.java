@@ -33,6 +33,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+@Deprecated
 public class KeyedExtensionCollector<T, KeyT> {
   private static final Logger LOG = Logger.getInstance(KeyedExtensionCollector.class);
 

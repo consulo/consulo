@@ -20,13 +20,12 @@ module consulo.language.impl {
   exports consulo.language.impl.psi.template;
 
   // internal implementation
-  exports consulo.language.impl.plain to consulo.ide.impl, consulo.injecting.pico.impl, consulo.test.impl;
-  exports consulo.language.impl.internal.ast to consulo.ide.impl, consulo.injecting.pico.impl, consulo.test.impl, consulo.language.code.style.api;
+  exports consulo.language.impl.plain to consulo.ide.impl, consulo.test.impl;
+  exports consulo.language.impl.internal.ast to consulo.ide.impl, consulo.test.impl, consulo.language.code.style.api;
   exports consulo.language.impl.internal.file to consulo.ide.impl, consulo.language.inject.impl;
-  exports consulo.language.impl.internal.parser to consulo.ide.impl, consulo.injecting.pico.impl, consulo.test.impl;
+  exports consulo.language.impl.internal.parser to consulo.ide.impl, consulo.test.impl;
   exports consulo.language.impl.internal.psi to
           consulo.ide.impl,
-          consulo.injecting.pico.impl,
           consulo.test.impl,
           consulo.component.impl,
           consulo.language.code.style.api,
@@ -34,15 +33,7 @@ module consulo.language.impl {
           consulo.language.inject.impl,
           consulo.util.xml.serializer;
   exports consulo.language.impl.internal.psi.diff to consulo.ide.impl, consulo.language.inject.impl;
-  exports consulo.language.impl.internal.psi.pointer to consulo.ide.impl, consulo.injecting.pico.impl, consulo.test.impl, consulo.language.inject.impl;
+  exports consulo.language.impl.internal.psi.pointer to consulo.ide.impl, consulo.test.impl, consulo.language.inject.impl;
   exports consulo.language.impl.internal.psi.stub to consulo.ide.impl;
   exports consulo.language.impl.internal.pom to consulo.ide.impl;
-
-  opens consulo.language.impl.internal.psi.diff to consulo.injecting.pico.impl;
-  opens consulo.language.impl.internal.psi.include to consulo.injecting.pico.impl;
-  opens consulo.language.impl.internal.pom to consulo.injecting.pico.impl;
-  opens consulo.language.impl.internal.psi.meta to consulo.injecting.pico.impl;
-  opens consulo.language.impl.psi.template to consulo.injecting.pico.impl;
-  opens consulo.language.impl.internal.sem to consulo.injecting.pico.impl;
-  opens consulo.language.impl.internal.psi.resolve to consulo.injecting.pico.impl;
 }

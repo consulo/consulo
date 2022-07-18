@@ -15,19 +15,19 @@
  */
 package consulo.virtualFileSystem.fileWatcher.impl;
 
-import consulo.annotation.component.ExtensionImpl;
-import consulo.fileEditor.FileEditor;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.ui.EditorNotificationPanel;
-import consulo.ui.ex.Gray;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.dumb.DumbAware;
+import consulo.fileEditor.FileEditor;
+import consulo.ide.impl.codeEditor.EditorNotificationProvider;
+import consulo.ide.impl.idea.ui.EditorNotificationPanel;
+import consulo.project.Project;
+import consulo.ui.ex.Gray;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeManager;
 import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeProvider;
 import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeTask;
-import consulo.ide.impl.codeEditor.EditorNotificationProvider;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;

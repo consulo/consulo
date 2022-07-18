@@ -15,12 +15,12 @@
  */
 package consulo.virtualFileSystem.fileWatcher.impl.ui;
 
-import consulo.project.ui.view.tree.ViewSettings;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.PsiFileNode;
-import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
 import consulo.project.Project;
+import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.project.ui.view.tree.ViewSettings;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeManager;
 import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeTask;
@@ -47,19 +47,19 @@ public class BackgroundTaskPsiFileTreeNode extends PsiFileNode {
   @Override
   public Collection<AbstractTreeNode> getChildrenImpl() {
     VirtualFile ourVirtualFile = getVirtualFile();
-    if(ourVirtualFile == null) {
+    if (ourVirtualFile == null) {
       return super.getChildrenImpl();
     }
     BackgroundTaskByVfsChangeManager vfsChangeManager = BackgroundTaskByVfsChangeManager.getInstance(getProject());
     List<BackgroundTaskByVfsChangeTask> tasks = vfsChangeManager.findTasks(ourVirtualFile);
-    if(tasks.isEmpty()) {
+    if (tasks.isEmpty()) {
       return super.getChildrenImpl();
     }
     List<VirtualFile> generatedFiles = new ArrayList<VirtualFile>();
     for (BackgroundTaskByVfsChangeTask task : tasks) {
       Collections.addAll(generatedFiles, task.getGeneratedFiles());
     }
-    if(generatedFiles.isEmpty()) {
+    if (generatedFiles.isEmpty()) {
       return super.getChildrenImpl();
     }
     PsiFile[] psiFiles = PsiUtilCore.virtualToPsiFiles(generatedFiles, myProject);
