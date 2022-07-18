@@ -15,5 +15,5 @@ module consulo.process.api {
   exports consulo.process.event;
   exports consulo.process.local;
 
-  exports consulo.process.local.internal to consulo.ide.impl;
+  exports consulo.process.internal to consulo.ide.impl;
 }

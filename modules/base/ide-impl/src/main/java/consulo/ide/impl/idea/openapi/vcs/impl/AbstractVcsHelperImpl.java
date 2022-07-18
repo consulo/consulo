@@ -16,9 +16,7 @@
 package consulo.ide.impl.idea.openapi.vcs.impl;
 
 import consulo.ui.ex.action.CloseTabToolbarAction;
-import consulo.ui.ex.errorTreeView.ErrorTreeElementKind;
-import consulo.ui.ex.errorTreeView.HotfixData;
-import consulo.ui.ex.errorTreeView.SimpleErrorData;
+import consulo.ui.ex.errorTreeView.*;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
@@ -83,7 +81,6 @@ import consulo.ide.impl.idea.util.BufferedListConsumer;
 import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.ui.ConfirmationDialog;
-import consulo.ui.ex.errorTreeView.ErrorTreeView;
 import consulo.ui.ex.MessageCategory;
 import consulo.ide.impl.idea.vcs.history.VcsHistoryProviderEx;
 import consulo.vcs.util.VcsUtil;
@@ -119,7 +116,7 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
     super(project);
   }
 
-  public void openMessagesView(final VcsErrorViewPanel errorTreeView, final String tabDisplayName) {
+  public void openMessagesView(final NewErrorTreeViewPanel errorTreeView, final String tabDisplayName) {
     CommandProcessor commandProcessor = CommandProcessor.getInstance();
     commandProcessor.executeCommand(myProject, new Runnable() {
       @Override
@@ -129,7 +126,7 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
           @Override
           public void run() {
             final Content content =
-                    ContentFactory.getInstance().createContent(errorTreeView, tabDisplayName, true);
+                    ContentFactory.getInstance().createContent(errorTreeView.getComponent(), tabDisplayName, true);
             messageView.getContentManager().addContent(content);
             Disposer.register(content, errorTreeView);
             messageView.getContentManager().setSelectedContent(content);
@@ -253,18 +250,8 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
   }
 
   @Override
-  public void showErrors(final List<VcsException> abstractVcsExceptions, @Nonnull final String tabDisplayName) {
-    showErrorsImpl(abstractVcsExceptions.isEmpty(), new Getter<VcsException>() {
-                     @Override
-                     public VcsException get() {
-                       return abstractVcsExceptions.get(0);
-                     }
-                   }, tabDisplayName, new Consumer<VcsErrorViewPanel>() {
-                     @Override
-                     public void consume(VcsErrorViewPanel vcsErrorViewPanel) {
-                       addDirectMessages(vcsErrorViewPanel, abstractVcsExceptions);
-                     }
-                   });
+  public void showErrors(final List<VcsException> list, @Nonnull final String tabDisplayName) {
+    showErrorsImpl(list.isEmpty(), () -> list.get(0), tabDisplayName, vcsErrorViewPanel -> addDirectMessages(vcsErrorViewPanel, list));
   }
 
   @Override
@@ -275,7 +262,7 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
                                                 customResultHandler);
   }
 
-  private static void addDirectMessages(VcsErrorViewPanel vcsErrorViewPanel, List<VcsException> abstractVcsExceptions) {
+  private static void addDirectMessages(NewErrorTreeViewPanel vcsErrorViewPanel, List<VcsException> abstractVcsExceptions) {
     for (final VcsException exception : abstractVcsExceptions) {
       String[] messages = getExceptionMessages(exception);
       vcsErrorViewPanel.addMessage(getErrorCategory(exception), messages, exception.getVirtualFile(), -1, -1, null);
@@ -293,7 +280,7 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
   }
 
   private void showErrorsImpl(final boolean isEmpty, final Getter<VcsException> firstGetter, @Nonnull final String tabDisplayName,
-                              final Consumer<VcsErrorViewPanel> viewFiller) {
+                              final Consumer<NewErrorTreeViewPanel> viewFiller) {
     if (ApplicationManager.getApplication().isUnitTestMode()) {
       if (!isEmpty) {
         VcsException exception = firstGetter.get();
@@ -312,7 +299,9 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
           return;
         }
 
-        final VcsErrorViewPanel errorTreeView = new VcsErrorViewPanel(myProject);
+        final NewErrorTreeViewPanel errorTreeView = myProject.getApplication().getInstance(NewErrorTreeViewPanelFactory.class).createPanel(myProject, null);
+        errorTreeView.setCanHideWarningsOrInfos(false);
+        
         openMessagesView(errorTreeView, tabDisplayName);
 
         viewFiller.consume(errorTreeView);
@@ -336,9 +325,9 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
                        final List<VcsException> exceptionList = exceptionGroups.values().iterator().next();
                        return exceptionList == null ? null : (exceptionList.isEmpty() ? null : exceptionList.get(0));
                      }
-                   }, tabDisplayName, new Consumer<VcsErrorViewPanel>() {
+                   }, tabDisplayName, new Consumer<NewErrorTreeViewPanel>() {
                      @Override
-                     public void consume(VcsErrorViewPanel vcsErrorViewPanel) {
+                     public void consume(NewErrorTreeViewPanel vcsErrorViewPanel) {
                        for (Map.Entry<HotfixData, List<VcsException>> entry : exceptionGroups.entrySet()) {
                          if (entry.getKey() == null) {
                            addDirectMessages(vcsErrorViewPanel, entry.getValue());

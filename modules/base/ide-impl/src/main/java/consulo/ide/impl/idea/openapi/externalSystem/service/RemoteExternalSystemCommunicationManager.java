@@ -47,7 +47,7 @@ import consulo.module.content.layer.orderEntry.DependencyScope;
 import consulo.process.ExecutionException;
 import consulo.process.ProcessHandler;
 import consulo.process.cmd.SimpleJavaParameters;
-import consulo.process.local.OSProcessHandler;
+import consulo.process.internal.OSProcessHandler;
 import consulo.project.ProjectBundle;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.awt.util.Alarm;

@@ -16,7 +16,7 @@ import consulo.logging.Logger;
 import consulo.process.ProcessOutputTypes;
 import consulo.process.io.BaseDataReader;
 import consulo.process.io.BaseOutputReader;
-import consulo.process.local.OSProcessHandler;
+import consulo.process.internal.OSProcessHandler;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.util.dataholder.Key;
 import consulo.util.io.CharsetToolkit;

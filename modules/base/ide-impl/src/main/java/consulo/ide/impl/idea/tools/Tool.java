@@ -35,7 +35,7 @@ import consulo.process.ExecutionException;
 import consulo.process.ProcessHandler;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.event.ProcessListener;
-import consulo.process.local.OSProcessHandler;
+import consulo.process.internal.OSProcessHandler;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import org.jetbrains.annotations.NonNls;

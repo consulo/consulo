@@ -16,25 +16,25 @@
 package consulo.ide.impl.idea.openapi.vcs.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.codeInsight.CodeSmellInfo;
-import consulo.language.editor.DaemonCodeAnalyzer;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl;
-import consulo.application.impl.internal.progress.DaemonProgressIndicator;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.SeverityRegistrarImpl;
-import consulo.ide.impl.idea.ide.errorTreeView.NewErrorTreeViewPanelImpl;
-import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
-import consulo.application.impl.internal.progress.AbstractProgressIndicatorExBase;
-import consulo.vcs.AbstractVcsHelper;
-import consulo.ide.impl.idea.openapi.vcs.CodeSmellDetector;
-import consulo.vcs.VcsBundle;
-import consulo.ide.impl.idea.util.ExceptionUtil;
-import consulo.ui.ex.MessageCategory;
 import consulo.application.ApplicationManager;
-import consulo.application.progress.*;
+import consulo.application.impl.internal.progress.AbstractProgressIndicatorExBase;
+import consulo.application.impl.internal.progress.DaemonProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicatorEx;
+import consulo.application.progress.ProgressManager;
+import consulo.application.progress.Task;
 import consulo.component.ProcessCanceledException;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.codeInsight.CodeSmellInfo;
+import consulo.ide.impl.idea.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl;
+import consulo.ide.impl.idea.codeInsight.daemon.impl.SeverityRegistrarImpl;
+import consulo.ide.impl.idea.ide.errorTreeView.NewErrorTreeViewPanelImpl;
+import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.ide.impl.idea.openapi.vcs.CodeSmellDetector;
+import consulo.ide.impl.idea.util.ExceptionUtil;
+import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.editor.rawHighlight.HighlightInfo;
@@ -45,7 +45,12 @@ import consulo.language.psi.PsiManager;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.ex.MessageCategory;
+import consulo.ui.ex.errorTreeView.NewErrorTreeViewPanel;
+import consulo.ui.ex.errorTreeView.NewErrorTreeViewPanelFactory;
 import consulo.util.lang.ref.Ref;
+import consulo.vcs.AbstractVcsHelper;
+import consulo.vcs.VcsBundle;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -84,7 +89,9 @@ public class CodeSmellDetectorImpl extends CodeSmellDetector {
           return;
         }
 
-        final VcsErrorViewPanel errorTreeView = new VcsErrorViewPanel(myProject);
+        final NewErrorTreeViewPanel errorTreeView = myProject.getApplication().getInstance(NewErrorTreeViewPanelFactory.class).createPanel(myProject, null);
+        errorTreeView.setCanHideWarningsOrInfos(false);
+
         AbstractVcsHelperImpl helper = (AbstractVcsHelperImpl)AbstractVcsHelper.getInstance(myProject);
         helper.openMessagesView(errorTreeView, VcsBundle.message("code.smells.error.messages.tab.name"));
 

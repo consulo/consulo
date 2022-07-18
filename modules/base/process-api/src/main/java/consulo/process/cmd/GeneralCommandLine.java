@@ -20,7 +20,7 @@ import consulo.application.util.SystemInfo;
 import consulo.logging.Logger;
 import consulo.process.*;
 import consulo.process.local.EnvironmentUtil;
-import consulo.process.local.OSProcessHandler;
+import consulo.process.internal.OSProcessHandler;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.DelegateMap;
 import consulo.util.collection.HashingStrategy;

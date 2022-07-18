@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.process.local;
+package consulo.process.internal;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
 import consulo.process.DefaultCharsetProvider;
@@ -23,7 +22,6 @@ import consulo.process.ExecutionException;
 import consulo.process.SelfKiller;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.io.BaseOutputReader;
-import consulo.process.local.internal.OSProcessManager;
 import consulo.util.dataholder.Key;
 import consulo.util.io.FileUtil;
 
@@ -45,8 +43,6 @@ public class OSProcessHandler extends BaseOSProcessHandler {
   private boolean myDestroyRecursively = true;
   private Set<File> myFilesToDelete = null;
 
-  @Deprecated
-  @DeprecationInfo("Use consulo.ide.impl.idea.execution.process.ProcessHandlerFactory")
   public OSProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
     this(startProcess(commandLine), commandLine.getCommandLineString(), commandLine.getCharset());
     myHasErrorStream = !commandLine.isRedirectErrorStream();

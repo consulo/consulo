@@ -15,16 +15,16 @@
  */
 package consulo.ide.impl.idea.execution.process;
 
+import consulo.application.util.SystemInfo;
+import consulo.logging.Logger;
 import consulo.process.ExecutionException;
 import consulo.process.KillableProcess;
 import consulo.process.cmd.GeneralCommandLine;
-import consulo.logging.Logger;
-import consulo.process.local.OSProcessHandler;
-import consulo.process.local.internal.UnixProcessManager;
+import consulo.process.internal.OSProcessHandler;
+import consulo.process.internal.UnixProcessManager;
 import consulo.util.dataholder.Key;
-import consulo.application.util.SystemInfo;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.nio.charset.Charset;
 

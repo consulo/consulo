@@ -33,7 +33,7 @@ public abstract class ProcessHandlerFactory {
   }
 
   /**
-   * Returns a new instance of the {@link OSProcessHandler}.
+   * Returns a new instance of the {@link ProcessHandler}.
    */
   @Nonnull
   public final ProcessHandler createProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
@@ -41,7 +41,22 @@ public abstract class ProcessHandlerFactory {
   }
 
   /**
-   * Returns a new instance of the {@link OSProcessHandler} which is aware of ANSI coloring output.
+   * This process handler supports the "soft-kill" feature (see {@link KillableProcessHandler}).
+   * At first "stop" button send SIGINT signal to process, if it still hangs user can terminate it recursively with SIGKILL signal.
+   * <p>
+   * Soft kill works on Unix, and also on Windows if a mediator process was used.
+   */
+  @Nonnull
+  public abstract ProcessHandler createKillableProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException;
+
+  /**
+   * Returns a new instance of the {@link #createKillableProcessHandler(GeneralCommandLine)} which is aware of ANSI coloring output.
+   */
+  @Nonnull
+  public abstract ProcessHandler createKillableColoredProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException;
+
+  /**
+   * Returns a new instance of the {@link ProcessHandler} which is aware of ANSI coloring output.
    */
   @Nonnull
   public abstract ProcessHandler createColoredProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException;

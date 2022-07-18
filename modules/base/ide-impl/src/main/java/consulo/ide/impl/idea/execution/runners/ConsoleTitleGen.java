@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.execution.runners;
 
-import consulo.ide.impl.idea.execution.ExecutionHelper;
+import consulo.execution.ExecutionHelper;
 import consulo.process.ProcessHandler;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.project.Project;

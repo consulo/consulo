@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.execution;
+package consulo.execution.process;
 
 import consulo.process.event.ProcessListener;
-import consulo.ide.impl.idea.util.Function;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
+import consulo.util.collection.Lists;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.List;
+import java.util.function.Function;
 
 /**
 * @author Roman.Chernyatchik
@@ -36,7 +36,7 @@ public class ExecutionMode {
   private final JComponent myProgressParentComponent;
   private Function<Object, Boolean> myShouldCancelFun;
   private final Object CANCEL_FUN_LOCK = new Object();
-  private final List<ProcessListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
+  private final List<ProcessListener> myListeners = Lists.newLockFreeCopyOnWriteList();
 
   public ExecutionMode(final boolean cancelable,
                        @Nullable final String title,

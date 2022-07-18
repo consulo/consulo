@@ -4,6 +4,7 @@ package consulo.process.local;
 import consulo.application.progress.ProgressIndicator;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
+import consulo.process.internal.OSProcessHandler;
 import consulo.util.lang.DeprecatedMethodException;
 
 import javax.annotation.Nonnull;
@@ -15,22 +16,12 @@ import java.nio.charset.Charset;
  *
  * @author yole
  */
-public class CapturingProcessHandler extends OSProcessHandler {
+public final class CapturingProcessHandler extends OSProcessHandler {
   private final CapturingProcessRunner myProcessRunner;
 
   public CapturingProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
     super(commandLine);
     myProcessRunner = new CapturingProcessRunner(this, this::createProcessAdapter);
-  }
-
-  /**
-   * @deprecated Use {@link #CapturingProcessHandler(Process, Charset, String)} instead (to be removed in IDEA 17)
-   */
-  @Deprecated
-  //@ApiStatus.ScheduledForRemoval(inVersion = "2017")
-  public CapturingProcessHandler(@Nonnull Process process) {
-    this(process, null, "");
-    DeprecatedMethodException.report("Use CapturingProcessHandler(Process, Charset, String) instead");
   }
 
   /**

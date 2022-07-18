@@ -1,29 +1,27 @@
-package consulo.ide.impl.idea.execution;
+package consulo.execution;
 
+import consulo.application.AllIcons;
+import consulo.application.ApplicationManager;
+import consulo.application.dumb.DumbAware;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.document.FileDocumentManager;
+import consulo.execution.action.CloseAction;
 import consulo.execution.executor.DefaultRunExecutor;
+import consulo.execution.executor.Executor;
+import consulo.execution.ui.RunContentDescriptor;
+import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.console.Filter;
 import consulo.execution.ui.console.TextConsoleBuilder;
 import consulo.execution.ui.console.TextConsoleBuilderFactory;
-import consulo.execution.ExecutionManager;
-import consulo.execution.executor.Executor;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.process.ProcessHandler;
 import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
-import consulo.process.ProcessHandler;
-import consulo.execution.ui.console.ConsoleView;
-import consulo.execution.ui.RunContentDescriptor;
-import consulo.ide.impl.idea.execution.ui.actions.CloseAction;
-import consulo.application.AllIcons;
-import consulo.application.ApplicationManager;
-import consulo.document.FileDocumentManager;
-import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import consulo.application.util.function.Computable;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.image.Image;
 
@@ -33,6 +31,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BooleanSupplier;
 
 /**
  * Runs a process and prints the output in a content tab within the Run toolwindow.
@@ -46,7 +45,7 @@ public class RunContentExecutor implements Disposable {
   private Runnable myRerunAction;
   private Runnable myStopAction;
   private Runnable myAfterCompletion;
-  private Computable<Boolean> myStopEnabled;
+  private BooleanSupplier myStopEnabled;
   private String myTitle = "Output";
   private String myHelpId = null;
   private boolean myActivateToolWindow = true;
@@ -82,7 +81,7 @@ public class RunContentExecutor implements Disposable {
     return this;
   }
 
-  public RunContentExecutor withStop(@Nonnull Runnable stop, @Nonnull Computable<Boolean> stopEnabled) {
+  public RunContentExecutor withStop(@Nonnull Runnable stop, @Nonnull BooleanSupplier stopEnabled) {
     myStopAction = stop;
     myStopEnabled = stopEnabled;
     return this;
@@ -137,7 +136,7 @@ public class RunContentExecutor implements Disposable {
     FileDocumentManager.getInstance().saveAllDocuments();
 
     // Use user-provided console if exist. Create new otherwise
-    ConsoleView view = (myUserProvidedConsole != null ? myUserProvidedConsole :  createConsole(myProject));
+    ConsoleView view = (myUserProvidedConsole != null ? myUserProvidedConsole : createConsole(myProject));
     view.attachToProcess(myProcess);
     if (myAfterCompletion != null) {
       myProcess.addProcessListener(new ProcessAdapter() {
@@ -151,8 +150,7 @@ public class RunContentExecutor implements Disposable {
   }
 
   public void activateToolWindow() {
-    ApplicationManager.getApplication().invokeLater(
-            () -> ToolWindowManager.getInstance(myProject).getToolWindow(ToolWindowId.RUN).activate(null));
+    ApplicationManager.getApplication().invokeLater(() -> ToolWindowManager.getInstance(myProject).getToolWindow(ToolWindowId.RUN).activate(null));
   }
 
   private static JComponent createConsolePanel(ConsoleView view, ActionGroup actions) {
@@ -184,16 +182,17 @@ public class RunContentExecutor implements Disposable {
 
   private class RerunAction extends AnAction {
     public RerunAction(JComponent consolePanel) {
-      super("Rerun", "Rerun",
-            AllIcons.Actions.Restart);
+      super("Rerun", "Rerun", AllIcons.Actions.Restart);
       registerCustomShortcutSet(CommonShortcuts.getRerun(), consolePanel);
     }
 
+    @RequiredUIAccess
     @Override
     public void actionPerformed(AnActionEvent e) {
       myRerunAction.run();
     }
 
+    @RequiredUIAccess
     @Override
     public void update(AnActionEvent e) {
       e.getPresentation().setVisible(myRerunAction != null);
@@ -208,19 +207,20 @@ public class RunContentExecutor implements Disposable {
 
   private class StopAction extends AnAction implements DumbAware {
     public StopAction() {
-      super("Stop", "Stop",
-            AllIcons.Actions.Suspend);
+      super("Stop", "Stop", AllIcons.Actions.Suspend);
     }
 
+    @RequiredUIAccess
     @Override
     public void actionPerformed(AnActionEvent e) {
       myStopAction.run();
     }
 
+    @RequiredUIAccess
     @Override
     public void update(AnActionEvent e) {
       e.getPresentation().setVisible(myStopAction != null);
-      e.getPresentation().setEnabled(myStopEnabled != null && myStopEnabled.compute());
+      e.getPresentation().setEnabled(myStopEnabled != null && myStopEnabled.getAsBoolean());
     }
   }
 }

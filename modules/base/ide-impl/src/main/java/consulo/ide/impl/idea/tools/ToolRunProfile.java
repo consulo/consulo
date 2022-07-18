@@ -39,7 +39,7 @@ import consulo.process.ProcessOutputTypes;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
-import consulo.process.local.OSProcessHandler;
+import consulo.process.internal.OSProcessHandler;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;

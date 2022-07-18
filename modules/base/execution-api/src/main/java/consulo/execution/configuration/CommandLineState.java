@@ -34,7 +34,6 @@ import consulo.execution.ui.console.TextConsoleBuilderFactory;
 import consulo.process.ExecutionException;
 import consulo.process.ProcessHandler;
 import consulo.process.cmd.GeneralCommandLine;
-import consulo.process.local.OSProcessHandler;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -43,7 +42,6 @@ import consulo.ui.ex.action.ToggleAction;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 /**
  * Base implementation of {@link RunProfileState}. Takes care of putting together a process and a console and wrapping them into an
  * {@link ExecutionResult}. Does not contain any logic for actually starting the process.
@@ -105,7 +103,6 @@ public abstract class CommandLineState implements RunProfileState {
    * @return the handler for the running process
    * @throws ExecutionException if the execution failed.
    * @see GeneralCommandLine
-   * @see OSProcessHandler
    */
   @Nonnull
   protected abstract ProcessHandler startProcess() throws ExecutionException;
@@ -129,7 +126,7 @@ public abstract class CommandLineState implements RunProfileState {
     myConsoleBuilder = consoleBuilder;
   }
 
-  protected static class PauseOutputAction extends ToggleAction implements DumbAware{
+  protected static class PauseOutputAction extends ToggleAction implements DumbAware {
     private final ConsoleView myConsole;
     private final ProcessHandler myProcessHandler;
 

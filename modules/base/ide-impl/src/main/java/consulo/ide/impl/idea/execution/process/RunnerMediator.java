@@ -22,7 +22,7 @@ import consulo.platform.Platform;
 import consulo.process.ExecutionException;
 import consulo.process.ProcessHandler;
 import consulo.process.cmd.GeneralCommandLine;
-import consulo.process.local.internal.UnixProcessManager;
+import consulo.process.internal.UnixProcessManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -48,7 +48,7 @@ public class RunnerMediator {
   /**
    * Creates default runner mediator
    */
-  public static RunnerMediator getInstance() {
+  public static RunnerMediator newInstance() {
     return new RunnerMediator();
   }
 

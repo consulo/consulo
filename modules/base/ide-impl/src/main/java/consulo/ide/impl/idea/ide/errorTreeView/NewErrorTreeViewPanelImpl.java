@@ -87,6 +87,8 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
   private AutoScrollToSourceHandler myAutoScrollToSourceHandler;
   private MyOccurenceNavigatorSupport myOccurenceNavigatorSupport;
 
+  private boolean myCanHideWarningsOrInfos = true;
+
   public NewErrorTreeViewPanelImpl(Project project, String helpId) {
     this(project, helpId, true);
   }
@@ -619,7 +621,12 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
   }
 
   protected boolean canHideWarningsOrInfos() {
-    return true;
+    return myCanHideWarningsOrInfos;
+  }
+
+  @Override
+  public void setCanHideWarningsOrInfos(boolean canHideWarningsOrInfos) {
+    myCanHideWarningsOrInfos = canHideWarningsOrInfos;
   }
 
   private class ShowInfosAction extends ToggleAction {

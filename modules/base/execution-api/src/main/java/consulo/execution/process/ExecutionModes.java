@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.execution;
+package consulo.execution.process;
 
 import javax.annotation.Nullable;
 

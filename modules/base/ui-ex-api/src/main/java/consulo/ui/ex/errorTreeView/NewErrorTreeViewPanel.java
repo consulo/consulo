@@ -34,4 +34,6 @@ public interface NewErrorTreeViewPanel extends OccurenceNavigator, MutableErrorT
   boolean canControlProcess();
 
   boolean isProcessStopped();
+
+  void setCanHideWarningsOrInfos(boolean canHideWarningsOrInfos);
 }

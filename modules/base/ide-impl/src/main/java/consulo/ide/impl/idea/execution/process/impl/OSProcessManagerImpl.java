@@ -16,9 +16,9 @@
 package consulo.ide.impl.idea.execution.process.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.process.local.internal.OSProcessManager;
+import consulo.process.internal.OSProcessManager;
 import consulo.ide.impl.idea.execution.process.RunnerWinProcess;
-import consulo.process.local.internal.UnixProcessManager;
+import consulo.process.internal.UnixProcessManager;
 import consulo.application.util.SystemInfo;
 import consulo.logging.Logger;
 import jakarta.inject.Singleton;

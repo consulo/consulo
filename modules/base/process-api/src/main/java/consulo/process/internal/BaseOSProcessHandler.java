@@ -1,5 +1,5 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.process.local;
+package consulo.process.internal;
 
 import consulo.logging.Logger;
 import consulo.process.ProcessOutputTypes;
@@ -9,6 +9,7 @@ import consulo.process.io.BaseDataReader;
 import consulo.process.io.BaseInputStreamReader;
 import consulo.process.io.BaseOutputReader;
 import consulo.process.io.ProcessIOExecutorService;
+import consulo.process.local.BaseProcessHandler;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 

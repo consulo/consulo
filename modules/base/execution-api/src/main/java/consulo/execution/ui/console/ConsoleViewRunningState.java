@@ -16,13 +16,12 @@
 package consulo.execution.ui.console;
 
 import consulo.execution.ExecutionBundle;
-import consulo.virtualFileSystem.encoding.EncodingManager;
 import consulo.process.ProcessHandler;
 import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
 import consulo.process.local.BaseProcessHandler;
-import consulo.process.local.OSProcessHandler;
 import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.encoding.EncodingManager;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -66,8 +65,8 @@ public class ConsoleViewRunningState extends ConsoleState {
 
   private static OutputStreamWriter createOutputStreamWriter(OutputStream processInput, ProcessHandler processHandler) {
     Charset charset = null;
-    if (processHandler instanceof OSProcessHandler) {
-      charset = ((OSProcessHandler)processHandler).getCharset();
+    if (processHandler instanceof BaseProcessHandler) {
+      charset = ((BaseProcessHandler)processHandler).getCharset();
     }
     if (charset == null) {
       charset = EncodingManager.getInstance().getDefaultCharset();
