@@ -7,7 +7,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.util.ConcurrentFactoryMap;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.codeInsight.daemon.AnnotatorStatisticsCollector;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.analysis.ErrorQuickFixProvider;
+import consulo.language.editor.intention.ErrorQuickFixProvider;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
 import consulo.language.Language;

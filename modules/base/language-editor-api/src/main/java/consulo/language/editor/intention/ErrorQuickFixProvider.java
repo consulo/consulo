@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.daemon.impl.analysis;
+package consulo.language.editor.intention;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
@@ -24,10 +24,11 @@ import consulo.language.psi.PsiErrorElement;
 
 /**
  * @author yole
+ * @see QuickFixAction#registerQuickFixAction(HighlightInfo, IntentionAction)
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ErrorQuickFixProvider {
   ExtensionPointName<ErrorQuickFixProvider> EP_NAME = ExtensionPointName.create(ErrorQuickFixProvider.class);
-  
+
   void registerErrorQuickFix(PsiErrorElement errorElement, HighlightInfo highlightInfo);
 }
