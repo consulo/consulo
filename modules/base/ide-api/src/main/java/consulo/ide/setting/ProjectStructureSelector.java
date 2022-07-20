@@ -45,6 +45,12 @@ public interface ProjectStructureSelector {
 
   @Nonnull
   @RequiredUIAccess
+  default AsyncResult<Void> select(@Nonnull Module module, final boolean requestFocus) {
+    return select(module.getName(), null, requestFocus);
+  }
+
+  @Nonnull
+  @RequiredUIAccess
   AsyncResult<Void> select(@Nullable final String moduleToSelect, @Nullable String tabId, final boolean requestFocus);
 
   @Nonnull
