@@ -18,32 +18,34 @@ package consulo.ide.impl.idea.openapi.vcs.changes.conflicts;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.document.Document;
 import consulo.codeEditor.EditorFactory;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
-import consulo.document.FileDocumentManager;
-import consulo.project.Project;
+import consulo.fileEditor.EditorNotifications;
 import consulo.ide.impl.idea.openapi.project.ProjectUtil;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.ZipperUpdater;
+import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListAdapter;
+import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManager;
+import consulo.ide.impl.idea.openapi.vcs.changes.ChangesUtil;
+import consulo.ide.impl.idea.openapi.vcs.changes.InvokeAfterUpdateMode;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.project.Project;
+import consulo.ui.ex.awt.util.Alarm;
+import consulo.util.xml.serializer.XmlSerializer;
 import consulo.vcs.FilePath;
 import consulo.vcs.change.Change;
 import consulo.vcs.change.ChangeList;
 import consulo.vcs.change.ContentRevision;
 import consulo.vcs.change.LocalChangeList;
-import consulo.virtualFileSystem.status.FileStatusManager;
-import consulo.ide.impl.idea.openapi.vcs.changes.*;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.fileEditor.EditorNotifications;
-import consulo.ui.ex.awt.util.Alarm;
-import consulo.ide.impl.idea.util.NullableFunction;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.util.xml.serializer.XmlSerializer;
+import consulo.virtualFileSystem.status.FileStatusManager;
 import org.jdom.Element;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.*;
 
@@ -256,7 +258,7 @@ public class ChangelistConflictTracker {
   }
 
   public Collection<String> getIgnoredConflicts() {
-    return ContainerUtil.mapNotNull(myConflicts.entrySet(), (NullableFunction<Map.Entry<String, Conflict>, String>)entry -> entry.getValue().ignored ? entry.getKey() : null);
+    return ContainerUtil.mapNotNull(myConflicts.entrySet(), entry -> entry.getValue().ignored ? entry.getKey() : null);
   }
 
   public static class Conflict {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.fileEditor.internal;
+package consulo.ide.impl.fileEditor;
 
-import consulo.util.collection.Maps;
-import consulo.util.dataholder.Key;
-
-import javax.annotation.Nonnull;
-import java.util.Map;
+import consulo.application.dumb.DumbAware;
+import consulo.fileEditor.EditorNotificationProvider;
 
 /**
  * @author VISTALL
- * @since 2019-05-08
+ * @since 18-Jul-22
  */
-public class EditorNotificationProviderKeyCache {
-  private static final Map<Class, Key> ourKeys = Maps.newConcurrentWeakKeySoftValueHashMap();
-
-  @Nonnull
-  @SuppressWarnings("unchecked")
-  public static <T> Key<T> getOrCreate(Class clazz) {
-    return ourKeys.computeIfAbsent(clazz, aClass -> Key.create(aClass.getName() + "$EditorNotificationProvider"));
+public class DumbAwareNewEditorNotificationProvider extends NewEditorNotificationProvider implements DumbAware {
+  public DumbAwareNewEditorNotificationProvider(EditorNotificationProvider editorNotificationProvider) {
+    super(editorNotificationProvider);
   }
 }

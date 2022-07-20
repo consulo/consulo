@@ -1,29 +1,25 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.editor.impl;
 
-import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.ide.impl.idea.ui.EditorNotificationPanel;
-import consulo.fileEditor.EditorNotifications;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.ApplicationPropertiesComponent;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorBundle;
 import consulo.codeEditor.internal.RealEditor;
-import consulo.fileEditor.EditorNotificationProvider;
-import consulo.fileEditor.FileEditor;
-import consulo.fileEditor.TextEditor;
+import consulo.fileEditor.*;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Supplier;
 
 @ExtensionImpl
-public final class ForcedSoftWrapsNotificationProvider implements EditorNotificationProvider<EditorNotificationPanel>, DumbAware {
-  private static final Key<EditorNotificationPanel> KEY = Key.create("forced.soft.wraps.notification.panel");
+public final class ForcedSoftWrapsNotificationProvider implements EditorNotificationProvider, DumbAware {
   private static final String DISABLED_NOTIFICATION_KEY = "disable.forced.soft.wraps.notification";
 
   private final Project myProject;
@@ -33,34 +29,28 @@ public final class ForcedSoftWrapsNotificationProvider implements EditorNotifica
     myProject = project;
   }
 
-  @Nonnull
-  @Override
-  public Key<EditorNotificationPanel> getKey() {
-    return KEY;
-  }
-
   @RequiredReadAction
   @Nullable
   @Override
-  public EditorNotificationPanel createNotificationPanel(@Nonnull final VirtualFile file, @Nonnull final FileEditor fileEditor) {
+  public EditorNotificationBuilder buildNotification(@Nonnull VirtualFile file, @Nonnull FileEditor fileEditor, @Nonnull Supplier<EditorNotificationBuilder> builderFactory) {
     if (!(fileEditor instanceof TextEditor)) return null;
     final Editor editor = ((TextEditor)fileEditor).getEditor();
     if (!Boolean.TRUE.equals(editor.getUserData(RealEditor.FORCED_SOFT_WRAPS)) ||
         !Boolean.TRUE.equals(editor.getUserData(RealEditor.SOFT_WRAPS_EXIST)) ||
-        PropertiesComponent.getInstance().isTrueValue(DISABLED_NOTIFICATION_KEY)) {
+        ApplicationPropertiesComponent.getInstance().isTrueValue(DISABLED_NOTIFICATION_KEY)) {
       return null;
     }
 
-    final EditorNotificationPanel panel = new EditorNotificationPanel();
-    panel.setText(EditorBundle.message("forced.soft.wrap.message"));
-    panel.createActionLabel(EditorBundle.message("forced.soft.wrap.hide.message"), () -> {
+    EditorNotificationBuilder builder = builderFactory.get();
+    builder.withText(LocalizeValue.localizeTODO(EditorBundle.message("forced.soft.wrap.message")));
+    builder.withAction(LocalizeValue.localizeTODO(EditorBundle.message("forced.soft.wrap.hide.message")), () -> {
       editor.putUserData(RealEditor.FORCED_SOFT_WRAPS, null);
       EditorNotifications.getInstance(myProject).updateNotifications(file);
     });
-    panel.createActionLabel(EditorBundle.message("forced.soft.wrap.dont.show.again.message"), () -> {
-      PropertiesComponent.getInstance().setValue(DISABLED_NOTIFICATION_KEY, "true");
+    builder.withAction(LocalizeValue.localizeTODO(EditorBundle.message("forced.soft.wrap.dont.show.again.message")), () -> {
+      ApplicationPropertiesComponent.getInstance().setValue(DISABLED_NOTIFICATION_KEY, "true");
       EditorNotifications.getInstance(myProject).updateAllNotifications();
     });
-    return panel;
+    return builder;
   }
 }

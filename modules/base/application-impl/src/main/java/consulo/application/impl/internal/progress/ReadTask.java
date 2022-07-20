@@ -22,6 +22,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.function.Computable;
 import consulo.component.ProcessCanceledException;
 import consulo.project.DumbService;
+import consulo.ui.ModalityState;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -78,7 +79,7 @@ public abstract class ReadTask {
    */
   public static final class Continuation {
     private final Runnable myAction;
-    private final IdeaModalityState myModalityState;
+    private final ModalityState myModalityState;
 
     /**
      * @param action code to be executed in Swing thread in default modality state
@@ -92,7 +93,7 @@ public abstract class ReadTask {
      * @param action code to be executed in Swing thread in default modality state
      * @param modalityState modality state when the action is to be executed
      */
-    public Continuation(@Nonnull Runnable action, @Nonnull IdeaModalityState modalityState) {
+    public Continuation(@Nonnull Runnable action, @Nonnull ModalityState modalityState) {
       myAction = action;
       myModalityState = modalityState;
     }
@@ -101,7 +102,7 @@ public abstract class ReadTask {
      * @return modality state when {@link #getAction()} is to be executed
      */
     @Nonnull
-    public IdeaModalityState getModalityState() {
+    public ModalityState getModalityState() {
       return myModalityState;
     }
 

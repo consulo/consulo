@@ -230,7 +230,7 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
           PluginDescriptor descriptor = PluginManager.getPlugin(extender.getClass());
           assert descriptor != null;
 
-          if (extender.hasAnyExtensions()) {
+          if (extender.hasAnyExtensions(myComponentManager)) {
             extender.extend(myComponentManager, it -> extensions.add(Pair.create((T)it, descriptor)));
           }
         }
@@ -293,7 +293,7 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
     // if we have extenders for this extension, always return
     if (myApiClass != ExtensionExtender.class) {
       for (ExtensionExtender extender : Application.get().getExtensionPoint(ExtensionExtender.class).getExtensionList()) {
-        if (extender.getExtensionClass() == myApiClass && extender.hasAnyExtensions()) {
+        if (extender.getExtensionClass() == myApiClass && extender.hasAnyExtensions(myComponentManager)) {
           return true;
         }
       }

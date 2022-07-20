@@ -13,24 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.fileEditor;
+package consulo.fileEditor.internal;
 
-import consulo.annotation.access.RequiredReadAction;
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ExtensionAPI;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.fileEditor.EditorNotificationBuilder;
+import consulo.ui.Component;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.function.Supplier;
+import javax.swing.*;
 
 /**
  * @author VISTALL
- * @since 18-Jul-22
+ * @since 20-Jul-22
  */
-@ExtensionAPI(ComponentScope.PROJECT)
-public interface EditorNotificationProvider {
-  @Nullable
-  @RequiredReadAction
-  EditorNotificationBuilder buildNotification(@Nonnull VirtualFile file, @Nonnull FileEditor fileEditor, @Nonnull Supplier<EditorNotificationBuilder> builderFactory);
+public interface EditorNotificationBuilderEx extends EditorNotificationBuilder {
+  @Nonnull
+  default JComponent getComponent() {
+    return (JComponent)TargetAWT.to(getUIComponent());
+  }
+
+  @Nonnull
+  Component getUIComponent();
 }

@@ -17,8 +17,6 @@ package consulo.ide.impl.idea.ui;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
 import consulo.application.impl.internal.progress.ReadTask;
@@ -26,20 +24,22 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.concurrent.SequentialTaskExecutor;
 import consulo.component.ProcessCanceledException;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.fileEditor.*;
+import consulo.fileEditor.EditorNotifications;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorManager;
+import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.text.AsyncEditorLoader;
-import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.event.DumbModeListener;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.ref.SoftReference;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 
@@ -92,7 +92,7 @@ public class EditorNotificationsImpl extends EditorNotifications {
 
   @Override
   public void updateNotifications(@Nonnull final VirtualFile file) {
-    UIUtil.invokeLaterIfNeeded(() -> {
+    myProject.getApplication().getLastUIAccess().giveIfNeed(() -> {
       ProgressIndicator indicator = getCurrentProgress(file);
       if (indicator != null) {
         indicator.cancel();
@@ -108,15 +108,8 @@ public class EditorNotificationsImpl extends EditorNotifications {
       if (task == null) return;
 
       file.putUserData(CURRENT_UPDATES, new WeakReference<>(indicator));
-      if (ApplicationManager.getApplication().isUnitTestMode()) {
-        ReadTask.Continuation continuation = task.performInReadAction(indicator);
-        if (continuation != null) {
-          continuation.getAction().run();
-        }
-      }
-      else {
-        ProgressIndicatorUtils.scheduleWithWriteActionPriority(indicator, ourExecutor, task);
-      }
+
+      ProgressIndicatorUtils.scheduleWithWriteActionPriority(indicator, ourExecutor, task);
     });
   }
 
@@ -165,7 +158,7 @@ public class EditorNotificationsImpl extends EditorNotifications {
               update.run();
             }
           }
-        }, IdeaModalityState.any());
+        }, myProject.getApplication().getAnyModalityState());
       }
 
       @Override
@@ -180,7 +173,6 @@ public class EditorNotificationsImpl extends EditorNotifications {
   private static ProgressIndicator getCurrentProgress(VirtualFile file) {
     return SoftReference.dereference(file.getUserData(CURRENT_UPDATES));
   }
-
 
   private void updateNotification(@Nonnull FileEditor editor, @Nonnull Key<? extends JComponent> key, @Nullable JComponent component) {
     JComponent old = editor.getUserData(key);

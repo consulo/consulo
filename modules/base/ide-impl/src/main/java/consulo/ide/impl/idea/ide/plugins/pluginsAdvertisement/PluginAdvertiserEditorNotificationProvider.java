@@ -15,27 +15,28 @@
  */
 package consulo.ide.impl.idea.ide.plugins.pluginsAdvertisement;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.dumb.DumbAware;
+import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginId;
+import consulo.fileEditor.EditorNotificationBuilder;
+import consulo.fileEditor.EditorNotificationProvider;
+import consulo.fileEditor.EditorNotifications;
+import consulo.fileEditor.FileEditor;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.plugins.PluginManager;
 import consulo.ide.impl.idea.ide.plugins.PluginManagerCore;
 import consulo.ide.impl.idea.ide.plugins.PluginManagerMain;
-import consulo.fileEditor.FileEditor;
-import consulo.virtualFileSystem.fileType.FileTypeFactory;
-import consulo.language.plain.PlainTextFileType;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.AbstractFileType;
-import consulo.application.dumb.DumbAware;
+import consulo.ide.impl.plugins.pluginsAdvertisement.PluginsAdvertiserDialog;
+import consulo.ide.impl.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
+import consulo.language.plain.PlainTextFileType;
+import consulo.localize.LocalizeValue;
 import consulo.project.UnknownExtension;
 import consulo.project.UnknownFeaturesCollector;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.ui.EditorNotificationPanel;
-import consulo.fileEditor.EditorNotifications;
-import consulo.annotation.access.RequiredReadAction;
-import consulo.container.plugin.PluginDescriptor;
-import consulo.container.plugin.PluginId;
-import consulo.fileEditor.EditorNotificationProvider;
-import consulo.ide.impl.plugins.pluginsAdvertisement.PluginsAdvertiserDialog;
-import consulo.ide.impl.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
+import consulo.virtualFileSystem.fileType.FileTypeFactory;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
@@ -44,6 +45,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -51,7 +53,7 @@ import java.util.stream.Collectors;
  * Date: 10/11/13
  */
 @ExtensionImpl
-public class PluginAdvertiserEditorNotificationProvider implements EditorNotificationProvider<EditorNotificationPanel>, DumbAware {
+public class PluginAdvertiserEditorNotificationProvider implements EditorNotificationProvider, DumbAware {
   private final EditorNotifications myNotifications;
   private final Set<String> myEnabledExtensions = new HashSet<>();
   private final UnknownFeaturesCollector myUnknownFeaturesCollector;
@@ -65,7 +67,7 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
   @RequiredReadAction
   @Nullable
   @Override
-  public EditorNotificationPanel createNotificationPanel(@Nonnull VirtualFile file, @Nonnull FileEditor fileEditor) {
+  public EditorNotificationBuilder buildNotification(@Nonnull VirtualFile file, @Nonnull FileEditor fileEditor, @Nonnull Supplier<EditorNotificationBuilder> builderFactory) {
     if (file.getFileType() != PlainTextFileType.INSTANCE && !(file.getFileType() instanceof AbstractFileType)) return null;
 
     final String extension = file.getExtension();
@@ -81,21 +83,21 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
 
     Set<PluginDescriptor> byFeature = PluginsAdvertiser.findByFeature(allPlugins, fileFeatureForChecking);
     if (!byFeature.isEmpty()) {
-      return createPanel(file, byFeature, allPlugins);
+      return build(file, byFeature, allPlugins, builderFactory.get());
 
     }
     return null;
   }
 
+  @RequiredReadAction
   @Nonnull
-  private EditorNotificationPanel createPanel(VirtualFile virtualFile, Set<PluginDescriptor> plugins, List<PluginDescriptor> allPlugins) {
+  private EditorNotificationBuilder build(VirtualFile virtualFile, Set<PluginDescriptor> plugins, List<PluginDescriptor> allPlugins, EditorNotificationBuilder builder) {
     String extension = virtualFile.getExtension();
 
-    final EditorNotificationPanel panel = new EditorNotificationPanel();
-    panel.setText(IdeBundle.message("plugin.advestiser.notification.text", plugins.size()));
+    builder.withText(LocalizeValue.localizeTODO(IdeBundle.message("plugin.advestiser.notification.text", plugins.size())));
     final PluginDescriptor disabledPlugin = getDisabledPlugin(plugins.stream().map(x -> x.getPluginId().getIdString()).collect(Collectors.toSet()));
     if (disabledPlugin != null) {
-      panel.createActionLabel("Enable " + disabledPlugin.getName() + " plugin", () -> {
+      builder.withAction(LocalizeValue.localizeTODO("Enable " + disabledPlugin.getName() + " plugin"), () -> {
         myEnabledExtensions.add(extension);
         consulo.container.plugin.PluginManager.enablePlugin(disabledPlugin.getPluginId().getIdString());
         myNotifications.updateAllNotifications();
@@ -103,7 +105,7 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
       });
     }
     else {
-      panel.createActionLabel(IdeBundle.message("plugin.advestiser.notification.install.link", plugins.size()), () -> {
+      builder.withAction(LocalizeValue.localizeTODO(IdeBundle.message("plugin.advestiser.notification.install.link", plugins.size())), () -> {
         final PluginsAdvertiserDialog advertiserDialog = new PluginsAdvertiserDialog(null, allPlugins, new ArrayList<>(plugins));
         advertiserDialog.show();
         if (advertiserDialog.isUserInstalledPlugins()) {
@@ -113,17 +115,17 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
       });
     }
 
-    panel.createActionLabel("Ignore by file name", () -> {
+    builder.withAction(LocalizeValue.localizeTODO("Ignore by file name"), () -> {
       myUnknownFeaturesCollector.ignoreFeature(new UnknownExtension(FileTypeFactory.FILE_TYPE_FACTORY_EP, virtualFile.getName()));
       myNotifications.updateAllNotifications();
     });
 
-    panel.createActionLabel("Ignore by extension", () -> {
+    builder.withAction(LocalizeValue.localizeTODO("Ignore by extension"), () -> {
       myUnknownFeaturesCollector.ignoreFeature(new UnknownExtension(FileTypeFactory.FILE_TYPE_FACTORY_EP, "*." + virtualFile.getExtension()));
       myNotifications.updateAllNotifications();
     });
 
-    return panel;
+    return builder;
   }
 
   private boolean isIgnoredFile(@Nonnull VirtualFile virtualFile) {

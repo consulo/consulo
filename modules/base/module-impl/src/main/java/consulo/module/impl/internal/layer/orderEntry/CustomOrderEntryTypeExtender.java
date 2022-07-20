@@ -40,7 +40,7 @@ public class CustomOrderEntryTypeExtender implements ExtensionExtender<OrderEntr
   }
 
   @Override
-  public boolean hasAnyExtensions() {
+  public boolean hasAnyExtensions(ComponentManager componentManager) {
     return CustomOrderEntryTypeProvider.EP.hasAnyExtensions(Application.get());
   }
 

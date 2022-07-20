@@ -24,11 +24,8 @@ import consulo.component.macro.PathMacroProtocolProvider;
 import consulo.component.macro.ReplacePathToMacroMap;
 import consulo.ide.impl.idea.build.progress.BuildProgress;
 import consulo.ide.impl.idea.build.progress.BuildProgressDescriptor;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.logging.Logger;
 import consulo.process.ExecutionException;
 import consulo.process.ProcessHandler;
@@ -39,8 +36,11 @@ import consulo.process.event.ProcessEvent;
 import consulo.process.local.ProcessHandlerFactory;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeProvider;
@@ -60,7 +60,7 @@ import java.util.List;
  * @since 23:16/06.10.13
  */
 public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsChangeTask {
-  private static final Logger LOGGER = Logger.getInstance(BackgroundTaskByVfsChangeTaskImpl.class);
+  private static final Logger LOG = Logger.getInstance(BackgroundTaskByVfsChangeTaskImpl.class);
 
   private final Project myProject;
   private final BackgroundTaskByVfsParameters myParameters;
@@ -171,7 +171,7 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
     }
     catch (ExecutionException e) {
       actionCallback.setRejected();
-      LOGGER.error(e);
+      LOG.error(e);
     }
   }
 

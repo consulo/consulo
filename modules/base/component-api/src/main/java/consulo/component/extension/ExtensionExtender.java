@@ -38,7 +38,7 @@ public interface ExtensionExtender<T> {
   Class<T> getExtensionClass();
 
   /**
-   * Return true if extender will add one or more valyues
+   * Return true if extender will add one or more values
    */
-  boolean hasAnyExtensions();
+  boolean hasAnyExtensions(ComponentManager componentManager);
 }

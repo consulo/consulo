@@ -15,13 +15,14 @@
  */
 package consulo.ide.impl.idea.ide;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.ApplicationManager;
-import consulo.ide.IdeBundle;
-import consulo.logging.Logger;
-import consulo.fileEditor.FileEditor;
-import consulo.fileEditor.FileEditorManager;
 import consulo.application.dumb.DumbAware;
+import consulo.component.messagebus.MessageBusConnection;
+import consulo.fileEditor.*;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.logging.Logger;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.util.io.FileAttributes;
 import consulo.virtualFileSystem.LocalFileSystem;
@@ -29,21 +30,16 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileEvent;
-import consulo.ide.impl.idea.ui.EditorNotificationPanel;
-import consulo.fileEditor.EditorNotifications;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.component.messagebus.MessageBusConnection;
-import consulo.annotation.access.RequiredReadAction;
-import consulo.fileEditor.EditorNotificationProvider;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Supplier;
 
 @ExtensionImpl
-public class FileChangedNotificationProvider implements EditorNotificationProvider<EditorNotificationPanel>, DumbAware {
+public class FileChangedNotificationProvider implements EditorNotificationProvider, DumbAware {
   private static final Logger LOG = Logger.getInstance(FileChangedNotificationProvider.class);
 
   private final Project myProject;
@@ -64,7 +60,7 @@ public class FileChangedNotificationProvider implements EditorNotificationProvid
       }
     }, project);
 
-    MessageBusConnection connection = ApplicationManager.getApplication().getMessageBus().connect(myProject);
+    MessageBusConnection connection = project.getApplication().getMessageBus().connect(myProject);
     connection.subscribe(BulkFileListener.class, new BulkFileListener() {
       @Override
       public void after(@Nonnull List<? extends VFileEvent> events) {
@@ -85,7 +81,7 @@ public class FileChangedNotificationProvider implements EditorNotificationProvid
   @RequiredReadAction
   @Nullable
   @Override
-  public EditorNotificationPanel createNotificationPanel(@Nonnull VirtualFile file, @Nonnull FileEditor fileEditor) {
+  public EditorNotificationBuilder buildNotification(@Nonnull VirtualFile file, @Nonnull FileEditor fileEditor, @Nonnull Supplier<EditorNotificationBuilder> builderFactory) {
     if (!myProject.isDisposed() && !GeneralSettings.getInstance().isSyncOnFrameActivation()) {
       VirtualFileSystem fs = file.getFileSystem();
       if (fs instanceof LocalFileSystem) {
@@ -94,7 +90,7 @@ public class FileChangedNotificationProvider implements EditorNotificationProvid
           if (LOG.isDebugEnabled()) {
             LOG.debug(String.format("%s: (%s,%s) -> %s", file, file.getTimeStamp(), file.getLength(), attributes));
           }
-          return createPanel(file);
+          return build(file, builderFactory.get());
         }
       }
     }
@@ -102,15 +98,14 @@ public class FileChangedNotificationProvider implements EditorNotificationProvid
     return null;
   }
 
-  private EditorNotificationPanel createPanel(@Nonnull final VirtualFile file) {
-    EditorNotificationPanel panel = new EditorNotificationPanel();
-    panel.setText(IdeBundle.message("file.changed.externally.message"));
-    panel.createActionLabel(IdeBundle.message("file.changed.externally.reload"), () -> {
+  private EditorNotificationBuilder build(@Nonnull final VirtualFile file, EditorNotificationBuilder builder) {
+    builder.withText(IdeLocalize.fileChangedExternallyMessage());
+    builder.withAction(IdeLocalize.fileChangedExternallyReload(), () -> {
       if (!myProject.isDisposed()) {
         file.refresh(false, false);
         EditorNotifications.getInstance(myProject).updateNotifications(file);
       }
     });
-    return panel;
+    return builder;
   }
 }

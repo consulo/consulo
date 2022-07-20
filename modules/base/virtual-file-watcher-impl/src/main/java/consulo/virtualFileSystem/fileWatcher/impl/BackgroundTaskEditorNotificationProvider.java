@@ -18,11 +18,12 @@ package consulo.virtualFileSystem.fileWatcher.impl;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
-import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.EditorNotificationBuilder;
 import consulo.fileEditor.EditorNotificationProvider;
-import consulo.ide.impl.idea.ui.EditorNotificationPanel;
+import consulo.fileEditor.FileEditor;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.ui.ex.Gray;
+import consulo.ui.color.RGBColor;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeManager;
@@ -33,13 +34,14 @@ import jakarta.inject.Inject;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
  * @since 26.10.2015
  */
 @ExtensionImpl
-public class BackgroundTaskEditorNotificationProvider implements EditorNotificationProvider<EditorNotificationPanel>, DumbAware {
+public class BackgroundTaskEditorNotificationProvider implements EditorNotificationProvider, DumbAware {
   private final Project myProject;
 
   @Inject
@@ -50,29 +52,26 @@ public class BackgroundTaskEditorNotificationProvider implements EditorNotificat
   @RequiredReadAction
   @Nullable
   @Override
-  public EditorNotificationPanel createNotificationPanel(@Nonnull final VirtualFile file, @Nonnull FileEditor fileEditor) {
+  public EditorNotificationBuilder buildNotification(@Nonnull VirtualFile file, @Nonnull FileEditor fileEditor, @Nonnull Supplier<EditorNotificationBuilder> builderFactory) {
     List<BackgroundTaskByVfsChangeProvider> providers = BackgroundTaskByVfsChangeProviders.getProviders(myProject, file);
     if (providers.isEmpty()) {
       return null;
     }
 
-    EditorNotificationPanel panel = new EditorNotificationPanel(Gray._220);
+    EditorNotificationBuilder builder = builderFactory.get();
+    builder.withBackgroundColor(new RGBColor(220, 220, 220));
 
     List<BackgroundTaskByVfsChangeTask> tasks = BackgroundTaskByVfsChangeManager.getInstance(myProject).findTasks(file);
     if (!tasks.isEmpty()) {
-      panel.text("Task(s): " + StringUtil.join(tasks, it -> it.getName() + (!it.isEnabled() ? " (disabled)" : ""), ", "));
+      builder.withText(LocalizeValue.localizeTODO("Task(s): " + StringUtil.join(tasks, it -> it.getName() + (!it.isEnabled() ? " (disabled)" : ""), ", ")));
 
-      panel.createActionLabel("Force Run", () -> {
-        BackgroundTaskByVfsChangeManager.getInstance(myProject).runTasks(file);
-      });
+      builder.withAction(LocalizeValue.localizeTODO("Force Run"), () -> BackgroundTaskByVfsChangeManager.getInstance(myProject).runTasks(file));
     }
     else {
-      panel.text("Background task(s) on file change is available");
+      builder.withText(LocalizeValue.localizeTODO("Background task(s) on file change is available"));
     }
 
-    panel.createActionLabel("Manage", () -> {
-      BackgroundTaskByVfsChangeManager.getInstance(myProject).openManageDialog(file);
-    });
-    return panel;
+    builder.withAction(LocalizeValue.localizeTODO("Manage"), () -> BackgroundTaskByVfsChangeManager.getInstance(myProject).openManageDialog(file));
+    return builder;
   }
 }

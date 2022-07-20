@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ui;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.AllIcons;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorBundle;
@@ -22,9 +23,9 @@ import consulo.codeEditor.EditorColors;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.component.util.Iconable;
 import consulo.dataContext.DataManager;
-import consulo.language.editor.intention.AbstractEmptyIntentionAction;
 import consulo.ide.impl.idea.codeInsight.intention.IntentionActionProvider;
 import consulo.ide.impl.idea.codeInsight.intention.IntentionActionWithOptions;
+import consulo.language.editor.intention.AbstractEmptyIntentionAction;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.intention.LowPriorityAction;
 import consulo.language.editor.intention.SyntheticIntentionAction;
@@ -59,11 +60,13 @@ import java.util.List;
 /**
  * @author Dmitry Avdeev
  */
+@Deprecated
+@DeprecationInfo("Just AWT implementation")
 public class EditorNotificationPanel extends JPanel implements IntentionActionProvider {
   protected final JLabel myLabel = new JLabel();
   protected final JLabel myGearLabel = new JLabel();
   protected final JPanel myLinksPanel;
-  private final Color myBackgroundColor;
+  protected Color myBackgroundColor;
 
   public EditorNotificationPanel() {
     this(null);
@@ -79,10 +82,11 @@ public class EditorNotificationPanel extends JPanel implements IntentionActionPr
     add(myLabel, BorderLayout.CENTER);
 
     myLinksPanel = new JPanel(new FlowLayout());
-    myLinksPanel.setBackground(getBackground());
+    myLinksPanel.setOpaque(false);
 
     JPanel panel = new JPanel(new BorderLayout());
-    panel.setBackground(getBackground());
+    panel.setOpaque(false);
+
     myGearLabel.setBorder(JBUI.Borders.empty(0, 3, 0, 0));
     panel.add(myLinksPanel, BorderLayout.WEST);
     panel.add(myGearLabel, BorderLayout.EAST);
@@ -118,6 +122,8 @@ public class EditorNotificationPanel extends JPanel implements IntentionActionPr
 
   public HyperlinkLabel createActionLabel(final String text, final Runnable action) {
     HyperlinkLabel label = new HyperlinkLabel(text, JBColor.BLUE, getBackground(), JBColor.BLUE);
+    label.setOpaque(false);
+
     label.addHyperlinkListener(new HyperlinkAdapter() {
       @Override
       protected void hyperlinkActivated(HyperlinkEvent e) {
@@ -131,8 +137,7 @@ public class EditorNotificationPanel extends JPanel implements IntentionActionPr
   @RequiredUIAccess
   protected void executeAction(final String actionId) {
     final AnAction action = ActionManager.getInstance().getAction(actionId);
-    final AnActionEvent event = new AnActionEvent(null, DataManager.getInstance().getDataContext(this), ActionPlaces.UNKNOWN, action.getTemplatePresentation(),
-                                                  ActionManager.getInstance(), 0);
+    final AnActionEvent event = new AnActionEvent(null, DataManager.getInstance().getDataContext(this), ActionPlaces.UNKNOWN, action.getTemplatePresentation(), ActionManager.getInstance(), 0);
     action.beforeActionPerformedUpdate(event);
     action.update(event);
 

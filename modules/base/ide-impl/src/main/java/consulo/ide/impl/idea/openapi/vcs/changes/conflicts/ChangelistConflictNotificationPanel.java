@@ -15,68 +15,61 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.conflicts;
 
-import consulo.application.AllIcons;
+import consulo.fileEditor.EditorNotificationBuilder;
+import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManager;
+import consulo.ide.impl.idea.openapi.vcs.changes.LocalChangeListImpl;
 import consulo.ide.setting.ShowSettingsUtil;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.vcs.changes.*;
 import consulo.vcs.change.Change;
-import consulo.vcs.change.ChangeList;
 import consulo.vcs.change.LocalChangeList;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.ui.EditorNotificationPanel;
-import consulo.ide.impl.idea.ui.InplaceButton;
-import javax.annotation.Nullable;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import javax.annotation.Nullable;
 import java.util.Collections;
+import java.util.function.Supplier;
 
 /**
  * @author Dmitry Avdeev
  */
-public class ChangelistConflictNotificationPanel extends EditorNotificationPanel {
-
-  private final ChangeList myChangeList;
-  private final VirtualFile myFile;
-  private final ChangelistConflictTracker myTracker;
-
+public class ChangelistConflictNotificationPanel {
   @Nullable
-  public static ChangelistConflictNotificationPanel create(ChangelistConflictTracker tracker, VirtualFile file) {
+  public static EditorNotificationBuilder create(ChangelistConflictTracker tracker, VirtualFile file, Supplier<EditorNotificationBuilder> builderFactory) {
     final ChangeListManager manager = tracker.getChangeListManager();
     final Change change = manager.getChange(file);
     if (change == null) return null;
     final LocalChangeList changeList = manager.getChangeList(change);
     if (changeList == null) return null;
-    return new ChangelistConflictNotificationPanel(tracker, file, changeList);
+    EditorNotificationBuilder builder = builderFactory.get();
+    build(tracker, file, LocalChangeListImpl.createEmptyChangeList(tracker.getProject(), "Test"), builder);
+    return builder;
   }
 
-  private ChangelistConflictNotificationPanel(ChangelistConflictTracker tracker, VirtualFile file, LocalChangeList changeList) {
-    myTracker = tracker;
-    myFile = file;
+  static void build(ChangelistConflictTracker tracker, VirtualFile file, LocalChangeList changeList, EditorNotificationBuilder builder) {
     final ChangeListManager manager = tracker.getChangeListManager();
-    myChangeList = changeList;
-    myLabel.setText("File from non-active changelist is modified");
-    createActionLabel("Move changes", () -> ChangelistConflictResolution.MOVE.resolveConflict(myTracker.getProject(), myChangeList.getChanges(), myFile)).
-            setToolTipText("Move changes to active changelist (" + manager.getDefaultChangeList().getName() + ")");
+    builder.withText(LocalizeValue.localizeTODO("File from non-active changelist is modified"));
 
-    createActionLabel("Switch changelist", () -> {
-      Change change = myTracker.getChangeListManager().getChange(myFile);
+    builder.withAction(LocalizeValue.localizeTODO("Move changes"), LocalizeValue.localizeTODO("Move changes to active changelist (" + manager.getDefaultChangeList().getName() + ")"), () -> {
+      ChangelistConflictResolution.MOVE.resolveConflict(tracker.getProject(), changeList.getChanges(), file);
+    });
+
+    builder.withAction(LocalizeValue.localizeTODO("Switch changelist"), LocalizeValue.localizeTODO("Set active changelist to '" + changeList.getName() + "'"), () -> {
+      Change change = tracker.getChangeListManager().getChange(file);
       if (change == null) {
         Messages.showInfoMessage("No changes for this file", "Message");
       }
       else {
-        ChangelistConflictResolution.SWITCH.resolveConflict(myTracker.getProject(), Collections.singletonList(change), null);
+        ChangelistConflictResolution.SWITCH.resolveConflict(tracker.getProject(), Collections.singletonList(change), null);
       }
-    }).setToolTipText("Set active changelist to '" + myChangeList.getName() + "'");
+    });
 
-    createActionLabel("Ignore", () -> myTracker.ignoreConflict(myFile, true)).setToolTipText("Hide this notification");
+    builder.withAction(LocalizeValue.localizeTODO("Ignore"), LocalizeValue.localizeTODO("Hide this notification"), () -> {
+      tracker.ignoreConflict(file, true);
+    });
 
-    myLinksPanel.add(new InplaceButton("Show options dialog", AllIcons.General.Settings, new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-
-        ShowSettingsUtil.getInstance().editConfigurable(myTracker.getProject(),
-                                                        new ChangelistConflictConfigurable((ChangeListManagerImpl)manager));
-      }
-    }));
+    builder.withGearAction(LocalizeValue.localizeTODO("Show options dialog"), PlatformIconGroup.generalSettings(), () -> {
+      ShowSettingsUtil.getInstance().showAndSelect(tracker.getProject(), ChangelistConflictConfigurable.class);
+    });
   }
 }

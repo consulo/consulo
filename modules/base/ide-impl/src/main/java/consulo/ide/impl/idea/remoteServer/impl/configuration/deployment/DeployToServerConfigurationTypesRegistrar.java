@@ -37,7 +37,7 @@ public class DeployToServerConfigurationTypesRegistrar implements ExtensionExten
   }
 
   @Override
-  public boolean hasAnyExtensions() {
+  public boolean hasAnyExtensions(ComponentManager componentManager) {
     return ServerType.EP_NAME.hasAnyExtensions();
   }
 

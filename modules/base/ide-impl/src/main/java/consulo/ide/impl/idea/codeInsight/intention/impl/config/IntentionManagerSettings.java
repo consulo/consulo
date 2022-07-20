@@ -84,7 +84,7 @@ public class IntentionManagerSettings implements PersistentStateComponent<Elemen
   }
 
   public boolean isShowLightBulb(@Nonnull IntentionAction action) {
-    if (action instanceof SyntheticIntentionAction) {
+    if (isSyntheticIntention(action)) {
       return true;
     }
 
@@ -115,7 +115,7 @@ public class IntentionManagerSettings implements PersistentStateComponent<Elemen
   }
 
   public boolean isEnabled(@Nonnull IntentionActionMetaData metaData) {
-    if (metaData.getAction() instanceof SyntheticIntentionAction) {
+    if (isSyntheticIntention(metaData.getAction())) {
       return true;
     }
 
@@ -135,6 +135,18 @@ public class IntentionManagerSettings implements PersistentStateComponent<Elemen
     throw new IllegalArgumentException("Missed @IntentionMetaData on " + action.getClass());
   }
 
+  private static boolean isSyntheticIntention(@Nonnull IntentionAction action) {
+    if (action instanceof SyntheticIntentionAction) {
+      return true;
+    }
+
+    while (action instanceof IntentionActionDelegate) {
+      action = ((IntentionActionDelegate)action).getDelegate();
+    }
+
+    return action instanceof SyntheticIntentionAction;
+  }
+
   public void setEnabled(@Nonnull IntentionActionMetaData metaData, boolean enabled) {
     if (enabled) {
       myIgnoredActions.remove(getIgnoreId(metaData.getAction()));
@@ -145,7 +157,7 @@ public class IntentionManagerSettings implements PersistentStateComponent<Elemen
   }
 
   public boolean isEnabled(@Nonnull IntentionAction action) {
-    if (action instanceof SyntheticIntentionAction) {
+    if (isSyntheticIntention(action)) {
       return true;
     }
     return !myIgnoredActions.contains(getIgnoreId(action));

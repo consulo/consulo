@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,41 +13,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.changes.conflicts;
+package consulo.sandboxPlugin.ide.fileEditor;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.fileEditor.EditorNotificationBuilder;
 import consulo.fileEditor.EditorNotificationProvider;
 import consulo.fileEditor.FileEditor;
-import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManager;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.sandboxPlugin.lang.SandFileType;
+import consulo.ui.Alerts;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.annotation.access.RequiredReadAction;
-
-import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
 /**
- * @author Dmitry Avdeev
+ * @author VISTALL
+ * @since 18-Jul-22
  */
 @ExtensionImpl
-public class ChangelistConflictNotificationProvider implements EditorNotificationProvider, DumbAware {
-
-  private final ChangelistConflictTracker myConflictTracker;
-
-  @Inject
-  public ChangelistConflictNotificationProvider(ChangeListManager changeListManager) {
-    myConflictTracker = ((ChangeListManagerImpl)changeListManager).getConflictTracker();
-  }
-
+public class SandEditorNotificationProvider implements EditorNotificationProvider {
   @RequiredReadAction
   @Nullable
   @Override
   public EditorNotificationBuilder buildNotification(@Nonnull VirtualFile file, @Nonnull FileEditor fileEditor, @Nonnull Supplier<EditorNotificationBuilder> builderFactory) {
-    return myConflictTracker.hasConflict(file) ? ChangelistConflictNotificationPanel.create(myConflictTracker, file, builderFactory) : null;
+    if (file.getFileType() != SandFileType.INSTANCE) {
+      return null;
+    }
+
+    EditorNotificationBuilder builder = builderFactory.get();
+    builder.withText(LocalizeValue.localizeTODO("Sand text"));
+    builder.withIcon(PlatformIconGroup.nodesStatic());
+    builder.withAction(LocalizeValue.localizeTODO("Hello World"), () -> Alerts.okInfo(LocalizeValue.localizeTODO("Hello World")).showAsync());
+    return builder;
   }
 }

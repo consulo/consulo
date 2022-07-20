@@ -15,25 +15,27 @@
  */
 package consulo.ide.impl.idea.ide;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
-import consulo.fileEditor.FileEditor;
 import consulo.application.dumb.DumbAware;
+import consulo.fileEditor.EditorNotificationBuilder;
+import consulo.fileEditor.EditorNotificationProvider;
+import consulo.fileEditor.FileEditor;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.content.GeneratedSourcesFilter;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.ui.EditorNotificationPanel;
-import consulo.annotation.access.RequiredReadAction;
-import consulo.fileEditor.EditorNotificationProvider;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Supplier;
 
 /**
  * @author nik
  */
 @ExtensionImpl
-public class GeneratedFileEditingNotificationProvider implements EditorNotificationProvider<EditorNotificationPanel>, DumbAware {
+public class GeneratedFileEditingNotificationProvider implements EditorNotificationProvider, DumbAware {
   private final Project myProject;
 
   @Inject
@@ -44,11 +46,11 @@ public class GeneratedFileEditingNotificationProvider implements EditorNotificat
   @RequiredReadAction
   @Nullable
   @Override
-  public EditorNotificationPanel createNotificationPanel(@Nonnull VirtualFile file, @Nonnull FileEditor fileEditor) {
-    if (!GeneratedSourcesFilter.isGenerated(myProject, file)) return null;
+  public EditorNotificationBuilder buildNotification(@Nonnull VirtualFile file, @Nonnull FileEditor fileEditor, @Nonnull Supplier<EditorNotificationBuilder> builderFactory) {
+    if (!GeneratedSourcesFilter.isGeneratedSourceByAnyFilter(file, myProject)) return null;
 
-    EditorNotificationPanel panel = new EditorNotificationPanel();
-    panel.setText("Generated source files should not be edited. The changes will be lost when sources are regenerated.");
-    return panel;
+    EditorNotificationBuilder builder = builderFactory.get();
+    builder.withText(LocalizeValue.localizeTODO("Generated source files should not be edited. The changes will be lost when sources are regenerated."));
+    return builder;
   }
 }

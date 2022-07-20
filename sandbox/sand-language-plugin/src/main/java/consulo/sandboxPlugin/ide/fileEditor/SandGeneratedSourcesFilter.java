@@ -13,24 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.fileEditor;
+package consulo.sandboxPlugin.ide.fileEditor;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ExtensionAPI;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.project.Project;
+import consulo.project.content.GeneratedSourcesFilter;
+import consulo.sandboxPlugin.lang.SandFileType;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 18-Jul-22
+ * @since 20-Jul-22
  */
-@ExtensionAPI(ComponentScope.PROJECT)
-public interface EditorNotificationProvider {
-  @Nullable
+@ExtensionImpl
+public class SandGeneratedSourcesFilter extends GeneratedSourcesFilter {
   @RequiredReadAction
-  EditorNotificationBuilder buildNotification(@Nonnull VirtualFile file, @Nonnull FileEditor fileEditor, @Nonnull Supplier<EditorNotificationBuilder> builderFactory);
+  @Override
+  public boolean isGeneratedSource(@Nonnull VirtualFile file, @Nonnull Project project) {
+    return file.getFileType() == SandFileType.INSTANCE && file.getNameWithoutExtension().endsWith("_gen");
+  }
 }
