@@ -47,6 +47,7 @@ module consulo.component.api {
           consulo.ide.impl,
           consulo.desktop.awt.ide.impl,
           consulo.desktop.swt.ide.impl,
+          consulo.test.impl,
           consulo.language.editor.api;
 
   uses consulo.component.bind.InjectingBinding;
