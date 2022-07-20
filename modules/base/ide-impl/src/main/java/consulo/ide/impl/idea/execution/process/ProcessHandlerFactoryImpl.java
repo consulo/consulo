@@ -63,7 +63,7 @@ public class ProcessHandlerFactoryImpl extends ProcessHandlerFactory {
   @Nonnull
   @Override
   public ProcessHandler createKillableProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
-    return new KillableProcessHandler(commandLine);
+    return new KillableProcessHandler(commandLine, true);
   }
 
   @Nonnull
