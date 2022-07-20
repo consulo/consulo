@@ -3,7 +3,6 @@ package consulo.execution.coverage.view;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
-import consulo.execution.coverage.CoverageViewExtension;
 import consulo.project.Project;
 import consulo.project.ui.view.commander.AbstractListBuilder;
 import consulo.project.ui.view.tree.AbstractTreeNode;

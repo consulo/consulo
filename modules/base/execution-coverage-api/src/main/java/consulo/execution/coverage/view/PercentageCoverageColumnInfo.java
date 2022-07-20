@@ -1,6 +1,5 @@
-package consulo.ide.impl.idea.coverage.view;
+package consulo.execution.coverage.view;
 
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.execution.coverage.CoverageEngine;
 import consulo.execution.coverage.CoverageSuitesBundle;
 import consulo.execution.coverage.CoverageViewManager;
@@ -8,6 +7,7 @@ import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.ex.awt.ColumnInfo;
 import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.util.lang.Comparing;
 
 import java.util.Comparator;
 

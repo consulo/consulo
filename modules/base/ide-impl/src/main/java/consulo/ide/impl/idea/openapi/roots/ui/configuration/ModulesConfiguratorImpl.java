@@ -25,6 +25,7 @@ import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.configurable.ConfigurationException;
 import consulo.ide.setting.ShowSettingsUtil;
+import consulo.module.ModulesAlphaComparator;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.module.content.layer.ContentEntry;

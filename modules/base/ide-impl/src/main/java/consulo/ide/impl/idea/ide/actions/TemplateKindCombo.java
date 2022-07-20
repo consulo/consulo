@@ -21,7 +21,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.util.lang.Trinity;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
-import consulo.ide.impl.idea.ui.ComboboxSpeedSearch;
+import consulo.ui.ex.awt.ComboboxSpeedSearch;
 import consulo.ui.ex.awt.ComboboxWithBrowseButton;
 import consulo.ui.image.Image;
 

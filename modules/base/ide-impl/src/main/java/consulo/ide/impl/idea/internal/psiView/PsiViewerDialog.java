@@ -42,9 +42,9 @@ import consulo.ide.impl.idea.internal.psiView.formattingblocks.BlockTreeStructur
 import consulo.ide.impl.idea.openapi.fileTypes.impl.AbstractFileType;
 import consulo.ide.impl.idea.openapi.util.DimensionService;
 import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
-import consulo.ide.impl.idea.ui.ComboboxSpeedSearch;
+import consulo.ui.ex.awt.ComboboxSpeedSearch;
 import consulo.ide.impl.idea.ui.ListCellRendererWrapper;
-import consulo.ide.impl.idea.ui.SortedComboBoxModel;
+import consulo.ui.ex.awt.SortedComboBoxModel;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.psi.search.FilenameIndex;

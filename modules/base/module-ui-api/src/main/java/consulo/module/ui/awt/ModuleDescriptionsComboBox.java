@@ -13,17 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.application.options;
+package consulo.module.ui.awt;
 
 import consulo.application.AllIcons;
-import consulo.ui.ex.JBColor;
-import consulo.module.*;
-import consulo.ide.impl.idea.openapi.module.impl.LoadedModuleDescriptionImpl;
 import consulo.module.Module;
+import consulo.module.*;
+import consulo.module.content.internal.LoadedModuleDescriptionImpl;
 import consulo.project.Project;
+import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.ComboBox;
-import consulo.ide.impl.idea.ui.*;
+import consulo.ui.ex.awt.ComboboxSpeedSearch;
+import consulo.ui.ex.awt.SortedComboBoxModel;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -33,7 +34,7 @@ import java.util.Collection;
 import java.util.Comparator;
 
 /**
- * Combobox which may show not only regular loaded modules but also unloaded modules. Use it instead of {@link consulo.ide.impl.idea.openapi.roots.ui.configuration.ModulesCombobox} for
+ * Combobox which may show not only regular loaded modules but also unloaded modules. Use it instead of {@link ModulesComboBox} for
  * configuration elements which may refer to unloaded modules.
  *
  * @author nik

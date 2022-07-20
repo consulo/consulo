@@ -1,4 +1,4 @@
-package consulo.ide.impl.idea.application.options;
+package consulo.module.ui.awt;
 
 import consulo.application.AllIcons;
 import consulo.module.Module;

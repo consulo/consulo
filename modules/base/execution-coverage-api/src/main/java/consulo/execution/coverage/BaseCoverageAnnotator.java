@@ -1,12 +1,8 @@
-package consulo.ide.impl.idea.coverage;
+package consulo.execution.coverage;
 
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
-import consulo.execution.coverage.CoverageAnnotator;
-import consulo.execution.coverage.CoverageDataManager;
-import consulo.execution.coverage.CoverageSuitesBundle;
-import consulo.execution.coverage.CoverageViewManager;
 import consulo.execution.coverage.view.CoverageView;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;

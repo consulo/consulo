@@ -1,4 +1,4 @@
-package consulo.ide.impl.idea.coverage.view;
+package consulo.execution.coverage.view;
 
 import consulo.ui.ex.tree.AlphaComparator;
 import consulo.ui.ex.tree.NodeDescriptor;

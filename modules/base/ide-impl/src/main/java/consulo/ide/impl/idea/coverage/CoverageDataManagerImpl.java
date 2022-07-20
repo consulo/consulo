@@ -61,6 +61,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Supplier;
 
 /**
  * @author ven
@@ -445,7 +446,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
   }
 
   @Override
-  public <T> T doInReadActionIfProjectOpen(Computable<T> computation) {
+  public <T> T doInReadActionIfProjectOpen(Supplier<T> computation) {
     synchronized (myLock) {
       if (myIsProjectClosing) return null;
     }

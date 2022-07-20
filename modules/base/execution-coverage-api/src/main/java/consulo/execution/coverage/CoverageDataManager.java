@@ -18,16 +18,16 @@ package consulo.execution.coverage;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
+import consulo.disposer.Disposable;
 import consulo.execution.configuration.RunConfigurationBase;
 import consulo.execution.configuration.RunnerSettings;
 import consulo.process.ProcessHandler;
-import consulo.disposer.Disposable;
 import consulo.project.Project;
-import consulo.application.util.function.Computable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * @author ven
@@ -120,11 +120,11 @@ public abstract class CoverageDataManager {
    * runs computation in read action, blocking project close till action has been run,
    * and doing nothing in case projectClosing() event has been already broadcasted.
    *  Note that actions must not be long running not to cause significant pauses on project close.  
-   * @param computation {@link Computable to be run}
+   * @param computation {@link Supplier to be run}
    * @return result of the computation or null if the project is already closing.
    */
   @Nullable
-  public abstract <T> T doInReadActionIfProjectOpen(Computable<T> computation);
+  public abstract <T> T doInReadActionIfProjectOpen(Supplier<T> computation);
 
   public abstract boolean isSubCoverageActive();
 

@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.application.options;
+package consulo.module.ui.awt;
 
 import consulo.module.Module;
 import consulo.module.ModuleManager;
+import consulo.module.ModulesAlphaComparator;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.ModulesAlphaComparator;
 import consulo.ui.ex.awt.ComboBox;
-import consulo.ide.impl.idea.ui.ComboboxSpeedSearch;
-import consulo.ide.impl.idea.ui.SortedComboBoxModel;
+import consulo.ui.ex.awt.ComboboxSpeedSearch;
+import consulo.ui.ex.awt.SortedComboBoxModel;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -45,12 +45,13 @@ public class ModulesComboBox extends ComboBox<Module> {
   private ModulesComboBox(final SortedComboBoxModel<Module> model) {
     super(model);
     myModel = model;
-    new ComboboxSpeedSearch(this){
+    new ComboboxSpeedSearch(this) {
       @Override
       protected String getElementText(Object element) {
         if (element instanceof Module) {
           return ((Module)element).getName();
-        } else if (element == null) {
+        }
+        else if (element == null) {
           return "";
         }
         return super.getElementText(element);

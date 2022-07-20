@@ -1,7 +1,6 @@
 package consulo.execution.coverage.view;
 
 import consulo.execution.coverage.CoverageSuitesBundle;
-import consulo.execution.coverage.CoverageViewExtension;
 import consulo.execution.coverage.CoverageViewManager;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;

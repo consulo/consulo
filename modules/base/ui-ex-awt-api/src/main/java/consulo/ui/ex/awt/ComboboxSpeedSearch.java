@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ui;
+package consulo.ui.ex.awt;
 
 import consulo.ui.ex.awt.speedSearch.SpeedSearchBase;
 
@@ -39,15 +39,18 @@ public class ComboboxSpeedSearch extends SpeedSearchBase<JComboBox> {
     }
   }
 
+  @Override
   protected void selectElement(Object element, String selectedText) {
     myComponent.setSelectedItem(element);
     myComponent.repaint();
   }
 
+  @Override
   protected int getSelectedIndex() {
     return myComponent.getSelectedIndex();
   }
 
+  @Override
   protected Object[] getAllElements() {
     ListModel model = myComponent.getModel();
     Object[] elements = new Object[model.getSize()];
@@ -57,6 +60,7 @@ public class ComboboxSpeedSearch extends SpeedSearchBase<JComboBox> {
     return elements;
   }
 
+  @Override
   protected String getElementText(Object element) {
     return element.toString();
   }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.module.impl;
+package consulo.module.content.internal;
 
 import consulo.module.LoadedModuleDescription;
 import consulo.module.Module;

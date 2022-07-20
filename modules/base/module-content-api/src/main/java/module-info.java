@@ -16,5 +16,5 @@ module consulo.module.content.api {
   exports consulo.module.content.layer.extension;
   exports consulo.module.content.layer.event;
   exports consulo.module.content.layer.orderEntry;
-  exports consulo.module.content.internal to consulo.ide.impl, consulo.module.impl;
+  exports consulo.module.content.internal to consulo.ide.impl, consulo.module.impl, consulo.module.ui.api;
 }

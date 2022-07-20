@@ -34,7 +34,7 @@ import consulo.ide.impl.idea.remoteServer.impl.configuration.RemoteServerListCon
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.ComboboxWithBrowseButton;
 import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ide.impl.idea.ui.SortedComboBoxModel;
+import consulo.ui.ex.awt.SortedComboBoxModel;
 import consulo.ui.ex.awt.FormBuilder;
 
 import javax.annotation.Nonnull;

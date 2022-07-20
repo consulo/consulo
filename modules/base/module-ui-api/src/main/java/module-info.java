@@ -8,6 +8,7 @@ module consulo.module.ui.api {
   requires consulo.ui.ex.awt.api;
 
   requires transitive consulo.module.api;
+  requires transitive consulo.module.content.api;
   requires transitive consulo.application.content.api;
 
   exports consulo.module.ui;

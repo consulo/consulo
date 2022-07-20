@@ -1,10 +1,10 @@
-package consulo.ide.impl.idea.coverage.view;
+package consulo.execution.coverage.view;
 
 import consulo.application.ApplicationManager;
 import consulo.application.util.function.Computable;
 import consulo.execution.coverage.CoverageAnnotator;
 import consulo.execution.coverage.CoverageSuitesBundle;
-import consulo.execution.coverage.CoverageViewExtension;
+import consulo.execution.coverage.view.CoverageViewExtension;
 import consulo.execution.coverage.CoverageViewManager;
 import consulo.execution.coverage.view.CoverageListNode;
 import consulo.execution.coverage.view.CoverageListRootNode;

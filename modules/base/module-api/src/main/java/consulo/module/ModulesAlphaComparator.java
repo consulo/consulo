@@ -13,14 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.roots.ui.configuration;
+package consulo.module;
 
-import consulo.ide.impl.idea.application.options.ModulesComboBox;
+import java.util.Comparator;
 
 /**
- * @author nik
- * @deprecated use {@link consulo.ide.impl.idea.application.options.ModulesComboBox} instead
+ * @author Eugene Zhuravlev
  */
-@Deprecated
-public class ModulesCombobox extends ModulesComboBox {
+public class ModulesAlphaComparator implements Comparator<Module>{
+  public static final ModulesAlphaComparator INSTANCE = new ModulesAlphaComparator();
+
+  @Override
+  public int compare(Module module1, Module module2) {
+    if (module1 == null && module2 == null) return 0;
+    if (module1 == null) return -1;
+    if (module2 == null) return 1;
+    return module1.getName().compareToIgnoreCase(module2.getName());
+  }
 }

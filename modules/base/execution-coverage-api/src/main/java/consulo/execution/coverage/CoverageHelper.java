@@ -1,9 +1,7 @@
-package consulo.ide.impl.idea.coverage;
+package consulo.execution.coverage;
 
 import consulo.execution.configuration.RunConfigurationBase;
 import consulo.execution.configuration.RunnerSettings;
-import consulo.execution.coverage.CoverageDataManager;
-import consulo.execution.coverage.CoverageEnabledConfiguration;
 import consulo.process.ProcessHandler;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;

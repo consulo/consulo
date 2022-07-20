@@ -25,7 +25,7 @@ import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import consulo.ui.ex.awt.ComboBox;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.ui.ComboboxSpeedSearch;
+import consulo.ui.ex.awt.ComboboxSpeedSearch;
 import consulo.ui.ex.awt.PopupHandler;
 import consulo.ide.impl.idea.ui.PopupMenuListenerAdapter;
 import consulo.ui.ex.awt.ScrollPaneFactory;

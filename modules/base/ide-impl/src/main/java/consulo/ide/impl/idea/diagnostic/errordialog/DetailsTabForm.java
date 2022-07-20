@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.diagnostic.errordialog;
 import consulo.ide.impl.idea.diagnostic.Developer;
 import consulo.ide.impl.idea.diagnostic.DiagnosticBundle;
 import consulo.ide.impl.idea.diagnostic.IdeErrorsDialog;
-import consulo.ide.impl.idea.ui.ComboboxSpeedSearch;
+import consulo.ui.ex.awt.ComboboxSpeedSearch;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ide.impl.idea.util.containers.ComparatorUtil;
 import consulo.ui.ex.awt.UIUtil;
