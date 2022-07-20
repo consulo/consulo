@@ -16,6 +16,8 @@
 package consulo.ide.impl.idea.codeInsight.daemon.impl.analysis;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.language.editor.DefaultHighlightingSettingProvider;
+import consulo.language.editor.FileHighlightingSetting;
 import consulo.project.Project;
 import consulo.project.content.GeneratedSourcesFilter;
 import consulo.virtualFileSystem.VirtualFile;

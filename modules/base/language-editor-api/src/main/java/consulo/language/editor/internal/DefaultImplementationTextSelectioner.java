@@ -18,16 +18,17 @@
  * User: anna
  * Date: 01-Feb-2008
  */
-package consulo.language.editor;
+package consulo.language.editor.internal;
 
 import consulo.document.util.TextRange;
 import consulo.language.Language;
+import consulo.language.editor.ImplementationTextSelectioner;
 import consulo.language.psi.PsiElement;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
 
-class DefaultImplementationTextSelectioner implements ImplementationTextSelectioner {
+public class DefaultImplementationTextSelectioner implements ImplementationTextSelectioner {
   private static final Logger LOG = Logger.getInstance(DefaultImplementationTextSelectioner.class);
 
   @Override

@@ -15,14 +15,10 @@
  */
 package consulo.ide.impl.idea.diff.contents;
 
-import consulo.ide.impl.idea.codeInsight.daemon.impl.analysis.DefaultHighlightingSettingProvider;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.analysis.FileHighlightingSetting;
 import consulo.language.psi.PsiFile;
-import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class DiffPsiFileSupport {

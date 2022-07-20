@@ -33,6 +33,7 @@ package consulo.ide.impl.idea.codeInsight.daemon.impl.analysis;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
+import consulo.language.editor.FileHighlightingSetting;
 import consulo.language.psi.PsiElement;
 
 import javax.annotation.Nonnull;

@@ -17,6 +17,7 @@
 package consulo.ide.impl.idea.codeInsight.daemon.impl.analysis;
 
 import consulo.application.ApplicationManager;
+import consulo.language.editor.FileHighlightingSetting;
 import consulo.project.Project;
 import consulo.project.ProjectCoreUtil;
 import consulo.module.content.ProjectFileIndex;

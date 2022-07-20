@@ -18,7 +18,7 @@ import consulo.configurable.ConfigurationException;
 import consulo.diff.DiffUserDataKeys;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.analysis.FileHighlightingSetting;
+import consulo.language.editor.FileHighlightingSetting;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.analysis.HighlightLevelUtil;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.analysis.HighlightingLevelManager;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.analysis.HighlightingSettingsPerFile;

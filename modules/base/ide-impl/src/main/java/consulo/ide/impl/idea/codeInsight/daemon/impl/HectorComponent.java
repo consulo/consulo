@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.language.editor.DaemonCodeAnalyzer;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.analysis.FileHighlightingSetting;
+import consulo.language.editor.FileHighlightingSetting;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.analysis.HighlightLevelUtil;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.analysis.HighlightingLevelManager;
 import consulo.application.AllIcons;

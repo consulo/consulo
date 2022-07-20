@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.daemon.impl.analysis;
+package consulo.language.editor;
 
 public enum FileHighlightingSetting {
   NONE,

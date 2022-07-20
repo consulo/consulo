@@ -24,6 +24,8 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.ide.ServiceManager;
+import consulo.language.editor.DefaultHighlightingSettingProvider;
+import consulo.language.editor.FileHighlightingSetting;
 import consulo.language.editor.internal.PsiUtilBase;
 import consulo.language.impl.file.SingleRootFileViewProvider;
 import consulo.language.psi.PsiElement;
@@ -80,8 +82,7 @@ public class HighlightingSettingsPerFile extends HighlightingLevelManager implem
   @Nonnull
   private static FileHighlightingSetting getDefaultHighlightingSetting(@Nonnull Project project, final VirtualFile virtualFile) {
     if (virtualFile != null) {
-      DefaultHighlightingSettingProvider[] providers = DefaultHighlightingSettingProvider.EP_NAME.getExtensions();
-      List<DefaultHighlightingSettingProvider> filtered = DumbService.getInstance(project).filterByDumbAwareness(Arrays.asList(providers));
+      List<DefaultHighlightingSettingProvider> filtered = DumbService.getInstance(project).filterByDumbAwareness(DefaultHighlightingSettingProvider.EP_NAME.getExtensionList());
       for (DefaultHighlightingSettingProvider p : filtered) {
         FileHighlightingSetting setting = p.getDefaultSetting(project, virtualFile);
         if (setting != null) {
