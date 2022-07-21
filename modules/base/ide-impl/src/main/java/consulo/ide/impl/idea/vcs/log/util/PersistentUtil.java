@@ -16,6 +16,9 @@
 package consulo.ide.impl.idea.vcs.log.util;
 
 import consulo.index.io.KeyDescriptor;
+import consulo.index.io.Page;
+import consulo.index.io.PersistentBTreeEnumerator;
+import consulo.index.io.PersistentEnumeratorBase;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
@@ -23,7 +26,6 @@ import consulo.index.io.data.IOUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.PathUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.io.*;
 import consulo.ide.impl.idea.vcs.log.VcsLogProvider;
 import consulo.container.boot.ContainerPathManager;
 

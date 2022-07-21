@@ -4,7 +4,7 @@ package consulo.ide.impl.psi.stubs;
 import consulo.annotation.component.ServiceImpl;
 import consulo.container.boot.ContainerPathManager;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.util.io.PersistentStringEnumerator;
+import consulo.index.io.PersistentStringEnumerator;
 import consulo.index.io.data.IOUtil;
 import consulo.language.psi.stub.*;
 import consulo.logging.Logger;

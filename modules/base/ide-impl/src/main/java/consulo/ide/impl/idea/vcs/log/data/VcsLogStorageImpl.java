@@ -26,7 +26,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.application.util.function.CommonProcessors;
 import consulo.index.io.data.IOUtil;
 import consulo.index.io.KeyDescriptor;
-import consulo.ide.impl.idea.util.io.PersistentEnumeratorBase;
+import consulo.index.io.PersistentEnumeratorBase;
 import consulo.ide.impl.idea.vcs.log.*;
 import consulo.ide.impl.idea.vcs.log.impl.FatalErrorHandler;
 import consulo.ide.impl.idea.vcs.log.impl.HashImpl;

@@ -19,7 +19,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.execution.DefaultExecutionTarget;
 import consulo.execution.ExecutionTarget;
 import consulo.execution.ExecutionTargetProvider;
-import consulo.execution.RunnerAndConfigurationSettings;
+import consulo.execution.configuration.RunConfiguration;
 import consulo.project.Project;
 
 import javax.annotation.Nonnull;
@@ -29,7 +29,7 @@ import java.util.List;
 public class DefaultExecutionTargetProvider extends ExecutionTargetProvider {
   @Nonnull
   @Override
-  public List<ExecutionTarget> getTargets(@Nonnull Project project, @Nonnull RunnerAndConfigurationSettings configuration) {
+  public List<ExecutionTarget> getTargets(@Nonnull Project project, @Nonnull RunConfiguration configuration) {
     return List.of(DefaultExecutionTarget.INSTANCE);
   }
 }

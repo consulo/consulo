@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.vcs.log.data.index;
 
+import consulo.index.io.*;
 import consulo.util.lang.Couple;
 import consulo.application.util.SystemInfo;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
@@ -23,16 +24,12 @@ import consulo.vcs.change.Change;
 import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.PathUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.index.io.DataIndexer;
 import consulo.ide.impl.idea.util.indexing.StorageException;
-import consulo.ide.impl.idea.util.io.*;
 import consulo.ide.impl.idea.vcs.log.VcsFullCommitDetails;
 import consulo.ide.impl.idea.vcs.log.impl.FatalErrorHandler;
 import consulo.ide.impl.idea.vcs.log.impl.VcsChangesLazilyParsedDetails;
 import consulo.ide.impl.idea.vcs.log.util.PersistentUtil;
 import consulo.disposer.Disposable;
-import consulo.index.io.EnumeratorStringDescriptor;
-import consulo.index.io.KeyDescriptor;
 import consulo.index.io.data.DataExternalizer;
 import consulo.logging.Logger;
 import consulo.util.collection.primitive.ints.IntSet;

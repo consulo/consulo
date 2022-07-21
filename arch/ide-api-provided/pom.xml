@@ -141,6 +141,24 @@
     </dependency>
     <dependency>
       <groupId>${project.parent.groupId}</groupId>
+      <artifactId>consulo-execution-test-api</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>${project.parent.groupId}</groupId>
+      <artifactId>consulo-execution-test-sm-api</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>${project.parent.groupId}</groupId>
+      <artifactId>consulo-execution-test-thrift-api</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>${project.parent.groupId}</groupId>
       <artifactId>consulo-language-api</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>

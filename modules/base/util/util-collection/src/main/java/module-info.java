@@ -12,7 +12,9 @@ module consulo.util.collection {
           consulo.util.collection.primitive,
           consulo.desktop.awt.ide.impl,
           consulo.language.impl,
+          consulo.index.io,
           consulo.ide.impl;
+
   exports consulo.util.collection.impl.set to consulo.util.collection.primitive;
   exports consulo.util.collection.impl to consulo.util.collection.primitive, consulo.util.collection.via.trove;
 

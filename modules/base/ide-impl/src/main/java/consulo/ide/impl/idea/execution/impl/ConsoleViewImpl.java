@@ -41,7 +41,7 @@ import consulo.ide.impl.idea.codeInsight.template.impl.editorActions.TypedAction
 import consulo.ide.impl.idea.execution.actions.ClearConsoleAction;
 import consulo.ide.impl.idea.execution.actions.EOFAction;
 import consulo.ide.impl.idea.execution.filters.BrowserHyperlinkInfo;
-import consulo.ide.impl.idea.execution.filters.CompositeFilter;
+import consulo.execution.ui.console.CompositeFilter;
 import consulo.ide.impl.idea.execution.filters.CompositeInputFilter;
 import consulo.project.internal.StartupManagerEx;
 import consulo.ide.impl.idea.openapi.editor.actions.ScrollToTheEndToolbarAction;

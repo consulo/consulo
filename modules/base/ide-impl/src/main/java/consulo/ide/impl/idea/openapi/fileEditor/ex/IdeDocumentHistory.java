@@ -6,7 +6,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.IdeDocumentHistoryImpl;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.io.PersistentHashMap;
+import consulo.index.io.PersistentHashMap;
 import javax.annotation.Nonnull;
 
 import java.util.List;

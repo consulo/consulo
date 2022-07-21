@@ -21,8 +21,8 @@ import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.application.util.function.Processor;
 import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.KeyDescriptor;
-import consulo.ide.impl.idea.util.io.PersistentEnumerator;
-import consulo.ide.impl.idea.util.io.PersistentHashMap;
+import consulo.index.io.PersistentEnumerator;
+import consulo.index.io.PersistentHashMap;
 import javax.annotation.Nonnull;
 
 import java.io.DataInput;

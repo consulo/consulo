@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.history.core;
 
 import consulo.util.lang.Clock;
-import consulo.ide.impl.idea.util.io.PagePool;
+import consulo.index.io.PagePool;
 import consulo.ide.impl.idea.util.io.storage.AbstractRecordsTable;
 import consulo.ide.impl.idea.util.io.storage.AbstractStorage;
 import consulo.util.lang.Pair;

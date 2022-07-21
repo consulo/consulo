@@ -30,7 +30,7 @@ import consulo.vcs.*;
 import consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman.NewMappings;
 import consulo.ide.impl.idea.openapi.vcs.roots.VcsRootErrorsFinder;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.ui.ColoredTableCellRenderer;
+import consulo.ui.ex.awt.ColoredTableCellRenderer;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.table.TableView;

@@ -44,7 +44,7 @@ import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.Tree;
-import consulo.ide.impl.idea.util.containers.ComparatorUtil;
+import consulo.util.lang.ComparatorUtil;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;

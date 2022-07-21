@@ -34,6 +34,6 @@ public interface ProjectIdeFocusManager extends IdeFocusManager {
   static IdeFocusManager getInstance(@Nullable Project project) {
     if (project == null || project.isDisposed() || !project.isInitialized()) return ApplicationIdeFocusManager.getInstance();
 
-    return project.getComponent(ProjectIdeFocusManager.class);
+    return project.getInstance(ProjectIdeFocusManager.class);
   }
 }

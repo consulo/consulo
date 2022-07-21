@@ -1,7 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.util.indexing.impl.forward;
 
-import consulo.ide.impl.idea.openapi.util.ThreadLocalCachedByteArray;
+import consulo.util.io.ThreadLocalCachedByteArray;
 import consulo.ide.impl.idea.util.indexing.impl.InputData;
 import consulo.ide.impl.idea.util.indexing.impl.InputDataDiffBuilder;
 import consulo.ide.impl.idea.util.io.UnsyncByteArrayInputStream;

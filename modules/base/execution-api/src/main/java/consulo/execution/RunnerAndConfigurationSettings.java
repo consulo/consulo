@@ -28,7 +28,7 @@ import java.util.function.Supplier;
  * settings.
  *
  * @author anna
- * @see RunManager#createRunConfiguration(String, consulo.ide.impl.idea.execution.configurations.ConfigurationFactory)
+ * @see RunManager#createRunConfiguration(String, ConfigurationFactory)
  */
 public interface RunnerAndConfigurationSettings {
   /**

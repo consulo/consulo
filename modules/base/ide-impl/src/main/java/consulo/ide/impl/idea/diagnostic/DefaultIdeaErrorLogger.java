@@ -22,7 +22,7 @@ import consulo.project.ui.notification.Notifications;
 import consulo.application.ApplicationManager;
 import consulo.application.util.logging.IdeaLoggingEvent;
 import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.util.io.MappingFailedException;
+import consulo.index.io.MappingFailedException;
 
 import javax.annotation.Nullable;
 import javax.swing.*;

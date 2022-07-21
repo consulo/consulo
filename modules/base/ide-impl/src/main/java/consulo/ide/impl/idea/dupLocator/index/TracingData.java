@@ -4,7 +4,7 @@ import consulo.ide.impl.idea.dupLocator.util.PsiFragment;
 import consulo.util.lang.ShutDownTracker;
 import consulo.ide.impl.idea.util.ConcurrencyUtil;
 import consulo.index.io.EnumeratorIntegerDescriptor;
-import consulo.ide.impl.idea.util.io.PersistentHashMap;
+import consulo.index.io.PersistentHashMap;
 import consulo.util.collection.primitive.ints.IntIntMap;
 import consulo.util.collection.primitive.ints.IntMaps;
 

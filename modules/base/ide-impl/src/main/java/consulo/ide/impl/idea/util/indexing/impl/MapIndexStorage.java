@@ -16,13 +16,14 @@
 package consulo.ide.impl.idea.util.indexing.impl;
 
 import consulo.index.io.KeyDescriptor;
+import consulo.index.io.PersistentHashMapValueStorage;
+import consulo.index.io.PersistentMap;
 import consulo.index.io.data.DataExternalizer;
 import consulo.language.util.IncorrectOperationException;
 import consulo.application.util.function.Processor;
 import consulo.util.collection.SLRUCache;
 import consulo.ide.impl.idea.util.indexing.StorageException;
 import consulo.ide.impl.idea.util.indexing.ValueContainer;
-import consulo.ide.impl.idea.util.io.*;
 import consulo.logging.Logger;
 import consulo.index.io.data.IOUtil;
 import org.jetbrains.annotations.TestOnly;

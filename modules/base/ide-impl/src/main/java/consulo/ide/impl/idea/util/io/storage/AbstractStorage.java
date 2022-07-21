@@ -21,7 +21,7 @@ package consulo.ide.impl.idea.util.io.storage;
 
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.io.PagePool;
+import consulo.index.io.PagePool;
 import consulo.ide.impl.idea.util.io.RecordDataOutput;
 import consulo.ide.impl.idea.util.io.UnsyncByteArrayInputStream;
 import consulo.disposer.Disposable;

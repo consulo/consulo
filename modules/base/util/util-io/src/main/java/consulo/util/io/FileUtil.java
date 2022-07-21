@@ -1273,4 +1273,31 @@ public class FileUtil {
     copy(source, target, permissionCopier);
     delete(source);
   }
+
+  public static boolean deleteWithRenaming(File file) {
+    File tempFileNameForDeletion = findSequentNonexistentFile(file.getParentFile(), file.getName(), "");
+    boolean success = file.renameTo(tempFileNameForDeletion);
+    return delete(success ? tempFileNameForDeletion : file);
+  }
+
+  public static File findSequentNonexistentFile(@Nonnull File parentFolder, @Nonnull String filePrefix, @Nonnull String extension) {
+    int postfix = 0;
+    String ext = extension.isEmpty() ? "" : '.' + extension;
+    File candidate = new File(parentFolder, filePrefix + ext);
+    while (candidate.exists()) {
+      postfix++;
+      candidate = new File(parentFolder, filePrefix + Integer.toString(postfix) + ext);
+    }
+    return candidate;
+  }
+
+  public static int compareFiles(@Nullable File file1, @Nullable File file2) {
+    return comparePaths(file1 == null ? null : file1.getPath(), file2 == null ? null : file2.getPath());
+  }
+
+  public static int comparePaths(@Nullable String path1, @Nullable String path2) {
+    path1 = path1 == null ? null : toSystemIndependentName(path1);
+    path2 = path2 == null ? null : toSystemIndependentName(path2);
+    return StringUtil.compare(path1, path2, !OSInfo.isFileSystemCaseSensitive);
+  }
 }

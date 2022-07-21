@@ -15,8 +15,10 @@
  */
 package consulo.ide.impl.idea.util.indexing;
 
+import consulo.index.io.PersistentHashMap;
 import consulo.language.psi.stub.FileBasedIndexExtension;
 import consulo.index.io.IndexExtension;
+import consulo.util.io.FileAccessorCache;
 import consulo.util.lang.ref.Ref;
 import consulo.util.lang.ShutDownTracker;
 import consulo.util.io.BufferExposingByteArrayOutputStream;

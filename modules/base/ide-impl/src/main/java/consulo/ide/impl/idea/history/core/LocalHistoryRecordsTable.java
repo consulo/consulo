@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.history.core;
 
-import consulo.ide.impl.idea.util.io.PagePool;
+import consulo.index.io.PagePool;
 import consulo.ide.impl.idea.util.io.storage.AbstractRecordsTable;
 
 import java.io.File;

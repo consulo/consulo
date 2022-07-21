@@ -374,7 +374,7 @@ public class FilePathImpl implements FilePath {
   @Override
   @NonNls
   public String toString() {
-    return "FilePath[" + myFile.getName() + "] (" + myFile.getParent() + ")";
+    return "DocumentFilePath[" + myFile.getName() + "] (" + myFile.getParent() + ")";
   }
 
   @Override

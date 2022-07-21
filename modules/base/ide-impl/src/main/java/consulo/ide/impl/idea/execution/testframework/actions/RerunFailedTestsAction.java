@@ -19,6 +19,7 @@ import consulo.dataContext.DataManager;
 import consulo.execution.ExecutionDataKeys;
 import consulo.execution.ExecutionManager;
 import consulo.execution.runner.ExecutionEnvironment;
+import consulo.execution.test.action.AbstractRerunFailedTestsAction;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
@@ -70,7 +71,7 @@ public class RerunFailedTestsAction extends AnAction {
 
     for (AnAction action : actions) {
       if (action instanceof AbstractRerunFailedTestsAction) {
-        if (execute) {
+        if (execute) {                                                                         
           ((AbstractRerunFailedTestsAction)action).execute(e, environment);
         }
         return true;

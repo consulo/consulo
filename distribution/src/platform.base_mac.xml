@@ -63,6 +63,8 @@
         <include>consulo:consulo-execution-debug-api</include>
         <include>consulo:consulo-execution-coverage-api</include>
         <include>consulo:consulo-execution-test-api</include>
+        <include>consulo:consulo-execution-test-sm-api</include>
+        <include>consulo:consulo-execution-test-thrift-api</include>
         <include>consulo:consulo-virtual-file-watcher-api</include>
         <include>consulo:consulo-virtual-file-watcher-impl</include>
         <include>consulo:consulo-compiler-api</include>

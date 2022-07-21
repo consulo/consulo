@@ -109,6 +109,16 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-execution-test-sm-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-execution-test-thrift-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-execution-debug-api</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -151,6 +161,11 @@
       <groupId>${project.groupId}</groupId>
       <artifactId>consulo-vcs-api</artifactId>
       <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>consulo.internal</groupId>
+      <artifactId>build.serviceMessages</artifactId>
+      <optional>true</optional>
     </dependency>
   </dependencies>
 </project>

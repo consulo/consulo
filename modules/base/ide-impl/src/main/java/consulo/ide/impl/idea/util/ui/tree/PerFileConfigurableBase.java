@@ -41,7 +41,6 @@ import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.util.lang.Trinity;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.ui.*;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.ide.impl.idea.util.Consumer;

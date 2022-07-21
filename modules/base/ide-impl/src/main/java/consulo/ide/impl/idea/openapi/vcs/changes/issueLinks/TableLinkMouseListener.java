@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.issueLinks;
 
-import consulo.ide.impl.idea.ui.ColoredTableCellRenderer;
+import consulo.ui.ex.awt.ColoredTableCellRenderer;
 import consulo.ide.impl.idea.ui.dualView.DualView;
 import consulo.ide.impl.idea.ui.dualView.TreeTableView;
 

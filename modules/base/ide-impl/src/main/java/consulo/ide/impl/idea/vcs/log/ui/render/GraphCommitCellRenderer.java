@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.vcs.log.ui.render;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.IssueLinkRenderer;
 import consulo.ui.ex.awt.SimpleColoredComponent;
-import consulo.ide.impl.idea.ui.SimpleColoredRenderer;
+import consulo.ui.ex.awt.SimpleColoredRenderer;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
 import consulo.ide.impl.idea.util.ObjectUtils;

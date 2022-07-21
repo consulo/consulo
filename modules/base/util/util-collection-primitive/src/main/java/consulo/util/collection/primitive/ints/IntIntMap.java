@@ -48,4 +48,6 @@ public interface IntIntMap {
   }
 
   void forEach(@Nonnull BiIntConsumer consumer);
+
+  int[] keys();
 }

@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.execution.testframework.sm.runner.ui.statistics;
 
 import consulo.execution.test.AbstractTestProxy;
+import consulo.execution.test.sm.ui.statistic.StatisticsPanel;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;

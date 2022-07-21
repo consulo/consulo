@@ -77,7 +77,6 @@ import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.ui.ex.action.*;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.ide.impl.idea.ui.*;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ide.impl.idea.ui.dualView.CellWrapper;
 import consulo.ide.impl.idea.ui.dualView.DualView;

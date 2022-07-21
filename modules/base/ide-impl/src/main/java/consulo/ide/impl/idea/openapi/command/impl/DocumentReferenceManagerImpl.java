@@ -17,7 +17,6 @@ import consulo.virtualFileSystem.event.VFileDeleteEvent;
 import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.io.fs.FilePath;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
@@ -38,7 +37,7 @@ public final class DocumentReferenceManagerImpl extends DocumentReferenceManager
 
   private static final Key<Reference<DocumentReference>> FILE_TO_REF_KEY = Key.create("FILE_TO_REF_KEY");
   private static final Key<DocumentReference> FILE_TO_STRONG_REF_KEY = Key.create("FILE_TO_STRONG_REF_KEY");
-  private final Map<FilePath, DocumentReference> myDeletedFilePathToRef = ContainerUtil.createWeakValueMap();
+  private final Map<DocumentFilePath, DocumentReference> myDeletedFilePathToRef = ContainerUtil.createWeakValueMap();
 
   @Inject
   DocumentReferenceManagerImpl(@Nonnull Application application) {
@@ -79,14 +78,14 @@ public final class DocumentReferenceManagerImpl extends DocumentReferenceManager
           DocumentReference ref = SoftReference.dereference(each.getUserData(FILE_TO_REF_KEY));
           each.putUserData(FILE_TO_REF_KEY, null);
           if (ref != null) {
-            myDeletedFilePathToRef.put(new FilePath(each.getUrl()), ref);
+            myDeletedFilePathToRef.put(new DocumentFilePath(each.getUrl()), ref);
           }
         }
       }
 
       private void fileCreated(@Nonnull VFileCreateEvent event) {
         VirtualFile f = event.getFile();
-        DocumentReference ref = f == null ? null : myDeletedFilePathToRef.remove(new FilePath(f.getUrl()));
+        DocumentReference ref = f == null ? null : myDeletedFilePathToRef.remove(new DocumentFilePath(f.getUrl()));
         if (ref != null) {
           f.putUserData(FILE_TO_REF_KEY, new WeakReference<>(ref));
           ((DocumentReferenceByVirtualFile)ref).update(f);

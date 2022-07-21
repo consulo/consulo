@@ -84,6 +84,8 @@
     <module>modules/base/execution-debug-api</module>
     <module>modules/base/execution-coverage-api</module>
     <module>modules/base/execution-test-api</module>
+    <module>modules/base/execution-test-sm-api</module>
+    <module>modules/base/execution-test-thrift-api</module>
     <module>modules/base/virtual-file-watcher-api</module>
     <module>modules/base/virtual-file-watcher-impl</module>
     <module>modules/base/compiler-api</module>

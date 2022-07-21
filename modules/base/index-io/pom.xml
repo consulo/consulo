@@ -53,5 +53,15 @@
       <artifactId>consulo-util-collection-primitive</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.lz4</groupId>
+      <artifactId>lz4-java</artifactId>
+      <optional>true</optional>
+    </dependency>
   </dependencies>
 </project>

@@ -1,7 +1,10 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.vfs.newvfs.persistent;
 
+import consulo.index.io.DifferentSerializableBytesImplyNonEqualityPolicy;
 import consulo.index.io.KeyDescriptor;
+import consulo.index.io.PagedFileStorage;
+import consulo.index.io.PersistentBTreeEnumerator;
 import consulo.util.lang.ThreadLocalCachedValue;
 import consulo.ide.impl.idea.util.io.*;
 import javax.annotation.Nonnull;

@@ -25,7 +25,7 @@ import consulo.ide.impl.idea.util.indexing.impl.DebugAssertions;
 import consulo.ide.impl.idea.util.indexing.impl.IndexStorage;
 import consulo.ide.impl.idea.util.indexing.impl.InputDataDiffBuilder;
 import consulo.ide.impl.idea.util.indexing.impl.forward.EmptyForwardIndex;
-import consulo.ide.impl.idea.util.io.PersistentHashMapValueStorage;
+import consulo.index.io.PersistentHashMapValueStorage;
 import consulo.index.io.ID;
 import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.data.DataInputOutputUtil;

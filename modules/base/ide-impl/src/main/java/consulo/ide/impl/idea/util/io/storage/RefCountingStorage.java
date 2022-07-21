@@ -22,7 +22,7 @@ package consulo.ide.impl.idea.util.io.storage;
 import consulo.ide.impl.idea.openapi.util.io.StreamUtil;
 import consulo.ide.impl.idea.util.ConcurrencyUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.io.PagePool;
+import consulo.index.io.PagePool;
 import consulo.ide.impl.idea.util.io.UnsyncByteArrayInputStream;
 import consulo.language.util.IncorrectOperationException;
 import consulo.util.io.BufferExposingByteArrayOutputStream;

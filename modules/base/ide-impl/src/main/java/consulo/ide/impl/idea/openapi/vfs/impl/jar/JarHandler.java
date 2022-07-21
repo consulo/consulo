@@ -16,6 +16,8 @@
 package consulo.ide.impl.idea.openapi.vfs.impl.jar;
 
 import consulo.index.io.EnumeratorStringDescriptor;
+import consulo.index.io.PersistentHashMap;
+import consulo.index.io.PersistentHashMapValueStorage;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationType;
 import consulo.index.io.data.DataExternalizer;
@@ -35,7 +37,6 @@ import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.FlushingDaemon;
 import consulo.application.util.function.CommonProcessors;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.MultiMap;
-import consulo.ide.impl.idea.util.io.*;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 import consulo.ide.impl.vfs.impl.archive.ArchiveFile;

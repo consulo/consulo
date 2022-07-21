@@ -25,7 +25,7 @@ import consulo.virtualFileSystem.status.FileStatusManager;
 import consulo.virtualFileSystem.status.impl.internal.FileStatusManagerImpl;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.file.light.LightVirtualFile;
-import consulo.ide.impl.idea.util.CompressionUtil;
+import consulo.index.io.CompressionUtil;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

@@ -15,6 +15,7 @@
  */
 package consulo.execution;
 
+import consulo.execution.configuration.RunConfiguration;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -40,7 +41,7 @@ public class DefaultExecutionTarget extends ExecutionTarget {
   }
 
   @Override
-  public boolean canRun(@Nonnull RunnerAndConfigurationSettings configuration) {
+  public boolean canRun(@Nonnull RunConfiguration configuration) {
     return true;
   }
 }

@@ -36,7 +36,7 @@ public class ID<K, V> extends IndexId<K, V> {
 
   private final short myUniqueId;
 
-  static {
+  public static void reload() {
     final File indices = getEnumFile();
     try {
       ObjectIntMap<String> nameToIdRegistry = ObjectMaps.newObjectIntHashMap();

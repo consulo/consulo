@@ -203,7 +203,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.execution;
   exports consulo.ide.impl.execution.coverage;
   exports consulo.ide.impl.execution.editor;
-  exports consulo.ide.impl.execution.testframework.thrift.runner;
   exports consulo.ide.impl.external.api;
   exports consulo.ide.impl.externalService;
   exports consulo.ide.impl.externalService.impl;
@@ -402,13 +401,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.execution.rmi;
   exports consulo.ide.impl.idea.execution.runners;
   exports consulo.ide.impl.idea.execution.testframework.actions;
-  exports consulo.ide.impl.idea.execution.testframework.sm;
-  exports consulo.ide.impl.idea.execution.testframework.sm.runner;
-  exports consulo.ide.impl.idea.execution.testframework.sm.runner.events;
-  exports consulo.ide.impl.idea.execution.testframework.sm.runner.history;
-  exports consulo.ide.impl.idea.execution.testframework.sm.runner.history.actions;
-  exports consulo.ide.impl.idea.execution.testframework.sm.runner.states;
-  exports consulo.ide.impl.idea.execution.testframework.sm.runner.ui;
   exports consulo.ide.impl.idea.execution.testframework.sm.runner.ui.statistics;
   exports consulo.ide.impl.idea.execution.ui;
   exports consulo.ide.impl.idea.execution.ui.actions;
@@ -918,7 +910,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.util.indexing.impl.forward;
   exports consulo.ide.impl.idea.util.indexing.provided;
   exports consulo.ide.impl.idea.util.io;
-  exports consulo.ide.impl.idea.util.io.fs;
   exports consulo.ide.impl.idea.util.io.storage;
   exports consulo.ide.impl.idea.util.io.zip;
   exports consulo.ide.impl.idea.util.net;

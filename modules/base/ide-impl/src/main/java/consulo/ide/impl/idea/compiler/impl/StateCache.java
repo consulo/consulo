@@ -19,7 +19,7 @@ import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.data.IOUtil;
 import consulo.index.io.KeyDescriptor;
-import consulo.ide.impl.idea.util.io.PersistentHashMap;
+import consulo.index.io.PersistentHashMap;
 import org.jetbrains.annotations.NonNls;
 
 import java.io.DataInput;

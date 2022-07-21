@@ -19,7 +19,7 @@
  */
 package consulo.ide.impl.idea.util.io.storage;
 
-import consulo.ide.impl.idea.util.io.PagePool;
+import consulo.index.io.PagePool;
 
 import java.io.File;
 import java.io.IOException;

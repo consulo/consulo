@@ -1,14 +1,11 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.util.indexing;
 
-import consulo.index.io.EnumeratorIntegerDescriptor;
-import consulo.index.io.ID;
-import consulo.index.io.IndexExtension;
+import consulo.index.io.*;
 import consulo.logging.Logger;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.PersistentFS;
 import consulo.ide.impl.idea.util.indexing.impl.forward.IntForwardIndex;
-import consulo.ide.impl.idea.util.io.*;
 import consulo.index.io.data.IOUtil;
 
 import javax.annotation.Nonnull;

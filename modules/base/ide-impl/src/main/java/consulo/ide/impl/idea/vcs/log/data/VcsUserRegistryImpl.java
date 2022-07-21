@@ -17,9 +17,9 @@ package consulo.ide.impl.idea.vcs.log.data;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.io.Page;
-import consulo.ide.impl.idea.util.io.PersistentBTreeEnumerator;
-import consulo.ide.impl.idea.util.io.PersistentEnumeratorBase;
+import consulo.index.io.Page;
+import consulo.index.io.PersistentBTreeEnumerator;
+import consulo.index.io.PersistentEnumeratorBase;
 import consulo.ide.impl.idea.vcs.log.VcsUser;
 import consulo.ide.impl.idea.vcs.log.VcsUserRegistry;
 import consulo.ide.impl.idea.vcs.log.impl.VcsUserImpl;

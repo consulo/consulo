@@ -2,15 +2,15 @@
 package consulo.ide.impl.idea.util.indexing;
 
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.util.CompressionUtil;
+import consulo.index.io.CompressionUtil;
 import consulo.ide.impl.idea.util.ExceptionUtil;
 import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.ide.impl.idea.util.indexing.impl.DebugAssertions;
 import consulo.ide.impl.idea.util.indexing.impl.InputData;
 import consulo.ide.impl.idea.util.indexing.impl.forward.AbstractForwardIndexAccessor;
 import consulo.ide.impl.idea.util.indexing.impl.forward.PersistentMapBasedForwardIndex;
-import consulo.ide.impl.idea.util.io.ByteSequenceDataExternalizer;
-import consulo.ide.impl.idea.util.io.PersistentHashMap;
+import consulo.index.io.ByteSequenceDataExternalizer;
+import consulo.index.io.PersistentHashMap;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.index.io.DataIndexer;

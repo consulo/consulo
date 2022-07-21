@@ -5,7 +5,7 @@ import consulo.ide.impl.idea.diagnostic.DiagnosticBundle;
 import consulo.ide.impl.idea.diagnostic.IdeErrorsDialog;
 import consulo.ui.ex.awt.ComboboxSpeedSearch;
 import consulo.ui.ex.awt.IdeBorderFactory;
-import consulo.ide.impl.idea.util.containers.ComparatorUtil;
+import consulo.util.lang.ComparatorUtil;
 import consulo.ui.ex.awt.UIUtil;
 import javax.annotation.Nullable;
 

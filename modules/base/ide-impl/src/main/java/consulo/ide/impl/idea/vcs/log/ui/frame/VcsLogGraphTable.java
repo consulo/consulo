@@ -30,7 +30,6 @@ import consulo.util.lang.Pair;
 import consulo.application.util.registry.Registry;
 import consulo.util.lang.Couple;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.ui.*;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

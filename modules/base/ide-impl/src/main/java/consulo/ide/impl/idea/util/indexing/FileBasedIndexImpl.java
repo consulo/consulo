@@ -2204,6 +2204,8 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
     private boolean currentVersionCorrupted;
 
     private void initAssociatedDataForExtensions() {
+      ID.reload();
+
       //Activity activity = StartUpMeasurer.startActivity("file index extensions iteration");
       Iterator<FileBasedIndexExtension> extensions = IndexInfrastructure.hasIndices() ? FileBasedIndexExtension.EXTENSION_POINT_NAME.getExtensionList().iterator() : Collections.emptyIterator();
 

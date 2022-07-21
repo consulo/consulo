@@ -41,7 +41,7 @@ import consulo.vcs.VcsBundle;
 import consulo.vcs.VcsException;
 import consulo.vcs.change.VcsDirtyScopeManager;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.ui.ColoredTableCellRenderer;
+import consulo.ui.ex.awt.ColoredTableCellRenderer;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.table.TableView;

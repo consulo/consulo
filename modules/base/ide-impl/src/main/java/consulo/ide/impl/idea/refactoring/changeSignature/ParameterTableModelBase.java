@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.refactoring.changeSignature;
 
 import consulo.ui.ex.awt.BooleanTableCellRenderer;
+import consulo.ui.ex.awt.ColoredTableCellRenderer;
 import consulo.ui.ex.awt.table.BooleanTableCellEditor;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.SimpleColoredComponent;

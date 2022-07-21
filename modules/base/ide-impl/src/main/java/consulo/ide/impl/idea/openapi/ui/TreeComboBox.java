@@ -19,7 +19,7 @@ import consulo.component.util.Iconable;
 import consulo.application.util.SystemInfo;
 import consulo.ui.ex.awt.ComboBoxWithWidePopup;
 import consulo.ui.ex.awt.SimpleColoredComponent;
-import consulo.ide.impl.idea.ui.SimpleColoredRenderer;
+import consulo.ui.ex.awt.SimpleColoredRenderer;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.util.collection.Stack;
 import consulo.ui.ex.awt.UIUtil;

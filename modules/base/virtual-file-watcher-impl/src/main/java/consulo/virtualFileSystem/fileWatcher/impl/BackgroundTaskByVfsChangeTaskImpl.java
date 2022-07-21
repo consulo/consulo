@@ -178,7 +178,7 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
   public ExpandMacroToPathMap createExpandMacroToPathMap() {
     final ExpandMacroToPathMap expandMacroToPathMap = new ExpandMacroToPathMap();
     expandMacroToPathMap.addMacroExpand("FileName", myVirtualFilePointer.getFileName());
-    expandMacroToPathMap.addMacroExpand("FilePath", myVirtualFilePointer.getPresentableUrl());
+    expandMacroToPathMap.addMacroExpand("DocumentFilePath", myVirtualFilePointer.getPresentableUrl());
 
     File parentFile = FileUtil.getParentFile(new File(myVirtualFilePointer.getPresentableUrl()));
     expandMacroToPathMap.addMacroExpand("FileParentPath", parentFile.getAbsolutePath());
@@ -188,7 +188,7 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
   private ExpandMacroToPathMap createExpandOutMacroToPathMap() {
     final ExpandMacroToPathMap expandMacroToPathMap = new ExpandMacroToPathMap();
     expandMacroToPathMap.addMacroExpand("FileName", myVirtualFilePointer.getFileName());
-    expandMacroToPathMap.addMacroExpand("FilePath", myVirtualFilePointer.getPresentableUrl());
+    expandMacroToPathMap.addMacroExpand("DocumentFilePath", myVirtualFilePointer.getPresentableUrl());
     expandMacroToPathMap.addMacroExpand("OutPath", myParameters.getOutPath());
 
     File parentFile = FileUtil.getParentFile(new File(myVirtualFilePointer.getPresentableUrl()));
@@ -201,7 +201,7 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
 
     final ReplacePathToMacroMap replacePathToMacroMap = new ReplacePathToMacroMap();
     replacePathToMacroMap.put(myVirtualFilePointer.getFileName(), "$FileName$");
-    replacePathToMacroMap.addMacroReplacement(pathMacroProtocolProvider, myVirtualFilePointer.getPresentableUrl(), "FilePath");
+    replacePathToMacroMap.addMacroReplacement(pathMacroProtocolProvider, myVirtualFilePointer.getPresentableUrl(), "DocumentFilePath");
 
     File parentFile = FileUtil.getParentFile(new File(myVirtualFilePointer.getPresentableUrl()));
     replacePathToMacroMap.addMacroReplacement(pathMacroProtocolProvider, parentFile.getAbsolutePath(), "FileParentPath");

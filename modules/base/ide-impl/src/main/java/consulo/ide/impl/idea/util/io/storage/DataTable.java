@@ -20,8 +20,8 @@
 package consulo.ide.impl.idea.util.io.storage;
 
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.util.io.PagePool;
-import consulo.ide.impl.idea.util.io.RandomAccessDataFile;
+import consulo.index.io.PagePool;
+import consulo.index.io.RandomAccessDataFile;
 import consulo.disposer.Disposable;
 import consulo.index.io.Forceable;
 import consulo.logging.Logger;

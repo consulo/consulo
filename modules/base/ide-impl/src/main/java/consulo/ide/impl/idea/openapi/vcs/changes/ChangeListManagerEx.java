@@ -52,7 +52,7 @@ public abstract class ChangeListManagerEx extends ChangeListManager {
 
   /**
    * Temporarily disable CLM update
-   * For example, to preserve FilePath->ChangeList mapping during "stash-do_smth-unstash" routine.
+   * For example, to preserve DocumentFilePath->ChangeList mapping during "stash-do_smth-unstash" routine.
    */
   public abstract void freeze(@Nonnull String reason);
 

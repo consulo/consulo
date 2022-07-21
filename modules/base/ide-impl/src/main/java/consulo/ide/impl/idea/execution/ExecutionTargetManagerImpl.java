@@ -1,50 +1,60 @@
-/*
- * Copyright 2000-2012 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.execution;
 
-import consulo.annotation.access.RequiredReadAction;
+
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.Application;
-import consulo.application.ReadAction;
+import consulo.application.ApplicationManager;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.execution.*;
+import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.configuration.TargetAwareRunProfile;
 import consulo.execution.event.ExecutionTargetListener;
 import consulo.execution.event.RunManagerListener;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.execution.compound.CompoundRunConfiguration;
+import consulo.ide.impl.idea.execution.impl.RunManagerImpl;
 import consulo.project.Project;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.image.Image;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.Pair;
 import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 import org.jdom.Element;
+import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.function.BiPredicate;
 
-@State(name = "ExecutionTargetManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
-@Singleton
+@State(name = "ExecutionTargetManager", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 @ServiceImpl
-public class ExecutionTargetManagerImpl extends ExecutionTargetManager implements PersistentStateComponent<Element> {
-  @Nonnull
-  private final Application myApplication;
+public final class ExecutionTargetManagerImpl extends ExecutionTargetManager implements PersistentStateComponent<Element> {
+  public static final ExecutionTarget MULTIPLE_TARGETS = new ExecutionTarget() {
+    @Nonnull
+    @Override
+    public String getId() {
+      return "multiple_targets";
+    }
+
+    @Nonnull
+    @Override
+    public String getDisplayName() {
+      return ExecutionBundle.message("multiple.specified");
+    }
+
+    @Override
+    public Image getIcon() {
+      return null;
+    }
+
+    @Override
+    public boolean canRun(@Nonnull RunConfiguration configuration) {
+      return true;
+    }
+  };
+
   @Nonnull
   private final Project myProject;
   @Nonnull
@@ -56,38 +66,55 @@ public class ExecutionTargetManagerImpl extends ExecutionTargetManager implement
   private String mySavedActiveTargetId;
 
   @Inject
-  public ExecutionTargetManagerImpl(@Nonnull Application application, @Nonnull Project project) {
-    myApplication = application;
+  public ExecutionTargetManagerImpl(@Nonnull Project project) {
     myProject = project;
 
     project.getMessageBus().connect().subscribe(RunManagerListener.class, new RunManagerListener() {
       @Override
       public void runConfigurationChanged(@Nonnull RunnerAndConfigurationSettings settings) {
-        if (settings == RunManager.getInstance(myProject).getSelectedConfiguration()) {
+        if (settings == getRunManager().getSelectedConfiguration()) {
           updateActiveTarget(settings);
         }
       }
 
       @Override
-      public void runConfigurationSelected(@Nullable RunnerAndConfigurationSettings selected) {
-        ReadAction.run(() -> updateActiveTarget(selected));
+      public void runConfigurationSelected(@Nullable RunnerAndConfigurationSettings settings) {
+        updateActiveTarget(settings);
       }
     });
   }
 
-  @Override
-  public Element getState() {
-    synchronized (myActiveTargetLock) {
-      Element state = new Element("state");
+  @Nullable
+  private RunManagerImpl myRunManager;
 
-      String id = myActiveTarget == null ? mySavedActiveTargetId : myActiveTarget.getId();
-      if (id != null) state.setAttribute("SELECTED_TARGET", id);
-      return state;
+  @Nonnull
+  private RunManagerImpl getRunManager() {
+    RunManagerImpl runManager = myRunManager;
+    if (runManager == null) {
+      runManager = RunManagerImpl.getInstanceImpl(myProject);
+      myRunManager = runManager;
     }
+    return runManager;
+  }
+
+  @TestOnly
+  public void setRunManager(@Nonnull RunManagerImpl runManager) {
+    myRunManager = runManager;
   }
 
   @Override
-  public void loadState(Element state) {
+  public Element getState() {
+    Element state = new Element("state");
+    synchronized (myActiveTargetLock) {
+      if (mySavedActiveTargetId != null && !mySavedActiveTargetId.equals(DefaultExecutionTarget.INSTANCE.getId())) {
+        state.setAttribute("SELECTED_TARGET", mySavedActiveTargetId);
+      }
+    }
+    return state;
+  }
+
+  @Override
+  public void loadState(@Nonnull Element state) {
     synchronized (myActiveTargetLock) {
       if (myActiveTarget == null && mySavedActiveTargetId == null) {
         mySavedActiveTargetId = state.getAttributeValue("SELECTED_TARGET");
@@ -95,11 +122,9 @@ public class ExecutionTargetManagerImpl extends ExecutionTargetManager implement
     }
   }
 
-  @RequiredReadAction
   @Nonnull
   @Override
   public ExecutionTarget getActiveTarget() {
-    myApplication.assertReadAccessAllowed();
     synchronized (myActiveTargetLock) {
       if (myActiveTarget == null) {
         updateActiveTarget();
@@ -108,17 +133,16 @@ public class ExecutionTargetManagerImpl extends ExecutionTargetManager implement
     }
   }
 
-  @RequiredUIAccess
   @Override
   public void setActiveTarget(@Nonnull ExecutionTarget target) {
-    myApplication.assertIsDispatchThread();
+    ApplicationManager.getApplication().assertIsDispatchThread();
     synchronized (myActiveTargetLock) {
-      updateActiveTarget(RunManager.getInstance(myProject).getSelectedConfiguration(), target);
+      updateActiveTarget(getRunManager().getSelectedConfiguration(), target);
     }
   }
 
   private void updateActiveTarget() {
-    updateActiveTarget(RunManager.getInstance(myProject).getSelectedConfiguration());
+    updateActiveTarget(getRunManager().getSelectedConfiguration());
   }
 
   private void updateActiveTarget(@Nullable RunnerAndConfigurationSettings settings) {
@@ -126,10 +150,12 @@ public class ExecutionTargetManagerImpl extends ExecutionTargetManager implement
   }
 
   private void updateActiveTarget(@Nullable RunnerAndConfigurationSettings settings, @Nullable ExecutionTarget toSelect) {
-    List<ExecutionTarget> suitable = settings == null ? Collections.singletonList(DefaultExecutionTarget.INSTANCE) : getTargetsFor(settings);
-    ExecutionTarget toNotify = null;
+    List<ExecutionTarget> suitable = settings == null ? Collections.singletonList(DefaultExecutionTarget.INSTANCE) : getTargetsFor(settings.getConfiguration());
+    ExecutionTarget toNotify;
     synchronized (myActiveTargetLock) {
-      if (toSelect == null) toSelect = myActiveTarget;
+      if (toSelect == null && !DefaultExecutionTarget.INSTANCE.equals(myActiveTarget)) {
+        toSelect = myActiveTarget;
+      }
 
       int index = -1;
       if (toSelect != null) {
@@ -143,7 +169,7 @@ public class ExecutionTargetManagerImpl extends ExecutionTargetManager implement
           }
         }
       }
-      toNotify = doSetActiveTarget(index >= 0 ? suitable.get(index) : ContainerUtil.getFirstItem(suitable, DefaultExecutionTarget.INSTANCE));
+      toNotify = doSetActiveTarget(index >= 0 ? suitable.get(index) : getDefaultTarget(suitable));
     }
 
     if (toNotify != null) {
@@ -151,9 +177,24 @@ public class ExecutionTargetManagerImpl extends ExecutionTargetManager implement
     }
   }
 
+  private ExecutionTarget getDefaultTarget(List<? extends ExecutionTarget> suitable) {
+    // The following cases are possible when we enter this method:
+    // a) mySavedActiveTargetId == null. It means that we open / import project for the first time and there is no target selected
+    // In this case we are trying to find the first ExecutionTarget that is ready, because we do not have any other conditions.
+    // b) mySavedActiveTargetId != null. It means that some target was saved, but we weren't able to find it. Right now it can happen
+    // when and only when there was a device connected, it was saved as a target, next the device was disconnected and other device was
+    // connected / no devices left connected. In this case we should not select the target that is ready, cause most probably user still
+    // needs some device to be selected (or at least the device placeholder). As all the devices and device placeholders are always shown
+    // at the beginning of the list, selecting the first item works in this case.
+    ExecutionTarget result = mySavedActiveTargetId == null ? ContainerUtil.find(suitable, ExecutionTarget::isReady) : ContainerUtil.getFirstItem(suitable);
+    return result != null ? result : DefaultExecutionTarget.INSTANCE;
+  }
+
   @Nullable
   private ExecutionTarget doSetActiveTarget(@Nonnull ExecutionTarget newTarget) {
-    mySavedActiveTargetId = null;
+    if (!DefaultExecutionTarget.INSTANCE.equals(newTarget)) {
+      mySavedActiveTargetId = newTarget.getId();
+    }
 
     ExecutionTarget prev = myActiveTarget;
     myActiveTarget = newTarget;
@@ -163,26 +204,110 @@ public class ExecutionTargetManagerImpl extends ExecutionTargetManager implement
     return null;
   }
 
-  @RequiredReadAction
-  @Nonnull
   @Override
-  public List<ExecutionTarget> getTargetsFor(@Nullable RunnerAndConfigurationSettings settings) {
-    myApplication.assertReadAccessAllowed();
-    if (settings == null) return Collections.emptyList();
-
-    List<ExecutionTarget> result = new ArrayList<>();
-    for (ExecutionTargetProvider eachTargetProvider : ExecutionTargetProvider.EXTENSION_NAME.getExtensionList()) {
-      for (ExecutionTarget eachTarget : eachTargetProvider.getTargets(myProject, settings)) {
-        if (canRun(settings, eachTarget)) result.add(eachTarget);
-      }
+  public boolean doCanRun(@Nullable RunConfiguration configuration, @Nonnull ExecutionTarget target) {
+    if (configuration == null) {
+      return false;
     }
-    return Collections.unmodifiableList(result);
+
+    boolean isCompound = configuration instanceof CompoundRunConfiguration;
+    if (isCompound && target == MULTIPLE_TARGETS) {
+      return true;
+    }
+
+    ExecutionTarget defaultTarget = DefaultExecutionTarget.INSTANCE;
+    boolean checkFallbackToDefault = isCompound && !target.equals(defaultTarget);
+
+    return doWithEachNonCompoundWithSpecifiedTarget(configuration, (subConfiguration, executionTarget) -> {
+      if (!(subConfiguration instanceof TargetAwareRunProfile)) {
+        return true;
+      }
+
+      TargetAwareRunProfile targetAwareProfile = (TargetAwareRunProfile)subConfiguration;
+      return target.canRun(subConfiguration) && targetAwareProfile.canRunOn(target) || (checkFallbackToDefault && defaultTarget.canRun(subConfiguration) && targetAwareProfile.canRunOn(defaultTarget));
+    });
   }
 
-  @RequiredUIAccess
+  @Nonnull
+  @Override
+  public List<ExecutionTarget> getTargetsFor(@Nullable RunConfiguration configuration) {
+    if (configuration == null) {
+      return Collections.emptyList();
+    }
+
+    List<ExecutionTargetProvider> providers = ExecutionTargetProvider.EXTENSION_NAME.getExtensionList();
+    LinkedHashSet<ExecutionTarget> result = new LinkedHashSet<>();
+
+    Set<ExecutionTarget> specifiedTargets = new HashSet<>();
+    doWithEachNonCompoundWithSpecifiedTarget(configuration, (subConfiguration, executionTarget) -> {
+      for (ExecutionTargetProvider eachTargetProvider : providers) {
+        List<ExecutionTarget> supportedTargets = eachTargetProvider.getTargets(myProject, subConfiguration);
+        if (executionTarget == null) {
+          result.addAll(supportedTargets);
+        }
+        else if (supportedTargets.contains(executionTarget)) {
+          result.add(executionTarget);
+          specifiedTargets.add(executionTarget);
+          break;
+        }
+      }
+      return true;
+    });
+
+    if (!result.isEmpty()) {
+      specifiedTargets.forEach(it -> result.retainAll(Collections.singleton(it)));
+      if (result.isEmpty()) {
+        result.add(MULTIPLE_TARGETS);
+      }
+    }
+    return Collections.unmodifiableList(ContainerUtil.filter(result, it -> doCanRun(configuration, it)));
+  }
+
+  private boolean doWithEachNonCompoundWithSpecifiedTarget(@Nonnull RunConfiguration configuration, @Nonnull BiPredicate<? super RunConfiguration, ? super ExecutionTarget> action) {
+    Set<RunConfiguration> recursionGuard = new HashSet<>();
+    LinkedList<Pair<RunConfiguration, ExecutionTarget>> toProcess = new LinkedList<>();
+    toProcess.add(Pair.create(configuration, null));
+
+    while (!toProcess.isEmpty()) {
+      Pair<RunConfiguration, ExecutionTarget> eachWithTarget = toProcess.pollFirst();
+      assert eachWithTarget != null;
+      if (!recursionGuard.add(eachWithTarget.first)) {
+        continue;
+      }
+
+      RunConfiguration eachConfiguration = eachWithTarget.first;
+      if (eachConfiguration instanceof CompoundRunConfiguration) {
+        for (Map.Entry<RunConfiguration, ExecutionTarget> subConfigWithTarget : ((CompoundRunConfiguration)eachConfiguration).getConfigurationsWithTargets(getRunManager()).entrySet()) {
+          toProcess.add(Pair.create(subConfigWithTarget.getKey(), subConfigWithTarget.getValue()));
+        }
+      }
+      else if (!action.test(eachWithTarget.first, eachWithTarget.second)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  @Nullable
+  public ExecutionTarget findTargetByIdFor(@Nullable RunConfiguration configuration, @Nullable String id) {
+    if (id == null) {
+      return null;
+    }
+    else {
+      return ContainerUtil.find(getTargetsFor(configuration), it -> it.getId().equals(id));
+    }
+  }
+
   @Override
   public void update() {
-    myApplication.assertIsDispatchThread();
+    ApplicationManager.getApplication().assertIsDispatchThread();
     updateActiveTarget();
+  }
+
+  @TestOnly
+  public void reset(@Nullable RunManagerImpl runManager) {
+    mySavedActiveTargetId = null;
+    myActiveTarget = null;
+    myRunManager = runManager;
   }
 }

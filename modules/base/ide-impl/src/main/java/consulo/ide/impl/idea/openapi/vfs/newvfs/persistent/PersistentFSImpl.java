@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.encoding.EncodingManager;
 import consulo.virtualFileSystem.encoding.EncodingProjectManager;
 import consulo.virtualFileSystem.encoding.Utf8BomOptionProvider;
-import consulo.ide.impl.idea.openapi.vfs.ex.temp.TempFileSystem;
+import consulo.ide.impl.idea.openapi.vfs.ex.temp.TempFileSystemImpl;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.*;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.*;
 import consulo.ide.impl.idea.util.*;

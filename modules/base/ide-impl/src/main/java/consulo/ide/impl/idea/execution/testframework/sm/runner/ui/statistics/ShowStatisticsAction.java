@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.execution.testframework.sm.runner.ui.statistics;
 
-import consulo.ide.impl.idea.execution.testframework.sm.runner.ui.SMTRunnerTestTreeView;
-import consulo.ide.impl.idea.execution.testframework.sm.runner.ui.TestResultsViewer;
+import consulo.execution.test.sm.ui.SMTRunnerTestTreeView;
+import consulo.execution.test.sm.ui.TestResultsViewer;
 import consulo.execution.test.AbstractTestProxy;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

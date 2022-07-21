@@ -1,33 +1,29 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.vfs.newvfs.persistent;
 
-import consulo.util.lang.Pair;
+import consulo.application.ApplicationManager;
+import consulo.application.ReadAction;
+import consulo.application.util.SystemInfo;
+import consulo.application.util.registry.Registry;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.ide.impl.idea.openapi.vfs.ex.temp.TempFileSystem;
 import consulo.ide.impl.idea.openapi.vfs.impl.local.DirectoryAccessChecker;
 import consulo.ide.impl.idea.openapi.vfs.impl.local.LocalFileSystemBase;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.ChildInfoImpl;
-import consulo.virtualFileSystem.internal.NewVirtualFile;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.FakeVirtualFile;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.VirtualDirectoryImpl;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.Queue;
 import consulo.ide.impl.idea.util.text.FilePathHashingStrategy;
-import consulo.application.ApplicationManager;
-import consulo.application.ReadAction;
-import consulo.application.util.SystemInfo;
-import consulo.application.util.registry.Registry;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Sets;
 import consulo.util.interner.Interner;
 import consulo.util.io.FileAttributes;
-import consulo.virtualFileSystem.InvalidVirtualFileAccessException;
-import consulo.virtualFileSystem.NewVirtualFileSystem;
-import consulo.virtualFileSystem.VFileProperty;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.util.lang.Pair;
+import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.event.ChildInfo;
 import consulo.virtualFileSystem.event.VFileEvent;
+import consulo.virtualFileSystem.internal.NewVirtualFile;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
@@ -38,8 +34,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import static consulo.util.lang.Pair.pair;
 import static consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.VfsEventGenerationHelper.LOG;
+import static consulo.util.lang.Pair.pair;
 
 /**
  * @author max

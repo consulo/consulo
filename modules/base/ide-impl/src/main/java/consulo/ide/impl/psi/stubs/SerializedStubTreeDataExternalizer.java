@@ -2,10 +2,10 @@
 package consulo.ide.impl.psi.stubs;
 
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.CompressionUtil;
+import consulo.index.io.CompressionUtil;
 import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.data.DataInputOutputUtil;
-import consulo.ide.impl.idea.util.io.PersistentHashMapValueStorage;
+import consulo.index.io.PersistentHashMapValueStorage;
 import javax.annotation.Nonnull;
 
 import java.io.DataInput;

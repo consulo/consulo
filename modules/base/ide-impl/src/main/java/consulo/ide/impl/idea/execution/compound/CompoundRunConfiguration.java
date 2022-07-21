@@ -70,6 +70,15 @@ public class CompoundRunConfiguration extends RunConfigurationBase implements Wi
   }
 
   @Nonnull
+  public Map<RunConfiguration, ExecutionTarget> getConfigurationsWithTargets(RunManager manager) {
+    initIfNeed();
+    Map<RunConfiguration, ExecutionTarget> map = new LinkedHashMap<>();
+    // TODO [VISTAL] for now we not support configurations with executiontarget (idea like)
+    getSetToRun().forEach(configuration -> map.put(configuration, null));
+    return map;
+  }
+
+  @Nonnull
   @Override
   public SettingsEditor<? extends RunConfiguration> getConfigurationEditor() {
     return new CompoundRunConfigurationSettingsEditor(getProject());
