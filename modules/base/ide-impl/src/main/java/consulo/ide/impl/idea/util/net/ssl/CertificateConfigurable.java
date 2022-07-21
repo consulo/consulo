@@ -1,10 +1,9 @@
 package consulo.ide.impl.idea.util.net.ssl;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.configurable.*;
 import consulo.fileChooser.IdeaFileChooser;
 import consulo.fileChooser.FileTypeDescriptor;
-import consulo.configurable.Configurable;
-import consulo.configurable.ConfigurationException;
-import consulo.configurable.SearchableConfigurable;
 import consulo.ui.ex.awt.Messages;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.AnActionButton;
@@ -37,7 +36,8 @@ import static consulo.ide.impl.idea.util.net.ssl.ConfirmingTrustManager.MutableT
 /**
  * @author Mikhail Golubev
  */
-public class CertificateConfigurable implements SearchableConfigurable, Configurable.NoScroll, CertificateListener {
+@ExtensionImpl
+public class CertificateConfigurable implements SearchableConfigurable, Configurable.NoScroll, CertificateListener, ApplicationConfigurable {
   private static final FileTypeDescriptor CERTIFICATE_DESCRIPTOR = new FileTypeDescriptor("Choose Certificate", ".crt", ".cer", ".pem");
   @NonNls public static final String EMPTY_PANEL = "empty.panel";
 
@@ -152,8 +152,8 @@ public class CertificateConfigurable implements SearchableConfigurable, Configur
 
   @Nullable
   @Override
-  public Runnable enableSearch(String option) {
-    return null;
+  public String getParentId() {
+    return StandardConfigurableIds.GENERAL_GROUP;
   }
 
   @Nls
