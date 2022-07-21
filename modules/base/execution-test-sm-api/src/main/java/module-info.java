@@ -7,7 +7,7 @@ module consulo.execution.test.sm.api {
   requires java.desktop;
 
   requires transitive consulo.execution.test.api;
-  requires transitive build.serviceMessages;
+  requires build.serviceMessages;
 
   exports consulo.execution.test.sm;
   exports consulo.execution.test.sm.action;
