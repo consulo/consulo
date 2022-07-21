@@ -18,6 +18,8 @@ module consulo.execution.api {
   requires transitive consulo.language.api;
   requires transitive consulo.path.macro.api;
 
+  requires consulo.external.service.api;
+
   exports consulo.execution;
   exports consulo.execution.action;
   exports consulo.execution.configuration;
@@ -27,6 +29,7 @@ module consulo.execution.api {
   exports consulo.execution.configuration.ui.event;
   exports consulo.execution.event;
   exports consulo.execution.executor;
+  exports consulo.execution.lineMarker;
   exports consulo.execution.runner;
   exports consulo.execution.process;
   exports consulo.execution.ui;
@@ -34,6 +37,8 @@ module consulo.execution.api {
   exports consulo.execution.ui.console;
   exports consulo.execution.ui.event;
   exports consulo.execution.ui.layout;
+
+  exports consulo.execution.internal.action to consulo.ide.impl;
   exports consulo.execution.internal to consulo.ide.impl,
           consulo.execution.test.sm.api,
           consulo.execution.test.api;

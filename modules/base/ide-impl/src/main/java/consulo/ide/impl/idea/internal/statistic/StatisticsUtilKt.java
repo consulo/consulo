@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.internal.statistic;
 
-import consulo.ide.impl.idea.internal.statistic.beans.UsageDescriptor;
+import consulo.externalService.statistic.UsageDescriptor;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 
 import java.util.Arrays;

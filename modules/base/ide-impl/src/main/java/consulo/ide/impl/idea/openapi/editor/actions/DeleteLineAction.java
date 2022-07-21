@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.openapi.editor.actions;
 
-import consulo.application.statistic.FeatureUsageTracker;
+import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.codeEditor.action.EditorActionUtil;
 import consulo.dataContext.DataContext;
 import consulo.undoRedo.CommandProcessor;

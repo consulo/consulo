@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.codeInsight.generation;
 
-import consulo.application.statistic.FeatureUsageTracker;
+import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;

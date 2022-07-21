@@ -20,7 +20,7 @@ import consulo.application.event.ApplicationLoadListener;
 import consulo.application.Application;
 import consulo.application.impl.internal.store.IApplicationStore;
 import consulo.component.store.impl.internal.StateStorageManager;
-import consulo.ide.impl.externalService.ExternalServiceConfiguration;
+import consulo.externalService.ExternalServiceConfiguration;
 import consulo.ide.impl.externalStorage.storage.ExternalStorage;
 import jakarta.inject.Inject;
 

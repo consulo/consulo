@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.externalSystem.service.execution;
 
 import consulo.execution.action.Location;
-import consulo.ide.impl.idea.execution.RunManagerEx;
+import consulo.execution.internal.RunManagerEx;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.action.ConfigurationContext;
 import consulo.execution.configuration.RunConfiguration;

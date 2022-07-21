@@ -31,9 +31,9 @@ import consulo.execution.event.RunManagerListener;
 import consulo.execution.executor.Executor;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.ide.impl.execution.ConfigurationTypeCache;
-import consulo.ide.impl.idea.execution.ProgramRunnerUtil;
-import consulo.ide.impl.idea.execution.RunManagerConfig;
-import consulo.ide.impl.idea.execution.RunManagerEx;
+import consulo.execution.ProgramRunnerUtil;
+import consulo.execution.internal.RunManagerConfig;
+import consulo.execution.internal.RunManagerEx;
 import consulo.ide.impl.idea.execution.configurations.UnknownConfigurationType;
 import consulo.ide.impl.idea.execution.configurations.UnknownRunConfiguration;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -131,6 +131,11 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
   @Nonnull
   public RunnerAndConfigurationSettings createConfiguration(@Nonnull final String name, @Nonnull final ConfigurationFactory factory) {
     return createConfiguration(doCreateConfiguration(name, factory, true), factory);
+  }
+
+  @Override
+  public RunnerAndConfigurationSettings createConfiguration(@Nonnull RunConfiguration configuration, boolean isTemplate) {
+    return new RunnerAndConfigurationSettingsImpl(this, configuration, isTemplate);
   }
 
   protected RunConfiguration doCreateConfiguration(@Nonnull String name, @Nonnull ConfigurationFactory factory, final boolean fromTemplate) {
@@ -531,7 +536,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
     return myConfigurations.values();
   }
 
-  public static boolean canRunConfiguration(@Nonnull ExecutionEnvironment environment) {
+  public boolean canRunConfiguration(@Nonnull ExecutionEnvironment environment) {
     RunnerAndConfigurationSettings runnerAndConfigurationSettings = environment.getRunnerAndConfigurationSettings();
     return runnerAndConfigurationSettings != null && canRunConfiguration(runnerAndConfigurationSettings, environment.getExecutor());
   }

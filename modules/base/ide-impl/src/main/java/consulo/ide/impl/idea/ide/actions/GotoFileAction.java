@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.application.statistic.FeatureUsageTracker;
+import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.actions.searcheverywhere.FileSearchEverywhereContributor;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNameFilter;

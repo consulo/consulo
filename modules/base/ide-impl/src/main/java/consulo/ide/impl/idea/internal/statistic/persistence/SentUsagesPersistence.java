@@ -16,8 +16,8 @@
 
 package consulo.ide.impl.idea.internal.statistic.persistence;
 
-import consulo.ide.impl.idea.internal.statistic.beans.PatchedUsage;
-import consulo.ide.impl.idea.internal.statistic.beans.UsageDescriptor;
+import consulo.externalService.impl.internal.statistic.PatchedUsage;
+import consulo.externalService.statistic.UsageDescriptor;
 
 import javax.annotation.Nonnull;
 import java.util.Map;

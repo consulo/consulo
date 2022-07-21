@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.ide.actions.runAnything;
 
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
-import consulo.application.statistic.FeatureUsageTracker;
+import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import consulo.execution.executor.Executor;

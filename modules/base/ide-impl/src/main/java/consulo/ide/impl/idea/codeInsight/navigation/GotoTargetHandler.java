@@ -25,7 +25,7 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.progress.ProgressManager;
-import consulo.application.statistic.FeatureUsageTracker;
+import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.application.util.function.Computable;
 import consulo.codeEditor.Editor;
 import consulo.ide.navigation.GotoTargetRendererProvider;

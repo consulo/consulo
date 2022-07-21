@@ -129,6 +129,8 @@
     <module>modules/base/injecting-binding-processor</module>
     <module>modules/base/vcs/vcs-api</module>
     <module>modules/base/vcs/vcs-impl</module>
+    <module>modules/base/external-service-api</module>
+    <module>modules/base/external-service-impl</module>
 
     <module>modules/base/proxy</module>
     <module>modules/base/xcoverage-data</module>

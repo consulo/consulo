@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.actionSystem.impl;
 
-import consulo.application.statistic.FeatureUsageTracker;
+import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.application.AllIcons;
 import consulo.application.ui.UISettings;
 import consulo.ui.ex.internal.ActionManagerEx;

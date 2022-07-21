@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.ide.actions.runAnything;
 import consulo.execution.executor.Executor;
 import consulo.execution.executor.ExecutorRegistry;
 import consulo.execution.executor.DefaultRunExecutor;
-import consulo.application.statistic.FeatureUsageTracker;
+import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.application.AllIcons;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.actions.BigPopupUI;

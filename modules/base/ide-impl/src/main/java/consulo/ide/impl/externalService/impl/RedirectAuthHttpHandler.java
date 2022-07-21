@@ -25,7 +25,7 @@ import consulo.ide.impl.idea.util.io.HttpRequests;
 import consulo.ide.impl.builtInServer.http.HttpRequestHandler;
 import consulo.ide.impl.builtInServer.http.Responses;
 import consulo.ide.impl.external.api.UserAccount;
-import consulo.ide.impl.externalService.ExternalServiceConfiguration;
+import consulo.externalService.ExternalServiceConfiguration;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.Alerts;

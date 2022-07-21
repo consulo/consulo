@@ -3,7 +3,7 @@
 package consulo.ide.impl.idea.codeInsight.lookup.impl;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.statistic.FeatureUsageTracker;
+import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.application.util.matcher.PrefixMatcher;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.internal.ExtensionTypedActionHandler;

@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.editorActions.moveLeftRight;
 
-import consulo.application.statistic.FeatureUsageTracker;
+import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.IdeActions;
 import consulo.codeEditor.Caret;

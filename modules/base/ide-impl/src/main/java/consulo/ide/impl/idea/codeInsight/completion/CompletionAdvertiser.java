@@ -19,7 +19,7 @@ import consulo.language.editor.completion.CompletionParameters;
 import consulo.language.util.ProcessingContext;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ui.ex.action.ActionManager;
-import consulo.application.statistic.FeatureUsageTracker;
+import consulo.externalService.statistic.FeatureUsageTracker;
 import javax.annotation.Nonnull;
 
 /**

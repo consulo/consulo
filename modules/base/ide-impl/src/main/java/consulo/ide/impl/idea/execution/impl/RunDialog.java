@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.execution.impl;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.execution.ExecutionBundle;
 import consulo.execution.executor.Executor;
 import consulo.execution.RunnerAndConfigurationSettings;
@@ -36,6 +37,8 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
+@Deprecated
+@DeprecationInfo("Use RunConfigurationEditor")
 public class RunDialog extends DialogWrapper implements RunConfigurable.RunDialogBase {
   private final Project myProject;
   private final RunConfigurable myConfigurable;

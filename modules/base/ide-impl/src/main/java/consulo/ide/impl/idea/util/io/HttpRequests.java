@@ -19,26 +19,27 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.ApplicationInfo;
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.util.Patches;
+import consulo.application.util.ProgressStreamUtil;
 import consulo.ide.HttpProxyManager;
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.io.StreamUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.net.HttpProxyManagerImpl;
-import consulo.ide.impl.idea.util.net.NetUtils;
 import consulo.ide.impl.idea.util.net.ssl.CertificateManager;
 import consulo.logging.Logger;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.io.BufferExposingByteArrayOutputStream;
-import consulo.util.lang.SystemProperties;
+import consulo.util.io.FileUtil;
+import consulo.util.io.StreamUtil;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
-import java.net.*;
+import java.net.HttpURLConnection;
+import java.net.Proxy;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -61,7 +62,8 @@ public final class HttpRequests {
   private static final int BLOCK_SIZE = 16 * 1024;
   private static final Pattern CHARSET_PATTERN = Pattern.compile("charset=([^;]+)");
 
-  private HttpRequests() { }
+  private HttpRequests() {
+  }
 
 
   public interface Request {
@@ -80,7 +82,9 @@ public final class HttpRequests {
     @Nonnull
     BufferedReader getReader(@Nullable ProgressIndicator indicator) throws IOException;
 
-    /** @deprecated Called automatically on open connection. Use {@link RequestBuilder#tryConnect()} to get response code */
+    /**
+     * @deprecated Called automatically on open connection. Use {@link RequestBuilder#tryConnect()} to get response code
+     */
     boolean isSuccessful() throws IOException;
 
     @Nonnull
@@ -158,7 +162,8 @@ public final class HttpRequests {
         builder.append("\n, response: ").append(httpConnection.getResponseCode()).append(' ').append(httpConnection.getResponseMessage());
       }
     }
-    catch (Throwable ignored) { }
+    catch (Throwable ignored) {
+    }
 
     return builder.toString();
   }
@@ -330,7 +335,7 @@ public final class HttpRequests {
     public byte[] readBytes(@Nullable ProgressIndicator indicator) throws IOException {
       int contentLength = getConnection().getContentLength();
       BufferExposingByteArrayOutputStream out = new BufferExposingByteArrayOutputStream(contentLength > 0 ? contentLength : BLOCK_SIZE);
-      NetUtils.copyStreamContent(indicator, getInputStream(), out, contentLength);
+      ProgressStreamUtil.copyStreamContent(indicator, getInputStream(), out, contentLength);
       return ArrayUtil.realloc(out.getInternalBuffer(), out.size());
     }
 
@@ -350,7 +355,7 @@ public final class HttpRequests {
       boolean deleteFile = true;
       try {
         try (OutputStream out = new FileOutputStream(file)) {
-          NetUtils.copyStreamContent(indicator, digest, getInputStream(), out, getConnection().getContentLength());
+          ProgressStreamUtil.copyStreamContent(indicator, digest, getInputStream(), out, getConnection().getContentLength());
           deleteFile = false;
         }
         catch (IOException e) {
@@ -377,30 +382,9 @@ public final class HttpRequests {
   }
 
   private static <T> T process(RequestBuilderImpl builder, RequestProcessor<T> processor) throws IOException {
-    LOG.assertTrue(ApplicationManager.getApplication() == null ||
-                   ApplicationManager.getApplication().isUnitTestMode() ||
-                   !ApplicationManager.getApplication().isReadAccessAllowed(),
-                   "Network shouldn't be accessed in EDT or inside read action");
+    LOG.assertTrue(ApplicationManager.getApplication() == null || !ApplicationManager.getApplication().isReadAccessAllowed(), "Network shouldn't be accessed in EDT or inside read action");
 
-    ClassLoader contextLoader = Thread.currentThread().getContextClassLoader();
-    if (contextLoader != null && shouldOverrideContextClassLoader()) {
-      // hack-around for class loader lock in sun.net.www.protocol.http.NegotiateAuthentication (IDEA-131621)
-      try (URLClassLoader cl = new URLClassLoader(new URL[0], contextLoader)) {
-        Thread.currentThread().setContextClassLoader(cl);
-        return doProcess(builder, processor);
-      }
-      finally {
-        Thread.currentThread().setContextClassLoader(contextLoader);
-      }
-    }
-    else {
-      return doProcess(builder, processor);
-    }
-  }
-
-  private static boolean shouldOverrideContextClassLoader() {
-    return Patches.JDK_BUG_ID_8032832 &&
-           SystemProperties.getBooleanProperty("http.requests.override.context.classloader", true);
+    return doProcess(builder, processor);
   }
 
   private static <T> T doProcess(RequestBuilderImpl builder, RequestProcessor<T> processor) throws IOException {

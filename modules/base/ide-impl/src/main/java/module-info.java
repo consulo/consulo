@@ -76,6 +76,7 @@ open module consulo.ide.impl {
   requires transitive consulo.util.xml.fast.reader;
   requires transitive consulo.language.copyright.api;
   requires consulo.project.impl;
+  requires consulo.external.service.impl;
 
   requires consulo.ui.impl;
   requires consulo.localize.impl;
@@ -529,7 +530,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.internal.psiView;
   exports consulo.ide.impl.idea.internal.psiView.formattingblocks;
   exports consulo.ide.impl.idea.internal.statistic;
-  exports consulo.ide.impl.idea.internal.statistic.beans;
   exports consulo.ide.impl.idea.internal.statistic.collectors.fus.actions.persistence;
   exports consulo.ide.impl.idea.internal.statistic.configurable;
   exports consulo.ide.impl.idea.internal.statistic.ideSettings;

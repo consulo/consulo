@@ -21,6 +21,7 @@ import consulo.execution.configuration.ConfigurationFactory;
 import consulo.execution.configuration.ConfigurationType;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.configuration.RunProfile;
+import consulo.execution.runner.ExecutionEnvironment;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
@@ -301,6 +302,8 @@ public abstract class RunManager {
 
   @Nonnull
   public abstract Collection<RunnerAndConfigurationSettings> getSortedConfigurations();
+
+  public abstract boolean canRunConfiguration(@Nonnull ExecutionEnvironment environment);
 
   @Nullable
   public RunnerAndConfigurationSettings findConfigurationByTypeAndName(@Nonnull String typeId, @Nonnull String name) {

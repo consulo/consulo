@@ -34,7 +34,7 @@ import consulo.ide.impl.idea.openapi.wm.impl.ToolWindowSideStack;
 import consulo.ide.impl.idea.openapi.wm.impl.WindowInfoImpl;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.EventDispatcher;
-import consulo.ide.statistic.UsageTrigger;
+import consulo.externalService.statistic.UsageTrigger;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.extension.event.ModuleExtensionChangeListener;

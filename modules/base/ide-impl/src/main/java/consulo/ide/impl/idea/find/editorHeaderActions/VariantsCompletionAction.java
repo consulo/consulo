@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.find.editorHeaderActions;
 
-import consulo.application.statistic.FeatureUsageTracker;
+import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.codeEditor.Editor;
 import consulo.colorScheme.EditorFontType;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;

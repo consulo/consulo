@@ -17,8 +17,8 @@ package consulo.ide.impl.externalStorage;
 
 import consulo.component.persist.RoamingType;
 import consulo.component.store.impl.internal.StreamProvider;
-import consulo.ide.impl.externalService.ExternalService;
-import consulo.ide.impl.externalService.ExternalServiceConfiguration;
+import consulo.externalService.ExternalService;
+import consulo.externalService.ExternalServiceConfiguration;
 import consulo.ide.impl.externalStorage.storage.ExternalStorage;
 import consulo.util.lang.ThreeState;
 

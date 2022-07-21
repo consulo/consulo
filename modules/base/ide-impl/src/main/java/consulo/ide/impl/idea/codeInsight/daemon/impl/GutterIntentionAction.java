@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.ide.impl.idea.codeInsight.intention.AbstractIntentionAction;
-import consulo.ide.impl.idea.codeInsight.intention.PriorityAction;
+import consulo.language.editor.inspection.PriorityAction;
 import consulo.ui.ex.action.ShortcutProvider;
 import consulo.codeEditor.EditorEx;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;

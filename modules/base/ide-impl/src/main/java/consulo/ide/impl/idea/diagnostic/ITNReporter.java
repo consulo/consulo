@@ -30,7 +30,7 @@ import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.application.impl.internal.ApplicationInfo;
 import consulo.application.ApplicationManager;
-import consulo.ide.impl.idea.openapi.application.PermanentInstallationID;
+import consulo.externalService.impl.internal.PermanentInstallationID;
 import consulo.ide.impl.idea.openapi.diagnostic.ErrorReportSubmitter;
 import consulo.application.util.logging.IdeaLoggingEvent;
 import consulo.ide.impl.idea.openapi.diagnostic.SubmittedReportInfo;

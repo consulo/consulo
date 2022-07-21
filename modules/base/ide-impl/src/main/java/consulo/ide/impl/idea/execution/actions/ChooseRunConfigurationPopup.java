@@ -16,8 +16,8 @@
 
 package consulo.ide.impl.idea.execution.actions;
 
-import consulo.ide.impl.idea.execution.ProgramRunnerUtil;
-import consulo.ide.impl.idea.execution.RunManagerEx;
+import consulo.execution.ProgramRunnerUtil;
+import consulo.execution.internal.RunManagerEx;
 import consulo.ide.impl.idea.execution.configurations.UnknownConfigurationType;
 import consulo.ide.impl.idea.execution.impl.EditConfigurationsDialog;
 import consulo.ide.impl.idea.execution.impl.RunDialog;

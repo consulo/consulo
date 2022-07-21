@@ -9,7 +9,7 @@ import consulo.ide.impl.idea.codeInsight.hint.EditorHintListener;
 import consulo.language.editor.hint.HintManager;
 import consulo.ide.impl.idea.codeInsight.lookup.impl.LookupImpl;
 import consulo.application.impl.internal.JobScheduler;
-import consulo.application.statistic.FeatureUsageTracker;
+import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.application.AllIcons;
 import consulo.language.editor.completion.*;
 import consulo.language.editor.completion.lookup.Lookup;

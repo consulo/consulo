@@ -23,7 +23,7 @@ import consulo.ide.impl.idea.openapi.keymap.impl.ui.MouseShortcutPanel;
 import consulo.ide.impl.idea.openapi.wm.impl.FocusManagerImpl;
 import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
 import consulo.ide.impl.idea.util.ReflectionUtil;
-import consulo.application.statistic.FeatureUsageTracker;
+import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;

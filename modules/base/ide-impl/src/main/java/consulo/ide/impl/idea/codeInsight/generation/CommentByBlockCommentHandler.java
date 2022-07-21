@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.codeInsight.generation;
 
-import consulo.application.statistic.FeatureUsageTracker;
+import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.codeEditor.*;
 import consulo.document.Document;
 import consulo.document.RangeMarker;

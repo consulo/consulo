@@ -15,20 +15,20 @@
  */
 package consulo.ide.impl.idea.execution.lineMarker;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.AllIcons;
+import consulo.codeEditor.markup.GutterIconRenderer;
+import consulo.execution.lineMarker.RunLineMarkerContributor;
+import consulo.ide.impl.idea.util.Function;
 import consulo.language.Language;
 import consulo.language.editor.Pass;
 import consulo.language.editor.gutter.LineMarkerInfo;
 import consulo.language.editor.gutter.LineMarkerProviderDescriptor;
-import consulo.application.AllIcons;
+import consulo.language.psi.PsiElement;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnSeparator;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.codeEditor.markup.GutterIconRenderer;
-import consulo.language.psi.PsiElement;
-import consulo.ide.impl.idea.util.Function;
-import consulo.annotation.access.RequiredReadAction;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -53,7 +53,7 @@ public class RunLineMarkerProvider extends LineMarkerProviderDescriptor {
   @Override
   public LineMarkerInfo getLineMarkerInfo(@Nonnull PsiElement element) {
     List<RunLineMarkerContributor> contributors = RunLineMarkerContributor.forLanguage(element.getLanguage());
-    DefaultActionGroup actionGroup = null;
+    ActionGroup.Builder builder = null;
     Image icon = null;
     final List<RunLineMarkerContributor.Info> infos = new ArrayList<>();
     for (RunLineMarkerContributor contributor : contributors) {
@@ -64,23 +64,23 @@ public class RunLineMarkerProvider extends LineMarkerProviderDescriptor {
       if (icon == null) {
         icon = info.icon;
       }
-      if (actionGroup == null) {
-        actionGroup = new DefaultActionGroup();
+      if (builder == null) {
+        builder = ActionGroup.newImmutableBuilder();
       }
       infos.add(info);
       for (AnAction action : info.actions) {
-        actionGroup.add(new LineMarkerActionWrapper(element, action));
+        builder.add(new LineMarkerActionWrapper(element, action));
       }
-      actionGroup.add(new AnSeparator());
+      builder.add(new AnSeparator());
     }
     if (icon == null) return null;
 
-    final DefaultActionGroup finalActionGroup = actionGroup;
+    final ActionGroup finalActionGroup = builder == null ? null : builder.build();
     Function<PsiElement, String> tooltipProvider = element1 -> {
       final StringBuilder tooltip = new StringBuilder();
       for (RunLineMarkerContributor.Info info : infos) {
         if (info.tooltipProvider != null) {
-          String string = info.tooltipProvider.fun(element1);
+          String string = info.tooltipProvider.apply(element1);
           if (string == null) continue;
           if (tooltip.length() != 0) {
             tooltip.append("\n");
@@ -91,11 +91,11 @@ public class RunLineMarkerProvider extends LineMarkerProviderDescriptor {
 
       return tooltip.length() == 0 ? null : tooltip.toString();
     };
-    return new LineMarkerInfo<PsiElement>(element, element.getTextRange(), icon, Pass.LINE_MARKERS, tooltipProvider, null, GutterIconRenderer.Alignment.CENTER) {
+    return new LineMarkerInfo<>(element, element.getTextRange(), icon, Pass.LINE_MARKERS, tooltipProvider, null, GutterIconRenderer.Alignment.CENTER) {
       @Nullable
       @Override
       public GutterIconRenderer createGutterRenderer() {
-        return new LineMarkerGutterIconRenderer<PsiElement>(this) {
+        return new LineMarkerGutterIconRenderer<>(this) {
           @Override
           public AnAction getClickAction() {
             return null;

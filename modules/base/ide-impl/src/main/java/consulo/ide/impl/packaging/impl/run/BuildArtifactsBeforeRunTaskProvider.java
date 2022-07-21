@@ -17,7 +17,7 @@ package consulo.ide.impl.packaging.impl.run;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.execution.BeforeRunTask;
-import consulo.ide.impl.idea.execution.RunManagerEx;
+import consulo.execution.internal.RunManagerEx;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.ide.impl.idea.execution.impl.ConfigurationSettingsEditorWrapper;
 import consulo.execution.runner.ExecutionEnvironment;

@@ -22,6 +22,7 @@ import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.action.ConfigurationContext;
 import consulo.execution.action.ConfigurationFromContext;
 import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.internal.action.BaseRunConfigurationAction;
 import consulo.ide.impl.idea.execution.impl.RunDialog;
 import consulo.ide.impl.idea.execution.impl.RunManagerImpl;
 import consulo.ui.ex.action.Presentation;

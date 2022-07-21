@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.application.statistic.FeatureUsageTracker;
+import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.idea.ide.*;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;

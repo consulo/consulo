@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.execution.dashboard.tree;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.execution.executor.Executor;
 import consulo.execution.RunManager;
-import consulo.ide.impl.idea.execution.RunManagerEx;
+import consulo.execution.internal.RunManagerEx;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.ide.impl.idea.execution.dashboard.DashboardRunConfigurationNode;
 import consulo.ide.impl.idea.execution.dashboard.DashboardRunConfigurationStatus;

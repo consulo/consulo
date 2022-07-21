@@ -12,7 +12,7 @@ import consulo.language.editor.completion.lookup.LookupActionProvider;
 import consulo.language.editor.completion.lookup.LookupElementAction;
 import consulo.ide.impl.idea.codeInsight.lookup.impl.actions.ChooseItemAction;
 import consulo.ide.impl.idea.codeInsight.template.impl.actions.NextVariableAction;
-import consulo.application.statistic.FeatureUsageTracker;
+import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.language.LangBundle;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;

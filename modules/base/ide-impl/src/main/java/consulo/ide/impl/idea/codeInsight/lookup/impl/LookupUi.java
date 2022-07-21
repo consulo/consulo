@@ -7,7 +7,7 @@ import consulo.ide.impl.idea.codeInsight.completion.ShowHideIntentionIconLookupA
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementAction;
-import consulo.application.statistic.FeatureUsageTracker;
+import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.application.AllIcons;
 import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.application.ui.UISettings;

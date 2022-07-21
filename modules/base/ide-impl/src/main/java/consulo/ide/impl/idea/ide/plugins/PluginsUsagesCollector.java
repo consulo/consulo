@@ -16,8 +16,8 @@
 package consulo.ide.impl.idea.ide.plugins;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.internal.statistic.UsagesCollector;
-import consulo.ide.impl.idea.internal.statistic.beans.UsageDescriptor;
+import consulo.externalService.statistic.UsagesCollector;
+import consulo.externalService.statistic.UsageDescriptor;
 import consulo.project.Project;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.container.plugin.PluginDescriptor;

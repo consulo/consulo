@@ -63,7 +63,7 @@ public interface DataContext {
       myParent = parent;
     }
 
-    public Builder setParent(@Nullable DataContext parent) {
+    public Builder parent(@Nullable DataContext parent) {
       myParent = parent;
       return this;
     }

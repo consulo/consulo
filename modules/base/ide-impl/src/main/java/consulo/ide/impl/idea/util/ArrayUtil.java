@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.util;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.util.text.CharArrayCharSequence;
 import consulo.util.collection.ArrayFactory;
@@ -35,6 +36,8 @@ import java.util.function.IntFunction;
  * Author: msk
  */
 @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
+@Deprecated(forRemoval = true)
+@DeprecationInfo("Use consulo.util.collection.ArrayUtil")
 public class ArrayUtil extends ArrayUtilRt {
   public static final short[] EMPTY_SHORT_ARRAY = ArrayUtilRt.EMPTY_SHORT_ARRAY;
   public static final char[] EMPTY_CHAR_ARRAY = ArrayUtilRt.EMPTY_CHAR_ARRAY;

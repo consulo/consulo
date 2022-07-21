@@ -28,7 +28,7 @@ import consulo.ide.impl.externalService.impl.WebServiceApi;
 import consulo.ide.impl.externalService.impl.WebServiceApiSender;
 import consulo.ide.impl.externalService.impl.statistics.SendStatisticsUtil;
 import consulo.ide.impl.idea.internal.statistic.persistence.UsageStatisticsPersistenceComponent;
-import consulo.ide.impl.idea.openapi.application.PermanentInstallationID;
+import consulo.externalService.impl.internal.PermanentInstallationID;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.event.ProjectManagerListener;

@@ -5,7 +5,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
 import consulo.application.dumb.DumbAware;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.statistic.FeatureUsageTracker;
+import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.application.ui.UISettings;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;

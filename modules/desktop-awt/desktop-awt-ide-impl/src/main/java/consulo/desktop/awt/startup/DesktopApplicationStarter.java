@@ -46,7 +46,7 @@ import consulo.desktop.awt.wm.impl.TopMenuInitializer;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.plugins.PluginsConfigurable;
 import consulo.ide.setting.ShowSettingsUtil;
-import consulo.ide.statistic.UsageTrigger;
+import consulo.externalService.statistic.UsageTrigger;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.project.Project;

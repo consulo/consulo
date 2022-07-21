@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.tasks.actions;
 
 import consulo.ide.impl.idea.codeInsight.documentation.DocumentationManager;
-import consulo.application.statistic.FeatureUsageTracker;
+import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.undoRedo.CommandProcessor;

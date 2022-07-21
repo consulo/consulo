@@ -16,9 +16,9 @@
 
 package consulo.ide.impl.idea.execution.impl;
 
-import consulo.ide.impl.idea.execution.ProgramRunnerUtil;
-import consulo.ide.impl.idea.execution.RunManagerConfig;
-import consulo.ide.impl.idea.execution.RunManagerEx;
+import consulo.execution.ProgramRunnerUtil;
+import consulo.execution.internal.RunManagerConfig;
+import consulo.execution.internal.RunManagerEx;
 import consulo.ide.impl.idea.execution.configurations.UnknownConfigurationType;
 import consulo.ide.impl.idea.execution.configurations.UnknownRunConfiguration;
 import consulo.ui.ex.awt.LabeledComponent;

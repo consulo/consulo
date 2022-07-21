@@ -28,7 +28,7 @@ import consulo.ide.impl.idea.diff.util.DiffUtil;
 import consulo.application.AllIcons;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.ide.statistic.UsageTrigger;
+import consulo.externalService.statistic.UsageTrigger;
 import consulo.ui.ex.awt.action.ComboBoxAction;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorPopupHandler;

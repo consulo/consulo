@@ -20,7 +20,7 @@ import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.diff.*;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.ide.impl.idea.openapi.diff.impl.dir.actions.popup.WarnOnDeletion;
-import consulo.ide.statistic.UsageTrigger;
+import consulo.externalService.statistic.UsageTrigger;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ide.impl.idea.openapi.ui.MessageDialogBuilder;
 import consulo.ui.ex.awt.Messages;

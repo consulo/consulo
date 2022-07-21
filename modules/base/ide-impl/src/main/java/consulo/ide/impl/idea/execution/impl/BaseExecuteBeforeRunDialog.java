@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.execution.impl;
 
-import consulo.ide.impl.idea.execution.*;
+import consulo.execution.internal.RunManagerEx;
 import consulo.execution.*;
 import consulo.execution.configuration.ConfigurationFactory;
 import consulo.execution.configuration.ConfigurationType;

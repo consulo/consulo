@@ -26,6 +26,7 @@ import consulo.execution.event.ExecutionListener;
 import consulo.execution.executor.DefaultRunExecutor;
 import consulo.execution.executor.Executor;
 import consulo.execution.executor.ExecutorRegistry;
+import consulo.execution.internal.RunManagerEx;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.ExecutionEnvironmentBuilder;
 import consulo.execution.runner.ProgramRunner;

@@ -20,7 +20,7 @@ import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.statistic.FeatureUsageTracker;
+import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.application.util.function.Processor;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.application.util.registry.Registry;

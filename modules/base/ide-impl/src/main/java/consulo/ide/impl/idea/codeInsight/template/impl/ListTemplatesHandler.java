@@ -25,7 +25,7 @@ import consulo.application.util.ClientId;
 import consulo.language.editor.template.context.TemplateActionContext;
 import consulo.language.editor.template.TemplateManager;
 import consulo.language.util.AttachmentFactoryUtil;
-import consulo.application.statistic.FeatureUsageTracker;
+import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.language.editor.WriteCommandAction;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;

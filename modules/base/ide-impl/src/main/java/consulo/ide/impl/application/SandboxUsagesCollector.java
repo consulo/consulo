@@ -16,9 +16,9 @@
 package consulo.ide.impl.application;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.internal.statistic.CollectUsagesException;
-import consulo.ide.impl.idea.internal.statistic.UsagesCollector;
-import consulo.ide.impl.idea.internal.statistic.beans.UsageDescriptor;
+import consulo.externalService.statistic.CollectUsagesException;
+import consulo.externalService.statistic.UsagesCollector;
+import consulo.externalService.statistic.UsageDescriptor;
 import consulo.project.Project;
 import consulo.application.ApplicationProperties;
 

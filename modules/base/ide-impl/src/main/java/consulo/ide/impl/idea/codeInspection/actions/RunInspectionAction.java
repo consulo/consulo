@@ -24,7 +24,7 @@ import consulo.language.editor.inspection.scheme.InspectionProfile;
 import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.ide.impl.idea.codeInspection.ex.InspectionManagerEx;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
-import consulo.application.statistic.FeatureUsageTracker;
+import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.actions.GotoActionBase;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNameFilter;

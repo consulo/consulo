@@ -8,7 +8,7 @@ import consulo.application.TransactionGuard;
 import consulo.application.WriteAction;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
-import consulo.application.statistic.FeatureUsageTracker;
+import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.application.util.function.Computable;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Caret;

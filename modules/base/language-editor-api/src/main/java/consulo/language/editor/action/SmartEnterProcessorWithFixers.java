@@ -1,11 +1,11 @@
 package consulo.language.editor.action;
 
-import consulo.application.statistic.FeatureUsageTracker;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionManager;
 import consulo.document.Document;
+import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.codeInsight.completion.actions;
 
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.impl.internal.action.BaseCodeInsightAction;
-import consulo.application.statistic.FeatureUsageTracker;
+import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.codeEditor.Editor;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;

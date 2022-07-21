@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.util.net;
 
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
-import consulo.ide.util.ProgressStreamUtil;
+import consulo.application.util.ProgressStreamUtil;
 import consulo.util.io.NetUtil;
 
 import javax.annotation.Nonnull;

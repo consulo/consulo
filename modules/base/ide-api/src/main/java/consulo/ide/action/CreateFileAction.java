@@ -25,7 +25,7 @@ import consulo.application.util.SystemInfo;
 import consulo.ide.IdeBundle;
 import consulo.ide.action.ui.NewItemPopupUtil;
 import consulo.ide.action.ui.NewItemSimplePopupPanel;
-import consulo.ide.statistic.UsageTrigger;
+import consulo.externalService.statistic.UsageTrigger;
 import consulo.language.LangBundle;
 import consulo.language.file.FileTypeManager;
 import consulo.language.psi.PsiDirectory;

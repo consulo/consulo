@@ -19,7 +19,7 @@ import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.impl.internal.action.BaseCodeInsightAction;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.ui.PopupNavigationUtil;
-import consulo.application.statistic.FeatureUsageTracker;
+import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.idea.find.actions.ShowUsagesAction;
 import consulo.language.editor.ui.DefaultPsiElementCellRenderer;
 import consulo.language.psi.util.EditSourceUtil;

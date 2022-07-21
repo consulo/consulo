@@ -27,7 +27,7 @@ import consulo.desktop.awt.startup.splash.AnimatedLogoLabel;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.welcomeScreen.BaseWelcomeScreenPanel;
 import consulo.ide.impl.welcomeScreen.WelcomeScreenConstants;
-import consulo.ide.statistic.UsageTrigger;
+import consulo.externalService.statistic.UsageTrigger;
 import consulo.project.ui.notification.NotificationType;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;

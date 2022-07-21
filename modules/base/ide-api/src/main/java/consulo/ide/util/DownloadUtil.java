@@ -2,6 +2,7 @@ package consulo.ide.util;
 
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
+import consulo.application.util.ProgressStreamUtil;
 import consulo.ide.HttpProxyManager;
 import consulo.logging.Logger;
 import consulo.project.Project;

@@ -58,6 +58,7 @@ module consulo.ide.api {
   requires transitive consulo.vcs.api;
   requires transitive consulo.execution.test.sm.api;
   requires transitive consulo.execution.test.thrift.api;
+  requires transitive consulo.external.service.api;
 
   exports consulo.ide;
   exports consulo.ide.action;
@@ -71,7 +72,6 @@ module consulo.ide.api {
   exports consulo.ide.setting.module.event;
   exports consulo.ide.moduleImport;
   exports consulo.ide.newModule;
-  exports consulo.ide.statistic;
   exports consulo.ide.newModule.ui;
   exports consulo.ide.ui;
   exports consulo.ide.ui.popup;

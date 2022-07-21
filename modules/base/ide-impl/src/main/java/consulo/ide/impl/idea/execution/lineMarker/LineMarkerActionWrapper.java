@@ -1,11 +1,11 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.execution.lineMarker;
 
-import consulo.ide.impl.idea.codeInsight.intention.PriorityAction;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
 import consulo.execution.action.Location;
 import consulo.execution.action.PsiLocation;
-import consulo.dataContext.DataManager;
-import consulo.dataContext.DataContext;
+import consulo.language.editor.inspection.PriorityAction;
 import consulo.language.psi.PsiElement;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;

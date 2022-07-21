@@ -15,9 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.fileTypes;
 
-import consulo.ide.impl.idea.internal.statistic.AbstractApplicationUsagesCollector;
-import consulo.ide.impl.idea.internal.statistic.CollectUsagesException;
-import consulo.ide.impl.idea.internal.statistic.beans.UsageDescriptor;
+import consulo.externalService.statistic.AbstractApplicationUsagesCollector;
+import consulo.externalService.statistic.CollectUsagesException;
+import consulo.externalService.statistic.UsageDescriptor;
 import consulo.application.ApplicationManager;
 import consulo.language.file.FileTypeManager;
 import consulo.project.Project;

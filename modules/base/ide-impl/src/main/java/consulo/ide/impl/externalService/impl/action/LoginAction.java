@@ -24,7 +24,7 @@ import consulo.ide.impl.idea.openapi.actionSystem.RightAlignedToolbarAction;
 import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.util.ObjectUtil;
 import consulo.ide.impl.builtInServer.BuiltInServerManager;
-import consulo.ide.impl.externalService.ExternalServiceConfiguration;
+import consulo.externalService.ExternalServiceConfiguration;
 import consulo.ide.impl.externalService.impl.ExternalServiceConfigurationImpl;
 import consulo.ide.impl.externalService.impl.WebServiceApi;
 import consulo.localize.LocalizeValue;
