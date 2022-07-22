@@ -1,6 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.lookup.impl;
 
+import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButtonImpl;
 import consulo.language.editor.CodeInsightSettings;
 import consulo.ide.impl.idea.codeInsight.completion.CodeCompletionFeatures;
 import consulo.ide.impl.idea.codeInsight.completion.ShowHideIntentionIconLookupAction;
@@ -12,7 +13,6 @@ import consulo.application.AllIcons;
 import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.application.ui.UISettings;
 import consulo.language.editor.inject.EditorWindow;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButton;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.codeEditor.Editor;
@@ -58,8 +58,8 @@ class LookupUi {
   private final Alarm myHintAlarm = new Alarm();
   private final JScrollPane myScrollPane;
   private final AsyncProcessIcon myProcessIcon = new AsyncProcessIcon("Completion progress");
-  private final ActionButton myMenuButton;
-  private final ActionButton myHintButton;
+  private final ActionButtonImpl myMenuButton;
+  private final ActionButtonImpl myHintButton;
   private final JComponent myBottomPanel;
 
   private int myMaximumHeight = Integer.MAX_VALUE;
@@ -85,12 +85,12 @@ class LookupUi {
 
     Presentation presentation = new Presentation();
     presentation.setIcon(AllIcons.Actions.More);
-    presentation.putClientProperty(ActionButton.HIDE_DROPDOWN_ICON, Boolean.TRUE);
+    presentation.putClientProperty(ActionButtonImpl.HIDE_DROPDOWN_ICON, Boolean.TRUE);
 
-    myMenuButton = new ActionButton(menuAction, presentation, ActionPlaces.EDITOR_POPUP, ActionToolbar.NAVBAR_MINIMUM_BUTTON_SIZE);
+    myMenuButton = new ActionButtonImpl(menuAction, presentation, ActionPlaces.EDITOR_POPUP, ActionToolbar.NAVBAR_MINIMUM_BUTTON_SIZE);
 
     AnAction hintAction = new HintAction();
-    myHintButton = new ActionButton(hintAction, hintAction.getTemplatePresentation(), ActionPlaces.EDITOR_POPUP, ActionToolbar.NAVBAR_MINIMUM_BUTTON_SIZE);
+    myHintButton = new ActionButtonImpl(hintAction, hintAction.getTemplatePresentation(), ActionPlaces.EDITOR_POPUP, ActionToolbar.NAVBAR_MINIMUM_BUTTON_SIZE);
     myHintButton.setVisible(false);
 
     myBottomPanel = new NonOpaquePanel(new LookupBottomLayout());

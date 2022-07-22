@@ -181,7 +181,7 @@ public interface Document extends UserDataHolder {
    * of the content of the file. Note that it is not related to the file modification time.
    *
    * @return the modification stamp value.
-   * @see com.intellij.psi.PsiFile#getModificationStamp()
+   * @see PsiFile#getModificationStamp()
    * @see VirtualFile#getModificationStamp()
    */
   @Contract(pure = true)

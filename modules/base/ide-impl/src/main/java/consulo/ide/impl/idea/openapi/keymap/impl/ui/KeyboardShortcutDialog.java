@@ -52,7 +52,7 @@ public class KeyboardShortcutDialog extends DialogWrapper {
   private final JTextArea myConflictInfoArea;
   private Keymap myKeymap;
   private final String myActionId;
-  private final Group myMainGroup;
+  private final KeymapGroupImpl myMainGroup;
 
   public KeyboardShortcutDialog(Component component, String actionId, final QuickList[] quickLists) {
     super(component, true);

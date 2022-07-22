@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.actionSystem.impl;
 
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButton;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButtonImpl;
 
 import java.awt.*;
 
@@ -24,5 +24,5 @@ import java.awt.*;
  * @since 2020-06-20
  */
 public interface ActionButtonUI {
-  void paintBackground(ActionButton button, Graphics g, Dimension size, int state);
+  void paintBackground(ActionButtonImpl button, Graphics g, Dimension size, int state);
 }

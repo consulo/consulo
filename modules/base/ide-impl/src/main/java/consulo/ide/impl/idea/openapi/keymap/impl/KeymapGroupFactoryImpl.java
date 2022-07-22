@@ -16,9 +16,9 @@
 package consulo.ide.impl.idea.openapi.keymap.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.openapi.keymap.KeymapGroup;
+import consulo.ui.ex.keymap.KeymapGroup;
 import consulo.ide.impl.idea.openapi.keymap.KeymapGroupFactory;
-import consulo.ide.impl.idea.openapi.keymap.impl.ui.Group;
+import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapGroupImpl;
 import consulo.ui.image.Image;
 
 import jakarta.inject.Singleton;
@@ -31,11 +31,11 @@ import jakarta.inject.Singleton;
 public class KeymapGroupFactoryImpl extends KeymapGroupFactory {
   @Override
   public KeymapGroup createGroup(final String name) {
-    return new Group(name, null, null);
+    return new KeymapGroupImpl(name, null, null);
   }
 
   @Override
   public KeymapGroup createGroup(final String name, final Image icon) {
-    return new Group(name, icon);
+    return new KeymapGroupImpl(name, icon);
   }
 }

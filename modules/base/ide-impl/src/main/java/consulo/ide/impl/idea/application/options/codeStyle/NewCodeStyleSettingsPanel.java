@@ -16,15 +16,17 @@
 
 package consulo.ide.impl.idea.application.options.codeStyle;
 
-import consulo.ide.impl.idea.application.options.CodeStyleAbstractConfigurable;
-import consulo.ide.impl.idea.application.options.CodeStyleAbstractPanel;
-import consulo.ide.impl.idea.application.options.OptionsContainingConfigurable;
-import consulo.ide.impl.idea.application.options.TabbedLanguageCodeStylePanel;
-import consulo.logging.Logger;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
-import javax.annotation.Nonnull;
+import consulo.configurable.OptionsContainingConfigurable;
+import consulo.disposer.Disposable;
+import consulo.language.codeStyle.ui.setting.TabbedLanguageCodeStylePanel;
+import consulo.language.codeStyle.ui.setting.CodeStyleAbstractConfigurable;
+import consulo.language.codeStyle.ui.setting.CodeStyleAbstractPanel;
+import consulo.language.codeStyle.ui.setting.CodeStyleSchemesModel;
+import consulo.logging.Logger;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -34,16 +36,23 @@ import java.util.Set;
 /**
  * @author max
  */
-public class NewCodeStyleSettingsPanel extends JPanel implements TabbedLanguageCodeStylePanel.TabChangeListener {
+public class NewCodeStyleSettingsPanel implements TabbedLanguageCodeStylePanel.TabChangeListener {
   private static final Logger LOG = Logger.getInstance(NewCodeStyleSettingsPanel.class);
 
+  private final JPanel myPanel;
   private final Configurable myTab;
 
   public NewCodeStyleSettingsPanel(Configurable tab) {
-    super(new BorderLayout());
+    myPanel = new JPanel(new BorderLayout());
     myTab = tab;
-    JComponent component = myTab.createComponent();
-    add(component, BorderLayout.CENTER);
+  }
+
+  public JComponent getPanel(@Nonnull Disposable uiDisposable) {
+    if (myPanel.getComponentCount() == 0) {
+      JComponent component = myTab.createComponent(uiDisposable);
+      myPanel.add(component, BorderLayout.CENTER);
+    }
+    return myPanel;
   }
 
   public boolean isModified() {

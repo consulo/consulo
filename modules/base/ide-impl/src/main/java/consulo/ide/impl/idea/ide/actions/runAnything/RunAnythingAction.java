@@ -12,7 +12,7 @@ import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.ide.impl.idea.ide.actions.GotoActionBase;
 import consulo.ide.impl.idea.ide.actions.runAnything.activity.RunAnythingProvider;
 import consulo.ui.ex.awt.action.CustomComponentAction;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButton;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButtonImpl;
 import consulo.ide.impl.idea.openapi.keymap.impl.ModifierKeyDoubleClickHandler;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.editor.CommonDataKeys;
@@ -92,7 +92,7 @@ public class RunAnythingAction extends AnAction implements CustomComponentAction
   @Nonnull
   @Override
   public JComponent createCustomComponent(@Nonnull Presentation presentation, @Nonnull String place) {
-    return new ActionButton(this, presentation, place, ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE) {
+    return new ActionButtonImpl(this, presentation, place, ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE) {
 
       @Nullable
       @Override

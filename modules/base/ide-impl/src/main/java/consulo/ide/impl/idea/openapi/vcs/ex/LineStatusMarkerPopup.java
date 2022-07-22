@@ -19,7 +19,7 @@ import consulo.ide.impl.idea.codeInsight.hint.EditorFragmentComponent;
 import consulo.language.editor.hint.HintManager;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.diff.comparison.ByWord;
-import consulo.ide.impl.idea.diff.comparison.ComparisonPolicy;
+import consulo.diff.comparison.ComparisonPolicy;
 import consulo.diff.fragment.DiffFragment;
 import consulo.ide.impl.idea.diff.util.DiffDrawUtil;
 import consulo.ide.impl.idea.diff.util.DiffUtil;

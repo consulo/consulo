@@ -15,12 +15,12 @@
  */
 package consulo.ide.impl.idea.application.options.codeStyle.arrangement.component;
 
-import consulo.ide.impl.idea.application.options.codeStyle.arrangement.ArrangementConstants;
+import consulo.language.codeStyle.ui.internal.arrangement.ArrangementConstants;
 import consulo.language.codeStyle.arrangement.model.ArrangementAtomMatchCondition;
 import consulo.language.codeStyle.arrangement.model.ArrangementMatchCondition;
 import consulo.language.codeStyle.arrangement.std.ArrangementSettingsToken;
 import consulo.ui.ex.awt.JBCheckBox;
-import consulo.ide.impl.idea.util.ui.GridBag;
+import consulo.ui.ex.awt.GridBag;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

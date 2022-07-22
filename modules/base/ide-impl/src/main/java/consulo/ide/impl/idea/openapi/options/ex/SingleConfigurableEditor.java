@@ -33,7 +33,7 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.BorderLayoutPanel;
 import consulo.ide.impl.base.BaseShowSettingsUtil;
 import consulo.logging.Logger;
-import consulo.ide.setting.ConfigurableUIMigrationUtil;
+import consulo.configurable.internal.ConfigurableUIMigrationUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 

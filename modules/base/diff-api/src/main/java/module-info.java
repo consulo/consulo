@@ -16,5 +16,6 @@ module consulo.diff.api {
   exports consulo.diff.request;
   exports consulo.diff.content;
   exports consulo.diff.fragment;
+  exports consulo.diff.comparison;
   exports consulo.diff.util;
 }

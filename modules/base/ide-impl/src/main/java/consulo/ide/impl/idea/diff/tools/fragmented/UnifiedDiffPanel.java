@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.diff.tools.fragmented;
 
 import consulo.ide.impl.idea.diff.DiffContext;
-import consulo.ide.impl.idea.diff.comparison.DiffTooBigException;
+import consulo.diff.comparison.DiffTooBigException;
 import consulo.ide.impl.idea.diff.tools.util.base.DiffPanelBase;
 import consulo.dataContext.DataProvider;
 import consulo.project.Project;

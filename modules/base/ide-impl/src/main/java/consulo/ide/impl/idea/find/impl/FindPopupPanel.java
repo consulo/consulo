@@ -5,7 +5,7 @@ import consulo.ide.impl.idea.find.SearchTextArea;
 import consulo.ide.impl.idea.find.actions.ShowUsagesAction;
 import consulo.ide.impl.idea.find.replaceInProject.ReplaceInProjectManager;
 import consulo.ide.impl.idea.ide.IdeEventQueue;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButton;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButtonImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionToolbarImpl;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.project.DumbAwareToggleAction;
@@ -155,7 +155,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
   private StateRestoringCheckBox myCbFileFilter;
   private ActionToolbarImpl myScopeSelectionToolbar;
   private ComboBox<String> myFileMaskField;
-  private ActionButton myFilterContextButton;
+  private ActionButtonImpl myFilterContextButton;
   private JButton myOKButton;
   private JButton myReplaceAllButton;
   private JButton myReplaceSelectedButton;
@@ -515,7 +515,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
     }
 
     AnAction myShowFilterPopupAction = new MyShowFilterPopupAction();
-    myFilterContextButton = new ActionButton(myShowFilterPopupAction, myShowFilterPopupAction.getTemplatePresentation(), ActionPlaces.UNKNOWN, ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE) {
+    myFilterContextButton = new ActionButtonImpl(myShowFilterPopupAction, myShowFilterPopupAction.getTemplatePresentation(), ActionPlaces.UNKNOWN, ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE) {
       @Override
       public int getPopState() {
         int state = super.getPopState();
@@ -525,7 +525,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
     };
     myShowFilterPopupAction.registerCustomShortcutSet(myShowFilterPopupAction.getShortcutSet(), this);
     ToggleAction pinAction = new MyPinAction();
-    ActionButton pinButton = new ActionButton(pinAction, pinAction.getTemplatePresentation(), ActionPlaces.UNKNOWN, ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE);
+    ActionButtonImpl pinButton = new ActionButtonImpl(pinAction, pinAction.getTemplatePresentation(), ActionPlaces.UNKNOWN, ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE);
 
     DefaultActionGroup tabOptionsGroup = new DefaultActionGroup() {{
       Presentation presentation = getTemplatePresentation();
@@ -536,7 +536,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
       add(new MySkipTabWithOneUsageAction());
       add(new MyOpenResultsInNewTabAction());
     }};
-    ActionButton tabOptionsButton = new ActionButton(tabOptionsGroup, tabOptionsGroup.getTemplatePresentation(), ActionPlaces.UNKNOWN, ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE);
+    ActionButtonImpl tabOptionsButton = new ActionButtonImpl(tabOptionsGroup, tabOptionsGroup.getTemplatePresentation(), ActionPlaces.UNKNOWN, ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE);
     DumbAwareAction.create(event -> tabOptionsButton.click()).registerCustomShortcutSet(tabOptionsGroup.getShortcutSet(), this);
 
     myOKButton = new JButton(FindBundle.message("find.popup.find.button"));

@@ -32,7 +32,7 @@ import consulo.ide.impl.idea.util.IconUtil;
 import consulo.ide.impl.idea.util.config.StorageAccessors;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.Convertor;
-import consulo.ide.impl.idea.util.ui.GridBag;
+import consulo.ui.ex.awt.GridBag;
 import consulo.application.AllIcons;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.configurable.BaseConfigurable;

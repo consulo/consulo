@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.diff.util;
 
-import consulo.ide.impl.idea.diff.comparison.ComparisonPolicy;
+import consulo.diff.comparison.ComparisonPolicy;
 import consulo.diff.fragment.LineFragment;
 import consulo.diff.DiffUserDataKeys;
 import consulo.diff.merge.MergeResult;

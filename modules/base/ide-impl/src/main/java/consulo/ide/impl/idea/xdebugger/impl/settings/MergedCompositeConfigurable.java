@@ -10,7 +10,7 @@ import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.TitledSeparator;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
-import consulo.ide.setting.ConfigurableUIMigrationUtil;
+import consulo.configurable.internal.ConfigurableUIMigrationUtil;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.LabeledLayout;

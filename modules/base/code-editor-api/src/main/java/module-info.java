@@ -25,6 +25,7 @@ module consulo.code.editor.api {
           consulo.language.inject.impl,
           consulo.desktop.awt.ide.impl,
           consulo.language.editor.api,
+          consulo.language.code.style.ui.api,
           consulo.language.editor.refactoring.api,
           consulo.desktop.swt.ide.impl;
 }

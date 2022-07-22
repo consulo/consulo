@@ -15,8 +15,8 @@
  */
 package consulo.desktop.awt.ui.plaf.darcula;
 
+import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButtonImpl;
 import consulo.ui.ex.action.ActionButtonComponent;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButton;
 import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.ex.awt.JBInsets;
 import consulo.desktop.awt.ui.plaf.intellij.ActionButtonUI;
@@ -36,7 +36,7 @@ public class DarculaActionButtonUI extends ActionButtonUI {
   }
 
   @Override
-  public void paintBackground(ActionButton button, Graphics g, Dimension size, int state) {
+  public void paintBackground(ActionButtonImpl button, Graphics g, Dimension size, int state) {
     if (state == ActionButtonComponent.NORMAL && !button.isBackgroundSet()) return;
 
     Rectangle rect = new Rectangle(button.getSize());
@@ -59,7 +59,7 @@ public class DarculaActionButtonUI extends ActionButtonUI {
   }
 
   @Override
-  public void paintBorder(ActionButton button, Graphics g, Dimension size, int state) {
+  public void paintBorder(ActionButtonImpl button, Graphics g, Dimension size, int state) {
     if (state == ActionButtonComponent.NORMAL && !button.isBackgroundSet()) return;
 
     Rectangle rect = new Rectangle(button.getSize());

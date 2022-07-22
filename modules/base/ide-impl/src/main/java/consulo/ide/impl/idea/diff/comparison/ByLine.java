@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.diff.comparison;
 
+import consulo.diff.comparison.ComparisonPolicy;
 import consulo.ide.impl.idea.diff.comparison.iterables.FairDiffIterable;
 import consulo.ide.impl.idea.diff.util.MergeRange;
 import consulo.ide.impl.idea.diff.util.Range;
@@ -30,7 +31,7 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-import static consulo.ide.impl.idea.diff.comparison.ComparisonPolicy.IGNORE_WHITESPACES;
+import static consulo.diff.comparison.ComparisonPolicy.IGNORE_WHITESPACES;
 import static consulo.ide.impl.idea.diff.comparison.TrimUtil.trimEnd;
 import static consulo.ide.impl.idea.diff.comparison.TrimUtil.trimStart;
 import static consulo.ide.impl.idea.diff.comparison.iterables.DiffIterableUtil.*;

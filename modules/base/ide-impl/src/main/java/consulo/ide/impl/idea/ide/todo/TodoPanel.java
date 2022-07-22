@@ -87,7 +87,7 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
   public static final Key<TodoPanel> TODO_PANEL_DATA_KEY = Key.create("TodoPanel");
 
   /**
-   * @param currentFileMode if {@code true} then view doesn't have "Group By Packages" and "Flatten Packages"
+   * @param currentFileMode if {@code true} then view doesn't have "KeymapGroupImpl By Packages" and "Flatten Packages"
    *                        actions.
    */
   TodoPanel(Project project, TodoPanelSettings settings, boolean currentFileMode, Content content) {

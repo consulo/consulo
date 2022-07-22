@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.application.options.codeStyle.arrangement.action;
 
-import consulo.ide.impl.idea.application.options.codeStyle.arrangement.match.ArrangementMatchingRulesControl;
-import consulo.ide.impl.idea.application.options.codeStyle.arrangement.match.ArrangementSectionRulesControl;
+import consulo.language.codeStyle.ui.internal.arrangement.ArrangementMatchingRulesControl;
+import consulo.language.codeStyle.ui.internal.arrangement.ArrangementSectionRulesControl;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import javax.annotation.Nonnull;

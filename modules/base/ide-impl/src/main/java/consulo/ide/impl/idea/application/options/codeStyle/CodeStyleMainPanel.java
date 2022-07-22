@@ -16,20 +16,23 @@
 
 package consulo.ide.impl.idea.application.options.codeStyle;
 
-import consulo.ide.impl.idea.application.options.CodeStyleAbstractPanel;
-import consulo.ide.impl.idea.application.options.TabbedLanguageCodeStylePanel;
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.language.Language;
 import consulo.application.ApplicationBundle;
 import consulo.application.ApplicationManager;
+import consulo.disposer.Disposable;
+import consulo.language.codeStyle.ui.setting.TabbedLanguageCodeStylePanel;
+import consulo.ide.impl.idea.ide.util.PropertiesComponent;
+import consulo.ide.impl.idea.ui.components.labels.SwingActionLink;
+import consulo.language.Language;
 import consulo.language.codeStyle.CodeStyleScheme;
 import consulo.language.codeStyle.CodeStyleSchemes;
-import consulo.ide.impl.idea.ui.components.labels.SwingActionLink;
+import consulo.language.codeStyle.ui.setting.CodeStyleAbstractPanel;
+import consulo.language.codeStyle.ui.setting.CodeStyleSchemesModel;
+import consulo.language.codeStyle.ui.setting.CodeStyleSchemesModelListener;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.concurrent.EdtExecutorService;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -46,7 +49,7 @@ public class CodeStyleMainPanel extends JPanel implements TabbedLanguageCodeStyl
   private final CardLayout myLayout = new CardLayout();
   private final JPanel mySettingsPanel = new JPanel(myLayout);
 
-  private final Map<String, NewCodeStyleSettingsPanel> mySettingsPanels = new HashMap<String, NewCodeStyleSettingsPanel>();
+  private final Map<String, NewCodeStyleSettingsPanel> mySettingsPanels = new HashMap<>();
 
   private Future<?> myAlarm = CompletableFuture.completedFuture(null);
   private final CodeStyleSchemesModel myModel;
@@ -68,6 +71,7 @@ public class CodeStyleMainPanel extends JPanel implements TabbedLanguageCodeStyl
 
   private final PropertiesComponent myProperties;
 
+  private Disposable myUiDisposable;
   private final static String SELECTED_TAB = "settings.code.style.selected.tab";
 
   public CodeStyleMainPanel(CodeStyleSchemesModel model, CodeStyleSettingsPanelFactory factory) {
@@ -238,7 +242,9 @@ public class CodeStyleMainPanel extends JPanel implements TabbedLanguageCodeStyl
         }
       }
       mySettingsPanels.put(name, panel);
-      mySettingsPanel.add(scheme.getName(), panel);
+
+      myUiDisposable = Disposable.newDisposable();
+      mySettingsPanel.add(scheme.getName(), panel.getPanel(myUiDisposable));
     }
 
     return mySettingsPanels.get(name);
@@ -252,6 +258,10 @@ public class CodeStyleMainPanel extends JPanel implements TabbedLanguageCodeStyl
     myAlarm.cancel(false);
     clearPanels();
     myIsDisposed = true;
+    if (myUiDisposable != null) {
+      myUiDisposable.disposeWithTree();
+      myUiDisposable = null;
+    }
   }
 
   public boolean isModified(final CodeStyleScheme scheme) {

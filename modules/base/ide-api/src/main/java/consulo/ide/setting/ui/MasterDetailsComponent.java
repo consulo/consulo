@@ -22,8 +22,7 @@ import consulo.application.ui.wm.IdeFocusManager;
 import consulo.configurable.*;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.setting.ConfigurableUIMigrationUtil;
-import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.configurable.internal.ConfigurableUIMigrationUtil;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleTextAttributes;
@@ -32,6 +31,7 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.popup.ListPopupStep;
 import consulo.ui.image.Image;
@@ -249,7 +249,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
       }
       ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true);
       toolbar.setTargetComponent(myTree);
-      
+
       final JComponent component = toolbar.getComponent();
       myNorthPanel.add(component, BorderLayout.NORTH);
     }

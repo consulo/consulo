@@ -15,19 +15,19 @@
  */
 package consulo.ide.impl.idea.application.options.codeStyle;
 
-import consulo.ide.impl.idea.application.options.CodeStyleAbstractPanel;
-import consulo.language.codeStyle.setting.IndentOptionsEditor;
 import consulo.application.ApplicationBundle;
-import consulo.colorScheme.EditorColorsScheme;
 import consulo.codeEditor.EditorHighlighter;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.language.plain.PlainTextFileType;
+import consulo.colorScheme.EditorColorsScheme;
 import consulo.configurable.ConfigurationException;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
+import consulo.language.codeStyle.setting.IndentOptionsEditor;
+import consulo.language.codeStyle.ui.setting.CodeStyleAbstractPanel;
+import consulo.language.plain.PlainTextFileType;
+import consulo.virtualFileSystem.fileType.FileType;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 

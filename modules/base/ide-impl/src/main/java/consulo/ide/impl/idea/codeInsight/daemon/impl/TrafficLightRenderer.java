@@ -27,7 +27,7 @@ import consulo.ide.impl.idea.openapi.editor.markup.*;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.ui.GridBag;
+import consulo.ui.ex.awt.GridBag;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
 import consulo.language.Language;

@@ -105,7 +105,7 @@ class RecentLocationsRenderer extends ColoredListCellRenderer<RecentLocationItem
   private static JPanel createSeparatorLine(@Nonnull EditorColorsScheme colorsScheme) {
     Color color = TargetAWT.to(colorsScheme.getColor(CodeInsightColors.METHOD_SEPARATORS_COLOR));
     if (color == null) {
-      color = JBColor.namedColor("Group.separatorColor", new JBColor(Gray.xCD, Gray.x51));
+      color = JBColor.namedColor("KeymapGroupImpl.separatorColor", new JBColor(Gray.xCD, Gray.x51));
     }
 
     return JBUI.Panels.simplePanel().withBorder(JBUI.Borders.customLine(color, 1, 0, 0, 0));

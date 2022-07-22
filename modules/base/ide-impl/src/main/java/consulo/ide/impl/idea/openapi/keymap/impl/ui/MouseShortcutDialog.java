@@ -41,7 +41,7 @@ import java.awt.event.*;
 class MouseShortcutDialog extends DialogWrapper{
   private final Keymap myKeymap;
   private final String myActionId;
-  private final Group myMainGroup;
+  private final KeymapGroupImpl myMainGroup;
 
   private final JRadioButton myRbSingleClick;
   private final JRadioButton myRbDoubleClick;
@@ -61,7 +61,7 @@ class MouseShortcutDialog extends DialogWrapper{
           MouseShortcut shortcut,
           @Nonnull Keymap keymap,
           @Nonnull String actiondId,
-          @Nonnull Group mainGroup,
+          @Nonnull KeymapGroupImpl mainGroup,
           @Nonnull ShortcutRestrictions restrictions
   ){
     super(parentComponent,true);

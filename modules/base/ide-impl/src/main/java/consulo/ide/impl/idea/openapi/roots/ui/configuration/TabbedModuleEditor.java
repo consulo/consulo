@@ -5,7 +5,7 @@ import consulo.ide.impl.idea.openapi.module.ModuleConfigurationEditor;
 import consulo.project.Project;
 import consulo.ui.ex.awt.TabbedPaneWrapper;
 import consulo.disposer.Disposable;
-import consulo.ide.setting.ConfigurableUIMigrationUtil;
+import consulo.configurable.internal.ConfigurableUIMigrationUtil;
 import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ide.setting.module.ModulesConfigurator;
 import consulo.ui.annotation.RequiredUIAccess;

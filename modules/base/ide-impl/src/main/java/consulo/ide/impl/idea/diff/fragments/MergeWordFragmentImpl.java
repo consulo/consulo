@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.diff.fragments;
 
+import consulo.diff.fragment.MergeWordFragment;
 import consulo.ide.impl.idea.diff.util.MergeRange;
 import consulo.diff.util.ThreeSide;
 import javax.annotation.Nonnull;

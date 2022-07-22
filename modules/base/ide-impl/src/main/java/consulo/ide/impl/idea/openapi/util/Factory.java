@@ -15,11 +15,15 @@
  */
 package consulo.ide.impl.idea.openapi.util;
 
+import consulo.annotation.DeprecationInfo;
+
 import java.util.function.Supplier;
 
 /**
  * @author dsl
  */
+@Deprecated(forRemoval = true)
+@DeprecationInfo("use java.util.function.Supplier")
 public interface Factory<T> extends Supplier<T> {
   Factory NULL_FACTORY = () -> null;
 

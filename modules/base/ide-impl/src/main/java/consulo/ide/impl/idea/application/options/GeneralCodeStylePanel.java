@@ -16,25 +16,21 @@
 
 package consulo.ide.impl.idea.application.options;
 
-import consulo.ide.impl.idea.application.options.codeStyle.CodeStyleSchemesModel;
-import consulo.ide.impl.idea.application.options.codeStyle.excludedFiles.ExcludedFilesList;
 import consulo.application.ApplicationBundle;
-import consulo.language.editor.highlight.EditorHighlighterFactory;
-import consulo.ide.impl.idea.openapi.options.ex.ConfigurableWrapper;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.language.codeStyle.CodeStyleSettings;
-import consulo.ui.ex.awt.JBCheckBox;
-import consulo.ui.ex.awt.JBTabbedPane;
-import consulo.ide.impl.idea.ui.components.fields.CommaSeparatedIntegersField;
-import consulo.ui.ex.awt.IntegerField;
+import consulo.codeEditor.EditorHighlighter;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.configurable.ConfigurationException;
 import consulo.disposer.Disposer;
-import consulo.ui.ex.awt.valueEditor.ValueValidationException;
-import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ide.impl.idea.application.options.codeStyle.excludedFiles.ExcludedFilesList;
+import consulo.ide.impl.idea.openapi.options.ex.ConfigurableWrapper;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ui.ex.awt.CommaSeparatedIntegersField;
 import consulo.language.Language;
-import consulo.codeEditor.EditorHighlighter;
+import consulo.language.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.ui.setting.CodeStyleAbstractPanel;
+import consulo.language.codeStyle.ui.setting.CodeStyleSchemesModel;
+import consulo.language.editor.highlight.EditorHighlighterFactory;
 import consulo.language.plain.PlainTextFileType;
 import consulo.logging.Logger;
 import consulo.project.ProjectManager;
@@ -42,8 +38,10 @@ import consulo.ui.NotificationType;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.valueEditor.ValueValidationException;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.BalloonBuilder;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;

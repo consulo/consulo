@@ -1,10 +1,10 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.application.options.codeStyle;
 
-import consulo.ide.impl.idea.application.options.CodeStyleAbstractConfigurable;
-import consulo.ide.impl.idea.application.options.CodeStyleAbstractPanel;
 import consulo.application.ApplicationBundle;
 import consulo.language.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.ui.setting.CodeStyleAbstractConfigurable;
+import consulo.language.codeStyle.ui.setting.CodeStyleAbstractPanel;
 import org.jetbrains.annotations.Nls;
 
 public class OtherFileTypesCodeStyleConfigurable extends CodeStyleAbstractConfigurable {

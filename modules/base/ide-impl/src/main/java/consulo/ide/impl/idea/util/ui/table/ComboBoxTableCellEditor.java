@@ -20,6 +20,7 @@ import consulo.ide.impl.idea.ui.*;
 import consulo.ide.impl.idea.util.ListWithSelection;
 import consulo.ui.ex.awt.CollectionComboBoxModel;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
+import consulo.ui.ex.awt.EnumComboBoxModel;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

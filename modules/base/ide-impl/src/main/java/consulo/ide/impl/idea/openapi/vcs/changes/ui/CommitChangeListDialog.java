@@ -46,7 +46,7 @@ import consulo.vcs.ui.RefreshableOnComponent;
 import consulo.ide.impl.idea.ui.SplitterWithSecondHideable;
 import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.ui.GridBag;
+import consulo.ui.ex.awt.GridBag;
 import consulo.project.Project;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.*;

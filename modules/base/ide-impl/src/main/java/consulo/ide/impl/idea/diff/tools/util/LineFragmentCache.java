@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.diff.tools.util;
 
-import consulo.ide.impl.idea.diff.comparison.ComparisonPolicy;
+import consulo.diff.comparison.ComparisonPolicy;
 import consulo.diff.fragment.LineFragment;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

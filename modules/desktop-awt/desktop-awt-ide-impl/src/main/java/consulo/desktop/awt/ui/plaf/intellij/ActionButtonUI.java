@@ -16,7 +16,7 @@
 package consulo.desktop.awt.ui.plaf.intellij;
 
 import consulo.application.AllIcons;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButton;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButtonImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButtonWithText;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionToolbarImpl;
 import consulo.ui.ex.awt.GraphicsConfig;
@@ -43,7 +43,7 @@ import java.awt.event.KeyEvent;
  * @author VISTALL
  * @since 27-Nov-16.
  *
- * Code extract from {@link consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButton}
+ * Code extract from {@link ActionButtonImpl}
  */
 public class ActionButtonUI extends ComponentUI implements consulo.ide.impl.actionSystem.impl.ActionButtonUI {
   private static final Color ALPHA_20 = Gray._0.withAlpha(20);
@@ -62,7 +62,7 @@ public class ActionButtonUI extends ComponentUI implements consulo.ide.impl.acti
       paintTextButton(g, (ActionButtonWithText)c);
     }
     else {
-      paintDefaultButton(g, (ActionButton)c);
+      paintDefaultButton(g, (ActionButtonImpl)c);
     }
   }
 
@@ -96,7 +96,7 @@ public class ActionButtonUI extends ComponentUI implements consulo.ide.impl.acti
     BasicGraphicsUtils.drawStringUnderlineCharAt(c, (Graphics2D)g, text, getMnemonicCharIndex(c, action, text), textRect.x, textRect.y + fm.getAscent());
   }
 
-  private int getMnemonicCharIndex(ActionButton button, AnAction action, String text) {
+  private int getMnemonicCharIndex(ActionButtonImpl button, AnAction action, String text) {
     final int mnemonicIndex = button.getDisplayedMnemonicIndex();
     if (mnemonicIndex != -1) {
       return mnemonicIndex;
@@ -120,7 +120,7 @@ public class ActionButtonUI extends ComponentUI implements consulo.ide.impl.acti
     }
     return -1;
   }
-  private void paintDefaultButton(Graphics g, ActionButton c) {
+  private void paintDefaultButton(Graphics g, ActionButtonImpl c) {
     int state = c.getPopState();
 
     paintBackground(c, g, c.getSize(), state);
@@ -142,7 +142,7 @@ public class ActionButtonUI extends ComponentUI implements consulo.ide.impl.acti
     }
   }
 
-  public void paintBorder(ActionButton button, Graphics g, Dimension size, int state) {
+  public void paintBorder(ActionButtonImpl button, Graphics g, Dimension size, int state) {
     if (state == ActionButtonComponent.NORMAL && !button.isBackgroundSet()) return;
 
     if (UIUtil.isUnderAquaLookAndFeel()) {
@@ -162,7 +162,7 @@ public class ActionButtonUI extends ComponentUI implements consulo.ide.impl.acti
   }
 
   @Override
-  public void paintBackground(ActionButton button, Graphics g, Dimension size, int state) {
+  public void paintBackground(ActionButtonImpl button, Graphics g, Dimension size, int state) {
     if (state == ActionButtonComponent.NORMAL && !button.isBackgroundSet()) return;
 
     if (UIUtil.isUnderAquaLookAndFeel()) {

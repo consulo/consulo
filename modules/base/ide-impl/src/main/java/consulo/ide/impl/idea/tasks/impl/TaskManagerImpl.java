@@ -101,7 +101,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
     return i == 0 ? Comparing.compare(o2.getCreated(), o1.getCreated()) : i;
   };
   private static final Convertor<Task, String> KEY_CONVERTOR = o -> o.getId();
-  static final String TASKS_NOTIFICATION_GROUP = "Task Group";
+  static final String TASKS_NOTIFICATION_GROUP = "Task KeymapGroupImpl";
 
   private final Project myProject;
 

@@ -1,7 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.find.editorHeaderActions;
 
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButton;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButtonImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionToolbarImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.ex.action.*;
@@ -36,7 +36,7 @@ public class ShowMoreOptions extends AnAction implements DumbAware {
 
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final ActionButton secondaryActions = myToolbarComponent.getSecondaryActionsButton();
+    final ActionButtonImpl secondaryActions = myToolbarComponent.getSecondaryActionsButton();
     if (secondaryActions != null) {
       secondaryActions.click();
     }

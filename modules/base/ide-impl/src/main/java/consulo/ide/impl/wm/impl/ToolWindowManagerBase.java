@@ -185,7 +185,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     busConnection.subscribe(ToolWindowManagerListener.class, myDispatcher.getMulticaster());
   }
 
-  // region Factory Abstract Group
+  // region Factory Abstract KeymapGroupImpl
 
   @Nonnull
   protected abstract InternalDecoratorListener createInternalDecoratorListener();

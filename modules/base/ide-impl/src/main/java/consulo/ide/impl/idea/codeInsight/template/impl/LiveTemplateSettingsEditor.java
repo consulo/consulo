@@ -24,7 +24,7 @@ import consulo.ide.impl.idea.ui.CheckboxTree;
 import consulo.ide.impl.idea.ui.CheckedTreeNode;
 import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.ui.GridBag;
+import consulo.ui.ex.awt.GridBag;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ui.wm.IdeFocusManager;

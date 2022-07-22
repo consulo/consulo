@@ -23,7 +23,7 @@ import consulo.ide.impl.idea.packageDependencies.DefaultScopesProvider;
 import consulo.ide.impl.idea.packageDependencies.DependencyValidationManager;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.PackageSet;
-import consulo.ide.impl.idea.ui.components.editors.JBComboBoxTableCellEditorComponent;
+import consulo.ui.ex.awt.JBComboBoxTableCellEditorComponent;
 import consulo.ide.impl.idea.util.Function;
 import consulo.logging.Logger;
 

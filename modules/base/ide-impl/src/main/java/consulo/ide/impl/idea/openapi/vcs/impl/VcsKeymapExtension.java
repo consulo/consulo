@@ -16,17 +16,18 @@
 package consulo.ide.impl.idea.openapi.vcs.impl;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.openapi.keymap.KeymapExtension;
-import consulo.ide.impl.idea.openapi.keymap.KeymapGroup;
+import consulo.component.ComponentManager;
 import consulo.ide.impl.idea.openapi.keymap.KeymapGroupFactory;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.ActionsTreeUtil;
-import consulo.ide.impl.idea.openapi.keymap.impl.ui.Group;
+import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapGroupImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.project.Project;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.internal.ActionStubBase;
 import consulo.ui.ex.keymap.KeyMapBundle;
-import consulo.util.lang.function.Condition;
+import consulo.ui.ex.keymap.KeymapExtension;
+import consulo.ui.ex.keymap.KeymapGroup;
+
+import java.util.function.Predicate;
 
 /**
  * @author yole
@@ -34,7 +35,7 @@ import consulo.util.lang.function.Condition;
 @ExtensionImpl
 public class VcsKeymapExtension implements KeymapExtension {
   @Override
-  public KeymapGroup createGroup(final Condition<AnAction> filtered, final Project project) {
+  public KeymapGroup createGroup(final Predicate<AnAction> filtered, final ComponentManager project) {
     KeymapGroup result = KeymapGroupFactory.getInstance().createGroup(KeyMapBundle.message("version.control.group.title"));
 
     AnAction[] versionControlsGroups = getActions("VcsGroup");
@@ -49,14 +50,12 @@ public class VcsKeymapExtension implements KeymapExtension {
       addAction(result, action, filtered, true);
     }
 
-    if (result instanceof Group) {
-      ((Group)result).normalizeSeparators();
-    }
+    result.normalizeSeparators();
 
     return result;
   }
 
-  private static void addAction(KeymapGroup result, AnAction action, Condition<AnAction> filtered, boolean forceNonPopup) {
+  private static void addAction(KeymapGroup result, AnAction action, Predicate<AnAction> filtered, boolean forceNonPopup) {
     if (action instanceof ActionGroup) {
       if (forceNonPopup) {
         AnAction[] actions = getActions((ActionGroup)action);
@@ -65,19 +64,19 @@ public class VcsKeymapExtension implements KeymapExtension {
         }
       }
       else {
-        Group subGroup = ActionsTreeUtil.createGroup((ActionGroup)action, false, filtered);
+        KeymapGroupImpl subGroup = ActionsTreeUtil.createGroup((ActionGroup)action, false, filtered);
         if (subGroup.getSize() > 0) {
           result.addGroup(subGroup);
         }
       }
     }
     else if (action instanceof AnSeparator) {
-      if (result instanceof Group) {
-        ((Group)result).addSeparator();
+      if (result instanceof KeymapGroupImpl) {
+        ((KeymapGroupImpl)result).addSeparator();
       }
     }
     else {
-      if (filtered == null || filtered.value(action)) {
+      if (filtered == null || filtered.test(action)) {
         String id = action instanceof ActionStubBase ? ((ActionStubBase)action).getId() : ActionManager.getInstance().getId(action);
         result.addActionId(id);
       }

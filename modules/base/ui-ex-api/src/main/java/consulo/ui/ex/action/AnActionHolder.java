@@ -15,8 +15,6 @@
  */
 package consulo.ui.ex.action;
 
-import consulo.ui.ex.action.AnAction;
-
 /**
  * @author Konstantin Bulenkov
  */

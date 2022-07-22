@@ -3,7 +3,6 @@ package consulo.ui.ex.awt.speedSearch;
 
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
-import consulo.application.statistic.FeatureUsageTracker;
 import consulo.application.ui.UISettings;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.matcher.MatcherTextRange;
@@ -11,6 +10,7 @@ import consulo.application.util.matcher.NameUtilCore;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;

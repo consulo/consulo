@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.util.io;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.ObjectUtils;
@@ -52,7 +53,8 @@ import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
 import java.util.regex.Pattern;
 
-@SuppressWarnings({"UtilityClassWithoutPrivateConstructor", "MethodOverridesStaticMethodOfSuperclass"})
+@Deprecated
+@DeprecationInfo("Use consulo.util.io.FileUtil")
 public class FileUtil extends FileUtilRt {
   private static final int KILOBYTE = 1024;
 

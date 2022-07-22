@@ -9,7 +9,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
- * Group of intention actions with specific title.
+ * KeymapGroupImpl of intention actions with specific title.
  * <p>
  * IntentionActionWithChoice can be used to reduce number of user's
  * clicks.

@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.ide.ui.customization;
 import consulo.application.AllIcons;
 import consulo.ide.IdeBundle;
 import consulo.application.Application;
+import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapGroupImpl;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnSeparator;
@@ -26,7 +27,6 @@ import consulo.ide.impl.idea.openapi.actionSystem.ex.QuickListsManager;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.ActionsTree;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.ActionsTreeUtil;
-import consulo.ide.impl.idea.openapi.keymap.impl.ui.Group;
 import consulo.configurable.ConfigurationException;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
@@ -92,7 +92,7 @@ public class CustomizableActionsPanel implements Disposable {
   public CustomizableActionsPanel() {
     myPanel = new JPanel(new BorderLayout());
 
-    Group rootGroup = new Group("root", null, null);
+    KeymapGroupImpl rootGroup = new KeymapGroupImpl("root", null, null);
     final DefaultMutableTreeNode root = new DefaultMutableTreeNode(rootGroup);
     myModel = new DefaultTreeModel(root);
     myActionsTree = new Tree(myModel);
@@ -308,8 +308,8 @@ public class CustomizableActionsPanel implements Disposable {
         final ActionUrl selectedUrl = CustomizationUtil.getActionUrl(path, ActionUrl.MOVE);
         final ArrayList<String> selectedGroupPath = new ArrayList<>(selectedUrl.getGroupPath());
         final Object component = selectedUrl.getComponent();
-        if (component instanceof Group) {
-          selectedGroupPath.add(((Group)component).getName());
+        if (component instanceof KeymapGroupImpl) {
+          selectedGroupPath.add(((KeymapGroupImpl)component).getName());
           for (ActionUrl action : mySelectedSchema.getActions()) {
             final ArrayList<String> groupPath = action.getGroupPath();
             final int idx = Collections.indexOfSubList(groupPath, selectedGroupPath);
@@ -461,8 +461,8 @@ public class CustomizableActionsPanel implements Disposable {
       if (value instanceof DefaultMutableTreeNode) {
         Object userObject = ((DefaultMutableTreeNode)value).getUserObject();
         consulo.ui.image.Image icon = null;
-        if (userObject instanceof Group) {
-          Group group = (Group)userObject;
+        if (userObject instanceof KeymapGroupImpl) {
+          KeymapGroupImpl group = (KeymapGroupImpl)userObject;
           String name = group.getName();
           setText(name != null ? name : group.getId());
           icon = ObjectUtil.notNull(group.getIcon(), AllIcons.Nodes.Folder);
@@ -511,8 +511,8 @@ public class CustomizableActionsPanel implements Disposable {
 
   private static boolean isToolbarAction(DefaultMutableTreeNode node) {
     return node.getParent() != null &&
-           ((DefaultMutableTreeNode)node.getParent()).getUserObject() instanceof Group &&
-           ((Group)((DefaultMutableTreeNode)node.getParent()).getUserObject()).getName().equals(ActionsTreeUtil.MAIN_TOOLBAR);
+           ((DefaultMutableTreeNode)node.getParent()).getUserObject() instanceof KeymapGroupImpl &&
+           ((KeymapGroupImpl)((DefaultMutableTreeNode)node.getParent()).getUserObject()).getName().equals(ActionsTreeUtil.MAIN_TOOLBAR);
   }
 
   @Nullable
@@ -661,7 +661,7 @@ public class CustomizableActionsPanel implements Disposable {
 
     @Override
     protected JComponent createCenterPanel() {
-      Group rootGroup = ActionsTreeUtil.createMainGroup(null, null, QuickListsManager.getInstance().getAllQuickLists());
+      KeymapGroupImpl rootGroup = ActionsTreeUtil.createMainGroup(null, null, QuickListsManager.getInstance().getAllQuickLists());
       DefaultMutableTreeNode root = ActionsTreeUtil.createNode(rootGroup);
       DefaultTreeModel model = new DefaultTreeModel(root);
       myTree = new Tree();

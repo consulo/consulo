@@ -19,11 +19,11 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.configurable.*;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.options.ConfigurableEP;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.options.ProjectConfigurableEP;
 import consulo.project.Project;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.collection.ArrayUtil;
 import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;
@@ -115,6 +115,20 @@ public class ConfigurableWrapper implements SearchableConfigurable {
   @RequiredUIAccess
   @Nullable
   @Override
+  public JComponent createComponent() {
+    return getConfigurable().createComponent();
+  }
+
+  @RequiredUIAccess
+  @Nullable
+  @Override
+  public Component createUIComponent() {
+    return getConfigurable().createUIComponent();
+  }
+
+  @RequiredUIAccess
+  @Nullable
+  @Override
   public Component createUIComponent(@Nonnull Disposable parentUIDisposable) {
     return getConfigurable().createUIComponent(parentUIDisposable);
   }
@@ -173,7 +187,7 @@ public class ConfigurableWrapper implements SearchableConfigurable {
 
   @Override
   public String toString() {
-    return getDisplayName();
+    return myConfigurable.toString();
   }
 
   @Nullable
@@ -189,7 +203,7 @@ public class ConfigurableWrapper implements SearchableConfigurable {
     public CompositeWrapper(Configurable configurable, Configurable... kids) {
       super(configurable);
       if (configurable instanceof Composite c) {
-        kids = consulo.util.collection.ArrayUtil.mergeArrays(c.getConfigurables(), kids);
+        kids = ArrayUtil.mergeArrays(c.getConfigurables(), kids);
       }
       myKids = kids;
     }

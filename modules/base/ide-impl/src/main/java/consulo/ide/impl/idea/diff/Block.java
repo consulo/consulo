@@ -16,13 +16,13 @@
 package consulo.ide.impl.idea.diff;
 
 import consulo.ide.impl.idea.diff.comparison.ByLine;
-import consulo.ide.impl.idea.diff.comparison.ComparisonPolicy;
-import consulo.ide.impl.idea.diff.comparison.DiffTooBigException;
+import consulo.diff.comparison.ComparisonPolicy;
+import consulo.diff.comparison.DiffTooBigException;
 import consulo.ide.impl.idea.diff.comparison.iterables.DiffIterableUtil;
 import consulo.ide.impl.idea.diff.comparison.iterables.FairDiffIterable;
 import consulo.ide.impl.idea.diff.util.Range;
 import consulo.logging.Logger;
-import consulo.ide.impl.idea.openapi.progress.DumbProgressIndicator;
+import consulo.application.progress.DumbProgressIndicator;
 import consulo.util.lang.Pair;
 import consulo.application.util.LineTokenizer;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;

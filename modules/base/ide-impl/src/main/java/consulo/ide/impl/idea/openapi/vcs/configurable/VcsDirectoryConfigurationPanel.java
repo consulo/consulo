@@ -37,7 +37,6 @@ import consulo.ui.ex.awt.table.TableView;
 import consulo.ide.impl.idea.util.Function;
 import consulo.util.io.UriUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.ui.*;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;

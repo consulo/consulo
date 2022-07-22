@@ -15,27 +15,25 @@
  */
 package consulo.ide.impl.idea.openapi.project;
 
-import consulo.dataContext.DataManager;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.openapi.application.PathManagerEx;
-import consulo.fileEditor.UniqueVFilePathBuilder;
-import consulo.module.Module;
-import consulo.ide.impl.idea.openapi.module.ModuleUtil;
-import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
-import consulo.module.content.layer.orderEntry.OrderEntry;
-import consulo.ide.impl.idea.openapi.roots.libraries.LibraryUtil;
+import consulo.annotation.DeprecationInfo;
 import consulo.application.util.SystemInfo;
+import consulo.fileEditor.UniqueVFilePathBuilder;
+import consulo.ide.impl.idea.openapi.application.PathManagerEx;
+import consulo.ide.impl.idea.openapi.module.ModuleUtil;
+import consulo.ide.impl.idea.openapi.roots.libraries.LibraryUtil;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.project.Project;
-import consulo.project.ProjectLocator;
-import consulo.project.ProjectManager;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFilePathWrapper;
 import consulo.ide.impl.idea.util.ObjectUtil;
 import consulo.ide.impl.idea.util.PathUtil;
 import consulo.ide.impl.idea.util.io.PathKt;
+import consulo.module.Module;
+import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
+import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.project.Project;
+import consulo.project.ProjectLocator;
+import consulo.project.ui.util.ProjectUIUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFilePathWrapper;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 
 import javax.annotation.Nonnull;
@@ -156,17 +154,9 @@ public class ProjectUtil {
   }
 
   @Nonnull
+  @Deprecated
+  @DeprecationInfo("Use ProjectUIUtil#guessCurrentProject")
   public static Project guessCurrentProject(JComponent component) {
-    Project project = null;
-    Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
-    if (openProjects.length > 0) project = openProjects[0];
-    if (project == null) {
-      DataContext dataContext = component == null ? DataManager.getInstance().getDataContext() : DataManager.getInstance().getDataContext(component);
-      project = dataContext.getData(CommonDataKeys.PROJECT);
-    }
-    if (project == null) {
-      project = ProjectManager.getInstance().getDefaultProject();
-    }
-    return project;
+    return ProjectUIUtil.guessCurrentProject(component);
   }
 }

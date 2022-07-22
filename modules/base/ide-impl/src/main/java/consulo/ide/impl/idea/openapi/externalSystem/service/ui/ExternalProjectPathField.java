@@ -51,7 +51,7 @@ import consulo.ide.impl.idea.util.TextFieldCompletionProvider;
 import consulo.ide.impl.idea.util.TextFieldCompletionProviderDumbAware;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
-import consulo.ide.impl.idea.util.ui.GridBag;
+import consulo.ui.ex.awt.GridBag;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.annotation.RequiredUIAccess;

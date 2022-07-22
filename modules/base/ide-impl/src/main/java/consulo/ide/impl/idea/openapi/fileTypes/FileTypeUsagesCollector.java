@@ -23,7 +23,7 @@ import consulo.language.file.FileTypeManager;
 import consulo.project.Project;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.psi.search.FileTypeIndex;
+import consulo.language.psi.search.FileTypeIndex;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.ide.impl.idea.util.NotNullFunction;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

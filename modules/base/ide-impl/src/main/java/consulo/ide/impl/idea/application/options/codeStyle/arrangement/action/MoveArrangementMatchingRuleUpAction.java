@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.application.options.codeStyle.arrangement.action;
 
-import consulo.ide.impl.idea.application.options.codeStyle.arrangement.match.ArrangementMatchingRulesControl;
+import consulo.language.codeStyle.ui.internal.arrangement.ArrangementMatchingRulesControl;
 import consulo.application.ApplicationBundle;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;

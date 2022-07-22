@@ -1320,4 +1320,50 @@ public class ContainerUtil {
 
     return result.isEmpty() ? List.of() : result;
   }
+
+  @Nonnull
+  public static <K, V> MultiMap<K, V> groupBy(@Nonnull Iterable<V> collection, @Nonnull java.util.function.Function<V, K> grouper) {
+    MultiMap<K, V> result = MultiMap.createLinked();
+    for (V data : collection) {
+      K key = grouper.apply(data);
+      if (key == null) {
+        continue;
+      }
+      result.putValue(key, data);
+    }
+
+    if (!result.isEmpty() && result.keySet().iterator().next() instanceof Comparable) {
+      return new KeyOrderedMultiMap<K, V>(result);
+    }
+    return result;
+  }
+
+  private static class KeyOrderedMultiMap<K, V> extends MultiMap<K, V> {
+
+    public KeyOrderedMultiMap() {
+    }
+
+    public KeyOrderedMultiMap(@Nonnull MultiMap<? extends K, ? extends V> toCopy) {
+      super(toCopy);
+    }
+
+    @Nonnull
+    @Override
+    protected Map<K, Collection<V>> createMap() {
+      return new TreeMap<K, Collection<V>>();
+    }
+
+    @Nonnull
+    @Override
+    protected Map<K, Collection<V>> createMap(int initialCapacity, float loadFactor) {
+      return new TreeMap<K, Collection<V>>();
+    }
+
+    @Nonnull
+    public NavigableSet<K> navigableKeySet() {
+      //noinspection unchecked
+      return ((TreeMap)myMap).navigableKeySet();
+    }
+  }
+
 }

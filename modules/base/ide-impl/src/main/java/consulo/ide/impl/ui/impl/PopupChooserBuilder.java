@@ -12,6 +12,7 @@ import consulo.ide.ui.popup.HintUpdateSupply;
 import consulo.ui.ex.ActiveComponent;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
+import consulo.ui.ex.awt.internal.AWTPopupChooserBuilder;
 import consulo.ui.ex.popup.*;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.util.collection.Lists;
@@ -36,7 +37,7 @@ import java.util.function.Predicate;
  */
 @Deprecated
 @DeprecationInfo("Use consulo.ide.ui.popup.JBPopupFactory#createPopupChooserBuilder")
-public class PopupChooserBuilder<T> implements IPopupChooserBuilder<T> {
+public class PopupChooserBuilder<T> implements IPopupChooserBuilder<T>, AWTPopupChooserBuilder<T> {
   private final PopupComponentAdapter<T> myChooserComponent;
   private String myTitle;
   private final ArrayList<KeyStroke> myAdditionalKeystrokes = new ArrayList<>();

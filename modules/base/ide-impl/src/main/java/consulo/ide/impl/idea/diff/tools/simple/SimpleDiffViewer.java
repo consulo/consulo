@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.diff.tools.simple;
 import consulo.ide.impl.idea.diff.DiffContext;
 import consulo.ide.impl.idea.diff.actions.AllLinesIterator;
 import consulo.ide.impl.idea.diff.actions.BufferedLineIterator;
-import consulo.ide.impl.idea.diff.comparison.DiffTooBigException;
+import consulo.diff.comparison.DiffTooBigException;
 import consulo.diff.fragment.LineFragment;
 import consulo.diff.request.ContentDiffRequest;
 import consulo.diff.request.DiffRequest;

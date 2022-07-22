@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.ide.impl.idea.ide.actions.searcheverywhere.SearchEverywhereManager;
 import consulo.ide.impl.idea.ide.actions.searcheverywhere.SearchEverywhereManagerImpl;
 import consulo.ui.ex.awt.action.CustomComponentAction;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButton;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButtonImpl;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
@@ -50,7 +50,7 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
   @Nonnull
   @Override
   public JComponent createCustomComponent(Presentation presentation, String place) {
-    return new ActionButton(this, presentation, place, ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE) {
+    return new ActionButtonImpl(this, presentation, place, ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE) {
       @Override
       protected void updateToolTipText() {
         String shortcutText = getShortcut();

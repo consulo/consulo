@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.diff.tools.simple;
 
-import consulo.ide.impl.idea.diff.fragments.MergeLineFragment;
+import consulo.diff.fragment.MergeLineFragment;
 import consulo.ide.impl.idea.diff.util.DiffUtil;
 import consulo.ide.impl.idea.diff.util.MergeConflictType;
 import consulo.diff.util.ThreeSide;

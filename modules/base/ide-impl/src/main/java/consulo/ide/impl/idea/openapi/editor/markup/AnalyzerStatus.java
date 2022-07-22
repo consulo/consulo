@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.editor.markup;
 
 import consulo.ui.ex.action.AnAction;
 import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
-import consulo.ide.impl.idea.util.ui.GridBag;
+import consulo.ui.ex.awt.GridBag;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

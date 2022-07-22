@@ -28,7 +28,7 @@ import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.http.HttpVirtualFile;
 import consulo.virtualFileSystem.http.RemoteFileState;
-import consulo.ide.impl.psi.search.FilenameIndex;
+import consulo.language.psi.search.FilenameIndex;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.JBList;

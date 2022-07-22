@@ -57,7 +57,7 @@ public class ActionsTree {
   private DefaultMutableTreeNode myRoot;
   private final JScrollPane myComponent;
   private Keymap myKeymap;
-  private Group myMainGroup = new Group("", null, null);
+  private KeymapGroupImpl myMainGroup = new KeymapGroupImpl("", null, null);
   private boolean myShowBoundActions = Registry.is("keymap.show.alias.actions");
 
   private static final String ROOT = "ROOT";
@@ -140,7 +140,7 @@ public class ActionsTree {
     reset(keymap, allQuickLists, myFilter, null);
   }
 
-  public Group getMainGroup() {
+  public KeymapGroupImpl getMainGroup() {
     return myMainGroup;
   }
 
@@ -163,9 +163,9 @@ public class ActionsTree {
 
     ActionManager actionManager = ActionManager.getInstance();
     Project project = DataManager.getInstance().getDataContext(myComponent).getData(CommonDataKeys.PROJECT);
-    Group mainGroup = ActionsTreeUtil.createMainGroup(project, myKeymap, allQuickLists, filter, true, filter != null && filter.length() > 0 ?
-                                                                                                      ActionsTreeUtil.isActionFiltered(filter, true) :
-                                                                                                      (shortcut != null ? ActionsTreeUtil.isActionFiltered(actionManager, myKeymap, shortcut) : null));
+    KeymapGroupImpl mainGroup = ActionsTreeUtil.createMainGroup(project, myKeymap, allQuickLists, filter, true, filter != null && filter.length() > 0 ?
+                                                                                                                ActionsTreeUtil.isActionFiltered(filter, true) :
+                                                                                                                (shortcut != null ? ActionsTreeUtil.isActionFiltered(actionManager, myKeymap, shortcut) : null));
     if ((filter != null && filter.length() > 0 || shortcut != null) && mainGroup.initIds().isEmpty()){
       mainGroup = ActionsTreeUtil.createMainGroup(project, myKeymap, allQuickLists, filter, false, filter != null && filter.length() > 0 ?
                                                                                                    ActionsTreeUtil.isActionFiltered(filter, false) :
@@ -191,13 +191,13 @@ public class ActionsTree {
     return !Comparing.equal(oldShortcuts, newShortcuts);
   }
 
-  private static boolean isGroupChanged(Group group, Keymap oldKeymap, Keymap newKeymap) {
+  private static boolean isGroupChanged(KeymapGroupImpl group, Keymap oldKeymap, Keymap newKeymap) {
     if (!newKeymap.canModify()) return false;
 
     ArrayList children = group.getChildren();
     for (Object child : children) {
-      if (child instanceof Group) {
-        if (isGroupChanged((Group)child, oldKeymap, newKeymap)) {
+      if (child instanceof KeymapGroupImpl) {
+        if (isGroupChanged((KeymapGroupImpl)child, oldKeymap, newKeymap)) {
           return true;
         }
       }
@@ -266,15 +266,15 @@ public class ActionsTree {
       final TreeNode parent = node.getParent();
       if (parent instanceof DefaultMutableTreeNode) {
         final Object object = ((DefaultMutableTreeNode)parent).getUserObject();
-        if (object instanceof Group) {
-          return ((Group)object).getActionQualifiedPath(actionId);
+        if (object instanceof KeymapGroupImpl) {
+          return ((KeymapGroupImpl)object).getActionQualifiedPath(actionId);
         }
       }
 
       return myMainGroup.getActionQualifiedPath(actionId);
     }
-    if (userObject instanceof Group) {
-      return ((Group)userObject).getQualifiedPath();
+    if (userObject instanceof KeymapGroupImpl) {
+      return ((KeymapGroupImpl)userObject).getQualifiedPath();
     }
     if (userObject instanceof QuickList) {
       return ((QuickList)userObject).getDisplayName();
@@ -371,8 +371,8 @@ public class ActionsTree {
       if (value instanceof DefaultMutableTreeNode) {
         Object userObject = ((DefaultMutableTreeNode)value).getUserObject();
         boolean changed;
-        if (userObject instanceof Group) {
-          Group group = (Group)userObject;
+        if (userObject instanceof KeymapGroupImpl) {
+          KeymapGroupImpl group = (KeymapGroupImpl)userObject;
           text = group.getName();
 
           changed = originalKeymap != null && isGroupChanged(group, originalKeymap, myKeymap);

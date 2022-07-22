@@ -14,7 +14,7 @@ import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.psi.search.FilenameIndex;
+import consulo.language.psi.search.FilenameIndex;
 import consulo.ide.navigation.GotoFileContributor;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;

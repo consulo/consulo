@@ -76,9 +76,9 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
     for (ActionToolbarImpl toolbar : new ArrayList<>(ourToolbars)) {
       toolbar.updateActionsImmediately();
       for (Component c : toolbar.getComponents()) {
-        if (c instanceof ActionButton) {
-          ((ActionButton)c).updateToolTipText();
-          ((ActionButton)c).updateIcon();
+        if (c instanceof ActionButtonImpl) {
+          ((ActionButtonImpl)c).updateToolTipText();
+          ((ActionButtonImpl)c).updateIcon();
         }
       }
     }
@@ -131,11 +131,11 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
 
   private final Throwable myCreationTrace = new Throwable("toolbar creation trace");
 
-  public ActionButton getSecondaryActionsButton() {
+  public ActionButtonImpl getSecondaryActionsButton() {
     return mySecondaryActionsButton;
   }
 
-  private ActionButton mySecondaryActionsButton;
+  private ActionButtonImpl mySecondaryActionsButton;
 
   private int myFirstOutsideIndex = -1;
   private JBPopup myPopup;
@@ -323,7 +323,7 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
     }
 
     if (mySecondaryActions.getChildrenCount() > 0) {
-      mySecondaryActionsButton = new ActionButton(mySecondaryActions, myPresentationFactory.getPresentation(mySecondaryActions), myPlace, getMinimumButtonSize()) {
+      mySecondaryActionsButton = new ActionButtonImpl(mySecondaryActions, myPresentationFactory.getPresentation(mySecondaryActions), myPlace, getMinimumButtonSize()) {
         @Override
         @ButtonState
         public int getPopState() {
@@ -383,12 +383,12 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
   }
 
   @Nonnull
-  protected ActionButton createToolbarButton(@Nonnull AnAction action,
-                                             boolean minimalMode,
-                                             boolean decorateButtons,
-                                             @Nonnull String place,
-                                             @Nonnull Presentation presentation,
-                                             @Nonnull Size minimumSize) {
+  protected ActionButtonImpl createToolbarButton(@Nonnull AnAction action,
+                                                 boolean minimalMode,
+                                                 boolean decorateButtons,
+                                                 @Nonnull String place,
+                                                 @Nonnull Presentation presentation,
+                                                 @Nonnull Size minimumSize) {
     if (action.displayTextInToolbar()) {
       int mnemonic = KeyEvent.getExtendedKeyCodeForChar(TextWithMnemonic.parse(action.getTemplatePresentation().getTextWithMnemonic()).getMnemonic());
 
@@ -401,7 +401,7 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
       return buttonWithText;
     }
 
-    ActionButton actionButton = new ActionButton(action, presentation, place, minimumSize) {
+    ActionButtonImpl actionButton = new ActionButtonImpl(action, presentation, place, minimumSize) {
       @Override
       protected DataContext getDataContext() {
         return getToolbarDataContext();
@@ -413,7 +413,7 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
   }
 
   @Nonnull
-  private ActionButton createToolbarButton(@Nonnull AnAction action) {
+  private ActionButtonImpl createToolbarButton(@Nonnull AnAction action) {
     return createToolbarButton(action, myMinimalMode, myDecorateButtons, myPlace, myPresentationFactory.getPresentation(action), myMinimumButtonSize);
   }
 
@@ -1000,8 +1000,8 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
     myMinimumButtonSize = size;
     for (int i = getComponentCount() - 1; i >= 0; i--) {
       final Component component = getComponent(i);
-      if (component instanceof ActionButton) {
-        final ActionButton button = (ActionButton)component;
+      if (component instanceof ActionButtonImpl) {
+        final ActionButtonImpl button = (ActionButtonImpl)component;
         button.setMinimumButtonSize(size);
       }
     }
@@ -1306,7 +1306,7 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
   public void setSecondaryActionsIcon(Image icon, boolean hideDropdownIcon) {
     Presentation presentation = mySecondaryActions.getTemplatePresentation();
     presentation.setIcon(icon);
-    presentation.putClientProperty(ActionButton.HIDE_DROPDOWN_ICON, hideDropdownIcon ? Boolean.TRUE : null);
+    presentation.putClientProperty(ActionButtonImpl.HIDE_DROPDOWN_ICON, hideDropdownIcon ? Boolean.TRUE : null);
   }
 
   public void setSecondaryActionsShortcut(@Nonnull String secondaryActionsShortcut) {

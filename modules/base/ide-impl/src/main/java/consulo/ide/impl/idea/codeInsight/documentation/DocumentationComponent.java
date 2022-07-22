@@ -3,6 +3,7 @@
 package consulo.ide.impl.idea.codeInsight.documentation;
 
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButtonImpl;
 import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.ide.impl.idea.ide.actions.BaseNavigateToSourceAction;
@@ -15,7 +16,6 @@ import consulo.language.editor.documentation.DocumentationManagerProtocol;
 import consulo.language.editor.documentation.DocumentationProvider;
 import consulo.language.editor.documentation.ExternalDocumentationHandler;
 import consulo.language.editor.PlatformDataKeys;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButton;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionManagerImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionToolbarImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
@@ -154,7 +154,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
   };
 
   private Runnable myToolwindowCallback;
-  private final ActionButton myCorner;
+  private final ActionButtonImpl myCorner;
 
   private final MyScrollPane myScrollPane;
   private final JEditorPane myEditorPane;
@@ -425,8 +425,8 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     gearActions.addAll(actions);
     Presentation presentation = new Presentation();
     presentation.setIcon(AllIcons.Actions.More);
-    presentation.putClientProperty(ActionButton.HIDE_DROPDOWN_ICON, Boolean.TRUE);
-    myCorner = new ActionButton(gearActions, presentation, ActionPlaces.UNKNOWN, new Dimension(20, 20)) {
+    presentation.putClientProperty(ActionButtonImpl.HIDE_DROPDOWN_ICON, Boolean.TRUE);
+    myCorner = new ActionButtonImpl(gearActions, presentation, ActionPlaces.UNKNOWN, new Dimension(20, 20)) {
       @Override
       protected DataContext getDataContext() {
         return DataManager.getInstance().getDataContext(myCorner);

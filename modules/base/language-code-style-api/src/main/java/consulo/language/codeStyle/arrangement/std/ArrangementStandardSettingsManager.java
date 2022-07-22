@@ -15,9 +15,39 @@
  */
 package consulo.language.codeStyle.arrangement.std;
 
+import consulo.language.codeStyle.arrangement.model.ArrangementMatchCondition;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+
 /**
  * @author VISTALL
  * @since 12-Mar-22
  */
 public interface ArrangementStandardSettingsManager {
+  public boolean isSectionRulesSupported();
+
+  @Nullable
+  public List<CompositeArrangementSettingsToken> getSupportedMatchingTokens();
+
+  public boolean isEnabled(@Nonnull ArrangementSettingsToken token, @Nullable ArrangementMatchCondition current);
+
+  @Nonnull
+  public Collection<Set<ArrangementSettingsToken>> getMutexes();
+
+  public List<ArrangementSettingsToken> sort(@Nonnull Collection<ArrangementSettingsToken> tokens);
+
+  @Nullable
+  public List<CompositeArrangementSettingsToken> getSupportedGroupingTokens();
+
+  @Nonnull
+  public Collection<StdArrangementRuleAliasToken> getRuleAliases();
+
+  @Nonnull
+  public ArrangementStandardSettingsAware getDelegate();
+
+  public int getWidth(@Nonnull ArrangementSettingsToken token);
 }

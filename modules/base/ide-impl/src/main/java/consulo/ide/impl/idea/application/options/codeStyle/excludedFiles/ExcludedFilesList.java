@@ -1,24 +1,24 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.application.options.codeStyle.excludedFiles;
 
-import consulo.ide.impl.idea.application.options.codeStyle.CodeStyleSchemesModel;
-import consulo.language.codeStyle.fileSet.FileSetDescriptor;
-import consulo.language.codeStyle.fileSet.NamedScopeDescriptor;
-import consulo.ide.impl.idea.ide.util.scopeChooser.EditScopesDialog;
-import consulo.project.Project;
-import consulo.project.ProjectManager;
-import consulo.ide.impl.idea.packageDependencies.DependencyValidationManager;
-import consulo.language.codeStyle.CodeStyleScheme;
-import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.content.scope.NamedScope;
-import consulo.language.editor.scope.NamedScopeManager;
 import consulo.content.scope.NamedScopesHolder;
 import consulo.content.scope.PackageSet;
+import consulo.ide.impl.idea.ide.util.scopeChooser.EditScopesDialog;
+import consulo.ide.impl.idea.packageDependencies.DependencyValidationManager;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.codeStyle.CodeStyleScheme;
+import consulo.language.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.fileSet.FileSetDescriptor;
+import consulo.language.codeStyle.fileSet.NamedScopeDescriptor;
+import consulo.language.codeStyle.ui.setting.CodeStyleSchemesModel;
+import consulo.language.editor.scope.NamedScopeManager;
+import consulo.project.Project;
+import consulo.project.ProjectManager;
 import consulo.ui.ex.awt.AnActionButton;
 import consulo.ui.ex.awt.AnActionButtonRunnable;
-import consulo.ui.ex.awt.ToolbarDecorator;
 import consulo.ui.ex.awt.JBList;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ui.ex.awt.ToolbarDecorator;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

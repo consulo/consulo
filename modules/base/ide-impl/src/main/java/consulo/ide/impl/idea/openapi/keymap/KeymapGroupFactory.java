@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.openapi.keymap;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.ide.ServiceManager;
+import consulo.ui.ex.keymap.KeymapGroup;
 import consulo.ui.image.Image;
 
 /**

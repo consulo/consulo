@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes.shelf;
 import consulo.project.Project;
 import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ide.impl.idea.ui.EnumComboBoxModel;
+import consulo.ui.ex.awt.EnumComboBoxModel;
 import net.miginfocom.swing.MigLayout;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

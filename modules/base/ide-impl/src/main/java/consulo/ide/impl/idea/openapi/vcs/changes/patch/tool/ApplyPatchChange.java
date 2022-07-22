@@ -16,8 +16,8 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.patch.tool;
 
 import consulo.ide.impl.idea.diff.comparison.ByWord;
-import consulo.ide.impl.idea.diff.comparison.ComparisonPolicy;
-import consulo.ide.impl.idea.diff.comparison.DiffTooBigException;
+import consulo.diff.comparison.ComparisonPolicy;
+import consulo.diff.comparison.DiffTooBigException;
 import consulo.diff.fragment.DiffFragment;
 import consulo.ide.impl.idea.diff.merge.MergeModelBase;
 import consulo.ide.impl.idea.diff.util.*;
@@ -34,7 +34,7 @@ import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.codeEditor.markup.HighlighterLayer;
 import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.codeEditor.markup.RangeHighlighter;
-import consulo.ide.impl.idea.openapi.progress.DumbProgressIndicator;
+import consulo.application.progress.DumbProgressIndicator;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.AppliedTextPatch.HunkStatus;
 import consulo.ide.impl.idea.openapi.vcs.ex.LineStatusMarkerRenderer;

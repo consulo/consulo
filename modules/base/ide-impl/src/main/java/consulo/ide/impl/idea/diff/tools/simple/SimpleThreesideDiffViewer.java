@@ -16,12 +16,12 @@
 package consulo.ide.impl.idea.diff.tools.simple;
 
 import consulo.ide.impl.idea.diff.DiffContext;
-import consulo.ide.impl.idea.diff.comparison.ComparisonManager;
-import consulo.ide.impl.idea.diff.comparison.ComparisonPolicy;
-import consulo.ide.impl.idea.diff.comparison.DiffTooBigException;
+import consulo.diff.comparison.ComparisonManager;
+import consulo.diff.comparison.ComparisonPolicy;
+import consulo.diff.comparison.DiffTooBigException;
 import consulo.diff.content.DiffContent;
 import consulo.diff.content.DocumentContent;
-import consulo.ide.impl.idea.diff.fragments.MergeLineFragment;
+import consulo.diff.fragment.MergeLineFragment;
 import consulo.diff.request.ContentDiffRequest;
 import consulo.diff.request.DiffRequest;
 import consulo.ide.impl.idea.diff.tools.util.DiffNotifications;

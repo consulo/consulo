@@ -16,7 +16,7 @@ import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.application.util.registry.Registry;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.ui.*;
-import consulo.ide.impl.idea.util.ui.GridBag;
+import consulo.ui.ex.awt.GridBag;
 import consulo.ui.ex.Html;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;

@@ -23,7 +23,7 @@ import consulo.document.Document;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.virtualFileSystem.fileType.FileType;
-import consulo.ide.impl.idea.openapi.progress.DumbProgressIndicator;
+import consulo.application.progress.DumbProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.impl.internal.progress.ProgressIndicatorUtils;

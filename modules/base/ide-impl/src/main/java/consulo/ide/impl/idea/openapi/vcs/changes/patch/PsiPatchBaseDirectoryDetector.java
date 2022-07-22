@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes.patch;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.psi.search.FilenameIndex;
+import consulo.language.psi.search.FilenameIndex;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.scope.GlobalSearchScope;

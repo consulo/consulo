@@ -19,8 +19,10 @@ package consulo.ide.impl.idea.application.options;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.EditorFactory;
 import consulo.configurable.*;
+import consulo.configurable.internal.ConfigurableUIMigrationUtil;
+import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.application.options.codeStyle.CodeStyleMainPanel;
-import consulo.ide.impl.idea.application.options.codeStyle.CodeStyleSchemesModel;
+import consulo.ide.impl.idea.application.options.codeStyle.CodeStyleSchemesModelImpl;
 import consulo.ide.impl.idea.application.options.codeStyle.CodeStyleSettingsPanelFactory;
 import consulo.ide.impl.idea.application.options.codeStyle.NewCodeStyleSettingsPanel;
 import consulo.ide.impl.psi.impl.source.codeStyle.CodeStyleSchemeImpl;
@@ -44,7 +46,7 @@ import java.util.Set;
 @ExtensionImpl
 public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.Abstract implements OptionsContainingConfigurable, Configurable.NoMargin, ProjectConfigurable {
 
-  private CodeStyleSchemesModel myModel;
+  private CodeStyleSchemesModelImpl myModel;
   private List<CodeStyleConfigurableWrapper> myPanels;
 
   private CodeStyleConfigurableWrapper myRootConfigurable;
@@ -69,11 +71,11 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
 
   @RequiredUIAccess
   @Override
-  public JComponent createComponent() {
+  public JComponent createComponent(@Nonnull Disposable uiDisposable) {
     myModel = ensureModel();
 
     if (myRootConfigurable != null) {
-      return myRootConfigurable.createComponent();
+      return ConfigurableUIMigrationUtil.createComponent(myRootConfigurable, uiDisposable);
     }
     return null;
   }
@@ -91,6 +93,10 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
         super.disposeUIResources();
         for (CodeStyleConfigurableWrapper panel : myPanels) {
           panel.disposeUIResources();
+        }
+
+        if (myRootConfigurable != null) {
+          myRootConfigurable.disposeUIResources();
         }
       }
       finally {
@@ -184,7 +190,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
         super.apply();
 
         for (CodeStyleScheme scheme : new ArrayList<>(myModel.getSchemes())) {
-          final boolean isDefaultModified = CodeStyleSchemesModel.cannotBeModified(scheme) && isSchemeModified(scheme);
+          final boolean isDefaultModified = CodeStyleSchemesModelImpl.cannotBeModified(scheme) && isSchemeModified(scheme);
           if (isDefaultModified) {
             CodeStyleScheme newscheme = myModel.createNewScheme(null, scheme);
             CodeStyleSettings settingsWillBeModified = scheme.getCodeStyleSettings();
@@ -277,13 +283,14 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
     });
   }
 
-  private CodeStyleSchemesModel ensureModel() {
+  private CodeStyleSchemesModelImpl ensureModel() {
     if (myModel == null) {
-      myModel = new CodeStyleSchemesModel(myProject);
+      myModel = new CodeStyleSchemesModelImpl(myProject);
     }
     return myModel;
   }
 
+  @Nonnull
   @Override
   public String getDisplayName() {
     return "Code Style";
@@ -354,7 +361,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
 
     @RequiredUIAccess
     @Override
-    public JComponent createComponent() {
+    public JComponent createComponent(@Nonnull Disposable uiDisposable) {
       return ensurePanel();
     }
 
@@ -413,11 +420,12 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
     public void disposeUIResources() {
       if (myPanel != null) {
         myPanel.disposeUIResources();
+        myPanel = null;
       }
     }
 
     public void selectTab(@Nonnull String tab) {
-      createComponent();
+      assert myPanel != null;
       myPanel.showTabOnCurrentPanel(tab);
     }
 

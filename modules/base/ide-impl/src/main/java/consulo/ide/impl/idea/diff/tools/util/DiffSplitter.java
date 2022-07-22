@@ -10,7 +10,7 @@ import consulo.ui.ex.awt.Divider;
 import consulo.ui.ex.awt.Splitter;
 import consulo.application.util.registry.Registry;
 import consulo.ui.ex.awt.JBUIScale;
-import consulo.ide.impl.idea.util.ui.GridBag;
+import consulo.ui.ex.awt.GridBag;
 import consulo.ui.annotation.RequiredUIAccess;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

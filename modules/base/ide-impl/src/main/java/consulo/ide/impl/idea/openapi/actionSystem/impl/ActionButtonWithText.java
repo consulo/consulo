@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 
-public class ActionButtonWithText extends ActionButton {
+public class ActionButtonWithText extends ActionButtonImpl {
   private static final int ICON_TEXT_SPACE = 2;
 
   @Deprecated

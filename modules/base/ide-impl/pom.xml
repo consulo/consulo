@@ -309,6 +309,11 @@
       <artifactId>consulo-language-inject-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-language-code-style-ui-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>

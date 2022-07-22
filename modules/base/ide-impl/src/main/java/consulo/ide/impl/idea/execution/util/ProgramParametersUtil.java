@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.execution.util;
 
 import consulo.execution.CommonProgramRunConfigurationParameters;
-import consulo.ide.impl.idea.execution.configurations.RuntimeConfigurationWarning;
+import consulo.execution.RuntimeConfigurationWarning;
 import consulo.process.cmd.SimpleProgramParameters;
 import consulo.module.Module;
 import consulo.project.Project;

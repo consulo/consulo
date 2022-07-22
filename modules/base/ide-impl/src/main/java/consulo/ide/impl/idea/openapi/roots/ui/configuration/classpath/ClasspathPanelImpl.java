@@ -35,7 +35,6 @@ import consulo.ide.impl.idea.openapi.ui.ComboBoxTableRenderer;
 import consulo.ui.ex.awt.Messages;
 import consulo.ide.impl.idea.packageDependencies.DependenciesBuilder;
 import consulo.ide.impl.idea.packageDependencies.actions.AnalyzeDependenciesOnSpecifiedTargetHandler;
-import consulo.ide.impl.idea.ui.*;
 import consulo.ide.impl.idea.util.IconUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.CommonBundle;

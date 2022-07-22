@@ -50,10 +50,25 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
 
 public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
+  public interface Cloner<T> {
+    T cloneOf(T t);
+
+    T copyOf(T t);
+  }
+
+  public interface Namer<T> {
+    String getName(T t);
+
+    boolean canRename(T item);
+
+    void setName(T t, String name);
+  }
+
   private final Namer<T> myNamer;
-  private final Factory<T> myFactory;
+  private final Supplier<T> myFactory;
   private final Cloner<T> myCloner;
   private final List<T> myItems = new ArrayList<T>();
   private final HashingStrategy<T> myComparer;
@@ -61,11 +76,11 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
   private final List<T> myOriginalItems;
   private boolean myShowIcons;
 
-  protected NamedItemsListEditor(Namer<T> namer, Factory<T> factory, Cloner<T> cloner, HashingStrategy<T> comparer, List<T> items) {
+  protected NamedItemsListEditor(Namer<T> namer, Supplier<T> factory, Cloner<T> cloner, HashingStrategy<T> comparer, List<T> items) {
     this(namer, factory, cloner, comparer, items, true);
   }
 
-  protected NamedItemsListEditor(Namer<T> namer, Factory<T> factory, Cloner<T> cloner, HashingStrategy<T> comparer, List<T> items, boolean initInConstructor) {
+  protected NamedItemsListEditor(Namer<T> namer, Supplier<T> factory, Cloner<T> cloner, HashingStrategy<T> comparer, List<T> items, boolean initInConstructor) {
     myNamer = namer;
     myFactory = factory;
     myCloner = cloner;
@@ -347,7 +362,7 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
   protected T createItem() {
     final String name = askForProfileName("Create new {0}");
     if (name == null) return null;
-    final T newItem = myFactory.create();
+    final T newItem = myFactory.get();
     myNamer.setName(newItem, name);
     return newItem;
   }

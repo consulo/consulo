@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.ide.ui.customization;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.ActionsTreeUtil;
-import consulo.ide.impl.idea.openapi.keymap.impl.ui.Group;
+import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapGroupImpl;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
@@ -248,8 +248,8 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, JDOMExterna
         if (url.getGroupPath().contains(text) || url.getGroupPath().contains(defaultGroupName)) {
           return true;
         }
-        if (url.getComponent() instanceof Group) {
-          final Group urlGroup = (Group)url.getComponent();
+        if (url.getComponent() instanceof KeymapGroupImpl) {
+          final KeymapGroupImpl urlGroup = (KeymapGroupImpl)url.getComponent();
           String id = urlGroup.getName() != null ? urlGroup.getName() : urlGroup.getId();
           if (id == null || id.equals(text) || id.equals(defaultGroupName)) {
             return true;

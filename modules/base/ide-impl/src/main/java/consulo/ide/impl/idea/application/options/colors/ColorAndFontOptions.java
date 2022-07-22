@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.application.options.colors;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.*;
-import consulo.ide.impl.idea.application.options.OptionsContainingConfigurable;
+import consulo.configurable.OptionsContainingConfigurable;
 import consulo.ide.impl.idea.execution.impl.ConsoleViewUtil;
 import consulo.ide.impl.idea.ide.bookmarks.BookmarkManager;
 import consulo.ide.impl.idea.ide.todo.TodoConfiguration;

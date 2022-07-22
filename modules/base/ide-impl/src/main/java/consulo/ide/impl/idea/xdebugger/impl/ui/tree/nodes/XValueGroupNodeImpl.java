@@ -53,7 +53,7 @@ public class XValueGroupNodeImpl extends XValueContainerNode<XValueGroup> implem
 
   @Override
   public String toString() {
-    return "Group:" + myValueContainer.getName();
+    return "KeymapGroupImpl:" + myValueContainer.getName();
   }
 
   @Nullable

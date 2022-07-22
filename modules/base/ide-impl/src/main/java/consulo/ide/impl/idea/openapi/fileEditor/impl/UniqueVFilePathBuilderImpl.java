@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.content.scope.SearchScope;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.UniqueVFilePathBuilder;
-import consulo.ide.impl.psi.search.FilenameIndex;
+import consulo.language.psi.search.FilenameIndex;
 import consulo.language.psi.PsiModificationTracker;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.application.util.CachedValue;

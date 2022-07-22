@@ -15,11 +15,12 @@
  */
 package consulo.ide.impl.idea.diff.comparison;
 
+import consulo.diff.comparison.ComparisonPolicy;
 import consulo.ide.impl.idea.diff.comparison.LineFragmentSplitter.WordBlock;
 import consulo.ide.impl.idea.diff.comparison.iterables.DiffIterable;
 import consulo.ide.impl.idea.diff.comparison.iterables.FairDiffIterable;
 import consulo.diff.fragment.DiffFragment;
-import consulo.ide.impl.idea.diff.fragments.MergeWordFragment;
+import consulo.diff.fragment.MergeWordFragment;
 import consulo.ide.impl.idea.diff.util.MergeRange;
 import consulo.ide.impl.idea.diff.util.Range;
 import consulo.application.progress.ProgressIndicator;

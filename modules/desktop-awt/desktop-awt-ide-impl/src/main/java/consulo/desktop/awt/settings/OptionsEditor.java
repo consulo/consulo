@@ -41,7 +41,7 @@ import consulo.ide.impl.idea.ui.speedSearch.ElementFilter;
 import consulo.ide.impl.idea.util.ReflectionUtil;
 import consulo.ide.impl.options.ProjectStructureSelectorOverSettings;
 import consulo.ide.impl.roots.ui.configuration.session.internal.ConfigurableSessionImpl;
-import consulo.ide.setting.ConfigurableUIMigrationUtil;
+import consulo.configurable.internal.ConfigurableUIMigrationUtil;
 import consulo.ide.setting.ProjectStructureSelector;
 import consulo.ide.setting.Settings;
 import consulo.logging.Logger;
@@ -218,7 +218,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
         final Object clientProperty = myComponent.getClientProperty(NOT_A_NEW_COMPONENT);
         if (clientProperty != null && ApplicationProperties.isInSandbox()) {
           LOG.warn(String.format("Settings component for '%s' MUST be recreated, please dispose it in disposeUIResources() and create a new instance in createComponent()!",
-                                 configurable.getClass().getCanonicalName()));
+                                 configurable));
         }
         else {
           myComponent.putClientProperty(NOT_A_NEW_COMPONENT, Boolean.TRUE);
@@ -1177,7 +1177,12 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
 
   private static void visitRecursive(Configurable[] configurables, Consumer<Configurable> consumer) {
     for (Configurable configurable : configurables) {
-      consumer.accept(configurable);
+      try {
+        consumer.accept(configurable);
+      }
+      catch (Exception e) {
+        LOG.error(e);
+      }
 
       if (configurable instanceof Configurable.Composite) {
         visitRecursive(((Configurable.Composite)configurable).getConfigurables(), consumer);

@@ -15,13 +15,13 @@
  */
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
+import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButtonImpl;
 import consulo.language.editor.DaemonBundle;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.tooltips.TooltipActionProvider;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.codeInsight.hint.LineTooltipRenderer;
 import consulo.ide.impl.idea.codeInsight.hint.TooltipGroup;
 import consulo.ide.impl.idea.openapi.actionSystem.PopupAction;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButton;
 import consulo.ide.impl.idea.openapi.editor.ex.TooltipAction;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
@@ -29,7 +29,7 @@ import consulo.ide.impl.idea.ui.BalloonImpl;
 import consulo.ui.ex.awt.HintHint;
 import consulo.ui.ex.awt.HyperlinkLabel;
 import consulo.ide.impl.idea.ui.LightweightHint;
-import consulo.ide.impl.idea.util.ui.GridBag;
+import consulo.ui.ex.awt.GridBag;
 import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
 import consulo.application.ui.UIFontManager;
@@ -406,7 +406,7 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
   private JComponent createSettingsComponent(HintHint hintHint, TooltipReloader reloader, boolean hasMore, boolean newLayout) {
     Presentation presentation = new Presentation();
     presentation.setIcon(AllIcons.Actions.More);
-    presentation.putClientProperty(ActionButton.HIDE_DROPDOWN_ICON, true);
+    presentation.putClientProperty(ActionButtonImpl.HIDE_DROPDOWN_ICON, true);
 
     List<AnAction> actions = new ArrayList<>();
     actions.add(new ShowActionsAction(reloader, tooltipAction != null));
@@ -415,7 +415,7 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
     AnAction actionGroup = new SettingsActionGroup(actions);
     int buttonSize = newLayout ? 20 : 18;
 
-    ActionButton settingsButton = new ActionButton(actionGroup, presentation, ActionPlaces.UNKNOWN, new Dimension(buttonSize, buttonSize));
+    ActionButtonImpl settingsButton = new ActionButtonImpl(actionGroup, presentation, ActionPlaces.UNKNOWN, new Dimension(buttonSize, buttonSize));
 
     settingsButton.setNoIconsInPopup(true);
     settingsButton.setBorder(JBUI.Borders.empty());

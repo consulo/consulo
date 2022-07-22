@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.diff.actions.AllLinesIterator;
 import consulo.ide.impl.idea.diff.actions.BufferedLineIterator;
 import consulo.ide.impl.idea.diff.actions.impl.OpenInEditorWithMouseAction;
 import consulo.ide.impl.idea.diff.actions.impl.SetEditorSettingsAction;
-import consulo.ide.impl.idea.diff.comparison.DiffTooBigException;
+import consulo.diff.comparison.DiffTooBigException;
 import consulo.diff.DiffUserDataKeys;
 import consulo.diff.content.DocumentContent;
 import consulo.diff.fragment.LineFragment;

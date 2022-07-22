@@ -24,7 +24,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.psi.search.FilenameIndex;
+import consulo.language.psi.search.FilenameIndex;
 
 import java.io.InputStream;
 import java.security.MessageDigest;

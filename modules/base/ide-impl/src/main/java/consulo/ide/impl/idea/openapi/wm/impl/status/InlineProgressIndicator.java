@@ -14,7 +14,7 @@ import consulo.ui.ex.awt.Wrapper;
 import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.util.collection.JBIterable;
 import consulo.ui.ex.awt.util.GraphicsUtil;
-import consulo.ide.impl.idea.util.ui.GridBag;
+import consulo.ui.ex.awt.GridBag;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.disposer.Disposable;

@@ -23,7 +23,7 @@ import consulo.ide.impl.idea.openapi.externalSystem.model.project.ExternalProjec
 import consulo.ide.impl.idea.openapi.externalSystem.service.task.ui.ExternalSystemTasksTreeModel;
 import consulo.ide.impl.idea.openapi.externalSystem.service.ui.DefaultExternalSystemUiAware;
 import consulo.ide.impl.idea.openapi.externalSystem.settings.AbstractExternalSystemLocalSettings;
-import consulo.ide.impl.idea.util.ui.GridBag;
+import consulo.ui.ex.awt.GridBag;
 import consulo.application.ApplicationManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;

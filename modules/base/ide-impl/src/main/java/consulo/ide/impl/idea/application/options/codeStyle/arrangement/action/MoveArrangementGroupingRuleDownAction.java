@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.application.options.codeStyle.arrangement.action;
 
-import consulo.ide.impl.idea.application.options.codeStyle.arrangement.group.ArrangementGroupingRulesControl;
+import consulo.language.codeStyle.ui.internal.arrangement.ArrangementGroupingRulesControl;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.ApplicationBundle;

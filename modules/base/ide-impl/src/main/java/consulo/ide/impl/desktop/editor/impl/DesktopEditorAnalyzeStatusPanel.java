@@ -17,11 +17,11 @@ package consulo.ide.impl.desktop.editor.impl;
 
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.application.impl.internal.performance.ActivityTracker;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButtonImpl;
 import consulo.ui.ex.action.ActionButtonComponent;
 import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ui.ex.awt.action.CustomComponentAction;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButton;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionToolbarImpl;
 import consulo.codeEditor.EditorBundle;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
@@ -36,7 +36,7 @@ import consulo.ide.impl.idea.util.Function;
 import consulo.ui.ex.awt.IJSwingUtilities;
 import consulo.ide.impl.idea.util.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.ui.GridBag;
+import consulo.ui.ex.awt.GridBag;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.ide.impl.actionSystem.impl.ActionButtonUI;
 import consulo.application.AllIcons;
@@ -102,7 +102,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
       if (ActionToolbar.CUSTOM_COMPONENT_CONSTRAINT.equals(s) && jc instanceof StatusButton) {
         statusComponent = jc;
       }
-      else if (ActionToolbar.ACTION_BUTTON_CONSTRAINT.equals(s) && jc instanceof ActionButton) {
+      else if (ActionToolbar.ACTION_BUTTON_CONSTRAINT.equals(s) && jc instanceof ActionButtonImpl) {
         actionButtons.add(jc);
       }
     }
@@ -113,7 +113,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
       if (jc instanceof StatusButton) {
         statusComponent = null;
       }
-      else if (jc instanceof ActionButton) {
+      else if (jc instanceof ActionButtonImpl) {
         actionButtons.remove(jc);
       }
     }
@@ -195,14 +195,14 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
     private final EditorColorsScheme colorsScheme;
     private boolean translucent;
 
-    private final ActionButton myActionEmulator;
+    private final ActionButtonImpl myActionEmulator;
     private ActionButtonUI myActionButtonUI;
 
     private StatusButton(@Nonnull AnAction action, @Nonnull Presentation presentation, @Nonnull String place, @Nonnull EditorColorsScheme colorsScheme, @Nonnull BooleanSupplier hasNavButtons) {
       setLayout(new GridBagLayout());
       setOpaque(false);
 
-      myActionEmulator = new ActionButton(action, presentation, place, new Size(16, 16));
+      myActionEmulator = new ActionButtonImpl(action, presentation, place, new Size(16, 16));
 
       this.presentation = presentation;
       this.colorsScheme = colorsScheme;
@@ -560,11 +560,11 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
 
       Presentation presentation = new Presentation();
       presentation.setIcon(AllIcons.Actions.More);
-      presentation.putClientProperty(ActionButton.HIDE_DROPDOWN_ICON, Boolean.TRUE);
+      presentation.putClientProperty(ActionButtonImpl.HIDE_DROPDOWN_ICON, Boolean.TRUE);
 
       java.util.List<AnAction> actions = controller.getActions();
       if (!actions.isEmpty()) {
-        ActionButton menuButton = new ActionButton(new MenuAction(actions), presentation, ActionPlaces.EDITOR_POPUP, ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE);
+        ActionButtonImpl menuButton = new ActionButtonImpl(new MenuAction(actions), presentation, ActionPlaces.EDITOR_POPUP, ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE);
 
         myContent.add(menuButton, gc.next().anchor(GridBagConstraints.LINE_END).weightx(0).insets(10, 6, 10, 6));
       }
@@ -756,7 +756,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
 
   private static final EditorColorKey PRESSED_BACKGROUND = EditorColorKey.createColorKey("ActionButton.pressedBackground", TargetAWT.from(JBCurrentTheme.ActionButton.pressedBackground()));
 
-  private static final EditorColorKey ICON_TEXT_COLOR = EditorColorKey.createColorKey("ActionButton.iconTextForeground", TargetAWT.from(UIUtil.getContextHelpForeground()));
+  private static final EditorColorKey ICON_TEXT_COLOR = EditorColorKey.createColorKey("ActionButtonImpl.iconTextForeground", TargetAWT.from(UIUtil.getContextHelpForeground()));
 
   private static int getStatusIconSize() {
     return JBUIScale.scale(18);
@@ -814,13 +814,13 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
 
       @Nonnull
       @Override
-      protected ActionButton createToolbarButton(@Nonnull AnAction action,
-                                                 boolean minimalMode,
-                                                 boolean decorateButtons,
-                                                 @Nonnull String place,
-                                                 @Nonnull Presentation presentation,
-                                                 @Nonnull Size minimumSize) {
-        ActionButton actionButton = new ActionButton(action, presentation, place, minimumSize) {
+      protected ActionButtonImpl createToolbarButton(@Nonnull AnAction action,
+                                                     boolean minimalMode,
+                                                     boolean decorateButtons,
+                                                     @Nonnull String place,
+                                                     @Nonnull Presentation presentation,
+                                                     @Nonnull Size minimumSize) {
+        ActionButtonImpl actionButton = new ActionButtonImpl(action, presentation, place, minimumSize) {
 
           @Override
           public void updateIcon() {

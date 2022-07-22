@@ -23,7 +23,7 @@ import consulo.util.lang.Trinity;
 import consulo.util.io.CharsetToolkit;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.ColoredTextContainer;
-import consulo.ide.impl.idea.ui.EnumComboBoxModel;
+import consulo.ui.ex.awt.EnumComboBoxModel;
 import consulo.ui.ex.awt.HyperlinkLabel;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ide.impl.idea.util.Consumer;

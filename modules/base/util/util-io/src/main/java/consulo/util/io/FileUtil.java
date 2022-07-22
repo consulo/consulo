@@ -1300,4 +1300,21 @@ public class FileUtil {
     path2 = path2 == null ? null : toSystemIndependentName(path2);
     return StringUtil.compare(path1, path2, !OSInfo.isFileSystemCaseSensitive);
   }
+
+  public static boolean isAbsolutePlatformIndependent(@Nonnull String path) {
+    return isUnixAbsolutePath(path) || isWindowsAbsolutePath(path);
+  }
+
+  public static boolean isUnixAbsolutePath(@Nonnull String path) {
+    return path.startsWith("/");
+  }
+
+  public static boolean isWindowsAbsolutePath(@Nonnull String pathString) {
+    return pathString.length() >= 2 && Character.isLetter(pathString.charAt(0)) && pathString.charAt(1) == ':';
+  }
+
+  @Nonnull
+  public static String join(@Nonnull final String... parts) {
+    return StringUtil.join(parts, File.separator);
+  }
 }

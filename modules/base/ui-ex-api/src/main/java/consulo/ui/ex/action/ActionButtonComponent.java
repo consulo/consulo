@@ -15,7 +15,12 @@
  */
 package consulo.ui.ex.action;
 
+import consulo.ui.Component;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.intellij.lang.annotations.MagicConstant;
+
+import javax.annotation.Nonnull;
+import javax.swing.*;
 
 public interface ActionButtonComponent {
   int NORMAL = 0;
@@ -32,4 +37,12 @@ public interface ActionButtonComponent {
   int getWidth();
 
   int getHeight();
+
+  @Nonnull
+  default JComponent getComponent() {
+    return (JComponent)TargetAWT.to(getUIComponent());
+  }
+
+  @Nonnull
+  Component getUIComponent();
 }

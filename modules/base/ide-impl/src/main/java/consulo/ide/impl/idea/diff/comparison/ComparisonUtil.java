@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.diff.comparison;
 
+import consulo.diff.comparison.ComparisonPolicy;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import org.jetbrains.annotations.Contract;
 import javax.annotation.Nonnull;

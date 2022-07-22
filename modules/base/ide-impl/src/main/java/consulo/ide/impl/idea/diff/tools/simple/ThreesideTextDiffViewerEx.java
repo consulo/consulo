@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.diff.tools.simple;
 
 import consulo.ide.impl.idea.diff.DiffContext;
-import consulo.ide.impl.idea.diff.fragments.MergeLineFragment;
+import consulo.diff.fragment.MergeLineFragment;
 import consulo.diff.request.ContentDiffRequest;
 import consulo.ide.impl.idea.diff.tools.util.*;
 import consulo.ide.impl.idea.diff.tools.util.base.TextDiffViewerUtil;

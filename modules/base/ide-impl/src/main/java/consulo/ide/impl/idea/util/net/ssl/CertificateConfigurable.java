@@ -2,19 +2,13 @@ package consulo.ide.impl.idea.util.net.ssl;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.*;
-import consulo.fileChooser.IdeaFileChooser;
-import consulo.fileChooser.FileTypeDescriptor;
-import consulo.ui.ex.awt.Messages;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.awt.AnActionButton;
-import consulo.ui.ex.awt.AnActionButtonRunnable;
-import consulo.ui.ex.awt.ToolbarDecorator;
-import consulo.ui.ex.awt.JBCheckBox;
-import consulo.ui.ex.awt.JBScrollPane;
-import consulo.ui.ex.awt.tree.Tree;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.disposer.Disposer;
+import consulo.fileChooser.FileTypeDescriptor;
+import consulo.fileChooser.IdeaFileChooser;
+import consulo.ide.impl.idea.util.Consumer;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.tree.Tree;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 
@@ -236,8 +230,12 @@ public class CertificateConfigurable implements SearchableConfigurable, Configur
 
   @Override
   public void disposeUIResources() {
-    Disposer.dispose(myTreeBuilder);
-    myTrustManager.removeListener(this);
+    if (myTreeBuilder != null) {
+      Disposer.dispose(myTreeBuilder);
+    }
+    if (myTrustManager != null) {
+      myTrustManager.removeListener(this);
+    }
   }
 
   @Override

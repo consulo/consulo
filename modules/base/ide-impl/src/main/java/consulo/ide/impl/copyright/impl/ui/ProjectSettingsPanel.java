@@ -25,7 +25,7 @@ import consulo.ide.impl.idea.ide.util.scopeChooser.ScopeChooserConfigurable;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.packageDependencies.DefaultScopesProvider;
 import consulo.ide.impl.idea.packageDependencies.DependencyValidationManager;
-import consulo.ide.impl.idea.ui.components.editors.JBComboBoxTableCellEditorComponent;
+import consulo.ui.ex.awt.JBComboBoxTableCellEditorComponent;
 import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.psi.search.scope.packageSet.CustomScopesProviderEx;
 import consulo.ide.setting.Settings;

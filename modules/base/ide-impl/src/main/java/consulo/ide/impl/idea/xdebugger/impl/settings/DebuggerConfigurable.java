@@ -23,7 +23,7 @@ import consulo.execution.debug.XDebuggerBundle;
 import consulo.execution.debug.breakpoint.XBreakpointType;
 import consulo.execution.debug.setting.DebuggerSettingsCategory;
 import consulo.disposer.Disposable;
-import consulo.ide.setting.ConfigurableUIMigrationUtil;
+import consulo.configurable.internal.ConfigurableUIMigrationUtil;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 

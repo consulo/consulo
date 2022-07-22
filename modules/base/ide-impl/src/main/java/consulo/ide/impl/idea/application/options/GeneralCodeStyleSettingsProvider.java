@@ -21,6 +21,9 @@ import consulo.application.ApplicationBundle;
 import consulo.configurable.Configurable;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.setting.CodeStyleSettingsProvider;
+import consulo.language.codeStyle.ui.setting.CodeStyleAbstractConfigurable;
+import consulo.language.codeStyle.ui.setting.CodeStyleAbstractPanel;
+
 import javax.annotation.Nonnull;
 
 /**

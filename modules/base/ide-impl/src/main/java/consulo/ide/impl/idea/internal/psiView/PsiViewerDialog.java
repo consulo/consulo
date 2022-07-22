@@ -47,7 +47,7 @@ import consulo.ide.impl.idea.ui.ListCellRendererWrapper;
 import consulo.ui.ex.awt.SortedComboBoxModel;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.psi.search.FilenameIndex;
+import consulo.language.psi.search.FilenameIndex;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.codeStyle.*;

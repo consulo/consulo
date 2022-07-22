@@ -412,7 +412,7 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
     public String getColumnName(int column) {
       switch (column) {
         case NotificationsTreeTable.ID_COLUMN:
-          return "Group";
+          return "KeymapGroupImpl";
         case NotificationsTreeTable.LOG_COLUMN:
           return "Log";
         case NotificationsTreeTable.READ_ALOUD_COLUMN:

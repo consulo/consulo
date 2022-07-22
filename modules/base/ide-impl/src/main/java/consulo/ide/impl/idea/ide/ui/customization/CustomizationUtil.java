@@ -15,29 +15,28 @@
  */
 package consulo.ide.impl.idea.ide.ui.customization;
 
-import consulo.application.ApplicationManager;
-import consulo.ui.ex.action.*;
-import consulo.ui.ex.util.TextWithMnemonic;
-import consulo.logging.Logger;
-import consulo.ide.impl.idea.openapi.keymap.impl.ui.Group;
-import consulo.util.lang.Pair;
-import consulo.ui.ex.awt.PopupHandler;
-import consulo.ui.ex.awt.tree.Tree;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.util.diff.Diff;
 import consulo.application.util.diff.FilesTooBigForDiffException;
+import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapGroupImpl;
+import consulo.logging.Logger;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.awt.PopupHandler;
+import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.ui.ex.util.TextWithMnemonic;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
-
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
-import java.awt.*;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,9 +52,9 @@ public class CustomizationUtil {
   }
 
   public static ActionGroup correctActionGroup(final ActionGroup group, final CustomActionsSchemaImpl schema, final String defaultGroupName) {
-    if (!schema.isCorrectActionGroup(group, defaultGroupName)){
-       return group;
-     }
+    if (!schema.isCorrectActionGroup(group, defaultGroupName)) {
+      return group;
+    }
     String text = group.getTemplatePresentation().getText();
     final int mnemonic = TextWithMnemonic.parse(group.getTemplatePresentation().getTextWithMnemonic()).getMnemonic();
     if (text != null) {
@@ -78,9 +77,7 @@ public class CustomizationUtil {
     ContainerUtil.addAll(reorderedChildren, group.getChildren(e));
     final List<ActionUrl> actions = schema.getActions();
     for (ActionUrl actionUrl : actions) {
-      if ((actionUrl.getParentGroup().equals(text) ||
-           actionUrl.getParentGroup().equals(defaultGroupName) ||
-           actionUrl.getParentGroup().equals(actionManager.getId(group)))) {
+      if ((actionUrl.getParentGroup().equals(text) || actionUrl.getParentGroup().equals(defaultGroupName) || actionUrl.getParentGroup().equals(actionManager.getId(group)))) {
         AnAction componentAction = actionUrl.getComponentAction();
         if (componentAction != null) {
           if (actionUrl.getActionType() == ActionUrl.ADDED) {
@@ -98,8 +95,7 @@ public class CustomizationUtil {
           else if (actionUrl.getActionType() == ActionUrl.DELETED && reorderedChildren.size() > actionUrl.getAbsolutePosition()) {
             final AnAction anAction = reorderedChildren.get(actionUrl.getAbsolutePosition());
             if (anAction.getTemplatePresentation().getText() == null
-                ? (componentAction.getTemplatePresentation().getText() != null &&
-                   componentAction.getTemplatePresentation().getText().length() > 0)
+                ? (componentAction.getTemplatePresentation().getText() != null && componentAction.getTemplatePresentation().getText().length() > 0)
                 : !anAction.getTemplatePresentation().getText().equals(componentAction.getTemplatePresentation().getText())) {
               continue;
             }
@@ -121,7 +117,7 @@ public class CustomizationUtil {
 
   public static void optimizeSchema(final JTree tree, final CustomActionsSchemaImpl schema) {
     //noinspection HardCodedStringLiteral
-    Group rootGroup = new Group("root", null, null);
+    KeymapGroupImpl rootGroup = new KeymapGroupImpl("root", null, null);
     DefaultMutableTreeNode root = new DefaultMutableTreeNode(rootGroup);
     root.removeAllChildren();
     schema.fillActionGroups(root);
@@ -136,18 +132,19 @@ public class CustomizationUtil {
           return true;
         }
         final ActionUrl url = getActionUrl(new TreePath(treeNode.getPath()), 0);
-        url.getGroupPath().add(((Group)treeNode.getUserObject()).getName());
+        url.getGroupPath().add(((KeymapGroupImpl)treeNode.getUserObject()).getName());
         final TreePath treePath = getTreePath(defaultTree, url);
         if (treePath != null) {
           final DefaultMutableTreeNode visited = (DefaultMutableTreeNode)treePath.getLastPathComponent();
           final ActionUrl[] defaultUserObjects = getChildUserObjects(visited, url);
           final ActionUrl[] currentUserObjects = getChildUserObjects(treeNode, url);
           computeDiff(defaultUserObjects, currentUserObjects, actions);
-        } else {
+        }
+        else {
           //customizations at the new place
           url.getGroupPath().remove(url.getParentGroup());
-          if (actions.contains(url)){
-            url.getGroupPath().add(((Group)treeNode.getUserObject()).getName());
+          if (actions.contains(url)) {
+            url.getGroupPath().add(((KeymapGroupImpl)treeNode.getUserObject()).getName());
             actions.addAll(schema.getChildActions(url));
           }
         }
@@ -157,9 +154,7 @@ public class CustomizationUtil {
     schema.setActions(actions);
   }
 
-  private static void computeDiff(final ActionUrl[] defaultUserObjects,
-                                  final ActionUrl[] currentUserObjects,
-                                  final ArrayList<ActionUrl> actions) {
+  private static void computeDiff(final ActionUrl[] defaultUserObjects, final ActionUrl[] currentUserObjects, final ArrayList<ActionUrl> actions) {
     Diff.Change change = null;
     try {
       change = Diff.buildChanges(defaultUserObjects, currentUserObjects);
@@ -186,12 +181,12 @@ public class CustomizationUtil {
     }
   }
 
-  public static TreePath getPathByUserObjects(JTree tree, TreePath treePath){
-    List<String>  path = new ArrayList<String>();
+  public static TreePath getPathByUserObjects(JTree tree, TreePath treePath) {
+    List<String> path = new ArrayList<String>();
     for (int i = 0; i < treePath.getPath().length; i++) {
       Object o = ((DefaultMutableTreeNode)treePath.getPath()[i]).getUserObject();
-      if (o instanceof Group) {
-        path.add(((Group)o).getName());
+      if (o instanceof KeymapGroupImpl) {
+        path.add(((KeymapGroupImpl)o).getName());
       }
     }
     return getTreePath(0, path, tree.getModel().getRoot(), tree);
@@ -201,8 +196,8 @@ public class CustomizationUtil {
     ActionUrl url = new ActionUrl();
     for (int i = 0; i < treePath.getPath().length - 1; i++) {
       Object o = ((DefaultMutableTreeNode)treePath.getPath()[i]).getUserObject();
-      if (o instanceof Group) {
-        url.getGroupPath().add(((Group)o).getName());
+      if (o instanceof KeymapGroupImpl) {
+        url.getGroupPath().add(((KeymapGroupImpl)o).getName());
       }
 
     }
@@ -239,9 +234,9 @@ public class CustomizationUtil {
 
     if (pathElement == null) return null;
 
-    if (!(userObject instanceof Group)) return null;
+    if (!(userObject instanceof KeymapGroupImpl)) return null;
 
-    if (!pathElement.equals(((Group)userObject).getName())) return null;
+    if (!pathElement.equals(((KeymapGroupImpl)userObject).getName())) return null;
 
 
     TreePath currentPath = new TreePath(treeNode.getPath());
@@ -277,16 +272,8 @@ public class CustomizationUtil {
     return result.toArray(new ActionUrl[result.size()]);
   }
 
+  @Deprecated
   public static MouseListener installPopupHandler(JComponent component, @Nonnull final String groupId, final String place) {
-    if (ApplicationManager.getApplication() == null) return new MouseAdapter(){};
-    PopupHandler popupHandler = new PopupHandler() {
-      public void invokePopup(Component comp, int x, int y) {
-        ActionGroup group = (ActionGroup)CustomActionsSchemaImpl.getInstance().getCorrectedAction(groupId);
-        final ActionPopupMenu popupMenu = ActionManager.getInstance().createActionPopupMenu(place, group);
-        popupMenu.getComponent().show(comp, x, y);
-      }
-    };
-    component.addMouseListener(popupHandler);
-    return popupHandler;
+    return PopupHandler.installPopupHandlerFromCustomActions(component, groupId, place);
   }
 }

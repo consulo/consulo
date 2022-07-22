@@ -5,7 +5,7 @@ import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.idea.find.editorHeaderActions.Utils;
 import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButton;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButtonImpl;
 import consulo.codeEditor.EditorCopyPasteHelper;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
@@ -56,11 +56,11 @@ public class SearchTextArea extends JPanel implements PropertyChangeListener {
   private final JTextArea myTextArea;
   private final boolean mySearchMode;
   private final JPanel myIconsPanel = new NonOpaquePanel();
-  private final ActionButton myNewLineButton;
-  private final ActionButton myClearButton;
+  private final ActionButtonImpl myNewLineButton;
+  private final ActionButtonImpl myClearButton;
   private final NonOpaquePanel myExtraActionsPanel = new NonOpaquePanel();
   private final JBScrollPane myScrollPane;
-  private final ActionButton myHistoryPopupButton;
+  private final ActionButtonImpl myHistoryPopupButton;
   private boolean myMultilineEnabled = true;
 
   @Deprecated
@@ -235,7 +235,7 @@ public class SearchTextArea extends JPanel implements PropertyChangeListener {
     if (actions != null && actions.length > 0) {
       JPanel buttonsGrid = new NonOpaquePanel(new GridLayout(1, actions.length, 0, 0));
       for (AnAction action : actions) {
-        ActionButton button = new MyActionButton(action, true);
+        ActionButtonImpl button = new MyActionButton(action, true);
         addedButtons.add(button);
         buttonsGrid.add(button);
       }
@@ -247,7 +247,7 @@ public class SearchTextArea extends JPanel implements PropertyChangeListener {
   }
 
   public void updateExtraActions() {
-    for (ActionButton button : UIUtil.findComponentsOfType(myExtraActionsPanel, ActionButton.class)) {
+    for (ActionButtonImpl button : UIUtil.findComponentsOfType(myExtraActionsPanel, ActionButtonImpl.class)) {
       button.update();
     }
   }
@@ -350,7 +350,7 @@ public class SearchTextArea extends JPanel implements PropertyChangeListener {
     }
   }
 
-  private static class MyActionButton extends ActionButton {
+  private static class MyActionButton extends ActionButtonImpl {
 
     private MyActionButton(@Nonnull AnAction action, boolean focusable) {
       super(action, action.getTemplatePresentation().clone(), ActionPlaces.UNKNOWN, ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE);

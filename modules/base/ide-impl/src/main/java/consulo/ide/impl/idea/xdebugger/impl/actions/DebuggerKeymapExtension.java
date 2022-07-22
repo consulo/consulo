@@ -16,27 +16,27 @@
 package consulo.ide.impl.idea.xdebugger.impl.actions;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.openapi.keymap.KeymapExtension;
-import consulo.ide.impl.idea.openapi.keymap.KeymapGroup;
-import consulo.ide.impl.idea.openapi.keymap.impl.ui.Group;
-import consulo.project.Project;
+import consulo.component.ComponentManager;
+import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapGroupImpl;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.internal.ActionStubBase;
 import consulo.ui.ex.keymap.KeyMapBundle;
-import consulo.util.lang.function.Condition;
+import consulo.ui.ex.keymap.KeymapExtension;
+import consulo.ui.ex.keymap.KeymapGroup;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.function.Predicate;
 
 /**
  * @author yole
  */
 @ExtensionImpl
 public class DebuggerKeymapExtension implements KeymapExtension {
-  public KeymapGroup createGroup(final Condition<AnAction> filtered, final Project project) {
+  public KeymapGroup createGroup(final Predicate<AnAction> filtered, final ComponentManager project) {
     ActionManager actionManager = ActionManager.getInstance();
     DefaultActionGroup debuggerGroup = (DefaultActionGroup)actionManager.getActionOrStub(IdeActions.GROUP_DEBUGGER);
     AnAction[] debuggerActions = debuggerGroup.getChildActionsOrStubs();
@@ -44,13 +44,13 @@ public class DebuggerKeymapExtension implements KeymapExtension {
     ArrayList<String> ids = new ArrayList<String>();
     for (AnAction debuggerAction : debuggerActions) {
       String actionId = debuggerAction instanceof ActionStubBase ? ((ActionStubBase)debuggerAction).getId() : actionManager.getId(debuggerAction);
-      if (filtered == null || filtered.value(debuggerAction)) {
+      if (filtered == null || filtered.test(debuggerAction)) {
         ids.add(actionId);
       }
     }
 
     Collections.sort(ids);
-    Group group = new Group(KeyMapBundle.message("debugger.actions.group.title"), IdeActions.GROUP_DEBUGGER, null);
+    KeymapGroup group = new KeymapGroupImpl(KeyMapBundle.message("debugger.actions.group.title"), IdeActions.GROUP_DEBUGGER, null);
     for (String id : ids) {
       group.addActionId(id);
     }

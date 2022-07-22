@@ -77,6 +77,7 @@ open module consulo.ide.impl {
   requires transitive consulo.language.copyright.api;
   requires consulo.project.impl;
   requires consulo.external.service.impl;
+  requires consulo.language.code.style.ui.api;
 
   requires consulo.ui.impl;
   requires consulo.localize.impl;
@@ -225,17 +226,8 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.analysis;
   exports consulo.ide.impl.idea.application.options;
   exports consulo.ide.impl.idea.application.options.codeStyle;
-  exports consulo.ide.impl.idea.application.options.codeStyle.arrangement;
   exports consulo.ide.impl.idea.application.options.codeStyle.arrangement.action;
-  exports consulo.ide.impl.idea.application.options.codeStyle.arrangement.additional;
-  exports consulo.ide.impl.idea.application.options.codeStyle.arrangement.animation;
-  exports consulo.ide.impl.idea.application.options.codeStyle.arrangement.color;
   exports consulo.ide.impl.idea.application.options.codeStyle.arrangement.component;
-  exports consulo.ide.impl.idea.application.options.codeStyle.arrangement.group;
-  exports consulo.ide.impl.idea.application.options.codeStyle.arrangement.match;
-  exports consulo.ide.impl.idea.application.options.codeStyle.arrangement.match.tokens;
-  exports consulo.ide.impl.idea.application.options.codeStyle.arrangement.ui;
-  exports consulo.ide.impl.idea.application.options.codeStyle.arrangement.util;
   exports consulo.ide.impl.idea.application.options.codeStyle.cache;
   exports consulo.ide.impl.idea.application.options.codeStyle.excludedFiles;
   exports consulo.ide.impl.idea.application.options.colors;
@@ -852,8 +844,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.ui.breadcrumbs;
   exports consulo.ide.impl.idea.ui.components;
   exports consulo.ide.impl.idea.ui.components.breadcrumbs;
-  exports consulo.ide.impl.idea.ui.components.editors;
-  exports consulo.ide.impl.idea.ui.components.fields;
   exports consulo.ide.impl.idea.ui.components.labels;
   exports consulo.ide.impl.idea.ui.components.panels;
   exports consulo.ide.impl.idea.ui.content;
@@ -989,7 +979,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.language;
   exports consulo.ide.impl.language.codeStyle;
   exports consulo.ide.impl.language.codeStyle.arrangement;
-  exports consulo.ide.impl.language.codeStyle.arrangement.std;
   exports consulo.ide.impl.language.editor;
   exports consulo.ide.impl.language.editor.rawHighlight;
   exports consulo.ide.impl.language.editor.refactoring;
@@ -1024,7 +1013,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.psi.codeStyle.autodetect;
   exports consulo.ide.impl.psi.codeStyle.lineIndent;
   exports consulo.ide.impl.psi.codeStyle.modifier;
-  exports consulo.ide.impl.psi.codeStyle.presentation;
   exports consulo.ide.impl.psi.codeStyle.statusbar;
   exports consulo.ide.impl.psi.file;
   exports consulo.ide.impl.psi.formatter;

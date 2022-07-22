@@ -23,7 +23,7 @@ import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers.FileInfoManager;
-import consulo.ide.impl.psi.search.FilenameIndex;
+import consulo.language.psi.search.FilenameIndex;
 import consulo.ide.navigation.ChooseByNameContributor;
 import consulo.ide.navigation.GotoFileContributor;
 import consulo.language.Language;

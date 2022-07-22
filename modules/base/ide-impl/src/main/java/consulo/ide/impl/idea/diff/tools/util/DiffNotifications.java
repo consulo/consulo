@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.diff.tools.util;
 
-import consulo.ide.impl.idea.diff.comparison.DiffTooBigException;
+import consulo.diff.comparison.DiffTooBigException;
 import consulo.ide.impl.idea.diff.util.TextDiffType;
 import consulo.ide.impl.idea.openapi.diff.DiffBundle;
 import consulo.ide.impl.idea.ui.EditorNotificationPanel;

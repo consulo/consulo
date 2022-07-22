@@ -2,19 +2,6 @@
 package consulo.ide.impl.idea.ui.popup;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.ide.IdeEventQueue;
-import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionMenu;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.PresentationFactory;
-import consulo.ide.impl.idea.openapi.ui.MessageType;
-import consulo.ui.ex.popup.BaseListPopupStep;
-import consulo.ui.ex.awt.HintHint;
-import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
-import consulo.ide.impl.idea.ui.popup.mock.MockConfirmation;
-import consulo.ide.impl.idea.ui.popup.tree.TreePopupImpl;
-import consulo.ide.impl.idea.util.ObjectUtils;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.CommonBundle;
@@ -25,6 +12,17 @@ import consulo.codeEditor.VisualPosition;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
+import consulo.ide.impl.idea.ide.IdeEventQueue;
+import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionMenu;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.PresentationFactory;
+import consulo.ide.impl.idea.openapi.ui.MessageType;
+import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
+import consulo.ide.impl.idea.ui.popup.mock.MockConfirmation;
+import consulo.ide.impl.idea.ui.popup.tree.TreePopupImpl;
+import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
@@ -36,6 +34,8 @@ import consulo.ui.NotificationType;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.internal.AWTPopupChooserBuilder;
+import consulo.ui.ex.awt.internal.AWTPopupFactory;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.popup.*;
 import consulo.ui.ex.util.TextWithMnemonic;
@@ -59,10 +59,15 @@ import java.util.function.Supplier;
 
 @Singleton
 @ServiceImpl
-public class PopupFactoryImpl extends JBPopupFactory {
+public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory {
   private static final Logger LOG = Logger.getInstance(PopupFactoryImpl.class);
 
   private final Map<Disposable, List<Balloon>> myStorage = ContainerUtil.createWeakMap();
+
+  @Override
+  public <T> AWTPopupChooserBuilder<T> createListPopupBuilder(@Nonnull JList<T> list) {
+    return new PopupChooserBuilder<T>(list);
+  }
 
   @Nonnull
   @Override

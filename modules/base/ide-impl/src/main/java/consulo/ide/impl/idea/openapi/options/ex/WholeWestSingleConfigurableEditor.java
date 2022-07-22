@@ -28,7 +28,7 @@ import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ide.impl.base.BaseShowSettingsUtil;
 import consulo.logging.Logger;
-import consulo.ide.setting.ConfigurableUIMigrationUtil;
+import consulo.configurable.internal.ConfigurableUIMigrationUtil;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.ex.awt.WholeWestDialogWrapper;
 import consulo.ui.annotation.RequiredUIAccess;

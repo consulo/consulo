@@ -24,7 +24,7 @@ import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.FormBuilder;
-import consulo.ide.impl.idea.util.ui.GridBag;
+import consulo.ui.ex.awt.GridBag;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.util.ListUtil;

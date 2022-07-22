@@ -19,8 +19,8 @@ import consulo.application.AllIcons;
 import consulo.application.ui.util.TodoPanelSettings;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.todo.configurable.TodoConfigurable;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButtonImpl;
 import consulo.ui.ex.awt.action.CustomComponentAction;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButton;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.Comparing;
@@ -60,7 +60,7 @@ public class SetTodoFilterAction extends AnAction implements CustomComponentActi
 
   @Override
   public JComponent createCustomComponent(Presentation presentation, String place) {
-    ActionButton button = new ActionButton(
+    ActionButtonImpl button = new ActionButtonImpl(
             this,
             presentation,
             ActionPlaces.TODO_VIEW_TOOLBAR,

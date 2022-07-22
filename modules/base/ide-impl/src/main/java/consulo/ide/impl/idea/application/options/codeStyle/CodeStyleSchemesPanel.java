@@ -18,6 +18,7 @@
 package consulo.ide.impl.idea.application.options.codeStyle;
 
 import consulo.language.codeStyle.CodeStyleScheme;
+import consulo.language.codeStyle.ui.setting.CodeStyleSchemesModel;
 import consulo.localize.LocalizeValue;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;

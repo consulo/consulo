@@ -460,7 +460,7 @@ public abstract class PluginManagerMain implements Disposable {
     message += "<br><a href=";
     message += restartCapable ? "\"restart\">Restart now" : "\"shutdown\">Shutdown";
     message += "</a>";
-    new NotificationGroup("Plugins Lifecycle Group", NotificationDisplayType.STICKY_BALLOON, true)
+    new NotificationGroup("Plugins Lifecycle KeymapGroupImpl", NotificationDisplayType.STICKY_BALLOON, true)
             .createNotification(title, XmlStringUtil.wrapInHtml(message), NotificationType.INFORMATION, new NotificationListener() {
               @Override
               public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {

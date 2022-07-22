@@ -16,16 +16,16 @@
 package consulo.ide.impl.idea.tools;
 
 import consulo.application.AllIcons;
+import consulo.component.ComponentManager;
+import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapGroupImpl;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.internal.ActionManagerEx;
-import consulo.ide.impl.idea.openapi.keymap.KeymapExtension;
-import consulo.ide.impl.idea.openapi.keymap.KeymapGroup;
-import consulo.ide.impl.idea.openapi.keymap.impl.ui.Group;
-import consulo.project.Project;
-import consulo.util.lang.function.Condition;
+import consulo.ui.ex.keymap.KeymapExtension;
+import consulo.ui.ex.keymap.KeymapGroup;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.function.Predicate;
 
 /**
  * @author traff
@@ -33,26 +33,26 @@ import java.util.HashMap;
 public abstract class BaseToolKeymapExtension implements KeymapExtension {
 
   @Override
-  public KeymapGroup createGroup(final Condition<AnAction> filtered, final Project project) {
+  public KeymapGroup createGroup(final Predicate<AnAction> filtered, final ComponentManager project) {
     final ActionManagerEx actionManager = ActionManagerEx.getInstanceEx();
     String[] ids = actionManager.getActionIds(getActionIdPrefix());
     Arrays.sort(ids);
-    Group group = new Group(getGroupName(), AllIcons.Nodes.KeymapTools);
+    KeymapGroupImpl group = new KeymapGroupImpl(getGroupName(), AllIcons.Nodes.KeymapTools);
 
 
-    HashMap<String, Group> toolGroupNameToGroup = new HashMap<String, Group>();
+    HashMap<String, KeymapGroupImpl> toolGroupNameToGroup = new HashMap<>();
 
     for (String id : ids) {
-      if (filtered != null && !filtered.value(actionManager.getActionOrStub(id))) continue;
+      if (filtered != null && !filtered.test(actionManager.getActionOrStub(id))) continue;
       String groupName = getGroupByActionId(id);
 
       if (groupName != null && groupName.trim().length() == 0) {
         groupName = null;
       }
 
-      Group subGroup = toolGroupNameToGroup.get(groupName);
+      KeymapGroupImpl subGroup = toolGroupNameToGroup.get(groupName);
       if (subGroup == null) {
-        subGroup = new Group(groupName, null, null);
+        subGroup = new KeymapGroupImpl(groupName, null, null);
         toolGroupNameToGroup.put(groupName, subGroup);
         if (groupName != null) {
           group.addGroup(subGroup);
@@ -62,7 +62,7 @@ public abstract class BaseToolKeymapExtension implements KeymapExtension {
       subGroup.addActionId(id);
     }
 
-    Group subGroup = toolGroupNameToGroup.get(null);
+    KeymapGroupImpl subGroup = toolGroupNameToGroup.get(null);
     if (subGroup != null) {
       group.addAll(subGroup);
     }

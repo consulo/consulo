@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.diff.comparison.iterables;
 
-import consulo.ide.impl.idea.diff.comparison.DiffTooBigException;
+import consulo.diff.comparison.DiffTooBigException;
 import consulo.ide.impl.idea.diff.comparison.TrimUtil;
 import consulo.diff.fragment.DiffFragment;
 import consulo.ide.impl.idea.diff.util.Range;

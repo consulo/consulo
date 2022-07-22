@@ -21,7 +21,7 @@ import consulo.language.codeStyle.arrangement.std.ArrangementSettingsToken;
 import consulo.language.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
 import consulo.language.codeStyle.arrangement.std.ArrangementUiComponent;
 import consulo.language.codeStyle.arrangement.std.StdArrangementTokenUiRole;
-import consulo.ide.impl.language.codeStyle.arrangement.std.ArrangementStandardSettingsManagerImpl;
+import consulo.language.codeStyle.ui.internal.arrangement.ArrangementAtomMatchConditionComponent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -66,7 +66,7 @@ public class DefaultArrangementUiComponentFactory implements ArrangementUiCompon
         if (tokens.size() != 1) {
           throw new IllegalArgumentException("Can't build a bulb token for elements " + tokens);
         }
-        return new ArrangementAtomMatchConditionComponent((ArrangementStandardSettingsManagerImpl)settingsManager, colorsProvider,
+        return new ArrangementAtomMatchConditionComponent(settingsManager, colorsProvider,
                                                           new ArrangementAtomMatchCondition(tokens.get(0)), null);
     }
     return null;

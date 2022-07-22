@@ -30,7 +30,7 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.execution.ui.awt.RawCommandLineEditor;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.JBTextField;
-import consulo.ide.impl.idea.util.ui.GridBag;
+import consulo.ui.ex.awt.GridBag;
 import consulo.disposer.Disposable;
 
 import javax.annotation.Nonnull;

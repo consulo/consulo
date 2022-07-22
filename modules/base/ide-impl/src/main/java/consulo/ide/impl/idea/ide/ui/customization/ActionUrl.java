@@ -15,13 +15,13 @@
  */
 package consulo.ide.impl.idea.ide.ui.customization;
 
+import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapGroupImpl;
 import consulo.util.xml.serializer.DefaultJDOMExternalizer;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.ActionsTreeUtil;
-import consulo.ide.impl.idea.openapi.keymap.impl.ui.Group;
 import consulo.ide.impl.idea.openapi.util.*;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
@@ -97,10 +97,10 @@ public class ActionUrl implements JDOMExternalizable {
     if (myComponent instanceof String){
       return ActionManager.getInstance().getAction((String)myComponent);
     }
-    if (myComponent instanceof Group){
-      final String id = ((Group)myComponent).getId();
+    if (myComponent instanceof KeymapGroupImpl){
+      final String id = ((KeymapGroupImpl)myComponent).getId();
       if (id == null || id.length() == 0){
-        return ((Group)myComponent).constructActionGroup(true);
+        return ((KeymapGroupImpl)myComponent).constructActionGroup(true);
       }
       return ActionManager.getInstance().getAction(id);
     }
@@ -147,7 +147,7 @@ public class ActionUrl implements JDOMExternalizable {
       final AnAction action = ActionManager.getInstance().getAction(attributeValue);
       myComponent = action instanceof ActionGroup
                     ? ActionsTreeUtil.createGroup((ActionGroup)action, true, null)
-                    : new Group(attributeValue, attributeValue, null);
+                    : new KeymapGroupImpl(attributeValue, attributeValue, null);
     }
     myActionType = Integer.parseInt(element.getAttributeValue(ACTION_TYPE));
     myAbsolutePosition = Integer.parseInt(element.getAttributeValue(POSITION));
@@ -167,10 +167,10 @@ public class ActionUrl implements JDOMExternalizable {
     else if (myComponent instanceof AnSeparator) {
       element.setAttribute(SEPARATOR, Boolean.TRUE.toString());
     }
-    else if (myComponent instanceof Group) {
-      final String groupId = ((Group)myComponent).getId() != null && ((Group)myComponent).getId().length() != 0
-                             ? ((Group)myComponent).getId()
-                             : ((Group)myComponent).getName();
+    else if (myComponent instanceof KeymapGroupImpl) {
+      final String groupId = ((KeymapGroupImpl)myComponent).getId() != null && ((KeymapGroupImpl)myComponent).getId().length() != 0
+                             ? ((KeymapGroupImpl)myComponent).getId()
+                             : ((KeymapGroupImpl)myComponent).getName();
       element.setAttribute(VALUE, groupId != null ? groupId : "");
       element.setAttribute(IS_GROUP, Boolean.TRUE.toString());
     }
@@ -204,8 +204,8 @@ public class ActionUrl implements JDOMExternalizable {
     DefaultMutableTreeNode node = (DefaultMutableTreeNode)treePath.getLastPathComponent();
     final int absolutePosition = url.getAbsolutePosition();
     if (node.getChildCount() >= absolutePosition && absolutePosition >= 0) {
-      if (url.getComponent() instanceof Group){
-        node.insert(ActionsTreeUtil.createNode((Group)url.getComponent()), absolutePosition);
+      if (url.getComponent() instanceof KeymapGroupImpl){
+        node.insert(ActionsTreeUtil.createNode((KeymapGroupImpl)url.getComponent()), absolutePosition);
       } else {
         node.insert(new DefaultMutableTreeNode(url.getComponent()), absolutePosition);
       }
@@ -250,8 +250,8 @@ public class ActionUrl implements JDOMExternalizable {
     final ArrayList<String> result = new ArrayList<String>();
     for (int i = 0; i < treePath.getPath().length - 1; i++) {
       Object o = ((DefaultMutableTreeNode)treePath.getPath()[i]).getUserObject();
-      if (o instanceof Group){
-        result.add(((Group)o).getName());
+      if (o instanceof KeymapGroupImpl){
+        result.add(((KeymapGroupImpl)o).getName());
       }
     }
     return result;
