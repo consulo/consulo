@@ -9,6 +9,8 @@ module consulo.language.editor.refactoring.api {
   requires transitive consulo.language.editor.ui.api;
   requires transitive consulo.ui.ex.api;
   requires transitive consulo.document.api;
+
+  requires consulo.external.service.api;
   
   requires consulo.local.history.api;
 

@@ -2,9 +2,9 @@
 
 package consulo.language.editor.impl.internal.completion;
 
-import consulo.application.statistic.FeatureUsageTracker;
 import consulo.codeEditor.Editor;
 import consulo.document.Document;
+import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.language.Language;
 import consulo.language.editor.completion.CompletionInitializationContext;
 import consulo.language.editor.completion.CompletionParameters;
