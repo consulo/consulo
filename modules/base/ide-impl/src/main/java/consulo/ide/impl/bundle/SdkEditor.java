@@ -18,9 +18,9 @@ package consulo.ide.impl.bundle;
 import consulo.content.bundle.SdkModel;
 import consulo.content.impl.internal.bundle.SdkImpl;
 import consulo.ide.impl.idea.openapi.projectRoots.ui.BaseSdkEditor;
-import consulo.ide.impl.idea.openapi.projectRoots.ui.SdkPathEditor;
+import consulo.ide.ui.SdkPathEditor;
 import consulo.content.OrderRootType;
-import consulo.ide.impl.idea.openapi.roots.ui.OrderRootTypeUIFactory;
+import consulo.ide.ui.OrderRootTypeUIFactory;
 import consulo.ui.ex.awt.TabbedPaneWrapper;
 import consulo.disposer.Disposable;
 

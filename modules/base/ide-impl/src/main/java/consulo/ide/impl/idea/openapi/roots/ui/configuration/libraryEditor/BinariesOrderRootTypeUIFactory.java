@@ -25,8 +25,8 @@ import consulo.application.AllIcons;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.project.ProjectBundle;
 import consulo.content.bundle.Sdk;
-import consulo.ide.impl.idea.openapi.projectRoots.ui.SdkPathEditor;
-import consulo.ide.impl.idea.openapi.roots.ui.OrderRootTypeUIFactory;
+import consulo.ide.ui.SdkPathEditor;
+import consulo.ide.ui.OrderRootTypeUIFactory;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.ui.image.Image;
 

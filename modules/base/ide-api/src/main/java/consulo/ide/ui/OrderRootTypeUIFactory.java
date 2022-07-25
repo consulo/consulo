@@ -18,7 +18,7 @@
  * User: anna
  * Date: 26-Dec-2007
  */
-package consulo.ide.impl.idea.openapi.roots.ui;
+package consulo.ide.ui;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
@@ -27,7 +27,6 @@ import consulo.component.extension.ExtensionPoint;
 import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.content.OrderRootType;
 import consulo.content.bundle.Sdk;
-import consulo.ide.impl.idea.openapi.projectRoots.ui.SdkPathEditor;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

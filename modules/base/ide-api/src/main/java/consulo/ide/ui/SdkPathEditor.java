@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.projectRoots.ui;
+package consulo.ide.ui;
 
-import consulo.fileChooser.FileChooserDescriptor;
+import consulo.content.OrderRootType;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkModificator;
-import consulo.content.OrderRootType;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.fileChooser.FileChooserDescriptor;
+
 import javax.annotation.Nullable;
+import java.util.List;
 
 public class SdkPathEditor extends PathEditor {
   private final String myDisplayName;
@@ -62,7 +63,7 @@ public class SdkPathEditor extends PathEditor {
 
   public void reset(@Nullable SdkModificator modificator) {
     if (modificator != null) {
-      resetPath(ContainerUtil.newArrayList(modificator.getRoots(myOrderRootType)));
+      resetPath(List.of(modificator.getRoots(myOrderRootType)));
     }
     else {
       setEnabled(false);

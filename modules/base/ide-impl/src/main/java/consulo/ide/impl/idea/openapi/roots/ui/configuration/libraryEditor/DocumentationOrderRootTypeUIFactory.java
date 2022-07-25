@@ -22,23 +22,23 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.libraryEditor;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
+import consulo.content.base.DocumentationOrderRootType;
+import consulo.content.bundle.Sdk;
+import consulo.content.bundle.SdkType;
+import consulo.fileChooser.FileChooserDescriptorFactory;
+import consulo.ide.impl.idea.openapi.projectRoots.ui.Util;
+import consulo.ide.impl.idea.util.IconUtil;
+import consulo.ide.ui.OrderRootTypeUIFactory;
+import consulo.ide.ui.SdkPathEditor;
+import consulo.project.ProjectBundle;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
-import consulo.fileChooser.FileChooserDescriptorFactory;
-import consulo.project.ProjectBundle;
-import consulo.content.bundle.Sdk;
-import consulo.content.bundle.SdkType;
-import consulo.ide.impl.idea.openapi.projectRoots.ui.SdkPathEditor;
-import consulo.ide.impl.idea.openapi.projectRoots.ui.Util;
-import consulo.ide.impl.idea.openapi.roots.ui.OrderRootTypeUIFactory;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.ToolbarDecorator;
-import consulo.ide.impl.idea.util.IconUtil;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.content.base.DocumentationOrderRootType;
 import consulo.ui.image.Image;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 

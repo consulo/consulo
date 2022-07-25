@@ -13,33 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.projectRoots.ui;
+package consulo.ide.ui;
 
 import consulo.application.AllIcons;
-import consulo.ui.ex.JBColor;
-import consulo.dataContext.DataManager;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.application.ApplicationManager;
-import consulo.fileChooser.IdeaFileChooser;
+import consulo.application.ui.wm.IdeFocusManager;
+import consulo.application.util.function.Computable;
+import consulo.dataContext.DataManager;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDialog;
+import consulo.fileChooser.IdeaFileChooser;
+import consulo.language.editor.CommonDataKeys;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.ListUtil;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.project.Project;
-import consulo.application.util.function.Computable;
-import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.http.HttpFileSystem;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.ArchiveFileSystem;
-import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.virtualFileSystem.archive.ArchiveFileType;
-import consulo.logging.Logger;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
+import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.archive.ArchiveFileSystem;
+import consulo.virtualFileSystem.archive.ArchiveFileType;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.http.HttpFileSystem;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -195,7 +195,7 @@ public class PathEditor {
         added.add(vFile);
       }
     }
-    return VfsUtil.toVirtualFileArray(added);
+    return VirtualFileUtil.toVirtualFileArray(added);
   }
 
   /**

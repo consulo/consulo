@@ -21,7 +21,7 @@ import consulo.content.base.DocumentationOrderRootType;
 import consulo.content.library.ui.*;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.openapi.projectRoots.ui.Util;
-import consulo.ide.impl.idea.openapi.roots.ui.OrderRootTypeUIFactory;
+import consulo.ide.ui.OrderRootTypeUIFactory;
 import consulo.project.ProjectBundle;
 import consulo.virtualFileSystem.VirtualFile;
 
