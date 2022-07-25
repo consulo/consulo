@@ -1,8 +1,8 @@
-package consulo.ide.impl.idea.util.text;
+package consulo.util.lang;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.text.StringTokenizer;
+
 import javax.annotation.Nonnull;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 
 /**
  * @author Leonid Shalupov
- *
+ * <p>
  * This versions comparator is much smarter than StringUtil.compareVersionNumbers
  * E.g: is used for TeamCity plugins and Ruby gems versions
  */
@@ -31,15 +31,24 @@ public class VersionComparatorUtil {
   }
 
   public enum VersionTokenType {
-    SNAP(10), SNAPSHOT(10),
+    SNAP(10),
+    SNAPSHOT(10),
     M(20),
-    EAP(25), PRE(25), PREVIEW(25),
-    ALPHA(30), A(30),
-    BETA(40), BETTA(40), B(40),
+    EAP(25),
+    PRE(25),
+    PREVIEW(25),
+    ALPHA(30),
+    A(30),
+    BETA(40),
+    BETTA(40),
+    B(40),
     RC(50),
     _WS(60),
     SP(70),
-    REL(80), RELEASE(80), R(80), FINAL(80),
+    REL(80),
+    RELEASE(80),
+    R(80),
+    FINAL(80),
     _WORD(90),
     _DIGITS(100),
     BUNDLED(666);
@@ -86,7 +95,7 @@ public class VersionComparatorUtil {
 
   static List<String> splitVersionString(final String ver) {
     StringTokenizer st = new StringTokenizer(ver.trim(), "()._-;:/, +~");
-    List<String> result = new ArrayList<String>();
+    List<String> result = new ArrayList<>();
 
     while (st.hasMoreTokens()) {
       final Matcher matcher = WORDS_SPLITTER.matcher(st.nextToken());
@@ -102,14 +111,16 @@ public class VersionComparatorUtil {
   /**
    * Compare two version strings. See TeamCity documentation on requirements comparison
    * for formal description.
-   *
+   * <p>
    * Examples: 1.0rc1 < 1.0release, 1.0 < 1.0.1, 1.1 > 1.02
+   *
    * @return 0 if ver1 equals ver2, positive value if ver1 > ver2, negative value if ver1 < ver2
    */
   public static int compare(String ver1, String ver2) {
     if (ver1 == null) {
       return (ver2 == null) ? 0 : -1;
-    } else if (ver2 == null) {
+    }
+    else if (ver2 == null) {
       return 1;
     }
 
@@ -131,9 +142,11 @@ public class VersionComparatorUtil {
 
       if (!t1.equals(t2)) {
         res = comparePriorities(t1, t2);
-      } else if (t1 == VersionTokenType._WORD) {
+      }
+      else if (t1 == VersionTokenType._WORD) {
         res = e1.compareTo(e2);
-      } else if (t1 == VersionTokenType._DIGITS) {
+      }
+      else if (t1 == VersionTokenType._DIGITS) {
         res = compareNumbers(e1, e2);
       }
 
@@ -151,14 +164,15 @@ public class VersionComparatorUtil {
 
     if (p1 == p2) {
       return 0;
-    } else {
+    }
+    else {
       return p1 > p2 ? 1 : -1;
     }
   }
 
   private static int compareNumbers(String n1, String n2) {
     // trim leading zeros
-    while(n1.length() > 0 && n2.length() > 0 && n1.charAt(0) == '0' && n2.charAt(0) == '0') {
+    while (n1.length() > 0 && n2.length() > 0 && n1.charAt(0) == '0' && n2.charAt(0) == '0') {
       n1 = n1.substring(1);
       n2 = n2.substring(1);
     }
@@ -166,7 +180,8 @@ public class VersionComparatorUtil {
     // starts with zero => less
     if (n1.length() > 0 && n1.charAt(0) == '0') {
       return -1;
-    } else if (n2.length() > 0 && n2.charAt(0) == '0') {
+    }
+    else if (n2.length() > 0 && n2.charAt(0) == '0') {
       return 1;
     }
 
@@ -176,7 +191,8 @@ public class VersionComparatorUtil {
 
     if (n1len > n2len) {
       n2 = StringUtil.repeatSymbol('0', n1len - n2len) + n2;
-    } else if (n2len > n1len) {
+    }
+    else if (n2len > n1len) {
       n1 = StringUtil.repeatSymbol('0', n2len - n1len) + n1;
     }
 

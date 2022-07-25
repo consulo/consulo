@@ -14,39 +14,38 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.unwrap;
+package consulo.language.editor.refactoring.unwrap;
 
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorColors;
-import consulo.colorScheme.EditorColorsManager;
 import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.codeEditor.markup.MarkupModel;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.colorScheme.TextAttributes;
-import consulo.util.lang.Pair;
 import consulo.document.util.TextRange;
+import consulo.language.editor.refactoring.internal.unwrap.UnwrapHelper;
 import consulo.language.psi.PsiElement;
-import consulo.ide.impl.idea.util.NotNullFunction;
-import javax.annotation.Nonnull;
+import consulo.util.lang.Pair;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 public class ScopeHighlighter {
-  public static final NotNullFunction<PsiElement, TextRange> NATURAL_RANGER = PsiElement::getTextRange;
+  public static final Function<PsiElement, TextRange> NATURAL_RANGER = PsiElement::getTextRange;
 
   @Nonnull
   private final Editor myEditor;
   @Nonnull
   private final List<RangeHighlighter> myActiveHighliters = new ArrayList<>();
   @Nonnull
-  private final NotNullFunction<? super PsiElement, ? extends TextRange> myRanger;
+  private final Function<? super PsiElement, ? extends TextRange> myRanger;
 
   public ScopeHighlighter(@Nonnull Editor editor) {
     this(editor, NATURAL_RANGER);
   }
 
-  public ScopeHighlighter(@Nonnull Editor editor, @Nonnull NotNullFunction<? super PsiElement, ? extends TextRange> ranger) {
+  public ScopeHighlighter(@Nonnull Editor editor, @Nonnull Function<? super PsiElement, ? extends TextRange> ranger) {
     myEditor = editor;
     myRanger = ranger;
   }
@@ -66,10 +65,10 @@ public class ScopeHighlighter {
     List<TextRange> rangesToRemove = RangeSplitter.split(wholeRange, rangesToExtract);
 
     for (TextRange r : rangesToRemove) {
-      addHighlighter(r, UnwrapHandler.HIGHLIGHTER_LEVEL, getTestAttributesForRemoval());
+      addHighlighter(r, UnwrapHelper.HIGHLIGHTER_LEVEL, UnwrapHelper.getTestAttributesForRemoval());
     }
     for (TextRange r : rangesToExtract) {
-      addHighlighter(r, UnwrapHandler.HIGHLIGHTER_LEVEL, UnwrapHandler.getTestAttributesForExtract());
+      addHighlighter(r, UnwrapHelper.HIGHLIGHTER_LEVEL, UnwrapHelper.getTestAttributesForExtract());
     }
   }
 
@@ -84,8 +83,9 @@ public class ScopeHighlighter {
     return Pair.create(affectedRange, rangesToExtract);
   }
 
+  @Nonnull
   private TextRange getRange(PsiElement e) {
-    return myRanger.fun(e);
+    return myRanger.apply(e);
   }
 
   private void addHighlighter(TextRange r, int level, TextAttributes attr) {
@@ -99,10 +99,5 @@ public class ScopeHighlighter {
       h.dispose();
     }
     myActiveHighliters.clear();
-  }
-
-  private static TextAttributes getTestAttributesForRemoval() {
-    EditorColorsManager manager = EditorColorsManager.getInstance();
-    return manager.getGlobalScheme().getAttributes(EditorColors.DELETED_TEXT_ATTRIBUTES);
   }
 }

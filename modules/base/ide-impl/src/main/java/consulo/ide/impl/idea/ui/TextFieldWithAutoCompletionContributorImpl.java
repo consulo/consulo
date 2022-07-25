@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.ui;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.language.editor.ui.awt.TextFieldWithAutoCompletionContributor;
 import jakarta.inject.Inject;
 
 /**

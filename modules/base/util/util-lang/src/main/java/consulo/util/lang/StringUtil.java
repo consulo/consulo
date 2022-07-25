@@ -575,6 +575,16 @@ public class StringUtil {
   }
 
   @Contract(pure = true)
+  public static double parseDouble(final String string, final double defaultValue) {
+    try {
+      return Double.parseDouble(string);
+    }
+    catch (Exception e) {
+      return defaultValue;
+    }
+  }
+
+  @Contract(pure = true)
   public static boolean startsWithIgnoreCase(@NonNls @Nonnull String str, @NonNls @Nonnull String prefix) {
     final int stringLength = str.length();
     final int prefixLength = prefix.length();

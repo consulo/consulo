@@ -120,7 +120,7 @@ public class IterationState {
                         boolean useFoldRegions,
                         boolean iterateBackwards) {
     ApplicationManager.getApplication().assertReadAccessAllowed();
-    myDocument = editor.getDocument();
+    myDocument = (DocumentEx)editor.getDocument();
 
     assert !DocumentUtil.isInsideSurrogatePair(myDocument, start);
     assert !DocumentUtil.isInsideSurrogatePair(myDocument, end);

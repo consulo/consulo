@@ -49,6 +49,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -389,8 +390,9 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
     return new FileEditor[0];
   }
 
+  @Nullable
   @Override
-  public Editor getSelectedTextEditor() {
+  public Editor getSelectedTextEditor(boolean requiredUIThread) {
     return myActiveFile != null ? getEditor(myActiveFile) : null;
   }
 

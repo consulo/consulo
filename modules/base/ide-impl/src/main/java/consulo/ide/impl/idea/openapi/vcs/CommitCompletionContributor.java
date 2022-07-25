@@ -22,7 +22,7 @@ import consulo.document.Document;
 import consulo.vcs.change.Change;
 import consulo.vcs.change.ChangeList;
 import consulo.ide.impl.idea.openapi.vcs.ui.CommitMessage;
-import consulo.ide.impl.idea.ui.TextFieldWithAutoCompletionListProvider;
+import consulo.language.editor.ui.awt.TextFieldWithAutoCompletionListProvider;
 import consulo.language.Language;
 import consulo.language.editor.completion.CompletionContributor;
 import consulo.language.editor.completion.CompletionParameters;

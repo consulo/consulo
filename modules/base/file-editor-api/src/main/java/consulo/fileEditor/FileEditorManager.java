@@ -87,7 +87,15 @@ public abstract class FileEditorManager {
    * there is no selected editor at all or selected editor is not a text one.
    */
   @Nullable
-  public abstract Editor getSelectedTextEditor();
+  public Editor getSelectedTextEditor() {
+    return getSelectedTextEditor(false);
+  }
+
+  /**
+   * @param requiredUIThread
+   */
+  @Nullable
+  public abstract Editor getSelectedTextEditor(boolean requiredUIThread);
 
   /**
    * @return <code>true</code> if <code>file</code> is opened, <code>false</code> otherwise

@@ -16,25 +16,20 @@
 
 package consulo.ide.impl.idea.codeInsight.unwrap;
 
-import consulo.language.editor.action.CodeInsightActionHandler;
+import consulo.application.ApplicationManager;
+import consulo.codeEditor.Editor;
+import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.language.editor.CodeInsightBundle;
-import consulo.ide.impl.idea.codeInsight.CodeInsightUtilBase;
 import consulo.language.editor.FileModificationService;
+import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.highlight.HighlightManager;
+import consulo.language.editor.refactoring.internal.unwrap.UnwrapHelper;
+import consulo.language.editor.refactoring.unwrap.ScopeHighlighter;
 import consulo.language.editor.refactoring.unwrap.UnwrapDescriptor;
 import consulo.language.editor.refactoring.unwrap.Unwrapper;
-import consulo.undoRedo.CommandProcessor;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorColors;
-import consulo.colorScheme.EditorColorsManager;
-import consulo.codeEditor.markup.HighlighterLayer;
-import consulo.colorScheme.TextAttributes;
-import consulo.ui.ex.popup.event.JBPopupAdapter;
-import consulo.ide.impl.ui.impl.PopupChooserBuilder;
-import consulo.language.impl.internal.psi.RecursiveTreeElementWalkingVisitor;
+import consulo.language.editor.util.LanguageEditorUtil;
 import consulo.language.impl.ast.TreeElement;
-import consulo.ui.ex.awt.JBList;
-import consulo.application.ApplicationManager;
+import consulo.language.impl.internal.psi.RecursiveTreeElementWalkingVisitor;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
@@ -42,8 +37,11 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.event.JBPopupAdapter;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
+import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
@@ -57,8 +55,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UnwrapHandler implements CodeInsightActionHandler {
-  public static final int HIGHLIGHTER_LEVEL = HighlighterLayer.SELECTION + 1;
-
   @Override
   public boolean startInWriteAction() {
     return true;
@@ -67,7 +63,7 @@ public class UnwrapHandler implements CodeInsightActionHandler {
   @RequiredUIAccess
   @Override
   public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
-    if (!CodeInsightUtilBase.prepareEditorForWrite(editor)) return;
+    if (!LanguageEditorUtil.checkModificationAllowed(editor)) return;
     List<AnAction> options = collectOptions(project, editor, file);
     selectOption(options, editor, file);
   }
@@ -96,9 +92,7 @@ public class UnwrapHandler implements CodeInsightActionHandler {
   protected void selectOption(List<AnAction> options, Editor editor, PsiFile file) {
     if (options.isEmpty()) return;
 
-    if (!getUnwrapDescription(file).showOptionsDialog() ||
-        ApplicationManager.getApplication().isUnitTestMode()
-       ) {
+    if (!getUnwrapDescription(file).showOptionsDialog() || ApplicationManager.getApplication().isUnitTestMode()) {
       options.get(0).actionPerformed(null);
       return;
     }
@@ -133,32 +127,21 @@ public class UnwrapHandler implements CodeInsightActionHandler {
     });
 
     PopupChooserBuilder builder = new PopupChooserBuilder<>(list);
-    builder
-        .setTitle(CodeInsightBundle.message("unwrap.popup.title"))
-        .setMovable(false)
-        .setResizable(false)
-        .setRequestFocus(true)
-        .setItemChoosenCallback(new Runnable() {
-          @Override
-          public void run() {
-            MyUnwrapAction a = (MyUnwrapAction)options.get(list.getSelectedIndex());
-            a.actionPerformed(null);
-          }
-        })
-        .addListener(new JBPopupAdapter() {
-          @Override
-          public void onClosed(LightweightWindowEvent event) {
-            highlighter.dropHighlight();
-          }
-        });
+    builder.setTitle(CodeInsightBundle.message("unwrap.popup.title")).setMovable(false).setResizable(false).setRequestFocus(true).setItemChoosenCallback(new Runnable() {
+      @Override
+      public void run() {
+        MyUnwrapAction a = (MyUnwrapAction)options.get(list.getSelectedIndex());
+        a.actionPerformed(null);
+      }
+    }).addListener(new JBPopupAdapter() {
+      @Override
+      public void onClosed(LightweightWindowEvent event) {
+        highlighter.dropHighlight();
+      }
+    });
 
     JBPopup popup = builder.createPopup();
     editor.showPopupInBestPositionFor(popup);
-  }
-
-  public static TextAttributes getTestAttributesForExtract() {
-    EditorColorsManager manager = EditorColorsManager.getInstance();
-    return manager.getGlobalScheme().getAttributes(EditorColors.SEARCH_RESULT_ATTRIBUTES);
   }
 
   private static class MyUnwrapAction extends AnAction {
@@ -237,14 +220,8 @@ public class UnwrapHandler implements CodeInsightActionHandler {
 
     private void highlightExtractedElements(final List<PsiElement> extractedElements) {
       for (PsiElement each : extractedElements) {
-        HighlightManager.getInstance(myProject).addRangeHighlight(
-            myEditor,
-            each.getTextOffset(),
-            each.getTextOffset() + each.getTextLength(),
-            getTestAttributesForExtract(),
-            false,
-            true,
-            null);
+        HighlightManager.getInstance(myProject)
+                .addRangeHighlight(myEditor, each.getTextOffset(), each.getTextOffset() + each.getTextLength(), UnwrapHelper.getTestAttributesForExtract(), false, true, null);
       }
     }
 

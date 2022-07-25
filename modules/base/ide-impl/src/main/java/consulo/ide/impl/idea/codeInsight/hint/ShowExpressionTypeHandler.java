@@ -7,7 +7,7 @@ import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ide.impl.idea.refactoring.IntroduceTargetChooser;
+import consulo.language.editor.refactoring.IntroduceTargetChooser;
 import consulo.ide.impl.idea.ui.LightweightHint;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.Language;

@@ -15,25 +15,25 @@
  */
 package consulo.ide.impl.idea.diff.tools.util;
 
+import consulo.application.ApplicationManager;
+import consulo.application.util.function.Computable;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.FoldRegion;
+import consulo.codeEditor.FoldingModelEx;
+import consulo.codeEditor.event.FoldingListener;
+import consulo.codeEditor.markup.RangeHighlighter;
+import consulo.disposer.Disposable;
+import consulo.document.Document;
+import consulo.document.event.DocumentEvent;
 import consulo.ide.impl.idea.diff.util.DiffDividerDrawUtil;
 import consulo.ide.impl.idea.diff.util.DiffDrawUtil;
 import consulo.ide.impl.idea.diff.util.DiffUtil;
 import consulo.ide.impl.idea.diff.util.LineRange;
-import consulo.application.ApplicationManager;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.FoldRegion;
-import consulo.document.event.DocumentEvent;
-import consulo.document.internal.DocumentEx;
-import consulo.codeEditor.EditorEx;
-import consulo.codeEditor.event.FoldingListener;
-import consulo.codeEditor.FoldingModelEx;
-import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.ide.impl.idea.openapi.util.BooleanGetter;
-import consulo.application.util.function.Computable;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import org.jetbrains.annotations.Contract;
@@ -62,7 +62,7 @@ public class FoldingModelSupport {
   protected final EditorEx[] myEditors;
 
   @Nonnull
-  protected final List<FoldedBlock[]> myFoldings = new ArrayList<FoldedBlock[]>();
+  protected final List<FoldedBlock[]> myFoldings = new ArrayList<>();
 
   private boolean myDuringSynchronize;
   private final boolean[] myShouldUpdateLineNumbers;
@@ -154,7 +154,7 @@ public class FoldingModelSupport {
     }
 
     private void addRange(int[] starts, int[] ends) {
-      List<FoldedBlock> result = new ArrayList<FoldedBlock>(3);
+      List<FoldedBlock> result = new ArrayList<>(3);
       int[] rangeStarts = new int[myCount];
       int[] rangeEnds = new int[myCount];
 
@@ -205,7 +205,7 @@ public class FoldingModelSupport {
 
   @Nullable
   private static FoldRegion addFolding(@Nonnull EditorEx editor, int start, int end, boolean expanded) {
-    DocumentEx document = editor.getDocument();
+    Document document = editor.getDocument();
     final int startOffset = document.getLineStartOffset(start);
     final int endOffset = document.getLineEndOffset(end - 1);
 
@@ -347,7 +347,7 @@ public class FoldingModelSupport {
   private class MyFoldingListener implements FoldingListener {
     private final int myIndex;
     @Nonnull
-    Set<FoldRegion> myModifiedRegions = new HashSet<FoldRegion>();
+    Set<FoldRegion> myModifiedRegions = new HashSet<>();
 
     public MyFoldingListener(int index) {
       myIndex = index;
@@ -515,8 +515,8 @@ public class FoldingModelSupport {
   @Nonnull
   private List<FoldedRangeState> getFoldedRanges(int index, @Nonnull Settings settings) {
     ApplicationManager.getApplication().assertReadAccessAllowed();
-    List<FoldedRangeState> ranges = new ArrayList<FoldedRangeState>();
-    DocumentEx document = myEditors[index].getDocument();
+    List<FoldedRangeState> ranges = new ArrayList<>();
+    Document document = myEditors[index].getDocument();
 
     for (FoldedBlock[] blocks : myFoldings) {
       LineRange expanded = null;
@@ -583,11 +583,11 @@ public class FoldingModelSupport {
 
   @Nonnull
   private Iterable<FoldedBlock> getFoldedBlocks() {
-    return new Iterable<FoldedBlock>() {
+    return new Iterable<>() {
       @Nonnull
       @Override
       public Iterator<FoldedBlock> iterator() {
-        return new Iterator<FoldedBlock>() {
+        return new Iterator<>() {
           private int myGroupIndex = 0;
           private int myBlockIndex = 0;
 
@@ -627,7 +627,7 @@ public class FoldingModelSupport {
     @Nonnull
     private final int[] myLines;
     @Nonnull
-    private final List<RangeHighlighter> myHighlighters = new ArrayList<RangeHighlighter>(myCount);
+    private final List<RangeHighlighter> myHighlighters = new ArrayList<>(myCount);
 
     public FoldedBlock(@Nonnull FoldRegion[] regions) {
       assert regions.length == myCount;
@@ -718,7 +718,7 @@ public class FoldingModelSupport {
   protected static <T, V> Iterator<V> map(@Nullable final List<T> list, @Nonnull final Function<T, V> mapping) {
     if (list == null) return null;
     final Iterator<T> it = list.iterator();
-    return new Iterator<V>() {
+    return new Iterator<>() {
       @Override
       public boolean hasNext() {
         return it.hasNext();

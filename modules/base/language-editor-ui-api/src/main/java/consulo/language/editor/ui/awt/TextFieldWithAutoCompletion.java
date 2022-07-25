@@ -14,24 +14,23 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.ui;
+package consulo.language.editor.ui.awt;
 
-import consulo.language.editor.hint.HintManager;
-import consulo.language.editor.ui.awt.LanguageTextField;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.IdeActions;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
-import consulo.document.event.DocumentAdapter;
-import consulo.document.event.DocumentEvent;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.event.FocusChangeListener;
+import consulo.document.event.DocumentAdapter;
+import consulo.document.event.DocumentEvent;
+import consulo.language.editor.hint.HintManager;
 import consulo.language.plain.PlainTextLanguage;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.project.Project;
-import consulo.util.lang.ref.Ref;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.ui.image.Image;
+import consulo.util.lang.StringUtil;
+import consulo.util.lang.ref.Ref;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

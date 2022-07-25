@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.editorActions.wordSelection;
+package consulo.language.editor.action;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.language.editor.action.ExtendWordSelectionHandlerBase;
-import consulo.language.editor.action.SelectWordUtil;
 import consulo.codeEditor.Editor;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,7 +41,7 @@ public abstract class AbstractWordSelectioner extends ExtendWordSelectionHandler
       ranges = super.select(e, editorText, cursorOffset, editor);
     }
     else {
-      ranges = ContainerUtil.newArrayList();
+      ranges = new ArrayList<>();
     }
     SelectWordUtil.addWordSelection(editor.getSettings().isCamelWords(), editorText, cursorOffset, ranges);
     return ranges;

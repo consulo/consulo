@@ -26,7 +26,7 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.tasks.Task;
 import consulo.ide.impl.idea.tasks.TaskManager;
 import consulo.ide.impl.idea.tasks.impl.TaskManagerImpl;
-import consulo.ide.impl.idea.ui.TextFieldWithAutoCompletionListProvider;
+import consulo.language.editor.ui.awt.TextFieldWithAutoCompletionListProvider;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

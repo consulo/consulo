@@ -16,7 +16,7 @@ import consulo.colorScheme.TextAttributes;
 import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.document.internal.DocumentEx;
+import consulo.document.Document;
 import consulo.language.editor.highlight.HighlighterFactory;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighterFactory;
@@ -161,7 +161,7 @@ class EditorWindowImpl extends UserDataHolderBase implements EditorWindow, Edito
   @Nonnull
   public LogicalPosition hostToInjected(@Nonnull LogicalPosition hPos) {
     checkValid();
-    DocumentEx hostDocument = myDelegate.getDocument();
+    Document hostDocument = myDelegate.getDocument();
     int hLineEndOffset = hPos.line >= hostDocument.getLineCount() ? hostDocument.getTextLength() : hostDocument.getLineEndOffset(hPos.line);
     LogicalPosition hLineEndPos = myDelegate.offsetToLogicalPosition(hLineEndOffset);
     if (hLineEndPos.column < hPos.column) {

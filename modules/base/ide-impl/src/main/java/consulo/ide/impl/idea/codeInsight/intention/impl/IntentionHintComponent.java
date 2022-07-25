@@ -10,7 +10,7 @@ import consulo.language.editor.hint.QuestionAction;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.ide.impl.idea.codeInsight.intention.IntentionActionDelegate;
 import consulo.ide.impl.idea.codeInsight.intention.impl.config.IntentionManagerSettings;
-import consulo.ide.impl.idea.codeInsight.unwrap.ScopeHighlighter;
+import consulo.language.editor.refactoring.unwrap.ScopeHighlighter;
 import consulo.language.editor.inspection.SuppressIntentionActionFromFix;
 import consulo.application.AllIcons;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;

@@ -2,7 +2,7 @@ package consulo.ide.impl.idea.internal;
 
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
-import consulo.ide.impl.idea.refactoring.IntroduceTargetChooser;
+import consulo.language.editor.refactoring.IntroduceTargetChooser;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;

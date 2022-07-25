@@ -1160,7 +1160,6 @@
 
 
 
-    <statementUpDownMover implementation="consulo.ide.impl.idea.codeInsight.editorActions.moveUpDown.LineMover" id="line" order="last"/>
 
     <!--<enterHandlerDelegate implementation="consulo.ide.impl.idea.codeInsight.editorActions.enter.EnterInStringLiteralHandler"/>-->
     <!--<enterHandlerDelegate implementation="consulo.ide.impl.idea.codeInsight.editorActions.enter.EnterInLineCommentHandler"/>-->

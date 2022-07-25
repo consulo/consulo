@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.editorActions.moveUpDown;
+package consulo.language.editor.moveUpDown;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.util.lang.Pair;
 import consulo.codeEditor.Editor;
@@ -35,8 +37,9 @@ import javax.annotation.Nullable;
 /**
  * @author spleaner
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class StatementUpDownMover {
-  public static final ExtensionPointName<StatementUpDownMover> STATEMENT_UP_DOWN_MOVER_EP = ExtensionPointName.create("consulo.statementUpDownMover");
+  public static final ExtensionPointName<StatementUpDownMover> STATEMENT_UP_DOWN_MOVER_EP = ExtensionPointName.create(StatementUpDownMover.class);
 
   public static class MoveInfo {
     /** Source line range */
@@ -56,7 +59,7 @@ public abstract class StatementUpDownMover {
     public boolean indentTarget = true;
 
     /**
-     * Use this method in {@link StatementUpDownMover#checkAvailable(Editor, PsiFile, consulo.ide.impl.idea.codeInsight.editorActions.moveUpDown.StatementUpDownMover.MoveInfo, boolean)}
+     * Use this method in {@link StatementUpDownMover#checkAvailable(Editor, PsiFile, StatementUpDownMover.MoveInfo, boolean)}
      * @return true to suppress further movers processing
      */
     public final boolean prohibitMove() {
@@ -117,13 +120,13 @@ public abstract class StatementUpDownMover {
     return null;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   protected static PsiElement firstNonWhiteElement(int offset, @Nonnull PsiFile file, final boolean lookRight) {
     final ASTNode leafElement = file.getNode().findLeafElementAt(offset);
     return leafElement == null ? null : firstNonWhiteElement(leafElement.getPsi(), lookRight);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   protected static PsiElement firstNonWhiteElement(PsiElement element, final boolean lookRight) {
     if (element instanceof PsiWhiteSpace) {
       element = lookRight ? element.getNextSibling() : element.getPrevSibling();

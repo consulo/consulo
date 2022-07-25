@@ -13,42 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.refactoring;
+package consulo.language.editor.refactoring;
 
-import consulo.ide.impl.idea.codeInsight.unwrap.ScopeHighlighter;
-import consulo.ide.impl.idea.util.Function;
-import consulo.ide.impl.idea.util.NotNullFunction;
 import consulo.codeEditor.Editor;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.ui.impl.PopupChooserBuilder;
+import consulo.language.editor.refactoring.unwrap.ScopeHighlighter;
 import consulo.language.psi.PsiElement;
-import consulo.ui.ex.awt.JBList;
+import consulo.ui.ex.popup.IPopupChooserBuilder;
 import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.event.JBPopupAdapter;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class IntroduceTargetChooser {
   private IntroduceTargetChooser() {
   }
 
-  public static <T extends PsiElement> void showChooser(final Editor editor, final List<T> expressions, final Consumer<T> callback,
-                                                        final Function<T, String> renderer) {
+  public static <T extends PsiElement> void showChooser(final Editor editor, final List<T> expressions, final Consumer<T> callback, final Function<T, String> renderer) {
     showChooser(editor, expressions, callback, renderer, "Expressions");
   }
 
-  public static <T extends PsiElement> void showChooser(final Editor editor,
-                                                        final List<T> expressions,
-                                                        final Consumer<T> callback,
-                                                        final Function<T, String> renderer,
-                                                        String title) {
+  public static <T extends PsiElement> void showChooser(final Editor editor, final List<T> expressions, final Consumer<T> callback, final Function<T, String> renderer, String title) {
     showChooser(editor, expressions, callback, renderer, title, ScopeHighlighter.NATURAL_RANGER);
   }
 
@@ -57,7 +49,7 @@ public class IntroduceTargetChooser {
                                                         final Consumer<T> callback,
                                                         final Function<T, String> renderer,
                                                         String title,
-                                                        NotNullFunction<PsiElement, TextRange> ranger) {
+                                                        Function<PsiElement, TextRange> ranger) {
     showChooser(editor, expressions, callback, renderer, title, -1, ranger);
   }
 
@@ -67,27 +59,24 @@ public class IntroduceTargetChooser {
                                                         final Function<T, String> renderer,
                                                         String title,
                                                         int selection,
-                                                        NotNullFunction<PsiElement, TextRange> ranger) {
+                                                        Function<PsiElement, TextRange> ranger) {
     final ScopeHighlighter highlighter = new ScopeHighlighter(editor, ranger);
-    final DefaultListModel model = new DefaultListModel();
-    for (T expr : expressions) {
-      model.addElement(expr);
-    }
-    final JList list = new JBList(model);
-    if (selection > -1) list.setSelectedIndex(selection);
-    list.setCellRenderer(new DefaultListCellRenderer() {
+
+    IPopupChooserBuilder<T> builder = JBPopupFactory.getInstance().createPopupChooserBuilder(expressions);
+    builder.setSelectedValue(expressions.get(selection > -1 ? selection : 0), true);
+    builder.setTitle(title);
+    builder.setMovable(false);
+    builder.setResizable(false);
+    builder.setRequestFocus(true);
+    builder.setRenderer(new DefaultListCellRenderer() {
 
       @Override
-      public Component getListCellRendererComponent(final JList list,
-                                                    final Object value,
-                                                    final int index,
-                                                    final boolean isSelected,
-                                                    final boolean cellHasFocus) {
+      public Component getListCellRendererComponent(final JList list, final Object value, final int index, final boolean isSelected, final boolean cellHasFocus) {
         final Component rendererComponent = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
         final T expr = (T)value;
         if (expr.isValid()) {
-          String text = renderer.fun(expr);
+          String text = renderer.apply(expr);
           int firstNewLinePos = text.indexOf('\n');
           String trimmedText = text.substring(0, firstNewLinePos != -1 ? firstNewLinePos : Math.min(100, text.length()));
           if (trimmedText.length() != text.length()) trimmedText += " ...";
@@ -96,32 +85,21 @@ public class IntroduceTargetChooser {
         return rendererComponent;
       }
     });
-
-    list.addListSelectionListener(new ListSelectionListener() {
-      @Override
-      public void valueChanged(final ListSelectionEvent e) {
-        highlighter.dropHighlight();
-        final int index = list.getSelectedIndex();
-        if (index < 0 ) return;
-        final T expr = (T)model.get(index);
-        final ArrayList<PsiElement> toExtract = new ArrayList<PsiElement>();
-        toExtract.add(expr);
-        highlighter.highlight(expr, toExtract);
-      }
+    builder.setItemSelectedCallback(expr -> {
+      highlighter.dropHighlight();
+      final ArrayList<PsiElement> toExtract = new ArrayList<PsiElement>();
+      toExtract.add(expr);
+      highlighter.highlight(expr, toExtract);
     });
-
-    JBPopup popup = new PopupChooserBuilder<>(list).setTitle(title).setMovable(false).setResizable(false).setRequestFocus(true).setItemChoosenCallback(new Runnable() {
-      @Override
-      public void run() {
-        callback.accept((T)list.getSelectedValue());
-      }
-    }).addListener(new JBPopupAdapter() {
+    builder.setItemChosenCallback(callback::accept);
+    builder.addListener(new JBPopupAdapter() {
       @Override
       public void onClosed(LightweightWindowEvent event) {
         highlighter.dropHighlight();
       }
-    }).createPopup();
+    });
 
+    JBPopup popup = builder.createPopup();
     editor.showPopupInBestPositionFor(popup);
   }
 }

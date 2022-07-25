@@ -2,11 +2,23 @@
 
 package consulo.ide.impl.idea.openapi.diff.impl.settings;
 
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorColors;
+import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.FoldRegion;
+import consulo.codeEditor.event.CaretEvent;
+import consulo.codeEditor.event.CaretListener;
+import consulo.codeEditor.event.EditorMouseEvent;
+import consulo.codeEditor.event.EditorMouseMotionListener;
+import consulo.colorScheme.EditorColorsScheme;
+import consulo.diff.content.DiffContent;
+import consulo.diff.request.ContentDiffRequest;
+import consulo.diff.util.ThreeSide;
+import consulo.disposer.Disposer;
+import consulo.document.Document;
 import consulo.ide.impl.idea.application.options.colors.ColorAndFontSettingsListener;
 import consulo.ide.impl.idea.application.options.colors.PreviewPanel;
 import consulo.ide.impl.idea.diff.DiffContext;
-import consulo.diff.content.DiffContent;
-import consulo.diff.request.ContentDiffRequest;
 import consulo.ide.impl.idea.diff.tools.simple.SimpleThreesideDiffChange;
 import consulo.ide.impl.idea.diff.tools.simple.SimpleThreesideDiffViewer;
 import consulo.ide.impl.idea.diff.tools.util.base.HighlightPolicy;
@@ -14,23 +26,11 @@ import consulo.ide.impl.idea.diff.tools.util.base.IgnorePolicy;
 import consulo.ide.impl.idea.diff.util.DiffLineSeparatorRenderer;
 import consulo.ide.impl.idea.diff.util.DiffUtil;
 import consulo.ide.impl.idea.diff.util.TextDiffTypeFactory.TextDiffTypeImpl;
-import consulo.diff.util.ThreeSide;
 import consulo.ide.impl.idea.openapi.diff.DiffBundle;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.FoldRegion;
-import consulo.codeEditor.EditorColors;
-import consulo.colorScheme.EditorColorsScheme;
-import consulo.codeEditor.event.CaretEvent;
-import consulo.codeEditor.event.CaretListener;
-import consulo.codeEditor.event.EditorMouseEvent;
-import consulo.codeEditor.event.EditorMouseMotionListener;
-import consulo.document.internal.DocumentEx;
-import consulo.codeEditor.EditorEx;
-import consulo.project.Project;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.project.Project;
 import consulo.ui.ex.awt.JBUI;
-import consulo.disposer.Disposer;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
@@ -218,7 +218,7 @@ class DiffPreviewPanel implements PreviewPanel {
   @Nullable
   private FoldRegion getFoldRegion(@Nonnull ThreeSide side, int line) {
     EditorEx editor = myViewer.getEditor(side);
-    DocumentEx document = editor.getDocument();
+    Document document = editor.getDocument();
     for (FoldRegion region : editor.getFoldingModel().getAllFoldRegions()) {
       if (region.isExpanded()) continue;
       int line1 = document.getLineNumber(region.getStartOffset());

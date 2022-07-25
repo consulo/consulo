@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.execution.configurations;
+package consulo.process;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.process.local.EnvironmentUtil;
-import consulo.util.collection.SmartList;
 import consulo.logging.Logger;
+import consulo.process.local.EnvironmentUtil;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -85,7 +84,7 @@ public class PathEnvironmentVariableUtil {
     if (systemPath == null) {
       return Collections.emptyList();
     }
-    List<File> result = new SmartList<File>();
+    List<File> result = new ArrayList<>();
     List<String> paths = StringUtil.split(systemPath, File.pathSeparator, true, true);
     for (String path : paths) {
       File dir = new File(path);

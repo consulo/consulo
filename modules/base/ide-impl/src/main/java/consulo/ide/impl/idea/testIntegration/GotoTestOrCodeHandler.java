@@ -18,6 +18,8 @@ package consulo.ide.impl.idea.testIntegration;
 
 import consulo.language.editor.CodeInsightBundle;
 import consulo.ide.impl.idea.codeInsight.navigation.GotoTargetHandler;
+import consulo.language.editor.testIntegration.TestCreator;
+import consulo.language.editor.testIntegration.TestFinderHelper;
 import consulo.language.editor.ui.PopupNavigationUtil;
 import consulo.execution.executor.DefaultRunExecutor;
 import consulo.application.AllIcons;

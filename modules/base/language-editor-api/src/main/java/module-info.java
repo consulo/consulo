@@ -34,6 +34,7 @@ module consulo.language.editor.api {
   exports consulo.language.editor.highlight.usage;
   exports consulo.language.editor.rawHighlight;
   exports consulo.language.editor.inspection;
+  exports consulo.language.editor.moveUpDown;
   exports consulo.language.editor.parameterInfo;
   exports consulo.language.editor.inspection.reference;
   exports consulo.language.editor.inspection.ui;
@@ -48,6 +49,7 @@ module consulo.language.editor.api {
   exports consulo.language.editor.template.macro;
   exports consulo.language.editor.template.context;
   exports consulo.language.editor.template.event;
+  exports consulo.language.editor.testIntegration;
   exports consulo.language.editor.surroundWith;
   exports consulo.language.editor.wolfAnalyzer;
   exports consulo.language.editor.scratch;

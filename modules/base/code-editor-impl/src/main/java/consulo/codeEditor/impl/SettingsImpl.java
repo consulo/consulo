@@ -28,7 +28,6 @@ import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorKind;
 import consulo.codeEditor.EditorSettings;
 import consulo.document.Document;
-import consulo.document.internal.DocumentEx;
 import consulo.language.Language;
 import consulo.language.codeStyle.CodeStyle;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
@@ -354,7 +353,7 @@ public class SettingsImpl implements EditorSettings {
   private void reinitDocumentIndentOptions() {
     if (myEditor == null || myEditor.isViewer()) return;
     final Project project = myEditor.getProject();
-    final DocumentEx document = myEditor.getDocument();
+    final Document document = myEditor.getDocument();
 
     if (project == null || project.isDisposed()) return;
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.editorActions.moveUpDown;
+package consulo.language.editor.moveUpDown;
 
 import consulo.document.Document;
 import consulo.language.psi.PsiElement;

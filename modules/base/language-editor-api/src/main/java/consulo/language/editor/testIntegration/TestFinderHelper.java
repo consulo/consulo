@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.testIntegration;
+package consulo.language.editor.testIntegration;
 
 import consulo.application.util.matcher.NameUtil;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ public class TestFinderHelper {
   }
 
   public static List<PsiElement> findTestsForClass(PsiElement element) {
-    List<PsiElement> result = new ArrayList<PsiElement>();
+    List<PsiElement> result = new ArrayList<>();
     for (TestFinder each : getFinders()) {
       result.addAll(each.findTestsForClass(element));
     }
@@ -47,7 +47,7 @@ public class TestFinderHelper {
   }
 
   public static List<PsiElement> findClassesForTest(PsiElement element) {
-    List<PsiElement> result = new ArrayList<PsiElement>();
+    List<PsiElement> result = new ArrayList<>();
     for (TestFinder each : getFinders()) {
       result.addAll(each.findClassesForTest(element));
     }
@@ -73,15 +73,14 @@ public class TestFinderHelper {
     return posProximity + sizeProximity;
   }
 
-  public static List<PsiElement> getSortedElements(final List<Pair<? extends PsiNamedElement, Integer>> elementsWithWeights,
-                                                   final boolean weightsAscending) {
+  public static List<PsiElement> getSortedElements(final List<Pair<? extends PsiNamedElement, Integer>> elementsWithWeights, final boolean weightsAscending) {
     return getSortedElements(elementsWithWeights, weightsAscending, null);
   }
 
   public static List<PsiElement> getSortedElements(final List<Pair<? extends PsiNamedElement, Integer>> elementsWithWeights,
                                                    final boolean weightsAscending,
                                                    @Nullable final Comparator<PsiElement> sameNameComparator) {
-    Collections.sort(elementsWithWeights, new Comparator<Pair<? extends PsiNamedElement, Integer>>() {
+    Collections.sort(elementsWithWeights, new Comparator<>() {
       @Override
       public int compare(Pair<? extends PsiNamedElement, Integer> o1, Pair<? extends PsiNamedElement, Integer> o2) {
         int result = weightsAscending ? o1.second.compareTo(o2.second) : o2.second.compareTo(o1.second);
@@ -92,7 +91,7 @@ public class TestFinderHelper {
       }
     });
 
-    final List<PsiElement> result = new ArrayList<PsiElement>(elementsWithWeights.size());
+    final List<PsiElement> result = new ArrayList<>(elementsWithWeights.size());
     for (Pair<? extends PsiNamedElement, Integer> each : elementsWithWeights) {
       result.add(each.first);
     }
@@ -102,12 +101,11 @@ public class TestFinderHelper {
 
   public static List<Pair<String, Integer>> collectPossibleClassNamesWithWeights(String testName) {
     String[] words = NameUtil.splitNameIntoWords(testName);
-    List<Pair<String, Integer>> result = new ArrayList<Pair<String, Integer>>();
+    List<Pair<String, Integer>> result = new ArrayList<>();
 
     for (int from = 0; from < words.length; from++) {
       for (int to = from; to < words.length; to++) {
-        result.add(new Pair<String, Integer>(StringUtil.join(words, from, to + 1, ""),
-                                             words.length - from + to));
+        result.add(new Pair<>(StringUtil.join(words, from, to + 1, ""), words.length - from + to));
       }
     }
 

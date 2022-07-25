@@ -15,35 +15,30 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.patch.tool;
 
-import consulo.ide.impl.idea.diff.comparison.ByWord;
+import consulo.application.AllIcons;
+import consulo.application.progress.DumbProgressIndicator;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.markup.*;
 import consulo.diff.comparison.ComparisonPolicy;
 import consulo.diff.comparison.DiffTooBigException;
 import consulo.diff.fragment.DiffFragment;
+import consulo.diff.util.Side;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.diff.comparison.ByWord;
 import consulo.ide.impl.idea.diff.merge.MergeModelBase;
 import consulo.ide.impl.idea.diff.util.*;
-import consulo.application.AllIcons;
-import consulo.diff.util.Side;
-import consulo.ui.ex.action.AnActionEvent;
 import consulo.ide.impl.idea.openapi.diff.DiffBundle;
-import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.document.internal.DocumentEx;
-import consulo.codeEditor.EditorEx;
-import consulo.codeEditor.markup.MarkupModelEx;
-import consulo.codeEditor.markup.GutterIconRenderer;
-import consulo.codeEditor.markup.HighlighterLayer;
-import consulo.codeEditor.markup.HighlighterTargetArea;
-import consulo.codeEditor.markup.RangeHighlighter;
-import consulo.application.progress.DumbProgressIndicator;
-import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.AppliedTextPatch.HunkStatus;
 import consulo.ide.impl.idea.openapi.vcs.ex.LineStatusMarkerRenderer;
-import consulo.ui.ex.awt.util.ColorUtil;
-import consulo.ui.ex.JBColor;
-import consulo.util.lang.function.PairConsumer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
+import consulo.util.lang.function.PairConsumer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -93,7 +88,7 @@ class ApplyPatchChange {
     if (deletionRange.isEmpty() || insertionRange.isEmpty()) return null;
 
     try {
-      DocumentEx patchDocument = viewer.getPatchEditor().getDocument();
+      Document patchDocument = viewer.getPatchEditor().getDocument();
       CharSequence deleted = DiffUtil.getLinesContent(patchDocument, deletionRange.start, deletionRange.end);
       CharSequence inserted = DiffUtil.getLinesContent(patchDocument, insertionRange.start, insertionRange.end);
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.testIntegration;
+package consulo.language.editor.testIntegration;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;

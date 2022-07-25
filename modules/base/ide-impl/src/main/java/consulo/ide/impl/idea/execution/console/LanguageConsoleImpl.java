@@ -1,17 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.execution.console;
 
-import consulo.ide.impl.idea.execution.impl.ConsoleViewImpl;
-import consulo.ide.impl.idea.execution.impl.ConsoleViewUtil;
-import consulo.language.editor.highlight.HighlighterFactory;
-import consulo.ui.ex.action.EmptyAction;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.language.editor.highlight.LexerEditorHighlighter;
-import consulo.ide.impl.idea.openapi.editor.impl.EditorFactoryImpl;
-import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
-import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorManagerEx;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.FileContentUtil;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.application.ui.wm.IdeFocusManager;
@@ -27,11 +16,20 @@ import consulo.document.FileDocumentManager;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import consulo.document.impl.DocumentImpUtil;
-import consulo.document.internal.DocumentEx;
 import consulo.document.util.TextRange;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.fileEditor.FileEditorManager;
+import consulo.ide.impl.idea.execution.impl.ConsoleViewImpl;
+import consulo.ide.impl.idea.execution.impl.ConsoleViewUtil;
+import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
+import consulo.ide.impl.idea.openapi.editor.impl.EditorFactoryImpl;
+import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorManagerEx;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.FileContentUtil;
 import consulo.language.Language;
+import consulo.language.editor.highlight.HighlighterFactory;
+import consulo.language.editor.highlight.LexerEditorHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.language.file.light.LightVirtualFile;
@@ -40,6 +38,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.project.Project;
+import consulo.ui.ex.action.EmptyAction;
 import consulo.ui.ex.awt.AbstractLayoutManager;
 import consulo.ui.ex.awt.JBScrollBar;
 import consulo.ui.ex.awt.JBScrollPane.Alignment;
@@ -432,7 +431,7 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
   }
 
   private void addPromptToHistoryImpl(@Nonnull String prompt) {
-    DocumentEx document = getHistoryViewer().getDocument();
+    Document document = getHistoryViewer().getDocument();
     RangeHighlighter highlighter = this.getHistoryViewer().getMarkupModel().addRangeHighlighter(document.getTextLength(), document.getTextLength(), 0, null, HighlighterTargetArea.EXACT_RANGE);
     print(prompt, myConsoleExecutionEditor.getPromptAttributes());
     //highlighter.putUserData(ConsoleHistoryCopyHandler.PROMPT_LENGTH_MARKER, prompt.length());

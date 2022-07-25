@@ -29,4 +29,5 @@ module consulo.language.editor.refactoring.api {
   exports consulo.language.editor.refactoring.ui;
 
   exports consulo.language.editor.refactoring.internal to consulo.ide.impl;
+  exports consulo.language.editor.refactoring.internal.unwrap to consulo.ide.impl;
 }

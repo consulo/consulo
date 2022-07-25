@@ -16,18 +16,20 @@
 
 package consulo.ide.impl.idea.codeInsight.editorActions.moveUpDown;
 
-import consulo.language.editor.folding.CodeFoldingManager;
 import consulo.codeEditor.*;
-import consulo.project.Project;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.language.codeStyle.CodeStyleManager;
+import consulo.language.editor.folding.CodeFoldingManager;
+import consulo.language.editor.moveUpDown.StatementUpDownMover;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import consulo.language.codeStyle.CodeStyleManager;
+import consulo.project.Project;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -56,7 +58,7 @@ class MoverWrapper {
     myInfo.range1 = document.createRangeMarker(start, end);
 
     String textToInsert = document.getCharsSequence().subSequence(start, end).toString();
-    if (!StringUtil.endsWithChar(textToInsert,'\n')) textToInsert += '\n';
+    if (!StringUtil.endsWithChar(textToInsert, '\n')) textToInsert += '\n';
 
     final int start2 = document.getLineStartOffset(myInfo.toMove2.startLine);
     final int end2 = StatementUpDownMover.getLineStartSafeOffset(document,myInfo.toMove2.endLine);

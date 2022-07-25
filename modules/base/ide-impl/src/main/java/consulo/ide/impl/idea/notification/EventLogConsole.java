@@ -15,62 +15,47 @@
  */
 package consulo.ide.impl.idea.notification;
 
-import consulo.codeEditor.EditorEx;
-import consulo.codeEditor.markup.MarkupModelEx;
-import consulo.codeEditor.markup.RangeHighlighterEx;
-import consulo.colorScheme.TextAttributes;
-import consulo.document.internal.DocumentEx;
+import consulo.application.AllIcons;
+import consulo.application.util.DateFormatUtil;
+import consulo.application.util.function.Processor;
+import consulo.codeEditor.*;
+import consulo.codeEditor.event.EditorMouseEvent;
+import consulo.codeEditor.markup.*;
+import consulo.colorScheme.*;
+import consulo.colorScheme.event.EditorColorsListener;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
+import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.ide.impl.idea.execution.impl.ConsoleViewUtil;
 import consulo.ide.impl.idea.execution.impl.EditorHyperlinkSupport;
-import consulo.execution.ui.console.ConsoleViewContentType;
-import consulo.application.AllIcons;
 import consulo.ide.impl.idea.notification.impl.NotificationSettings;
 import consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl;
 import consulo.ide.impl.idea.notification.impl.NotificationsManagerImpl;
 import consulo.ide.impl.idea.notification.impl.ui.NotificationsUtil;
-import consulo.colorScheme.event.EditorColorsListener;
-import consulo.colorScheme.EditorColorsManager;
-import consulo.colorScheme.EditorColorsScheme;
-import consulo.colorScheme.TextAttributesKey;
-import consulo.colorScheme.DelegateColorScheme;
-import consulo.codeEditor.ScrollType;
-import consulo.codeEditor.event.EditorMouseEvent;
-import consulo.ide.impl.idea.openapi.editor.ex.*;
+import consulo.ide.impl.idea.openapi.editor.ex.EditorMarkupModel;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.codeEditor.ContextMenuPopupHandler;
+import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.Function;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.CommonDataKeys;
-import consulo.project.event.ProjectManagerListener;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorFactory;
-import consulo.codeEditor.LogicalPosition;
-import consulo.codeEditor.markup.*;
 import consulo.project.Project;
 import consulo.project.event.ProjectManagerAdapter;
-import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
-import consulo.util.lang.Pair;
+import consulo.project.event.ProjectManagerListener;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationDisplayType;
 import consulo.project.ui.notification.NotificationType;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.colorScheme.EffectType;
-import consulo.ui.ex.action.*;
-import consulo.util.lang.ref.Ref;
-import consulo.document.Document;
-import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.awt.util.ColorUtil;
-import consulo.ui.ex.RelativePoint;
-import consulo.ide.impl.idea.util.Function;
-import consulo.application.util.function.Processor;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.application.util.DateFormatUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.UIAccess;
 import consulo.ui.color.ColorValue;
+import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.util.ColorUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.style.StandardColors;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Pair;
+import consulo.util.lang.ref.Ref;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -86,7 +71,7 @@ class EventLogConsole {
   private static final Key<String> GROUP_ID = Key.create("GROUP_ID");
   private static final Key<String> NOTIFICATION_ID = Key.create("NOTIFICATION_ID");
 
-  private final NotNullLazyValue<Editor> myLogEditor = new NotNullLazyValue<Editor>() {
+  private final NotNullLazyValue<Editor> myLogEditor = new NotNullLazyValue<>() {
     @Nonnull
     @Override
     protected Editor compute() {
@@ -94,7 +79,7 @@ class EventLogConsole {
     }
   };
 
-  private final NotNullLazyValue<EditorHyperlinkSupport> myHyperlinkSupport = new NotNullLazyValue<EditorHyperlinkSupport>() {
+  private final NotNullLazyValue<EditorHyperlinkSupport> myHyperlinkSupport = new NotNullLazyValue<>() {
     @Nonnull
     @Override
     protected EditorHyperlinkSupport compute() {
@@ -207,7 +192,7 @@ class EventLogConsole {
       return;
     }
     int offset = editor.logicalPositionToOffset(position);
-    editor.getMarkupModel().processRangeHighlightersOverlappingWith(offset, offset, new Processor<RangeHighlighterEx>() {
+    editor.getMarkupModel().processRangeHighlightersOverlappingWith(offset, offset, new Processor<>() {
       @Override
       public boolean process(RangeHighlighterEx rangeHighlighter) {
         String groupId = GROUP_ID.get(rangeHighlighter);
@@ -408,7 +393,7 @@ class EventLogConsole {
 
   public void showNotification(@Nonnull final List<String> ids) {
     clearNMore();
-    myNMoreHighlighters = new ArrayList<RangeHighlighter>();
+    myNMoreHighlighters = new ArrayList<>();
 
     EditorEx editor = (EditorEx)getConsoleEditor();
     List<RangeHighlighterEx> highlighters =
@@ -423,11 +408,11 @@ class EventLogConsole {
       editor.getCaretModel().moveToOffset(highlighters.get(0).getStartOffset());
       editor.getScrollingModel().scrollToCaret(ScrollType.CENTER_UP);
 
-      List<Point> ranges = new ArrayList<Point>();
+      List<Point> ranges = new ArrayList<>();
       Point currentRange = null;
-      DocumentEx document = editor.getDocument();
+      Document document = editor.getDocument();
 
-      for (RangeHighlighterEx highlighter : highlighters) {
+      for (RangeHighlighter highlighter : highlighters) {
         int startLine = document.getLineNumber(highlighter.getStartOffset());
         int endLine = document.getLineNumber(highlighter.getEndOffset()) + 1;
         if (currentRange != null && startLine - 1 == currentRange.y) {
@@ -454,9 +439,9 @@ class EventLogConsole {
   @Nullable
   private RangeHighlighterEx findHighlighter(@Nonnull final String id) {
     EditorEx editor = (EditorEx)getConsoleEditor();
-    final Ref<RangeHighlighterEx> highlighter = new Ref<RangeHighlighterEx>();
+    final Ref<RangeHighlighterEx> highlighter = new Ref<>();
 
-    editor.getMarkupModel().processRangeHighlightersOverlappingWith(0, editor.getDocument().getTextLength(), new Processor<RangeHighlighterEx>() {
+    editor.getMarkupModel().processRangeHighlightersOverlappingWith(0, editor.getDocument().getTextLength(), new Processor<>() {
       @Override
       public boolean process(RangeHighlighterEx rangeHighlighter) {
         if (id.equals(NOTIFICATION_ID.get(rangeHighlighter))) {

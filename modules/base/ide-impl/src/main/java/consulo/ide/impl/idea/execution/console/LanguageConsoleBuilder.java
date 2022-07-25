@@ -15,12 +15,6 @@
  */
 package consulo.ide.impl.idea.execution.console;
 
-import consulo.language.editor.DaemonCodeAnalyzer;
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.ide.impl.idea.openapi.editor.impl.EditorComponentImpl;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.util.lang.function.PairFunction;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorColors;
 import consulo.codeEditor.EditorEx;
@@ -33,8 +27,12 @@ import consulo.document.Document;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentBulkUpdateListener;
 import consulo.document.event.DocumentEvent;
-import consulo.document.internal.DocumentEx;
+import consulo.ide.impl.idea.ide.util.PropertiesComponent;
+import consulo.ide.impl.idea.openapi.editor.impl.EditorComponentImpl;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.Consumer;
 import consulo.language.Language;
+import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.language.psi.PsiCodeFragment;
 import consulo.language.psi.PsiFile;
@@ -44,6 +42,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
+import consulo.util.lang.function.PairFunction;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
@@ -380,13 +379,13 @@ public final class LanguageConsoleBuilder {
         lineSeparatorPainter = highlighter;
       }
 
-      private DocumentEx getDocument() {
+      private Document getDocument() {
         return getHistoryViewer().getDocument();
       }
 
       @Override
       public void documentChanged(DocumentEvent event) {
-        DocumentEx document = getDocument();
+        Document document = getDocument();
         if (document.isInBulkUpdate()) {
           return;
         }

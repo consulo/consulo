@@ -24,7 +24,7 @@ import consulo.ide.impl.idea.tasks.ChangeListInfo;
 import consulo.ide.impl.idea.tasks.LocalTask;
 import consulo.ide.impl.idea.tasks.TaskManager;
 import consulo.ide.impl.idea.tasks.actions.TaskAutoCompletionListProvider;
-import consulo.ide.impl.idea.ui.TextFieldWithAutoCompletionContributor;
+import consulo.language.editor.ui.awt.TextFieldWithAutoCompletionContributor;
 import consulo.ide.impl.idea.util.Consumer;
 import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.project.Project;

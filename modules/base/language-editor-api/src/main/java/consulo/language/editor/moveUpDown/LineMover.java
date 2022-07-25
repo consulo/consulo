@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.editorActions.moveUpDown;
+package consulo.language.editor.moveUpDown;
 
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
-import consulo.util.lang.Pair;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.PsiTreeUtil;
+import consulo.util.lang.Pair;
+
 import javax.annotation.Nonnull;
 
 public class LineMover extends StatementUpDownMover {
@@ -31,7 +32,7 @@ public class LineMover extends StatementUpDownMover {
     LineRange range = StatementUpDownMover.getLineRangeFromSelection(editor);
 
     LogicalPosition maxLinePos = editor.offsetToLogicalPosition(editor.getDocument().getTextLength());
-    int maxLine = maxLinePos.column == 0? maxLinePos.line : maxLinePos.line + 1;
+    int maxLine = maxLinePos.column == 0 ? maxLinePos.line : maxLinePos.line + 1;
     if (range.startLine == 0 && !down) return false;
     if (range.endLine >= maxLine && down) return false;
 
@@ -42,9 +43,7 @@ public class LineMover extends StatementUpDownMover {
     return true;
   }
 
-  protected static Pair<PsiElement, PsiElement> getElementRange(final PsiElement parent,
-                                                                PsiElement element1,
-                                                                PsiElement element2) {
+  protected static Pair<PsiElement, PsiElement> getElementRange(final PsiElement parent, PsiElement element1, PsiElement element2) {
     if (PsiTreeUtil.isAncestor(element1, element2, false) || PsiTreeUtil.isAncestor(element2, element1, false)) {
       return Pair.create(parent, parent);
     }
@@ -57,7 +56,7 @@ public class LineMover extends StatementUpDownMover {
     }
     if (element1 == null || element2 == null) return null;
     if (element1 != element2) {
-      assert element1.getTextRange().getEndOffset() <= element2.getTextRange().getStartOffset() : element1.getTextRange() + "-"+element2.getTextRange()+element1+element2;
+      assert element1.getTextRange().getEndOffset() <= element2.getTextRange().getStartOffset() : element1.getTextRange() + "-" + element2.getTextRange() + element1 + element2;
     }
     return Pair.create(element1, element2);
   }

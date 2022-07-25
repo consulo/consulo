@@ -1,27 +1,27 @@
 package consulo.ide.impl.builtInServer.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.net.NetUtils;
 import consulo.application.Application;
 import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.application.impl.internal.start.ImportantFolderLocker;
 import consulo.application.impl.internal.start.StartupUtil;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.ide.impl.builtInServer.BuiltInServerManager;
 import consulo.ide.impl.builtInServer.custom.CustomPortServerManager;
 import consulo.ide.impl.builtInServer.impl.ide.BuiltInServerOptions;
 import consulo.ide.impl.builtInServer.impl.net.http.BuiltInServer;
 import consulo.ide.impl.builtInServer.impl.net.http.ImportantFolderLockerViaBuiltInServer;
 import consulo.ide.impl.builtInServer.impl.net.http.SubServer;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
 import consulo.logging.Logger;
 import consulo.project.ui.notification.NotificationDisplayType;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationType;
+import consulo.util.io.NetUtil;
 import consulo.util.io.Url;
 import consulo.util.io.Urls;
+import consulo.util.lang.StringUtil;
 import io.netty.channel.oio.OioEventLoopGroup;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -185,7 +185,7 @@ public class BuiltInServerManagerImpl extends BuiltInServerManager {
     }
 
     String host = authority.substring(0, portIndex);
-    if (NetUtils.isLocalhost(host)) {
+    if (NetUtil.isLocalhost(host)) {
       return true;
     }
 

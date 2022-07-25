@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.testIntegration;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.language.editor.testIntegration.TestFinderHelper;
 import consulo.language.navigation.GotoRelatedItem;
 import consulo.language.navigation.GotoRelatedProvider;
 import consulo.dataContext.DataContext;

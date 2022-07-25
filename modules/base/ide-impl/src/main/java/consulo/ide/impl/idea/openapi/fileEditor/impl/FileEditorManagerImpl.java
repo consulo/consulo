@@ -1143,16 +1143,12 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
   }
 
   @Override
-  public Editor getSelectedTextEditor() {
-    return getSelectedTextEditor(false);
-  }
-
-  public Editor getSelectedTextEditor(boolean lockfree) {
-    if (!lockfree) {
+  public Editor getSelectedTextEditor(boolean requiredUIThread) {
+    if (!requiredUIThread) {
       assertDispatchThread();
     }
 
-    final FileEditorWindow currentWindow = lockfree ? getMainSplitters().getCurrentWindow() : getSplitters().getCurrentWindow();
+    final FileEditorWindow currentWindow = requiredUIThread ? getMainSplitters().getCurrentWindow() : getSplitters().getCurrentWindow();
     if (currentWindow != null) {
       final FileEditorWithProviderComposite selectedEditor = currentWindow.getSelectedEditor();
       if (selectedEditor != null && selectedEditor.getSelectedEditor() instanceof TextEditor) {

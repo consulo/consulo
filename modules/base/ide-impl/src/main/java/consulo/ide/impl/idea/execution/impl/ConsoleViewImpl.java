@@ -27,7 +27,6 @@ import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.document.impl.DocumentImpl;
 import consulo.document.impl.RangeMarkerImpl;
-import consulo.document.internal.DocumentEx;
 import consulo.document.util.DocumentUtil;
 import consulo.document.util.TextRange;
 import consulo.execution.ConsoleFolding;
@@ -41,9 +40,7 @@ import consulo.ide.impl.idea.codeInsight.template.impl.editorActions.TypedAction
 import consulo.ide.impl.idea.execution.actions.ClearConsoleAction;
 import consulo.ide.impl.idea.execution.actions.EOFAction;
 import consulo.ide.impl.idea.execution.filters.BrowserHyperlinkInfo;
-import consulo.execution.ui.console.CompositeFilter;
 import consulo.ide.impl.idea.execution.filters.CompositeInputFilter;
-import consulo.project.internal.StartupManagerEx;
 import consulo.ide.impl.idea.openapi.editor.actions.ScrollToTheEndToolbarAction;
 import consulo.ide.impl.idea.openapi.editor.actions.ToggleUseSoftWrapsToolbarAction;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
@@ -57,9 +54,10 @@ import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.logging.Logger;
 import consulo.navigation.OpenFileDescriptor;
 import consulo.process.ProcessHandler;
-import consulo.project.event.DumbModeListener;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.project.event.DumbModeListener;
+import consulo.project.internal.StartupManagerEx;
 import consulo.ui.ex.OccurenceNavigator;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
@@ -211,7 +209,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
         ApplicationManager.getApplication().invokeLater(() -> {
           if (myEditor == null || project.isDisposed() || DumbService.getInstance(project).isDumb()) return;
 
-          DocumentEx document = myEditor.getDocument();
+          Document document = myEditor.getDocument();
           if (myLastStamp != document.getModificationStamp()) {
             rehighlightHyperlinksAndFoldings();
           }
@@ -802,7 +800,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     ApplicationManager.getApplication().assertIsDispatchThread();
 
     if (isDisposed()) return;
-    final DocumentEx document = myEditor.getDocument();
+    final Document document = myEditor.getDocument();
     synchronized (LOCK) {
       clearHyperlinkAndFoldings();
     }
@@ -969,7 +967,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     if (!canHighlightHyperlinks && !myUpdateFoldingsEnabled) {
       return;
     }
-    DocumentEx document = myEditor.getDocument();
+    Document document = myEditor.getDocument();
     if (document.getTextLength() == 0) return;
 
     int endLine = Math.max(0, document.getLineCount() - 1);

@@ -22,7 +22,6 @@ import consulo.colorScheme.TextAttributes;
 import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
-import consulo.document.internal.DocumentEx;
 import consulo.document.util.TextRange;
 import consulo.project.Project;
 import consulo.ui.color.ColorValue;
@@ -56,10 +55,6 @@ public interface EditorEx extends Editor {
   @NonNls
   String PROP_FONT_SIZE = "fontSize";
   Key<TextRange> LAST_PASTED_REGION = Key.create("LAST_PASTED_REGION");
-
-  @Nonnull
-  @Override
-  DocumentEx getDocument();
 
   @Override
   @Nonnull

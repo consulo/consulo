@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.codeInsight.editorActions.moveUpDown;
 
 import consulo.codeEditor.Editor;
+import consulo.language.editor.moveUpDown.StatementUpDownMover;
 import consulo.language.psi.PsiFile;
 
 import javax.annotation.Nullable;
@@ -33,7 +34,7 @@ class MoveLineHandler extends BaseMoveHandler {
   protected MoverWrapper getSuitableMover(final Editor editor, final PsiFile file) {
     final StatementUpDownMover.MoveInfo info = new StatementUpDownMover.MoveInfo();
     info.indentTarget = false;
-    final StatementUpDownMover mover = new LineMover();
+    final StatementUpDownMover mover = new DefaultLineMover();
     return mover.checkAvailable(editor, file, info, isDown) ? new MoverWrapper(mover, info, isDown) : null;
   }
 }

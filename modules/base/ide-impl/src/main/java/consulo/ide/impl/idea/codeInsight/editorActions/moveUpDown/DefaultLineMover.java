@@ -14,14 +14,11 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.testIntegration;
+package consulo.ide.impl.idea.codeInsight.editorActions.moveUpDown;
 
-import consulo.codeEditor.Editor;
-import consulo.language.psi.PsiFile;
-import consulo.project.Project;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.editor.moveUpDown.LineMover;
 
-public interface TestCreator {
-  boolean isAvailable(Project project, Editor editor, PsiFile file);
-
-  void createTest(Project project, Editor editor, PsiFile file);
+@ExtensionImpl(id = "line", order = "last")
+public class DefaultLineMover extends LineMover {
 }

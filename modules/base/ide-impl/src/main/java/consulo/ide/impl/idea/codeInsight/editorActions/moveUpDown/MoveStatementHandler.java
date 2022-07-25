@@ -21,6 +21,7 @@ package consulo.ide.impl.idea.codeInsight.editorActions.moveUpDown;
 
 import consulo.codeEditor.Editor;
 import consulo.component.extension.Extensions;
+import consulo.language.editor.moveUpDown.StatementUpDownMover;
 import consulo.language.psi.PsiFile;
 import javax.annotation.Nullable;
 
@@ -34,16 +35,15 @@ class MoveStatementHandler extends BaseMoveHandler {
   @Nullable
   protected MoverWrapper getSuitableMover(final Editor editor, final PsiFile file) {
     // order is important!
-    final StatementUpDownMover[] movers = Extensions.getExtensions(StatementUpDownMover.STATEMENT_UP_DOWN_MOVER_EP);
     final StatementUpDownMover.MoveInfo info = new StatementUpDownMover.MoveInfo();
-    for (final StatementUpDownMover mover : movers) {
+    for (final StatementUpDownMover mover : StatementUpDownMover.STATEMENT_UP_DOWN_MOVER_EP.getExtensionList()) {
       if (mover.checkAvailable(editor, file, info, isDown)) {
         return new MoverWrapper(mover, info, isDown);
       }
     }
 
     // order is important
-    //Mover[] movers = new Mover[]{new StatementMover(isDown), new DeclarationMover(isDown), new XmlMover(isDown), new LineMover(isDown)};
+    //Mover[] movers = new Mover[]{new StatementMover(isDown), new DeclarationMover(isDown), new XmlMover(isDown), new DefaultLineMover(isDown)};
     return null;
   }
 

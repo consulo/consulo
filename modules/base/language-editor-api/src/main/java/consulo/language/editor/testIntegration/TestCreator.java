@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.testIntegration;
+package consulo.language.editor.testIntegration;
 
-import consulo.language.OldLanguageExtension;
-import consulo.container.plugin.PluginIds;
-import consulo.language.editor.testIntegration.TestCreator;
+import consulo.codeEditor.Editor;
+import consulo.language.psi.PsiFile;
+import consulo.project.Project;
 
-public class LanguageTestCreators extends OldLanguageExtension<TestCreator> {
-  public static final LanguageTestCreators INSTANCE = new LanguageTestCreators();
+public interface TestCreator {
+  boolean isAvailable(Project project, Editor editor, PsiFile file);
 
-  public LanguageTestCreators() {
-    super(PluginIds.CONSULO_BASE + ".testCreator");
-  }
+  void createTest(Project project, Editor editor, PsiFile file);
 }

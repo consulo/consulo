@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.testIntegration;
 
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.impl.internal.action.BaseCodeInsightAction;
+import consulo.language.editor.testIntegration.TestFinderHelper;
 import consulo.ui.ex.action.ActionsBundle;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
