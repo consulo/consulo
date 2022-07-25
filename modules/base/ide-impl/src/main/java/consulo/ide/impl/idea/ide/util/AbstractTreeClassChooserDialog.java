@@ -20,7 +20,6 @@ import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.function.Processor;
-import consulo.application.util.query.Query;
 import consulo.disposer.Disposer;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.projectView.BaseProjectTreeBuilder;
@@ -28,23 +27,25 @@ import consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectTreeStructure;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectAbstractTreeStructureBase;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectTreeBuilder;
 import consulo.ide.impl.idea.ide.util.gotoByName.*;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.internal.PsiUtilBase;
 import consulo.language.editor.ui.TreeChooser;
+import consulo.language.editor.ui.TreeClassInheritorsProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
-import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.search.FindSymbolParameters;
 import consulo.language.psi.util.SymbolPresentationUtil;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
+import consulo.project.content.scope.ProjectAwareSearchScope;
+import consulo.project.content.scope.ProjectScopes;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.NodeRenderer;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.tree.AlphaComparator;
+import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
@@ -76,7 +77,7 @@ public abstract class AbstractTreeClassChooserDialog<T extends PsiNamedElement> 
   private BaseProjectTreeBuilder myBuilder;
   private TabbedPaneWrapper myTabbedPane;
   private ChooseByNamePanel myGotoByNamePanel;
-  private final GlobalSearchScope myScope;
+  private final ProjectAwareSearchScope myScope;
   @Nonnull
   private final Predicate<T> myClassFilter;
   private final Class<T> myElementClass;
@@ -91,16 +92,21 @@ public abstract class AbstractTreeClassChooserDialog<T extends PsiNamedElement> 
   }
 
   public AbstractTreeClassChooserDialog(String title, Project project, final Class<T> elementClass, @Nullable T initialClass) {
-    this(title, project, GlobalSearchScope.projectScope(project), elementClass, null, initialClass);
+    this(title, project, ProjectScopes.getProjectScope(project), elementClass, null, initialClass);
   }
 
-  public AbstractTreeClassChooserDialog(String title, @Nonnull Project project, GlobalSearchScope scope, @Nonnull Class<T> elementClass, @Nullable Predicate<T> classFilter, @Nullable T initialClass) {
+  public AbstractTreeClassChooserDialog(String title,
+                                        @Nonnull Project project,
+                                        ProjectAwareSearchScope scope,
+                                        @Nonnull Class<T> elementClass,
+                                        @Nullable Predicate<T> classFilter,
+                                        @Nullable T initialClass) {
     this(title, project, scope, elementClass, classFilter, null, initialClass, false, true);
   }
 
   public AbstractTreeClassChooserDialog(String title,
                                         @Nonnull Project project,
-                                        GlobalSearchScope scope,
+                                        ProjectAwareSearchScope scope,
                                         @Nonnull Class<T> elementClass,
                                         @Nullable Predicate<T> classFilter,
                                         @Nullable T baseClass,
@@ -294,7 +300,7 @@ public abstract class AbstractTreeClassChooserDialog<T extends PsiNamedElement> 
       return new MyGotoClassModel<T>(myProject, this);
     }
     else {
-      BaseClassInheritorsProvider<T> inheritorsProvider = getInheritorsProvider(myBaseClass);
+      TreeClassInheritorsProvider<T> inheritorsProvider = getInheritorsProvider(myBaseClass);
       if (inheritorsProvider != null) {
         return new SubclassGotoClassModel<T>(myProject, this, inheritorsProvider);
       }
@@ -311,7 +317,7 @@ public abstract class AbstractTreeClassChooserDialog<T extends PsiNamedElement> 
    * @return
    */
   @Nullable
-  protected BaseClassInheritorsProvider<T> getInheritorsProvider(@Nonnull T baseClass) {
+  protected TreeClassInheritorsProvider<T> getInheritorsProvider(@Nonnull T baseClass) {
     return null;
   }
 
@@ -395,7 +401,6 @@ public abstract class AbstractTreeClassChooserDialog<T extends PsiNamedElement> 
 
   protected abstract T getSelectedFromTreeUserObject(DefaultMutableTreeNode node);
 
-
   @Override
   public void dispose() {
     if (myBuilder != null) {
@@ -420,7 +425,7 @@ public abstract class AbstractTreeClassChooserDialog<T extends PsiNamedElement> 
     return myProject;
   }
 
-  protected GlobalSearchScope getScope() {
+  protected ProjectAwareSearchScope getScope() {
     return myScope;
   }
 
@@ -491,49 +496,16 @@ public abstract class AbstractTreeClassChooserDialog<T extends PsiNamedElement> 
     }
   }
 
-
   @Nonnull
-  protected abstract List<T> getClassesByName(final String name, final boolean checkBoxState, final String pattern, final GlobalSearchScope searchScope);
+  protected abstract List<T> getClassesByName(final String name, final boolean searchInLibraries, final String pattern, final ProjectAwareSearchScope searchScope);
 
-  public abstract static class BaseClassInheritorsProvider<T> {
-    private final T myBaseClass;
-    private final GlobalSearchScope myScope;
-
-    public T getBaseClass() {
-      return myBaseClass;
-    }
-
-    public GlobalSearchScope getScope() {
-      return myScope;
-    }
-
-    public BaseClassInheritorsProvider(T baseClass, GlobalSearchScope scope) {
-      myBaseClass = baseClass;
-      myScope = scope;
-    }
-
-    @Nonnull
-    protected abstract Query<T> searchForInheritors(T baseClass, GlobalSearchScope searchScope, boolean checkDeep);
-
-    protected abstract boolean isInheritor(T clazz, T baseClass, boolean checkDeep);
-
-    protected abstract String[] getNames();
-
-    protected Query<T> searchForInheritorsOfBaseClass() {
-      return searchForInheritors(myBaseClass, myScope, true);
-    }
-
-    protected boolean isInheritorOfBaseClass(T aClass) {
-      return isInheritor(aClass, myBaseClass, true);
-    }
-  }
 
   private static class SubclassGotoClassModel<T extends PsiNamedElement> extends MyGotoClassModel<T> {
-    private final BaseClassInheritorsProvider<T> myInheritorsProvider;
+    private final TreeClassInheritorsProvider<T> myInheritorsProvider;
 
     private boolean myFastMode = true;
 
-    public SubclassGotoClassModel(@Nonnull final Project project, @Nonnull final AbstractTreeClassChooserDialog<T> treeClassChooserDialog, @Nonnull BaseClassInheritorsProvider<T> inheritorsProvider) {
+    public SubclassGotoClassModel(@Nonnull final Project project, @Nonnull final AbstractTreeClassChooserDialog<T> treeClassChooserDialog, @Nonnull TreeClassInheritorsProvider<T> inheritorsProvider) {
       super(project, treeClassChooserDialog);
       myInheritorsProvider = inheritorsProvider;
       assert myInheritorsProvider.getBaseClass() != null;
