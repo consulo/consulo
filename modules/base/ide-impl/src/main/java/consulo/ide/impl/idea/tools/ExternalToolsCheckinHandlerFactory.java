@@ -25,7 +25,7 @@ import consulo.vcs.checkin.CheckinHandlerFactory;
 import consulo.vcs.ui.RefreshableOnComponent;
 import consulo.ui.ex.awt.CollectionComboBoxModel;
 import consulo.ui.ex.awt.ComboboxWithBrowseButton;
-import consulo.ide.impl.idea.ui.ListCellRendererWrapper;
+import consulo.ui.ex.awt.ListCellRendererWrapper;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.disposer.Disposable;
 

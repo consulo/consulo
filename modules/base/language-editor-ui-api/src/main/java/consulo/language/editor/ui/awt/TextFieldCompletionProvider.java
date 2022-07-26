@@ -1,28 +1,28 @@
-package consulo.ide.impl.idea.util;
+package consulo.language.editor.ui.awt;
 
-import consulo.language.editor.completion.CompletionResultSet;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
-import consulo.virtualFileSystem.fileType.FileType;
+import consulo.document.Document;
+import consulo.language.editor.completion.CompletionResultSet;
 import consulo.language.plain.PlainTextLanguage;
-import consulo.project.Project;
-import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileFactory;
-import consulo.language.editor.ui.awt.EditorTextField;
+import consulo.project.Project;
+import consulo.util.dataholder.Key;
 import consulo.util.lang.LocalTimeCounter;
+import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Consumer;
 
 /**
  * @author sergey.evdokimov
  */
 public abstract class TextFieldCompletionProvider {
 
-  static final Key<TextFieldCompletionProvider> COMPLETING_TEXT_FIELD_KEY = Key.create("COMPLETING_TEXT_FIELD_KEY");
+  public static final Key<TextFieldCompletionProvider> COMPLETING_TEXT_FIELD_KEY = Key.create("COMPLETING_TEXT_FIELD_KEY");
 
   protected boolean myCaseInsensitivity;
 
@@ -50,8 +50,7 @@ public abstract class TextFieldCompletionProvider {
     assert fileType != null;
 
     final long stamp = LocalTimeCounter.currentTime();
-    final PsiFile psiFile = PsiFileFactory.getInstance(project)
-      .createFileFromText("Dummy." + fileType.getDefaultExtension(), fileType, text, stamp, true, false);
+    final PsiFile psiFile = PsiFileFactory.getInstance(project).createFileFromText("Dummy." + fileType.getDefaultExtension(), fileType, text, stamp, true, false);
 
     psiFile.putUserData(COMPLETING_TEXT_FIELD_KEY, this);
 
@@ -65,11 +64,11 @@ public abstract class TextFieldCompletionProvider {
   }
 
   @Nonnull
-  protected String getPrefix(@Nonnull String currentTextPrefix) {
+  public String getPrefix(@Nonnull String currentTextPrefix) {
     return currentTextPrefix;
   }
 
-  protected abstract void addCompletionVariants(@Nonnull String text, int offset, @Nonnull String prefix, @Nonnull CompletionResultSet result);
+  public abstract void addCompletionVariants(@Nonnull String text, int offset, @Nonnull String prefix, @Nonnull CompletionResultSet result);
 
   @Nonnull
   public EditorTextField createEditor(Project project) {
@@ -82,10 +81,7 @@ public abstract class TextFieldCompletionProvider {
   }
 
   @Nonnull
-  public EditorTextField createEditor(Project project,
-                                      final boolean shouldHaveBorder,
-                                      @Nullable final Consumer<Editor> editorConstructionCallback)
-  {
+  public EditorTextField createEditor(Project project, final boolean shouldHaveBorder, @Nullable final Consumer<Editor> editorConstructionCallback) {
     return new EditorTextField(createDocument(project, ""), project, PlainTextLanguage.INSTANCE.getAssociatedFileType()) {
       @Override
       protected boolean shouldHaveBorder() {
@@ -106,7 +102,7 @@ public abstract class TextFieldCompletionProvider {
       protected EditorEx createEditor() {
         EditorEx result = super.createEditor();
         if (editorConstructionCallback != null) {
-          editorConstructionCallback.consume(result);
+          editorConstructionCallback.accept(result);
         }
         return result;
       }

@@ -43,7 +43,7 @@ import consulo.ide.impl.idea.openapi.fileTypes.impl.AbstractFileType;
 import consulo.ide.impl.idea.openapi.util.DimensionService;
 import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
 import consulo.ui.ex.awt.ComboboxSpeedSearch;
-import consulo.ide.impl.idea.ui.ListCellRendererWrapper;
+import consulo.ui.ex.awt.ListCellRendererWrapper;
 import consulo.ui.ex.awt.SortedComboBoxModel;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

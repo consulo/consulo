@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ui;
+package consulo.ui.ex.awt;
 
-import consulo.ui.ex.awt.ComboBox;
-import consulo.ui.ex.awt.TextFieldWithBrowseButton;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ui.ex.awt.event.DocumentAdapter;
+import consulo.util.lang.Comparing;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -30,8 +28,9 @@ public class ComboBoxFieldPanel extends AbstractFieldPanel {
 
   public ComboBoxFieldPanel() {
     super(new ComboBox());
-    myComboBox = (JComboBox) getComponent();
+    myComboBox = (JComboBox)getComponent();
   }
+
   public ComboBoxFieldPanel(String[] items, String labelText, final String viewerDialogTitle, ActionListener browseButtonActionListener) {
     this(items, labelText, viewerDialogTitle, browseButtonActionListener, null);
   }
@@ -39,7 +38,7 @@ public class ComboBoxFieldPanel extends AbstractFieldPanel {
   public ComboBoxFieldPanel(String[] items, String labelText, final String viewerDialogTitle, ActionListener browseButtonActionListener, final Runnable documentListener) {
     super(new JComboBox(items), labelText, viewerDialogTitle, browseButtonActionListener, documentListener);
 
-    myComboBox = (JComboBox) getComponent();
+    myComboBox = (JComboBox)getComponent();
     createComponent();
   }
 
@@ -72,7 +71,7 @@ public class ComboBoxFieldPanel extends AbstractFieldPanel {
 
   @Override
   public String getText() {
-    final Object selectedItem = myComboBox.isEditable()? myComboBox.getEditor().getItem() : myComboBox.getSelectedItem();
+    final Object selectedItem = myComboBox.isEditable() ? myComboBox.getEditor().getItem() : myComboBox.getSelectedItem();
     return selectedItem instanceof String ? (String)selectedItem : null;
   }
 

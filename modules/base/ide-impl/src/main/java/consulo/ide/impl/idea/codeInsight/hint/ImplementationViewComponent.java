@@ -48,7 +48,7 @@ import consulo.document.Document;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiUtilCore;
 import consulo.ui.ex.awt.IdeBorderFactory;
-import consulo.ide.impl.idea.ui.ListCellRendererWrapper;
+import consulo.ui.ex.awt.ListCellRendererWrapper;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awt.SideBorder;
 import consulo.ui.ex.awt.JBScrollPane;

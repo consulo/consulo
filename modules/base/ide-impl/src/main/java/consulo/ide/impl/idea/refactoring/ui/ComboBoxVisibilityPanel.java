@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.refactoring.ui;
 
 import consulo.language.editor.refactoring.RefactoringBundle;
-import consulo.ide.impl.idea.ui.ListCellRendererWrapper;
+import consulo.ui.ex.awt.ListCellRendererWrapper;
 import consulo.ui.ex.awt.util.DialogUtil;
 import consulo.ide.impl.idea.util.ui.UpDownHandler;
 

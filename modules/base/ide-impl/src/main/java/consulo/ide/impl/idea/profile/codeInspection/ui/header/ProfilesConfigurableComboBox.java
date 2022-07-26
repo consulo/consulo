@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.profile.codeInspection.ui.header;
 import consulo.ide.impl.idea.codeInspection.ex.InspectionProfileImpl;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.language.editor.inspection.scheme.Profile;
-import consulo.ide.impl.idea.ui.ListCellRendererWrapper;
+import consulo.ui.ex.awt.ListCellRendererWrapper;
 
 import javax.swing.*;
 import java.awt.*;

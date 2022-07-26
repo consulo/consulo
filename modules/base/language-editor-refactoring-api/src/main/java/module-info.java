@@ -22,6 +22,7 @@ module consulo.language.editor.refactoring.api {
   exports consulo.language.editor.refactoring.action;
   exports consulo.language.editor.refactoring.rename;
   exports consulo.language.editor.refactoring.rename.inplace;
+  exports consulo.language.editor.refactoring.introduce.inplace;
   exports consulo.language.editor.refactoring.changeSignature;
   exports consulo.language.editor.refactoring.util;
   exports consulo.language.editor.refactoring.event;

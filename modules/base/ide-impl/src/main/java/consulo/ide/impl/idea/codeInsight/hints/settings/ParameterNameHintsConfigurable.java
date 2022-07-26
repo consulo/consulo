@@ -30,7 +30,7 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.CollectionComboBoxModel;
 import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.ui.ex.awt.IdeBorderFactory;
-import consulo.ide.impl.idea.ui.ListCellRendererWrapper;
+import consulo.ui.ex.awt.ListCellRendererWrapper;
 import consulo.ui.ex.awt.JBCheckBox;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 

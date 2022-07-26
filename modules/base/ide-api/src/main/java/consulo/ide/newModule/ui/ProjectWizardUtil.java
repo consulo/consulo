@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.util.projectWizard;
+package consulo.ide.newModule.ui;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.application.Application;
 import consulo.application.CommonBundle;
 import consulo.ide.IdeBundle;
-import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jetbrains.annotations.NonNls;
 
 import java.io.File;
@@ -28,6 +29,8 @@ import java.io.IOException;
 /**
  * @author cdr
  */
+@Deprecated(forRemoval = true)
+@DeprecationInfo("Desktop util for ProjectOrModuleNameStep. Use UnifiedProjectOrModuleNameStep")
 public class ProjectWizardUtil {
   private ProjectWizardUtil() {
   }
@@ -46,14 +49,14 @@ public class ProjectWizardUtil {
     if (!dir.exists()) {
       if (promptUser) {
         final int answer = Messages.showOkCancelDialog(IdeBundle.message("promot.projectwizard.directory.does.not.exist", promptPrefix,
-                                                                         dir.getPath(), ApplicationNamesInfo.getInstance().getFullProductName()),
+                                                                         dir.getPath(), Application.get().getName().get()),
                                                        IdeBundle.message("title.directory.does.not.exist"), Messages.getQuestionIcon());
         if (answer != 0) {
           return false;
         }
       }
       try {
-        VfsUtil.createDirectories(dir.getPath());
+        VirtualFileUtil.createDirectories(dir.getPath());
       }
       catch (IOException e) {
         Messages.showErrorDialog(IdeBundle.message("error.failed.to.create.directory", dir.getPath()), CommonBundle.getErrorTitle());

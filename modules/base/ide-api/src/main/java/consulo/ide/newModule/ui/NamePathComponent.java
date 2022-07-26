@@ -13,20 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.util.projectWizard;
+package consulo.ide.newModule.ui;
 
-import consulo.ide.IdeBundle;
-import consulo.ui.ex.awt.util.BrowseFilesListener;
-import consulo.application.impl.internal.ApplicationInfo;
-import consulo.fileChooser.FileChooserDescriptor;
+import consulo.annotation.DeprecationInfo;
 import consulo.configurable.ConfigurationException;
-import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.event.DocumentAdapter;
-import consulo.ide.impl.idea.ui.FieldPanel;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.ide.IdeBundle;
 import consulo.ide.newModule.NewModuleWizardContext;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.ui.ex.awt.FieldPanel;
+import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.event.DocumentAdapter;
+import consulo.ui.ex.awt.util.BrowseFilesListener;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -42,6 +42,8 @@ import java.io.File;
  * @author Eugene Zhuravlev
  * Date: Dec 30, 2003
  */
+@Deprecated(forRemoval = true)
+@DeprecationInfo("Desktop component for ProjectOrModuleNameStep, use UnifiedProjectOrModuleNameStep")
 public class NamePathComponent extends JPanel {
   private static final Logger LOG = Logger.getInstance(NamePathComponent.class);
 
@@ -108,8 +110,7 @@ public class NamePathComponent extends JPanel {
   public boolean validateNameAndPath(@Nonnull NewModuleWizardContext context) throws ConfigurationException {
     final String name = getNameValue();
     if (name.length() == 0) {
-      final ApplicationInfo info = ApplicationInfo.getInstance();
-      throw new ConfigurationException(IdeBundle.message("prompt.new.project.file.name", info.getVersionName(), context.getTargetId()));
+      throw new ConfigurationException(IdeBundle.message("prompt.new.project.file.name", context.getTargetId()));
     }
 
     final String projectFileDirectory = getPath();

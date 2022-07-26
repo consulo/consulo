@@ -23,7 +23,7 @@ import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
 import consulo.content.library.LibraryType;
 import consulo.ui.ex.awt.ComboBox;
-import consulo.ide.impl.idea.ui.ListCellRendererWrapper;
+import consulo.ui.ex.awt.ListCellRendererWrapper;
 import consulo.ui.ex.awt.FormBuilder;
 import consulo.ide.setting.module.LibrariesConfigurator;
 

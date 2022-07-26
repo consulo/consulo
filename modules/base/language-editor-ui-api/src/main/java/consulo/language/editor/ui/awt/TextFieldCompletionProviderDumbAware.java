@@ -1,4 +1,4 @@
-package consulo.ide.impl.idea.util;
+package consulo.language.editor.ui.awt;
 
 import consulo.application.dumb.DumbAware;
 

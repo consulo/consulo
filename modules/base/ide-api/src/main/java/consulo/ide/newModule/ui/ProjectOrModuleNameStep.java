@@ -13,23 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.newProject.ui;
+package consulo.ide.newModule.ui;
 
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.util.projectWizard.NamePathComponent;
-import consulo.ide.impl.idea.ide.util.projectWizard.ProjectWizardUtil;
-import consulo.application.impl.internal.ApplicationInfo;
-import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.awt.JBUI;
 import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
+import consulo.ide.IdeBundle;
 import consulo.ide.newModule.NewModuleWizardContext;
+import consulo.project.Project;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.wizard.WizardStep;
 import consulo.ui.ex.wizard.WizardStepValidationException;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -76,8 +73,7 @@ public class ProjectOrModuleNameStep<C extends NewModuleWizardContext> implement
   private boolean validateNameAndPath(@Nonnull NewModuleWizardContext context) throws WizardStepValidationException {
     final String name = myNamePathComponent.getNameValue();
     if (name.length() == 0) {
-      final ApplicationInfo info = ApplicationInfo.getInstance();
-      throw new WizardStepValidationException(IdeBundle.message("prompt.new.project.file.name", info.getVersionName(), context.getTargetId()));
+      throw new WizardStepValidationException(IdeBundle.message("prompt.new.project.file.name", context.getTargetId()));
     }
 
     final String projectFileDirectory = myNamePathComponent.getPath();

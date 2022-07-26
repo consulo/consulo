@@ -13,15 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.refactoring.introduce.inplace;
+package consulo.language.editor.refactoring.introduce.inplace;
 
 import consulo.application.Result;
 import consulo.codeEditor.Editor;
 import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.codeInsight.template.impl.TemplateManagerImpl;
-import consulo.ide.impl.idea.codeInsight.template.impl.TemplateStateImpl;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.TokenSeparatorGenerator;
 import consulo.language.editor.WriteCommandAction;
@@ -33,6 +30,8 @@ import consulo.language.editor.refactoring.rename.SuggestedNameInfo;
 import consulo.language.editor.refactoring.rename.inplace.InplaceRefactoring;
 import consulo.language.editor.refactoring.rename.inplace.MyLookupExpression;
 import consulo.language.editor.template.ExpressionContext;
+import consulo.language.editor.template.TemplateManager;
+import consulo.language.editor.template.TemplateState;
 import consulo.language.editor.template.TextResult;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
@@ -40,6 +39,7 @@ import consulo.language.psi.SmartPointerManager;
 import consulo.language.psi.SmartPsiElementPointer;
 import consulo.project.Project;
 import consulo.undoRedo.internal.StartMarkAction;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
 
 import javax.annotation.Nullable;
@@ -53,14 +53,11 @@ import java.util.List;
  * Date: 3/15/11
  */
 public abstract class InplaceVariableIntroducer<E extends PsiElement> extends InplaceRefactoring {
-
-
   protected E myExpr;
   protected RangeMarker myExprMarker;
 
   protected E[] myOccurrences;
   protected List<RangeMarker> myOccurrenceMarkers;
-
 
   public InplaceVariableIntroducer(PsiNamedElement elementToRename, Editor editor, Project project, String title, E[] occurrences, @Nullable E expr) {
     super(editor, elementToRename, project);
@@ -92,7 +89,6 @@ public abstract class InplaceVariableIntroducer<E extends PsiElement> extends In
   protected StartMarkAction startRename() throws StartMarkAction.AlreadyStartedException {
     return null;
   }
-
 
   public void setOccurrenceMarkers(List<RangeMarker> occurrenceMarkers) {
     myOccurrenceMarkers = occurrenceMarkers;
@@ -191,27 +187,29 @@ public abstract class InplaceVariableIntroducer<E extends PsiElement> extends In
 
     @Nullable
     private LookupElement[] createLookupItems(String name, Editor editor, PsiNamedElement psiVariable) {
-      TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
-      if (psiVariable != null) {
-        final TextResult insertedValue = templateState != null ? templateState.getVariableValue(PRIMARY_VARIABLE_NAME) : null;
-        if (insertedValue != null) {
-          final String text = insertedValue.getText();
-          if (!text.isEmpty() && !Comparing.strEqual(text, name)) {
-            final LinkedHashSet<String> names = new LinkedHashSet<String>();
-            names.add(text);
-            for (NameSuggestionProvider provider : NameSuggestionProvider.EP_NAME.getExtensionList()) {
-              final SuggestedNameInfo suggestedNameInfo = provider.getSuggestedNames(psiVariable, psiVariable, names);
-              if (suggestedNameInfo != null && provider instanceof PreferrableNameSuggestionProvider && !((PreferrableNameSuggestionProvider)provider).shouldCheckOthers()) {
-                break;
-              }
+      if (psiVariable == null) {
+        return myLookupItems;
+      }
+
+      TemplateState templateState = TemplateManager.getInstance(psiVariable.getProject()).getTemplateState(editor);
+      final TextResult insertedValue = templateState != null ? templateState.getVariableValue(PRIMARY_VARIABLE_NAME) : null;
+      if (insertedValue != null) {
+        final String text = insertedValue.getText();
+        if (!text.isEmpty() && !Comparing.strEqual(text, name)) {
+          final LinkedHashSet<String> names = new LinkedHashSet<>();
+          names.add(text);
+          for (NameSuggestionProvider provider : NameSuggestionProvider.EP_NAME.getExtensionList()) {
+            final SuggestedNameInfo suggestedNameInfo = provider.getSuggestedNames(psiVariable, psiVariable, names);
+            if (suggestedNameInfo != null && provider instanceof PreferrableNameSuggestionProvider && !((PreferrableNameSuggestionProvider)provider).shouldCheckOthers()) {
+              break;
             }
-            final LookupElement[] items = new LookupElement[names.size()];
-            final Iterator<String> iterator = names.iterator();
-            for (int i = 0; i < items.length; i++) {
-              items[i] = LookupElementBuilder.create(iterator.next());
-            }
-            return items;
           }
+          final LookupElement[] items = new LookupElement[names.size()];
+          final Iterator<String> iterator = names.iterator();
+          for (int i = 0; i < items.length; i++) {
+            items[i] = LookupElementBuilder.create(iterator.next());
+          }
+          return items;
         }
       }
       return myLookupItems;

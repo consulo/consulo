@@ -18,13 +18,15 @@ package consulo.ide.impl.idea.util.textCompletion;
 import consulo.language.editor.completion.CompletionParameters;
 import consulo.language.editor.completion.CompletionResultSet;
 import consulo.language.editor.completion.lookup.CharFilter;
+import consulo.language.editor.ui.awt.TextFieldCompletionProvider;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
  * Base interface for text completion.
  * Default implementations are: {@link ValuesCompletionProvider} for completion from a fixed set of elements
- * and {@link consulo.ide.impl.idea.util.TextFieldCompletionProvider} for other cases.
+ * and {@link TextFieldCompletionProvider} for other cases.
  * <p>
  * Use {@link TextFieldWithCompletion} to create a text field component with completion.
  * <p>

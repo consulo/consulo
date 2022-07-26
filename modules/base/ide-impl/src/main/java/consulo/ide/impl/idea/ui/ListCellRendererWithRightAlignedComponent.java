@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.ui;
 
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ui.ex.awt.ListCellRendererWrapper;
 
 import javax.swing.*;
 import java.awt.*;

@@ -24,6 +24,7 @@ import consulo.language.editor.completion.lookup.LookupElementBuilder;
 import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.editor.ui.awt.TextFieldCompletionProvider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -38,7 +39,7 @@ import java.util.List;
  * Completion elements and their presentation (represented with {@link TextCompletionValueDescriptor}) are provided in constructor.
  * Use {@link TextFieldWithCompletion} to create a text field component with completion.
  * <p>
- * Completion is done via {@link consulo.ide.impl.idea.util.TextFieldCompletionProvider}.
+ * Completion is done via {@link TextFieldCompletionProvider}.
  *
  * @param <T> completion element type.
  */

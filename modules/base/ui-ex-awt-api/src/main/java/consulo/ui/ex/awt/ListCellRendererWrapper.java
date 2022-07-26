@@ -13,17 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ui;
+package consulo.ui.ex.awt;
 
-import consulo.util.lang.Pair;
-import consulo.util.collection.FList;
-import consulo.ui.ex.awt.TitledSeparator;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;
+import consulo.util.collection.FList;
+import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
-
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicComboBoxRenderer;
@@ -40,7 +37,7 @@ import static consulo.util.lang.Pair.pair;
  * @since 30.09.2010
  */
 @Deprecated
-@DeprecationInfo(value = "Use consulo.ide.impl.idea.ui.ColoredListCellRenderer")
+@DeprecationInfo(value = "Use ColoredListCellRenderer")
 public abstract class ListCellRendererWrapper<T> implements ListCellRenderer<T> {
   private final ListCellRenderer myDefaultRenderer;
 

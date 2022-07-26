@@ -6,6 +6,7 @@ import consulo.language.editor.completion.CompletionContributor;
 import consulo.language.editor.completion.CompletionParameters;
 import consulo.language.editor.completion.CompletionResultSet;
 import consulo.application.dumb.DumbAware;
+import consulo.language.editor.ui.awt.TextFieldCompletionProvider;
 import consulo.language.plain.PlainTextLanguage;
 import consulo.project.DumbService;
 import consulo.language.psi.PsiFile;

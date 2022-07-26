@@ -13,18 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ui;
+package consulo.ui.ex.awt;
 
 import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
-import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.logging.Logger;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.FixedSizeButton;
-import consulo.ui.ex.awt.TextFieldWithBrowseButton;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 
 import javax.annotation.Nonnull;

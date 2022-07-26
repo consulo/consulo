@@ -26,7 +26,7 @@ import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.ui.FieldPanel;
+import consulo.ui.ex.awt.FieldPanel;
 import consulo.util.collection.MultiMap;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;

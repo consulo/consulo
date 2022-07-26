@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.ui;
 
 import consulo.configurable.BaseConfigurableWithChangeSupport;
+import consulo.ui.ex.awt.AbstractFieldPanel;
 
 public class FieldPanelWithChangeSupport {
   public static AbstractFieldPanel createPanel(AbstractFieldPanel panel, final BaseConfigurableWithChangeSupport configurable) {

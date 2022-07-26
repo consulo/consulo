@@ -47,8 +47,8 @@ import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.TextAccessor;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ide.impl.idea.util.Consumer;
-import consulo.ide.impl.idea.util.TextFieldCompletionProvider;
-import consulo.ide.impl.idea.util.TextFieldCompletionProviderDumbAware;
+import consulo.language.editor.ui.awt.TextFieldCompletionProvider;
+import consulo.language.editor.ui.awt.TextFieldCompletionProviderDumbAware;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
 import consulo.ui.ex.awt.GridBag;
@@ -176,7 +176,7 @@ public class ExternalProjectPathField extends ComponentWithBrowseButton<External
     final ExternalSystemUiAware uiAware = ExternalSystemUiUtil.getUiAware(externalSystemId);
     TextFieldCompletionProvider provider = new TextFieldCompletionProviderDumbAware() {
       @Override
-      protected void addCompletionVariants(@Nonnull String text, int offset, @Nonnull String prefix, @Nonnull CompletionResultSet result) {
+      public void addCompletionVariants(@Nonnull String text, int offset, @Nonnull String prefix, @Nonnull CompletionResultSet result) {
         for (Map.Entry<ExternalProjectPojo, Collection<ExternalProjectPojo>> entry : settings.getAvailableProjects().entrySet()) {
           String rootProjectPath = entry.getKey().getPath();
           String rootProjectName = uiAware.getProjectRepresentationName(rootProjectPath, null);

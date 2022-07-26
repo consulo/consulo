@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.util.scopeChooser;
 
-import consulo.ide.impl.idea.ui.ListCellRendererWrapper;
+import consulo.ui.ex.awt.ListCellRendererWrapper;
 import consulo.project.Project;
 import consulo.ui.ex.awt.ComponentWithBrowseButton;
 import consulo.ui.ex.awt.DialogWrapper;

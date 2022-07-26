@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.diagnostic.errordialog;
 
 import consulo.ide.impl.idea.diagnostic.Developer;
-import consulo.ide.impl.idea.ui.ListCellRendererWrapper;
+import consulo.ui.ex.awt.ListCellRendererWrapper;
 
 import javax.swing.*;
 

@@ -35,7 +35,7 @@ import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileMana
 import consulo.ide.impl.idea.profile.codeInspection.ui.ErrorsConfigurable;
 import consulo.ide.impl.idea.profile.codeInspection.ui.IDEInspectionToolsConfigurable;
 import consulo.ui.ex.awt.ComboboxWithBrowseButton;
-import consulo.ide.impl.idea.ui.ListCellRendererWrapper;
+import consulo.ui.ex.awt.ListCellRendererWrapper;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;

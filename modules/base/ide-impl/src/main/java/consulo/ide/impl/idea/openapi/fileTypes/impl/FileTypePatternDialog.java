@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.fileTypes.impl;
 
-import consulo.ide.impl.idea.ui.ListCellRendererWrapper;
+import consulo.ui.ex.awt.ListCellRendererWrapper;
 import consulo.language.Language;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.template.TemplateLanguageFileType;
