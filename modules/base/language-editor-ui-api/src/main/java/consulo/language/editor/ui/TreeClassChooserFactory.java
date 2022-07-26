@@ -46,7 +46,7 @@ public interface TreeClassChooserFactory {
     Builder<T> withTitle(@Nonnull LocalizeValue title);
 
     @Nonnull
-    Builder<T> witSearchScope(@Nonnull ProjectAwareSearchScope searchScope);
+    Builder<T> withSearchScope(@Nonnull ProjectAwareSearchScope searchScope);
 
     @Nonnull
     Builder<T> withClassFilter(@Nonnull Predicate<T> classFilter);

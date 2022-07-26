@@ -70,7 +70,7 @@ public class TreeClassChooserFactoryImpl implements TreeClassChooserFactory {
 
     @Nonnull
     @Override
-    public Builder<T> witSearchScope(@Nonnull ProjectAwareSearchScope searchScope) {
+    public Builder<T> withSearchScope(@Nonnull ProjectAwareSearchScope searchScope) {
       myProjectAwareSearchScope = searchScope;
       return this;
     }
