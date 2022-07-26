@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.language.Language;
 import consulo.application.progress.ProgressManager;
+import consulo.language.editor.util.CollectHighlightsUtil;
 import consulo.util.lang.function.Condition;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;

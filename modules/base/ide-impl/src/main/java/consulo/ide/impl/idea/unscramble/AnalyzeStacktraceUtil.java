@@ -16,34 +16,29 @@
 
 package consulo.ide.impl.idea.unscramble;
 
-import consulo.execution.ExecutionManager;
-import consulo.execution.executor.Executor;
-import consulo.execution.executor.DefaultRunExecutor;
-import consulo.execution.ui.console.Filter;
-import consulo.execution.ui.console.TextConsoleBuilder;
-import consulo.execution.ui.console.TextConsoleBuilderFactory;
-import consulo.ide.impl.idea.execution.impl.ConsoleViewImpl;
-import consulo.ide.impl.idea.execution.impl.ConsoleViewUtil;
-import consulo.execution.ui.console.ConsoleView;
-import consulo.execution.ui.console.ConsoleViewContentType;
-import consulo.execution.ui.ExecutionConsole;
-import consulo.execution.ui.RunContentDescriptor;
-import consulo.dataContext.DataProvider;
-import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
-import consulo.language.editor.CommonDataKeys;
-import consulo.undoRedo.CommandProcessor;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.EditorSettings;
-import consulo.component.extension.ExtensionPointName;
-import consulo.ui.ex.awt.CopyPasteManager;
-import consulo.project.Project;
+import consulo.dataContext.DataProvider;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ui.ex.action.*;
-import consulo.util.dataholder.Key;
+import consulo.document.Document;
+import consulo.execution.ExecutionManager;
+import consulo.execution.executor.DefaultRunExecutor;
+import consulo.execution.executor.Executor;
+import consulo.execution.ui.ExecutionConsole;
+import consulo.execution.ui.RunContentDescriptor;
+import consulo.execution.ui.console.*;
+import consulo.ide.impl.idea.execution.impl.ConsoleViewImpl;
+import consulo.ide.impl.idea.execution.impl.ConsoleViewUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.language.editor.CommonDataKeys;
+import consulo.project.Project;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.undoRedo.CommandProcessor;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -55,8 +50,6 @@ import java.awt.datatransfer.DataFlavor;
  * @author yole
  */
 public class AnalyzeStacktraceUtil {
-  public static final ExtensionPointName<Filter> EP_NAME = ExtensionPointName.create("consulo.analyzeStacktraceFilter");
-
   private AnalyzeStacktraceUtil() {
   }
 
@@ -81,7 +74,7 @@ public class AnalyzeStacktraceUtil {
 
   public static RunContentDescriptor addConsole(Project project, @Nullable ConsoleFactory consoleFactory, final String tabTitle, String text, @Nullable consulo.ui.image.Image icon) {
     final TextConsoleBuilder builder = TextConsoleBuilderFactory.getInstance().createBuilder(project);
-    builder.filters(EP_NAME.getExtensions(project));
+    builder.filters(project.getExtensionList(AnalyzeStackTraceFilter.class));
     final ConsoleView consoleView = builder.getConsole();
 
     final DefaultActionGroup toolbarActions = new DefaultActionGroup();

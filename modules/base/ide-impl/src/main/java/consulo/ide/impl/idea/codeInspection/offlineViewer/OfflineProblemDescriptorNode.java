@@ -20,7 +20,7 @@
  */
 package consulo.ide.impl.idea.codeInspection.offlineViewer;
 
-import consulo.ide.impl.idea.codeInsight.daemon.impl.CollectHighlightsUtil;
+import consulo.language.editor.util.CollectHighlightsUtil;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.analysis.HighlightingLevelManager;
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;

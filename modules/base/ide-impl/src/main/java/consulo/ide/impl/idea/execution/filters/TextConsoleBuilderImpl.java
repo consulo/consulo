@@ -74,7 +74,7 @@ public class TextConsoleBuilderImpl extends TextConsoleBuilder {
   }
 
   @Override
-  public TextConsoleBuilder filters(List<Filter> filters) {
+  public TextConsoleBuilder filters(List<? extends Filter> filters) {
     myFilters.addAll(filters);
     return this;
   }

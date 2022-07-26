@@ -39,7 +39,7 @@ public abstract class TextConsoleBuilder {
     return this;
   }
 
-  public TextConsoleBuilder filters(List<Filter> filters) {
+  public TextConsoleBuilder filters(List<? extends Filter> filters) {
     for (Filter filter : filters) {
       addFilter(filter);
     }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.daemon.impl;
+package consulo.language.editor.util;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.ProgressIndicatorProvider;

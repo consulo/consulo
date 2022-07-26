@@ -2,36 +2,31 @@
 
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
-import consulo.language.editor.Pass;
-import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPass;
-import consulo.language.editor.DaemonBundle;
-import consulo.language.editor.DaemonCodeAnalyzer;
-import consulo.language.editor.DaemonCodeAnalyzerSettings;
-import consulo.language.editor.ReferenceImporter;
-import consulo.language.editor.intention.IntentionAction;
-import consulo.language.editor.intention.HintAction;
-import consulo.language.editor.inject.EditorWindow;
-import consulo.language.editor.annotation.HighlightSeverity;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.IdeActions;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
-import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.application.progress.ProgressIndicator;
-import consulo.project.DumbService;
-import consulo.project.Project;
+import consulo.codeEditor.Editor;
+import consulo.document.Document;
 import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPass;
+import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
+import consulo.language.editor.DaemonCodeAnalyzer;
+import consulo.language.editor.DaemonCodeAnalyzerSettings;
+import consulo.language.editor.Pass;
+import consulo.language.editor.ReferenceImporter;
+import consulo.language.editor.annotation.HighlightSeverity;
+import consulo.language.editor.inject.EditorWindow;
+import consulo.language.editor.intention.HintAction;
+import consulo.language.editor.intention.IntentionAction;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.project.DumbService;
+import consulo.project.Project;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -164,14 +159,5 @@ public class ShowAutoImportPass extends TextEditorHighlightingPass {
       }
     }
     return hintActions;
-  }
-
-
-  @Nonnull
-  public static String getMessage(final boolean multiple, @Nonnull String name) {
-    final String messageKey = multiple ? "import.popup.multiple" : "import.popup.text";
-    String hintText = DaemonBundle.message(messageKey, name);
-    hintText += " " + KeymapUtil.getFirstKeyboardShortcutText(ActionManager.getInstance().getAction(IdeActions.ACTION_SHOW_INTENTION_ACTIONS));
-    return hintText;
   }
 }

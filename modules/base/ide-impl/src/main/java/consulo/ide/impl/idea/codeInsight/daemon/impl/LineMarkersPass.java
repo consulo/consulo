@@ -5,22 +5,18 @@
  */
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.language.editor.Pass;
 import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPass;
 import consulo.ide.impl.idea.codeInsight.daemon.*;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.analysis.HighlightingLevelManager;
 import consulo.language.editor.gutter.*;
+import consulo.language.editor.util.CollectHighlightsUtil;
 import consulo.language.file.inject.DocumentWindow;
 import consulo.language.Language;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
 import consulo.document.Document;
-import consulo.codeEditor.CodeInsightColors;
-import consulo.colorScheme.EditorColorsManager;
-import consulo.colorScheme.EditorColorsScheme;
 import consulo.codeEditor.markup.GutterIconRenderer;
-import consulo.codeEditor.markup.SeparatorPlacement;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
@@ -33,7 +29,6 @@ import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.ide.impl.idea.util.FunctionUtil;
 import consulo.util.lang.function.PairConsumer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.NotNullList;

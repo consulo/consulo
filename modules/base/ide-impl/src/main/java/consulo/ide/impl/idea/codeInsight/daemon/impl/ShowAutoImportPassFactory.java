@@ -23,12 +23,13 @@
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPass;
 import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPassFactory;
+import consulo.language.editor.AutoImportHelper;
 import consulo.language.editor.Pass;
 import consulo.language.psi.PsiFile;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -38,6 +39,13 @@ import javax.annotation.Nullable;
  */
 @ExtensionImpl
 public class ShowAutoImportPassFactory implements TextEditorHighlightingPassFactory {
+  private final AutoImportHelper myAutoImportHelper;
+
+  @Inject
+  public ShowAutoImportPassFactory(AutoImportHelper autoImportHelper) {
+    myAutoImportHelper = autoImportHelper;
+  }
+
   @Override
   public void register(@Nonnull Registrar registrar) {
     registrar.registerTextEditorHighlightingPass(this, new int[]{Pass.UPDATE_ALL,}, null, false, -1);
@@ -46,6 +54,6 @@ public class ShowAutoImportPassFactory implements TextEditorHighlightingPassFact
   @Override
   @Nullable
   public TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull final Editor editor) {
-    return ApplicationManager.getApplication().isUnitTestMode() || DaemonListeners.canChangeFileSilently(file) ? new ShowAutoImportPass(file.getProject(), file, editor) : null;
+    return myAutoImportHelper.canChangeFileSilently(file) ? new ShowAutoImportPass(file.getProject(), file, editor) : null;
   }
 }

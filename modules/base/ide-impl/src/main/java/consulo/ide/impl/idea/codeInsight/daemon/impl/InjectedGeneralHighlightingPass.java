@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
+import consulo.language.editor.util.CollectHighlightsUtil;
 import consulo.language.inject.impl.internal.InjectedLanguageManagerImpl;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.inject.impl.internal.PlaceImpl;

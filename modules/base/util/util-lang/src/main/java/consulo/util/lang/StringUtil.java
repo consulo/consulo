@@ -1075,6 +1075,17 @@ public class StringUtil {
     return text.length() > length ? (prependEllipsis ? "..." : "") + text.subSequence(text.length() - length, text.length()) : text;
   }
 
+  @Contract(value = "null -> null; !null -> !null", pure = true)
+  public static String trim(@Nullable String s) {
+    return s == null ? null : s.trim();
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String wrapWithDoubleQuote(@Nonnull String str) {
+    return '\"' + str + "\"";
+  }
+
   @Nonnull
   @Contract(pure = true)
   public static String trimEnd(@Nonnull String s, @NonNls @Nonnull String suffix) {

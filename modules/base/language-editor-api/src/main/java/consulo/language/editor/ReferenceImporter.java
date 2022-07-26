@@ -18,10 +18,11 @@ package consulo.language.editor;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 import consulo.codeEditor.Editor;
+import consulo.component.extension.ExtensionPointName;
 import consulo.language.editor.intention.HintAction;
 import consulo.language.psi.PsiFile;
+
 import javax.annotation.Nonnull;
 
 /**
