@@ -63,10 +63,8 @@ import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
+import java.util.*;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Predicate;
 
 public abstract class AbstractTreeClassChooserDialog<T extends PsiNamedElement> extends DialogWrapper implements TreeChooser<T> {
@@ -470,13 +468,14 @@ public abstract class AbstractTreeClassChooserDialog<T extends PsiNamedElement> 
     @Override
     public Object[] getElementsByName(String name, FindSymbolParameters parameters, @Nonnull ProgressIndicator canceled) {
       String patternName = parameters.getLocalPatternName();
-      List<T> classes = myTreeClassChooserDialog.getClassesByName(name, parameters.isSearchInLibraries(), patternName, myTreeClassChooserDialog.getScope());
+      Collection<T> classes = myTreeClassChooserDialog.getClassesByName(name, parameters.isSearchInLibraries(), patternName, myTreeClassChooserDialog.getScope());
       if (classes.size() == 0) return ArrayUtil.EMPTY_OBJECT_ARRAY;
       if (classes.size() == 1) {
-        return isAccepted(classes.get(0)) ? ArrayUtil.toObjectArray(classes) : ArrayUtil.EMPTY_OBJECT_ARRAY;
+        return isAccepted(ContainerUtil.getFirstItem(classes)) ? ArrayUtil.toObjectArray(classes) : ArrayUtil.EMPTY_OBJECT_ARRAY;
       }
+
       Set<String> qNames = ContainerUtil.newHashSet();
-      List<T> list = new ArrayList<T>(classes.size());
+      List<T> list = new ArrayList<>(classes.size());
       for (T aClass : classes) {
         if (qNames.add(getFullName(aClass)) && isAccepted(aClass)) {
           list.add(aClass);
@@ -497,8 +496,7 @@ public abstract class AbstractTreeClassChooserDialog<T extends PsiNamedElement> 
   }
 
   @Nonnull
-  protected abstract List<T> getClassesByName(final String name, final boolean searchInLibraries, final String pattern, final ProjectAwareSearchScope searchScope);
-
+  protected abstract Collection<T> getClassesByName(final String name, final boolean searchInLibraries, final String pattern, final ProjectAwareSearchScope searchScope);
 
   private static class SubclassGotoClassModel<T extends PsiNamedElement> extends MyGotoClassModel<T> {
     private final TreeClassInheritorsProvider<T> myInheritorsProvider;

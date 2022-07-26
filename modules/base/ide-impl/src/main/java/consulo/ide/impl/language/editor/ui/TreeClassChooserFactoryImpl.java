@@ -30,6 +30,7 @@ import jakarta.inject.Inject;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.tree.DefaultMutableTreeNode;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -51,7 +52,7 @@ public class TreeClassChooserFactoryImpl implements TreeClassChooserFactory {
     private T myInitialClass;
     private boolean myShowMembers;
     private boolean myShowLibraryContents = true;
-    private ClassProvider<T> myClassProvider = (name, searchInLibraries, pattern, searchScope) -> List.of();
+    private ClassProvider<T> myClassProvider = (project, name, searchInLibraries, pattern, searchScope) -> List.of();
     private InheritorsProviderFactory<T> myInheritorsProviderSupplier = (b, s) -> null;
     private Function<Object, T> myUserDataElementConverter = o -> null;
 
@@ -146,8 +147,8 @@ public class TreeClassChooserFactoryImpl implements TreeClassChooserFactory {
 
         @Nonnull
         @Override
-        protected List<T> getClassesByName(String name, boolean checkBoxState, String pattern, ProjectAwareSearchScope searchScope) {
-          return myClassProvider.getClassesByName(name, checkBoxState, pattern, searchScope);
+        protected Collection<T> getClassesByName(String name, boolean checkBoxState, String pattern, ProjectAwareSearchScope searchScope) {
+          return myClassProvider.getClassesByName(getProject(), name, checkBoxState, pattern, searchScope);
         }
 
         @Nullable

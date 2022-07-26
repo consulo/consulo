@@ -23,7 +23,8 @@ import consulo.project.Project;
 import consulo.project.content.scope.ProjectAwareSearchScope;
 
 import javax.annotation.Nonnull;
-import java.util.List;
+import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -33,11 +34,15 @@ import java.util.function.Predicate;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface TreeClassChooserFactory {
+  @FunctionalInterface
   interface ClassProvider<T extends PsiNamedElement> {
-    List<T> getClassesByName(final String name, final boolean searchInLibraries, final String pattern, final ProjectAwareSearchScope searchScope);
+    @Nonnull
+    Collection<T> getClassesByName(@Nonnull Project project, String name, final boolean searchInLibraries, final String pattern, final ProjectAwareSearchScope searchScope);
   }
 
+  @FunctionalInterface
   interface InheritorsProviderFactory<T extends PsiNamedElement> {
+    @Nullable
     TreeClassInheritorsProvider<T> create(@Nonnull T baseClass, @Nonnull ProjectAwareSearchScope scope);
   }
 
