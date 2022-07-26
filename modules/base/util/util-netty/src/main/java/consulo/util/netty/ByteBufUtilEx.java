@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.builtInServer.impl.net.util.netty.buffer;
+package consulo.util.netty;
 
 import io.netty.buffer.AbstractByteBuf;
 import io.netty.buffer.ByteBuf;

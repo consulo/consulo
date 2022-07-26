@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.builtInServer.impl.net.util.netty;
+package consulo.util.netty;
 
-import consulo.util.lang.function.Condition;
-import consulo.ide.impl.builtInServer.impl.net.http.NettyUtil;
 import consulo.util.concurrent.AsyncResult;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.bootstrap.ServerBootstrap;
@@ -30,13 +28,14 @@ import io.netty.channel.oio.OioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.oio.OioServerSocketChannel;
 import io.netty.channel.socket.oio.OioSocketChannel;
-import consulo.application.util.concurrent.PooledThreadExecutor;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.Executor;
+import java.util.function.Predicate;
 
 /**
  * @author VISTALL
@@ -45,8 +44,13 @@ import java.nio.charset.StandardCharsets;
  * from kotlin platform/platform-impl/src/com/intellij/util/io/netty.kt
  */
 public class NettyKt {
-  public static Bootstrap oioClientBootstrap() {
-    Bootstrap bootstrap = new Bootstrap().group(new OioEventLoopGroup(1, PooledThreadExecutor.INSTANCE)).channel(OioSocketChannel.class);
+  public static final int MAX_CONTENT_LENGTH = 100 * 1024 * 1024;
+
+  public static final int DEFAULT_CONNECT_ATTEMPT_COUNT = 20;
+  public static final int MIN_START_TIME = 100;
+
+  public static Bootstrap oioClientBootstrap(Executor executor) {
+    Bootstrap bootstrap = new Bootstrap().group(new OioEventLoopGroup(1, executor)).channel(OioSocketChannel.class);
     bootstrap.option(ChannelOption.TCP_NODELAY, true).option(ChannelOption.SO_KEEPALIVE, true);
     return bootstrap;
   }
@@ -70,7 +74,7 @@ public class NettyKt {
                                 InetSocketAddress remoteAddress,
                                 AsyncResult<?> promise,
                                 int maxAttemptCount,
-                                Condition<Void> stopCondition) {
+                                Predicate<Void> stopCondition) {
     try {
       return doConnect(bootstrap, remoteAddress, promise, maxAttemptCount, stopCondition);
     }
@@ -86,7 +90,7 @@ public class NettyKt {
                                    InetSocketAddress remoteAddress,
                                    AsyncResult<?> asyncResult,
                                    int maxAttemptCount,
-                                   @Nullable Condition<Void> stopCondition) throws Throwable {
+                                   @Nullable Predicate<Void> stopCondition) throws Throwable {
     int attemptCount = 0;
     if (bootstrap.config().group() instanceof NioEventLoopGroup) {
       return connectNio(bootstrap, remoteAddress, asyncResult, maxAttemptCount, stopCondition, attemptCount);
@@ -101,7 +105,7 @@ public class NettyKt {
         return channel;
       }
       catch (IOException e) {
-        if (stopCondition != null && stopCondition.value(null) || asyncResult != null && !asyncResult.isProcessed()) {
+        if (stopCondition != null && stopCondition.test(null) || asyncResult != null && !asyncResult.isProcessed()) {
           return null;
         }
         else if (maxAttemptCount == -1) {
@@ -111,7 +115,7 @@ public class NettyKt {
           attemptCount++;
         }
         else if (++attemptCount < maxAttemptCount) {
-          if (sleep(asyncResult, attemptCount * NettyUtil.MIN_START_TIME)) {
+          if (sleep(asyncResult, attemptCount * MIN_START_TIME)) {
             return null;
           }
         }
@@ -129,7 +133,7 @@ public class NettyKt {
                                     InetSocketAddress remoteAddress,
                                     AsyncResult<?> promise,
                                     int maxAttemptCount,
-                                    @Nullable Condition<Void> stopCondition,
+                                    @Nullable Predicate<Void> stopCondition,
                                     int _attemptCount) {
     int attemptCount = _attemptCount;
     while (true) {
@@ -140,7 +144,7 @@ public class NettyKt {
         }
         return future.channel();
       }
-      else if (stopCondition != null && stopCondition.value(null) || promise != null && promise.isRejected()) {
+      else if (stopCondition != null && stopCondition.test(null) || promise != null && promise.isRejected()) {
         return null;
       }
       else if (maxAttemptCount == -1) {
@@ -150,7 +154,7 @@ public class NettyKt {
         attemptCount++;
       }
       else if (++attemptCount < maxAttemptCount) {
-        if (sleep(promise, attemptCount * NettyUtil.MIN_START_TIME)) {
+        if (sleep(promise, attemptCount * MIN_START_TIME)) {
           return null;
         }
       }

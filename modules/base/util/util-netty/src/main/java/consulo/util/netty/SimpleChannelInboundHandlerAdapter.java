@@ -1,4 +1,4 @@
-package consulo.ide.impl.builtInServer.impl.net.http;
+package consulo.util.netty;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;

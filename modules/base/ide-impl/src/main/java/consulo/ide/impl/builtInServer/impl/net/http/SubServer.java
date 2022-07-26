@@ -34,7 +34,7 @@ import javax.annotation.Nonnull;
 import java.net.InetSocketAddress;
 import java.util.Map;
 
-import static consulo.ide.impl.builtInServer.impl.net.util.netty.NettyKt.serverBootstrap;
+import static consulo.util.netty.NettyKt.serverBootstrap;
 
 public final class SubServer implements CustomPortServerManager.CustomPortService, Disposable {
   private ChannelRegistrar channelRegistrar;

@@ -93,6 +93,7 @@ open module consulo.ide.impl {
   requires transitive consulo.util.io;
   requires transitive consulo.util.jdom;
   requires transitive consulo.util.lang;
+  requires transitive consulo.util.netty;
   requires transitive consulo.util.rmi;
   requires transitive consulo.util.jna;
   requires transitive consulo.util.xml.serializer;
@@ -160,8 +161,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.builtInServer.impl.ide;
   exports consulo.ide.impl.builtInServer.impl.net.http;
   exports consulo.ide.impl.builtInServer.impl.net.json;
-  exports consulo.ide.impl.builtInServer.impl.net.util.netty;
-  exports consulo.ide.impl.builtInServer.impl.net.util.netty.buffer;
   exports consulo.ide.impl.builtInServer.impl.net.websocket;
   exports consulo.ide.impl.builtInServer.impl.net.xml;
   exports consulo.ide.impl.builtInServer.json;

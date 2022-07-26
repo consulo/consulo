@@ -34,7 +34,7 @@ import java.util.Random;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static consulo.ide.impl.builtInServer.impl.net.util.netty.NettyKt.serverBootstrap;
+import static consulo.util.netty.NettyKt.serverBootstrap;
 
 public class BuiltInServer implements Disposable {
   // Some antiviral software detect viruses by the fact of accessing these ports so we should not touch them to appear innocent.

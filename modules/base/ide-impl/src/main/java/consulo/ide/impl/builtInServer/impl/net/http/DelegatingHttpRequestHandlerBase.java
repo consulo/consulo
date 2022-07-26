@@ -17,6 +17,7 @@ package consulo.ide.impl.builtInServer.impl.net.http;
 
 import consulo.logging.Logger;
 import consulo.ide.impl.builtInServer.http.Responses;
+import consulo.util.netty.SimpleChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;

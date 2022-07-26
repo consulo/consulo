@@ -16,6 +16,7 @@
 package consulo.ide.impl.builtInServer.impl.net.http;
 
 import consulo.logging.Logger;
+import consulo.util.netty.NettyKt;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -39,10 +40,10 @@ import java.net.ConnectException;
 import java.util.concurrent.TimeUnit;
 
 public final class NettyUtil {
-  public static final int MAX_CONTENT_LENGTH = 100 * 1024 * 1024;
+  public static final int MAX_CONTENT_LENGTH = NettyKt.MAX_CONTENT_LENGTH;
 
-  public static final int DEFAULT_CONNECT_ATTEMPT_COUNT = 20;
-  public static final int MIN_START_TIME = 100;
+  public static final int DEFAULT_CONNECT_ATTEMPT_COUNT = NettyKt.DEFAULT_CONNECT_ATTEMPT_COUNT;
+  public static final int MIN_START_TIME = NettyKt.MIN_START_TIME;
 
   public static void logAndClose(@Nonnull Throwable error, @Nonnull Logger log, @Nonnull Channel channel) {
     // don't report about errors while connecting
