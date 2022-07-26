@@ -15,6 +15,8 @@
  */
 package consulo.language.editor.completion;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
 import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.language.Language;
@@ -31,6 +33,7 @@ import java.util.List;
 /**
  * @author peter
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class CompletionConfidence implements LanguageExtension {
   private static final ExtensionPointCacheKey<CompletionConfidence, ByLanguageValue<List<CompletionConfidence>>> KEY =
           ExtensionPointCacheKey.create("CompletionConfidence", LanguageOneToMany.build(false));

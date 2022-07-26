@@ -11,8 +11,7 @@ import consulo.application.util.query.QueryFactory;
 import javax.annotation.Nonnull;
 
 /**
- * Allows to search for occurrences of specified regular expressions in the comments
- * of Java source files.
+ * Allows to search for occurrences of specified regular expressions in the comments of source files.
  *
  * @author yole
  * @see IndexPatternProvider
