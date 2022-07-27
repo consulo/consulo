@@ -4,6 +4,7 @@ package consulo.ide.impl.idea.ide.navigationToolbar;
 
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.ide.navigationToolbar.NavBarModelExtension;
 import consulo.util.lang.function.PairProcessor;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.ReadAction;

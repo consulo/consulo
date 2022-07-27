@@ -65,6 +65,7 @@ module consulo.ide.api {
   exports consulo.ide.action.ui;
   exports consulo.ide.navigation;
   exports consulo.ide.tipOfDay;
+  exports consulo.ide.navigationToolbar;
   exports consulo.ide.setting;
   exports consulo.ide.setting.module;
   exports consulo.ide.setting.bundle;

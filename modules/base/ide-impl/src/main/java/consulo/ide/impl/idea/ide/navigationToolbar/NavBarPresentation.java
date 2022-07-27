@@ -19,6 +19,7 @@ import consulo.application.AllIcons;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectRootsUtil;
 import consulo.application.ApplicationManager;
+import consulo.ide.navigationToolbar.NavBarModelExtension;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.ide.impl.idea.openapi.module.ModuleUtil;

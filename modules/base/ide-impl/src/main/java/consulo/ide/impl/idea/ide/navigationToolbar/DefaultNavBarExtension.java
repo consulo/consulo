@@ -16,27 +16,28 @@
 package consulo.ide.impl.idea.ide.navigationToolbar;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.language.editor.scope.AnalysisScopeBundle;
 import consulo.application.ApplicationManager;
+import consulo.application.util.function.Computable;
+import consulo.ide.navigationToolbar.AbstractNavBarModelExtension;
+import consulo.language.editor.scope.AnalysisScopeBundle;
 import consulo.language.psi.*;
+import consulo.language.psi.resolve.PsiFileSystemItemProcessor;
+import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
-import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ModuleFileIndex;
+import consulo.module.content.ModuleRootManager;
+import consulo.module.content.ProjectRootManager;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
 import consulo.module.content.layer.orderEntry.ModuleOrderEntry;
 import consulo.project.Project;
-import consulo.application.util.function.Computable;
-import consulo.module.content.ProjectRootManager;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.language.psi.resolve.PsiFileSystemItemProcessor;
-import consulo.language.psi.PsiUtilCore;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
-import consulo.application.util.function.Processor;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Predicate;
 
 /**
  * @author anna
@@ -82,7 +83,7 @@ public class DefaultNavBarExtension extends AbstractNavBarModelExtension {
   }
 
   @Override
-  public boolean processChildren(final Object object, final Object rootElement, final Processor<Object> processor) {
+  public boolean processChildren(final Object object, final Object rootElement, final Predicate<Object> processor) {
     if (object instanceof Project) {
       return processChildren((Project)object, processor);
     }
@@ -111,20 +112,20 @@ public class DefaultNavBarExtension extends AbstractNavBarModelExtension {
     return true;
   }
 
-  private static boolean processChildren(final Project object, final Processor<Object> processor) {
+  private static boolean processChildren(final Project object, final Predicate<Object> processor) {
     if (!object.isInitialized()) {
       return true;
     }
 
     return ApplicationManager.getApplication().runReadAction((Computable<Boolean>)() -> {
       for (Module module : ModuleManager.getInstance(object).getModules()) {
-        if (!processor.process(module)) return false;
+        if (!processor.test(module)) return false;
       }
       return true;
     });
   }
 
-  private static boolean processChildren(Module module, Processor<Object> processor) {
+  private static boolean processChildren(Module module, Predicate<Object> processor) {
     final PsiManager psiManager = PsiManager.getInstance(module.getProject());
     ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
     VirtualFile[] roots = moduleRootManager.getContentRoots();
@@ -136,13 +137,13 @@ public class DefaultNavBarExtension extends AbstractNavBarModelExtension {
         }
       });
       if (psiDirectory != null) {
-        if (!processor.process(psiDirectory)) return false;
+        if (!processor.test(psiDirectory)) return false;
       }
     }
     return true;
   }
 
-  private static boolean processChildren(final PsiDirectory object, final Object rootElement, final Processor<Object> processor) {
+  private static boolean processChildren(final PsiDirectory object, final Object rootElement, final Predicate<Object> processor) {
     return ApplicationManager.getApplication().runReadAction(new Computable<Boolean>() {
       @Override
       public Boolean compute() {
@@ -154,7 +155,7 @@ public class DefaultNavBarExtension extends AbstractNavBarModelExtension {
               final VirtualFile virtualFile = PsiUtilCore.getVirtualFile(child);
               if (virtualFile != null && !moduleFileIndex.isInContent(virtualFile)) continue;
             }
-            if (!processor.process(child)) return false;
+            if (!processor.test(child)) return false;
           }
         }
         return true;
@@ -162,7 +163,7 @@ public class DefaultNavBarExtension extends AbstractNavBarModelExtension {
     });
   }
 
-  private static boolean processChildren(final PsiFileSystemItem object, final Processor<Object> processor) {
+  private static boolean processChildren(final PsiFileSystemItem object, final Predicate<Object> processor) {
     return ApplicationManager.getApplication().runReadAction(new Computable<Boolean>() {
       @Override
       public Boolean compute() {
@@ -174,7 +175,7 @@ public class DefaultNavBarExtension extends AbstractNavBarModelExtension {
 
           @Override
           public boolean execute(@Nonnull PsiFileSystemItem element) {
-            return processor.process(element);
+            return processor.test(element);
           }
         });
       }

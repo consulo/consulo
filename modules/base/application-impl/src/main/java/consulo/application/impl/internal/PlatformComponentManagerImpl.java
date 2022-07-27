@@ -40,6 +40,8 @@ public abstract class PlatformComponentManagerImpl extends BaseComponentManager 
 
   private AtomicInteger myCreatedNotLazyServicesCount = new AtomicInteger();
 
+  private IComponentStore myComponentStore;
+
   protected PlatformComponentManagerImpl(@Nullable ComponentManager parent, @Nonnull String name, @Nonnull ComponentScope areaId) {
     super(parent, name, areaId, true);
   }
@@ -134,6 +136,14 @@ public abstract class PlatformComponentManagerImpl extends BaseComponentManager 
 
   @Nullable
   protected IComponentStore getStateStore() {
+    if (myComponentStore == null) {
+      myComponentStore = getStateStoreImpl();
+    }
+    return myComponentStore;
+  }
+
+  @Nullable
+  protected IComponentStore getStateStoreImpl() {
     return null;
   }
 

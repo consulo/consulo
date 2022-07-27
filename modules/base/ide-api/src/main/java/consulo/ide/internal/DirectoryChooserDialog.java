@@ -26,8 +26,6 @@ import java.util.Map;
 /**
  * @author VISTALL
  * @since 10-Jul-22
- *
- * This is
  */
 public interface DirectoryChooserDialog {
   void setTitle(String title);

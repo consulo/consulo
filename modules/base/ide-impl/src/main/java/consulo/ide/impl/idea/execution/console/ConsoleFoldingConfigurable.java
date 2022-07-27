@@ -2,15 +2,19 @@ package consulo.ide.impl.idea.execution.console;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.*;
+import consulo.disposer.Disposable;
+import consulo.ide.impl.idea.ui.AddEditDeleteListPanel;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.InputValidatorEx;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.Splitter;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.ui.AddEditDeleteListPanel;
+import consulo.util.lang.StringUtil;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import org.jetbrains.annotations.Nls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -22,13 +26,20 @@ import java.util.List;
  */
 @ExtensionImpl
 public class ConsoleFoldingConfigurable implements SearchableConfigurable, Configurable.NoScroll, ApplicationConfigurable {
+  private final Provider<ConsoleFoldingSettings> mySettings;
+
   private JPanel myMainComponent;
   private MyAddDeleteListPanel myPositivePanel;
   private MyAddDeleteListPanel myNegativePanel;
-  private final ConsoleFoldingSettings mySettings = ConsoleFoldingSettings.getSettings();
 
+  @Inject
+  public ConsoleFoldingConfigurable(Provider<ConsoleFoldingSettings> settings) {
+    mySettings = settings;
+  }
+
+  @RequiredUIAccess
   @Override
-  public JComponent createComponent() {
+  public JComponent createComponent(@Nonnull Disposable disposable) {
     if (myMainComponent == null) {
       myMainComponent = new JPanel(new BorderLayout());
       Splitter splitter = new Splitter(true);
@@ -49,25 +60,34 @@ public class ConsoleFoldingConfigurable implements SearchableConfigurable, Confi
     myPositivePanel.addRule(rule);
   }
 
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
-    return !Arrays.asList(myNegativePanel.getListItems()).equals(mySettings.getNegativePatterns()) ||
-           !Arrays.asList(myPositivePanel.getListItems()).equals(mySettings.getPositivePatterns());
+    ConsoleFoldingSettings consoleFoldingSettings = mySettings.get();
+    return !Arrays.asList(myNegativePanel.getListItems()).equals(consoleFoldingSettings.getNegativePatterns()) ||
+           !Arrays.asList(myPositivePanel.getListItems()).equals(consoleFoldingSettings.getPositivePatterns());
 
   }
 
+  @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
-    myNegativePanel.applyTo(mySettings.getNegativePatterns());
-    myPositivePanel.applyTo(mySettings.getPositivePatterns());
+    ConsoleFoldingSettings consoleFoldingSettings = mySettings.get();
+
+    myNegativePanel.applyTo(consoleFoldingSettings.getNegativePatterns());
+    myPositivePanel.applyTo(consoleFoldingSettings.getPositivePatterns());
   }
 
+  @RequiredUIAccess
   @Override
   public void reset() {
-    myNegativePanel.resetFrom(mySettings.getNegativePatterns());
-    myPositivePanel.resetFrom(mySettings.getPositivePatterns());
+    ConsoleFoldingSettings consoleFoldingSettings = mySettings.get();
+
+    myNegativePanel.resetFrom(consoleFoldingSettings.getNegativePatterns());
+    myPositivePanel.resetFrom(consoleFoldingSettings.getPositivePatterns());
   }
 
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
     myMainComponent = null;
@@ -110,11 +130,13 @@ public class ConsoleFoldingConfigurable implements SearchableConfigurable, Confi
     @Nullable
     private String showEditDialog(final String initialValue) {
       return Messages.showInputDialog(this, myQuery, "Folding pattern", Messages.getQuestionIcon(), initialValue, new InputValidatorEx() {
+        @RequiredUIAccess
         @Override
         public boolean checkInput(String inputString) {
            return !StringUtil.isEmpty(inputString);
         }
 
+        @RequiredUIAccess
         @Override
         public boolean canClose(String inputString) {
           return !StringUtil.isEmpty(inputString);

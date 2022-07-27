@@ -25,6 +25,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.TimedReference;
 import consulo.component.internal.inject.InjectingContainerBuilder;
+import consulo.component.store.impl.internal.IComponentStore;
 import consulo.component.store.impl.internal.StoreUtil;
 import consulo.logging.Logger;
 import consulo.module.impl.internal.ModuleManagerImpl;
@@ -145,9 +146,15 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     builder.bind(ProjectEx.class).to(this);
   }
 
-  @Nonnull
+  @Nullable
   @Override
   public IProjectStore getStateStore() {
+    return (IProjectStore)super.getStateStore();
+  }
+
+  @Nonnull
+  @Override
+  public IComponentStore getStateStoreImpl() {
     return getInstance(IProjectStore.class);
   }
 

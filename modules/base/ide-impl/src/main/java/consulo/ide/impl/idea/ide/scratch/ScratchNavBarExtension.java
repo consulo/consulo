@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.ide.scratch;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.ide.navigationToolbar.AbstractNavBarModelExtension;
+import consulo.ide.navigationToolbar.AbstractNavBarModelExtension;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.scratch.RootType;
 import consulo.language.editor.scratch.ScratchFileService;

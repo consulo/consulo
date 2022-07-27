@@ -13,26 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.navigationToolbar;
+package consulo.ide.navigationToolbar;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.ui.UISettings;
+import consulo.codeEditor.Editor;
+import consulo.dataContext.DataContext;
 import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.fileEditor.structureView.StructureViewModel;
 import consulo.fileEditor.structureView.StructureViewTreeElement;
 import consulo.fileEditor.structureView.TreeBasedStructureViewBuilder;
-import consulo.language.editor.structureView.PsiStructureViewFactory;
-import consulo.language.editor.structureView.PsiTreeElementBase;
-import consulo.application.ui.UISettings;
 import consulo.fileEditor.structureView.tree.NodeProvider;
 import consulo.fileEditor.structureView.tree.TreeElement;
 import consulo.language.Language;
 import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
-import consulo.codeEditor.Editor;
+import consulo.language.editor.structureView.PsiStructureViewFactory;
+import consulo.language.editor.structureView.PsiTreeElementBase;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.application.util.function.Processor;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.annotation.access.RequiredReadAction;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.ref.SoftReference;
@@ -42,6 +41,7 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -89,7 +89,7 @@ public abstract class StructureAwareNavBarModelExtension extends AbstractNavBarM
 
   @Override
   @RequiredReadAction
-  public boolean processChildren(Object object, Object rootElement, Processor<Object> processor) {
+  public boolean processChildren(Object object, Object rootElement, Predicate<Object> processor) {
     if (UISettings.getInstance().getShowMembersInNavigationBar()) {
       if (object instanceof PsiElement) {
         if (((PsiElement)object).getLanguage() == getLanguage()) {
@@ -148,14 +148,14 @@ public abstract class StructureAwareNavBarModelExtension extends AbstractNavBarM
   }
 
   @RequiredReadAction
-  private boolean processStructureViewChildren(StructureViewTreeElement parent, Object object, Processor<Object> processor) {
+  private boolean processStructureViewChildren(StructureViewTreeElement parent, Object object, Predicate<Object> processor) {
     List<TreeElement> children = childrenFromNodeAndProviders(parent);
 
     boolean result = true;
     if (Comparing.equal(parent.getValue(), object)) {
       for (TreeElement child : children) {
         if (child instanceof StructureViewTreeElement) {
-          if (!processor.process(((StructureViewTreeElement)child).getValue())) {
+          if (!processor.test(((StructureViewTreeElement)child).getValue())) {
             result = false;
           }
         }

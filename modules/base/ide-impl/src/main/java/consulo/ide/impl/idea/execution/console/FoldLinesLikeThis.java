@@ -1,7 +1,5 @@
 package consulo.ide.impl.idea.execution.console;
 
-import consulo.ide.impl.idea.execution.impl.ConsoleViewImpl;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.codeEditor.Editor;
@@ -9,6 +7,8 @@ import consulo.codeEditor.SelectionModel;
 import consulo.document.Document;
 import consulo.execution.ExecutionDataKeys;
 import consulo.execution.ui.console.ConsoleView;
+import consulo.ide.impl.idea.execution.impl.ConsoleViewImpl;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.ui.ex.action.AnActionEvent;
@@ -64,7 +64,7 @@ public class FoldLinesLikeThis extends DumbAwareAction {
     assert editor != null;
     final String selection = getSingleLineSelection(editor);
     assert selection != null;
-    ShowSettingsUtil.getInstance().editConfigurable(editor.getProject(), new ConsoleFoldingConfigurable() {
+    ShowSettingsUtil.getInstance().editConfigurable(editor.getProject(), new ConsoleFoldingConfigurable(ConsoleFoldingSettings::getSettings) {
       @Override
       public void reset() {
         super.reset();

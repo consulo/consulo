@@ -23,16 +23,13 @@ import consulo.application.Application;
 import consulo.application.ApplicationProperties;
 import consulo.application.event.ApplicationListener;
 import consulo.application.event.ApplicationLoadListener;
-import consulo.application.impl.internal.macro.ApplicationPathMacroManagerImpl;
 import consulo.application.impl.internal.performance.ActivityTracker;
 import consulo.application.impl.internal.performance.HeavyProcessLatch;
 import consulo.application.impl.internal.performance.PerformanceWatcher;
 import consulo.application.impl.internal.start.StartupProgress;
-import consulo.application.impl.internal.store.ApplicationStoreImpl;
 import consulo.application.impl.internal.store.IApplicationStore;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.internal.ApplicationWithIntentWriteLock;
-import consulo.application.macro.ApplicationPathMacroManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.progress.ProgressManager;
@@ -44,8 +41,8 @@ import consulo.application.util.concurrent.PooledThreadExecutor;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
-import consulo.component.bind.InjectingBinding;
 import consulo.component.internal.inject.InjectingContainerBuilder;
+import consulo.component.store.impl.internal.IComponentStore;
 import consulo.component.store.impl.internal.StateStorageException;
 import consulo.component.store.impl.internal.StoreUtil;
 import consulo.container.boot.ContainerPathManager;
@@ -454,9 +451,15 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     }
   }
 
+  @Nullable
+  @Override
+  protected IApplicationStore getStateStore() {
+    return (IApplicationStore)super.getStateStore();
+  }
+
   @Override
   @Nonnull
-  public IApplicationStore getStateStore() {
+  public IComponentStore getStateStoreImpl() {
     return getInstance(IApplicationStore.class);
   }
 

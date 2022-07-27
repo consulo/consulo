@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.navigationToolbar;
+package consulo.ide.navigationToolbar;
 
+import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiElement;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 
 /**
  * @author gregsh
@@ -47,6 +47,6 @@ public abstract class AbstractNavBarModelExtension implements NavBarModelExtensi
   @Nonnull
   @Override
   public Collection<VirtualFile> additionalRoots(Project project) {
-    return Collections.emptyList();
+    return List.of();
   }
 }

@@ -17,6 +17,7 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.actions.ModuleDelete
 import consulo.ide.impl.idea.openapi.util.Getter;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.ide.navigationToolbar.NavBarModelExtension;
 import consulo.ui.ex.awt.HintHint;
 import consulo.ide.impl.idea.ui.LightweightHint;
 import consulo.ide.impl.idea.ui.ListenerUtil;

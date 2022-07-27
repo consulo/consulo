@@ -18,22 +18,22 @@
  * User: anna
  * Date: 04-Feb-2008
  */
-package consulo.ide.impl.idea.ide.navigationToolbar;
+package consulo.ide.navigationToolbar;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
+import consulo.component.extension.ExtensionPointName;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
-import consulo.component.extension.ExtensionPointName;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
-import consulo.application.util.function.Processor;
+import consulo.project.Project;
 import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.function.Predicate;
 
 /**
  * The interface has a default implementation ({@link DefaultNavBarExtension}) which is normally registered as last.
@@ -76,7 +76,7 @@ public interface NavBarModelExtension {
     return null;
   }
 
-  default boolean processChildren(Object object, Object rootElement, Processor<Object> processor) {
+  default boolean processChildren(Object object, Object rootElement, Predicate<Object> processor) {
     return true;
   }
 
