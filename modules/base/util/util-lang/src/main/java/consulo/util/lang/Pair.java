@@ -16,9 +16,10 @@
 package consulo.util.lang;
 
 import javax.annotation.Nonnull;
+import java.util.Map;
 import java.util.function.Function;
 
-public class Pair<A, B> {
+public class Pair<A, B> implements Map.Entry<A, B> {
   public final A first;
   public final B second;
 
@@ -72,6 +73,21 @@ public class Pair<A, B> {
 
   public final B getSecond() {
     return second;
+  }
+
+  @Override
+  public A getKey() {
+    return getFirst();
+  }
+
+  @Override
+  public B getValue() {
+    return getSecond();
+  }
+
+  @Override
+  public B setValue(B value) {
+    throw new UnsupportedOperationException();
   }
 
   @Override
