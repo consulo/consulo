@@ -17,6 +17,7 @@ package consulo.util.collection;
 
 import consulo.util.collection.impl.map.*;
 import consulo.util.lang.Pair;
+import consulo.util.lang.function.Condition;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
@@ -114,12 +115,12 @@ public class ContainerUtil {
   }
 
   @Contract(pure = true)
-  public static <T> boolean and(@Nonnull T[] iterable, @Nonnull java.util.function.Predicate<? super T> condition) {
+  public static <T> boolean and(@Nonnull T[] iterable, @Nonnull Predicate<? super T> condition) {
     return and(Arrays.asList(iterable), condition);
   }
 
   @Contract(pure = true)
-  public static <T> boolean and(@Nonnull Iterable<? extends T> iterable, @Nonnull java.util.function.Predicate<? super T> condition) {
+  public static <T> boolean and(@Nonnull Iterable<? extends T> iterable, @Nonnull Predicate<? super T> condition) {
     for (final T t : iterable) {
       if (!condition.test(t)) return false;
     }
@@ -1302,6 +1303,27 @@ public class ContainerUtil {
     return hashMap;
   }
 
+  @Contract(pure = true)
+  public static <T> int indexOf(@Nonnull List<? extends T> list, @Nonnull Predicate<? super T> condition) {
+    for (int i = 0, listSize = list.size(); i < listSize; i++) {
+      T t = list.get(i);
+      if (condition.test(t)) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
+  @Contract(pure = true)
+  public static <T> int lastIndexOf(@Nonnull List<T> list, @Nonnull Predicate<? super T> condition) {
+    for (int i = list.size() - 1; i >= 0; i--) {
+      T t = list.get(i);
+      if (condition.test(t)) {
+        return i;
+      }
+    }
+    return -1;
+  }
 
   /**
    * @return read-only list consisting of the elements from all of the collections
@@ -1322,7 +1344,7 @@ public class ContainerUtil {
   }
 
   @Nonnull
-  public static <K, V> MultiMap<K, V> groupBy(@Nonnull Iterable<V> collection, @Nonnull java.util.function.Function<V, K> grouper) {
+  public static <K, V> MultiMap<K, V> groupBy(@Nonnull Iterable<V> collection, @Nonnull Function<V, K> grouper) {
     MultiMap<K, V> result = MultiMap.createLinked();
     for (V data : collection) {
       K key = grouper.apply(data);

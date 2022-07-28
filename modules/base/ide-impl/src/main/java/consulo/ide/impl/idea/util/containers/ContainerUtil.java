@@ -2451,24 +2451,14 @@ public class ContainerUtil extends ContainerUtilRt {
   @Nullable
   @Contract(pure = true)
   public static <T, U extends T> U findLastInstance(@Nonnull List<T> list, @Nonnull final Class<U> clazz) {
-    int i = lastIndexOf(list, new Condition<T>() {
-      @Override
-      public boolean value(T t) {
-        return clazz.isInstance(t);
-      }
-    });
+    int i = lastIndexOf(list, t -> clazz.isInstance(t));
     //noinspection unchecked
     return i < 0 ? null : (U)list.get(i);
   }
 
   @Contract(pure = true)
   public static <T, U extends T> int lastIndexOfInstance(@Nonnull List<T> list, @Nonnull final Class<U> clazz) {
-    return lastIndexOf(list, new Condition<T>() {
-      @Override
-      public boolean value(T t) {
-        return clazz.isInstance(t);
-      }
-    });
+    return lastIndexOf(list, t -> clazz.isInstance(t));
   }
 
   @Contract(pure = true)
