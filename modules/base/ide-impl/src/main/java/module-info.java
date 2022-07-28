@@ -266,7 +266,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.codeInsight.documentation;
   exports consulo.ide.impl.idea.codeInsight.documentation.actions;
   exports consulo.ide.impl.idea.codeInsight.editorActions;
-  exports consulo.ide.impl.idea.codeInsight.editorActions.emacs;
   exports consulo.ide.impl.idea.codeInsight.editorActions.enter;
   exports consulo.ide.impl.idea.codeInsight.editorActions.fillParagraph;
   exports consulo.ide.impl.idea.codeInsight.editorActions.moveLeftRight;

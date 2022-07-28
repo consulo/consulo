@@ -21,6 +21,7 @@ import consulo.language.Language;
 import consulo.codeEditor.Editor;
 import consulo.language.editor.action.BackspaceHandlerDelegate;
 import consulo.codeEditor.action.BackspaceModeOverride;
+import consulo.language.editor.action.LanguageBackspaceModeOverride;
 import consulo.language.psi.PsiFile;
 import consulo.util.lang.StringUtil;
 
@@ -60,7 +61,7 @@ abstract class AbstractIndentingBackspaceHandler extends BackspaceHandlerDelegat
 
   private static SmartBackspaceMode getBackspaceMode(Language language) {
     SmartBackspaceMode mode = CodeInsightSettings.getInstance().getBackspaceMode();
-    BackspaceModeOverride override = LanguageBackspaceModeOverride.INSTANCE.forLanguage(language);
+    BackspaceModeOverride override = LanguageBackspaceModeOverride.forLanguage(language);
     if (override != null) {
       mode = override.getBackspaceMode(mode);
     }

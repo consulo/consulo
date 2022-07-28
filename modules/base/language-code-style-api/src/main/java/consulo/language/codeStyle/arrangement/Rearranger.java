@@ -15,13 +15,20 @@
  */
 package consulo.language.codeStyle.arrangement;
 
-import consulo.container.plugin.PluginIds;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.application.Application;
+import consulo.component.extension.ExtensionPoint;
+import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
-import consulo.language.OldLanguageExtension;
+import consulo.language.Language;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.arrangement.std.ArrangementStandardSettingsAware;
 import consulo.language.codeStyle.arrangement.std.StdArrangementTokens;
+import consulo.language.extension.ByLanguageValue;
+import consulo.language.extension.LanguageExtension;
+import consulo.language.extension.LanguageOneToOne;
 import consulo.language.psi.PsiElement;
 import consulo.util.lang.Pair;
 
@@ -39,9 +46,18 @@ import java.util.List;
  * @since 7/16/12 3:23 PM
  * @param <E>   entry type
  */
-public interface Rearranger<E extends ArrangementEntry> {
+@ExtensionAPI(ComponentScope.APPLICATION)
+public interface Rearranger<E extends ArrangementEntry> extends LanguageExtension {
 
-  OldLanguageExtension<Rearranger<?>> EXTENSION = new OldLanguageExtension<>(PluginIds.CONSULO_BASE + ".lang.rearranger");
+  ExtensionPointCacheKey<Rearranger, ByLanguageValue<Rearranger>> KEY =
+          ExtensionPointCacheKey.create("Rearranger", LanguageOneToOne.build());
+
+  @Nullable
+  static Rearranger forLanguage(Language language) {
+    ExtensionPoint<Rearranger> extensionPoint = Application.get().getExtensionPoint(Rearranger.class);
+    ByLanguageValue<Rearranger> map = extensionPoint.getOrBuildCache(KEY);
+    return map.get(language);
+  }
 
   /**
    * Tries to wrap given element into arrangement entry at the target context.

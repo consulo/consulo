@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.codeEditor.action;
 
-package consulo.ide.impl.idea.testIntegration;
+import javax.annotation.Nonnull;
 
-import consulo.language.OldLanguageExtension;
-import consulo.container.plugin.PluginIds;
-import consulo.language.editor.testIntegration.TestCreator;
-
-public class LanguageTestCreators extends OldLanguageExtension<TestCreator> {
-  public static final LanguageTestCreators INSTANCE = new LanguageTestCreators();
-
-  public LanguageTestCreators() {
-    super(PluginIds.CONSULO_BASE + ".testCreator");
+public class SmartBackspaceDisabler implements BackspaceModeOverride {
+  @Nonnull
+  @Override
+  public SmartBackspaceMode getBackspaceMode(SmartBackspaceMode modeFromSettings) {
+    return modeFromSettings == SmartBackspaceMode.AUTOINDENT ? SmartBackspaceMode.INDENT : modeFromSettings;
   }
 }

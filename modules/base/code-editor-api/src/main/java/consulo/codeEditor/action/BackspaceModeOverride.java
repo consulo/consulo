@@ -15,11 +15,14 @@
  */
 package consulo.codeEditor.action;
 
+import javax.annotation.Nonnull;
+
 /**
  * Allows specific languages to override backspace unindent mode set in global editor preferences.
  *
  * @see SmartBackspaceDisabler
  */
-public abstract class BackspaceModeOverride {
-  public abstract SmartBackspaceMode getBackspaceMode(SmartBackspaceMode modeFromSettings);
+public interface BackspaceModeOverride {
+  @Nonnull
+  SmartBackspaceMode getBackspaceMode(SmartBackspaceMode modeFromSettings);
 }

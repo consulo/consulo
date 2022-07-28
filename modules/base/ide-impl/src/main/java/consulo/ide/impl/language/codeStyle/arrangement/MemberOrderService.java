@@ -69,7 +69,7 @@ public class MemberOrderService {
   @Nullable
   public PsiElement getAnchor(@Nonnull PsiElement member, @Nonnull CommonCodeStyleSettings settings, @Nonnull PsiElement context) {
     Language language = context.getLanguage();
-    Rearranger<?> rearranger = Rearranger.EXTENSION.forLanguage(language);
+    Rearranger<?> rearranger = Rearranger.forLanguage(language);
     if (rearranger == null) {
       return null;
     }

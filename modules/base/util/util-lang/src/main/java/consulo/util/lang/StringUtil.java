@@ -232,6 +232,13 @@ public class StringUtil {
     return -1;
   }
 
+  @Nonnull
+  @Contract(pure = true)
+  public static String pluralize(@Nonnull String base, int n) {
+    if (n == 1) return base;
+    return pluralize(base);
+  }
+
   @SuppressWarnings({"HardCodedStringLiteral"})
   @Nonnull
   @Contract(pure = true)

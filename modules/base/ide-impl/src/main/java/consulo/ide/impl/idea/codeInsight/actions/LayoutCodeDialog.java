@@ -125,7 +125,7 @@ public class LayoutCodeDialog extends DialogWrapper {
       myOptimizeImportsCb.setSelected(myLastRunOptions.getLastOptimizeImports());
     }
 
-    boolean canRearrangeCode = Rearranger.EXTENSION.forLanguage(myFile.getLanguage()) != null;
+    boolean canRearrangeCode = Rearranger.forLanguage(myFile.getLanguage()) != null;
     myRearrangeCodeCb.setVisible(canRearrangeCode);
     if (canRearrangeCode) {
       myRearrangeCodeCb.setSelected(myLastRunOptions.isRearrangeCode(myFile.getLanguage()));

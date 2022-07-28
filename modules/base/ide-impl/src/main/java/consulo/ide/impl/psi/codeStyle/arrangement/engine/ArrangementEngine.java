@@ -116,7 +116,7 @@ public class ArrangementEngine {
       return;
     }
 
-    final Rearranger<?> rearranger = Rearranger.EXTENSION.forLanguage(file.getLanguage());
+    final Rearranger<?> rearranger = Rearranger.forLanguage(file.getLanguage());
     if (rearranger == null) {
       return;
     }

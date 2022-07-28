@@ -1075,7 +1075,7 @@ public class CommonCodeStyleSettings {
     ArrangementSettings theseSettings = myArrangementSettings;
     ArrangementSettings otherSettings = obj.getArrangementSettings();
     if (theseSettings == null && otherSettings != null) {
-      Rearranger<?> rearranger = Rearranger.EXTENSION.forLanguage(myLanguage);
+      Rearranger<?> rearranger = Rearranger.forLanguage(myLanguage);
       if (rearranger instanceof ArrangementStandardSettingsAware) {
         theseSettings = ((ArrangementStandardSettingsAware)rearranger).getDefaultSettings();
       }

@@ -13,20 +13,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.editorActions.emacs;
+package consulo.language.editor.action;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.application.Application;
 import consulo.codeEditor.Editor;
-import consulo.project.Project;
+import consulo.component.extension.ExtensionPoint;
+import consulo.component.extension.ExtensionPointCacheKey;
+import consulo.language.Language;
+import consulo.language.editor.internal.DefaultEmacsProcessingHandler;
+import consulo.language.extension.ByLanguageValue;
+import consulo.language.extension.LanguageExtension;
+import consulo.language.extension.LanguageOneToOne;
 import consulo.language.psi.PsiFile;
+import consulo.project.Project;
+
 import javax.annotation.Nonnull;
 
 /**
  * This interface is assumed to define general contract for Emacs-like functionality.
- * 
+ *
  * @author Denis Zhdanov
  * @since 4/11/11 1:56 PM
  */
-public interface EmacsProcessingHandler {
+@ExtensionAPI(ComponentScope.APPLICATION)
+public interface EmacsProcessingHandler extends LanguageExtension {
+  ExtensionPointCacheKey<EmacsProcessingHandler, ByLanguageValue<EmacsProcessingHandler>> KEY =
+          ExtensionPointCacheKey.create("EmacsProcessingHandler", LanguageOneToOne.build(new DefaultEmacsProcessingHandler()));
+
+  @Nonnull
+  static EmacsProcessingHandler forLanguage(Language language) {
+    ExtensionPoint<EmacsProcessingHandler> extensionPoint = Application.get().getExtensionPoint(EmacsProcessingHandler.class);
+    ByLanguageValue<EmacsProcessingHandler> map = extensionPoint.getOrBuildCache(KEY);
+    return map.requiredGet(language);
+  }
 
   /**
    * Enumerates possible processing results.
@@ -40,8 +61,7 @@ public interface EmacsProcessingHandler {
     /**
      * Stop current processing as everything is done by the current handler
      */
-    STOP
-  }
+    STOP}
 
   /**
    * Emacs handles <code>Tab</code> pressing as
@@ -51,11 +71,11 @@ public interface EmacsProcessingHandler {
    * <p/>
    * So, current method may be implemented by changing code block for the active line by changing its indentation.
    * {@link Result#STOP} should be returned then.
-   * 
-   * @param project     current project
-   * @param editor      current editor
-   * @param file        current file
-   * @return            processing result
+   *
+   * @param project current project
+   * @param editor  current editor
+   * @param file    current file
+   * @return processing result
    */
   @Nonnull
   Result changeIndent(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull final PsiFile file);

@@ -15,19 +15,20 @@
  */
 package consulo.ide.impl.idea.application.options.codeStyle.arrangement.action;
 
-import consulo.ide.impl.idea.codeInsight.actions.RearrangeCodeProcessor;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.SelectionModel;
-import consulo.project.Project;
+import consulo.document.Document;
+import consulo.ide.impl.idea.codeInsight.actions.RearrangeCodeProcessor;
+import consulo.language.codeStyle.arrangement.Rearranger;
+import consulo.language.editor.CommonDataKeys;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import consulo.language.codeStyle.arrangement.Rearranger;
-import javax.annotation.Nonnull;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+
+import javax.annotation.Nonnull;
 
 /**
  * Arranges content at the target file(s).
@@ -41,7 +42,7 @@ public class RearrangeCodeAction extends AnAction {
   @Override
   public void update(@Nonnull AnActionEvent e) {
     PsiFile file = e.getDataContext().getData(CommonDataKeys.PSI_FILE);
-    boolean enabled = file != null && Rearranger.EXTENSION.forLanguage(file.getLanguage()) != null;
+    boolean enabled = file != null && Rearranger.forLanguage(file.getLanguage()) != null;
     e.getPresentation().setEnabled(enabled);
   }
 

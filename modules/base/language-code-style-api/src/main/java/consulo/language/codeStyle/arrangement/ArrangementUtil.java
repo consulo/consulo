@@ -71,7 +71,7 @@ public class ArrangementUtil {
 
   @Nullable
   private static ArrangementSettingsSerializer getSerializer(@Nonnull Language language) {
-    Rearranger<?> rearranger = Rearranger.EXTENSION.forLanguage(language);
+    Rearranger<?> rearranger = Rearranger.forLanguage(language);
     return rearranger == null ? null : rearranger.getSerializer();
   }
 

@@ -13,9 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.editorActions.emacs;
+package consulo.language.editor.internal;
 
 import consulo.codeEditor.Editor;
+import consulo.language.Language;
+import consulo.language.editor.action.EmacsProcessingHandler;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
@@ -30,5 +32,11 @@ public class DefaultEmacsProcessingHandler implements EmacsProcessingHandler {
   @Override
   public Result changeIndent(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
     return Result.CONTINUE;
+  }
+
+  @Nonnull
+  @Override
+  public Language getLanguage() {
+    return Language.ANY;
   }
 }

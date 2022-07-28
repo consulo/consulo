@@ -62,7 +62,7 @@ public class GotoTestOrCodeHandler extends GotoTargetHandler {
     }
     else {
       candidates = TestFinderHelper.findTestsForClass(selectedElement);
-      final TestCreator creator = LanguageTestCreators.INSTANCE.forLanguage(file.getLanguage());
+      final TestCreator creator = TestCreator.forLanguage(file.getLanguage());
       if (creator != null && creator.isAvailable(file.getProject(), editor, file)) {
         actions.add(new AdditionalAction() {
           @Nonnull

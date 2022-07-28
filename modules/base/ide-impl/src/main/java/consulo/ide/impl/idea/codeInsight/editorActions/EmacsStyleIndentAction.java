@@ -16,25 +16,24 @@
 
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
-import consulo.language.codeStyle.FormattingModelBuilder;
-import consulo.language.editor.action.CodeInsightActionHandler;
-import consulo.ide.impl.idea.codeInsight.CodeInsightUtilBase;
-import consulo.language.editor.impl.internal.action.BaseCodeInsightAction;
-import consulo.ide.impl.idea.codeInsight.editorActions.emacs.EmacsProcessingHandler;
-import consulo.ide.impl.idea.codeInsight.editorActions.emacs.LanguageEmacsExtension;
-import consulo.document.Document;
+import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.ScrollType;
+import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
+import consulo.ide.impl.idea.codeInsight.CodeInsightUtilBase;
+import consulo.language.codeStyle.CodeStyleManager;
+import consulo.language.codeStyle.FormattingModelBuilder;
+import consulo.language.editor.action.CodeInsightActionHandler;
+import consulo.language.editor.action.EmacsProcessingHandler;
+import consulo.language.editor.impl.internal.action.BaseCodeInsightAction;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
@@ -68,12 +67,10 @@ public class EmacsStyleIndentAction extends BaseCodeInsightAction implements Dum
         return;
       }
 
-      EmacsProcessingHandler emacsProcessingHandler = LanguageEmacsExtension.INSTANCE.forLanguage(file.getLanguage());
-      if (emacsProcessingHandler != null) {
-        EmacsProcessingHandler.Result result = emacsProcessingHandler.changeIndent(project, editor, file);
-        if (result == EmacsProcessingHandler.Result.STOP) {
-          return;
-        }
+      EmacsProcessingHandler emacsProcessingHandler = EmacsProcessingHandler.forLanguage(file.getLanguage());
+      EmacsProcessingHandler.Result result = emacsProcessingHandler.changeIndent(project, editor, file);
+      if (result == EmacsProcessingHandler.Result.STOP) {
+        return;
       }
 
       final Document document = editor.getDocument();

@@ -63,7 +63,7 @@ public abstract class ArrangementSettingsPanel extends CodeStyleAbstractPanel {
   public ArrangementSettingsPanel(@Nonnull CodeStyleSettings settings, @Nonnull Language language) {
     super(settings);
     myLanguage = language;
-    Rearranger<?> rearranger = Rearranger.EXTENSION.forLanguage(language);
+    Rearranger<?> rearranger = Rearranger.forLanguage(language);
 
     assert rearranger instanceof ArrangementStandardSettingsAware;
     mySettingsAware = (ArrangementStandardSettingsAware)rearranger;
