@@ -59,6 +59,7 @@ module consulo.ide.api {
   requires transitive consulo.execution.test.sm.api;
   requires transitive consulo.execution.test.thrift.api;
   requires transitive consulo.external.service.api;
+  requires transitive consulo.language.code.style.ui.api;
 
   exports consulo.ide;
   exports consulo.ide.action;
