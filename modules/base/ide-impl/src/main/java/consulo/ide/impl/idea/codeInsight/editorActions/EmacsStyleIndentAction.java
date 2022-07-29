@@ -27,7 +27,7 @@ import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.codeStyle.FormattingModelBuilder;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.action.EmacsProcessingHandler;
-import consulo.language.editor.impl.internal.action.BaseCodeInsightAction;
+import consulo.language.editor.impl.action.BaseCodeInsightAction;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

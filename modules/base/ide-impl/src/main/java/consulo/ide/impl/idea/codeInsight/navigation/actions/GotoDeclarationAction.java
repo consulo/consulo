@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.codeInsight.navigation.actions;
 
 import consulo.language.editor.action.CodeInsightActionHandler;
-import consulo.language.editor.impl.internal.action.BaseCodeInsightAction;
+import consulo.language.editor.impl.action.BaseCodeInsightAction;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.ui.PopupNavigationUtil;
 import consulo.externalService.statistic.FeatureUsageTracker;

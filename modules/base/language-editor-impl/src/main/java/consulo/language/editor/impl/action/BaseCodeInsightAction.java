@@ -14,21 +14,20 @@
  * limitations under the License.
  */
 
-package consulo.language.editor.impl.internal.action;
+package consulo.language.editor.impl.action;
 
+import consulo.codeEditor.Editor;
+import consulo.dataContext.DataContext;
 import consulo.language.editor.action.CodeInsightAction;
 import consulo.language.editor.completion.lookup.Lookup;
 import consulo.language.editor.completion.lookup.LookupManager;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
-import consulo.ui.ex.action.Presentation;
-import consulo.codeEditor.Editor;
-import consulo.project.Project;
+import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -82,7 +81,7 @@ public abstract class BaseCodeInsightAction extends CodeInsightAction {
   public void update(AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     DataContext dataContext = event.getDataContext();
-    Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    Project project = dataContext.getData(Project.KEY);
     if (project == null){
       presentation.setEnabled(false);
       return;

@@ -21,7 +21,7 @@ import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.lang.CodeInsightActions;
 import consulo.language.Language;
 import consulo.language.editor.action.CodeInsightActionHandler;
-import consulo.language.editor.impl.internal.action.BaseCodeInsightAction;
+import consulo.language.editor.impl.action.BaseCodeInsightAction;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;

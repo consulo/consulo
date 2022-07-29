@@ -15,12 +15,14 @@
  */
 package consulo.ide.impl.idea.vcsUtil;
 
+import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.SelectionModel;
 import consulo.vcs.action.VcsContext;
+import consulo.vcs.history.VcsSelection;
+import consulo.vcs.history.VcsSelectionProvider;
 
 import javax.annotation.Nullable;
-import java.util.List;
 
 /**
  * @author yole
@@ -31,17 +33,12 @@ public class VcsSelectionUtil {
 
   @Nullable
   public static VcsSelection getSelection(VcsContext context) {
-
     VcsSelection selectionFromEditor = getSelectionFromEditor(context);
     if (selectionFromEditor != null) {
       return selectionFromEditor;
     }
-    final List<VcsSelectionProvider> providers = VcsSelectionProvider.EP_NAME.getExtensionList();
-    for(VcsSelectionProvider provider: providers) {
-      final VcsSelection vcsSelection = provider.getSelection(context);
-      if (vcsSelection != null) return vcsSelection;
-    }
-    return null;
+
+    return Application.get().getExtensionPoint(VcsSelectionProvider.class).computeSafeIfAny(p -> p.getSelection(context));
   }
 
   @Nullable

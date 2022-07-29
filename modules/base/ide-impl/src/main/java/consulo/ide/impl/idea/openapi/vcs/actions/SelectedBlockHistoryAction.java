@@ -32,7 +32,7 @@ import consulo.ide.impl.idea.openapi.vcs.impl.VcsBackgroundableActions;
 import consulo.vcs.action.VcsContext;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.Consumer;
-import consulo.ide.impl.idea.vcsUtil.VcsSelection;
+import consulo.vcs.history.VcsSelection;
 import consulo.ide.impl.idea.vcsUtil.VcsSelectionUtil;
 import consulo.vcs.util.VcsUtil;
 import javax.annotation.Nonnull;

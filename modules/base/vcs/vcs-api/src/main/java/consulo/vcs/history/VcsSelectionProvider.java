@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.vcsUtil;
+package consulo.vcs.history;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 import consulo.vcs.action.VcsContext;
 
 import javax.annotation.Nullable;
@@ -27,8 +26,6 @@ import javax.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface VcsSelectionProvider {
-  ExtensionPointName<VcsSelectionProvider> EP_NAME = ExtensionPointName.create(VcsSelectionProvider.class);
-
   @Nullable
   VcsSelection getSelection(VcsContext context);
 }

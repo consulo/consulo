@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.vcsUtil;
+package consulo.vcs.history;
 
-import consulo.document.Document;
 import consulo.codeEditor.SelectionModel;
+import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.vcs.VcsBundle;
 
-public class VcsSelection {
+public final class VcsSelection {
   private final Document myDocument;
   private final int mySelectionStartLineNumber;
   private final int mySelectionEndLineNumber;
@@ -28,8 +28,7 @@ public class VcsSelection {
   private final String myDialogTitle;
 
   public VcsSelection(Document document, SelectionModel selectionModel) {
-    this(document, new TextRange(selectionModel.getSelectionStart(), selectionModel.getSelectionEnd()),
-         VcsBundle.message("action.name.show.history.for.selection"));
+    this(document, new TextRange(selectionModel.getSelectionStart(), selectionModel.getSelectionEnd()), VcsBundle.message("action.name.show.history.for.selection"));
   }
 
   public VcsSelection(Document document, TextRange textRange, String actionName) {

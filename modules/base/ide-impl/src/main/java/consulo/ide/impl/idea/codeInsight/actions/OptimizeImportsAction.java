@@ -20,7 +20,7 @@ import consulo.language.editor.CodeInsightBundle;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
-import consulo.language.editor.impl.internal.action.BaseCodeInsightAction;
+import consulo.language.editor.impl.action.BaseCodeInsightAction;
 import consulo.ui.ex.action.ActionsBundle;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.refactoring.ImportOptimizer;

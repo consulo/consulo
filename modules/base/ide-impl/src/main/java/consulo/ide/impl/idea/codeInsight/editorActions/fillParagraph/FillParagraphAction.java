@@ -1,7 +1,7 @@
 package consulo.ide.impl.idea.codeInsight.editorActions.fillParagraph;
 
 import consulo.language.editor.action.CodeInsightActionHandler;
-import consulo.language.editor.impl.internal.action.BaseCodeInsightAction;
+import consulo.language.editor.impl.action.BaseCodeInsightAction;
 import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;

@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.codeInsight.daemon.impl.actions;
 
 import consulo.language.editor.action.CodeInsightActionHandler;
-import consulo.language.editor.impl.internal.action.BaseCodeInsightAction;
+import consulo.language.editor.impl.action.BaseCodeInsightAction;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.GotoNextErrorHandler;
 import consulo.codeEditor.Editor;

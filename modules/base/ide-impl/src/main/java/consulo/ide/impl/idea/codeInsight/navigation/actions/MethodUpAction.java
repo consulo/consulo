@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.codeInsight.navigation.actions;
 
 import consulo.language.editor.action.CodeInsightActionHandler;
-import consulo.language.editor.impl.internal.action.BaseCodeInsightAction;
+import consulo.language.editor.impl.action.BaseCodeInsightAction;
 import consulo.ide.impl.idea.codeInsight.navigation.MethodUpHandler;
 import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.fileEditor.structureView.TreeBasedStructureViewBuilder;

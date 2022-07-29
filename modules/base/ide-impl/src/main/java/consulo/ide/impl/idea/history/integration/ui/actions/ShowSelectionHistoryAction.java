@@ -25,7 +25,7 @@ import consulo.project.Project;
 import consulo.vcs.action.VcsContext;
 import consulo.ide.impl.idea.openapi.vcs.actions.VcsContextWrapper;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.vcsUtil.VcsSelection;
+import consulo.vcs.history.VcsSelection;
 import consulo.ide.impl.idea.vcsUtil.VcsSelectionUtil;
 import javax.annotation.Nullable;
 

@@ -23,7 +23,7 @@ import consulo.document.FileDocumentManager;
 import consulo.language.Language;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.action.LanguageCodeInsightActionHandler;
-import consulo.language.editor.impl.internal.action.BaseCodeInsightAction;
+import consulo.language.editor.impl.action.BaseCodeInsightAction;
 import consulo.language.editor.util.LanguageEditorUtil;
 import consulo.language.extension.ByLanguageValue;
 import consulo.language.psi.PsiFile;
