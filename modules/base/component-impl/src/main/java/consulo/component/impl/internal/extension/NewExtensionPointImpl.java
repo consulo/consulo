@@ -25,9 +25,9 @@ import consulo.component.extension.ExtensionExtender;
 import consulo.component.extension.ExtensionPoint;
 import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.component.internal.inject.InjectingBindingHolder;
+import consulo.component.internal.inject.InjectingContainer;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
-import consulo.component.internal.inject.InjectingContainer;
 import consulo.logging.Logger;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.HashingStrategy;
@@ -38,10 +38,7 @@ import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.AbstractList;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiConsumer;
 
 /**
@@ -116,6 +113,7 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
     }
   }
 
+  private final String myApiClassName;
   private Class<T> myApiClass;
 
   private final ComponentManager myComponentManager;
@@ -128,12 +126,24 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
   private volatile CacheValue<T> myCacheValue;
 
   @SuppressWarnings("unchecked")
-  public NewExtensionPointImpl(Class apiClass, List<InjectingBinding> bindings, ComponentManager componentManager, Runnable checkCanceled, ComponentScope componentScope) {
-    myApiClass = apiClass;
+  public NewExtensionPointImpl(String apiClassName,
+                               List<InjectingBinding> bindings,
+                               ComponentManager componentManager,
+                               Runnable checkCanceled,
+                               ComponentScope componentScope) {
+    myApiClassName = apiClassName;
     myCheckCanceled = checkCanceled;
     myComponentManager = componentManager;
     myComponentScope = componentScope;
     myCacheValue = new CacheValue<>(null, bindings);
+  }
+
+  public void initIfNeed(Class<T> apiClass) {
+    if (myApiClass != null) {
+      return;
+    }
+    
+    myApiClass = apiClass;
   }
 
   public void reset(@Nonnull List<InjectingBinding> newBindings) {
@@ -143,6 +153,8 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
     myCaches = null;
     // reset all extension cache
     myCacheValue = new CacheValue<>(null, new ArrayList<>(newBindings));
+    // reset api class
+    myApiClass = null;
   }
 
   @Nullable
@@ -180,9 +192,11 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
       throw new IllegalArgumentException("cache dropped");
     }
 
-    ExtensionAPI annotation = myApiClass.getAnnotation(ExtensionAPI.class);
+    Class<T> apiClassName = getExtensionClass();
+
+    ExtensionAPI annotation = apiClassName.getAnnotation(ExtensionAPI.class);
     if (annotation == null) {
-      throw new IllegalArgumentException(myApiClass + " is not annotated by @ExtensionAPI");
+      throw new IllegalArgumentException(myApiClassName + " is not annotated by @ExtensionAPI");
     }
 
     ComponentScope value = annotation.value();
@@ -204,7 +218,7 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
 
         extension = (T)injectingContainer.getUnbindedInstance(binding.getImplClass(), binding.getParameterTypes(), binding::create);
 
-        if (!myApiClass.isInstance(extension)) {
+        if (!apiClassName.isInstance(extension)) {
           LOG.error("Extension " + extension.getClass() + " does not implement " + myApiClass);
           continue;
         }
@@ -224,9 +238,9 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
       }
     }
 
-    if (myApiClass != ExtensionExtender.class) {
+    if (apiClassName != ExtensionExtender.class) {
       for (ExtensionExtender extender : Application.get().getExtensionPoint(ExtensionExtender.class).getExtensionList()) {
-        if (extender.getExtensionClass() == myApiClass) {
+        if (extender.getExtensionClass() == apiClassName) {
           PluginDescriptor descriptor = PluginManager.getPlugin(extender.getClass());
           assert descriptor != null;
 
@@ -290,10 +304,12 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
       return !extensionCache.isEmpty();
     }
 
+    Class<T> extensionClass = getExtensionClass();
+
     // if we have extenders for this extension, always return
-    if (myApiClass != ExtensionExtender.class) {
+    if (extensionClass != ExtensionExtender.class) {
       for (ExtensionExtender extender : Application.get().getExtensionPoint(ExtensionExtender.class).getExtensionList()) {
-        if (extender.getExtensionClass() == myApiClass && extender.hasAnyExtensions(myComponentManager)) {
+        if (extender.getExtensionClass() == extensionClass && extender.hasAnyExtensions(myComponentManager)) {
           return true;
         }
       }
@@ -325,7 +341,13 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
 
   @Nonnull
   @Override
+  public String getClassName() {
+    return myApiClassName;
+  }
+
+  @Nonnull
+  @Override
   public Class<T> getExtensionClass() {
-    return myApiClass;
+    return Objects.requireNonNull(myApiClass, "apiClass not initialized");
   }
 }

@@ -28,6 +28,11 @@ public interface InjectingBinding {
   Type[] EMPTY_TYPES = new Type[0];
 
   @Nonnull
+  default String getApiClassName() {
+    return getApiClass().getName();
+  }
+
+  @Nonnull
   Class getApiClass();
 
   @Nonnull

@@ -22,20 +22,19 @@ import consulo.component.bind.InjectingBinding;
 import consulo.component.extension.ExtensionPoint;
 import consulo.component.internal.inject.InjectingBindingHolder;
 import consulo.component.internal.inject.InjectingBindingLoader;
-import consulo.util.collection.HashingStrategy;
-import consulo.util.collection.Maps;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author VISTALL
  * @since 17-Jun-22
  */
 public class NewExtensionAreaImpl {
-  private final Map<Class, NewExtensionPointImpl> myExtensionPoints = Maps.newConcurrentHashMap(HashingStrategy.identity());
+  private final Map<String, NewExtensionPointImpl> myExtensionPoints = new ConcurrentHashMap<>();
 
   private final ComponentManager myComponentManager;
   private final ComponentScope myComponentScope;
@@ -52,7 +51,7 @@ public class NewExtensionAreaImpl {
   public void registerFromInjectingBinding(ComponentScope componentScope) {
     InjectingBindingHolder holder = myInjectingBindingLoader.getHolder(ExtensionAPI.class, myComponentScope);
 
-    for (Map.Entry<Class, List<InjectingBinding>> entry : holder.getBindings().entrySet()) {
+    for (Map.Entry<String, List<InjectingBinding>> entry : holder.getBindings().entrySet()) {
       myExtensionPoints.put(entry.getKey(), new NewExtensionPointImpl(entry.getKey(), entry.getValue(), myComponentManager, myCheckCanceled, componentScope));
     }
   }
@@ -65,12 +64,15 @@ public class NewExtensionAreaImpl {
   @Nonnull
   @SuppressWarnings("unchecked")
   public <T> ExtensionPoint<T> getExtensionPoint(@Nonnull Class<T> extensionClass) {
-    return myExtensionPoints.computeIfAbsent(extensionClass, e -> {
+    NewExtensionPointImpl point = myExtensionPoints.computeIfAbsent(extensionClass.getName(), e -> {
       if (!extensionClass.isAnnotationPresent(ExtensionAPI.class)) {
         throw new IllegalArgumentException(extensionClass.getName() + " is not annotated by @ExtensionAPI");
       }
-      
+
       return new NewExtensionPointImpl(e, List.of(), myComponentManager, myCheckCanceled, myComponentScope);
     });
+
+    point.initIfNeed(extensionClass);
+    return point;
   }
 }

@@ -51,14 +51,18 @@ public abstract class InspectionToolWrapper<T extends InspectionProfileEntry> {
   @SuppressWarnings("unchecked")
   protected InspectionToolWrapper(@Nonnull InspectionToolWrapper<T> other) {
     // find injecting binding and create new instance
-    Map<Class, List<InjectingBinding>> bindings = InjectingBindingLoader.INSTANCE.getHolder(ExtensionAPI.class, ComponentScope.APPLICATION).getBindings();
-    List<InjectingBinding> injectingBindings = bindings.get(getToolClass());
+    Map<String, List<InjectingBinding>> bindings = InjectingBindingLoader.INSTANCE.getHolder(ExtensionAPI.class, ComponentScope.APPLICATION).getBindings();
+    List<InjectingBinding> injectingBindings = bindings.get(getToolClass().getName());
 
     InjectingBinding binding = null;
     for (InjectingBinding injectingBinding : injectingBindings) {
-      if (injectingBinding.getImplClass() == other.myTool.getClass())  {
-        binding = injectingBinding;
-        break;
+      try {
+        if (injectingBinding.getImplClass() == other.myTool.getClass())  {
+          binding = injectingBinding;
+          break;
+        }
+      }
+      catch (Exception ignored) {
       }
     }
 

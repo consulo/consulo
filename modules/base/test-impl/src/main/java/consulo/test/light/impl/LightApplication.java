@@ -60,7 +60,7 @@ public class LightApplication extends BaseComponentManager implements Applicatio
   }
 
   @Override
-  protected void fillListenerDescriptors(MultiMap<Class, InjectingBinding> mapByTopic) {
+  protected void fillListenerDescriptors(MultiMap<String, InjectingBinding> mapByTopic) {
   }
 
   @Nonnull

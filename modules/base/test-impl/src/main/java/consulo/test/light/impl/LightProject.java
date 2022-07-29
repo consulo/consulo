@@ -59,7 +59,7 @@ public class LightProject extends BaseComponentManager implements Project {
   }
 
   @Override
-  protected void fillListenerDescriptors(MultiMap<Class, InjectingBinding> mapByTopic) {
+  protected void fillListenerDescriptors(MultiMap<String, InjectingBinding> mapByTopic) {
   }
 
   @Nonnull

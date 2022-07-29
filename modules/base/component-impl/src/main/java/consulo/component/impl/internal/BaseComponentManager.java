@@ -99,7 +99,7 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
   protected void buildInjectingContainer() {
     myMessageBus = MessageBusFactory.newMessageBus(this, myParent == null ? null : myParent.getMessageBus());
 
-    MultiMap<Class, InjectingBinding> mapByTopic = new MultiMap<>();
+    MultiMap<String, InjectingBinding> mapByTopic = new MultiMap<>();
 
     fillListenerDescriptors(mapByTopic);
 
@@ -158,13 +158,13 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
     return root;
   }
 
-  protected void fillListenerDescriptors(MultiMap<Class, InjectingBinding> mapByTopic) {
+  protected void fillListenerDescriptors(MultiMap<String, InjectingBinding> mapByTopic) {
     InjectingBindingHolder holder = InjectingBindingLoader.INSTANCE.getHolder(TopicAPI.class, getComponentScope());
 
     for (List<InjectingBinding> bindings : holder.getBindings().values()) {
       for (InjectingBinding binding : bindings) {
-        if (holder.isValid(binding, getProfiles())) {
-          mapByTopic.put(binding.getApiClass(), bindings);
+        if (InjectingBindingHolder.isValid(binding, getProfiles())) {
+          mapByTopic.put(binding.getApiClassName(), bindings);
         }
       }
     }
@@ -184,7 +184,7 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
     int profiles = getProfiles();
 
     for (List<InjectingBinding> listOfBindings : holder.getBindings().values()) {
-      InjectingBinding injectingBinding = holder.findValid(listOfBindings, profiles);
+      InjectingBinding injectingBinding = InjectingBindingHolder.findValid(listOfBindings, profiles);
       if (injectingBinding == null) {
         LOG.error("There no valid binding " + listOfBindings);
         continue;

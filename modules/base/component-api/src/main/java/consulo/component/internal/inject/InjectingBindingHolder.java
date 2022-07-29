@@ -27,7 +27,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @since 13-Jun-22
  */
 public class InjectingBindingHolder {
-  private final Map<Class, List<InjectingBinding>> myBindings = new HashMap<>();
+  private final Map<String, List<InjectingBinding>> myBindings = new HashMap<>();
   private final AtomicBoolean myLocked;
 
   public InjectingBindingHolder(AtomicBoolean locked) {
@@ -39,11 +39,11 @@ public class InjectingBindingHolder {
       throw new IllegalArgumentException("locked");
     }
 
-    myBindings.computeIfAbsent(binding.getApiClass(), s -> new LinkedList<>()).add(binding);
+    myBindings.computeIfAbsent(binding.getApiClassName(), s -> new LinkedList<>()).add(binding);
   }
 
   @Nonnull
-  public Map<Class, List<InjectingBinding>> getBindings() {
+  public Map<String, List<InjectingBinding>> getBindings() {
     return Collections.unmodifiableMap(myBindings);
   }
 

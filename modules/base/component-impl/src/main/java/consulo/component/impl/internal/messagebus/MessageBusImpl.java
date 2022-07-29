@@ -55,7 +55,7 @@ public class MessageBusImpl implements MessageBus, Disposable {
   private final List<MessageBusImpl> myChildBuses = Lists.newLockFreeCopyOnWriteList();
 
   @Nonnull
-  private MultiMap<Class, InjectingBinding> myTopicClassToListenerClass = MultiMap.empty();
+  private MultiMap<String, InjectingBinding> myTopicClassToListenerClass = MultiMap.empty();
 
   private static final Object NA = new Object();
   private MessageBusImpl myParentBus;
@@ -94,8 +94,8 @@ public class MessageBusImpl implements MessageBus, Disposable {
     myLazyConnection = connect();
   }
 
-  public void setLazyListeners(@Nonnull MultiMap<Class, InjectingBinding> map) {
-    if (myTopicClassToListenerClass != MultiMap.<Class, InjectingBinding>empty()) {
+  public void setLazyListeners(@Nonnull MultiMap<String, InjectingBinding> map) {
+    if (myTopicClassToListenerClass != MultiMap.<String, InjectingBinding>empty()) {
       throw new IllegalStateException("Already set: " + myTopicClassToListenerClass);
     }
     myTopicClassToListenerClass = map;
@@ -201,7 +201,7 @@ public class MessageBusImpl implements MessageBus, Disposable {
       return publisher;
     }
 
-    Collection<InjectingBinding> listenerDescriptors = myTopicClassToListenerClass.remove(listenerClass);
+    Collection<InjectingBinding> listenerDescriptors = myTopicClassToListenerClass.remove(listenerClass.getName());
     if (listenerDescriptors != null) {
       List<Object> listeners = new ArrayList<>(listenerDescriptors.size());
       for (InjectingBinding binding : listenerDescriptors) {

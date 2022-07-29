@@ -158,6 +158,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     injectStat.markWith("register", () -> {
       InjectingBindingHolder holder = InjectingBindingLoader.INSTANCE.getHolder(ActionAPI.class, ComponentScope.APPLICATION);
 
+      String actionGroupClassName = ActionGroup.class.getName();
       for (List<InjectingBinding> bindingList : holder.getBindings().values()) {
         for (InjectingBinding binding : bindingList) {
           if (!InjectingBindingHolder.isValid(binding, profiles)) {
@@ -167,7 +168,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
           Class<?> actionImplClass = binding.getImplClass();
           ActionImpl actionImpl = actionImplClass.getAnnotation(ActionImpl.class);
 
-          boolean isGroup = binding.getApiClass() == ActionGroup.class;
+          boolean isGroup = actionGroupClassName.equals(binding.getApiClassName());
           if (isGroup) {
             InjectingBindingActionGroupStub groupStub = new InjectingBindingActionGroupStub(actionImpl, binding);
             registerAction(actionImpl.id(), groupStub, groupStub.getPluginId());

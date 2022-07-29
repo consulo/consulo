@@ -113,6 +113,9 @@ public class InjectingBindingProcessor extends AbstractProcessor {
           bindBuilder.addMethod(MethodSpec.methodBuilder("getApiClass").returns(Class.class).addModifiers(Modifier.PUBLIC)
                                         .addCode(CodeBlock.of("return $T.class;", ClassName.bestGuess(apiInfo.typeElement().getQualifiedName().toString()))).build());
 
+          bindBuilder.addMethod(MethodSpec.methodBuilder("getApiClassName").returns(String.class).addModifiers(Modifier.PUBLIC)
+                                        .addCode(CodeBlock.of("return $S;", apiInfo.typeElement().getQualifiedName().toString())).build());
+          
           bindBuilder.addMethod(MethodSpec.methodBuilder("getImplClass").returns(Class.class).addModifiers(Modifier.PUBLIC).addCode(CodeBlock.of("return $T.class;", typeElement)).build());
 
           bindBuilder.addMethod(MethodSpec.methodBuilder("getComponentAnnotationClass").addModifiers(Modifier.PUBLIC).returns(Class.class)
@@ -249,7 +252,7 @@ public class InjectingBindingProcessor extends AbstractProcessor {
 
           newCreationBuilder.append(");");
 
-          bindBuilder.addMethod(MethodSpec.methodBuilder("create").addParameter(Object[].class, "args").addModifiers(Modifier.PUBLIC).returns(toTypeName(typeElement))
+          bindBuilder.addMethod(MethodSpec.methodBuilder("create").addParameter(Object[].class, "args").addModifiers(Modifier.PUBLIC).returns(Object.class)
                                         .addCode(CodeBlock.of(newCreationBuilder.toString(), argsTypes.toArray())).build());
 
           TypeSpec bindClass = bindBuilder.build();
