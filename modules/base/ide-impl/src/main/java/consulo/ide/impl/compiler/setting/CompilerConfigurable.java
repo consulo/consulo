@@ -24,12 +24,12 @@ import consulo.configurable.StandardConfigurableIds;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.compiler.CompilerWorkspaceConfiguration;
 import consulo.ide.impl.idea.openapi.util.NotNullComputable;
-import consulo.project.Project;
 import consulo.ui.CheckBox;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.VerticalLayout;
 import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 import javax.annotation.Nonnull;
 
@@ -59,40 +59,46 @@ public class CompilerConfigurable extends SimpleConfigurable<CompilerConfigurabl
     }
   }
 
-  private final CompilerWorkspaceConfiguration myCompilerWorkspaceConfiguration;
+  private final Provider<CompilerWorkspaceConfiguration> myCompilerWorkspaceConfiguration;
 
   @Inject
-  public CompilerConfigurable(Project project) {
-    myCompilerWorkspaceConfiguration = CompilerWorkspaceConfiguration.getInstance(project);
+  public CompilerConfigurable(Provider<CompilerWorkspaceConfiguration> compilerWorkspaceConfiguration) {
+    myCompilerWorkspaceConfiguration = compilerWorkspaceConfiguration;
   }
 
   @RequiredUIAccess
   @Nonnull
   @Override
-  protected Root createPanel(Disposable uiDisposable) {
+  protected Root createPanel(@Nonnull Disposable uiDisposable) {
     return new Root();
   }
 
   @RequiredUIAccess
   @Override
   protected boolean isModified(@Nonnull Root component) {
-    boolean isModified = component.myCbClearOutputDirectory.getValue() != myCompilerWorkspaceConfiguration.CLEAR_OUTPUT_DIRECTORY;
-    isModified |= component.myCbAutoShowFirstError.getValue() != myCompilerWorkspaceConfiguration.AUTO_SHOW_ERRORS_IN_EDITOR;
+    CompilerWorkspaceConfiguration compilerWorkspaceConfiguration = myCompilerWorkspaceConfiguration.get();
+
+    boolean isModified = component.myCbClearOutputDirectory.getValue() != compilerWorkspaceConfiguration.CLEAR_OUTPUT_DIRECTORY;
+    isModified |= component.myCbAutoShowFirstError.getValue() != compilerWorkspaceConfiguration.AUTO_SHOW_ERRORS_IN_EDITOR;
     return isModified;
   }
 
   @RequiredUIAccess
   @Override
   protected void reset(@Nonnull Root component) {
-    component.myCbAutoShowFirstError.setValue(myCompilerWorkspaceConfiguration.AUTO_SHOW_ERRORS_IN_EDITOR);
-    component.myCbClearOutputDirectory.setValue(myCompilerWorkspaceConfiguration.CLEAR_OUTPUT_DIRECTORY);
+    CompilerWorkspaceConfiguration compilerWorkspaceConfiguration = myCompilerWorkspaceConfiguration.get();
+
+    component.myCbAutoShowFirstError.setValue(compilerWorkspaceConfiguration.AUTO_SHOW_ERRORS_IN_EDITOR);
+    component.myCbClearOutputDirectory.setValue(compilerWorkspaceConfiguration.CLEAR_OUTPUT_DIRECTORY);
   }
 
   @RequiredUIAccess
   @Override
   protected void apply(@Nonnull Root component) throws ConfigurationException {
-    myCompilerWorkspaceConfiguration.AUTO_SHOW_ERRORS_IN_EDITOR = component.myCbAutoShowFirstError.getValue();
-    myCompilerWorkspaceConfiguration.CLEAR_OUTPUT_DIRECTORY = component.myCbClearOutputDirectory.getValue();
+    CompilerWorkspaceConfiguration compilerWorkspaceConfiguration = myCompilerWorkspaceConfiguration.get();
+
+    compilerWorkspaceConfiguration.AUTO_SHOW_ERRORS_IN_EDITOR = component.myCbAutoShowFirstError.getValue();
+    compilerWorkspaceConfiguration.CLEAR_OUTPUT_DIRECTORY = component.myCbClearOutputDirectory.getValue();
   }
 
   @Nonnull

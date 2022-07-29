@@ -15,14 +15,14 @@
  */
 package consulo.ide.impl.idea.compiler.impl;
 
-import consulo.ide.impl.compiler.setting.CompilerConfigurable;
 import consulo.application.AllIcons;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.compiler.CompilerBundle;
+import consulo.ide.impl.compiler.setting.CompilerConfigurable;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 
 /**
  * @author Eugene Zhuravlev
@@ -33,10 +33,12 @@ public class CompilerPropertiesAction extends AnAction {
     super(CompilerBundle.message("action.compiler.properties.text"), null, AllIcons.General.Settings);
   }
 
+  @RequiredUIAccess
+  @Override
   public void actionPerformed(AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project != null) {
-      ShowSettingsUtil.getInstance().editConfigurable(project, new CompilerConfigurable(project));
+      ShowSettingsUtil.getInstance().showAndSelect(project, CompilerConfigurable.class);
     }
   }
 }

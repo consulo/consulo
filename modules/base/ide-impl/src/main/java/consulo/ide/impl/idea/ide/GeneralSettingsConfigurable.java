@@ -35,6 +35,7 @@ import consulo.ui.layout.LabeledLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.LabeledBuilder;
 import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -155,11 +156,11 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
     }
   }
 
-  private final GeneralSettings myGeneralSettings;
-  private final FileOperateDialogSettings myFileOperateDialogSettings;
+  private final Provider<GeneralSettings> myGeneralSettings;
+  private final Provider<FileOperateDialogSettings> myFileOperateDialogSettings;
 
   @Inject
-  public GeneralSettingsConfigurable(GeneralSettings generalSettings, FileOperateDialogSettings fileOperateDialogSettings) {
+  public GeneralSettingsConfigurable(Provider<GeneralSettings> generalSettings, Provider<FileOperateDialogSettings> fileOperateDialogSettings) {
     myGeneralSettings = generalSettings;
     myFileOperateDialogSettings = fileOperateDialogSettings;
   }
@@ -174,18 +175,20 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
   @RequiredUIAccess
   @Override
   protected boolean isModified(@Nonnull MyComponent component) {
+    GeneralSettings generalSettings = myGeneralSettings.get();
     boolean isModified = false;
-    isModified |= myGeneralSettings.isReopenLastProject() != component.myChkReopenLastProject.getValue();
-    isModified |= myGeneralSettings.isConfirmExit() != component.myConfirmExit.getValue();
-    isModified |= myGeneralSettings.isSupportScreenReaders() != component.myChkSupportScreenReaders.getValue();
-    isModified |= myGeneralSettings.isSyncOnFrameActivation() != component.myChkSyncOnFrameActivation.getValue();
-    isModified |= myGeneralSettings.isSaveOnFrameDeactivation() != component.myChkSaveOnFrameDeactivation.getValue();
-    isModified |= myGeneralSettings.isAutoSaveIfInactive() != component.myChkAutoSaveIfInactive.getValue();
-    isModified |= myGeneralSettings.getProcessCloseConfirmation() != getProcessCloseConfirmation(component);
-    isModified |= myGeneralSettings.getConfirmOpenNewProject() != getConfirmOpenNewProject(component);
+    isModified |= generalSettings.isReopenLastProject() != component.myChkReopenLastProject.getValue();
+    isModified |= generalSettings.isConfirmExit() != component.myConfirmExit.getValue();
+    isModified |= generalSettings.isSupportScreenReaders() != component.myChkSupportScreenReaders.getValue();
+    isModified |= generalSettings.isSyncOnFrameActivation() != component.myChkSyncOnFrameActivation.getValue();
+    isModified |= generalSettings.isSaveOnFrameDeactivation() != component.myChkSaveOnFrameDeactivation.getValue();
+    isModified |= generalSettings.isAutoSaveIfInactive() != component.myChkAutoSaveIfInactive.getValue();
+    isModified |= generalSettings.getProcessCloseConfirmation() != getProcessCloseConfirmation(component);
+    isModified |= generalSettings.getConfirmOpenNewProject() != getConfirmOpenNewProject(component);
 
-    isModified |= isModified(myFileOperateDialogSettings.getFileChooseDialogId(), component.myFileChooseDialogBox);
-    isModified |= isModified(myFileOperateDialogSettings.getFileSaveDialogId(), component.myFileSaveDialogBox);
+    FileOperateDialogSettings dialogSettings = myFileOperateDialogSettings.get();
+    isModified |= isModified(dialogSettings.getFileChooseDialogId(), component.myFileChooseDialogBox);
+    isModified |= isModified(dialogSettings.getFileSaveDialogId(), component.myFileSaveDialogBox);
 
     LocalizeManager localizeManager = LocalizeManager.get();
     isModified |= !localizeManager.getLocale().equals(component.myLocaleBox.getValueOrError());
@@ -196,9 +199,9 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
     }
     catch (NumberFormatException ignored) {
     }
-    isModified |= inactiveTimeout > 0 && myGeneralSettings.getInactiveTimeout() != inactiveTimeout;
+    isModified |= inactiveTimeout > 0 && generalSettings.getInactiveTimeout() != inactiveTimeout;
 
-    isModified |= myGeneralSettings.isUseSafeWrite() != component.myChkUseSafeWrite.getValue();
+    isModified |= generalSettings.isUseSafeWrite() != component.myChkUseSafeWrite.getValue();
 
     return isModified;
   }
@@ -216,30 +219,34 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
   @RequiredUIAccess
   @Override
   protected void apply(@Nonnull MyComponent component) throws ConfigurationException {
-    myGeneralSettings.setReopenLastProject(component.myChkReopenLastProject.getValue());
-    myGeneralSettings.setSupportScreenReaders(component.myChkSupportScreenReaders.getValue());
-    myGeneralSettings.setSyncOnFrameActivation(component.myChkSyncOnFrameActivation.getValue());
-    myGeneralSettings.setSaveOnFrameDeactivation(component.myChkSaveOnFrameDeactivation.getValue());
-    myGeneralSettings.setConfirmExit(component.myConfirmExit.getValue());
-    myGeneralSettings.setConfirmOpenNewProject(getConfirmOpenNewProject(component));
-    myGeneralSettings.setProcessCloseConfirmation(getProcessCloseConfirmation(component));
+    GeneralSettings generalSettings = myGeneralSettings.get();
+
+    generalSettings.setReopenLastProject(component.myChkReopenLastProject.getValue());
+    generalSettings.setSupportScreenReaders(component.myChkSupportScreenReaders.getValue());
+    generalSettings.setSyncOnFrameActivation(component.myChkSyncOnFrameActivation.getValue());
+    generalSettings.setSaveOnFrameDeactivation(component.myChkSaveOnFrameDeactivation.getValue());
+    generalSettings.setConfirmExit(component.myConfirmExit.getValue());
+    generalSettings.setConfirmOpenNewProject(getConfirmOpenNewProject(component));
+    generalSettings.setProcessCloseConfirmation(getProcessCloseConfirmation(component));
 
     LocalizeManager localizeManager = LocalizeManager.get();
     localizeManager.setLocale(component.myLocaleBox.getValueOrError());
 
-    myGeneralSettings.setAutoSaveIfInactive(component.myChkAutoSaveIfInactive.getValue());
+    generalSettings.setAutoSaveIfInactive(component.myChkAutoSaveIfInactive.getValue());
     try {
       int newInactiveTimeout = Integer.parseInt(component.myTfInactiveTimeout.getValue());
       if (newInactiveTimeout > 0) {
-        myGeneralSettings.setInactiveTimeout(newInactiveTimeout);
+        generalSettings.setInactiveTimeout(newInactiveTimeout);
       }
     }
     catch (NumberFormatException ignored) {
     }
-    myGeneralSettings.setUseSafeWrite(component.myChkUseSafeWrite.getValue());
+    generalSettings.setUseSafeWrite(component.myChkUseSafeWrite.getValue());
 
-    apply(component.myFileChooseDialogBox, myFileOperateDialogSettings::setFileChooseDialogId);
-    apply(component.myFileSaveDialogBox, myFileOperateDialogSettings::setFileSaveDialogId);
+    FileOperateDialogSettings dialogSettings = myFileOperateDialogSettings.get();
+
+    apply(component.myFileChooseDialogBox, dialogSettings::setFileChooseDialogId);
+    apply(component.myFileSaveDialogBox, dialogSettings::setFileSaveDialogId);
   }
 
   private void apply(ComboBox<FileOperateDialogProvider> comboBox, Consumer<String> func) {
@@ -290,8 +297,10 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
         break;
     }
 
-    reset(component.myFileChooseDialogBox, myFileOperateDialogSettings::getFileChooseDialogId);
-    reset(component.myFileSaveDialogBox, myFileOperateDialogSettings::getFileSaveDialogId);
+    FileOperateDialogSettings dialogSettings = myFileOperateDialogSettings.get();
+
+    reset(component.myFileChooseDialogBox, dialogSettings::getFileChooseDialogId);
+    reset(component.myFileSaveDialogBox, dialogSettings::getFileSaveDialogId);
 
     LocalizeManager localizeManager = LocalizeManager.get();
     component.myLocaleBox.setValue(localizeManager.getLocale());
