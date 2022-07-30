@@ -15,6 +15,8 @@
  */
 package consulo.language.editor.bidi;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
 import consulo.codeEditor.EditorHighlighter;
 import consulo.codeEditor.HighlighterIterator;
@@ -32,6 +34,7 @@ import javax.annotation.Nonnull;
  * programming language elements (e.g. identifiers) are not reordered visually even if they are named using RTL languages.
  * Default implementation assumes a border between any two tokens of different types.
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class BidiRegionsSeparator implements LanguageExtension {
   private static final ExtensionPointCacheKey<BidiRegionsSeparator, ByLanguageValue<BidiRegionsSeparator>> KEY =
           ExtensionPointCacheKey.create("BidiRegionsSeparator", LanguageOneToOne.build(new BidiRegionsSeparator() {
