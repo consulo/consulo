@@ -13,12 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.intention;
+package consulo.language.editor.internal.intention;
+
+import consulo.language.editor.intention.IntentionActionWithOptions;
+
+import javax.annotation.Nullable;
 
 /**
  * An entity having an associated intention action
  */
 public interface IntentionActionProvider {
-  @javax.annotation.Nullable
+  @Nullable
   IntentionActionWithOptions getIntentionAction();
 }

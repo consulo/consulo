@@ -1,7 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.ide.impl.idea.codeInsight.intention.AbstractIntentionAction;
+import consulo.language.editor.intention.AbstractIntentionAction;
 import consulo.language.editor.inspection.PriorityAction;
 import consulo.ui.ex.action.ShortcutProvider;
 import consulo.codeEditor.EditorEx;

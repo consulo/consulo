@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.intention;
+package consulo.language.editor.intention;
 
-import consulo.language.editor.intention.BaseElementAtCaretIntentionAction;
-import consulo.language.editor.intention.BaseIntentionAction;
 import consulo.codeEditor.CaretModel;
 import consulo.codeEditor.Editor;
-import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
+import consulo.project.Project;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

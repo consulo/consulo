@@ -13,13 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.virtualFileSystem.internal;
+package consulo.virtualFileSystem;
 
 import consulo.application.ApplicationManager;
-import consulo.virtualFileSystem.NewVirtualFileSystem;
-import consulo.virtualFileSystem.RefreshQueue;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileWithId;
 import consulo.virtualFileSystem.encoding.EncodingRegistry;
 import org.jetbrains.annotations.NonNls;
 

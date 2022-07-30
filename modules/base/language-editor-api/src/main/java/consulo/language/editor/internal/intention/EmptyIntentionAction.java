@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.intention;
+package consulo.language.editor.internal.intention;
 
 import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.application.AllIcons;
 import consulo.codeEditor.Editor;
 import consulo.language.editor.intention.AbstractEmptyIntentionAction;
-import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.intention.LowPriorityAction;
 import consulo.project.Project;
 import consulo.component.util.Iconable;
@@ -28,7 +27,6 @@ import consulo.language.psi.PsiFile;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
 /**
  * User: anna

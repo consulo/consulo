@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.intention;
+package consulo.language.editor.internal.intention;
 
 import consulo.language.editor.intention.IntentionAction;
 

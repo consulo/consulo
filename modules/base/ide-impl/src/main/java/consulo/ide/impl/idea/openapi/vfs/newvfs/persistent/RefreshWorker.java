@@ -23,7 +23,7 @@ import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.event.ChildInfo;
 import consulo.virtualFileSystem.event.VFileEvent;
-import consulo.virtualFileSystem.internal.NewVirtualFile;
+import consulo.virtualFileSystem.NewVirtualFile;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;

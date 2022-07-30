@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.codeInsight.intention.impl.config;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.codeInsight.intention.IntentionActionDelegate;
+import consulo.language.editor.internal.intention.IntentionActionDelegate;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;

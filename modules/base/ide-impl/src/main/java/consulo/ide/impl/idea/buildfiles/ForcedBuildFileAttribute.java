@@ -19,7 +19,7 @@ import consulo.util.dataholder.Key;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.FileAttribute;
-import consulo.virtualFileSystem.internal.NewVirtualFile;
+import consulo.virtualFileSystem.NewVirtualFile;
 import consulo.index.io.data.IOUtil;
 import consulo.logging.Logger;
 

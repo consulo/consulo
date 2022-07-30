@@ -18,7 +18,7 @@ import consulo.ui.ModalityState;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.event.AsyncFileListener;
 import consulo.virtualFileSystem.event.VFileEvent;
-import consulo.virtualFileSystem.internal.NewVirtualFile;
+import consulo.virtualFileSystem.NewVirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

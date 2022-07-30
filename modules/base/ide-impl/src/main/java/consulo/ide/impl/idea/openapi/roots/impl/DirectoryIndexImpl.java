@@ -28,7 +28,7 @@ import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.application.util.LowMemoryWatcher;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.BulkFileListener;
-import consulo.virtualFileSystem.internal.NewVirtualFile;
+import consulo.virtualFileSystem.NewVirtualFile;
 import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.application.util.query.Query;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

@@ -1,11 +1,9 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.codeInsight.intention;
+package consulo.language.editor.intention;
 
 import consulo.language.editor.completion.lookup.Lookup;
-import consulo.language.editor.intention.IntentionAction;
 
 import javax.annotation.Nonnull;
-
 import java.util.List;
 
 /**
@@ -19,8 +17,7 @@ import java.util.List;
  * in {@link Lookup}.
  *
  * @see com.intellij.spellchecker.quickfixes.ChangeTo for reference implementation
- * @see consulo.ide.impl.idea.codeInsight.intention.choice.DefaultIntentionActionWithChoice for
- * reasonably preconfigured action
+ * @see DefaultIntentionActionWithChoice for reasonably preconfigured action
  */
 public interface IntentionActionWithChoice<T extends IntentionAction, V extends IntentionAction> {
   /**

@@ -28,7 +28,7 @@ import consulo.vcs.*;
 import consulo.vcs.action.VcsContextFactory;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManager;
 import consulo.vcs.change.VcsDirtyScopeManager;
-import consulo.virtualFileSystem.internal.NewVirtualFile;
+import consulo.virtualFileSystem.NewVirtualFile;
 import consulo.util.collection.SmartList;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.vcs.util.VcsUtil;

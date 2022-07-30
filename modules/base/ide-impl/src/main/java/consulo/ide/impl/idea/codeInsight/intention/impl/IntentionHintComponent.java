@@ -8,7 +8,7 @@ import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.hint.QuestionAction;
 import consulo.language.editor.intention.IntentionAction;
-import consulo.ide.impl.idea.codeInsight.intention.IntentionActionDelegate;
+import consulo.language.editor.internal.intention.IntentionActionDelegate;
 import consulo.ide.impl.idea.codeInsight.intention.impl.config.IntentionManagerSettings;
 import consulo.language.editor.refactoring.unwrap.ScopeHighlighter;
 import consulo.language.editor.inspection.SuppressIntentionActionFromFix;

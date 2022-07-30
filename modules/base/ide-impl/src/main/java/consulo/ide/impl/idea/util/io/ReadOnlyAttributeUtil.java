@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.util.io;
 
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.internal.NewVirtualFile;
+import consulo.virtualFileSystem.NewVirtualFile;
 
 import java.io.IOException;
 

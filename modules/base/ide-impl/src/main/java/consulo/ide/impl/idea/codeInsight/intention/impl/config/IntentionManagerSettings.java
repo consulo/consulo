@@ -32,7 +32,7 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.ide.ServiceManager;
-import consulo.ide.impl.idea.codeInsight.intention.IntentionActionDelegate;
+import consulo.language.editor.internal.intention.IntentionActionDelegate;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.editor.intention.SyntheticIntentionAction;

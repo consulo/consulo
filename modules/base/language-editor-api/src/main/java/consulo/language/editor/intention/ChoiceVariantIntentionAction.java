@@ -1,9 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.codeInsight.intention.choice;
+package consulo.language.editor.intention;
 
 import consulo.language.editor.rawHighlight.HighlightInfoType;
-import consulo.ide.impl.idea.codeInsight.intention.CustomizableIntentionAction;
-import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.inspection.IntentionAndQuickFixAction;
 import consulo.component.util.Iconable;
 import consulo.ui.image.Image;

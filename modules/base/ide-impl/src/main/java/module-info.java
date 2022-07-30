@@ -285,9 +285,7 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.codeInsight.hints;
   exports consulo.ide.impl.idea.codeInsight.hints.filtering;
   exports consulo.ide.impl.idea.codeInsight.hints.settings;
-  exports consulo.ide.impl.idea.codeInsight.intention;
   exports consulo.ide.impl.idea.codeInsight.intention.actions;
-  exports consulo.ide.impl.idea.codeInsight.intention.choice;
   exports consulo.ide.impl.idea.codeInsight.intention.impl;
   exports consulo.ide.impl.idea.codeInsight.intention.impl.config;
   exports consulo.ide.impl.idea.codeInsight.lookup;

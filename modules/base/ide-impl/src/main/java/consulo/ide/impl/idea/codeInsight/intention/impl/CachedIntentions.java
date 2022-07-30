@@ -3,9 +3,9 @@ package consulo.ide.impl.idea.codeInsight.intention.impl;
 
 import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.ShowIntentionsPass;
-import consulo.ide.impl.idea.codeInsight.intention.EmptyIntentionAction;
+import consulo.language.editor.internal.intention.EmptyIntentionAction;
 import consulo.language.editor.intention.IntentionAction;
-import consulo.ide.impl.idea.codeInsight.intention.IntentionActionDelegate;
+import consulo.language.editor.internal.intention.IntentionActionDelegate;
 import consulo.language.editor.inspection.PriorityAction;
 import consulo.ide.impl.idea.codeInsight.intention.impl.config.IntentionManagerSettings;
 import consulo.language.editor.inspection.SuppressIntentionActionFromFix;

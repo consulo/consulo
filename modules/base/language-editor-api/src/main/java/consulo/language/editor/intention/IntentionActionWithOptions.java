@@ -13,12 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.intention;
-
-import consulo.language.editor.intention.IntentionAction;
+package consulo.language.editor.intention;
 
 import javax.annotation.Nonnull;
-
 import java.util.List;
 
 /**

@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.intention.choice;
+package consulo.language.editor.intention;
 
-import consulo.ide.impl.idea.codeInsight.intention.IntentionActionWithChoice;
 import consulo.language.editor.inspection.LocalQuickFix;
 import consulo.language.editor.inspection.QuickFix;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.collection.ContainerUtil;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;

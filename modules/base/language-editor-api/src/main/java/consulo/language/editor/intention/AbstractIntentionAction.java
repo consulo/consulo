@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.intention;
+package consulo.language.editor.intention;
 
-import javax.annotation.Nonnull;
-
-import consulo.language.editor.intention.IntentionAction;
-import consulo.project.Project;
 import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiFile;
+import consulo.project.Project;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev

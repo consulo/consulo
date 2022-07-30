@@ -23,7 +23,7 @@ import consulo.application.internal.ApplicationEx;
 import consulo.language.file.FileTypeManager;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.FileTypeManagerImpl;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.internal.NewVirtualFile;
+import consulo.virtualFileSystem.NewVirtualFile;
 import consulo.ide.impl.idea.util.LineSeparator;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.io.UnsyncByteArrayInputStream;

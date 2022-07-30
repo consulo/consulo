@@ -21,7 +21,6 @@ import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.encoding.EncodingManager;
 import consulo.virtualFileSystem.encoding.EncodingProjectManager;
 import consulo.virtualFileSystem.encoding.Utf8BomOptionProvider;
-import consulo.ide.impl.idea.openapi.vfs.ex.temp.TempFileSystemImpl;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.*;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.*;
 import consulo.ide.impl.idea.util.*;
@@ -43,7 +42,7 @@ import consulo.util.collection.SmartList;
 import consulo.util.collection.primitive.ints.*;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.event.*;
-import consulo.virtualFileSystem.internal.NewVirtualFile;
+import consulo.virtualFileSystem.NewVirtualFile;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 

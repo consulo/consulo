@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.codeInspection.actions;
 
 import consulo.language.editor.FileModificationService;
 import consulo.language.editor.hint.HintManager;
-import consulo.ide.impl.idea.codeInsight.intention.EmptyIntentionAction;
+import consulo.language.editor.internal.intention.EmptyIntentionAction;
 import consulo.language.editor.intention.HighPriorityAction;
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.scheme.InspectionManager;

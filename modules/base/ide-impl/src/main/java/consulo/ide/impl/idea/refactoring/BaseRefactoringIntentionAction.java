@@ -1,7 +1,7 @@
 package consulo.ide.impl.idea.refactoring;
 
 import consulo.language.editor.intention.HighPriorityAction;
-import consulo.ide.impl.idea.codeInsight.intention.PsiElementBaseIntentionAction;
+import consulo.language.editor.intention.PsiElementBaseIntentionAction;
 import consulo.application.AllIcons;
 import consulo.component.util.Iconable;
 import consulo.ui.image.Image;
