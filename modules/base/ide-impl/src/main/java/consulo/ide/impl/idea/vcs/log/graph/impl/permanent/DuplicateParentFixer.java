@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.vcs.log.graph.impl.permanent;
 
 
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.vcs.log.graph.GraphCommit;
+import consulo.versionControlSystem.log.graph.GraphCommit;
 import javax.annotation.Nonnull;
 
 import java.util.*;

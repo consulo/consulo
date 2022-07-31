@@ -15,12 +15,12 @@
  */
 package consulo.ide.impl.idea.vcs.log.data;
 
+import consulo.versionControlSystem.log.*;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.vcs.log.*;
 import consulo.ide.impl.idea.vcs.log.graph.GraphColorManagerImpl;
-import consulo.ide.impl.idea.vcs.log.graph.GraphCommit;
+import consulo.versionControlSystem.log.graph.GraphCommit;
 import consulo.ide.impl.idea.vcs.log.graph.PermanentGraph;
 import consulo.ide.impl.idea.vcs.log.graph.impl.facade.PermanentGraphImpl;
 import consulo.ide.impl.idea.vcs.log.util.StopWatch;

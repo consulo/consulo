@@ -19,6 +19,8 @@ import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
 import consulo.ide.impl.idea.vcs.log.*;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogData;
+import consulo.versionControlSystem.log.VcsShortCommitDetails;
+
 import javax.annotation.Nonnull;
 
 public class MergeCommitsHighlighter implements VcsLogHighlighter {

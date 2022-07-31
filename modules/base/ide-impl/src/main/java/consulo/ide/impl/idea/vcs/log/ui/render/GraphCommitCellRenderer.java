@@ -9,7 +9,7 @@ import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
 import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ide.impl.idea.vcs.log.VcsRef;
+import consulo.versionControlSystem.log.VcsRef;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogData;
 import consulo.ide.impl.idea.vcs.log.graph.EdgePrintElement;
 import consulo.ide.impl.idea.vcs.log.graph.PrintElement;

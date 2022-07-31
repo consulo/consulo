@@ -23,7 +23,7 @@ import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ide.impl.idea.openapi.vcs.ui.FlatSpeedSearchPopup;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.vcs.log.VcsLogUserFilter;
+import consulo.versionControlSystem.log.VcsLogUserFilter;
 import consulo.ide.impl.idea.vcs.log.data.MainVcsLogUiProperties;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogData;
 import consulo.ide.impl.idea.vcs.log.impl.VcsLogUserFilterImpl;

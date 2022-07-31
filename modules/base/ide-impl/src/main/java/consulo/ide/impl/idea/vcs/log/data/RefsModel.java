@@ -2,6 +2,9 @@ package consulo.ide.impl.idea.vcs.log.data;
 
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
+import consulo.versionControlSystem.log.CommitId;
+import consulo.versionControlSystem.log.VcsLogProvider;
+import consulo.versionControlSystem.log.VcsRef;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.vcs.log.*;
 import gnu.trove.TIntObjectHashMap;

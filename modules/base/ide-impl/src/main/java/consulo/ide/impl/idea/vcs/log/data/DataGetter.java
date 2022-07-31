@@ -16,12 +16,12 @@
 package consulo.ide.impl.idea.vcs.log.data;
 
 import consulo.application.progress.ProgressIndicator;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.ide.impl.idea.vcs.log.VcsShortCommitDetails;
+import consulo.versionControlSystem.log.VcsShortCommitDetails;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public interface DataGetter<T extends VcsShortCommitDetails> {
   @Nonnull

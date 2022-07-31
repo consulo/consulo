@@ -24,7 +24,7 @@ import consulo.application.progress.Task;
 import consulo.project.Project;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ide.impl.idea.vcs.log.VcsLogFilterCollection;
+import consulo.versionControlSystem.log.VcsLogFilterCollection;
 import consulo.ide.impl.idea.vcs.log.graph.PermanentGraph;
 import consulo.ide.impl.idea.vcs.log.impl.VcsLogFilterCollectionImpl;
 import consulo.util.lang.Pair;

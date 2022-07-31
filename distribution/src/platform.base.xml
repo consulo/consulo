@@ -108,6 +108,8 @@
         <include>consulo:consulo-web-browser-api</include>
         <include>consulo:consulo-version-control-system-api</include>
         <include>consulo:consulo-version-control-system-impl</include>
+        <include>consulo:consulo-version-control-system-distributed-api</include>
+        <include>consulo:consulo-version-control-system-log-api</include>
         <include>consulo:consulo-external-service-api</include>
         <include>consulo:consulo-external-service-impl</include>
 

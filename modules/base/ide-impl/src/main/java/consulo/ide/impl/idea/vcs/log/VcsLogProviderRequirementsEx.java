@@ -15,11 +15,13 @@
  */
 package consulo.ide.impl.idea.vcs.log;
 
+import consulo.versionControlSystem.log.VcsRef;
+
 import javax.annotation.Nonnull;
 
 import java.util.Collection;
 
-import static consulo.ide.impl.idea.vcs.log.VcsLogProvider.Requirements;
+import static consulo.versionControlSystem.log.VcsLogProvider.Requirements;
 
 /**
  * Extension of the standard {@link Requirements} which contains data used by some VCSs. <br/>

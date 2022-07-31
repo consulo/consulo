@@ -16,17 +16,16 @@
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.logging.Logger;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
+import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.ModalityState;
 import consulo.util.lang.EmptyRunnable;
 import consulo.versionControlSystem.change.InvokeAfterUpdateMode;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.function.Consumer;
 
 class CallbackData {
@@ -57,7 +56,7 @@ class CallbackData {
                                     @Nonnull InvokeAfterUpdateMode mode,
                                     @Nonnull Runnable afterUpdate,
                                     @Nullable String title,
-                                    @Nullable IdeaModalityState state) {
+                                    @Nullable ModalityState state) {
     return mode.isSilent() ? createSilent(project, mode, afterUpdate) : createInteractive(project, mode, afterUpdate, title, state);
   }
 
@@ -78,7 +77,7 @@ class CallbackData {
                                                 @Nonnull InvokeAfterUpdateMode mode,
                                                 @Nonnull Runnable afterUpdate,
                                                 String title,
-                                                @Nullable IdeaModalityState state) {
+                                                @Nullable ModalityState state) {
     Task task = mode.isSynchronous()
                 ? new Waiter(project, afterUpdate, title, mode.isCancellable())
                 : new FictiveBackgroundable(project, afterUpdate, title, mode.isCancellable(), state);

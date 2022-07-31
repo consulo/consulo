@@ -23,7 +23,7 @@ import consulo.ui.ex.awt.DialogBuilder;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ide.impl.idea.openapi.vcs.versionBrowser.DateFilterComponent;
 import consulo.application.util.DateFormatUtil;
-import consulo.ide.impl.idea.vcs.log.VcsLogDateFilter;
+import consulo.versionControlSystem.log.VcsLogDateFilter;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogDateFilterImpl;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

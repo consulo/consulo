@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.vcs.log.data;
 
-import consulo.ide.impl.idea.vcs.log.TimedVcsCommit;
+import consulo.versionControlSystem.log.TimedVcsCommit;
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;

@@ -16,6 +16,8 @@
 package consulo.ide.impl.idea.vcs.log;
 
 import consulo.util.dataholder.Key;
+import consulo.versionControlSystem.log.VcsLog;
+import consulo.versionControlSystem.log.VcsRef;
 
 import java.util.List;
 

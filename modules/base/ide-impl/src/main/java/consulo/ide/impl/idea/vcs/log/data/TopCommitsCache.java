@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.vcs.log.data;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.PeekingIterator;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.vcs.log.VcsCommitMetadata;
+import consulo.versionControlSystem.log.VcsCommitMetadata;
 import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
 import consulo.util.collection.primitive.ints.IntMaps;
 

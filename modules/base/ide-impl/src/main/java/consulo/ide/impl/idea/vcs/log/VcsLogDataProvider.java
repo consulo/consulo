@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.vcs.log;
 
+import consulo.versionControlSystem.log.CommitId;
+import consulo.versionControlSystem.log.Hash;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 

@@ -22,21 +22,21 @@ import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
-import consulo.ide.ServiceManager;
+import consulo.ide.impl.idea.openapi.vcs.VcsNotifier;
+import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerEx;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.MultiMap;
+import consulo.util.collection.Sets;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsKey;
-import consulo.ide.impl.idea.openapi.vcs.VcsNotifier;
 import consulo.versionControlSystem.change.ChangeListManager;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerEx;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.vcs.log.CommitId;
-import consulo.versionControlSystem.distributed.push.VcsFullCommitDetails;
-import consulo.ide.impl.idea.vcs.log.VcsLog;
-import consulo.logging.Logger;
-import consulo.project.Project;
-import consulo.util.collection.MultiMap;
+import consulo.versionControlSystem.distributed.VcsCherryPicker;
+import consulo.versionControlSystem.log.CommitId;
+import consulo.versionControlSystem.log.VcsFullCommitDetails;
+import consulo.versionControlSystem.log.VcsLog;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -54,7 +54,7 @@ public class VcsCherryPickManager {
   @Nonnull
   private final ProjectLevelVcsManager myProjectLevelVcsManager;
   @Nonnull
-  private final Set<CommitId> myIdsInProgress = ContainerUtil.newConcurrentSet();
+  private final Set<CommitId> myIdsInProgress = Sets.newConcurrentHashSet();
 
   @Inject
   public VcsCherryPickManager(@Nonnull Project project, @Nonnull ProjectLevelVcsManager projectLevelVcsManager) {
@@ -63,12 +63,7 @@ public class VcsCherryPickManager {
   }
 
   public void cherryPick(@Nonnull VcsLog log) {
-    log.requestSelectedDetails(new Consumer<List<VcsFullCommitDetails>>() {
-      @Override
-      public void consume(List<VcsFullCommitDetails> details) {
-        ProgressManager.getInstance().run(new CherryPickingTask(myProject, ContainerUtil.reverse(details)));
-      }
-    }, null);
+    log.requestSelectedDetails(details -> ProgressManager.getInstance().run(new CherryPickingTask(myProject, ContainerUtil.reverse(details))), null);
   }
 
   public boolean isCherryPickAlreadyStartedFor(@Nonnull List<CommitId> commits) {
@@ -90,7 +85,7 @@ public class VcsCherryPickManager {
 
   @Nullable
   public VcsCherryPicker getCherryPickerFor(@Nonnull final VcsKey key) {
-    return ContainerUtil.find(VcsCherryPicker.EXTENSION_POINT_NAME.getExtensionList(myProject), picker -> picker.getSupportedVcs().equals(key));
+    return ContainerUtil.find(myProject.getExtensionList(VcsCherryPicker.class), picker -> picker.getSupportedVcs().equals(key));
   }
 
   private class CherryPickingTask extends Task.Backgroundable {
@@ -177,6 +172,6 @@ public class VcsCherryPickManager {
   }
 
   public static VcsCherryPickManager getInstance(@Nonnull Project project) {
-    return ServiceManager.getService(project, VcsCherryPickManager.class);
+    return project.getInstance(VcsCherryPickManager.class);
   }
 }

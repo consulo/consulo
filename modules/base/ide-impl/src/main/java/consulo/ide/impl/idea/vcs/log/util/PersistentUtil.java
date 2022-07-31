@@ -26,7 +26,7 @@ import consulo.index.io.data.IOUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.PathUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.vcs.log.VcsLogProvider;
+import consulo.versionControlSystem.log.VcsLogProvider;
 import consulo.container.boot.ContainerPathManager;
 
 import javax.annotation.Nonnull;

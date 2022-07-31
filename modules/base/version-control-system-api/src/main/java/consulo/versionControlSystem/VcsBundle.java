@@ -28,14 +28,14 @@ public class VcsBundle extends AbstractBundle {
   private static final VcsBundle ourInstance = new VcsBundle();
 
   private VcsBundle() {
-    super("consulo.vcs.VcsBundle");
+    super("consulo.versionControlSystem.VcsBundle");
   }
 
-  public static String message(@PropertyKey(resourceBundle = "consulo.vcs.VcsBundle") String key) {
+  public static String message(@PropertyKey(resourceBundle = "consulo.versionControlSystem.VcsBundle") String key) {
     return ourInstance.getMessage(key);
   }
 
-  public static String message(@PropertyKey(resourceBundle = "consulo.vcs.VcsBundle") String key, Object... params) {
+  public static String message(@PropertyKey(resourceBundle = "consulo.versionControlSystem.VcsBundle") String key, Object... params) {
     return ourInstance.getMessage(key, params);
   }
 }

@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.vcs.log.graph.impl.facade;
 import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.NotNullFunction;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.vcs.log.graph.GraphCommit;
+import consulo.versionControlSystem.log.graph.GraphCommit;
 import consulo.ide.impl.idea.vcs.log.graph.GraphCommitImpl;
 import consulo.ide.impl.idea.vcs.log.graph.api.GraphLayout;
 import consulo.ide.impl.idea.vcs.log.graph.api.LinearGraph;

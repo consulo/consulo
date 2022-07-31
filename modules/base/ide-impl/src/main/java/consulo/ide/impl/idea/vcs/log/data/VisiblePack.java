@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.vcs.log.data;
 
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.vcs.log.VcsLogDataPack;
-import consulo.ide.impl.idea.vcs.log.VcsLogFilterCollection;
-import consulo.ide.impl.idea.vcs.log.VcsLogProvider;
+import consulo.versionControlSystem.log.VcsLogFilterCollection;
+import consulo.versionControlSystem.log.VcsLogProvider;
 import consulo.ide.impl.idea.vcs.log.VcsLogRefs;
 import consulo.ide.impl.idea.vcs.log.graph.VisibleGraph;
 import consulo.ide.impl.idea.vcs.log.impl.VcsLogFilterCollectionImpl;

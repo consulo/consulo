@@ -15,17 +15,16 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
-import consulo.ide.impl.idea.ide.startup.impl.StartupManagerImpl;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.impl.internal.performance.HeavyProcessLatch;
+import consulo.application.util.Semaphore;
+import consulo.ide.impl.idea.ide.startup.impl.StartupManagerImpl;
+import consulo.ide.impl.idea.openapi.util.Getter;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;
-import consulo.ide.impl.idea.openapi.util.Getter;
+import consulo.ui.ModalityState;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.application.util.Semaphore;
-import consulo.application.impl.internal.performance.HeavyProcessLatch;
 import consulo.versionControlSystem.change.InvokeAfterUpdateMode;
 import consulo.versionControlSystem.change.VcsDirtyScopeManager;
 import org.jetbrains.annotations.TestOnly;
@@ -36,6 +35,7 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 /**
  * ChangeListManager updates scheduler.
@@ -187,14 +187,14 @@ public class UpdateRequestsQueue {
                                 @Nonnull InvokeAfterUpdateMode mode,
                                 @Nullable String title,
                                 @Nullable Consumer<VcsDirtyScopeManager> dirtyScopeManagerFiller,
-                                @javax.annotation.Nullable IdeaModalityState state) {
+                                @Nullable ModalityState state) {
     LOG.debug("invokeAfterUpdate for project: " + myProject.getName());
     final CallbackData data = CallbackData.create(myProject, mode, afterUpdate, title, state);
 
     if (dirtyScopeManagerFiller != null) {
       VcsDirtyScopeManagerProxy managerProxy = new VcsDirtyScopeManagerProxy();
 
-      dirtyScopeManagerFiller.consume(managerProxy);
+      dirtyScopeManagerFiller.accept(managerProxy);
       if (!myProject.isDisposed()) {
         managerProxy.callRealManager(VcsDirtyScopeManager.getInstance(myProject));
       }

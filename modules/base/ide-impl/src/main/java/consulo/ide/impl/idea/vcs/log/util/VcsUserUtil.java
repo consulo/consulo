@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.vcs.log.util;
 
 import consulo.util.lang.Couple;
-import consulo.ide.impl.idea.vcs.log.VcsUser;
+import consulo.versionControlSystem.log.VcsUser;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

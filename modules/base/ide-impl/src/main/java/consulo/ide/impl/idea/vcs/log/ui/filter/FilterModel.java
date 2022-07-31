@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.vcs.log.ui.filter;
 import consulo.application.util.function.Computable;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.VcsLogDataPack;
-import consulo.ide.impl.idea.vcs.log.VcsLogFilter;
+import consulo.versionControlSystem.log.VcsLogFilter;
 import consulo.ide.impl.idea.vcs.log.data.MainVcsLogUiProperties;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

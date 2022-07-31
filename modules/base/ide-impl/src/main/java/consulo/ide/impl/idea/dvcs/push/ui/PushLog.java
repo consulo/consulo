@@ -39,7 +39,7 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.ui.ThreeStateCheckBox;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.internal.laf.WideSelectionTreeUI;
-import consulo.ide.impl.idea.vcs.log.Hash;
+import consulo.versionControlSystem.log.Hash;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogActionPlaces;
 import javax.annotation.Nonnull;
 

@@ -1,8 +1,8 @@
 package consulo.ide.impl.idea.vcs.log.impl;
 
-import consulo.ide.impl.idea.vcs.log.Hash;
-import consulo.ide.impl.idea.vcs.log.VcsRef;
-import consulo.ide.impl.idea.vcs.log.VcsRefType;
+import consulo.versionControlSystem.log.Hash;
+import consulo.versionControlSystem.log.VcsRef;
+import consulo.versionControlSystem.log.VcsRefType;
 import consulo.util.interner.Interner;
 import consulo.virtualFileSystem.VirtualFile;
 

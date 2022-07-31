@@ -20,6 +20,7 @@ import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.change.FilePathsHelper;
 import consulo.versionControlSystem.change.IgnoreSettingsType;
+import consulo.versionControlSystem.change.IgnoredBeanFactory;
 import consulo.versionControlSystem.change.IgnoredFileBean;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.BulkFileListener;

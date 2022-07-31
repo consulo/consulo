@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.vcs.log.impl;
 
-import consulo.ide.impl.idea.vcs.log.RefGroup;
-import consulo.ide.impl.idea.vcs.log.VcsRef;
+import consulo.versionControlSystem.log.RefGroup;
+import consulo.versionControlSystem.log.VcsRef;
 import javax.annotation.Nonnull;
 
 import java.awt.*;

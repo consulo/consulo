@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.vcs.log.graph.impl.permanent;
 import consulo.ide.impl.idea.util.NotNullFunction;
 import consulo.util.collection.SmartList;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.vcs.log.graph.GraphCommit;
+import consulo.versionControlSystem.log.graph.GraphCommit;
 import consulo.ide.impl.idea.vcs.log.graph.utils.Flags;
 import consulo.ide.impl.idea.vcs.log.graph.utils.impl.BitSetFlags;
 import javax.annotation.Nonnull;

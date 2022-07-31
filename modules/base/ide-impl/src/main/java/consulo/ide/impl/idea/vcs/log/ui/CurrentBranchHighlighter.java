@@ -17,6 +17,10 @@ package consulo.ide.impl.idea.vcs.log.ui;
 
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
+import consulo.versionControlSystem.log.CommitId;
+import consulo.versionControlSystem.log.VcsLogBranchFilter;
+import consulo.versionControlSystem.log.VcsLogProvider;
+import consulo.versionControlSystem.log.VcsShortCommitDetails;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.JBColor;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

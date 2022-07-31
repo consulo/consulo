@@ -15,9 +15,9 @@
  */
 package consulo.ide.impl.idea.vcs.log.data;
 
-import consulo.ide.impl.idea.vcs.log.VcsCommitMetadata;
-import consulo.ide.impl.idea.vcs.log.VcsLogDateFilter;
-import consulo.ide.impl.idea.vcs.log.VcsLogDetailsFilter;
+import consulo.versionControlSystem.log.VcsCommitMetadata;
+import consulo.versionControlSystem.log.VcsLogDateFilter;
+import consulo.versionControlSystem.log.VcsLogDetailsFilter;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

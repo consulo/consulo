@@ -19,9 +19,8 @@ import com.google.common.primitives.Ints;
 import com.google.common.util.concurrent.SettableFuture;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
-import consulo.versionControlSystem.distributed.push.VcsFullCommitDetails;
+import consulo.versionControlSystem.log.*;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.vcs.log.*;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogData;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl;
@@ -33,6 +32,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.Future;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class VcsLogImpl implements VcsLog {

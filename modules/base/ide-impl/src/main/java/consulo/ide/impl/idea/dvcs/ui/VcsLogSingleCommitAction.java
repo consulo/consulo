@@ -23,9 +23,9 @@ import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.vcs.log.CommitId;
-import consulo.ide.impl.idea.vcs.log.Hash;
-import consulo.ide.impl.idea.vcs.log.VcsLog;
+import consulo.versionControlSystem.log.CommitId;
+import consulo.versionControlSystem.log.Hash;
+import consulo.versionControlSystem.log.VcsLog;
 import consulo.ide.impl.idea.vcs.log.VcsLogDataKeys;
 import javax.annotation.Nonnull;
 

@@ -20,7 +20,7 @@ import consulo.project.Project;
 import consulo.util.lang.function.Condition;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.MultiMap;
-import consulo.versionControlSystem.distributed.push.VcsFullCommitDetails;
+import consulo.versionControlSystem.log.VcsFullCommitDetails;
 import javax.annotation.Nonnull;
 
 import java.util.Collection;

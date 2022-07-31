@@ -1,5 +1,8 @@
 package consulo.ide.impl.idea.vcs.log;
 
+import consulo.versionControlSystem.log.VcsLogFilter;
+import consulo.versionControlSystem.log.VcsLogFilterCollection;
+
 import javax.annotation.Nonnull;
 
 /**

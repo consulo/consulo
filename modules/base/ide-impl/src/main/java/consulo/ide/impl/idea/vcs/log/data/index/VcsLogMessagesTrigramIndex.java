@@ -19,7 +19,7 @@ import consulo.ide.impl.idea.openapi.util.text.TrigramBuilder;
 import consulo.index.io.DataIndexer;
 import consulo.ide.impl.idea.util.indexing.StorageException;
 import consulo.index.io.VoidDataExternalizer;
-import consulo.versionControlSystem.distributed.push.VcsFullCommitDetails;
+import consulo.versionControlSystem.log.VcsFullCommitDetails;
 import consulo.ide.impl.idea.vcs.log.impl.FatalErrorHandler;
 import consulo.disposer.Disposable;
 import consulo.util.collection.primitive.ints.IntSet;

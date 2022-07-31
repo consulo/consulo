@@ -45,6 +45,7 @@ import consulo.ide.impl.idea.openapi.vcs.changes.ui.CommitHelper;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.PlusMinusModify;
 import consulo.ide.impl.idea.openapi.vcs.impl.AbstractVcsHelperImpl;
 import consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
+import consulo.ui.ModalityState;
 import consulo.versionControlSystem.VcsInitObject;
 import consulo.ide.impl.idea.openapi.vcs.impl.VcsRootIterator;
 import consulo.ide.impl.idea.openapi.vcs.readOnlyHandler.ReadonlyStatusHandlerImpl;
@@ -357,7 +358,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
    * so waiting for its completion on AWT thread is not good runnable is invoked on AWT thread
    */
   @Override
-  public void invokeAfterUpdate(final Runnable afterUpdate, final InvokeAfterUpdateMode mode, @Nullable final String title, @Nullable final IdeaModalityState state) {
+  public void invokeAfterUpdate(final Runnable afterUpdate, final InvokeAfterUpdateMode mode, @Nullable final String title, @Nullable final ModalityState state) {
     myUpdater.invokeAfterUpdate(afterUpdate, mode, title, null, state);
   }
 
@@ -365,8 +366,8 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
   public void invokeAfterUpdate(final Runnable afterUpdate,
                                 final InvokeAfterUpdateMode mode,
                                 final String title,
-                                final Consumer<VcsDirtyScopeManager> dirtyScopeManagerFiller,
-                                final IdeaModalityState state) {
+                                final java.util.function.Consumer<VcsDirtyScopeManager> dirtyScopeManagerFiller,
+                                final ModalityState state) {
     myUpdater.invokeAfterUpdate(afterUpdate, mode, title, dirtyScopeManagerFiller, state);
   }
 

@@ -16,6 +16,8 @@
 package consulo.ide.impl.idea.vcs.log.graph;
 
 import consulo.util.lang.function.Condition;
+import consulo.versionControlSystem.log.graph.GraphCommit;
+
 import javax.annotation.Nonnull;
 
 import java.util.Collection;

@@ -22,7 +22,7 @@ import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.util.registry.Registry;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.vcs.log.VcsLogRefresher;
+import consulo.versionControlSystem.log.VcsLogRefresher;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogData;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogFilterer;
 import javax.annotation.Nonnull;

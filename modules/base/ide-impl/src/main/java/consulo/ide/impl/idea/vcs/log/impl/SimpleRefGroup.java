@@ -18,9 +18,9 @@ package consulo.ide.impl.idea.vcs.log.impl;
 import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.MultiMap;
-import consulo.ide.impl.idea.vcs.log.RefGroup;
-import consulo.ide.impl.idea.vcs.log.VcsRef;
-import consulo.ide.impl.idea.vcs.log.VcsRefType;
+import consulo.versionControlSystem.log.RefGroup;
+import consulo.versionControlSystem.log.VcsRef;
+import consulo.versionControlSystem.log.VcsRefType;
 import javax.annotation.Nonnull;
 
 import java.awt.*;

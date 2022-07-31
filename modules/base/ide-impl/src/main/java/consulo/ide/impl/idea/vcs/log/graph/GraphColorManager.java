@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.vcs.log.graph;
 
-import consulo.ide.impl.idea.vcs.log.VcsLogRefManager;
+import consulo.versionControlSystem.log.VcsLogRefManager;
 
 public interface GraphColorManager<CommitId> {
 

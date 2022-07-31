@@ -17,6 +17,8 @@ package consulo.ide.impl.idea.vcs.log.graph;
 
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ImmutableList;
+import consulo.versionControlSystem.log.graph.GraphCommit;
+
 import javax.annotation.Nonnull;
 
 import java.util.List;

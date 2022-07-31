@@ -36,7 +36,7 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.util.DateFormatUtil;
 import consulo.ide.impl.idea.vcs.log.VcsCommitStyleFactory;
 import consulo.ide.impl.idea.vcs.log.VcsLogHighlighter;
-import consulo.ide.impl.idea.vcs.log.VcsShortCommitDetails;
+import consulo.versionControlSystem.log.VcsShortCommitDetails;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogData;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogProgress;
 import consulo.ide.impl.idea.vcs.log.data.VisiblePack;

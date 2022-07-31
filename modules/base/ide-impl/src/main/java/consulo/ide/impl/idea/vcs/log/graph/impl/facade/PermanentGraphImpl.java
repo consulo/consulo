@@ -34,6 +34,7 @@ import consulo.ide.impl.idea.vcs.log.graph.linearBek.LinearBekController;
 import consulo.ide.impl.idea.vcs.log.graph.utils.LinearGraphUtils;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
+import consulo.versionControlSystem.log.graph.GraphCommit;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

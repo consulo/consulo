@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.vcs.log.impl;
 
-import consulo.ide.impl.idea.vcs.log.VcsUser;
+import consulo.versionControlSystem.log.VcsUser;
 import consulo.ide.impl.idea.vcs.log.util.VcsUserUtil;
 import javax.annotation.Nonnull;
 

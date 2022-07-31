@@ -15,10 +15,10 @@
  */
 package consulo.ide.impl.idea.vcs.log.impl;
 
-import consulo.ide.impl.idea.vcs.log.VcsCommitMetadata;
-import consulo.ide.impl.idea.vcs.log.VcsLogProvider;
-import consulo.ide.impl.idea.vcs.log.VcsRef;
-import consulo.ide.impl.idea.vcs.log.VcsUser;
+import consulo.versionControlSystem.log.VcsCommitMetadata;
+import consulo.versionControlSystem.log.VcsLogProvider;
+import consulo.versionControlSystem.log.VcsRef;
+import consulo.versionControlSystem.log.VcsUser;
 import javax.annotation.Nonnull;
 
 import java.util.Collections;

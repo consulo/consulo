@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.vcs.log.ui.filter;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ide.impl.idea.vcs.log.VcsLogFilter;
+import consulo.versionControlSystem.log.VcsLogFilter;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogPopupComponent;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

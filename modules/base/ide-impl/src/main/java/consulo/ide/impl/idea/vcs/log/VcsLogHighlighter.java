@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.vcs.log;
 
+import consulo.versionControlSystem.log.VcsShortCommitDetails;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

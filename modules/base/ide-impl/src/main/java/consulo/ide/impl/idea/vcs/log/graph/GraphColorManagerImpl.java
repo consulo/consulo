@@ -18,9 +18,9 @@ package consulo.ide.impl.idea.vcs.log.graph;
 import consulo.logging.Logger;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.Function;
-import consulo.ide.impl.idea.vcs.log.Hash;
-import consulo.ide.impl.idea.vcs.log.VcsLogRefManager;
-import consulo.ide.impl.idea.vcs.log.VcsRef;
+import consulo.versionControlSystem.log.Hash;
+import consulo.versionControlSystem.log.VcsLogRefManager;
+import consulo.versionControlSystem.log.VcsRef;
 import consulo.ide.impl.idea.vcs.log.data.RefsModel;
 import javax.annotation.Nonnull;
 

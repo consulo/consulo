@@ -35,7 +35,7 @@ import consulo.ide.impl.idea.util.textCompletion.DefaultTextCompletionValueDescr
 import consulo.ide.impl.idea.util.textCompletion.ValuesCompletionProvider;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ide.impl.idea.vcs.log.VcsLogRefs;
-import consulo.ide.impl.idea.vcs.log.VcsRef;
+import consulo.versionControlSystem.log.VcsRef;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogColorManager;
 import consulo.ide.impl.idea.vcs.log.ui.frame.VcsLogGraphTable;
 import consulo.ide.impl.idea.vcsUtil.VcsImplUtil;

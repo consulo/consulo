@@ -57,7 +57,7 @@ public class IgnoredFileBean {
     myMatcher = null;
   }
 
-  Project getProject() {
+  public Project getProject() {
     return myProject;
   }
 

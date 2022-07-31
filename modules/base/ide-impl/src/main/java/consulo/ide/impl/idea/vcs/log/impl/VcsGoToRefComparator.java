@@ -16,8 +16,8 @@
 package consulo.ide.impl.idea.vcs.log.impl;
 
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.vcs.log.VcsLogProvider;
-import consulo.ide.impl.idea.vcs.log.VcsRef;
+import consulo.versionControlSystem.log.VcsLogProvider;
+import consulo.versionControlSystem.log.VcsRef;
 import javax.annotation.Nonnull;
 
 import java.util.Comparator;

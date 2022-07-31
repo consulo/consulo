@@ -17,9 +17,9 @@ package consulo.ide.impl.idea.vcs.log.data;
 
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.vcs.log.VcsLogFilterCollection;
-import consulo.ide.impl.idea.vcs.log.VcsLogProvider;
-import consulo.ide.impl.idea.vcs.log.VcsRef;
+import consulo.versionControlSystem.log.VcsLogFilterCollection;
+import consulo.versionControlSystem.log.VcsLogProvider;
+import consulo.versionControlSystem.log.VcsRef;
 import consulo.ide.impl.idea.vcs.log.graph.GraphColorManagerImpl;
 import consulo.ide.impl.idea.vcs.log.graph.VisibleGraph;
 import consulo.ide.impl.idea.vcs.log.graph.api.permanent.PermanentGraphInfo;

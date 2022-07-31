@@ -22,9 +22,9 @@ import consulo.ide.impl.idea.openapi.vcs.LocalFilePath;
 import consulo.versionControlSystem.change.Change;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.vcs.log.Hash;
-import consulo.versionControlSystem.distributed.push.VcsFullCommitDetails;
-import consulo.ide.impl.idea.vcs.log.VcsUser;
+import consulo.versionControlSystem.log.Hash;
+import consulo.versionControlSystem.log.VcsFullCommitDetails;
+import consulo.versionControlSystem.log.VcsUser;
 import javax.annotation.Nonnull;
 
 import java.util.Collection;

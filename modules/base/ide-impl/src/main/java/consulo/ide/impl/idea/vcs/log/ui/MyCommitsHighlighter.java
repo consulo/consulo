@@ -21,6 +21,11 @@ import consulo.ide.impl.idea.vcs.log.*;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogData;
 import consulo.ide.impl.idea.vcs.log.impl.VcsLogUserFilterImpl;
 import consulo.ide.impl.idea.vcs.log.util.VcsUserUtil;
+import consulo.versionControlSystem.log.VcsLogFilterCollection;
+import consulo.versionControlSystem.log.VcsLogUserFilter;
+import consulo.versionControlSystem.log.VcsShortCommitDetails;
+import consulo.versionControlSystem.log.VcsUser;
+
 import javax.annotation.Nonnull;
 
 import java.util.Collection;

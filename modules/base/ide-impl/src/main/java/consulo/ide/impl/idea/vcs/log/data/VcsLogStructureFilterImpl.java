@@ -22,10 +22,10 @@ import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ContentRevision;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.vcs.log.VcsCommitMetadata;
-import consulo.versionControlSystem.distributed.push.VcsFullCommitDetails;
-import consulo.ide.impl.idea.vcs.log.VcsLogDetailsFilter;
-import consulo.ide.impl.idea.vcs.log.VcsLogStructureFilter;
+import consulo.versionControlSystem.log.VcsCommitMetadata;
+import consulo.versionControlSystem.log.VcsFullCommitDetails;
+import consulo.versionControlSystem.log.VcsLogDetailsFilter;
+import consulo.versionControlSystem.log.VcsLogStructureFilter;
 import consulo.versionControlSystem.util.VcsUtil;
 import javax.annotation.Nonnull;
 

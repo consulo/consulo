@@ -50,6 +50,10 @@
       <artifactId>consulo-version-control-system-api</artifactId>
       <version>${project.version}</version>
     </dependency>
-
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-version-control-system-log-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
   </dependencies>
 </project>

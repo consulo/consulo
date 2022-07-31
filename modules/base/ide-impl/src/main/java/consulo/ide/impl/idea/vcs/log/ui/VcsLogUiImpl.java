@@ -24,6 +24,9 @@ import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.lang.function.PairFunction;
+import consulo.versionControlSystem.log.Hash;
+import consulo.versionControlSystem.log.VcsLog;
+import consulo.versionControlSystem.log.VcsLogFilterCollection;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;

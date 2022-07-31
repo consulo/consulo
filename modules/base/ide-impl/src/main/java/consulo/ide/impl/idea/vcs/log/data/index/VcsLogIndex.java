@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.vcs.log.data.index;
 
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.vcs.log.VcsLogDetailsFilter;
+import consulo.versionControlSystem.log.VcsLogDetailsFilter;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

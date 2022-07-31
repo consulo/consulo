@@ -39,6 +39,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.versionControlSystem.log.VcsFullCommitDetails;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

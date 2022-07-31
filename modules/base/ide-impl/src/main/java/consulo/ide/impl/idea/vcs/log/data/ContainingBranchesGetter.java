@@ -22,6 +22,7 @@ import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
 import consulo.ide.impl.idea.openapi.vcs.CalledInAny;
 import consulo.versionControlSystem.VcsException;
+import consulo.versionControlSystem.log.*;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.SLRUMap;

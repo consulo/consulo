@@ -15,6 +15,8 @@
  */
 package consulo.versionControlSystem.distributed.push;
 
+import consulo.versionControlSystem.log.VcsFullCommitDetails;
+
 import javax.annotation.Nonnull;
 import java.util.List;
 

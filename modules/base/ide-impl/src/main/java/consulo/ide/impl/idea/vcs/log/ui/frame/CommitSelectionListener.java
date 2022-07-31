@@ -22,7 +22,7 @@ import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.ide.impl.idea.openapi.vcs.CalledInAwt;
 import consulo.ide.impl.idea.ui.components.JBLoadingPanel;
-import consulo.versionControlSystem.distributed.push.VcsFullCommitDetails;
+import consulo.versionControlSystem.log.VcsFullCommitDetails;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogData;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -7,15 +7,15 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.disposer.Disposer;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.versionControlSystem.VcsException;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.MultiMap;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ide.impl.idea.vcs.log.CommitId;
-import consulo.ide.impl.idea.vcs.log.VcsLogProvider;
-import consulo.ide.impl.idea.vcs.log.VcsShortCommitDetails;
+import consulo.versionControlSystem.log.CommitId;
+import consulo.versionControlSystem.log.VcsLogProvider;
+import consulo.versionControlSystem.log.VcsShortCommitDetails;
 import consulo.ide.impl.idea.vcs.log.data.index.IndexedDetails;
 import consulo.ide.impl.idea.vcs.log.data.index.VcsLogIndex;
 import consulo.ide.impl.idea.vcs.log.util.SequentialLimitedLifoExecutor;
@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * The DataGetter realizes the following pattern of getting some data (parametrized by {@code T}) from the VCS:
@@ -116,10 +117,10 @@ abstract class AbstractDataGetter<T extends VcsShortCommitDetails> implements Di
   public void loadCommitsData(@Nonnull List<Integer> hashes, @Nonnull Consumer<List<T>> consumer, @Nullable ProgressIndicator indicator) {
     assert EventQueue.isDispatchThread();
     loadCommitsData(getCommitsMap(hashes), consumer, indicator);
-  }
+  }                                                                                     
 
   private void loadCommitsData(@Nonnull final TIntIntHashMap commits, @Nonnull final Consumer<List<T>> consumer, @Nullable ProgressIndicator indicator) {
-    final List<T> result = ContainerUtil.newArrayList();
+    final List<T> result = new ArrayList<T>();
     final TIntHashSet toLoad = new TIntHashSet();
 
     long taskNumber = myCurrentTaskIndex++;
@@ -137,7 +138,7 @@ abstract class AbstractDataGetter<T extends VcsShortCommitDetails> implements Di
 
     if (toLoad.isEmpty()) {
       sortCommitsByRow(result, commits);
-      consumer.consume(result);
+      consumer.accept(result);
     }
     else {
       Task.Backgroundable task = new Task.Backgroundable(null, "Loading Selected Details", true, PerformInBackgroundOption.ALWAYS_BACKGROUND) {
@@ -158,9 +159,10 @@ abstract class AbstractDataGetter<T extends VcsShortCommitDetails> implements Di
           }
         }
 
+        @RequiredUIAccess
         @Override
         public void onSuccess() {
-          consumer.consume(result);
+          consumer.accept(result);
         }
       };
       if (indicator != null) {

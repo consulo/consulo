@@ -57,6 +57,7 @@ module consulo.ide.api {
   requires transitive consulo.web.browser.api;
   requires transitive consulo.version.control.system.api;
   requires transitive consulo.version.control.system.distributed.api;
+  requires transitive consulo.version.control.system.log.api;
   requires transitive consulo.execution.test.sm.api;
   requires transitive consulo.execution.test.thrift.api;
   requires transitive consulo.external.service.api;

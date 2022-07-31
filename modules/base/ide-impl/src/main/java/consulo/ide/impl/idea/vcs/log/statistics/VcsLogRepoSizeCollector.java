@@ -25,7 +25,7 @@ import consulo.versionControlSystem.VcsKey;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.MultiMap;
-import consulo.ide.impl.idea.vcs.log.VcsLogProvider;
+import consulo.versionControlSystem.log.VcsLogProvider;
 import consulo.ide.impl.idea.vcs.log.data.DataPack;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogData;
 import consulo.ide.impl.idea.vcs.log.graph.PermanentGraph;

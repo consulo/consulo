@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.vcs.log;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
+import consulo.versionControlSystem.log.VcsUser;
 
 import javax.annotation.Nonnull;
 import java.util.Set;

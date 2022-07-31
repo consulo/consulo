@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.vcs.log.data;
 
 import consulo.util.collection.SLRUMap;
-import consulo.ide.impl.idea.vcs.log.VcsShortCommitDetails;
+import consulo.versionControlSystem.log.VcsShortCommitDetails;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

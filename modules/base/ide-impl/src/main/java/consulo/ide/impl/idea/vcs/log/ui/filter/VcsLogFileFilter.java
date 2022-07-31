@@ -15,9 +15,9 @@
  */
 package consulo.ide.impl.idea.vcs.log.ui.filter;
 
-import consulo.ide.impl.idea.vcs.log.VcsLogFilter;
-import consulo.ide.impl.idea.vcs.log.VcsLogRootFilter;
-import consulo.ide.impl.idea.vcs.log.VcsLogStructureFilter;
+import consulo.versionControlSystem.log.VcsLogFilter;
+import consulo.versionControlSystem.log.VcsLogRootFilter;
+import consulo.versionControlSystem.log.VcsLogStructureFilter;
 import javax.annotation.Nullable;
 
 /*package private*/ class VcsLogFileFilter implements VcsLogFilter {

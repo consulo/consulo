@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.vcs.log.impl;
 
-import consulo.ide.impl.idea.vcs.log.VcsLogHashFilter;
+import consulo.versionControlSystem.log.VcsLogHashFilter;
 import javax.annotation.Nonnull;
 
 import java.util.Collection;

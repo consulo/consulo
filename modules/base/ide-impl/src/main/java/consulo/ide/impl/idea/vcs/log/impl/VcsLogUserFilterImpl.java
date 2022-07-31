@@ -19,9 +19,9 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.MultiMap;
-import consulo.ide.impl.idea.vcs.log.VcsCommitMetadata;
-import consulo.ide.impl.idea.vcs.log.VcsLogUserFilter;
-import consulo.ide.impl.idea.vcs.log.VcsUser;
+import consulo.versionControlSystem.log.VcsCommitMetadata;
+import consulo.versionControlSystem.log.VcsLogUserFilter;
+import consulo.versionControlSystem.log.VcsUser;
 import consulo.ide.impl.idea.vcs.log.util.VcsUserUtil;
 import consulo.logging.Logger;
 

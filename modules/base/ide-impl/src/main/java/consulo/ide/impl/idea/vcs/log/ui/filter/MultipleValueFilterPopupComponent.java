@@ -26,7 +26,7 @@ import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.event.JBPopupAdapter;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.vcs.log.VcsLogFilter;
+import consulo.versionControlSystem.log.VcsLogFilter;
 import consulo.ide.impl.idea.vcs.log.data.MainVcsLogUiProperties;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

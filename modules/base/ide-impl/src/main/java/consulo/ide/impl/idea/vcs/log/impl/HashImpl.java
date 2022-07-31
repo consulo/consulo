@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.vcs.log.impl;
 
 import consulo.index.io.data.DataInputOutputUtil;
-import consulo.ide.impl.idea.vcs.log.Hash;
+import consulo.versionControlSystem.log.Hash;
 import javax.annotation.Nonnull;
 
 import java.io.DataInput;

@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.index.io.Page;
 import consulo.index.io.PersistentBTreeEnumerator;
 import consulo.index.io.PersistentEnumeratorBase;
-import consulo.ide.impl.idea.vcs.log.VcsUser;
+import consulo.versionControlSystem.log.VcsUser;
 import consulo.ide.impl.idea.vcs.log.VcsUserRegistry;
 import consulo.ide.impl.idea.vcs.log.impl.VcsUserImpl;
 import consulo.container.boot.ContainerPathManager;

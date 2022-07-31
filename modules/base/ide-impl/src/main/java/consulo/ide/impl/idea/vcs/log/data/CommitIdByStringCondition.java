@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.vcs.log.data;
 
 import consulo.util.lang.function.Condition;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.vcs.log.CommitId;
+import consulo.versionControlSystem.log.CommitId;
 import javax.annotation.Nonnull;
 
 public class CommitIdByStringCondition implements Condition<CommitId> {

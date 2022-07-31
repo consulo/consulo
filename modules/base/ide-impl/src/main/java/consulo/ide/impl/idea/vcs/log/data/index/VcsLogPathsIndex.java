@@ -25,7 +25,7 @@ import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.PathUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.indexing.StorageException;
-import consulo.versionControlSystem.distributed.push.VcsFullCommitDetails;
+import consulo.versionControlSystem.log.VcsFullCommitDetails;
 import consulo.ide.impl.idea.vcs.log.impl.FatalErrorHandler;
 import consulo.ide.impl.idea.vcs.log.impl.VcsChangesLazilyParsedDetails;
 import consulo.ide.impl.idea.vcs.log.util.PersistentUtil;

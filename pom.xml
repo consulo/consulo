@@ -134,6 +134,7 @@
     <module>modules/base/version-control-system-api</module>
     <module>modules/base/version-control-system-impl</module>
     <module>modules/base/version-control-system-distributed-api</module>
+    <module>modules/base/version-control-system-log-api</module>
 
     <module>modules/base/proxy</module>
     <module>modules/base/xcoverage-data</module>

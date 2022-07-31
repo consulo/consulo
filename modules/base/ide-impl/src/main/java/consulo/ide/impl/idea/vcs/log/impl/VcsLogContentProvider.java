@@ -30,7 +30,7 @@ import consulo.ide.impl.idea.util.ContentsUtil;
 import consulo.ide.impl.idea.util.NotNullFunction;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.ide.impl.idea.vcs.log.VcsLogFilter;
+import consulo.versionControlSystem.log.VcsLogFilter;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogPanel;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl;
 import javax.annotation.Nonnull;
