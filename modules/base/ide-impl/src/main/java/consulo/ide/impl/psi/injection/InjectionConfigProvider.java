@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.intelliLang.inject;
+package consulo.ide.impl.psi.injection;
 
-import consulo.component.extension.AbstractExtensionPointBean;
-import consulo.util.xml.serializer.annotation.Attribute;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+
+import javax.annotation.Nonnull;
 
 /**
- * @author gregsh
+ * @author VISTALL
+ * @since 31-Jul-22
  */
-public class LanguageInjectionConfigBean extends AbstractExtensionPointBean {
-  @Attribute("config")
-  public String myConfigUrl;
-
-  public String getConfigUrl() {
-    return myConfigUrl;
-  }
+@ExtensionAPI(ComponentScope.APPLICATION)
+public interface InjectionConfigProvider {
+  @Nonnull
+  String getConfigFilePath();
 }
-

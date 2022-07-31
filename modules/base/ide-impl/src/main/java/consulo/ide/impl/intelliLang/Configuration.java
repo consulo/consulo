@@ -15,39 +15,41 @@
  */
 package consulo.ide.impl.intelliLang;
 
-import consulo.ide.impl.idea.openapi.command.undo.GlobalUndoableAction;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.JDOMUtil;
-import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.util.*;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.containers.Convertor;
+import consulo.application.Application;
 import consulo.application.util.ConcurrentFactoryMap;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.util.ModificationTracker;
-import consulo.container.plugin.PluginDescriptor;
 import consulo.ide.ServiceManager;
+import consulo.ide.impl.idea.openapi.command.undo.GlobalUndoableAction;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.openapi.util.JDOMUtil;
+import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.ide.impl.idea.util.FileContentUtil;
+import consulo.ide.impl.idea.util.Function;
+import consulo.ide.impl.idea.util.NullableFunction;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.intelliLang.inject.InjectorUtils;
+import consulo.ide.impl.intelliLang.inject.config.BaseInjection;
+import consulo.ide.impl.intelliLang.inject.config.InjectionPlace;
+import consulo.ide.impl.psi.injection.InjectionConfigProvider;
+import consulo.ide.impl.psi.injection.LanguageInjectionSupport;
+import consulo.ide.impl.psi.injection.impl.ApplicationInjectionConfiguration;
+import consulo.ide.impl.psi.injection.impl.ProjectInjectionConfiguration;
 import consulo.language.Language;
 import consulo.language.editor.WriteCommandAction;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.ide.impl.psi.injection.LanguageInjectionSupport;
-import consulo.ide.impl.psi.injection.impl.ApplicationInjectionConfiguration;
-import consulo.ide.impl.psi.injection.impl.ProjectInjectionConfiguration;
 import consulo.undoRedo.ProjectUndoManager;
 import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.undoRedo.UndoableAction;
 import consulo.util.collection.MultiMap;
 import consulo.util.collection.MultiValuesMap;
+import consulo.util.lang.Pair;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.PairProcessor;
 import consulo.util.lang.lazy.LazyValue;
 import consulo.util.xml.serializer.JDOMExternalizerUtil;
-import consulo.ide.impl.intelliLang.inject.InjectorUtils;
-import consulo.ide.impl.intelliLang.inject.LanguageInjectionConfigBean;
-import consulo.ide.impl.intelliLang.inject.config.BaseInjection;
-import consulo.ide.impl.intelliLang.inject.config.InjectionPlace;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -189,34 +191,17 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
 
   public static List<BaseInjection> loadDefaultInjections() {
     final ArrayList<Configuration> cfgList = new ArrayList<>();
-    final Set<Object> visited = new HashSet<>();
-    for (LanguageInjectionConfigBean configBean : LanguageInjectionSupport.CONFIG_EP_NAME.getExtensionList()) {
-      PluginDescriptor descriptor = configBean.getPluginDescriptor();
-      final ClassLoader loader = descriptor.getPluginClassLoader();
+    Application application = Application.get();
+
+    application.getExtensionPoint(InjectionConfigProvider.class).forEachExtensionSafe(provider -> {
       try {
-        final Enumeration<URL> enumeration = loader.getResources(configBean.getConfigUrl());
-        if (enumeration == null || !enumeration.hasMoreElements()) {
-          LOG.warn(descriptor.getPluginId() + ": " + configBean.getConfigUrl() + " was not found");
-        }
-        else {
-          while (enumeration.hasMoreElements()) {
-            URL url = enumeration.nextElement();
-            if (!visited.add(url.getFile())) {
-              continue; // for DEBUG mode
-            }
-            try {
-              cfgList.add(load(url.openStream()));
-            }
-            catch (Exception e) {
-              LOG.warn(e);
-            }
-          }
-        }
+        URL url = provider.getClass().getResource(provider.getConfigFilePath());
+        cfgList.add(load(url.openStream()));
       }
       catch (Exception e) {
         LOG.warn(e);
       }
-    }
+    });
 
     final ArrayList<BaseInjection> defaultInjections = new ArrayList<>();
     for (String supportId : InjectorUtils.getActiveInjectionSupportIds()) {
@@ -275,12 +260,7 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
         elements.add(rootElement);
         //noinspection unchecked
         elements.addAll(rootElement.getChildren("component"));
-        state = ContainerUtil.find(elements, new Condition<Element>() {
-          @Override
-          public boolean value(final Element element) {
-            return "component".equals(element.getName()) && COMPONENT_NAME.equals(element.getAttributeValue("name"));
-          }
-        });
+        state = consulo.util.collection.ContainerUtil.find(elements, element -> "component".equals(element.getName()) && COMPONENT_NAME.equals(element.getAttributeValue("name")));
       }
       if (state != null) {
         final Configuration cfg = new Configuration();
@@ -295,12 +275,7 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
   }
 
   private int importPlaces(final List<BaseInjection> injections) {
-    final Map<String, Set<BaseInjection>> map = ContainerUtil.classify(injections.iterator(), new Convertor<BaseInjection, String>() {
-      @Override
-      public String convert(final BaseInjection o) {
-        return o.getSupportId();
-      }
-    });
+    final Map<String, Set<BaseInjection>> map = ContainerUtil.classify(injections.iterator(), o -> o.getSupportId());
     final ArrayList<BaseInjection> originalInjections = new ArrayList<>();
     final ArrayList<BaseInjection> newInjections = new ArrayList<>();
     for (String supportId : InjectorUtils.getActiveInjectionSupportIds()) {

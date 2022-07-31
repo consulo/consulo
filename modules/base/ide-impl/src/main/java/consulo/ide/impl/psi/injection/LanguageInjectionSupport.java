@@ -20,7 +20,6 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.ide.impl.idea.openapi.util.Factory;
 import consulo.ui.ex.SimpleColoredText;
 import consulo.ide.impl.idea.util.Consumer;
-import consulo.component.extension.ExtensionPointName;
 import consulo.configurable.Configurable;
 import consulo.language.Language;
 import consulo.language.psi.PsiElement;
@@ -31,7 +30,6 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.Ref;
 import consulo.ide.impl.intelliLang.Configuration;
 import consulo.ide.impl.intelliLang.inject.InjectedLanguage;
-import consulo.ide.impl.intelliLang.inject.LanguageInjectionConfigBean;
 import consulo.ide.impl.intelliLang.inject.config.BaseInjection;
 import org.jdom.Element;
 
@@ -43,9 +41,6 @@ import javax.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class LanguageInjectionSupport {
-  public static final ExtensionPointName<LanguageInjectionConfigBean> CONFIG_EP_NAME = ExtensionPointName.create("consulo.injectionConfig");
-
-
   public static Key<InjectedLanguage> TEMPORARY_INJECTED_LANGUAGE = Key.create("TEMPORARY_INJECTED_LANGUAGE");
   public static Key<LanguageInjectionSupport> INJECTOR_SUPPORT = Key.create("INJECTOR_SUPPORT");
   public static Key<LanguageInjectionSupport> SETTINGS_EDITOR = Key.create("SETTINGS_EDITOR");
