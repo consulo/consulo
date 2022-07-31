@@ -17,7 +17,10 @@ package consulo.virtualFileSystem.fileWatcher.impl.ui;
 
 import consulo.fileEditor.EditorNotifications;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.dialog.DialogService;
 import consulo.ui.ex.popup.*;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeManager;
@@ -29,6 +32,7 @@ import consulo.virtualFileSystem.fileWatcher.impl.BackgroundTaskByVfsParametersI
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,17 +44,19 @@ public class BackgroundTaskByVfsChangeManageDialog extends DialogWrapper {
   private final CheckBoxList<BackgroundTaskByVfsChangeTask> myBoxlist;
   private final Project myProject;
   private final VirtualFile myVirtualFile;
-  private JPanel myPanel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 0, true, true));
-  private BackgroundTaskByVfsChangePanel myVfsChangePanel;
+  private JPanel myPanel = new JPanel(new BorderLayout());
+  private BackgroundTaskByVfsChangeLayout myVfsChangePanel;
 
   private BackgroundTaskByVfsChangeTask myPrevTask;
 
+  @RequiredUIAccess
   public BackgroundTaskByVfsChangeManageDialog(@Nonnull final Project project, final VirtualFile virtualFile) {
     super(project);
     myProject = project;
     myVirtualFile = virtualFile;
 
-    myVfsChangePanel = new BackgroundTaskByVfsChangePanel(project);
+    myVfsChangePanel = new BackgroundTaskByVfsChangeLayout(project.getApplication().getInstance(DialogService.class));
+    myVfsChangePanel.build();
     myVfsChangePanel.reset(BackgroundTaskByVfsParametersImpl.EMPTY);
 
     myBoxlist = new CheckBoxList<>();
@@ -64,7 +70,7 @@ public class BackgroundTaskByVfsChangeManageDialog extends DialogWrapper {
     });
     myBoxlist.addListSelectionListener(e -> {
       if (myPrevTask != null) {
-        myVfsChangePanel.applyTo(myPrevTask.getParameters());
+        myVfsChangePanel.apply(myPrevTask.getParameters());
         myPrevTask = null;
       }
 
@@ -121,8 +127,8 @@ public class BackgroundTaskByVfsChangeManageDialog extends DialogWrapper {
 
     ScrollingUtil.ensureSelectionExists(myBoxlist);
 
-    myPanel.add(decorator.createPanel());
-    myPanel.add(myVfsChangePanel);
+    myPanel.add(decorator.createPanel(), BorderLayout.CENTER);
+    myPanel.add(TargetAWT.to(myVfsChangePanel.getComponent()), BorderLayout.SOUTH);
     setTitle("Manage Background Tasks");
     init();
   }
@@ -153,7 +159,7 @@ public class BackgroundTaskByVfsChangeManageDialog extends DialogWrapper {
   @Override
   protected void doOKAction() {
     if (myPrevTask != null) {
-      myVfsChangePanel.applyTo(myPrevTask.getParameters());
+      myVfsChangePanel.apply(myPrevTask.getParameters());
     }
 
     BackgroundTaskByVfsChangeManager vfsChangeManager = BackgroundTaskByVfsChangeManager.getInstance(myProject);

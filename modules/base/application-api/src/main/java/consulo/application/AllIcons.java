@@ -426,7 +426,7 @@ public class AllIcons {
     public static final Image ErrorsInProgress = PlatformIconGroup.generalErrorsinprogress(); // 12x12
     public static final Image ExclMark = PlatformIconGroup.generalExclmark(); // 16x16
     public static final Image ExpandComponent = PlatformIconGroup.generalExpandcomponent();
-    public static final Image ExpandComponentHover = PlatformIconGroup.ideNotificationExpandhover();
+    public static final Image ExpandComponentHover = PlatformIconGroup.generalExpandcomponenthover();
     public static final Image ExpandAll = PlatformIconGroup.generalExpandall(); // 11x16
     public static final Image ExternalTools = PlatformIconGroup.generalExternaltools(); // 32x32
     public static final Image ExternalToolsSmall = PlatformIconGroup.generalExternaltoolssmall(); // 16x16

@@ -15,20 +15,23 @@
  */
 package consulo.desktop.awt.ui.impl.layout;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
 import consulo.ui.Component;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
+import consulo.ui.layout.Layout;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
  * @since 2019-02-16
  */
-abstract class DesktopLayoutBase<T extends JPanel> extends SwingComponentDelegate<T> {
+abstract class DesktopLayoutBase<T extends JPanel> extends SwingComponentDelegate<T> implements Layout {
   class MyJPanel extends JPanel implements FromSwingComponentWrapper {
     MyJPanel(LayoutManager layout) {
       super(layout);
@@ -43,6 +46,19 @@ abstract class DesktopLayoutBase<T extends JPanel> extends SwingComponentDelegat
     @Override
     public Component toUIComponent() {
       return DesktopLayoutBase.this;
+    }
+  }
+
+  @Override
+  public void forEachChild(@RequiredUIAccess @Nonnull Consumer<Component> consumer) {
+    T component = toAWTComponent();
+
+    for (int i = 0; i < component.getComponentCount(); i++) {
+      java.awt.Component child = component.getComponent(i);
+
+      if (child instanceof FromSwingComponentWrapper fromSwingComponentWrapper) {
+        consumer.accept(fromSwingComponentWrapper.toUIComponent());
+      }
     }
   }
 

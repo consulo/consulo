@@ -22,6 +22,7 @@ import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsParameters;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -40,7 +41,7 @@ public class BackgroundTaskByVfsParametersImpl implements BackgroundTaskByVfsPar
   private String myExePath = "";
   private String myOutPath = "";
   private boolean myShowConsole = true;
-  private Map<String, String> myEnvs = Map.of();
+  private Map<String, String> myEnvs = new HashMap<>();
   private boolean myPassParentEnvs;
 
   public BackgroundTaskByVfsParametersImpl(Project project) {

@@ -19,6 +19,7 @@ import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -27,10 +28,22 @@ import javax.annotation.Nonnull;
 public interface Layout extends Component {
   @RequiredUIAccess
   default void removeAll() {
-    throw new AbstractMethodError();
+    throw new AbstractMethodError(getClass().getName());
   }
 
   default void remove(@Nonnull Component component) {
-    throw new AbstractMethodError();
+    throw new AbstractMethodError(getClass().getName());
+  }
+
+  @RequiredUIAccess
+  @Override
+  default void setEnabledRecursive(boolean value) {
+    setEnabled(value);
+
+    forEachChild(component -> component.setEnabledRecursive(value));
+  }
+
+  default void forEachChild(@RequiredUIAccess @Nonnull Consumer<Component> consumer) {
+    throw new AbstractMethodError(getClass().getName());
   }
 }

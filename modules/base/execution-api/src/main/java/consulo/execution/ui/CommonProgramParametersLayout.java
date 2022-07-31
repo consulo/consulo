@@ -88,10 +88,12 @@ public class CommonProgramParametersLayout<P extends CommonProgramRunConfigurati
     myLayout = builder.build();
   }
 
+  @RequiredUIAccess
   protected void addBefore(@Nonnull FormBuilder builder) {
     // nothing
   }
 
+  @RequiredUIAccess
   protected void addAfter(@Nonnull FormBuilder builder) {
     // nothing
   }
@@ -139,6 +141,7 @@ public class CommonProgramParametersLayout<P extends CommonProgramRunConfigurati
     myHasModuleMacro = true;
   }
 
+  @RequiredUIAccess
   public void apply(P configuration) {
     configuration.setProgramParameters(myProgramParametersComponent.getValueOrError());
     configuration.setWorkingDirectory(myWorkDirectoryBox.getValue());
@@ -147,6 +150,7 @@ public class CommonProgramParametersLayout<P extends CommonProgramRunConfigurati
     configuration.setPassParentEnvs(myEnvVariablesComponent.isPassParentEnvs());
   }
 
+  @RequiredUIAccess
   public void reset(P configuration) {
     setProgramParameters(configuration.getProgramParameters());
     setWorkingDirectory(PathUtil.toSystemDependentName(configuration.getWorkingDirectory()));

@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl.textBox;
 
+import consulo.desktop.awt.facade.FromSwingComponentWrapper;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awt.JBTextField;
 import consulo.desktop.awt.uiOld.components.fields.ExtendableTextComponent;
@@ -53,7 +54,7 @@ import java.util.List;
  */
 public class DesktopTextBoxWithExtensions {
   private static class Supported extends DocumentSwingValidator<String, Supported.MyExtendableTextField> implements TextBoxWithExtensions, TextBoxWithTextField {
-    public class MyExtendableTextField extends ExtendableTextField {
+    public class MyExtendableTextField extends ExtendableTextField implements FromSwingComponentWrapper {
       private ColorValue myForegroundColor;
 
       public MyExtendableTextField(String text) {
@@ -80,6 +81,12 @@ public class DesktopTextBoxWithExtensions {
         else {
           setForeground(TargetAWT.to(myForegroundColor));
         }
+      }
+
+      @Nonnull
+      @Override
+      public consulo.ui.Component toUIComponent() {
+        return Supported.this;
       }
     }
 

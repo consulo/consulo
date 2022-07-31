@@ -15,18 +15,20 @@
  */
 package consulo.desktop.awt.ui.impl.textBox;
 
-import consulo.ui.ex.awt.ComponentWithBrowseButton;
-import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.awt.event.DocumentAdapter;
-import consulo.desktop.awt.uiOld.components.fields.ExpandableTextField;
-import consulo.disposer.Disposable;
-import consulo.localize.LocalizeValue;
-import consulo.ui.TextBoxWithExpandAction;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.desktop.awt.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.ui.impl.validableComponent.DocumentSwingValidator;
 import consulo.desktop.awt.ui.plaf.LafExtendUtil;
 import consulo.desktop.awt.ui.plaf.extend.textBox.SupportTextBoxWithExpandActionExtender;
+import consulo.desktop.awt.uiOld.components.fields.ExpandableTextField;
+import consulo.disposer.Disposable;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.localize.LocalizeValue;
+import consulo.ui.Component;
+import consulo.ui.TextBoxWithExpandAction;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.ComponentWithBrowseButton;
+import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -53,8 +55,22 @@ public class DesktopTextBoxWithExpandAction {
   }
 
   private static class SupportedTextBoxWithExpandAction extends DocumentSwingValidator<String, ExpandableTextField> implements TextBoxWithExpandAction, TextBoxWithTextField {
+    private class MyExpandableTextField extends ExpandableTextField implements FromSwingComponentWrapper {
+      private MyExpandableTextField(@Nonnull Function<? super String, ? extends List<String>> parser,
+                                    @Nonnull Function<? super List<String>, String> joiner,
+                                    SupportTextBoxWithExpandActionExtender lookAndFeel) {
+        super(parser, joiner, lookAndFeel);
+      }
+
+      @Nonnull
+      @Override
+      public Component toUIComponent() {
+        return SupportedTextBoxWithExpandAction.this;
+      }
+    }
+
     private SupportedTextBoxWithExpandAction(Function<String, List<String>> parser, Function<List<String>, String> joiner, SupportTextBoxWithExpandActionExtender lookAndFeel) {
-      ExpandableTextField field = new ExpandableTextField(parser::apply, joiner::apply, lookAndFeel);
+      ExpandableTextField field = new MyExpandableTextField(parser::apply, joiner::apply, lookAndFeel);
       TextFieldPlaceholderFunction.install(field);
       initialize(field);
       addDocumentListenerForValidator(field.getDocument());

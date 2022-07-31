@@ -11,4 +11,6 @@ module consulo.virtual.file.watcher.impl {
 
   // TODO [VISTALL] very massive dependency, reduce it, when impl modules will introduced
   requires consulo.ide.impl;
+
+  opens consulo.virtualFileSystem.fileWatcher.impl to consulo.util.xml.serializer;
 }

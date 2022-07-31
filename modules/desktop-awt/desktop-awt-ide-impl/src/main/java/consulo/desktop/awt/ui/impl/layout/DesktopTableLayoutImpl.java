@@ -15,18 +15,19 @@
  */
 package consulo.desktop.awt.ui.impl.layout;
 
+import consulo.desktop.awt.facade.FromSwingComponentWrapper;
+import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
+import consulo.ui.Component;
+import consulo.ui.StaticPosition;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.desktop.awt.facade.FromSwingComponentWrapper;
-import consulo.ui.Component;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.ui.layout.TableLayout;
-import consulo.ui.StaticPosition;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -69,6 +70,19 @@ public class DesktopTableLayoutImpl extends SwingComponentDelegate<JPanel> imple
           break;
         default:
           throw new UnsupportedOperationException();
+      }
+    }
+  }
+
+  @Override
+  public void forEachChild(@RequiredUIAccess @Nonnull Consumer<Component> consumer) {
+    JPanel component = myGridPanel; // grid is owner of of children, not myComponent
+
+    for (int i = 0; i < component.getComponentCount(); i++) {
+      java.awt.Component child = component.getComponent(i);
+
+      if (child instanceof FromSwingComponentWrapper fromSwingComponentWrapper) {
+        consumer.accept(fromSwingComponentWrapper.toUIComponent());
       }
     }
   }

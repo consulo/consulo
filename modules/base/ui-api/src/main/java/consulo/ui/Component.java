@@ -120,6 +120,11 @@ public interface Component extends Disposable, UserDataHolder {
   void setEnabled(boolean value);
 
   @RequiredUIAccess
+  default void setEnabledRecursive(boolean value) {
+    setEnabled(value);
+  }
+
+  @RequiredUIAccess
   default Component withEnabled(boolean enabled) {
     setEnabled(enabled);
     return this;
