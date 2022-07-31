@@ -17,20 +17,20 @@
 /**
  * class InlineAction
  * created Aug 28, 2001
+ *
  * @author Jeka
  */
 package consulo.ide.impl.idea.refactoring.actions;
 
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.lang.refactoring.InlineActionHandler;
-import consulo.ide.impl.idea.lang.refactoring.InlineHandler;
-import consulo.ide.impl.idea.lang.refactoring.InlineHandlers;
 import consulo.ide.impl.idea.refactoring.inline.InlineRefactoringActionHandler;
 import consulo.language.Language;
 import consulo.language.editor.internal.PsiUtilBase;
 import consulo.language.editor.refactoring.RefactoringActionHandler;
 import consulo.language.editor.refactoring.RefactoringSupportProvider;
+import consulo.language.editor.refactoring.inline.InlineActionHandler;
+import consulo.language.editor.refactoring.inline.InlineHandler;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 
@@ -56,18 +56,16 @@ public class InlineAction extends BasePlatformRefactoringAction {
 
   @Override
   public boolean isEnabledOnElements(@Nonnull PsiElement[] elements) {
-    return elements.length == 1 && hasInlineActionHandler(elements [0], null, null);
+    return elements.length == 1 && hasInlineActionHandler(elements[0], null, null);
   }
 
   private static boolean hasInlineActionHandler(PsiElement element, @Nullable Language editorLanguage, Editor editor) {
-    for(InlineActionHandler handler: InlineActionHandler.EP_NAME.getExtensionList()) {
+    for (InlineActionHandler handler : InlineActionHandler.EP_NAME.getExtensionList()) {
       if (handler.isEnabledOnElement(element, editor)) {
         return true;
       }
     }
-    return InlineHandlers.getInlineHandlers(
-      editorLanguage != null ? editorLanguage :element.getLanguage()
-    ).size() > 0;
+    return InlineHandler.forLanguage(editorLanguage != null ? editorLanguage : element.getLanguage()).size() > 0;
   }
 
   @Override
@@ -79,17 +77,17 @@ public class InlineAction extends BasePlatformRefactoringAction {
   protected RefactoringActionHandler getHandler(@Nonnull Language language, PsiElement element) {
     RefactoringActionHandler handler = super.getHandler(language, element);
     if (handler != null) return handler;
-    List<InlineHandler> handlers = InlineHandlers.getInlineHandlers(language);
+    List<InlineHandler> handlers = InlineHandler.forLanguage(language);
     return handlers.isEmpty() ? null : new InlineRefactoringActionHandler();
   }
 
   @Override
   protected boolean isAvailableForLanguage(Language language) {
-    for(InlineActionHandler handler: InlineActionHandler.EP_NAME.getExtensionList()) {
+    for (InlineActionHandler handler : InlineActionHandler.EP_NAME.getExtensionList()) {
       if (handler.isEnabledForLanguage(language)) {
         return true;
       }
     }
-    return InlineHandlers.getInlineHandlers(language).size() > 0;
+    return InlineHandler.forLanguage(language).size() > 0;
   }
 }

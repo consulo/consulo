@@ -24,14 +24,13 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.ide.impl.idea.lang.refactoring.InlineActionHandler;
-import consulo.ide.impl.idea.lang.refactoring.InlineHandler;
-import consulo.ide.impl.idea.lang.refactoring.InlineHandlers;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.refactoring.RefactoringActionHandler;
 import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.refactoring.action.BaseRefactoringAction;
+import consulo.language.editor.refactoring.inline.InlineActionHandler;
+import consulo.language.editor.refactoring.inline.InlineHandler;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -87,7 +86,7 @@ public class InlineRefactoringActionHandler implements RefactoringActionHandler 
   }
 
   public static boolean invokeInliner(@Nullable Editor editor, PsiElement element) {
-    final List<InlineHandler> handlers = InlineHandlers.getInlineHandlers(element.getLanguage());
+    final List<InlineHandler> handlers = InlineHandler.forLanguage(element.getLanguage());
     for (InlineHandler handler : handlers) {
       if (GenericInlineHandler.invoke(element, editor, handler)) {
         return true;

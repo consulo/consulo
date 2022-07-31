@@ -16,30 +16,27 @@
 
 package consulo.ide.impl.idea.refactoring.inline;
 
-import consulo.language.editor.TargetElementUtil;
-import consulo.language.Language;
-import consulo.ide.impl.idea.lang.refactoring.InlineHandler;
-import consulo.ide.impl.idea.lang.refactoring.InlineHandlers;
 import consulo.application.ApplicationManager;
-import consulo.undoRedo.CommandProcessor;
-import consulo.logging.Logger;
-import consulo.codeEditor.Editor;
 import consulo.application.progress.ProgressManager;
-import consulo.project.Project;
-import consulo.util.lang.ref.Ref;
+import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.language.Language;
+import consulo.language.editor.TargetElementUtil;
+import consulo.language.editor.refactoring.BaseRefactoringProcessor;
+import consulo.language.editor.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.inline.InlineHandler;
+import consulo.language.editor.refactoring.ui.ConflictsDialog;
+import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.PsiReference;
 import consulo.language.psi.search.ReferencesSearch;
-import consulo.language.editor.refactoring.BaseRefactoringProcessor;
-import consulo.language.editor.refactoring.RefactoringBundle;
-import consulo.language.editor.refactoring.ui.ConflictsDialog;
-import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.undoRedo.CommandProcessor;
 import consulo.usage.UsageInfo;
-import java.util.HashMap;
-
 import consulo.util.collection.MultiMap;
+import consulo.util.lang.ref.Ref;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -155,7 +152,7 @@ public class GenericInlineHandler {
       final Language language = refElement.getLanguage();
       if (inliners.containsKey(language)) continue;
 
-      final List<InlineHandler> handlers = InlineHandlers.getInlineHandlers(language);
+      final List<InlineHandler> handlers = InlineHandler.forLanguage(language);
       for (InlineHandler handler : handlers) {
         InlineHandler.Inliner inliner = handler.createInliner(element, settings);
         if (inliner != null) {

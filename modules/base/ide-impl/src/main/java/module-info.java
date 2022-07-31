@@ -532,7 +532,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.lang.folding;
   exports consulo.ide.impl.idea.lang.parameterInfo;
   exports consulo.ide.impl.idea.lang.pratt;
-  exports consulo.ide.impl.idea.lang.refactoring;
   exports consulo.ide.impl.idea.model.search.impl;
   exports consulo.ide.impl.idea.moduleDependencies;
   exports consulo.ide.impl.idea.navigation;

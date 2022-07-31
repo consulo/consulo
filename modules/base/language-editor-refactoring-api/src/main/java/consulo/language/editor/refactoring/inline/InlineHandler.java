@@ -14,10 +14,17 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.lang.refactoring;
+package consulo.language.editor.refactoring.inline;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.application.Application;
 import consulo.codeEditor.Editor;
+import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.language.Language;
+import consulo.language.extension.ByLanguageValue;
+import consulo.language.extension.LanguageExtension;
+import consulo.language.extension.LanguageOneToMany;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
 import consulo.usage.UsageInfo;
@@ -25,14 +32,22 @@ import consulo.util.collection.MultiMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * Interface that should be implemented by the language in order to provide inline functionality and possibly
  * participate in inline of elements in other languages this language may reference.
  * @author ven
- * @see InlineHandlers#getInlineHandlers(Language)
+ * @see #forLanguage(Language)
  */
-public interface InlineHandler {
+@ExtensionAPI(ComponentScope.APPLICATION)
+public interface InlineHandler extends LanguageExtension {
+  ExtensionPointCacheKey<InlineHandler, ByLanguageValue<List<InlineHandler>>> KEY = ExtensionPointCacheKey.create("InlineHandler", LanguageOneToMany.build(false));
+
+  @Nonnull
+  static List<InlineHandler> forLanguage(@Nonnull Language language) {
+    return Application.get().getExtensionPoint(InlineHandler.class).getOrBuildCache(KEY).requiredGet(language);
+  }
 
   interface Settings {
     /**
