@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2012 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,22 @@
 
 package consulo.fileTemplate.impl.internal;
 
-import consulo.component.extension.ExtensionPointName;
-import consulo.util.xml.serializer.annotation.Attribute;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.fileTemplate.CreateFromTemplateHandler;
+import consulo.fileTemplate.FileTemplate;
+import jakarta.inject.Inject;
 
 /**
  * @author yole
  */
-public class InternalTemplateBean {
-  public static ExtensionPointName<InternalTemplateBean> EP_NAME = ExtensionPointName.create("consulo.internalFileTemplate");
-  
-  @Attribute("name")
-  public String name;
+@ExtensionImpl(order = "last")
+public class DefaultCreateFromTemplateHandler implements CreateFromTemplateHandler {
+  @Inject
+  DefaultCreateFromTemplateHandler() {
+  }
 
-  @Attribute("subject")
-  public String subject;
+  @Override
+  public boolean handlesTemplate(final FileTemplate template) {
+    return true;
+  }
 }

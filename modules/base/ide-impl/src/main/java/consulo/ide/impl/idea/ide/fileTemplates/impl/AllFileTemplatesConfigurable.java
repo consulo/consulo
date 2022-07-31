@@ -18,33 +18,28 @@ package consulo.ide.impl.idea.ide.fileTemplates.impl;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
-import consulo.configurable.*;
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.ide.impl.idea.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
+import consulo.configurable.*;
+import consulo.disposer.Disposable;
 import consulo.fileTemplate.*;
-import consulo.fileTemplate.impl.internal.InternalTemplateBean;
 import consulo.fileTemplate.impl.internal.BundledFileTemplate;
 import consulo.fileTemplate.impl.internal.CustomFileTemplate;
 import consulo.fileTemplate.impl.internal.FileTemplateImplUtil;
-import consulo.language.plain.PlainTextFileType;
-import consulo.ide.setting.ShowSettingsUtil;
-import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.Splitter;
+import consulo.fileTemplate.impl.internal.FileTemplateRegistratorImpl;
+import consulo.ide.IdeBundle;
+import consulo.ide.impl.idea.ide.util.PropertiesComponent;
+import consulo.ide.impl.idea.openapi.actionSystem.DefaultCompactActionGroup;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ui.ex.awt.IdeBorderFactory;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.awt.TabbedPaneWrapper;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.JBUI;
-import consulo.disposer.Disposable;
+import consulo.ide.setting.ShowSettingsUtil;
+import consulo.language.plain.PlainTextFileType;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.*;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.TestOnly;
 
@@ -462,12 +457,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
   }
 
   private static boolean isInternalTemplateName(final String templateName) {
-    for (InternalTemplateBean bean : InternalTemplateBean.EP_NAME.getExtensionList()) {
-      if (Comparing.strEqual(templateName, bean.name)) {
-        return true;
-      }
-    }
-    return false;
+    return FileTemplateRegistratorImpl.last().getInternalTemplates().containsKey(templateName);
   }
 
   private void initLists() {

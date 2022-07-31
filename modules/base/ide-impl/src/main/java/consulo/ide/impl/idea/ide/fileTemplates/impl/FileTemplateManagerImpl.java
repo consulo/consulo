@@ -17,28 +17,27 @@
 package consulo.ide.impl.idea.ide.fileTemplates.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeManagerEx;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.application.util.DateFormatUtil;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.ApplicationNamesInfo;
-import consulo.component.extension.Extensions;
+import consulo.application.util.DateFormatUtil;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
-import consulo.project.impl.internal.ProjectStorageUtil;
 import consulo.fileTemplate.FileTemplate;
 import consulo.fileTemplate.FileTemplateManager;
 import consulo.fileTemplate.FileTemplatesScheme;
 import consulo.fileTemplate.impl.internal.*;
+import consulo.ide.IdeBundle;
+import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeManagerEx;
+import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.language.file.FileTypeManager;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
+import consulo.project.impl.internal.ProjectStorageUtil;
 import consulo.util.io.FileUtil;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.SystemProperties;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import jakarta.inject.Inject;
@@ -247,12 +246,11 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
   @Override
   @Nonnull
   public FileTemplate[] getInternalTemplates() {
-    List<InternalTemplateBean> internalTemplateBeans = InternalTemplateBean.EP_NAME.getExtensionList();
-    FileTemplate[] result = new FileTemplate[internalTemplateBeans.size()];
-    for (int i = 0; i < internalTemplateBeans.size(); i++) {
-      result[i] = getInternalTemplate(internalTemplateBeans.get(i).name);
+    List<FileTemplate> templates = new ArrayList<>();
+    for (String internalFileName : FileTemplateRegistratorImpl.last().getInternalTemplates().keySet()) {
+      templates.add(getInternalTemplate(internalFileName));
     }
-    return result;
+    return templates.toArray(FileTemplate.EMPTY_ARRAY);
   }
 
   @Override
@@ -297,14 +295,9 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
 
   @Override
   @Nonnull
-  public String internalTemplateToSubject(@Nonnull @NonNls String templateName) {
-    //noinspection HardCodedStringLiteral
-    for (InternalTemplateBean bean : Extensions.getExtensions(InternalTemplateBean.EP_NAME)) {
-      if (bean.name.equals(templateName) && bean.subject != null) {
-        return bean.subject;
-      }
-    }
-    return templateName.toLowerCase();
+  public String internalTemplateToSubject(@Nonnull String templateName) {
+    String subject = FileTemplateRegistratorImpl.last().getInternalTemplates().get(templateName);
+    return subject == null ? templateName.toLowerCase() : subject;
   }
 
   @Override
