@@ -15,15 +15,24 @@
  */
 package consulo.ide.impl.idea.codeInsight.completion;
 
-import consulo.language.editor.completion.CompletionLocation;
-import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.ide.impl.psi.statistics.Statistician;
 import consulo.ide.impl.psi.statistics.StatisticsInfo;
+import consulo.language.editor.completion.CompletionLocation;
+import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.util.dataholder.Key;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
  */
-public abstract class CompletionStatistician extends Statistician<LookupElement,CompletionLocation> {
+public abstract class CompletionStatistician extends Statistician<LookupElement, CompletionLocation, CompletionStatistician> {
   @Override
   public abstract StatisticsInfo serialize(final LookupElement element, final CompletionLocation location);
+
+  @Nonnull
+  @Override
+  public Key<CompletionStatistician> getKey() {
+    return StatisticsWeigher.STATISTICS_KEY;
+  }
 }

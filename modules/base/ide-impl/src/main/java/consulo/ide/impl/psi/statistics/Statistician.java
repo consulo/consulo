@@ -15,12 +15,39 @@
  */
 package consulo.ide.impl.psi.statistics;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.application.Application;
+import consulo.component.extension.ExtensionPointCacheKey;
+import consulo.util.collection.MultiMap;
+import consulo.util.dataholder.Key;
+
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collection;
 
 /**
  * @author peter
  */
-public abstract class Statistician<T,Loc> {
+@ExtensionAPI(ComponentScope.APPLICATION)
+public abstract class Statistician<T, Loc, Stat extends Statistician<T, Loc, Stat>> {
+  private static final ExtensionPointCacheKey<Statistician, MultiMap<Key, Statistician>> CACHE_KEY = ExtensionPointCacheKey.create("Statistician", statisticians -> {
+    MultiMap<Key, Statistician> map = MultiMap.create();
+    for (Statistician statistician : statisticians) {
+      map.putValue(statistician.getKey(), statistician);
+    }
+    return map;
+  });
+
+  @Nonnull
+  public static Collection<Statistician> forKey(@Nonnull Key<? extends Statistician> key) {
+    MultiMap<Key, Statistician> map = Application.get().getExtensionPoint(Statistician.class).getOrBuildCache(CACHE_KEY);
+    return map.get(key);
+  }
+
   @Nullable
   public abstract StatisticsInfo serialize(T element, Loc location);
+
+  @Nonnull
+  public abstract Key<Stat> getKey();
 }

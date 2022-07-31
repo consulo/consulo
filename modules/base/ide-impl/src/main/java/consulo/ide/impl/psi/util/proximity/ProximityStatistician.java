@@ -18,9 +18,17 @@ package consulo.ide.impl.psi.util.proximity;
 import consulo.ide.impl.psi.statistics.Statistician;
 import consulo.language.psi.PsiElement;
 import consulo.ide.impl.psi.util.ProximityLocation;
+import consulo.util.dataholder.Key;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author peter
  */
-public abstract class ProximityStatistician extends Statistician<PsiElement, ProximityLocation>{
+public abstract class ProximityStatistician extends Statistician<PsiElement, ProximityLocation, ProximityStatistician> {
+  @Nonnull
+  @Override
+  public Key<ProximityStatistician> getKey() {
+    return PsiProximityComparator.STATISTICS_KEY;
+  }
 }

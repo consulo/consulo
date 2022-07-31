@@ -13,20 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.editorActions.moveLeftRight;
+package consulo.language.editor.moveLeftRight;
 
-import consulo.language.OldLanguageExtension;
-import consulo.language.psi.PsiElement;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.container.plugin.PluginIds;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.application.Application;
+import consulo.component.extension.ExtensionPointCacheKey;
+import consulo.language.Language;
+import consulo.language.extension.ByLanguageValue;
+import consulo.language.extension.LanguageExtension;
+import consulo.language.extension.LanguageOneToMany;
+import consulo.language.psi.PsiElement;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 /**
  * Instances of this class implement language-specific logic of 'move element left/right' actions
  */
-public interface MoveElementLeftRightHandler {
-  OldLanguageExtension<MoveElementLeftRightHandler> EP = new OldLanguageExtension<>(PluginIds.CONSULO_BASE + ".moveLeftRightHandler");
+@ExtensionAPI(ComponentScope.APPLICATION)
+public interface MoveElementLeftRightHandler extends LanguageExtension {
+  ExtensionPointCacheKey<MoveElementLeftRightHandler, ByLanguageValue<List<MoveElementLeftRightHandler>>> KEY =
+          ExtensionPointCacheKey.create("MoveElementLeftRightHandler", LanguageOneToMany.build(false));
+
+  @Nonnull
+  public static List<MoveElementLeftRightHandler> forLanguage(@Nonnull Language language) {
+    return Application.get().getExtensionPoint(MoveElementLeftRightHandler.class).getOrBuildCache(KEY).requiredGet(language);
+  }
 
   /**
    * Returns a list of sub-elements (usually children) of given PSI element, which can be moved using 'move element left/right' actions.

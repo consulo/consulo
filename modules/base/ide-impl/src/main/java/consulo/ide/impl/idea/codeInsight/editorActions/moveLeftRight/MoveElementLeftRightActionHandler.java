@@ -15,40 +15,32 @@
  */
 package consulo.ide.impl.idea.codeInsight.editorActions.moveLeftRight;
 
-import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.dataContext.DataContext;
-import consulo.ui.ex.action.IdeActions;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.codeEditor.Caret;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
+import consulo.dataContext.DataContext;
+import consulo.document.Document;
+import consulo.document.internal.DocumentEx;
+import consulo.document.util.TextRange;
+import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.idea.openapi.editor.EditorLastActionTracker;
 import consulo.ide.impl.idea.openapi.editor.actionSystem.EditorWriteActionHandler;
-import consulo.document.internal.DocumentEx;
-import consulo.project.Project;
-import consulo.document.util.TextRange;
+import consulo.language.editor.moveLeftRight.MoveElementLeftRightHandler;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.PsiTreeUtil;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.IdeActions;
 import consulo.util.lang.Range;
-import java.util.HashSet;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.annotation.access.RequiredWriteAction;
-
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class MoveElementLeftRightActionHandler extends EditorWriteActionHandler {
-  private static final Comparator<PsiElement> BY_OFFSET = new Comparator<PsiElement>() {
-    @Override
-    public int compare(PsiElement o1, PsiElement o2) {
-      return o1.getTextOffset() - o2.getTextOffset();
-    }
-  };
+  private static final Comparator<PsiElement> BY_OFFSET = (o1, o2) -> o1.getTextOffset() - o2.getTextOffset();
 
   private static final Set<String> OUR_ACTIONS = new HashSet<String>(Arrays.asList(
           IdeActions.MOVE_ELEMENT_LEFT,
@@ -86,7 +78,7 @@ public class MoveElementLeftRightActionHandler extends EditorWriteActionHandler 
     if (endElement == null) return null;
     PsiElement element = PsiTreeUtil.findCommonParent(startElement, endElement);
     while (element != null) {
-      List<MoveElementLeftRightHandler> handlers = MoveElementLeftRightHandler.EP.allForLanguage(element.getLanguage());
+      List<MoveElementLeftRightHandler> handlers = MoveElementLeftRightHandler.forLanguage(element.getLanguage());
       for (MoveElementLeftRightHandler handler : handlers) {
         PsiElement[] elementList = handler.getMovableSubElements(element);
         if (elementList.length > 1) {

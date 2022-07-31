@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.completion;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.completion.CompletionLocation;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.ide.impl.psi.statistics.StatisticsInfo;
@@ -22,6 +23,7 @@ import consulo.ide.impl.psi.statistics.StatisticsInfo;
 /**
  * @author peter
  */
+@ExtensionImpl(order = "last")
 public class DefaultCompletionStatistician extends CompletionStatistician {
 
   @Override

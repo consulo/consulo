@@ -691,11 +691,6 @@
 
     <extensionPoint name="pom.declarationSearcher" interface="consulo.language.pom.PomDeclarationSearcher"/>
 
-    <extensionPoint name="statistician" beanClass="consulo.ide.impl.psi.statistics.StatisticsExtensionPoint">
-      <with attribute="implementationClass" implements="consulo.ide.impl.psi.statistics.Statistician"/>
-    </extensionPoint>
-
-
     <extensionPoint name="highlightRangeExtension" interface="consulo.ide.impl.idea.codeInsight.daemon.impl.HighlightRangeExtension"/>
 
     <extensionPoint name="elementsToHighlightFilter" interface="consulo.util.lang.function.Condition"/>
@@ -1117,13 +1112,6 @@
     <customScopesProvider implementation="consulo.ide.impl.packageDependencies.ResourceScopeProvider"/>
     <customScopesProvider implementation="consulo.ide.impl.packageDependencies.TestResourceScopeProvider"/>
     <customScopesProvider implementation="consulo.ide.impl.idea.vcs.changes.ChangeListsScopesProvider" order="last"/>
-
-
-
-
-    <statistician key="completion" implementationClass="consulo.ide.impl.idea.codeInsight.completion.DecoratorCompletionStatistician" order="first"
-				  id="decorator"/>
-    <statistician key="completion" implementationClass="consulo.ide.impl.idea.codeInsight.completion.DefaultCompletionStatistician" order="last"/>
 
 
 

@@ -15,16 +15,18 @@
  */
 package consulo.ide.impl.idea.codeInsight.completion;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.ide.impl.psi.statistics.StatisticsInfo;
+import consulo.ide.impl.psi.statistics.StatisticsManager;
 import consulo.language.editor.completion.CompletionLocation;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementDecorator;
-import consulo.ide.impl.psi.statistics.StatisticsInfo;
-import consulo.ide.impl.psi.statistics.StatisticsManager;
 
 /**
  * @author peter
  */
-public class DecoratorCompletionStatistician extends CompletionStatistician{
+@ExtensionImpl(id = "decorator", order = "first")
+public class DecoratorCompletionStatistician extends CompletionStatistician {
 
   @Override
   public StatisticsInfo serialize(final LookupElement element, final CompletionLocation location) {

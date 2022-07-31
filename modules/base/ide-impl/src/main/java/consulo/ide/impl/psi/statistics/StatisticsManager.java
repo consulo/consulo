@@ -17,12 +17,9 @@ package consulo.ide.impl.psi.statistics;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.ide.ServiceManager;
+import consulo.application.Application;
 import consulo.component.persist.SettingsSavingComponent;
-import consulo.application.extension.KeyedExtensionCollector;
-import consulo.container.plugin.PluginIds;
 import consulo.util.dataholder.Key;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -41,26 +38,18 @@ public abstract class StatisticsManager implements SettingsSavingComponent {
    */
   public static final int RECENCY_OBLIVION_THRESHOLD = 10000;
 
-  private static final KeyedExtensionCollector<Statistician,Key> COLLECTOR = new KeyedExtensionCollector<Statistician, Key>(PluginIds.CONSULO_BASE + ".statistician") {
-    @Override
-    @Nonnull
-    protected String keyToString(@Nonnull final Key key) {
-      return key.toString();
-    }
-  };
-
   @Nullable
-  public static <T,Loc> StatisticsInfo serialize(Key<? extends Statistician<T,Loc>> key, T element, Loc location) {
-    for (final Statistician<T,Loc> statistician : COLLECTOR.forKey(key)) {
+  @SuppressWarnings("unchecked")
+  public static <T, Loc, Stat extends Statistician<T, Loc, Stat>> StatisticsInfo serialize(Key<? extends Statistician<T, Loc, Stat>> key, T element, Loc location) {
+    for (Statistician<T, Loc, Stat> statistician : Statistician.forKey(key)) {
       final StatisticsInfo info = statistician.serialize(element, location);
       if (info != null) return info;
     }
     return null;
   }
 
-
   public static StatisticsManager getInstance() {
-    return ServiceManager.getService(StatisticsManager.class);
+    return Application.get().getInstance(StatisticsManager.class);
   }
 
   /**
@@ -80,14 +69,12 @@ public abstract class StatisticsManager implements SettingsSavingComponent {
    */
   public abstract void incUseCount(@Nonnull StatisticsInfo info);
 
-  public <T,Loc> int getUseCount(final Key<? extends Statistician<T, Loc>> key, final T element, final Loc location) {
+  public <T, Loc, Stat extends Statistician<T, Loc, Stat>> int getUseCount(final Key<? extends Statistician<T, Loc, Stat>> key, final T element, final Loc location) {
     final StatisticsInfo info = serialize(key, element, location);
     return info == null ? 0 : getUseCount(info);
   }
 
-  public <T, Loc> void incUseCount(final Key<? extends Statistician<T, Loc>> key,
-                                   final T element,
-                                   final Loc location) {
+  public <T, Loc, Stat extends Statistician<T, Loc, Stat>> void incUseCount(final Key<? extends Statistician<T, Loc, Stat>> key, final T element, final Loc location) {
     final StatisticsInfo info = serialize(key, element, location);
     if (info != null) {
       incUseCount(info);
@@ -97,5 +84,5 @@ public abstract class StatisticsManager implements SettingsSavingComponent {
   /**
    * @return infos by this context ordered by usage time: recent first
    */
-  public abstract StatisticsInfo[] getAllValues(@NonNls String context);
+  public abstract StatisticsInfo[] getAllValues(@Nonnull String context);
 }

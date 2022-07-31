@@ -19,4 +19,7 @@ module consulo.web.browser.api {
   exports consulo.webBrowser;
   exports consulo.webBrowser.action;
   exports consulo.webBrowser.chrome;
+
+  opens consulo.webBrowser.chrome to consulo.util.xml.serializer;
+  opens consulo.webBrowser.firefox to consulo.util.xml.serializer;
 }

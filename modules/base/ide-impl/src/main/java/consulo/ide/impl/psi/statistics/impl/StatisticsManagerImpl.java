@@ -16,26 +16,25 @@
 package consulo.ide.impl.psi.statistics.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.CommonBundle;
-import consulo.ide.IdeBundle;
 import consulo.application.ApplicationManager;
-import consulo.ui.ex.awt.Messages;
+import consulo.application.CommonBundle;
+import consulo.container.boot.ContainerPathManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.psi.statistics.StatisticsInfo;
-import consulo.ide.impl.psi.statistics.StatisticsManager;
-import consulo.ide.impl.idea.reference.SoftReference;
-import consulo.ide.impl.idea.util.NotNullFunction;
+import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.util.ScrambledInputStream;
 import consulo.ide.impl.idea.util.ScrambledOutputStream;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.container.boot.ContainerPathManager;
+import consulo.ide.impl.psi.statistics.StatisticsInfo;
+import consulo.ide.impl.psi.statistics.StatisticsManager;
+import consulo.ui.ex.awt.Messages;
+import consulo.util.lang.ref.SoftReference;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -48,10 +47,11 @@ public class StatisticsManagerImpl extends StatisticsManager {
 
   @NonNls private static final String STORE_PATH = ContainerPathManager.get().getSystemPath() + File.separator + "stat";
 
-  private final List<SoftReference<StatisticsUnit>> myUnits = ContainerUtil.newArrayList(Collections.nCopies(UNIT_COUNT, null));
+  private final List<SoftReference<StatisticsUnit>> myUnits = new ArrayList<>(Collections.nCopies(UNIT_COUNT, null));
   private final HashSet<StatisticsUnit> myModifiedUnits = new HashSet<>();
   private boolean myTestingStatistics;
 
+  @Override
   public int getUseCount(@Nonnull final StatisticsInfo info) {
     if (info == StatisticsInfo.EMPTY) return 0;
 
@@ -93,6 +93,7 @@ public class StatisticsManagerImpl extends StatisticsManager {
     }
   }
 
+  @Override
   public void incUseCount(@Nonnull final StatisticsInfo info) {
     if (info == StatisticsInfo.EMPTY) return;
     if (ApplicationManager.getApplication().isUnitTestMode() && !myTestingStatistics) {
@@ -116,14 +117,16 @@ public class StatisticsManagerImpl extends StatisticsManager {
     }
   }
 
+  @Override
   public StatisticsInfo[] getAllValues(final String context) {
     final String[] strings;
     synchronized (LOCK) {
       strings = getUnit(getUnitNumber(context)).getKeys2(context);
     }
-    return ContainerUtil.map2Array(strings, StatisticsInfo.class, (NotNullFunction<String, StatisticsInfo>)s -> new StatisticsInfo(context, s));
+    return consulo.util.collection.ContainerUtil.map2Array(strings, StatisticsInfo.class, s -> new StatisticsInfo(context, s));
   }
 
+  @Override
   public void save() {
     synchronized (LOCK) {
       if (!ApplicationManager.getApplication().isUnitTestMode()){

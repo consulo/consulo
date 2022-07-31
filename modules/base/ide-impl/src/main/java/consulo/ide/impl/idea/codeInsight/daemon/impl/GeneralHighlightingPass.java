@@ -7,6 +7,7 @@ import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.analysis.HighlightingLevelManager;
 import consulo.ide.impl.idea.codeInsight.problems.ProblemImpl;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.language.editor.HighlightRangeExtension;
 import consulo.language.editor.wolfAnalyzer.Problem;
 import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
 import consulo.ide.impl.psi.impl.search.PsiTodoSearchHelperImpl;
