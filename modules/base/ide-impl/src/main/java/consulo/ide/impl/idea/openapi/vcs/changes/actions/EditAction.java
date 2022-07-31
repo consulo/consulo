@@ -27,7 +27,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.vcs.*;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangesUtil;
+import consulo.vcs.change.ChangesUtil;
 import consulo.vcs.change.VcsDirtyScopeManager;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.vcs.AbstractVcsHelper;

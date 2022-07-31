@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.dvcs.push.ui;
 
-import consulo.ide.impl.idea.dvcs.push.OutgoingResult;
+import consulo.versionControlSystem.distributed.push.OutgoingResult;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

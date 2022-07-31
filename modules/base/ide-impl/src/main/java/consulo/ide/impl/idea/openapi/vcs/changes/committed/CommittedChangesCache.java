@@ -25,7 +25,7 @@ import consulo.util.lang.Pair;
 import consulo.vcs.*;
 import consulo.vcs.change.Change;
 import consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
-import consulo.ide.impl.idea.openapi.vcs.impl.VcsInitObject;
+import consulo.vcs.VcsInitObject;
 import consulo.ide.impl.idea.openapi.vcs.ui.VcsBalloonProblemNotifier;
 import consulo.vcs.change.commited.RepositoryLocationGroup;
 import consulo.vcs.change.commited.VcsCommittedListsZipper;

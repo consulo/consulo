@@ -4,6 +4,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.vcs.change.Change;
+import consulo.versionControlSystem.distributed.push.VcsFullCommitDetails;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 

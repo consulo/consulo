@@ -16,7 +16,11 @@
 package consulo.ide.impl.idea.dvcs.push.ui;
 
 import consulo.ide.impl.idea.dvcs.push.*;
-import consulo.ide.impl.idea.dvcs.repo.Repository;
+import consulo.versionControlSystem.distributed.push.PushSupport;
+import consulo.versionControlSystem.distributed.push.PushTarget;
+import consulo.versionControlSystem.distributed.push.VcsPushOptionValue;
+import consulo.versionControlSystem.distributed.push.VcsPushOptionsPanel;
+import consulo.versionControlSystem.distributed.repository.Repository;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.OptionAction;

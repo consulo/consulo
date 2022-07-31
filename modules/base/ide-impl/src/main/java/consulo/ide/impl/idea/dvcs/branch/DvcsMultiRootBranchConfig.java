@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.dvcs.branch;
 
-import consulo.ide.impl.idea.dvcs.repo.Repository;
+import consulo.versionControlSystem.distributed.repository.Repository;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

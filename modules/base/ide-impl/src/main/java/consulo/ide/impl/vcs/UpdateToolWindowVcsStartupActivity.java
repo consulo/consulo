@@ -17,8 +17,8 @@ package consulo.ide.impl.vcs;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentManager;
-import consulo.ide.impl.idea.openapi.vcs.impl.VcsInitObject;
-import consulo.ide.impl.idea.openapi.vcs.impl.VcsStartupActivity;
+import consulo.vcs.VcsInitObject;
+import consulo.vcs.VcsStartupActivity;
 import consulo.project.Project;
 
 import javax.annotation.Nonnull;

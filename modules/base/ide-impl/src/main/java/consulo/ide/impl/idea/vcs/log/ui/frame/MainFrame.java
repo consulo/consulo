@@ -15,6 +15,7 @@ import consulo.vcs.change.Change;
 import consulo.ide.impl.idea.openapi.vcs.changes.TextRevisionNumber;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesTreeBrowser;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.RepositoryChangesBrowser;
+import consulo.versionControlSystem.distributed.push.VcsFullCommitDetails;
 import consulo.vcs.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.ui.components.JBLoadingPanel;

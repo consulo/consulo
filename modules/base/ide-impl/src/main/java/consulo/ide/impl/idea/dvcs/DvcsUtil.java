@@ -15,11 +15,11 @@
  */
 package consulo.ide.impl.idea.dvcs;
 
-import consulo.ide.impl.idea.dvcs.push.PushSupport;
-import consulo.ide.impl.idea.dvcs.repo.AbstractRepositoryManager;
-import consulo.ide.impl.idea.dvcs.repo.RepoStateException;
-import consulo.ide.impl.idea.dvcs.repo.Repository;
-import consulo.ide.impl.idea.dvcs.repo.RepositoryManager;
+import consulo.versionControlSystem.distributed.push.PushSupport;
+import consulo.versionControlSystem.distributed.repository.AbstractRepositoryManager;
+import consulo.versionControlSystem.distributed.repository.RepoStateException;
+import consulo.versionControlSystem.distributed.repository.Repository;
+import consulo.versionControlSystem.distributed.repository.RepositoryManager;
 import consulo.ide.impl.idea.ide.file.BatchFileChangeListener;
 import consulo.application.AccessToken;
 import consulo.document.Document;
@@ -52,7 +52,7 @@ import consulo.application.util.function.Processor;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.util.DateFormatUtil;
 import consulo.ide.impl.idea.vcs.log.TimedVcsCommit;
-import consulo.ide.impl.idea.vcs.log.VcsFullCommitDetails;
+import consulo.versionControlSystem.distributed.push.VcsFullCommitDetails;
 import consulo.ide.impl.idea.vcsUtil.VcsImplUtil;
 import consulo.vcs.util.VcsUtil;
 import consulo.disposer.Disposer;
@@ -489,7 +489,7 @@ public class DvcsUtil {
 
   @Nullable
   public static PushSupport getPushSupport(@Nonnull final AbstractVcs vcs) {
-    return ContainerUtil.find(PushSupport.PUSH_SUPPORT_EP.getExtensionList(vcs.getProject()), (Condition<PushSupport>)support -> support.getVcs().equals(vcs));
+    return ContainerUtil.find(vcs.getProject().getExtensionList(PushSupport.class), (Condition<PushSupport>)support -> support.getVcs().equals(vcs));
   }
 
   @Nonnull

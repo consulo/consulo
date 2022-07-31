@@ -28,12 +28,10 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.*;
 import consulo.ide.impl.idea.openapi.vcs.rollback.DefaultRollbackEnvironment;
 import consulo.vcs.*;
-import consulo.vcs.change.VcsDirtyScopeManager;
+import consulo.vcs.change.*;
 import consulo.vcs.rollback.RollbackEnvironment;
 import consulo.ide.impl.idea.openapi.vcs.update.RefreshVFsSynchronously;
 import consulo.ide.impl.idea.util.WaitForProgressToShow;
-import consulo.vcs.change.Change;
-import consulo.vcs.change.ContentRevision;
 
 import javax.annotation.Nonnull;
 

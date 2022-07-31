@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.index.io.DataIndexer;
 import consulo.ide.impl.idea.util.indexing.StorageException;
 import consulo.index.io.VoidDataExternalizer;
-import consulo.ide.impl.idea.vcs.log.VcsFullCommitDetails;
+import consulo.versionControlSystem.distributed.push.VcsFullCommitDetails;
 import consulo.ide.impl.idea.vcs.log.VcsUser;
 import consulo.ide.impl.idea.vcs.log.data.VcsUserRegistryImpl;
 import consulo.ide.impl.idea.vcs.log.impl.FatalErrorHandler;

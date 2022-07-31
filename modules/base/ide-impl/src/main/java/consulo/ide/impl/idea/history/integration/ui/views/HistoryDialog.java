@@ -45,7 +45,7 @@ import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.vcs.VcsException;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangesUtil;
+import consulo.vcs.change.ChangesUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.CreatePatchConfigurationPanel;
 import consulo.util.lang.Couple;
 import consulo.util.lang.ref.Ref;

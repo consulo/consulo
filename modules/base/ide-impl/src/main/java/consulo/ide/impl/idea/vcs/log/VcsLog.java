@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.vcs.log;
 
 import consulo.application.progress.ProgressIndicator;
+import consulo.versionControlSystem.distributed.push.VcsFullCommitDetails;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.Consumer;
 import javax.annotation.Nonnull;

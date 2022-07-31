@@ -24,7 +24,7 @@ import consulo.vcs.AbstractVcs;
 import consulo.vcs.AbstractVcsHelper;
 import consulo.vcs.FilePath;
 import consulo.vcs.ProjectLevelVcsManager;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangesUtil;
+import consulo.vcs.change.ChangesUtil;
 import consulo.vcs.history.VcsHistoryProvider;
 import consulo.vcs.action.VcsContext;
 import consulo.virtualFileSystem.LocalFileSystem;

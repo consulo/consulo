@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.dvcs.branch;
 
-import consulo.ide.impl.idea.dvcs.repo.Repository;
+import consulo.versionControlSystem.distributed.repository.Repository;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.xml.serializer.annotation.MapAnnotation;
 import consulo.util.xml.serializer.annotation.Property;

@@ -24,7 +24,7 @@ import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.vcs.FilePath;
 import consulo.vcs.VcsBundle;
 import consulo.vcs.change.Change;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangesUtil;
+import consulo.vcs.change.ChangesUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesBrowserNode;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesBrowserNodeRenderer;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.TreeModelBuilder;

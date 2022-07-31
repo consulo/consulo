@@ -20,7 +20,7 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.vcs.VcsBundle;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManager;
+import consulo.vcs.change.ChangeListManager;
 import consulo.vcs.change.LocalChangeList;
 import javax.annotation.Nonnull;
 

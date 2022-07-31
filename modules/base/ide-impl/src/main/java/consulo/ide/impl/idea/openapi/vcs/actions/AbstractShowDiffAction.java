@@ -21,7 +21,7 @@ import consulo.project.Project;
 import consulo.vcs.AbstractVcs;
 import consulo.ide.impl.idea.openapi.vcs.FilePathImpl;
 import consulo.vcs.ProjectLevelVcsManager;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManager;
+import consulo.vcs.change.ChangeListManager;
 import consulo.vcs.diff.DiffProvider;
 import consulo.ide.impl.idea.openapi.vcs.impl.BackgroundableActionEnabledHandler;
 import consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl;

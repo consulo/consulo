@@ -2,8 +2,8 @@
 package consulo.ide.impl.idea.dvcs.ui;
 
 import consulo.ide.impl.idea.dvcs.branch.DvcsBranchUtil;
-import consulo.ide.impl.idea.dvcs.repo.Repository;
-import consulo.ide.impl.idea.dvcs.repo.VcsRepositoryMappingListener;
+import consulo.versionControlSystem.distributed.repository.Repository;
+import consulo.versionControlSystem.distributed.repository.VcsRepositoryMappingListener;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import consulo.fileEditor.FileEditorManager;

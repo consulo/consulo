@@ -29,7 +29,7 @@ import consulo.module.content.ModuleRootManager;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.application.util.function.Computable;
 import consulo.vcs.FilePath;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManager;
+import consulo.vcs.change.ChangeListManager;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.PlusMinus;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.VirtualFileListCellRenderer;
 import consulo.ui.ex.awt.ClickListener;

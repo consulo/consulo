@@ -29,9 +29,7 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ide.impl.idea.vcsUtil.RollbackUtil;
 import consulo.disposer.Disposer;
-import consulo.vcs.change.Change;
-import consulo.vcs.change.ChangeList;
-import consulo.vcs.change.LocalChangeList;
+import consulo.vcs.change.*;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

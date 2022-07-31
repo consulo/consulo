@@ -1,5 +1,6 @@
 package consulo.ide.impl.idea.vcs.log;
 
+import consulo.versionControlSystem.distributed.push.VcsFullCommitDetails;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 

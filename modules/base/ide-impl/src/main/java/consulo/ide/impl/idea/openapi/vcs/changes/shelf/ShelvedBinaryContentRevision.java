@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes.shelf;
 import consulo.vcs.FilePath;
 import consulo.vcs.VcsBundle;
 import consulo.vcs.VcsException;
-import consulo.ide.impl.idea.openapi.vcs.changes.BinaryContentRevision;
+import consulo.vcs.change.BinaryContentRevision;
 import consulo.vcs.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.RawFileLoader;
 

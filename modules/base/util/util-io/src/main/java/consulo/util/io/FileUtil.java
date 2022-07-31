@@ -1317,4 +1317,13 @@ public class FileUtil {
   public static String join(@Nonnull final String... parts) {
     return StringUtil.join(parts, File.separator);
   }
+
+  @Nullable
+  public static File findAncestor(@Nonnull File f1, @Nonnull File f2) {
+    File ancestor = f1;
+    while (ancestor != null && !isAncestor(ancestor, f2, false)) {
+      ancestor = ancestor.getParentFile();
+    }
+    return ancestor;
+  }
 }

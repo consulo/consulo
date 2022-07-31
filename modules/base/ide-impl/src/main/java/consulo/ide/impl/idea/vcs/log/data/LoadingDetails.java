@@ -6,7 +6,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.CommitId;
 import consulo.ide.impl.idea.vcs.log.Hash;
-import consulo.ide.impl.idea.vcs.log.VcsFullCommitDetails;
+import consulo.versionControlSystem.distributed.push.VcsFullCommitDetails;
 import consulo.ide.impl.idea.vcs.log.VcsUser;
 import consulo.ide.impl.idea.vcs.log.impl.VcsUserImpl;
 import javax.annotation.Nonnull;

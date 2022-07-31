@@ -29,7 +29,7 @@ import consulo.project.Project;
 import consulo.vcs.VcsBundle;
 import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
 import consulo.vcs.change.ChangeList;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManager;
+import consulo.vcs.change.ChangeListManager;
 import consulo.vcs.change.LocalChangeList;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;

@@ -23,16 +23,12 @@ import consulo.project.Project;
 import consulo.vcs.FilePath;
 import consulo.vcs.ProjectLevelVcsManager;
 import consulo.vcs.VcsBundle;
-import consulo.ide.impl.idea.openapi.vcs.changes.*;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.CommitChangeListDialog;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.vcs.change.*;
 import consulo.vcs.util.VcsUtil;
 import consulo.vcs.action.VcsContext;
-import consulo.vcs.change.Change;
-import consulo.vcs.change.ChangeList;
-import consulo.vcs.change.CommitExecutor;
-import consulo.vcs.change.LocalChangeList;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

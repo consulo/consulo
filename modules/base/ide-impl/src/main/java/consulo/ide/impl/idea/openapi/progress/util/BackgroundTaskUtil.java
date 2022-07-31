@@ -250,7 +250,7 @@ public class BackgroundTaskUtil {
   }
 
   private static boolean registerIfParentNotDisposed(@Nonnull Disposable parent, @Nonnull Disposable disposable) {
-    ThrowableComputable<Boolean, RuntimeException> action = () -> {
+    return AccessRule.read(() -> {
       if (Disposer.isDisposed(parent)) return false;
       try {
         Disposer.register(parent, disposable);
@@ -260,8 +260,7 @@ public class BackgroundTaskUtil {
         LOG.error(ioe);
         return false;
       }
-    };
-    return AccessRule.read(action);
+    });
   }
 
   /**
@@ -273,11 +272,10 @@ public class BackgroundTaskUtil {
    */
   @Nonnull
   public static <L> L syncPublisher(@Nonnull Project project, @Nonnull Class<L> topic) throws ProcessCanceledException {
-    ThrowableComputable<L, RuntimeException> action = () -> {
+    return AccessRule.read(() -> {
       if (project.isDisposed()) throw new ProcessCanceledException();
       return project.getMessageBus().syncPublisher(topic);
-    };
-    return AccessRule.read(action);
+    });
   }
 
   /**
@@ -289,11 +287,10 @@ public class BackgroundTaskUtil {
    */
   @Nonnull
   public static <L> L syncPublisher(@Nonnull Class<L> topic) throws ProcessCanceledException {
-    ThrowableComputable<L,RuntimeException> action = () -> {
+    return AccessRule.read(() -> {
       if (ApplicationManager.getApplication().isDisposed()) throw new ProcessCanceledException();
       return ApplicationManager.getApplication().getMessageBus().syncPublisher(topic);
-    };
-    return AccessRule.read(action);
+    });
   }
 
 

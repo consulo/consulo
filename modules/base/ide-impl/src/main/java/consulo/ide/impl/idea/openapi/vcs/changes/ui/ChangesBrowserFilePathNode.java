@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.openapi.util.SystemInfoRt;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.vcs.FilePath;
 import consulo.vcs.change.Change;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangesUtil;
+import consulo.vcs.change.ChangesUtil;
 import consulo.ui.ex.SimpleTextAttributes;
 
 import javax.annotation.Nonnull;

@@ -22,7 +22,7 @@ import consulo.ui.ex.action.*;
 import consulo.util.dataholder.Key;
 import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
 import consulo.vcs.change.Change;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangesUtil;
+import consulo.vcs.change.ChangesUtil;
 import consulo.vcs.change.ContentRevision;
 import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.TreeLinkMouseListener;
 import consulo.vcs.change.commited.*;

@@ -24,7 +24,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.vcs.VcsBundle;
 import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
 import consulo.vcs.change.ChangeList;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManager;
+import consulo.vcs.change.ChangeListManager;
 import consulo.vcs.change.LocalChangeList;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

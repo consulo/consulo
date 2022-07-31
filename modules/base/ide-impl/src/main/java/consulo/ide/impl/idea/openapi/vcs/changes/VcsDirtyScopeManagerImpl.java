@@ -28,6 +28,7 @@ import consulo.ide.impl.idea.openapi.vcs.impl.DefaultVcsRootPolicy;
 import consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
 import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.vcs.change.ChangeListManager;
 import consulo.vcs.util.VcsUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;

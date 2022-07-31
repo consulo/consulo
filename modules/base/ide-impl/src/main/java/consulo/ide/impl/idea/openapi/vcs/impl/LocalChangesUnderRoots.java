@@ -17,13 +17,10 @@ package consulo.ide.impl.idea.openapi.vcs.impl;
 
 import consulo.vcs.FilePath;
 import consulo.vcs.ProjectLevelVcsManager;
+import consulo.vcs.change.*;
 import consulo.vcs.root.VcsRoot;
-import consulo.ide.impl.idea.openapi.vcs.changes.*;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.vcs.change.Change;
-import consulo.vcs.change.ContentRevision;
-import consulo.vcs.change.LocalChangeList;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 

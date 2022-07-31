@@ -31,7 +31,7 @@ import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.vcs.change.Change;
 import consulo.vcs.change.ChangeList;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManager;
+import consulo.vcs.change.ChangeListManager;
 import consulo.vcs.change.ContentRevision;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;

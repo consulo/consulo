@@ -25,7 +25,7 @@ import consulo.ide.impl.idea.openapi.vcs.VcsTaskHandler;
 import consulo.vcs.VcsType;
 import consulo.vcs.change.ChangeList;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListAdapter;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManager;
+import consulo.vcs.change.ChangeListManager;
 import consulo.vcs.change.LocalChangeList;
 import consulo.ide.impl.idea.tasks.*;
 import consulo.ide.impl.idea.tasks.actions.TaskSearchSupport;

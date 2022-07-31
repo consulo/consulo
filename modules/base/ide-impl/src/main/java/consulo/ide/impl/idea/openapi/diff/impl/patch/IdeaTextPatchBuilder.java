@@ -21,6 +21,8 @@ import consulo.application.util.SystemInfo;
 import consulo.vcs.FilePath;
 import consulo.vcs.VcsException;
 import consulo.vcs.VcsOutgoingChangesProvider;
+import consulo.vcs.change.BinaryContentRevision;
+import consulo.vcs.change.ChangesUtil;
 import consulo.vcs.root.VcsRoot;
 import consulo.ide.impl.idea.openapi.vcs.changes.*;
 import consulo.ide.impl.idea.util.BeforeAfter;

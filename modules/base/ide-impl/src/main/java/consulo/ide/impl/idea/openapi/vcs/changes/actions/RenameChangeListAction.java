@@ -27,7 +27,7 @@ import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
 import consulo.vcs.change.ChangeList;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManager;
+import consulo.vcs.change.ChangeListManager;
 import consulo.vcs.change.LocalChangeList;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.EditChangelistDialog;
 import consulo.ui.ex.action.ActionPlaces;

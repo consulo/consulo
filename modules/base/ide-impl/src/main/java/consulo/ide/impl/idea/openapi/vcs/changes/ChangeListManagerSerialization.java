@@ -20,6 +20,7 @@ import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.vcs.change.Change;
 import consulo.vcs.change.ContentRevision;
+import consulo.vcs.change.IgnoredFileBean;
 import consulo.vcs.change.LocalChangeList;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;

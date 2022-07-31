@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.openapi.vfs.newvfs.impl;
 
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.virtualFileSystem.StubVirtualFile;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

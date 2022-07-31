@@ -20,6 +20,7 @@ import consulo.ide.impl.idea.openapi.vcs.changes.local.ChangeListCommand;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.vcs.change.Change;
 import consulo.vcs.change.ChangeList;
+import consulo.vcs.change.ChangeListListener;
 
 import javax.annotation.Nonnull;
 

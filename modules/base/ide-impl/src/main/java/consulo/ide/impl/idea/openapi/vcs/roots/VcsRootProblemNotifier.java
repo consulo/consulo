@@ -16,7 +16,7 @@ import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.application.util.registry.Registry;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.*;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManager;
+import consulo.vcs.change.ChangeListManager;
 import consulo.vcs.ProjectLevelVcsManager;
 import consulo.vcs.VcsBundle;
 import consulo.vcs.VcsConfiguration;

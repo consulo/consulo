@@ -16,8 +16,8 @@
 package consulo.ide.impl.idea.openapi.vcs.roots;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.openapi.vcs.impl.VcsInitObject;
-import consulo.ide.impl.idea.openapi.vcs.impl.VcsStartupActivity;
+import consulo.vcs.VcsInitObject;
+import consulo.vcs.VcsStartupActivity;
 import consulo.project.Project;
 import jakarta.inject.Inject;
 

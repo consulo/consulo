@@ -27,6 +27,7 @@ import consulo.disposer.Disposer;
 import consulo.vcs.FilePath;
 import consulo.vcs.VcsException;
 import consulo.index.io.data.IOUtil;
+import consulo.versionControlSystem.distributed.push.VcsFullCommitDetails;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.EmptyConsumer;
 import consulo.application.util.function.Processor;

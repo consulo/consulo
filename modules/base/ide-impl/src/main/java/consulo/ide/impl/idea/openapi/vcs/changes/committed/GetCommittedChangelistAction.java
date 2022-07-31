@@ -22,7 +22,7 @@ import consulo.vcs.VcsBundle;
 import consulo.vcs.action.VcsContext;
 import consulo.vcs.change.Change;
 import consulo.vcs.change.ChangeList;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangesUtil;
+import consulo.vcs.change.ChangesUtil;
 import consulo.ide.impl.idea.openapi.vcs.update.AbstractCommonUpdateAction;
 import consulo.ide.impl.idea.openapi.vcs.update.ActionInfo;
 import consulo.ide.impl.idea.openapi.vcs.update.ScopeInfo;

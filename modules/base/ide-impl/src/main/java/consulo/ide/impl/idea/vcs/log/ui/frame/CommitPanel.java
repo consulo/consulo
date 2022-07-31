@@ -29,7 +29,7 @@ import consulo.ui.ex.awt.JBScrollPane;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.util.DateFormatUtil;
 import consulo.ide.impl.idea.util.ui.*;
-import consulo.ide.impl.idea.vcs.log.VcsFullCommitDetails;
+import consulo.versionControlSystem.distributed.push.VcsFullCommitDetails;
 import consulo.ide.impl.idea.vcs.log.VcsRef;
 import consulo.ide.impl.idea.vcs.log.VcsUser;
 import consulo.ide.impl.idea.vcs.log.data.LoadingDetails;

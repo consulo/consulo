@@ -21,7 +21,7 @@ import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.vcs.ProjectLevelVcsManager;
 import consulo.vcs.VcsListener;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManager;
+import consulo.vcs.change.ChangeListManager;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
 import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.language.file.event.FileTypeEvent;

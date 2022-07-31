@@ -26,7 +26,7 @@ import consulo.ide.impl.idea.openapi.vcs.actions.AbstractCommonCheckinAction;
 import consulo.vcs.action.VcsContext;
 import consulo.vcs.change.Change;
 import consulo.vcs.change.ChangeList;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManager;
+import consulo.vcs.change.ChangeListManager;
 
 /**
  * @author yole

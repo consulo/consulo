@@ -27,7 +27,7 @@ import consulo.util.dataholder.Key;
 import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
 import consulo.vcs.change.Change;
 import consulo.vcs.change.ChangeList;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangesUtil;
+import consulo.vcs.change.ChangesUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.OpenRepositoryVersionAction;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.RevertSelectedChangesAction;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesBrowser;

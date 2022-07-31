@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.dvcs.branch;
 
-import consulo.ide.impl.idea.dvcs.repo.Repository;
+import consulo.versionControlSystem.distributed.repository.Repository;
 import consulo.ide.impl.idea.dvcs.ui.DvcsBundle;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

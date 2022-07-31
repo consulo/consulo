@@ -20,6 +20,7 @@ import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.vcs.FilePath;
 import consulo.vcs.VcsBundle;
 import consulo.vcs.change.Change;
+import consulo.vcs.change.ChangesUtil;
 import consulo.vcs.change.ContentRevision;
 
 import javax.annotation.Nullable;

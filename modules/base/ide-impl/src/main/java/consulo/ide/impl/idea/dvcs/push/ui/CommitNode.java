@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.IssueLinkHtmlRendere
 import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.IssueLinkRenderer;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ide.impl.idea.vcs.log.VcsFullCommitDetails;
+import consulo.versionControlSystem.distributed.push.VcsFullCommitDetails;
 import javax.annotation.Nonnull;
 
 import javax.swing.tree.DefaultMutableTreeNode;

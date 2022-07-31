@@ -22,6 +22,7 @@ import consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelveChangesCommitExecut
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.CommitChangeListDialog;
 import consulo.vcs.change.Change;
 import consulo.vcs.change.ChangeList;
+import consulo.vcs.change.ChangeListManager;
 import consulo.vcs.change.LocalChangeList;
 import consulo.virtualFileSystem.VirtualFile;
 

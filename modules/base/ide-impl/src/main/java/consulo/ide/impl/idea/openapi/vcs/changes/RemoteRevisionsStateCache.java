@@ -20,6 +20,7 @@ import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.vcs.*;
 import consulo.vcs.*;
 import consulo.vcs.change.Change;
+import consulo.vcs.change.ChangesUtil;
 import consulo.vcs.root.VcsRoot;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.util.collection.MultiMap;

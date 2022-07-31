@@ -15,8 +15,9 @@
  */
 package consulo.ide.impl.idea.dvcs.push.ui;
 
-import consulo.ide.impl.idea.dvcs.push.PushTarget;
-import consulo.ide.impl.idea.dvcs.push.PushTargetPanel;
+import consulo.versionControlSystem.distributed.push.PushTarget;
+import consulo.versionControlSystem.distributed.push.PushTargetEditorListener;
+import consulo.versionControlSystem.distributed.push.PushTargetPanel;
 import consulo.ide.impl.idea.dvcs.push.RepositoryNodeListener;
 import consulo.ui.ex.awt.ValidationInfo;
 import consulo.ide.impl.idea.openapi.ui.popup.util.PopupUtil;

@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.local;
 
 import consulo.vcs.change.Change;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListListener;
+import consulo.vcs.change.ChangeListListener;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListWorker;
 import consulo.vcs.change.LocalChangeList;
 import consulo.ide.impl.idea.util.EventDispatcher;

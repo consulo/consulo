@@ -42,7 +42,7 @@ import consulo.vcs.FilePath;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.vcs.VcsException;
 import consulo.vcs.change.Change;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManager;
+import consulo.vcs.change.ChangeListManager;
 import consulo.vcs.change.CommitContext;
 import consulo.vcs.change.FilePathsHelper;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ChangeGoToChangePopupAction;

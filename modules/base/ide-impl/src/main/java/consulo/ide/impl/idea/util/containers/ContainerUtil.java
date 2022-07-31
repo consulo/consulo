@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.util.containers;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.ide.impl.idea.openapi.util.*;
 import consulo.ide.impl.idea.util.*;
 import consulo.ide.impl.idea.util.ArrayUtil;
@@ -44,6 +45,8 @@ import java.util.function.BiPredicate;
 import java.util.function.IntFunction;
 
 @SuppressWarnings({"UtilityClassWithoutPrivateConstructor", "MethodOverridesStaticMethodOfSuperclass"})
+@Deprecated(forRemoval = true)
+@DeprecationInfo("Use consulo.util.collection.ContainerUtil")
 public class ContainerUtil extends ContainerUtilRt {
   private static final int INSERTION_SORT_THRESHOLD = 10;
   private static final int DEFAULT_CONCURRENCY_LEVEL = Math.min(16, Runtime.getRuntime().availableProcessors());

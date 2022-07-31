@@ -29,7 +29,7 @@ import consulo.util.dataholder.Key;
 import consulo.document.util.TextRange;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.vcs.change.Change;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManager;
+import consulo.vcs.change.ChangeListManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;

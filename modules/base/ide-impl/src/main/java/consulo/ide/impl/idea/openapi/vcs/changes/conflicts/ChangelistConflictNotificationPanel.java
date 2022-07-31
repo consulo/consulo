@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.conflicts;
 
 import consulo.fileEditor.EditorNotificationBuilder;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManager;
+import consulo.vcs.change.ChangeListManager;
 import consulo.ide.impl.idea.openapi.vcs.changes.LocalChangeListImpl;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.localize.LocalizeValue;

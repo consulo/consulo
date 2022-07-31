@@ -16,8 +16,8 @@
 package consulo.ide.impl.idea.dvcs.actions;
 
 import consulo.ide.impl.idea.dvcs.DvcsUtil;
-import consulo.ide.impl.idea.dvcs.repo.AbstractRepositoryManager;
-import consulo.ide.impl.idea.dvcs.repo.Repository;
+import consulo.versionControlSystem.distributed.repository.AbstractRepositoryManager;
+import consulo.versionControlSystem.distributed.repository.Repository;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;

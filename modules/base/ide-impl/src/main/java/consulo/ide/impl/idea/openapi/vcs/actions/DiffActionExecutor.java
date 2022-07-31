@@ -35,7 +35,7 @@ import consulo.application.progress.Task;
 import consulo.project.Project;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ref.Ref;
-import consulo.ide.impl.idea.openapi.vcs.changes.BinaryContentRevision;
+import consulo.vcs.change.BinaryContentRevision;
 import consulo.ide.impl.idea.openapi.vcs.changes.ByteBackedContentRevision;
 import consulo.vcs.*;
 import consulo.vcs.change.ContentRevision;

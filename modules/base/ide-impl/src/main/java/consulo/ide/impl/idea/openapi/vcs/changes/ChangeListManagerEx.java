@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.vcs.change.Change;
+import consulo.vcs.change.ChangeListManager;
 import consulo.vcs.change.LocalChangeList;
 
 import javax.annotation.Nonnull;

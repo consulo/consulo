@@ -57,6 +57,8 @@ import consulo.vcs.VcsConfiguration;
 import consulo.vcs.VcsException;
 import consulo.vcs.change.Change;
 import consulo.vcs.change.ChangeList;
+import consulo.vcs.change.ChangeListListener;
+import consulo.vcs.change.ChangeListManager;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

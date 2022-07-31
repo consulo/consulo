@@ -58,7 +58,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import static consulo.ide.impl.idea.openapi.vcs.changes.ChangesUtil.getAfterRevisionsFiles;
+import static consulo.vcs.change.ChangesUtil.getAfterRevisionsFiles;
 import static consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesBrowserNode.*;
 import static consulo.ide.impl.idea.util.containers.UtilKt.getIfSingle;
 import static consulo.ide.impl.idea.util.containers.UtilKt.stream;

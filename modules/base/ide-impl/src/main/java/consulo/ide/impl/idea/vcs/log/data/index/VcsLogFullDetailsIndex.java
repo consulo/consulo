@@ -29,7 +29,7 @@ import consulo.index.io.DataIndexer;
 import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.EnumeratorIntegerDescriptor;
 import consulo.index.io.KeyDescriptor;
-import consulo.ide.impl.idea.vcs.log.VcsFullCommitDetails;
+import consulo.versionControlSystem.distributed.push.VcsFullCommitDetails;
 import consulo.ide.impl.idea.vcs.log.impl.FatalErrorHandler;
 import consulo.ide.impl.idea.vcs.log.util.PersistentUtil;
 import consulo.index.io.ID;

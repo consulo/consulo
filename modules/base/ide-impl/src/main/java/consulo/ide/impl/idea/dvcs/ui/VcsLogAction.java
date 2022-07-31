@@ -15,9 +15,9 @@
  */
 package consulo.ide.impl.idea.dvcs.ui;
 
-import consulo.ide.impl.idea.dvcs.repo.AbstractRepositoryManager;
-import consulo.ide.impl.idea.dvcs.repo.Repository;
-import consulo.ide.impl.idea.dvcs.repo.RepositoryManager;
+import consulo.versionControlSystem.distributed.repository.AbstractRepositoryManager;
+import consulo.versionControlSystem.distributed.repository.Repository;
+import consulo.versionControlSystem.distributed.repository.RepositoryManager;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -26,7 +26,7 @@ import consulo.util.lang.function.Condition;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.MultiMap;
-import consulo.ide.impl.idea.vcs.log.VcsFullCommitDetails;
+import consulo.versionControlSystem.distributed.push.VcsFullCommitDetails;
 import consulo.ide.impl.idea.vcs.log.VcsLog;
 import consulo.ide.impl.idea.vcs.log.VcsLogDataKeys;
 import javax.annotation.Nonnull;

@@ -21,7 +21,7 @@ import consulo.vcs.FilePath;
 import consulo.vcs.VcsException;
 import consulo.vcs.action.VcsContextFactory;
 import consulo.vcs.change.Change;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManager;
+import consulo.vcs.change.ChangeListManager;
 import consulo.vcs.change.CommitContext;
 import consulo.logging.Logger;
 

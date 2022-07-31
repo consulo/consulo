@@ -15,12 +15,12 @@
  */
 package consulo.ide.impl.idea.dvcs.ui;
 
-import consulo.ide.impl.idea.dvcs.repo.Repository;
+import consulo.versionControlSystem.distributed.repository.Repository;
 import consulo.project.Project;
 import consulo.util.lang.function.Condition;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.MultiMap;
-import consulo.ide.impl.idea.vcs.log.VcsFullCommitDetails;
+import consulo.versionControlSystem.distributed.push.VcsFullCommitDetails;
 import javax.annotation.Nonnull;
 
 import java.util.Collection;

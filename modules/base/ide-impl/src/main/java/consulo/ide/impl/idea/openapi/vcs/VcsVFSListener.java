@@ -26,7 +26,7 @@ import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.vcs.*;
 import consulo.vcs.action.VcsContextFactory;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManager;
+import consulo.vcs.change.ChangeListManager;
 import consulo.vcs.change.VcsDirtyScopeManager;
 import consulo.virtualFileSystem.NewVirtualFile;
 import consulo.util.collection.SmartList;

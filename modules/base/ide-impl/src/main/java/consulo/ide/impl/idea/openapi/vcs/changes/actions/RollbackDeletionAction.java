@@ -29,7 +29,7 @@ import consulo.vcs.AbstractVcs;
 import consulo.vcs.FilePath;
 import consulo.vcs.VcsBundle;
 import consulo.vcs.VcsException;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangesUtil;
+import consulo.vcs.change.ChangesUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.RollbackProgressModifier;
 import consulo.vcs.rollback.RollbackEnvironment;
 import consulo.virtualFileSystem.LocalFileSystem;

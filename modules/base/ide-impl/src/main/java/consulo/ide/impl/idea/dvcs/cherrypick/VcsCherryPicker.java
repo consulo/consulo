@@ -19,7 +19,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.vcs.VcsKey;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.vcs.log.Hash;
-import consulo.ide.impl.idea.vcs.log.VcsFullCommitDetails;
+import consulo.versionControlSystem.distributed.push.VcsFullCommitDetails;
 import consulo.ide.impl.idea.vcs.log.VcsLog;
 
 import javax.annotation.Nonnull;

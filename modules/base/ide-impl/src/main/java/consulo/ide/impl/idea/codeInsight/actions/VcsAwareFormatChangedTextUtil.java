@@ -24,7 +24,7 @@ import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.editor.impl.EditorFactoryImpl;
 import consulo.vcs.VcsException;
 import consulo.vcs.change.Change;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManager;
+import consulo.vcs.change.ChangeListManager;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl;
 import consulo.vcs.change.ContentRevision;
 import consulo.ide.impl.idea.openapi.vcs.ex.LineStatusTracker;

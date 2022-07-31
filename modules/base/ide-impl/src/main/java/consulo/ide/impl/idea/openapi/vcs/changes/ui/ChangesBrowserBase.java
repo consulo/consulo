@@ -41,6 +41,7 @@ import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ShowDiffAction;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ShowDiffContext;
 import consulo.vcs.change.Change;
 import consulo.vcs.change.ChangeList;
+import consulo.vcs.change.ChangesUtil;
 import consulo.vcs.change.ContentRevision;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.ScrollPaneFactory;
@@ -61,8 +62,8 @@ import java.util.*;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static consulo.ide.impl.idea.openapi.vcs.changes.ChangesUtil.getAfterRevisionsFiles;
-import static consulo.ide.impl.idea.openapi.vcs.changes.ChangesUtil.getNavigatableArray;
+import static consulo.vcs.change.ChangesUtil.getAfterRevisionsFiles;
+import static consulo.vcs.change.ChangesUtil.getNavigatableArray;
 import static consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesBrowserNode.UNVERSIONED_FILES_TAG;
 import static consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesListView.*;
 

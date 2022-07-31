@@ -27,7 +27,7 @@ import consulo.vcs.annotate.FileAnnotation;
 import consulo.ide.impl.idea.openapi.vcs.annotate.UpToDateLineNumberListener;
 import consulo.ide.impl.idea.openapi.vcs.changes.BackgroundFromStartOption;
 import consulo.vcs.change.Change;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManager;
+import consulo.vcs.change.ChangeListManager;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ShowDiffAction;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ShowDiffContext;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesComparator;

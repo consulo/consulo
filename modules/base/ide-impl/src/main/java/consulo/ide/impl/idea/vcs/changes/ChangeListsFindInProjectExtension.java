@@ -24,7 +24,7 @@ import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
 import consulo.vcs.change.Change;
 import consulo.vcs.change.ChangeList;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManager;
+import consulo.vcs.change.ChangeListManager;
 import consulo.content.scope.SearchScope;
 import consulo.content.scope.SearchScopeProvider;
 import consulo.util.collection.ArrayUtil;

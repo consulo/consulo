@@ -2,6 +2,7 @@ package consulo.ide.impl.idea.vcs.log.ui.tables;
 
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.EmptyRunnable;
+import consulo.versionControlSystem.distributed.push.VcsFullCommitDetails;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.NotNullFunction;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

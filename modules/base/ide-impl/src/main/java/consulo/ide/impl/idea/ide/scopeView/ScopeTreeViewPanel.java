@@ -46,6 +46,7 @@ import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
 import consulo.vcs.change.Change;
 import consulo.vcs.change.ChangeList;
+import consulo.vcs.change.ChangeListManager;
 import consulo.vcs.change.ContentRevision;
 import consulo.virtualFileSystem.status.FileStatusListener;
 import consulo.virtualFileSystem.status.FileStatusManager;

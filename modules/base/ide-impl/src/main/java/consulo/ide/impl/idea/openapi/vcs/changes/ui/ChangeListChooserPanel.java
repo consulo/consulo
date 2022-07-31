@@ -24,7 +24,7 @@ import consulo.ui.ex.awt.ComboBox;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.vcs.VcsConfiguration;
 import consulo.vcs.change.ChangeList;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManager;
+import consulo.vcs.change.ChangeListManager;
 import consulo.vcs.change.LocalChangeList;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangeListRenderer;
 import consulo.ui.ex.awt.ColoredListCellRenderer;

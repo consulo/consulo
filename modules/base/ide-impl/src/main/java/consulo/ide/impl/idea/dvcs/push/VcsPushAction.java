@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.dvcs.push;
 
 import consulo.ide.impl.idea.dvcs.DvcsUtil;
 import consulo.ide.impl.idea.dvcs.push.ui.VcsPushDialog;
-import consulo.ide.impl.idea.dvcs.repo.Repository;
-import consulo.ide.impl.idea.dvcs.repo.VcsRepositoryManager;
+import consulo.versionControlSystem.distributed.repository.Repository;
+import consulo.versionControlSystem.distributed.repository.VcsRepositoryManager;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ide.ServiceManager;

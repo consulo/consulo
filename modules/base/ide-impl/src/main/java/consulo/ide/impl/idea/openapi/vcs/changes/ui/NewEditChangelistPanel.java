@@ -21,7 +21,7 @@ import consulo.document.event.DocumentEvent;
 import consulo.ide.ServiceManager;
 import consulo.vcs.VcsBundle;
 import consulo.vcs.VcsConfiguration;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManager;
+import consulo.vcs.change.ChangeListManager;
 import consulo.vcs.change.LocalChangeList;
 import consulo.ide.impl.idea.ui.EditorTextFieldProvider;
 import consulo.ide.impl.idea.ui.HorizontalScrollBarEditorCustomization;

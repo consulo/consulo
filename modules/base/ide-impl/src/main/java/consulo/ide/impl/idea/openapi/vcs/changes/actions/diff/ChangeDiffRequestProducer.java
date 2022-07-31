@@ -44,6 +44,8 @@ import consulo.vcs.FilePath;
 import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
 import consulo.vcs.VcsException;
 import consulo.ide.impl.idea.openapi.vcs.changes.*;
+import consulo.vcs.change.BinaryContentRevision;
+import consulo.vcs.change.ChangesUtil;
 import consulo.vcs.merge.MergeData;
 import consulo.vcs.change.Change;
 import consulo.vcs.change.ContentRevision;

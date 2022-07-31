@@ -18,6 +18,8 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.lang.TimeoutUtil;
 import consulo.util.lang.function.Condition;
+import consulo.vcs.VcsInitObject;
+import consulo.vcs.VcsStartupActivity;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;

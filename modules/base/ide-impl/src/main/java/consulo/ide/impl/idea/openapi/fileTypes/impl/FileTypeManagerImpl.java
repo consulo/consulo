@@ -36,7 +36,7 @@ import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtilRt;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.FileAttribute;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.StubVirtualFile;
+import consulo.virtualFileSystem.StubVirtualFile;
 import consulo.ide.impl.idea.util.*;
 import consulo.ide.impl.idea.util.containers.ConcurrentPackedBitsArray;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

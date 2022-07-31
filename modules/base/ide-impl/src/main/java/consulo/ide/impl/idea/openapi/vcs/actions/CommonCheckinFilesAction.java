@@ -22,7 +22,7 @@ import consulo.vcs.FilePath;
 import consulo.vcs.ProjectLevelVcsManager;
 import consulo.vcs.action.VcsContext;
 import consulo.vcs.change.Change;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManager;
+import consulo.vcs.change.ChangeListManager;
 import consulo.vcs.change.LocalChangeList;
 import consulo.vcs.checkin.CheckinEnvironment;
 import consulo.vcs.VcsBundle;

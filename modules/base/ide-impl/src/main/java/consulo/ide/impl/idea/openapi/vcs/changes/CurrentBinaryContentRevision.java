@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.vcs.FilePath;
 import consulo.vcs.VcsException;
+import consulo.vcs.change.BinaryContentRevision;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NonNls;
 

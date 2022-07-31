@@ -40,6 +40,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.vcs.change.Change;
 import consulo.vcs.change.ChangeList;
+import consulo.vcs.change.ChangeListManager;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
@@ -75,7 +76,7 @@ abstract class RevertCommittedStuffAbstractAction extends AnAction implements Du
     }
 
     final ChangeListChooser chooser = new ChangeListChooser(project, ChangeListManager.getInstance(project).getChangeListsCopy(), null,
-                                                      "Select Target Changelist", defaultName);
+                                                            "Select Target Changelist", defaultName);
     chooser.show();
     if (!chooser.isOK()) return;
 

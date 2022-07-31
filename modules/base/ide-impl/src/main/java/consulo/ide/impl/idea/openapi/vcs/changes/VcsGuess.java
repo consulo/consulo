@@ -22,6 +22,7 @@ import consulo.vcs.AbstractVcs;
 import consulo.vcs.FilePath;
 import consulo.vcs.ProjectLevelVcsManager;
 import consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
+import consulo.vcs.change.ChangesUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

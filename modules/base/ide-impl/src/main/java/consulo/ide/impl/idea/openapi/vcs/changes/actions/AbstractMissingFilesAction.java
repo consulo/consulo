@@ -32,7 +32,7 @@ import consulo.vcs.AbstractVcs;
 import consulo.vcs.AbstractVcsHelper;
 import consulo.vcs.FilePath;
 import consulo.vcs.VcsException;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangesUtil;
+import consulo.vcs.change.ChangesUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangesViewManager;
 import consulo.vcs.change.VcsDirtyScopeManager;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesListView;

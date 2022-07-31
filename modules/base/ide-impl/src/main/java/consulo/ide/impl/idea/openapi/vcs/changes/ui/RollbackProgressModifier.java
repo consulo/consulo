@@ -19,7 +19,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.vcs.FilePath;
 import consulo.vcs.VcsBundle;
 import consulo.vcs.change.Change;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangesUtil;
+import consulo.vcs.change.ChangesUtil;
 import consulo.vcs.rollback.RollbackProgressListener;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;

@@ -4,6 +4,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.vcs.change.Change;
 import consulo.ide.impl.idea.vcs.log.*;
+import consulo.versionControlSystem.distributed.push.VcsFullCommitDetails;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

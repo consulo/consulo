@@ -37,6 +37,8 @@ import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesBrowserBase;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesBrowserNode;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesListView;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.TreeModelBuilder;
+import consulo.vcs.change.ChangeListManager;
+import consulo.vcs.change.InvokeAfterUpdateMode;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.EditSourceOnDoubleClickHandler;

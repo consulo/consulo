@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.dvcs.push.ui;
 
-import consulo.ide.impl.idea.dvcs.push.OutgoingResult;
-import consulo.ide.impl.idea.dvcs.push.PushTargetPanel;
+import consulo.versionControlSystem.distributed.push.OutgoingResult;
+import consulo.versionControlSystem.distributed.push.PushTargetPanel;
 import consulo.ide.impl.idea.ui.CheckedTreeNode;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.SimpleTextAttributes;

@@ -21,7 +21,7 @@ import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import consulo.vcs.FilePath;
 import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManager;
+import consulo.vcs.change.ChangeListManager;
 import consulo.vcs.history.DiffFromHistoryHandler;
 import consulo.vcs.history.VcsFileRevision;
 import consulo.vcs.history.VcsHistorySession;

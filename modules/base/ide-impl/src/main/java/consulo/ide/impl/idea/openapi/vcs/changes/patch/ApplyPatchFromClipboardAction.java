@@ -7,9 +7,9 @@ import consulo.ide.impl.idea.openapi.application.ex.ClipboardUtil;
 import consulo.document.FileDocumentManager;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.vcs.VcsApplicationSettings;
+import consulo.vcs.VcsApplicationSettings;
 import consulo.vcs.VcsBundle;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManager;
+import consulo.vcs.change.ChangeListManager;
 import consulo.language.file.light.LightVirtualFile;
 import javax.annotation.Nonnull;
 

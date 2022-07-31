@@ -23,6 +23,7 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.vcs.FilePath;
 import consulo.vcs.VcsException;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.versionControlSystem.distributed.push.VcsFullCommitDetails;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

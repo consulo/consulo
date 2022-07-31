@@ -22,6 +22,8 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.project.Project;
 import consulo.util.lang.EmptyRunnable;
+import consulo.vcs.change.InvokeAfterUpdateMode;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -26,6 +26,7 @@ import consulo.vcs.ProjectLevelVcsManager;
 import consulo.ide.impl.idea.util.Consumer;
 import consulo.application.util.Semaphore;
 import consulo.application.impl.internal.performance.HeavyProcessLatch;
+import consulo.vcs.change.InvokeAfterUpdateMode;
 import consulo.vcs.change.VcsDirtyScopeManager;
 import org.jetbrains.annotations.TestOnly;
 

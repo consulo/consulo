@@ -19,7 +19,7 @@ import consulo.logging.Logger;
 import consulo.vcs.FilePath;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.vcs.change.Change;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangesUtil;
+import consulo.vcs.change.ChangesUtil;
 
 public class IncomingChangeState {
   private static final Logger INCOMING_LOG = Logger.getInstance(IncomingChangeState.class);

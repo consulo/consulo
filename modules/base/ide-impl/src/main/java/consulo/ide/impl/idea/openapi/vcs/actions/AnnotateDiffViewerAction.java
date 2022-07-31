@@ -59,6 +59,7 @@ import consulo.vcs.annotate.FileAnnotation;
 import consulo.ide.impl.idea.openapi.vcs.changes.*;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ChangeDiffRequestProducer;
 import consulo.vcs.AbstractVcs;
+import consulo.vcs.change.ChangesUtil;
 import consulo.vcs.history.VcsRevisionNumber;
 import consulo.ide.impl.idea.openapi.vcs.impl.BackgroundableActionLock;
 import consulo.ide.impl.idea.openapi.vcs.impl.UpToDateLineNumberProviderImpl;
