@@ -19,7 +19,6 @@ package consulo.language.psi.path;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
-import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
 import consulo.module.Module;
@@ -35,9 +34,6 @@ import java.util.ArrayList;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class PathReferenceManager {
-  public static final ExtensionPointName<PathReferenceProvider> PATH_REFERENCE_PROVIDER_EP = ExtensionPointName.create("consulo.pathReferenceProvider");
-  public static final ExtensionPointName<PathReferenceProvider> ANCHOR_REFERENCE_PROVIDER_EP = ExtensionPointName.create("consulo.anchorReferenceProvider");
-
   @Nonnull
   public static PathReferenceManager getInstance() {
     return Application.get().getInstance(PathReferenceManager.class);

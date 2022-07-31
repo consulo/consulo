@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.openapi.paths;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.component.extension.Extensions;
+import consulo.application.Application;
 import consulo.document.util.TextRange;
 import consulo.language.editor.impl.internal.psi.path.StaticPathReferenceProvider;
 import consulo.language.psi.PsiElement;
@@ -29,6 +29,7 @@ import consulo.language.psi.path.PsiDynaReference;
 import consulo.module.Module;
 import consulo.util.collection.SmartList;
 import consulo.virtualFileSystem.fileType.FileType;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
@@ -43,12 +44,14 @@ import java.util.*;
 public class PathReferenceManagerImpl extends PathReferenceManager {
   private final StaticPathReferenceProvider myStaticProvider = new StaticPathReferenceProvider(null);
   private final PathReferenceProvider myGlobalPathsProvider = new GlobalPathReferenceProvider();
-  private static final Comparator<PsiReference> START_OFFSET_COMPARATOR = new Comparator<PsiReference>() {
-    @Override
-    public int compare(final PsiReference o1, final PsiReference o2) {
-      return o1.getRangeInElement().getStartOffset() - o2.getRangeInElement().getStartOffset();
-    }
-  };
+  private static final Comparator<PsiReference> START_OFFSET_COMPARATOR = (o1, o2) -> o1.getRangeInElement().getStartOffset() - o2.getRangeInElement().getStartOffset();
+
+  private final Application myApplication;
+
+  @Inject
+  public PathReferenceManagerImpl(Application application) {
+    myApplication = application;
+  }
 
   @Override
   @Nullable
@@ -56,7 +59,11 @@ public class PathReferenceManagerImpl extends PathReferenceManager {
                                         @Nonnull PsiElement element,
                                         PathReferenceProvider... additionalProviders) {
     PathReference pathReference;
-    for (PathReferenceProvider provider : getProviders()) {
+    for (PathReferenceProvider provider : myApplication.getExtensionPoint(PathReferenceProvider.class)) {
+      if (provider.isAnchorReference()) {
+        continue;
+      }
+
       pathReference = provider.getPathReference(path, element);
       if (pathReference != null) {
         return pathReference;
@@ -117,7 +124,7 @@ public class PathReferenceManagerImpl extends PathReferenceManager {
                                          boolean endingSlashNotAllowed,
                                          final boolean relativePathsAllowed, FileType[] suitableFileTypes, PathReferenceProvider... additionalProviders) {
 
-    List<PsiReference> mergedReferences = new ArrayList<PsiReference>();
+    List<PsiReference> mergedReferences = new ArrayList<>();
     processProvider(psiElement, myGlobalPathsProvider, mergedReferences, soft);
 
     StaticPathReferenceProvider staticProvider = new StaticPathReferenceProvider(suitableFileTypes);
@@ -125,14 +132,19 @@ public class PathReferenceManagerImpl extends PathReferenceManager {
     staticProvider.setRelativePathsAllowed(relativePathsAllowed);
     processProvider(psiElement, staticProvider, mergedReferences, soft);
 
-    for (PathReferenceProvider provider : getProviders()) {
-      processProvider(psiElement, provider, mergedReferences, soft);
+
+    for (PathReferenceProvider provider : myApplication.getExtensionPoint(PathReferenceProvider.class)) {
+      if (!provider.isAnchorReference()) {
+        processProvider(psiElement, provider, mergedReferences, soft);
+      }
     }
     for (PathReferenceProvider provider : additionalProviders) {
       processProvider(psiElement, provider, mergedReferences, soft);
     }
-    for (PathReferenceProvider provider : Extensions.getExtensions(ANCHOR_REFERENCE_PROVIDER_EP)) {
-      processProvider(psiElement, provider, mergedReferences, soft);
+    for (PathReferenceProvider provider : myApplication.getExtensionPoint(PathReferenceProvider.class)) {
+      if (provider.isAnchorReference()) {
+        processProvider(psiElement, provider, mergedReferences, soft);
+      }
     }
     return mergeReferences(psiElement, mergedReferences);
   }
@@ -140,7 +152,7 @@ public class PathReferenceManagerImpl extends PathReferenceManager {
   @Override
   @Nonnull
   public PsiReference[] createCustomReferences(@Nonnull PsiElement psiElement, boolean soft, PathReferenceProvider... providers) {
-    List<PsiReference> references = new ArrayList<PsiReference>();
+    List<PsiReference> references = new ArrayList<>();
     for (PathReferenceProvider provider : providers) {
       boolean processed = processProvider(psiElement, provider, references, soft);
       if (processed) {
@@ -161,8 +173,8 @@ public class PathReferenceManagerImpl extends PathReferenceManager {
       return references.toArray(new PsiReference[references.size()]);
     }
     Collections.sort(references, START_OFFSET_COMPARATOR);
-    final List<PsiReference> intersecting = new ArrayList<PsiReference>();
-    final List<PsiReference> notIntersecting = new ArrayList<PsiReference>();
+    final List<PsiReference> intersecting = new ArrayList<>();
+    final List<PsiReference> notIntersecting = new ArrayList<>();
     TextRange intersectingRange = references.get(0).getRangeInElement();
     boolean intersected = false;
     for (int i = 1; i < references.size(); i++) {
@@ -197,8 +209,8 @@ public class PathReferenceManagerImpl extends PathReferenceManager {
   }
 
   private static List<PsiReference> doMerge(final PsiElement element, final List<PsiReference> references) {
-    List<PsiReference> resolvingRefs = new ArrayList<PsiReference>();
-    List<PsiReference> nonResolvingRefs = new ArrayList<PsiReference>();
+    List<PsiReference> resolvingRefs = new ArrayList<>();
+    List<PsiReference> nonResolvingRefs = new ArrayList<>();
 
     //noinspection ForLoopReplaceableByForEach
     for (int i = 0; i < references.size(); i++) {
@@ -212,16 +224,16 @@ public class PathReferenceManagerImpl extends PathReferenceManager {
       }
     }
 
-    List<PsiReference> result = new ArrayList<PsiReference>(5);
+    List<PsiReference> result = new ArrayList<>(5);
     while (!resolvingRefs.isEmpty()) {
-      final List<PsiReference> list = new ArrayList<PsiReference>(5);
+      final List<PsiReference> list = new ArrayList<>(5);
       final TextRange range = getFirstIntersectingReferences(resolvingRefs, list);
       final TextRange textRange = addIntersectingReferences(nonResolvingRefs, list, range);
       addToResult(element, result, list, textRange);
     }
 
     while (!nonResolvingRefs.isEmpty()) {
-      final SmartList<PsiReference> list = new SmartList<PsiReference>();
+      final SmartList<PsiReference> list = new SmartList<>();
       final TextRange range = getFirstIntersectingReferences(nonResolvingRefs, list);
       int endOffset = range.getEndOffset();
       for (final PsiReference reference : list) {
@@ -239,7 +251,7 @@ public class PathReferenceManagerImpl extends PathReferenceManager {
     if (list.size() == 1) {
       result.add(list.get(0));
     } else {
-      final PsiDynaReference psiDynaReference = new PsiDynaReference<PsiElement>(element);
+      final PsiDynaReference psiDynaReference = new PsiDynaReference<>(element);
       psiDynaReference.addReferences(list);
       psiDynaReference.setRangeInElement(range);
       result.add(psiDynaReference);
@@ -287,9 +299,5 @@ public class PathReferenceManagerImpl extends PathReferenceManager {
 
   private static boolean processProvider(PsiElement psiElement, PathReferenceProvider provider, List<PsiReference> mergedReferences, boolean soft) {
     return provider.createReferences(psiElement, mergedReferences, soft);
-  }
-
-  private static PathReferenceProvider[] getProviders() {
-    return Extensions.getExtensions(PATH_REFERENCE_PROVIDER_EP);
   }
 }

@@ -16,6 +16,8 @@
 
 package consulo.language.psi.path;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
 import javax.annotation.Nonnull;
@@ -25,12 +27,19 @@ import java.util.List;
 
 /**
  * @author Dmitry Avdeev
- * @see PathReferenceManager#PATH_REFERENCE_PROVIDER_EP
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface PathReferenceProvider {
 
   boolean createReferences(@Nonnull PsiElement psiElement, final @Nonnull List<PsiReference> references, final boolean soft);
 
   @Nullable
   PathReference getPathReference(@Nonnull String path, @Nonnull final PsiElement element);
+
+  /**
+   * Will move provider to end of providers, and will ignored by {@link PathReferenceManager#getPathReference}
+   */
+  default boolean isAnchorReference() {
+    return false;
+  }
 }
