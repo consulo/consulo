@@ -23,7 +23,7 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
-import consulo.vcs.VcsBundle;
+import consulo.versionControlSystem.VcsBundle;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.ui.FilePathSplittingPolicy;
 import consulo.application.CommonBundle;

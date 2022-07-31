@@ -17,12 +17,12 @@ package consulo.ide.impl.idea.openapi.diff.impl.patch;
 
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
-import consulo.vcs.FilePath;
-import consulo.vcs.VcsException;
-import consulo.vcs.action.VcsContextFactory;
-import consulo.vcs.change.Change;
-import consulo.vcs.change.ChangeListManager;
-import consulo.vcs.change.CommitContext;
+import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.VcsException;
+import consulo.versionControlSystem.action.VcsContextFactory;
+import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.change.ChangeListManager;
+import consulo.versionControlSystem.change.CommitContext;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

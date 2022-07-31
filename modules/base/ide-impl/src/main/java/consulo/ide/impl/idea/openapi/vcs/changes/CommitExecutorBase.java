@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
-import consulo.vcs.change.CommitExecutor;
+import consulo.versionControlSystem.change.CommitExecutor;
 
 public abstract class CommitExecutorBase implements CommitExecutor {
 

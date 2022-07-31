@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.tasks.impl;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.document.Document;
-import consulo.vcs.change.LocalChangeList;
+import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.EditChangelistSupport;
 import consulo.ide.impl.idea.tasks.ChangeListInfo;
 import consulo.ide.impl.idea.tasks.LocalTask;

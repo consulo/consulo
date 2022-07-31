@@ -27,9 +27,9 @@ import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.*;
 import consulo.ide.impl.idea.openapi.vcs.rollback.DefaultRollbackEnvironment;
-import consulo.vcs.*;
-import consulo.vcs.change.*;
-import consulo.vcs.rollback.RollbackEnvironment;
+import consulo.versionControlSystem.*;
+import consulo.versionControlSystem.change.*;
+import consulo.versionControlSystem.rollback.RollbackEnvironment;
 import consulo.ide.impl.idea.openapi.vcs.update.RefreshVFsSynchronously;
 import consulo.ide.impl.idea.util.WaitForProgressToShow;
 

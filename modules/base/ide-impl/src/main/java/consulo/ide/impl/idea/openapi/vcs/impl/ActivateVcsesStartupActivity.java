@@ -16,10 +16,10 @@
 package consulo.ide.impl.idea.openapi.vcs.impl;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.vcs.ProjectLevelVcsManager;
+import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.project.Project;
-import consulo.vcs.VcsInitObject;
-import consulo.vcs.VcsStartupActivity;
+import consulo.versionControlSystem.VcsInitObject;
+import consulo.versionControlSystem.VcsStartupActivity;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;

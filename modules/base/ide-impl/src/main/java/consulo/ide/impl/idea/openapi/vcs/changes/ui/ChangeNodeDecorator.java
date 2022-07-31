@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
 import consulo.util.lang.Pair;
-import consulo.vcs.change.Change;
+import consulo.versionControlSystem.change.Change;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;
 import javax.annotation.Nullable;

@@ -15,11 +15,11 @@
  */
 package consulo.ide.impl.idea.openapi.diff.impl.patch;
 
-import consulo.vcs.FilePath;
-import consulo.vcs.VcsConfiguration;
-import consulo.vcs.VcsException;
-import consulo.vcs.change.Change;
-import consulo.vcs.change.ContentRevision;
+import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.VcsConfiguration;
+import consulo.versionControlSystem.VcsException;
+import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.change.ContentRevision;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.logging.Logger;
 

@@ -38,11 +38,11 @@ import consulo.ide.impl.idea.openapi.vcs.changes.actions.ScheduleForAdditionActi
 import consulo.ide.impl.idea.openapi.vcs.checkin.*;
 import consulo.ide.impl.idea.openapi.vcs.impl.CheckinHandlersManager;
 import consulo.ide.impl.idea.openapi.vcs.ui.CommitMessage;
-import consulo.vcs.*;
-import consulo.vcs.change.*;
-import consulo.vcs.checkin.*;
-import consulo.vcs.ui.Refreshable;
-import consulo.vcs.ui.RefreshableOnComponent;
+import consulo.versionControlSystem.*;
+import consulo.versionControlSystem.change.*;
+import consulo.versionControlSystem.checkin.*;
+import consulo.versionControlSystem.ui.Refreshable;
+import consulo.versionControlSystem.ui.RefreshableOnComponent;
 import consulo.ide.impl.idea.ui.SplitterWithSecondHideable;
 import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

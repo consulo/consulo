@@ -19,9 +19,9 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.vcs.VcsBundle;
-import consulo.vcs.change.ChangeListManager;
-import consulo.vcs.change.LocalChangeList;
+import consulo.versionControlSystem.VcsBundle;
+import consulo.versionControlSystem.change.ChangeListManager;
+import consulo.versionControlSystem.change.LocalChangeList;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

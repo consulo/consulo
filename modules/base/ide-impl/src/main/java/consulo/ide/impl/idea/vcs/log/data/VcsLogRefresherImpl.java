@@ -20,7 +20,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.project.Project;
 import consulo.util.lang.Pair;
-import consulo.vcs.VcsException;
+import consulo.versionControlSystem.VcsException;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.Function;

@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.vcs.annotate;
 
 import consulo.codeEditor.EditorGutterAction;
-import consulo.vcs.annotate.LineAnnotationAspect;
+import consulo.versionControlSystem.annotate.LineAnnotationAspect;
 
 import java.awt.*;
 

@@ -24,7 +24,7 @@ import consulo.ide.impl.idea.openapi.diff.impl.processing.DiffPolicy;
 import consulo.ide.impl.idea.openapi.diff.impl.string.DiffString;
 import consulo.ide.impl.idea.openapi.diff.impl.util.TextDiffTypeEnum;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.vcs.VcsException;
+import consulo.versionControlSystem.VcsException;
 import consulo.ide.impl.idea.util.BeforeAfter;
 import consulo.application.util.diff.FilesTooBigForDiffException;
 import org.jetbrains.annotations.NonNls;

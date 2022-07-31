@@ -15,9 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
-import consulo.vcs.AbstractVcs;
-import consulo.vcs.FilePath;
-import consulo.vcs.change.LocallyDeletedChange;
+import consulo.versionControlSystem.AbstractVcs;
+import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.change.LocallyDeletedChange;
 
 import java.util.ArrayList;
 import java.util.HashMap;

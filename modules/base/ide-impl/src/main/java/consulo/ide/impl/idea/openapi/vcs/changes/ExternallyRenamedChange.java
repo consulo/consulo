@@ -17,11 +17,11 @@ package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.vcs.FilePath;
-import consulo.vcs.VcsBundle;
-import consulo.vcs.change.Change;
-import consulo.vcs.change.ChangesUtil;
-import consulo.vcs.change.ContentRevision;
+import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.VcsBundle;
+import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.change.ChangesUtil;
+import consulo.versionControlSystem.change.ContentRevision;
 
 import javax.annotation.Nullable;
 

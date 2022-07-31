@@ -2,7 +2,7 @@
  * @author VISTALL
  * @since 10-Jul-22
  */
-module consulo.vcs.api {
+module consulo.version.control.system.api {
   // TODO remove this in future
   requires java.desktop;
 
@@ -16,21 +16,21 @@ module consulo.vcs.api {
 
   requires consulo.ui.ex.awt.api;
 
-  exports consulo.vcs;
-  exports consulo.vcs.checkin;
-  exports consulo.vcs.localize;
-  exports consulo.vcs.change;
-  exports consulo.vcs.history;
-  exports consulo.vcs.ui;
-  exports consulo.vcs.action;
-  exports consulo.vcs.diff;
-  exports consulo.vcs.rollback;
-  exports consulo.vcs.versionBrowser;
-  exports consulo.vcs.annotate;
-  exports consulo.vcs.change.commited;
-  exports consulo.vcs.merge;
-  exports consulo.vcs.update;
-  exports consulo.vcs.root;
-  exports consulo.vcs.util;
-  exports consulo.vcs.internal to consulo.ide.impl;
+  exports consulo.versionControlSystem;
+  exports consulo.versionControlSystem.checkin;
+  exports consulo.versionControlSystem.localize;
+  exports consulo.versionControlSystem.change;
+  exports consulo.versionControlSystem.history;
+  exports consulo.versionControlSystem.ui;
+  exports consulo.versionControlSystem.action;
+  exports consulo.versionControlSystem.diff;
+  exports consulo.versionControlSystem.rollback;
+  exports consulo.versionControlSystem.versionBrowser;
+  exports consulo.versionControlSystem.annotate;
+  exports consulo.versionControlSystem.change.commited;
+  exports consulo.versionControlSystem.merge;
+  exports consulo.versionControlSystem.update;
+  exports consulo.versionControlSystem.root;
+  exports consulo.versionControlSystem.util;
+  exports consulo.versionControlSystem.internal to consulo.ide.impl;
 }

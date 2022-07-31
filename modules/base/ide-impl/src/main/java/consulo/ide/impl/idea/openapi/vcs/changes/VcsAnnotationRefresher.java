@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
-import consulo.vcs.VcsKey;
+import consulo.versionControlSystem.VcsKey;
 import consulo.virtualFileSystem.VirtualFile;
 
 /**

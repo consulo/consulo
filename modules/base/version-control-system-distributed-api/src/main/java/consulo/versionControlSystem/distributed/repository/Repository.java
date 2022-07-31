@@ -17,7 +17,7 @@ package consulo.versionControlSystem.distributed.repository;
 
 import consulo.disposer.Disposable;
 import consulo.project.Project;
-import consulo.vcs.AbstractVcs;
+import consulo.versionControlSystem.AbstractVcs;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

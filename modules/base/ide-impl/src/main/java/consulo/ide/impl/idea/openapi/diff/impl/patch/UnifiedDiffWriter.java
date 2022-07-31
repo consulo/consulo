@@ -25,7 +25,7 @@ package consulo.ide.impl.idea.openapi.diff.impl.patch;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.vcs.change.CommitContext;
+import consulo.versionControlSystem.change.CommitContext;
 import consulo.ide.impl.idea.util.ObjectUtils;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

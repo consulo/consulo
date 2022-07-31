@@ -22,7 +22,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.*;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.application.dumb.DumbAware;
-import consulo.vcs.VcsApplicationSettings;
+import consulo.versionControlSystem.VcsApplicationSettings;
 import consulo.ide.impl.idea.openapi.vcs.actions.ShowNextChangeMarkerAction;
 import consulo.ide.impl.idea.openapi.vcs.actions.ShowPrevChangeMarkerAction;
 import consulo.disposer.Disposable;

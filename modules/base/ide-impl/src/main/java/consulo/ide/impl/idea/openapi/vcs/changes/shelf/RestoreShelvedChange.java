@@ -19,7 +19,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
-import consulo.vcs.VcsBundle;
+import consulo.versionControlSystem.VcsBundle;
 
 public class RestoreShelvedChange extends AnAction {
   public RestoreShelvedChange() {

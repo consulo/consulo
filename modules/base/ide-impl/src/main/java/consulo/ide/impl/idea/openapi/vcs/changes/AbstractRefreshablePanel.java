@@ -19,7 +19,7 @@ import consulo.ide.impl.idea.openapi.progress.BackgroundTaskQueue;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.vcs.Details;
 import consulo.ide.impl.idea.openapi.vcs.GenericDetailsLoader;
-import consulo.vcs.VcsException;
+import consulo.versionControlSystem.VcsException;
 import consulo.ide.impl.idea.openapi.vcs.ui.VcsBalloonProblemNotifier;
 import consulo.ide.impl.idea.util.Consumer;
 import consulo.util.lang.function.PairConsumer;
@@ -32,7 +32,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationType;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.vcs.change.Change;
+import consulo.versionControlSystem.change.Change;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

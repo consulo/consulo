@@ -2,8 +2,8 @@ package consulo.ide.impl.idea.vcs.log;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.vcs.VcsException;
-import consulo.vcs.VcsKey;
+import consulo.versionControlSystem.VcsException;
+import consulo.versionControlSystem.VcsKey;
 import consulo.versionControlSystem.distributed.push.VcsFullCommitDetails;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.Consumer;

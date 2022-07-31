@@ -20,13 +20,13 @@ import consulo.application.util.function.Computable;
 import consulo.component.ProcessCanceledException;
 import consulo.ide.impl.idea.openapi.util.Getter;
 import consulo.ide.impl.idea.util.ObjectUtils;
-import consulo.vcs.util.VcsUtil;
+import consulo.versionControlSystem.util.VcsUtil;
 import consulo.language.file.FileTypeManager;
 import consulo.logging.Logger;
-import consulo.vcs.FilePath;
-import consulo.vcs.ProjectLevelVcsManager;
-import consulo.vcs.VcsKey;
-import consulo.vcs.change.*;
+import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.ProjectLevelVcsManager;
+import consulo.versionControlSystem.VcsKey;
+import consulo.versionControlSystem.change.*;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nullable;

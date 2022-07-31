@@ -29,7 +29,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.ui.ex.awt.table.ListTableModel;
-import consulo.vcs.VcsBundle;
+import consulo.versionControlSystem.VcsBundle;
 import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;

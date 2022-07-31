@@ -18,8 +18,8 @@ package consulo.ide.impl.idea.openapi.vcs.changes;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import consulo.application.util.function.Computable;
-import consulo.vcs.AbstractVcs;
-import consulo.vcs.FilePath;
+import consulo.versionControlSystem.AbstractVcs;
+import consulo.versionControlSystem.FilePath;
 import consulo.ide.impl.idea.openapi.vcs.FilePathImpl;
 import consulo.virtualFileSystem.VirtualFile;
 

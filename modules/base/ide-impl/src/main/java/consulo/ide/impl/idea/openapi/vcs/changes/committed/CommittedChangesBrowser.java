@@ -23,13 +23,13 @@ import consulo.ui.ex.action.CommonShortcuts;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.*;
-import consulo.vcs.ChangeListColumn;
-import consulo.vcs.VcsBundle;
-import consulo.vcs.VcsException;
-import consulo.vcs.change.Change;
+import consulo.versionControlSystem.ChangeListColumn;
+import consulo.versionControlSystem.VcsBundle;
+import consulo.versionControlSystem.VcsException;
+import consulo.versionControlSystem.change.Change;
 import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.IssueLinkHtmlRenderer;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesBrowser;
-import consulo.vcs.versionBrowser.CommittedChangeList;
+import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.ui.ex.awt.table.TableView;
 import consulo.ui.ex.awt.util.TableUtil;
 

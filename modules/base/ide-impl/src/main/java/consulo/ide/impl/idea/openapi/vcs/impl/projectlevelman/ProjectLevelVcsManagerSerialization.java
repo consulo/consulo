@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman;
 
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
-import consulo.vcs.VcsShowConfirmationOption;
+import consulo.versionControlSystem.VcsShowConfirmationOption;
 import consulo.ide.impl.idea.openapi.vcs.VcsShowConfirmationOptionImpl;
 import consulo.ide.impl.idea.openapi.vcs.VcsShowOptionsSettingImpl;
 import java.util.HashMap;

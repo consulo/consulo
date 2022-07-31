@@ -15,9 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
-import consulo.vcs.RepositoryLocation;
-import consulo.vcs.VcsException;
-import consulo.vcs.versionBrowser.CommittedChangeList;
+import consulo.versionControlSystem.RepositoryLocation;
+import consulo.versionControlSystem.VcsException;
+import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 
 import java.util.List;
 

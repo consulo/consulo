@@ -15,12 +15,12 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
-import consulo.vcs.RepositoryLocation;
-import consulo.vcs.VcsBundle;
-import consulo.vcs.VcsException;
+import consulo.versionControlSystem.RepositoryLocation;
+import consulo.versionControlSystem.VcsBundle;
+import consulo.versionControlSystem.VcsException;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentProvider;
 import consulo.ide.impl.idea.openapi.vcs.ui.VcsBalloonProblemNotifier;
-import consulo.vcs.versionBrowser.CommittedChangeList;
+import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.ide.impl.idea.util.Consumer;
 import consulo.application.ApplicationManager;
 import consulo.ui.ex.awt.UIUtil;

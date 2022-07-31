@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.history.integration.ui.models.HistoryDialogModel;
 import consulo.ide.impl.idea.history.integration.ui.models.RevisionItem;
 import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.vcs.VcsBundle;
+import consulo.versionControlSystem.VcsBundle;
 import consulo.ui.ex.ExpandableItemsHandler;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.SeparatorWithText;

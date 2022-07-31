@@ -22,10 +22,10 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
-import consulo.vcs.AbstractVcs;
-import consulo.vcs.FilePath;
-import consulo.vcs.VcsException;
-import consulo.vcs.checkin.CheckinEnvironment;
+import consulo.versionControlSystem.AbstractVcs;
+import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.VcsException;
+import consulo.versionControlSystem.checkin.CheckinEnvironment;
 
 import java.util.Collections;
 import java.util.List;

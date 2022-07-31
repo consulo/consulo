@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
-import consulo.vcs.AbstractVcs;
-import consulo.vcs.ProjectLevelVcsManager;
+import consulo.versionControlSystem.AbstractVcs;
+import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.project.Project;

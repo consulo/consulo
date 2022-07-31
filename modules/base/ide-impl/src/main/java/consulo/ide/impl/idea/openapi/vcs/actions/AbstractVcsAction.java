@@ -20,9 +20,9 @@ import consulo.ui.ex.action.AsyncUpdateAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
-import consulo.vcs.AbstractVcs;
-import consulo.vcs.ProjectLevelVcsManager;
-import consulo.vcs.action.VcsContext;
+import consulo.versionControlSystem.AbstractVcs;
+import consulo.versionControlSystem.ProjectLevelVcsManager;
+import consulo.versionControlSystem.action.VcsContext;
 
 import javax.annotation.Nonnull;
 

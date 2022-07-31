@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import com.google.common.primitives.Ints;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.vcs.change.ChangeListManager;
-import consulo.vcs.change.LocalChangeList;
+import consulo.versionControlSystem.change.ChangeListManager;
+import consulo.versionControlSystem.change.LocalChangeList;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

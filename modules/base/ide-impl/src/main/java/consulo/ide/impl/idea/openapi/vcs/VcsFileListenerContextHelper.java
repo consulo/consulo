@@ -20,7 +20,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.ServiceManager;
 import consulo.project.Project;
-import consulo.vcs.FilePath;
+import consulo.versionControlSystem.FilePath;
 import consulo.virtualFileSystem.VirtualFile;
 
 import jakarta.inject.Inject;

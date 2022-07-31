@@ -3,8 +3,8 @@ package consulo.ide.impl.idea.vcs.changes;
 
 import consulo.application.AllIcons;
 import consulo.component.util.WeighedItem;
-import consulo.vcs.VcsBundle;
-import consulo.vcs.change.ChangeListManager;
+import consulo.versionControlSystem.VcsBundle;
+import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.ide.impl.psi.search.scope.packageSet.FilteredNamedScope;
 import consulo.localize.LocalizeValue;
 import org.jetbrains.annotations.NonNls;

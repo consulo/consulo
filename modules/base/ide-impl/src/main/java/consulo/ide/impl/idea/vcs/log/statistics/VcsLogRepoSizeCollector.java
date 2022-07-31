@@ -21,7 +21,7 @@ import consulo.externalService.statistic.CollectUsagesException;
 import consulo.ide.impl.idea.internal.statistic.StatisticsUtilKt;
 import consulo.externalService.statistic.UsageDescriptor;
 import consulo.project.Project;
-import consulo.vcs.VcsKey;
+import consulo.versionControlSystem.VcsKey;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.MultiMap;

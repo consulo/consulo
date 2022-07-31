@@ -17,10 +17,10 @@ package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.vcs.AbstractVcs;
-import consulo.vcs.ProjectLevelVcsManager;
-import consulo.vcs.RepositoryLocation;
-import consulo.vcs.VcsDirectoryMapping;
+import consulo.versionControlSystem.AbstractVcs;
+import consulo.versionControlSystem.ProjectLevelVcsManager;
+import consulo.versionControlSystem.RepositoryLocation;
+import consulo.versionControlSystem.VcsDirectoryMapping;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
@@ -33,7 +33,7 @@ import java.util.Map;
 import static consulo.ide.impl.idea.openapi.util.text.StringUtil.join;
 import static consulo.ide.impl.idea.util.containers.ContainerUtil.addAll;
 import static consulo.ide.impl.idea.util.containers.ContainerUtil.newArrayList;
-import static consulo.vcs.util.VcsUtil.getFilePath;
+import static consulo.versionControlSystem.util.VcsUtil.getFilePath;
 import static java.util.function.Function.identity;
 
 public class RootsCalculator {

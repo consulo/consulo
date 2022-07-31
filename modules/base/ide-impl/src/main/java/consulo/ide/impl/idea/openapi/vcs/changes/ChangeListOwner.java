@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
-import consulo.vcs.change.Change;
-import consulo.vcs.change.LocalChangeList;
+import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.Project;
 import javax.annotation.Nonnull;

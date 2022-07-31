@@ -17,9 +17,9 @@ package consulo.ide.impl.idea.openapi.vcs.history;
 
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
-import consulo.vcs.FilePath;
-import consulo.vcs.history.DiffFromHistoryHandler;
-import consulo.vcs.history.VcsFileRevision;
+import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.history.DiffFromHistoryHandler;
+import consulo.versionControlSystem.history.VcsFileRevision;
 
 import javax.annotation.Nonnull;
 

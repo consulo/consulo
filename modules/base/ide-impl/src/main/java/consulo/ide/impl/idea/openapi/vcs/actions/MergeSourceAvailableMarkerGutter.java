@@ -18,11 +18,11 @@ package consulo.ide.impl.idea.openapi.vcs.actions;
 import consulo.codeEditor.Editor;
 import consulo.colorScheme.EditorColorKey;
 import consulo.util.lang.Couple;
-import consulo.vcs.annotate.AnnotationSource;
-import consulo.vcs.annotate.AnnotationSourceSwitcher;
-import consulo.vcs.annotate.FileAnnotation;
+import consulo.versionControlSystem.annotate.AnnotationSource;
+import consulo.versionControlSystem.annotate.AnnotationSourceSwitcher;
+import consulo.versionControlSystem.annotate.FileAnnotation;
 import consulo.ide.impl.idea.openapi.vcs.annotate.TextAnnotationPresentation;
-import consulo.vcs.history.VcsRevisionNumber;
+import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.ide.impl.idea.util.Consumer;
 import consulo.ui.color.ColorValue;
 

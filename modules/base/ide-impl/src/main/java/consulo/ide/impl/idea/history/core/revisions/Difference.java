@@ -18,11 +18,11 @@ package consulo.ide.impl.idea.history.core.revisions;
 
 import consulo.ide.impl.idea.history.core.tree.Entry;
 import consulo.ide.impl.idea.history.integration.IdeaGateway;
-import consulo.vcs.FilePath;
+import consulo.versionControlSystem.FilePath;
 import consulo.ide.impl.idea.openapi.vcs.FilePathImpl;
-import consulo.vcs.VcsException;
-import consulo.vcs.change.ContentRevision;
-import consulo.vcs.history.VcsRevisionNumber;
+import consulo.versionControlSystem.VcsException;
+import consulo.versionControlSystem.change.ContentRevision;
+import consulo.versionControlSystem.history.VcsRevisionNumber;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

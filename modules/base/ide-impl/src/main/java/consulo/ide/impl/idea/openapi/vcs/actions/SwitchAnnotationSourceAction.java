@@ -18,9 +18,9 @@ package consulo.ide.impl.idea.openapi.vcs.actions;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.codeEditor.EditorGutterComponentEx;
-import consulo.vcs.VcsBundle;
-import consulo.vcs.annotate.AnnotationSource;
-import consulo.vcs.annotate.AnnotationSourceSwitcher;
+import consulo.versionControlSystem.VcsBundle;
+import consulo.versionControlSystem.annotate.AnnotationSource;
+import consulo.versionControlSystem.annotate.AnnotationSourceSwitcher;
 import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 

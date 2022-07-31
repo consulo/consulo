@@ -17,9 +17,9 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.shelf;
 
 import consulo.project.Project;
-import consulo.vcs.VcsBundle;
-import consulo.vcs.action.VcsContext;
-import consulo.vcs.change.CommitExecutor;
+import consulo.versionControlSystem.VcsBundle;
+import consulo.versionControlSystem.action.VcsContext;
+import consulo.versionControlSystem.change.CommitExecutor;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.AbstractCommitChangesAction;
 import javax.annotation.Nullable;
 

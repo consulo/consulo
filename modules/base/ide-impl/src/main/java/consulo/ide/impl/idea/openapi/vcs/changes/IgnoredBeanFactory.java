@@ -16,8 +16,8 @@
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.project.Project;
-import consulo.vcs.change.IgnoreSettingsType;
-import consulo.vcs.change.IgnoredFileBean;
+import consulo.versionControlSystem.change.IgnoreSettingsType;
+import consulo.versionControlSystem.change.IgnoredFileBean;
 import org.jetbrains.annotations.NonNls;
 
 import java.io.File;

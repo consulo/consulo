@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.vcs;
 
-import consulo.vcs.VcsConfiguration;
-import consulo.vcs.VcsShowSettingOption;
+import consulo.versionControlSystem.VcsConfiguration;
+import consulo.versionControlSystem.VcsShowSettingOption;
 
 public class VcsShowOptionsSettingImpl extends VcsAbstractSetting implements VcsShowSettingOption {
   private boolean myValue = true;

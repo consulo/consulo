@@ -2,6 +2,6 @@
  * @author VISTALL
  * @since 10-Jul-22
  */
-module consulo.vcs.impl {
-  requires consulo.vcs.api;
+module consulo.version.control.system.impl {
+  requires consulo.version.control.system.api;
 }

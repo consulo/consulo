@@ -15,10 +15,10 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.annotate;
 
-import consulo.vcs.annotate.FileAnnotation;
-import consulo.vcs.annotate.VcsAnnotation;
-import consulo.vcs.history.VcsAbstractHistorySession;
-import consulo.vcs.history.VcsRevisionNumber;
+import consulo.versionControlSystem.annotate.FileAnnotation;
+import consulo.versionControlSystem.annotate.VcsAnnotation;
+import consulo.versionControlSystem.history.VcsAbstractHistorySession;
+import consulo.versionControlSystem.history.VcsRevisionNumber;
 
 /**
  * @author irengrig

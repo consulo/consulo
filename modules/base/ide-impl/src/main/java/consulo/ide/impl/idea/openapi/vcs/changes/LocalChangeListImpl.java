@@ -5,9 +5,9 @@ import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.application.util.registry.Registry;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.vcs.ProjectLevelVcsManager;
-import consulo.vcs.change.*;
-import consulo.vcs.history.VcsRevisionNumber;
+import consulo.versionControlSystem.ProjectLevelVcsManager;
+import consulo.versionControlSystem.change.*;
+import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.logging.Logger;
 

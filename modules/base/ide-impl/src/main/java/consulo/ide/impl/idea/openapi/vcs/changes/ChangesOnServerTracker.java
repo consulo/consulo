@@ -15,11 +15,11 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
-import consulo.vcs.AbstractVcs;
-import consulo.vcs.VcsListener;
+import consulo.versionControlSystem.AbstractVcs;
+import consulo.versionControlSystem.VcsListener;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.PlusMinus;
 import consulo.util.lang.Pair;
-import consulo.vcs.change.Change;
+import consulo.versionControlSystem.change.Change;
 
 import java.util.Collection;
 

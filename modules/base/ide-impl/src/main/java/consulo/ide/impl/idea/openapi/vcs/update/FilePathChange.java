@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.update;
 
-import consulo.vcs.FilePath;
+import consulo.versionControlSystem.FilePath;
 
 import javax.annotation.Nullable;
 

@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.shelf;
 
-import consulo.vcs.change.CommitContext;
+import consulo.versionControlSystem.change.CommitContext;
 import consulo.util.io.CharsetToolkit;
 import javax.annotation.Nonnull;
 

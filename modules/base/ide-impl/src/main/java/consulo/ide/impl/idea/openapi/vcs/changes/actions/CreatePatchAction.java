@@ -16,9 +16,9 @@
 
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
-import consulo.vcs.VcsBundle;
-import consulo.vcs.action.VcsContext;
-import consulo.vcs.change.CommitExecutor;
+import consulo.versionControlSystem.VcsBundle;
+import consulo.versionControlSystem.action.VcsContext;
+import consulo.versionControlSystem.change.CommitExecutor;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.CreatePatchCommitExecutor;
 import consulo.project.Project;
 

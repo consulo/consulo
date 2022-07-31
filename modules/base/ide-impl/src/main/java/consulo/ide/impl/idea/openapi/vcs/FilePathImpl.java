@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs;
 
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.vcs.FilePath;
+import consulo.versionControlSystem.FilePath;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.file.FileTypeManager;
 import consulo.project.Project;

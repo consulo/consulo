@@ -1,10 +1,10 @@
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
 import consulo.application.AllIcons;
-import consulo.vcs.AbstractVcs;
-import consulo.vcs.annotate.FileAnnotation;
-import consulo.vcs.history.VcsFileRevision;
-import consulo.vcs.history.VcsRevisionNumber;
+import consulo.versionControlSystem.AbstractVcs;
+import consulo.versionControlSystem.annotate.FileAnnotation;
+import consulo.versionControlSystem.history.VcsFileRevision;
+import consulo.versionControlSystem.history.VcsRevisionNumber;
 import java.util.HashMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

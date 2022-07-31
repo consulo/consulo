@@ -17,12 +17,12 @@ package consulo.ide.impl.idea.openapi.vcs.update;
 
 import consulo.configurable.Configurable;
 import consulo.project.Project;
-import consulo.vcs.AbstractVcs;
-import consulo.vcs.VcsBundle;
-import consulo.vcs.VcsConfiguration;
+import consulo.versionControlSystem.AbstractVcs;
+import consulo.versionControlSystem.VcsBundle;
+import consulo.versionControlSystem.VcsConfiguration;
 import consulo.ide.impl.idea.openapi.vcs.ex.ProjectLevelVcsManagerEx;
-import consulo.vcs.update.FileGroup;
-import consulo.vcs.update.UpdateEnvironment;
+import consulo.versionControlSystem.update.FileGroup;
+import consulo.versionControlSystem.update.UpdateEnvironment;
 
 import java.util.LinkedHashMap;
 

@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.vcs;
 
-import consulo.vcs.VcsBundle;
-import consulo.vcs.VcsException;
+import consulo.versionControlSystem.VcsBundle;
+import consulo.versionControlSystem.VcsException;
 
 /**
  * @author Konstantin Bulenkov

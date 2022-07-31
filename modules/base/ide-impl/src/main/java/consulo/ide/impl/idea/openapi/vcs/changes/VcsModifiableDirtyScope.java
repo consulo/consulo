@@ -16,8 +16,8 @@
 
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
-import consulo.vcs.FilePath;
-import consulo.vcs.change.VcsDirtyScope;
+import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.change.VcsDirtyScope;
 
 public abstract class VcsModifiableDirtyScope extends VcsDirtyScope {
   public abstract void addDirtyFile(final FilePath newcomer);

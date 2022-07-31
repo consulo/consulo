@@ -27,8 +27,8 @@ import consulo.util.lang.function.Condition;
 import consulo.util.lang.Couple;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
-import consulo.vcs.FilePath;
-import consulo.vcs.history.VcsRevisionNumber;
+import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 

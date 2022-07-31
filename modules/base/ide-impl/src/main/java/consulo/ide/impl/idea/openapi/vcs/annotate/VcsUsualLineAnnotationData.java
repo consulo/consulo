@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.annotate;
 
-import consulo.vcs.annotate.VcsLineAnnotationData;
-import consulo.vcs.history.VcsRevisionNumber;
+import consulo.versionControlSystem.annotate.VcsLineAnnotationData;
+import consulo.versionControlSystem.history.VcsRevisionNumber;
 
 /**
  * @author irengrig

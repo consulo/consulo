@@ -20,7 +20,7 @@ import consulo.application.CommonBundle;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.internal.laf.MultiLineLabelUI;
-import consulo.vcs.VcsShowConfirmationOption;
+import consulo.versionControlSystem.VcsShowConfirmationOption;
 import consulo.ui.ex.action.*;
 
 import javax.annotation.Nonnull;

@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.conflicts;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.vcs.change.ChangeListManager;
+import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl;
 import consulo.document.Document;
 import consulo.localize.LocalizeValue;

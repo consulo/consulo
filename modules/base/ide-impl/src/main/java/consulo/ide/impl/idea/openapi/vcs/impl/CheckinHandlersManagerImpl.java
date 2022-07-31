@@ -16,11 +16,11 @@
 package consulo.ide.impl.idea.openapi.vcs.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.vcs.AbstractVcs;
-import consulo.vcs.VcsKey;
-import consulo.vcs.checkin.BaseCheckinHandlerFactory;
-import consulo.vcs.checkin.CheckinHandlerFactory;
-import consulo.vcs.checkin.VcsCheckinHandlerFactory;
+import consulo.versionControlSystem.AbstractVcs;
+import consulo.versionControlSystem.VcsKey;
+import consulo.versionControlSystem.checkin.BaseCheckinHandlerFactory;
+import consulo.versionControlSystem.checkin.CheckinHandlerFactory;
+import consulo.versionControlSystem.checkin.VcsCheckinHandlerFactory;
 import consulo.util.collection.MultiMap;
 import consulo.util.collection.SmartList;
 import jakarta.inject.Inject;

@@ -19,7 +19,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.ActionPromoter;
 import consulo.ui.ex.action.AnAction;
 import consulo.dataContext.DataContext;
-import consulo.vcs.ui.Refreshable;
+import consulo.versionControlSystem.ui.Refreshable;
 
 import java.util.Arrays;
 import java.util.Collections;

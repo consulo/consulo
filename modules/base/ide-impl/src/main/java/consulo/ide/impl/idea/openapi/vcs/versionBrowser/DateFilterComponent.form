@@ -38,7 +38,7 @@
                   <forms/>
                 </constraints>
                 <properties>
-                  <text resource-bundle="consulo/vcs/VcsBundle" key="checkbox.show.changes.after.date"/>
+                  <text resource-bundle="consulo/versionControlSystem/VcsBundle" key="checkbox.show.changes.after.date"/>
                 </properties>
               </component>
               <component id="861f1" class="javax.swing.JCheckBox" binding="myUseDateBeforeFilter">
@@ -47,7 +47,7 @@
                   <forms/>
                 </constraints>
                 <properties>
-                  <text resource-bundle="consulo/vcs/VcsBundle" key="checkbox.show.changes.before.date"/>
+                  <text resource-bundle="consulo/versionControlSystem/VcsBundle" key="checkbox.show.changes.before.date"/>
                 </properties>
               </component>
               <component id="3b7e7" class="com.michaelbaranov.microba.calendar.DatePicker" binding="myDateAfter">

@@ -22,12 +22,12 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;
 import consulo.ide.impl.idea.openapi.util.Getter;
-import consulo.vcs.ProjectLevelVcsManager;
+import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.ide.impl.idea.util.Consumer;
 import consulo.application.util.Semaphore;
 import consulo.application.impl.internal.performance.HeavyProcessLatch;
-import consulo.vcs.change.InvokeAfterUpdateMode;
-import consulo.vcs.change.VcsDirtyScopeManager;
+import consulo.versionControlSystem.change.InvokeAfterUpdateMode;
+import consulo.versionControlSystem.change.VcsDirtyScopeManager;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;

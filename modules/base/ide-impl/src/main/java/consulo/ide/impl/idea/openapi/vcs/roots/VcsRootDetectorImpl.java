@@ -16,13 +16,13 @@
 package consulo.ide.impl.idea.openapi.vcs.roots;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.vcs.AbstractVcs;
-import consulo.vcs.ProjectLevelVcsManager;
-import consulo.vcs.root.VcsRoot;
+import consulo.versionControlSystem.AbstractVcs;
+import consulo.versionControlSystem.ProjectLevelVcsManager;
+import consulo.versionControlSystem.root.VcsRoot;
 import consulo.ide.impl.idea.openapi.vcs.VcsRootChecker;
 import consulo.module.content.ProjectRootManager;
 import consulo.project.Project;
-import consulo.vcs.root.VcsRootDetector;
+import consulo.versionControlSystem.root.VcsRootDetector;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

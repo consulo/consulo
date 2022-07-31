@@ -24,10 +24,10 @@ import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.ex.awt.Messages;
-import consulo.vcs.*;
-import consulo.vcs.action.VcsContextFactory;
+import consulo.versionControlSystem.*;
+import consulo.versionControlSystem.action.VcsContextFactory;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesFilterDialog;
-import consulo.vcs.versionBrowser.ChangeBrowserSettings;
+import consulo.versionControlSystem.versionBrowser.ChangeBrowserSettings;
 import consulo.virtualFileSystem.VirtualFile;
 
 /**

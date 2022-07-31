@@ -26,7 +26,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
-import consulo.vcs.change.LocalChangeList;
+import consulo.versionControlSystem.change.LocalChangeList;
 
 /**
  * Allows to modify the painting of changelists in the Changes view. Classes implementing this

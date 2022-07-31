@@ -16,8 +16,8 @@
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.language.file.FileTypeManager;
-import consulo.vcs.AbstractVcs;
-import consulo.vcs.FilePath;
+import consulo.versionControlSystem.AbstractVcs;
+import consulo.versionControlSystem.FilePath;
 import consulo.util.collection.MultiMap;
 import javax.annotation.Nonnull;
 

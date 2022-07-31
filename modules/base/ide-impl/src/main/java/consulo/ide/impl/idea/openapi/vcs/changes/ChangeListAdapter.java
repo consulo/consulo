@@ -16,9 +16,9 @@
 
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
-import consulo.vcs.change.Change;
-import consulo.vcs.change.ChangeList;
-import consulo.vcs.change.ChangeListListener;
+import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.change.ChangeList;
+import consulo.versionControlSystem.change.ChangeListListener;
 
 import java.util.Collection;
 

@@ -21,7 +21,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.Presentation;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import consulo.vcs.ProjectLevelVcsManager;
+import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

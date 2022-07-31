@@ -17,14 +17,14 @@
 package consulo.ide.impl.idea.openapi.vcs.checkin;
 
 import consulo.ide.impl.idea.codeInsight.actions.ReformatCodeProcessor;
-import consulo.vcs.checkin.CheckinProjectPanel;
-import consulo.vcs.VcsBundle;
-import consulo.vcs.VcsConfiguration;
-import consulo.vcs.ui.RefreshableOnComponent;
+import consulo.versionControlSystem.checkin.CheckinProjectPanel;
+import consulo.versionControlSystem.VcsBundle;
+import consulo.versionControlSystem.VcsConfiguration;
+import consulo.versionControlSystem.ui.RefreshableOnComponent;
 import consulo.document.FileDocumentManager;
 import consulo.language.codeStyle.FormatterUtil;
 import consulo.project.Project;
-import consulo.vcs.checkin.CheckinHandler;
+import consulo.versionControlSystem.checkin.CheckinHandler;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nullable;

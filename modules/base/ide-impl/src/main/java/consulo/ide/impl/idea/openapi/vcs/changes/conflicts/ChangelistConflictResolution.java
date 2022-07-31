@@ -20,10 +20,10 @@ import consulo.ui.ex.awt.Messages;
 import consulo.ide.impl.idea.openapi.vcs.changes.*;
 import consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelveChangesCommitExecutor;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.CommitChangeListDialog;
-import consulo.vcs.change.Change;
-import consulo.vcs.change.ChangeList;
-import consulo.vcs.change.ChangeListManager;
-import consulo.vcs.change.LocalChangeList;
+import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.change.ChangeList;
+import consulo.versionControlSystem.change.ChangeListManager;
+import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.Collection;

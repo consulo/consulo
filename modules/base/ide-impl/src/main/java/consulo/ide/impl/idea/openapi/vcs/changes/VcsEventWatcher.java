@@ -24,7 +24,7 @@ import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.project.Project;
 import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
-import consulo.vcs.change.VcsDirtyScopeManager;
+import consulo.versionControlSystem.change.VcsDirtyScopeManager;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;

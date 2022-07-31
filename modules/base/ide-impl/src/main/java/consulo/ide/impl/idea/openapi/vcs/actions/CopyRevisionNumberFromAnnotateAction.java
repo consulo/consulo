@@ -18,9 +18,9 @@ package consulo.ide.impl.idea.openapi.vcs.actions;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.CopyPasteManager;
-import consulo.vcs.annotate.FileAnnotation;
+import consulo.versionControlSystem.annotate.FileAnnotation;
 import consulo.ide.impl.idea.openapi.vcs.annotate.UpToDateLineNumberListener;
-import consulo.vcs.history.VcsRevisionNumber;
+import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.ide.impl.idea.util.ui.TextTransferable;
 
 /**

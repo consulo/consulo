@@ -16,9 +16,9 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
 import consulo.application.AllIcons;
-import consulo.vcs.FilePath;
+import consulo.versionControlSystem.FilePath;
 import consulo.virtualFileSystem.status.FileStatus;
-import consulo.vcs.change.LocallyDeletedChange;
+import consulo.versionControlSystem.change.LocallyDeletedChange;
 import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.TreeLinkMouseListener;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awtUnsafe.TargetAWT;

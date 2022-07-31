@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.update;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.openapi.project.ProjectReloadState;
-import consulo.vcs.VcsBundle;
+import consulo.versionControlSystem.VcsBundle;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesCache;
 import consulo.ide.impl.idea.openapi.vcs.ex.ProjectLevelVcsManagerEx;
 import consulo.project.Project;

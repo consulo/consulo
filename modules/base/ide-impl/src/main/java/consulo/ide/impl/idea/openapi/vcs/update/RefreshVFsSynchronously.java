@@ -16,9 +16,9 @@
 package consulo.ide.impl.idea.openapi.vcs.update;
 
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.vcs.change.Change;
-import consulo.vcs.update.FileGroup;
-import consulo.vcs.update.UpdatedFiles;
+import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.update.FileGroup;
+import consulo.versionControlSystem.update.UpdatedFiles;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;

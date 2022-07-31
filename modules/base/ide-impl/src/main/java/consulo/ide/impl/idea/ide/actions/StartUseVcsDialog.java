@@ -15,14 +15,14 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.vcs.AllVcses;
+import consulo.versionControlSystem.AllVcses;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.internal.laf.MultiLineLabelUI;
 import consulo.util.lang.ObjectUtil;
-import consulo.vcs.AbstractVcs;
-import consulo.vcs.VcsBundle;
+import consulo.versionControlSystem.AbstractVcs;
+import consulo.versionControlSystem.VcsBundle;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

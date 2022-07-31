@@ -25,7 +25,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 import consulo.application.HelpManager;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.vcs.VcsBundle;
+import consulo.versionControlSystem.VcsBundle;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

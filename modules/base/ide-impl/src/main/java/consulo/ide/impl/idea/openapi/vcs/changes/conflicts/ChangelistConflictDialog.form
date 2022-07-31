@@ -30,7 +30,7 @@
               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text resource-bundle="consulo/vcs/VcsBundle" key="move.to.changelist"/>
+              <text resource-bundle="consulo/versionControlSystem/VcsBundle" key="move.to.changelist"/>
             </properties>
           </component>
           <component id="16741" class="javax.swing.JRadioButton" binding="myIgnoreRadioButton" default-binding="true">
@@ -46,7 +46,7 @@
               <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text resource-bundle="consulo/vcs/VcsBundle" key="switch.to.changelist"/>
+              <text resource-bundle="consulo/versionControlSystem/VcsBundle" key="switch.to.changelist"/>
             </properties>
           </component>
         </children>

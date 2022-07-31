@@ -25,7 +25,7 @@ import consulo.document.impl.DocumentImpl;
 import consulo.document.util.TextRange;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
-import consulo.vcs.change.VcsDirtyScopeManager;
+import consulo.versionControlSystem.change.VcsDirtyScopeManager;
 import consulo.ide.impl.idea.ui.EditorNotificationPanel;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;

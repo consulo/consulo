@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.diff.impl.patch;
 
-import consulo.vcs.VcsException;
+import consulo.versionControlSystem.VcsException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -16,10 +16,10 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
 import consulo.util.lang.Pair;
-import consulo.vcs.RepositoryLocation;
-import consulo.vcs.change.commited.RepositoryLocationGroup;
-import consulo.vcs.change.commited.VcsCommittedListsZipper;
-import consulo.vcs.versionBrowser.CommittedChangeList;
+import consulo.versionControlSystem.RepositoryLocation;
+import consulo.versionControlSystem.change.commited.RepositoryLocationGroup;
+import consulo.versionControlSystem.change.commited.VcsCommittedListsZipper;
+import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 
 import java.util.*;
 

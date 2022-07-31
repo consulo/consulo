@@ -18,12 +18,12 @@ package consulo.ide.impl.idea.openapi.vcs.actions;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.project.Project;
-import consulo.vcs.AbstractVcs;
-import consulo.vcs.ProjectLevelVcsManager;
-import consulo.vcs.diff.DiffProvider;
-import consulo.vcs.diff.RevisionSelector;
-import consulo.vcs.action.VcsContext;
-import consulo.vcs.history.VcsRevisionNumber;
+import consulo.versionControlSystem.AbstractVcs;
+import consulo.versionControlSystem.ProjectLevelVcsManager;
+import consulo.versionControlSystem.diff.DiffProvider;
+import consulo.versionControlSystem.diff.RevisionSelector;
+import consulo.versionControlSystem.action.VcsContext;
+import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.ide.impl.idea.openapi.vcs.impl.VcsBackgroundableActions;
 import consulo.virtualFileSystem.VirtualFile;
 

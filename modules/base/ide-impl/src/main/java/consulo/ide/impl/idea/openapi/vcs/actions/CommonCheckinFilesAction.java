@@ -17,18 +17,18 @@ package consulo.ide.impl.idea.openapi.vcs.actions;
 
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.vcs.AbstractVcs;
-import consulo.vcs.FilePath;
-import consulo.vcs.ProjectLevelVcsManager;
-import consulo.vcs.action.VcsContext;
-import consulo.vcs.change.Change;
-import consulo.vcs.change.ChangeListManager;
-import consulo.vcs.change.LocalChangeList;
-import consulo.vcs.checkin.CheckinEnvironment;
-import consulo.vcs.VcsBundle;
+import consulo.versionControlSystem.AbstractVcs;
+import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.ProjectLevelVcsManager;
+import consulo.versionControlSystem.action.VcsContext;
+import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.change.ChangeListManager;
+import consulo.versionControlSystem.change.LocalChangeList;
+import consulo.versionControlSystem.checkin.CheckinEnvironment;
+import consulo.versionControlSystem.VcsBundle;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.ObjectUtils;
-import consulo.vcs.util.VcsUtil;
+import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
 

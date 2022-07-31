@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.versionBrowser;
 
-import consulo.vcs.history.VcsRevisionNumber;
+import consulo.versionControlSystem.history.VcsRevisionNumber;
 
 /**
  * For classes that are capable to return {@link VcsRevisionNumber}.

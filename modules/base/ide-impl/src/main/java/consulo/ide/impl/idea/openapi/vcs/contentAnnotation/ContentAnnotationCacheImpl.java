@@ -17,11 +17,11 @@ package consulo.ide.impl.idea.openapi.vcs.contentAnnotation;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.document.util.TextRange;
-import consulo.vcs.VcsKey;
-import consulo.vcs.action.VcsContextFactory;
-import consulo.vcs.annotate.FileAnnotation;
-import consulo.vcs.history.HistoryCacheWithRevisionKey;
-import consulo.vcs.history.VcsRevisionNumber;
+import consulo.versionControlSystem.VcsKey;
+import consulo.versionControlSystem.action.VcsContextFactory;
+import consulo.versionControlSystem.annotate.FileAnnotation;
+import consulo.versionControlSystem.history.HistoryCacheWithRevisionKey;
+import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.util.lang.ThreeState;
 import consulo.util.collection.SLRUMap;

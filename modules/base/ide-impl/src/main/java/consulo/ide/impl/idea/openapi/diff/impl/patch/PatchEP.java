@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.diff.impl.patch;
 
 import consulo.component.extension.ExtensionPointName;
-import consulo.vcs.change.CommitContext;
+import consulo.versionControlSystem.change.CommitContext;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

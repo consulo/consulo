@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.history;
 
-import consulo.vcs.FilePath;
-import consulo.vcs.VcsException;
+import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.VcsException;
 import consulo.application.util.function.Processor;
 
 import java.util.List;

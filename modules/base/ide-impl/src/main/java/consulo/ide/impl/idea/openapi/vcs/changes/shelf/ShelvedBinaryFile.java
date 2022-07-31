@@ -23,12 +23,12 @@ import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.ide.impl.idea.openapi.vcs.FilePathImpl;
 import consulo.virtualFileSystem.status.FileStatus;
-import consulo.vcs.VcsBundle;
-import consulo.vcs.change.Change;
-import consulo.vcs.change.ContentRevision;
+import consulo.versionControlSystem.VcsBundle;
+import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.change.ContentRevision;
 import consulo.ide.impl.idea.openapi.vcs.changes.CurrentBinaryContentRevision;
 import consulo.ide.impl.idea.openapi.vcs.changes.TextRevisionNumber;
-import consulo.vcs.history.VcsRevisionNumber;
+import consulo.versionControlSystem.history.VcsRevisionNumber;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 

@@ -15,9 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
-import consulo.vcs.FilePath;
-import consulo.vcs.change.Change;
-import consulo.vcs.versionBrowser.CommittedChangeList;
+import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 
 import java.io.File;

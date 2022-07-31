@@ -38,9 +38,9 @@ import consulo.ide.impl.idea.openapi.vcs.*;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ide.impl.idea.ui.*;
 import consulo.ide.impl.idea.util.Consumer;
-import consulo.vcs.CommitMessageI;
-import consulo.vcs.VcsBundle;
-import consulo.vcs.VcsConfiguration;
+import consulo.versionControlSystem.CommitMessageI;
+import consulo.versionControlSystem.VcsBundle;
+import consulo.versionControlSystem.VcsConfiguration;
 
 import javax.swing.*;
 import java.awt.*;

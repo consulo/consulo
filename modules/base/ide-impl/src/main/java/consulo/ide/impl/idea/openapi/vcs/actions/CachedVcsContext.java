@@ -17,11 +17,11 @@ package consulo.ide.impl.idea.openapi.vcs.actions;
 
 import consulo.codeEditor.Editor;
 import consulo.project.Project;
-import consulo.vcs.FilePath;
-import consulo.vcs.action.VcsContext;
-import consulo.vcs.change.Change;
-import consulo.vcs.change.ChangeList;
-import consulo.vcs.ui.Refreshable;
+import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.action.VcsContext;
+import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.change.ChangeList;
+import consulo.versionControlSystem.ui.Refreshable;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

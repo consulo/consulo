@@ -25,7 +25,7 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.language.psi.PsiFile;
 import consulo.language.codeStyle.arrangement.Rearranger;
 import consulo.language.file.light.LightVirtualFile;
-import consulo.vcs.util.VcsUtil;
+import consulo.versionControlSystem.util.VcsUtil;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

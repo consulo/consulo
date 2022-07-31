@@ -23,8 +23,8 @@ import consulo.document.FileDocumentManager;
 import consulo.language.impl.internal.psi.LoadTextUtil;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.Getter;
-import consulo.vcs.FilePath;
-import consulo.vcs.change.CommitContext;
+import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.change.CommitContext;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.ApplyPatchForBaseRevisionTexts;
 import consulo.virtualFileSystem.VirtualFile;
 

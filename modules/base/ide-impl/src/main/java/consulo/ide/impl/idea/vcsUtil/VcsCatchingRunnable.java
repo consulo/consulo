@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.vcsUtil;
 
 import consulo.ide.impl.idea.openapi.util.Getter;
-import consulo.vcs.VcsException;
+import consulo.versionControlSystem.VcsException;
 import consulo.util.collection.SmartList;
 
 import java.util.List;

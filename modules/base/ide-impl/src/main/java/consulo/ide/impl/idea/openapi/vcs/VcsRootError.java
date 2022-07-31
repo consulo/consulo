@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs;
 
-import consulo.vcs.VcsDirectoryMapping;
+import consulo.versionControlSystem.VcsDirectoryMapping;
 
 import javax.annotation.Nonnull;
 

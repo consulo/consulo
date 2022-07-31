@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
-import consulo.vcs.change.Change;
+import consulo.versionControlSystem.change.Change;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.swing.*;

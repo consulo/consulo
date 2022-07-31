@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.history;
 
-import consulo.vcs.FilePath;
-import consulo.vcs.history.VcsFileRevision;
+import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.history.VcsFileRevision;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

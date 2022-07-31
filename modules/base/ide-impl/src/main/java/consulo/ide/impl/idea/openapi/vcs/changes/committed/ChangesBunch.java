@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
-import consulo.vcs.versionBrowser.CommittedChangeList;
+import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 
 import java.util.List;
 

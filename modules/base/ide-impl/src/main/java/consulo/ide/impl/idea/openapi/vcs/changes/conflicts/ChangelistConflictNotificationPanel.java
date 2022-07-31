@@ -16,14 +16,14 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.conflicts;
 
 import consulo.fileEditor.EditorNotificationBuilder;
-import consulo.vcs.change.ChangeListManager;
+import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.ide.impl.idea.openapi.vcs.changes.LocalChangeListImpl;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.awt.Messages;
-import consulo.vcs.change.Change;
-import consulo.vcs.change.LocalChangeList;
+import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nullable;

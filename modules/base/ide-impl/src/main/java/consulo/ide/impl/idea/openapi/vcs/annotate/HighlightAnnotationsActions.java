@@ -19,11 +19,11 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.codeEditor.EditorGutterComponentEx;
 import consulo.project.Project;
-import consulo.vcs.VcsBundle;
+import consulo.versionControlSystem.VcsBundle;
 import consulo.ide.impl.idea.openapi.vcs.actions.CompareWithSelectedRevisionAction;
-import consulo.vcs.annotate.FileAnnotation;
-import consulo.vcs.history.VcsFileRevision;
-import consulo.vcs.history.VcsRevisionNumber;
+import consulo.versionControlSystem.annotate.FileAnnotation;
+import consulo.versionControlSystem.history.VcsFileRevision;
+import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.Consumer;
 

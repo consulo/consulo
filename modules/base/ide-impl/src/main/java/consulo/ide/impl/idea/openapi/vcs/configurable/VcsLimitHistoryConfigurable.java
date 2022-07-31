@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs.configurable;
 
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.vcs.VcsConfiguration;
+import consulo.versionControlSystem.VcsConfiguration;
 
 import javax.swing.*;
 

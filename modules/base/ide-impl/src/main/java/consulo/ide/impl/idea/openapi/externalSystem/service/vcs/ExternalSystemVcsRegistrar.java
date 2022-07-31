@@ -22,12 +22,12 @@ import consulo.ide.impl.idea.openapi.externalSystem.settings.ExternalSystemSetti
 import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemApiUtil;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.vcs.ProjectLevelVcsManager;
-import consulo.vcs.VcsDirectoryMapping;
+import consulo.versionControlSystem.ProjectLevelVcsManager;
+import consulo.versionControlSystem.VcsDirectoryMapping;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
-import consulo.vcs.util.VcsUtil;
+import consulo.versionControlSystem.util.VcsUtil;
 import javax.annotation.Nonnull;
 
 import java.util.Collection;

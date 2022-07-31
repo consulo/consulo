@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
-import consulo.vcs.AbstractVcs;
+import consulo.versionControlSystem.AbstractVcs;
 
 public interface FileHolder {
   void cleanAll();

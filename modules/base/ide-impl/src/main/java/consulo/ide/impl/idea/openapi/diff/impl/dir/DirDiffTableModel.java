@@ -25,7 +25,7 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ide.impl.idea.openapi.ui.MessageDialogBuilder;
 import consulo.ui.ex.awt.Messages;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.vcs.VcsBundle;
+import consulo.versionControlSystem.VcsBundle;
 import consulo.ide.impl.idea.ui.components.JBLoadingPanel;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.Application;

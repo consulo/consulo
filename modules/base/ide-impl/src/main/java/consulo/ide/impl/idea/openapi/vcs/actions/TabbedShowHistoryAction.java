@@ -20,23 +20,23 @@ import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.UpdateInBackground;
 import consulo.project.Project;
 import consulo.util.lang.Pair;
-import consulo.vcs.AbstractVcs;
-import consulo.vcs.AbstractVcsHelper;
-import consulo.vcs.FilePath;
-import consulo.vcs.ProjectLevelVcsManager;
-import consulo.vcs.change.ChangesUtil;
-import consulo.vcs.history.VcsHistoryProvider;
-import consulo.vcs.action.VcsContext;
+import consulo.versionControlSystem.AbstractVcs;
+import consulo.versionControlSystem.AbstractVcsHelper;
+import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.ProjectLevelVcsManager;
+import consulo.versionControlSystem.change.ChangesUtil;
+import consulo.versionControlSystem.history.VcsHistoryProvider;
+import consulo.versionControlSystem.action.VcsContext;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.vcs.util.VcsUtil;
+import consulo.versionControlSystem.util.VcsUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import java.io.File;
 
 import static consulo.ide.impl.idea.util.ObjectUtils.assertNotNull;
-import static consulo.vcs.util.VcsUtil.getIfSingle;
+import static consulo.versionControlSystem.util.VcsUtil.getIfSingle;
 
 
 public class TabbedShowHistoryAction extends AbstractVcsAction implements UpdateInBackground {

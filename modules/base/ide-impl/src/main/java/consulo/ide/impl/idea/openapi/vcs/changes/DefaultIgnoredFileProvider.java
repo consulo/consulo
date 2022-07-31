@@ -16,10 +16,10 @@
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.vcs.FilePath;
+import consulo.versionControlSystem.FilePath;
 import consulo.project.Project;
-import consulo.vcs.change.ChangeListManager;
-import consulo.vcs.change.IgnoredFileProvider;
+import consulo.versionControlSystem.change.ChangeListManager;
+import consulo.versionControlSystem.change.IgnoredFileProvider;
 
 import javax.annotation.Nonnull;
 

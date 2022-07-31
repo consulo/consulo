@@ -24,7 +24,7 @@ import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorGutterComponentEx;
 import consulo.colorScheme.TextAttributes;
 import consulo.document.util.TextRange;
-import consulo.vcs.VcsBundle;
+import consulo.versionControlSystem.VcsBundle;
 import consulo.ide.impl.idea.util.Function;
 import consulo.util.lang.function.PairConsumer;
 import consulo.ui.ex.awt.JBUI;

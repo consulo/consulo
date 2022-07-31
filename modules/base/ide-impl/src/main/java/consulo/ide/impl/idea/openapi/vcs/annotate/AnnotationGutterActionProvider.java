@@ -19,7 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.ui.ex.action.AnAction;
 import consulo.component.extension.ExtensionPointName;
-import consulo.vcs.annotate.FileAnnotation;
+import consulo.versionControlSystem.annotate.FileAnnotation;
 
 import javax.annotation.Nonnull;
 

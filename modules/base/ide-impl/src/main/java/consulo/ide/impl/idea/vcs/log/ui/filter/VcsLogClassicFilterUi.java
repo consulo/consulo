@@ -28,7 +28,7 @@ import consulo.application.util.function.Computable;
 import consulo.ide.impl.idea.openapi.util.NotNullComputable;
 import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.vcs.FilePath;
+import consulo.versionControlSystem.FilePath;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.event.DocumentAdapter;
@@ -42,7 +42,7 @@ import consulo.ide.impl.idea.vcs.log.impl.*;
 import consulo.ide.impl.idea.vcs.log.impl.VcsLogFilterCollectionImpl.VcsLogFilterCollectionBuilder;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogActionPlaces;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl;
-import consulo.vcs.util.VcsUtil;
+import consulo.versionControlSystem.util.VcsUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

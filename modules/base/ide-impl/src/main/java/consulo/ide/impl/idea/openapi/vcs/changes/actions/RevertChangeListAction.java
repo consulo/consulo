@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
-import consulo.vcs.change.Change;
+import consulo.versionControlSystem.change.Change;
 import consulo.ide.impl.idea.util.containers.Convertor;
 
 /**

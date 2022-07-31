@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
-import consulo.vcs.change.Change;
+import consulo.versionControlSystem.change.Change;
 
 import javax.annotation.Nonnull;
 

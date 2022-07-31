@@ -15,10 +15,10 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.impl;
 
-import consulo.vcs.FilePath;
-import consulo.vcs.ProjectLevelVcsManager;
-import consulo.vcs.change.*;
-import consulo.vcs.root.VcsRoot;
+import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.ProjectLevelVcsManager;
+import consulo.versionControlSystem.change.*;
+import consulo.versionControlSystem.root.VcsRoot;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;

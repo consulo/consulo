@@ -17,13 +17,13 @@ package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
 import consulo.configurable.Configurable;
 import consulo.project.Project;
-import consulo.vcs.AbstractVcs;
-import consulo.vcs.CommittedChangesProvider;
-import consulo.vcs.VcsKey;
-import consulo.vcs.change.ChangeProvider;
-import consulo.vcs.checkin.CheckinEnvironment;
-import consulo.vcs.diff.DiffProvider;
-import consulo.vcs.history.VcsRevisionNumber;
+import consulo.versionControlSystem.AbstractVcs;
+import consulo.versionControlSystem.CommittedChangesProvider;
+import consulo.versionControlSystem.VcsKey;
+import consulo.versionControlSystem.change.ChangeProvider;
+import consulo.versionControlSystem.checkin.CheckinEnvironment;
+import consulo.versionControlSystem.diff.DiffProvider;
+import consulo.versionControlSystem.history.VcsRevisionNumber;
 
 import javax.annotation.Nullable;
 

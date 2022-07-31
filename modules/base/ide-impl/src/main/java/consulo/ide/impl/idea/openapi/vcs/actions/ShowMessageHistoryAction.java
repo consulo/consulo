@@ -23,11 +23,11 @@ import consulo.ide.impl.idea.openapi.editor.actions.ContentChooser;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.vcs.*;
-import consulo.vcs.CommitMessageI;
-import consulo.vcs.VcsBundle;
-import consulo.vcs.VcsConfiguration;
-import consulo.vcs.checkin.CheckinProjectPanel;
-import consulo.vcs.ui.Refreshable;
+import consulo.versionControlSystem.CommitMessageI;
+import consulo.versionControlSystem.VcsBundle;
+import consulo.versionControlSystem.VcsConfiguration;
+import consulo.versionControlSystem.checkin.CheckinProjectPanel;
+import consulo.versionControlSystem.ui.Refreshable;
 
 import java.util.ArrayList;
 import java.util.Collections;

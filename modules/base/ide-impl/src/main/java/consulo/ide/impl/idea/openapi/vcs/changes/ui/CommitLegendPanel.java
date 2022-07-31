@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
 import consulo.virtualFileSystem.status.FileStatus;
-import consulo.vcs.VcsBundle;
+import consulo.versionControlSystem.VcsBundle;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awtUnsafe.TargetAWT;

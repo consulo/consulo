@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.update;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.util.lang.Pair;
-import consulo.vcs.VcsBundle;
+import consulo.versionControlSystem.VcsBundle;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.content.scope.NamedScopesHolder;
 import consulo.content.scope.PackageSetBase;

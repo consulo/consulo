@@ -20,11 +20,11 @@ import consulo.language.editor.CodeInsightBundle;
 import consulo.ide.impl.idea.codeInsight.actions.OptimizeImportsProcessor;
 import consulo.document.FileDocumentManager;
 import consulo.project.Project;
-import consulo.vcs.checkin.CheckinProjectPanel;
-import consulo.vcs.VcsBundle;
-import consulo.vcs.VcsConfiguration;
-import consulo.vcs.ui.RefreshableOnComponent;
-import consulo.vcs.checkin.CheckinHandler;
+import consulo.versionControlSystem.checkin.CheckinProjectPanel;
+import consulo.versionControlSystem.VcsBundle;
+import consulo.versionControlSystem.VcsConfiguration;
+import consulo.versionControlSystem.ui.RefreshableOnComponent;
+import consulo.versionControlSystem.checkin.CheckinHandler;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nullable;
 

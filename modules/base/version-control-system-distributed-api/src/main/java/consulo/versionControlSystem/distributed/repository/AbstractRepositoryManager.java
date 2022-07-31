@@ -3,9 +3,9 @@ package consulo.versionControlSystem.distributed.repository;
 import consulo.application.AccessRule;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.util.collection.ContainerUtil;
-import consulo.vcs.AbstractVcs;
-import consulo.vcs.FilePath;
-import consulo.vcs.change.ChangesUtil;
+import consulo.versionControlSystem.AbstractVcs;
+import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;

@@ -28,11 +28,11 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.content.ContentManager;
-import consulo.vcs.AbstractVcs;
-import consulo.vcs.FilePath;
-import consulo.vcs.VcsBundle;
-import consulo.vcs.VcsException;
-import consulo.vcs.history.*;
+import consulo.versionControlSystem.AbstractVcs;
+import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.VcsBundle;
+import consulo.versionControlSystem.VcsException;
+import consulo.versionControlSystem.history.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

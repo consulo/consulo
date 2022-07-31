@@ -24,8 +24,8 @@ package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentProvider;
 import consulo.ide.impl.idea.openapi.vcs.ui.VcsBalloonProblemNotifier;
-import consulo.vcs.*;
-import consulo.vcs.versionBrowser.CommittedChangeList;
+import consulo.versionControlSystem.*;
+import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.application.ApplicationManager;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.MessageBusConnection;

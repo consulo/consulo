@@ -1,7 +1,7 @@
 package consulo.ide.impl.idea.vcs.log.data;
 
 import consulo.application.util.function.Computable;
-import consulo.vcs.change.Change;
+import consulo.versionControlSystem.change.Change;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.CommitId;

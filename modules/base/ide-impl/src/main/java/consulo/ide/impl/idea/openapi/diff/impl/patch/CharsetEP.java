@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.openapi.diff.impl.patch;
 
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
-import consulo.vcs.change.CommitContext;
-import consulo.vcs.change.FilePathsHelper;
+import consulo.versionControlSystem.change.CommitContext;
+import consulo.versionControlSystem.change.FilePathsHelper;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;

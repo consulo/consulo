@@ -19,7 +19,7 @@ import consulo.application.AllIcons;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.vcs.FilePath;
+import consulo.versionControlSystem.FilePath;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.FilePathChangesTreeList;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.JBLabel;

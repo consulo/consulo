@@ -21,7 +21,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.*;
 import consulo.ide.ServiceManager;
 import consulo.project.Project;
-import consulo.vcs.update.UpdatedFiles;
+import consulo.versionControlSystem.update.UpdatedFiles;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;

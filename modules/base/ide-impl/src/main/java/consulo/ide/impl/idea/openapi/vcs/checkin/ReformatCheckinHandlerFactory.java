@@ -17,10 +17,10 @@
 package consulo.ide.impl.idea.openapi.vcs.checkin;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.vcs.checkin.CheckinHandlerFactory;
-import consulo.vcs.checkin.CheckinProjectPanel;
-import consulo.vcs.change.CommitContext;
-import consulo.vcs.checkin.CheckinHandler;
+import consulo.versionControlSystem.checkin.CheckinHandlerFactory;
+import consulo.versionControlSystem.checkin.CheckinProjectPanel;
+import consulo.versionControlSystem.change.CommitContext;
+import consulo.versionControlSystem.checkin.CheckinHandler;
 
 import javax.annotation.Nonnull;
 

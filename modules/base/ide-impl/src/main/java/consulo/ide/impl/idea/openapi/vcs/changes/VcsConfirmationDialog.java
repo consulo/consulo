@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.application.util.SystemInfo;
-import consulo.vcs.VcsShowConfirmationOption;
+import consulo.versionControlSystem.VcsShowConfirmationOption;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ide.impl.idea.util.ui.OptionsDialog;
 

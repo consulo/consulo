@@ -19,11 +19,11 @@ import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.vcs.*;
 import consulo.ide.impl.idea.openapi.vcs.update.ActionInfo;
 import consulo.ide.impl.idea.openapi.vcs.update.UpdateInfoTree;
-import consulo.vcs.VcsConfiguration;
-import consulo.vcs.update.UpdatedFiles;
+import consulo.versionControlSystem.VcsConfiguration;
+import consulo.versionControlSystem.update.UpdatedFiles;
 import consulo.ui.ex.content.ContentManager;
-import consulo.vcs.ProjectLevelVcsManager;
-import consulo.vcs.VcsShowSettingOption;
+import consulo.versionControlSystem.ProjectLevelVcsManager;
+import consulo.versionControlSystem.VcsShowSettingOption;
 
 import javax.annotation.Nonnull;
 

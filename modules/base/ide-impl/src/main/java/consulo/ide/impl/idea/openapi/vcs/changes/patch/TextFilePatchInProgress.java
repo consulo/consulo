@@ -29,11 +29,11 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.Getter;
 import consulo.util.dataholder.UserDataHolder;
-import consulo.vcs.FilePath;
-import consulo.vcs.change.ContentRevision;
+import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.change.ContentRevision;
 import consulo.ide.impl.idea.openapi.vcs.changes.SimpleContentRevision;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.vcs.util.VcsUtil;
+import consulo.versionControlSystem.util.VcsUtil;
 import javax.annotation.Nonnull;
 
 import java.io.File;

@@ -17,9 +17,9 @@ package consulo.ide.impl.idea.openapi.vcs.checkout;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.project.Project;
-import consulo.vcs.ProjectLevelVcsManager;
-import consulo.vcs.VcsDirectoryMapping;
-import consulo.vcs.VcsKey;
+import consulo.versionControlSystem.ProjectLevelVcsManager;
+import consulo.versionControlSystem.VcsDirectoryMapping;
+import consulo.versionControlSystem.VcsKey;
 
 import java.io.File;
 import java.util.Collections;

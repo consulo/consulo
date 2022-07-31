@@ -6,7 +6,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.dataContext.DataContext;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
-import consulo.vcs.AbstractVcs;
+import consulo.versionControlSystem.AbstractVcs;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

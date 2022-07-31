@@ -15,10 +15,10 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.history;
 
-import consulo.vcs.VcsException;
-import consulo.vcs.history.VcsAbstractHistorySession;
-import consulo.vcs.history.VcsAppendableHistorySessionPartner;
-import consulo.vcs.history.VcsFileRevision;
+import consulo.versionControlSystem.VcsException;
+import consulo.versionControlSystem.history.VcsAbstractHistorySession;
+import consulo.versionControlSystem.history.VcsAppendableHistorySessionPartner;
+import consulo.versionControlSystem.history.VcsFileRevision;
 
 /**
  * @author irengrig

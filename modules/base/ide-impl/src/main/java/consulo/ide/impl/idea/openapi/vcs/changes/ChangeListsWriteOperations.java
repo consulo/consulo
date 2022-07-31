@@ -18,8 +18,8 @@ package consulo.ide.impl.idea.openapi.vcs.changes;
 import javax.annotation.Nullable;
 import javax.annotation.Nonnull;
 import consulo.util.collection.MultiMap;
-import consulo.vcs.change.Change;
-import consulo.vcs.change.LocalChangeList;
+import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.change.LocalChangeList;
 
 public interface ChangeListsWriteOperations {
   @Nullable

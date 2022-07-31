@@ -1,9 +1,9 @@
 
 package consulo.ide.impl.idea.openapi.diff.impl.patch;
 
-import consulo.vcs.FilePath;
+import consulo.versionControlSystem.FilePath;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.vcs.util.VcsUtil;
+import consulo.versionControlSystem.util.VcsUtil;
 
 import java.util.HashMap;
 import java.util.Map;

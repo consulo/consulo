@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.vcs.log.data;
 
 import consulo.application.util.function.Computable;
 import consulo.util.lang.Pair;
-import consulo.vcs.VcsException;
+import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.distributed.push.VcsFullCommitDetails;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

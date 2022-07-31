@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman;
 import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.ide.impl.idea.openapi.vcs.*;
 import consulo.ide.impl.idea.util.containers.Convertor;
-import consulo.vcs.*;
+import consulo.versionControlSystem.*;
 
 import javax.annotation.Nonnull;
 

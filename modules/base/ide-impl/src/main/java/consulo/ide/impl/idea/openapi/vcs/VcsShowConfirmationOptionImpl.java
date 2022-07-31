@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.vcs;
 
 
-import consulo.vcs.VcsShowConfirmationOption;
+import consulo.versionControlSystem.VcsShowConfirmationOption;
 
 public class VcsShowConfirmationOptionImpl extends VcsAbstractSetting implements VcsShowConfirmationOption {
   private Value myValue = Value.SHOW_CONFIRMATION;

@@ -17,10 +17,10 @@ package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.vcs.FilePath;
-import consulo.vcs.change.FilePathsHelper;
-import consulo.vcs.change.IgnoreSettingsType;
-import consulo.vcs.change.IgnoredFileBean;
+import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.change.FilePathsHelper;
+import consulo.versionControlSystem.change.IgnoreSettingsType;
+import consulo.versionControlSystem.change.IgnoredFileBean;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileContentChangeEvent;

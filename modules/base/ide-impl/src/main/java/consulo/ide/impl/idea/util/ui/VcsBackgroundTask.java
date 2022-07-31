@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.util.ui;
 
-import consulo.vcs.AbstractVcsHelper;
-import consulo.vcs.VcsException;
+import consulo.versionControlSystem.AbstractVcsHelper;
+import consulo.versionControlSystem.VcsException;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.PerformInBackgroundOption;
 import consulo.application.progress.ProgressIndicator;

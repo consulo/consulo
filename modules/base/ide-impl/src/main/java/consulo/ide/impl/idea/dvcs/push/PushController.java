@@ -29,7 +29,7 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
 import consulo.util.lang.function.Condition;
-import consulo.vcs.AbstractVcs;
+import consulo.versionControlSystem.AbstractVcs;
 import consulo.ide.impl.idea.ui.CheckedTreeNode;
 import consulo.ide.impl.idea.util.ConcurrencyUtil;
 import consulo.ide.impl.idea.util.Function;

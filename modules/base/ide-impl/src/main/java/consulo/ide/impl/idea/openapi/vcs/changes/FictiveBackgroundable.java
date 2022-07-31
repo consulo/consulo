@@ -19,7 +19,7 @@ import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.project.Project;
-import consulo.vcs.VcsBundle;
+import consulo.versionControlSystem.VcsBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

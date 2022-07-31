@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
-import consulo.vcs.change.FilePathsHelper;
+import consulo.versionControlSystem.change.FilePathsHelper;
 import consulo.virtualFileSystem.VirtualFile;
 
 public class StaticFilePath {

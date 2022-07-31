@@ -16,9 +16,9 @@
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.project.Project;
-import consulo.vcs.FilePath;
-import consulo.vcs.ProjectLevelVcsManager;
-import consulo.vcs.root.VcsRoot;
+import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.ProjectLevelVcsManager;
+import consulo.versionControlSystem.root.VcsRoot;
 import consulo.ide.impl.idea.util.containers.Convertor;
 import consulo.util.collection.MultiMap;
 

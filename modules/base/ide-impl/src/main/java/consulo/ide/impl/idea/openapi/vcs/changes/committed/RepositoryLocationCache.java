@@ -20,7 +20,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import consulo.util.lang.Pair;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.vcs.*;
+import consulo.versionControlSystem.*;
 
 import javax.annotation.Nonnull;
 

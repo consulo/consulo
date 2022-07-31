@@ -15,15 +15,15 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
-import consulo.vcs.util.VcsUtil;
+import consulo.versionControlSystem.util.VcsUtil;
 import consulo.project.Project;
 import consulo.util.lang.Pair;
-import consulo.vcs.*;
-import consulo.vcs.change.ContentRevision;
-import consulo.vcs.diff.DiffProvider;
-import consulo.vcs.history.VcsRevisionNumber;
-import consulo.vcs.internal.ContentRevisionCache;
-import consulo.vcs.internal.CurrentRevisionProvider;
+import consulo.versionControlSystem.*;
+import consulo.versionControlSystem.change.ContentRevision;
+import consulo.versionControlSystem.diff.DiffProvider;
+import consulo.versionControlSystem.history.VcsRevisionNumber;
+import consulo.versionControlSystem.internal.ContentRevisionCache;
+import consulo.versionControlSystem.internal.CurrentRevisionProvider;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;

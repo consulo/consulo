@@ -25,13 +25,13 @@ import consulo.project.Project;
 import consulo.ui.ex.action.*;
 import consulo.util.dataholder.Key;
 import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
-import consulo.vcs.change.Change;
-import consulo.vcs.change.ChangeList;
-import consulo.vcs.change.ChangesUtil;
+import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.change.ChangeList;
+import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.OpenRepositoryVersionAction;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.RevertSelectedChangesAction;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesBrowser;
-import consulo.vcs.versionBrowser.CommittedChangeList;
+import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.navigation.Navigatable;
 

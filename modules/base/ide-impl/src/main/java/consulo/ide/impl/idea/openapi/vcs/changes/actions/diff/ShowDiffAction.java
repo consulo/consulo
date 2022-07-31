@@ -32,7 +32,7 @@ import consulo.util.dataholder.Key;
 import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
 import consulo.ide.impl.idea.openapi.vcs.changes.*;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.vcs.change.*;
+import consulo.versionControlSystem.change.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

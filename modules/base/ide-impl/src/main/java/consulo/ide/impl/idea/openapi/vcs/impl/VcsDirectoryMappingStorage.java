@@ -22,7 +22,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import consulo.vcs.ProjectLevelVcsManager;
+import consulo.versionControlSystem.ProjectLevelVcsManager;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 

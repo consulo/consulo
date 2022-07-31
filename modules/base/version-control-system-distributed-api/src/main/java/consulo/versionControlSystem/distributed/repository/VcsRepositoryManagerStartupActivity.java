@@ -17,8 +17,8 @@ package consulo.versionControlSystem.distributed.repository;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.project.Project;
-import consulo.vcs.VcsInitObject;
-import consulo.vcs.VcsStartupActivity;
+import consulo.versionControlSystem.VcsInitObject;
+import consulo.versionControlSystem.VcsStartupActivity;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;

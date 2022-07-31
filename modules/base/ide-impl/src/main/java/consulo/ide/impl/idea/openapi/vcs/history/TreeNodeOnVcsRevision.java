@@ -15,12 +15,12 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.history;
 
-import consulo.vcs.RepositoryLocation;
-import consulo.vcs.VcsException;
+import consulo.versionControlSystem.RepositoryLocation;
+import consulo.versionControlSystem.VcsException;
 import consulo.ide.impl.idea.ui.dualView.DualTreeElement;
 import consulo.util.lang.TreeItem;
-import consulo.vcs.history.VcsFileRevision;
-import consulo.vcs.history.VcsRevisionNumber;
+import consulo.versionControlSystem.history.VcsFileRevision;
+import consulo.versionControlSystem.history.VcsRevisionNumber;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

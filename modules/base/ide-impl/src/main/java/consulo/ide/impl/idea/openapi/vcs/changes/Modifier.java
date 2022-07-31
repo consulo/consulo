@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.ide.impl.idea.openapi.vcs.changes.local.*;
 import consulo.util.collection.MultiMap;
-import consulo.vcs.change.Change;
-import consulo.vcs.change.LocalChangeList;
+import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.change.LocalChangeList;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

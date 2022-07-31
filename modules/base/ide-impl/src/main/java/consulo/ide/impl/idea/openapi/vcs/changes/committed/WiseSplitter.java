@@ -21,7 +21,7 @@ import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.SideBorder;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.vcs.change.commited.CommittedChangesFilterKey;
+import consulo.versionControlSystem.change.commited.CommittedChangesFilterKey;
 
 import javax.swing.*;
 import javax.swing.border.Border;

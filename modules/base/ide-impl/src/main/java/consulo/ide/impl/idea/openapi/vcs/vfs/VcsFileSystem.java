@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.vcs.vfs;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.vcs.VcsBundle;
+import consulo.versionControlSystem.VcsBundle;
 import consulo.virtualFileSystem.BaseVirtualFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;

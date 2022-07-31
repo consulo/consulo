@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ToolbarLabelAction;
-import consulo.vcs.ProjectLevelVcsManager;
+import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.language.editor.CommonDataKeys;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
@@ -10,7 +10,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.action.CustomComponentAction;
-import consulo.vcs.localize.VcsLocalize;
+import consulo.versionControlSystem.localize.VcsLocalize;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

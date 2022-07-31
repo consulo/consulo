@@ -16,11 +16,11 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
 import consulo.application.progress.ProgressIndicator;
-import consulo.vcs.VcsException;
-import consulo.vcs.change.ChangeListManagerGate;
-import consulo.vcs.change.ChangeProvider;
-import consulo.vcs.change.ChangelistBuilder;
-import consulo.vcs.change.VcsDirtyScope;
+import consulo.versionControlSystem.VcsException;
+import consulo.versionControlSystem.change.ChangeListManagerGate;
+import consulo.versionControlSystem.change.ChangeProvider;
+import consulo.versionControlSystem.change.ChangelistBuilder;
+import consulo.versionControlSystem.change.VcsDirtyScope;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.List;

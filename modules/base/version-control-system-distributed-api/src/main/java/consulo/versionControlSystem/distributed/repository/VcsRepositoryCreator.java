@@ -17,7 +17,7 @@ package consulo.versionControlSystem.distributed.repository;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.vcs.VcsKey;
+import consulo.versionControlSystem.VcsKey;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;

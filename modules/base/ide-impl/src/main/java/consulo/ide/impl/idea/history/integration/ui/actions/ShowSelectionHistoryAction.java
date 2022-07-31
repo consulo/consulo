@@ -22,10 +22,10 @@ import consulo.ide.impl.idea.history.integration.ui.views.SelectionHistoryDialog
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
-import consulo.vcs.action.VcsContext;
+import consulo.versionControlSystem.action.VcsContext;
 import consulo.ide.impl.idea.openapi.vcs.actions.VcsContextWrapper;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.vcs.history.VcsSelection;
+import consulo.versionControlSystem.history.VcsSelection;
 import consulo.ide.impl.idea.vcsUtil.VcsSelectionUtil;
 import javax.annotation.Nullable;
 

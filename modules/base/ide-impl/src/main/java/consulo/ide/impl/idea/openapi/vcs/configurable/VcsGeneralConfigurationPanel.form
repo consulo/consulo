@@ -30,7 +30,7 @@
             </constraints>
             <properties>
               <margin top="2" left="2" bottom="2" right="2"/>
-              <text resource-bundle="consulo/vcs/VcsBundle" key="radio.after.creation.show.options"/>
+              <text resource-bundle="consulo/versionControlSystem/VcsBundle" key="radio.after.creation.show.options"/>
             </properties>
           </component>
           <component id="3cc74" class="javax.swing.JRadioButton" binding="myPerformActionOnAddingFile">
@@ -38,7 +38,7 @@
               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text resource-bundle="consulo/vcs/VcsBundle" key="radio.after.creation.add.silently"/>
+              <text resource-bundle="consulo/versionControlSystem/VcsBundle" key="radio.after.creation.add.silently"/>
             </properties>
           </component>
           <component id="7fc5c" class="javax.swing.JRadioButton" binding="myDoNothingOnAddingFile">
@@ -46,7 +46,7 @@
               <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text resource-bundle="consulo/vcs/VcsBundle" key="radio.after.creation.do.not.add"/>
+              <text resource-bundle="consulo/versionControlSystem/VcsBundle" key="radio.after.creation.do.not.add"/>
             </properties>
           </component>
         </children>
@@ -108,7 +108,7 @@
             </constraints>
             <properties>
               <margin top="2" left="2" bottom="2" right="2"/>
-              <text resource-bundle="consulo/vcs/VcsBundle" key="radio.after.deletion.show.options"/>
+              <text resource-bundle="consulo/versionControlSystem/VcsBundle" key="radio.after.deletion.show.options"/>
             </properties>
           </component>
           <component id="f0ee1" class="javax.swing.JRadioButton" binding="myPerformActionOnRemovingFile">
@@ -117,7 +117,7 @@
             </constraints>
             <properties>
               <margin top="2" left="2" bottom="2" right="2"/>
-              <text resource-bundle="consulo/vcs/VcsBundle" key="radio.after.deletion.remove.silently"/>
+              <text resource-bundle="consulo/versionControlSystem/VcsBundle" key="radio.after.deletion.remove.silently"/>
             </properties>
           </component>
           <component id="daddb" class="javax.swing.JRadioButton" binding="myDoNothingOnRemovingFile">
@@ -128,7 +128,7 @@
             </constraints>
             <properties>
               <margin top="2" left="2" bottom="2" right="2"/>
-              <text resource-bundle="consulo/vcs/VcsBundle" key="radio.after.deletion.do.not.remove"/>
+              <text resource-bundle="consulo/versionControlSystem/VcsBundle" key="radio.after.deletion.do.not.remove"/>
             </properties>
           </component>
         </children>
@@ -144,7 +144,7 @@
         <clientProperties>
           <BorderFactoryClass class="java.lang.String" value="consulo.ui.ex.awt.IdeBorderFactory$PlainSmallWithIndent"/>
         </clientProperties>
-        <border type="etched" title-resource-bundle="consulo/vcs/VcsBundle" title-key="border.display.dialog.when.commands.invoked"/>
+        <border type="etched" title-resource-bundle="consulo/versionControlSystem/VcsBundle" title-key="border.display.dialog.when.commands.invoked"/>
         <children/>
       </grid>
       <hspacer id="308c6">
@@ -165,7 +165,7 @@
               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text resource-bundle="consulo/vcs/VcsBundle" key="checkbox.changelist.move.offer"/>
+              <text resource-bundle="consulo/versionControlSystem/VcsBundle" key="checkbox.changelist.move.offer"/>
             </properties>
           </component>
           <component id="5f121" class="javax.swing.JCheckBox" binding="myForceNonEmptyComment">
@@ -173,7 +173,7 @@
               <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text resource-bundle="consulo/vcs/VcsBundle" key="checkbox.force.non.empty.messages"/>
+              <text resource-bundle="consulo/versionControlSystem/VcsBundle" key="checkbox.force.non.empty.messages"/>
             </properties>
           </component>
           <component id="9ee4d" class="javax.swing.JCheckBox" binding="myShowReadOnlyStatusDialog">
@@ -181,7 +181,7 @@
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text resource-bundle="consulo/vcs/VcsBundle" key="checkbox.show.clear.read.only.status.dialog"/>
+              <text resource-bundle="consulo/versionControlSystem/VcsBundle" key="checkbox.show.clear.read.only.status.dialog"/>
             </properties>
           </component>
           <grid id="da366" layout-manager="FlowLayout" hgap="5" vgap="2" flow-align="0">
@@ -195,7 +195,7 @@
                 <constraints/>
                 <properties>
                   <labelFor value="c8cb8"/>
-                  <text resource-bundle="consulo/vcs/VcsBundle" key="create.changelist.on.failed.commit"/>
+                  <text resource-bundle="consulo/versionControlSystem/VcsBundle" key="create.changelist.on.failed.commit"/>
                 </properties>
               </component>
               <component id="c8cb8" class="javax.swing.JComboBox" binding="myFailedCommitChangelistCombo" default-binding="true">

@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.vcsUtil;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.vcs.util.VcsUtil;
+import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.WaitForProgressToShow;
 import javax.annotation.Nonnull;

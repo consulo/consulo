@@ -19,10 +19,10 @@
     <groupId>consulo</groupId>
     <artifactId>arch.bind</artifactId>
     <version>3-SNAPSHOT</version>
-    <relativePath>../../../../arch/bind/pom.xml</relativePath>
+    <relativePath>../../../arch/bind/pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>consulo-vcs-api</artifactId>
+  <artifactId>consulo-version-control-system-api</artifactId>
   <version>3-SNAPSHOT</version>
   <packaging>jar</packaging>
 

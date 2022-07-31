@@ -21,7 +21,7 @@ import consulo.dataContext.DataProvider;
 import consulo.util.dataholder.Key;
 import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.vcs.change.Change;
+import consulo.versionControlSystem.change.Change;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

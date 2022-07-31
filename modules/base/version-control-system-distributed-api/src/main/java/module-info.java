@@ -2,8 +2,8 @@
  * @author VISTALL
  * @since 31-Jul-22
  */
-module consulo.vcs.distributed.api {
-  requires transitive consulo.vcs.api;
+module consulo.version.control.system.distributed.api {
+  requires transitive consulo.version.control.system.api;
 
   // TODO remove in future
   requires java.desktop;

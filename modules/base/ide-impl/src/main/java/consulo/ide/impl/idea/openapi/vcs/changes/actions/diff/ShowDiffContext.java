@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes.actions.diff;
 import consulo.ui.ex.action.AnAction;
 import consulo.util.dataholder.Key;
 import consulo.diff.DiffDialogHints;
-import consulo.vcs.change.Change;
+import consulo.versionControlSystem.change.Change;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.update;
 
-import consulo.vcs.update.FileGroup;
-import consulo.vcs.update.UpdatedFiles;
+import consulo.versionControlSystem.update.FileGroup;
+import consulo.versionControlSystem.update.UpdatedFiles;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.*;

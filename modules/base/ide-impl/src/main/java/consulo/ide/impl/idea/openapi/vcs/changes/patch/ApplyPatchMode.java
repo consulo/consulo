@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.patch;
 
-import consulo.vcs.VcsBundle;
+import consulo.versionControlSystem.VcsBundle;
 
 /**
  * @author irengrig

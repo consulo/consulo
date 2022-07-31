@@ -20,12 +20,12 @@ import consulo.ide.impl.idea.codeInsight.actions.RearrangeCodeProcessor;
 import consulo.document.FileDocumentManager;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.vcs.checkin.CheckinProjectPanel;
-import consulo.vcs.VcsBundle;
-import consulo.vcs.VcsConfiguration;
-import consulo.vcs.ui.RefreshableOnComponent;
+import consulo.versionControlSystem.checkin.CheckinProjectPanel;
+import consulo.versionControlSystem.VcsBundle;
+import consulo.versionControlSystem.VcsConfiguration;
+import consulo.versionControlSystem.ui.RefreshableOnComponent;
 import consulo.ui.ex.awt.NonFocusableCheckBox;
-import consulo.vcs.checkin.CheckinHandler;
+import consulo.versionControlSystem.checkin.CheckinHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

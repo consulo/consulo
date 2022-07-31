@@ -21,7 +21,7 @@ import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ui.ex.InputValidator;
 import consulo.ui.ex.awt.Messages;
-import consulo.vcs.VcsBundle;
+import consulo.versionControlSystem.VcsBundle;
 
 import java.util.List;
 
