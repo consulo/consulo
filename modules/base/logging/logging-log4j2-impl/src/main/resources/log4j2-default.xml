@@ -17,7 +17,7 @@
 <Configuration packages="consulo.logging.impl.log4j2.appender">
   <Appenders>
     <Console name="CONSOLE-WARN" target="SYSTEM_ERR">
-      <PatternLayout pattern="[%7r] %6p - %30.30c - %m \n"/>
+      <PatternLayout pattern="[%d{HH:mm:ss.SSS}] %4p - %30.30c - %m \n"/>
       <ThresholdFilter level="WARN"/>
     </Console>
 
@@ -26,7 +26,7 @@
     </Dialog>
 
     <RollingFile name="FILE" fileName="$LOG_DIR$/consulo.log" filePattern="$LOG_DIR$/consulo.log.%i">
-      <PatternLayout pattern="[%7r] %6p - %30.30c - %m \n"/>
+      <PatternLayout pattern="[%d{HH:mm:ss.SSS}] %4p - %30.30c - %m \n"/>
       <Policies>
         <SizeBasedTriggeringPolicy size="1 Mb"/>
       </Policies>
