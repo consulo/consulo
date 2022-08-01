@@ -426,23 +426,21 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
     }
   }
 
-  private TemplateImpl addTemplate(String key, String string, String group, String description, String shortcut, boolean isDefault, final String id) {
+  private TemplateImpl addTemplate(String key, String string, String group, String description, @Nullable String shortcut, boolean isDefault, final String id) {
     TemplateImpl template = new TemplateImpl(key, string, group);
     template.setId(id);
     template.setDescription(description);
-    switch (shortcut) {
-      case TAB:
-        template.setShortcutChar(TAB_CHAR);
-        break;
-      case ENTER:
-        template.setShortcutChar(ENTER_CHAR);
-        break;
-      case SPACE:
-        template.setShortcutChar(SPACE_CHAR);
-        break;
-      default:
-        template.setShortcutChar(DEFAULT_CHAR);
-        break;
+    if (TAB.equals(shortcut)) {
+      template.setShortcutChar(TAB_CHAR);
+    }
+    else if (ENTER.equals(shortcut)) {
+      template.setShortcutChar(ENTER_CHAR);
+    }
+    else if (SPACE.equals(shortcut)) {
+      template.setShortcutChar(SPACE_CHAR);
+    }
+    else {
+      template.setShortcutChar(DEFAULT_CHAR);
     }
     if (isDefault) {
       myDefaultTemplates.put(TemplateKey.keyOf(template), template);
