@@ -16,10 +16,10 @@
 package consulo.ide.impl.idea.application.options;
 
 import consulo.application.ApplicationBundle;
-import consulo.ide.impl.idea.openapi.options.SchemeImporterEP;
+import consulo.component.persist.scheme.SchemeImporter;
+import consulo.component.util.pointer.Named;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.JBList;
-import consulo.component.util.pointer.Named;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -41,7 +41,7 @@ public class ImportSourceChooserDialog <S extends Named> extends DialogWrapper {
   public ImportSourceChooserDialog(JComponent parent, Class<S> schemeClass) {
     super(parent, true);
     setTitle(ApplicationBundle.message("title.import.scheme.from"));
-    myListModel = new SourceListModel(SchemeImporterEP.getExtensions(schemeClass));
+    myListModel = new SourceListModel(SchemeImporter.getExtensions(schemeClass));
     initSourceList();
     init();
   }
@@ -81,11 +81,11 @@ public class ImportSourceChooserDialog <S extends Named> extends DialogWrapper {
   }
   
   private class SourceListModel extends DefaultListModel {
-    private final List<String> mySourceNames = new ArrayList<String>();
+    private final List<String> mySourceNames = new ArrayList<>();
     
-    public SourceListModel(Collection<SchemeImporterEP<S>> extensions) {
-      for (SchemeImporterEP extension : extensions) {
-        mySourceNames.add(extension.name);
+    public SourceListModel(Collection<SchemeImporter<S>> extensions) {
+      for (SchemeImporter extension : extensions) {
+        mySourceNames.add(extension.getName());
       }
     }
 

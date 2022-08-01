@@ -26,7 +26,6 @@ import consulo.ide.impl.idea.application.options.SaveSchemeDialog;
 import consulo.ide.impl.idea.application.options.SchemesToImportPopup;
 import consulo.component.persist.scheme.SchemeImportException;
 import consulo.component.persist.scheme.SchemeImporter;
-import consulo.ide.impl.idea.openapi.options.SchemeImporterEP;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
 import consulo.language.codeStyle.CodeStyleScheme;
 import consulo.language.codeStyle.CodeStyleSchemes;
@@ -117,7 +116,7 @@ public class ManageCodeStyleSchemesDialog extends DialogWrapper {
 
     myExportButton.setVisible(false);
 
-    if (SchemeImporterEP.getExtensions(CodeStyleScheme.class).isEmpty()) {
+    if (SchemeImporter.getExtensions(CodeStyleScheme.class).isEmpty()) {
       myImportButton.setVisible(false);
     }
     else {
@@ -176,7 +175,7 @@ public class ManageCodeStyleSchemesDialog extends DialogWrapper {
 
   @Nullable
   private String importExternalCodeStyle(String importerName) throws SchemeImportException {
-    final SchemeImporter<CodeStyleScheme> importer = SchemeImporterEP.getImporter(importerName, CodeStyleScheme.class);
+    final SchemeImporter<CodeStyleScheme> importer = SchemeImporter.getImporter(importerName, CodeStyleScheme.class);
     if (importer != null) {
       FileChooserDialog fileChooser = FileChooserFactory.getInstance().createFileChooser(new FileChooserDescriptor(true, false, false, false, false, false) {
         @Override

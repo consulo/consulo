@@ -24,30 +24,17 @@ import consulo.util.lang.Pair;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Singleton
 @ServiceImpl
 public class ColorSettingsPagesImpl extends ColorSettingsPages {
-  private final List<ColorSettingsPage> myPages = new ArrayList<>();
-  private boolean myExtensionsLoaded = false;
-  private Map<TextAttributesKey, Pair<ColorSettingsPage, AttributesDescriptor>> myKeyToDescriptorMap = new HashMap<TextAttributesKey, Pair<ColorSettingsPage, AttributesDescriptor>>();
-
-  @Override
-  public void registerPage(ColorSettingsPage page) {
-    myPages.add(page);
-  }
+  private Map<TextAttributesKey, Pair<ColorSettingsPage, AttributesDescriptor>> myKeyToDescriptorMap = new HashMap<>();
 
   @Override
   public ColorSettingsPage[] getRegisteredPages() {
-    if (!myExtensionsLoaded) {
-      myExtensionsLoaded = true;
-      myPages.addAll(ColorSettingsPage.EP_NAME.getExtensionList());
-    }
-    return myPages.toArray(new ColorSettingsPage[myPages.size()]);
+    return ColorSettingsPage.EP_NAME.getExtensions();
   }
 
   @Override
@@ -60,7 +47,7 @@ public class ColorSettingsPagesImpl extends ColorSettingsPages {
       for (ColorSettingsPage page : getRegisteredPages()) {
         for (AttributesDescriptor descriptor : page.getAttributeDescriptors()) {
           if (descriptor.getKey() == key) {
-            Pair<ColorSettingsPage,AttributesDescriptor> result = new Pair<ColorSettingsPage, AttributesDescriptor>(page, descriptor);
+            Pair<ColorSettingsPage,AttributesDescriptor> result = new Pair<>(page, descriptor);
             myKeyToDescriptorMap.put(key, result);
             return result;
           }

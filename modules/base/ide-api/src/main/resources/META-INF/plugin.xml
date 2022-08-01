@@ -673,11 +673,6 @@
                     interface="consulo.ide.impl.idea.execution.dashboard.DashboardGroupingRule"/>
 
 
-    <extensionPoint name="schemeImporter" beanClass="consulo.ide.impl.idea.openapi.options.SchemeImporterEP">
-      <with attribute="schemeClass" implements="consulo.component.util.pointer.Named"/>
-      <with attribute="implementationClass" implements="consulo.ide.impl.idea.openapi.options.SchemeImporter"/>
-    </extensionPoint>
-
     <extensionPoint name="psi.fileReferenceHelper"
                     interface="consulo.language.psi.path.FileReferenceHelper"/>
 
