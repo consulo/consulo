@@ -18,11 +18,12 @@ package consulo.ide.impl.idea.execution.console;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
-import consulo.ide.ServiceManager;
+import consulo.ide.impl.execution.ui.console.ConsoleFoldingRegistratorImpl;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
 import jakarta.inject.Singleton;
@@ -37,17 +38,17 @@ import java.util.*;
 @ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class ConsoleFoldingSettings implements PersistentStateComponent<ConsoleFoldingSettings.MyBean> {
-  private final List<String> myPositivePatterns = new ArrayList<String>();
-  private final List<String> myNegativePatterns = new ArrayList<String>();
+  private final List<String> myPositivePatterns = new ArrayList<>();
+  private final List<String> myNegativePatterns = new ArrayList<>();
 
   public ConsoleFoldingSettings() {
-    for (CustomizableConsoleFoldingBean regexp : CustomizableConsoleFoldingBean.EP_NAME.getExtensionList()) {
-      patternList(regexp.negate).add(regexp.substring);
-    }
+    ConsoleFoldingRegistratorImpl registrator = ConsoleFoldingRegistratorImpl.last();
+    myPositivePatterns.addAll(registrator.getAddSet());
+    myNegativePatterns.addAll(registrator.getRemoveSet());
   }
 
   public static ConsoleFoldingSettings getSettings() {
-    return ServiceManager.getService(ConsoleFoldingSettings.class);
+    return Application.get().getInstance(ConsoleFoldingSettings.class);
   }
 
   public boolean shouldFoldLine(String line) {
@@ -81,11 +82,12 @@ public class ConsoleFoldingSettings implements PersistentStateComponent<ConsoleF
 
   private void writeDiff(List<String> added, List<String> removed, boolean negated) {
     Set<String> baseline = new LinkedHashSet<>();
-    for (CustomizableConsoleFoldingBean regexp : CustomizableConsoleFoldingBean.EP_NAME.getExtensionList()) {
-      if (regexp.negate == negated) {
-        baseline.add(regexp.substring);
-      }
-    }
+
+    ConsoleFoldingRegistratorImpl registrator = ConsoleFoldingRegistratorImpl.last();
+
+    Set<String> targets = negated ? registrator.getRemoveSet() : registrator.getAddSet();
+
+    baseline.addAll(targets);
 
     final List<String> current = patternList(negated);
     added.addAll(current);
@@ -108,25 +110,31 @@ public class ConsoleFoldingSettings implements PersistentStateComponent<ConsoleF
     myPositivePatterns.clear();
     myNegativePatterns.clear();
 
-    Set<String> removedPositive = new HashSet<String>(state.removedPositive);
-    Set<String> removedNegative = new HashSet<String>(state.removedNegative);
+    Set<String> removedPositive = new HashSet<>(state.removedPositive);
+    Set<String> removedNegative = new HashSet<>(state.removedNegative);
 
-    for (CustomizableConsoleFoldingBean regexp : CustomizableConsoleFoldingBean.EP_NAME.getExtensions()) {
-      if (!(regexp.negate ? removedNegative : removedPositive).contains(regexp.substring)) {
-        patternList(regexp.negate).add(regexp.substring);
+    ConsoleFoldingRegistratorImpl registrator = ConsoleFoldingRegistratorImpl.last();
+    for (String addFold : registrator.getAddSet()) {
+      if (!removedPositive.contains(addFold)) {
+        myPositivePatterns.add(addFold);
+      }
+    }
+
+    for (String removeFold : registrator.getRemoveSet()) {
+      if (!removedNegative.contains(removeFold)) {
+        myNegativePatterns.add(removeFold);
       }
     }
 
     myPositivePatterns.addAll(filterEmptyStringsFromCollection(state.addedPositive));
     myNegativePatterns.addAll(filterEmptyStringsFromCollection(state.addedNegative));
-
   }
 
   public static class MyBean {
-    public List<String> addedPositive = new ArrayList<String>();
-    public List<String> addedNegative = new ArrayList<String>();
-    public List<String> removedPositive = new ArrayList<String>();
-    public List<String> removedNegative = new ArrayList<String>();
+    public List<String> addedPositive = new ArrayList<>();
+    public List<String> addedNegative = new ArrayList<>();
+    public List<String> removedPositive = new ArrayList<>();
+    public List<String> removedNegative = new ArrayList<>();
   }
 
 }
