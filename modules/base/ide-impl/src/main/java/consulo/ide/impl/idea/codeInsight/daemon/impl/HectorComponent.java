@@ -16,37 +16,34 @@
 
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.language.editor.DaemonCodeAnalyzer;
-import consulo.language.editor.FileHighlightingSetting;
+import consulo.application.AllIcons;
+import consulo.codeEditor.EditorBundle;
+import consulo.configurable.ConfigurationException;
+import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.analysis.HighlightLevelUtil;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.analysis.HighlightingLevelManager;
-import consulo.application.AllIcons;
+import consulo.ide.impl.idea.profile.codeInspection.ui.ErrorsConfigurable;
+import consulo.ide.impl.idea.util.Function;
+import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.Language;
-import consulo.language.util.LanguageUtil;
-import consulo.codeEditor.EditorBundle;
+import consulo.language.editor.DaemonCodeAnalyzer;
+import consulo.language.editor.FileHighlightingSetting;
 import consulo.language.editor.HectorComponentPanel;
 import consulo.language.editor.HectorComponentPanelsProvider;
-import consulo.configurable.ConfigurationException;
-import consulo.ide.setting.ShowSettingsUtil;
-import consulo.project.Project;
-import consulo.module.content.ProjectFileIndex;
-import consulo.module.content.ProjectRootManager;
-import consulo.ui.ex.popup.JBPopup;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.profile.codeInspection.ui.ErrorsConfigurable;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.ui.ex.awt.HyperlinkLabel;
-import consulo.ui.ex.awt.IdeBorderFactory;
-import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.awt.JBLabel;
-import consulo.ide.impl.idea.util.Function;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.disposer.Disposer;
+import consulo.language.util.LanguageUtil;
 import consulo.logging.Logger;
+import consulo.module.content.ProjectFileIndex;
+import consulo.module.content.ProjectRootManager;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -145,6 +142,7 @@ public class HectorComponent extends JPanel {
     add(configurator, gc);
     configurator.addHyperlinkListener(new HyperlinkListener() {
       @Override
+      @RequiredUIAccess
       public void hyperlinkUpdate(HyperlinkEvent e) {
         final JBPopup hector = getOldHector();
         if (hector != null) {
@@ -152,10 +150,10 @@ public class HectorComponent extends JPanel {
         }
         if (!DaemonCodeAnalyzer.getInstance(myFile.getProject()).isHighlightingAvailable(myFile)) return;
         final Project project = myFile.getProject();
-        final ErrorsConfigurable errorsConfigurable = ErrorsConfigurable.SERVICE.createConfigurable(project);
-        assert errorsConfigurable != null;
-        errorsConfigurable.setFilterLanguages(languages);
-        ShowSettingsUtil.getInstance().editConfigurable(errorsConfigurable.getDisplayName(), project, errorsConfigurable);
+
+        ShowSettingsUtil.getInstance().showAndSelect(project, ErrorsConfigurable.class, inspectionToolsConfigurable -> {
+          inspectionToolsConfigurable.setFilterLanguages(languages);
+        });
       }
     });
 

@@ -16,20 +16,21 @@
 
 package consulo.ide.impl.idea.application.options;
 
+import consulo.application.Application;
 import consulo.application.ApplicationBundle;
 import consulo.codeEditor.EditorHighlighter;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.configurable.ConfigurationException;
+import consulo.configurable.internal.ConfigurableUIMigrationUtil;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.application.options.codeStyle.excludedFiles.ExcludedFilesList;
-import consulo.ide.impl.idea.openapi.options.ex.ConfigurableWrapper;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.awt.CommaSeparatedIntegersField;
 import consulo.language.Language;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.ui.setting.CodeStyleAbstractPanel;
 import consulo.language.codeStyle.ui.setting.CodeStyleSchemesModel;
+import consulo.language.codeStyle.ui.setting.GeneralCodeStyleOptionsProvider;
 import consulo.language.editor.highlight.EditorHighlighterFactory;
 import consulo.language.plain.PlainTextFileType;
 import consulo.logging.Logger;
@@ -128,9 +129,9 @@ public class GeneralCodeStylePanel extends CodeStyleAbstractPanel {
 
     myAdditionalSettingsPanel.setLayout(new VerticalFlowLayout(true, true));
     myAdditionalSettingsPanel.removeAll();
-    myAdditionalOptions = ConfigurableWrapper.createConfigurables(GeneralCodeStyleOptionsProviderEP.EP_NAME);
+    myAdditionalOptions = Application.get().getExtensionList(GeneralCodeStyleOptionsProvider.class);
     for (GeneralCodeStyleOptionsProvider provider : myAdditionalOptions) {
-      JComponent generalSettingsComponent = provider.createComponent();
+      JComponent generalSettingsComponent = ConfigurableUIMigrationUtil.createComponent(provider, this);
       if (generalSettingsComponent != null) {
         myAdditionalSettingsPanel.add(generalSettingsComponent);
       }

@@ -13,16 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.application.options;
+package consulo.language.codeStyle.ui.setting;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.language.codeStyle.CodeStyleSettings;
 
 /**
  * @author Dennis.Ushakov
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface GeneralCodeStyleOptionsProvider extends UnnamedConfigurable {
   void apply(CodeStyleSettings settings);
+
   boolean isModified(CodeStyleSettings settings);
+
   void reset(CodeStyleSettings settings);
 }

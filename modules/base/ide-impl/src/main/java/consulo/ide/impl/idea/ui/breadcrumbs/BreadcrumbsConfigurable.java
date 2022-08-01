@@ -11,8 +11,9 @@ import consulo.configurable.StandardConfigurableIds;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.openapi.options.CompositeConfigurable;
+import consulo.configurable.CompositeConfigurable;
 import consulo.ide.impl.idea.openapi.options.colors.pages.GeneralColorsPage;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.HorizontalLayout;
 import consulo.ide.impl.idea.ui.components.panels.VerticalLayout;
 import consulo.language.Language;
@@ -120,6 +121,7 @@ final class BreadcrumbsConfigurable extends CompositeConfigurable<BreadcrumbsCon
     return component;
   }
 
+  @RequiredUIAccess
   @Override
   public void reset() {
     EditorSettingsExternalizable settings = EditorSettingsExternalizable.getInstance();
@@ -131,6 +133,7 @@ final class BreadcrumbsConfigurable extends CompositeConfigurable<BreadcrumbsCon
     updateEnabled();
   }
 
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     EditorSettingsExternalizable settings = EditorSettingsExternalizable.getInstance();
@@ -154,6 +157,7 @@ final class BreadcrumbsConfigurable extends CompositeConfigurable<BreadcrumbsCon
     return configurables;
   }
 
+  @RequiredUIAccess
   @Override
   public void apply() {
     boolean modified = false;

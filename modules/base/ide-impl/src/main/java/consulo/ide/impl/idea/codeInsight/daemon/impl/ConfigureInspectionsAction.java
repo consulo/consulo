@@ -15,16 +15,14 @@
  */
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.language.editor.DaemonBundle;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.configurable.Configurable;
+import consulo.ide.impl.idea.profile.codeInspection.ui.ErrorsConfigurable;
 import consulo.ide.setting.ShowSettingsUtil;
-import consulo.ide.impl.idea.openapi.options.ex.ConfigurableExtensionPointUtil;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.DaemonBundle;
 import consulo.project.Project;
-import consulo.ide.impl.idea.profile.codeInspection.ui.ErrorsConfigurableProvider;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
 
 import javax.annotation.Nonnull;
 
@@ -43,12 +41,7 @@ public class ConfigureInspectionsAction extends DumbAwareAction {
     if (project == null) {
       return;
     }
-
-    Configurable provider = ConfigurableExtensionPointUtil.createProjectConfigurableForProvider(project, ErrorsConfigurableProvider.class);
-    if (provider == null) {
-      return;
-    }
-    ShowSettingsUtil.getInstance().editConfigurable(project, provider);
+    ShowSettingsUtil.getInstance().showAndSelect(project, ErrorsConfigurable.class);
   }
 
   @RequiredUIAccess

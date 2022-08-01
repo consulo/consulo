@@ -15,15 +15,12 @@
  */
 package consulo.ide.impl.base;
 
-import consulo.component.extension.ExtensionPointName;
 import consulo.configurable.ApplicationConfigurable;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.ProjectConfigurable;
 import consulo.ide.impl.idea.openapi.options.ex.ConfigurableExtensionPointUtil;
 import consulo.ide.impl.idea.openapi.options.ex.ConfigurableWrapper;
-import consulo.ide.impl.options.ApplicationConfigurableEP;
-import consulo.ide.impl.options.ProjectConfigurableEP;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
@@ -40,10 +37,6 @@ import java.util.List;
  * @since 2019-01-06
  */
 public abstract class BaseShowSettingsUtil extends ShowSettingsUtil {
-  public static final ExtensionPointName<ApplicationConfigurableEP<Configurable>> APPLICATION_CONFIGURABLE = ExtensionPointName.create("consulo.applicationConfigurable");
-
-  public static final ExtensionPointName<ProjectConfigurableEP<Configurable>> PROJECT_CONFIGURABLE = ExtensionPointName.create("consulo.projectConfigurable");
-
   public static Configurable SKIP_SELECTION_CONFIGURATION = new Configurable() {
     @RequiredUIAccess
     @Override

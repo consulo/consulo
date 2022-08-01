@@ -15,12 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.options.ex;
 
-import consulo.component.extension.ExtensionPointName;
 import consulo.configurable.*;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.openapi.options.ConfigurableEP;
-import consulo.ide.impl.options.ProjectConfigurableEP;
-import consulo.project.Project;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ArrayUtil;
@@ -29,7 +25,6 @@ import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
-import java.util.List;
 
 /**
  * @author Dmitry Avdeev
@@ -38,11 +33,6 @@ import java.util.List;
 public class ConfigurableWrapper implements SearchableConfigurable {
   public static ConfigurableWrapper wrapConfigurable(Configurable configurable) {
     return new CompositeWrapper(configurable);
-  }
-
-  public static <T extends UnnamedConfigurable> List<T> createConfigurables(ExtensionPointName<? extends ConfigurableEP<T>> name) {
-    throw new UnsupportedOperationException("unsupported");
-    //return ContainerUtil.mapNotNull(name.getExtensionList(), ConfigurableWrapper::wrapConfigurable);
   }
 
   public static boolean isNoScroll(Configurable configurable) {
@@ -206,13 +196,6 @@ public class ConfigurableWrapper implements SearchableConfigurable {
         kids = ArrayUtil.mergeArrays(c.getConfigurables(), kids);
       }
       myKids = kids;
-    }
-
-    private Project getProject(ConfigurableEP<?> ep) {
-      if (ep instanceof ProjectConfigurableEP) {
-        return ((ProjectConfigurableEP)ep).getProject();
-      }
-      return null;
     }
 
     @Nonnull

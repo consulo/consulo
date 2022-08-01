@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.options;
+package consulo.configurable;
 
-import consulo.configurable.Configurable;
-import consulo.configurable.ConfigurationException;
-import consulo.configurable.UnnamedConfigurable;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import java.util.List;
 
 public abstract class CompositeConfigurable<T extends UnnamedConfigurable> implements Configurable {
   private List<T> myConfigurables;
 
+  @RequiredUIAccess
   @Override
   public void reset() {
     for (T configurable : getConfigurables()) {
@@ -31,6 +30,7 @@ public abstract class CompositeConfigurable<T extends UnnamedConfigurable> imple
     }
   }
 
+  @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
     for (T configurable : getConfigurables()) {
@@ -38,6 +38,7 @@ public abstract class CompositeConfigurable<T extends UnnamedConfigurable> imple
     }
   }
 
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
     for (T configurable : getConfigurables()) {
@@ -48,6 +49,7 @@ public abstract class CompositeConfigurable<T extends UnnamedConfigurable> imple
     return false;
   }
 
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
     if (myConfigurables != null) {

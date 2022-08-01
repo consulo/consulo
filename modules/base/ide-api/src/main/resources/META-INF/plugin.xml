@@ -71,20 +71,6 @@
     <extensionPoint name="backgroundPostStartupActivity" interface="consulo.project.startup.StartupActivity$Background"/>
     <extensionPoint name="psiReferenceLocalFixProvider" interface="consulo.language.editor.inspection.PsiReferenceLocalQuickFixProvider" area="PROJECT"/>
 
-    <extensionPoint name="projectConfigurable"
-                    beanClass="consulo.ide.impl.options.ProjectConfigurableEP"
-                    area="PROJECT">
-      <with attribute="instanceClass" implements="consulo.configurable.Configurable"/>
-    </extensionPoint>
-
-    <extensionPoint name="applicationConfigurable"
-                    beanClass="consulo.ide.impl.options.ApplicationConfigurableEP">
-      <with attribute="instanceClass" implements="consulo.configurable.Configurable"/>
-    </extensionPoint>
-
-    <extensionPoint name="generalCodeStyleOptionsProvider" beanClass="consulo.ide.impl.idea.application.options.GeneralCodeStyleOptionsProviderEP">
-      <with attribute="instance" implements="consulo.ide.impl.idea.application.options.GeneralCodeStyleOptionsProvider"/>
-    </extensionPoint>
 
     <extensionPoint name="module.workingDirectoryProvider" interface="consulo.execution.WorkingDirectoryProvider"/>
 
@@ -858,10 +844,6 @@
 
     <extensionPoint name="typeHierarchyProvider" beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="consulo.ide.impl.idea.ide.hierarchy.HierarchyProvider"/>
-    </extensionPoint>
-
-    <extensionPoint name="editorAppearanceConfigurable" beanClass="consulo.ide.impl.idea.application.options.editor.EditorAppearanceConfigurableEP">
-      <with attribute="instance" implements="consulo.ide.impl.idea.application.options.editor.EditorAppearanceConfigurable"/>
     </extensionPoint>
 
     <extensionPoint name="metaDataContributor" interface="consulo.language.psi.meta.MetaDataContributor"/>

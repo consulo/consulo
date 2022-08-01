@@ -18,10 +18,7 @@ package consulo.ide.impl.idea.openapi.options.ex;
 import consulo.application.Application;
 import consulo.configurable.ApplicationConfigurable;
 import consulo.configurable.Configurable;
-import consulo.configurable.ConfigurableProvider;
 import consulo.configurable.OptionalConfigurable;
-import consulo.ide.impl.base.BaseShowSettingsUtil;
-import consulo.ide.impl.idea.openapi.options.ConfigurableEP;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
@@ -97,41 +94,5 @@ public class ConfigurableExtensionPointUtil {
   @Nonnull
   public static <T extends Configurable> T findApplicationConfigurable(@Nonnull Class<T> configurableClass) {
     return (T)Application.get().getExtensionPoint(ApplicationConfigurable.class).findExtension((Class)configurableClass);
-  }
-
-  @Nonnull
-  private static <T extends Configurable> T findConfigurable(ConfigurableEP<Configurable>[] extensions, Class<T> configurableClass) {
-    for (ConfigurableEP<Configurable> extension : extensions) {
-      if (extension.providerClass != null || extension.instanceClass != null || extension.implementationClass != null) {
-        final Configurable configurable = extension.createConfigurable();
-        if (configurableClass.isInstance(configurable)) {
-          return configurableClass.cast(configurable);
-        }
-      }
-    }
-    throw new IllegalArgumentException("Cannot find configurable of " + configurableClass);
-  }
-
-  @Nullable
-  public static Configurable createProjectConfigurableForProvider(@Nonnull Project project, Class<? extends ConfigurableProvider> providerClass) {
-    return createConfigurableForProvider(project.getExtensions(BaseShowSettingsUtil.PROJECT_CONFIGURABLE), providerClass);
-  }
-
-  @Nullable
-  public static Configurable createApplicationConfigurableForProvider(Class<? extends ConfigurableProvider> providerClass) {
-    return createConfigurableForProvider(BaseShowSettingsUtil.APPLICATION_CONFIGURABLE.getExtensions(), providerClass);
-  }
-
-  @Nullable
-  private static Configurable createConfigurableForProvider(ConfigurableEP<Configurable>[] extensions, Class<? extends ConfigurableProvider> providerClass) {
-    for (ConfigurableEP<Configurable> extension : extensions) {
-      if (extension.providerClass != null) {
-        final Class<Object> aClass = extension.findClassNoExceptions(extension.providerClass);
-        if (aClass != null && providerClass.isAssignableFrom(aClass)) {
-          return extension.createConfigurable();
-        }
-      }
-    }
-    return null;
   }
 }

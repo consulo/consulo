@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.options;
 
+import consulo.configurable.CompositeConfigurable;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.TabbedPaneWrapper;
 import consulo.configurable.Configurable;
 import consulo.disposer.Disposable;
@@ -50,6 +52,7 @@ public abstract class TabbedConfigurable extends CompositeConfigurable<Configura
     }
   }
 
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
     myTabbedPane = null;

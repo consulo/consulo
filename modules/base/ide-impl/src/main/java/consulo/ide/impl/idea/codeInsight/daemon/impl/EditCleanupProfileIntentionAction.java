@@ -15,17 +15,18 @@
  */
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.language.editor.intention.IntentionAction;
-import consulo.ide.impl.idea.codeInspection.actions.CodeCleanupAction;
-import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.codeEditor.Editor;
-import consulo.ide.setting.ShowSettingsUtil;
-import consulo.project.Project;
-import consulo.language.editor.inspection.scheme.InspectionProfileManager;
+import consulo.ide.impl.idea.codeInspection.actions.CodeCleanupAction;
 import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
 import consulo.ide.impl.idea.profile.codeInspection.ui.ProjectInspectionToolsConfigurable;
+import consulo.ide.setting.ShowSettingsUtil;
+import consulo.language.editor.inspection.scheme.InspectionProfileManager;
+import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
+import consulo.language.editor.intention.IntentionAction;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
+import consulo.project.Project;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -33,7 +34,9 @@ import javax.annotation.Nonnull;
  */
 public class EditCleanupProfileIntentionAction implements IntentionAction {
   public static final EditCleanupProfileIntentionAction INSTANCE = new EditCleanupProfileIntentionAction();
-  private EditCleanupProfileIntentionAction() {}
+
+  private EditCleanupProfileIntentionAction() {
+  }
 
   @Override
   @Nonnull
@@ -55,14 +58,13 @@ public class EditCleanupProfileIntentionAction implements IntentionAction {
   @Override
   public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     final InspectionProjectProfileManager profileManager = InspectionProjectProfileManager.getInstance(project);
-    final ProjectInspectionToolsConfigurable configurable =
-            new ProjectInspectionToolsConfigurable(InspectionProfileManager.getInstance(), profileManager) {
-              @Override
-              protected boolean acceptTool(InspectionToolWrapper entry) {
-                return super.acceptTool(entry) && entry.isCleanupTool();
-              }
-            };
-    ShowSettingsUtil.getInstance().editConfigurable(CodeCleanupAction.CODE_CLEANUP_INSPECTIONS_DISPLAY_NAME,  project, configurable);
+    final ProjectInspectionToolsConfigurable configurable = new ProjectInspectionToolsConfigurable(InspectionProfileManager.getInstance(), profileManager) {
+      @Override
+      protected boolean acceptTool(InspectionToolWrapper entry) {
+        return super.acceptTool(entry) && entry.isCleanupTool();
+      }
+    };
+    ShowSettingsUtil.getInstance().editConfigurable(CodeCleanupAction.CODE_CLEANUP_INSPECTIONS_DISPLAY_NAME, project, configurable);
   }
 
   @Override

@@ -15,16 +15,14 @@
  */
 package consulo.ide.impl.options;
 
-import consulo.configurable.StandardConfigurableIds;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.configurable.*;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.util.NotNullComputable;
 import consulo.application.ui.UIFontManager;
 import consulo.application.ui.UISettings;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
-import consulo.configurable.Configurable;
-import consulo.configurable.ConfigurationException;
-import consulo.configurable.SimpleConfigurable;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.IdeLocalize;
@@ -54,7 +52,8 @@ import java.util.Set;
  * @author VISTALL
  * @since 2020-08-23
  */
-public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigurable.LayoutImpl> implements Configurable {
+@ExtensionImpl
+public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigurable.LayoutImpl> implements ApplicationConfigurable {
   public static class LayoutImpl implements NotNullComputable<Layout> {
     private VerticalLayout myPanel;
 
@@ -226,6 +225,7 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
     return StandardConfigurableIds.GENERAL_GROUP;
   }
 
+  @Nonnull
   @Override
   public String getDisplayName() {
     return "Appearance";
@@ -234,7 +234,7 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
   @RequiredUIAccess
   @Nonnull
   @Override
-  protected LayoutImpl createPanel(Disposable uiDisposable) {
+  protected LayoutImpl createPanel(@Nonnull Disposable uiDisposable) {
     return new LayoutImpl();
   }
 

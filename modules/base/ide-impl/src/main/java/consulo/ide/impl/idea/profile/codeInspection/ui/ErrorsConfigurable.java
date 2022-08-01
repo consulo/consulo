@@ -16,14 +16,13 @@
 
 package consulo.ide.impl.idea.profile.codeInspection.ui;
 
-import consulo.language.Language;
 import consulo.configurable.Configurable;
-import consulo.ide.impl.idea.openapi.options.ex.ConfigurableExtensionPointUtil;
-import consulo.project.Project;
+import consulo.language.Language;
 import consulo.language.editor.inspection.scheme.Profile;
+import consulo.project.Project;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collection;
 
 /**
@@ -41,17 +40,15 @@ public interface ErrorsConfigurable extends Configurable {
   @Nullable
   Object getSelectedObject();
 
+  @Deprecated
   class SERVICE {
     private SERVICE() {
     }
 
     @Nullable
+    @Deprecated
     public static ErrorsConfigurable createConfigurable(@Nonnull Project project) {
-      Configurable configurable = ConfigurableExtensionPointUtil.createProjectConfigurableForProvider(project, ErrorsConfigurableProvider.class);
-      if (configurable == null) {
-        configurable = ConfigurableExtensionPointUtil.createApplicationConfigurableForProvider(ErrorsConfigurableProvider.class);
-      }
-      return (ErrorsConfigurable)configurable;
+      throw new UnsupportedOperationException("ShowSettingsUtil.getInstance().showAndSelect(project, ErrorsConfigurable.class) use");
     }
   }
 }
