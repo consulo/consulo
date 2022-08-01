@@ -16,11 +16,12 @@
 
 package consulo.ide.impl.idea.codeInsight.navigation.actions;
 
+import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.lang.CodeInsightActions;
 import consulo.language.Language;
 import consulo.language.editor.action.CodeInsightActionHandler;
+import consulo.language.editor.action.GotoSuperActionHander;
 import consulo.language.editor.impl.action.BaseCodeInsightAction;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
@@ -28,13 +29,12 @@ import consulo.language.psi.PsiUtilCore;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 
 public class GotoSuperAction extends BaseCodeInsightAction implements CodeInsightActionHandler, DumbAware {
 
-  @NonNls public static final String FEATURE_ID = "navigation.goto.super";
+  public static final String FEATURE_ID = "navigation.goto.super";
 
   @Nonnull
   @Override
@@ -50,7 +50,7 @@ public class GotoSuperAction extends BaseCodeInsightAction implements CodeInsigh
     int offset = editor.getCaretModel().getOffset();
     final Language language = PsiUtilCore.getLanguageAtOffset(file, offset);
 
-    final CodeInsightActionHandler codeInsightActionHandler = CodeInsightActions.GOTO_SUPER.forLanguage(language);
+    final CodeInsightActionHandler codeInsightActionHandler = GotoSuperActionHander.forLanguage(language);
     if (codeInsightActionHandler != null) {
       codeInsightActionHandler.invoke(project, editor, file);
     }
@@ -64,7 +64,7 @@ public class GotoSuperAction extends BaseCodeInsightAction implements CodeInsigh
   @RequiredUIAccess
   @Override
   public void update(final AnActionEvent event) {
-    if (CodeInsightActions.GOTO_SUPER.hasAnyExtensions()) {
+    if (Application.get().getExtensionPoint(GotoSuperActionHander.class).hasAnyExtensions()) {
       event.getPresentation().setVisible(true);
       super.update(event);
     }
