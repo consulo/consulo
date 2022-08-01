@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.options;
+package consulo.component.persist.scheme;
 
 import consulo.util.xml.serializer.InvalidDataException;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.IOException;
 
 /**
@@ -51,7 +51,7 @@ public abstract class BaseSchemeProcessor<T, E extends ExternalizableScheme> imp
 
   @Nullable
   /**
-   * @param duringLoad If occurred during {@link SchemesManager#loadSchemes()} call
+   * @param duringLoad If occurred during {@link SchemeManager#loadSchemes()} call
    */
   public E readScheme(@Nonnull Element element, boolean duringLoad) throws InvalidDataException, IOException, JDOMException {
     return readScheme(element);

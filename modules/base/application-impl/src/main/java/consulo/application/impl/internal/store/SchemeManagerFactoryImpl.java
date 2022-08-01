@@ -13,16 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.options;
+package consulo.application.impl.internal.store;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.SettingsSavingComponent;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.application.impl.internal.store.IApplicationStore;
-import consulo.component.store.impl.internal.StreamProvider;
+import consulo.component.persist.scheme.ExternalizableScheme;
+import consulo.component.persist.scheme.SchemeManager;
+import consulo.component.persist.scheme.SchemeManagerFactory;
+import consulo.component.persist.scheme.SchemeProcessor;
 import consulo.component.store.impl.internal.StateStorageManager;
+import consulo.component.store.impl.internal.StreamProvider;
+import consulo.component.store.impl.internal.scheme.SchemeManagerImpl;
 import consulo.logging.Logger;
+import consulo.util.collection.Lists;
+import consulo.virtualFileSystem.internal.VirtualFileTracker;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -31,32 +36,34 @@ import java.util.List;
 
 @Singleton
 @ServiceImpl
-public class SchemesManagerFactoryImpl extends SchemesManagerFactory implements SettingsSavingComponent {
-  private static final Logger LOG = Logger.getInstance(SchemesManagerFactoryImpl.class);
+public class SchemeManagerFactoryImpl extends SchemeManagerFactory implements SettingsSavingComponent {
+  private static final Logger LOG = Logger.getInstance(SchemeManagerFactoryImpl.class);
 
-  private final List<SchemesManagerImpl> myRegisteredManagers = ContainerUtil.createLockFreeCopyOnWriteList();
+  private final List<SchemeManagerImpl> myRegisteredManagers = Lists.newLockFreeCopyOnWriteList();
 
   private final IApplicationStore myApplicationStore;
+  private final VirtualFileTracker myVirtualFileTracker;
 
   @Inject
-  public SchemesManagerFactoryImpl(IApplicationStore applicationStore) {
+  public SchemeManagerFactoryImpl(IApplicationStore applicationStore, VirtualFileTracker virtualFileTracker) {
     myApplicationStore = applicationStore;
+    myVirtualFileTracker = virtualFileTracker;
   }
 
   @Override
-  public <T, E extends ExternalizableScheme> SchemesManager<T, E> createSchemesManager(final String fileSpec, final SchemeProcessor<T, E> processor, final RoamingType roamingType) {
+  public <T, E extends ExternalizableScheme> SchemeManager<T, E> createSchemeManager(final String fileSpec, final SchemeProcessor<T, E> processor, final RoamingType roamingType) {
     StateStorageManager stateStorageManager = myApplicationStore.getStateStorageManager();
     
     String baseDirPath = stateStorageManager.expandMacros(fileSpec);
     StreamProvider provider = stateStorageManager.getStreamProvider();
-    SchemesManagerImpl<T, E> manager = new SchemesManagerImpl<>(fileSpec, processor, roamingType, provider, new File(baseDirPath));
+    SchemeManagerImpl<T, E> manager = new SchemeManagerImpl<>(fileSpec, myVirtualFileTracker, processor, roamingType, provider, new File(baseDirPath));
     myRegisteredManagers.add(manager);
     return manager;
   }
 
   @Override
   public void updateConfigFilesFromStreamProviders() {
-    for (SchemesManagerImpl registeredManager : myRegisteredManagers) {
+    for (SchemeManagerImpl registeredManager : myRegisteredManagers) {
       try {
         registeredManager.updateConfigFilesFromStreamProviders();
       }
@@ -68,7 +75,7 @@ public class SchemesManagerFactoryImpl extends SchemesManagerFactory implements 
 
   @Override
   public void save() {
-    for (SchemesManager registeredManager : myRegisteredManagers) {
+    for (SchemeManager registeredManager : myRegisteredManagers) {
       try {
         registeredManager.save();
       }

@@ -11,4 +11,5 @@ module consulo.component.store.impl {
 
   exports consulo.component.store.impl.internal to consulo.ide.impl, consulo.application.impl, consulo.desktop.awt.ide.impl, consulo.proxy, consulo.component.impl, consulo.test.impl, consulo.module.impl, consulo.project.impl;
   exports consulo.component.store.impl.internal.storage to consulo.ide.impl, consulo.application.impl, consulo.component.impl, consulo.project.impl;
+  exports consulo.component.store.impl.internal.scheme to consulo.application.impl;
 }

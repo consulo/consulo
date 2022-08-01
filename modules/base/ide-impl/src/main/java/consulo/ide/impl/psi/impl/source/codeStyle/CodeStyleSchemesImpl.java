@@ -17,10 +17,10 @@ package consulo.ide.impl.psi.impl.source.codeStyle;
 
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.StoragePathMacros;
-import consulo.ide.impl.idea.openapi.options.BaseSchemeProcessor;
-import consulo.ide.impl.idea.openapi.options.SchemeProcessor;
-import consulo.ide.impl.idea.openapi.options.SchemesManager;
-import consulo.ide.impl.idea.openapi.options.SchemesManagerFactory;
+import consulo.component.persist.scheme.BaseSchemeProcessor;
+import consulo.component.persist.scheme.SchemeProcessor;
+import consulo.component.persist.scheme.SchemeManagerFactory;
+import consulo.component.persist.scheme.SchemeManager;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.language.codeStyle.CodeStyleScheme;
 import consulo.language.codeStyle.CodeStyleSchemes;
@@ -40,9 +40,9 @@ public abstract class CodeStyleSchemesImpl extends CodeStyleSchemes {
 
   private boolean myIsInitialized = false;
 
-  private final SchemesManager<CodeStyleScheme, CodeStyleSchemeImpl> mySchemesManager;
+  private final SchemeManager<CodeStyleScheme, CodeStyleSchemeImpl> mySchemeManager;
 
-  public CodeStyleSchemesImpl(SchemesManagerFactory schemesManagerFactory) {
+  public CodeStyleSchemesImpl(SchemeManagerFactory schemeManagerFactory) {
     SchemeProcessor<CodeStyleScheme, CodeStyleSchemeImpl> processor = new BaseSchemeProcessor<>() {
       @Nonnull
       @Override
@@ -72,7 +72,7 @@ public abstract class CodeStyleSchemesImpl extends CodeStyleSchemes {
       }
     };
 
-    mySchemesManager = schemesManagerFactory.createSchemesManager(CODE_STYLES_DIR_PATH, processor, RoamingType.DEFAULT);
+    mySchemeManager = schemeManagerFactory.createSchemeManager(CODE_STYLES_DIR_PATH, processor, RoamingType.DEFAULT);
 
     init();
     addScheme(new CodeStyleSchemeImpl(DEFAULT_SCHEME_NAME, true, null));
@@ -81,19 +81,19 @@ public abstract class CodeStyleSchemesImpl extends CodeStyleSchemes {
 
   @Override
   public CodeStyleScheme[] getSchemes() {
-    Collection<CodeStyleScheme> schemes = mySchemesManager.getAllSchemes();
+    Collection<CodeStyleScheme> schemes = mySchemeManager.getAllSchemes();
     return schemes.toArray(new CodeStyleScheme[schemes.size()]);
   }
 
   @Override
   public CodeStyleScheme getCurrentScheme() {
-    return mySchemesManager.getCurrentScheme();
+    return mySchemeManager.getCurrentScheme();
   }
 
   @Override
   public void setCurrentScheme(CodeStyleScheme scheme) {
     String schemeName = scheme == null ? null : scheme.getName();
-    mySchemesManager.setCurrentSchemeName(schemeName);
+    mySchemeManager.setCurrentSchemeName(schemeName);
   }
 
   @SuppressWarnings("ForLoopThatDoesntUseLoopVariable")
@@ -136,7 +136,7 @@ public abstract class CodeStyleSchemesImpl extends CodeStyleSchemes {
       }
       setCurrentScheme(newCurrentScheme);
     }
-    mySchemesManager.removeScheme(scheme);
+    mySchemeManager.removeScheme(scheme);
   }
 
   @Override
@@ -147,21 +147,21 @@ public abstract class CodeStyleSchemesImpl extends CodeStyleSchemes {
   @Nullable
   @Override
   public CodeStyleScheme findSchemeByName(@Nonnull String name) {
-    return mySchemesManager.findSchemeByName(name);
+    return mySchemeManager.findSchemeByName(name);
   }
 
   @Override
   public void addScheme(CodeStyleScheme scheme) {
-    mySchemesManager.addNewScheme(scheme, true);
+    mySchemeManager.addNewScheme(scheme, true);
   }
 
   protected void init() {
     if (myIsInitialized) return;
     myIsInitialized = true;
-    mySchemesManager.loadSchemes();
+    mySchemeManager.loadSchemes();
   }
 
-  public SchemesManager<CodeStyleScheme, CodeStyleSchemeImpl> getSchemesManager() {
-    return mySchemesManager;
+  public SchemeManager<CodeStyleScheme, CodeStyleSchemeImpl> getSchemeManager() {
+    return mySchemeManager;
   }
 }

@@ -19,9 +19,9 @@ package consulo.ide.impl.idea.tools;
 
 import consulo.ui.ex.action.ActionManager;
 import consulo.component.persist.RoamingType;
-import consulo.ide.impl.idea.openapi.options.SchemeProcessor;
-import consulo.ide.impl.idea.openapi.options.SchemesManager;
-import consulo.ide.impl.idea.openapi.options.SchemesManagerFactory;
+import consulo.component.persist.scheme.SchemeProcessor;
+import consulo.component.persist.scheme.SchemeManager;
+import consulo.component.persist.scheme.SchemeManagerFactory;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.util.ArrayUtil;
 
@@ -33,14 +33,14 @@ import java.util.List;
 public abstract class BaseToolManager<T extends Tool> {
 
   private final ActionManager myActionManager;
-  private final SchemesManager<ToolsGroup<T>, ToolsGroup<T>> mySchemesManager;
+  private final SchemeManager<ToolsGroup<T>, ToolsGroup<T>> mySchemeManager;
 
-  public BaseToolManager(ActionManager actionManagerEx, SchemesManagerFactory factory) {
+  public BaseToolManager(ActionManager actionManagerEx, SchemeManagerFactory factory) {
     myActionManager = actionManagerEx;
 
-    mySchemesManager = factory.createSchemesManager(getSchemesPath(), createProcessor(), RoamingType.DEFAULT);
+    mySchemeManager = factory.createSchemeManager(getSchemesPath(), createProcessor(), RoamingType.DEFAULT);
 
-    mySchemesManager.loadSchemes();
+    mySchemeManager.loadSchemes();
     registerActions();
   }
 
@@ -56,7 +56,7 @@ public abstract class BaseToolManager<T extends Tool> {
 
   public List<T> getTools() {
     ArrayList<T> result = new ArrayList<T>();
-    for (ToolsGroup group : mySchemesManager.getAllSchemes()) {
+    for (ToolsGroup group : mySchemeManager.getAllSchemes()) {
       result.addAll(group.getElements());
     }
     return result;
@@ -64,7 +64,7 @@ public abstract class BaseToolManager<T extends Tool> {
 
   public List<T> getTools(String group) {
     ArrayList<T> list = new ArrayList<T>();
-    ToolsGroup groupByName = mySchemesManager.findSchemeByName(group);
+    ToolsGroup groupByName = mySchemeManager.findSchemeByName(group);
     if (groupByName != null) {
       list.addAll(groupByName.getElements());
     }
@@ -95,13 +95,13 @@ public abstract class BaseToolManager<T extends Tool> {
   }
 
   public List<ToolsGroup<T>> getGroups() {
-    return mySchemesManager.getAllSchemes();
+    return mySchemeManager.getAllSchemes();
   }
 
   public void setTools(ToolsGroup[] tools) {
-    mySchemesManager.clearAllSchemes();
+    mySchemeManager.clearAllSchemes();
     for (ToolsGroup newGroup : tools) {
-      mySchemesManager.addNewScheme(newGroup, true);
+      mySchemeManager.addNewScheme(newGroup, true);
     }
     registerActions();
   }

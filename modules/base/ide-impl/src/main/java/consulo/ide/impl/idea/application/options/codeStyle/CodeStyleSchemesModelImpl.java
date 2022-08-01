@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.application.options.codeStyle;
 
-import consulo.ide.impl.idea.openapi.options.SchemesManager;
+import consulo.component.persist.scheme.SchemeManager;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.psi.impl.source.codeStyle.CodeStyleSchemeImpl;
@@ -202,8 +202,8 @@ public class CodeStyleSchemesModelImpl implements CodeStyleSchemesModel {
     projectSettingsManager.notifyCodeStyleSettingsChanged();
   }
 
-  static SchemesManager<CodeStyleScheme, CodeStyleSchemeImpl> getSchemesManager() {
-    return ((CodeStyleSchemesImpl) CodeStyleSchemes.getInstance()).getSchemesManager();
+  static SchemeManager<CodeStyleScheme, CodeStyleSchemeImpl> getSchemesManager() {
+    return ((CodeStyleSchemesImpl) CodeStyleSchemes.getInstance()).getSchemeManager();
   }
 
   public static boolean cannotBeModified(final CodeStyleScheme currentScheme) {

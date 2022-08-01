@@ -19,7 +19,7 @@ import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.keymap.event.KeymapManagerListener;
 import consulo.ide.impl.idea.openapi.keymap.impl.KeymapImpl;
-import consulo.ide.impl.idea.openapi.options.SchemesManager;
+import consulo.component.persist.scheme.SchemeManager;
 import javax.annotation.Nonnull;
 
 import java.util.Set;
@@ -50,7 +50,7 @@ public abstract class KeymapManagerEx extends KeymapManager {
   public abstract Set<String> getBoundActions();
   public abstract String getActionBinding(String actionId);
 
-  public abstract SchemesManager<Keymap, KeymapImpl> getSchemesManager();
+  public abstract SchemeManager<Keymap, KeymapImpl> getSchemeManager();
 
   public abstract void addWeakListener(@Nonnull KeymapManagerListener listener);
 

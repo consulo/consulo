@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vfs.tracker;
+package consulo.virtualFileSystem.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.disposer.Disposer;
+import consulo.util.collection.Sets;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.event.*;
 import consulo.virtualFileSystem.internal.VirtualFileTracker;
@@ -186,7 +186,7 @@ public class VirtualFileTrackerImpl implements VirtualFileTracker {
     Set<VirtualFileListener> listeners = map.get(fileUrl);
 
     if (listeners == null) {
-      listeners = ContainerUtil.newConcurrentSet();
+      listeners = Sets.newConcurrentHashSet();
       map.put(fileUrl, listeners);
     }
     return listeners;

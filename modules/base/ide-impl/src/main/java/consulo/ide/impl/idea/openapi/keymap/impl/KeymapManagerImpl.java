@@ -19,9 +19,9 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.event.KeymapManagerListener;
 import consulo.ide.impl.idea.openapi.keymap.ex.KeymapManagerEx;
-import consulo.ide.impl.idea.openapi.options.BaseSchemeProcessor;
-import consulo.ide.impl.idea.openapi.options.SchemesManager;
-import consulo.ide.impl.idea.openapi.options.SchemesManagerFactory;
+import consulo.component.persist.scheme.BaseSchemeProcessor;
+import consulo.component.persist.scheme.SchemeManager;
+import consulo.component.persist.scheme.SchemeManagerFactory;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.component.persist.*;
@@ -49,13 +49,13 @@ public class KeymapManagerImpl extends KeymapManagerEx implements PersistentStat
 
   private static final String ACTIVE_KEYMAP = "active_keymap";
   private static final String NAME_ATTRIBUTE = "name";
-  private final SchemesManager<Keymap, KeymapImpl> mySchemesManager;
+  private final SchemeManager<Keymap, KeymapImpl> mySchemeManager;
 
   public static boolean ourKeymapManagerInitialized = false;
 
   @Inject
-  KeymapManagerImpl(DefaultKeymap defaultKeymap, SchemesManagerFactory factory) {
-    mySchemesManager = factory.createSchemesManager(KEYMAPS_DIR_PATH, new BaseSchemeProcessor<Keymap, KeymapImpl>() {
+  KeymapManagerImpl(DefaultKeymap defaultKeymap, SchemeManagerFactory factory) {
+    mySchemeManager = factory.createSchemeManager(KEYMAPS_DIR_PATH, new BaseSchemeProcessor<Keymap, KeymapImpl>() {
       @Nonnull
       @Override
       public KeymapImpl readScheme(@Nonnull Element element) throws InvalidDataException {
@@ -90,7 +90,7 @@ public class KeymapManagerImpl extends KeymapManagerEx implements PersistentStat
         setActiveKeymap(keymap);
       }
     }
-    mySchemesManager.loadSchemes();
+    mySchemeManager.loadSchemes();
 
     //noinspection AssignmentToStaticFieldFromInstanceMethod
     ourKeymapManagerInitialized = true;
@@ -99,7 +99,7 @@ public class KeymapManagerImpl extends KeymapManagerEx implements PersistentStat
   @Override
   public Keymap[] getAllKeymaps() {
     List<Keymap> answer = new ArrayList<>();
-    for (Keymap keymap : mySchemesManager.getAllSchemes()) {
+    for (Keymap keymap : mySchemeManager.getAllSchemes()) {
       if (!keymap.getPresentableName().startsWith("$")) {
         answer.add(keymap);
       }
@@ -108,24 +108,24 @@ public class KeymapManagerImpl extends KeymapManagerEx implements PersistentStat
   }
 
   public Keymap[] getAllIncludingDefaultsKeymaps() {
-    Collection<Keymap> keymaps = mySchemesManager.getAllSchemes();
+    Collection<Keymap> keymaps = mySchemeManager.getAllSchemes();
     return keymaps.toArray(new Keymap[keymaps.size()]);
   }
 
   @Override
   @Nullable
   public Keymap getKeymap(@Nonnull String name) {
-    return mySchemesManager.findSchemeByName(name);
+    return mySchemeManager.findSchemeByName(name);
   }
 
   @Override
   public Keymap getActiveKeymap() {
-    return mySchemesManager.getCurrentScheme();
+    return mySchemeManager.getCurrentScheme();
   }
 
   @Override
   public void setActiveKeymap(Keymap activeKeymap) {
-    mySchemesManager.setCurrentSchemeName(activeKeymap == null ? null : activeKeymap.getName());
+    mySchemeManager.setCurrentSchemeName(activeKeymap == null ? null : activeKeymap.getName());
     fireActiveKeymapChanged();
   }
 
@@ -156,37 +156,37 @@ public class KeymapManagerImpl extends KeymapManagerEx implements PersistentStat
   }
 
   @Override
-  public SchemesManager<Keymap, KeymapImpl> getSchemesManager() {
-    return mySchemesManager;
+  public SchemeManager<Keymap, KeymapImpl> getSchemeManager() {
+    return mySchemeManager;
   }
 
   public void addKeymap(Keymap keymap) {
-    mySchemesManager.addNewScheme(keymap, true);
+    mySchemeManager.addNewScheme(keymap, true);
   }
 
   public void removeAllKeymapsExceptUnmodifiable() {
-    List<Keymap> schemes = mySchemesManager.getAllSchemes();
+    List<Keymap> schemes = mySchemeManager.getAllSchemes();
     for (int i = schemes.size() - 1; i >= 0; i--) {
       Keymap keymap = schemes.get(i);
       if (keymap.canModify()) {
-        mySchemesManager.removeScheme(keymap);
+        mySchemeManager.removeScheme(keymap);
       }
     }
 
-    mySchemesManager.setCurrentSchemeName(null);
+    mySchemeManager.setCurrentSchemeName(null);
 
-    Collection<Keymap> keymaps = mySchemesManager.getAllSchemes();
+    Collection<Keymap> keymaps = mySchemeManager.getAllSchemes();
     if (!keymaps.isEmpty()) {
-      mySchemesManager.setCurrentSchemeName(keymaps.iterator().next().getName());
+      mySchemeManager.setCurrentSchemeName(keymaps.iterator().next().getName());
     }
   }
 
   @Override
   public Element getState() {
     Element result = new Element("component");
-    if (mySchemesManager.getCurrentScheme() != null) {
+    if (mySchemeManager.getCurrentScheme() != null) {
       Element e = new Element(ACTIVE_KEYMAP);
-      Keymap currentScheme = mySchemesManager.getCurrentScheme();
+      Keymap currentScheme = mySchemeManager.getCurrentScheme();
       if (currentScheme != null) {
         e.setAttribute(NAME_ATTRIBUTE, currentScheme.getName());
       }
@@ -212,7 +212,7 @@ public class KeymapManagerImpl extends KeymapManagerEx implements PersistentStat
 
   private void fireActiveKeymapChanged() {
     for (KeymapManagerListener listener : myListeners) {
-      listener.activeKeymapChanged(mySchemesManager.getCurrentScheme());
+      listener.activeKeymapChanged(mySchemeManager.getCurrentScheme());
     }
   }
 

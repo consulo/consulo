@@ -25,7 +25,7 @@ import consulo.ide.impl.idea.ide.todo.TodoConfiguration;
 import consulo.ide.impl.idea.openapi.editor.colors.impl.DefaultColorsScheme;
 import consulo.ide.impl.idea.openapi.editor.colors.impl.EditorColorsSchemeImpl;
 import consulo.ide.impl.idea.openapi.editor.colors.impl.ReadOnlyColorsScheme;
-import consulo.ide.impl.idea.openapi.options.ExternalizableScheme;
+import consulo.component.persist.scheme.ExternalizableScheme;
 import consulo.ide.impl.idea.openapi.options.colors.ColorSettingsPages;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.util.lang.Pair;

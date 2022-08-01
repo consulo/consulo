@@ -23,12 +23,11 @@ module consulo.component.api {
   requires static consulo.hacking.java.base;
   requires static com.ibm.icu;                                                                     
 
-  requires java.compiler;
-
   exports consulo.component;
   exports consulo.component.bind;
   exports consulo.component.extension;
   exports consulo.component.persist;
+  exports consulo.component.persist.scheme;
   exports consulo.component.macro;
   exports consulo.component.messagebus;
   exports consulo.component.util;

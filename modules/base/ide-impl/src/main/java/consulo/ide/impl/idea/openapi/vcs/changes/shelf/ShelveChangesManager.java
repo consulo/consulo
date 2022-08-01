@@ -31,14 +31,14 @@ import consulo.component.messagebus.Topic;
 import consulo.component.persist.RoamingType;
 import consulo.component.util.text.UniqueNameGenerator;
 import consulo.disposer.Disposer;
+import consulo.component.persist.scheme.SchemeManagerFactory;
 import consulo.project.impl.internal.ProjectPathMacroManager;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.*;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.ApplyFilePatchBase;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.formove.CustomBinaryPatchApplier;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.formove.PatchApplier;
-import consulo.ide.impl.idea.openapi.options.BaseSchemeProcessor;
-import consulo.ide.impl.idea.openapi.options.SchemesManager;
-import consulo.ide.impl.idea.openapi.options.SchemesManagerFactory;
+import consulo.component.persist.scheme.BaseSchemeProcessor;
+import consulo.component.persist.scheme.SchemeManager;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
@@ -106,7 +106,7 @@ public class ShelveChangesManager implements JDOMExternalizable {
   private static final String REMOVE_FILES_FROM_SHELF_STRATEGY = "remove_strategy";
 
   @Nonnull
-  private final SchemesManager<ShelvedChangeList, ShelvedChangeList> mySchemeManager;
+  private final SchemeManager<ShelvedChangeList, ShelvedChangeList> mySchemeManager;
   private ScheduledFuture<?> myCleaningFuture;
   private boolean myRemoveFilesFromShelf;
 
@@ -127,10 +127,10 @@ public class ShelveChangesManager implements JDOMExternalizable {
   private final Project myProject;
 
   @Inject
-  public ShelveChangesManager(Project project, ProjectPathMacroManager projectPathMacroManager, SchemesManagerFactory schemesManagerFactory, ChangeListManager changeListManager) {
+  public ShelveChangesManager(Project project, ProjectPathMacroManager projectPathMacroManager, SchemeManagerFactory schemeManagerFactory, ChangeListManager changeListManager) {
     myProject = project;
     myBus = project.getMessageBus();
-    mySchemeManager = schemesManagerFactory.createSchemesManager(SHELVE_MANAGER_DIR_PATH, new BaseSchemeProcessor<ShelvedChangeList, ShelvedChangeList>() {
+    mySchemeManager = schemeManagerFactory.createSchemeManager(SHELVE_MANAGER_DIR_PATH, new BaseSchemeProcessor<ShelvedChangeList, ShelvedChangeList>() {
       @Nullable
       @Override
       public ShelvedChangeList readScheme(@Nonnull Element element, boolean duringLoad) throws InvalidDataException {

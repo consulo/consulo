@@ -729,7 +729,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.openapi.vfs.newvfs;
   exports consulo.ide.impl.idea.openapi.vfs.newvfs.impl;
   exports consulo.ide.impl.idea.openapi.vfs.newvfs.persistent;
-  exports consulo.ide.impl.idea.openapi.vfs.tracker;
   exports consulo.ide.impl.idea.openapi.wm;
   exports consulo.ide.impl.idea.openapi.wm.ex;
   exports consulo.ide.impl.idea.openapi.wm.impl;

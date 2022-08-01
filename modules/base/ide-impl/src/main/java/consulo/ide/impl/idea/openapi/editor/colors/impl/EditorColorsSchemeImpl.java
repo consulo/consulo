@@ -20,8 +20,8 @@ import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.colorScheme.TextAttributes;
-import consulo.ide.impl.idea.openapi.options.ExternalInfo;
-import consulo.ide.impl.idea.openapi.options.ExternalizableScheme;
+import consulo.component.persist.scheme.ExternalInfo;
+import consulo.component.persist.scheme.ExternalizableScheme;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ui.color.ColorValue;
 

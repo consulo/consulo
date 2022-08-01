@@ -43,7 +43,7 @@ public class QuickChangeKeymapAction extends QuickSwitchSchemeAction {
       @Override
       public void actionPerformed(AnActionEvent e) {
         if (addScheme) {
-          manager.getSchemesManager().addNewScheme(keymap, false);
+          manager.getSchemeManager().addNewScheme(keymap, false);
         }
         manager.setActiveKeymap(keymap);
       }

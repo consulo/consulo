@@ -20,8 +20,8 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.ui.ex.action.ActionManager;
 import consulo.application.ApplicationManager;
-import consulo.ide.impl.idea.openapi.options.SchemeProcessor;
-import consulo.ide.impl.idea.openapi.options.SchemesManagerFactory;
+import consulo.component.persist.scheme.SchemeProcessor;
+import consulo.component.persist.scheme.SchemeManagerFactory;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -37,7 +37,7 @@ public class ToolManager extends BaseToolManager<Tool> {
   }
 
   @Inject
-  public ToolManager(ActionManager actionManager, SchemesManagerFactory factory) {
+  public ToolManager(ActionManager actionManager, SchemeManagerFactory factory) {
     super(actionManager, factory);
   }
 

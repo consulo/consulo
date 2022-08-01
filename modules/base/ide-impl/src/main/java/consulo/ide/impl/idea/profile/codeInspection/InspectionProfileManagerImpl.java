@@ -26,9 +26,9 @@ import consulo.ide.impl.idea.codeInsight.daemon.InspectionProfileConvertor;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.SeverityRegistrarImpl;
 import consulo.ide.impl.idea.codeInspection.ex.InspectionProfileImpl;
 import consulo.ide.impl.idea.codeInspection.ex.InspectionToolRegistrar;
-import consulo.ide.impl.idea.openapi.options.BaseSchemeProcessor;
-import consulo.ide.impl.idea.openapi.options.SchemesManager;
-import consulo.ide.impl.idea.openapi.options.SchemesManagerFactory;
+import consulo.component.persist.scheme.BaseSchemeProcessor;
+import consulo.component.persist.scheme.SchemeManager;
+import consulo.component.persist.scheme.SchemeManagerFactory;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.language.editor.annotation.HighlightSeverity;
@@ -65,7 +65,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @ServiceImpl
 public class InspectionProfileManagerImpl extends InspectionProfileManager implements SeverityProvider, PersistentStateComponent<Element> {
   private final InspectionToolRegistrar myRegistrar;
-  private final SchemesManager<Profile, InspectionProfileImpl> mySchemesManager;
+  private final SchemeManager<Profile, InspectionProfileImpl> mySchemeManager;
   private final AtomicBoolean myProfilesAreInitialized = new AtomicBoolean(false);
   private final SeverityRegistrarImpl mySeverityRegistrar;
 
@@ -76,11 +76,11 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
   }
 
   @Inject
-  public InspectionProfileManagerImpl(@Nonnull Application application, @Nonnull InspectionToolRegistrar registrar, @Nonnull SchemesManagerFactory schemesManagerFactory) {
+  public InspectionProfileManagerImpl(@Nonnull Application application, @Nonnull InspectionToolRegistrar registrar, @Nonnull SchemeManagerFactory schemeManagerFactory) {
     myRegistrar = registrar;
     registerProvidedSeverities();
 
-    mySchemesManager = schemesManagerFactory.createSchemesManager(FILE_SPEC, new BaseSchemeProcessor<Profile, InspectionProfileImpl>() {
+    mySchemeManager = schemeManagerFactory.createSchemeManager(FILE_SPEC, new BaseSchemeProcessor<Profile, InspectionProfileImpl>() {
       @Nonnull
       @Override
       public InspectionProfileImpl readScheme(@Nonnull Element element) {
@@ -126,7 +126,7 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
 
       @Override
       public void onCurrentSchemeChanged(final InspectionProfileImpl oldCurrentScheme) {
-        Profile current = mySchemesManager.getCurrentScheme();
+        Profile current = mySchemeManager.getCurrentScheme();
         if (current != null) {
           fireProfileChanged((Profile)oldCurrentScheme, current, null);
         }
@@ -162,7 +162,7 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
   @Nonnull
   public Collection<Profile> getProfiles() {
     initProfiles();
-    return mySchemesManager.getAllSchemes();
+    return mySchemeManager.getAllSchemes();
   }
 
   private volatile boolean LOAD_PROFILES = !ApplicationManager.getApplication().isUnitTestMode();
@@ -176,15 +176,15 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
   @Override
   public void initProfiles() {
     if (myProfilesAreInitialized.getAndSet(true)) {
-      if (mySchemesManager.getAllSchemes().isEmpty()) {
+      if (mySchemeManager.getAllSchemes().isEmpty()) {
         createDefaultProfile();
       }
       return;
     }
     if (!LOAD_PROFILES) return;
 
-    mySchemesManager.loadSchemes();
-    Collection<Profile> profiles = mySchemesManager.getAllSchemes();
+    mySchemeManager.loadSchemes();
+    Collection<Profile> profiles = mySchemeManager.getAllSchemes();
     if (profiles.isEmpty()) {
       createDefaultProfile();
     }
@@ -229,7 +229,7 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
 
   @Override
   public void updateProfile(@Nonnull Profile profile) {
-    mySchemesManager.addNewScheme(profile, true);
+    mySchemeManager.addNewScheme(profile, true);
     updateProfileImpl(profile);
   }
 
@@ -285,16 +285,16 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
 
   @Override
   public void setRootProfile(String rootProfile) {
-    Profile current = mySchemesManager.getCurrentScheme();
+    Profile current = mySchemeManager.getCurrentScheme();
     if (current != null && !Comparing.strEqual(rootProfile, current.getName())) {
       fireProfileChanged(current, getProfile(rootProfile), null);
     }
-    mySchemesManager.setCurrentSchemeName(rootProfile);
+    mySchemeManager.setCurrentSchemeName(rootProfile);
   }
 
   @Override
   public Profile getProfile(@Nonnull final String name, boolean returnRootProfileIfNamedIsAbsent) {
-    Profile found = mySchemesManager.findSchemeByName(name);
+    Profile found = mySchemeManager.findSchemeByName(name);
     if (found != null) return found;
     //profile was deleted
     if (returnRootProfileIfNamedIsAbsent) {
@@ -306,7 +306,7 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
   @Nonnull
   @Override
   public Profile getRootProfile() {
-    Profile current = mySchemesManager.getCurrentScheme();
+    Profile current = mySchemeManager.getCurrentScheme();
     if (current != null) return current;
     Collection<Profile> profiles = getProfiles();
     if (profiles.isEmpty()) return createSampleProfile();
@@ -315,21 +315,21 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
 
   @Override
   public void deleteProfile(@Nonnull final String profile) {
-    Profile found = mySchemesManager.findSchemeByName(profile);
+    Profile found = mySchemeManager.findSchemeByName(profile);
     if (found != null) {
-      mySchemesManager.removeScheme(found);
+      mySchemeManager.removeScheme(found);
     }
   }
 
   @Override
   public void addProfile(@Nonnull final Profile profile) {
-    mySchemesManager.addNewScheme(profile, true);
+    mySchemeManager.addNewScheme(profile, true);
   }
 
   @Override
   @Nonnull
   public String[] getAvailableProfileNames() {
-    return ArrayUtil.toStringArray(mySchemesManager.getAllSchemeNames());
+    return ArrayUtil.toStringArray(mySchemeManager.getAllSchemeNames());
   }
 
   @Override

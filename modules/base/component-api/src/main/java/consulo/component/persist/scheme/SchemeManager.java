@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.options;
+package consulo.component.persist.scheme;
 
-import consulo.ide.impl.idea.util.ThrowableConvertor;
+import consulo.util.lang.function.ThrowableFunction;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
@@ -24,7 +24,7 @@ import java.io.File;
 import java.util.Collection;
 import java.util.List;
 
-public abstract class SchemesManager<T, E extends ExternalizableScheme> {
+public abstract class SchemeManager<T, E extends ExternalizableScheme> {
   @Nonnull
   public abstract Collection<E> loadSchemes();
 
@@ -52,6 +52,6 @@ public abstract class SchemesManager<T, E extends ExternalizableScheme> {
 
   public abstract File getRootDirectory();
 
-  public void loadBundledScheme(@Nonnull String resourceName, @Nonnull Object requestor, @Nonnull ThrowableConvertor<Element, T, Throwable> convertor) {
+  public void loadBundledScheme(@Nonnull String resourceName, @Nonnull Object requestor, @Nonnull ThrowableFunction<Element, T, Throwable> convertor) {
   }
 }

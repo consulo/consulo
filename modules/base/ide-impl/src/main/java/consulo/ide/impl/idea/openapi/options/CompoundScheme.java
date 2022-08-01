@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.options;
 
+import consulo.component.persist.scheme.ExternalInfo;
+import consulo.component.persist.scheme.ExternalizableScheme;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

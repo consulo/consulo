@@ -21,7 +21,7 @@ import consulo.language.editor.template.context.TemplateContextType;
 import consulo.ide.impl.idea.ide.dnd.aware.DnDAwareTree;
 import consulo.application.ApplicationManager;
 import consulo.configurable.ConfigurationException;
-import consulo.ide.impl.idea.openapi.options.SchemesManager;
+import consulo.component.persist.scheme.SchemeManager;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.InputValidator;
 import consulo.ui.ex.awt.Messages;
@@ -745,7 +745,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
           Set<String> oldGroups = getAllGroups(templates);
 
           removeAll();
-          SchemesManager<TemplateGroup, TemplateGroup> schemesManager = TemplateSettingsImpl.getInstanceImpl().getSchemesManager();
+          SchemeManager<TemplateGroup, TemplateGroup> schemeManager = TemplateSettingsImpl.getInstanceImpl().getSchemeManager();
 
           for (TemplateGroup group : getTemplateGroups()) {
             final String newGroupName = group.getName();

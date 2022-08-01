@@ -25,9 +25,9 @@ import consulo.ide.impl.idea.openapi.fileTypes.ex.ExternalizableFileType;
 import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeChooser;
 import consulo.virtualFileSystem.fileType.FileTypeIdentifiableByVirtualFile;
 import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeManagerEx;
-import consulo.ide.impl.idea.openapi.options.BaseSchemeProcessor;
-import consulo.ide.impl.idea.openapi.options.SchemesManager;
-import consulo.ide.impl.idea.openapi.options.SchemesManagerFactory;
+import consulo.component.persist.scheme.BaseSchemeProcessor;
+import consulo.component.persist.scheme.SchemeManager;
+import consulo.component.persist.scheme.SchemeManagerFactory;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.JDOMExternalizer;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
@@ -146,7 +146,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
   private final Map<String, StandardFileType> myStandardFileTypes = new LinkedHashMap<>();
   @NonNls
   private static final String[] FILE_TYPES_WITH_PREDEFINED_EXTENSIONS = {"JSP", "JSPX", "DTD", "HTML", "Properties", "XHTML"};
-  private final SchemesManager<FileType, AbstractFileType> mySchemeManager;
+  private final SchemeManager<FileType, AbstractFileType> mySchemeManager;
 
   static final String FILE_SPEC = StoragePathMacros.ROOT_CONFIG + "/filetypes";
 
@@ -171,13 +171,13 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
   private final Object FILE_TYPE_DETECTOR_MAP_LOCK = new Object();
 
   @Inject
-  public FileTypeManagerImpl(Application application, SchemesManagerFactory schemesManagerFactory, ApplicationPropertiesComponent propertiesComponent) {
+  public FileTypeManagerImpl(Application application, SchemeManagerFactory schemeManagerFactory, ApplicationPropertiesComponent propertiesComponent) {
     int fileTypeChangedCounter = propertiesComponent.getInt("fileTypeChangedCounter", 0);
     fileTypeChangedCount = new AtomicInteger(fileTypeChangedCounter);
     autoDetectedAttribute = new FileAttribute("AUTO_DETECTION_CACHE_ATTRIBUTE", fileTypeChangedCounter + getVersionFromDetectors(), true);
 
     myMessageBus = application.getMessageBus();
-    mySchemeManager = schemesManagerFactory.createSchemesManager(FILE_SPEC, new BaseSchemeProcessor<FileType, AbstractFileType>() {
+    mySchemeManager = schemeManagerFactory.createSchemeManager(FILE_SPEC, new BaseSchemeProcessor<FileType, AbstractFileType>() {
       @Nonnull
       @Override
       public AbstractFileType readScheme(@Nonnull Element element, boolean duringLoad) {

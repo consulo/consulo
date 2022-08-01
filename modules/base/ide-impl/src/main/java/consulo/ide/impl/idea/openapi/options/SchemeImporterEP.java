@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.openapi.options;
 import consulo.component.extension.AbstractExtensionPointBean;
 import consulo.component.extension.ExtensionPointName;
 import consulo.application.extension.LazyInstance;
+import consulo.component.persist.scheme.SchemeImporter;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.component.util.pointer.Named;
 import javax.annotation.Nonnull;

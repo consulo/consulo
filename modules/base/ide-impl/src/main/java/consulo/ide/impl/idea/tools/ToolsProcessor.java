@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.tools;
 
-import consulo.ide.impl.idea.openapi.options.BaseSchemeProcessor;
+import consulo.component.persist.scheme.BaseSchemeProcessor;
 import consulo.application.ApplicationManager;
 import consulo.application.macro.ApplicationPathMacroManager;
 import consulo.component.macro.PathMacroManager;

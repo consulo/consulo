@@ -18,8 +18,8 @@ package consulo.ide.impl.idea.codeInspection.ex;
 
 import consulo.ide.impl.idea.codeInsight.daemon.InspectionProfileConvertor;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.SeverityRegistrarImpl;
-import consulo.ide.impl.idea.openapi.options.ExternalInfo;
-import consulo.ide.impl.idea.openapi.options.ExternalizableScheme;
+import consulo.component.persist.scheme.ExternalInfo;
+import consulo.component.persist.scheme.ExternalizableScheme;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.profile.DefaultProjectProfileManager;
 import consulo.ide.impl.idea.util.ArrayUtil;

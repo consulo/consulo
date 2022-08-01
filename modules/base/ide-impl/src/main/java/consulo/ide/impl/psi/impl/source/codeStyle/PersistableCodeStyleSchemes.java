@@ -19,7 +19,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import consulo.ide.impl.idea.openapi.options.SchemesManagerFactory;
+import consulo.component.persist.scheme.SchemeManagerFactory;
 import consulo.language.codeStyle.CodeStyleScheme;
 import consulo.util.xml.serializer.Accessor;
 import consulo.util.xml.serializer.SerializationFilter;
@@ -41,7 +41,7 @@ public class PersistableCodeStyleSchemes extends CodeStyleSchemesImpl implements
   public String CURRENT_SCHEME_NAME = CodeStyleScheme.DEFAULT_SCHEME_NAME;
 
   @Inject
-  public PersistableCodeStyleSchemes(@Nonnull SchemesManagerFactory schemeManagerFactory) {
+  public PersistableCodeStyleSchemes(@Nonnull SchemeManagerFactory schemeManagerFactory) {
     super(schemeManagerFactory);
   }
 

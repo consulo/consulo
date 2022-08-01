@@ -16,8 +16,8 @@
 package consulo.ide.impl.idea.openapi.actionSystem.ex;
 
 
-import consulo.ide.impl.idea.openapi.options.ExternalInfo;
-import consulo.ide.impl.idea.openapi.options.ExternalizableScheme;
+import consulo.component.persist.scheme.ExternalInfo;
+import consulo.component.persist.scheme.ExternalizableScheme;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;

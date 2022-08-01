@@ -23,8 +23,8 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.shelf;
 
 import consulo.ide.impl.idea.openapi.diff.impl.patch.FilePatch;
-import consulo.ide.impl.idea.openapi.options.ExternalInfo;
-import consulo.ide.impl.idea.openapi.options.ExternalizableScheme;
+import consulo.component.persist.scheme.ExternalInfo;
+import consulo.component.persist.scheme.ExternalizableScheme;
 import consulo.project.Project;
 import consulo.util.xml.serializer.DefaultJDOMExternalizer;
 import consulo.util.xml.serializer.InvalidDataException;

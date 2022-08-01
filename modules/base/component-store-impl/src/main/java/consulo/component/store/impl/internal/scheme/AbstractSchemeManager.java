@@ -13,8 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.options;
+package consulo.component.store.impl.internal.scheme;
 
+import consulo.component.persist.scheme.ExternalizableScheme;
+import consulo.component.persist.scheme.SchemeManager;
 import consulo.component.util.text.UniqueNameGenerator;
 import consulo.logging.Logger;
 
@@ -22,8 +24,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
-public abstract class AbstractSchemesManager<T, E extends ExternalizableScheme> extends SchemesManager<T, E> {
-  private static final Logger LOG = Logger.getInstance(AbstractSchemesManager.class);
+public abstract class AbstractSchemeManager<T, E extends ExternalizableScheme> extends SchemeManager<T, E> {
+  private static final Logger LOG = Logger.getInstance(AbstractSchemeManager.class);
 
   protected final List<T> mySchemes = new ArrayList<>();
   private volatile T myCurrentScheme;

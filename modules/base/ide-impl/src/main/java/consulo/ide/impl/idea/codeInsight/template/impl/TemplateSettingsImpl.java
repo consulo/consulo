@@ -21,9 +21,9 @@ import consulo.component.ProcessCanceledException;
 import consulo.component.persist.*;
 import consulo.component.util.localize.AbstractBundle;
 import consulo.container.classloader.PluginClassLoader;
-import consulo.ide.impl.idea.openapi.options.BaseSchemeProcessor;
-import consulo.ide.impl.idea.openapi.options.SchemesManager;
-import consulo.ide.impl.idea.openapi.options.SchemesManagerFactory;
+import consulo.component.persist.scheme.BaseSchemeProcessor;
+import consulo.component.persist.scheme.SchemeManager;
+import consulo.component.persist.scheme.SchemeManagerFactory;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.language.editor.internal.TemplateConstants;
@@ -116,7 +116,7 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
   private final Map<TemplateKey, TemplateImpl> myDefaultTemplates = new LinkedHashMap<>();
 
   private int myMaxKeyLength = 0;
-  private final SchemesManager<TemplateGroup, TemplateGroup> mySchemesManager;
+  private final SchemeManager<TemplateGroup, TemplateGroup> mySchemeManager;
 
   private State myState = new State();
 
@@ -198,8 +198,8 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
   private TemplateKey myLastSelectedTemplate;
 
   @Inject
-  public TemplateSettingsImpl(SchemesManagerFactory schemesManagerFactory) {
-    mySchemesManager = schemesManagerFactory.createSchemesManager(TEMPLATES_DIR_PATH, new BaseSchemeProcessor<TemplateGroup, TemplateGroup>() {
+  public TemplateSettingsImpl(SchemeManagerFactory schemeManagerFactory) {
+    mySchemeManager = schemeManagerFactory.createSchemeManager(TEMPLATES_DIR_PATH, new BaseSchemeProcessor<TemplateGroup, TemplateGroup>() {
       @Override
       @Nullable
       public TemplateGroup readScheme(@Nonnull final Document schemeContent) throws InvalidDataException {
@@ -259,7 +259,7 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
       }
     }, RoamingType.DEFAULT);
 
-    for (TemplateGroup group : mySchemesManager.loadSchemes()) {
+    for (TemplateGroup group : mySchemeManager.loadSchemes()) {
       for (TemplateImpl template : group.getElements()) {
         addTemplateImpl(template);
       }
@@ -372,10 +372,10 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
 
     TemplateImpl templateImpl = (TemplateImpl)template;
     String groupName = templateImpl.getGroupName();
-    TemplateGroup group = mySchemesManager.findSchemeByName(groupName);
+    TemplateGroup group = mySchemeManager.findSchemeByName(groupName);
     if (group == null) {
       group = new TemplateGroup(groupName);
-      mySchemesManager.addNewScheme(group, true);
+      mySchemeManager.addNewScheme(group, true);
     }
     group.addElement(templateImpl);
   }
@@ -384,11 +384,11 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
     TemplateImpl existing = getTemplate(template.getKey(), ((TemplateImpl)template).getGroupName());
     if (existing != null) {
       LOG.info("Template with key " + template.getKey() + " and id " + template.getId() + " already registered");
-      TemplateGroup group = mySchemesManager.findSchemeByName(existing.getGroupName());
+      TemplateGroup group = mySchemeManager.findSchemeByName(existing.getGroupName());
       if (group != null) {
         group.removeElement(existing);
         if (group.isEmpty()) {
-          mySchemesManager.removeScheme(group);
+          mySchemeManager.removeScheme(group);
         }
       }
       myTemplates.remove(template.getKey(), existing);
@@ -417,11 +417,11 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
   public void removeTemplate(@Nonnull Template template) {
     myTemplates.remove(template.getKey(), (TemplateImpl)template);
 
-    TemplateGroup group = mySchemesManager.findSchemeByName(((TemplateImpl)template).getGroupName());
+    TemplateGroup group = mySchemeManager.findSchemeByName(((TemplateImpl)template).getGroupName());
     if (group != null) {
       group.removeElement((TemplateImpl)template);
       if (group.isEmpty()) {
-        mySchemesManager.removeScheme(group);
+        mySchemeManager.removeScheme(group);
       }
     }
   }
@@ -534,7 +534,7 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
     }
 
     if (registerTemplate) {
-      TemplateGroup existingScheme = mySchemesManager.findSchemeByName(result.getName());
+      TemplateGroup existingScheme = mySchemeManager.findSchemeByName(result.getName());
       if (existingScheme != null) {
         result = existingScheme;
       }
@@ -551,9 +551,9 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
     }
 
     if (registerTemplate) {
-      TemplateGroup existingScheme = mySchemesManager.findSchemeByName(result.getName());
+      TemplateGroup existingScheme = mySchemeManager.findSchemeByName(result.getName());
       if (existingScheme == null && !result.isEmpty()) {
-        mySchemesManager.addNewScheme(result, false);
+        mySchemeManager.addNewScheme(result, false);
       }
     }
 
@@ -668,11 +668,11 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
     for (TemplateImpl template : myDefaultTemplates.values()) {
       myState.deletedKeys.add(TemplateKey.keyOf(template));
     }
-    mySchemesManager.clearAllSchemes();
+    mySchemeManager.clearAllSchemes();
     myMaxKeyLength = 0;
     for (TemplateGroup group : newGroups) {
       if (!group.isEmpty()) {
-        mySchemesManager.addNewScheme(group, true);
+        mySchemeManager.addNewScheme(group, true);
         for (TemplateImpl template : group.getElements()) {
           clearPreviouslyRegistered(template);
           addTemplateImpl(template);
@@ -681,12 +681,12 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
     }
   }
 
-  public SchemesManager<TemplateGroup, TemplateGroup> getSchemesManager() {
-    return mySchemesManager;
+  public SchemeManager<TemplateGroup, TemplateGroup> getSchemeManager() {
+    return mySchemeManager;
   }
 
   public List<TemplateGroup> getTemplateGroups() {
-    return mySchemesManager.getAllSchemes();
+    return mySchemeManager.getAllSchemes();
   }
 
   public List<TemplateImpl> collectMatchingCandidates(String key, @Nullable Character shortcutChar, boolean hasArgument) {

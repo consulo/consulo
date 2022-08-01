@@ -1,4 +1,4 @@
-package consulo.ide.impl.idea.openapi.options;
+package consulo.component.persist.scheme;
 
 import consulo.component.util.pointer.Named;
 import javax.annotation.Nonnull;
@@ -7,7 +7,7 @@ import javax.annotation.Nullable;
 import java.io.InputStream;
 
 /**
- * Provides functionality to import a scheme from another non-IntelliJ IDEA format.
+ * Provides functionality to import a scheme from another non-Consulo format.
  *
  * @author Rustam Vishnyakov
  */
