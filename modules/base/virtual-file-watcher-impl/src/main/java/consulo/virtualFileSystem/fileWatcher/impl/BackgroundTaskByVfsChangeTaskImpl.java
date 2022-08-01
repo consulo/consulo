@@ -25,7 +25,6 @@ import consulo.component.macro.ReplacePathToMacroMap;
 import consulo.ide.impl.idea.build.progress.BuildProgress;
 import consulo.ide.impl.idea.build.progress.BuildProgressDescriptor;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.logging.Logger;
 import consulo.process.ExecutionException;
 import consulo.process.ProcessHandler;
@@ -48,6 +47,7 @@ import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeTask;
 import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsParameters;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -273,7 +273,7 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
         list.add(fileByPath);
       }
     }
-    return VfsUtilCore.toVirtualFileArray(list);
+    return VirtualFileUtil.toVirtualFileArray(list);
   }
 
   @Nonnull

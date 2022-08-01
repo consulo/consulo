@@ -21,7 +21,7 @@ import consulo.project.Project;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsBundle;
-import consulo.ide.impl.idea.openapi.vcs.VcsConfigurableProvider;
+import consulo.versionControlSystem.VcsConfigurableProvider;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl;
 import consulo.ide.impl.idea.openapi.vcs.changes.conflicts.ChangelistConflictConfigurable;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.IgnoredSettingsPanel;
@@ -126,7 +126,7 @@ public class VcsManagerConfigurable extends SearchableConfigurable.Parent.Abstra
       myGeneralPanel.updateAvailableOptions(Arrays.asList(ProjectLevelVcsManager.getInstance(myProject).getAllActiveVcss()));
     }
 
-    List<Configurable> result = new ArrayList<Configurable>();
+    List<Configurable> result = new ArrayList<>();
 
     result.add(myGeneralPanel);
     result.add(new VcsBackgroundOperationsConfigurationPanel(myProject));
@@ -140,7 +140,7 @@ public class VcsManagerConfigurable extends SearchableConfigurable.Parent.Abstra
       result.add(new ChangelistConflictConfigurable(ChangeListManagerImpl.getInstanceImpl(myProject)));
     }
 
-    VcsConfigurableProvider.EP_NAME.forEachExtensionSafe(provider -> {
+    myProject.getExtensionPoint(VcsConfigurableProvider.class).forEachExtensionSafe(provider -> {
       final Configurable configurable = provider.getConfigurable(myProject);
       if (configurable != null) {
         result.add(configurable);

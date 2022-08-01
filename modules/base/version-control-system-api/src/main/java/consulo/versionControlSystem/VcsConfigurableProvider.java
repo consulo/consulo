@@ -13,19 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs;
+package consulo.versionControlSystem;
 
-import consulo.component.extension.ExtensionPointName;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.configurable.Configurable;
 import consulo.project.Project;
+
 import javax.annotation.Nullable;
 
 /**
  * @author Konstantin Bulenkov
  */
+@ExtensionAPI(ComponentScope.PROJECT)
 public interface VcsConfigurableProvider {
-  ExtensionPointName<VcsConfigurableProvider> EP_NAME = ExtensionPointName.create("consulo.vcsConfigurableProvider");
-
   @Nullable
   Configurable getConfigurable(Project project);
 }
