@@ -26,7 +26,7 @@ import consulo.content.base.DocumentationOrderRootType;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkType;
 import consulo.fileChooser.FileChooserDescriptorFactory;
-import consulo.ide.impl.idea.openapi.projectRoots.ui.Util;
+import consulo.ide.impl.idea.openapi.projectRoots.ui.DocumentationUtil;
 import consulo.ide.impl.idea.util.IconUtil;
 import consulo.ide.ui.OrderRootTypeUIFactory;
 import consulo.ide.ui.SdkPathEditor;
@@ -100,7 +100,7 @@ public class DocumentationOrderRootTypeUIFactory implements OrderRootTypeUIFacto
 
     private void onSpecifyUrlButtonClicked() {
       final String defaultDocsUrl = mySdk == null ? "" : StringUtil.notNullize(((SdkType)mySdk.getSdkType()).getDefaultDocumentationUrl(mySdk), "");
-      VirtualFile virtualFile = Util.showSpecifyJavadocUrlDialog(myComponent, defaultDocsUrl);
+      VirtualFile virtualFile = DocumentationUtil.showSpecifyJavadocUrlDialog(myComponent, defaultDocsUrl);
       if (virtualFile != null) {
         addElement(virtualFile);
         setModified(true);

@@ -20,7 +20,7 @@ import consulo.content.OrderRootType;
 import consulo.content.base.DocumentationOrderRootType;
 import consulo.content.library.ui.*;
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.openapi.projectRoots.ui.Util;
+import consulo.ide.impl.idea.openapi.projectRoots.ui.DocumentationUtil;
 import consulo.ide.ui.OrderRootTypeUIFactory;
 import consulo.project.ProjectBundle;
 import consulo.virtualFileSystem.VirtualFile;
@@ -66,7 +66,7 @@ public class DefaultLibraryRootsComponentDescriptor extends LibraryRootsComponen
                                      @Nullable VirtualFile initialSelection,
                                      @Nullable DataContext dataContext,
                                      @Nonnull LibraryEditor libraryEditor) {
-      final VirtualFile vFile = Util.showSpecifyJavadocUrlDialog(parent);
+      final VirtualFile vFile = DocumentationUtil.showSpecifyJavadocUrlDialog(parent);
       if (vFile != null) {
         return new VirtualFile[]{vFile};
       }

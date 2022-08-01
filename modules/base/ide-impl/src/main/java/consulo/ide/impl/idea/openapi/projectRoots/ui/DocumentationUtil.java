@@ -30,31 +30,32 @@ import java.net.URL;
  * Date: Oct 29, 2002
  * Time: 8:47:43 PM
  */
-public class Util{
+public class DocumentationUtil {
 
   public static VirtualFile showSpecifyJavadocUrlDialog(JComponent parent) {
     return showSpecifyJavadocUrlDialog(parent, "");
   }
 
-  public static VirtualFile showSpecifyJavadocUrlDialog(JComponent parent, String initialValue){
-    final String url = Messages.showInputDialog(parent, ProjectBundle.message("sdk.configure.javadoc.url.prompt"),
-                                                ProjectBundle.message("sdk.configure.javadoc.url.title"), Messages.getQuestionIcon(), initialValue, new InputValidator() {
-      @Override
-      public boolean checkInput(String inputString) {
-        return true;
-      }
-      @Override
-      public boolean canClose(String inputString) {
-        try {
-          new URL(inputString);
-          return true;
-        }
-        catch (MalformedURLException e1) {
-          Messages.showErrorDialog(e1.getMessage(), ProjectBundle.message("sdk.configure.javadoc.url.title"));
-        }
-        return false;
-      }
-    });
+  public static VirtualFile showSpecifyJavadocUrlDialog(JComponent parent, String initialValue) {
+    final String url = Messages.showInputDialog(parent, ProjectBundle.message("sdk.configure.javadoc.url.prompt"), ProjectBundle.message("sdk.configure.javadoc.url.title"), Messages.getQuestionIcon(),
+                                                initialValue, new InputValidator() {
+              @Override
+              public boolean checkInput(String inputString) {
+                return true;
+              }
+
+              @Override
+              public boolean canClose(String inputString) {
+                try {
+                  new URL(inputString);
+                  return true;
+                }
+                catch (MalformedURLException e1) {
+                  Messages.showErrorDialog(e1.getMessage(), ProjectBundle.message("sdk.configure.javadoc.url.title"));
+                }
+                return false;
+              }
+            });
     if (url == null) {
       return null;
     }
