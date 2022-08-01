@@ -2,28 +2,28 @@
 // Copyright 2000-2021 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.compiler.build;
 
-import consulo.ide.impl.idea.build.*;
-import consulo.ide.impl.idea.build.events.MessageEvent;
-import consulo.ide.impl.idea.build.issue.BuildIssue;
-import consulo.ide.impl.idea.build.progress.BuildProgress;
-import consulo.ide.impl.idea.build.progress.BuildProgressDescriptor;
-import consulo.ide.impl.idea.compiler.impl.CompilerPropertiesAction;
-import consulo.compiler.ExitStatus;
-import consulo.ide.impl.idea.compiler.progress.BuildViewService;
-import consulo.ide.impl.idea.compiler.progress.ModuleLinkFilter;
-import consulo.execution.ui.console.RegexpFilter;
-import consulo.ide.impl.idea.execution.filters.UrlFilter;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicatorEx;
+import consulo.build.ui.*;
+import consulo.build.ui.event.MessageEvent;
+import consulo.build.ui.issue.BuildIssue;
+import consulo.build.ui.progress.BuildProgress;
+import consulo.build.ui.progress.BuildProgressDescriptor;
 import consulo.compiler.CompilerMessage;
 import consulo.compiler.CompilerMessageCategory;
+import consulo.compiler.ExitStatus;
+import consulo.execution.ui.console.RegexpFilter;
+import consulo.execution.ui.console.UrlFilter;
+import consulo.ide.impl.idea.compiler.impl.CompilerPropertiesAction;
+import consulo.ide.impl.idea.compiler.progress.BuildViewService;
+import consulo.ide.impl.idea.compiler.progress.ModuleLinkFilter;
 import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
-import consulo.application.progress.ProgressIndicator;
-import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.application.progress.ProgressIndicatorEx;
-import consulo.navigation.Navigatable;
 import consulo.localize.LocalizeValue;
+import consulo.navigation.Navigatable;
+import consulo.project.Project;
 import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;
@@ -90,7 +90,7 @@ public class BuildViewServiceImpl implements BuildViewService {
     myProject = project;
     mySessionId = sessionId;
     myContentName = contentName;
-    myBuildProgress = BuildViewManager.createBuildProgress(project);
+    myBuildProgress = BuildViewManager.getInstance(project).createBuildProgress();
     myConsolePrinter = new ConsolePrinter(myBuildProgress);
   }
 

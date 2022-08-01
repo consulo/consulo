@@ -31,10 +31,10 @@ import java.util.function.Predicate;
  * from kotlin
  */
 public class BuildTreeFilters {
-  private static final Predicate<ExecutionNode> SUCCESSFUL_STEPS_FILTER = (node) -> !node.isFailed() && !node.hasWarnings();
-  private static final Predicate<ExecutionNode> WARNINGS_FILTER = (node) -> node.hasWarnings() || node.hasInfos();
+  private static final Predicate<ExecutionNodeImpl> SUCCESSFUL_STEPS_FILTER = (node) -> !node.isFailed() && !node.hasWarnings();
+  private static final Predicate<ExecutionNodeImpl> WARNINGS_FILTER = (node) -> node.hasWarnings() || node.hasInfos();
 
-  public static DefaultActionGroup createFilteringActionsGroup(Filterable<ExecutionNode> filterable) {
+  public static DefaultActionGroup createFilteringActionsGroup(Filterable<ExecutionNodeImpl> filterable) {
     DefaultActionGroup actionGroup = new DefaultActionGroup(LangBundle.message("action.filters.text"), true);
     actionGroup.getTemplatePresentation().setIcon(PlatformIconGroup.actionsShow());
     actionGroup.add(new WarningsToggleAction(filterable));
@@ -42,7 +42,7 @@ public class BuildTreeFilters {
     return actionGroup;
   }
 
-  public static void install(Filterable<ExecutionNode> filterable) {
+  public static void install(Filterable<ExecutionNodeImpl> filterable) {
     boolean filteringEnabled = filterable.isFilteringEnabled();
     if (!filteringEnabled) return;
     SuccessfulStepsToggleAction.install(filterable);
@@ -50,42 +50,42 @@ public class BuildTreeFilters {
   }
 
   static class WarningsToggleAction extends FilterToggleAction {
-    static void install(Filterable<ExecutionNode> filterable) {
+    static void install(Filterable<ExecutionNodeImpl> filterable) {
       install(filterable, WARNINGS_FILTER, STATE_KEY, true);
     }
 
     private static final String STATE_KEY = "build.toolwindow.show.warnings.selection.state";
 
-    WarningsToggleAction(Filterable<ExecutionNode> filterable) {
+    WarningsToggleAction(Filterable<ExecutionNodeImpl> filterable) {
       super(LangBundle.message("build.tree.filters.show.warnings"), STATE_KEY, filterable, WARNINGS_FILTER, true);
     }
   }
 
   static class SuccessfulStepsToggleAction extends FilterToggleAction {
-    static void install(Filterable<ExecutionNode> filterable) {
+    static void install(Filterable<ExecutionNodeImpl> filterable) {
       install(filterable, SUCCESSFUL_STEPS_FILTER, STATE_KEY, false);
     }
 
     private static final String STATE_KEY = "build.toolwindow.show.successful.steps.selection.state";
 
-    SuccessfulStepsToggleAction(Filterable<ExecutionNode> filterable) {
+    SuccessfulStepsToggleAction(Filterable<ExecutionNodeImpl> filterable) {
       super(LangBundle.message("build.tree.filters.show.succesful"), STATE_KEY, filterable, SUCCESSFUL_STEPS_FILTER, false);
     }
   }
 
   static class FilterToggleAction extends ToggleAction implements DumbAware {
-    static void install(Filterable<ExecutionNode> filterable, Predicate<ExecutionNode> filter, String stateKey, boolean defaultState) {
+    static void install(Filterable<ExecutionNodeImpl> filterable, Predicate<ExecutionNodeImpl> filter, String stateKey, boolean defaultState) {
       if (PropertiesComponent.getInstance().getBoolean(stateKey, defaultState) && !filterable.contains(filter)) {
         filterable.addFilter(filter);
       }
     }
 
     private final String stateKey;
-    private final Filterable<ExecutionNode> filterable;
-    private final Predicate<ExecutionNode> filter;
+    private final Filterable<ExecutionNodeImpl> filterable;
+    private final Predicate<ExecutionNodeImpl> filter;
     private final boolean defaultState;
 
-    FilterToggleAction(String text, String stateKey, Filterable<ExecutionNode> filterable, Predicate<ExecutionNode> filter, boolean defaultState) {
+    FilterToggleAction(String text, String stateKey, Filterable<ExecutionNodeImpl> filterable, Predicate<ExecutionNodeImpl> filter, boolean defaultState) {
       super(text);
       this.stateKey = stateKey;
       this.filterable = filterable;

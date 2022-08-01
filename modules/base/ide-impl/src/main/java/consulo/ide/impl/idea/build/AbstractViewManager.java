@@ -1,29 +1,31 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.build;
 
-import consulo.ide.impl.idea.build.events.*;
 import consulo.application.AllIcons;
-import consulo.ide.IdeBundle;
-import consulo.language.LangBundle;
-import consulo.project.ui.notification.Notification;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.action.Toggleable;
-import consulo.ide.impl.idea.openapi.diagnostic.Logger;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.AtomicClearableLazyValue;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.ui.ex.SystemNotifications;
-import consulo.ui.ex.UIBundle;
-import consulo.ui.ex.content.Content;
-import consulo.ui.ex.content.ContentManager;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.containers.DisposableWrapperList;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.build.ui.*;
+import consulo.build.ui.event.*;
+import consulo.build.ui.progress.BuildProgressListener;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ide.IdeBundle;
+import consulo.ide.impl.idea.openapi.util.AtomicClearableLazyValue;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.DisposableWrapperList;
+import consulo.language.LangBundle;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.ui.notification.Notification;
+import consulo.ui.ex.SystemNotifications;
+import consulo.ui.ex.UIBundle;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.Toggleable;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.content.Content;
+import consulo.ui.ex.content.ContentManager;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 
@@ -34,7 +36,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static consulo.ide.impl.idea.build.ExecutionNode.getEventResultIcon;
+import static consulo.ide.impl.idea.build.ExecutionNodeImpl.getEventResultIcon;
 
 /**
  * Provides base implementation of the {@link ViewManager}

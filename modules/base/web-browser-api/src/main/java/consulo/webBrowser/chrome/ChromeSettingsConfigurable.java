@@ -15,20 +15,28 @@
  */
 package consulo.webBrowser.chrome;
 
+import consulo.application.AllIcons;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.container.boot.ContainerPathManager;
-import consulo.execution.ui.awt.RawCommandLineEditor;
+import consulo.disposer.Disposable;
 import consulo.fileChooser.FileChooserDescriptorFactory;
-import consulo.ui.ex.awt.TextFieldWithBrowseButton;
+import consulo.localize.LocalizeValue;
+import consulo.process.cmd.ParametersListUtil;
+import consulo.ui.CheckBox;
+import consulo.ui.Component;
+import consulo.ui.Label;
+import consulo.ui.TextBoxWithExpandAction;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.FileChooserTextBoxBuilder;
+import consulo.ui.layout.VerticalLayout;
+import consulo.ui.util.Indenter;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 
@@ -37,37 +45,53 @@ import java.io.IOException;
  */
 public class ChromeSettingsConfigurable implements Configurable {
   private final ChromeSettings mySettings;
-  private JPanel myMainPanel;
-  private JCheckBox myUseCustomProfileCheckBox;
-  private TextFieldWithBrowseButton myUserDataDirField;
-  private JLabel myCommandLineOptionsLabel;
-  private RawCommandLineEditor myCommandLineOptionsEditor;
+
+  private VerticalLayout myLayout;
+  private TextBoxWithExpandAction myCommandLineOptionsBox;
+  private CheckBox myUseCustomProfileCheckBox;
+  private FileChooserTextBoxBuilder.Controller myUserDataDirBox;
+
   private final String myDefaultUserDirPath;
 
   public ChromeSettingsConfigurable(@Nonnull ChromeSettings settings) {
     mySettings = settings;
-    myUserDataDirField.addBrowseFolderListener("Select User Data Directory", "Specifies the directory that user data (your \"profile\") is kept in", null,
-                                               FileChooserDescriptorFactory.createSingleFolderDescriptor());
-    myUseCustomProfileCheckBox.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        myUserDataDirField.setEnabled(myUseCustomProfileCheckBox.isSelected());
-      }
-    });
     myDefaultUserDirPath = getDefaultUserDataPath();
-    myCommandLineOptionsEditor.setDialogCaption("Chrome Command Line Options");
-    myCommandLineOptionsLabel.setLabelFor(myCommandLineOptionsEditor.getTextField());
   }
 
+  @RequiredUIAccess
+  @Nullable
   @Override
-  public JComponent createComponent() {
-    return myMainPanel;
+  public Component createUIComponent(@Nonnull Disposable parentDisposable) {
+    if (myLayout == null) {
+      myLayout = VerticalLayout.create();
+
+      myLayout.add(Label.create(LocalizeValue.localizeTODO("&Command line options:")));
+      myCommandLineOptionsBox =
+              TextBoxWithExpandAction.create(AllIcons.Actions.ShowViewer, "Chrome Command Line Options", ParametersListUtil.DEFAULT_LINE_PARSER, ParametersListUtil.DEFAULT_LINE_JOINER);
+
+      myLayout.add(Indenter.indent(myCommandLineOptionsBox, 1));
+      myUseCustomProfileCheckBox = CheckBox.create(LocalizeValue.localizeTODO("&Use custom profile directory:"));
+      myLayout.add(myUseCustomProfileCheckBox);
+
+      FileChooserTextBoxBuilder builder = FileChooserTextBoxBuilder.create(null);
+      builder.fileChooserDescriptor(FileChooserDescriptorFactory.createSingleFolderDescriptor());
+      builder.dialogTitle(LocalizeValue.localizeTODO("Select User Data Directory"));
+      builder.dialogDescription(LocalizeValue.localizeTODO("Specifies the directory that user data (your \"profile\") is kept in"));
+
+      myUserDataDirBox = builder.build();
+      myLayout.add(Indenter.indent(myUserDataDirBox.getComponent(), 1));
+
+      myUseCustomProfileCheckBox.addValueListener(event -> myUserDataDirBox.getComponent().setEnabled(event.getValue()));
+    }
+
+    return myLayout;
   }
 
+
+  @RequiredUIAccess
   @Override
   public boolean isModified() {
-    if (myUseCustomProfileCheckBox.isSelected() != mySettings.isUseCustomProfile()
-        || !myCommandLineOptionsEditor.getText().equals(StringUtil.notNullize(mySettings.getCommandLineOptions()))) {
+    if (myUseCustomProfileCheckBox.getValue() != mySettings.isUseCustomProfile() || !myCommandLineOptionsBox.getValue().equals(StringUtil.notNullize(mySettings.getCommandLineOptions()))) {
       return true;
     }
 
@@ -77,35 +101,35 @@ public class ChromeSettingsConfigurable implements Configurable {
     return !configuredPath.equals(storedPath);
   }
 
-
   private String getConfiguredUserDataDirPath() {
-    return FileUtil.toSystemIndependentName(myUserDataDirField.getText());
+    return FileUtil.toSystemIndependentName(myUserDataDirBox.getValue());
   }
 
+  @RequiredUIAccess
   @Override
   public void apply() throws ConfigurationException {
-    mySettings.setCommandLineOptions(myCommandLineOptionsEditor.getText());
-    mySettings.setUseCustomProfile(myUseCustomProfileCheckBox.isSelected());
+    mySettings.setCommandLineOptions(myCommandLineOptionsBox.getValue());
+    mySettings.setUseCustomProfile(myUseCustomProfileCheckBox.getValue());
     mySettings.setUserDataDirectoryPath(getConfiguredUserDataDirPath());
   }
 
+  @RequiredUIAccess
   @Override
   public void reset() {
-    myCommandLineOptionsEditor.setText(mySettings.getCommandLineOptions());
-    myUseCustomProfileCheckBox.setSelected(mySettings.isUseCustomProfile());
-    myUserDataDirField.setEnabled(mySettings.isUseCustomProfile());
+    myCommandLineOptionsBox.setValue(mySettings.getCommandLineOptions());
+    myUseCustomProfileCheckBox.setValue(mySettings.isUseCustomProfile());
     String path = mySettings.getUserDataDirectoryPath();
     if (path != null) {
-      myUserDataDirField.setText(FileUtil.toSystemDependentName(path));
+      myUserDataDirBox.setValue(FileUtil.toSystemDependentName(path));
     }
     else {
-      myUserDataDirField.setText(FileUtil.toSystemDependentName(myDefaultUserDirPath));
+      myUserDataDirBox.setValue(FileUtil.toSystemDependentName(myDefaultUserDirPath));
     }
   }
 
   public void enableRecommendedOptions() {
-    if (!myUseCustomProfileCheckBox.isSelected()) {
-      myUseCustomProfileCheckBox.doClick(0);
+    if (!myUseCustomProfileCheckBox.getValue()) {
+      myUseCustomProfileCheckBox.setValue(true);
     }
   }
 
@@ -119,8 +143,10 @@ public class ChromeSettingsConfigurable implements Configurable {
     }
   }
 
+  @RequiredUIAccess
   @Override
   public void disposeUIResources() {
+    myLayout = null;
   }
 
   @Nls

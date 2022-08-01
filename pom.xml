@@ -50,6 +50,7 @@
     <module>modules/base/annotation</module>
     <module>modules/base/base-localize-library</module>
     <module>modules/base/base-icon-library</module>
+    <module>modules/base/build-ui-api</module>
     <module>modules/base/ide-impl</module>
     <module>modules/base/component-api</module>
     <module>modules/base/application-api</module>

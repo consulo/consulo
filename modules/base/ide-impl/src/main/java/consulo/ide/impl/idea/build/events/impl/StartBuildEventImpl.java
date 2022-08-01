@@ -15,12 +15,12 @@
  */
 package consulo.ide.impl.idea.build.events.impl;
 
-import consulo.ide.impl.idea.build.BuildDescriptor;
-import consulo.ide.impl.idea.build.BuildViewSettingsProvider;
-import consulo.ide.impl.idea.build.DefaultBuildDescriptor;
-import consulo.ide.impl.idea.build.events.BuildEventsNls;
-import consulo.ide.impl.idea.build.events.StartBuildEvent;
-import consulo.ide.impl.idea.build.process.BuildProcessHandler;
+import consulo.build.ui.BuildDescriptor;
+import consulo.build.ui.BuildViewSettingsProvider;
+import consulo.build.ui.DefaultBuildDescriptor;
+import consulo.build.ui.event.BuildEventsNls;
+import consulo.build.ui.event.StartBuildEvent;
+import consulo.build.ui.process.BuildProcessHandler;
 import consulo.execution.ui.console.Filter;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.RunContentDescriptor;

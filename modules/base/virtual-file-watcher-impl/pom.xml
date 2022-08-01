@@ -39,13 +39,8 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-ide-impl</artifactId>
+      <artifactId>consulo-build-ui-api</artifactId>
       <version>${project.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>consulo.internal</groupId>
-      <artifactId>forms_rt</artifactId>
     </dependency>
   </dependencies>
 </project>

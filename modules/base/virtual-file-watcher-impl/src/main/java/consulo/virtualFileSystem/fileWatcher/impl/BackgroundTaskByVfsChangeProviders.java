@@ -32,11 +32,11 @@ public class BackgroundTaskByVfsChangeProviders {
   @Nonnull
   public static List<BackgroundTaskByVfsChangeProvider> getProviders(@Nonnull Project project, @Nonnull VirtualFile virtualFile) {
     List<BackgroundTaskByVfsChangeProvider> providers = new ArrayList<>();
-    for (BackgroundTaskByVfsChangeProvider provider : BackgroundTaskByVfsChangeProvider.EP_NAME.getExtensionList()) {
+    project.getApplication().getExtensionPoint(BackgroundTaskByVfsChangeProvider.class).forEachExtensionSafe(provider -> {
       if (provider.validate(project, virtualFile)) {
         providers.add(provider);
       }
-    }
+    });
     return providers.isEmpty() ? Collections.<BackgroundTaskByVfsChangeProvider>emptyList() : providers;
   }
 }

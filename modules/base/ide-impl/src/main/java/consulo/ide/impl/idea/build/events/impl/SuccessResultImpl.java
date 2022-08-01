@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.build.events.impl;
 
-import consulo.ide.impl.idea.build.events.SuccessResult;
-import consulo.ide.impl.idea.build.events.Warning;
+import consulo.build.ui.event.SuccessResult;
+import consulo.build.ui.event.Warning;
 
 import java.util.Collections;
 import java.util.List;

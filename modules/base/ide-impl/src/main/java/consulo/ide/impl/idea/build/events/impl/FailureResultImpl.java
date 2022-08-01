@@ -15,9 +15,9 @@
  */
 package consulo.ide.impl.idea.build.events.impl;
 
-import consulo.ide.impl.idea.build.events.BuildEventsNls;
-import consulo.ide.impl.idea.build.events.Failure;
-import consulo.ide.impl.idea.build.events.FailureResult;
+import consulo.build.ui.event.BuildEventsNls;
+import consulo.build.ui.event.Failure;
+import consulo.build.ui.event.FailureResult;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

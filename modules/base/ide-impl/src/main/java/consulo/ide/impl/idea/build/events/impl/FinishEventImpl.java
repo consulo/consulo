@@ -15,10 +15,10 @@
  */
 package consulo.ide.impl.idea.build.events.impl;
 
-import consulo.ide.impl.idea.build.events.BuildEventsNls;
-import consulo.ide.impl.idea.build.events.EventResult;
-import consulo.ide.impl.idea.build.events.FinishEvent;
-import consulo.ide.impl.idea.build.events.SuccessResult;
+import consulo.build.ui.event.BuildEventsNls;
+import consulo.build.ui.event.EventResult;
+import consulo.build.ui.event.FinishEvent;
+import consulo.build.ui.event.SuccessResult;
 import consulo.language.LangBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

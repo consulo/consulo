@@ -1,9 +1,9 @@
 // Copyright 2000-2017 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.build.events.impl;
 
-import consulo.ide.impl.idea.build.events.BuildEventsNls;
-import consulo.ide.impl.idea.build.events.MessageEvent;
-import consulo.ide.impl.idea.build.events.MessageEventResult;
+import consulo.build.ui.event.BuildEventsNls;
+import consulo.build.ui.event.MessageEvent;
+import consulo.build.ui.event.MessageEventResult;
 import consulo.language.LangBundle;
 import consulo.project.Project;
 import consulo.navigation.Navigatable;

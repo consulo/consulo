@@ -234,13 +234,9 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.application.options.editor;
   exports consulo.ide.impl.idea.application.options.pathMacros;
   exports consulo.ide.impl.idea.build;
-  exports consulo.ide.impl.idea.build.events;
   exports consulo.ide.impl.idea.build.events.impl;
-  exports consulo.ide.impl.idea.build.internal;
-  exports consulo.ide.impl.idea.build.issue;
   exports consulo.ide.impl.idea.build.issue.quickfix;
   exports consulo.ide.impl.idea.build.output;
-  exports consulo.ide.impl.idea.build.process;
   exports consulo.ide.impl.idea.build.progress;
   exports consulo.ide.impl.idea.buildfiles;
   exports consulo.ide.impl.idea.codeEditor.printing;

@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.compiler.impl;
 
 import consulo.ide.impl.compiler.*;
-import consulo.ide.impl.idea.build.BuildContentManager;
+import consulo.build.ui.BuildContentManager;
 import consulo.ide.impl.idea.compiler.make.CacheUtils;
 import consulo.ide.impl.idea.compiler.progress.CompilerTask;
 import consulo.module.content.internal.ProjectRootManagerEx;

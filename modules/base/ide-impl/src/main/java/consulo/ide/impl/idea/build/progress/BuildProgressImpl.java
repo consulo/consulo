@@ -1,15 +1,17 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.build.progress;
 
-import consulo.ide.impl.idea.build.BuildDescriptor;
-import consulo.ide.impl.idea.build.BuildProgressListener;
-import consulo.ide.impl.idea.build.FilePosition;
-import consulo.ide.impl.idea.build.events.EventResult;
-import consulo.ide.impl.idea.build.events.FinishEvent;
-import consulo.ide.impl.idea.build.events.MessageEvent;
-import consulo.ide.impl.idea.build.events.StartEvent;
+import consulo.build.ui.BuildDescriptor;
+import consulo.build.ui.progress.BuildProgress;
+import consulo.build.ui.progress.BuildProgressDescriptor;
+import consulo.build.ui.progress.BuildProgressListener;
+import consulo.build.ui.FilePosition;
+import consulo.build.ui.event.EventResult;
+import consulo.build.ui.event.FinishEvent;
+import consulo.build.ui.event.MessageEvent;
+import consulo.build.ui.event.StartEvent;
 import consulo.ide.impl.idea.build.events.impl.*;
-import consulo.ide.impl.idea.build.issue.BuildIssue;
+import consulo.build.ui.issue.BuildIssue;
 import consulo.project.Project;
 import consulo.navigation.Navigatable;
 

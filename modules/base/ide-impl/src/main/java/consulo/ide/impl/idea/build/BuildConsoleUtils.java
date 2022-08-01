@@ -1,9 +1,10 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.build;
 
-import consulo.ide.impl.idea.build.events.Failure;
-import consulo.ide.impl.idea.build.issue.BuildIssue;
-import consulo.ide.impl.idea.build.issue.BuildIssueQuickFix;
+import consulo.build.ui.progress.BuildProgressListener;
+import consulo.build.ui.event.Failure;
+import consulo.build.ui.issue.BuildIssue;
+import consulo.build.ui.issue.BuildIssueQuickFix;
 import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.console.ConsoleViewContentType;

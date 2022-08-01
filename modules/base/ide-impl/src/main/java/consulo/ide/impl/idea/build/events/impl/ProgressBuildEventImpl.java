@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.build.events.impl;
 
-import consulo.ide.impl.idea.build.events.ProgressBuildEvent;
+import consulo.build.ui.event.ProgressBuildEvent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

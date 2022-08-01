@@ -56,6 +56,13 @@ public class URLUtil {
   public static final Pattern FILE_URL_PATTERN = Pattern.compile("\\b(file:///)[-A-Za-z0-9+$&@#/%?=~_|!:,.;]*[-A-Za-z0-9+$&@#/%=~_|]");
 
   /**
+   * @return if false, then the line contains no URL; if true, then more heavy {@link #URL_PATTERN} check should be used.
+   */
+  public static boolean canContainUrl(@Nonnull String line) {
+    return line.contains("mailto:") || line.contains("://") || line.contains("www.");
+  }
+
+  /**
    * Opens a url stream. The semantics is the sames as {@link URL#openStream()}. The
    * separate method is needed, since jar URLs open jars via JarFactory and thus keep them
    * mapped into memory.

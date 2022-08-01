@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.build.events.impl;
 
-import consulo.ide.impl.idea.build.events.SkippedResult;
+import consulo.build.ui.event.SkippedResult;
 
 /**
  * @author Vladislav.Soroka

@@ -19,6 +19,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.content.scope.SearchScope;
 import consulo.execution.ui.console.ConsoleFilterProviderEx;
 import consulo.execution.ui.console.Filter;
+import consulo.execution.ui.console.UrlFilter;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.project.Project;
 

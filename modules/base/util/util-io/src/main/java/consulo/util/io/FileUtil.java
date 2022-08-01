@@ -1326,4 +1326,36 @@ public class FileUtil {
     }
     return ancestor;
   }
+
+  /**
+   * Get parent for the file. The method correctly
+   * processes "." and ".." in file names. The name
+   * remains relative if was relative before.
+   *
+   * @param file a file to analyze
+   * @return files's parent, or {@code null} if the file has no parent.
+   */
+  @Nullable
+  public static File getParentFile(@Nonnull File file) {
+    int skipCount = 0;
+    File parentFile = file;
+    while (true) {
+      parentFile = parentFile.getParentFile();
+      if (parentFile == null) {
+        return null;
+      }
+      if (".".equals(parentFile.getName())) {
+        continue;
+      }
+      if ("..".equals(parentFile.getName())) {
+        skipCount++;
+        continue;
+      }
+      if (skipCount > 0) {
+        skipCount--;
+        continue;
+      }
+      return parentFile;
+    }
+  }
 }

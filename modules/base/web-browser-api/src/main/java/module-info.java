@@ -14,7 +14,6 @@ module consulo.web.browser.api {
   requires consulo.language.api;
   requires consulo.ui.ex.api;
   requires consulo.process.api;
-  requires consulo.execution.api;
 
   exports consulo.webBrowser;
   exports consulo.webBrowser.action;

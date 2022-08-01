@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.build.issue.quickfix;
 
-import consulo.ide.impl.idea.build.issue.BuildIssueQuickFix;
+import consulo.build.ui.issue.BuildIssueQuickFix;
 import consulo.language.editor.highlight.HighlightManager;
 import consulo.ide.impl.idea.codeInsight.highlighting.HighlightUsagesHandler;
 import consulo.find.FindManager;

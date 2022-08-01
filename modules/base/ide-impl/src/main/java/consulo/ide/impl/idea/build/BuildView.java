@@ -1,11 +1,16 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.build;
 
-import consulo.ide.impl.idea.build.events.BuildEvent;
-import consulo.ide.impl.idea.build.events.OutputBuildEvent;
-import consulo.ide.impl.idea.build.events.StartBuildEvent;
+import consulo.build.ui.BuildDescriptor;
+import consulo.build.ui.DefaultBuildDescriptor;
+import consulo.build.ui.progress.BuildProgressListener;
+import consulo.build.ui.BuildViewSettingsProvider;
+import consulo.build.ui.ViewManager;
+import consulo.build.ui.event.BuildEvent;
+import consulo.build.ui.event.OutputBuildEvent;
+import consulo.build.ui.event.StartBuildEvent;
 import consulo.ide.impl.idea.build.events.impl.StartBuildEventImpl;
-import consulo.ide.impl.idea.build.process.BuildProcessHandler;
+import consulo.build.ui.process.BuildProcessHandler;
 import consulo.ide.impl.idea.execution.actions.StopAction;
 import consulo.ide.impl.idea.execution.actions.StopProcessAction;
 import consulo.execution.ui.console.*;
@@ -43,7 +48,7 @@ import java.util.function.Supplier;
 /**
  * @author Vladislav.Soroka
  */
-public class BuildView extends CompositeView<ExecutionConsole> implements BuildProgressListener, ConsoleView, DataProvider, Filterable<ExecutionNode>, OccurenceNavigator, ObservableConsoleView {
+public class BuildView extends CompositeView<ExecutionConsole> implements BuildProgressListener, ConsoleView, DataProvider, Filterable<ExecutionNodeImpl>, OccurenceNavigator, ObservableConsoleView {
   public static final String CONSOLE_VIEW_NAME = "consoleView";
   //@ApiStatus.Experimental
   public static final Key<List<AnAction>> RESTART_ACTIONS = Key.create("restart actions");
@@ -166,9 +171,9 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
       if (processHandler != null) {
         assert consoleView != null;
         consoleView.attachToProcess(processHandler);
-        Consumer<? super ConsoleView> attachedConsoleConsumer = myBuildDescriptor.getAttachedConsoleConsumer();
+        java.util.function.Consumer<? super ConsoleView> attachedConsoleConsumer = myBuildDescriptor.getAttachedConsoleConsumer();
         if (attachedConsoleConsumer != null) {
-          attachedConsoleConsumer.consume(consoleView);
+          attachedConsoleConsumer.accept(consoleView);
         }
       }
     }
@@ -365,13 +370,13 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
 
   @Nonnull
   @Override
-  public Predicate<ExecutionNode> getFilter() {
+  public Predicate<ExecutionNodeImpl> getFilter() {
     BuildTreeConsoleView eventView = getEventView();
     return eventView == null ? executionNode -> true : eventView.getFilter();
   }
 
   @Override
-  public void addFilter(@Nonnull Predicate<? super ExecutionNode> filter) {
+  public void addFilter(@Nonnull Predicate<? super ExecutionNodeImpl> filter) {
     BuildTreeConsoleView eventView = getEventView();
     if (eventView != null) {
       eventView.addFilter(filter);
@@ -379,7 +384,7 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
   }
 
   @Override
-  public void removeFilter(@Nonnull Predicate<? super ExecutionNode> filter) {
+  public void removeFilter(@Nonnull Predicate<? super ExecutionNodeImpl> filter) {
     BuildTreeConsoleView eventView = getEventView();
     if (eventView != null) {
       eventView.removeFilter(filter);
@@ -387,7 +392,7 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
   }
 
   @Override
-  public boolean contains(@Nonnull Predicate<? super ExecutionNode> filter) {
+  public boolean contains(@Nonnull Predicate<? super ExecutionNodeImpl> filter) {
     BuildTreeConsoleView eventView = getEventView();
     return eventView != null && eventView.contains(filter);
   }

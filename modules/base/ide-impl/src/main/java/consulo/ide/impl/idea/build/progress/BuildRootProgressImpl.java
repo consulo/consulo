@@ -1,12 +1,14 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.build.progress;
 
-import consulo.ide.impl.idea.build.BuildBundle;
-import consulo.ide.impl.idea.build.BuildProgressListener;
-import consulo.ide.impl.idea.build.events.BuildEventsNls;
-import consulo.ide.impl.idea.build.events.FinishBuildEvent;
-import consulo.ide.impl.idea.build.events.FinishEvent;
-import consulo.ide.impl.idea.build.events.StartEvent;
+import consulo.build.ui.BuildBundle;
+import consulo.build.ui.progress.BuildProgress;
+import consulo.build.ui.progress.BuildProgressDescriptor;
+import consulo.build.ui.progress.BuildProgressListener;
+import consulo.build.ui.event.BuildEventsNls;
+import consulo.build.ui.event.FinishBuildEvent;
+import consulo.build.ui.event.FinishEvent;
+import consulo.build.ui.event.StartEvent;
 import consulo.ide.impl.idea.build.events.impl.*;
 
 import javax.annotation.Nonnull;

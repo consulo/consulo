@@ -18,6 +18,10 @@ package consulo.virtualFileSystem.fileWatcher.impl;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
+import consulo.build.ui.BuildViewManager;
+import consulo.build.ui.DefaultBuildDescriptor;
+import consulo.build.ui.progress.BuildProgress;
+import consulo.build.ui.progress.BuildProgressDescriptor;
 import consulo.component.macro.ExpandMacroToPathMap;
 import consulo.component.macro.ReplacePathToMacroMap;
 import consulo.component.persist.PersistentStateComponent;
@@ -25,11 +29,7 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.build.BuildViewManager;
-import consulo.ide.impl.idea.build.DefaultBuildDescriptor;
-import consulo.ide.impl.idea.build.progress.BuildProgress;
-import consulo.ide.impl.idea.build.progress.BuildProgressDescriptor;
-import consulo.ide.impl.idea.execution.filters.UrlFilter;
+import consulo.execution.ui.console.UrlFilter;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -78,6 +78,7 @@ public class BackgroundTaskByVfsChangeManagerImpl extends BackgroundTaskByVfsCha
   public BackgroundTaskByVfsChangeManagerImpl(@Nonnull Project project) {
     myProject = project;
 
+    // TODO rewrite by AsyncFileListener
     VirtualFileManager.getInstance().addVirtualFileListener(new VirtualFileListener() {
       @Override
       public void contentsChanged(@Nonnull VirtualFileEvent event) {
@@ -169,7 +170,7 @@ public class BackgroundTaskByVfsChangeManagerImpl extends BackgroundTaskByVfsCha
       return;
     }
 
-    BuildProgress<BuildProgressDescriptor> buildProgress = BuildViewManager.createBuildProgress(myProject);
+    BuildProgress<BuildProgressDescriptor> buildProgress = BuildViewManager.getInstance(myProject).createBuildProgress();
 
     UUID uuid = UUID.randomUUID();
     DefaultBuildDescriptor buildDescriptor = new DefaultBuildDescriptor(uuid, virtualFile.getName(), myProject.getBasePath(), System.currentTimeMillis());

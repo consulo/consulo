@@ -16,7 +16,7 @@
 package consulo.ide.impl.compiler.build;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.build.BuildWorkspaceConfiguration;
+import consulo.build.ui.BuildWorkspaceConfiguration;
 import consulo.ide.impl.compiler.CompilerWorkspaceConfiguration;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

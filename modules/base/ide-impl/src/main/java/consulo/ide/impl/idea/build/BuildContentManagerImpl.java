@@ -2,7 +2,10 @@
 package consulo.ide.impl.idea.build;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.build.process.BuildProcessHandler;
+import consulo.build.ui.BuildBundle;
+import consulo.build.ui.BuildContentManager;
+import consulo.build.ui.BuildDescriptor;
+import consulo.build.ui.process.BuildProcessHandler;
 import consulo.execution.ExecutionUtil;
 import consulo.ide.impl.idea.execution.ui.BaseContentCloseListener;
 import consulo.ide.impl.idea.execution.ui.RunContentManagerImpl;

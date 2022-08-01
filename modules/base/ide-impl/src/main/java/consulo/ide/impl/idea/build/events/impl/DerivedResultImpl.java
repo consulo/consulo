@@ -1,9 +1,9 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.build.events.impl;
 
-import consulo.ide.impl.idea.build.events.DerivedResult;
-import consulo.ide.impl.idea.build.events.EventResult;
-import consulo.ide.impl.idea.build.events.FailureResult;
+import consulo.build.ui.event.DerivedResult;
+import consulo.build.ui.event.EventResult;
+import consulo.build.ui.event.FailureResult;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -2,10 +2,10 @@
 package consulo.ide.impl.idea.build.events.impl;
 
 import consulo.ide.impl.idea.build.FileNavigatable;
-import consulo.ide.impl.idea.build.FilePosition;
-import consulo.ide.impl.idea.build.events.BuildEventsNls;
-import consulo.ide.impl.idea.build.events.FileMessageEvent;
-import consulo.ide.impl.idea.build.events.FileMessageEventResult;
+import consulo.build.ui.FilePosition;
+import consulo.build.ui.event.BuildEventsNls;
+import consulo.build.ui.event.FileMessageEvent;
+import consulo.build.ui.event.FileMessageEventResult;
 import consulo.project.Project;
 import consulo.navigation.Navigatable;
 import javax.annotation.Nonnull;
