@@ -39,9 +39,6 @@ import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.util.xml.serializer.XmlSerializer;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileManager;
-import consulo.virtualFileSystem.event.VirtualFileEvent;
-import consulo.virtualFileSystem.event.VirtualFileListener;
 import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeManager;
 import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeProvider;
 import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeTask;
@@ -77,14 +74,6 @@ public class BackgroundTaskByVfsChangeManagerImpl extends BackgroundTaskByVfsCha
   @Inject
   public BackgroundTaskByVfsChangeManagerImpl(@Nonnull Project project) {
     myProject = project;
-
-    // TODO rewrite by AsyncFileListener
-    VirtualFileManager.getInstance().addVirtualFileListener(new VirtualFileListener() {
-      @Override
-      public void contentsChanged(@Nonnull VirtualFileEvent event) {
-        runTasks(event.getFile());
-      }
-    }, this);
   }
 
   @Nonnull
@@ -124,6 +113,10 @@ public class BackgroundTaskByVfsChangeManagerImpl extends BackgroundTaskByVfsCha
   @Nonnull
   @Override
   public List<BackgroundTaskByVfsChangeTask> findEnabledTasks(@Nonnull VirtualFile virtualFile) {
+    if (myTasks.isEmpty()) {
+      return List.of();
+    }
+
     List<BackgroundTaskByVfsChangeTask> list = new ArrayList<>();
     for (BackgroundTaskByVfsChangeTaskImpl task : myTasks) {
       if (!task.isEnabled()) {
