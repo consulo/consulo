@@ -525,10 +525,6 @@
     <extensionPoint name="elementSignatureProvider" interface="consulo.ide.impl.idea.codeInsight.folding.impl.ElementSignatureProvider"/>
     <extensionPoint name="preFormatProcessor" interface="consulo.ide.impl.psi.impl.source.codeStyle.PreFormatProcessor"/>
 
-    <extensionPoint name="declarationRangeHandler" beanClass="consulo.component.extension.MixinEP">
-      <with attribute="implementationClass" implements="consulo.ide.impl.idea.codeInsight.hint.DeclarationRangeHandler"/>
-    </extensionPoint>
-
     <extensionPoint name="highlightUsagesHandlerFactory" interface="consulo.language.editor.highlight.usage.HighlightUsagesHandlerFactory"/>
 
     <extensionPoint name="usageTargetProvider"

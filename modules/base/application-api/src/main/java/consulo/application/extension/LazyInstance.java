@@ -24,7 +24,7 @@ import java.util.function.Supplier;
 /**
  * @author peter
  */
-@Deprecated
+@Deprecated(forRemoval = true)
 public abstract class LazyInstance<T> implements Supplier<T> {
   @Nonnull
   public static <T> LazyInstance<T> createInstance(@Nonnull final ThrowableComputable<Class<T>, ClassNotFoundException> value) {

@@ -26,6 +26,7 @@ import javax.annotation.Nullable;
 /**
  * @author peter
  */
+@Deprecated(forRemoval = true)
 public abstract class AbstractExtensionPointBean implements PluginAware, ComponentAware {
   private static final Logger LOG = Logger.getInstance(AbstractExtensionPointBean.class);
 

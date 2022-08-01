@@ -23,6 +23,7 @@ import consulo.util.xml.serializer.annotation.Text;
  * @since 0:46/07.11.13
  */
 @Tag("add")
+@Deprecated(forRemoval = true)
 public class ElementEP {
   @Text
   public String myValue;

@@ -22,6 +22,7 @@ import consulo.util.xml.serializer.annotation.Text;
  * @author VISTALL
  * @since 0:46/07.11.13
  */
+@Deprecated(forRemoval = true)
 public class AddToElementEP {
   public static final ExtensionPointName<AddToElementEP> EP_NAME = ExtensionPointName.create("consulo.addTo.listOfElements");
 

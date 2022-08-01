@@ -30,6 +30,7 @@ import java.util.List;
  * @author VISTALL
  * @since 0:44/07.11.13
  */
+@Deprecated(forRemoval = true)
 public class ListOfElementsEP {
   public static final ExtensionPointName<ListOfElementsEP> EP_NAME = ExtensionPointName.create("consulo.listOfElements");
 

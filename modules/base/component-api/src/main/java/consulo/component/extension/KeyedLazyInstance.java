@@ -19,6 +19,7 @@
  */
 package consulo.component.extension;
 
+@Deprecated(forRemoval = true)
 public interface KeyedLazyInstance<T> {
   String getKey();
 

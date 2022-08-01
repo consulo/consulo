@@ -14,6 +14,7 @@ import java.util.function.BiConsumer;
  *
  * @see ExtensionPointName#processWithPluginDescriptor(BiConsumer)
  */
+@Deprecated(forRemoval = true)
 public abstract class LazyExtensionInstance<T> {
   private volatile T instance;
 
