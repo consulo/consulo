@@ -468,7 +468,7 @@
     </extensionPoint>
 
     <extensionPoint name="outerLanguageRangePatcher" beanClass="consulo.language.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="consulo.language.impl.psi.template.TemplateDataElementType$OuterLanguageRangePatcher"/>
+      <with attribute="implementationClass" implements="consulo.language.impl.psi.template.OuterLanguageRangePatcher"/>
     </extensionPoint>
 
     <extensionPoint name="lang.tokenSeparatorGenerator" beanClass="consulo.language.LanguageExtensionPoint">

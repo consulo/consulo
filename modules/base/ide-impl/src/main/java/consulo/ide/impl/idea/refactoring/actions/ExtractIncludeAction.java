@@ -18,15 +18,16 @@ package consulo.ide.impl.idea.refactoring.actions;
 
 import consulo.ide.impl.idea.ide.TitledHandler;
 import consulo.language.Language;
+import consulo.language.editor.refactoring.LanguageExtractIncludeHandler;
+import consulo.language.editor.refactoring.RefactoringActionHandler;
 import consulo.language.editor.refactoring.RefactoringSupportProvider;
-import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.editor.refactoring.RefactoringActionHandler;
-import consulo.ide.impl.idea.refactoring.lang.LanguageExtractInclude;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.ui.annotation.RequiredUIAccess;
 
 /**
  * @author ven
@@ -63,7 +64,7 @@ public class ExtractIncludeAction extends BasePlatformRefactoringAction {
   @Override
   protected boolean isAvailableForFile(PsiFile file) {
     final Language baseLanguage = file.getViewProvider().getBaseLanguage();
-    return LanguageExtractInclude.INSTANCE.forLanguage(baseLanguage) != null;
+    return LanguageExtractIncludeHandler.forLanguage(baseLanguage) != null;
   }
 
   @Nullable
@@ -72,10 +73,11 @@ public class ExtractIncludeAction extends BasePlatformRefactoringAction {
     return null;
   }
 
+  @Override
   @Nullable
   protected RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider provider, PsiElement element) {
     PsiFile file = element.getContainingFile();
     if (file == null) return null;
-    return LanguageExtractInclude.INSTANCE.forLanguage(file.getViewProvider().getBaseLanguage());
+    return LanguageExtractIncludeHandler.forLanguage(file.getViewProvider().getBaseLanguage());
   }
 }

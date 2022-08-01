@@ -1,22 +1,24 @@
 package consulo.ide.impl.idea.codeInsight.editorActions.fillParagraph;
 
-import consulo.ide.impl.idea.formatting.FormatterTagHandler;
-import consulo.undoRedo.CommandProcessor;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
+import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.document.util.UnfairTextRange;
-import consulo.util.lang.CharFilter;
+import consulo.ide.impl.idea.formatting.FormatterTagHandler;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.ide.impl.psi.impl.source.codeStyle.CodeFormatterFacade;
 import consulo.language.ast.IElementType;
+import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.plain.psi.PsiPlainTextFile;
-import consulo.language.psi.*;
+import consulo.language.psi.PsiComment;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiWhiteSpace;
+import consulo.undoRedo.CommandProcessor;
+import consulo.util.lang.CharFilter;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
 
 /**

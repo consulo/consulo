@@ -55,7 +55,6 @@ import java.util.function.BiPredicate;
  * @author ven
  */
 public class VariableInplaceRenamer extends InplaceRefactoring {
-  public static final OldLanguageExtension<ResolveSnapshotProvider> INSTANCE = new OldLanguageExtension<>(PluginIds.CONSULO_BASE + ".rename.inplace.resolveSnapshotProvider");
   private ResolveSnapshotProvider.ResolveSnapshot mySnapshot;
   private TextRange mySelectedRange;
   private Language myLanguage;

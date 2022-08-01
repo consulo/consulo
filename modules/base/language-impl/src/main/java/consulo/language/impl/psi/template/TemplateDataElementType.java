@@ -44,7 +44,6 @@ import java.util.function.Supplier;
  */
 public class TemplateDataElementType extends IFileElementType implements ITemplateDataElementType {
   private static final int CHECK_PROGRESS_AFTER_TOKENS = 1000;
-  public static final OldLanguageExtension<TreePatcher> TREE_PATCHER = new OldLanguageExtension<>(PluginIds.CONSULO_BASE + ".lang.treePatcher", new SimpleTreePatcher());
 
   @Nonnull
   private final IElementType myTemplateElementType;
@@ -314,7 +313,7 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
     @Nonnull
     @Override
     public Image getIcon() {
-      return null;
+      throw new UnsupportedOperationException();
     }
 
     @Override
@@ -378,18 +377,4 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
     TreeElement createTreeElement(@Nonnull CharSequence text);
   }
 
-  /**
-   * Customizes template data language-specific parsing in templates.
-   */
-  public interface OuterLanguageRangePatcher {
-
-    OldLanguageExtension<OuterLanguageRangePatcher> EXTENSION = new OldLanguageExtension<>(PluginIds.CONSULO_BASE + ".outerLanguageRangePatcher");
-
-    /**
-     * @return Text to be inserted for parsing in outer element insertion ranges provided by
-     * {@link RangeCollector#addOuterRange(TextRange, boolean)} where <tt>isInsertion == true</tt>
-     */
-    @Nullable
-    String getTextForOuterLanguageInsertionRange(@Nonnull TemplateDataElementType templateDataElementType, @Nonnull CharSequence outerElementText);
-  }
 }

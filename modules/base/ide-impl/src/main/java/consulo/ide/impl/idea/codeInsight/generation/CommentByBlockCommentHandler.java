@@ -26,7 +26,7 @@ import consulo.ide.impl.idea.codeInsight.actions.MultiCaretCodeInsightActionHand
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.language.IndentedCommenter;
 import consulo.language.internal.custom.CustomFileTypeLexer;
-import consulo.ide.impl.idea.lang.CustomUncommenter;
+import consulo.language.editor.CustomUncommenter;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.AbstractFileType;
 import consulo.language.internal.custom.CustomSyntaxTableFileType;

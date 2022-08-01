@@ -16,9 +16,7 @@
 package consulo.language.editor;
 
 import consulo.application.*;
-import consulo.application.util.function.Computable;
 import consulo.application.util.function.ThrowableComputable;
-import consulo.util.lang.function.ThrowableRunnable;
 import consulo.component.ProcessCanceledException;
 import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
@@ -26,12 +24,14 @@ import consulo.project.Project;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.util.collection.ArrayUtil;
+import consulo.util.lang.function.ThrowableRunnable;
 import consulo.util.lang.ref.Ref;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.function.Supplier;
 
 public abstract class WriteCommandAction<T> extends BaseActionRunnable<T> {
   private static final Logger LOG = Logger.getInstance(WriteCommandAction.class);
@@ -256,11 +256,11 @@ public abstract class WriteCommandAction<T> extends BaseActionRunnable<T> {
   }
 
   @SuppressWarnings("LambdaUnfriendlyMethodOverload")
-  public static <T> T runWriteCommandAction(Project project, @Nonnull final Computable<T> computable) {
+  public static <T> T runWriteCommandAction(Project project, @Nonnull final Supplier<T> computable) {
     return new WriteCommandAction<T>(project) {
       @Override
       protected void run(@Nonnull Result<T> result) throws Throwable {
-        result.setResult(computable.compute());
+        result.setResult(computable.get());
       }
     }.execute().getResultObject();
   }

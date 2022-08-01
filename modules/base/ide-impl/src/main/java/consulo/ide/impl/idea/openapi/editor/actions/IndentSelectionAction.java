@@ -16,28 +16,27 @@
 
 package consulo.ide.impl.idea.openapi.editor.actions;
 
-import consulo.language.editor.CommonDataKeys;
-import consulo.codeEditor.action.EditorActionUtil;
-import consulo.dataContext.DataContext;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
-import consulo.ui.ex.action.Presentation;
-import consulo.ide.impl.idea.openapi.editor.*;
+import consulo.codeEditor.action.EditorActionUtil;
 import consulo.codeEditor.impl.action.EditorAction;
+import consulo.dataContext.DataContext;
+import consulo.document.Document;
+import consulo.document.util.DocumentUtil;
+import consulo.ide.impl.idea.openapi.editor.IndentStrategy;
 import consulo.ide.impl.idea.openapi.editor.actionSystem.EditorWriteActionHandler;
-import consulo.project.Project;
+import consulo.ide.impl.idea.util.text.CharArrayUtil;
+import consulo.language.Language;
+import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.codeStyle.CodeStyleSettingsManager;
-import consulo.document.util.DocumentUtil;
-import consulo.ide.impl.idea.util.text.CharArrayUtil;
-import consulo.annotation.access.RequiredWriteAction;
-import consulo.document.Document;
+import consulo.project.Project;
+import consulo.ui.ex.action.Presentation;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,7 +53,7 @@ public class IndentSelectionAction extends EditorAction {
     @RequiredWriteAction
     @Override
     public void executeWriteAction(Editor editor, @Nullable Caret caret, DataContext dataContext) {
-      Project project = dataContext.getData(CommonDataKeys.PROJECT);
+      Project project = dataContext.getData(Project.KEY);
       if (isEnabled(editor, caret, dataContext)) {
         indentSelection(editor, project);
       }
@@ -127,8 +126,9 @@ public class IndentSelectionAction extends EditorAction {
       List<Integer> nonModifiableLines = new ArrayList<>();
       if (project != null) {
         PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(document);
-        IndentStrategy indentStrategy = LanguageIndentStrategy.getIndentStrategy(file);
-        if (!LanguageIndentStrategy.isDefault(indentStrategy)) {
+        IndentStrategy indentStrategy = IndentStrategy.forFile(file);
+        // it's not default indent strategy
+        if (indentStrategy.getLanguage() != Language.ANY) {
           for (int i = startIndex; i <= endIndex; i++) {
             if (!canIndent(document, file, i, indentStrategy)) {
               nonModifiableLines.add(i);

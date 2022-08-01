@@ -3,32 +3,45 @@
  */
 package consulo.ide.impl.idea.ide.scratch;
 
-import consulo.ide.IdeView;
+import consulo.application.Application;
+import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.dataContext.DataContext;
-import consulo.language.editor.WriteCommandAction;
-import consulo.ide.impl.idea.openapi.util.Factory;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.language.codeStyle.CodeStyleManager;
+import consulo.ide.IdeView;
 import consulo.ide.impl.idea.util.PathUtil;
-import consulo.application.util.function.Computable;
-import consulo.container.plugin.PluginIds;
 import consulo.language.Language;
-import consulo.language.OldLanguageExtension;
+import consulo.language.codeStyle.CodeStyleManager;
+import consulo.language.editor.WriteCommandAction;
 import consulo.language.editor.scratch.ScratchFileService;
+import consulo.language.extension.ByLanguageValue;
+import consulo.language.extension.LanguageExtension;
+import consulo.language.extension.LanguageOneToOne;
 import consulo.language.file.LanguageFileType;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileFactory;
 import consulo.project.Project;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Supplier;
 
 /**
  * @author gregsh
  */
-public abstract class ScratchFileCreationHelper {
-  public static final OldLanguageExtension<ScratchFileCreationHelper> EXTENSION = new OldLanguageExtension<>(PluginIds.CONSULO_BASE + ".scratch.creationHelper", new ScratchFileCreationHelper() {
-  });
+public abstract class ScratchFileCreationHelper implements LanguageExtension {
+  private static final ExtensionPointCacheKey<ScratchFileCreationHelper, ByLanguageValue<ScratchFileCreationHelper>> KEY =
+          ExtensionPointCacheKey.create("ScratchFileCreationHelper", LanguageOneToOne.build(new ScratchFileCreationHelper() {
+            @Nonnull
+            @Override
+            public Language getLanguage() {
+              return Language.ANY;
+            }
+          }));
+
+  @Nonnull
+  public static ScratchFileCreationHelper forLanguage(@Nonnull Language language) {
+    return Application.get().getExtensionPoint(ScratchFileCreationHelper.class).getOrBuildCache(KEY).requiredGet(language);
+  }
 
   /**
    * Override to change the default initial text for a scratch file stored in {@link Context#text} field.
@@ -48,7 +61,7 @@ public abstract class ScratchFileCreationHelper {
     public int caretOffset;
 
     public String filePrefix;
-    public Factory<Integer> fileCounter;
+    public Supplier<Integer> fileCounter;
     public String fileExtension;
 
     public ScratchFileService.Option createOption = ScratchFileService.Option.create_new_always;
@@ -65,7 +78,7 @@ public abstract class ScratchFileCreationHelper {
 
   @Nonnull
   public static String reformat(@Nonnull Project project, @Nonnull Language language, @Nonnull String text) {
-    return WriteCommandAction.runWriteCommandAction(project, (Computable<String>)() -> {
+    return WriteCommandAction.runWriteCommandAction(project, (Supplier<String>)() -> {
       PsiFile psi = parseHeader(project, language, text);
       if (psi != null) CodeStyleManager.getInstance(project).reformat(psi);
       return psi == null ? text : psi.getText();

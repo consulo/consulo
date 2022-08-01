@@ -1,11 +1,9 @@
-package consulo.ide.impl.psi.templateLanguages;
-
-import consulo.language.impl.psi.template.TemplateDataElementType;
+package consulo.language.impl.psi.template;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class DefaultOuterLanguagePatcher implements TemplateDataElementType.OuterLanguageRangePatcher {
+public abstract class DefaultOuterLanguagePatcher implements OuterLanguageRangePatcher {
   public static final String OUTER_EXPRESSION_PLACEHOLDER = "jbIdentifier6b52cc4b";
 
   @Override

@@ -8,7 +8,6 @@ import consulo.language.ast.ASTNode;
 import consulo.language.impl.DebugUtil;
 import consulo.language.impl.ast.*;
 import consulo.language.impl.ast.SharedImplUtil;
-import consulo.language.impl.psi.template.TemplateDataElementType.OuterLanguageRangePatcher;
 import consulo.language.util.CharTable;
 import consulo.logging.Logger;
 import consulo.logging.attachment.AttachmentFactory;
@@ -82,7 +81,7 @@ public class RangeCollectorImpl extends TemplateDataElementType.RangeCollector {
 
   void prepareFileForParsing(@Nonnull Language templateLanguage, @Nonnull CharSequence originalSourceCode, @Nonnull CharSequence templateSourceCode) {
     addDummyStringsToRangesToRemove(templateSourceCode);
-    OuterLanguageRangePatcher patcher = OuterLanguageRangePatcher.EXTENSION.forLanguage(templateLanguage);
+    OuterLanguageRangePatcher patcher = OuterLanguageRangePatcher.forLanguage(templateLanguage);
     if (patcher != null) {
       StringBuilder builder = templateSourceCode instanceof StringBuilder ? (StringBuilder)templateSourceCode : new StringBuilder(templateSourceCode);
       insertDummyStringIntoInsertionRanges(patcher, originalSourceCode, builder);
@@ -146,7 +145,7 @@ public class RangeCollectorImpl extends TemplateDataElementType.RangeCollector {
    * @param sourceCode          original source code (include template data language and template language)
    */
   void insertOuterElementsAndRemoveRanges(@Nonnull TreeElement templateFileElement, @Nonnull CharSequence sourceCode, @Nonnull CharTable charTable, @Nonnull Language language) {
-    TreePatcher templateTreePatcher = TemplateDataElementType.TREE_PATCHER.forLanguage(language);
+    TreePatcher templateTreePatcher = TreePatcher.forLanguage(language);
 
     TreeElement currentLeafOrLazyParseable = findFirstSuitableElement(templateFileElement);
 
@@ -370,7 +369,7 @@ public class RangeCollectorImpl extends TemplateDataElementType.RangeCollector {
 
     StringBuilder stringBuilder = applyOuterAndRemoveRanges(chars);
 
-    OuterLanguageRangePatcher outerLanguageRangePatcher = OuterLanguageRangePatcher.EXTENSION.forLanguage(language);
+    OuterLanguageRangePatcher outerLanguageRangePatcher = OuterLanguageRangePatcher.forLanguage(language);
     if (outerLanguageRangePatcher != null) {
       insertDummyStringIntoInsertionRanges(outerLanguageRangePatcher, chars, stringBuilder);
     }

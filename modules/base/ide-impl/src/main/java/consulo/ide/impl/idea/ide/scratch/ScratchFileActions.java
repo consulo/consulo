@@ -1,19 +1,16 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.scratch;
 
-import consulo.ide.IdeView;
-import consulo.ide.impl.idea.ide.actions.NewActionGroup;
-import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.*;
 import consulo.application.AllIcons;
-import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
-import consulo.language.psi.SyntaxTraverser;
+import consulo.externalService.statistic.FeatureUsageTracker;
+import consulo.ide.IdeView;
+import consulo.ide.impl.idea.ide.actions.NewActionGroup;
+import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
+import consulo.ide.impl.idea.util.Consumer;
 import consulo.language.Language;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
@@ -28,7 +25,12 @@ import consulo.project.Project;
 import consulo.ui.ex.action.*;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.JBIterable;
+import consulo.util.io.FileUtil;
+import consulo.util.io.PathUtil;
+import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.Condition;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.PerFileMappings;
@@ -88,7 +90,7 @@ public class ScratchFileActions {
       ScratchFileCreationHelper.Context context = createContext(e, project);
       Consumer<Language> consumer = l -> {
         context.language = l;
-        ScratchFileCreationHelper.EXTENSION.forLanguage(context.language).prepareText(project, context, DataContext.EMPTY_CONTEXT);
+        ScratchFileCreationHelper.forLanguage(context.language).prepareText(project, context, DataContext.EMPTY_CONTEXT);
         doCreateNewScratch(project, context);
       };
       if (context.language != null) {
@@ -158,14 +160,14 @@ public class ScratchFileActions {
       LanguageFileType fileType = language.getAssociatedFileType();
       context.fileExtension = fileType == null ? "" : fileType.getDefaultExtension();
     }
-    ScratchFileCreationHelper.EXTENSION.forLanguage(language).beforeCreate(project, context);
+    ScratchFileCreationHelper.forLanguage(language).beforeCreate(project, context);
 
     VirtualFile dir = context.ideView != null ? PsiUtilCore.getVirtualFile(ArrayUtil.getFirstElement(context.ideView.getDirectories())) : null;
     RootType rootType = dir == null ? null : ScratchFileService.findRootType(dir);
     String relativePath = rootType != ScratchRootType.getInstance() ? "" : FileUtil.getRelativePath(ScratchFileService.getInstance().getRootPath(rootType), dir.getPath(), '/');
 
     String fileName = (StringUtil.isEmpty(relativePath) ? "" : relativePath + "/") +
-                      PathUtil.makeFileName(ObjectUtils.notNull(context.filePrefix, "scratch") + (context.fileCounter != null ? context.fileCounter.create() : ""), context.fileExtension);
+                      PathUtil.makeFileName(ObjectUtil.notNull(context.filePrefix, "scratch") + (context.fileCounter != null ? context.fileCounter.get() : ""), context.fileExtension);
     VirtualFile file = ScratchRootType.getInstance().createScratchFile(project, fileName, language, context.text, context.createOption);
     if (file == null) return null;
 
@@ -179,7 +181,7 @@ public class ScratchFileActions {
 
   private static void checkLanguageAndTryToFixText(@Nonnull Project project, @Nonnull ScratchFileCreationHelper.Context context, @Nonnull DataContext dataContext) {
     if (context.language == null) return;
-    ScratchFileCreationHelper handler = ScratchFileCreationHelper.EXTENSION.forLanguage(context.language);
+    ScratchFileCreationHelper handler = ScratchFileCreationHelper.forLanguage(context.language);
     if (handler.prepareText(project, context, dataContext)) return;
 
     PsiFile psiFile = ScratchFileCreationHelper.parseHeader(project, context.language, context.text);
@@ -249,12 +251,12 @@ public class ScratchFileActions {
     }
 
     @Nonnull
-    protected Function<VirtualFile, Language> fileLanguage(@Nonnull Project project) {
-      return new Function<VirtualFile, Language>() {
+    protected java.util.function.Function<VirtualFile, Language> fileLanguage(@Nonnull Project project) {
+      return new java.util.function.Function<>() {
         final ScratchFileService fileService = ScratchFileService.getInstance();
 
         @Override
-        public Language fun(VirtualFile file) {
+        public Language apply(VirtualFile file) {
           Language lang = fileService.getScratchesMapping().getMapping(file);
           return lang != null ? lang : LanguageUtil.getLanguageForPsi(project, file);
         }

@@ -15,17 +15,33 @@
  */
 package consulo.language.impl.psi.template;
 
-import consulo.language.impl.ast.ASTFactory;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.application.Application;
+import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.document.util.TextRange;
+import consulo.language.Language;
+import consulo.language.extension.ByLanguageValue;
+import consulo.language.extension.LanguageExtension;
+import consulo.language.extension.LanguageOneToOne;
+import consulo.language.impl.ast.ASTFactory;
 import consulo.language.impl.ast.CompositeElement;
 import consulo.language.impl.ast.LeafElement;
 import consulo.language.impl.ast.TreeElement;
 import consulo.language.psi.OuterLanguageElement;
 import consulo.language.util.CharTable;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public interface TreePatcher {
+@ExtensionAPI(ComponentScope.APPLICATION)
+public interface TreePatcher extends LanguageExtension {
+  ExtensionPointCacheKey<TreePatcher, ByLanguageValue<TreePatcher>> KEY = ExtensionPointCacheKey.create("TreePatcher", LanguageOneToOne.build(new SimpleTreePatcher()));
+
+  @Nonnull
+  static TreePatcher forLanguage(@Nonnull Language language) {
+    return Application.get().getExtensionPoint(TreePatcher.class).getOrBuildCache(KEY).requiredGet(language);
+  }
 
   /**
    * Inserts toInsert into tree

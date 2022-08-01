@@ -15,6 +15,7 @@
  */
 package consulo.language.impl.psi.template;
 
+import consulo.language.Language;
 import consulo.language.impl.ast.CompositeElement;
 import consulo.language.impl.ast.TreeElement;
 import consulo.language.psi.OuterLanguageElement;
@@ -30,5 +31,11 @@ class SimpleTreePatcher implements TreePatcher {
     else {
       parent.rawAddChildren((TreeElement)toInsert);
     }
+  }
+
+  @Nonnull
+  @Override
+  public Language getLanguage() {
+    return Language.ANY;
   }
 }

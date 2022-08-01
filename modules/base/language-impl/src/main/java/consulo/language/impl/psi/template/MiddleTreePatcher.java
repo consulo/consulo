@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
 /**
  * Inserts the {@link OuterLanguageElement} so that it isn't a first child of the parent (unless it's the very first element in the file).
  */
-public class MiddleTreePatcher implements TreePatcher {
+public abstract class MiddleTreePatcher implements TreePatcher {
   @Override
   public void insert(@Nonnull CompositeElement parent, TreeElement anchorBefore, @Nonnull OuterLanguageElement toInsert) {
     anchorBefore = findTopmostAnchor(anchorBefore);

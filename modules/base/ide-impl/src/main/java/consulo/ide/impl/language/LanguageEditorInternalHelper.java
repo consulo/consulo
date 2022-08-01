@@ -34,7 +34,7 @@ import consulo.language.ast.IElementType;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.editor.DaemonCodeAnalyzerSettings;
 import consulo.language.editor.LanguageLineWrapPositionStrategy;
-import consulo.language.editor.action.LanguageWordBoundaryFilter;
+import consulo.language.editor.action.WordBoundaryFilter;
 import consulo.language.editor.highlight.EmptyEditorHighlighter;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiDocumentManager;
@@ -115,7 +115,7 @@ public class LanguageEditorInternalHelper implements EditorInternalHelper {
   public boolean isLexemeBoundary(@Nullable Object left, @Nullable Object right) {
     IElementType leftTokenType = (IElementType)left;
     IElementType rightTokenType = (IElementType)right;
-    return leftTokenType != null && rightTokenType != null && LanguageWordBoundaryFilter.INSTANCE.forLanguage(rightTokenType.getLanguage()).isWordBoundary(leftTokenType, rightTokenType);
+    return leftTokenType != null && rightTokenType != null && WordBoundaryFilter.forLanguage(rightTokenType.getLanguage()).isWordBoundary(leftTokenType, rightTokenType);
   }
 
   @Override
