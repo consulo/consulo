@@ -17,25 +17,23 @@ package consulo.ide.impl.language;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.codeEditor.Caret;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorEx;
-import consulo.codeEditor.EditorHighlighter;
+import consulo.codeEditor.*;
 import consulo.codeEditor.impl.DocumentMarkupModelImpl;
 import consulo.codeEditor.impl.util.EditorImplUtil;
 import consulo.codeEditor.internal.EditorInternalHelper;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
+import consulo.fileEditor.EditorNotifications;
 import consulo.fileEditor.FileEditorManager;
 import consulo.ide.impl.idea.codeInsight.hints.InlayParameterHintsProvider;
 import consulo.ide.impl.idea.codeInsight.hints.settings.ParameterNameHintsConfigurable;
 import consulo.ide.impl.idea.codeStyle.CodeStyleFacade;
 import consulo.ide.impl.idea.openapi.editor.impl.EditorHighlighterCache;
-import consulo.fileEditor.EditorNotifications;
 import consulo.language.ast.IElementType;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.editor.DaemonCodeAnalyzerSettings;
+import consulo.language.editor.LanguageLineWrapPositionStrategy;
 import consulo.language.editor.action.LanguageWordBoundaryFilter;
 import consulo.language.editor.highlight.EmptyEditorHighlighter;
 import consulo.language.inject.InjectedLanguageManager;
@@ -59,7 +57,7 @@ import java.awt.*;
  */
 @Singleton
 @ServiceImpl
-public class IdeEditorInternalHelper implements EditorInternalHelper {
+public class LanguageEditorInternalHelper implements EditorInternalHelper {
   private static class FileEditorAffectCaretContext extends CaretDataContext {
 
     public FileEditorAffectCaretContext(@Nonnull DataContext delegate, @Nonnull Caret caret) {
@@ -85,7 +83,7 @@ public class IdeEditorInternalHelper implements EditorInternalHelper {
   private final Provider<DaemonCodeAnalyzerSettings> myDaemonCodeAnalyzerSettings;
 
   @Inject
-  public IdeEditorInternalHelper(Provider<DaemonCodeAnalyzerSettings> daemonCodeAnalyzerSettings) {
+  public LanguageEditorInternalHelper(Provider<DaemonCodeAnalyzerSettings> daemonCodeAnalyzerSettings) {
     myDaemonCodeAnalyzerSettings = daemonCodeAnalyzerSettings;
   }
 
@@ -180,5 +178,11 @@ public class IdeEditorInternalHelper implements EditorInternalHelper {
   @Override
   public boolean hasAnyInlayExtensions() {
     return Application.get().getExtensionPoint(InlayParameterHintsProvider.class).hasAnyExtensions();
+  }
+
+  @Nonnull
+  @Override
+  public LineWrapPositionStrategy getLineWrapPositionStrategy(@Nonnull Editor editor) {
+    return LanguageLineWrapPositionStrategy.forEditor(editor);
   }
 }

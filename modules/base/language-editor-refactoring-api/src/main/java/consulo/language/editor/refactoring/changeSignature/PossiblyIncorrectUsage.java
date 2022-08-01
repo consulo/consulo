@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2022 consulo.io
+ * Copyright 2000-2010 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.extension;
-
-import consulo.language.Language;
-
-import javax.annotation.Nonnull;
+package consulo.language.editor.refactoring.changeSignature;
 
 /**
- * @author VISTALL
- * @since 24-Jun-22
+ * All Usages that may be incorrect must implement this interface. In other case incorrect usages will be processed by default processor  
+ * @author Maxim.Medvedev
  */
-public interface LanguageExtension {
-  @Nonnull
-  Language getLanguage();
+public interface PossiblyIncorrectUsage {
+  boolean isCorrect();
 }

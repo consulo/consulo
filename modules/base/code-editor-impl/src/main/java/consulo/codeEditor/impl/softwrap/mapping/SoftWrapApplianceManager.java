@@ -690,7 +690,7 @@ public abstract class SoftWrapApplianceManager implements Dumpable {
 
       // Performance optimization implied by profiling results analysis.
       if (myLineWrapPositionStrategy == null) {
-        myLineWrapPositionStrategy = LanguageLineWrapPositionStrategy.INSTANCE.forEditor(myEditor);
+        myLineWrapPositionStrategy = EditorInternalHelper.getInstance().getLineWrapPositionStrategy(myEditor);
       }
 
       softWrapOffset = myLineWrapPositionStrategy.calculateWrapPosition(document, myEditor.getProject(), minOffset, maxOffset, preferredOffset, true, true);

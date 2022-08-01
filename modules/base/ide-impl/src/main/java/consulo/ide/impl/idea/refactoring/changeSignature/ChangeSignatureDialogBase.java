@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.refactoring.changeSignature;
 import consulo.application.AllIcons;
 import consulo.disposer.Disposable;
 import consulo.language.editor.refactoring.changeSignature.ChangeSignatureHandler;
+import consulo.language.editor.refactoring.changeSignature.ParameterInfo;
 import consulo.language.editor.refactoring.ui.RefactoringDialog;
 import consulo.language.editor.refactoring.ui.StringTableCellEditor;
 import consulo.language.editor.ui.awt.EditorTextField;

@@ -18,6 +18,7 @@ package consulo.content.library;
 import consulo.content.OrderRootType;
 import consulo.content.RootProvider;
 import consulo.disposer.Disposable;
+import consulo.util.dataholder.Key;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -28,6 +29,8 @@ import javax.annotation.Nullable;
  * @author dsl
  */
 public interface Library extends JDOMExternalizable, Disposable {
+  Key<Library> KEY = Key.create(Library.class);
+
   Library[] EMPTY_ARRAY = new Library[0];
 
   @Nullable

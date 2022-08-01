@@ -13,29 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.refactoring.changeSignature;
+package consulo.language.editor.refactoring.changeSignature;
 
-import consulo.ide.impl.idea.ide.actions.CopyReferenceAction;
-import consulo.language.findUsage.DescriptiveNameUtil;
-import consulo.undoRedo.BasicUndoableAction;
-import consulo.undoRedo.UndoableAction;
-import consulo.undoRedo.ProjectUndoManager;
-import consulo.project.Project;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiManager;
+import consulo.language.editor.QualifiedNameProviderUtil;
 import consulo.language.editor.refactoring.BaseRefactoringProcessor;
 import consulo.language.editor.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.RefactoringTransaction;
+import consulo.language.editor.refactoring.ResolveSnapshotProvider;
 import consulo.language.editor.refactoring.event.RefactoringElementListener;
 import consulo.language.editor.refactoring.event.RefactoringEventData;
 import consulo.language.editor.refactoring.event.UndoRefactoringElementListener;
-import consulo.language.editor.refactoring.RefactoringTransaction;
-import consulo.language.editor.refactoring.ResolveSnapshotProvider;
-import consulo.language.editor.refactoring.rename.inplace.VariableInplaceRenamer;
+import consulo.language.findUsage.DescriptiveNameUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiManager;
+import consulo.language.util.IncorrectOperationException;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.undoRedo.BasicUndoableAction;
+import consulo.undoRedo.ProjectUndoManager;
+import consulo.undoRedo.UndoableAction;
 import consulo.usage.MoveRenameUsageInfo;
 import consulo.usage.UsageInfo;
-import consulo.language.util.IncorrectOperationException;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.logging.Logger;
+import consulo.util.collection.ContainerUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -102,7 +101,7 @@ public abstract class ChangeSignatureProcessorBase extends BaseRefactoringProces
 
   @Override
   protected boolean isPreviewUsages(@Nonnull UsageInfo[] usages) {
-    for (ChangeSignatureUsageProcessor processor : ChangeSignatureUsageProcessor.EP_NAME.getExtensions()) {
+    for (ChangeSignatureUsageProcessor processor : ChangeSignatureUsageProcessor.EP_NAME.getExtensionList()) {
       if (processor.shouldPreviewUsages(myChangeInfo, usages)) return true;
     }
     return super.isPreviewUsages(usages);
@@ -134,7 +133,7 @@ public abstract class ChangeSignatureProcessorBase extends BaseRefactoringProces
   protected void performRefactoring(@Nonnull UsageInfo[] usages) {
     RefactoringTransaction transaction = getTransaction();
     final RefactoringElementListener elementListener = transaction == null ? null : transaction.getElementListener(myChangeInfo.getMethod());
-    final String fqn = CopyReferenceAction.elementToFqn(myChangeInfo.getMethod());
+    final String fqn = QualifiedNameProviderUtil.elementToFqn(myChangeInfo.getMethod(), null);
     if (fqn != null) {
       UndoableAction action = new BasicUndoableAction() {
         @Override
@@ -151,10 +150,9 @@ public abstract class ChangeSignatureProcessorBase extends BaseRefactoringProces
       ProjectUndoManager.getInstance(myProject).undoableActionPerformed(action);
     }
     try {
-      final ChangeSignatureUsageProcessor[] processors = ChangeSignatureUsageProcessor.EP_NAME.getExtensions();
+      final List<ChangeSignatureUsageProcessor> processors = ChangeSignatureUsageProcessor.EP_NAME.getExtensionList();
 
-      final ResolveSnapshotProvider resolveSnapshotProvider = myChangeInfo.isParameterNamesChanged() ?
-                                                              VariableInplaceRenamer.INSTANCE.forLanguage(myChangeInfo.getMethod().getLanguage()) : null;
+      final ResolveSnapshotProvider resolveSnapshotProvider = myChangeInfo.isParameterNamesChanged() ? ResolveSnapshotProvider.forLanguage(myChangeInfo.getMethod().getLanguage()) : null;
       final List<ResolveSnapshotProvider.ResolveSnapshot> snapshots = new ArrayList<ResolveSnapshotProvider.ResolveSnapshot>();
       for (ChangeSignatureUsageProcessor processor : processors) {
         if (resolveSnapshotProvider != null) {

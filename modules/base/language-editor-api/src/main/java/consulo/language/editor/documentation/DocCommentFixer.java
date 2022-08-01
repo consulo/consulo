@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2012 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,40 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package consulo.language.editor.refactoring;
+package consulo.language.editor.documentation;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
+import consulo.codeEditor.Editor;
 import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.language.Language;
 import consulo.language.extension.ByLanguageValue;
 import consulo.language.extension.LanguageExtension;
 import consulo.language.extension.LanguageOneToOne;
-import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiComment;
+import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * User: Maxim.Mossienko
- * Date: 29.07.2009
- * Time: 14:00:17
+ * @author Denis Zhdanov
+ * @since 9/20/12 8:37 PM
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
-public abstract class ResolveSnapshotProvider implements LanguageExtension {
-  private static final ExtensionPointCacheKey<ResolveSnapshotProvider, ByLanguageValue<ResolveSnapshotProvider>> KEY =
-          ExtensionPointCacheKey.create("ResolveSnapshotProvider", LanguageOneToOne.build());
+public interface DocCommentFixer extends LanguageExtension {
+  ExtensionPointCacheKey<DocCommentFixer, ByLanguageValue<DocCommentFixer>> KEY = ExtensionPointCacheKey.create("DocCommentFixer", LanguageOneToOne.build());
 
   @Nullable
-  public static ResolveSnapshotProvider forLanguage(@Nonnull Language language) {
-    return Application.get().getExtensionPoint(ResolveSnapshotProvider.class).getOrBuildCache(KEY).get(language);
+  static DocCommentFixer forLanguage(@Nonnull Language language) {
+    return Application.get().getExtensionPoint(DocCommentFixer.class).getOrBuildCache(KEY).get(language);
   }
 
-  public abstract ResolveSnapshot createSnapshot(PsiElement scope);
-
-  public static abstract class ResolveSnapshot {
-    public abstract void apply(String name);
-  }
+  void fixComment(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiComment comment);
 }

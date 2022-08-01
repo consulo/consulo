@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.editorActions.enter;
+package consulo.language.editor.action;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
@@ -33,8 +33,6 @@ import javax.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface EnterHandlerDelegate {
-  ExtensionPointName<EnterHandlerDelegate> EP_NAME = ExtensionPointName.create(EnterHandlerDelegate.class);
-
   enum Result {
     Default, Continue, DefaultForceIndent, DefaultSkipIndent, Stop
   }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,12 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.refactoring.changeSignature;
+
+package consulo.language.editor.refactoring.changeSignature;
+
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReference;
 
 /**
- * All Usages that may be incorrect must implement this interface. In other case incorrect usages will be processed by default processor  
- * @author Maxim.Medvedev
+ * A reference which can be affected by a "Change Signature" refactoring.
+ *
+ * @author yole
+ * @since 8.1
  */
-public interface PossiblyIncorrectUsage {
-  boolean isCorrect();
+public interface PsiCallReference extends PsiReference {
+  PsiElement handleChangeSignature(ChangeInfo changeInfo);
 }

@@ -13,20 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.editor;
+package consulo.language.editor;
 
 import consulo.codeEditor.LineWrapPositionStrategy;
-import consulo.codeEditor.impl.LanguageLineWrapPositionStrategy;
-import consulo.language.ast.ASTNode;
 import consulo.document.Document;
-import consulo.logging.Logger;
-import consulo.project.Project;
 import consulo.document.util.TextRange;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.ast.IElementType;
-import consulo.language.ast.TokenSet;
+import consulo.logging.Logger;
+import consulo.project.Project;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -37,7 +37,7 @@ import javax.annotation.Nullable;
  * @author Denis Zhdanov
  * @since 5/12/11 12:30 PM
  */
-public abstract class PsiAwareLineWrapPositionStrategy implements LineWrapPositionStrategy {
+public abstract class PsiAwareLineWrapPositionStrategy implements LanguageLineWrapPositionStrategy {
 
   private static final Logger LOG = Logger.getInstance(PsiAwareLineWrapPositionStrategy.class);
   
@@ -68,7 +68,7 @@ public abstract class PsiAwareLineWrapPositionStrategy implements LineWrapPositi
                                    boolean allowToBeyondMaxPreferredOffset,
                                    boolean virtual) {
     if (virtual && myNonVirtualOnly) {
-      LineWrapPositionStrategy implementation = LanguageLineWrapPositionStrategy.INSTANCE.getDefaultImplementation();
+      LineWrapPositionStrategy implementation = LanguageLineWrapPositionStrategy.getDefaultImplementation();
       return implementation.calculateWrapPosition(
         document, project, startOffset, endOffset, maxPreferredOffset, allowToBeyondMaxPreferredOffset, virtual
       );

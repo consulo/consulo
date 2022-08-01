@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.codeInsight.editorActions.enter;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.CodeInsightSettings;
+import consulo.language.editor.action.EnterHandlerDelegateAdapter;
 import consulo.language.editor.highlight.BraceMatcher;
 import consulo.language.editor.action.BraceMatchingUtil;
 import consulo.language.ast.ASTNode;

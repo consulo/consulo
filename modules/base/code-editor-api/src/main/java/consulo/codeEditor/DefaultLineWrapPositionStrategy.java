@@ -13,10 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.codeEditor.impl;
-
-import consulo.codeEditor.GenericLineWrapPositionStrategy;
-import consulo.codeEditor.LineWrapPositionStrategy;
+package consulo.codeEditor;
 
 /**
  * Default {@link LineWrapPositionStrategy} implementation. Is assumed to provide language-agnostic algorithm that may

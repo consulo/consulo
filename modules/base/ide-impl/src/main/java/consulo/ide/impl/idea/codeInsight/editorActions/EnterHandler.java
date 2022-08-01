@@ -3,6 +3,7 @@
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.Application;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.CaretModel;
 import consulo.codeEditor.Editor;
@@ -16,7 +17,7 @@ import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.document.util.DocumentUtil;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.codeInsight.editorActions.enter.EnterHandlerDelegate;
+import consulo.language.editor.action.EnterHandlerDelegate;
 import consulo.ide.impl.idea.codeStyle.CodeStyleFacade;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
@@ -133,7 +134,7 @@ public class EnterHandler extends BaseEnterHandler implements ExtensionEditorAct
     Ref<Integer> caretOffsetRef = new Ref<>(caretOffset);
     Ref<Integer> caretAdvanceRef = new Ref<>(0);
 
-    for (EnterHandlerDelegate delegate : EnterHandlerDelegate.EP_NAME.getExtensionList()) {
+    for (EnterHandlerDelegate delegate : Application.get().getExtensionPoint(EnterHandlerDelegate.class)) {
       EnterHandlerDelegate.Result result = delegate.preprocessEnter(file, editor, caretOffsetRef, caretAdvanceRef, dataContext, myOriginalHandler);
       if (caretOffsetRef.get() > document.getTextLength()) {
         throw new AssertionError("Wrong caret offset change by " + delegate);
@@ -175,7 +176,7 @@ public class EnterHandler extends BaseEnterHandler implements ExtensionEditorAct
     final DoEnterAction action = new DoEnterAction(file, editor, document, dataContext, caretOffset, !insertSpace, caretAdvanceRef.get(), project);
     action.setForceIndent(forceIndent);
     action.run();
-    for (EnterHandlerDelegate delegate : EnterHandlerDelegate.EP_NAME.getExtensionList()) {
+    for (EnterHandlerDelegate delegate : Application.get().getExtensionPoint(EnterHandlerDelegate.class)) {
       if (delegate.postProcessEnter(file, editor, dataContext) == EnterHandlerDelegate.Result.Stop) {
         break;
       }

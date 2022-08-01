@@ -13,6 +13,8 @@
 package consulo.ide.impl.idea.refactoring.changeSignature;
 
 import consulo.application.ApplicationManager;
+import consulo.language.editor.refactoring.changeSignature.ChangeInfo;
+import consulo.language.editor.refactoring.changeSignature.ParameterInfo;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.editor.refactoring.rename.RenameProcessor;
 import consulo.language.psi.PsiElement;

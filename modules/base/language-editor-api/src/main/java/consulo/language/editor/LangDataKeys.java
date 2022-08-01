@@ -30,6 +30,7 @@ import consulo.util.lang.function.Condition;
  * @author yole
  */
 public interface LangDataKeys extends PlatformDataKeys {
+  @Deprecated(forRemoval = true)
   Key<Module> MODULE = CommonDataKeys.MODULE;
   /**
    * Returns module if module node is selected (in module view)
@@ -38,8 +39,11 @@ public interface LangDataKeys extends PlatformDataKeys {
   Key<Module[]> MODULE_CONTEXT_ARRAY = Key.create("context.Module.Array");
   Key<ModifiableModuleModel> MODIFIABLE_MODULE_MODEL = Key.create("modifiable.module.model");
 
-  Key<Language> LANGUAGE = Key.create("Language");
+  @Deprecated(forRemoval = true)
+  Key<Language> LANGUAGE = Language.KEY;
   Key<Language[]> CONTEXT_LANGUAGES = Key.create("context.Languages");
+
+  @Deprecated(forRemoval = true)
   Key<PsiElement[]> PSI_ELEMENT_ARRAY = CommonDataKeys.PSI_ELEMENT_ARRAY;
 
   Key<Boolean> NO_NEW_ACTION = Key.create("IDEview.no.create.element.action");
@@ -52,6 +56,6 @@ public interface LangDataKeys extends PlatformDataKeys {
   Key<JBPopup> POSITION_ADJUSTER_POPUP = Key.create("chooseByNameDropDown");
   Key<JBPopup> PARENT_POPUP = Key.create("chooseByNamePopup");
 
-
-  Key<Library> LIBRARY = Key.create("project.model.library");
+  @Deprecated(forRemoval = true)
+  Key<Library> LIBRARY = Library.KEY;
 }

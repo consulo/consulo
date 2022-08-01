@@ -13,17 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.extension;
+package consulo.language.editor.internal;
 
+import consulo.codeEditor.DefaultLineWrapPositionStrategy;
 import consulo.language.Language;
+import consulo.language.editor.LanguageLineWrapPositionStrategy;
 
 import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 24-Jun-22
+ * @since 01-Aug-22
  */
-public interface LanguageExtension {
+public class LanguageDefaultLineWrapPositionStrategy extends DefaultLineWrapPositionStrategy implements LanguageLineWrapPositionStrategy {
+  public static final LanguageDefaultLineWrapPositionStrategy INSTANCE = new LanguageDefaultLineWrapPositionStrategy();
+
   @Nonnull
-  Language getLanguage();
+  @Override
+  public Language getLanguage() {
+    return Language.ANY;
+  }
 }

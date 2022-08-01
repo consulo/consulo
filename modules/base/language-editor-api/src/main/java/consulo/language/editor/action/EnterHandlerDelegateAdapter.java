@@ -1,10 +1,11 @@
-package consulo.ide.impl.idea.codeInsight.editorActions.enter;
+package consulo.language.editor.action;
 
-import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
-import consulo.util.lang.ref.Ref;
+import consulo.dataContext.DataContext;
 import consulo.language.psi.PsiFile;
+import consulo.util.lang.ref.Ref;
+
 import javax.annotation.Nonnull;
 
 /**

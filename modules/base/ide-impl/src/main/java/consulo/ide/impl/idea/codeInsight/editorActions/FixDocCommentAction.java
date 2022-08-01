@@ -9,7 +9,7 @@ import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.impl.action.EditorAction;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
-import consulo.ide.impl.idea.codeInsight.documentation.DocCommentFixer;
+import consulo.language.editor.documentation.DocCommentFixer;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.CodeDocumentationAwareCommenter;
@@ -120,7 +120,7 @@ public class FixDocCommentAction extends EditorAction {
       task = () -> generateComment(pair.first, editor, docProvider, commenter, project);
     }
     else {
-      final DocCommentFixer fixer = DocCommentFixer.EXTENSION.forLanguage(language);
+      final DocCommentFixer fixer = DocCommentFixer.forLanguage(language);
       if (fixer == null) {
         return;
       }

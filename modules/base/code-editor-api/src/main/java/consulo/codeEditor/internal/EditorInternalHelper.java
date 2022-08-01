@@ -18,9 +18,7 @@ package consulo.codeEditor.internal;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
-import consulo.codeEditor.Caret;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorHighlighter;
+import consulo.codeEditor.*;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.codeEditor.util.EditorUtil;
 import consulo.dataContext.DataContext;
@@ -122,5 +120,10 @@ public interface EditorInternalHelper {
 
   default boolean hasAnyInlayExtensions() {
     return false;
+  }
+
+  @Nonnull
+  default LineWrapPositionStrategy getLineWrapPositionStrategy(@Nonnull Editor editor) {
+    return new DefaultLineWrapPositionStrategy();
   }
 }

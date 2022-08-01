@@ -128,7 +128,7 @@ public class VariableInplaceRenamer extends InplaceRefactoring {
     super.beforeTemplateStart();
     myLanguage = myScope.getLanguage();
     if (shouldCreateSnapshot()) {
-      final ResolveSnapshotProvider resolveSnapshotProvider = INSTANCE.forLanguage(myLanguage);
+      final ResolveSnapshotProvider resolveSnapshotProvider = ResolveSnapshotProvider.forLanguage(myLanguage);
       mySnapshot = resolveSnapshotProvider != null ? resolveSnapshotProvider.createSnapshot(myScope) : null;
     }
 

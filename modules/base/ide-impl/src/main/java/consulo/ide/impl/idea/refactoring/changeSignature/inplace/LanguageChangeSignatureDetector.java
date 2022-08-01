@@ -21,7 +21,7 @@ import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.refactoring.changeSignature.ChangeInfo;
+import consulo.language.editor.refactoring.changeSignature.ChangeInfo;
 import consulo.language.Language;
 import consulo.language.extension.ByLanguageValue;
 import consulo.language.extension.LanguageExtension;

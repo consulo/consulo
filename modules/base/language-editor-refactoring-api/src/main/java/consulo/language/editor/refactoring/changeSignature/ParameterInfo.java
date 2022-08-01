@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.refactoring.changeSignature;
+package consulo.language.editor.refactoring.changeSignature;
 
 import javax.annotation.Nullable;
 

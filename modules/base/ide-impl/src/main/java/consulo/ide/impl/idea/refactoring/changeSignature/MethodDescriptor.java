@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.refactoring.changeSignature;
 
+import consulo.language.editor.refactoring.changeSignature.ParameterInfo;
 import consulo.language.psi.PsiElement;
 
 import java.util.List;

@@ -14,17 +14,42 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.refactoring.changeSignature;
+package consulo.language.editor.refactoring.changeSignature;
 
+import consulo.language.Language;
 import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiReference;
+import javax.annotation.Nonnull;
 
 /**
- * A reference which can be affected by a "Change Signature" refactoring.
+ * Represents the set of changes performed by a "Change Signature" refactoring.
  *
  * @author yole
  * @since 8.1
  */
-public interface PsiCallReference extends PsiReference {
-  PsiElement handleChangeSignature(ChangeInfo changeInfo);
+public interface ChangeInfo {
+  /**
+   * Returns the list of parameters after the refactoring.
+   *
+   * @return parameter list.
+   */
+  @Nonnull
+  ParameterInfo[] getNewParameters();
+
+  boolean isParameterSetOrOrderChanged();
+
+  boolean isParameterTypesChanged();
+
+  boolean isParameterNamesChanged();
+
+  boolean isGenerateDelegate();
+
+  boolean isNameChanged();
+  
+  PsiElement getMethod();
+
+  boolean isReturnTypeChanged();
+
+  String getNewName();
+
+  Language getLanguage();
 }

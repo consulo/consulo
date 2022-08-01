@@ -11,6 +11,7 @@ import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
+import consulo.language.editor.action.EnterHandlerDelegateAdapter;
 import consulo.project.Project;
 import consulo.util.lang.ref.Ref;
 import consulo.language.psi.PsiFile;

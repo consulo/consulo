@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.editor;
+package consulo.language.editor;
 
 import consulo.codeEditor.LineWrapPositionStrategy;
-import consulo.codeEditor.impl.LanguageLineWrapPositionStrategy;
-import consulo.project.Project;
-import consulo.language.ast.IElementType;
 import consulo.document.Document;
+import consulo.language.ast.IElementType;
+import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -32,7 +31,7 @@ import javax.annotation.Nullable;
  * @author Denis Zhdanov
  * @since 5/12/11 12:50 PM
  */
-public class PsiAwareDefaultLineWrapPositionStrategy extends PsiAwareLineWrapPositionStrategy {
+public abstract class PsiAwareDefaultLineWrapPositionStrategy extends PsiAwareLineWrapPositionStrategy {
 
   public PsiAwareDefaultLineWrapPositionStrategy(boolean nonVirtualOnly, @Nonnull IElementType ... enabledTypes) {
     super(nonVirtualOnly, enabledTypes);
@@ -47,7 +46,7 @@ public class PsiAwareDefaultLineWrapPositionStrategy extends PsiAwareLineWrapPos
                                         boolean allowToBeyondMaxPreferredOffset,
                                         boolean virtual)
   {
-    LineWrapPositionStrategy implementation = LanguageLineWrapPositionStrategy.INSTANCE.getDefaultImplementation();
+    LineWrapPositionStrategy implementation = LanguageLineWrapPositionStrategy.getDefaultImplementation();
     return implementation.calculateWrapPosition(document, project, startOffset, endOffset, maxPreferredOffset,
                                                 allowToBeyondMaxPreferredOffset, virtual);
   }

@@ -27,6 +27,7 @@ import consulo.language.CodeDocumentationAwareCommenter;
 import consulo.language.Commenter;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
+import consulo.language.editor.action.EnterHandlerDelegateAdapter;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.util.lang.ref.Ref;

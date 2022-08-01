@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.codeInsight.editorActions.enter;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.codeInsight.editorActions.EnterHandler;
+import consulo.language.editor.action.EnterHandlerDelegateAdapter;
 import consulo.language.editor.action.JavaLikeQuoteHandler;
 import consulo.language.editor.action.LanguageQuoteHandler;
 import consulo.language.editor.action.QuoteHandler;

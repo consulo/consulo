@@ -13,23 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.refactoring.changeSignature;
+package consulo.language.editor.refactoring.changeSignature;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
-import consulo.util.lang.ref.Ref;
-import consulo.language.psi.PsiElement;
 import consulo.language.editor.refactoring.ResolveSnapshotProvider;
+import consulo.language.psi.PsiElement;
 import consulo.usage.UsageInfo;
 import consulo.util.collection.MultiMap;
-import javax.annotation.Nonnull;
+import consulo.util.lang.ref.Ref;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
  * @author Maxim.Medvedev
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface ChangeSignatureUsageProcessor {
-  ExtensionPointName<ChangeSignatureUsageProcessor> EP_NAME = ExtensionPointName.create("consulo.refactoring.changeSignatureUsageProcessor");
+  ExtensionPointName<ChangeSignatureUsageProcessor> EP_NAME = ExtensionPointName.create(ChangeSignatureUsageProcessor.class);
 
   @Nonnull
   UsageInfo[] findUsages(@Nonnull ChangeInfo info);

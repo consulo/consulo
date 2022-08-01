@@ -1,22 +1,23 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.editor.impl;
 
-import consulo.codeEditor.impl.TextChangeImpl;
-import consulo.document.Document;
-import consulo.codeEditor.impl.LanguageLineWrapPositionStrategy;
 import consulo.codeEditor.LineWrapPositionStrategy;
 import consulo.codeEditor.SoftWrap;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.codeEditor.SoftWrapDrawingType;
+import consulo.codeEditor.impl.TextChangeImpl;
 import consulo.codeEditor.impl.softwrap.SoftWrapImpl;
 import consulo.codeEditor.impl.softwrap.SoftWrapPainter;
 import consulo.codeEditor.impl.softwrap.SoftWrapsStorage;
 import consulo.codeEditor.impl.softwrap.mapping.CachingSoftWrapDataMapper;
 import consulo.codeEditor.impl.softwrap.mapping.IncrementalCacheUpdateEvent;
+import consulo.document.Document;
+import consulo.document.util.DocumentUtil;
+import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.editor.impl.view.EditorView;
 import consulo.ide.impl.idea.openapi.editor.impl.view.WrapElementMeasuringIterator;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.document.util.DocumentUtil;
+import consulo.language.editor.LanguageLineWrapPositionStrategy;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -163,7 +164,7 @@ public class SoftWrapEngine {
     }
 
     if (myLineWrapPositionStrategy == null) {
-      myLineWrapPositionStrategy = LanguageLineWrapPositionStrategy.INSTANCE.forEditor(myEditor);
+      myLineWrapPositionStrategy = LanguageLineWrapPositionStrategy.forEditor(myEditor);
     }
 
     int wrapOffset = myLineWrapPositionStrategy.calculateWrapPosition(myDocument, myEditor.getProject(), minOffset - 1, maxOffset + 1, maxOffset + 1, false, true);

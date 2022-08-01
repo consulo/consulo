@@ -15,25 +15,25 @@
  */
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
-import consulo.language.editor.template.TemplateManager;
-import consulo.ide.impl.idea.formatting.FormatConstants;
 import consulo.codeEditor.*;
-import consulo.codeEditor.impl.LanguageLineWrapPositionStrategy;
-import consulo.dataContext.DataManager;
-import consulo.language.Language;
-import consulo.dataContext.DataContext;
-import consulo.ui.ex.action.IdeActions;
 import consulo.codeEditor.action.EditorActionManager;
+import consulo.codeEditor.impl.TextChangeImpl;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
+import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
-import consulo.codeEditor.impl.TextChangeImpl;
-import consulo.project.Project;
-import consulo.document.Document;
-import consulo.util.dataholder.Key;
+import consulo.ide.impl.idea.formatting.FormatConstants;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.Language;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.WhiteSpaceFormattingStrategy;
 import consulo.language.codeStyle.WhiteSpaceFormattingStrategyFactory;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.editor.LanguageLineWrapPositionStrategy;
+import consulo.language.editor.template.TemplateManager;
+import consulo.project.Project;
+import consulo.ui.ex.action.IdeActions;
+import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
@@ -83,11 +83,11 @@ public class AutoHardWrapHandler {
    *   <li>Check if right margin is exceeded. Return in case of the negative answer;</li>
    *   <li>Perform line wrapping;</li>
    * </ol>
-   </pre>
+   * </pre>
    *
-   * @param editor                          active editor
-   * @param dataContext                     current data context
-   * @param modificationStampBeforeTyping   document modification stamp before the current symbols typing
+   * @param editor                        active editor
+   * @param dataContext                   current data context
+   * @param modificationStampBeforeTyping document modification stamp before the current symbols typing
    */
   public void wrapLineIfNecessary(@Nonnull Editor editor, @Nonnull DataContext dataContext, long modificationStampBeforeTyping) {
     Project project = editor.getProject();
@@ -99,10 +99,9 @@ public class AutoHardWrapHandler {
 
     // Return eagerly if we don't need to auto-wrap line, e.g. because of right margin exceeding.
     if (/*editor.isOneLineMode()
-        || */project == null
-             || !editor.getSettings().isWrapWhenTypingReachesRightMargin(project)
-             || (TemplateManager.getInstance(project) != null && TemplateManager.getInstance(project).getActiveTemplate(editor) != null))
-    {
+        || */project == null ||
+             !editor.getSettings().isWrapWhenTypingReachesRightMargin(project) ||
+             (TemplateManager.getInstance(project) != null && TemplateManager.getInstance(project).getActiveTemplate(editor) != null)) {
       return;
     }
 
@@ -130,7 +129,7 @@ public class AutoHardWrapHandler {
 
     // We assume that right margin is exceeded if control flow reaches this place. Hence, we define wrap position and perform
     // smart line break there.
-    LineWrapPositionStrategy strategy = LanguageLineWrapPositionStrategy.INSTANCE.forEditor(editor);
+    LineWrapPositionStrategy strategy = LanguageLineWrapPositionStrategy.forEditor(editor);
 
     // There is a possible case that user starts typing in the middle of the long string. Hence, there is a possible case that
     // particular symbols were already wrapped because of typing. Example:
@@ -161,9 +160,8 @@ public class AutoHardWrapHandler {
     change.update(editor);
 
     // Is assumed to be max possible number of characters inserted on the visual line with caret.
-    int maxPreferredOffset = editor.logicalPositionToOffset(editor.visualToLogicalPosition(
-            new VisualPosition(caretModel.getVisualPosition().line, margin - FormatConstants.RESERVED_LINE_WRAP_WIDTH_IN_COLUMNS)
-    ));
+    int maxPreferredOffset =
+            editor.logicalPositionToOffset(editor.visualToLogicalPosition(new VisualPosition(caretModel.getVisualPosition().line, margin - FormatConstants.RESERVED_LINE_WRAP_WIDTH_IN_COLUMNS)));
 
     int wrapOffset = strategy.calculateWrapPosition(document, project, startOffset, endOffset, maxPreferredOffset, true, false);
     if (wrapOffset < 0) {
@@ -171,9 +169,7 @@ public class AutoHardWrapHandler {
     }
 
     WhiteSpaceFormattingStrategy formattingStrategy = WhiteSpaceFormattingStrategyFactory.getStrategy(editor.getProject(), editor.getDocument());
-    if (wrapOffset <= startOffset || wrapOffset > maxPreferredOffset
-        || formattingStrategy.check(document.getCharsSequence(), startOffset, wrapOffset) >= wrapOffset)
-    {
+    if (wrapOffset <= startOffset || wrapOffset > maxPreferredOffset || formattingStrategy.check(document.getCharsSequence(), startOffset, wrapOffset) >= wrapOffset) {
       // Don't perform hard line wrapping if it doesn't makes sense (no point to wrap at first position and no point to wrap
       // on first non-white space symbol because wrapped part will have the same indent value).
       return;
@@ -259,14 +255,15 @@ public class AutoHardWrapHandler {
     }
 
     private boolean matches(CaretModel caretModel, long modificationStamp) {
-      return this.modificationStamp == modificationStamp && caretModel.getOffset() <= change.getStart()
-             && visualLine == caretModel.getVisualPosition().line && logicalLine == caretModel.getLogicalPosition().line;
+      return this.modificationStamp == modificationStamp &&
+             caretModel.getOffset() <= change.getStart() &&
+             visualLine == caretModel.getVisualPosition().line &&
+             logicalLine == caretModel.getLogicalPosition().line;
     }
 
     @Override
     public String toString() {
-      return "visual line: " + visualLine + ", logical line: " + logicalLine + ", modification stamp: " + modificationStamp
-             + ", text change: " + change;
+      return "visual line: " + visualLine + ", logical line: " + logicalLine + ", modification stamp: " + modificationStamp + ", text change: " + change;
     }
   }
 

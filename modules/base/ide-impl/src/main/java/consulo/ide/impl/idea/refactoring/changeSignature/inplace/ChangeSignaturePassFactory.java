@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPass;
 import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPassFactory;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.UpdateHighlightersUtil;
 import consulo.language.editor.intention.QuickFixAction;
-import consulo.ide.impl.idea.refactoring.changeSignature.ChangeInfo;
+import consulo.language.editor.refactoring.changeSignature.ChangeInfo;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.codeEditor.Editor;

@@ -54,7 +54,7 @@ import consulo.language.psi.PsiWhiteSpace;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.editor.refactoring.RefactoringBundle;
-import consulo.ide.impl.idea.refactoring.changeSignature.ChangeInfo;
+import consulo.language.editor.refactoring.changeSignature.ChangeInfo;
 import consulo.language.editor.refactoring.changeSignature.ChangeSignatureHandler;
 import consulo.language.editor.refactoring.rename.inplace.InplaceRefactoring;
 import consulo.ui.ex.awt.NonFocusableCheckBox;

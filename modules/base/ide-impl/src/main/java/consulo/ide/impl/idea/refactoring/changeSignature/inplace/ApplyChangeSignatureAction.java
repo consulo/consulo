@@ -21,7 +21,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.ide.impl.idea.refactoring.BaseRefactoringIntentionAction;
 import consulo.language.editor.refactoring.RefactoringBundle;
-import consulo.ide.impl.idea.refactoring.changeSignature.ChangeInfo;
+import consulo.language.editor.refactoring.changeSignature.ChangeInfo;
 import consulo.language.util.IncorrectOperationException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
