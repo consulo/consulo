@@ -121,6 +121,7 @@ public class ScopeChooserCombo extends ComboboxWithBrowseButton implements Dispo
   }
 
   private void handleScopeChooserAction(ActionEvent ignore) {
+    throw new UnsupportedOperationException();
     // TODO implement opening settings
     //String selection = getSelectedScopeName();
     //if (myBrowseListener != null) myBrowseListener.onBeforeBrowseStarted();
