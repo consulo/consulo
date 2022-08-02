@@ -16,12 +16,13 @@
 
 package consulo.ide.impl.idea.codeInspection.ex;
 
-import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.codeEditor.Editor;
+import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.inspection.LocalQuickFix;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.editor.inspection.QuickFix;
 import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.intention.SyntheticIntentionAction;
 import consulo.language.editor.util.LanguageUndoUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -34,7 +35,7 @@ import javax.annotation.Nonnull;
 /**
  * @author max
  */
-public class QuickFixWrapper implements IntentionAction {
+public class QuickFixWrapper implements IntentionAction, SyntheticIntentionAction {
   private static final Logger LOG = Logger.getInstance(QuickFixWrapper.class);
 
   private final ProblemDescriptor myDescriptor;
