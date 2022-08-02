@@ -20,6 +20,7 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.component.ComponentManager;
+import consulo.component.ProcessCanceledException;
 import consulo.component.bind.InjectingBinding;
 import consulo.component.extension.ExtensionExtender;
 import consulo.component.extension.ExtensionPoint;
@@ -232,6 +233,9 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
 
 
         extensions.add(pair);
+      }
+      catch (ProcessCanceledException e) {
+        throw e;
       }
       catch (Exception e) {
         LOG.error(e);
