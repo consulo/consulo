@@ -19,6 +19,7 @@ package consulo.ide.impl.idea.tasks.context;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectViewPane;
 import consulo.project.Project;
+import consulo.task.context.WorkingContextProvider;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.ui.ex.awt.tree.TreeUtil;

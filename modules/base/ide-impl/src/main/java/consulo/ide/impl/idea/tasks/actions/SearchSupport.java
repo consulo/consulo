@@ -26,7 +26,7 @@ import consulo.document.event.DocumentEvent;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.application.util.function.Computable;
-import consulo.ide.impl.idea.tasks.Task;
+import consulo.task.Task;
 import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.ide.impl.idea.ui.ListScrollingUtil;
 import consulo.ui.ex.awt.SortedListModel;

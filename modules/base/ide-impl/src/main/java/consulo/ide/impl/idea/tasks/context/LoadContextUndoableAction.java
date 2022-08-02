@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.tasks.context;
 
 import consulo.ide.impl.idea.openapi.command.undo.GlobalUndoableAction;
 import consulo.undoRedo.UnexpectedUndoException;
-import consulo.ide.impl.idea.tasks.Task;
+import consulo.task.Task;
 import org.jetbrains.annotations.NonNls;
 
 /**

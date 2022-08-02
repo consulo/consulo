@@ -16,7 +16,7 @@
 package consulo.application.impl.internal.start;
 
 import consulo.application.ApplicationProperties;
-import consulo.application.impl.internal.ApplicationInfo;
+import consulo.application.internal.ApplicationInfo;
 import consulo.application.util.SystemInfo;
 import consulo.container.ExitCodes;
 import consulo.container.boot.ContainerPathManager;

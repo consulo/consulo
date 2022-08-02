@@ -22,7 +22,7 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.util.lang.function.Condition;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.vcs.VcsTaskHandler;
+import consulo.versionControlSystem.VcsTaskHandler;
 import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.NullableFunction;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

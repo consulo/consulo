@@ -4,7 +4,7 @@ import java.util.Date;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
-import consulo.ide.impl.idea.tasks.impl.TaskUtil;
+import consulo.task.util.TaskUtil;
 
 /**
  * @author Mikhail Golubev

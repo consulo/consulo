@@ -21,8 +21,8 @@ import consulo.language.editor.documentation.ExternalDocumentationProvider;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
-import consulo.ide.impl.idea.tasks.Comment;
-import consulo.ide.impl.idea.tasks.Task;
+import consulo.task.Comment;
+import consulo.task.Task;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 
 import javax.annotation.Nullable;

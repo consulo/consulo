@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.tasks.impl;
 
-import consulo.ide.impl.idea.tasks.Comment;
+import consulo.task.Comment;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

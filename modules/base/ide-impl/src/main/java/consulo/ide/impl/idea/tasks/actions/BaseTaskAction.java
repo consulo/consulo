@@ -21,8 +21,8 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import consulo.ide.impl.idea.tasks.LocalTask;
-import consulo.ide.impl.idea.tasks.TaskManager;
+import consulo.task.LocalTask;
+import consulo.task.TaskManager;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nullable;

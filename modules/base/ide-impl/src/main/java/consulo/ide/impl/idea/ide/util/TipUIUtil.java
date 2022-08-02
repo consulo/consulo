@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.ide.util;
 
 import consulo.application.Application;
 import consulo.application.CommonBundle;
-import consulo.application.impl.internal.ApplicationInfo;
+import consulo.application.internal.ApplicationInfo;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;
 import consulo.ide.IdeBundle;

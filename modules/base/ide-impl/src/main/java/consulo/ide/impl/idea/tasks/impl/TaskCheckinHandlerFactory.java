@@ -21,10 +21,10 @@ import consulo.versionControlSystem.checkin.CheckinProjectPanel;
 import consulo.versionControlSystem.change.CommitContext;
 import consulo.versionControlSystem.checkin.CheckinHandler;
 import consulo.versionControlSystem.checkin.CheckinHandlerFactory;
-import consulo.ide.impl.idea.tasks.LocalTask;
-import consulo.ide.impl.idea.tasks.Task;
-import consulo.ide.impl.idea.tasks.TaskManager;
-import consulo.ide.impl.idea.tasks.TaskRepository;
+import consulo.task.LocalTask;
+import consulo.task.Task;
+import consulo.task.TaskManager;
+import consulo.task.TaskRepository;
 import consulo.ide.impl.idea.tasks.context.WorkingContextManager;
 import javax.annotation.Nonnull;
 

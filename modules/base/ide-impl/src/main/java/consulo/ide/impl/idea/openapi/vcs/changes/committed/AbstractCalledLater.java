@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.project.Project;
-import consulo.ide.impl.idea.util.WaitForProgressToShow;
+import consulo.project.util.WaitForProgressToShow;
 
 import java.awt.*;
 

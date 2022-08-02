@@ -16,11 +16,11 @@
 package consulo.ide.impl.idea.tasks.actions.vcs;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.tasks.LocalTask;
-import consulo.ide.impl.idea.tasks.Task;
-import consulo.ide.impl.idea.tasks.TaskManager;
-import consulo.ide.impl.idea.tasks.ui.TaskDialogPanel;
-import consulo.ide.impl.idea.tasks.ui.TaskDialogPanelProvider;
+import consulo.task.LocalTask;
+import consulo.task.Task;
+import consulo.task.TaskManager;
+import consulo.task.ui.TaskDialogPanel;
+import consulo.task.ui.TaskDialogPanelProvider;
 import consulo.project.Project;
 
 import javax.annotation.Nonnull;

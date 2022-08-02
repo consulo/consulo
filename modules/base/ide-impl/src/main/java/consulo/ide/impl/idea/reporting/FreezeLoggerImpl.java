@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.reporting;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.impl.internal.ApplicationInfo;
+import consulo.application.internal.ApplicationInfo;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ApplicationManager;
 import consulo.application.util.FreezeLogger;

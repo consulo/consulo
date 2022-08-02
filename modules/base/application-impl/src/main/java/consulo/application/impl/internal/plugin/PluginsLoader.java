@@ -17,7 +17,7 @@ package consulo.application.impl.internal.plugin;
 
 import consulo.application.Application;
 import consulo.application.ApplicationProperties;
-import consulo.application.impl.internal.ApplicationInfo;
+import consulo.application.internal.ApplicationInfo;
 import consulo.application.impl.internal.start.StartupProgress;
 import consulo.component.util.BuildNumber;
 import consulo.component.util.graph.*;

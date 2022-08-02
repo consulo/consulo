@@ -44,7 +44,7 @@ import consulo.ide.impl.idea.openapi.vcs.update.RefreshVFsSynchronously;
 import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.NullableFunction;
-import consulo.ide.impl.idea.util.WaitForProgressToShow;
+import consulo.project.util.WaitForProgressToShow;
 import consulo.application.util.Semaphore;
 import consulo.ide.impl.idea.util.ui.ConfirmationDialog;
 import javax.annotation.Nonnull;

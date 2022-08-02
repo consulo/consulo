@@ -45,7 +45,7 @@ import consulo.versionControlSystem.update.*;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.content.scope.NamedScope;
-import consulo.ide.impl.idea.util.WaitForProgressToShow;
+import consulo.project.util.WaitForProgressToShow;
 import consulo.util.collection.MultiMap;
 import consulo.ide.impl.idea.util.ui.OptionsDialog;
 import consulo.ide.impl.idea.vcs.ViewUpdateInfoNotification;

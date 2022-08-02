@@ -11,7 +11,7 @@ import consulo.language.editor.LangDataKeys;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
 import consulo.ui.ex.popup.JBPopup;
-import consulo.ide.impl.idea.openapi.ui.popup.util.PopupUtil;
+import consulo.ui.ex.awt.util.PopupUtil;
 import consulo.ide.impl.idea.openapi.util.DimensionService;
 import consulo.util.dataholder.Key;
 import consulo.ui.ex.awt.util.ScreenUtil;

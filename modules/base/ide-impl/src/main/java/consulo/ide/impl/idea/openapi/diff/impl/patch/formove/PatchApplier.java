@@ -36,7 +36,7 @@ import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.Function;
-import consulo.ide.impl.idea.util.WaitForProgressToShow;
+import consulo.project.util.WaitForProgressToShow;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.application.Application;

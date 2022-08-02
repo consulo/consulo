@@ -19,7 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.application.impl.internal.ApplicationInfo;
+import consulo.application.internal.ApplicationInfo;
 import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.disposer.Disposable;

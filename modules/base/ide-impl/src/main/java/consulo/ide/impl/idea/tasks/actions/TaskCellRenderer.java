@@ -2,9 +2,9 @@ package consulo.ide.impl.idea.tasks.actions;
 
 import consulo.application.AllIcons;
 import consulo.project.Project;
-import consulo.ide.impl.idea.tasks.LocalTask;
-import consulo.ide.impl.idea.tasks.Task;
-import consulo.ide.impl.idea.tasks.TaskManager;
+import consulo.task.LocalTask;
+import consulo.task.Task;
+import consulo.task.TaskManager;
 import consulo.ide.impl.idea.tasks.doc.TaskPsiElement;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;
@@ -14,7 +14,7 @@ import consulo.application.util.matcher.MatcherHolder;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
-import consulo.ide.impl.idea.tasks.TasksIcons;
+import consulo.task.TasksIcons;
 
 import javax.swing.*;
 import java.awt.*;

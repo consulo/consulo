@@ -28,7 +28,7 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.ide.impl.idea.openapi.vcs.changes.*;
-import consulo.ide.impl.idea.util.WaitForProgressToShow;
+import consulo.project.util.WaitForProgressToShow;
 import consulo.logging.Logger;
 import consulo.versionControlSystem.change.*;
 import org.jetbrains.annotations.Nls;

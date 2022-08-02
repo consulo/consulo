@@ -29,7 +29,7 @@ import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.ide.impl.idea.openapi.progress.util.BackgroundTaskUtil;
 import consulo.ui.ex.awt.FrameWrapper;
-import consulo.ide.impl.idea.openapi.ui.popup.util.PopupUtil;
+import consulo.ui.ex.awt.util.PopupUtil;
 import consulo.ide.impl.idea.openapi.vcs.*;
 import consulo.ide.impl.idea.openapi.vcs.annotate.ShowAllAffectedGenericAction;
 import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.IssueLinkHtmlRenderer;

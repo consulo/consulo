@@ -18,7 +18,7 @@ import consulo.ide.impl.idea.ide.passwordSafe.impl.PasswordSafeImpl;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.net.AuthenticationPanel;
+import consulo.http.impl.internal.proxy.AuthenticationPanel;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

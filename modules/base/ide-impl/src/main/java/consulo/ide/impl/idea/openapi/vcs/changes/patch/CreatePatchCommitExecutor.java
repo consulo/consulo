@@ -31,7 +31,7 @@ import consulo.versionControlSystem.VcsConfiguration;
 import consulo.ide.impl.idea.openapi.vcs.changes.*;
 import consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelveChangesManager;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.SessionDialog;
-import consulo.ide.impl.idea.util.WaitForProgressToShow;
+import consulo.project.util.WaitForProgressToShow;
 import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.logging.Logger;

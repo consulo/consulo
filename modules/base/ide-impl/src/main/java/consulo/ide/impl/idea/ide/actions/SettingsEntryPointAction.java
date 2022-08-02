@@ -19,7 +19,7 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.ex.popup.ListPopup;
-import consulo.ide.impl.idea.openapi.ui.popup.util.PopupUtil;
+import consulo.ui.ex.awt.util.PopupUtil;
 import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetsManager;
 import consulo.ui.ex.awt.AnActionButton;
 import consulo.ide.impl.idea.util.Consumer;

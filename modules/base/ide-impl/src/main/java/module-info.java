@@ -78,6 +78,7 @@ open module consulo.ide.impl {
   requires consulo.project.impl;
   requires consulo.external.service.impl;
   requires consulo.language.code.style.ui.api;
+  requires consulo.http.impl;
 
   requires consulo.ui.impl;
   requires consulo.localize.impl;
@@ -131,7 +132,6 @@ open module consulo.ide.impl {
   requires miglayout;
   requires microba;
   requires imgscalr.lib;
-  requires proxy.vole;
   requires args4j;
   requires winp;
   requires xmlrpc.client;
@@ -813,7 +813,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.remoteServer.runtime.ui;
   exports consulo.ide.impl.idea.reporting;
   exports consulo.ide.impl.idea.ssh;
-  exports consulo.ide.impl.idea.tasks;
   exports consulo.ide.impl.idea.tasks.actions;
   exports consulo.ide.impl.idea.tasks.actions.context;
   exports consulo.ide.impl.idea.tasks.actions.vcs;
@@ -822,10 +821,7 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.tasks.doc;
   exports consulo.ide.impl.idea.tasks.impl;
   exports consulo.ide.impl.idea.tasks.impl.gson;
-  exports consulo.ide.impl.idea.tasks.impl.httpclient;
   exports consulo.ide.impl.idea.tasks.timeTracking;
-  exports consulo.ide.impl.idea.tasks.timeTracking.model;
-  exports consulo.ide.impl.idea.tasks.ui;
   exports consulo.ide.impl.idea.testIntegration;
   exports consulo.ide.impl.idea.tools;
   exports consulo.ide.impl.idea.ui;
@@ -893,7 +889,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.util.net;
   exports consulo.ide.impl.idea.util.net.ssl;
   exports consulo.ide.impl.idea.util.properties;
-  exports consulo.ide.impl.idea.util.proxy;
   exports consulo.ide.impl.idea.util.text;
   exports consulo.ide.impl.idea.util.textCompletion;
   exports consulo.ide.impl.idea.util.treeWithCheckedNodes;
@@ -1060,7 +1055,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.startup.customize;
   exports consulo.ide.impl.store;
   exports consulo.ide.impl.task;
-  exports consulo.ide.impl.task.repository;
   exports consulo.ide.impl.tipOfDay;
   exports consulo.ide.impl.ui;
   exports consulo.ide.impl.ui.app;

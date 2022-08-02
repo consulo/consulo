@@ -19,6 +19,7 @@ package consulo.ide.impl.idea.tasks.context;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.execution.RunManager;
 import consulo.ide.impl.idea.execution.impl.RunManagerImpl;
+import consulo.task.context.WorkingContextProvider;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import jakarta.inject.Inject;

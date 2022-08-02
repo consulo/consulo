@@ -29,6 +29,7 @@ import consulo.application.impl.internal.performance.PerformanceWatcher;
 import consulo.application.impl.internal.start.StartupProgress;
 import consulo.application.impl.internal.store.IApplicationStore;
 import consulo.application.internal.ApplicationEx;
+import consulo.application.internal.ApplicationInfo;
 import consulo.application.internal.ApplicationWithIntentWriteLock;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;

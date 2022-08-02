@@ -16,8 +16,8 @@
 package consulo.sandboxPlugin.tasks;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.tasks.TaskRepository;
-import consulo.ide.impl.idea.tasks.impl.BaseRepositoryType;
+import consulo.task.TaskRepository;
+import consulo.task.BaseRepositoryType;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 

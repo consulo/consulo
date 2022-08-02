@@ -46,7 +46,7 @@ import consulo.ide.impl.idea.openapi.actionSystem.PopupAction;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.text.AsyncEditorLoader;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
-import consulo.ide.impl.idea.openapi.ui.popup.util.PopupUtil;
+import consulo.ui.ex.awt.util.PopupUtil;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.ui.InplaceButton;

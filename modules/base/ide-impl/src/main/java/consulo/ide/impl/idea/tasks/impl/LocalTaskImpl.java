@@ -19,15 +19,14 @@ package consulo.ide.impl.idea.tasks.impl;
 import consulo.application.AllIcons;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.tasks.*;
-import consulo.ide.impl.idea.tasks.timeTracking.model.WorkItem;
+import consulo.task.WorkItem;
+import consulo.task.*;
 import consulo.util.xml.serializer.annotation.AbstractCollection;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.util.xml.serializer.annotation.Property;
 import consulo.util.xml.serializer.annotation.Tag;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
-import consulo.ide.impl.idea.tasks.TasksIcons;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

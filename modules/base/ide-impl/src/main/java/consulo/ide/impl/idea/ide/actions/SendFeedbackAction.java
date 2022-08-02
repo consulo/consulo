@@ -25,7 +25,7 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.ide.impl.idea.ide.BrowserUtil;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.application.impl.internal.ApplicationInfo;
+import consulo.application.internal.ApplicationInfo;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.annotation.RequiredUIAccess;
 

@@ -19,11 +19,11 @@ import consulo.project.Project;
 import consulo.versionControlSystem.VcsType;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.LocalChangeList;
-import consulo.ide.impl.idea.tasks.ChangeListInfo;
-import consulo.ide.impl.idea.tasks.LocalTask;
-import consulo.ide.impl.idea.tasks.TaskManager;
+import consulo.task.ChangeListInfo;
+import consulo.task.LocalTask;
+import consulo.task.TaskManager;
 import consulo.ide.impl.idea.tasks.impl.TaskManagerImpl;
-import consulo.ide.impl.idea.tasks.ui.TaskDialogPanel;
+import consulo.task.ui.TaskDialogPanel;
 import consulo.ui.ex.awt.JBCheckBox;
 import javax.annotation.Nonnull;
 

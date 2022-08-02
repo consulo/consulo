@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.ui.mac;
 
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
-import consulo.application.impl.internal.ApplicationInfo;
+import consulo.application.internal.ApplicationInfo;
 import consulo.application.ApplicationManager;
 import consulo.component.util.BuildNumber;
 import consulo.application.util.SystemInfo;

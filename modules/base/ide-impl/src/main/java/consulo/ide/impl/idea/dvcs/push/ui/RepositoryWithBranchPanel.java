@@ -20,7 +20,7 @@ import consulo.versionControlSystem.distributed.push.PushTargetEditorListener;
 import consulo.versionControlSystem.distributed.push.PushTargetPanel;
 import consulo.ide.impl.idea.dvcs.push.RepositoryNodeListener;
 import consulo.ui.ex.awt.ValidationInfo;
-import consulo.ide.impl.idea.openapi.ui.popup.util.PopupUtil;
+import consulo.ui.ex.awt.util.PopupUtil;
 import consulo.ui.ex.awt.JBCheckBox;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.project.Project;

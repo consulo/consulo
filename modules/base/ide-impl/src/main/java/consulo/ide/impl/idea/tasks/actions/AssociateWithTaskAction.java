@@ -24,7 +24,7 @@ import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
 import consulo.project.Project;
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.tasks.TaskManager;
+import consulo.task.TaskManager;
 
 /**
  * @author Dmitry Avdeev

@@ -20,8 +20,8 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.ValidationInfo;
-import consulo.ide.impl.idea.tasks.LocalTask;
-import consulo.ide.impl.idea.tasks.TaskRepository;
+import consulo.task.LocalTask;
+import consulo.task.TaskRepository;
 
 import javax.annotation.Nullable;
 import javax.swing.*;

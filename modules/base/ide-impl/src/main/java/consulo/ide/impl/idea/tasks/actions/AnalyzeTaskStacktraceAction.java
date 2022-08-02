@@ -18,9 +18,9 @@ package consulo.ide.impl.idea.tasks.actions;
 
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
-import consulo.ide.impl.idea.tasks.Comment;
-import consulo.ide.impl.idea.tasks.LocalTask;
-import consulo.ide.impl.idea.tasks.Task;
+import consulo.task.Comment;
+import consulo.task.LocalTask;
+import consulo.task.Task;
 import consulo.ide.impl.idea.unscramble.AnalyzeStacktraceUtil;
 
 /**

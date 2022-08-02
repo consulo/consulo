@@ -25,7 +25,7 @@ import consulo.component.persist.StoragePathMacros;
 import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.tasks.TaskRepository;
+import consulo.task.TaskRepository;
 import consulo.ide.impl.idea.tasks.impl.TaskManagerImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.HashingStrategy;

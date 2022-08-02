@@ -20,7 +20,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.WaitForProgressToShow;
+import consulo.project.util.WaitForProgressToShow;
 import javax.annotation.Nonnull;
 
 import java.io.File;

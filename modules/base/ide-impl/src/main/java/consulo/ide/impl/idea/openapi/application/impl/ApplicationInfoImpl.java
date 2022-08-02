@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.application.impl;
 
-import consulo.application.impl.internal.ApplicationInfo;
+import consulo.application.internal.ApplicationInfo;
 import consulo.annotation.DeprecationInfo;
 
 @Deprecated

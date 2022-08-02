@@ -23,7 +23,7 @@ import consulo.application.ApplicationBundle;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.ui.popup.util.PopupUtil;
+import consulo.ui.ex.awt.util.PopupUtil;
 import consulo.ide.impl.idea.openapi.util.DimensionService;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;

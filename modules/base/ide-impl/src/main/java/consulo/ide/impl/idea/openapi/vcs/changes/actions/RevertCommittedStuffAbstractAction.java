@@ -26,7 +26,7 @@ import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
 import consulo.versionControlSystem.VcsException;
 import consulo.ide.impl.idea.openapi.vcs.changes.*;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangeListChooser;
-import consulo.ide.impl.idea.util.WaitForProgressToShow;
+import consulo.project.util.WaitForProgressToShow;
 import consulo.ide.impl.idea.util.containers.Convertor;
 import consulo.application.dumb.DumbAware;
 import consulo.application.progress.ProgressIndicator;

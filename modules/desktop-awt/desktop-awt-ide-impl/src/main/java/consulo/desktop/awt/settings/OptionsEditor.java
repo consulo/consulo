@@ -21,6 +21,7 @@ import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.configurable.*;
+import consulo.configurable.internal.ConfigurableUIMigrationUtil;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
@@ -34,14 +35,12 @@ import consulo.ide.impl.idea.ide.ui.search.SearchUtil;
 import consulo.ide.impl.idea.ide.ui.search.SearchableOptionsRegistrar;
 import consulo.ide.impl.idea.openapi.options.ex.ConfigurableWrapper;
 import consulo.ide.impl.idea.openapi.options.ex.GlassPanel;
-import consulo.ui.ex.awt.LoadingDecorator;
 import consulo.ide.impl.idea.openapi.util.EdtRunnable;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.ui.speedSearch.ElementFilter;
 import consulo.ide.impl.idea.util.ReflectionUtil;
 import consulo.ide.impl.options.ProjectStructureSelectorOverSettings;
 import consulo.ide.impl.roots.ui.configuration.session.internal.ConfigurableSessionImpl;
-import consulo.configurable.internal.ConfigurableUIMigrationUtil;
 import consulo.ide.setting.ProjectStructureSelector;
 import consulo.ide.setting.Settings;
 import consulo.logging.Logger;
@@ -217,8 +216,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
       if (myComponent != null) {
         final Object clientProperty = myComponent.getClientProperty(NOT_A_NEW_COMPONENT);
         if (clientProperty != null && ApplicationProperties.isInSandbox()) {
-          LOG.warn(String.format("Settings component for '%s' MUST be recreated, please dispose it in disposeUIResources() and create a new instance in createComponent()!",
-                                 configurable));
+          LOG.warn(String.format("Settings component for '%s' MUST be recreated, please dispose it in disposeUIResources() and create a new instance in createComponent()!", configurable));
         }
         else {
           myComponent.putClientProperty(NOT_A_NEW_COMPONENT, Boolean.TRUE);
@@ -794,6 +792,10 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
           checkModified(oldConfigurable);
           checkModified(configurable);
 
+          if (configurable instanceof SelectableConfigurable selectableConfigurable) {
+            selectableConfigurable.onSelected();
+          }
+
           if (myTree.myBuilder.getSelectedElements().size() == 0) {
             select(configurable).notify(result);
           }
@@ -1000,7 +1002,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
       if (target == current && helpTopic != null) {
         id = helpTopic;
       }
-      
+
       id = formatHelpId(id);
 
       if (StringUtil.isEmptyOrSpaces(id)) {
@@ -1008,7 +1010,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
       }
 
       ids.add(id);
-      
+
       target = getContext().getParentConfigurable(target);
     }
 
@@ -1032,7 +1034,8 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
     PluginId pluginId = getPluginId(current);
     if (PluginIds.isPlatformPlugin(pluginId)) {
       builder.append("platform/settings/");
-    } else {
+    }
+    else {
       builder.append("plugins/").append(pluginId).append("/settings/");
     }
     builder.append(String.join("/", ids));

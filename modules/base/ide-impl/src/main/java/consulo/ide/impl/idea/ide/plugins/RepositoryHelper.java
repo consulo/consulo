@@ -17,10 +17,10 @@ package consulo.ide.impl.idea.ide.plugins;
 
 import com.google.gson.Gson;
 import consulo.application.eap.EarlyAccessProgramManager;
-import consulo.application.impl.internal.ApplicationInfo;
+import consulo.application.internal.ApplicationInfo;
 import consulo.application.progress.ProgressIndicator;
 import consulo.container.plugin.PluginDescriptor;
-import consulo.ide.HttpProxyManager;
+import consulo.http.HttpProxyManager;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.eap.plugins.ExperimentalPluginsDescriptor;
 import consulo.ide.impl.externalService.impl.WebServiceApi;

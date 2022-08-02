@@ -15,8 +15,6 @@
  */
 package consulo.ui.ex.awt;
 
-import consulo.application.util.SystemInfo;
-import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
@@ -77,7 +75,6 @@ public class JBTabbedPane extends JTabbedPane implements HierarchyListener {
     label.setIcon(icon);
     label.setBorder(new EmptyBorder(1, 1, 1, 1));
     setTabComponentAt(index, label);
-    updateSelectedTabForeground();
     label.putClientProperty(LABEL_FROM_TABBED_PANE, Boolean.TRUE);
 
     component.addHierarchyListener(this);
@@ -92,20 +89,8 @@ public class JBTabbedPane extends JTabbedPane implements HierarchyListener {
   public void setSelectedIndex(int index) {
     previousSelectedIndex = getSelectedIndex();
     super.setSelectedIndex(index);
-    updateSelectedTabForeground();
     revalidate();
     repaint();
-  }
-
-  private void updateSelectedTabForeground() {
-    if (UIUtil.isUnderAquaLookAndFeel() && SystemInfo.isMacOSLion) {
-      if (getSelectedIndex() != -1 && getTabComponentAt(getSelectedIndex()) != null) {
-        getTabComponentAt(getSelectedIndex()).setForeground(Color.WHITE);
-      }
-      if (previousSelectedIndex != -1 && getTabComponentAt(previousSelectedIndex) != null) {
-        getTabComponentAt(previousSelectedIndex).setForeground(JBColor.foreground());
-      }
-    }
   }
 
   private void setInsets(Component component) {

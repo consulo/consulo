@@ -28,7 +28,7 @@ import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.language.psi.PsiElement;
-import consulo.ide.impl.idea.util.io.HttpRequests;
+import consulo.http.HttpRequests;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -23,6 +23,7 @@ import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.ide.impl.ui.docking.BaseDockManager;
 import consulo.project.ui.wm.dock.DockContainer;
 import consulo.project.ui.wm.dock.DockManager;
+import consulo.task.context.WorkingContextProvider;
 import consulo.ui.UIAccess;
 import jakarta.inject.Inject;
 import org.jdom.Element;

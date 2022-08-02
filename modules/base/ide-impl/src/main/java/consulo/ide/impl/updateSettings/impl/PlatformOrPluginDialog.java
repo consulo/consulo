@@ -16,7 +16,7 @@
 package consulo.ide.impl.updateSettings.impl;
 
 import consulo.application.Application;
-import consulo.application.impl.internal.ApplicationInfo;
+import consulo.application.internal.ApplicationInfo;
 import consulo.application.progress.Task;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;

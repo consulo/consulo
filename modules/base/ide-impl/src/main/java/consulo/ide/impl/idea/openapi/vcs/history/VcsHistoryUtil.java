@@ -39,7 +39,7 @@ import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.encoding.EncodingManager;
 import consulo.virtualFileSystem.encoding.EncodingProjectManager;
-import consulo.ide.impl.idea.util.WaitForProgressToShow;
+import consulo.project.util.WaitForProgressToShow;
 import consulo.ui.ex.awt.JBUI;
 import consulo.logging.Logger;
 

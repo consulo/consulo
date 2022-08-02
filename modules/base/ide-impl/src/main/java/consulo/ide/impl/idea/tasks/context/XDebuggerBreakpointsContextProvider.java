@@ -20,6 +20,7 @@ import consulo.application.ApplicationManager;
 import consulo.execution.debug.XDebuggerManager;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XBreakpointBase;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XBreakpointManagerImpl;
+import consulo.task.context.WorkingContextProvider;
 import consulo.util.xml.serializer.*;
 import jakarta.inject.Inject;
 import org.jdom.Element;

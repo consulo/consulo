@@ -16,7 +16,7 @@
 package consulo.ide.impl.builtInServer.impl.net.json;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.impl.internal.ApplicationInfo;
+import consulo.application.internal.ApplicationInfo;
 import consulo.ide.impl.builtInServer.json.JsonGetRequestHandler;
 import consulo.ide.impl.updateSettings.UpdateChannel;
 import consulo.ide.impl.updateSettings.UpdateSettings;

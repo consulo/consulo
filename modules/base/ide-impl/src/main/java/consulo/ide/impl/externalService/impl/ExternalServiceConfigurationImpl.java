@@ -17,7 +17,7 @@ package consulo.ide.impl.externalService.impl;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.ide.impl.idea.util.io.HttpRequests;
+import consulo.http.HttpRequests;
 import consulo.ui.ex.awt.JBUI;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.component.persist.PersistentStateComponent;

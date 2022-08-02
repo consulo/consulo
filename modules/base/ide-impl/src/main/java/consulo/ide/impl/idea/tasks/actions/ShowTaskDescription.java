@@ -22,7 +22,7 @@ import consulo.ui.ex.action.Presentation;
 import consulo.undoRedo.CommandProcessor;
 import consulo.project.Project;
 import consulo.language.psi.PsiManager;
-import consulo.ide.impl.idea.tasks.LocalTask;
+import consulo.task.LocalTask;
 import consulo.ide.impl.idea.tasks.doc.TaskPsiElement;
 
 /**

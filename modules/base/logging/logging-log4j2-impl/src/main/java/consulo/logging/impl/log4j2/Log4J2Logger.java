@@ -17,7 +17,7 @@ package consulo.logging.impl.log4j2;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.ApplicationInfo;
+import consulo.application.internal.ApplicationInfo;
 import consulo.application.util.logging.IdeaLoggingEvent;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;

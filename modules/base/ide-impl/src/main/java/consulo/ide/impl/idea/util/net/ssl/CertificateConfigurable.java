@@ -5,6 +5,7 @@ import consulo.configurable.*;
 import consulo.disposer.Disposer;
 import consulo.fileChooser.FileTypeDescriptor;
 import consulo.fileChooser.IdeaFileChooser;
+import consulo.http.impl.internal.ssl.*;
 import consulo.ide.impl.idea.util.Consumer;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.tree.Tree;
@@ -24,8 +25,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static consulo.ide.impl.idea.util.net.ssl.CertificateUtil.getCommonName;
-import static consulo.ide.impl.idea.util.net.ssl.ConfirmingTrustManager.MutableTrustManager;
+import static consulo.http.impl.internal.ssl.CertificateUtil.getCommonName;
+import static consulo.http.impl.internal.ssl.ConfirmingTrustManager.MutableTrustManager;
 
 /**
  * @author Mikhail Golubev
@@ -58,7 +59,7 @@ public class CertificateConfigurable implements SearchableConfigurable, Configur
     myCheckHostname.setVisible(false);
     myCheckValidityPeriod.setVisible(false);
 
-    myTrustManager = CertificateManager.getInstance().getCustomTrustManager();
+    myTrustManager = CertificateManagerImpl.getInstance().getCustomTrustManager();
     // show newly added certificates
     myTrustManager.addListener(this);
 
@@ -167,7 +168,7 @@ public class CertificateConfigurable implements SearchableConfigurable, Configur
 
   @Override
   public boolean isModified() {
-    CertificateManager.Config state = CertificateManager.getInstance().getState();
+    CertificateManagerImpl.Config state = CertificateManagerImpl.getInstance().getState();
     return myAcceptAutomatically.isSelected() != state.ACCEPT_AUTOMATICALLY ||
            myCheckHostname.isSelected() != state.CHECK_HOSTNAME ||
            myCheckValidityPeriod.isSelected() != state.CHECK_VALIDITY ||
@@ -195,7 +196,7 @@ public class CertificateConfigurable implements SearchableConfigurable, Configur
         throw new ConfigurationException("Cannot remove certificate for " + getCommonName(certificate), "Cannot Remove Certificate");
       }
     }
-    CertificateManager.Config state = CertificateManager.getInstance().getState();
+    CertificateManagerImpl.Config state = CertificateManagerImpl.getInstance().getState();
 
     state.ACCEPT_AUTOMATICALLY = myAcceptAutomatically.isSelected();
     state.CHECK_HOSTNAME = myCheckHostname.isSelected();
@@ -222,7 +223,7 @@ public class CertificateConfigurable implements SearchableConfigurable, Configur
       myTreeBuilder.selectFirstCertificate();
     }
 
-    CertificateManager.Config state = CertificateManager.getInstance().getState();
+    CertificateManagerImpl.Config state = CertificateManagerImpl.getInstance().getState();
     myAcceptAutomatically.setSelected(state.ACCEPT_AUTOMATICALLY);
     myCheckHostname.setSelected(state.CHECK_HOSTNAME);
     myCheckValidityPeriod.setSelected(state.CHECK_VALIDITY);

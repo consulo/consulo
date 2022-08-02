@@ -21,7 +21,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ApplicationProperties;
-import consulo.application.impl.internal.ApplicationInfo;
+import consulo.application.internal.ApplicationInfo;
 import consulo.application.impl.internal.JobScheduler;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.concurrent.AppScheduledExecutorService;

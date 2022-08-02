@@ -28,7 +28,7 @@ import consulo.project.ui.notification.NotificationType;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
-import consulo.application.impl.internal.ApplicationInfo;
+import consulo.application.internal.ApplicationInfo;
 import consulo.application.ApplicationManager;
 import consulo.externalService.impl.internal.PermanentInstallationID;
 import consulo.ide.impl.idea.openapi.diagnostic.ErrorReportSubmitter;

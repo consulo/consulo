@@ -19,7 +19,8 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.ApplicationConfigurable;
 import consulo.configurable.IdeaConfigurableBase;
 import consulo.configurable.StandardConfigurableIds;
-import consulo.ide.HttpProxyManager;
+import consulo.http.HttpProxyManager;
+import consulo.http.impl.internal.proxy.HttpProxyManagerImpl;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;

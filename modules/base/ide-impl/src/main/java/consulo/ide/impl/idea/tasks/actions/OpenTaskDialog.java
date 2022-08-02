@@ -16,47 +16,38 @@
 
 package consulo.ide.impl.idea.tasks.actions;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Collection;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.swing.BoxLayout;
-import javax.swing.JCheckBox;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-
-import org.jetbrains.annotations.NonNls;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.diagnostic.Logger;
 import consulo.ide.impl.idea.openapi.options.binding.BindControl;
 import consulo.ide.impl.idea.openapi.options.binding.ControlBinder;
-import consulo.project.Project;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.ValidationInfo;
-import consulo.ide.impl.idea.tasks.CustomTaskState;
-import consulo.ide.impl.idea.tasks.Task;
-import consulo.ide.impl.idea.tasks.TaskManager;
-import consulo.ide.impl.idea.tasks.TaskRepository;
-import consulo.ide.impl.idea.tasks.TaskType;
 import consulo.ide.impl.idea.tasks.impl.TaskManagerImpl;
 import consulo.ide.impl.idea.tasks.impl.TaskStateCombo;
-import consulo.ide.impl.idea.tasks.impl.TaskUtil;
-import consulo.ide.impl.idea.tasks.ui.TaskDialogPanel;
-import consulo.ide.impl.idea.tasks.ui.TaskDialogPanelProvider;
+import consulo.task.util.TaskUtil;
+import consulo.project.Project;
+import consulo.task.*;
+import consulo.task.ui.TaskDialogPanel;
+import consulo.task.ui.TaskDialogPanelProvider;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.JBCheckBox;
+import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.ValidationInfo;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import org.jetbrains.annotations.NonNls;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @author Dmitry Avdeev
  */
 public class OpenTaskDialog extends DialogWrapper
 {
-	private final static Logger LOG = Logger.getInstance("#consulo.ide.impl.idea.tasks.actions.SimpleOpenTaskDialog");
+	private final static Logger LOG = Logger.getInstance(OpenTaskDialog.class);
 	private static final String UPDATE_STATE_ENABLED = "tasks.open.task.update.state.enabled";
 
 	private JPanel myPanel;

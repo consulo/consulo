@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.tasks.actions;
 
 import javax.annotation.Nullable;
 
-import consulo.ide.impl.idea.tasks.LocalTask;
-import consulo.ide.impl.idea.tasks.impl.TaskUtil;
+import consulo.task.LocalTask;
+import consulo.task.util.TaskUtil;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 

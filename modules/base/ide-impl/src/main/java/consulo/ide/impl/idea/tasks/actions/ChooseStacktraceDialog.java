@@ -18,8 +18,8 @@ package consulo.ide.impl.idea.tasks.actions;
 
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ide.impl.idea.tasks.Comment;
-import consulo.ide.impl.idea.tasks.Task;
+import consulo.task.Comment;
+import consulo.task.Task;
 import consulo.ui.ex.awt.CollectionListModel;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ide.impl.idea.unscramble.AnalyzeStacktraceUtil;

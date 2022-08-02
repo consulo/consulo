@@ -48,7 +48,7 @@ import consulo.ui.ex.awt.FilterComponent;
 import consulo.application.util.function.AsynchConsumer;
 import consulo.ide.impl.idea.util.BufferedListConsumer;
 import consulo.ide.impl.idea.util.Consumer;
-import consulo.ide.impl.idea.util.WaitForProgressToShow;
+import consulo.project.util.WaitForProgressToShow;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

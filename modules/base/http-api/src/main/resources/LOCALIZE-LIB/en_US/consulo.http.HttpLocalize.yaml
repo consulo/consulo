@@ -1,0 +1,4 @@
+error.connection.failed.with.http.code.N:
+  text: "Connection failed with HTTP code {0}"
+error.connection.failed.redirects:
+  text: "Connection failed: too many redirects"

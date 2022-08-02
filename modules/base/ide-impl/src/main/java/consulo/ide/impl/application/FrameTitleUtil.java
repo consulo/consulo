@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.application;
 
-import consulo.application.impl.internal.ApplicationInfo;
+import consulo.application.internal.ApplicationInfo;
 import consulo.component.util.BuildNumber;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.application.ApplicationProperties;

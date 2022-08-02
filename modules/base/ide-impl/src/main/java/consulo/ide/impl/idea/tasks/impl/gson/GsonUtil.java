@@ -8,7 +8,7 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
-import consulo.ide.impl.idea.tasks.impl.TaskUtil;
+import consulo.task.util.TaskUtil;
 
 /**
  * @author Mikhail Golubev

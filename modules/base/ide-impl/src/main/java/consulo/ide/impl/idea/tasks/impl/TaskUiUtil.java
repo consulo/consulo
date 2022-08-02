@@ -14,7 +14,7 @@ import consulo.ide.impl.idea.openapi.diagnostic.Logger;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.project.Project;
-import consulo.ide.impl.idea.tasks.config.TaskRepositoryEditor;
+import consulo.task.ui.TaskRepositoryEditor;
 import consulo.ui.ex.awt.ListCellRendererWrapper;
 import consulo.ide.impl.idea.util.ArrayUtil;
 

@@ -21,10 +21,10 @@ import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.Presentation;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.tasks.CustomTaskState;
-import consulo.ide.impl.idea.tasks.LocalTask;
-import consulo.ide.impl.idea.tasks.TaskManager;
-import consulo.ide.impl.idea.tasks.TaskRepository;
+import consulo.task.CustomTaskState;
+import consulo.task.LocalTask;
+import consulo.task.TaskManager;
+import consulo.task.TaskRepository;
 import consulo.ide.impl.idea.tasks.impl.TaskManagerImpl;
 import consulo.ui.annotation.RequiredUIAccess;
 

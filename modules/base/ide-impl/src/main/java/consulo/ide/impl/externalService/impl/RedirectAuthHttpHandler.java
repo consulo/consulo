@@ -21,7 +21,7 @@ import consulo.application.Application;
 import consulo.application.progress.Task;
 import consulo.ide.impl.idea.openapi.util.io.StreamUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.io.HttpRequests;
+import consulo.http.HttpRequests;
 import consulo.ide.impl.builtInServer.http.HttpRequestHandler;
 import consulo.ide.impl.builtInServer.http.Responses;
 import consulo.ide.impl.external.api.UserAccount;

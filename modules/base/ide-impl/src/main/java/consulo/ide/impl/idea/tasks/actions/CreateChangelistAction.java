@@ -19,10 +19,10 @@ package consulo.ide.impl.idea.tasks.actions;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.tasks.LocalTask;
-import consulo.ide.impl.idea.tasks.TaskManager;
+import consulo.task.LocalTask;
+import consulo.task.TaskManager;
 import consulo.ide.impl.idea.tasks.impl.TaskManagerImpl;
-import consulo.ide.impl.idea.tasks.impl.TaskUtil;
+import consulo.task.util.TaskUtil;
 
 /**
  * @author Dmitry Avdeev

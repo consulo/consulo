@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.ide.plugins.PluginManagerMain;
 import consulo.ide.impl.idea.ide.plugins.PluginNode;
 import consulo.ide.impl.idea.ide.plugins.RepositoryHelper;
 import consulo.ide.impl.idea.notification.NotificationAction;
-import consulo.application.impl.internal.ApplicationInfo;
+import consulo.application.internal.ApplicationInfo;
 import consulo.ui.ex.awt.Messages;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;

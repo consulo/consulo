@@ -1,36 +1,30 @@
 package consulo.ide.impl.idea.tasks.impl;
 
-import java.awt.Dimension;
-import java.util.Collection;
-import java.util.List;
+import consulo.application.progress.ProgressIndicator;
+import consulo.ide.impl.idea.ide.actions.TemplateKindCombo;
+import consulo.ide.impl.idea.tasks.impl.TaskUiUtil.ComboBoxUpdater;
+import consulo.ide.impl.idea.util.PlatformIcons;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.project.Project;
+import consulo.task.CustomTaskState;
+import consulo.task.Task;
+import consulo.task.TaskRepository;
+import consulo.ui.ex.awt.JBLabel;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.util.lang.Trinity;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.BoxLayout;
-import javax.swing.Icon;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-
-import consulo.ide.impl.idea.ide.actions.TemplateKindCombo;
-import consulo.application.progress.ProgressIndicator;
-import consulo.project.Project;
-import consulo.util.lang.Trinity;
-import consulo.ide.impl.idea.tasks.CustomTaskState;
-import consulo.ide.impl.idea.tasks.Task;
-import consulo.ide.impl.idea.tasks.TaskRepository;
-import consulo.ide.impl.idea.tasks.impl.TaskUiUtil.ComboBoxUpdater;
-import consulo.ui.ex.awt.JBLabel;
-import consulo.ide.impl.idea.util.PlatformIcons;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.UIUtil;
+import javax.swing.*;
+import java.awt.*;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @author Mikhail Golubev
  */
 public abstract class TaskStateCombo extends JPanel
 {
-
 	private final JBLabel myHintLabel;
 
 	public static boolean stateUpdatesSupportedFor(@Nullable Task task)
@@ -54,10 +48,6 @@ public abstract class TaskStateCombo extends JPanel
 		this(null, null);
 	}
 
-	@SuppressWarnings({
-			"GtkPreferredJComboBoxRenderer",
-			"unchecked"
-	})
 	public TaskStateCombo(Project project, Task task)
 	{
 		myProject = project;

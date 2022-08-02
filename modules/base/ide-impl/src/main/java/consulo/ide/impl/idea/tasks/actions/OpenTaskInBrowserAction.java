@@ -23,7 +23,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.Presentation;
 import consulo.project.Project;
-import consulo.ide.impl.idea.tasks.TaskManager;
+import consulo.task.TaskManager;
 
 /**
  * @author Dmitry Avdeev

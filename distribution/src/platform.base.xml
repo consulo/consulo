@@ -113,6 +113,9 @@
         <include>consulo:consulo-version-control-system-log-api</include>
         <include>consulo:consulo-external-service-api</include>
         <include>consulo:consulo-external-service-impl</include>
+        <include>consulo:consulo-task-api</include>
+        <include>consulo:consulo-http-api</include>
+        <include>consulo:consulo-http-impl</include>
 
         <include>consulo:consulo-base-localize-library</include>
         <include>consulo:consulo-base-icon-library</include>

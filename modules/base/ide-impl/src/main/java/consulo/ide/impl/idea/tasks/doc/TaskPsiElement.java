@@ -20,7 +20,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileFactory;
 import consulo.language.psi.PsiManager;
 import consulo.language.impl.psi.FakePsiElement;
-import consulo.ide.impl.idea.tasks.Task;
+import consulo.task.Task;
 
 /**
  * @author Dennis.Ushakov
