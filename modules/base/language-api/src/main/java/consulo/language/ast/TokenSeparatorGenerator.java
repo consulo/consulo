@@ -15,6 +15,8 @@
  */
 package consulo.language.ast;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
 import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.language.Language;
@@ -29,6 +31,7 @@ import javax.annotation.Nullable;
 /**
  * @author yole
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface TokenSeparatorGenerator extends LanguageExtension {
   ExtensionPointCacheKey<TokenSeparatorGenerator, ByLanguageValue<TokenSeparatorGenerator>> KEY =
           ExtensionPointCacheKey.create("TokenSeparatorGenerator", LanguageOneToOne.build(new DefaultTokenSeparatorGenerator()));
