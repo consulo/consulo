@@ -19,25 +19,26 @@
  */
 package consulo.ide.impl.idea.codeInsight.intention.impl.config;
 
-import consulo.language.editor.CodeInsightBundle;
-import consulo.dataContext.DataManager;
-import consulo.ide.impl.idea.ide.ui.search.SearchUtil;
-import consulo.dataContext.DataContext;
-import consulo.language.editor.internal.intention.IntentionActionMetaData;
-import consulo.language.editor.internal.intention.ResourceTextDescriptor;
-import consulo.language.editor.internal.intention.TextDescriptor;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeManagerEx;
-import consulo.ide.setting.Settings;
-import consulo.ui.ex.awt.HyperlinkLabel;
-import consulo.ui.ex.awt.TitledSeparator;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
+import consulo.ide.impl.idea.ide.ui.search.SearchUtil;
+import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeManagerEx;
 import consulo.ide.impl.plugins.PluginsConfigurable;
+import consulo.ide.setting.Settings;
+import consulo.language.editor.CodeInsightBundle;
+import consulo.language.editor.internal.intention.IntentionActionMetaData;
+import consulo.language.editor.internal.intention.ResourceTextDescriptor;
+import consulo.language.editor.internal.intention.TextDescriptor;
+import consulo.language.editor.ui.awt.EditorAWTUtil;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.awt.*;
+import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -56,11 +57,35 @@ public class IntentionDescriptionPanel {
   private JPanel myAfterPanel;
   private JPanel myBeforePanel;
   private JEditorPane myDescriptionBrowser;
-  private TitledSeparator myBeforeSeparator;
-  private TitledSeparator myAfterSeparator;
+
   private JPanel myPoweredByPanel;
-  private final List<IntentionUsagePanel> myBeforeUsagePanels = new ArrayList<IntentionUsagePanel>();
-  private final List<IntentionUsagePanel> myAfterUsagePanels = new ArrayList<IntentionUsagePanel>();
+  private final List<IntentionUsagePanel> myBeforeUsagePanels = new ArrayList<>();
+  private final List<IntentionUsagePanel> myAfterUsagePanels = new ArrayList<>();
+
+  public IntentionDescriptionPanel() {
+    myPanel = new JPanel(new BorderLayout());
+    myPanel.setBorder(JBUI.Borders.emptyLeft(5));
+    
+    myDescriptionBrowser = new JEditorPane("text/html", "");
+    myDescriptionBrowser.setEditable(false);
+    myDescriptionBrowser.setBorder(JBUI.Borders.customLine(JBColor.border(), 1));
+    myDescriptionBrowser.setFont(EditorAWTUtil.getEditorFont());
+
+    myPanel.add(new BorderLayoutPanel().withBorder(JBUI.Borders.empty(5)).addToTop(new TitledSeparator("Description")).addToCenter(myDescriptionBrowser), BorderLayout.CENTER);
+
+    myBeforePanel = new JPanel();
+    myAfterPanel = new JPanel();
+    myPoweredByPanel = new JPanel(new BorderLayout());
+
+    JPanel bottomPanel = new JPanel(new VerticalFlowLayout());
+    bottomPanel.add(new TitledSeparator("Before"));
+    bottomPanel.add(myBeforePanel);
+    bottomPanel.add(new TitledSeparator("Before"));
+    bottomPanel.add(myAfterPanel);
+    bottomPanel.add(myPoweredByPanel);
+
+    myPanel.add(bottomPanel, BorderLayout.SOUTH);
+  }
 
   public void reset(IntentionActionMetaData actionMetaData, String filter) {
     try {
@@ -69,11 +94,10 @@ public class IntentionDescriptionPanel {
       myDescriptionBrowser.setText(description);
       setupPoweredByPanel(actionMetaData);
 
-      showUsages(myBeforePanel, myBeforeSeparator, myBeforeUsagePanels, actionMetaData.getExampleUsagesBefore());
-      showUsages(myAfterPanel, myAfterSeparator, myAfterUsagePanels, actionMetaData.getExampleUsagesAfter());
+      showUsages(myBeforePanel, myBeforeUsagePanels, actionMetaData.getExampleUsagesBefore());
+      showUsages(myAfterPanel, myAfterUsagePanels, actionMetaData.getExampleUsagesAfter());
 
       SwingUtilities.invokeLater(() -> myPanel.revalidate());
-
     }
     catch (IOException e) {
       LOG.error(e);
@@ -82,7 +106,7 @@ public class IntentionDescriptionPanel {
 
   private void setupPoweredByPanel(final IntentionActionMetaData actionMetaData) {
     myPoweredByPanel.removeAll();
-    
+
     PluginId pluginId = actionMetaData == null ? null : actionMetaData.getPluginId();
     if (pluginId == null || PluginIds.isPlatformPlugin(pluginId)) {
       myPoweredByPanel.setVisible(false);
@@ -99,7 +123,7 @@ public class IntentionDescriptionPanel {
         DataContext dataContext = DataManager.getInstance().getDataContext(myPoweredByPanel);
 
         Settings data = dataContext.getData(Settings.KEY);
-        if(data == null) {
+        if (data == null) {
           return;
         }
 
@@ -108,7 +132,7 @@ public class IntentionDescriptionPanel {
     });
     owner = label;
     myPoweredByPanel.setVisible(true);
-    myPoweredByPanel.add(owner, BorderLayout.CENTER);
+    myPoweredByPanel.add(owner, BorderLayout.WEST);
   }
 
 
@@ -121,10 +145,10 @@ public class IntentionDescriptionPanel {
 
       URL beforeURL = getClass().getClassLoader().getResource("intentionDescriptions/TemplateGroup/before.txt.template");
       assert beforeURL != null : "no template file. resources are not copied?";
-      showUsages(myBeforePanel, myBeforeSeparator, myBeforeUsagePanels, new ResourceTextDescriptor[]{new ResourceTextDescriptor(beforeURL)});
+      showUsages(myBeforePanel, myBeforeUsagePanels, new ResourceTextDescriptor[]{new ResourceTextDescriptor(beforeURL)});
       URL afterURL = getClass().getClassLoader().getResource("intentionDescriptions/TemplateGroup/after.txt.template");
       assert afterURL != null : "no template file. resources are not copied?";
-      showUsages(myAfterPanel, myAfterSeparator, myAfterUsagePanels, new ResourceTextDescriptor[]{new ResourceTextDescriptor(afterURL)});
+      showUsages(myAfterPanel, myAfterUsagePanels, new ResourceTextDescriptor[]{new ResourceTextDescriptor(afterURL)});
 
       SwingUtilities.invokeLater(() -> myPanel.revalidate());
     }
@@ -133,7 +157,7 @@ public class IntentionDescriptionPanel {
     }
   }
 
-  private static void showUsages(final JPanel panel, final TitledSeparator separator, final List<IntentionUsagePanel> usagePanels, @Nullable final TextDescriptor[] exampleUsages) throws IOException {
+  private static void showUsages(final JPanel panel, final List<IntentionUsagePanel> usagePanels, @Nullable final TextDescriptor[] exampleUsages) throws IOException {
     GridBagConstraints gb = null;
     boolean reuse = exampleUsages != null && panel.getComponents().length == exampleUsages.length;
     if (!reuse) {
