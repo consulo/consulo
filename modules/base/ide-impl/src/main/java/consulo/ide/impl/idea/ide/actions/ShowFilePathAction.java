@@ -15,46 +15,49 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.application.CommonBundle;
-import consulo.process.ExecutionException;
-import consulo.process.cmd.GeneralCommandLine;
-import consulo.process.local.CapturingProcessHandler;
-import consulo.ide.impl.idea.execution.util.ExecUtil;
-import consulo.application.util.SystemInfo;
-import consulo.dataContext.DataManager;
-import consulo.ide.IdeBundle;
-import consulo.ui.ex.action.ActionsBundle;
-import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.event.NotificationListener;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.application.Application;
-import consulo.project.Project;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ui.ex.popup.ListPopup;
-import consulo.ui.ex.popup.PopupStep;
-import consulo.ui.ex.popup.BaseListPopupStep;
-import consulo.ide.impl.idea.openapi.util.*;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileSystem;
-import consulo.ui.ex.RelativePoint;
-import consulo.util.lang.SystemProperties;
 import com.sun.jna.Native;
 import com.sun.jna.platform.win32.Kernel32;
 import com.sun.jna.platform.win32.WinDef;
 import consulo.annotation.UsedInPlugin;
+import consulo.application.Application;
+import consulo.application.CommonBundle;
+import consulo.application.util.SystemInfo;
+import consulo.application.util.concurrent.PooledThreadExecutor;
+import consulo.dataContext.DataManager;
+import consulo.ide.IdeBundle;
+import consulo.ide.impl.idea.execution.util.ExecUtil;
+import consulo.ide.impl.idea.openapi.util.AtomicNotNullLazyValue;
+import consulo.ide.impl.idea.openapi.util.AtomicNullableLazyValue;
+import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
+import consulo.ide.impl.idea.openapi.util.NullableLazyValue;
+import consulo.language.editor.CommonDataKeys;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
+import consulo.process.ExecutionException;
+import consulo.process.cmd.GeneralCommandLine;
+import consulo.process.local.CapturingProcessHandler;
+import consulo.project.Project;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.event.NotificationListener;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.action.ActionsBundle;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.popup.BaseListPopupStep;
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ui.ex.popup.ListPopup;
+import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.image.Image;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.StringUtil;
+import consulo.util.lang.SystemProperties;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileSystem;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
-import consulo.application.util.concurrent.PooledThreadExecutor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -273,13 +276,19 @@ public class ShowFilePathAction extends AnAction {
     if (SystemInfo.isWindows) {
       String cmd = toSelect != null ? "explorer /select,\"" + shortPath(toSelect) + '"' : "explorer /root,\"" + shortPath(dir) + '"';
       LOG.debug(cmd);
-      Process process = Runtime.getRuntime().exec(cmd);  // no advanced quoting/escaping is needed
-      new CapturingProcessHandler(process, null, cmd).runProcess().checkSuccess(LOG);
+      PooledThreadExecutor.INSTANCE.execute(() -> {
+        try {
+          Process process = new ProcessBuilder(cmd).start();  // no advanced quoting/escaping is needed
+          new CapturingProcessHandler(process, null, cmd).runProcess().checkSuccess(LOG);
+        }
+        catch (IOException e) {
+          LOG.warn(e);
+        }
+      });
     }
     else if (SystemInfo.isMac) {
       GeneralCommandLine cmd = toSelect != null ? new GeneralCommandLine("open", "-R", toSelect) : new GeneralCommandLine("open", dir);
-      LOG.debug(cmd.toString());
-      ExecUtil.execAndGetOutput(cmd).checkSuccess(LOG);
+      schedule(cmd);
     }
     else if (fileManagerApp.getValue() != null) {
       schedule(new GeneralCommandLine(fileManagerApp.getValue(), toSelect != null ? toSelect : dir));
