@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.codeInspection.actions;
 
 import consulo.language.editor.FileModificationService;
 import consulo.language.editor.hint.HintManager;
+import consulo.language.editor.intention.SyntheticIntentionAction;
 import consulo.language.editor.internal.intention.EmptyIntentionAction;
 import consulo.language.editor.intention.HighPriorityAction;
 import consulo.language.editor.inspection.*;
@@ -50,7 +51,7 @@ import java.util.List;
  * User: anna
  * Date: 21-Feb-2006
  */
-public class CleanupInspectionIntention implements IntentionAction, HighPriorityAction {
+public class CleanupInspectionIntention implements IntentionAction, HighPriorityAction, SyntheticIntentionAction {
   private final static Logger LOG = Logger.getInstance(CleanupInspectionIntention.class);
 
   private final InspectionToolWrapper myToolWrapper;

@@ -16,39 +16,42 @@
 
 package consulo.ide.impl.idea.codeInspection.actions;
 
-import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
-import consulo.language.editor.scope.AnalysisScope;
-import consulo.language.editor.scope.AnalysisScopeBundle;
+import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.analysis.AnalysisUIOptions;
 import consulo.ide.impl.idea.analysis.BaseAnalysisActionDialog;
-import consulo.language.editor.rawHighlight.HighlightDisplayKey;
-import consulo.language.editor.intention.HighPriorityAction;
+import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionContextImpl;
+import consulo.ide.impl.idea.codeInspection.ex.InspectionManagerEx;
+import consulo.ide.impl.idea.codeInspection.ex.InspectionProfileImpl;
 import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.editor.inspection.scheme.InspectionManager;
+import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
+import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
+import consulo.language.editor.intention.HighPriorityAction;
 import consulo.language.editor.intention.IntentionAction;
-import consulo.ide.impl.idea.codeInspection.ex.*;
-import consulo.codeEditor.Editor;
-import consulo.module.Module;
+import consulo.language.editor.intention.SyntheticIntentionAction;
+import consulo.language.editor.rawHighlight.HighlightDisplayKey;
+import consulo.language.editor.scope.AnalysisScope;
+import consulo.language.editor.scope.AnalysisScopeBundle;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.util.IncorrectOperationException;
 import consulo.language.util.ModuleUtilCore;
+import consulo.module.Module;
 import consulo.project.Project;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.editor.inspection.scheme.InspectionProfileManager;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
-import consulo.language.util.IncorrectOperationException;
 import org.jdom.Element;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.LinkedHashSet;
 
 /**
  * User: anna
  * Date: 21-Feb-2006
  */
-public class RunInspectionIntention implements IntentionAction, HighPriorityAction {
+public class RunInspectionIntention implements IntentionAction, HighPriorityAction, SyntheticIntentionAction {
   private final String myShortName;
 
   public RunInspectionIntention(@Nonnull InspectionToolWrapper toolWrapper) {

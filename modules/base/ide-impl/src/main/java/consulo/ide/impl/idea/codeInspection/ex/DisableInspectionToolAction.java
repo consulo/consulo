@@ -16,28 +16,29 @@
 
 package consulo.ide.impl.idea.codeInspection.ex;
 
-import consulo.application.CommonBundle;
-import consulo.language.editor.DaemonCodeAnalyzer;
-import consulo.language.editor.rawHighlight.HighlightDisplayKey;
-import consulo.language.editor.intention.IntentionAction;
-import consulo.language.editor.inspection.scheme.InspectionProfile;
-import consulo.language.editor.inspection.InspectionsBundle;
-import consulo.language.editor.inspection.LocalInspectionTool;
-import consulo.language.editor.inspection.scheme.ModifiableModel;
 import consulo.application.AllIcons;
+import consulo.application.CommonBundle;
 import consulo.codeEditor.Editor;
-import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
 import consulo.component.util.Iconable;
 import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
+import consulo.language.editor.DaemonCodeAnalyzer;
+import consulo.language.editor.inspection.InspectionsBundle;
+import consulo.language.editor.inspection.LocalInspectionTool;
+import consulo.language.editor.inspection.scheme.InspectionProfile;
+import consulo.language.editor.inspection.scheme.ModifiableModel;
+import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.intention.SyntheticIntentionAction;
+import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
+import consulo.project.Project;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
 
-public class DisableInspectionToolAction implements IntentionAction, Iconable {
+public class DisableInspectionToolAction implements IntentionAction, SyntheticIntentionAction, Iconable {
   private final String myToolId;
   public static final String NAME = InspectionsBundle.message("disable.inspection.action.name");
 

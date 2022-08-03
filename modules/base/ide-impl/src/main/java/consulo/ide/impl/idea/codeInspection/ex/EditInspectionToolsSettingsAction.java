@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.codeInspection.ex;
 
+import consulo.language.editor.intention.SyntheticIntentionAction;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.editor.intention.HighPriorityAction;
 import consulo.language.editor.intention.IntentionAction;
@@ -43,7 +44,7 @@ import javax.swing.*;
  * User: anna
  * Date: Feb 7, 2005
  */
-public class EditInspectionToolsSettingsAction implements IntentionAction, Iconable, HighPriorityAction {
+public class EditInspectionToolsSettingsAction implements IntentionAction, Iconable, HighPriorityAction, SyntheticIntentionAction {
   private final String myShortName;
 
   public EditInspectionToolsSettingsAction(@Nonnull LocalInspectionTool tool) {

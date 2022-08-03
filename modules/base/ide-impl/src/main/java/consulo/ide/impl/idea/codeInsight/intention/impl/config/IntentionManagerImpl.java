@@ -27,7 +27,6 @@ import consulo.ide.impl.idea.codeInspection.actions.CleanupInspectionIntention;
 import consulo.ide.impl.idea.codeInspection.actions.RunInspectionIntention;
 import consulo.ide.impl.idea.codeInspection.ex.*;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.inspection.GlobalInspectionTool;
 import consulo.language.editor.inspection.LocalQuickFix;
 import consulo.language.editor.inspection.ProblemDescriptor;
@@ -41,6 +40,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.util.collection.Lists;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -58,7 +58,7 @@ import java.util.List;
 public class IntentionManagerImpl extends IntentionManager implements Disposable {
   private static final Logger LOG = Logger.getInstance(IntentionManagerImpl.class);
 
-  private final List<IntentionAction> myActions = ContainerUtil.createLockFreeCopyOnWriteList();
+  private final List<IntentionAction> myActions = Lists.newLockFreeCopyOnWriteList();
 
   private final Provider<IntentionManagerSettings> mySettingsProvider;
 
