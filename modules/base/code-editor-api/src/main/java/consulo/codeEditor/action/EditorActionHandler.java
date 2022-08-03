@@ -77,10 +77,10 @@ public abstract class EditorActionHandler {
       final boolean[] result = new boolean[1];
       final CaretTask check = (___, __) -> result[0] = true;
       if (myRunForEachCaret) {
-        hostEditor.getCaretModel().runForEachCaret(caret -> doIfEnabled(editor.getProject(), caret, dataContext, check));
+        hostEditor.getCaretModel().runForEachCaret(caret -> doIfEnabled(caret, dataContext, check));
       }
       else {
-        doIfEnabled(editor.getProject(), hostEditor.getCaretModel().getCurrentCaret(), dataContext, check);
+        doIfEnabled(hostEditor.getCaretModel().getCurrentCaret(), dataContext, check);
       }
       return result[0];
     }
@@ -89,7 +89,7 @@ public abstract class EditorActionHandler {
     }
   }
 
-  private void doIfEnabled(@Nonnull Project project, @Nonnull Caret hostCaret, @Nullable DataContext context, @Nonnull CaretTask task) {
+  private void doIfEnabled(@Nonnull Caret hostCaret, @Nullable DataContext context, @Nonnull CaretTask task) {
     DataContext caretContext = context == null ? null : EditorInternalHelper.getInstance().createCaretDataContext(context, hostCaret);
     Editor editor = hostCaret.getEditor();
     if (myWorksInInjected && caretContext != null) {
@@ -202,13 +202,13 @@ public abstract class EditorActionHandler {
     if (contextCaret == null && runForAllCarets()) {
       hostEditor.getCaretModel().runForEachCaret(caret -> {
         if (myWorksInInjected) ensureInjectionUpToDate(caret);
-        doIfEnabled(editor.getProject(), caret, dataContext, (caret1, dc) -> doExecute(caret1.getEditor(), caret1, dc));
+        doIfEnabled(caret, dataContext, (caret1, dc) -> doExecute(caret1.getEditor(), caret1, dc));
       });
     }
     else {
       if (contextCaret == null) {
         if (myWorksInInjected) ensureInjectionUpToDate(hostEditor.getCaretModel().getCurrentCaret());
-        doIfEnabled(editor.getProject(), hostEditor.getCaretModel().getCurrentCaret(), dataContext, (caret, dc) -> doExecute(caret.getEditor(), null, dc));
+        doIfEnabled(hostEditor.getCaretModel().getCurrentCaret(), dataContext, (caret, dc) -> doExecute(caret.getEditor(), null, dc));
       }
       else {
         doExecute(editor, contextCaret, dataContext);
