@@ -1,7 +1,5 @@
 package consulo.http.impl.internal.ssl;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
@@ -70,7 +68,6 @@ import java.util.concurrent.atomic.AtomicReference;
 
 @Singleton
 @State(name = "CertificateManagerImpl", storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml"))
-@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class CertificateManagerImpl implements CertificateManager, PersistentStateComponent<CertificateManagerImpl.Config> {
   @NonNls
