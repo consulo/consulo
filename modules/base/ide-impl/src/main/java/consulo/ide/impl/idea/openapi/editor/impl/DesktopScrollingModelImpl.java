@@ -336,7 +336,7 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
 
     cancelAnimatedScrolling(false);
 
-    VisibleEditorsTracker editorsTracker = VisibleEditorsTracker.getInstance();
+    DesktopAWTVisibleEditorsTracker editorsTracker = DesktopAWTVisibleEditorsTracker.getInstance();
     boolean useAnimation;
     //System.out.println("myCurrentCommandStart - myLastCommandFinish = " + (myCurrentCommandStart - myLastCommandFinish));
     if (!myEditor.getSettings().isAnimatedScrolling() || myAnimationDisabled || RemoteDesktopService.isRemoteSession()) {
