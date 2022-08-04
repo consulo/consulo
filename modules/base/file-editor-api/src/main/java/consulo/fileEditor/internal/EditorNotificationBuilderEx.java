@@ -16,22 +16,20 @@
 package consulo.fileEditor.internal;
 
 import consulo.fileEditor.EditorNotificationBuilder;
-import consulo.ui.Component;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.ComponentContainer;
 
-import javax.annotation.Nonnull;
-import javax.swing.*;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 20-Jul-22
  */
-public interface EditorNotificationBuilderEx extends EditorNotificationBuilder {
-  @Nonnull
-  default JComponent getComponent() {
-    return (JComponent)TargetAWT.to(getUIComponent());
+public interface EditorNotificationBuilderEx extends EditorNotificationBuilder, ComponentContainer {
+  @Override
+  default void dispose() {
+    throw new AbstractMethodError();
   }
 
-  @Nonnull
-  Component getUIComponent();
+  @Nullable
+  Object getIntentionAction();
 }

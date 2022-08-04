@@ -15,24 +15,24 @@
  */
 package consulo.ide.impl.execution.editor;
 
-import consulo.ide.impl.idea.execution.impl.RunConfigurable;
 import consulo.application.impl.internal.IdeaModalityState;
+import consulo.configurable.ConfigurationException;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
+import consulo.fileEditor.internal.FileEditorWithModifiedIcon;
+import consulo.ide.impl.idea.execution.impl.RunConfigurable;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
-import consulo.configurable.ConfigurationException;
 import consulo.project.Project;
 import consulo.project.internal.ProjectExListener;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.Splitter;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.awt.util.Alarm;
-import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
-import consulo.ide.impl.fileEditor.FileEditorWithModifiedIcon;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.util.Alarm;
 import consulo.util.dataholder.UserDataHolderBase;
+import consulo.virtualFileSystem.VirtualFile;
 import kava.beans.PropertyChangeListener;
 
 import javax.annotation.Nonnull;

@@ -16,19 +16,19 @@
 package consulo.ide.impl.idea.ide.favoritesTreeView;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.ide.SelectInManager;
 import consulo.ide.impl.idea.ide.StandardTargetWeights;
 import consulo.ide.impl.idea.ide.impl.SelectInTargetPsiWrapper;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFileSystemItem;
+import consulo.language.psi.PsiUtilCore;
 import consulo.project.Project;
-import consulo.util.concurrent.ActionCallback;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.project.ui.view.SelectInManager;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
-import consulo.language.psi.PsiUtilCore;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.util.concurrent.ActionCallback;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;

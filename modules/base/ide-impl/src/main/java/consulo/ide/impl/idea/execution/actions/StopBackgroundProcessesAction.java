@@ -1,28 +1,28 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.execution.actions;
 
-import consulo.execution.ExecutionBundle;
 import consulo.application.AllIcons;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.TaskInfo;
+import consulo.dataContext.DataContext;
+import consulo.execution.ExecutionBundle;
+import consulo.ide.impl.idea.openapi.ui.popup.ListItemDescriptorAdapter;
+import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
+import consulo.ide.impl.idea.ui.popup.list.GroupedItemsListRenderer;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
+import consulo.language.editor.CommonDataKeys;
+import consulo.project.Project;
+import consulo.project.ui.internal.StatusBarEx;
+import consulo.project.ui.wm.IdeFrame;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.TaskInfo;
 import consulo.ui.ex.action.DumbAwareAction;
-import consulo.project.Project;
-import consulo.ui.ex.popup.JBPopup;
-import consulo.ide.impl.idea.openapi.ui.popup.ListItemDescriptorAdapter;
-import consulo.util.lang.Pair;
-import consulo.project.ui.wm.IdeFrame;
-import consulo.ide.impl.idea.openapi.wm.ex.StatusBarEx;
-import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
 import consulo.ui.ex.awt.JBList;
-import consulo.ide.impl.idea.ui.popup.list.GroupedItemsListRenderer;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.image.Image;
+import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

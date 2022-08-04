@@ -40,6 +40,7 @@ import consulo.project.event.ProjectManagerAdapter;
 import consulo.project.event.ProjectManagerListener;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.ComponentContainer;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
@@ -424,13 +425,10 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
     return result;
   }
 
+  @Nonnull
   @Override
-  public void showEditorAnnotation(@Nonnull FileEditor editor, @Nonnull JComponent annotationComponent) {
-  }
-
-
-  @Override
-  public void removeEditorAnnotation(@Nonnull FileEditor editor, @Nonnull JComponent annotationComponent) {
+  public Disposable addTopComponent(@Nonnull FileEditor editor, @Nonnull ComponentContainer component) {
+    return null;
   }
 
   @Override

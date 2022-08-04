@@ -17,13 +17,13 @@ package consulo.ide.impl.idea.openapi.vfs.newvfs;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
+import consulo.project.ui.internal.StatusBarEx;
 import consulo.project.ui.wm.WindowManager;
-import consulo.ide.impl.idea.openapi.wm.ex.StatusBarEx;
 import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;

@@ -15,15 +15,15 @@
  */
 package consulo.ide.impl.idea.ide.impl;
 
-import consulo.ide.impl.idea.ide.SelectInContext;
-import consulo.ide.impl.idea.ide.SelectInManager;
 import consulo.ide.impl.idea.ide.StandardTargetWeights;
 import consulo.ide.impl.idea.ide.projectView.impl.PackageViewPane;
-import consulo.project.Project;
+import consulo.language.editor.internal.PsiUtilBase;
+import consulo.language.psi.PsiFileSystemItem;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
-import consulo.language.psi.PsiFileSystemItem;
-import consulo.language.editor.internal.PsiUtilBase;
+import consulo.project.Project;
+import consulo.project.ui.view.SelectInContext;
+import consulo.project.ui.view.SelectInManager;
 import consulo.virtualFileSystem.VirtualFile;
 
 public class PackagesPaneSelectInTarget extends ProjectViewSelectInTarget {

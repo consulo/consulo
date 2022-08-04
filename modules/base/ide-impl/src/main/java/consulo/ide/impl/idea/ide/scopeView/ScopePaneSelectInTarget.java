@@ -16,19 +16,19 @@
 
 package consulo.ide.impl.idea.ide.scopeView;
 
-import consulo.ide.impl.idea.ide.SelectInContext;
-import consulo.ide.impl.idea.ide.SelectInManager;
+import consulo.content.scope.NamedScope;
+import consulo.content.scope.NamedScopesHolder;
+import consulo.content.scope.PackageSet;
 import consulo.ide.impl.idea.ide.StandardTargetWeights;
 import consulo.ide.impl.idea.ide.impl.ProjectViewSelectInTarget;
 import consulo.ide.impl.idea.packageDependencies.DependencyValidationManager;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.content.scope.NamedScope;
-import consulo.content.scope.NamedScopesHolder;
-import consulo.content.scope.PackageSet;
 import consulo.language.editor.scope.NamedScopeManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileSystemItem;
 import consulo.project.Project;
+import consulo.project.ui.view.SelectInContext;
+import consulo.project.ui.view.SelectInManager;
 import consulo.virtualFileSystem.VirtualFile;
 
 /**

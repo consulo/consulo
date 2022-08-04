@@ -24,13 +24,13 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.concurrent.SequentialTaskExecutor;
 import consulo.component.ProcessCanceledException;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.fileEditor.EditorNotifications;
-import consulo.fileEditor.FileEditor;
-import consulo.fileEditor.FileEditorManager;
-import consulo.fileEditor.TextEditor;
+import consulo.disposer.Disposable;
+import consulo.fileEditor.EditorNotificationProvider;
+import consulo.fileEditor.*;
 import consulo.fileEditor.event.FileEditorManagerListener;
+import consulo.fileEditor.impl.internal.EditorNotificationBuilderFactory;
+import consulo.fileEditor.internal.EditorNotificationBuilderEx;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.text.AsyncEditorLoader;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.project.DumbService;
@@ -38,6 +38,7 @@ import consulo.project.Project;
 import consulo.project.event.DumbModeListener;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.SoftReference;
 import consulo.virtualFileSystem.VirtualFile;
@@ -45,9 +46,11 @@ import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -55,14 +58,24 @@ import java.util.concurrent.ExecutorService;
  */
 @ServiceImpl
 public class EditorNotificationsImpl extends EditorNotifications {
+  private record NotificationInfo(EditorNotificationBuilder builder, Disposable disposer) {
+  }
+
   private static final Key<WeakReference<ProgressIndicator>> CURRENT_UPDATES = Key.create("CURRENT_UPDATES");
   private static final ExecutorService ourExecutor = SequentialTaskExecutor.createSequentialApplicationPoolExecutor("EditorNotificationsImpl pool");
+
   private final MergingUpdateQueue myUpdateMerger;
   private final Project myProject;
+  private final FileEditorManager myFileEditorManager;
+  private final EditorNotificationBuilderFactory myEditorNotificationBuilderFactory;
+
+  private final Map<String, Key<NotificationInfo>> myKeyStore = new ConcurrentHashMap<>();
 
   @Inject
-  public EditorNotificationsImpl(Project project) {
+  public EditorNotificationsImpl(Project project, FileEditorManager fileEditorManager, EditorNotificationBuilderFactory notificationBuilderFactory) {
     myProject = project;
+    myEditorNotificationBuilderFactory = notificationBuilderFactory;
+    myFileEditorManager = fileEditorManager;
     myUpdateMerger = new MergingUpdateQueue("EditorNotifications update merger", 100, true, null, project);
     MessageBusConnection connection = project.getMessageBus().connect(project);
     connection.subscribe(FileEditorManagerListener.class, new FileEditorManagerListener() {
@@ -115,8 +128,8 @@ public class EditorNotificationsImpl extends EditorNotifications {
 
   @Nullable
   private ReadTask createTask(@Nonnull final ProgressIndicator indicator, @Nonnull final VirtualFile file) {
-    List<FileEditor> editors = ContainerUtil
-            .filter(FileEditorManager.getInstance(myProject).getAllEditors(file), editor -> !(editor instanceof TextEditor) || AsyncEditorLoader.isEditorLoaded(((TextEditor)editor).getEditor()));
+    List<FileEditor> editors =
+            ContainerUtil.filter(myFileEditorManager.getAllEditors(file), editor -> !(editor instanceof TextEditor) || AsyncEditorLoader.isEditorLoaded(((TextEditor)editor).getEditor()));
 
     if (editors.isEmpty()) return null;
 
@@ -141,13 +154,13 @@ public class EditorNotificationsImpl extends EditorNotifications {
       public Continuation performInReadAction(@Nonnull ProgressIndicator indicator) throws ProcessCanceledException {
         if (isOutdated()) return null;
 
-        final List<EditorNotificationProvider> providers = DumbService.getInstance(myProject).filterByDumbAwareness(EditorNotificationProvider.EP_NAME.getExtensionList(myProject));
+        final List<EditorNotificationProvider> providers = DumbService.getInstance(myProject).filterByDumbAwareness(myProject.getExtensionList(EditorNotificationProvider.class));
 
-        final List<Runnable> updates = ContainerUtil.newArrayList();
+        final List<Runnable> updates = new ArrayList<>();
         for (final FileEditor editor : editors) {
-          for (final EditorNotificationProvider<?> provider : providers) {
-            final JComponent component = provider.createNotificationPanel(file, editor);
-            updates.add(() -> updateNotification(editor, provider.getKey(), component));
+          for (final EditorNotificationProvider provider : providers) {
+            final EditorNotificationBuilder builder = provider.buildNotification(file, editor, myEditorNotificationBuilderFactory::newBuilder);
+            updates.add(() -> updateNotification(editor, provider.getId(), (EditorNotificationBuilderEx)builder));
           }
         }
 
@@ -174,18 +187,21 @@ public class EditorNotificationsImpl extends EditorNotifications {
     return SoftReference.dereference(file.getUserData(CURRENT_UPDATES));
   }
 
-  private void updateNotification(@Nonnull FileEditor editor, @Nonnull Key<? extends JComponent> key, @Nullable JComponent component) {
-    JComponent old = editor.getUserData(key);
-    if (old != null) {
-      FileEditorManager.getInstance(myProject).removeTopComponent(editor, old);
-    }
-    if (component != null) {
-      FileEditorManager.getInstance(myProject).addTopComponent(editor, component);
-      @SuppressWarnings("unchecked") Key<JComponent> _key = (Key<JComponent>)key;
-      editor.putUserData(_key, component);
-    }
-    else {
+  private void updateNotification(@Nonnull FileEditor editor, @Nonnull String notificationId, @Nullable EditorNotificationBuilderEx builder) {
+    Key<NotificationInfo> key = myKeyStore.computeIfAbsent(notificationId, Key::create);
+
+    NotificationInfo oldData = editor.getUserData(key);
+    if (oldData != null) {
+      oldData.disposer().dispose();
+      // reset value
       editor.putUserData(key, null);
+    }
+
+    if (builder != null) {
+      Disposable disposer = myFileEditorManager.addTopComponent(editor, builder);
+      if (disposer != null) {
+        editor.putUserData(key, new NotificationInfo(builder, disposer));
+      }
     }
   }
 
@@ -194,7 +210,7 @@ public class EditorNotificationsImpl extends EditorNotifications {
     myUpdateMerger.queue(new Update("update") {
       @Override
       public void run() {
-        for (VirtualFile file : FileEditorManager.getInstance(myProject).getOpenFiles()) {
+        for (VirtualFile file : myFileEditorManager.getOpenFiles()) {
           updateNotifications(file);
         }
       }

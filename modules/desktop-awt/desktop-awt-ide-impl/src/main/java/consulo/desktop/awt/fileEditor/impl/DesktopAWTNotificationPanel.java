@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.fileEditor;
+package consulo.desktop.awt.fileEditor.impl;
 
 import consulo.fileEditor.EditorNotificationBuilder;
 import consulo.fileEditor.internal.EditorNotificationBuilderEx;
 import consulo.ide.impl.idea.ui.EditorNotificationPanel;
+import consulo.language.editor.intention.IntentionActionWithOptions;
 import consulo.localize.LocalizeValue;
-import consulo.ui.Component;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.ClickListener;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -27,6 +27,7 @@ import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.MouseEvent;
 
@@ -87,13 +88,13 @@ public class DesktopAWTNotificationPanel extends EditorNotificationPanel impleme
 
   @Nonnull
   @Override
-  public Component getUIComponent() {
-    throw new UnsupportedOperationException("unsupported platform");
-  }
-
-  @Nonnull
-  @Override
   public JComponent getComponent() {
     return this;
+  }
+
+  @Nullable
+  @Override
+  public IntentionActionWithOptions getIntentionAction() {
+    return super.getIntentionAction();
   }
 }

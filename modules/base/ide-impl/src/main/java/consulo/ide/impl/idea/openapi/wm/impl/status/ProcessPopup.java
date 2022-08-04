@@ -16,17 +16,13 @@
 package consulo.ide.impl.idea.openapi.wm.impl.status;
 
 import consulo.ide.IdeBundle;
-import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ide.impl.idea.openapi.ui.popup.util.MinimizeButton;
-import consulo.project.ui.wm.IdeFrame;
-import consulo.ide.impl.idea.openapi.wm.ex.StatusBarEx;
-import consulo.ui.ex.awt.util.ScreenUtil;
-import consulo.ui.ex.awt.JBScrollPane;
 import consulo.ide.impl.idea.ui.components.panels.VerticalBox;
-import consulo.ui.ex.awt.Wrapper;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.project.ui.internal.StatusBarEx;
+import consulo.project.ui.wm.IdeFrame;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;

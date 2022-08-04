@@ -15,14 +15,14 @@
  */
 package consulo.ide.impl.idea.openapi.wm.impl.status;
 
+import consulo.application.dumb.DumbAware;
+import consulo.project.ui.internal.StatusBarEx;
+import consulo.project.ui.wm.IdeFrame;
+import consulo.project.ui.wm.IdeFrameUtil;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionsBundle;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
-import consulo.application.dumb.DumbAware;
-import consulo.project.ui.wm.IdeFrame;
-import consulo.ide.impl.idea.openapi.wm.ex.StatusBarEx;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.project.ui.wm.IdeFrameUtil;
 
 import javax.annotation.Nonnull;
 

@@ -16,23 +16,29 @@
 
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.ide.impl.idea.ide.*;
-import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
+import consulo.dataContext.DataContext;
+import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.IdeBundle;
+import consulo.ide.impl.idea.ide.CompositeSelectInTarget;
 import consulo.project.Project;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.project.ui.view.SelectInContext;
+import consulo.project.ui.view.SelectInManager;
+import consulo.project.ui.view.SelectInTarget;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.popup.BaseListPopupStep;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.popup.PopupStep;
-import consulo.ui.ex.popup.BaseListPopupStep;
-import javax.annotation.Nonnull;
 
-import java.util.*;
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 public class SelectInAction extends AnAction implements DumbAware {
   @Override
@@ -63,8 +69,7 @@ public class SelectInAction extends AnAction implements DumbAware {
     if (targetVector.isEmpty()) {
       DefaultActionGroup group = new DefaultActionGroup();
       group.add(new NoTargetsAction());
-      popup = JBPopupFactory.getInstance().createActionGroupPopup(IdeBundle.message("title.popup.select.target"), group, dataContext,
-                                                                  JBPopupFactory.ActionSelectionAid.MNEMONICS, true);
+      popup = JBPopupFactory.getInstance().createActionGroupPopup(IdeBundle.message("title.popup.select.target"), group, dataContext, JBPopupFactory.ActionSelectionAid.MNEMONICS, true);
     }
     else {
       popup = JBPopupFactory.getInstance().createListPopup(new SelectInActionsStep(targetVector, context));
@@ -112,8 +117,7 @@ public class SelectInAction extends AnAction implements DumbAware {
 
     @Override
     public boolean hasSubstep(final SelectInTarget selectedValue) {
-      return selectedValue instanceof CompositeSelectInTarget &&
-             ((CompositeSelectInTarget)selectedValue).getSubTargets(mySelectInContext).size() != 0;
+      return selectedValue instanceof CompositeSelectInTarget && ((CompositeSelectInTarget)selectedValue).getSubTargets(mySelectInContext).size() != 0;
     }
 
     @Override

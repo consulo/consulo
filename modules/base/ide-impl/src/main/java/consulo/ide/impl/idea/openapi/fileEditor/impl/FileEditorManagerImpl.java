@@ -87,6 +87,7 @@ import consulo.project.ui.wm.dock.DockManager;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
+import consulo.ui.ex.ComponentContainer;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
@@ -1309,16 +1310,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     return result.toArray(new FileEditor[result.size()]);
   }
 
-  @Override
-  public void showEditorAnnotation(@Nonnull FileEditor editor, @Nonnull JComponent annotationComponent) {
-    addTopComponent(editor, annotationComponent);
-  }
-
-  @Override
-  public void removeEditorAnnotation(@Nonnull FileEditor editor, @Nonnull JComponent annotationComponent) {
-    removeTopComponent(editor, annotationComponent);
-  }
-
   @Nonnull
   public List<JComponent> getTopComponents(@Nonnull FileEditor editor) {
     final FileEditorWithProviderComposite composite = getEditorComposite(editor);
@@ -1331,6 +1322,16 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     if (composite != null) {
       composite.addTopComponent(editor, component);
     }
+  }
+
+  @Nullable
+  @Override
+  public Disposable addTopComponent(@Nonnull FileEditor editor, @Nonnull ComponentContainer component) {
+    final FileEditorWithProviderComposite composite = getEditorComposite(editor);
+    if (composite != null) {
+      return composite.addTopComponent(editor, component);
+    }
+    return null;
   }
 
   @Override

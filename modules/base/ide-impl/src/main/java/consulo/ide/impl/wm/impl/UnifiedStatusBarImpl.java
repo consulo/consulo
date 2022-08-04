@@ -15,18 +15,19 @@
  */
 package consulo.ide.impl.wm.impl;
 
-import consulo.ide.impl.idea.openapi.wm.ex.StatusBarEx;
-import consulo.ide.impl.idea.openapi.wm.impl.status.ToolWindowsWidget;
-import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetWrapper;
 import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorEx;
 import consulo.application.progress.TaskInfo;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.openapi.wm.impl.status.ToolWindowsWidget;
+import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetWrapper;
+import consulo.ide.impl.wm.impl.status.UnifiedInfoAndProgressPanel;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
+import consulo.project.ui.internal.StatusBarEx;
 import consulo.project.ui.wm.CustomStatusBarWidget;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.StatusBar;
@@ -46,7 +47,6 @@ import consulo.ui.layout.WrappedLayout;
 import consulo.ui.style.ComponentColors;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import consulo.ide.impl.wm.impl.status.UnifiedInfoAndProgressPanel;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

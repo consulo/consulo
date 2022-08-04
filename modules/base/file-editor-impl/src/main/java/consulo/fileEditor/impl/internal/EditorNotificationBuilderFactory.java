@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ui;
+package consulo.fileEditor.impl.internal;
 
-import consulo.util.collection.Maps;
-import consulo.util.dataholder.Key;
-
-import javax.annotation.Nonnull;
-import java.util.Map;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.fileEditor.EditorNotificationBuilder;
 
 /**
  * @author VISTALL
- * @since 2019-05-08
+ * @since 04-Aug-22
  */
-public class EditorNotificationProviderKeyCache {
-  private static final Map<Class, Key> ourKeys = Maps.newConcurrentWeakKeySoftValueHashMap();
-
-  @Nonnull
-  @SuppressWarnings("unchecked")
-  public static <T> Key<T> getOrCreate(Class clazz) {
-    return ourKeys.computeIfAbsent(clazz, aClass -> Key.create(aClass.getName() + "$EditorNotificationProvider"));
-  }
+@ServiceAPI(ComponentScope.APPLICATION)
+public interface EditorNotificationBuilderFactory {
+  EditorNotificationBuilder newBuilder();
 }

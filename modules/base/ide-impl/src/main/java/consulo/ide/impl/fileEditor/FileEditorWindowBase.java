@@ -16,21 +16,18 @@
 package consulo.ide.impl.fileEditor;
 
 import consulo.application.ui.UISettings;
-import consulo.fileEditor.FileEditor;
-import consulo.fileEditor.EditorTabPresentationUtil;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
-import consulo.fileEditor.FileEditorComposite;
-import consulo.fileEditor.FileEditorWindow;
-import consulo.fileEditor.FileEditorWithProviderComposite;
-import consulo.virtualFileSystem.fileType.UnknownFileType;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.component.util.Iconable;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.fileEditor.*;
+import consulo.fileEditor.internal.FileEditorWithModifiedIcon;
 import consulo.ide.impl.VfsIconUtil;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
+import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.UnknownFileType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

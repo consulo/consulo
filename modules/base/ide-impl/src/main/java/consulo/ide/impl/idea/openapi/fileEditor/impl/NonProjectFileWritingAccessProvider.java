@@ -21,6 +21,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.util.registry.Registry;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.fileEditor.NonProjectFileWritingAccessExtension;
 import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;

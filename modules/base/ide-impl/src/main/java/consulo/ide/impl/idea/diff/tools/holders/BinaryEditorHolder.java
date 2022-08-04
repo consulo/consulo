@@ -15,26 +15,26 @@
  */
 package consulo.ide.impl.idea.diff.tools.holders;
 
-import consulo.ide.impl.idea.diff.DiffContext;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorFactory;
 import consulo.diff.content.DiffContent;
 import consulo.diff.content.DocumentContent;
 import consulo.diff.content.FileContent;
-import consulo.ide.impl.idea.diff.util.DiffUtil;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorFactory;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorProvider;
+import consulo.fileEditor.FileEditorProviderManager;
 import consulo.fileEditor.TextEditor;
-import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorProviderManager;
+import consulo.fileEditor.text.TextEditorProvider;
+import consulo.ide.impl.idea.diff.DiffContext;
+import consulo.ide.impl.idea.diff.util.DiffUtil;
 import consulo.ide.impl.idea.openapi.fileTypes.UIBasedFileType;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.fileEditor.text.TextEditorProvider;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

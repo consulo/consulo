@@ -15,17 +15,18 @@
  */
 package consulo.ide.impl.fileEditor;
 
+import consulo.disposer.Disposable;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorProvider;
 import consulo.fileEditor.FileEditorWithProvider;
 import consulo.fileEditor.FileEditorWithProviderComposite;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ui.Component;
+import consulo.ui.ex.ComponentContainer;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -99,32 +100,13 @@ public class UnifiedFileEditorWithProviderComposite implements FileEditorWithPro
 
   @Override
   public List<JComponent> getTopComponents(@Nonnull FileEditor editor) {
-    return Collections.emptyList();
+    return List.of();
   }
 
+  @Nonnull
   @Override
-  public List<JComponent> getBottomComponents(@Nonnull FileEditor editor) {
-    return Collections.emptyList();
-  }
-
-  @Override
-  public void addTopComponent(FileEditor editor, JComponent component) {
-
-  }
-
-  @Override
-  public void removeTopComponent(FileEditor editor, JComponent component) {
-
-  }
-
-  @Override
-  public void addBottomComponent(FileEditor editor, JComponent component) {
-
-  }
-
-  @Override
-  public void removeBottomComponent(FileEditor editor, JComponent component) {
-
+  public Disposable addTopComponent(@Nonnull FileEditor editor, @Nonnull ComponentContainer component) {
+    return () -> {};
   }
 
   @Override

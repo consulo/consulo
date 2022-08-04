@@ -17,6 +17,7 @@ package consulo.fileEditor;
 
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
+import consulo.ui.ex.ComponentContainer;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
@@ -43,15 +44,28 @@ public interface FileEditorComposite extends Disposable {
 
   List<JComponent> getTopComponents(@Nonnull FileEditor editor);
 
-  List<JComponent> getBottomComponents(@Nonnull FileEditor editor);
+  @Nonnull
+  Disposable addTopComponent(@Nonnull FileEditor editor, @Nonnull ComponentContainer component);
 
-  void addTopComponent(FileEditor editor, JComponent component);
+  @Deprecated
+  default void addTopComponent(FileEditor editor, JComponent component) {
+    throw new UnsupportedOperationException();
+  }
 
-  void removeTopComponent(FileEditor editor, JComponent component);
+  @Deprecated
+  default void removeTopComponent(FileEditor editor, JComponent component) {
+    throw new UnsupportedOperationException();
+  }
 
-  void addBottomComponent(FileEditor editor, JComponent component);
+  @Deprecated
+  default void addBottomComponent(FileEditor editor, JComponent component) {
+    throw new UnsupportedOperationException();
+  }
 
-  void removeBottomComponent(FileEditor editor, JComponent component);
+  @Deprecated
+  default void removeBottomComponent(FileEditor editor, JComponent component) {
+    throw new UnsupportedOperationException();
+  }
 
   boolean isPinned();
 

@@ -15,6 +15,7 @@
  */
 package consulo.fileEditor;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.codeEditor.Caret;
@@ -25,6 +26,7 @@ import consulo.navigation.OpenFileDescriptor;
 import consulo.project.Project;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.ComponentContainer;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
@@ -152,13 +154,26 @@ public abstract class FileEditorManager {
   /**
    * @deprecated use addTopComponent
    */
-  public abstract void showEditorAnnotation(@Nonnull FileEditor editor, @Nonnull JComponent annotationComponent);
+  public void showEditorAnnotation(@Nonnull FileEditor editor, @Nonnull JComponent annotationComponent) {
+    addTopComponent(editor, annotationComponent);
+  }
 
   /**
    * @deprecated use removeTopComponent
    */
-  public abstract void removeEditorAnnotation(@Nonnull FileEditor editor, @Nonnull JComponent annotationComponent);
+  public void removeEditorAnnotation(@Nonnull FileEditor editor, @Nonnull JComponent annotationComponent) {
+    removeTopComponent(editor, annotationComponent);
+  }
 
+  /**
+   * Add component to top of file editor
+   * @return disposer for removing it from editor. null mean not added, if editor not found in registry
+   */
+  @Nullable
+  public abstract Disposable addTopComponent(@Nonnull final FileEditor editor, @Nonnull final ComponentContainer component);
+
+  @Deprecated
+  @DeprecationInfo("addTopComponent(FileEditor, ComponentContainer)")
   public abstract void addTopComponent(@Nonnull final FileEditor editor, @Nonnull final JComponent component);
 
   public abstract void removeTopComponent(@Nonnull final FileEditor editor, @Nonnull final JComponent component);

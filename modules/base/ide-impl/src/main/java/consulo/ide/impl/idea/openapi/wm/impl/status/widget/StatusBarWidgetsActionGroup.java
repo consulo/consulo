@@ -1,19 +1,18 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.wm.impl.status.widget;
 
+import consulo.ide.impl.idea.openapi.project.DumbAwareToggleAction;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ide.impl.idea.openapi.project.DumbAwareToggleAction;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
+import consulo.project.ui.internal.StatusBarEx;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
-import consulo.ide.impl.idea.openapi.wm.ex.StatusBarEx;
-import consulo.ui.ex.UIBundle;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.action.*;
 
 import javax.annotation.Nonnull;

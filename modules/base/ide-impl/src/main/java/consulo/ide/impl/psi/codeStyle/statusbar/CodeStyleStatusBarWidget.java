@@ -1,34 +1,33 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.psi.codeStyle.statusbar;
 
-import consulo.language.codeStyle.*;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ReadAction;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.util.concurrent.NonUrgentExecutor;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
+import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.wm.impl.status.EditorBasedStatusBarPopup;
+import consulo.ide.impl.psi.codeStyle.modifier.CodeStyleSettingsModifier;
+import consulo.ide.impl.psi.codeStyle.modifier.TransientCodeStyleSettings;
+import consulo.language.codeStyle.*;
 import consulo.language.codeStyle.event.CodeStyleSettingsChangeEvent;
 import consulo.language.codeStyle.event.CodeStyleSettingsListener;
 import consulo.language.editor.CommonDataKeys;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
 import consulo.project.Project;
-import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.project.ui.wm.StatusBarWidget;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
-import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.project.ui.wm.StatusBarWidget;
-import consulo.ide.impl.idea.openapi.wm.impl.status.EditorBasedStatusBarPopup;
-import consulo.language.psi.PsiDocumentManager;
-import consulo.language.psi.PsiFile;
-import consulo.ide.impl.psi.codeStyle.modifier.CodeStyleSettingsModifier;
-import consulo.language.codeStyle.CodeStyleStatusBarUIContributor;
-import consulo.ide.impl.psi.codeStyle.modifier.TransientCodeStyleSettings;
-import consulo.ide.impl.idea.util.concurrency.NonUrgentExecutor;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;

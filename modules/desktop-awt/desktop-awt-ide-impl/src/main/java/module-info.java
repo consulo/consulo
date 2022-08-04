@@ -30,6 +30,7 @@ open module consulo.desktop.awt.ide.impl {
   requires consulo.desktop.ide.impl;
   requires consulo.util.jna;
   requires consulo.ui.ex.awt.api;
+  requires consulo.file.editor.impl;
   requires consulo.desktop.bootstrap;
 
   requires consulo.desktop.awt.bootstrap;

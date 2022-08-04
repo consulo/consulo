@@ -204,7 +204,7 @@ public class EditorNotificationPanel extends JPanel implements IntentionActionPr
     }
   }
 
-  private static class MyLinkOption implements IntentionAction {
+  private static class MyLinkOption implements IntentionAction, SyntheticIntentionAction {
     private final HyperlinkLabel myLabel;
 
     private MyLinkOption(HyperlinkLabel label) {

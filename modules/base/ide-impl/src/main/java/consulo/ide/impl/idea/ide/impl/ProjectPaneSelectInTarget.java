@@ -16,14 +16,14 @@
 
 package consulo.ide.impl.idea.ide.impl;
 
-import consulo.ide.impl.idea.ide.SelectInContext;
-import consulo.ide.impl.idea.ide.SelectInManager;
+import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.ide.StandardTargetWeights;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPane;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFileSystemItem;
+import consulo.project.Project;
+import consulo.project.ui.view.SelectInContext;
+import consulo.project.ui.view.SelectInManager;
+import consulo.virtualFileSystem.VirtualFile;
 
 public class ProjectPaneSelectInTarget extends ProjectViewSelectInTarget implements DumbAware {
   public ProjectPaneSelectInTarget(Project project) {

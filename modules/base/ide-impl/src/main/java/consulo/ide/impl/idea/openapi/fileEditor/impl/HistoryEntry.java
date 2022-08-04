@@ -15,19 +15,19 @@
  */
 package consulo.ide.impl.idea.openapi.fileEditor.impl;
 
-import consulo.fileEditor.FileEditorProvider;
-import consulo.fileEditor.FileEditorState;
-import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorProviderManager;
-import consulo.project.Project;
-import consulo.util.xml.serializer.InvalidDataException;
-import consulo.util.lang.Pair;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileManager;
-import consulo.ide.impl.idea.openapi.vfs.impl.LightFilePointer;
-import consulo.virtualFileSystem.pointer.VirtualFilePointer;
-import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.fileEditor.FileEditorProvider;
+import consulo.fileEditor.FileEditorProviderManager;
+import consulo.fileEditor.FileEditorState;
+import consulo.project.Project;
+import consulo.util.lang.Pair;
+import consulo.util.xml.serializer.InvalidDataException;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.pointer.LightFilePointer;
+import consulo.virtualFileSystem.pointer.VirtualFilePointer;
+import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
@@ -40,7 +40,7 @@ import java.util.Map;
 
 /**
  * `Heavy` entries should be disposed with {@link #destroy()} to prevent leak of VirtualFilePointer
- */
+ */                                                                                                  
 public final class HistoryEntry {
   @NonNls static final String TAG = "entry";
   public static final String FILE_ATTR = "file";

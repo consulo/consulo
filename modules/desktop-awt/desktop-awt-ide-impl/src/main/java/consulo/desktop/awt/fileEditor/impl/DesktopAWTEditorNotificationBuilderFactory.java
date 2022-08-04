@@ -13,17 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.fileEditor;
+package consulo.desktop.awt.fileEditor.impl;
 
-import consulo.application.dumb.DumbAware;
-import consulo.fileEditor.EditorNotificationProvider;
+import consulo.annotation.component.ServiceImpl;
+import consulo.fileEditor.EditorNotificationBuilder;
+import consulo.fileEditor.impl.internal.EditorNotificationBuilderFactory;
 
 /**
  * @author VISTALL
- * @since 18-Jul-22
+ * @since 04-Aug-22
  */
-public class DumbAwareNewEditorNotificationProvider extends NewEditorNotificationProvider implements DumbAware {
-  public DumbAwareNewEditorNotificationProvider(EditorNotificationProvider editorNotificationProvider) {
-    super(editorNotificationProvider);
+@ServiceImpl
+public class DesktopAWTEditorNotificationBuilderFactory implements EditorNotificationBuilderFactory {
+  @Override
+  public EditorNotificationBuilder newBuilder() {
+    return new DesktopAWTNotificationPanel();
   }
 }

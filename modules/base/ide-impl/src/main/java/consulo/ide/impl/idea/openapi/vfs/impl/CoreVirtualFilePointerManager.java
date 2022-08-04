@@ -19,10 +19,8 @@ import consulo.component.util.SimpleModificationTracker;
 import consulo.disposer.Disposable;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.impl.internal.VirtualFilePointerContainerImpl;
-import consulo.virtualFileSystem.pointer.VirtualFilePointer;
-import consulo.virtualFileSystem.pointer.VirtualFilePointerContainer;
-import consulo.virtualFileSystem.pointer.VirtualFilePointerListener;
-import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
+import consulo.virtualFileSystem.pointer.*;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

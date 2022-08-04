@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.ide.scratch;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.NonProjectFileWritingAccessExtension;
+import consulo.fileEditor.NonProjectFileWritingAccessExtension;
 import consulo.language.editor.scratch.ScratchUtil;
 import consulo.virtualFileSystem.VirtualFile;
 

@@ -24,7 +24,6 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.fileEditor.*;
 import consulo.fileEditor.text.TextEditorProvider;
-import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorProviderManager;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.project.DumbService;

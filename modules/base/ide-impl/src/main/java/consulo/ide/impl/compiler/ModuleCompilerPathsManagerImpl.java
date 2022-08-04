@@ -16,16 +16,16 @@
 package consulo.ide.impl.compiler;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.component.persist.PersistentStateComponent;
-import consulo.module.Module;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.openapi.vfs.impl.LightFilePointer;
-import consulo.virtualFileSystem.pointer.VirtualFilePointer;
-import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
 import consulo.compiler.CompilerConfiguration;
 import consulo.compiler.ModuleCompilerPathsManager;
-import consulo.disposer.Disposable;
+import consulo.component.persist.PersistentStateComponent;
 import consulo.content.ContentFolderTypeProvider;
+import consulo.disposer.Disposable;
+import consulo.module.Module;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.pointer.LightFilePointer;
+import consulo.virtualFileSystem.pointer.VirtualFilePointer;
+import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;

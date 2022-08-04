@@ -29,6 +29,12 @@ public final class ForcedSoftWrapsNotificationProvider implements EditorNotifica
     myProject = project;
   }
 
+  @Nonnull
+  @Override
+  public String getId() {
+    return "forced-soft-wrap";
+  }
+
   @RequiredReadAction
   @Nullable
   @Override

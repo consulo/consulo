@@ -22,6 +22,7 @@ import consulo.codeEditor.EditorColors;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.component.util.Weighted;
 import consulo.dataContext.DataProvider;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.*;
 import consulo.fileEditor.event.FileEditorManagerEvent;
@@ -41,6 +42,7 @@ import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
+import consulo.ui.ex.ComponentContainer;
 import consulo.ui.ex.PrevNextActionsDescriptor;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.*;
@@ -102,7 +104,7 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
   private final FileEditorManagerEx myFileEditorManager;
   private final Map<FileEditor, JComponent> myTopComponents = new HashMap<>();
   private final Map<FileEditor, JComponent> myBottomComponents = new HashMap<>();
-  private final Map<FileEditor, String> myDisplayNames = ContainerUtil.newHashMap();
+  private final Map<FileEditor, String> myDisplayNames = new HashMap<>();
 
   /**
    * @param file    {@code file} for which composite is being constructed
@@ -166,8 +168,7 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
   private TabFactoryBuilderImpl.AsJBTabs createTabbedPaneWrapper(FileEditor[] editors) {
     PrevNextActionsDescriptor descriptor = new PrevNextActionsDescriptor(IdeActions.ACTION_NEXT_EDITOR_TAB, IdeActions.ACTION_PREVIOUS_EDITOR_TAB);
     final TabFactoryBuilderImpl.AsJBTabs wrapper = new TabFactoryBuilderImpl.AsJBTabs(myFileEditorManager.getProject(), SwingConstants.BOTTOM, descriptor, this);
-    wrapper.getTabs().getPresentation()
-            .setUiDecorator(() -> new UiDecorator.UiDecoration(null, JBUI.insets(0, 8)));
+    wrapper.getTabs().getPresentation().setUiDecorator(() -> new UiDecorator.UiDecoration(null, JBUI.insets(0, 8)));
     wrapper.getTabs().getComponent().setBorder(new EmptyBorder(0, 0, 1, 0));
 
     boolean firstEditor = true;
@@ -204,6 +205,7 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
   /**
    * @return whether myEditor composite is pinned
    */
+  @Override
   public boolean isPinned() {
     return myPinned;
   }
@@ -277,17 +279,12 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
     return myEditors;
   }
 
+  @Override
   @Nonnull
   public List<JComponent> getTopComponents(@Nonnull FileEditor editor) {
     return getTopBottomComponents(editor, true);
   }
 
-  @Nonnull
-  public List<JComponent> getBottomComponents(@Nonnull FileEditor editor) {
-    return getTopBottomComponents(editor, false);
-  }
-
-  @Nonnull
   private List<JComponent> getTopBottomComponents(@Nonnull FileEditor editor, boolean top) {
     SmartList<JComponent> result = new SmartList<>();
     JComponent container = top ? myTopComponents.get(editor) : myBottomComponents.get(editor);
@@ -299,20 +296,47 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
     return Collections.unmodifiableList(result);
   }
 
+  @Nonnull
+  @Override
+  public Disposable addTopComponent(@Nonnull FileEditor editor, @Nonnull ComponentContainer component) {
+    return manageTopOrBottomComponent(editor, component, true);
+  }
+
+  @Override
   public void addTopComponent(FileEditor editor, JComponent component) {
     manageTopOrBottomComponent(editor, component, true, false);
   }
 
+  @Override
   public void removeTopComponent(FileEditor editor, JComponent component) {
     manageTopOrBottomComponent(editor, component, true, true);
   }
 
+  @Override
   public void addBottomComponent(FileEditor editor, JComponent component) {
     manageTopOrBottomComponent(editor, component, false, false);
   }
 
+  @Override
   public void removeBottomComponent(FileEditor editor, JComponent component) {
     manageTopOrBottomComponent(editor, component, false, true);
+  }
+
+  @Nonnull
+  private Disposable manageTopOrBottomComponent(FileEditor editor, @Nonnull ComponentContainer componentContainer, boolean top) {
+    final JComponent container = top ? myTopComponents.get(editor) : myBottomComponents.get(editor);
+    assert container != null;
+
+    JComponent component = componentContainer.getComponent();
+    NonOpaquePanel wrapper = new NonOpaquePanel(component);
+    wrapper.setBorder(createTopBottomSideBorder(top));
+    container.add(wrapper, calcComponentInsertionIndex(component, container));
+
+    container.revalidate();
+    return () -> {
+      container.remove(wrapper);
+      container.revalidate();
+    };
   }
 
   private void manageTopOrBottomComponent(FileEditor editor, JComponent component, boolean top, boolean remove) {
@@ -347,7 +371,7 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
   }
 
   public void setDisplayName(@Nonnull FileEditor editor, @Nonnull String name) {
-    int index = ContainerUtil.indexOfIdentity(ContainerUtil.immutableList(myEditors), editor);
+    int index = ContainerUtil.indexOfIdentity(List.of(myEditors), editor);
     assert index != -1;
 
     myDisplayNames.put(editor, name);
@@ -364,11 +388,13 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
   /**
    * @return currently selected myEditor.
    */
+  @Override
   @Nonnull
   public FileEditor getSelectedEditor() {
     return getSelectedEditorWithProvider().getFileEditor();
   }
 
+  @Override
   public boolean isDisposed() {
     return myTabbedPaneWrapper != null && myTabbedPaneWrapper.isDisposed();
   }
