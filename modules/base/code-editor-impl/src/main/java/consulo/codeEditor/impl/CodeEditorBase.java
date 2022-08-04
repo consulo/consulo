@@ -12,7 +12,7 @@ import consulo.application.util.registry.Registry;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.*;
 import consulo.codeEditor.impl.action.EditorAction;
-import consulo.codeEditor.internal.EditorInternalHelper;
+import consulo.codeEditor.internal.CodeEditorInternalHelper;
 import consulo.codeEditor.internal.RealEditor;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.codeEditor.markup.MarkupModelListener;
@@ -1130,7 +1130,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
     Disposer.register(myDisposable, myHighlighterDisposable);
     highlighter.setEditor(this);
     highlighter.setText(document.getImmutableCharSequence());
-    EditorInternalHelper.getInstance().rememberEditorHighlighterForCachesOptimization(document, highlighter);
+    CodeEditorInternalHelper.getInstance().rememberEditorHighlighterForCachesOptimization(document, highlighter);
     myHighlighter = highlighter;
   }
 

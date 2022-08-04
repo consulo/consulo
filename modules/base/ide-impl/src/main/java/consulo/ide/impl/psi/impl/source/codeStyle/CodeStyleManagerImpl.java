@@ -705,7 +705,7 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
 
   @Override
   public <T> T performActionWithFormatterDisabled(final Computable<T> r) {
-    return ((FormatterImpl)FormatterEx.getInstance()).runWithFormattingDisabled(() -> {
+    return ((FormatterImpl)FormatterEx.getInstanceEx()).runWithFormattingDisabled(() -> {
       final PostprocessReformattingAspect component = PostprocessReformattingAspect.getInstance(getProject());
       return component.disablePostprocessFormattingInside(r);
     });
@@ -883,13 +883,13 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
   @Override
   public int getSpacing(@Nonnull PsiFile file, int offset) {
     FormattingModel model = createFormattingModel(file);
-    return model == null ? -1 : FormatterEx.getInstance().getSpacingForBlockAtOffset(model, offset);
+    return model == null ? -1 : FormatterEx.getInstanceEx().getSpacingForBlockAtOffset(model, offset);
   }
 
   @Override
   public int getMinLineFeeds(@Nonnull PsiFile file, int offset) {
     FormattingModel model = createFormattingModel(file);
-    return model == null ? -1 : FormatterEx.getInstance().getMinLineFeedsBeforeBlockAtOffset(model, offset);
+    return model == null ? -1 : FormatterEx.getInstanceEx().getMinLineFeedsBeforeBlockAtOffset(model, offset);
   }
 
   @Nullable

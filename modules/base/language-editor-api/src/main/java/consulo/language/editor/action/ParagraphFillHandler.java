@@ -1,14 +1,22 @@
-package consulo.ide.impl.idea.codeInsight.editorActions.fillParagraph;
+package consulo.language.editor.action;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.application.Application;
 import consulo.codeEditor.Editor;
+import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.document.util.UnfairTextRange;
-import consulo.ide.impl.idea.formatting.FormatterTagHandler;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.psi.impl.source.codeStyle.CodeFormatterFacade;
+import consulo.language.Language;
 import consulo.language.ast.IElementType;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
+import consulo.language.codeStyle.FormatterTagHandler;
+import consulo.language.editor.internal.DefaultParagraphFillHandler;
+import consulo.language.editor.internal.LanguageEditorInternalHelper;
+import consulo.language.extension.ByLanguageValue;
+import consulo.language.extension.LanguageExtension;
+import consulo.language.extension.LanguageOneToOne;
 import consulo.language.plain.psi.PsiPlainTextFile;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
@@ -16,6 +24,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiWhiteSpace;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.CharFilter;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -24,12 +33,21 @@ import java.util.List;
 /**
  * Defines general re-flow paragraph functionality.
  * Serves plain text files.
+ * <p>
  *
- * User : ktisha
+ * @author ktisha
  */
-public class ParagraphFillHandler {
+@ExtensionAPI(ComponentScope.APPLICATION)
+public abstract class ParagraphFillHandler implements LanguageExtension {
+  private static final ExtensionPointCacheKey<ParagraphFillHandler, ByLanguageValue<ParagraphFillHandler>> KEY =
+          ExtensionPointCacheKey.create("ParagraphFillHandler", LanguageOneToOne.build(new DefaultParagraphFillHandler()));
 
-  protected void performOnElement(@Nonnull final PsiElement element, @Nonnull final Editor editor) {
+  @Nonnull
+  public static ParagraphFillHandler forLanguage(@Nonnull Language language) {
+    return Application.get().getExtensionPoint(ParagraphFillHandler.class).getOrBuildCache(KEY).requiredGet(language);
+  }
+
+  public final void performOnElement(@Nonnull final PsiElement element, @Nonnull final Editor editor) {
     final Document document = editor.getDocument();
 
     final TextRange textRange = getTextRange(element, editor);
@@ -47,45 +65,33 @@ public class ParagraphFillHandler {
       final String startTrimmed = StringUtil.trimStart(string.trim(), prefix.trim());
       final String str = StringUtil.trimEnd(startTrimmed, postfix.trim());
       final String finalString = str.trim();
-      if (!StringUtil.isEmptyOrSpaces(finalString))
-        stringBuilder.append(finalString).append(" ");
+      if (!StringUtil.isEmptyOrSpaces(finalString)) stringBuilder.append(finalString).append(" ");
     }
     appendPostfix(element, text, stringBuilder);
 
     final String replacementText = stringBuilder.toString();
 
     CommandProcessor.getInstance().executeCommand(element.getProject(), () -> {
-      document.replaceString(textRange.getStartOffset(), textRange.getEndOffset(),
-                             replacementText);
-      final CodeFormatterFacade codeFormatter = new CodeFormatterFacade(
-              CodeStyleSettingsManager.getSettings(element.getProject()), element.getLanguage());
-
+      document.replaceString(textRange.getStartOffset(), textRange.getEndOffset(), replacementText);
       final PsiFile file = element.getContainingFile();
       FormatterTagHandler formatterTagHandler = new FormatterTagHandler(CodeStyleSettingsManager.getSettings(file.getProject()));
       List<TextRange> enabledRanges = formatterTagHandler.getEnabledRanges(file.getNode(), TextRange.create(0, document.getTextLength()));
 
-      codeFormatter.doWrapLongLinesIfNecessary(editor, element.getProject(), document,
-                                               textRange.getStartOffset(),
-                                               textRange.getStartOffset() + replacementText.length() + 1,
-                                               enabledRanges);
+      LanguageEditorInternalHelper helper = LanguageEditorInternalHelper.getInstance();
+
+      helper.doWrapLongLinesIfNecessary(editor, element.getProject(), element.getLanguage(), document, textRange.getStartOffset(), textRange.getStartOffset() + replacementText.length() + 1, enabledRanges);
     }, null, document);
 
   }
 
-  protected void appendPostfix(@Nonnull final PsiElement element,
-                               @Nonnull final String text,
-                               @Nonnull final StringBuilder stringBuilder) {
+  protected void appendPostfix(@Nonnull final PsiElement element, @Nonnull final String text, @Nonnull final StringBuilder stringBuilder) {
     final String postfix = getPostfix(element);
-    if (text.endsWith(postfix.trim()))
-      stringBuilder.append(postfix);
+    if (text.endsWith(postfix.trim())) stringBuilder.append(postfix);
   }
 
-  protected void appendPrefix(@Nonnull final PsiElement element,
-                              @Nonnull final String text,
-                              @Nonnull final StringBuilder stringBuilder) {
+  protected void appendPrefix(@Nonnull final PsiElement element, @Nonnull final String text, @Nonnull final StringBuilder stringBuilder) {
     final String prefix = getPrefix(element);
-    if (text.startsWith(prefix.trim()))
-      stringBuilder.append(prefix);
+    if (text.startsWith(prefix.trim())) stringBuilder.append(prefix);
   }
 
   private TextRange getTextRange(@Nonnull final PsiElement element, @Nonnull final Editor editor) {
@@ -97,8 +103,7 @@ public class ParagraphFillHandler {
   private int getStartOffset(@Nonnull final PsiElement element, @Nonnull final Editor editor) {
     if (isBunchOfElement(element)) {
       final PsiElement firstElement = getFirstElement(element);
-      return firstElement != null? firstElement.getTextRange().getStartOffset()
-                                 : element.getTextRange().getStartOffset();
+      return firstElement != null ? firstElement.getTextRange().getStartOffset() : element.getTextRange().getStartOffset();
     }
     final int offset = editor.getCaretModel().getOffset();
     final int elementTextOffset = element.getTextOffset();
@@ -106,8 +111,7 @@ public class ParagraphFillHandler {
     int lineNumber = document.getLineNumber(offset);
 
     while (lineNumber != document.getLineNumber(elementTextOffset)) {
-      final String text = document.getText(TextRange.create(document.getLineStartOffset(lineNumber),
-                                                            document.getLineEndOffset(lineNumber)));
+      final String text = document.getText(TextRange.create(document.getLineStartOffset(lineNumber), document.getLineEndOffset(lineNumber)));
       if (StringUtil.isEmptyOrSpaces(text)) {
         lineNumber += 1;
         break;
@@ -115,8 +119,7 @@ public class ParagraphFillHandler {
       lineNumber -= 1;
     }
     final int lineStartOffset = lineNumber == document.getLineNumber(elementTextOffset) ? elementTextOffset : document.getLineStartOffset(lineNumber);
-    final String lineText = document
-            .getText(TextRange.create(lineStartOffset, document.getLineEndOffset(lineNumber)));
+    final String lineText = document.getText(TextRange.create(lineStartOffset, document.getLineEndOffset(lineNumber)));
     int shift = StringUtil.findFirst(lineText, CharFilter.NOT_WHITESPACE_FILTER);
 
     return lineStartOffset + shift;
@@ -129,8 +132,7 @@ public class ParagraphFillHandler {
   private int getEndOffset(@Nonnull final PsiElement element, @Nonnull final Editor editor) {
     if (isBunchOfElement(element)) {
       final PsiElement next = getLastElement(element);
-      return next != null? next.getTextRange().getEndOffset()
-                         : element.getTextRange().getEndOffset();
+      return next != null ? next.getTextRange().getEndOffset() : element.getTextRange().getEndOffset();
     }
     final int offset = editor.getCaretModel().getOffset();
     final int elementTextOffset = element.getTextRange().getEndOffset();
@@ -138,8 +140,7 @@ public class ParagraphFillHandler {
     int lineNumber = document.getLineNumber(offset);
 
     while (lineNumber != document.getLineNumber(elementTextOffset)) {
-      final String text = document.getText(TextRange.create(document.getLineStartOffset(lineNumber),
-                                                            document.getLineEndOffset(lineNumber)));
+      final String text = document.getText(TextRange.create(document.getLineStartOffset(lineNumber), document.getLineEndOffset(lineNumber)));
       if (StringUtil.isEmptyOrSpaces(text)) {
         lineNumber -= 1;
         break;
@@ -154,21 +155,17 @@ public class ParagraphFillHandler {
     final IElementType elementType = element.getNode().getElementType();
     PsiElement prevSibling = element.getPrevSibling();
     PsiElement result = element;
-    while (prevSibling != null && (prevSibling.getNode().getElementType().equals(elementType) ||
-                                   (atWhitespaceToken(prevSibling) &&
-                                    StringUtil.countChars(prevSibling.getText(), '\n') <= 1))) {
+    while (prevSibling != null && (prevSibling.getNode().getElementType().equals(elementType) || (atWhitespaceToken(prevSibling) && StringUtil.countChars(prevSibling.getText(), '\n') <= 1))) {
       String text = prevSibling.getText();
       final String prefix = getPrefix(element);
       final String postfix = getPostfix(element);
       text = StringUtil.trimStart(text.trim(), prefix.trim());
       text = StringUtil.trimEnd(text, postfix);
 
-      if (prevSibling.getNode().getElementType().equals(elementType) &&
-          StringUtil.isEmptyOrSpaces(text)) {
+      if (prevSibling.getNode().getElementType().equals(elementType) && StringUtil.isEmptyOrSpaces(text)) {
         break;
       }
-      if (prevSibling.getNode().getElementType().equals(elementType))
-        result = prevSibling;
+      if (prevSibling.getNode().getElementType().equals(elementType)) result = prevSibling;
       prevSibling = prevSibling.getPrevSibling();
     }
     return result;
@@ -179,35 +176,31 @@ public class ParagraphFillHandler {
     final IElementType elementType = element.getNode().getElementType();
     PsiElement nextSibling = element.getNextSibling();
     PsiElement result = element;
-    while (nextSibling != null && (nextSibling.getNode().getElementType().equals(elementType) ||
-                                   (atWhitespaceToken(nextSibling) &&
-                                    StringUtil.countChars(nextSibling.getText(), '\n') <= 1))) {
+    while (nextSibling != null && (nextSibling.getNode().getElementType().equals(elementType) || (atWhitespaceToken(nextSibling) && StringUtil.countChars(nextSibling.getText(), '\n') <= 1))) {
       String text = nextSibling.getText();
       final String prefix = getPrefix(element);
       final String postfix = getPostfix(element);
       text = StringUtil.trimStart(text.trim(), prefix.trim());
       text = StringUtil.trimEnd(text, postfix);
 
-      if (nextSibling.getNode().getElementType().equals(elementType) &&
-          StringUtil.isEmptyOrSpaces(text)) {
+      if (nextSibling.getNode().getElementType().equals(elementType) && StringUtil.isEmptyOrSpaces(text)) {
         break;
       }
-      if (nextSibling.getNode().getElementType().equals(elementType))
-        result = nextSibling;
+      if (nextSibling.getNode().getElementType().equals(elementType)) result = nextSibling;
       nextSibling = nextSibling.getNextSibling();
     }
     return result;
   }
 
-  protected boolean atWhitespaceToken(@Nullable final PsiElement element) {
+  public boolean atWhitespaceToken(@Nullable final PsiElement element) {
     return element instanceof PsiWhiteSpace;
   }
 
-  protected boolean isAvailableForElement(@Nullable final PsiElement element) {
+  public boolean isAvailableForElement(@Nullable final PsiElement element) {
     return element != null;
   }
 
-  protected boolean isAvailableForFile(@Nullable final PsiFile psiFile) {
+  public boolean isAvailableForFile(@Nullable final PsiFile psiFile) {
     return psiFile instanceof PsiPlainTextFile;
   }
 

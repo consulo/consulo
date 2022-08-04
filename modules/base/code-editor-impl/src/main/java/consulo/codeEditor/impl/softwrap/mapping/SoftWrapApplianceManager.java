@@ -8,7 +8,7 @@ import consulo.codeEditor.impl.softwrap.SoftWrapImpl;
 import consulo.codeEditor.impl.softwrap.SoftWrapPainter;
 import consulo.codeEditor.impl.softwrap.SoftWrapsStorage;
 import consulo.codeEditor.impl.util.EditorImplUtil;
-import consulo.codeEditor.internal.EditorInternalHelper;
+import consulo.codeEditor.internal.CodeEditorInternalHelper;
 import consulo.codeEditor.internal.RealEditor;
 import consulo.codeEditor.util.EditorUtil;
 import consulo.colorScheme.TextAttributes;
@@ -245,7 +245,7 @@ public abstract class SoftWrapApplianceManager implements Dumpable {
       }
       else if (myEditor.getUserData(RealEditor.SOFT_WRAPS_EXIST) == null) {
         myEditor.putUserData(RealEditor.SOFT_WRAPS_EXIST, Boolean.TRUE);
-        EditorInternalHelper.getInstance().updateNotifications(project, file);
+        CodeEditorInternalHelper.getInstance().updateNotifications(project, file);
       }
     }
   }
@@ -690,7 +690,7 @@ public abstract class SoftWrapApplianceManager implements Dumpable {
 
       // Performance optimization implied by profiling results analysis.
       if (myLineWrapPositionStrategy == null) {
-        myLineWrapPositionStrategy = EditorInternalHelper.getInstance().getLineWrapPositionStrategy(myEditor);
+        myLineWrapPositionStrategy = CodeEditorInternalHelper.getInstance().getLineWrapPositionStrategy(myEditor);
       }
 
       softWrapOffset = myLineWrapPositionStrategy.calculateWrapPosition(document, myEditor.getProject(), minOffset, maxOffset, preferredOffset, true, true);

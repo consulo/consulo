@@ -15,7 +15,7 @@
  */
 package consulo.codeEditor;
 
-import consulo.codeEditor.internal.EditorInternalHelper;
+import consulo.codeEditor.internal.CodeEditorInternalHelper;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.document.Document;
 import consulo.project.Project;
@@ -47,6 +47,6 @@ public final class DocumentMarkupModel {
   @Nullable
   @Contract("_, _, true -> !null")
   public static MarkupModelEx forDocument(@Nonnull Document document, @Nullable Project project, boolean create) {
-    return EditorInternalHelper.getInstance().forDocument(document, project, create);
+    return CodeEditorInternalHelper.getInstance().forDocument(document, project, create);
   }
 }

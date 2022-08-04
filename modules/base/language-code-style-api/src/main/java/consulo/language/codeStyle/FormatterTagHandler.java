@@ -13,22 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.formatting;
+package consulo.language.codeStyle;
 
-import consulo.language.ast.ASTNode;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.language.codeStyle.ASTBlock;
-import consulo.language.codeStyle.Block;
+import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiRecursiveElementVisitor;
-import consulo.language.codeStyle.CodeStyleSettings;
-import javax.annotation.Nonnull;
+import consulo.util.lang.StringUtil;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -95,7 +91,7 @@ public class FormatterTagHandler {
   }
 
   private class EnabledRangesCollector extends PsiRecursiveElementVisitor {
-    private final List<FormatterTagInfo> myTagInfoList = new ArrayList<FormatterTagInfo>();
+    private final List<FormatterTagInfo> myTagInfoList = new ArrayList<>();
     private final TextRange myInitialRange;
 
     private EnabledRangesCollector(TextRange initialRange) {
@@ -117,13 +113,8 @@ public class FormatterTagHandler {
     }
 
     private List<TextRange> getRanges() {
-      List<TextRange> enabledRanges = new ArrayList<TextRange>();
-      Collections.sort(myTagInfoList, new Comparator<FormatterTagInfo>() {
-        @Override
-        public int compare(FormatterTagInfo tagInfo1, FormatterTagInfo tagInfo2) {
-          return tagInfo1.offset - tagInfo2.offset;
-        }
-      });
+      List<TextRange> enabledRanges = new ArrayList<>();
+      Collections.sort(myTagInfoList, (tagInfo1, tagInfo2) -> tagInfo1.offset - tagInfo2.offset);
 
       int start = myInitialRange.getStartOffset();
       boolean formatterEnabled = true;

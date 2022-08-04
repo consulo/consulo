@@ -341,7 +341,7 @@ public class JoinLinesHandler extends EditorActionHandler {
       FormattingModelBuilder builder = FormattingModelBuilder.forContext(myFile);
       CodeStyleSettings settings = CodeStyle.getSettings(myFile);
       FormattingModel model = builder == null ? null : builder.createModel(FormattingContext.create(myFile, settings));
-      FormatterEx formatter = FormatterEx.getInstance();
+      FormatterEx formatter = FormatterEx.getInstanceEx();
       for (int i = 0; i < size; i++) {
         myIndicator.checkCanceled();
         myIndicator.setFraction(0.7 + 0.25 * i / size);

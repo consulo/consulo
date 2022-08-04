@@ -19,7 +19,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.application.ui.setting.AdditionalEditorAppearanceSettingProvider;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
-import consulo.codeEditor.internal.EditorInternalHelper;
+import consulo.codeEditor.internal.CodeEditorInternalHelper;
 import consulo.configurable.ApplicationConfigurable;
 import consulo.configurable.SimpleConfigurableByProperties;
 import consulo.configurable.StandardConfigurableIds;
@@ -50,10 +50,10 @@ import java.util.List;
 public class EditorAppearanceConfigurable extends SimpleConfigurableByProperties implements ApplicationConfigurable {
   private final Application myApplication;
   private final Provider<EditorSettingsExternalizable> myEditorSettingsExternalizable;
-  private final Provider<EditorInternalHelper> myEditorInternalHelper;
+  private final Provider<CodeEditorInternalHelper> myEditorInternalHelper;
 
   @Inject
-  public EditorAppearanceConfigurable(Application application, Provider<EditorSettingsExternalizable> editorSettingsExternalizable, Provider<EditorInternalHelper> editorInternalHelper) {
+  public EditorAppearanceConfigurable(Application application, Provider<EditorSettingsExternalizable> editorSettingsExternalizable, Provider<CodeEditorInternalHelper> editorInternalHelper) {
     myApplication = application;
     myEditorSettingsExternalizable = editorSettingsExternalizable;
     myEditorInternalHelper = editorInternalHelper;
@@ -64,7 +64,7 @@ public class EditorAppearanceConfigurable extends SimpleConfigurableByProperties
   @Override
   protected Component createLayout(@Nonnull PropertyBuilder propertyBuilder, @Nonnull Disposable uiDisposable) {
     EditorSettingsExternalizable editorSettings = myEditorSettingsExternalizable.get();
-    EditorInternalHelper editorInternalHelper = myEditorInternalHelper.get();
+    CodeEditorInternalHelper codeEditorInternalHelper = myEditorInternalHelper.get();
 
     VerticalLayout root = VerticalLayout.create();
 
@@ -89,7 +89,7 @@ public class EditorAppearanceConfigurable extends SimpleConfigurableByProperties
     root.add(showLineNumbers);
 
     CheckBox showMethodSeparators = CheckBox.create(ApplicationLocalize.checkboxShowMethodSeparators());
-    propertyBuilder.add(showMethodSeparators, editorInternalHelper::isShowMethodSeparators, editorInternalHelper::setShowMethodSeparators);
+    propertyBuilder.add(showMethodSeparators, codeEditorInternalHelper::isShowMethodSeparators, codeEditorInternalHelper::setShowMethodSeparators);
     root.add(showMethodSeparators);
 
     CheckBox showWhitespaces = CheckBox.create(ApplicationLocalize.checkboxShowWhitespaces());
@@ -101,7 +101,7 @@ public class EditorAppearanceConfigurable extends SimpleConfigurableByProperties
     root.add(showVerticalIndents);
 
     CheckBox showParameterHints = CheckBox.create(ApplicationLocalize.checkboxShowParameterNameHints());
-    boolean hasAnyInlayExtensions = editorInternalHelper.hasAnyInlayExtensions();
+    boolean hasAnyInlayExtensions = codeEditorInternalHelper.hasAnyInlayExtensions();
     showParameterHints.setVisible(hasAnyInlayExtensions);
     propertyBuilder.add(showParameterHints, editorSettings::isShowParameterNameHints, editorSettings::setShowParameterNameHints);
 

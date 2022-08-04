@@ -38,7 +38,7 @@ import java.util.Objects;
  * @since 18-Mar-22
  */
 @ServiceAPI(ComponentScope.APPLICATION)
-public interface EditorInternalHelper {
+public interface CodeEditorInternalHelper {
   public static class CaretDataContext extends DataContextWrapper {
     protected final Caret myCaret;
 
@@ -56,8 +56,8 @@ public interface EditorInternalHelper {
     }
   }
 
-  public static EditorInternalHelper getInstance() {
-    return Application.get().getInstance(EditorInternalHelper.class);
+  public static CodeEditorInternalHelper getInstance() {
+    return Application.get().getInstance(CodeEditorInternalHelper.class);
   }
 
   @Nonnull

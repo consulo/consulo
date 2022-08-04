@@ -18,7 +18,7 @@ package consulo.codeEditor.action;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorKeys;
-import consulo.codeEditor.internal.EditorInternalHelper;
+import consulo.codeEditor.internal.CodeEditorInternalHelper;
 import consulo.dataContext.DataContext;
 import consulo.document.DocCommandGroupId;
 import consulo.project.Project;
@@ -90,7 +90,7 @@ public abstract class EditorActionHandler {
   }
 
   private void doIfEnabled(@Nonnull Caret hostCaret, @Nullable DataContext context, @Nonnull CaretTask task) {
-    DataContext caretContext = context == null ? null : EditorInternalHelper.getInstance().createCaretDataContext(context, hostCaret);
+    DataContext caretContext = context == null ? null : CodeEditorInternalHelper.getInstance().createCaretDataContext(context, hostCaret);
     Editor editor = hostCaret.getEditor();
     if (myWorksInInjected && caretContext != null) {
       DataContext injectedCaretContext = AnActionEvent.getInjectedDataContext(caretContext);
@@ -108,7 +108,7 @@ public abstract class EditorActionHandler {
   static boolean ensureInjectionUpToDate(@Nonnull Caret hostCaret) {
     Editor editor = hostCaret.getEditor();
     Project project = editor.getProject();
-    return EditorInternalHelper.getInstance().ensureInjectionUpToDate(hostCaret);
+    return CodeEditorInternalHelper.getInstance().ensureInjectionUpToDate(hostCaret);
   }
 
   /**

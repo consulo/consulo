@@ -18,7 +18,7 @@ package consulo.language.codeStyle.ui.setting;
 import consulo.application.ApplicationBundle;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.*;
-import consulo.codeEditor.internal.EditorInternalHelper;
+import consulo.codeEditor.internal.CodeEditorInternalHelper;
 import consulo.codeEditor.internal.InternalEditorFactory;
 import consulo.codeEditor.markup.HighlighterLayer;
 import consulo.codeEditor.markup.HighlighterTargetArea;
@@ -499,7 +499,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
       // There is a possible case that viewport is located at its most bottom position and last document symbol
       // is located at the start of the line, hence, resulting visual end column has a small value and doesn't actually
       // indicates target visible rectangle. Hence, we need to correct that if necessary.
-      int endColumnCandidate = visibleArea.width / EditorInternalHelper.getInstance().getSpaceWidth(myEditor) + visualStart.column;
+      int endColumnCandidate = visibleArea.width / CodeEditorInternalHelper.getInstance().getSpaceWidth(myEditor) + visualStart.column;
       if (endColumnCandidate > visualEnd.column) {
         visualEnd = new VisualPosition(visualEnd.line, endColumnCandidate);
       }

@@ -20,7 +20,7 @@ import consulo.application.Application;
 import consulo.codeEditor.*;
 import consulo.codeEditor.impl.DocumentMarkupModelImpl;
 import consulo.codeEditor.impl.util.EditorImplUtil;
-import consulo.codeEditor.internal.EditorInternalHelper;
+import consulo.codeEditor.internal.CodeEditorInternalHelper;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
@@ -57,7 +57,7 @@ import java.awt.*;
  */
 @Singleton
 @ServiceImpl
-public class LanguageEditorInternalHelper implements EditorInternalHelper {
+public class LanguageCodeEditorInternalHelper implements CodeEditorInternalHelper {
   private static class FileEditorAffectCaretContext extends CaretDataContext {
 
     public FileEditorAffectCaretContext(@Nonnull DataContext delegate, @Nonnull Caret caret) {
@@ -83,7 +83,7 @@ public class LanguageEditorInternalHelper implements EditorInternalHelper {
   private final Provider<DaemonCodeAnalyzerSettings> myDaemonCodeAnalyzerSettings;
 
   @Inject
-  public LanguageEditorInternalHelper(Provider<DaemonCodeAnalyzerSettings> daemonCodeAnalyzerSettings) {
+  public LanguageCodeEditorInternalHelper(Provider<DaemonCodeAnalyzerSettings> daemonCodeAnalyzerSettings) {
     myDaemonCodeAnalyzerSettings = daemonCodeAnalyzerSettings;
   }
 

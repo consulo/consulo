@@ -12,7 +12,7 @@ import consulo.codeEditor.event.CaretEvent;
 import consulo.codeEditor.event.SelectionEvent;
 import consulo.codeEditor.impl.softwrap.SoftWrapHelper;
 import consulo.codeEditor.impl.util.EditorImplUtil;
-import consulo.codeEditor.internal.EditorInternalHelper;
+import consulo.codeEditor.internal.CodeEditorInternalHelper;
 import consulo.codeEditor.util.EditorUtil;
 import consulo.dataContext.DataContext;
 import consulo.disposer.Disposer;
@@ -1327,7 +1327,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
 
       try {
         EditorActionHandler handler = EditorActionManager.getInstance().getActionHandler(IdeActions.ACTION_EDITOR_SELECT_WORD_AT_CARET);
-        DataContext context = AnActionEvent.getInjectedDataContext(EditorInternalHelper.getInstance().createCaretDataContext(myEditor.getDataContext(), this));
+        DataContext context = AnActionEvent.getInjectedDataContext(CodeEditorInternalHelper.getInstance().createCaretDataContext(myEditor.getDataContext(), this));
         Caret caret = context.getData(Caret.KEY);
         assert caret != null;
         handler.execute(caret.getEditor(), caret, context);

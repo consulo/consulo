@@ -1,35 +1,15 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.formatting;
 
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.document.util.TextRange;
 import consulo.language.codeStyle.*;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public abstract class FormatterEx implements Formatter {
-  private static FormatterEx myTestInstance;
-
-  public static FormatterEx getInstance() {
-    final Application application = ApplicationManager.getApplication();
-    return application == null ? getTestInstance() : (FormatterEx)Formatter.getInstance();
-  }
-
-  private static FormatterEx getTestInstance() {
-    if (myTestInstance == null) {
-      try {
-        myTestInstance = (FormatterEx)Class.forName("consulo.ide.impl.idea.formatting.FormatterImpl").newInstance();
-      }
-      catch (Exception e) {
-        throw new RuntimeException(e);
-      }
-    }
-    return myTestInstance;
-  }
-
   public abstract void format(FormattingModel model, CodeStyleSettings settings, CommonCodeStyleSettings.IndentOptions indentOptions, FormatTextRanges affectedRanges)
           throws IncorrectOperationException;
 
@@ -75,7 +55,6 @@ public abstract class FormatterEx implements Formatter {
 
 
   public static FormatterEx getInstanceEx() {
-    return getInstance();
+    return (FormatterEx)Formatter.getInstance();
   }
-
 }

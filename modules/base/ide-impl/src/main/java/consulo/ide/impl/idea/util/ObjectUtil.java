@@ -28,6 +28,7 @@ import java.util.function.Supplier;
 /**
  * @author peter
  */
+@Deprecated(forRemoval = true)
 public class ObjectUtil {
   /**
    * @see NotNullizer

@@ -3,21 +3,22 @@ package consulo.ide.impl.idea.openapi.command.impl;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.ide.impl.idea.openapi.command.*;
+import consulo.component.messagebus.MessageBus;
 import consulo.document.Document;
+import consulo.ide.impl.idea.openapi.command.CommandProcessorEx;
+import consulo.ide.impl.idea.openapi.command.CommandToken;
 import consulo.project.Project;
 import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.undoRedo.event.CommandEvent;
 import consulo.undoRedo.event.CommandListener;
+import consulo.util.collection.Lists;
 import consulo.util.lang.EmptyRunnable;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.component.messagebus.MessageBus;
 import org.jetbrains.annotations.Nls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
 import java.util.Stack;
 
@@ -62,7 +63,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
 
   protected CommandDescriptor myCurrentCommand;
   private final Stack<CommandDescriptor> myInterruptedCommands = new Stack<>();
-  private final List<CommandListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
+  private final List<CommandListener> myListeners = Lists.newLockFreeCopyOnWriteList();
   private int myUndoTransparentCount;
 
   private final CommandListener eventPublisher;

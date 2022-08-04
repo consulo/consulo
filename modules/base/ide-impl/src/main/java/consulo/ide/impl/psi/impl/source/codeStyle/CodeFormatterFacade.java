@@ -15,10 +15,8 @@ import consulo.document.util.TextRange;
 import consulo.document.util.TextRangeUtil;
 import consulo.ide.impl.idea.formatting.FormatConstants;
 import consulo.ide.impl.idea.formatting.FormatterEx;
-import consulo.ide.impl.idea.formatting.FormatterTagHandler;
 import consulo.ide.impl.idea.formatting.FormattingProgressTask;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.ide.impl.psi.impl.source.PostprocessReformattingAspectImpl;
 import consulo.language.Language;
@@ -45,6 +43,7 @@ import consulo.ui.ex.action.IdeActions;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
+import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NonNls;
 
@@ -179,7 +178,7 @@ public class CodeFormatterFacade {
             return;
           }
 
-          TextRange formattingModelRange = ObjectUtils.notNull(ranges.getBoundRange(), file.getTextRange());
+          TextRange formattingModelRange = ObjectUtil.notNull(ranges.getBoundRange(), file.getTextRange());
 
           final FormattingModel originalModel = CoreFormatterUtil.buildModel(builder, file, formattingModelRange, mySettings, FormattingMode.REFORMAT);
           final FormattingModel model = new DocumentBasedFormattingModel(originalModel, document, project, mySettings, file.getFileType(), file);
@@ -565,7 +564,7 @@ public class CodeFormatterFacade {
     CommandProcessor commandProcessor = CommandProcessor.getInstance();
     try {
       Runnable command = () -> EditorActionManager.getInstance().getActionHandler(IdeActions.ACTION_EDITOR_ENTER).execute(editor, dataContext);
-      if (commandProcessor.getCurrentCommand() == null) {
+      if (!commandProcessor.hasCurrentCommand()) {
         commandProcessor.executeCommand(editor.getProject(), command, WRAP_LINE_COMMAND_NAME, null);
       }
       else {

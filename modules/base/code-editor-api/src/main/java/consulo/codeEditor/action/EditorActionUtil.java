@@ -25,7 +25,7 @@
 package consulo.codeEditor.action;
 
 import consulo.codeEditor.*;
-import consulo.codeEditor.internal.EditorInternalHelper;
+import consulo.codeEditor.internal.CodeEditorInternalHelper;
 import consulo.codeEditor.internal.RealEditor;
 import consulo.codeEditor.util.EditorModificationUtil;
 import consulo.codeEditor.util.EditorUtil;
@@ -62,7 +62,7 @@ public class EditorActionUtil {
       editor.getScrollingModel().scrollVertically(editor.getScrollingModel().getVerticalScrollOffset() + lineShift * editor.getLineHeight());
     }
     if (columnShift != 0) {
-      editor.getScrollingModel().scrollHorizontally(editor.getScrollingModel().getHorizontalScrollOffset() + columnShift * EditorInternalHelper.getInstance().getSpaceWidth(editor));
+      editor.getScrollingModel().scrollHorizontally(editor.getScrollingModel().getHorizontalScrollOffset() + columnShift * CodeEditorInternalHelper.getInstance().getSpaceWidth(editor));
     }
 
     if (!moveCaret) {
@@ -206,7 +206,7 @@ public class EditorActionUtil {
   }
 
   private static boolean shouldUseSmartTabs(Project project, @Nonnull Editor editor) {
-    return EditorInternalHelper.getInstance().shouldUseSmartTabs(project, editor);
+    return CodeEditorInternalHelper.getInstance().shouldUseSmartTabs(project, editor);
   }
 
   public static boolean isWordOrLexemeStart(@Nonnull Editor editor, int offset, boolean isCamel) {
@@ -237,7 +237,7 @@ public class EditorActionUtil {
   }
 
   private static boolean isLexemeBoundary(@Nullable Object leftTokenType, @Nullable Object rightTokenType) {
-    return EditorInternalHelper.getInstance().isLexemeBoundary(leftTokenType, rightTokenType);
+    return CodeEditorInternalHelper.getInstance().isLexemeBoundary(leftTokenType, rightTokenType);
   }
 
   public static boolean isWordStart(@Nonnull CharSequence text, int offset, boolean isCamel) {
@@ -437,7 +437,7 @@ public class EditorActionUtil {
     if (!softWrapIntroducedLine) {
       int offset = findFirstNonSpaceOffsetInRange(document.getCharsSequence(), logLineStartOffset, logLineEndOffset);
       if (offset >= 0) {
-        return newRendering ? editor.offsetToVisualPosition(offset).column : EditorInternalHelper.getInstance().calcColumnNumber(editor, document.getCharsSequence(), logLineStartOffset, offset);
+        return newRendering ? editor.offsetToVisualPosition(offset).column : CodeEditorInternalHelper.getInstance().calcColumnNumber(editor, document.getCharsSequence(), logLineStartOffset, offset);
       }
       else {
         return -1;
@@ -475,7 +475,7 @@ public class EditorActionUtil {
           assert !newRendering : "Unexpected soft wrap text";
           // Non space symbol is contained at soft wrap text after offset that corresponds to the target visual line start.
           if (nextSoftWrapLineFeedOffset < 0 || end < nextSoftWrapLineFeedOffset) {
-            return EditorInternalHelper.getInstance().calcColumnNumber(editor, softWrapText, j, end);
+            return CodeEditorInternalHelper.getInstance().calcColumnNumber(editor, softWrapText, j, end);
           }
           else {
             return -1;
@@ -489,7 +489,7 @@ public class EditorActionUtil {
       }
       int end = findFirstNonSpaceOffsetInRange(document.getCharsSequence(), softWrap.getStart(), logLineEndOffset);
       if (end >= 0) {
-        return newRendering ? editor.offsetToVisualPosition(end).column : EditorInternalHelper.getInstance().calcColumnNumber(editor, document.getCharsSequence(), softWrap.getStart(), end);
+        return newRendering ? editor.offsetToVisualPosition(end).column : CodeEditorInternalHelper.getInstance().calcColumnNumber(editor, document.getCharsSequence(), softWrap.getStart(), end);
       }
       else {
         return -1;
@@ -553,7 +553,7 @@ public class EditorActionUtil {
       return;
     }
     VisualPosition currentVisualCaret = editor.getCaretModel().getVisualPosition();
-    VisualPosition visualEndOfLineWithCaret = new VisualPosition(currentVisualCaret.line, EditorInternalHelper.getInstance().getLastVisualLineColumnNumber(editor, currentVisualCaret.line), true);
+    VisualPosition visualEndOfLineWithCaret = new VisualPosition(currentVisualCaret.line, CodeEditorInternalHelper.getInstance().getLastVisualLineColumnNumber(editor, currentVisualCaret.line), true);
 
     // There is a possible case that the caret is already located at the visual end of line and the line is soft wrapped.
     // We want to move the caret to the end of the next visual line then.
@@ -573,7 +573,7 @@ public class EditorActionUtil {
         int column = currentVisualCaret.column;
         if (softWrap != null) {
           line++;
-          column = EditorInternalHelper.getInstance().getLastVisualLineColumnNumber(editor, line);
+          column = CodeEditorInternalHelper.getInstance().getLastVisualLineColumnNumber(editor, line);
         }
         visualEndOfLineWithCaret = new VisualPosition(line, column, true);
       }

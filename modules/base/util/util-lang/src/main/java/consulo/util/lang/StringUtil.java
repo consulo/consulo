@@ -2337,4 +2337,22 @@ public class StringUtil {
   public static String formatFileSize(long fileSize, final String spaceBeforeUnits) {
     return formatValue(fileSize, null, new String[]{"B", "K", "M", "G", "T", "P", "E"}, new long[]{1000, 1000, 1000, 1000, 1000, 1000}, spaceBeforeUnits);
   }
+
+  /**
+   * Find position of the first character accepted by given filter.
+   *
+   * @param s      the string to search
+   * @param filter search filter
+   * @return position of the first character accepted or -1 if not found
+   */
+  @Contract(pure = true)
+  public static int findFirst(@Nonnull final CharSequence s, @Nonnull CharFilter filter) {
+    for (int i = 0; i < s.length(); i++) {
+      char ch = s.charAt(i);
+      if (filter.accept(ch)) {
+        return i;
+      }
+    }
+    return -1;
+  }
 }

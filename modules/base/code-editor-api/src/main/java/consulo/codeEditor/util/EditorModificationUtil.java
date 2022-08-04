@@ -16,7 +16,7 @@
 package consulo.codeEditor.util;
 
 import consulo.codeEditor.*;
-import consulo.codeEditor.internal.EditorInternalHelper;
+import consulo.codeEditor.internal.CodeEditorInternalHelper;
 import consulo.document.Document;
 import consulo.document.ReadOnlyFragmentModificationException;
 import consulo.project.Project;
@@ -280,7 +280,7 @@ public class EditorModificationUtil {
     boolean atLineStart = caretOffset >= doc.getTextLength() || doc.getLineStartOffset(doc.getLineNumber(caretOffset)) == caretOffset;
     if (atLineStart && project != null) {
       int offset = editor.getCaretModel().getOffset();
-      String properIndent = EditorInternalHelper.getInstance().getProperIndent(project, doc, offset);
+      String properIndent = CodeEditorInternalHelper.getInstance().getProperIndent(project, doc, offset);
       if (properIndent != null) {
         int tabSize = editor.getSettings().getTabSize(project);
         for (int i = 0; i < properIndent.length(); i++) {
