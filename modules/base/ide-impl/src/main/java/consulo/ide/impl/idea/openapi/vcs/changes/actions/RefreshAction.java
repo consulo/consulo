@@ -15,18 +15,18 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
+import consulo.application.dumb.DumbAware;
+import consulo.document.FileDocumentManager;
+import consulo.language.editor.CommonDataKeys;
+import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.document.FileDocumentManager;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
 import consulo.versionControlSystem.change.ChangeListManager;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangesViewRefresher;
+import consulo.versionControlSystem.change.ChangesViewRefresher;
 import consulo.versionControlSystem.change.VcsDirtyScopeManager;
 import consulo.virtualFileSystem.VirtualFileManager;
+
 import javax.annotation.Nonnull;
-import java.util.List;
 
 /**
  * @author yole
@@ -56,9 +56,6 @@ public class RefreshAction extends AnAction implements DumbAware {
   }
 
   private static void invokeCustomRefreshes(@Nonnull Project project) {
-    List<ChangesViewRefresher> extensions = ChangesViewRefresher.EP_NAME.getExtensionList();
-    for (ChangesViewRefresher refresher : extensions) {
-      refresher.refresh(project);
-    }
+    project.getExtensionPoint(ChangesViewRefresher.class).forEachExtensionSafe(it -> it.refresh(project));
   }
 }

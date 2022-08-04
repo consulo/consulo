@@ -13,8 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.changes;
+package consulo.versionControlSystem.change;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 
@@ -23,9 +25,7 @@ import consulo.project.Project;
  *
  * @author Kirill Likhodedov
  */
+@ExtensionAPI(ComponentScope.PROJECT)
 public interface ChangesViewRefresher {
-
-  ExtensionPointName<ChangesViewRefresher> EP_NAME = ExtensionPointName.create("consulo.vcsChangesViewRefresher");
-
   void refresh(Project project);
 }
