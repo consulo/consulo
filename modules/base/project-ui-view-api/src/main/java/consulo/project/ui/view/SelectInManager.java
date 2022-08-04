@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide;
+package consulo.project.ui.view;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.IdeBundle;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import jakarta.inject.Inject;
@@ -45,13 +44,13 @@ public class SelectInManager {
     }
   }
 
-  public static final String PROJECT = IdeBundle.message("select.in.project");
-  public static final String PACKAGES = IdeBundle.message("select.in.packages");
-  public static final String ASPECTS = IdeBundle.message("select.in.aspects");
-  public static final String COMMANDER = IdeBundle.message("select.in.commander");
-  public static final String FAVORITES = IdeBundle.message("select.in.favorites");
-  public static final String NAV_BAR = IdeBundle.message("select.in.nav.bar");
-  public static final String SCOPE = IdeBundle.message("select.in.scope");
+  public static final String PROJECT = ProjectUIViewBundle.message("select.in.project");
+  public static final String PACKAGES = ProjectUIViewBundle.message("select.in.packages");
+  public static final String ASPECTS = ProjectUIViewBundle.message("select.in.aspects");
+  public static final String COMMANDER = ProjectUIViewBundle.message("select.in.commander");
+  public static final String FAVORITES = ProjectUIViewBundle.message("select.in.favorites");
+  public static final String NAV_BAR = ProjectUIViewBundle.message("select.in.nav.bar");
+  public static final String SCOPE = ProjectUIViewBundle.message("select.in.scope");
 
   public static SelectInManager getInstance(Project project) {
     return project.getInstance(SelectInManager.class);

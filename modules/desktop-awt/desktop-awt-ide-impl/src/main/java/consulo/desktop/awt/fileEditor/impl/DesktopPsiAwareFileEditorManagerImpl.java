@@ -16,18 +16,18 @@
 package consulo.desktop.awt.fileEditor.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorManagerEx;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.DesktopFileEditorWithProviderComposite;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.DesktopFileEditorsSplitters;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.PsiAwareFileEditorManagerImpl;
-import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
-import consulo.project.ui.wm.dock.DockManager;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorProvider;
 import consulo.fileEditor.FileEditorWithProviderComposite;
+import consulo.fileEditor.internal.FileEditorManagerEx;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.DesktopFileEditorWithProviderComposite;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.DesktopFileEditorsSplitters;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.PsiAwareFileEditorManagerImpl;
+import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
 import consulo.language.psi.PsiManager;
 import consulo.project.Project;
+import consulo.project.ui.wm.dock.DockManager;
 import consulo.ui.ex.awt.JBUI;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;

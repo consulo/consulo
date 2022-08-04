@@ -16,14 +16,16 @@
 
 package consulo.ide.impl.idea.ide;
 
-import javax.annotation.Nonnull;
+import consulo.project.ui.view.SelectInContext;
+import consulo.project.ui.view.SelectInTarget;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 
 /**
  * @author Gregory.Shrago
  */
-public interface CompositeSelectInTarget extends SelectInTarget{
+public interface CompositeSelectInTarget extends SelectInTarget {
   @Nonnull
   Collection<SelectInTarget> getSubTargets(SelectInContext context);
 }

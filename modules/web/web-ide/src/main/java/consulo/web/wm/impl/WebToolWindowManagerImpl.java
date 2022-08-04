@@ -17,7 +17,7 @@ package consulo.web.wm.impl;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.StoragePathMacros;
-import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorManagerEx;
+import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ide.impl.idea.openapi.wm.ex.IdeFrameEx;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
 import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;

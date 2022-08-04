@@ -15,16 +15,16 @@
  */
 package consulo.ide.impl.idea.ide.favoritesTreeView;
 
-import consulo.ide.impl.idea.ide.SelectInContext;
-import consulo.ide.impl.idea.ide.SelectInTarget;
-import consulo.ide.impl.idea.ide.actions.SelectInContextImpl;
 import consulo.fileEditor.FileEditor;
-import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorManagerEx;
-import consulo.project.Project;
-import consulo.project.ui.view.ProjectViewAutoScrollFromSourceHandler;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.fileEditor.internal.FileEditorManagerEx;
+import consulo.ide.impl.idea.ide.actions.SelectInContextImpl;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
+import consulo.project.Project;
+import consulo.project.ui.view.ProjectViewAutoScrollFromSourceHandler;
+import consulo.project.ui.view.SelectInContext;
+import consulo.project.ui.view.SelectInTarget;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 

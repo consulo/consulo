@@ -16,16 +16,16 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.application.dumb.DumbAware;
+import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ide.IdeBundle;
 import consulo.language.editor.CommonDataKeys;
-import consulo.undoRedo.CommandProcessor;
-import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorManagerEx;
 import consulo.project.Project;
-import consulo.application.dumb.DumbAware;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import consulo.undoRedo.CommandProcessor;
 
 public class NextSplitAction extends AnAction implements DumbAware {
   public void actionPerformed(AnActionEvent e) {

@@ -20,7 +20,6 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.fileEditor.*;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
@@ -65,7 +64,7 @@ public class FileChangedNotificationProvider implements EditorNotificationProvid
       @Override
       public void after(@Nonnull List<? extends VFileEvent> events) {
         if (!myProject.isDisposed() && !GeneralSettings.getInstance().isSyncOnFrameActivation()) {
-          Set<VirtualFile> openFiles = ContainerUtil.newHashSet(FileEditorManager.getInstance(myProject).getSelectedFiles());
+          Set<VirtualFile> openFiles = Set.of(FileEditorManager.getInstance(myProject).getSelectedFiles());
           EditorNotifications notifications = EditorNotifications.getInstance(myProject);
           for (VFileEvent event : events) {
             VirtualFile file = event.getFile();
@@ -76,6 +75,12 @@ public class FileChangedNotificationProvider implements EditorNotificationProvid
         }
       }
     });
+  }
+
+  @Nonnull
+  @Override
+  public String getId() {
+    return "file-changed-externally";
   }
 
   @RequiredReadAction

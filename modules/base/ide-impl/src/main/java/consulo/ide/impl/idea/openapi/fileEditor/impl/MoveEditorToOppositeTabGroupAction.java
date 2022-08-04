@@ -15,19 +15,19 @@
  */
 package consulo.ide.impl.idea.openapi.fileEditor.impl;
 
-import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorManagerEx;
 import consulo.application.dumb.DumbAware;
+import consulo.fileEditor.FileEditorWindow;
+import consulo.fileEditor.FileEditorWithProviderComposite;
+import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.fileEditor.FileEditorWindow;
-import consulo.fileEditor.FileEditorWithProviderComposite;
-import consulo.ui.UIAccess;
 
 /**
  * User: anna

@@ -15,10 +15,10 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.application.dumb.DumbAware;
+import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
-import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorManagerEx;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

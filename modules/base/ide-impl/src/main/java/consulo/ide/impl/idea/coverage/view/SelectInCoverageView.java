@@ -1,14 +1,14 @@
 package consulo.ide.impl.idea.coverage.view;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.ide.SelectInContext;
-import consulo.ide.impl.idea.ide.SelectInTarget;
-import consulo.ide.impl.idea.ide.StandardTargetWeights;
 import consulo.execution.coverage.CoverageDataManager;
 import consulo.execution.coverage.CoverageSuitesBundle;
 import consulo.execution.coverage.CoverageViewManager;
 import consulo.execution.coverage.view.CoverageView;
+import consulo.ide.impl.idea.ide.StandardTargetWeights;
 import consulo.project.Project;
+import consulo.project.ui.view.SelectInContext;
+import consulo.project.ui.view.SelectInTarget;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 
@@ -17,7 +17,7 @@ import jakarta.inject.Inject;
  * Date: 1/3/12
  */
 @ExtensionImpl
-public class SelectInCoverageView implements  SelectInTarget {
+public class SelectInCoverageView implements SelectInTarget {
   private final Project myProject;
 
   @Inject

@@ -64,6 +64,12 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
     myNotifications = notifications;
   }
 
+  @Nonnull
+  @Override
+  public String getId() {
+    return "plugin-advertiser";
+  }
+
   @RequiredReadAction
   @Nullable
   @Override

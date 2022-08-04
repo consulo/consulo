@@ -15,25 +15,21 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.application.Application;
 import consulo.codeEditor.Editor;
-import consulo.fileEditor.FileEditor;
-import consulo.fileEditor.FileEditorProvider;
-import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorManagerEx;
-import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorProviderManager;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.navigation.Navigatable;
+import consulo.fileEditor.*;
+import consulo.fileEditor.internal.FileEditorManagerEx;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.language.psi.PsiFile;
-import consulo.fileEditor.FileEditorWindow;
-import consulo.fileEditor.FileEditorsSplitters;
+import consulo.navigation.Navigatable;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.util.lang.ObjectUtil;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

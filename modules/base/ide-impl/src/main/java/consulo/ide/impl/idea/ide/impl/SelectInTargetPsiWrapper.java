@@ -15,12 +15,12 @@
  */
 package consulo.ide.impl.idea.ide.impl;
 
-import consulo.ide.impl.idea.ide.SelectInContext;
-import consulo.ide.impl.idea.ide.SelectInTarget;
+import consulo.application.dumb.IndexNotReadyException;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.*;
-import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;
+import consulo.project.ui.view.SelectInContext;
+import consulo.project.ui.view.SelectInTarget;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;

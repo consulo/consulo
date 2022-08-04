@@ -36,6 +36,12 @@ import java.util.function.Supplier;
  */
 @ExtensionImpl
 public class SandEditorNotificationProvider implements EditorNotificationProvider {
+  @Nonnull
+  @Override
+  public String getId() {
+    return "sand";
+  }
+
   @RequiredReadAction
   @Nullable
   @Override

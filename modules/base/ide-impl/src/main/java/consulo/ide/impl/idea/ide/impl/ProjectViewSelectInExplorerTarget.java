@@ -16,12 +16,12 @@
 package consulo.ide.impl.idea.ide.impl;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.ide.SelectInContext;
-import consulo.ide.impl.idea.ide.SelectInTarget;
+import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.ide.StandardTargetWeights;
 import consulo.ide.impl.idea.ide.actions.RevealFileAction;
 import consulo.ide.impl.idea.ide.actions.ShowFilePathAction;
-import consulo.application.dumb.DumbAware;
+import consulo.project.ui.view.SelectInContext;
+import consulo.project.ui.view.SelectInTarget;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.io.File;

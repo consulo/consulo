@@ -15,13 +15,6 @@
  */
 package consulo.ide.impl.idea.openapi.fileEditor.impl;
 
-import consulo.fileEditor.event.FileEditorManagerBeforeListener;
-import consulo.ide.impl.fileEditor.FileEditorWindowBase;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorManagerEx;
-import consulo.ide.impl.idea.openapi.ui.ThreeComponentsSplitter;
-import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
@@ -32,10 +25,16 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.ScrollingModel;
 import consulo.dataContext.DataProvider;
-import consulo.ide.impl.desktop.awt.migration.AWTComponentProviderUtil;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.*;
+import consulo.fileEditor.event.FileEditorManagerBeforeListener;
 import consulo.fileEditor.event.FileEditorManagerListener;
+import consulo.fileEditor.internal.FileEditorManagerEx;
+import consulo.ide.impl.desktop.awt.migration.AWTComponentProviderUtil;
+import consulo.ide.impl.fileEditor.FileEditorWindowBase;
+import consulo.ide.impl.idea.openapi.ui.ThreeComponentsSplitter;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.editor.CommonDataKeys;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
@@ -48,6 +47,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
 import consulo.util.collection.Stack;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 

@@ -16,17 +16,17 @@
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.ide.SelectInContext;
-import consulo.ide.impl.idea.ide.SelectInTarget;
 import consulo.application.dumb.DumbAware;
+import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentManager;
 import consulo.project.Project;
-import consulo.virtualFileSystem.status.FileStatus;
-import consulo.virtualFileSystem.status.FileStatusManager;
+import consulo.project.ui.view.SelectInContext;
+import consulo.project.ui.view.SelectInTarget;
+import consulo.project.ui.wm.ToolWindowManager;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsBundle;
-import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentManager;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.project.ui.wm.ToolWindowManager;
+import consulo.virtualFileSystem.status.FileStatus;
+import consulo.virtualFileSystem.status.FileStatusManager;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nullable;

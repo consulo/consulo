@@ -15,12 +15,6 @@
  */
 package consulo.ide.impl.idea.openapi.fileEditor.impl.text;
 
-import consulo.language.editor.CommonDataKeys;
-import consulo.ide.impl.idea.openapi.editor.ex.EditorMarkupModel;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.EditorHistoryManagerImpl;
-import consulo.language.file.event.FileTypeEvent;
-import consulo.language.file.event.FileTypeListener;
-import consulo.ide.impl.idea.openapi.wm.ex.StatusBarEx;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
@@ -37,11 +31,17 @@ import consulo.document.event.DocumentEvent;
 import consulo.document.util.FileContentUtilCore;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
+import consulo.fileEditor.text.TextEditorProvider;
 import consulo.ide.impl.fileEditor.text.TextEditorComponentContainer;
 import consulo.ide.impl.fileEditor.text.TextEditorComponentContainerFactory;
-import consulo.fileEditor.text.TextEditorProvider;
+import consulo.ide.impl.idea.openapi.editor.ex.EditorMarkupModel;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.EditorHistoryManagerImpl;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.file.event.FileTypeEvent;
+import consulo.language.file.event.FileTypeListener;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.project.ui.internal.StatusBarEx;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.action.IdeActions;
 import consulo.util.dataholder.Key;

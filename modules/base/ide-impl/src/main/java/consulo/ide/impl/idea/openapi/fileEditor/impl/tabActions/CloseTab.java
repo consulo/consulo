@@ -16,19 +16,19 @@
 package consulo.ide.impl.idea.openapi.fileEditor.impl.tabActions;
 
 import consulo.application.AllIcons;
-import consulo.ide.IdeBundle;
-import consulo.application.ui.UISettings;
-import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorManagerEx;
 import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
+import consulo.application.ui.UISettings;
+import consulo.fileEditor.FileEditorWindow;
+import consulo.fileEditor.internal.FileEditorManagerEx;
+import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.openapi.ui.ShadowAction;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.Project;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.util.lang.BitUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.fileEditor.FileEditorWindow;
-import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ui.Component;
-import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

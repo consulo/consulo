@@ -15,23 +15,23 @@
  */
 package consulo.desktop.swt.wm.impl;
 
-import consulo.annotation.component.ServiceImpl;
-import consulo.component.persist.StoragePathMacros;
-import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorManagerEx;
-import consulo.ide.impl.idea.openapi.wm.ex.IdeFrameEx;
-import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
-import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
-import consulo.ui.ex.toolWindow.InternalDecoratorListener;
-import consulo.ide.impl.idea.openapi.wm.impl.WindowInfoImpl;
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
+import consulo.component.persist.StoragePathMacros;
+import consulo.fileEditor.FileEditorManager;
+import consulo.ide.impl.idea.openapi.wm.ex.IdeFrameEx;
+import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
+import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
+import consulo.ide.impl.idea.openapi.wm.impl.WindowInfoImpl;
+import consulo.ide.impl.wm.impl.ToolWindowManagerBase;
+import consulo.ide.impl.wm.impl.UnifiedToolWindowImpl;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.event.ProjectManagerListener;
-import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.Component;
 import consulo.ui.Label;
@@ -39,11 +39,11 @@ import consulo.ui.NotificationType;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.popup.Balloon;
+import consulo.ui.ex.toolWindow.InternalDecoratorListener;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
 import consulo.ui.ex.toolWindow.ToolWindowStripeButton;
 import consulo.ui.layout.DockLayout;
-import consulo.ide.impl.wm.impl.ToolWindowManagerBase;
-import consulo.ide.impl.wm.impl.UnifiedToolWindowImpl;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -122,7 +122,7 @@ public class DesktopSwtToolWindowManagerImpl extends ToolWindowManagerBase {
   }
 
   private Component getEditorComponent(Project project) {
-    return FileEditorManagerEx.getInstanceEx(project).getUIComponent();
+    return FileEditorManager.getInstance(project).getUIComponent();
   }
 
   @Override

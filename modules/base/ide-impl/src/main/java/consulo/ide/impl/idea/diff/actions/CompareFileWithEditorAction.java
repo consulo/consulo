@@ -15,19 +15,19 @@
  */
 package consulo.ide.impl.idea.diff.actions;
 
-import consulo.ide.impl.idea.diff.DiffRequestFactory;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorFactory;
+import consulo.diff.DiffUserDataKeys;
 import consulo.diff.content.DiffContent;
 import consulo.diff.content.DocumentContent;
 import consulo.diff.request.ContentDiffRequest;
 import consulo.diff.request.DiffRequest;
-import consulo.diff.DiffUserDataKeys;
 import consulo.diff.util.Side;
-import consulo.ui.ex.action.AnActionEvent;
+import consulo.fileEditor.internal.FileEditorManagerEx;
+import consulo.ide.impl.idea.diff.DiffRequestFactory;
 import consulo.language.editor.CommonDataKeys;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorFactory;
-import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorManagerEx;
 import consulo.project.Project;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 

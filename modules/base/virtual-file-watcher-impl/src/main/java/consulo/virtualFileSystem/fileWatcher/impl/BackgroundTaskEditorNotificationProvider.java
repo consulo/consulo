@@ -49,6 +49,12 @@ public class BackgroundTaskEditorNotificationProvider implements EditorNotificat
     myProject = project;
   }
 
+  @Nonnull
+  @Override
+  public String getId() {
+    return "background-task";
+  }
+
   @RequiredReadAction
   @Nullable
   @Override

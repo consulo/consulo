@@ -2,25 +2,25 @@
 package consulo.ide.impl.idea.openapi.wm.impl.status;
 
 import consulo.application.AllIcons;
-import consulo.ui.ex.action.ActionsBundle;
 import consulo.application.WriteAction;
 import consulo.document.FileDocumentManager;
+import consulo.fileEditor.FileEditorsSplitters;
 import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.fileEditor.event.FileEditorManagerListener;
-import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorManagerEx;
+import consulo.fileEditor.internal.FileEditorManagerEx;
+import consulo.ide.impl.idea.util.Consumer;
+import consulo.ide.impl.idea.util.io.ReadOnlyAttributeUtil;
 import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.ui.ex.UIBundle;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.ide.impl.idea.util.io.ReadOnlyAttributeUtil;
-import consulo.fileEditor.FileEditorsSplitters;
+import consulo.ui.ex.action.ActionsBundle;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.image.Image;
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 

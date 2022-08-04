@@ -17,11 +17,11 @@ package consulo.ide.impl.fileEditor;
 
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorProvider;
-import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorManagerEx;
 import consulo.fileEditor.FileEditorWithProvider;
 import consulo.fileEditor.FileEditorWithProviderComposite;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ui.Component;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.fileEditor.ex;
+package consulo.fileEditor.internal;
 
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;

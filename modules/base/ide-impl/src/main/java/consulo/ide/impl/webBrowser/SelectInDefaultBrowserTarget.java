@@ -16,14 +16,14 @@
 package consulo.ide.impl.webBrowser;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.ide.SelectInContext;
+import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.SelectInTargetBase;
 import consulo.ide.impl.idea.ide.StandardTargetWeights;
 import consulo.ide.impl.idea.openapi.diagnostic.Logger;
-import consulo.virtualFileSystem.http.HttpVirtualFile;
-import consulo.ide.IdeBundle;
 import consulo.language.psi.PsiElement;
+import consulo.project.ui.view.SelectInContext;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.http.HttpVirtualFile;
 import consulo.virtualFileSystem.light.LightVirtualFileBase;
 import consulo.webBrowser.OpenInBrowserRequest;
 import consulo.webBrowser.WebBrowserService;

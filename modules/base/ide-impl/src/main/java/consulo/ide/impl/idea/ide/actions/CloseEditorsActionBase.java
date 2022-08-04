@@ -15,21 +15,21 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ide.IdeBundle;
-import consulo.language.editor.CommonDataKeys;
-import consulo.undoRedo.CommandProcessor;
-import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorManagerEx;
 import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
-import consulo.util.lang.Pair;
-import consulo.virtualFileSystem.status.FileStatusManager;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.fileEditor.FileEditorComposite;
 import consulo.fileEditor.FileEditorWindow;
+import consulo.fileEditor.internal.FileEditorManagerEx;
+import consulo.ide.IdeBundle;
+import consulo.language.editor.CommonDataKeys;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import consulo.undoRedo.CommandProcessor;
+import consulo.util.lang.Pair;
+import consulo.virtualFileSystem.status.FileStatusManager;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;

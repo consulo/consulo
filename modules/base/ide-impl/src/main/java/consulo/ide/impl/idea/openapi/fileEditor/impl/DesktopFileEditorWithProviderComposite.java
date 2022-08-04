@@ -15,13 +15,13 @@
  */
 package consulo.ide.impl.idea.openapi.fileEditor.impl;
 
-import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorManagerEx;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorProvider;
 import consulo.fileEditor.FileEditorWithProvider;
 import consulo.fileEditor.FileEditorWithProviderComposite;
+import consulo.fileEditor.internal.FileEditorManagerEx;
+import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.logging.Logger;
 import consulo.virtualFileSystem.VirtualFile;
 

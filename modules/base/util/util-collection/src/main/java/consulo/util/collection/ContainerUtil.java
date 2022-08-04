@@ -1360,6 +1360,21 @@ public class ContainerUtil {
     return result;
   }
 
+  // returns true if the collection was modified
+  public static <T> boolean retainAll(@Nonnull Collection<T> collection, @Nonnull Condition<? super T> condition) {
+    boolean modified = false;
+
+    for (Iterator<T> iterator = collection.iterator(); iterator.hasNext(); ) {
+      T next = iterator.next();
+      if (!condition.value(next)) {
+        iterator.remove();
+        modified = true;
+      }
+    }
+
+    return modified;
+  }
+
   private static class KeyOrderedMultiMap<K, V> extends MultiMap<K, V> {
 
     public KeyOrderedMultiMap() {

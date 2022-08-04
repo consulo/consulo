@@ -43,6 +43,12 @@ public class GeneratedFileEditingNotificationProvider implements EditorNotificat
     myProject = project;
   }
 
+  @Nonnull
+  @Override
+  public String getId() {
+    return "file-is-generated";
+  }
+
   @RequiredReadAction
   @Nullable
   @Override

@@ -17,8 +17,6 @@ package consulo.ide.impl.idea.ide.impl;
 
 import consulo.application.ApplicationManager;
 import consulo.ide.impl.idea.ide.CompositeSelectInTarget;
-import consulo.ide.impl.idea.ide.SelectInContext;
-import consulo.ide.impl.idea.ide.SelectInTarget;
 import consulo.ide.impl.idea.ide.projectView.ProjectView;
 import consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectViewPane;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPane;
@@ -28,6 +26,8 @@ import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.PsiUtilCore;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.project.ui.view.SelectInContext;
+import consulo.project.ui.view.SelectInTarget;
 import consulo.project.ui.view.tree.SelectableTreeStructureProvider;
 import consulo.project.ui.view.tree.TreeStructureProvider;
 import consulo.project.ui.wm.ToolWindowId;

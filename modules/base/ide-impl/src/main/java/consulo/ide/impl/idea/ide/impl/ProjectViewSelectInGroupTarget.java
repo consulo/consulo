@@ -17,12 +17,12 @@
 package consulo.ide.impl.idea.ide.impl;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.ide.CompositeSelectInTarget;
-import consulo.ide.impl.idea.ide.SelectInContext;
-import consulo.ide.impl.idea.ide.SelectInTarget;
-import consulo.ide.impl.idea.ide.projectView.ProjectView;
 import consulo.application.dumb.DumbAware;
+import consulo.ide.impl.idea.ide.CompositeSelectInTarget;
+import consulo.ide.impl.idea.ide.projectView.ProjectView;
 import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.project.ui.view.SelectInContext;
+import consulo.project.ui.view.SelectInTarget;
 import consulo.project.ui.wm.ToolWindowId;
 
 import javax.annotation.Nonnull;

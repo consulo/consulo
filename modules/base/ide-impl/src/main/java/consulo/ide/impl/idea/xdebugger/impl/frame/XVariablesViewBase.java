@@ -15,20 +15,12 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.frame;
 
-import consulo.ui.ex.awt.dnd.DnDManager;
+import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.event.SelectionEvent;
 import consulo.codeEditor.event.SelectionListener;
-import consulo.fileEditor.FileEditor;
-import consulo.fileEditor.TextEditor;
-import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorManagerEx;
-import consulo.project.Project;
 import consulo.document.util.TextRange;
-import consulo.application.util.registry.Registry;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.containers.ObjectLongHashMap;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XDebuggerBundle;
 import consulo.execution.debug.XSourcePosition;
@@ -37,6 +29,12 @@ import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
 import consulo.execution.debug.evaluation.XDebuggerEvaluator;
 import consulo.execution.debug.frame.XStackFrame;
 import consulo.execution.debug.frame.XValueContainer;
+import consulo.execution.debug.setting.XDebuggerSettingsManager;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorManager;
+import consulo.fileEditor.TextEditor;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.containers.ObjectLongHashMap;
 import consulo.ide.impl.idea.xdebugger.impl.XDebuggerInlayUtil;
 import consulo.ide.impl.idea.xdebugger.impl.actions.XDebuggerActions;
 import consulo.ide.impl.idea.xdebugger.impl.evaluate.quick.XValueHint;
@@ -47,7 +45,9 @@ import consulo.ide.impl.idea.xdebugger.impl.ui.tree.XDebuggerTreeRestorer;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.XDebuggerTreeState;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.XStackFrameNode;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.XValueContainerNode;
-import consulo.execution.debug.setting.XDebuggerSettingsManager;
+import consulo.project.Project;
+import consulo.ui.ex.awt.dnd.DnDManager;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -112,7 +112,7 @@ public abstract class XVariablesViewBase extends XDebugView {
 
   private void registerInlineEvaluator(final XStackFrame stackFrame, final XSourcePosition position, final Project project) {
     final VirtualFile file = position.getFile();
-    final FileEditor fileEditor = FileEditorManagerEx.getInstanceEx(project).getSelectedEditor(file);
+    final FileEditor fileEditor = FileEditorManager.getInstance(project).getSelectedEditor(file);
     if (fileEditor instanceof TextEditor) {
       final Editor editor = ((TextEditor)fileEditor).getEditor();
       removeSelectionListener();

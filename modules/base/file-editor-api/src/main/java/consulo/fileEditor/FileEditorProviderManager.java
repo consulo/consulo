@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.fileEditor.ex;
+package consulo.fileEditor;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.ide.ServiceManager;
-import consulo.fileEditor.FileEditorProvider;
+import consulo.application.Application;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -32,7 +31,7 @@ import javax.annotation.Nullable;
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class FileEditorProviderManager {
   public static FileEditorProviderManager getInstance() {
-    return ServiceManager.getService(FileEditorProviderManager.class);
+    return Application.get().getInstance(FileEditorProviderManager.class);
   }
 
   /**

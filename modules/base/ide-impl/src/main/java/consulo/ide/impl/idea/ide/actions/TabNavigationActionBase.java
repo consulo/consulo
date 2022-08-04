@@ -15,21 +15,22 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
+import consulo.fileEditor.FileEditorWindow;
+import consulo.fileEditor.internal.FileEditorManagerEx;
+import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.logging.Logger;
-import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorManagerEx;
-import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
+import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.content.ContentManager;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.fileEditor.FileEditorWindow;
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 
 abstract class TabNavigationActionBase extends AnAction implements DumbAware {

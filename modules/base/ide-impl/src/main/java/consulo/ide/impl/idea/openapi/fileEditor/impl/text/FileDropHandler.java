@@ -15,25 +15,21 @@
  */
 package consulo.ide.impl.idea.openapi.fileEditor.impl.text;
 
-import consulo.ide.impl.idea.ide.dnd.FileCopyPasteUtil;
-import consulo.ide.impl.idea.openapi.editor.CustomFileDropHandler;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.impl.EditorDropHandler;
-import consulo.ide.impl.idea.openapi.fileEditor.*;
-import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorManagerEx;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
+import consulo.fileEditor.*;
+import consulo.fileEditor.internal.FileEditorManagerEx;
+import consulo.ide.impl.idea.ide.dnd.FileCopyPasteUtil;
+import consulo.ide.impl.idea.openapi.editor.CustomFileDropHandler;
+import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider;
-import consulo.fileEditor.FileEditor;
-import consulo.fileEditor.FileEditorManager;
-import consulo.fileEditor.TextEditor;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.document.FileDocumentManager;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.fileEditor.FileEditorWindow;
-import consulo.fileEditor.FileEditorWithProviderComposite;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

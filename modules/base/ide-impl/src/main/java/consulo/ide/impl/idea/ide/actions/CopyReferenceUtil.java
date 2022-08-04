@@ -1,22 +1,22 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ide.impl.idea.codeInsight.daemon.impl.IdentifierUtil;
-import consulo.language.editor.highlight.HighlightManager;
-import consulo.language.editor.LangDataKeys;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.wm.ex.StatusBarEx;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorColors;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributes;
 import consulo.dataContext.DataContext;
+import consulo.ide.impl.idea.codeInsight.daemon.impl.IdentifierUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.QualifiedNameProviderUtil;
 import consulo.language.editor.TargetElementUtil;
+import consulo.language.editor.highlight.HighlightManager;
 import consulo.language.psi.*;
 import consulo.project.Project;
+import consulo.project.ui.internal.StatusBarEx;
 import consulo.project.ui.wm.WindowManager;
 import consulo.virtualFileSystem.VirtualFile;
 

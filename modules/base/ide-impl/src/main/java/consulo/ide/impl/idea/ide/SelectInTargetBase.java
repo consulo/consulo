@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.ide;
 
+import consulo.project.ui.view.SelectInTarget;
+
 public abstract class SelectInTargetBase implements SelectInTarget {
   @Override
   public String getToolWindowId() {

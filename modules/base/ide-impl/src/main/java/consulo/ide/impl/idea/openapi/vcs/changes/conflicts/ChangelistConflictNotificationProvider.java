@@ -44,6 +44,12 @@ public class ChangelistConflictNotificationProvider implements EditorNotificatio
     myConflictTracker = ((ChangeListManagerImpl)changeListManager).getConflictTracker();
   }
 
+  @Nonnull
+  @Override
+  public String getId() {
+    return "changelist-conflict";
+  }
+
   @RequiredReadAction
   @Nullable
   @Override

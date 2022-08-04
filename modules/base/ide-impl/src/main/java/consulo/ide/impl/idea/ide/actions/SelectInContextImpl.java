@@ -16,16 +16,15 @@
 
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ide.impl.idea.ide.SelectInContext;
-import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
-import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorManagerEx;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
+import consulo.fileEditor.internal.FileEditorManagerEx;
+import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
@@ -36,6 +35,7 @@ import consulo.language.psi.PsiManager;
 import consulo.language.template.TemplateLanguageFileViewProvider;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
+import consulo.project.ui.view.SelectInContext;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.virtualFileSystem.VirtualFile;

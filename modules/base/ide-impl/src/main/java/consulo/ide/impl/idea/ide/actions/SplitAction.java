@@ -15,15 +15,15 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.application.dumb.DumbAware;
+import consulo.fileEditor.FileEditorWindow;
+import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ide.IdeBundle;
+import consulo.language.editor.CommonDataKeys;
+import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.Presentation;
-import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorManagerEx;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
-import consulo.fileEditor.FileEditorWindow;
 
 import javax.swing.*;
 

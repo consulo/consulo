@@ -16,10 +16,11 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ide.IdeBundle;
-import consulo.fileEditor.FileEditorManager;
-import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorManagerEx;
 import consulo.application.dumb.DumbAware;
+import consulo.fileEditor.FileEditorManager;
+import consulo.fileEditor.FileEditorWindow;
+import consulo.fileEditor.internal.FileEditorManagerEx;
+import consulo.ide.IdeBundle;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
@@ -28,7 +29,6 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.fileEditor.FileEditorWindow;
 
 public class CloseEditorAction extends AnAction implements DumbAware {
   @Override

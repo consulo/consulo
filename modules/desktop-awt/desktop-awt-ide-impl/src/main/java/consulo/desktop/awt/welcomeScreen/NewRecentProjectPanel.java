@@ -23,7 +23,7 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
-import consulo.ide.impl.idea.openapi.util.io.UniqueNameBuilder;
+import consulo.application.util.UniqueNameBuilder;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.RecentProjectsWelcomeScreenActionBase;
 import consulo.ui.ex.awt.util.ColorUtil;

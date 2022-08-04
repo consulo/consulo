@@ -30,6 +30,9 @@ import java.util.function.Supplier;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface EditorNotificationProvider {
+  @Nonnull
+  String getId();
+
   @Nullable
   @RequiredReadAction
   EditorNotificationBuilder buildNotification(@Nonnull VirtualFile file, @Nonnull FileEditor fileEditor, @Nonnull Supplier<EditorNotificationBuilder> builderFactory);

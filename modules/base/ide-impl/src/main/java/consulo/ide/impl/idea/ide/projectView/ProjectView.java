@@ -18,14 +18,14 @@ package consulo.ide.impl.idea.ide.projectView;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.ide.impl.idea.ide.SelectInTarget;
+import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectViewPSIPane;
 import consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectViewPane;
-import consulo.ide.ServiceManager;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
+import consulo.project.Project;
+import consulo.project.ui.view.SelectInTarget;
 import consulo.util.concurrent.AsyncResult;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

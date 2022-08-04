@@ -16,22 +16,21 @@
 
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.ide.impl.idea.ide.IdeEventQueue;
-import consulo.ide.impl.idea.ide.actions.searcheverywhere.SearchEverywhereManager;
-import consulo.ide.impl.idea.ide.util.gotoByName.*;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorManagerEx;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
+import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.fileEditor.FileEditorManager;
+import consulo.fileEditor.internal.FileEditorManagerEx;
+import consulo.ide.impl.idea.ide.IdeEventQueue;
+import consulo.ide.impl.idea.ide.actions.searcheverywhere.SearchEverywhereManager;
+import consulo.ide.impl.idea.ide.util.gotoByName.*;
+import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -41,6 +40,7 @@ import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
+import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

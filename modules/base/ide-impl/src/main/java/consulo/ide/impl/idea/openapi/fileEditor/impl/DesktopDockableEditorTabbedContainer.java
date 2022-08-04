@@ -15,26 +15,26 @@
  */
 package consulo.ide.impl.idea.openapi.fileEditor.impl;
 
-import consulo.dataContext.DataProvider;
-import consulo.fileEditor.DockableEditorTabbedContainer;
-import consulo.ui.ex.action.Presentation;
+import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
-import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorManagerEx;
-import consulo.project.Project;
-import consulo.ui.ex.awt.internal.SwingDockContainer;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.awt.RelativeRectangle;
-import consulo.project.ui.wm.dock.DockableContent;
+import consulo.dataContext.DataProvider;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.fileEditor.DockableEditorTabbedContainer;
+import consulo.fileEditor.FileEditorWindow;
+import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ide.impl.idea.ui.tabs.JBTabs;
 import consulo.ide.impl.idea.ui.tabs.TabInfo;
 import consulo.ide.impl.idea.ui.tabs.impl.JBTabsImpl;
-import consulo.annotation.DeprecationInfo;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.fileEditor.FileEditorWindow;
+import consulo.project.Project;
+import consulo.project.ui.wm.dock.DockableContent;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.awt.RelativeRectangle;
+import consulo.ui.ex.awt.internal.SwingDockContainer;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;

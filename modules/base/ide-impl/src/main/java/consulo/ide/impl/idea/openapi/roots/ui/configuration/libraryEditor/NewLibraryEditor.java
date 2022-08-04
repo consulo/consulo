@@ -1,23 +1,23 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.libraryEditor;
 
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.content.OrderRootType;
 import consulo.content.impl.internal.library.LibraryEx;
 import consulo.content.library.LibraryProperties;
 import consulo.content.library.LibraryType;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.util.VirtualFileVisitor;
-import consulo.ide.impl.idea.openapi.vfs.impl.LightFilePointer;
 import consulo.ide.impl.idea.util.ArrayUtilRt;
-import consulo.util.collection.MultiMap;
 import consulo.ide.impl.idea.util.io.URLUtil;
+import consulo.util.collection.MultiMap;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.fileType.FileTypeRegistry;
+import consulo.virtualFileSystem.pointer.LightFilePointer;
+import consulo.virtualFileSystem.util.VirtualFileVisitor;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;

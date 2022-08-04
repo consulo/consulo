@@ -34,7 +34,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.VerticalFlowLayout;
 import consulo.application.util.SystemInfo;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.io.UniqueNameBuilder;
+import consulo.application.util.UniqueNameBuilder;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.dataContext.DataManager;
 import consulo.application.ui.wm.IdeFocusManager;

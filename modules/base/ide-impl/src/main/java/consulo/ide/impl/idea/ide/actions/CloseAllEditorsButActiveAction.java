@@ -15,18 +15,19 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorManagerEx;
 import consulo.application.dumb.DumbAware;
+import consulo.fileEditor.FileEditorWindow;
+import consulo.fileEditor.internal.FileEditorManagerEx;
+import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.fileEditor.FileEditorWindow;
+
 import javax.annotation.Nonnull;
 
 public class CloseAllEditorsButActiveAction extends AnAction implements DumbAware {

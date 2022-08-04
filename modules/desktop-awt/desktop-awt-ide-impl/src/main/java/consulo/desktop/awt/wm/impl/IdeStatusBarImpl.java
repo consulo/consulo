@@ -35,7 +35,7 @@ import consulo.util.lang.Pair;
 import consulo.application.util.SystemInfo;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.application.progress.ProgressIndicatorEx;
-import consulo.ide.impl.idea.openapi.wm.ex.StatusBarEx;
+import consulo.project.ui.internal.StatusBarEx;
 import consulo.ide.impl.idea.openapi.wm.impl.status.InfoAndProgressPanel;
 import consulo.ide.impl.idea.openapi.wm.impl.status.MemoryUsagePanel;
 import consulo.ide.impl.idea.openapi.wm.impl.status.ToolWindowsWidget;

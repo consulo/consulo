@@ -16,8 +16,8 @@
 
 package consulo.ide.impl.idea.ide.impl;
 
-import consulo.ide.impl.idea.ide.SelectInContext;
-import consulo.ide.impl.idea.ide.SelectInTarget;
+import consulo.project.ui.view.SelectInContext;
+import consulo.project.ui.view.SelectInTarget;
 
 /**
  * @author yole

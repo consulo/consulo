@@ -15,10 +15,6 @@
  */
 package consulo.ide.impl.idea.openapi.fileEditor;
 
-import consulo.ide.impl.idea.ide.SelectInContext;
-import consulo.ide.impl.idea.ide.SelectInManager;
-import consulo.ide.impl.idea.ide.SelectInTarget;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.codeEditor.*;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
@@ -28,12 +24,16 @@ import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
-import consulo.navigation.OpenFileDescriptor;
 import consulo.fileEditor.TextEditor;
+import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.language.file.FileTypeManager;
 import consulo.navigation.Navigatable;
+import consulo.navigation.OpenFileDescriptor;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
+import consulo.project.ui.view.SelectInContext;
+import consulo.project.ui.view.SelectInManager;
+import consulo.project.ui.view.SelectInTarget;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;

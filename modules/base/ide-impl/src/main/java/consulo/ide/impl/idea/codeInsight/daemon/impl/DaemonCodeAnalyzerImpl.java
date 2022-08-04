@@ -2,47 +2,21 @@
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.impl.internal.progress.DaemonProgressIndicator;
-import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
-import consulo.fileEditor.highlight.HighlightingPass;
-import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPass;
-import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPassManager;
-import consulo.language.editor.DaemonCodeAnalyzer;
-import consulo.language.editor.DaemonCodeAnalyzerSettings;
-import consulo.ide.impl.idea.codeInsight.daemon.DaemonCodeAnalyzerSettingsImpl;
-import consulo.language.editor.ReferenceImporter;
-import consulo.language.editor.DaemonListener;
-import consulo.language.editor.hint.HintManager;
-import consulo.ide.impl.idea.codeInsight.intention.impl.FileLevelIntentionComponent;
-import consulo.ide.impl.idea.codeInsight.intention.impl.IntentionHintComponent;
-import consulo.application.PowerSaveMode;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.ide.impl.idea.openapi.application.impl.ApplicationInfoImpl;
-import consulo.ide.impl.idea.openapi.application.impl.NonBlockingReadActionImpl;
-import consulo.codeEditor.markup.RangeHighlighterEx;
-import consulo.fileEditor.FileEditor;
-import consulo.fileEditor.FileEditorManager;
-import consulo.fileEditor.TextEditor;
-import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorManagerEx;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.text.AsyncEditorLoader;
-import consulo.language.file.FileTypeManager;
-import consulo.ide.impl.idea.openapi.fileTypes.impl.FileTypeManagerImpl;
-import consulo.virtualFileSystem.RefreshQueue;
-import consulo.ide.impl.idea.packageDependencies.DependencyValidationManager;
-import consulo.ide.impl.psi.RefResolveService;
-import consulo.application.impl.internal.performance.HeavyProcessLatch;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.component.ProcessCanceledException;
+import consulo.application.PowerSaveMode;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.impl.internal.performance.HeavyProcessLatch;
+import consulo.application.impl.internal.progress.DaemonProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.application.util.concurrent.ThreadDumper;
 import consulo.application.util.function.CommonProcessors;
 import consulo.application.util.function.Processor;
 import consulo.application.util.function.Processors;
-import consulo.util.lang.function.ThrowableRunnable;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.markup.RangeHighlighterEx;
+import consulo.component.ProcessCanceledException;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
@@ -52,21 +26,42 @@ import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorManager;
+import consulo.fileEditor.TextEditor;
+import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
+import consulo.fileEditor.highlight.HighlightingPass;
 import consulo.fileEditor.text.TextEditorProvider;
-import consulo.language.editor.Pass;
+import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPass;
+import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPassManager;
+import consulo.ide.impl.idea.codeInsight.daemon.DaemonCodeAnalyzerSettingsImpl;
+import consulo.ide.impl.idea.codeInsight.intention.impl.FileLevelIntentionComponent;
+import consulo.ide.impl.idea.codeInsight.intention.impl.IntentionHintComponent;
+import consulo.ide.impl.idea.openapi.application.impl.ApplicationInfoImpl;
+import consulo.ide.impl.idea.openapi.application.impl.NonBlockingReadActionImpl;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.text.AsyncEditorLoader;
+import consulo.ide.impl.idea.openapi.fileTypes.impl.FileTypeManagerImpl;
+import consulo.ide.impl.idea.packageDependencies.DependencyValidationManager;
+import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
+import consulo.ide.impl.psi.RefResolveService;
+import consulo.language.editor.*;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.gutter.LineMarkerInfo;
+import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
-import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
+import consulo.language.file.FileTypeManager;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.concurrent.EdtExecutorService;
 import consulo.util.collection.SmartList;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.function.ThrowableRunnable;
+import consulo.virtualFileSystem.RefreshQueue;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -892,7 +887,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
     Collection<VirtualFile> files = new HashSet<>(activeTextEditors.size());
     if (!app.isUnitTestMode()) {
       // editors in tabs
-      FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(myProject);
+      FileEditorManager fileEditorManager = FileEditorManager.getInstance(myProject);
       for (FileEditor tabEditor : fileEditorManager.getSelectedEditors()) {
         if (!tabEditor.isValid()) continue;
         VirtualFile file = fileEditorManager.getFile(tabEditor);
@@ -905,7 +900,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
 
     // do not duplicate documents
     if (!activeTextEditors.isEmpty()) {
-      FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(myProject);
+      FileEditorManager fileEditorManager = FileEditorManager.getInstance(myProject);
       for (FileEditor fileEditor : activeTextEditors) {
         VirtualFile file = fileEditorManager.getFile(fileEditor);
         if (file != null && files.contains(file)) {

@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vfs.impl;
+package consulo.virtualFileSystem.pointer;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.StandardFileSystems;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.VirtualFileSystem;
-import consulo.virtualFileSystem.pointer.VirtualFilePointer;
-import consulo.ide.impl.idea.util.ObjectUtils;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -80,7 +80,7 @@ public class LightFilePointer implements VirtualFilePointer {
     String path = VirtualFileManager.extractPath(url);
     String protocol = VirtualFileManager.extractProtocol(url);
     VirtualFileSystem fileSystem = VirtualFileManager.getInstance().getFileSystem(protocol);
-    return ObjectUtils.notNull(fileSystem, StandardFileSystems.local()).extractPresentableUrl(path);
+    return ObjectUtil.notNull(fileSystem, StandardFileSystems.local()).extractPresentableUrl(path);
   }
 
   @Override
