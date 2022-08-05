@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.daemon.impl;
+package consulo.language.editor.impl.internal.daemon;
 
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
@@ -39,7 +39,7 @@ public abstract class DaemonCodeAnalyzerEx extends DaemonCodeAnalyzer {
   private static final Logger LOG = Logger.getInstance(DaemonCodeAnalyzerEx.class);
 
   public static DaemonCodeAnalyzerEx getInstanceEx(Project project) {
-    return (DaemonCodeAnalyzerEx)project.getComponent(DaemonCodeAnalyzer.class);
+    return (DaemonCodeAnalyzerEx)DaemonCodeAnalyzer.getInstance(project);
   }
 
   /**
@@ -59,7 +59,7 @@ public abstract class DaemonCodeAnalyzerEx extends DaemonCodeAnalyzer {
                                           @Nonnull final Processor<HighlightInfo> processor) {
     LOG.assertTrue(ApplicationManager.getApplication().isReadAccessAllowed());
 
-    final SeverityRegistrar severityRegistrar = SeverityRegistrarImpl.getSeverityRegistrar(project);
+    final SeverityRegistrar severityRegistrar = SeverityRegistrar.getSeverityRegistrar(project);
     MarkupModelEx model = DocumentMarkupModel.forDocument(document, project, true);
     return model.processRangeHighlightersOverlappingWith(startOffset, endOffset, marker -> {
       Object tt = marker.getErrorStripeTooltip();
@@ -78,15 +78,15 @@ public abstract class DaemonCodeAnalyzerEx extends DaemonCodeAnalyzer {
    * @param processor
    * @return
    */
-  static boolean processHighlightsOverlappingOutside(@Nonnull Document document,
-                                                     @Nonnull Project project,
-                                                     @Nullable final HighlightSeverity minSeverity,
-                                                     final int startOffset,
-                                                     final int endOffset,
-                                                     @Nonnull final Processor<HighlightInfo> processor) {
+  public static boolean processHighlightsOverlappingOutside(@Nonnull Document document,
+                                                            @Nonnull Project project,
+                                                            @Nullable final HighlightSeverity minSeverity,
+                                                            final int startOffset,
+                                                            final int endOffset,
+                                                            @Nonnull final Processor<HighlightInfo> processor) {
     LOG.assertTrue(ApplicationManager.getApplication().isReadAccessAllowed());
 
-    final SeverityRegistrar severityRegistrar = SeverityRegistrarImpl.getSeverityRegistrar(project);
+    final SeverityRegistrar severityRegistrar = SeverityRegistrar.getSeverityRegistrar(project);
     MarkupModelEx model = DocumentMarkupModel.forDocument(document, project, true);
     return model.processRangeHighlightersOutside(startOffset, endOffset, marker -> {
       Object tt = marker.getErrorStripeTooltip();
@@ -96,7 +96,7 @@ public abstract class DaemonCodeAnalyzerEx extends DaemonCodeAnalyzer {
     });
   }
 
-  static boolean hasErrors(@Nonnull Project project, @Nonnull Document document) {
+  public static boolean hasErrors(@Nonnull Project project, @Nonnull Document document) {
     return !processHighlights(document, project, HighlightSeverity.ERROR, 0, document.getTextLength(), CommonProcessors.<HighlightInfo>alwaysFalse());
   }
 

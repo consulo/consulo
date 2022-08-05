@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.daemon.impl.analysis;
+package consulo.language.editor.highlight;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.ide.ServiceManager;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 
@@ -26,7 +25,7 @@ import javax.annotation.Nonnull;
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class HighlightingLevelManager {
   public static HighlightingLevelManager getInstance(Project project) {
-    return ServiceManager.getService(project, HighlightingLevelManager.class);
+    return project.getInstance(HighlightingLevelManager.class);
   }
 
   public abstract boolean shouldHighlight(@Nonnull PsiElement psiRoot);

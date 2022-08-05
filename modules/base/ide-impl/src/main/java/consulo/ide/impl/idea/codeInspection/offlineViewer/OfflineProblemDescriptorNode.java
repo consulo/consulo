@@ -21,7 +21,7 @@
 package consulo.ide.impl.idea.codeInspection.offlineViewer;
 
 import consulo.language.editor.util.CollectHighlightsUtil;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.analysis.HighlightingLevelManager;
+import consulo.language.editor.highlight.HighlightingLevelManager;
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.ide.impl.idea.codeInspection.ex.QuickFixWrapper;

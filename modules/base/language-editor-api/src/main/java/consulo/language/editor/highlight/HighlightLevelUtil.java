@@ -14,19 +14,21 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.daemon.impl.analysis;
+package consulo.language.editor.highlight;
 
 import consulo.application.ApplicationManager;
 import consulo.language.editor.FileHighlightingSetting;
-import consulo.project.Project;
-import consulo.project.ProjectCoreUtil;
-import consulo.module.content.ProjectFileIndex;
-import consulo.module.content.ProjectRootManager;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.editor.internal.HighlightingSettingsPerFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.impl.file.SingleRootFileViewProvider;
+import consulo.module.content.ProjectFileIndex;
+import consulo.module.content.ProjectRootManager;
+import consulo.project.Project;
+import consulo.project.ProjectCoreUtil;
 import consulo.project.content.scope.ProjectScopes;
+import consulo.virtualFileSystem.RawFileLoaderHelper;
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 
 public class HighlightLevelUtil {
@@ -42,7 +44,6 @@ public class HighlightLevelUtil {
 
   public static boolean shouldHighlight(@Nonnull PsiElement psiRoot) {
     final HighlightingSettingsPerFile component = HighlightingSettingsPerFile.getInstance(psiRoot.getProject());
-    if (component == null) return true;
 
     final FileHighlightingSetting settingForRoot = component.getHighlightingSettingForRoot(psiRoot);
     return settingForRoot != FileHighlightingSetting.SKIP_HIGHLIGHTING;
@@ -61,10 +62,9 @@ public class HighlightLevelUtil {
     final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
     if (ProjectScopes.getLibrariesScope(project).contains(virtualFile) && !fileIndex.isInContent(virtualFile)) return false;
 
-    if (SingleRootFileViewProvider.isTooLargeForIntelligence(virtualFile)) return false;
+    if (RawFileLoaderHelper.isTooLargeForIntelligence(virtualFile)) return false;
 
     final HighlightingSettingsPerFile component = HighlightingSettingsPerFile.getInstance(project);
-    if (component == null) return true;
 
     final FileHighlightingSetting settingForRoot = component.getHighlightingSettingForRoot(psiRoot);
     return settingForRoot != FileHighlightingSetting.SKIP_INSPECTION;
@@ -72,7 +72,6 @@ public class HighlightLevelUtil {
 
   public static void forceRootHighlighting(@Nonnull PsiElement root, @Nonnull FileHighlightingSetting level) {
     final HighlightingSettingsPerFile component = HighlightingSettingsPerFile.getInstance(root.getProject());
-    if (component == null) return;
 
     component.setHighlightingSettingForRoot(root, level);
   }

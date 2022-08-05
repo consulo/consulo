@@ -8,7 +8,7 @@ import consulo.application.WriteAction;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.internal.TransactionGuardEx;
 import consulo.application.util.Semaphore;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.FileStatusMap;
+import consulo.language.editor.impl.internal.daemon.FileStatusMap;
 import consulo.ide.impl.idea.openapi.vfs.ex.VirtualFileManagerEx;
 import consulo.ide.impl.idea.openapi.vfs.impl.local.LocalFileSystemImpl;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.RefreshWorker;

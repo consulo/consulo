@@ -17,10 +17,12 @@
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.codeHighlighting.*;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.language.editor.Pass;
+import consulo.language.editor.impl.highlight.*;
+import consulo.language.editor.impl.internal.daemon.DaemonCodeAnalyzerEx;
+import consulo.language.editor.impl.internal.daemon.FileStatusMap;
 import consulo.project.Project;
 import consulo.language.psi.PsiCompiledElement;
 import consulo.language.psi.PsiDocumentManager;
@@ -173,6 +175,12 @@ public class TextEditorHighlightingPassManagerImpl extends TextEditorHighlightin
     passesRefusedToCreate.forEach(passId -> statusMap.markFileUpToDate(document, passId));
 
     return (List)Arrays.asList(id2Pass.getValues());
+  }
+
+  @Nonnull
+  @Override
+  public List<TextEditorHighlightingPass> instantiateMainPasses(@Nonnull PsiFile psiFile, @Nonnull Document document) {
+    return instantiateMainPasses(psiFile, document, new DefaultHighlightInfoProcessor());
   }
 
   @Nonnull

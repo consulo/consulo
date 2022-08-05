@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.codeInsight.daemon.ChangeLocalityDetector;
+import consulo.language.editor.ChangeLocalityDetector;
 import consulo.language.editor.inspection.SuppressionUtil;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;

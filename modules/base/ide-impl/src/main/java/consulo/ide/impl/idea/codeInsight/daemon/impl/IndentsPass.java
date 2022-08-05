@@ -32,7 +32,7 @@ import consulo.document.Document;
 import consulo.document.util.DocumentUtil;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPass;
+import consulo.language.editor.impl.highlight.TextEditorHighlightingPass;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.editor.impl.DesktopEditorImpl;
 import consulo.ide.impl.idea.openapi.editor.impl.view.EditorPainter;

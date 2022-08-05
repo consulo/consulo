@@ -17,7 +17,7 @@
 /*
  * @author max
  */
-package consulo.ide.impl.idea.codeInsight.daemon.impl;
+package consulo.language.editor.impl.highlight;
 
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;

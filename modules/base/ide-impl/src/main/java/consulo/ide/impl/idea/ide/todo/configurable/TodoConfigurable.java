@@ -26,7 +26,6 @@ import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.*;
 import consulo.ide.impl.psi.search.TodoAttributesUtil;
 import consulo.language.psi.search.TodoPattern;
-import consulo.ide.impl.idea.ui.*;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.ide.impl.idea.util.ui.Table;

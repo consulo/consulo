@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
 import consulo.language.editor.Pass;
-import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPass;
-import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPassManager;
+import consulo.language.editor.impl.highlight.TextEditorHighlightingPass;
+import consulo.language.editor.impl.highlight.TextEditorHighlightingPassManager;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;

@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.ide.impl.idea.codeInsight.breadcrumbs.FileBreadcrumbsCollector;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.DaemonCodeAnalyzerEx;
+import consulo.language.editor.impl.internal.daemon.DaemonCodeAnalyzerEx;
 import consulo.application.ui.UISettings;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.colorScheme.EditorColorsManager;

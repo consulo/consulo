@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPass;
+import consulo.language.editor.impl.highlight.TextEditorHighlightingPass;
 import consulo.ide.impl.idea.codeInsight.folding.impl.FoldingUpdate;
 import consulo.codeEditor.Editor;
 import consulo.application.progress.ProgressIndicator;

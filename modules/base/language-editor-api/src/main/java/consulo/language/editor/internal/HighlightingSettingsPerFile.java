@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.daemon.impl.analysis;
+package consulo.language.editor.internal;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
@@ -23,11 +23,10 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
-import consulo.ide.ServiceManager;
 import consulo.language.editor.DefaultHighlightingSettingProvider;
 import consulo.language.editor.FileHighlightingSetting;
-import consulo.language.editor.internal.PsiUtilBase;
-import consulo.language.impl.file.SingleRootFileViewProvider;
+import consulo.language.editor.highlight.FileHighlightingSettingListener;
+import consulo.language.editor.highlight.HighlightingLevelManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.module.content.ProjectFileIndex;
@@ -36,6 +35,7 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.ProjectCoreUtil;
 import consulo.project.content.scope.ProjectScopes;
+import consulo.virtualFileSystem.RawFileLoaderHelper;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import jakarta.inject.Inject;
@@ -43,7 +43,10 @@ import jakarta.inject.Singleton;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Singleton
 @State(name = "HighlightingSettingsPerFile", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
@@ -54,7 +57,7 @@ public class HighlightingSettingsPerFile extends HighlightingLevelManager implem
   private static final String FILE_ATT = "file";
 
   public static HighlightingSettingsPerFile getInstance(Project project) {
-    return (HighlightingSettingsPerFile)ServiceManager.getService(project, HighlightingLevelManager.class);
+    return (HighlightingSettingsPerFile)project.getInstance(HighlightingLevelManager.class);
   }
 
   private final Map<VirtualFile, FileHighlightingSetting[]> myHighlightSettings = new HashMap<VirtualFile, FileHighlightingSetting[]>();
@@ -184,7 +187,7 @@ public class HighlightingSettingsPerFile extends HighlightingLevelManager implem
     final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
     if (ProjectScopes.getLibrariesScope(project).contains(virtualFile) && !fileIndex.isInContent(virtualFile)) return false;
 
-    if (SingleRootFileViewProvider.isTooLargeForIntelligence(virtualFile)) return false;
+    if (RawFileLoaderHelper.isTooLargeForIntelligence(virtualFile)) return false;
 
     final FileHighlightingSetting settingForRoot = getHighlightingSettingForRoot(psiRoot);
     return settingForRoot != FileHighlightingSetting.SKIP_INSPECTION;

@@ -241,7 +241,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.build.progress;
   exports consulo.ide.impl.idea.buildfiles;
   exports consulo.ide.impl.idea.codeEditor.printing;
-  exports consulo.ide.impl.idea.codeHighlighting;
   exports consulo.ide.impl.idea.codeInsight;
   exports consulo.ide.impl.idea.codeInsight.actions;
   exports consulo.ide.impl.idea.codeInsight.breadcrumbs;
@@ -1014,7 +1013,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.psi.impl.source.codeStyle.lineIndent;
   exports consulo.ide.impl.psi.impl.source.parsing;
   exports consulo.ide.impl.psi.impl.source.resolve.reference;
-  exports consulo.ide.impl.psi.impl.source.resolve.reference.impl;
   exports consulo.ide.impl.psi.impl.source.resolve.reference.impl.manipulators;
   exports consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers;
   exports consulo.ide.impl.psi.impl.source.tree;
@@ -1033,7 +1031,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.psi.stubs.provided;
   exports consulo.ide.impl.psi.targets;
   exports consulo.ide.impl.psi.templateLanguages;
-  exports consulo.ide.impl.psi.tree;
   exports consulo.ide.impl.psi.util;
   exports consulo.ide.impl.psi.util.proximity;
   exports consulo.ide.impl.remoteServer.configuration.deployment;

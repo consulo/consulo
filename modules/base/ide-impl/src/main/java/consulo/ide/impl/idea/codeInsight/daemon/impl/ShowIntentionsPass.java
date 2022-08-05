@@ -2,7 +2,7 @@
 
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPass;
+import consulo.language.editor.impl.highlight.TextEditorHighlightingPass;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.ide.impl.idea.codeInsight.intention.impl.CachedIntentions;
 import consulo.ide.impl.idea.codeInsight.intention.impl.EditIntentionSettingsAction;

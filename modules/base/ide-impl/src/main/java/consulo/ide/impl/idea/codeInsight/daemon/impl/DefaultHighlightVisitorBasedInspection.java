@@ -2,14 +2,15 @@
 
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPass;
-import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPassManager;
+import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
+import consulo.language.editor.impl.highlight.TextEditorHighlightingPass;
+import consulo.language.editor.impl.highlight.TextEditorHighlightingPassManager;
 import consulo.ide.impl.idea.codeInspection.GlobalInspectionUtil;
 import consulo.ide.impl.idea.codeInspection.GlobalSimpleInspectionTool;
 import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionContextBase;
 import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.application.impl.internal.progress.DaemonProgressIndicator;
+import consulo.language.editor.impl.internal.daemon.DaemonProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.document.Document;

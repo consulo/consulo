@@ -1,8 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.component.extension.ExtensionPoint;
-import consulo.ide.impl.idea.codeInsight.daemon.ChangeLocalityDetector;
+import consulo.language.editor.ChangeLocalityDetector;
 import consulo.disposer.Disposable;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
@@ -15,6 +14,8 @@ import consulo.document.event.DocumentListener;
 import consulo.ide.impl.idea.openapi.editor.ex.EditorMarkupModel;
 import consulo.component.extension.ExtensionPointName;
 import consulo.fileEditor.FileEditorManager;
+import consulo.language.editor.impl.internal.daemon.DaemonCodeAnalyzerEx;
+import consulo.language.editor.impl.internal.daemon.FileStatusMap;
 import consulo.language.psi.*;
 import consulo.language.psi.event.PsiTreeChangeAdapter;
 import consulo.language.psi.event.PsiTreeChangeEvent;

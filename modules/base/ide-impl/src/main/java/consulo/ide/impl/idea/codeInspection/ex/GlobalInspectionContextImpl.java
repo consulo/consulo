@@ -36,7 +36,7 @@ import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.analysis.AnalysisUIOptions;
 import consulo.ide.impl.idea.analysis.PerformAnalysisInBackgroundOption;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.HighlightInfoProcessor;
+import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.LocalInspectionsPass;
 import consulo.ide.impl.idea.codeInspection.GlobalSimpleInspectionTool;
 import consulo.ide.impl.idea.codeInspection.reference.RefManagerImpl;

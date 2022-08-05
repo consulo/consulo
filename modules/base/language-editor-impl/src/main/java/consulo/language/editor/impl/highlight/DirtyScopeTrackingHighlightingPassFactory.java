@@ -14,21 +14,11 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.navigation;
-
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
-import consulo.language.psi.PsiFile;
-import javax.annotation.Nullable;
+package consulo.language.editor.impl.highlight;
 
 /**
  * @author yole
  */
-@ExtensionAPI(ComponentScope.APPLICATION)
-public interface MethodNavigationOffsetProvider {
-  ExtensionPointName<MethodNavigationOffsetProvider> EP_NAME = ExtensionPointName.create(MethodNavigationOffsetProvider.class);
-
-  @Nullable
-  int[] getMethodNavigationOffsets(PsiFile file, int caretOffset);
+public interface DirtyScopeTrackingHighlightingPassFactory extends TextEditorHighlightingPassFactory {
+  int getPassId();
 }

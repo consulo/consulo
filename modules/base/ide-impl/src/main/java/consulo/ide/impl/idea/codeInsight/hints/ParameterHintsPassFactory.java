@@ -16,9 +16,9 @@
 package consulo.ide.impl.idea.codeInsight.hints;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.codeHighlighting.EditorBoundHighlightingPass;
-import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPass;
-import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPassFactory;
+import consulo.language.editor.impl.highlight.EditorBoundHighlightingPass;
+import consulo.language.editor.impl.highlight.TextEditorHighlightingPass;
+import consulo.language.editor.impl.highlight.TextEditorHighlightingPassFactory;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.ParameterHintsPresentationManager;
 import consulo.ide.impl.idea.codeInsight.hints.filtering.Matcher;
 import consulo.ide.impl.idea.codeInsight.hints.filtering.MatcherConstructor;

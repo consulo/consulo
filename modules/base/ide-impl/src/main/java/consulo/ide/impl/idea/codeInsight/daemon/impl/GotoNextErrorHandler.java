@@ -28,6 +28,7 @@ import consulo.codeEditor.ScrollingModel;
 import consulo.document.Document;
 import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.annotation.HighlightSeverity;
+import consulo.language.editor.impl.internal.daemon.DaemonCodeAnalyzerEx;
 import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.editor.rawHighlight.SeverityRegistrar;

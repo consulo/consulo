@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeHighlighting;
+package consulo.language.editor.impl.highlight;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.HighlightInfoProcessor;
-import consulo.ide.ServiceManager;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
-import consulo.project.Project;
+import consulo.document.Document;
 import consulo.language.psi.PsiFile;
+import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -35,11 +33,17 @@ import java.util.List;
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class TextEditorHighlightingPassManager {
   public static TextEditorHighlightingPassManager getInstance(Project project) {
-    return ServiceManager.getService(project, TextEditorHighlightingPassManager.class);
+    return project.getInstance(TextEditorHighlightingPassManager.class);
   }
 
   @Nonnull
   public abstract List<TextEditorHighlightingPass> instantiatePasses(@Nonnull PsiFile psiFile, @Nonnull Editor editor, @Nonnull int[] passesToIgnore);
+
+  /**
+   * Same as {@link #instantiateMainPasses(PsiFile, Document, HighlightInfoProcessor)} but with default process
+   */
+  @Nonnull
+  public abstract List<TextEditorHighlightingPass> instantiateMainPasses(@Nonnull PsiFile psiFile, @Nonnull Document document);
 
   @Nonnull
   public abstract List<TextEditorHighlightingPass> instantiateMainPasses(@Nonnull PsiFile psiFile, @Nonnull Document document, @Nonnull HighlightInfoProcessor highlightInfoProcessor);

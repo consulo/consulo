@@ -2355,4 +2355,84 @@ public class StringUtil {
     }
     return -1;
   }
+
+  @NonNls
+  private static final String[] ourPrepositions =
+          {"a", "an", "and", "as", "at", "but", "by", "down", "for", "from", "if", "in", "into", "not", "of", "on", "onto", "or", "out", "over", "per", "nor", "the", "to", "up", "upon", "via",
+                  "with"};
+
+  @Contract(pure = true)
+  public static boolean isPreposition(@Nonnull String s, int firstChar, int lastChar) {
+    return isPreposition(s, firstChar, lastChar, ourPrepositions);
+  }
+
+  @Contract(pure = true)
+  public static boolean isPreposition(@Nonnull String s, int firstChar, int lastChar, @Nonnull String[] prepositions) {
+    for (String preposition : prepositions) {
+      boolean found = false;
+      if (lastChar - firstChar + 1 == preposition.length()) {
+        found = true;
+        for (int j = 0; j < preposition.length(); j++) {
+          if (!(toLowerCase(s.charAt(firstChar + j)) == preposition.charAt(j))) {
+            found = false;
+          }
+        }
+      }
+      if (found) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String wordsToBeginFromUpperCase(@Nonnull String s) {
+    return fixCapitalization(s, ourPrepositions, true);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String wordsToBeginFromLowerCase(@Nonnull String s) {
+    return fixCapitalization(s, ourPrepositions, false);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String toTitleCase(@Nonnull String s) {
+    return fixCapitalization(s, new String[0], true);
+  }
+
+  @Nonnull
+  private static String fixCapitalization(@Nonnull String s, @Nonnull String[] prepositions, boolean title) {
+    StringBuilder buffer = null;
+    for (int i = 0; i < s.length(); i++) {
+      char prevChar = i == 0 ? ' ' : s.charAt(i - 1);
+      char currChar = s.charAt(i);
+      if (!Character.isLetterOrDigit(prevChar) && prevChar != '\'') {
+        if (Character.isLetterOrDigit(currChar)) {
+          if (title || Character.isUpperCase(currChar)) {
+            int j = i;
+            for (; j < s.length(); j++) {
+              if (!Character.isLetterOrDigit(s.charAt(j))) {
+                break;
+              }
+            }
+            if (!isPreposition(s, i, j - 1, prepositions)) {
+              if (buffer == null) {
+                buffer = new StringBuilder(s);
+              }
+              buffer.setCharAt(i, title ? toUpperCase(currChar) : toLowerCase(currChar));
+            }
+          }
+        }
+      }
+    }
+    if (buffer == null) {
+      return s;
+    }
+    else {
+      return buffer.toString();
+    }
+  }
 }

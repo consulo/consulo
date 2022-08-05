@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.psi.tree;
+package consulo.language.ast;
 
 /**
  * @author Dmitry Avdeev

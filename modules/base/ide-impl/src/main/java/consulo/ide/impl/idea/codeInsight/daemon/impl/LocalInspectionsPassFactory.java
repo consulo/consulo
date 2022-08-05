@@ -17,9 +17,12 @@
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.codeHighlighting.MainHighlightingPassFactory;
+import consulo.language.editor.impl.highlight.MainHighlightingPassFactory;
 import consulo.language.editor.Pass;
-import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPass;
+import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
+import consulo.language.editor.impl.highlight.TextEditorHighlightingPass;
+import consulo.language.editor.impl.highlight.VisibleHighlightingPassFactory;
+import consulo.language.editor.impl.internal.daemon.FileStatusMap;
 import consulo.language.editor.inspection.scheme.InspectionProfileWrapper;
 import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.logging.Logger;

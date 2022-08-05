@@ -21,6 +21,7 @@ import consulo.ide.impl.idea.codeInsight.problems.WolfTheProblemSolverImpl;
 import consulo.document.Document;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.dumb.DumbAware;
+import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
 import consulo.application.util.registry.Registry;

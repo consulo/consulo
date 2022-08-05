@@ -1,25 +1,25 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.codeInsight.daemon.impl;
+package consulo.language.editor.impl.internal.daemon;
 
-import consulo.ide.impl.idea.codeHighlighting.DirtyScopeTrackingHighlightingPassFactory;
-import consulo.language.editor.Pass;
-import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPassManager;
-import consulo.language.editor.ProblemHighlightFilter;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
+import consulo.disposer.Disposable;
+import consulo.document.Document;
 import consulo.document.RangeMarker;
-import consulo.project.Project;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.language.editor.Pass;
+import consulo.language.editor.ProblemHighlightFilter;
+import consulo.language.editor.impl.highlight.DirtyScopeTrackingHighlightingPassFactory;
+import consulo.language.editor.impl.highlight.TextEditorHighlightingPassManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import consulo.ide.impl.idea.util.ConcurrencyUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.disposer.Disposable;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.Maps;
 import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.collection.primitive.ints.IntObjectMap;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
@@ -78,7 +78,7 @@ public final class FileStatusMap implements Disposable {
     }
   }
 
-  boolean wasErrorFound(@Nonnull Document document) {
+ public boolean wasErrorFound(@Nonnull Document document) {
     synchronized (myDocumentToStatusMap) {
       FileStatus status = myDocumentToStatusMap.get(document);
       return status != null && status.errorFound;
@@ -157,7 +157,7 @@ public final class FileStatusMap implements Disposable {
     }
   }
 
-  void markAllFilesDirty(@Nonnull Object reason) {
+  public void markAllFilesDirty(@Nonnull Object reason) {
     assertAllowModifications();
     synchronized (myDocumentToStatusMap) {
       if (!myDocumentToStatusMap.isEmpty()) {
@@ -211,7 +211,7 @@ public final class FileStatusMap implements Disposable {
     }
   }
 
-  void markFileScopeDirtyDefensively(@Nonnull PsiFile file, @Nonnull Object reason) {
+  public void markFileScopeDirtyDefensively(@Nonnull PsiFile file, @Nonnull Object reason) {
     assertAllowModifications();
     log("Mark dirty file defensively: ", file.getName(), reason);
     // mark whole file dirty in case no subsequent PSI events will come, but file requires rehighlighting nevertheless
@@ -225,7 +225,7 @@ public final class FileStatusMap implements Disposable {
     }
   }
 
-  void markFileScopeDirty(@Nonnull Document document, @Nonnull TextRange scope, int fileLength, @Nonnull Object reason) {
+  public void markFileScopeDirty(@Nonnull Document document, @Nonnull TextRange scope, int fileLength, @Nonnull Object reason) {
     assertAllowModifications();
     log("Mark scope dirty: ", scope, reason);
     synchronized (myDocumentToStatusMap) {
@@ -257,7 +257,7 @@ public final class FileStatusMap implements Disposable {
     return document.createRangeMarker(union);
   }
 
-  boolean allDirtyScopesAreNull(@Nonnull Document document) {
+  public boolean allDirtyScopesAreNull(@Nonnull Document document) {
     synchronized (myDocumentToStatusMap) {
       PsiFile file = PsiDocumentManager.getInstance(myProject).getPsiFile(document);
       if (!ProblemHighlightFilter.shouldHighlightFile(file)) return true;
@@ -275,8 +275,7 @@ public final class FileStatusMap implements Disposable {
     }
   }
 
-  @TestOnly
-  void allowDirt(boolean allow) {
+  public void allowDirt(boolean allow) {
     myAllowDirt = allow;
   }
 
@@ -352,7 +351,7 @@ public final class FileStatusMap implements Disposable {
   private static final ConcurrentMap<Thread, Integer> threads = ContainerUtil.createConcurrentWeakMap();
 
   private static int getThreadNum() {
-    return ConcurrencyUtil.cacheOrGet(threads, Thread.currentThread(), threads.size());
+    return Maps.cacheOrGet(threads, Thread.currentThread(), threads.size());
   }
 
   public static void log(@Nonnull Object... info) {

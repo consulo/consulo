@@ -37,7 +37,7 @@ module consulo.application.impl {
           consulo.sand.language.plugin,
           consulo.language.impl;
   exports consulo.application.impl.internal.macro to consulo.ide.impl, consulo.module.impl, consulo.project.impl;
-  exports consulo.application.impl.internal.progress to consulo.ide.impl, consulo.desktop.awt.ide.impl, consulo.test.impl, consulo.desktop.swt.ide.impl;
+  exports consulo.application.impl.internal.progress to consulo.ide.impl, consulo.language.editor.impl, consulo.desktop.awt.ide.impl, consulo.test.impl, consulo.desktop.swt.ide.impl;
   exports consulo.application.impl.internal.performance to consulo.ide.impl, consulo.proxy;
   exports consulo.application.impl.internal.plugin to consulo.ide.impl, consulo.desktop.awt.ide.impl, consulo.desktop.swt.ide.impl;
   exports consulo.application.impl.internal.start to consulo.desktop.awt.ide.impl, consulo.ide.impl, consulo.logging.log4j2.impl, consulo.desktop.ide.impl, consulo.desktop.swt.ide.impl;

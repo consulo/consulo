@@ -5,6 +5,7 @@ import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.DaemonBundle;
 import consulo.codeEditor.Editor;
 import consulo.application.progress.ProgressIndicator;
+import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;

@@ -16,8 +16,8 @@
 package consulo.ide.impl.idea.refactoring.changeSignature.inplace;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPass;
-import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPassFactory;
+import consulo.language.editor.impl.highlight.TextEditorHighlightingPass;
+import consulo.language.editor.impl.highlight.TextEditorHighlightingPassFactory;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.UpdateHighlightersUtil;
 import consulo.language.editor.intention.QuickFixAction;
 import consulo.language.editor.refactoring.changeSignature.ChangeInfo;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.daemon.impl;
+package consulo.language.editor.impl.highlight;
 
 import consulo.document.util.TextRange;
 import consulo.codeEditor.Editor;

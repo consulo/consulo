@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.folding.impl;
+package consulo.language.editor.folding;
 
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.language.editor.folding.ElementSignatureProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiNamedElement;
-import consulo.ide.impl.idea.util.ReflectionUtil;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.reflect.ReflectionUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.StringTokenizer;
 
 /**

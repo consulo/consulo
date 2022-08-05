@@ -4,10 +4,13 @@ package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.language.editor.DaemonBundle;
 import consulo.language.editor.DaemonCodeAnalyzer;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.analysis.HighlightingLevelManager;
+import consulo.language.editor.highlight.HighlightingLevelManager;
 import consulo.ide.impl.idea.codeInsight.problems.ProblemImpl;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.editor.HighlightRangeExtension;
+import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
+import consulo.language.editor.impl.internal.daemon.DaemonCodeAnalyzerEx;
+import consulo.language.editor.impl.internal.daemon.FileStatusMap;
 import consulo.language.editor.wolfAnalyzer.Problem;
 import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
 import consulo.ide.impl.psi.impl.search.PsiTodoSearchHelperImpl;

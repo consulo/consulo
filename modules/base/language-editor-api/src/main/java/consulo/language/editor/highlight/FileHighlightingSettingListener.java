@@ -29,7 +29,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.daemon.impl.analysis;
+package consulo.language.editor.highlight;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;

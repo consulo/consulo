@@ -16,7 +16,7 @@ import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.GeneralHighlightingPass;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.HighlightInfoProcessor;
+import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.ProgressableTextEditorHighlightingPass;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;

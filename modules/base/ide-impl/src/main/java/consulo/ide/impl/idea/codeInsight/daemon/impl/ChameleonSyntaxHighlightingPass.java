@@ -19,6 +19,7 @@ import consulo.language.ast.IFileElementType;
 import consulo.language.ast.ILazyParseableElementType;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighterFactory;
+import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
 import consulo.language.psi.PsiElement;

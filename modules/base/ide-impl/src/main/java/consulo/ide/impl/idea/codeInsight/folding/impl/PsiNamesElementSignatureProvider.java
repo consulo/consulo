@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.codeInsight.folding.impl;
 
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.language.editor.folding.AbstractElementSignatureProvider;
 import consulo.language.psi.*;
 
 import javax.annotation.Nonnull;

@@ -1,13 +1,13 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.codeHighlighting;
+package consulo.language.editor.impl.highlight;
 
-import consulo.ide.impl.idea.codeInsight.daemon.impl.DaemonCodeAnalyzerEx;
-import consulo.application.impl.internal.progress.DaemonProgressIndicator;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.colorScheme.EditorColorsScheme;
-import consulo.fileEditor.highlight.HighlightingPass;
 import consulo.document.Document;
+import consulo.fileEditor.highlight.HighlightingPass;
+import consulo.language.editor.impl.internal.daemon.DaemonCodeAnalyzerEx;
+import consulo.language.editor.impl.internal.daemon.DaemonProgressIndicator;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;

@@ -13,19 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util;
+package consulo.util.lang;
 
-import consulo.application.util.ConcurrentFactoryMap;
-
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author peter
  */
 public class ReflectionAssignabilityCache {
-  private final ConcurrentMap<Class, ConcurrentMap<Class, Boolean>> myCache = ConcurrentFactoryMap.createMap(anc -> ConcurrentFactoryMap.createMap(desc -> anc.isAssignableFrom(desc)));
+  private final ConcurrentMap<Class, ConcurrentMap<Class, Boolean>> myCache = new ConcurrentHashMap<>();
 
+  @SuppressWarnings("unchecked")
   public boolean isAssignable(Class ancestor, Class descendant) {
-    return ancestor == descendant || myCache.get(ancestor).get(descendant).booleanValue();
+    if (ancestor == descendant) {
+      return true;
+    }
+
+    ConcurrentMap<Class, Boolean> ancestorMap = myCache.computeIfAbsent(ancestor, it -> new ConcurrentHashMap<>());
+    return ancestorMap.computeIfAbsent(descendant, ancestor::isAssignableFrom);
   }
 }

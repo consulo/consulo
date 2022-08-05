@@ -17,14 +17,17 @@
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.codeHighlighting.MainHighlightingPassFactory;
+import consulo.language.editor.impl.highlight.MainHighlightingPassFactory;
 import consulo.language.editor.Pass;
-import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPass;
+import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
+import consulo.language.editor.impl.highlight.TextEditorHighlightingPass;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.ProgressableTextEditorHighlightingPass.EmptyPass;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
+import consulo.language.editor.impl.highlight.VisibleHighlightingPassFactory;
+import consulo.language.editor.impl.internal.daemon.FileStatusMap;
 import consulo.language.psi.PsiFile;
 
 import javax.annotation.Nonnull;

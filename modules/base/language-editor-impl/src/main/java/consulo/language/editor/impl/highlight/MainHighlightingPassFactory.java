@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeHighlighting;
+package consulo.language.editor.impl.highlight;
 
-import consulo.ide.impl.idea.codeInsight.daemon.impl.HighlightInfoProcessor;
 import consulo.document.Document;
 import consulo.language.psi.PsiFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

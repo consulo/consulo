@@ -10,11 +10,14 @@ import consulo.colorScheme.EditorColorsScheme;
 import consulo.document.Document;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPass;
-import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPassFactory;
 import consulo.ide.impl.idea.openapi.editor.ex.EditorMarkupModel;
 import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.Pass;
+import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
+import consulo.language.editor.impl.highlight.HighlightingSession;
+import consulo.language.editor.impl.highlight.TextEditorHighlightingPass;
+import consulo.language.editor.impl.highlight.TextEditorHighlightingPassFactory;
+import consulo.language.editor.impl.internal.daemon.DaemonCodeAnalyzerEx;
 import consulo.language.editor.internal.PsiUtilBase;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.psi.PsiDocumentManager;
@@ -77,7 +80,8 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
                                                       @Nullable Editor editor,
                                                       @Nonnull final List<? extends HighlightInfo> infos,
                                                       @Nonnull final TextRange priorityRange,
-                                                      @Nonnull final TextRange restrictedRange, final int groupId) {
+                                                      @Nonnull final TextRange restrictedRange,
+                                                      final int groupId) {
     final PsiFile psiFile = session.getPsiFile();
     final Project project = psiFile.getProject();
     final Document document = PsiDocumentManager.getInstance(project).getDocument(psiFile);

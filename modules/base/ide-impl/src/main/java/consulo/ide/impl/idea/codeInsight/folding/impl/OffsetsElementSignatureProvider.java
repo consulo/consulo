@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.codeInsight.folding.impl;
 
 import consulo.document.util.TextRange;
+import consulo.language.editor.folding.AbstractElementSignatureProvider;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

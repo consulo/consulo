@@ -25,7 +25,7 @@ import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.find.FindManager;
 import consulo.find.FindUsagesHandler;
-import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPass;
+import consulo.language.editor.impl.highlight.TextEditorHighlightingPass;
 import consulo.ide.impl.idea.codeInsight.highlighting.HighlightHandlerBase;
 import consulo.ide.impl.idea.codeInsight.highlighting.HighlightUsagesHandler;
 import consulo.ide.impl.idea.find.findUsages.FindUsagesManager;

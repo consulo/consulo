@@ -1,8 +1,8 @@
-package consulo.ide.impl.psi.impl.source.resolve.reference.impl;
+package consulo.language.psi;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.document.util.TextRange;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiReference;
 import consulo.language.util.IncorrectOperationException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -18,49 +18,59 @@ public class PsiDelegateReference implements PsiReference {
     myDelegate = delegate;
   }
 
+  @RequiredReadAction
   @Override
   public PsiElement getElement() {
     return myDelegate.getElement();
   }
 
+  @RequiredReadAction
+  @Nonnull
   @Override
   public TextRange getRangeInElement() {
     return myDelegate.getRangeInElement();
   }
 
+  @RequiredReadAction
   @Nullable
   @Override
   public PsiElement resolve() {
     return myDelegate.resolve();
   }
 
+  @RequiredReadAction
   @Nonnull
   @Override
   public String getCanonicalText() {
     return myDelegate.getCanonicalText();
   }
 
+  @RequiredWriteAction
   @Override
   public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
     return myDelegate.handleElementRename(newElementName);
   }
 
+  @RequiredWriteAction
   @Override
   public PsiElement bindToElement(@Nonnull PsiElement element) throws IncorrectOperationException {
     return myDelegate.bindToElement(element);
   }
 
+  @RequiredReadAction
   @Override
   public boolean isReferenceTo(PsiElement element) {
     return myDelegate.isReferenceTo(element);
   }
 
+  @RequiredReadAction
   @Nonnull
   @Override
   public Object[] getVariants() {
     return myDelegate.getVariants();
   }
 
+  @RequiredReadAction
   @Override
   public boolean isSoft() {
     return myDelegate.isSoft();

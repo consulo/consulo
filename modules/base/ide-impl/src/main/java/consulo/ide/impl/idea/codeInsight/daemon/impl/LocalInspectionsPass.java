@@ -16,7 +16,8 @@
 
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.ide.impl.idea.codeInsight.daemon.impl.analysis.HighlightingLevelManager;
+import consulo.language.editor.highlight.HighlightingLevelManager;
+import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
 import consulo.language.editor.intention.QuickFixAction;
 import consulo.language.editor.internal.intention.EmptyIntentionAction;
 import consulo.ide.impl.idea.codeInspection.InspectionEngine;

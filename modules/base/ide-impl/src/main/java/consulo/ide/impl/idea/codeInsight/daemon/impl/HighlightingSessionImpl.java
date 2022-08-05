@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.impl.internal.progress.DaemonProgressIndicator;
+import consulo.language.editor.impl.internal.daemon.DaemonProgressIndicator;
 import consulo.codeEditor.markup.RangeHighlighterEx;
 import consulo.ide.impl.idea.util.ConcurrencyUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -27,6 +27,7 @@ import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
 import consulo.colorScheme.EditorColorsScheme;
+import consulo.language.editor.impl.highlight.HighlightingSession;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
 import consulo.language.psi.PsiDocumentManager;

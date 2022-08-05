@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.navigation;
+package consulo.language.editor.moveUpDown;
 
 import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.fileEditor.structureView.StructureViewModel;
@@ -24,7 +24,8 @@ import consulo.fileEditor.structureView.tree.TreeElement;
 import consulo.language.editor.structureView.PsiStructureViewFactory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import gnu.trove.TIntArrayList;
+import consulo.util.collection.primitive.ints.IntList;
+import consulo.util.collection.primitive.ints.IntLists;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
@@ -35,7 +36,7 @@ public class MethodUpDownUtil {
   }
 
   public static int[] getNavigationOffsets(PsiFile file, final int caretOffset) {
-    for(MethodNavigationOffsetProvider provider: MethodNavigationOffsetProvider.EP_NAME.getExtensionList(file.getProject().getApplication())) {
+    for (MethodNavigationOffsetProvider provider : MethodNavigationOffsetProvider.EP_NAME.getExtensionList(file.getProject().getApplication())) {
       final int[] offsets = provider.getMethodNavigationOffsets(file, caretOffset);
       if (offsets != null && offsets.length > 0) {
         return offsets;
@@ -48,20 +49,20 @@ public class MethodUpDownUtil {
   }
 
   public static int[] offsetsFromElements(final Collection<PsiElement> array) {
-    TIntArrayList offsets = new TIntArrayList(array.size());
+    IntList offsets = IntLists.newArrayList(array.size());
     for (PsiElement element : array) {
       int offset = element.getTextOffset();
-      assert offset >= 0 : element + " ("+element.getClass()+"); offset: " + offset;
+      assert offset >= 0 : element + " (" + element.getClass() + "); offset: " + offset;
       offsets.add(offset);
     }
     offsets.sort();
-    return offsets.toNativeArray();
+    return offsets.toArray();
   }
 
   private static void addNavigationElements(Collection<PsiElement> array, PsiFile element) {
     StructureViewBuilder structureViewBuilder = PsiStructureViewFactory.createBuilderForFile(element);
     if (structureViewBuilder instanceof TreeBasedStructureViewBuilder) {
-      TreeBasedStructureViewBuilder builder = (TreeBasedStructureViewBuilder) structureViewBuilder;
+      TreeBasedStructureViewBuilder builder = (TreeBasedStructureViewBuilder)structureViewBuilder;
       StructureViewModel model = builder.createStructureViewModel(null);
       try {
         addStructureViewElements(model.getRoot(), array, element);
@@ -73,7 +74,7 @@ public class MethodUpDownUtil {
   }
 
   private static void addStructureViewElements(final TreeElement parent, final Collection<PsiElement> array, @Nonnull PsiFile file) {
-    for(TreeElement treeElement: parent.getChildren()) {
+    for (TreeElement treeElement : parent.getChildren()) {
       Object value = ((StructureViewTreeElement)treeElement).getValue();
       if (value instanceof PsiElement) {
         PsiElement element = (PsiElement)value;
