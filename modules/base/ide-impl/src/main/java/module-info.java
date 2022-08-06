@@ -747,7 +747,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.packaging.impl.ui;
   exports consulo.ide.impl.idea.packaging.impl.ui.actions;
   exports consulo.ide.impl.idea.packaging.ui;
-  exports consulo.ide.impl.idea.patterns.compiler;
   exports consulo.ide.impl.idea.peer.impl;
   exports consulo.ide.impl.idea.platform;
   exports consulo.ide.impl.idea.platform.templates.github;

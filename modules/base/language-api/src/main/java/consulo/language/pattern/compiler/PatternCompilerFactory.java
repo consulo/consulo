@@ -39,6 +39,9 @@ public abstract class PatternCompilerFactory {
   @Nonnull
   public abstract Class[] getPatternClasses(@Nullable final String alias);
 
+  /**
+   * Classes from {@link PatternClassProvider} extension
+   */
   @Nonnull
   public abstract <T> PatternCompiler<T> getPatternCompiler(@Nonnull Class[] patternClasses);
 

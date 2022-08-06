@@ -36,4 +36,5 @@ module consulo.language.impl {
   exports consulo.language.impl.internal.psi.pointer to consulo.ide.impl, consulo.test.impl, consulo.language.inject.impl;
   exports consulo.language.impl.internal.psi.stub to consulo.ide.impl;
   exports consulo.language.impl.internal.pom to consulo.ide.impl;
+  exports consulo.language.impl.internal.pattern.compiler to consulo.ide.impl;
 }

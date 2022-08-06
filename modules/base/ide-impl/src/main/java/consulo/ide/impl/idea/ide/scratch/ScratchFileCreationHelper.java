@@ -3,6 +3,8 @@
  */
 package consulo.ide.impl.idea.ide.scratch;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
 import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.dataContext.DataContext;
@@ -28,6 +30,7 @@ import java.util.function.Supplier;
 /**
  * @author gregsh
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class ScratchFileCreationHelper implements LanguageExtension {
   private static final ExtensionPointCacheKey<ScratchFileCreationHelper, ByLanguageValue<ScratchFileCreationHelper>> KEY =
           ExtensionPointCacheKey.create("ScratchFileCreationHelper", LanguageOneToOne.build(new ScratchFileCreationHelper() {

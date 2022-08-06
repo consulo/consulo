@@ -17,12 +17,7 @@
 package consulo.ide.impl.intelliLang.inject;
 
 import consulo.document.util.TextRange;
-import consulo.virtualFileSystem.fileType.FileTypeIdentifiableByVirtualFile;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.NullableFunction;
-import consulo.ide.impl.idea.util.ObjectUtils;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.intelliLang.Configuration;
 import consulo.ide.impl.intelliLang.inject.config.BaseInjection;
 import consulo.ide.impl.psi.injection.LanguageInjectionSupport;
@@ -38,11 +33,15 @@ import consulo.language.parser.ParserDefinition;
 import consulo.language.psi.*;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.project.Project;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.SmartList;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.Trinity;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.fileType.FileTypeIdentifiableByVirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -106,7 +105,7 @@ public class InjectorUtils {
     InjectedLanguage injectedLanguage = InjectedLanguage.create(injection.getInjectedLanguageId(), injection.getPrefix(), injection.getSuffix(), false);
 
     List<TextRange> ranges = injection.getInjectedArea(host);
-    List<Trinity<PsiLanguageInjectionHost, InjectedLanguage, TextRange>> list = ContainerUtil.newArrayListWithCapacity(ranges.size());
+    List<Trinity<PsiLanguageInjectionHost, InjectedLanguage, TextRange>> list = new ArrayList<>(ranges.size());
 
     for (TextRange range : ranges) {
       list.add(Trinity.create(host, injectedLanguage, range));
@@ -308,8 +307,8 @@ public class InjectorUtils {
     }
     Map<String, String> map = decodeMap(text);
     String languageId = map.get("language");
-    String prefix = ObjectUtils.notNull(map.get("prefix"), "");
-    String suffix = ObjectUtils.notNull(map.get("suffix"), "");
+    String prefix = ObjectUtil.notNull(map.get("prefix"), "");
+    String suffix = ObjectUtil.notNull(map.get("suffix"), "");
     BaseInjection injection = new BaseInjection(supportId);
     injection.setDisplayName(text);
     injection.setInjectedLanguageId(languageId);

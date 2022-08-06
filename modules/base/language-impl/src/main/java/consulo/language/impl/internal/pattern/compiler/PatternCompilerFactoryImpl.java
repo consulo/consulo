@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.patterns.compiler;
+package consulo.language.impl.internal.pattern.compiler;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.application.util.ConcurrentFactoryMap;
-import consulo.component.extension.ExtensionPointName;
-import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.language.pattern.compiler.PatternClassProvider;
 import consulo.language.pattern.compiler.PatternCompiler;
 import consulo.language.pattern.compiler.PatternCompilerFactory;
+import consulo.util.collection.ArrayUtil;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
@@ -31,16 +32,16 @@ import java.util.Map;
 
 /**
  * @author Gregory.Shrago
+ *
+ * TODO make it extension add/remove safe, use {@link consulo.component.extension.ExtensionPointCacheKey}
  */
 @Singleton
 @ServiceImpl
 public class PatternCompilerFactoryImpl extends PatternCompilerFactory {
-  public static final ExtensionPointName<PatternClassBean> PATTERN_CLASS_EP = ExtensionPointName.create("consulo.patterns.patternClass");
-
   private final Map<String, Class[]> myClasses = ConcurrentFactoryMap.createMap(key -> {
-    final ArrayList<Class> result = new ArrayList<Class>(1);
+    final ArrayList<Class> result = new ArrayList<>();
     final List<String> typeList = key == null ? null : Arrays.asList(key.split(",|\\s"));
-    for (PatternClassBean bean : PATTERN_CLASS_EP.getExtensions()) {
+    for (PatternClassProvider bean : Application.get().getExtensionPoint(PatternClassProvider.class)) {
       if (typeList == null || typeList.contains(bean.getAlias())) result.add(bean.getPatternClass());
     }
     return result.isEmpty() ? ArrayUtil.EMPTY_CLASS_ARRAY : result.toArray(new Class[result.size()]);
@@ -56,7 +57,8 @@ public class PatternCompilerFactoryImpl extends PatternCompilerFactory {
 
   @Nonnull
   @Override
+  @SuppressWarnings("unchecked")
   public <T> PatternCompiler<T> getPatternCompiler(@Nonnull Class[] patternClasses) {
-    return myCompilers.get(Arrays.asList(patternClasses));
+    return myCompilers.get(List.of(patternClasses));
   }
 }
