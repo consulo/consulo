@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.language.editor.impl.highlight.TextEditorHighlightingPass;
 import consulo.language.editor.highlight.HighlightingLevelManager;
-import consulo.ide.impl.idea.lang.ExternalLanguageAnnotators;
+import consulo.language.editor.annotation.ExternalLanguageAnnotators;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.language.editor.impl.internal.daemon.DaemonCodeAnalyzerEx;
 import consulo.ui.ex.awt.util.Update;

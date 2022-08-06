@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.lang;
+package consulo.language.editor.annotation;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.language.editor.annotation.ExternalAnnotator;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiFile;
 

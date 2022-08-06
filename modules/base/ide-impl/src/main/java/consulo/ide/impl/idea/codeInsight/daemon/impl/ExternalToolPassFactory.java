@@ -22,7 +22,7 @@ import consulo.codeEditor.Editor;
 import consulo.document.util.TextRange;
 import consulo.language.editor.impl.highlight.TextEditorHighlightingPass;
 import consulo.language.editor.impl.highlight.TextEditorHighlightingPassFactory;
-import consulo.ide.impl.idea.lang.ExternalLanguageAnnotators;
+import consulo.language.editor.annotation.ExternalLanguageAnnotators;
 import consulo.language.Language;
 import consulo.language.editor.Pass;
 import consulo.language.editor.annotation.ExternalAnnotator;

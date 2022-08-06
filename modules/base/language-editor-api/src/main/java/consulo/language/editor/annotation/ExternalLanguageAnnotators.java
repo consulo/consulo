@@ -17,12 +17,11 @@
 /*
  * @author max
  */
-package consulo.ide.impl.idea.lang;
+package consulo.language.editor.annotation;
 
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.Language;
-import consulo.language.editor.annotation.ExternalAnnotator;
 import consulo.language.psi.PsiFile;
+import consulo.util.collection.ContainerUtil;
 
 import javax.annotation.Nonnull;
 import java.util.List;
