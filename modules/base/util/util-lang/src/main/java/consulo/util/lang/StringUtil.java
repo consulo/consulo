@@ -2435,4 +2435,20 @@ public class StringUtil {
       return buffer.toString();
     }
   }
+
+  @Contract(pure = true)
+  @Nullable
+  public static String substringAfter(@Nonnull String text, @Nonnull String subString) {
+    int i = text.indexOf(subString);
+    if (i == -1) return null;
+    return text.substring(i + subString.length());
+  }
+
+  @Contract(pure = true)
+  @Nullable
+  public static String substringAfterLast(@Nonnull String text, @Nonnull String subString) {
+    int i = text.lastIndexOf(subString);
+    if (i == -1) return null;
+    return text.substring(i + subString.length());
+  }
 }

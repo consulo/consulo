@@ -21,7 +21,7 @@ import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.editor.refactoring.RefactoringActionHandler;
-import consulo.ide.impl.idea.refactoring.RefactoringActionHandlerFactory;
+import consulo.language.editor.refactoring.RefactoringActionHandlerFactory;
 import consulo.language.editor.refactoring.action.BaseRefactoringAction;
 import consulo.ide.impl.idea.refactoring.copy.CopyHandler;
 import consulo.ide.impl.idea.refactoring.move.MoveHandler;

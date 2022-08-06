@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.refactoring;
+package consulo.language.editor.refactoring;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.ide.ServiceManager;
+import consulo.application.Application;
 import consulo.dataContext.DataContext;
-import consulo.language.editor.refactoring.RefactoringActionHandler;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 
@@ -31,7 +30,7 @@ import consulo.project.Project;
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class RefactoringActionHandlerFactory {
   public static RefactoringActionHandlerFactory getInstance() {
-    return ServiceManager.getService(RefactoringActionHandlerFactory.class);
+    return Application.get().getInstance(RefactoringActionHandlerFactory.class);
   }
 
 
