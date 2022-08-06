@@ -44,8 +44,6 @@
   <import path="/META-INF/Task.xml"/>
 
   <extensionPoints>
-    <extensionPoint name="listOfElements" beanClass="consulo.component.extension.ListOfElementsEP"/>
-    <extensionPoint name="addTo.listOfElements" beanClass="consulo.component.extension.AddToElementEP"/>
     <extensionPoint name="search.topHitProvider" interface="consulo.ide.impl.idea.ide.SearchTopHitProvider"/>
     <extensionPoint name="search.optionContributor" interface="consulo.ide.impl.idea.ide.ui.search.SearchableOptionContributor"/>
     <extensionPoint name="referenceInjector" interface="consulo.language.inject.ReferenceInjector"/>

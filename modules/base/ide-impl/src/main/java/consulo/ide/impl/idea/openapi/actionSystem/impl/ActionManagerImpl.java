@@ -13,7 +13,6 @@ import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.registry.Registry;
 import consulo.component.ProcessCanceledException;
 import consulo.component.bind.InjectingBinding;
-import consulo.component.extension.ListOfElementsEP;
 import consulo.component.internal.inject.InjectingBindingHolder;
 import consulo.component.internal.inject.InjectingBindingLoader;
 import consulo.component.messagebus.MessageBusConnection;
@@ -330,9 +329,6 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     boolean canUseProjectAsDefault = !StringUtil.isEmpty(canUseProjectAsDefaultText) && Boolean.parseBoolean(canUseProjectAsDefaultText);
 
     action.setCanUseProjectAsDefault(canUseProjectAsDefault);
-
-    String requestModuleExtensionsValue = element.getAttributeValue(REQUIRE_MODULE_EXTENSIONS);
-    action.setModuleExtensionIds(ListOfElementsEP.getValuesOfVariableIfFound(requestModuleExtensionsValue));
   }
 
   private static boolean isSecondary(SimpleXmlElement element) {

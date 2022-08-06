@@ -15,7 +15,6 @@
  */
 package consulo.module.impl.internal.extension;
 
-import consulo.component.extension.ListOfElementsEP;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.content.ModuleRootManager;
@@ -29,27 +28,6 @@ import consulo.util.collection.ArrayUtil;
  * @since 2:26/10.09.13
  */
 public class ModuleExtensionConditionImpl implements ModuleExtensionCondition {
-
-  public static ModuleExtensionCondition create(String ids) {
-    String[] valuesOfVariableIfFound = ListOfElementsEP.getValuesOfVariableIfFound(ids);
-    if (valuesOfVariableIfFound.length == 0) {
-      return new ModuleExtensionCondition() {
-        @Override
-        public boolean value(ModuleExtension<?> rootModel) {
-          return true;
-        }
-
-        @Override
-        public boolean value(Project project) {
-          return true;
-        }
-      };
-    }
-    else {
-      return new ModuleExtensionConditionImpl(valuesOfVariableIfFound);
-    }
-  }
-
   private String[] myExtensionIds;
 
   private ModuleExtensionConditionImpl(String[] ids) {
