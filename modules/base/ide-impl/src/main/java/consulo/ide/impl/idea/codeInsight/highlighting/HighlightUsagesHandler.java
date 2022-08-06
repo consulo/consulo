@@ -38,7 +38,7 @@ import consulo.language.editor.highlight.ReadWriteAccessDetector;
 import consulo.language.editor.highlight.usage.HighlightUsagesHandlerBase;
 import consulo.language.editor.highlight.usage.HighlightUsagesHandlerFactory;
 import consulo.language.editor.inject.EditorWindow;
-import consulo.language.editor.internal.PsiUtilBase;
+import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.pom.PomTarget;
 import consulo.language.pom.PomTargetPsiElement;

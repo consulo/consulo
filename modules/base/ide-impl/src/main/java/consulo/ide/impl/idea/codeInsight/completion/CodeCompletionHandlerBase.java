@@ -33,7 +33,7 @@ import consulo.language.editor.CodeInsightSettings;
 import consulo.language.editor.action.SmartEnterProcessor;
 import consulo.language.editor.completion.*;
 import consulo.language.editor.completion.lookup.*;
-import consulo.language.editor.internal.PsiUtilBase;
+import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;

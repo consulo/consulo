@@ -37,7 +37,7 @@ import consulo.module.content.DirectoryIndex;
 import consulo.module.content.DirectoryInfo;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.editor.internal.PsiUtilBase;
+import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.psi.PsiUtilCore;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import consulo.annotation.access.RequiredReadAction;

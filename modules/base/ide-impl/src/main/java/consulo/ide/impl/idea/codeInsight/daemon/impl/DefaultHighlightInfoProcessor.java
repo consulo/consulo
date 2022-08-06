@@ -18,7 +18,7 @@ import consulo.language.editor.impl.highlight.HighlightingSession;
 import consulo.language.editor.impl.highlight.TextEditorHighlightingPass;
 import consulo.language.editor.impl.highlight.TextEditorHighlightingPassFactory;
 import consulo.language.editor.impl.internal.daemon.DaemonCodeAnalyzerEx;
-import consulo.language.editor.internal.PsiUtilBase;
+import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;

@@ -1,12 +1,11 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.language.editor.internal.matcher;
+package consulo.language.editor.completion;
 
 import consulo.application.util.matcher.*;
 import consulo.application.util.registry.Registry;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.language.editor.CodeInsightSettings;
-import consulo.language.editor.completion.CompletionUtilCore;
 import consulo.util.collection.FList;
 import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.StringUtil;

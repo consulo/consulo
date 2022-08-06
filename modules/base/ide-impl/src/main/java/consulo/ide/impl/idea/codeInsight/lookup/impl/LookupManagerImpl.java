@@ -21,7 +21,7 @@ import consulo.language.editor.completion.lookup.*;
 import consulo.language.editor.completion.lookup.event.LookupEvent;
 import consulo.language.editor.completion.lookup.event.LookupListener;
 import consulo.language.editor.hint.HintManager;
-import consulo.language.editor.internal.matcher.CamelHumpMatcher;
+import consulo.language.editor.completion.CamelHumpMatcher;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.event.DumbModeListener;

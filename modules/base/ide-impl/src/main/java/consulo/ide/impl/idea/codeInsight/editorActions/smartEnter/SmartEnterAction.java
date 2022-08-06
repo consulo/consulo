@@ -31,7 +31,7 @@ import consulo.language.Language;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.action.SmartEnterProcessor;
 import consulo.language.editor.completion.lookup.LookupManager;
-import consulo.language.editor.internal.PsiUtilBase;
+import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.ex.action.IdeActions;

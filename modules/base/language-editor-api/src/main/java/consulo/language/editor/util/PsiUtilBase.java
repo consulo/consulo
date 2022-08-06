@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package consulo.language.editor.internal;
+package consulo.language.editor.util;
 
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
-import consulo.language.editor.util.PsiEditorUtil;
 import consulo.language.file.FileViewProvider;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.*;
@@ -36,12 +35,7 @@ import java.util.*;
 
 public class PsiUtilBase extends PsiUtilCore {
   private static final Logger LOG = Logger.getInstance(PsiUtilBase.class);
-  public static final Comparator<Language> LANGUAGE_COMPARATOR = new Comparator<Language>() {
-    @Override
-    public int compare(@Nonnull Language o1, @Nonnull Language o2) {
-      return o1.getID().compareTo(o2.getID());
-    }
-  };
+  public static final Comparator<Language> LANGUAGE_COMPARATOR = (o1, o2) -> o1.getID().compareTo(o2.getID());
 
   public static int getRootIndex(PsiElement root) {
     ASTNode node = root.getNode();
@@ -67,7 +61,7 @@ public class PsiUtilBase extends PsiUtilCore {
   public static boolean isUnderPsiRoot(PsiFile root, PsiElement element) {
     PsiFile containingFile = element.getContainingFile();
     if (containingFile == root) return true;
-    for (PsiFile psiRoot : root.getPsiRoots()) {
+    for (PsiFile psiRoot : root.getViewProvider().getAllFiles()) {
       if (containingFile == psiRoot) return true;
     }
     PsiLanguageInjectionHost host = InjectedLanguageManager.getInstance(root.getProject()).getInjectionHost(element);

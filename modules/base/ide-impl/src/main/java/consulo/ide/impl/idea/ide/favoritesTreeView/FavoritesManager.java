@@ -44,7 +44,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.util.xml.serializer.DefaultJDOMExternalizer;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.editor.internal.PsiUtilBase;
+import consulo.language.editor.util.PsiUtilBase;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.EventDispatcher;

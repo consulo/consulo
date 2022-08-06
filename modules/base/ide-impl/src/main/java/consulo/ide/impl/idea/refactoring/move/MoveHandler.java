@@ -26,7 +26,7 @@ import consulo.dataContext.DataContext;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.refactoring.move.moveFilesOrDirectories.MoveFilesOrDirectoriesUtil;
 import consulo.language.editor.LangDataKeys;
-import consulo.language.editor.internal.PsiUtilBase;
+import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.editor.refactoring.RefactoringActionHandler;
 import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;

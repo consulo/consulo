@@ -44,7 +44,7 @@ import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.codeStyle.internal.IndentData;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.hint.HintManager;
-import consulo.language.editor.internal.PsiUtilBase;
+import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.language.file.FileViewProvider;
 import consulo.language.lexer.Lexer;

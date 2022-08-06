@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.codeInsight.daemon.*;
 import consulo.language.editor.WriteCommandAction;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.markup.GutterIconRenderer;
-import consulo.language.editor.internal.PsiUtilBase;
+import consulo.language.editor.util.PsiUtilBase;
 import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.FunctionUtil;
 import consulo.annotation.access.RequiredReadAction;

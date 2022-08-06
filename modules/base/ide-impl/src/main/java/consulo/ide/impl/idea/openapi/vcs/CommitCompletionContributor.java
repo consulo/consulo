@@ -28,7 +28,7 @@ import consulo.language.editor.completion.CompletionContributor;
 import consulo.language.editor.completion.CompletionParameters;
 import consulo.language.editor.completion.CompletionResultSet;
 import consulo.language.editor.completion.lookup.LookupElementBuilder;
-import consulo.language.editor.internal.matcher.CamelHumpMatcher;
+import consulo.language.editor.completion.CamelHumpMatcher;
 import consulo.language.plain.PlainTextLanguage;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;

@@ -42,7 +42,7 @@ import consulo.language.Language;
 import consulo.language.codeStyle.*;
 import consulo.language.codeStyle.internal.IndentData;
 import consulo.language.editor.inject.EditorWindow;
-import consulo.language.editor.internal.PsiUtilBase;
+import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.inject.impl.internal.InjectedCaret;
 import consulo.language.psi.PsiElement;

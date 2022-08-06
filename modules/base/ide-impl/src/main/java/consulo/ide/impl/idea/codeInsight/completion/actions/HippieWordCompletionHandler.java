@@ -30,7 +30,7 @@ import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.language.editor.FileModificationService;
 import consulo.language.editor.completion.lookup.LookupManager;
-import consulo.language.editor.internal.matcher.CamelHumpMatcher;
+import consulo.language.editor.completion.CamelHumpMatcher;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;

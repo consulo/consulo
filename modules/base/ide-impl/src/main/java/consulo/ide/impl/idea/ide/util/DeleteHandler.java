@@ -44,7 +44,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.util.PsiTreeUtil;
-import consulo.language.editor.internal.PsiUtilBase;
+import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.ide.impl.idea.refactoring.safeDelete.SafeDeleteDialog;

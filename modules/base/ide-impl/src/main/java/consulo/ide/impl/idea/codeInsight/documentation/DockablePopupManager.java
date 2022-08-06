@@ -17,7 +17,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
-import consulo.language.editor.internal.PsiUtilBase;
+import consulo.language.editor.util.PsiUtilBase;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.ToggleAction;

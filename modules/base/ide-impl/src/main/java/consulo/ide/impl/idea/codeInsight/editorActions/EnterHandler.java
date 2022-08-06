@@ -40,7 +40,7 @@ import consulo.language.editor.documentation.CodeDocumentationProvider;
 import consulo.language.editor.documentation.CompositeDocumentationProvider;
 import consulo.language.editor.documentation.DocumentationProvider;
 import consulo.language.editor.documentation.LanguageDocumentationProvider;
-import consulo.language.editor.internal.PsiUtilBase;
+import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.lexer.Lexer;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.psi.*;

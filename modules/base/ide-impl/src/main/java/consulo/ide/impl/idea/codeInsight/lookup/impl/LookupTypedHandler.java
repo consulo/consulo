@@ -24,7 +24,7 @@ import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.language.editor.AutoPopupController;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupManager;
-import consulo.language.editor.internal.PsiUtilBase;
+import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;

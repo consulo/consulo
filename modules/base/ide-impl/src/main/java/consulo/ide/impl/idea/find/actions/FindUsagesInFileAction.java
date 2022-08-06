@@ -25,7 +25,7 @@ import consulo.language.Language;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.hint.HintManager;
-import consulo.language.editor.internal.PsiUtilBase;
+import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.findUsage.EmptyFindUsagesProvider;
 import consulo.language.findUsage.FindUsagesProvider;
 import consulo.language.psi.PsiDocumentManager;

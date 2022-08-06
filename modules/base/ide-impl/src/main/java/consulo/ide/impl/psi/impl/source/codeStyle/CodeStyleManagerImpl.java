@@ -41,7 +41,7 @@ import consulo.ide.impl.psi.impl.source.codeStyle.lineIndent.FormatterBasedInden
 import consulo.language.impl.ast.FileElement;
 import consulo.language.impl.internal.psi.RecursiveTreeElementWalkingVisitor;
 import consulo.language.impl.ast.TreeElement;
-import consulo.language.editor.internal.PsiUtilBase;
+import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.util.CharTable;
 import consulo.language.util.IncorrectOperationException;
 import consulo.util.lang.function.ThrowableRunnable;

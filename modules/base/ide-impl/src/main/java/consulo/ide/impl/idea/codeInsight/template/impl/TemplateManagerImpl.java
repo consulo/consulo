@@ -37,7 +37,7 @@ import consulo.language.Language;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.completion.OffsetKey;
 import consulo.language.editor.impl.internal.completion.CompletionUtil;
-import consulo.language.editor.internal.PsiUtilBase;
+import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.editor.template.ExpressionContext;
 import consulo.language.editor.template.Template;
 import consulo.language.editor.template.TemplateManager;

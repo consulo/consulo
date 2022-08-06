@@ -47,7 +47,7 @@ import consulo.document.internal.DocumentEx;
 import consulo.document.util.TextRange;
 import consulo.fileEditor.FileEditorManager;
 import consulo.language.psi.SyntaxTraverser;
-import consulo.language.editor.internal.PsiUtilBase;
+import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.Language;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.ILazyParseableElementType;

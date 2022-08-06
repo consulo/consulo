@@ -16,7 +16,7 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.Language;
 import consulo.language.editor.completion.*;
 import consulo.language.editor.internal.TemplateConstants;
-import consulo.language.editor.internal.matcher.CamelHumpMatcher;
+import consulo.language.editor.completion.CamelHumpMatcher;
 import consulo.language.editor.template.context.TemplateActionContext;
 import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.language.pattern.PatternCondition;

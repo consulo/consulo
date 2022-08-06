@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.ide.impl;
 
 import consulo.ide.impl.idea.ide.StandardTargetWeights;
 import consulo.ide.impl.idea.ide.projectView.impl.PackageViewPane;
-import consulo.language.editor.internal.PsiUtilBase;
+import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.psi.PsiFileSystemItem;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;

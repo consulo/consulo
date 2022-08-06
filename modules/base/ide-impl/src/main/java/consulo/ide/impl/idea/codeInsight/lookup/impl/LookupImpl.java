@@ -3,7 +3,7 @@
 package consulo.ide.impl.idea.codeInsight.lookup.impl;
 
 import consulo.ide.impl.idea.codeInsight.completion.*;
-import consulo.language.editor.internal.matcher.CamelHumpMatcher;
+import consulo.language.editor.completion.CamelHumpMatcher;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.hint.HintManager;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;

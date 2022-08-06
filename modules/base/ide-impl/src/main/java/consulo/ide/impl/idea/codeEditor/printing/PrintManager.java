@@ -38,7 +38,7 @@ import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.editor.internal.PsiUtilBase;
+import consulo.language.editor.util.PsiUtilBase;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 
 import javax.annotation.Nonnull;

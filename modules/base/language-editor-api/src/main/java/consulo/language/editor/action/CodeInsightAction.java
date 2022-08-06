@@ -8,7 +8,7 @@ import consulo.dataContext.DataContext;
 import consulo.document.DocCommandGroupId;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.FileModificationService;
-import consulo.language.editor.internal.PsiUtilBase;
+import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.editor.util.LanguageEditorUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

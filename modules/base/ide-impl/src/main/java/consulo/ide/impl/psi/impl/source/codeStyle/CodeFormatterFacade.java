@@ -24,7 +24,7 @@ import consulo.language.ast.ASTNode;
 import consulo.language.codeStyle.*;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LanguageLineWrapPositionStrategy;
-import consulo.language.editor.internal.PsiUtilBase;
+import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.file.FileViewProvider;
 import consulo.language.file.inject.DocumentWindow;
 import consulo.language.file.light.LightVirtualFile;

@@ -28,7 +28,7 @@ import consulo.ide.impl.idea.ide.projectView.impl.ProjectAbstractTreeStructureBa
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectTreeBuilder;
 import consulo.ide.impl.idea.ide.util.gotoByName.*;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.editor.internal.PsiUtilBase;
+import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.editor.ui.TreeChooser;
 import consulo.language.editor.ui.TreeClassInheritorsProvider;
 import consulo.language.psi.PsiElement;

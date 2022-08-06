@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.codeInsight.completion;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.util.lang.Pair;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
-import consulo.language.editor.internal.PsiUtilBase;
+import consulo.language.editor.util.PsiUtilBase;
 import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.application.WriteAction;
 import consulo.codeEditor.Caret;

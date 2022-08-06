@@ -26,7 +26,7 @@ import consulo.fileEditor.structureView.TreeBasedStructureViewBuilder;
 import consulo.fileEditor.structureView.event.FileEditorPositionListener;
 import consulo.fileEditor.structureView.event.ModelListener;
 import consulo.fileEditor.structureView.tree.*;
-import consulo.language.editor.internal.PsiUtilBase;
+import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.util.collection.ArrayUtil;

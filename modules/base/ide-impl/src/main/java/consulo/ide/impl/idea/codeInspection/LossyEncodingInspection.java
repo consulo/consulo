@@ -38,7 +38,7 @@ import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.scheme.InspectionManager;
-import consulo.language.editor.internal.PsiUtilBase;
+import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.file.FileViewProvider;
 import consulo.language.impl.internal.psi.LoadTextUtil;

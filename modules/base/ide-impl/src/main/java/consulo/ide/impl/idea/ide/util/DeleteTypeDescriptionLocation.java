@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.ide.util;
 
 import consulo.ide.IdeBundle;
-import consulo.language.editor.internal.PsiUtilBase;
+import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.findUsage.FindUsagesProvider;
 import consulo.language.psi.*;
 

@@ -56,7 +56,7 @@ import consulo.ide.impl.idea.packageDependencies.DependencyValidationManager;
 import consulo.ide.impl.idea.packageDependencies.ui.*;
 import consulo.language.editor.wolfAnalyzer.ProblemListener;
 import consulo.language.psi.event.PsiTreeChangeAdapter;
-import consulo.language.editor.internal.PsiUtilBase;
+import consulo.language.editor.util.PsiUtilBase;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;

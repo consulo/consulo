@@ -30,7 +30,7 @@ import consulo.language.editor.action.BraceMatchingUtil;
 import consulo.language.editor.action.QuoteHandler;
 import consulo.language.editor.highlight.BraceMatcher;
 import consulo.language.editor.inject.EditorWindow;
-import consulo.language.editor.internal.PsiUtilBase;
+import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;

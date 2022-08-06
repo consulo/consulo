@@ -16,7 +16,7 @@
 package consulo.language.editor.impl.internal.parser;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.language.editor.internal.matcher.CamelHumpMatcher;
+import consulo.language.editor.completion.CamelHumpMatcher;
 import consulo.language.impl.parser.ParserPrefixMatcher;
 import jakarta.inject.Singleton;
 

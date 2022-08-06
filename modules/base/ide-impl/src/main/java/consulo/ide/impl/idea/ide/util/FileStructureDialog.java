@@ -31,7 +31,7 @@ import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
-import consulo.language.editor.internal.PsiUtilBase;
+import consulo.language.editor.util.PsiUtilBase;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.ScrollingUtil;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchBase;

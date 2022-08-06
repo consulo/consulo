@@ -27,6 +27,7 @@ import consulo.language.editor.DefaultHighlightingSettingProvider;
 import consulo.language.editor.FileHighlightingSetting;
 import consulo.language.editor.highlight.FileHighlightingSettingListener;
 import consulo.language.editor.highlight.HighlightingLevelManager;
+import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.module.content.ProjectFileIndex;
