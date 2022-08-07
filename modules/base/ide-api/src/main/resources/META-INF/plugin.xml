@@ -1270,10 +1270,6 @@
 
 
 
-    <dateTimeFormatter id="vcs.annotate" name="VCS Annotate"/>
-    <dateTimeFormatter id="vcs.log" name="VCS Log"/>
-
-
 
     <projectService serviceImplementation="consulo.ide.impl.idea.openapi.vcs.changes.committed.OutdatedVersionNotifier" lazy="false"/>
     <projectService serviceImplementation="consulo.ide.impl.idea.openapi.vcs.changes.committed.IncomingChangesIndicator" lazy="false"/>

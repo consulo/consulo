@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.refactoring.ui;
 
 import consulo.language.psi.PsiElement;
-import consulo.ide.impl.idea.refactoring.classMembers.MemberInfoBase;
+import consulo.language.editor.refactoring.classMember.MemberInfoBase;
 
 import javax.swing.*;
 

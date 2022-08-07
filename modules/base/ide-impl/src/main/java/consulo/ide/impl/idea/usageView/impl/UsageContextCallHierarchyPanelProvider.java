@@ -17,12 +17,12 @@ package consulo.ide.impl.idea.usageView.impl;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.ide.hierarchy.HierarchyProvider;
-import consulo.ide.impl.idea.ide.hierarchy.LanguageCallHierarchy;
 import consulo.ide.impl.idea.ide.hierarchy.actions.BrowseHierarchyActionBase;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.ide.impl.idea.usages.impl.UsageViewImpl;
 import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.hierarchy.CallHierarchyProvider;
+import consulo.language.editor.hierarchy.HierarchyProvider;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 import consulo.usage.*;
@@ -48,7 +48,7 @@ public class UsageContextCallHierarchyPanelProvider implements UsageContextPanel
 
     Project project = element.getProject();
     DataContext context = SimpleDataContext.getSimpleContext(CommonDataKeys.PSI_ELEMENT, element, SimpleDataContext.getProjectContext(project));
-    HierarchyProvider provider = BrowseHierarchyActionBase.findBestHierarchyProvider(LanguageCallHierarchy.INSTANCE, element, context);
+    HierarchyProvider provider = BrowseHierarchyActionBase.findBestHierarchyProvider(CallHierarchyProvider.class, element, context);
     if (provider == null) return false;
     PsiElement providerTarget = provider.getTarget(context);
     return providerTarget != null;

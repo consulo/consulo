@@ -763,7 +763,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.refactoring.actions;
   exports consulo.ide.impl.idea.refactoring.changeSignature;
   exports consulo.ide.impl.idea.refactoring.changeSignature.inplace;
-  exports consulo.ide.impl.idea.refactoring.classMembers;
   exports consulo.ide.impl.idea.refactoring.copy;
   exports consulo.ide.impl.idea.refactoring.extractMethod;
   exports consulo.ide.impl.idea.refactoring.extractSuperclass;

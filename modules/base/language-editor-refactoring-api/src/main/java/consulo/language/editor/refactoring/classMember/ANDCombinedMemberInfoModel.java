@@ -22,9 +22,10 @@
  * To change template for new class use
  * Code Style | Class Templates options (Tools | IDE Options).
  */
-package consulo.ide.impl.idea.refactoring.classMembers;
+package consulo.language.editor.refactoring.classMember;
 
 import consulo.language.psi.PsiElement;
+
 import javax.annotation.Nonnull;
 
 public class ANDCombinedMemberInfoModel<T extends PsiElement, M extends MemberInfoBase<T>> implements MemberInfoModel<T, M> {

@@ -14,12 +14,5 @@
   - limitations under the License.
   -->
 <consulo-plugin>
-  <extensionPoints>
-
-    <extensionPoint name="scratch.creationHelper" beanClass="consulo.language.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="consulo.ide.impl.idea.ide.scratch.ScratchFileCreationHelper"/>
-    </extensionPoint>
-  </extensionPoints>
-
 
 </consulo-plugin>

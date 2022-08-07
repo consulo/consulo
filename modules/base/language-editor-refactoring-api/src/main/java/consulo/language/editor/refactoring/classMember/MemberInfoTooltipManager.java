@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.refactoring.classMembers;
+package consulo.language.editor.refactoring.classMember;
 
 import consulo.language.psi.PsiElement;
+
 import java.util.HashMap;
 
 /**

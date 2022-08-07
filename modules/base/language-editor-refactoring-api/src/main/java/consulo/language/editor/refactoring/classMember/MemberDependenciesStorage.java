@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.refactoring.classMembers;
+package consulo.language.editor.refactoring.classMember;
 
-import consulo.ide.impl.idea.lang.LanguageDependentMembersRefactoringSupport;
 import consulo.language.psi.NavigatablePsiElement;
 import consulo.language.psi.PsiElement;
 
@@ -24,7 +23,6 @@ import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
 
 public class MemberDependenciesStorage<T extends NavigatablePsiElement, C extends PsiElement> {
   protected final C myClass;
@@ -52,7 +50,7 @@ public class MemberDependenciesStorage<T extends NavigatablePsiElement, C extend
   }
 
   private DependentMembersCollectorBase<T, C> getCollector() {
-    final ClassMembersRefactoringSupport factory = LanguageDependentMembersRefactoringSupport.INSTANCE.forLanguage(myClass.getLanguage());
+    final ClassMembersRefactoringSupport factory = ClassMembersRefactoringSupport.forLanguage(myClass.getLanguage());
     return factory != null ? factory.createDependentMembersCollector(myClass, mySuperClass) : null;
   }
 }

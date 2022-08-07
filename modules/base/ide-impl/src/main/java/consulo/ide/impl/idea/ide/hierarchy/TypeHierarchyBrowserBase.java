@@ -17,6 +17,7 @@
 package consulo.ide.impl.idea.ide.hierarchy;
 
 import consulo.language.editor.PlatformDataKeys;
+import consulo.language.editor.hierarchy.TypeHierarchyProvider;
 import consulo.localHistory.LocalHistory;
 import consulo.localHistory.LocalHistoryAction;
 import consulo.ui.ex.DeleteProvider;
@@ -166,10 +167,10 @@ public abstract class TypeHierarchyBrowserBase extends HierarchyBrowserBaseEx {
   }
 
 
-  protected static class BaseOnThisTypeAction extends BaseOnThisElementAction {
+  protected static class BaseOnThisTypeAction extends BaseOnThisElementAction<TypeHierarchyProvider> {
 
     public BaseOnThisTypeAction() {
-      super("", IdeActions.ACTION_TYPE_HIERARCHY, DATA_KEY, LanguageTypeHierarchy.INSTANCE);
+      super("", IdeActions.ACTION_TYPE_HIERARCHY, DATA_KEY, TypeHierarchyProvider.class);
     }
 
     @Override

@@ -22,7 +22,7 @@
  * To change template for new interface use 
  * Code Style | Class Templates options (Tools | IDE Options).
  */
-package consulo.ide.impl.idea.refactoring.classMembers;
+package consulo.language.editor.refactoring.classMember;
 
 import consulo.language.psi.PsiElement;
 

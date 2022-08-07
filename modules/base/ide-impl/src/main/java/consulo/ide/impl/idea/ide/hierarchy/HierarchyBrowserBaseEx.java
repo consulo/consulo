@@ -17,52 +17,52 @@
 package consulo.ide.impl.idea.ide.hierarchy;
 
 import consulo.application.AllIcons;
+import consulo.application.ApplicationManager;
+import consulo.application.ui.wm.IdeFocusManager;
+import consulo.content.scope.NamedScope;
+import consulo.content.scope.NamedScopesHolder;
+import consulo.dataContext.DataContext;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.ide.IdeBundle;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.ui.ex.OccurenceNavigator;
 import consulo.ide.impl.idea.ide.OccurenceNavigatorSupport;
 import consulo.ide.impl.idea.ide.PsiCopyPasteManager;
-import consulo.ide.impl.idea.ide.dnd.*;
+import consulo.ide.impl.idea.ide.dnd.TransferableWrapper;
 import consulo.ide.impl.idea.ide.dnd.aware.DnDAwareTree;
 import consulo.ide.impl.idea.ide.hierarchy.actions.BrowseHierarchyActionBase;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewTree;
 import consulo.ide.impl.idea.ide.util.scopeChooser.EditScopesDialog;
+import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.ide.impl.idea.util.NullableFunction;
 import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.PlatformDataKeys;
+import consulo.language.editor.hierarchy.HierarchyBrowser;
+import consulo.language.editor.hierarchy.HierarchyProvider;
+import consulo.language.psi.*;
+import consulo.logging.Logger;
+import consulo.navigation.Navigatable;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.OccurenceNavigator;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.EditSourceOnDoubleClickHandler;
+import consulo.ui.ex.awt.ScrollPaneFactory;
+import consulo.ui.ex.awt.action.ComboBoxAction;
 import consulo.ui.ex.awt.dnd.DnDAction;
 import consulo.ui.ex.awt.dnd.DnDDragStartBean;
 import consulo.ui.ex.awt.dnd.DnDManager;
 import consulo.ui.ex.awt.dnd.DnDSource;
+import consulo.ui.ex.awt.tree.Tree;
+import consulo.ui.ex.awt.util.Alarm;
+import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.tree.NodeDescriptor;
-import consulo.dataContext.DataContext;
-import consulo.language.OldLanguageExtension;
-import consulo.ui.ex.awt.action.ComboBoxAction;
-import consulo.application.ApplicationManager;
-import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
-import consulo.language.psi.*;
-import consulo.project.Project;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.action.*;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.application.ui.wm.IdeFocusManager;
-import consulo.navigation.Navigatable;
-import consulo.content.scope.NamedScope;
-import consulo.content.scope.NamedScopesHolder;
-import consulo.ui.ex.awt.util.ScreenUtil;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.awt.tree.Tree;
-import consulo.ui.ex.awt.util.Alarm;
-import consulo.ui.ex.awt.EditSourceOnDoubleClickHandler;
-import consulo.ide.impl.idea.util.NullableFunction;
-import consulo.logging.Logger;
-import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -77,7 +77,8 @@ import java.util.*;
 public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implements OccurenceNavigator {
   private static final Logger LOG = Logger.getInstance(HierarchyBrowserBaseEx.class);
 
-  @NonNls private static final String HELP_ID = "reference.toolWindows.hierarchy";
+  @NonNls
+  private static final String HELP_ID = "reference.toolWindows.hierarchy";
 
   protected final Hashtable<String, HierarchyTreeBuilder> myBuilders = new Hashtable<String, HierarchyTreeBuilder>();
   private final Hashtable<String, JTree> myType2TreeMap = new Hashtable<String, JTree>();
@@ -575,20 +576,17 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
     }
   }
 
-  static class BaseOnThisElementAction extends AnAction {
+  static class BaseOnThisElementAction<H extends HierarchyProvider> extends AnAction {
     private final String myActionId;
     private final Key<?> myBrowserDataKey;
     @Nonnull
-    private final OldLanguageExtension<HierarchyProvider> myProviderLanguageExtension;
+    private final Class<H> myHierarchyProviderClass;
 
-    BaseOnThisElementAction(@Nonnull String text,
-                            @Nonnull String actionId,
-                            @Nonnull Key<?> browserDataKey,
-                            @Nonnull OldLanguageExtension<HierarchyProvider> providerLanguageExtension) {
+    BaseOnThisElementAction(@Nonnull String text, @Nonnull String actionId, @Nonnull Key<?> browserDataKey, @Nonnull Class<H> hierarchyProviderClass) {
       super(text);
       myActionId = actionId;
       myBrowserDataKey = browserDataKey;
-      myProviderLanguageExtension = providerLanguageExtension;
+      myHierarchyProviderClass = hierarchyProviderClass;
     }
 
     @RequiredUIAccess
@@ -603,15 +601,9 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
 
       final String currentViewType = browser.myCurrentViewType;
       Disposer.dispose(browser);
-      final HierarchyProvider provider =
-              BrowseHierarchyActionBase.findProvider(myProviderLanguageExtension, selectedElement, selectedElement.getContainingFile(), event.getDataContext());
+      final H provider = BrowseHierarchyActionBase.findProvider(myHierarchyProviderClass, selectedElement, selectedElement.getContainingFile(), event.getDataContext());
       final HierarchyBrowser newBrowser = BrowseHierarchyActionBase.createAndAddToPanel(selectedElement.getProject(), provider, selectedElement);
-      ApplicationManager.getApplication().invokeLater(new Runnable() {
-        @Override
-        public void run() {
-          ((HierarchyBrowserBaseEx)newBrowser).changeView(correctViewType(browser, currentViewType));
-        }
-      });
+      ApplicationManager.getApplication().invokeLater(() -> ((HierarchyBrowserBaseEx)newBrowser).changeView(correctViewType(browser, currentViewType)));
     }
 
     protected String correctViewType(HierarchyBrowserBaseEx browser, String viewType) {
@@ -739,10 +731,8 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
     @Override
     public final JComponent createCustomComponent(final Presentation presentation, String place) {
       final JPanel panel = new JPanel(new GridBagLayout());
-      panel.add(new JLabel(IdeBundle.message("label.scope")),
-                new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(0, 5, 0, 0), 0, 0));
-      panel.add(super.createCustomComponent(presentation, place),
-                new GridBagConstraints(1, 0, 1, 1, 1, 1, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+      panel.add(new JLabel(IdeBundle.message("label.scope")), new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(0, 5, 0, 0), 0, 0));
+      panel.add(super.createCustomComponent(presentation, place), new GridBagConstraints(1, 0, 1, 1, 1, 1, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
       return panel;
     }
 

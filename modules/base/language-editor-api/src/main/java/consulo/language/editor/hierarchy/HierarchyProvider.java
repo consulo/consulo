@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.ide.hierarchy;
+package consulo.language.editor.hierarchy;
 
-import consulo.language.LanguageExtensionPoint;
 import consulo.dataContext.DataContext;
-import consulo.component.extension.ExtensionPointName;
+import consulo.language.extension.LanguageExtension;
 import consulo.language.psi.PsiElement;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -29,10 +29,7 @@ import javax.annotation.Nullable;
  *
  * @author yole
  */
-public interface HierarchyProvider {
-  ExtensionPointName<LanguageExtensionPoint> TYPE_EP_NAME = ExtensionPointName.create("consulo.typeHierarchyProvider");
-  ExtensionPointName<LanguageExtensionPoint> METHOD_EP_NAME = ExtensionPointName.create("consulo.methodHierarchyProvider");
-
+public interface HierarchyProvider extends LanguageExtension {
   /**
    * Returns the element for which the hierarchy should be displayed.
    *

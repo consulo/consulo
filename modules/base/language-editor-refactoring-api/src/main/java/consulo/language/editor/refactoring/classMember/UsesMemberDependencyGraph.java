@@ -22,14 +22,13 @@
  * To change template for new class use
  * Code Style | Class Templates options (Tools | IDE Options).
  */
-package consulo.ide.impl.idea.refactoring.classMembers;
+package consulo.language.editor.refactoring.classMember;
 
-import consulo.ide.impl.idea.lang.LanguageDependentMembersRefactoringSupport;
-import consulo.logging.Logger;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.psi.NavigatablePsiElement;
 import consulo.language.psi.PsiElement;
-import consulo.language.editor.refactoring.RefactoringBundle;
+import consulo.logging.Logger;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -131,8 +130,7 @@ public class UsesMemberDependencyGraph<T extends NavigatablePsiElement, C extend
 
   @Override
   public void memberChanged(M memberInfo) {
-    final ClassMembersRefactoringSupport support =
-      LanguageDependentMembersRefactoringSupport.INSTANCE.forLanguage(memberInfo.getMember().getLanguage());
+    final ClassMembersRefactoringSupport support = ClassMembersRefactoringSupport.forLanguage(memberInfo.getMember().getLanguage());
     if (support != null && support.isProperMember(memberInfo)) {
       myDependencies = null;
       myDependenciesToDependentMap = null;

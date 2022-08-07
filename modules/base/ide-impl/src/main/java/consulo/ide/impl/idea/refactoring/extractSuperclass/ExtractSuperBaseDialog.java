@@ -24,7 +24,7 @@ import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.editor.refactoring.BaseRefactoringProcessor;
 import consulo.language.editor.refactoring.RefactoringBundle;
-import consulo.ide.impl.idea.refactoring.classMembers.MemberInfoBase;
+import consulo.language.editor.refactoring.classMember.MemberInfoBase;
 import consulo.ide.impl.idea.refactoring.ui.DocCommentPanel;
 import consulo.language.editor.refactoring.ui.RefactoringDialog;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;

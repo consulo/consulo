@@ -17,15 +17,15 @@
 package consulo.ide.impl.idea.ide.hierarchy.actions;
 
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.hierarchy.LanguageTypeHierarchy;
+import consulo.language.editor.hierarchy.TypeHierarchyProvider;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
-import consulo.ui.annotation.RequiredUIAccess;
 
-public final class BrowseTypeHierarchyAction extends BrowseHierarchyActionBase {
+public final class BrowseTypeHierarchyAction extends BrowseHierarchyActionBase<TypeHierarchyProvider> {
   public BrowseTypeHierarchyAction() {
-    super(LanguageTypeHierarchy.INSTANCE);
+    super(TypeHierarchyProvider.class);
   }
 
   @RequiredUIAccess

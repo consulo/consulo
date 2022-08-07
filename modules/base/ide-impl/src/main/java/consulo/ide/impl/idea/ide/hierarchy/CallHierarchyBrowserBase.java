@@ -17,16 +17,17 @@
 package consulo.ide.impl.idea.ide.hierarchy;
 
 import consulo.application.AllIcons;
-import consulo.ide.IdeBundle;
 import consulo.application.ApplicationManager;
+import consulo.ide.IdeBundle;
+import consulo.language.editor.hierarchy.CallHierarchyProvider;
+import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 import consulo.ui.ex.action.*;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
-import consulo.language.psi.PsiElement;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 
 public abstract class CallHierarchyBrowserBase extends HierarchyBrowserBaseEx {
@@ -55,12 +56,8 @@ public abstract class CallHierarchyBrowserBase extends HierarchyBrowserBaseEx {
 
   @Override
   protected void prependActions(@Nonnull DefaultActionGroup actionGroup) {
-    actionGroup.add(new ChangeViewTypeActionBase(IdeBundle.message("action.caller.methods.hierarchy"),
-                                                 IdeBundle.message("action.caller.methods.hierarchy"),
-                                                 AllIcons.Hierarchy.Caller, CALLER_TYPE));
-    actionGroup.add(new ChangeViewTypeActionBase(IdeBundle.message("action.callee.methods.hierarchy"),
-                                                 IdeBundle.message("action.callee.methods.hierarchy"),
-                                                 AllIcons.Hierarchy.Callee, CALLEE_TYPE));
+    actionGroup.add(new ChangeViewTypeActionBase(IdeBundle.message("action.caller.methods.hierarchy"), IdeBundle.message("action.caller.methods.hierarchy"), AllIcons.Hierarchy.Caller, CALLER_TYPE));
+    actionGroup.add(new ChangeViewTypeActionBase(IdeBundle.message("action.callee.methods.hierarchy"), IdeBundle.message("action.callee.methods.hierarchy"), AllIcons.Hierarchy.Callee, CALLEE_TYPE));
     actionGroup.add(new AlphaSortAction());
     actionGroup.add(new ChangeScopeAction());
   }
@@ -117,10 +114,9 @@ public abstract class CallHierarchyBrowserBase extends HierarchyBrowserBaseEx {
     }
   }
 
-  protected static class BaseOnThisMethodAction extends BaseOnThisElementAction {
+  protected static class BaseOnThisMethodAction extends BaseOnThisElementAction<CallHierarchyProvider> {
     public BaseOnThisMethodAction() {
-      super(IdeBundle.message("action.base.on.this.method"), IdeActions.ACTION_CALL_HIERARCHY, CALL_HIERARCHY_BROWSER_DATA_KEY,
-            LanguageCallHierarchy.INSTANCE);
+      super(IdeBundle.message("action.base.on.this.method"), IdeActions.ACTION_CALL_HIERARCHY, CALL_HIERARCHY_BROWSER_DATA_KEY, CallHierarchyProvider.class);
     }
   }
 

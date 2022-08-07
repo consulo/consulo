@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.refactoring.classMembers;
+package consulo.language.editor.refactoring.classMember;
 
 import consulo.language.psi.NavigatablePsiElement;
 import consulo.language.psi.PsiElement;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -27,7 +28,7 @@ public abstract class AbstractUsesDependencyMemberInfoModel<T extends Navigatabl
   protected final C myClass;
 
   public AbstractUsesDependencyMemberInfoModel(C aClass, C superClass, boolean recursive) {
-    super(new UsesMemberDependencyGraph<T, C, M>(aClass, superClass, recursive), ERROR);
+    super(new UsesMemberDependencyGraph<T, C, M>(aClass, superClass, recursive), MemberInfoModel.ERROR);
     myClass = aClass;
     setTooltipProvider(new MemberInfoTooltipManager.TooltipProvider<T, M>() {
       @Override

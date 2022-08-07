@@ -3,10 +3,8 @@ package consulo.language.impl.psi.template;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.ProgressManager;
-import consulo.container.plugin.PluginIds;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
-import consulo.language.OldLanguageExtension;
 import consulo.language.ast.*;
 import consulo.language.file.FileViewProvider;
 import consulo.language.file.LanguageFileType;
@@ -35,7 +33,6 @@ import consulo.util.lang.lazy.LazyValue;
 import consulo.util.lang.reflect.ReflectionUtil;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.function.Function;
 import java.util.function.Supplier;
 

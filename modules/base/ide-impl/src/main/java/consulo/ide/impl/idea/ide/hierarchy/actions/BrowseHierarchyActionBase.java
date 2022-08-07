@@ -16,52 +16,58 @@
 
 package consulo.ide.impl.idea.ide.hierarchy.actions;
 
-import consulo.ide.impl.idea.ide.hierarchy.HierarchyBrowser;
-import consulo.ide.impl.idea.ide.hierarchy.HierarchyBrowserManager;
-import consulo.ide.impl.idea.ide.hierarchy.HierarchyProvider;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
+import consulo.component.extension.ExtensionPoint;
+import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.dataContext.DataContext;
-import consulo.language.OldLanguageExtension;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.language.editor.CommonDataKeys;
+import consulo.ide.impl.idea.ide.hierarchy.HierarchyBrowserManager;
+import consulo.language.editor.hierarchy.HierarchyBrowser;
+import consulo.language.editor.hierarchy.HierarchyProvider;
+import consulo.language.extension.ByLanguageValue;
+import consulo.language.extension.LanguageOneToMany;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
-import consulo.language.psi.PsiDocumentManager;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.collection.ContainerUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.annotation.access.RequiredReadAction;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-
 import java.awt.*;
 import java.util.List;
 
 /**
  * @author yole
  */
-public abstract class BrowseHierarchyActionBase extends AnAction {
-  private static final Logger LOG = Logger.getInstance(BrowseHierarchyActionBase.class);
-  private final OldLanguageExtension<HierarchyProvider> myExtension;
+public abstract class BrowseHierarchyActionBase<T extends HierarchyProvider> extends AnAction {
+  private static final ExtensionPointCacheKey CACHE_KEY =
+          ExtensionPointCacheKey.<HierarchyProvider, ByLanguageValue<List<HierarchyProvider>>>create("HierarchyProvider", LanguageOneToMany.build(false));
 
-  protected BrowseHierarchyActionBase(@Nonnull OldLanguageExtension<HierarchyProvider> extension) {
-    myExtension = extension;
+  private static final Logger LOG = Logger.getInstance(BrowseHierarchyActionBase.class);
+  private final Class<T> myHierarchyClass;
+
+  protected BrowseHierarchyActionBase(@Nonnull Class<T> hierarchyClass) {
+    myHierarchyClass = hierarchyClass;
   }
 
   @RequiredUIAccess
   @Override
   public final void actionPerformed(@Nonnull final AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     if (project == null) return;
 
     PsiDocumentManager.getInstance(project).commitAllDocuments(); // prevents problems with smart pointers creation
@@ -97,12 +103,7 @@ public abstract class BrowseHierarchyActionBase extends AnAction {
     contentManager.setSelectedContent(content);
     hierarchyBrowser.setContent(content);
 
-    final Runnable runnable = new Runnable() {
-      @Override
-      public void run() {
-        provider.browserActivated(hierarchyBrowser);
-      }
-    };
+    final Runnable runnable = () -> provider.browserActivated(hierarchyBrowser);
     ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.HIERARCHY).activate(runnable);
     return hierarchyBrowser;
   }
@@ -110,7 +111,8 @@ public abstract class BrowseHierarchyActionBase extends AnAction {
   @RequiredUIAccess
   @Override
   public void update(@Nonnull final AnActionEvent e) {
-    if (!myExtension.hasAnyExtensions()) {
+    Application application = Application.get();
+    if (!application.getExtensionPoint(myHierarchyClass).hasAnyExtensions()) {
       e.getPresentation().setVisible(false);
     }
     else {
@@ -142,16 +144,13 @@ public abstract class BrowseHierarchyActionBase extends AnAction {
   @Nullable
   @RequiredReadAction
   private HierarchyProvider getProvider(final AnActionEvent e) {
-    return findProvider(myExtension, e.getData(CommonDataKeys.PSI_ELEMENT), e.getData(CommonDataKeys.PSI_FILE), e.getDataContext());
+    return findProvider(myHierarchyClass, e.getData(PsiElement.KEY), e.getData(PsiFile.KEY), e.getDataContext());
   }
 
   @Nullable
   @RequiredReadAction
-  public static HierarchyProvider findProvider(@Nonnull OldLanguageExtension<HierarchyProvider> extension,
-                                               @Nullable PsiElement psiElement,
-                                               @Nullable PsiFile psiFile,
-                                               @Nonnull DataContext dataContext) {
-    final HierarchyProvider provider = findBestHierarchyProvider(extension, psiElement, dataContext);
+  public static <T extends HierarchyProvider> T findProvider(@Nonnull Class<T> extension, @Nullable PsiElement psiElement, @Nullable PsiFile psiFile, @Nonnull DataContext dataContext) {
+    final T provider = findBestHierarchyProvider(extension, psiElement, dataContext);
     if (provider == null) {
       return findBestHierarchyProvider(extension, psiFile, dataContext);
     }
@@ -160,12 +159,14 @@ public abstract class BrowseHierarchyActionBase extends AnAction {
 
   @Nullable
   @RequiredReadAction
-  public static HierarchyProvider findBestHierarchyProvider(final OldLanguageExtension<HierarchyProvider> extension,
-                                                            @Nullable PsiElement element,
-                                                            DataContext dataContext) {
+  @SuppressWarnings("unchecked")
+  public static <T extends HierarchyProvider> T findBestHierarchyProvider(final Class<T> extension, @Nullable PsiElement element, DataContext dataContext) {
     if (element == null) return null;
-    List<HierarchyProvider> providers = extension.allForLanguage(element.getLanguage());
-    for (HierarchyProvider provider : providers) {
+    ExtensionPoint<T> point = Application.get().getExtensionPoint(extension);
+    ByLanguageValue<List<T>> get = (ByLanguageValue<List<T>>)point.getOrBuildCache(CACHE_KEY);
+
+    List<T> providers = get.requiredGet(element.getLanguage());
+    for (T provider : providers) {
       PsiElement target = provider.getTarget(dataContext);
       if (target != null) {
         return provider;

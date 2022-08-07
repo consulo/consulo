@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.ide.hierarchy;
+package consulo.language.editor.hierarchy;
 
 import consulo.ui.ex.content.Content;
 

@@ -16,22 +16,25 @@
 
 package consulo.ide.impl.idea.usageView.impl;
 
-import consulo.ide.impl.idea.ide.hierarchy.*;
-import consulo.ide.impl.idea.ide.hierarchy.actions.BrowseHierarchyActionBase;
-import consulo.disposer.Disposable;
-import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
-import consulo.project.Project;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.language.psi.PsiElement;
-import consulo.usage.*;
+import consulo.ide.impl.idea.ide.hierarchy.CallHierarchyBrowserBase;
+import consulo.ide.impl.idea.ide.hierarchy.HierarchyBrowserBaseEx;
+import consulo.ide.impl.idea.ide.hierarchy.actions.BrowseHierarchyActionBase;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.ide.impl.idea.usages.impl.UsageContextPanelBase;
-import consulo.ide.impl.idea.usages.impl.UsageViewImpl;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.hierarchy.CallHierarchyProvider;
+import consulo.language.editor.hierarchy.HierarchyBrowser;
+import consulo.language.psi.PsiElement;
+import consulo.project.Project;
+import consulo.usage.UsageInfo;
+import consulo.usage.UsageViewBundle;
+import consulo.usage.UsageViewPresentation;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -81,7 +84,7 @@ public class UsageContextCallHierarchyPanel extends UsageContextPanelBase {
   @Nullable
   private static HierarchyBrowser createCallHierarchyPanel(@Nonnull PsiElement element) {
     DataContext context = SimpleDataContext.getSimpleContext(CommonDataKeys.PSI_ELEMENT, element, SimpleDataContext.getProjectContext(element.getProject()));
-    HierarchyProvider provider = BrowseHierarchyActionBase.findBestHierarchyProvider(LanguageCallHierarchy.INSTANCE, element, context);
+    CallHierarchyProvider provider = BrowseHierarchyActionBase.findBestHierarchyProvider(CallHierarchyProvider.class, element, context);
     if (provider == null) return null;
     PsiElement providerTarget = provider.getTarget(context);
     if (providerTarget == null) return null;

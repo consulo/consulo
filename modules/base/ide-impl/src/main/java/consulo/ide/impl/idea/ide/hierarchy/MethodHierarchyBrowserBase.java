@@ -17,13 +17,14 @@
 package consulo.ide.impl.idea.ide.hierarchy;
 
 import consulo.application.AllIcons;
-import consulo.ide.IdeBundle;
 import consulo.application.ApplicationManager;
-import consulo.project.Project;
-import consulo.ui.ex.awt.internal.laf.MultiLineLabelUI;
+import consulo.ide.IdeBundle;
+import consulo.language.editor.hierarchy.MethodHierarchyProvider;
 import consulo.language.psi.PsiElement;
-import consulo.ui.ex.awt.JBLabel;
+import consulo.project.Project;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.JBLabel;
+import consulo.ui.ex.awt.internal.laf.MultiLineLabelUI;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
@@ -53,13 +54,10 @@ public abstract class MethodHierarchyBrowserBase extends HierarchyBrowserBaseEx 
     return IdeBundle.message("hierarchy.method.next.occurence.name");
   }
 
-  protected static JPanel createStandardLegendPanel(final String methodDefinedText,
-                                                    final String methodNotDefinedLegallyText,
-                                                    final String methodShouldBeDefined) {
+  protected static JPanel createStandardLegendPanel(final String methodDefinedText, final String methodNotDefinedLegallyText, final String methodShouldBeDefined) {
     final JPanel panel = new JPanel(new GridBagLayout());
 
-    final GridBagConstraints gc =
-            new GridBagConstraints(0, 0, 1, 1, 1, 0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(3, 5, 0, 5), 0, 0);
+    final GridBagConstraints gc = new GridBagConstraints(0, 0, 1, 1, 1, 0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(3, 5, 0, 5), 0, 0);
 
     JLabel label = new JBLabel(methodDefinedText, AllIcons.Hierarchy.MethodDefined, SwingConstants.LEFT);
     label.setUI(new MultiLineLabelUI());
@@ -101,8 +99,7 @@ public abstract class MethodHierarchyBrowserBase extends HierarchyBrowserBaseEx 
 
   private final class ShowImplementationsOnlyAction extends ToggleAction {
     private ShowImplementationsOnlyAction() {
-      super(IdeBundle.message("action.hide.non.implementations"), null,
-            AllIcons.General.Filter); // TODO[anton] use own icon!!!
+      super(IdeBundle.message("action.hide.non.implementations"), null, AllIcons.General.Filter); // TODO[anton] use own icon!!!
     }
 
     @Override
@@ -131,10 +128,9 @@ public abstract class MethodHierarchyBrowserBase extends HierarchyBrowserBaseEx 
     }
   }
 
-  public static class BaseOnThisMethodAction extends BaseOnThisElementAction {
+  public static class BaseOnThisMethodAction extends BaseOnThisElementAction<MethodHierarchyProvider> {
     public BaseOnThisMethodAction() {
-      super(IdeBundle.message("action.base.on.this.method"), IdeActions.ACTION_METHOD_HIERARCHY, DATA_KEY,
-            LanguageMethodHierarchy.INSTANCE);
+      super(IdeBundle.message("action.base.on.this.method"), IdeActions.ACTION_METHOD_HIERARCHY, DATA_KEY, MethodHierarchyProvider.class);
     }
   }
 

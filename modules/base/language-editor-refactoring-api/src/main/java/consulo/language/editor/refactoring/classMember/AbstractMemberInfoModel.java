@@ -1,6 +1,7 @@
-package consulo.ide.impl.idea.refactoring.classMembers;
+package consulo.language.editor.refactoring.classMember;
 
 import consulo.language.psi.PsiElement;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -36,7 +37,7 @@ public abstract class AbstractMemberInfoModel<T extends PsiElement, M extends Me
 
   @Override
   public int checkForProblems(@Nonnull M member) {
-    return OK;
+    return MemberInfoModel.OK;
   }
 
   @Override

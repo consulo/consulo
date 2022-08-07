@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.refactoring.classMembers;
+package consulo.language.editor.refactoring.classMember;
 
-import consulo.ide.impl.idea.lang.LanguageDependentMembersRefactoringSupport;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.language.psi.NavigatablePsiElement;
-import consulo.language.psi.PsiNamedElement;
-import consulo.language.psi.PsiElement;
 import consulo.language.editor.refactoring.RefactoringBundle;
-import java.util.HashMap;
+import consulo.language.psi.NavigatablePsiElement;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiNamedElement;
+import consulo.util.lang.StringUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -45,8 +44,7 @@ public class UsedByMemberDependencyGraph<T extends NavigatablePsiElement, C exte
 
   @Override
   public void memberChanged(M memberInfo) {
-    final ClassMembersRefactoringSupport support =
-      LanguageDependentMembersRefactoringSupport.INSTANCE.forLanguage(memberInfo.getMember().getLanguage());
+    final ClassMembersRefactoringSupport support = ClassMembersRefactoringSupport.forLanguage(memberInfo.getMember().getLanguage());
     if (support != null && support.isProperMember(memberInfo)) {
       myDependencies = null;
       myDependenciesToDependent = null;
@@ -71,7 +69,7 @@ public class UsedByMemberDependencyGraph<T extends NavigatablePsiElement, C exte
 
   @Override
   public Set<? extends T> getDependent() {
-    if(myDependencies == null) {
+    if (myDependencies == null) {
       myDependencies = new HashSet<T>();
       myDependenciesToDependent = new HashMap<T, HashSet<T>>();
       for (T member : myMembers) {
@@ -98,7 +96,7 @@ public class UsedByMemberDependencyGraph<T extends NavigatablePsiElement, C exte
   @Override
   public Set<? extends T> getDependenciesOf(T member) {
     final Set<? extends T> dependent = getDependent();
-    if(!dependent.contains(member)) return null;
+    if (!dependent.contains(member)) return null;
     return myDependenciesToDependent.get(member);
   }
 

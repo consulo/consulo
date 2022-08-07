@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.ide.hierarchy;
-
-import consulo.language.OldLanguageExtension;
-import consulo.container.plugin.PluginIds;
-
-/**
- * Provides language-specific implementations of method hierarchy providers.
- *
- * @author yole
+/*
+ * Created by IntelliJ IDEA.
+ * User: dsl
+ * Date: 09.07.2002
+ * Time: 15:41:09
+ * To change template for new class use 
+ * Code Style | Class Templates options (Tools | IDE Options).
  */
-public class LanguageMethodHierarchy extends OldLanguageExtension<HierarchyProvider> {
-  public static final LanguageMethodHierarchy INSTANCE = new LanguageMethodHierarchy();
+package consulo.language.editor.refactoring.classMember;
 
-  public LanguageMethodHierarchy() {
-    super(PluginIds.CONSULO_BASE + ".methodHierarchyProvider");
-  }
+import consulo.language.psi.PsiElement;
+
+import java.util.EventListener;
+
+public interface MemberInfoChangeListener<T extends PsiElement, M extends MemberInfoBase<T>> extends EventListener {
+  void memberInfoChanged(MemberInfoChange<T, M> event);
 }
