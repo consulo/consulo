@@ -15,7 +15,8 @@
  */
 package consulo.ide.impl.idea.codeInsight.hint;
 
-import consulo.ide.impl.idea.codeInsight.highlighting.TooltipLinkHandler;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.editor.inspection.TooltipLinkHandler;
 import consulo.logging.Logger;
 import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
@@ -28,8 +29,15 @@ import javax.annotation.Nonnull;
  * Handles tooltip links in format <code>#navigation/file_path:offset</code>.
  * On a click opens specified file in an editor and positions caret to the given offset.
  */
+@ExtensionImpl
 public class NavigationLinkHandler extends TooltipLinkHandler {
   private static final Logger LOG = Logger.getInstance(NavigationLinkHandler.class);
+
+  @Nonnull
+  @Override
+  public String getPrefix() {
+    return "#navigation/";
+  }
 
   @Override
   public boolean handleLink(@Nonnull final String refSuffix, @Nonnull final Editor editor) {

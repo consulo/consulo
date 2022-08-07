@@ -1126,9 +1126,6 @@
                           <!--id="EnterBetweenBracesHandler"/>-->
     <!--<enterHandlerDelegate implementation="consulo.ide.impl.idea.codeInsight.editorActions.enter.EnterAfterJavadocTagHandler"/>-->
 
-    <codeInsight.linkHandler prefix="#inspection/" handlerClass="consulo.ide.impl.idea.codeInsight.hint.InspectionDescriptionLinkHandler"/>
-    <codeInsight.linkHandler prefix="#navigation/" handlerClass="consulo.ide.impl.idea.codeInsight.hint.NavigationLinkHandler"/>
-
     <!--<codeInsight.lineMarkerProvider language="" implementationClass="consulo.ide.impl.idea.execution.lineMarker.RunLineMarkerProvider"/>-->
     <!--<codeInsight.lineMarkerProvider language="" implementationClass="consulo.ide.impl.idea.ui.ColorLineMarkerProvider"/>-->
 

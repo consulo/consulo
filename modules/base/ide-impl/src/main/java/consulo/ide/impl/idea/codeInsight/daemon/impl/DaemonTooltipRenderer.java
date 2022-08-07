@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.codeInsight.daemon.impl;
 import consulo.language.editor.DaemonBundle;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.actions.ShowErrorDescriptionAction;
 import consulo.ide.impl.idea.codeInsight.hint.LineTooltipRenderer;
-import consulo.ide.impl.idea.codeInsight.hint.TooltipLinkHandlerEP;
+import consulo.language.editor.inspection.TooltipLinkHandlers;
 import consulo.ide.impl.idea.codeInspection.ui.InspectionNodeInfo;
 import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
@@ -51,11 +51,11 @@ class DaemonTooltipRenderer extends LineTooltipRenderer {
     for (String problem : problems) {
       final String ref = getLinkRef(problem);
       if (ref != null) {
-        String description = TooltipLinkHandlerEP.getDescription(ref, editor);
+        String description = TooltipLinkHandlers.getDescription(ref, editor);
         if (description != null) {
           description = InspectionNodeInfo.stripUIRefsFromInspectionDescription(UIUtil.getHtmlBody(new Html(description).setKeepFont(true)));
           text.append(getHtmlForProblemWithLink(problem)).append(END_MARKER).append("<p>").append("<span style=\"color:").append(ColorUtil.toHex(getDescriptionTitleColor())).append("\">")
-                  .append(TooltipLinkHandlerEP.getDescriptionTitle(ref, editor)).append(":</span>").append(description).append(UIUtil.BORDER_LINE);
+                  .append(TooltipLinkHandlers.getDescriptionTitle(ref, editor)).append(":</span>").append(description).append(UIUtil.BORDER_LINE);
         }
       }
       else {

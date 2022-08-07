@@ -5,6 +5,7 @@ import consulo.ide.impl.idea.ide.BrowserUtil;
 import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
 import consulo.ide.impl.idea.ide.TooltipEvent;
 import consulo.language.editor.hint.HintManager;
+import consulo.language.editor.inspection.TooltipLinkHandlers;
 import consulo.ui.ex.awt.HintHint;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.util.ColorUtil;
@@ -411,8 +412,7 @@ public class LineTooltipRenderer extends ComparableObject.Impl implements Toolti
   }
 
   private static boolean handle(@Nonnull final String ref, @Nonnull final Editor editor) {
-    // @kirillk please don't remove this call anymore
-    return TooltipLinkHandlerEP.handleLink(ref, editor);
+    return TooltipLinkHandlers.handleLink(ref, editor);
   }
 
   public static void correctLocation(Editor editor, JComponent tooltipComponent, Point p, boolean alignToRight, boolean expanded, int currentWidth) {

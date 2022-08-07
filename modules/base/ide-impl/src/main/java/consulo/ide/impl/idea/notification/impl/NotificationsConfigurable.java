@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.notification.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.*;
 import consulo.ide.impl.idea.notification.impl.ui.NotificationsConfigurablePanel;
 import consulo.disposer.Disposable;
@@ -29,6 +30,7 @@ import javax.swing.*;
 /**
  * @author spleaner
  */
+@ExtensionImpl
 public class NotificationsConfigurable implements Configurable, SearchableConfigurable, Configurable.NoScroll, ApplicationConfigurable {
   private NotificationsConfigurablePanel myComponent;
 

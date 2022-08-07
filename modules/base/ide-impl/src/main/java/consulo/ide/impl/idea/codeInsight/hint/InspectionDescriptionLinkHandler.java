@@ -15,7 +15,8 @@
  */
 package consulo.ide.impl.idea.codeInsight.hint;
 
-import consulo.ide.impl.idea.codeInsight.highlighting.TooltipLinkHandler;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.editor.inspection.TooltipLinkHandler;
 import consulo.language.editor.inspection.scheme.InspectionProfile;
 import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
@@ -33,8 +34,15 @@ import javax.annotation.Nonnull;
  *
  * @author peter
  */
+@ExtensionImpl
 public class InspectionDescriptionLinkHandler extends TooltipLinkHandler {
   private static final Logger LOG = Logger.getInstance(InspectionDescriptionLinkHandler.class);
+
+  @Nonnull
+  @Override
+  public String getPrefix() {
+    return "#inspection/";
+  }
 
   @Override
   public String getDescription(@Nonnull final String refSuffix, @Nonnull final Editor editor) {

@@ -13,18 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.highlighting;
+package consulo.language.editor.inspection;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.codeEditor.Editor;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
  * @author peter
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class TooltipLinkHandler {
   public static final String INSPECTION_INFO = "Inspection info";
+
+  @Nonnull
+  public abstract String getPrefix();
 
   /**
    * Override to handle mouse clicks on a link.
