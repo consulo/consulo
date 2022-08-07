@@ -120,10 +120,10 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
         ModuleRootLayerImpl moduleRootLayer = new ModuleRootLayerImpl(null, this);
         moduleRootLayer.loadState(moduleLayerElement, progressIndicator);
 
-        ModuleRootLayerImpl layer = myLayers.put(name, moduleRootLayer);
-        if (layer != null) {
+        ModuleRootLayerImpl oldLayer = myLayers.put(name, moduleRootLayer);
+        if (oldLayer != null) {
           // dispose old layout
-          Disposer.dispose(layer);
+          Disposer.dispose(oldLayer);
         }
       }
     }

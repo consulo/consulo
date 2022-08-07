@@ -73,7 +73,7 @@ public class ContentEntryImpl extends BaseModuleRootLayerChild implements Conten
     this(getUrlFrom(e), m);
 
     for (Element child : e.getChildren(ContentFolderImpl.ELEMENT_NAME)) {
-      myContentFolders.add(new ContentFolderImpl(child, this));
+      addFolderInternal(new ContentFolderImpl(child, this));
     }
   }
 
@@ -147,19 +147,19 @@ public class ContentEntryImpl extends BaseModuleRootLayerChild implements Conten
   @Override
   public ContentFolder addFolder(@Nonnull VirtualFile file, @Nonnull ContentFolderTypeProvider contentFolderType) {
     assertCanAddFolder(file);
-    return addFolder(new ContentFolderImpl(file, contentFolderType, this));
+    return addFolderInternal(new ContentFolderImpl(file, contentFolderType, this));
   }
 
   @Nonnull
   @Override
   public ContentFolder addFolder(@Nonnull String url, @Nonnull ContentFolderTypeProvider contentFolderType) {
     assertFolderUnderMe(url);
-    return addFolder(new ContentFolderImpl(url, contentFolderType, null, this));
+    return addFolderInternal(new ContentFolderImpl(url, contentFolderType, null, this));
   }
 
-  private ContentFolder addFolder(ContentFolderImpl f) {
+  private ContentFolder addFolderInternal(ContentFolderImpl f) {
     myContentFolders.add(f);
-    Disposer.register(this, f); //rewire source folder dispose parent from rootmodel to this content root
+    Disposer.register(this, f);
     return f;
   }
 
@@ -210,7 +210,7 @@ public class ContentEntryImpl extends BaseModuleRootLayerChild implements Conten
     for (ContentFolder contentFolder : myContentFolders) {
       if (contentFolder instanceof ClonableContentFolder) {
         ContentFolderImpl folder = (ContentFolderImpl)((ClonableContentFolder)contentFolder).cloneFolder(cloned);
-        cloned.addFolder(folder);
+        cloned.addFolderInternal(folder);
       }
     }
 

@@ -40,7 +40,6 @@ import consulo.module.content.layer.*;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.layer.orderEntry.RootPolicy;
 import consulo.module.extension.ModuleExtension;
-import consulo.module.impl.internal.layer.BaseModuleRootLayerChild;
 import consulo.module.impl.internal.layer.ModifiableModelCommitter;
 import consulo.module.impl.internal.layer.RootModelImpl;
 import consulo.module.impl.internal.layer.orderEntry.ModuleOrderEnumerator;
@@ -60,7 +59,7 @@ import java.util.function.Predicate;
 @Singleton
 @ServiceImpl
 public class ModuleRootManagerImpl extends ModuleRootManager implements Disposable {
-  private static final Logger LOGGER = Logger.getInstance(ModuleRootManagerImpl.class);
+  private static final Logger LOG = Logger.getInstance(ModuleRootManagerImpl.class);
 
   private final Module myModule;
   private RootModelImpl myRootModel;
@@ -131,10 +130,6 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements Disposab
         if (Disposer.isDebugMode()) {
           myModelCreations.remove(this);
         }
-
-        for (OrderEntry entry : ModuleRootManagerImpl.this.getOrderEntries()) {
-          assert !((BaseModuleRootLayerChild)entry).isDisposed();
-        }
       }
     };
     if (Disposer.isDebugMode()) {
@@ -172,7 +167,7 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements Disposab
   @RequiredWriteAction
   public void commitModel(RootModelImpl rootModel) {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
-    LOGGER.assertTrue(rootModel.myModuleRootManager == this);
+    LOG.assertTrue(rootModel.myModuleRootManager == this);
 
     final Project project = myModule.getProject();
     final ModifiableModuleModel moduleModel = ModuleManager.getInstance(project).getModifiableModel();
@@ -245,7 +240,7 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements Disposab
 
   @Override
   public <R> R processOrder(RootPolicy<R> policy, R initialValue) {
-    LOGGER.assertTrue(!myIsDisposed);
+    LOG.assertTrue(!myIsDisposed);
     return myRootModel.processOrder(policy, initialValue);
   }
 
@@ -274,49 +269,49 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements Disposab
   @Override
   @Nonnull
   public VirtualFile[] getContentRoots() {
-    LOGGER.assertTrue(!myIsDisposed);
+    LOG.assertTrue(!myIsDisposed);
     return myRootModel.getContentRoots();
   }
 
   @Override
   @Nonnull
   public String[] getContentRootUrls() {
-    LOGGER.assertTrue(!myIsDisposed);
+    LOG.assertTrue(!myIsDisposed);
     return myRootModel.getContentRootUrls();
   }
 
   @Nonnull
   @Override
   public String[] getContentFolderUrls(@Nonnull Predicate<ContentFolderTypeProvider> predicate) {
-    LOGGER.assertTrue(!myIsDisposed);
+    LOG.assertTrue(!myIsDisposed);
     return myRootModel.getContentFolderUrls(predicate);
   }
 
   @Nonnull
   @Override
   public VirtualFile[] getContentFolderFiles(@Nonnull Predicate<ContentFolderTypeProvider> predicate) {
-    LOGGER.assertTrue(!myIsDisposed);
+    LOG.assertTrue(!myIsDisposed);
     return myRootModel.getContentFolderFiles(predicate);
   }
 
   @Nonnull
   @Override
   public ContentFolder[] getContentFolders(@Nonnull Predicate<ContentFolderTypeProvider> predicate) {
-    LOGGER.assertTrue(!myIsDisposed);
+    LOG.assertTrue(!myIsDisposed);
     return myRootModel.getContentFolders(predicate);
   }
 
   @Override
   @Nonnull
   public String[] getExcludeRootUrls() {
-    LOGGER.assertTrue(!myIsDisposed);
+    LOG.assertTrue(!myIsDisposed);
     return myRootModel.getExcludeRootUrls();
   }
 
   @Override
   @Nonnull
   public VirtualFile[] getExcludeRoots() {
-    LOGGER.assertTrue(!myIsDisposed);
+    LOG.assertTrue(!myIsDisposed);
     return myRootModel.getExcludeRoots();
   }
 
@@ -329,7 +324,7 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements Disposab
   @Nonnull
   @Override
   public String[] getSourceRootUrls(boolean includingTests) {
-    LOGGER.assertTrue(!myIsDisposed);
+    LOG.assertTrue(!myIsDisposed);
     return myRootModel.getSourceRootUrls(includingTests);
   }
 
@@ -342,7 +337,7 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements Disposab
   @Override
   @Nonnull
   public VirtualFile[] getSourceRoots(final boolean includingTests) {
-    LOGGER.assertTrue(!myIsDisposed);
+    LOG.assertTrue(!myIsDisposed);
     return myRootModel.getSourceRoots(includingTests);
   }
 
@@ -361,14 +356,14 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements Disposab
   @Nullable
   @Override
   public ModuleRootLayer findLayerByName(@Nonnull String name) {
-    LOGGER.assertTrue(!myIsDisposed);
+    LOG.assertTrue(!myIsDisposed);
     return myRootModel.findLayerByName(name);
   }
 
   @Nonnull
   @Override
   public Map<String, ModuleRootLayer> getLayers() {
-    LOGGER.assertTrue(!myIsDisposed);
+    LOG.assertTrue(!myIsDisposed);
     return myRootModel.getLayers();
   }
 
@@ -402,7 +397,7 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements Disposab
       }
     }
     catch (InvalidDataException e) {
-      LOGGER.error(e);
+      LOG.error(e);
     }
   }
 }

@@ -17,7 +17,6 @@
 package consulo.module.impl.internal.layer;
 
 import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
 
 import javax.annotation.Nonnull;
 
@@ -31,8 +30,6 @@ public abstract class BaseModuleRootLayerChild implements Disposable {
 
   public BaseModuleRootLayerChild(@Nonnull ModuleRootLayerImpl moduleRootLayer) {
     myModuleRootLayer = moduleRootLayer;
-
-    Disposer.register(moduleRootLayer, this);
   }
 
   @Nonnull

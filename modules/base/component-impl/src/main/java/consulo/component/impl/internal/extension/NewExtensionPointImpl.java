@@ -125,6 +125,7 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
   private Map<ExtensionPointCacheKey, Object> myCaches;
   private long myModificationCount;
   private volatile CacheValue<T> myCacheValue;
+  private volatile Boolean myHasAnyExtension;
 
   @SuppressWarnings("unchecked")
   public NewExtensionPointImpl(String apiClassName,
@@ -156,6 +157,8 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
     myCacheValue = new CacheValue<>(null, new ArrayList<>(newBindings));
     // reset api class
     myApiClass = null;
+    // reset hasAnyExtensions
+    myHasAnyExtension = null;
   }
 
   @Nullable
@@ -300,12 +303,16 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
 
   @Override
   public boolean hasAnyExtensions() {
+    if (myHasAnyExtension != null) {
+      return myHasAnyExtension;
+    }
+
     CacheValue<T> cacheValue = myCacheValue;
 
     List<T> extensionCache = cacheValue.myUnwrapExtensionCache;
     // if we extensions already build - check list
     if (extensionCache != null) {
-      return !extensionCache.isEmpty();
+      return myHasAnyExtension = !extensionCache.isEmpty();
     }
 
     Class<T> extensionClass = getExtensionClass();
@@ -314,13 +321,13 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
     if (extensionClass != ExtensionExtender.class) {
       for (ExtensionExtender extender : Application.get().getExtensionPoint(ExtensionExtender.class).getExtensionList()) {
         if (extender.getExtensionClass() == extensionClass && extender.hasAnyExtensions(myComponentManager)) {
-          return true;
+          return myHasAnyExtension = true;
         }
       }
     }
 
     // at this moment myExtensionAdapters must exists
-    return !cacheValue.myInjectingBindings.isEmpty();
+    return myHasAnyExtension = !cacheValue.myInjectingBindings.isEmpty();
   }
 
   @Override

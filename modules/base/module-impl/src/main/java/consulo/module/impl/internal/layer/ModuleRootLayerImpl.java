@@ -833,11 +833,12 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
   @SuppressWarnings("unchecked")
   public <M extends CustomOrderEntryModel> CustomOrderEntry<M> addCustomOderEntry(@Nonnull CustomOrderEntryTypeProvider<M> type, @Nonnull M model) {
     OrderEntryType<?> entryType = OrderEntrySerializationUtil.findOrderEntryType(type.getId());
-    if (!(entryType instanceof CustomOrderEntryTypeProvider)) {
+    CustomOrderEntryTypeProvider otherProvider = entryType instanceof CustomOrderEntryTypeWrapper ? ((CustomOrderEntryTypeWrapper)entryType).getCustomOrderEntryTypeProvider() : null;
+    if (otherProvider != type) {
       throw new IllegalArgumentException("Type is not registered: " + type.getId());
     }
     model.bind(this);
-    CustomOrderEntryImpl<M> entry = new CustomOrderEntryImpl<>((CustomOrderEntryTypeWrapper<M>)type, this, model, true);
+    CustomOrderEntryImpl<M> entry = new CustomOrderEntryImpl<>(entryType, this, model, true);
     myOrderEntries.add(entry);
     return entry;
   }
@@ -917,8 +918,11 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
 
   public void removeAllContentEntries() {
     for (ContentEntry entry : myContent) {
-      if (entry instanceof BaseModuleRootLayerChild) {
-        Disposer.dispose((BaseModuleRootLayerChild)entry);
+      BaseModuleRootLayerChild implEntry = (BaseModuleRootLayerChild)entry;
+      Disposer.dispose(implEntry);
+
+      if (!implEntry.isDisposed()) {
+        LOG.error(implEntry + " is not disposed");
       }
     }
     myContent.clear();
@@ -927,7 +931,12 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
 
   public void removeAllOrderEntries() {
     for (OrderEntry entry : myOrderEntries) {
-      Disposer.dispose((OrderEntryBaseImpl)entry);
+      OrderEntryBaseImpl implOrderEntry = (OrderEntryBaseImpl)entry;
+      Disposer.dispose(implOrderEntry);
+
+      if (!implOrderEntry.isDisposed()) {
+        LOG.error(implOrderEntry + " is not disposed");
+      }
     }
     myOrderEntries.clear();
   }

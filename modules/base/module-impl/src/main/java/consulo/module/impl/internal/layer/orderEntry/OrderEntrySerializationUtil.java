@@ -15,6 +15,8 @@
  */
 package consulo.module.impl.internal.layer.orderEntry;
 
+import consulo.application.Application;
+import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.module.content.layer.ModuleRootLayer;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntryType;
@@ -24,19 +26,22 @@ import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 21.08.14
  */
 public class OrderEntrySerializationUtil {
+  private static final ExtensionPointCacheKey<OrderEntryType, Map<String, OrderEntryType>> ourOrderEntryTypeKey = ExtensionPointCacheKey.groupBy("OrderEntryType", OrderEntryType::getId);
+
   public static final String ORDER_ENTRY_ELEMENT_NAME = "orderEntry";
 
   public static final String ORDER_ENTRY_TYPE_ATTR = "type";
 
   @Nullable
   public static OrderEntryType<?> findOrderEntryType(@Nonnull String id) {
-    return OrderEntryType.EP_NAME.findFirstSafe(it -> it.getId().equals(id));
+    return Application.get().getExtensionPoint(OrderEntryType.class).getOrBuildCache(ourOrderEntryTypeKey).get(id);
   }
 
   @Nullable

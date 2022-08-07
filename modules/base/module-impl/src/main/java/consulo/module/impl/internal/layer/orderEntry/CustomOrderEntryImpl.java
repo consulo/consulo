@@ -97,8 +97,17 @@ public class CustomOrderEntryImpl<M extends CustomOrderEntryModel> extends Libra
   }
 
   @Override
+  public void dispose() {
+    super.dispose();
+
+    myProjectRootManagerImpl.removeOrderWithTracking(this);
+  }
+
+  @Override
   @SuppressWarnings("unchecked")
   public OrderEntry cloneEntry(ModuleRootLayerImpl layer) {
+    assert !isDisposed();
+
     M cloneModel = (M)myModel.clone();
     cloneModel.bind(layer);
 

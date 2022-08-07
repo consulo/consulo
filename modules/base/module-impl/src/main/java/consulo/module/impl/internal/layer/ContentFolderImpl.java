@@ -32,10 +32,7 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author dsl
@@ -50,10 +47,12 @@ public class ContentFolderImpl extends BaseModuleRootLayerChild
   @NonNls
   public static final String ELEMENT_NAME = "content-folder";
 
+  @Nonnull
   private final VirtualFilePointer myFilePointer;
   protected final ContentEntryImpl myContentEntry;
   private final ContentFolderTypeProvider myContentFolderType;
-  private Map<String, Object> myProperties;
+  // LinkedHashMap for saving order
+  private LinkedHashMap<String, Object> myProperties;
 
   private Map<Key, Object> myPropertiesByKeyCache;
 
@@ -73,7 +72,7 @@ public class ContentFolderImpl extends BaseModuleRootLayerChild
     super(contentEntry.getModuleRootLayer());
     myContentEntry = contentEntry;
     myContentFolderType = contentFolderType;
-    myProperties = map == null ? null : new HashMap<String, Object>(map);
+    myProperties = map == null ? null : new LinkedHashMap<>(map);
     myFilePointer = VirtualFilePointerManager.getInstance().create(url, this, null);
   }
 
@@ -92,7 +91,7 @@ public class ContentFolderImpl extends BaseModuleRootLayerChild
     super(contentEntry.getModuleRootLayer());
     myContentEntry = contentEntry;
     myContentFolderType = contentFolderType;
-    myProperties = properties;
+    myProperties = properties == null ? null : new LinkedHashMap<>(properties);
     myFilePointer = VirtualFilePointerManager.getInstance().duplicate(filePointer, this, null);
   }
 
@@ -239,7 +238,7 @@ public class ContentFolderImpl extends BaseModuleRootLayerChild
     }
     else {
       if (myProperties == null) {
-        myProperties = new HashMap<String, Object>();
+        myProperties = new LinkedHashMap<>();
       }
 
       myProperties.put(key.toString(), value);
@@ -285,7 +284,7 @@ public class ContentFolderImpl extends BaseModuleRootLayerChild
   @Nullable
   @Override
   public String toString() {
-    return myFilePointer == null ? null : getUrl();
+    return getUrl();
   }
 
   @Override
