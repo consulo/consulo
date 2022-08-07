@@ -1,22 +1,22 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.language.editor.intention.AbstractIntentionAction;
-import consulo.language.editor.inspection.PriorityAction;
-import consulo.ui.ex.action.ShortcutProvider;
-import consulo.codeEditor.EditorEx;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorPopupHelper;
 import consulo.component.util.Iconable;
 import consulo.dataContext.DataContext;
+import consulo.language.editor.inspection.PriorityAction;
+import consulo.language.editor.intention.AbstractIntentionAction;
 import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.intention.SyntheticIntentionAction;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
 import consulo.ui.image.Image;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
 /**
  * @author Dmitry Avdeev
  */
-class GutterIntentionAction extends AbstractIntentionAction implements Comparable<IntentionAction>, Iconable, ShortcutProvider, PriorityAction {
+class GutterIntentionAction extends AbstractIntentionAction implements Comparable<IntentionAction>, Iconable, ShortcutProvider, PriorityAction, SyntheticIntentionAction {
   private final AnAction myAction;
   private final int myOrder;
   private final Image myIcon;
