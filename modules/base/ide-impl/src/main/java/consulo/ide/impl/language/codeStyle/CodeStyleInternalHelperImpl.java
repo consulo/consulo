@@ -289,7 +289,7 @@ public class CodeStyleInternalHelperImpl implements CodeStyleInternalHelper {
 
   @Override
   public FormattingDocumentModel createFormattingDocumentModel(PsiFile file) {
-    return FormattingDocumentModel.create(file);
+    return FormattingDocumentModelImpl.createOn(file);
   }
 
   @Override
