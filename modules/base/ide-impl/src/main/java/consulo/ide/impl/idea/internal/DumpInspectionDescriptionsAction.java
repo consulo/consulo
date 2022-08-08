@@ -152,6 +152,6 @@ public class DumpInspectionDescriptionsAction extends AnAction implements DumbAw
   }
 
   private static void doNotify(final String message) {
-    Notifications.Bus.notify(new Notification("Actions", "Inspection descriptions dumped", message, NotificationType.INFORMATION));
+    Notifications.Bus.notify(new Notification(Notifications.SYSTEM_MESSAGES_GROUP, "Inspection descriptions dumped", message, NotificationType.INFORMATION));
   }
 }

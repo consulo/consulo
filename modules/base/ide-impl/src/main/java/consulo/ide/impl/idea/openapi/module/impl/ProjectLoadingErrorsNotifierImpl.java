@@ -17,14 +17,15 @@
 package consulo.ide.impl.idea.openapi.module.impl;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.CommonBundle;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.application.CommonBundle;
 import consulo.module.ConfigurationErrorDescription;
 import consulo.module.ConfigurationErrorType;
 import consulo.module.ProjectLoadingErrorsNotifier;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
+import consulo.project.impl.internal.ProjectNotificationGroups;
 import consulo.project.startup.StartupManager;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationType;
@@ -100,7 +101,7 @@ public class ProjectLoadingErrorsNotifierImpl extends ProjectLoadingErrorsNotifi
       final String invalidElements = getInvalidElementsString(type, descriptions);
       final String errorText = ProjectBundle.message("error.message.configuration.cannot.load") + " " + invalidElements + " <a href=\"\">Details...</a>";
 
-      Notifications.Bus.notify(new Notification("Project Loading Error", "Error Loading Project", errorText, NotificationType.ERROR, new NotificationListener() {
+      Notifications.Bus.notify(new Notification(ProjectNotificationGroups.Project, "Error Loading Project", errorText, NotificationType.ERROR, new NotificationListener() {
         @Override
         public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
           final List<ConfigurationErrorDescription> validDescriptions = ContainerUtil.findAll(descriptions, new Condition<ConfigurationErrorDescription>() {

@@ -16,11 +16,12 @@
 package consulo.project.ui.internal;
 
 import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.event.NotificationListener;
+import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.event.NotificationListener;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collection;
 
 /**
@@ -29,13 +30,13 @@ import java.util.Collection;
 public class UnknownMacroNotification extends Notification {
   private final Collection<String> myMacros;
 
-  public UnknownMacroNotification(@Nonnull String groupId,
+  public UnknownMacroNotification(@Nonnull NotificationGroup group,
                                   @Nonnull String title,
                                   @Nonnull String content,
                                   @Nonnull NotificationType type,
                                   @Nullable NotificationListener listener,
                                   @Nonnull Collection<String> macros) {
-    super(groupId, title, content, type, listener);
+    super(group, title, content, type, listener);
 
     myMacros = macros;
   }

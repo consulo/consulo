@@ -16,6 +16,7 @@
 package consulo.localize;
 
 import javax.annotation.Nonnull;
+import java.util.Locale;
 
 /**
  * @author VISTALL
@@ -29,7 +30,7 @@ public interface LocalizeKey {
 
   @Nonnull
   static LocalizeKey of(@Nonnull String localizeId, @Nonnull String key) {
-    return new DefaultLocalizeKey(localizeId, key);
+    return new DefaultLocalizeKey(localizeId, key.toLowerCase(Locale.ROOT));
   }
 
   @Nonnull

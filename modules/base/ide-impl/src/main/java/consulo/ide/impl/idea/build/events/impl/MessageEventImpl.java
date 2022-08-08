@@ -4,12 +4,12 @@ package consulo.ide.impl.idea.build.events.impl;
 import consulo.build.ui.event.BuildEventsNls;
 import consulo.build.ui.event.MessageEvent;
 import consulo.build.ui.event.MessageEventResult;
-import consulo.language.LangBundle;
-import consulo.project.Project;
 import consulo.navigation.Navigatable;
+import consulo.project.Project;
+import consulo.project.ui.notification.NotificationGroup;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Objects;
 
 /**
@@ -17,19 +17,19 @@ import java.util.Objects;
  */
 public class MessageEventImpl extends AbstractBuildEvent implements MessageEvent {
 
-  private final @Nonnull
-  Kind myKind;
-  private final @Nonnull
-  @BuildEventsNls.Title String myGroup;
+  @Nonnull
+  private final Kind myKind;
+  @Nonnull
+  private final NotificationGroup myGroup;
 
   public MessageEventImpl(@Nonnull Object parentId,
                           @Nonnull Kind kind,
-                          @Nullable @BuildEventsNls.Title String group,
+                          @Nonnull NotificationGroup group,
                           @Nonnull @BuildEventsNls.Message String message,
                           @Nullable @BuildEventsNls.Description String detailedMessage) {
     super(new Object(), parentId, System.currentTimeMillis(), message);
     myKind = kind;
-    myGroup = group == null ? LangBundle.message("build.event.title.other.messages") : group;
+    myGroup = group;
     setDescription(detailedMessage);
   }
 
@@ -46,7 +46,7 @@ public class MessageEventImpl extends AbstractBuildEvent implements MessageEvent
 
   @Nonnull
   @Override
-  public String getGroup() {
+  public NotificationGroup getGroup() {
     return myGroup;
   }
 
@@ -76,9 +76,7 @@ public class MessageEventImpl extends AbstractBuildEvent implements MessageEvent
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     MessageEventImpl event = (MessageEventImpl)o;
-    return Objects.equals(getMessage(), event.getMessage()) &&
-           Objects.equals(getDescription(), event.getDescription()) &&
-           Objects.equals(myGroup, event.myGroup);
+    return Objects.equals(getMessage(), event.getMessage()) && Objects.equals(getDescription(), event.getDescription()) && Objects.equals(myGroup, event.myGroup);
   }
 
   @Override

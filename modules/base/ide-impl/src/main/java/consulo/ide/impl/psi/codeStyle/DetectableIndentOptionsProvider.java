@@ -136,7 +136,7 @@ public class DetectableIndentOptionsProvider extends FileIndentOptionsProvider {
 
   private static final class DetectionDisabledNotification extends Notification {
     private DetectionDisabledNotification(Project project) {
-      super(NOTIFICATION_GROUP.getId(), ApplicationBundle.message("code.style.indent.detector.notification.content"), "", NotificationType.INFORMATION);
+      super(NOTIFICATION_GROUP, ApplicationBundle.message("code.style.indent.detector.notification.content"), "", NotificationType.INFORMATION);
       addAction(new ReEnableDetection(project, this));
       addAction(new ShowIndentDetectionOptionAction(ApplicationBundle.message("code.style.indent.provider.notification.settings")));
     }

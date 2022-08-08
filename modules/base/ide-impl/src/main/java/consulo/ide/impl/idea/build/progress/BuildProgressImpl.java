@@ -2,6 +2,7 @@
 package consulo.ide.impl.idea.build.progress;
 
 import consulo.build.ui.BuildDescriptor;
+import consulo.build.ui.BuildNotificationsGroups;
 import consulo.build.ui.progress.BuildProgress;
 import consulo.build.ui.progress.BuildProgressDescriptor;
 import consulo.build.ui.progress.BuildProgressListener;
@@ -117,7 +118,7 @@ class BuildProgressImpl implements BuildProgress<BuildProgressDescriptor> {
   @Nonnull
   @Override
   public BuildProgress<BuildProgressDescriptor> message(@Nonnull String title, @Nonnull String message, @Nonnull MessageEvent.Kind kind, @Nullable Navigatable navigatable) {
-    MessageEventImpl event = new MessageEventImpl(getId(), kind, null, title, message) {
+    MessageEventImpl event = new MessageEventImpl(getId(), kind, BuildNotificationsGroups.BUILD_ISSUES, title, message) {
       @Override
       public
       @Nullable

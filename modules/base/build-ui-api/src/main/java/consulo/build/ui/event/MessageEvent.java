@@ -3,6 +3,7 @@ package consulo.build.ui.event;
 
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
+import consulo.project.ui.notification.NotificationGroup;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -12,15 +13,18 @@ import javax.annotation.Nullable;
  */
 public interface MessageEvent extends BuildEvent {
   enum Kind {
-    ERROR, WARNING, INFO, STATISTICS, SIMPLE
+    ERROR,
+    WARNING,
+    INFO,
+    STATISTICS,
+    SIMPLE
   }
 
   @Nonnull
   Kind getKind();
 
   @Nonnull
-  @BuildEventsNls.Title
-  String getGroup();
+  NotificationGroup getGroup();
 
   @Nullable
   Navigatable getNavigatable(@Nonnull Project project);

@@ -34,9 +34,11 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.compiler.CompilerBundle;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
 import consulo.util.concurrent.AsyncResult;
@@ -56,6 +58,8 @@ import java.util.List;
  * @author nik
  */
 public class PackageFileWorker {
+  public static final NotificationGroup ARTIFACT_PACKAGING_GROUP = NotificationGroup.balloonGroup("artifactPackaging", LocalizeValue.localizeTODO("Artifact Packaging"));
+
   private static final Logger LOG = Logger.getInstance(PackageFileWorker.class);
   private final File myFile;
   private final String myRelativeOutputPath;
@@ -88,7 +92,7 @@ public class PackageFileWorker {
               }
               catch (IOException e) {
                 String message = CompilerBundle.message("message.tect.package.file.io.error", e.toString());
-                Notifications.Bus.notify(new Notification("Package File", "Cannot package file", message, NotificationType.ERROR));
+                Notifications.Bus.notify(new Notification(ARTIFACT_PACKAGING_GROUP, "Cannot package file", message, NotificationType.ERROR));
               }
             });
             callback.setDone();

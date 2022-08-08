@@ -19,6 +19,7 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.project.Project;
+import consulo.project.ui.notification.NotificationGroup;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.logging.Logger;
 import consulo.project.ui.notification.Notification;
@@ -28,6 +29,7 @@ import consulo.project.ui.notification.event.NotificationListener;
 
 import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.event.HyperlinkEvent;
 import java.util.*;
 
@@ -35,7 +37,7 @@ public abstract class GenericNotifierImpl<T, Key> {
   private final static Logger LOG = Logger.getInstance(GenericNotifierImpl.class);
   protected final Project myProject;
   @Nonnull
-  private final String myGroupId; //+- here
+  private final NotificationGroup myGroup;
   @Nonnull
   private final String myTitle;
   @Nonnull
@@ -45,8 +47,8 @@ public abstract class GenericNotifierImpl<T, Key> {
   private final MyListener myListener;
   private final Object myLock;
 
-  protected GenericNotifierImpl(final Project project, @Nonnull String groupId, @Nonnull String title, final @Nonnull NotificationType type) {
-    myGroupId = groupId;
+  protected GenericNotifierImpl(final Project project, @Nonnull NotificationGroup group, @Nonnull String title, final @Nonnull NotificationType type) {
+    myGroup = group;
     myTitle = title;
     myType = type;
     myProject = project;
@@ -109,7 +111,7 @@ public abstract class GenericNotifierImpl<T, Key> {
       if (myState.containsKey(key)) {
         return false;
       }
-      notification = new MyNotification(myGroupId, myTitle, getNotificationContent(obj), myType, myListener, obj);
+      notification = new MyNotification(myGroup, myTitle, getNotificationContent(obj), myType, myListener, obj);
       myState.put(key, notification);
     }
     final boolean state = onFirstNotification(obj);
@@ -167,7 +169,7 @@ public abstract class GenericNotifierImpl<T, Key> {
     }
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   protected T getObj(final Key key) {
     synchronized (myLock) {
       final MyNotification notification = myState.get(key);
@@ -178,13 +180,13 @@ public abstract class GenericNotifierImpl<T, Key> {
   protected class MyNotification extends Notification {
     private final T myObj;
 
-    protected MyNotification(@Nonnull String groupId,
+    protected MyNotification(@Nonnull NotificationGroup group,
                              @Nonnull String title,
                              @Nonnull String content,
                              @Nonnull NotificationType type,
-                             @javax.annotation.Nullable NotificationListener listener,
+                             @Nullable NotificationListener listener,
                              @Nonnull final T obj) {
-      super(groupId, title, content, type, listener);
+      super(group, title, content, type, listener);
       myObj = obj;
     }
 

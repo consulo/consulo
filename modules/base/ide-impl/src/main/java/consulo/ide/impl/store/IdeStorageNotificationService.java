@@ -16,15 +16,16 @@
 package consulo.ide.impl.store;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.project.internal.ProjectEx;
 import consulo.application.Application;
 import consulo.component.ComponentManager;
 import consulo.component.store.impl.internal.StorageNotificationService;
 import consulo.component.store.impl.internal.TrackingPathMacroSubstitutor;
-import consulo.project.impl.internal.ProjectStorageUtil;
-import consulo.project.ui.internal.UnknownMacroNotification;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.project.impl.internal.ProjectNotificationGroups;
+import consulo.project.impl.internal.ProjectStorageUtil;
+import consulo.project.internal.ProjectEx;
+import consulo.project.ui.internal.UnknownMacroNotification;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.Notifications;
 import consulo.project.ui.notification.NotificationsManager;
@@ -75,7 +76,7 @@ public class IdeStorageNotificationService implements StorageNotificationService
 
       if (!macros.isEmpty()) {
         LOG.warn("Reporting unknown path macros " + macros + " in component " + componentName);
-        
+
         String format = "<p><i>%s</i> %s undefined. <a href=\"define\">Fix it</a></p>";
         String productName = Application.get().getName().get();
         String content = String.format(format, StringUtil.join(macros, ", "), macros.size() == 1 ? "is" : "are") +
@@ -88,7 +89,7 @@ public class IdeStorageNotificationService implements StorageNotificationService
                          "and " +
                          productName +
                          " cannot restore those paths.";
-        new UnknownMacroNotification("Load Error", "Load error: undefined path variables", content, consulo.project.ui.notification.NotificationType.ERROR,
+        new UnknownMacroNotification(ProjectNotificationGroups.Project, "Load error: undefined path variables", content, consulo.project.ui.notification.NotificationType.ERROR,
                                      (notification, event) -> ProjectStorageUtil.checkUnknownMacros((ProjectEx)project, true), macros).notify((Project)project);
       }
     });

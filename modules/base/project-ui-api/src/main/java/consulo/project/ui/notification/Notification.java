@@ -15,7 +15,6 @@
  */
 package consulo.project.ui.notification;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
@@ -67,7 +66,8 @@ public class Notification {
    */
   public enum CollapseActionsDirection {
     KEEP_LEFTMOST,
-    KEEP_RIGHTMOST}
+    KEEP_RIGHTMOST
+  }
 
   public final String id;
 
@@ -88,35 +88,6 @@ public class Notification {
   private Boolean myImportant;
   private WeakReference<Balloon> myBalloonRef;
   private final long myTimestamp;
-
-
-  @Deprecated(forRemoval = true)
-  @DeprecationInfo("Use with NotificationGroup parameter")
-  public Notification(@Nonnull String groupDisplayId, @Nonnull String title, @Nonnull String content, @Nonnull NotificationType type) {
-    this(groupDisplayId, title, content, type, null);
-  }
-
-  /**
-   * @param groupDisplayId this should be a human-readable, capitalized string like "Facet Detector".
-   *                       It will appear in "Notifications" configurable.
-   * @param title          notification title
-   * @param content        notification content
-   * @param type           notification type
-   * @param listener       notification lifecycle listener
-   */
-  @Deprecated(forRemoval = true)
-  @DeprecationInfo("Use with NotificationGroup parameter")
-  public Notification(@Nonnull String groupDisplayId, @Nonnull String title, @Nonnull String content, @Nonnull NotificationType type, @Nullable NotificationListener listener) {
-    myGroupId = groupDisplayId;
-    myTitle = title;
-    myContent = content;
-    myType = type;
-    myListener = listener;
-    myTimestamp = System.currentTimeMillis();
-
-    assertHasTitleOrContent();
-    id = calculateId(this);
-  }
 
   public Notification(@Nonnull NotificationGroup group, @Nonnull String title, @Nonnull String content, @Nonnull NotificationType type) {
     this(group, title, content, type, null);

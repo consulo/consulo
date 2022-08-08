@@ -32,11 +32,13 @@ import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 import consulo.module.Module;
+import consulo.platform.base.localize.ApplicationLocalize;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.ProjectCoreUtil;
 import consulo.project.content.GeneratedSourcesFilter;
 import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationType;
 import consulo.ui.ex.awt.Messages;
 import consulo.undoRedo.CommandProcessor;
@@ -55,6 +57,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
 public abstract class AbstractLayoutCodeProcessor {
+  public static final NotificationGroup ReformatChangedTextTooBigNotificationGroup =
+          NotificationGroup.balloonGroup("reformat.changed.text.file.too.big.notification.groupId", ApplicationLocalize.reformatChangedTextFileTooBigNotificationGroupid());
+
   private static final Logger LOG = Logger.getInstance(AbstractLayoutCodeProcessor.class);
 
   @Nonnull
@@ -550,9 +555,8 @@ public abstract class AbstractLayoutCodeProcessor {
   void handleFileTooBigException(Logger logger, FilesTooBigForDiffException e, @Nonnull PsiFile file) {
     logger.info("Error while calculating changed ranges for: " + file.getVirtualFile(), e);
     if (!ApplicationManager.getApplication().isUnitTestMode()) {
-      Notification notification =
-              new Notification(ApplicationBundle.message("reformat.changed.text.file.too.big.notification.groupId"), ApplicationBundle.message("reformat.changed.text.file.too.big.notification.title"),
-                               ApplicationBundle.message("reformat.changed.text.file.too.big.notification.text", file.getName()), NotificationType.INFORMATION);
+      Notification notification = new Notification(ReformatChangedTextTooBigNotificationGroup, ApplicationBundle.message("reformat.changed.text.file.too.big.notification.title"),
+                                                   ApplicationBundle.message("reformat.changed.text.file.too.big.notification.text", file.getName()), NotificationType.INFORMATION);
       notification.notify(file.getProject());
     }
   }

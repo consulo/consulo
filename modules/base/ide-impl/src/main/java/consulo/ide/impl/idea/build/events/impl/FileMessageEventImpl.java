@@ -1,16 +1,17 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.build.events.impl;
 
-import consulo.ide.impl.idea.build.FileNavigatable;
 import consulo.build.ui.FilePosition;
 import consulo.build.ui.event.BuildEventsNls;
 import consulo.build.ui.event.FileMessageEvent;
 import consulo.build.ui.event.FileMessageEventResult;
-import consulo.project.Project;
+import consulo.ide.impl.idea.build.FileNavigatable;
 import consulo.navigation.Navigatable;
+import consulo.project.Project;
+import consulo.project.ui.notification.NotificationGroup;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Objects;
 
 /**
@@ -22,7 +23,7 @@ public class FileMessageEventImpl extends MessageEventImpl implements FileMessag
 
   public FileMessageEventImpl(@Nonnull Object parentId,
                               @Nonnull Kind kind,
-                              @Nullable @BuildEventsNls.Title String group,
+                              @Nonnull NotificationGroup group,
                               @Nonnull @BuildEventsNls.Message String message,
                               @Nullable @BuildEventsNls.Description String detailedMessage,
                               @Nonnull FilePosition filePosition) {
@@ -57,7 +58,9 @@ public class FileMessageEventImpl extends MessageEventImpl implements FileMessag
   }
 
   @Override
-  public @Nullable String getHint() {
+  public
+  @Nullable
+  String getHint() {
     String hint = super.getHint();
     if (hint == null && myFilePosition.getStartLine() >= 0) {
       hint = ":" + (myFilePosition.getStartLine() + 1);

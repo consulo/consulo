@@ -25,6 +25,7 @@ import javax.annotation.Nullable;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -73,7 +74,7 @@ class LocalizeFileState {
 
         LocalizeKeyText instance = new LocalizeKeyText(StringUtil.notNullize(value.get("text")));
 
-        map.put(key, instance);
+        map.put(key.toLowerCase(Locale.ROOT), instance);
       }
     }
     catch (Exception e) {

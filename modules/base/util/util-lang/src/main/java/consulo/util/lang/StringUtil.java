@@ -1101,6 +1101,15 @@ public class StringUtil {
 
   @Nonnull
   @Contract(pure = true)
+  public static String trimEnd(@Nonnull String s, char suffix) {
+    if (endsWithChar(s, suffix)) {
+      return s.substring(0, s.length() - 1);
+    }
+    return s;
+  }
+
+  @Nonnull
+  @Contract(pure = true)
   public static String trimEnd(@Nonnull String s, @NonNls @Nonnull String suffix, boolean ignoreCase) {
     boolean endsWith = ignoreCase ? endsWithIgnoreCase(s, suffix) : s.endsWith(suffix);
     if (endsWith) {

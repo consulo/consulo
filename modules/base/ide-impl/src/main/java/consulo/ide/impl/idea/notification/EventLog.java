@@ -176,7 +176,7 @@ public class EventLog {
           return "<a href=\"" + index++ + "\">" + action.getTemplatePresentation().getText() + "</a>";
         }
       }, isLongLine(actions) ? "<br>" : "&nbsp;") + "</p>";
-      Notification n = new Notification("", "", ".", NotificationType.INFORMATION, new NotificationListener() {
+      Notification n = new Notification(Notifications.SYSTEM_MESSAGES_GROUP, "", ".", NotificationType.INFORMATION, new NotificationListener() {
         @Override
         public void hyperlinkUpdate(@Nonnull Notification n, @Nonnull HyperlinkEvent event) {
           Notification.fire(notification, notification.getActions().get(Integer.parseInt(event.getDescription())));

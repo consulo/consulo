@@ -33,6 +33,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.event.ProjectManagerListener;
 import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.ui.UIAccess;
@@ -144,7 +145,7 @@ public class StatisticsSendManager implements Disposable {
   }
 
   // FIXME [VISTALL] at current moment we not show this notification
-  public Notification createNotification(@Nonnull final String groupDisplayId, @Nullable NotificationListener listener) {
+  public Notification createNotification(@Nonnull final NotificationGroup group, @Nullable NotificationListener listener) {
     final String fullProductName = ApplicationNamesInfo.getInstance().getFullProductName();
     final String companyName = ApplicationInfo.getInstance().getCompanyName();
 
@@ -154,6 +155,6 @@ public class StatisticsSendManager implements Disposable {
 
     String title = "Help improve " + fullProductName + " by sending anonymous usage statistics to " + companyName;
 
-    return new Notification(groupDisplayId, title, text, NotificationType.INFORMATION, listener);
+    return new Notification(group, title, text, NotificationType.INFORMATION, listener);
   }
 }

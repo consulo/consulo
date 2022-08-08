@@ -1,23 +1,24 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.build;
 
-import consulo.build.ui.progress.BuildProgressListener;
 import consulo.build.ui.event.Failure;
 import consulo.build.ui.issue.BuildIssue;
 import consulo.build.ui.issue.BuildIssueQuickFix;
-import consulo.execution.ui.console.HyperlinkInfo;
+import consulo.build.ui.progress.BuildProgressListener;
+import consulo.dataContext.DataProvider;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.console.ConsoleViewContentType;
-import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.event.NotificationListener;
-import consulo.project.ui.notification.NotificationType;
-import consulo.dataContext.DataProvider;
-import consulo.ide.impl.idea.openapi.diagnostic.Logger;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.awt.IJSwingUtilities;
+import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.event.NotificationListener;
+import consulo.ui.ex.awt.IJSwingUtilities;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -51,7 +52,7 @@ public final class BuildConsoleUtils {
     print(consoleView, notification, text);
   }
 
-  public static void print(@Nonnull BuildTextConsoleView consoleView, @Nonnull String group, @Nonnull BuildIssue buildIssue) {
+  public static void print(@Nonnull BuildTextConsoleView consoleView, @Nonnull NotificationGroup group, @Nonnull BuildIssue buildIssue) {
     Project project = consoleView.getProject();
     Map<String, NotificationListener> listenerMap = new LinkedHashMap<>();
     for (BuildIssueQuickFix quickFix : buildIssue.getQuickFixes()) {

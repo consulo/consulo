@@ -1,12 +1,13 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.build.events.impl;
 
-import consulo.build.ui.BuildBundle;
+import consulo.build.ui.BuildNotificationsGroups;
 import consulo.build.ui.event.BuildIssueEvent;
 import consulo.build.ui.event.MessageEventResult;
 import consulo.build.ui.issue.BuildIssue;
-import consulo.project.Project;
 import consulo.navigation.Navigatable;
+import consulo.project.Project;
+import consulo.project.ui.notification.NotificationGroup;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -14,7 +15,6 @@ import javax.annotation.Nullable;
 /**
  * @author Vladislav.Soroka
  */
-//@ApiStatus.Experimental
 public class BuildIssueEventImpl extends AbstractBuildEvent implements BuildIssueEvent {
   private final BuildIssue myIssue;
   private final Kind myKind;
@@ -45,8 +45,8 @@ public class BuildIssueEventImpl extends AbstractBuildEvent implements BuildIssu
 
   @Nonnull
   @Override
-  public String getGroup() {
-    return BuildBundle.message("build.event.title.build.issues");
+  public NotificationGroup getGroup() {
+    return BuildNotificationsGroups.BUILD_ISSUES;
   }
 
   @Nullable

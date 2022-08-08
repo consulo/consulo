@@ -113,8 +113,8 @@ public class NotificationsConfigurationImpl extends NotificationsConfiguration i
   }
 
   @Override
-  public void changeSettings(String groupDisplayName, NotificationDisplayType displayType, boolean shouldLog, boolean shouldReadAloud) {
-    changeSettings(new NotificationSettings(groupDisplayName, displayType, shouldLog, shouldReadAloud));
+  public void changeSettings(NotificationGroup group, NotificationDisplayType displayType, boolean shouldLog, boolean shouldReadAloud) {
+    changeSettings(new NotificationSettings(group.getId(), displayType, shouldLog, shouldReadAloud));
   }
 
   public synchronized void changeSettings(NotificationSettings settings) {

@@ -5,9 +5,9 @@ import consulo.build.ui.BuildBundle;
 import consulo.build.ui.FilePosition;
 import consulo.build.ui.event.BuildEvent;
 import consulo.build.ui.event.MessageEvent;
+import consulo.compiler.CompilerManager;
 import consulo.ide.impl.idea.build.events.impl.FileMessageEventImpl;
 import consulo.ide.impl.idea.build.events.impl.MessageEventImpl;
-import consulo.language.LangBundle;
 import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -20,26 +20,15 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 /**
  * Parses javac's output.
  */
 public class JavacOutputParser implements BuildOutputParser {
-  private static final
-  @Nonnull
-  Supplier<String> COMPILER_MESSAGES_GROUP = () -> BuildBundle.message("build.event.title.compiler");
-
   private static final char COLON = ':';
-  private static final
-  @NonNls
-  String WARNING_PREFIX = "warning:"; // default value
-  private static final
-  @NonNls
-  String NOTE_PREFIX = "note:";
-  private static final
-  @NonNls
-  String ERROR_PREFIX = "error:";
+  private static final String WARNING_PREFIX = "warning:"; // default value
+  private static final String NOTE_PREFIX = "note:";
+  private static final String ERROR_PREFIX = "error:";
   private final String[] myFileExtensions;
 
   public JavacOutputParser() {
@@ -62,17 +51,17 @@ public class JavacOutputParser implements BuildOutputParser {
       if (part1.equalsIgnoreCase("error") /* jikes */ || part1.equalsIgnoreCase("Caused by")) {
         // +1 so we don't include the colon
         String text = line.substring(colonIndex1 + 1).trim();
-        messageConsumer.accept(new MessageEventImpl(reader.getParentEventId(), MessageEvent.Kind.ERROR, COMPILER_MESSAGES_GROUP.get(), text, line));
+        messageConsumer.accept(new MessageEventImpl(reader.getParentEventId(), MessageEvent.Kind.ERROR, CompilerManager.NOTIFICATION_GROUP, text, line));
         return true;
       }
       if (part1.equalsIgnoreCase("warning")) {
         // +1 so we don't include the colon
         String text = line.substring(colonIndex1 + 1).trim();
-        messageConsumer.accept(new MessageEventImpl(reader.getParentEventId(), MessageEvent.Kind.WARNING, COMPILER_MESSAGES_GROUP.get(), text, line));
+        messageConsumer.accept(new MessageEventImpl(reader.getParentEventId(), MessageEvent.Kind.WARNING, CompilerManager.NOTIFICATION_GROUP, text, line));
         return true;
       }
       if (part1.equalsIgnoreCase("javac")) {
-        messageConsumer.accept(new MessageEventImpl(reader.getParentEventId(), MessageEvent.Kind.ERROR, COMPILER_MESSAGES_GROUP.get(), line, line));
+        messageConsumer.accept(new MessageEventImpl(reader.getParentEventId(), MessageEvent.Kind.ERROR, CompilerManager.NOTIFICATION_GROUP, line, line));
         return true;
       }
       if (part1.equalsIgnoreCase("Note")) {
@@ -83,7 +72,8 @@ public class JavacOutputParser implements BuildOutputParser {
           if (file.isFile()) {
             message = message.substring(javaFileExtensionIndex + ".java".length() + 1);
             String detailedMessage = amendNextInfoLinesIfNeeded(file.getPath() + ":\n" + message, reader);
-            messageConsumer.accept(new FileMessageEventImpl(reader.getParentEventId(), MessageEvent.Kind.INFO, COMPILER_MESSAGES_GROUP.get(), message, detailedMessage, new FilePosition(file, 0, 0)));
+            messageConsumer
+                    .accept(new FileMessageEventImpl(reader.getParentEventId(), MessageEvent.Kind.INFO, CompilerManager.NOTIFICATION_GROUP, message, detailedMessage, new FilePosition(file, 0, 0)));
             return true;
           }
         }
@@ -153,7 +143,8 @@ public class JavacOutputParser implements BuildOutputParser {
           if (column >= 0) {
             String message = StringUtil.join(convertMessages(messageList), "\n");
             String detailedMessage = line + "\n" + outputCollector.getOutput(); //NON-NLS
-            messageConsumer.accept(new FileMessageEventImpl(reader.getParentEventId(), kind, COMPILER_MESSAGES_GROUP.get(), message, detailedMessage, new FilePosition(file, lineNumber - 1, column)));
+            messageConsumer
+                    .accept(new FileMessageEventImpl(reader.getParentEventId(), kind, CompilerManager.NOTIFICATION_GROUP, message, detailedMessage, new FilePosition(file, lineNumber - 1, column)));
             return true;
           }
         }
@@ -163,7 +154,7 @@ public class JavacOutputParser implements BuildOutputParser {
     }
 
     if (line.endsWith("java.lang.OutOfMemoryError")) {
-      messageConsumer.accept(new MessageEventImpl(reader.getParentEventId(), MessageEvent.Kind.ERROR, COMPILER_MESSAGES_GROUP.get(), LangBundle.message("build.event.message.out.memory"), line));
+      messageConsumer.accept(new MessageEventImpl(reader.getParentEventId(), MessageEvent.Kind.ERROR, CompilerManager.NOTIFICATION_GROUP, BuildBundle.message("build.event.message.out.memory"), line));
       return true;
     }
 

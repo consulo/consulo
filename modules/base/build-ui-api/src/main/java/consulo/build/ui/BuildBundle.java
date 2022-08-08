@@ -8,7 +8,7 @@ import org.jetbrains.annotations.PropertyKey;
 import javax.annotation.Nonnull;
 
 public final class BuildBundle extends AbstractBundle {
-  private static final String BUNDLE = "messages.BuildBundle";
+  private static final String BUNDLE = "consulo.build.ui.BuildBundle";
   private static final BuildBundle INSTANCE = new BuildBundle();
 
   private BuildBundle() {

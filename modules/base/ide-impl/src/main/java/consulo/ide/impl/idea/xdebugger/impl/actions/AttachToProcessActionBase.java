@@ -4,6 +4,7 @@ package consulo.ide.impl.idea.xdebugger.impl.actions;
 import consulo.execution.ExecutionUtil;
 import consulo.execution.debug.attach.*;
 import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
 import consulo.language.editor.CommonDataKeys;
@@ -49,6 +50,8 @@ import java.util.*;
 import java.util.function.Supplier;
 
 public abstract class AttachToProcessActionBase extends AnAction {
+  public static final NotificationGroup GROUP = NotificationGroup.balloonGroup("Attach to Process");
+
   private static final Key<Map<XAttachHost, LinkedHashSet<RecentItem>>> RECENT_ITEMS_KEY = Key.create("AttachToProcessAction.RECENT_ITEMS_KEY");
   private static final Logger LOG = Logger.getInstance(AttachToProcessActionBase.class);
 
@@ -223,7 +226,7 @@ public abstract class AttachToProcessActionBase extends AnAction {
       return host.getProcessList();
     }
     catch (ExecutionException e) {
-      Notifications.Bus.notify(new Notification("Attach to Process action", XDebuggerBundle.message("xdebugger.attach.action.items.error.title"),
+      Notifications.Bus.notify(new Notification(GROUP, XDebuggerBundle.message("xdebugger.attach.action.items.error.title"),
                                                 XDebuggerBundle.message("xdebugger.attach.action.items.error.message"), NotificationType.WARNING));
       LOG.warn("Error while getting attach items", e);
 

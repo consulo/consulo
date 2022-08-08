@@ -40,7 +40,7 @@ public class ProjectStorageUtil {
     private final List<String> myFileNames;
 
     private UnableToSaveProjectNotification(@Nonnull final Project project, final Collection<File> readOnlyFiles) {
-      super("Project Settings", "Could not save project!", buildMessage(), NotificationType.ERROR, (notification, event) -> {
+      super(ProjectNotificationGroups.Project, "Could not save project!", buildMessage(), NotificationType.ERROR, (notification, event) -> {
         final UnableToSaveProjectNotification unableToSaveProjectNotification = (UnableToSaveProjectNotification)notification;
         final Project _project = unableToSaveProjectNotification.getProject();
         notification.expire();

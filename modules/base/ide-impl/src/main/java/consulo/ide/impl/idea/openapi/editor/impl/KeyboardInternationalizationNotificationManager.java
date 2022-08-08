@@ -20,10 +20,7 @@ import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.ide.impl.idea.openapi.keymap.KeyboardSettingsExternalizable;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapPanel;
 import consulo.ide.setting.ShowSettingsUtil;
-import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.NotificationDisplayType;
-import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.notification.Notifications;
+import consulo.project.ui.notification.*;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
@@ -38,7 +35,8 @@ import java.awt.*;
  * @author Denis Fokin
  */
 public class KeyboardInternationalizationNotificationManager {
-  public static final String LOCALIZATION_GROUP_DISPLAY_ID = "Localization and Internationalization";
+  public static final NotificationGroup LOCALIZATION_GROUP = NotificationGroup.balloonGroup("Localization and Internationalization");
+
   public static boolean notificationHasBeenShown;
 
   private KeyboardInternationalizationNotificationManager() {
@@ -57,11 +55,11 @@ public class KeyboardInternationalizationNotificationManager {
 
     MyNotificationListener listener = new MyNotificationListener();
 
-    Notifications.Bus.notify(createNotification(LOCALIZATION_GROUP_DISPLAY_ID, listener));
+    Notifications.Bus.notify(createNotification(LOCALIZATION_GROUP, listener));
     notificationHasBeenShown = true;
   }
 
-  public static Notification createNotification(@Nonnull final String groupDisplayId, @Nullable NotificationListener listener) {
+  public static Notification createNotification(@Nonnull final NotificationGroup group, @Nullable NotificationListener listener) {
 
     final String productName = ApplicationNamesInfo.getInstance().getProductName();
 
@@ -76,7 +74,7 @@ public class KeyboardInternationalizationNotificationManager {
 
     String title = "Enable smart keyboard internalization for " + productName + ".";
 
-    return new Notification(groupDisplayId, title, text, NotificationType.INFORMATION, listener);
+    return new Notification(group, title, text, NotificationType.INFORMATION, listener);
   }
 
   private static class MyNotificationListener implements NotificationListener {
@@ -98,7 +96,7 @@ public class KeyboardInternationalizationNotificationManager {
           util.showSettingsDialog(ideFrame.getProject(), KeymapPanel.class);
         }
 
-        NotificationsConfiguration.getNotificationsConfiguration().changeSettings(LOCALIZATION_GROUP_DISPLAY_ID, NotificationDisplayType.NONE, false, false);
+        NotificationsConfiguration.getNotificationsConfiguration().changeSettings(LOCALIZATION_GROUP, NotificationDisplayType.NONE, false, false);
         notification.expire();
       }
     }
