@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,27 +15,53 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentFactory;
+import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentProvider;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.CachingCommittedChangesProvider;
 import consulo.versionControlSystem.CommittedChangesProvider;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
-import consulo.ide.impl.idea.util.NotNullFunction;
+import jakarta.inject.Inject;
+
 import javax.annotation.Nonnull;
 
 /**
- * @author yole
+ * @author VISTALL
+ * @since 08-Aug-22
  */
-public class IncomingChangesVisibilityPredicate implements NotNullFunction<Project, Boolean> {
+@ExtensionImpl
+public class IncomingChangesViewFactory implements ChangesViewContentFactory {
+  private final Project myProject;
+
+  @Inject
+  public IncomingChangesViewFactory(Project project) {
+    myProject = project;
+  }
+
   @Nonnull
-  public Boolean fun(final Project project) {
-    final AbstractVcs[] abstractVcses = ProjectLevelVcsManager.getInstance(project).getAllActiveVcss();
-    for(AbstractVcs vcs: abstractVcses) {
+  @Override
+  public LocalizeValue getTabName() {
+    return LocalizeValue.localizeTODO("Incomming");
+  }
+
+  @Nonnull
+  @Override
+  public ChangesViewContentProvider create() {
+    return new IncomingChangesViewProvider(myProject);
+  }
+
+  @Override
+  public boolean isAvailable() {
+    final AbstractVcs[] abstractVcses = ProjectLevelVcsManager.getInstance(myProject).getAllActiveVcss();
+    for (AbstractVcs vcs : abstractVcses) {
       CommittedChangesProvider provider = vcs.getCommittedChangesProvider();
       if (provider instanceof CachingCommittedChangesProvider && provider.supportsIncomingChanges()) {
-        return Boolean.TRUE;
+        return true;
       }
     }
-    return Boolean.FALSE;
+    return false;
   }
 }

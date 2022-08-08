@@ -29,7 +29,6 @@ import consulo.ui.ex.content.Content;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.ex.UIBundle;
-import consulo.ide.impl.idea.util.NotNullFunction;
 import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
@@ -62,7 +61,7 @@ public class ChangesViewContentManager implements ChangesViewContentI {
   @DeprecationInfo(value = "Use ToolWindowId#VCS")
   public static final String TOOLWINDOW_ID = ToolWindowId.VCS;
 
-  private static final Key<ChangesViewContentEP> ourEpKey = Key.create("ChangesViewContentEP");
+  private static final Key<ChangesViewContentFactory> ourEpKey = Key.create(ChangesViewContentFactory.class);
 
   private final List<Content> myAddedContents = new ArrayList<>();
   @Nonnull
@@ -102,47 +101,44 @@ public class ChangesViewContentManager implements ChangesViewContentI {
 
   public void loadExtensionTabs() {
     final List<Content> contentList = new LinkedList<>();
-    final List<ChangesViewContentEP> contentEPs = ChangesViewContentEP.EP_NAME.getExtensionList(myProject);
-    for (ChangesViewContentEP ep : contentEPs) {
-      final NotNullFunction<Project, Boolean> predicate = ep.newPredicateInstance(myProject);
-      if (predicate == null || predicate.fun(myProject).equals(Boolean.TRUE)) {
-        final Content content = ContentFactory.getInstance().createContent(new ContentStub(ep), ep.getTabName(), false);
+    final List<ChangesViewContentFactory> contentEPs = myProject.getExtensionList(ChangesViewContentFactory.class);
+    for (ChangesViewContentFactory factory : contentEPs) {
+      if (factory.isAvailable()) {
+        final Content content = ContentFactory.getInstance().createContent(new ContentStub(factory), factory.getTabName().getValue(), false);
         content.setCloseable(false);
-        content.putUserData(ourEpKey, ep);
+        content.putUserData(ourEpKey, factory);
         contentList.add(content);
       }
     }
     myAddedContents.addAll(0, contentList);
   }
 
-  private void addExtensionTab(final ChangesViewContentEP ep) {
-    final Content content = ContentFactory.getInstance().createContent(new ContentStub(ep), ep.getTabName(), false);
+  private void addExtensionTab(final ChangesViewContentFactory factory) {
+    final Content content = ContentFactory.getInstance().createContent(new ContentStub(factory), factory.getTabName().getValue(), false);
     content.setCloseable(false);
-    content.putUserData(ourEpKey, ep);
+    content.putUserData(ourEpKey, factory);
     addIntoCorrectPlace(content);
   }
 
   private void updateExtensionTabs() {
-    final List<ChangesViewContentEP> contentEPs = ChangesViewContentEP.EP_NAME.getExtensionList(myProject);
-    for (ChangesViewContentEP ep : contentEPs) {
-      final NotNullFunction<Project, Boolean> predicate = ep.newPredicateInstance(myProject);
-      if (predicate == null) continue;
-      Content epContent = findEPContent(ep);
-      final Boolean predicateResult = predicate.fun(myProject);
-      if (predicateResult.equals(Boolean.TRUE) && epContent == null) {
-        addExtensionTab(ep);
+    final List<ChangesViewContentFactory> contentFactoryList = myProject.getExtensionList(ChangesViewContentFactory.class);
+    for (ChangesViewContentFactory factory : contentFactoryList) {
+      Content epContent = findContent(factory);
+      final boolean predicateResult = factory.isAvailable();
+      if (predicateResult && epContent == null) {
+        addExtensionTab(factory);
       }
-      else if (predicateResult.equals(Boolean.FALSE) && epContent != null) {
+      else if (!predicateResult && epContent != null) {
         myContentManager.removeContent(epContent, true);
       }
     }
   }
 
   @Nullable
-  private Content findEPContent(final ChangesViewContentEP ep) {
+  private Content findContent(final ChangesViewContentFactory factory) {
     if (myContentManager == null) {
       for (Content content : myAddedContents) {
-        if (content instanceof ContentStub && ((ContentStub)content).getEP() == ep) {
+        if (content instanceof ContentStub && ((ContentStub)content).getChangesViewContentFactory() == factory) {
           return content;
         }
       }
@@ -151,7 +147,7 @@ public class ChangesViewContentManager implements ChangesViewContentI {
 
     final Content[] contents = myContentManager.getContents();
     for (Content content : contents) {
-      if (content.getUserData(ourEpKey) == ep) {
+      if (content.getUserData(ourEpKey) == factory) {
         return content;
       }
     }
@@ -262,14 +258,14 @@ public class ChangesViewContentManager implements ChangesViewContentI {
   }
 
   private static class ContentStub extends JPanel {
-    private final ChangesViewContentEP myEP;
+    private final ChangesViewContentFactory myChangesViewContentFactory;
 
-    private ContentStub(final ChangesViewContentEP EP) {
-      myEP = EP;
+    private ContentStub(final ChangesViewContentFactory contentFactory) {
+      myChangesViewContentFactory = contentFactory;
     }
 
-    public ChangesViewContentEP getEP() {
-      return myEP;
+    public ChangesViewContentFactory getChangesViewContentFactory() {
+      return myChangesViewContentFactory;
     }
   }
 
@@ -278,8 +274,8 @@ public class ChangesViewContentManager implements ChangesViewContentI {
     public void selectionChanged(final ContentManagerEvent event) {
       Content content = event.getContent();
       if (content.getComponent() instanceof ContentStub) {
-        ChangesViewContentEP ep = ((ContentStub)content.getComponent()).getEP();
-        final ChangesViewContentProvider provider = ep.getInstance(myProject);
+        ChangesViewContentFactory contentFactory = ((ContentStub)content.getComponent()).getChangesViewContentFactory();
+        final ChangesViewContentProvider provider = contentFactory.create();
         final JComponent contentComponent = provider.initContent();
         content.setComponent(contentComponent);
         content.setDisposer(() -> provider.disposeContent());

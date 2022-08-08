@@ -20,10 +20,6 @@
   </extensionPoints>
 
   <extensions defaultExtensionNs="consulo">
-    <changesViewContent tabName="Log" className="consulo.ide.impl.idea.vcs.log.impl.VcsLogContentProvider"
-                        predicateClassName="consulo.ide.impl.idea.vcs.log.impl.VcsLogContentProvider$VcsLogVisibilityPredicate"/>
-
-
     <logHighlighterFactory implementation="consulo.ide.impl.idea.vcs.log.ui.MyCommitsHighlighter$Factory"/>
     <logHighlighterFactory implementation="consulo.ide.impl.idea.vcs.log.ui.MergeCommitsHighlighter$Factory"/>
     <logHighlighterFactory implementation="consulo.ide.impl.idea.vcs.log.ui.CurrentBranchHighlighter$Factory"/>

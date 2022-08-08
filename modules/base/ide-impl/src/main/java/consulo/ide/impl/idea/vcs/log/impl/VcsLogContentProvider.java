@@ -15,30 +15,27 @@
  */
 package consulo.ide.impl.idea.vcs.log.impl;
 
-import consulo.project.Project;
+import consulo.component.messagebus.MessageBusConnection;
 import consulo.ide.impl.idea.openapi.vcs.CalledInAwt;
-import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentProvider;
-import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.ide.impl.idea.ui.content.TabbedContent;
+import consulo.ide.impl.idea.util.ContentUtilEx;
+import consulo.ide.impl.idea.util.ContentsUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.vcs.log.ui.VcsLogPanel;
+import consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl;
+import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.awt.JBPanel;
 import consulo.ui.ex.content.Content;
-import consulo.ide.impl.idea.ui.content.TabbedContent;
-import consulo.ide.impl.idea.util.ContentUtilEx;
-import consulo.ide.impl.idea.util.ContentsUtil;
-import consulo.ide.impl.idea.util.NotNullFunction;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.component.messagebus.MessageBusConnection;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.versionControlSystem.log.VcsLogFilter;
-import consulo.ide.impl.idea.vcs.log.ui.VcsLogPanel;
-import consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -141,15 +138,6 @@ public class VcsLogContentProvider implements ChangesViewContentProvider {
           ContentsUtil.closeContentTab(toolWindow.getContentManager(), content);
         }
       }
-    }
-  }
-
-  public static class VcsLogVisibilityPredicate implements NotNullFunction<Project, Boolean> {
-    @Nonnull
-    @Override
-    public Boolean fun(Project project) {
-      return !VcsLogManager.findLogProviders(Arrays.asList(ProjectLevelVcsManager.getInstance(project).getAllVcsRoots()), project)
-              .isEmpty();
     }
   }
 }

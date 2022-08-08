@@ -175,9 +175,7 @@
     <extensionPoint name="vcsCheckinHandlerFactory"
                     interface="consulo.ide.impl.idea.openapi.vcs.checkin.VcsCheckinHandlerFactory"/>
 
-    <extensionPoint name="changesViewContent"
-                    beanClass="consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentEP"
-                    area="PROJECT"/>
+
 
     <extensionPoint name="editChangelistSupport"
                     interface="consulo.ide.impl.idea.openapi.vcs.changes.ui.EditChangelistSupport"
@@ -1021,22 +1019,10 @@
 
 
 
-    <changesViewContent tabName="Repository" className="consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesViewManager"
-                        predicateClassName="consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesVisibilityPredicate"/>
-    <changesViewContent tabName="Incoming" className="consulo.ide.impl.idea.openapi.vcs.changes.committed.IncomingChangesViewProvider"
-                        predicateClassName="consulo.ide.impl.idea.openapi.vcs.changes.committed.IncomingChangesVisibilityPredicate"/>
-
-
-    <!--Rich-->
-
-
     <packaging.sourceItemProvider
         implementation="consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.ModulesAndLibrariesSourceItemsProvider"/>
     <packaging.sourceItemProvider
         implementation="consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.ArtifactsSourceItemsProvider"/>
-
-    <!-- Compiler -->
-
 
 
     <checkoutListener implementation="consulo.ide.impl.idea.openapi.vcs.checkout.ProjectImporterCheckoutListener"/>
