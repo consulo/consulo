@@ -67,7 +67,7 @@ import java.util.*;
 public class PlatformOrPluginUpdateChecker {
   private static final Logger LOG = Logger.getInstance(PlatformOrPluginUpdateChecker.class);
 
-  private static final NotificationGroup ourGroup = new NotificationGroup("Platform Or Plugins Update", NotificationDisplayType.STICKY_BALLOON, false);
+  public static final NotificationGroup ourGroup = new NotificationGroup("Platform Or Plugins Update", NotificationDisplayType.STICKY_BALLOON, false);
 
   // windows ids
   private static final PluginId ourWinNoJre = PluginId.getId("consulo-win-no-jre");

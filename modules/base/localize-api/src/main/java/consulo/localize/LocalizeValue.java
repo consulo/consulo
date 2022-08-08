@@ -23,7 +23,7 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 2019-04-11
  */
-public interface LocalizeValue extends Supplier<String> {
+public interface LocalizeValue extends Supplier<String>, Comparable<LocalizeValue> {
   @Nonnull
   static LocalizeValue empty() {
     return SingleLocalizeValue.ourEmpty;

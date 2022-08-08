@@ -20,9 +20,9 @@ import consulo.application.dumb.DumbAware;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.container.plugin.SimpleExtension;
+import consulo.fileEditor.EditorNotifications;
 import consulo.ide.impl.idea.notification.NotificationAction;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.fileEditor.EditorNotifications;
 import consulo.ide.impl.plugins.pluginsAdvertisement.PluginsAdvertiserDialog;
 import consulo.ide.impl.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
 import consulo.ide.impl.updateSettings.UpdateSettings;
@@ -48,7 +48,7 @@ import java.util.*;
 
 @ExtensionImpl
 public class PluginsAdvertiser implements BackgroundStartupActivity, DumbAware {
-  private static NotificationGroup ourGroup = new NotificationGroup("Plugins Suggestion", NotificationDisplayType.STICKY_BALLOON, true);
+  public static NotificationGroup ourGroup = new NotificationGroup("Plugins Suggestion", NotificationDisplayType.STICKY_BALLOON, true);
 
   @Override
   public void runActivity(@Nonnull final Project project, @Nonnull UIAccess uiAccess) {
@@ -90,8 +90,7 @@ public class PluginsAdvertiser implements BackgroundStartupActivity, DumbAware {
         return;
       }
 
-      Notification notification =
-              ourGroup.createNotification("Features covered by non-installed plugins are detected.", NotificationType.INFORMATION);
+      Notification notification = ourGroup.createNotification("Features covered by non-installed plugins are detected.", NotificationType.INFORMATION);
       notification.addAction(new NotificationAction("Install plugins...") {
         @RequiredUIAccess
         @Override

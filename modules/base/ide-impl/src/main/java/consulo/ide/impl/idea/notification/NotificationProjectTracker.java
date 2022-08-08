@@ -23,13 +23,13 @@ import consulo.application.dumb.DumbAwareRunnable;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl;
 import consulo.ide.impl.idea.util.ObjectUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;
 import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.Notifications;
 import consulo.project.ui.wm.StatusBar;
 import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.util.collection.Lists;
+import consulo.util.collection.impl.map.ConcurrentHashMap;
 import consulo.util.lang.ShutDownTracker;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -41,15 +41,15 @@ import java.util.List;
 import java.util.Map;
 
 /**
-* @author VISTALL
-* @since 18-Jun-22
-*/
+ * @author VISTALL
+ * @since 18-Jun-22
+ */
 @Singleton
-@ServiceAPI(value = ComponentScope.PROJECT, lazy = false)
+@ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class NotificationProjectTracker implements Disposable {
-  private final Map<String, EventLogConsole> myCategoryMap = ContainerUtil.newConcurrentMap();
-  private final List<Notification> myInitial = ContainerUtil.createLockFreeCopyOnWriteList();
+  private final Map<String, EventLogConsole> myCategoryMap = new ConcurrentHashMap<>();
+  private final List<Notification> myInitial = Lists.newLockFreeCopyOnWriteList();
   private final Project myProject;
   private final EventLog myEventLog;
 
@@ -60,22 +60,12 @@ public class NotificationProjectTracker implements Disposable {
     myProject = project;
     myEventLog = eventLog;
 
-    if(project.isDefault()) {
-      return;
-    }
 
     myProjectModel = new LogModel(project, project);
 
     for (Notification notification : myEventLog.myModel.takeNotifications()) {
       printNotification(notification);
     }
-
-    project.getMessageBus().connect(project).subscribe(Notifications.class, new NotificationsAdapter() {
-      @Override
-      public void notify(@Nonnull Notification notification) {
-        printNotification(notification);
-      }
-    });
   }
 
   void initDefaultContent() {

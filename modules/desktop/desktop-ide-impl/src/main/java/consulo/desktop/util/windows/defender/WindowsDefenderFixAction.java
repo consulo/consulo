@@ -17,6 +17,7 @@ package consulo.desktop.util.windows.defender;
 
 import consulo.ide.impl.idea.diagnostic.DiagnosticBundle;
 import consulo.ide.impl.idea.ide.BrowserUtil;
+import consulo.ide.impl.idea.ide.SystemHealthMonitor;
 import consulo.ide.impl.idea.notification.NotificationAction;
 import consulo.ui.ex.awt.Messages;
 import consulo.application.Application;
@@ -58,7 +59,7 @@ public class WindowsDefenderFixAction extends NotificationAction {
         ApplicationManager.getApplication().executeOnPooledThread(() -> {
           if (WindowsDefenderChecker.getInstance().runExcludePathsCommand(e.getData(CommonDataKeys.PROJECT), myPaths)) {
             UIUtil.invokeLaterIfNeeded(() -> {
-              Notifications.Bus.notifyAndHide(new Notification("System Health", "", DiagnosticBundle.message("virus.scanning.fix.success.notification"), NotificationType.INFORMATION),
+              Notifications.Bus.notifyAndHide(new Notification(SystemHealthMonitor.GROUP, "", DiagnosticBundle.message("virus.scanning.fix.success.notification"), NotificationType.INFORMATION),
                                               e.getData(CommonDataKeys.PROJECT));
             });
           }

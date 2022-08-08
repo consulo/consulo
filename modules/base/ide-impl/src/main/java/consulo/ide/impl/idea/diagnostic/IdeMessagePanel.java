@@ -194,7 +194,7 @@ public final class IdeMessagePanel extends NonOpaquePanel implements MessagePool
   private void showErrorNotification(@Nonnull Project project) {
     String title = DiagnosticBundle.message("error.new.notification.title");
     String linkText = DiagnosticBundle.message("error.new.notification.link");
-    Notification notification = new Notification("", AllIcons.Ide.FatalError, title, null, null, NotificationType.ERROR, null);
+    Notification notification = new Notification(ReportMessages.GROUP, AllIcons.Ide.FatalError, title, null, null, NotificationType.ERROR, null);
     notification.addAction(new NotificationAction(linkText) {
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {

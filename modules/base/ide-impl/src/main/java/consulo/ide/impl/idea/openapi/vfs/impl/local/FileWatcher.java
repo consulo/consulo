@@ -39,13 +39,7 @@ import java.util.function.Consumer;
 public class FileWatcher {
   private static final Logger LOG = Logger.getInstance(FileWatcher.class);
 
-  public static final NotNullLazyValue<NotificationGroup> NOTIFICATION_GROUP = new NotNullLazyValue<NotificationGroup>() {
-    @Nonnull
-    @Override
-    protected NotificationGroup compute() {
-      return new NotificationGroup("File Watcher Messages", NotificationDisplayType.STICKY_BALLOON, true);
-    }
-  };
+  public static final NotificationGroup NOTIFICATION_GROUP = new NotificationGroup("File Watcher Messages", NotificationDisplayType.STICKY_BALLOON, true);
 
   static class DirtyPaths {
     final Set<String> dirtyPaths = new HashSet<>();
@@ -190,9 +184,8 @@ public class FileWatcher {
     LOG.warn(cause);
 
     if (myFailureShown.compareAndSet(false, true)) {
-      NotificationGroup group = NOTIFICATION_GROUP.getValue();
       String title = ApplicationBundle.message("watcher.slow.sync");
-      ApplicationManager.getApplication().invokeLater(() -> Notifications.Bus.notify(group.createNotification(title, cause, NotificationType.WARNING, listener)), IdeaModalityState.NON_MODAL);
+      ApplicationManager.getApplication().invokeLater(() -> Notifications.Bus.notify(NOTIFICATION_GROUP.createNotification(title, cause, NotificationType.WARNING, listener)), IdeaModalityState.NON_MODAL);
     }
   }
 

@@ -124,7 +124,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
 
   private static class UiInspectorNotification extends Notification {
     private UiInspectorNotification() {
-      super(Notifications.SYSTEM_MESSAGES_GROUP_ID, "UI Inspector", "Control-Alt-Click to view component info!", NotificationType.INFORMATION);
+      super(Notifications.SYSTEM_MESSAGES_GROUP, "UI Inspector", "Control-Alt-Click to view component info!", NotificationType.INFORMATION);
     }
   }
 

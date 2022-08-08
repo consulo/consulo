@@ -326,7 +326,7 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
         int prefix = expected ? 1 : 0;  // IDE=true -> FS=false -> prefix='in'
         String title = ApplicationBundle.message("fs.case.sensitivity.mismatch.title");
         String text = ApplicationBundle.message("fs.case.sensitivity.mismatch.message", prefix);
-        Notifications.Bus.notify(new Notification(Notifications.SYSTEM_MESSAGES_GROUP_ID, title, text, NotificationType.WARNING, NotificationListener.URL_OPENING_LISTENER), myProject);
+        Notifications.Bus.notify(new Notification(Notifications.SYSTEM_MESSAGES_GROUP, title, text, NotificationType.WARNING, NotificationListener.URL_OPENING_LISTENER), myProject);
       }
 
       //ProjectFsStatsCollector.caseSensitivity(myProject, actual);

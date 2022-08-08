@@ -39,7 +39,7 @@ public class EditProjectGroupAction extends RecentProjectsWelcomeScreenActionBas
     JList list = getList(e);
     assert list != null;
     DefaultListModel model = getDataModel(e);
-    String name = Messages.showInputDialog(list, "Enter group name: ", "Change KeymapGroupImpl Name", null, group.getName(), new InputValidatorEx() {
+    String name = Messages.showInputDialog(list, "Enter group name: ", "Change Group Name", null, group.getName(), new InputValidatorEx() {
       @Nullable
       @Override
       public String getErrorText(String inputString) {
@@ -48,7 +48,7 @@ public class EditProjectGroupAction extends RecentProjectsWelcomeScreenActionBas
           return "Name cannot be empty.";
         }
         if (!checkInput(inputString)) {
-          return "KeymapGroupImpl '" + inputString + "' already exists.";
+          return "Group '" + inputString + "' already exists.";
         }
         return null;
       }

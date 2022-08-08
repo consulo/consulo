@@ -61,14 +61,18 @@
         <include>consulo:consulo-code-editor-api</include>
         <include>consulo:consulo-process-api</include>
         <include>consulo:consulo-execution-api</include>
+        <include>consulo:consulo-execution-impl</include>
         <include>consulo:consulo-execution-debug-api</include>
+        <include>consulo:consulo-execution-debug-impl</include>
         <include>consulo:consulo-execution-coverage-api</include>
         <include>consulo:consulo-execution-test-api</include>
+        <include>consulo:consulo-execution-test-impl</include>
         <include>consulo:consulo-execution-test-sm-api</include>
         <include>consulo:consulo-execution-test-thrift-api</include>
         <include>consulo:consulo-virtual-file-watcher-api</include>
         <include>consulo:consulo-virtual-file-watcher-impl</include>
         <include>consulo:consulo-compiler-api</include>
+        <include>consulo:consulo-compiler-impl</include>
         <include>consulo:consulo-language-editor-api</include>
         <include>consulo:consulo-language-copyright-api</include>
         <include>consulo:consulo-undo-redo-api</include>

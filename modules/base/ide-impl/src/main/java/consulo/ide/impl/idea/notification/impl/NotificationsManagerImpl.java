@@ -27,11 +27,11 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.FrameStateManager;
 import consulo.ide.impl.idea.notification.EventLog;
-import consulo.ide.impl.idea.notification.NotificationsAdapter;
 import consulo.ide.impl.idea.notification.impl.ui.NotificationsUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.ui.*;
 import consulo.ide.impl.idea.ui.components.GradientViewport;
+import consulo.logging.Logger;
 import consulo.ui.ex.awt.HorizontalLayout;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.Function;
@@ -89,6 +89,8 @@ import java.util.List;
 @Singleton
 @ServiceImpl
 public class NotificationsManagerImpl extends NotificationsManager {
+  private static final Logger LOG = Logger.getInstance(NotificationsManagerImpl.class);
+
   public static final Color DEFAULT_TEXT_COLOR = new JBColor(Gray._0, Gray._191);
   public static final Color FILL_COLOR = JBColor.namedColor("Notification.background", new JBColor(Gray._242, new Color(0x4E5052)));
   public static final Color BORDER_COLOR = JBColor.namedColor("Notification.borderColor", new JBColor(0xCDB2B2B2, 0xCD565A5C));
@@ -118,10 +120,10 @@ public class NotificationsManagerImpl extends NotificationsManager {
     return ArrayUtil.toObjectArray(result, klass);
   }
 
-  static void doNotify(@Nonnull final Notification notification, @Nullable NotificationDisplayType displayType, @Nullable final Project project) {
+  static void doNotify(@Nonnull final Notification notification, @Nullable final Project project) {
     final NotificationsConfigurationImpl configuration = NotificationsConfigurationImpl.getInstanceImpl();
     if (!configuration.isRegistered(notification.getGroupId())) {
-      configuration.register(notification.getGroupId(), displayType == null ? NotificationDisplayType.BALLOON : displayType);
+      LOG.error("NotificationGroup: " + notification.getGroupId() + " is not registered. Please use NotificationGroupContributor");
     }
 
     final NotificationSettings settings = NotificationsConfigurationImpl.getSettings(notification.getGroupId());
@@ -872,7 +874,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
 
   private static void createMergeAction(@Nonnull final BalloonLayoutData layoutData, @Nonnull JPanel panel) {
     StringBuilder title = new StringBuilder().append(layoutData.mergeData.count).append(" more");
-    String shortTitle = NotificationParentGroup.getShortTitle(layoutData.groupId);
+    String shortTitle = null;
     if (shortTitle != null) {
       title.append(" from ").append(shortTitle);
     }
@@ -990,7 +992,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
     menu.getComponent().show(link, JBUI.scale(-10), link.getHeight() + JBUI.scale(2));
   }
 
-  private static class MyNotificationListener extends NotificationsAdapter {
+  private static class MyNotificationListener implements Notifications {
     private final Project myProject;
 
     private MyNotificationListener(@Nullable Project project) {
@@ -1003,7 +1005,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
         return;
       }
 
-      doNotify(notification, null, myProject);
+      doNotify(notification, myProject);
     }
   }
 

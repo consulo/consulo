@@ -16,18 +16,15 @@
 package consulo.ide.impl.idea.notification.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.Application;
-import consulo.component.messagebus.MessageBus;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.notification.NotificationsConfiguration;
+import consulo.ide.impl.project.ui.impl.NotificationGroupRegistrator;
 import consulo.logging.Logger;
 import consulo.project.ui.notification.NotificationDisplayType;
 import consulo.project.ui.notification.NotificationGroup;
-import consulo.project.ui.notification.Notifications;
-import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
@@ -47,24 +44,13 @@ public class NotificationsConfigurationImpl extends NotificationsConfiguration i
   private static final String SHOW_BALLOONS_ATTRIBUTE = "showBalloons";
   private static final String SYSTEM_NOTIFICATIONS_ATTRIBUTE = "systemNotifications";
 
-  private static final Comparator<NotificationSettings> NOTIFICATION_SETTINGS_COMPARATOR = new Comparator<NotificationSettings>() {
-    @Override
-    public int compare(@Nonnull NotificationSettings o1, @Nonnull NotificationSettings o2) {
-      return o1.getGroupId().compareToIgnoreCase(o2.getGroupId());
-    }
-  };
+  private static final Comparator<NotificationSettings> NOTIFICATION_SETTINGS_COMPARATOR = (o1, o2) -> o1.getGroupId().compareToIgnoreCase(o2.getGroupId());
 
-  private final Map<String, NotificationSettings> myIdToSettingsMap = new HashMap<String, NotificationSettings>();
-  private final Map<String, String> myToolWindowCapable = new HashMap<String, String>();
-  private final MessageBus myMessageBus;
+  private final Map<String, NotificationSettings> myIdToSettingsMap = new HashMap<>();
+  private final Map<String, String> myToolWindowCapable = new HashMap<>();
 
   public boolean SHOW_BALLOONS = true;
   public boolean SYSTEM_NOTIFICATIONS = true;
-
-  @Inject
-  public NotificationsConfigurationImpl(@Nonnull Application application) {
-    myMessageBus = application.getMessageBus();
-  }
 
   public static NotificationsConfigurationImpl getInstanceImpl() {
     return (NotificationsConfigurationImpl)getNotificationsConfiguration();
@@ -76,14 +62,14 @@ public class NotificationsConfigurationImpl extends NotificationsConfiguration i
 
   @Nullable
   public String getToolWindowId(@Nonnull String groupId) {
-    NotificationGroup group = NotificationGroup.findRegisteredGroup(groupId);
+    NotificationGroup group = NotificationGroupRegistrator.last().get(groupId);
     return group == null ? null : group.getToolWindowId();
   }
 
   public synchronized NotificationSettings[] getAllSettings() {
-    Collection<NotificationSettings> settings = new HashSet<NotificationSettings>(myIdToSettingsMap.values());
-    for (NotificationGroup group : NotificationGroup.getAllRegisteredGroups()) {
-      settings.add(getSettings(group.getDisplayId()));
+    Collection<NotificationSettings> settings = new HashSet<>(myIdToSettingsMap.values());
+    for (NotificationGroup group : NotificationGroupRegistrator.last().all()) {
+      settings.add(getSettings(group.getId()));
     }
     NotificationSettings[] result = settings.toArray(new NotificationSettings[settings.size()]);
     Arrays.sort(result, NOTIFICATION_SETTINGS_COMPARATOR);
@@ -114,7 +100,7 @@ public class NotificationsConfigurationImpl extends NotificationsConfiguration i
 
   @Nonnull
   private static NotificationSettings getDefaultSettings(String groupId) {
-    NotificationGroup group = NotificationGroup.findRegisteredGroup(groupId);
+    NotificationGroup group = NotificationGroupRegistrator.last().get(groupId);
     if (group != null) {
       return new NotificationSettings(groupId, group.getDisplayType(), group.isLogByDefault(), false);
     }
@@ -122,38 +108,8 @@ public class NotificationsConfigurationImpl extends NotificationsConfiguration i
   }
 
   @Override
-  public void afterLoadState() {
-    myMessageBus.connect().subscribe(Notifications.class, this);
-  }
-
-  @Override
   public synchronized void dispose() {
     myIdToSettingsMap.clear();
-  }
-
-  @Override
-  public void register(@Nonnull final String groupDisplayName, @Nonnull final NotificationDisplayType displayType) {
-    register(groupDisplayName, displayType, true);
-  }
-
-  @Override
-  public void register(@Nonnull String groupDisplayName, @Nonnull NotificationDisplayType displayType, boolean shouldLog) {
-    register(groupDisplayName, displayType, shouldLog, false);
-  }
-
-  @Override
-  public void register(@Nonnull String groupDisplayName, @Nonnull NotificationDisplayType displayType, boolean shouldLog, boolean shouldReadAloud) {
-    if (!isRegistered(groupDisplayName)) {
-      // register a new group and remember these settings as default
-      new NotificationGroup(groupDisplayName, displayType, shouldLog);
-      // and decide whether to save them explicitly (in case of non-default shouldReadAloud)
-      changeSettings(groupDisplayName, displayType, shouldLog, shouldReadAloud);
-    }
-    else if (displayType == NotificationDisplayType.TOOL_WINDOW && !hasToolWindowCapability(groupDisplayName)) {
-      // the first time with tool window capability
-      changeSettings(getSettings(groupDisplayName).withDisplayType(NotificationDisplayType.TOOL_WINDOW));
-      myToolWindowCapable.put(groupDisplayName, null);
-    }
   }
 
   @Override
@@ -172,7 +128,7 @@ public class NotificationsConfigurationImpl extends NotificationsConfiguration i
   }
 
   public synchronized boolean isRegistered(@Nonnull final String id) {
-    return myIdToSettingsMap.containsKey(id) || NotificationGroup.findRegisteredGroup(id) != null;
+    return myIdToSettingsMap.containsKey(id) || NotificationGroupRegistrator.last().get(id) != null;
   }
 
   @Override
@@ -209,7 +165,6 @@ public class NotificationsConfigurationImpl extends NotificationsConfiguration i
         myIdToSettingsMap.put(id, settings);
       }
     }
-    doRemove("Log Only");
 
     if ("false".equals(state.getAttributeValue(SHOW_BALLOONS_ATTRIBUTE))) {
       //noinspection NonPrivateFieldAccessedInSynchronizedContext

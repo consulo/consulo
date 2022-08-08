@@ -21,6 +21,7 @@ import consulo.dataContext.DataManager;
 import consulo.execution.configuration.RunProfile;
 import consulo.execution.executor.Executor;
 import consulo.execution.executor.ExecutorRegistry;
+import consulo.execution.internal.ExecutionNotificationGroupHolder;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.ExecutionEnvironmentBuilder;
 import consulo.execution.ui.RunContentDescriptor;
@@ -31,7 +32,6 @@ import consulo.process.ProcessNotCreatedException;
 import consulo.project.Project;
 import consulo.project.ProjectPropertiesComponent;
 import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.project.ui.wm.ToolWindowManager;
@@ -50,8 +50,6 @@ import javax.swing.event.HyperlinkListener;
 
 public class ExecutionUtil {
   private static final Logger LOG = Logger.getInstance(ExecutionUtil.class);
-
-  private static final NotificationGroup ourNotificationGroup = NotificationGroup.logOnlyGroup("Execution");
 
   private ExecutionUtil() {
   }
@@ -129,7 +127,7 @@ public class ExecutionUtil {
             finalListener.hyperlinkUpdate(event);
           }
         };
-        ourNotificationGroup.createNotification(title, finalDescription, NotificationType.ERROR, notificationListener).notify(project);
+        ExecutionNotificationGroupHolder.EXECUTION_GROUP.createNotification(title, finalDescription, NotificationType.ERROR, notificationListener).notify(project);
       }
     });
   }

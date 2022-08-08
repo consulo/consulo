@@ -15,44 +15,42 @@
  */
 package consulo.ide.impl.idea.ide.plugins;
 
-import consulo.application.CommonBundle;
 import consulo.application.AllIcons;
-import consulo.ide.impl.idea.ide.BrowserUtil;
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.plugins.sorters.SortByStatusAction;
-import consulo.ide.impl.idea.ide.ui.search.SearchableOptionsRegistrar;
-import consulo.ui.ex.awt.*;
-import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.NotificationDisplayType;
-import consulo.project.ui.notification.NotificationGroup;
-import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.notification.event.NotificationListener;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.application.Application;
+import consulo.application.CommonBundle;
+import consulo.application.eap.EarlyAccessProgramManager;
 import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.application.internal.ApplicationEx;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.awt.HorizontalLayout;
-import consulo.ui.ex.awt.speedSearch.SpeedSearchBase;
-import consulo.ui.ex.awt.update.UiNotifyConnector;
-import consulo.ide.impl.idea.xml.util.XmlStringUtil;
+import consulo.configurable.ConfigurableSession;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.disposer.Disposable;
-import consulo.application.eap.EarlyAccessProgramManager;
+import consulo.ide.IdeBundle;
+import consulo.ide.impl.idea.ide.BrowserUtil;
+import consulo.ide.impl.idea.ide.plugins.sorters.SortByStatusAction;
+import consulo.ide.impl.idea.ide.ui.search.SearchableOptionsRegistrar;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.ide.impl.plugins.PluginDescriptionPanel;
 import consulo.ide.impl.updateSettings.UpdateSettings;
 import consulo.localize.LocalizeKey;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.RepositoryTagLocalize;
-import consulo.configurable.ConfigurableSession;
+import consulo.project.Project;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationDisplayType;
+import consulo.project.ui.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.event.NotificationListener;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchBase;
+import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.awt.util.TableUtil;
 import consulo.util.lang.ref.SimpleReference;
 
@@ -76,6 +74,8 @@ import java.util.stream.Collectors;
  * @since Dec 25, 2003
  */
 public abstract class PluginManagerMain implements Disposable {
+  public static final NotificationGroup ourPluginsLifecycleGroup = new NotificationGroup("Plugins Lifecycle Group", NotificationDisplayType.STICKY_BALLOON, true);
+
   public static Logger LOG = Logger.getInstance(PluginManagerMain.class);
 
   private boolean requireShutdown = false;
@@ -105,7 +105,7 @@ public abstract class PluginManagerMain implements Disposable {
     myRoot.setContent(splitter);
 
     myDescriptionPanel = new PluginDescriptionPanel();
-    
+
     splitter.setSecondComponent(myDescriptionPanel.getPanel());
 
     myTablePanel = new JPanel(new BorderLayout());
@@ -460,19 +460,18 @@ public abstract class PluginManagerMain implements Disposable {
     message += "<br><a href=";
     message += restartCapable ? "\"restart\">Restart now" : "\"shutdown\">Shutdown";
     message += "</a>";
-    new NotificationGroup("Plugins Lifecycle KeymapGroupImpl", NotificationDisplayType.STICKY_BALLOON, true)
-            .createNotification(title, XmlStringUtil.wrapInHtml(message), NotificationType.INFORMATION, new NotificationListener() {
-              @Override
-              public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
-                notification.expire();
-                if (restartCapable) {
-                  app.restart(true);
-                }
-                else {
-                  app.exit(true, true);
-                }
-              }
-            }).notify(project);
+    ourPluginsLifecycleGroup.createNotification(title, XmlStringUtil.wrapInHtml(message), NotificationType.INFORMATION, new NotificationListener() {
+      @Override
+      public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
+        notification.expire();
+        if (restartCapable) {
+          app.restart(true);
+        }
+        else {
+          app.exit(true, true);
+        }
+      }
+    }).notify(project);
   }
 
   public class MyPluginsFilter extends FilterComponent {

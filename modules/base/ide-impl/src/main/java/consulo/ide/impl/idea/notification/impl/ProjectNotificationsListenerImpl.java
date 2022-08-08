@@ -17,9 +17,9 @@ package consulo.ide.impl.idea.notification.impl;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicImpl;
-import consulo.ide.impl.idea.notification.NotificationsAdapter;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.Notifications;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
@@ -29,7 +29,7 @@ import javax.annotation.Nonnull;
  * @since 06-Jul-22
  */
 @TopicImpl(ComponentScope.PROJECT)
-public class ProjectNotificationsListenerImpl extends NotificationsAdapter {
+public class ProjectNotificationsListenerImpl implements Notifications {
   private final Project myProject;
 
   @Inject
@@ -43,6 +43,6 @@ public class ProjectNotificationsListenerImpl extends NotificationsAdapter {
       return;
     }
 
-    NotificationsManagerImpl.doNotify(notification, null, myProject);
+    NotificationsManagerImpl.doNotify(notification, myProject);
   }
 }

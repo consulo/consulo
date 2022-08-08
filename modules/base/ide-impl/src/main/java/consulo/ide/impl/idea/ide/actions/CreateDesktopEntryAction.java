@@ -105,7 +105,7 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
 
       final String message = ApplicationBundle.message("desktop.entry.success", ApplicationNamesInfo.getInstance().getProductName());
       if (ApplicationManager.getApplication() != null) {
-        Notifications.Bus.notify(new Notification(Notifications.SYSTEM_MESSAGES_GROUP_ID, "Desktop entry created", message, NotificationType.INFORMATION));
+        Notifications.Bus.notify(new Notification(Notifications.SYSTEM_MESSAGES_GROUP, "Desktop entry created", message, NotificationType.INFORMATION));
       }
     }
     catch (Exception e) {
@@ -116,7 +116,7 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
       if (!StringUtil.isEmptyOrSpaces(message)) {
         LOG.warn(e);
         Notifications.Bus
-                .notify(new Notification(Notifications.SYSTEM_MESSAGES_GROUP_ID, "Failed to create desktop entry", message, NotificationType.ERROR), project);
+                .notify(new Notification(Notifications.SYSTEM_MESSAGES_GROUP, "Failed to create desktop entry", message, NotificationType.ERROR), project);
       }
       else {
         LOG.error(e);

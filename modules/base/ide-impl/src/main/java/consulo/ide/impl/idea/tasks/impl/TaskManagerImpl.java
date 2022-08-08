@@ -16,30 +16,6 @@
 package consulo.ide.impl.idea.tasks.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.task.*;
-import consulo.task.event.TaskListener;
-import consulo.task.util.RequestFailedException;
-import consulo.task.util.TaskUtil;
-import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.versionControlSystem.AbstractVcs;
-import consulo.versionControlSystem.ProjectLevelVcsManager;
-import consulo.versionControlSystem.VcsTaskHandler;
-import consulo.versionControlSystem.VcsType;
-import consulo.versionControlSystem.change.ChangeList;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListAdapter;
-import consulo.versionControlSystem.change.ChangeListManager;
-import consulo.versionControlSystem.change.LocalChangeList;
-import consulo.ide.impl.idea.tasks.actions.TaskSearchSupport;
-import consulo.ide.impl.idea.tasks.config.TaskRepositoriesConfigurable;
-import consulo.ide.impl.idea.tasks.context.WorkingContextManager;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.EventDispatcher;
-import consulo.ide.impl.idea.util.Function;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.containers.Convertor;
-import consulo.http.HttpRequests;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
@@ -50,18 +26,31 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.disposer.Disposable;
+import consulo.http.HttpRequests;
 import consulo.ide.ServiceManager;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListAdapter;
+import consulo.ide.impl.idea.tasks.actions.TaskSearchSupport;
+import consulo.ide.impl.idea.tasks.config.TaskRepositoriesConfigurable;
+import consulo.ide.impl.idea.tasks.context.WorkingContextManager;
+import consulo.ide.impl.idea.util.EventDispatcher;
+import consulo.ide.impl.idea.util.Function;
+import consulo.ide.impl.idea.util.containers.Convertor;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;
-import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.NotificationDisplayType;
-import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.notification.Notifications;
+import consulo.project.ui.notification.*;
 import consulo.project.ui.notification.event.NotificationListener;
-import consulo.task.ReconfigureRepository;
+import consulo.task.*;
+import consulo.task.event.TaskListener;
+import consulo.task.util.RequestFailedException;
+import consulo.task.util.TaskUtil;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.MultiMap;
 import consulo.util.xml.serializer.XmlSerializationException;
 import consulo.util.xml.serializer.XmlSerializer;
@@ -69,6 +58,13 @@ import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.util.xml.serializer.annotation.AbstractCollection;
 import consulo.util.xml.serializer.annotation.Property;
 import consulo.util.xml.serializer.annotation.Tag;
+import consulo.versionControlSystem.AbstractVcs;
+import consulo.versionControlSystem.ProjectLevelVcsManager;
+import consulo.versionControlSystem.VcsTaskHandler;
+import consulo.versionControlSystem.VcsType;
+import consulo.versionControlSystem.change.ChangeList;
+import consulo.versionControlSystem.change.ChangeListManager;
+import consulo.versionControlSystem.change.LocalChangeList;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -104,7 +100,8 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
     return i == 0 ? Comparing.compare(o2.getCreated(), o1.getCreated()) : i;
   };
   private static final Convertor<Task, String> KEY_CONVERTOR = o -> o.getId();
-  static final String TASKS_NOTIFICATION_GROUP = "Task KeymapGroupImpl";
+
+  public static final NotificationGroup TASKS_NOTIFICATION_GROUP = NotificationGroup.balloonGroup("Tasks");
 
   private final Project myProject;
 
@@ -844,12 +841,11 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
   }
 
   private void notifyAboutConnectionFailure(final TaskRepository repository, String details) {
-    Notifications.Bus.register(TASKS_NOTIFICATION_GROUP, NotificationDisplayType.BALLOON);
     String content = "<p><a href=\"\">Configure server...</a></p>";
     if (!StringUtil.isEmpty(details)) {
       content = "<p>" + details + "</p>" + content;
     }
-    Notifications.Bus.notify(new Notification(TASKS_NOTIFICATION_GROUP, "Cannot connect to " + repository.getUrl(), content, NotificationType.WARNING, new NotificationListener() {
+    TASKS_NOTIFICATION_GROUP.createNotification("Cannot connect to " + repository.getUrl(), content, NotificationType.WARNING, new NotificationListener() {
       @Override
       public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
         TaskRepositoriesConfigurable configurable = new TaskRepositoriesConfigurable(myProject);
@@ -858,7 +854,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
           notification.expire();
         }
       }
-    }), myProject);
+    }).notify(myProject);
   }
 
   @Override

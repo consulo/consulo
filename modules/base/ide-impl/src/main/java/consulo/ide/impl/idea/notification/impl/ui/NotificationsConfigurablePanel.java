@@ -15,30 +15,31 @@
  */
 package consulo.ide.impl.idea.notification.impl.ui;
 
-import consulo.project.ui.notification.NotificationDisplayType;
-import consulo.ide.impl.idea.notification.impl.NotificationParentGroup;
-import consulo.ide.impl.idea.notification.impl.NotificationParentGroupBean;
+import consulo.application.util.SystemInfo;
+import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.notification.impl.NotificationSettings;
 import consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl;
-import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.ui.ComboBoxTableRenderer;
 import consulo.ide.impl.idea.openapi.ui.StripeTable;
-import consulo.util.lang.Pair;
-import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.awt.BooleanTableCellRenderer;
-import consulo.ui.ex.awt.ScrollPaneFactory;
+import consulo.ide.impl.project.ui.impl.NotificationGroupRegistrator;
+import consulo.localize.LocalizeValue;
+import consulo.project.ui.notification.NotificationDisplayType;
+import consulo.project.ui.notification.NotificationGroup;
 import consulo.ui.ex.SystemNotifications;
-import consulo.ui.ex.awt.speedSearch.TableSpeedSearch;
-import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
-import consulo.ui.ex.awt.tree.table.TreeTable;
-import consulo.ui.ex.awt.tree.table.TreeTableModel;
-import consulo.ide.impl.idea.util.ObjectUtil;
+import consulo.ui.ex.awt.BooleanTableCellRenderer;
+import consulo.ui.ex.awt.ColoredTableCellRenderer;
+import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
+import consulo.ui.ex.awt.speedSearch.TableSpeedSearch;
 import consulo.ui.ex.awt.tree.IndexTreePathState;
 import consulo.ui.ex.awt.tree.TreeUtil;
-import javax.annotation.Nonnull;
+import consulo.ui.ex.awt.tree.table.TreeTable;
+import consulo.ui.ex.awt.tree.table.TreeTableModel;
+import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.Pair;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.table.TableColumn;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -49,7 +50,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EventObject;
 import java.util.List;
 
 /**
@@ -107,8 +110,7 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
     }
 
     NotificationsConfigurationImpl configuration = NotificationsConfigurationImpl.getInstanceImpl();
-    return configuration.SHOW_BALLOONS != myDisplayBalloons.isSelected() ||
-           configuration.SYSTEM_NOTIFICATIONS != mySystemNotifications.isSelected();
+    return configuration.SHOW_BALLOONS != myDisplayBalloons.isSelected() || configuration.SYSTEM_NOTIFICATIONS != mySystemNotifications.isSelected();
   }
 
   public void apply() {
@@ -138,15 +140,16 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
 
   private static class SettingsWrapper {
     private boolean myRemoved = false;
-    private NotificationSettings myVersion;
-    private String myTitle;
+    private NotificationSettings mySettings;
+    private final LocalizeValue myDisplayName;
 
-    private SettingsWrapper(NotificationSettings settings) {
-      myVersion = settings;
+    private SettingsWrapper(NotificationSettings settings, LocalizeValue displayName) {
+      mySettings = settings;
+      myDisplayName = displayName;
     }
 
     public boolean hasChanged() {
-      return myRemoved || !getOriginalSettings().equals(myVersion);
+      return myRemoved || !getOriginalSettings().equals(mySettings);
     }
 
     public void remove() {
@@ -167,22 +170,26 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
         NotificationsConfigurationImpl.remove(getGroupId());
       }
       else {
-        NotificationsConfigurationImpl.getInstanceImpl().changeSettings(myVersion);
+        NotificationsConfigurationImpl.getInstanceImpl().changeSettings(mySettings);
       }
     }
 
     public void reset() {
-      myVersion = getOriginalSettings();
+      mySettings = getOriginalSettings();
       myRemoved = false;
     }
 
     String getGroupId() {
-      return myVersion.getGroupId();
+      return mySettings.getGroupId();
+    }
+
+    public LocalizeValue getDisplayName() {
+      return myDisplayName;
     }
 
     @Override
     public String toString() {
-      return myTitle == null ? getGroupId() : myTitle;
+      return getGroupId() + ":" + myDisplayName;
     }
   }
 
@@ -199,12 +206,22 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
       getTree().setCellRenderer(new TreeColumnCellRenderer(this));
 
       final TableColumn idColumn = getColumnModel().getColumn(ID_COLUMN);
+      idColumn.setCellRenderer(new ColoredTableCellRenderer() {
+        @Override
+        protected void customizeCellRenderer(JTable table, Object value, boolean selected, boolean hasFocus, int row, int column) {
+          DefaultMutableTreeNode node = (DefaultMutableTreeNode)value;
+          Object userObject = node.getUserObject();
+          if (userObject instanceof SettingsWrapper wrapper) {
+            append(wrapper.myDisplayName.get());
+          }
+        }
+      });
       idColumn.setPreferredWidth(200);
 
       final TableColumn displayTypeColumn = getColumnModel().getColumn(DISPLAY_TYPE_COLUMN);
       displayTypeColumn.setMaxWidth(300);
       displayTypeColumn.setPreferredWidth(250);
-      displayTypeColumn.setCellRenderer(new ComboBoxTableRenderer<NotificationDisplayType>(NotificationDisplayType.values()) {
+      displayTypeColumn.setCellRenderer(new ComboBoxTableRenderer<>(NotificationDisplayType.values()) {
         @Override
         protected void customizeComponent(NotificationDisplayType value, JTable table, boolean isSelected) {
           super.customizeComponent(myDisplayBalloons.isSelected() ? value : NotificationDisplayType.NONE, table, isSelected);
@@ -220,7 +237,7 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
         }
       });
 
-      displayTypeColumn.setCellEditor(new ComboBoxTableRenderer<NotificationDisplayType>(NotificationDisplayType.values()) {
+      displayTypeColumn.setCellEditor(new ComboBoxTableRenderer<>(NotificationDisplayType.values()) {
         @Override
         public boolean isCellEditable(EventObject event) {
           if (!myDisplayBalloons.isSelected()) {
@@ -303,18 +320,10 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
 
     public TreeColumnCellRenderer(@Nonnull JTable table) {
       myTable = table;
-      setHorizontalAlignment(SwingConstants.CENTER);
-      setVerticalAlignment(SwingConstants.CENTER);
     }
 
     @Override
-    public Component getTreeCellRendererComponent(JTree tree,
-                                                  Object value,
-                                                  boolean selected,
-                                                  boolean expanded,
-                                                  boolean leaf,
-                                                  int row,
-                                                  boolean hasFocus) {
+    public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
       setForeground(selected ? myTable.getSelectionForeground() : myTable.getForeground());
       setText(value.toString());
       return this;
@@ -322,61 +331,30 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
   }
 
   private static class NotificationsTreeTableModel extends DefaultTreeModel implements TreeTableModel {
-    private final List<SettingsWrapper> mySettings = new ArrayList<SettingsWrapper>();
+    private final List<SettingsWrapper> mySettings = new ArrayList<>();
     private JTree myTree;
 
     public NotificationsTreeTableModel() {
       super(null);
 
-      List<DefaultMutableTreeNode> rootChildren = new ArrayList<DefaultMutableTreeNode>();
+      List<DefaultMutableTreeNode> rootChildren = new ArrayList<>();
 
-      Map<NotificationParentGroupBean, List<DefaultMutableTreeNode>> parentChildrenTable = new HashMap<NotificationParentGroupBean, List<DefaultMutableTreeNode>>();
       for (NotificationSettings setting : NotificationsConfigurationImpl.getInstanceImpl().getAllSettings()) {
-        SettingsWrapper wrapper = new SettingsWrapper(setting);
+        NotificationGroup group = NotificationGroupRegistrator.last().get(setting.getGroupId());
+        SettingsWrapper wrapper = new SettingsWrapper(setting, group == null ? LocalizeValue.of(setting.getGroupId()) : group.getDisplayName());
         mySettings.add(wrapper);
 
-        NotificationParentGroupBean parentGroup = NotificationParentGroup.findParent(setting);
         DefaultMutableTreeNode treeNode = new DefaultMutableTreeNode(wrapper, false);
-        if (parentGroup == null) {
-          rootChildren.add(treeNode);
-        }
-        else {
-          wrapper.myTitle = NotificationParentGroup.getReplaceTitle(wrapper.getGroupId());
-          if (wrapper.myTitle == null && parentGroup.titlePrefix != null) {
-            wrapper.myTitle = StringUtil.substringAfter(wrapper.getGroupId(), parentGroup.titlePrefix);
-          }
-
-          List<DefaultMutableTreeNode> children = parentChildrenTable.get(parentGroup);
-          if (children == null) {
-            parentChildrenTable.put(parentGroup, children = new ArrayList<DefaultMutableTreeNode>());
-          }
-          children.add(treeNode);
-        }
+        rootChildren.add(treeNode);
       }
 
-      for (NotificationParentGroupBean parentGroup : NotificationParentGroup.getParents()) {
-        if (parentGroup.parentId == null) {
-          DefaultMutableTreeNode node = new DefaultMutableTreeNode(parentGroup);
-          addParentGroup(parentGroup, node, parentChildrenTable);
-          rootChildren.add(node);
+      Collections.sort(rootChildren, (node1, node2) -> {
+        Object object1 = node1.getUserObject();
+        Object object2 = node2.getUserObject();
+        if (object2 instanceof SettingsWrapper) {
+          return ((SettingsWrapper)object1).getDisplayName().compareTo(((SettingsWrapper)object2).getDisplayName());
         }
-      }
-      Collections.sort(rootChildren, new Comparator<DefaultMutableTreeNode>() {
-        @Override
-        public int compare(DefaultMutableTreeNode node1, DefaultMutableTreeNode node2) {
-          Object object1 = node1.getUserObject();
-          Object object2 = node2.getUserObject();
-          if (object1 instanceof NotificationParentGroupBean) {
-            if (object2 instanceof NotificationParentGroupBean) {
-              return object1.toString().compareTo(object2.toString());
-            }
-            return -1;
-          }
-          if (object2 instanceof SettingsWrapper) {
-            return ((SettingsWrapper)object1).getGroupId().compareTo(((SettingsWrapper)object2).getGroupId());
-          }
-          return 1;
-        }
+        return 1;
       });
 
       DefaultMutableTreeNode root = new DefaultMutableTreeNode();
@@ -384,23 +362,6 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
         root.add(child);
       }
       setRoot(root);
-    }
-
-    private static void addParentGroup(@Nonnull NotificationParentGroupBean parent,
-                                       @Nonnull DefaultMutableTreeNode node,
-                                       @Nonnull Map<NotificationParentGroupBean, List<DefaultMutableTreeNode>> parentChildrenTable) {
-      for (NotificationParentGroupBean child : NotificationParentGroup.getChildren(parent)) {
-        DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(child);
-        addParentGroup(child, childNode, parentChildrenTable);
-        node.add(childNode);
-      }
-
-      List<DefaultMutableTreeNode> nodes = parentChildrenTable.get(parent);
-      if (nodes != null) {
-        for (DefaultMutableTreeNode childNode : nodes) {
-          node.add(childNode);
-        }
-      }
     }
 
     @Override
@@ -412,7 +373,7 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
     public String getColumnName(int column) {
       switch (column) {
         case NotificationsTreeTable.ID_COLUMN:
-          return "KeymapGroupImpl";
+          return "Group";
         case NotificationsTreeTable.LOG_COLUMN:
           return "Log";
         case NotificationsTreeTable.READ_ALOUD_COLUMN:
@@ -449,19 +410,16 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
       }
 
       Object object = ((DefaultMutableTreeNode)node).getUserObject();
-      if (object instanceof NotificationParentGroupBean) {
-        return null;
-      }
 
       SettingsWrapper wrapper = (SettingsWrapper)object;
       switch (column) {
         case NotificationsTreeTable.LOG_COLUMN:
-          return wrapper.myVersion.isShouldLog();
+          return wrapper.mySettings.isShouldLog();
         case NotificationsTreeTable.READ_ALOUD_COLUMN:
-          return wrapper.myVersion.isShouldReadAloud();
+          return wrapper.mySettings.isShouldReadAloud();
         case NotificationsTreeTable.DISPLAY_TYPE_COLUMN:
         default:
-          return wrapper.myVersion.getDisplayType();
+          return wrapper.mySettings.getDisplayType();
       }
     }
 
@@ -471,13 +429,13 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
 
       switch (column) {
         case NotificationsTreeTable.DISPLAY_TYPE_COLUMN:
-          wrapper.myVersion = wrapper.myVersion.withDisplayType((NotificationDisplayType)value);
+          wrapper.mySettings = wrapper.mySettings.withDisplayType((NotificationDisplayType)value);
           break;
         case NotificationsTreeTable.LOG_COLUMN:
-          wrapper.myVersion = wrapper.myVersion.withShouldLog((Boolean)value);
+          wrapper.mySettings = wrapper.mySettings.withShouldLog((Boolean)value);
           break;
         case NotificationsTreeTable.READ_ALOUD_COLUMN:
-          wrapper.myVersion = wrapper.myVersion.withShouldReadAloud((Boolean)value);
+          wrapper.mySettings = wrapper.mySettings.withShouldReadAloud((Boolean)value);
           break;
       }
     }

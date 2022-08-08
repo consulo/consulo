@@ -82,14 +82,18 @@
     <module>modules/base/code-editor-api</module>
     <module>modules/base/process-api</module>
     <module>modules/base/execution-api</module>
+    <module>modules/base/execution-impl</module>
     <module>modules/base/execution-debug-api</module>
+    <module>modules/base/execution-debug-impl</module>
     <module>modules/base/execution-coverage-api</module>
     <module>modules/base/execution-test-api</module>
+    <module>modules/base/execution-test-impl</module>
     <module>modules/base/execution-test-sm-api</module>
     <module>modules/base/execution-test-thrift-api</module>
     <module>modules/base/virtual-file-watcher-api</module>
     <module>modules/base/virtual-file-watcher-impl</module>
     <module>modules/base/compiler-api</module>
+    <module>modules/base/compiler-impl</module>
     <module>modules/base/language-editor-api</module>
     <module>modules/base/language-impl</module>
     <module>modules/base/document-impl</module>

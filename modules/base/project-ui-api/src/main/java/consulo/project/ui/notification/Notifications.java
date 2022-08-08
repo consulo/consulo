@@ -32,29 +32,11 @@ import java.util.concurrent.TimeUnit;
 // FIXME [VISTALL] this topic is App&Project level
 @TopicAPI(value = ComponentScope.APPLICATION, direction = TopicBroadcastDirection.NONE)
 public interface Notifications {
-  String SYSTEM_MESSAGES_GROUP_ID = "System Messages";
+  NotificationGroup SYSTEM_MESSAGES_GROUP = NotificationGroup.balloonGroup("System Messages");
 
   void notify(@Nonnull Notification notification);
 
-  void register(@Nonnull final String groupDisplayName, @Nonnull final NotificationDisplayType defaultDisplayType);
-
-  void register(@Nonnull final String groupDisplayName, @Nonnull final NotificationDisplayType defaultDisplayType, boolean shouldLog);
-
-  void register(@Nonnull final String groupDisplayName, @Nonnull final NotificationDisplayType defaultDisplayType, boolean shouldLog, boolean shouldReadAloud);
-
   class Bus {
-    /**
-     * Registration is OPTIONAL: STICKY_BALLOON display type will be used by default.
-     */
-    public static void register(@Nonnull final String group_id, @Nonnull final NotificationDisplayType defaultDisplayType) {
-      Application application = Application.get();
-      application.getLastUIAccess().give(() -> {
-        if (!application.isDisposed()) {
-          application.getMessageBus().syncPublisher(Notifications.class).register(group_id, defaultDisplayType);
-        }
-      });
-    }
-
     public static void notify(@Nonnull final Notification notification) {
       notify(notification, null);
     }

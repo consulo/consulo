@@ -13,7 +13,6 @@ import consulo.ide.impl.builtInServer.impl.ide.BuiltInServerOptions;
 import consulo.ide.impl.builtInServer.impl.net.http.BuiltInServer;
 import consulo.ide.impl.builtInServer.impl.net.http.ImportantFolderLockerViaBuiltInServer;
 import consulo.ide.impl.builtInServer.impl.net.http.SubServer;
-import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
 import consulo.logging.Logger;
 import consulo.project.ui.notification.NotificationDisplayType;
 import consulo.project.ui.notification.NotificationGroup;
@@ -42,13 +41,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class BuiltInServerManagerImpl extends BuiltInServerManager {
   private static final Logger LOG = Logger.getInstance(BuiltInServerManager.class);
 
-  public static final NotNullLazyValue<NotificationGroup> NOTIFICATION_GROUP = new NotNullLazyValue<NotificationGroup>() {
-    @Nonnull
-    @Override
-    protected NotificationGroup compute() {
-      return new NotificationGroup("Built-in Server", NotificationDisplayType.STICKY_BALLOON, true);
-    }
-  };
+  public static final NotificationGroup NOTIFICATION_GROUP = new NotificationGroup("Built-in Server", NotificationDisplayType.STICKY_BALLOON, true);
 
   @NonNls
   public static final String PROPERTY_RPC_PORT = "consulo.rpc.port";
@@ -115,9 +108,9 @@ public class BuiltInServerManagerImpl extends BuiltInServerManager {
       }
       catch (Throwable e) {
         LOG.info(e);
-        NOTIFICATION_GROUP.getValue().createNotification("Cannot start internal HTTP server. Git integration, Some plugins may operate with errors. " +
-                                                         "Please check your firewall settings and restart " + ApplicationNamesInfo.getInstance().getFullProductName(),
-                                                         NotificationType.ERROR).notify(null);
+        NOTIFICATION_GROUP.createNotification("Cannot start internal HTTP server. Git integration, Some plugins may operate with errors. " +
+                                              "Please check your firewall settings and restart " +
+                                              ApplicationNamesInfo.getInstance().getFullProductName(), NotificationType.ERROR).notify(null);
         return;
       }
 

@@ -49,6 +49,11 @@ class SingleLocalizeValue implements LocalizeValue {
   }
 
   @Override
+  public int compareTo(@Nonnull LocalizeValue o) {
+    return getValue().compareTo(o.getValue());
+  }
+
+  @Override
   public String toString() {
     return getValue();
   }

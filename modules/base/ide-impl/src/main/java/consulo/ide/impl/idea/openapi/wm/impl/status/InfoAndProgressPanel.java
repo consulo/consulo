@@ -27,7 +27,7 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.ide.impl.idea.ui.InplaceButton;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.project.StatusWidgetBorders;
+import consulo.ide.impl.project.ui.impl.StatusWidgetBorders;
 import consulo.ide.impl.ui.impl.BalloonLayoutEx;
 import consulo.ide.impl.ui.impl.ToolWindowPanelImplEx;
 import consulo.localize.LocalizeValue;

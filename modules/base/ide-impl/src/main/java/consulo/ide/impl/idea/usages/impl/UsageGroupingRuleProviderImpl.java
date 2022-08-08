@@ -135,7 +135,7 @@ public class UsageGroupingRuleProviderImpl implements UsageGroupingRuleProvider 
 
   private static class GroupByScopeAction extends RuleAction {
     private GroupByScopeAction(UsageViewImpl view) {
-      super(view, "KeymapGroupImpl by test/production", AllIcons.Actions.GroupByTestProduction);
+      super(view, "Group by test/production", AllIcons.Actions.GroupByTestProduction);
     }
     @Override
     protected boolean getOptionValue() {

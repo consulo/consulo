@@ -762,7 +762,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
           add(new DumbAwareAction("New group...") {
             @Override
             public void actionPerformed(AnActionEvent e) {
-              String newName = Messages.showInputDialog(myTree, "Enter the new group name:", "Move to a New KeymapGroupImpl", null, "", new TemplateGroupInputValidator(null));
+              String newName = Messages.showInputDialog(myTree, "Enter the new group name:", "Move to a New Group", null, "", new TemplateGroupInputValidator(null));
               if (newName != null) {
                 moveTemplates(templates, newName);
               }

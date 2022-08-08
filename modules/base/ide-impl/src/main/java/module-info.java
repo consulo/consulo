@@ -80,6 +80,10 @@ open module consulo.ide.impl {
   requires consulo.language.code.style.ui.api;
   requires consulo.http.impl;
   requires consulo.file.editor.impl;
+  requires consulo.compiler.impl;
+  requires consulo.execution.impl;
+  requires consulo.execution.debug.impl;
+  requires consulo.execution.test.impl;
 
   requires consulo.ui.impl;
   requires consulo.localize.impl;
@@ -1078,4 +1082,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.wm.impl.layout;
   exports consulo.ide.impl.wm.impl.status;
   exports consulo.ide.impl.wm.impl.welcomeScreen;
+  
+  exports consulo.ide.impl.project.ui.impl;
 }

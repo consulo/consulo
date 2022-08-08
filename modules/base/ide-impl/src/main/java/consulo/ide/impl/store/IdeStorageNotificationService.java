@@ -59,7 +59,7 @@ public class IdeStorageNotificationService implements StorageNotificationService
 
   @Override
   public void notify(@Nonnull NotificationType notificationType, @Nonnull String title, @Nonnull String text, @Nullable ComponentManager project) {
-    new Notification(Notifications.SYSTEM_MESSAGES_GROUP_ID, title, text, consulo.project.ui.notification.NotificationType.from(notificationType)).notify(ObjectUtil.tryCast(project, Project.class));
+    new Notification(Notifications.SYSTEM_MESSAGES_GROUP, title, text, consulo.project.ui.notification.NotificationType.from(notificationType)).notify(ObjectUtil.tryCast(project, Project.class));
   }
 
   @Override

@@ -27,7 +27,7 @@ public class CreateNewProjectGroupAction extends RecentProjectsWelcomeScreenActi
         return true;
       }
     };
-    final String newGroup = Messages.showInputDialog((Project)null, "Project group name", "Create New Project KeymapGroupImpl", null, null, validator);
+    final String newGroup = Messages.showInputDialog((Project)null, "Project group name", "Create New Project Group", null, null, validator);
     if (newGroup != null) {
       RecentProjectsManager.getInstance().addGroup(new ProjectGroup(newGroup));
       rebuildRecentProjectsList(e);

@@ -18,11 +18,11 @@ package consulo.ide.impl.idea.openapi.vcs;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.notification.*;
 import consulo.ide.ServiceManager;
-import consulo.project.Project;
+import consulo.ide.impl.idea.notification.NotificationAction;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentManager;
+import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationDisplayType;
 import consulo.project.ui.notification.NotificationGroup;
@@ -40,8 +40,7 @@ import javax.annotation.Nullable;
 public class VcsNotifier {
 
   public static final NotificationGroup NOTIFICATION_GROUP_ID = NotificationGroup.toolWindowGroup("Vcs Messages", ChangesViewContentManager.TOOLWINDOW_ID);
-  public static final NotificationGroup IMPORTANT_ERROR_NOTIFICATION =
-          new NotificationGroup("Vcs Important Messages", NotificationDisplayType.STICKY_BALLOON, true);
+  public static final NotificationGroup IMPORTANT_ERROR_NOTIFICATION = new NotificationGroup("Vcs Important Messages", NotificationDisplayType.STICKY_BALLOON, true);
   public static final NotificationGroup STANDARD_NOTIFICATION = new NotificationGroup("Vcs Notifications", NotificationDisplayType.BALLOON, true);
   public static final NotificationGroup SILENT_NOTIFICATION = new NotificationGroup("Vcs Silent Notifications", NotificationDisplayType.NONE, true);
 
@@ -73,11 +72,7 @@ public class VcsNotifier {
   }
 
   @Nonnull
-  public Notification notify(@Nonnull NotificationGroup notificationGroup,
-                             @Nonnull String title,
-                             @Nonnull String message,
-                             @Nonnull NotificationType type,
-                             @Nullable NotificationListener listener) {
+  public Notification notify(@Nonnull NotificationGroup notificationGroup, @Nonnull String title, @Nonnull String message, @Nonnull NotificationType type, @Nullable NotificationListener listener) {
     Notification notification = createNotification(notificationGroup, title, message, type, listener);
     notification.notify(myProject);
     return notification;

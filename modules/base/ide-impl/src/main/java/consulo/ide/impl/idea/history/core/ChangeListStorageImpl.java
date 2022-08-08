@@ -134,7 +134,7 @@ public class ChangeListStorageImpl implements ChangeListStorage {
                              "<br>" +
                              "Please attach log files from <a href=\"file\">" + logFile + "</a><br>" +
                              "to the <a href=\"url\">YouTrack issue</a>";*/
-    Notifications.Bus.notify(new Notification(Notifications.SYSTEM_MESSAGES_GROUP_ID, "Local History is broken", message /*+ createIssuePart*/, NotificationType.ERROR, new NotificationListener() {
+    Notifications.Bus.notify(new Notification(Notifications.SYSTEM_MESSAGES_GROUP, "Local History is broken", message /*+ createIssuePart*/, NotificationType.ERROR, new NotificationListener() {
       @Override
       public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
         if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {

@@ -15,27 +15,25 @@
  */
 package consulo.ide.impl.idea.execution;
 
+import consulo.application.ApplicationManager;
 import consulo.application.CommonBundle;
+import consulo.ide.setting.ShowSettingsUtil;
+import consulo.logging.Logger;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.local.CapturingProcessHandler;
 import consulo.process.local.ProcessOutput;
-import consulo.application.ApplicationManager;
-import consulo.logging.Logger;
-import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
-import consulo.application.util.registry.Registry;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.NotificationsManager;
 import consulo.project.ui.notification.event.NotificationListener;
-import consulo.util.io.CharsetToolkit;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.image.Image;
+import consulo.util.io.CharsetToolkit;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
 import java.util.Collections;
@@ -51,10 +49,11 @@ import static consulo.project.ui.notification.NotificationDisplayType.STICKY_BAL
  */
 public abstract class ExecutableValidator {
 
-  public static final int TIMEOUT_MS = Registry.intValue("vcs.executable.validator.timeout.sec", 60) * 1000;
+  public static final int TIMEOUT_MS = 60 * 1000;
 
   private static final Logger LOG = Logger.getInstance(ExecutableValidator.class);
-  private static final NotificationGroup ourNotificationGroup = new NotificationGroup("External Executable Critical Failures", STICKY_BALLOON, true);
+  static final NotificationGroup ourNotificationGroup = new NotificationGroup("External Executable Critical Failures", STICKY_BALLOON, true);
+
   @Nonnull
   protected final Project myProject;
   @Nonnull
@@ -254,7 +253,7 @@ public abstract class ExecutableValidator {
     }
 
     public ExecutableNotValidNotification(@Nonnull String preparedDescription, @Nonnull NotificationType type) {
-      super(ourNotificationGroup.getDisplayId(), "", preparedDescription, type, new NotificationListener.Adapter() {
+      super(ourNotificationGroup, "", preparedDescription, type, new NotificationListener.Adapter() {
         @Override
         protected void hyperlinkActivated(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
           showSettingsAndExpireIfFixed(notification);

@@ -149,7 +149,7 @@ public class AnalysisUIOptions implements PersistentStateComponent<AnalysisUIOpt
   }
 
   public AnAction createGroupByDirectoryAction(final InspectionResultsView view) {
-    return new ToggleAction("KeymapGroupImpl by directory", "KeymapGroupImpl by directory", AllIcons.Actions.GroupByPackage) {
+    return new ToggleAction("Group by directory", "Group by directory", AllIcons.Actions.GroupByPackage) {
 
       @Override
       public boolean isSelected(AnActionEvent e) {

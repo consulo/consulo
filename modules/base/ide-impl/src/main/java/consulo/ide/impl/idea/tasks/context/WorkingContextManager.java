@@ -25,8 +25,7 @@ import consulo.ide.impl.idea.openapi.diagnostic.Logger;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.task.Task;
-import consulo.ide.impl.idea.util.NullableFunction;
+import consulo.ide.impl.idea.tasks.impl.TaskManagerImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.io.zip.JBZipEntry;
 import consulo.ide.impl.idea.util.io.zip.JBZipFile;
@@ -34,6 +33,7 @@ import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
+import consulo.task.Task;
 import consulo.task.context.WorkingContextProvider;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
@@ -163,7 +163,7 @@ public class WorkingContextManager {
       JBZipFile zipFile = null;
       try {
         zipFile = new JBZipFile(file);
-        Notifications.Bus.notify(new Notification("Tasks", "Context Data Corrupted",
+        Notifications.Bus.notify(new Notification(TaskManagerImpl.TASKS_NOTIFICATION_GROUP, "Context Data Corrupted",
                                                   "Context information history for " + myProject.getName() + " was corrupted.\n" +
                                                   "The history was replaced with empty one.", NotificationType.ERROR), myProject);
       }
@@ -230,11 +230,7 @@ public class WorkingContextManager {
     try {
       archive = getTasksArchive(zipPostfix);
       List<JBZipEntry> entries = archive.getEntries();
-      return ContainerUtil.mapNotNull(entries, new NullableFunction<JBZipEntry, ContextInfo>() {
-        public ContextInfo fun(JBZipEntry entry) {
-          return entry.getName().startsWith("/context") ? new ContextInfo(entry.getName(), entry.getTime(), entry.getComment()) : null;
-        }
-      });
+      return ContainerUtil.mapNotNull(entries, entry -> entry.getName().startsWith("/context") ? new ContextInfo(entry.getName(), entry.getTime(), entry.getComment()) : null);
     }
     catch (IOException e) {
       LOG.error(e);

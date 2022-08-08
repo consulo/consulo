@@ -15,82 +15,103 @@
  */
 package consulo.project.ui.notification;
 
-import consulo.logging.Logger;
+import consulo.annotation.DeprecationInfo;
+import consulo.localize.LocalizeValue;
 import consulo.project.ui.notification.event.NotificationListener;
-import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author peter
  */
 public final class NotificationGroup {
-  private static final Logger LOG = Logger.getInstance(NotificationGroup.class);
-  private static final Map<String, NotificationGroup> ourRegisteredGroups = new ConcurrentHashMap<>();
-
   @Nonnull
-  private final String myDisplayId;
+  private final String myId;
+  @Nonnull
+  private final LocalizeValue myDisplayName;
   @Nonnull
   private final NotificationDisplayType myDisplayType;
   private final boolean myLogByDefault;
   @Nullable
   private final String myToolWindowId;
-  private final Image myIcon;
 
-  private String myParentId;
-
-  public NotificationGroup(@Nonnull String displayId, @Nonnull NotificationDisplayType defaultDisplayType, boolean logByDefault) {
-    this(displayId, defaultDisplayType, logByDefault, null);
+  @Deprecated
+  @DeprecationInfo("Use constructor with LocalizeValue parameter")
+  public NotificationGroup(@Nonnull String id, @Nonnull NotificationDisplayType defaultDisplayType, boolean logByDefault) {
+    this(id, LocalizeValue.of(id), defaultDisplayType, logByDefault, null);
   }
 
-  public NotificationGroup(@Nonnull String displayId, @Nonnull NotificationDisplayType defaultDisplayType, boolean logByDefault, @Nullable String toolWindowId) {
-    this(displayId, defaultDisplayType, logByDefault, toolWindowId, null);
+  public NotificationGroup(@Nonnull String id, @Nonnull LocalizeValue displayName, @Nonnull NotificationDisplayType defaultDisplayType, boolean logByDefault) {
+    this(id, displayName, defaultDisplayType, logByDefault, null);
   }
 
-  public NotificationGroup(@Nonnull String displayId, @Nonnull NotificationDisplayType defaultDisplayType, boolean logByDefault, @Nullable String toolWindowId, @Nullable Image icon) {
-    myDisplayId = displayId;
+  @Deprecated
+  @DeprecationInfo("Use constructor with LocalizeValue parameter")
+  public NotificationGroup(@Nonnull String id, @Nonnull NotificationDisplayType defaultDisplayType, boolean logByDefault, @Nullable String toolWindowId) {
+    this(id, LocalizeValue.of(id), defaultDisplayType, logByDefault, toolWindowId);
+  }
+
+  public NotificationGroup(@Nonnull String id, @Nonnull LocalizeValue displayName, @Nonnull NotificationDisplayType defaultDisplayType, boolean logByDefault, @Nullable String toolWindowId) {
+    myId = id;
     myDisplayType = defaultDisplayType;
     myLogByDefault = logByDefault;
     myToolWindowId = toolWindowId;
-    myIcon = icon;
-
-    if (ourRegisteredGroups.containsKey(displayId)) {
-      LOG.info("Notification group " + displayId + " is already registered", new Throwable());
-    }
-    ourRegisteredGroups.put(displayId, this);
+    myDisplayName = displayName;
   }
 
   @Nonnull
-  public static NotificationGroup balloonGroup(@Nonnull String displayId) {
-    return new NotificationGroup(displayId, NotificationDisplayType.BALLOON, true);
+  @Deprecated
+  public static NotificationGroup balloonGroup(@Nonnull String id) {
+    return new NotificationGroup(id, NotificationDisplayType.BALLOON, true);
   }
 
   @Nonnull
+  public static NotificationGroup balloonGroup(@Nonnull String id, @Nonnull LocalizeValue displayName) {
+    return new NotificationGroup(id, displayName, NotificationDisplayType.BALLOON, true);
+  }
+
+  @Nonnull
+  @Deprecated
   public static NotificationGroup logOnlyGroup(@Nonnull String displayId) {
     return new NotificationGroup(displayId, NotificationDisplayType.NONE, true);
   }
 
   @Nonnull
-  public static NotificationGroup toolWindowGroup(@Nonnull String displayId, @Nonnull String toolWindowId, final boolean logByDefault) {
-    return new NotificationGroup(displayId, NotificationDisplayType.TOOL_WINDOW, logByDefault, toolWindowId);
+  public static NotificationGroup logOnlyGroup(@Nonnull String id, @Nonnull LocalizeValue displayName) {
+    return new NotificationGroup(id, displayName, NotificationDisplayType.NONE, true);
   }
 
   @Nonnull
-  public static NotificationGroup toolWindowGroup(@Nonnull String displayId, @Nonnull String toolWindowId) {
-    return toolWindowGroup(displayId, toolWindowId, true);
+  @Deprecated
+  public static NotificationGroup toolWindowGroup(@Nonnull String id, @Nonnull String toolWindowId, final boolean logByDefault) {
+    return new NotificationGroup(id, NotificationDisplayType.TOOL_WINDOW, logByDefault, toolWindowId);
   }
 
   @Nonnull
-  public String getDisplayId() {
-    return myDisplayId;
+  public static NotificationGroup toolWindowGroup(@Nonnull String id, @Nonnull LocalizeValue displayName, @Nonnull String toolWindowId, final boolean logByDefault) {
+    return new NotificationGroup(id, displayName, NotificationDisplayType.TOOL_WINDOW, logByDefault, toolWindowId);
   }
 
-  @Nullable
-  public Image getIcon() {
-    return myIcon;
+  @Nonnull
+  @Deprecated
+  public static NotificationGroup toolWindowGroup(@Nonnull String id, @Nonnull String toolWindowId) {
+    return toolWindowGroup(id, toolWindowId, true);
+  }
+
+  @Nonnull
+  public static NotificationGroup toolWindowGroup(@Nonnull String id, @Nonnull LocalizeValue displayName, @Nonnull String toolWindowId) {
+    return toolWindowGroup(id, displayName, toolWindowId, true);
+  }
+
+  @Nonnull
+  public String getId() {
+    return myId;
+  }
+
+  @Nonnull
+  public LocalizeValue getDisplayName() {
+    return myDisplayName;
   }
 
   @Nonnull
@@ -100,7 +121,7 @@ public final class NotificationGroup {
 
   @Nonnull
   public Notification createNotification(@Nonnull final String title, @Nonnull final String content, @Nonnull final NotificationType type, @Nullable NotificationListener listener) {
-    return new Notification(myDisplayId, title, content, type, listener);
+    return new Notification(this, title, content, type, listener);
   }
 
   @Nonnull
@@ -120,19 +141,7 @@ public final class NotificationGroup {
 
   @Nonnull
   public Notification createNotification(@Nullable String title, @Nullable String subtitle, @Nullable String content, @Nonnull NotificationType type, @Nullable NotificationListener listener) {
-    LOG.assertTrue(myIcon != null);
-    return new Notification(myDisplayId, myIcon, title, subtitle, content, type, listener);
-  }
-
-  @Nullable
-  public String getParentId() {
-    return myParentId;
-  }
-
-  @Nonnull
-  public NotificationGroup setParentId(@Nonnull String parentId) {
-    myParentId = parentId;
-    return this;
+    return new Notification(this, null, title, subtitle, content, type, listener);
   }
 
   @Nonnull
@@ -148,15 +157,4 @@ public final class NotificationGroup {
   public String getToolWindowId() {
     return myToolWindowId;
   }
-
-  @Nullable
-  public static NotificationGroup findRegisteredGroup(String displayId) {
-    return ourRegisteredGroups.get(displayId);
-  }
-
-  @Nonnull
-  public static Iterable<NotificationGroup> getAllRegisteredGroups() {
-    return ourRegisteredGroups.values();
-  }
-
 }

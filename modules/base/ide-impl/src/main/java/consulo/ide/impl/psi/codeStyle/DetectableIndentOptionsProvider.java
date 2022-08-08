@@ -43,7 +43,7 @@ import static consulo.language.codeStyle.CommonCodeStyleSettings.IndentOptions;
  */
 @ExtensionImpl(order = "last")
 public class DetectableIndentOptionsProvider extends FileIndentOptionsProvider {
-  private static final NotificationGroup NOTIFICATION_GROUP = new NotificationGroup("Automatic indent detection", NotificationDisplayType.STICKY_BALLOON, true);
+  static final NotificationGroup NOTIFICATION_GROUP = new NotificationGroup("Automatic indent detection", NotificationDisplayType.STICKY_BALLOON, true);
 
   private boolean myIsEnabledInTest;
   private final Map<VirtualFile, IndentOptions> myDiscardedOptions = ContainerUtil.createWeakMap();
@@ -136,7 +136,7 @@ public class DetectableIndentOptionsProvider extends FileIndentOptionsProvider {
 
   private static final class DetectionDisabledNotification extends Notification {
     private DetectionDisabledNotification(Project project) {
-      super(NOTIFICATION_GROUP.getDisplayId(), ApplicationBundle.message("code.style.indent.detector.notification.content"), "", NotificationType.INFORMATION);
+      super(NOTIFICATION_GROUP.getId(), ApplicationBundle.message("code.style.indent.detector.notification.content"), "", NotificationType.INFORMATION);
       addAction(new ReEnableDetection(project, this));
       addAction(new ShowIndentDetectionOptionAction(ApplicationBundle.message("code.style.indent.provider.notification.settings")));
     }

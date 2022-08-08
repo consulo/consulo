@@ -15,13 +15,14 @@
  */
 package consulo.project.ui.notification;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.project.ui.notification.event.NotificationListener;
 import consulo.project.ui.internal.NotificationActionInvoker;
+import consulo.project.ui.notification.event.NotificationListener;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -66,8 +67,7 @@ public class Notification {
    */
   public enum CollapseActionsDirection {
     KEEP_LEFTMOST,
-    KEEP_RIGHTMOST
-  }
+    KEEP_RIGHTMOST}
 
   public final String id;
 
@@ -89,28 +89,56 @@ public class Notification {
   private WeakReference<Balloon> myBalloonRef;
   private final long myTimestamp;
 
-  public Notification(@Nonnull String groupDisplayId, @Nullable Image icon, @Nonnull NotificationType type) {
-    this(groupDisplayId, icon, null, null, null, type, null);
+
+  @Deprecated(forRemoval = true)
+  @DeprecationInfo("Use with NotificationGroup parameter")
+  public Notification(@Nonnull String groupDisplayId, @Nonnull String title, @Nonnull String content, @Nonnull NotificationType type) {
+    this(groupDisplayId, title, content, type, null);
   }
 
   /**
    * @param groupDisplayId this should be a human-readable, capitalized string like "Facet Detector".
    *                       It will appear in "Notifications" configurable.
-   * @param icon           notification icon, if <b>null</b> used icon from type
    * @param title          notification title
-   * @param subtitle       notification subtitle
    * @param content        notification content
    * @param type           notification type
    * @param listener       notification lifecycle listener
    */
-  public Notification(@Nonnull String groupDisplayId,
+  @Deprecated(forRemoval = true)
+  @DeprecationInfo("Use with NotificationGroup parameter")
+  public Notification(@Nonnull String groupDisplayId, @Nonnull String title, @Nonnull String content, @Nonnull NotificationType type, @Nullable NotificationListener listener) {
+    myGroupId = groupDisplayId;
+    myTitle = title;
+    myContent = content;
+    myType = type;
+    myListener = listener;
+    myTimestamp = System.currentTimeMillis();
+
+    assertHasTitleOrContent();
+    id = calculateId(this);
+  }
+
+  public Notification(@Nonnull NotificationGroup group, @Nonnull String title, @Nonnull String content, @Nonnull NotificationType type) {
+    this(group, title, content, type, null);
+  }
+
+  /**
+   * @param group    notification grouo
+   * @param icon     notification icon, if <b>null</b> used icon from type
+   * @param title    notification title
+   * @param subtitle notification subtitle
+   * @param content  notification content
+   * @param type     notification type
+   * @param listener notification lifecycle listener
+   */
+  public Notification(@Nonnull NotificationGroup group,
                       @Nullable Image icon,
                       @Nullable String title,
                       @Nullable String subtitle,
                       @Nullable String content,
                       @Nonnull NotificationType type,
                       @Nullable NotificationListener listener) {
-    myGroupId = groupDisplayId;
+    myGroupId = group.getId();
     myTitle = StringUtil.notNullize(title);
     myContent = StringUtil.notNullize(content);
     myType = type;
@@ -124,24 +152,15 @@ public class Notification {
     id = calculateId(this);
   }
 
-  public Notification(@Nonnull String groupDisplayId, @Nonnull String title, @Nonnull String content, @Nonnull NotificationType type) {
-    this(groupDisplayId, title, content, type, null);
-  }
-
   /**
-   * @param groupDisplayId this should be a human-readable, capitalized string like "Facet Detector".
-   *                       It will appear in "Notifications" configurable.
-   * @param title          notification title
-   * @param content        notification content
-   * @param type           notification type
-   * @param listener       notification lifecycle listener
+   * @param group    notification group
+   * @param title    notification title
+   * @param content  notification content
+   * @param type     notification type
+   * @param listener notification lifecycle listener
    */
-  public Notification(@Nonnull String groupDisplayId,
-                      @Nonnull String title,
-                      @Nonnull String content,
-                      @Nonnull NotificationType type,
-                      @Nullable NotificationListener listener) {
-    myGroupId = groupDisplayId;
+  public Notification(@Nonnull NotificationGroup group, @Nonnull String title, @Nonnull String content, @Nonnull NotificationType type, @Nullable NotificationListener listener) {
+    myGroupId = group.getId();
     myTitle = title;
     myContent = content;
     myType = type;
@@ -385,7 +404,6 @@ public class Notification {
   }
 
   private void assertHasTitleOrContent() {
-    LOG.assertTrue(hasTitle() || hasContent(),
-                   "Notification should have title: [" + myTitle + "] and/or content: [" + myContent + "]; groupId: " + myGroupId);
+    LOG.assertTrue(hasTitle() || hasContent(), "Notification should have title: [" + myTitle + "] and/or content: [" + myContent + "]; groupId: " + myGroupId);
   }
 }

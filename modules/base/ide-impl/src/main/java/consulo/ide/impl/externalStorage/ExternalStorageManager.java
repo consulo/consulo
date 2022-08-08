@@ -15,27 +15,16 @@
  */
 package consulo.ide.impl.externalStorage;
 
-import consulo.ide.impl.idea.ide.plugins.PluginInstallUtil;
-import consulo.ide.impl.idea.ide.startup.StartupActionScriptManager;
-import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.NotificationType;
 import consulo.application.AccessToken;
 import consulo.application.AppUIExecutor;
 import consulo.application.Application;
+import consulo.application.ApplicationProperties;
 import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.impl.internal.store.IApplicationStore;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
-import consulo.project.Project;
-import consulo.project.ProjectManager;
-import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.io.StreamUtil;
-import consulo.project.ui.wm.IdeFrame;
-import consulo.project.ui.wm.WindowManager;
 import consulo.application.util.concurrent.AppExecutorUtil;
-import consulo.ide.impl.idea.util.io.UnsyncByteArrayInputStream;
-import consulo.application.ApplicationProperties;
-import consulo.application.impl.internal.store.IApplicationStore;
 import consulo.component.store.impl.internal.StoreUtil;
 import consulo.externalService.ExternalService;
 import consulo.externalService.ExternalServiceConfiguration;
@@ -46,8 +35,21 @@ import consulo.ide.impl.externalService.impl.WebServiceApiSender;
 import consulo.ide.impl.externalStorage.storage.DataCompressor;
 import consulo.ide.impl.externalStorage.storage.ExternalStorage;
 import consulo.ide.impl.externalStorage.storage.InfoAllBeanResponse;
+import consulo.ide.impl.idea.ide.plugins.PluginInstallUtil;
+import consulo.ide.impl.idea.ide.startup.StartupActionScriptManager;
+import consulo.ide.impl.idea.openapi.util.io.StreamUtil;
+import consulo.ide.impl.idea.util.io.UnsyncByteArrayInputStream;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.ProjectManager;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationDisplayType;
+import consulo.project.ui.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.wm.IdeFrame;
+import consulo.project.ui.wm.WindowManager;
+import consulo.ui.ex.awt.Messages;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ThreeState;
 
@@ -57,7 +59,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -70,6 +75,8 @@ import java.util.zip.ZipInputStream;
  * @since 11/09/2021
  */
 public class ExternalStorageManager {
+  public static final NotificationGroup GROUP = new NotificationGroup("externalStorage", LocalizeValue.localizeTODO("External Storage"), NotificationDisplayType.BALLOON, true);
+
   private static final Logger LOG = Logger.getInstance(ExternalStorageManager.class);
 
   @Nonnull
@@ -96,12 +103,12 @@ public class ExternalStorageManager {
   public void startChecking() {
     boolean inSandbox = ApplicationProperties.isInSandbox();
     int time = inSandbox ? 1 : 10;
-    
+
     myCheckingFuture = AppExecutorUtil.getAppScheduledExecutorService().scheduleWithFixedDelay(() -> {
-      if(!myCheckingState.compareAndSet(false, true)) {
+      if (!myCheckingState.compareAndSet(false, true)) {
         return;
       }
-      
+
       Task.Backgroundable.queue(null, "Checking external storage...", this::checkForModifications);
     }, time, time, TimeUnit.MINUTES);
   }
@@ -111,11 +118,11 @@ public class ExternalStorageManager {
       boolean wantRestart = myPluginManager.updatePlugins(indicator);
 
       indicator.setTextValue(LocalizeValue.localizeTODO("Checking external storage for modifications..."));
- 
+
       InfoAllBeanResponse response = WebServiceApiSender.doGet(WebServiceApi.STORAGE_API, "infoAll", InfoAllBeanResponse.class);
 
       assert response != null;
-      
+
       Map<String, Long> localModsCount = myStorage.getModificationInfo();
 
       Set<String> reloadComponentNames = new LinkedHashSet<>();
@@ -167,7 +174,7 @@ public class ExternalStorageManager {
         runRefresher(fetchNewFileSpecs, reloadComponentNames, indicator);
       }
 
-      if(wantRestart) {
+      if (wantRestart) {
         myApplication.invokeLater(() -> {
           if (PluginInstallUtil.showRestartIDEADialog() == Messages.YES) {
             Application.get().restart(true);
@@ -185,7 +192,7 @@ public class ExternalStorageManager {
 
   private void runRefresher(Set<String> fetchNewFileSpecs, Set<String> reloadComponentNames, ProgressIndicator indicator) {
     indicator.setTextValue(LocalizeValue.localizeTODO("Refreshing from external storage..."));
- 
+
     try (AccessToken unused = myApplication.startSaveBlock()) {
       // fist of all we need download changed or new files
       for (String fullFileSpec : fetchNewFileSpecs) {
@@ -223,7 +230,7 @@ public class ExternalStorageManager {
             }
           }
 
-          new Notification("externalStorage", "External Storage", "Local configuration refreshed", NotificationType.INFORMATION).notify(project);
+          new Notification(ExternalStorageManager.GROUP, "External Storage", "Local configuration refreshed", NotificationType.INFORMATION).notify(project);
         });
       });
     }
@@ -268,7 +275,7 @@ public class ExternalStorageManager {
 
       // there not check for restart - restart will be anyway
       myPluginManager.updatePlugins(indicator);
-      
+
       // add action for restart
       StartupActionScriptManager.addActionCommand(new StartupActionScriptManager.CreateFileCommand(myStorage.getInitializedFile()));
 
@@ -288,7 +295,7 @@ public class ExternalStorageManager {
       StoreUtil.save(myApplicationStore, true, null);
 
       // if there plugins change - require restart
-      if(myPluginManager.updatePlugins(indicator)) {
+      if (myPluginManager.updatePlugins(indicator)) {
         myApplication.invokeLater(this::showRestartDialog, IdeaModalityState.NON_MODAL);
       }
     }

@@ -129,7 +129,7 @@ public class CreateLauncherScriptAction extends DumbAwareAction {
       if (!StringUtil.isEmptyOrSpaces(message)) {
         LOG.warn(e);
         Notifications.Bus.notify(
-                new Notification(Notifications.SYSTEM_MESSAGES_GROUP_ID, "Failed to create launcher script", message, NotificationType.ERROR),
+                new Notification(Notifications.SYSTEM_MESSAGES_GROUP, "Failed to create launcher script", message, NotificationType.ERROR),
                 project);
       }
       else {

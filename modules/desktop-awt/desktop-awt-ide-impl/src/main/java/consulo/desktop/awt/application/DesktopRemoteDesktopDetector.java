@@ -37,7 +37,7 @@ import java.awt.desktop.UserSessionListener;
 @ServiceImpl
 public class DesktopRemoteDesktopDetector extends RemoteDesktopService {
   private static final Logger LOG = Logger.getInstance(DesktopRemoteDesktopDetector.class);
-  private static final NotificationGroup NOTIFICATION_GROUP = new NotificationGroup("Remote Desktop", NotificationDisplayType.BALLOON, false);
+  public static final NotificationGroup NOTIFICATION_GROUP = new NotificationGroup("Remote Desktop", NotificationDisplayType.BALLOON, false);
 
   private volatile boolean myFailureDetected;
   private volatile boolean myRemoteDesktopConnected;

@@ -84,8 +84,6 @@
 
     <extensionPoint name="fileTypeOverrider" interface="consulo.ide.impl.idea.openapi.fileTypes.impl.FileTypeOverrider"/>
 
-    <extensionPoint name="fileType"
-                    beanClass="consulo.ide.impl.idea.openapi.fileTypes.impl.FileTypeBean"/>
 
     <extensionPoint name="virtualFileSystem" interface="consulo.virtualFileSystem.VirtualFileSystem"/>
 
@@ -954,9 +952,6 @@
     <extensionPoint name="actionFromOptionDescriptorProvider" interface="consulo.ide.impl.idea.ide.ui.search.ActionFromOptionDescriptorProvider"/>
 
     <extensionPoint name="stripTrailingSpacesFilterFactory" interface="consulo.document.StripTrailingSpacesFilterFactory"/>
-
-    <extensionPoint name="notification.parentGroup" beanClass="consulo.ide.impl.idea.notification.impl.NotificationParentGroupBean"/>
-    <extensionPoint name="notification.group" beanClass="consulo.ide.impl.idea.notification.impl.NotificationGroupBean"/>
 
     <extensionPoint name="openapi.vcs.actions.AnnotateToggleAction.Provider"
                     interface="consulo.ide.impl.idea.openapi.vcs.actions.AnnotateToggleAction$Provider"/>

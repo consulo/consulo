@@ -42,7 +42,6 @@ import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.AsyncEventSupport;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.ManagingFS;
-import consulo.virtualFileSystem.NewVirtualFile;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.FlushingDaemon;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.PersistentFS;
@@ -103,6 +102,7 @@ import consulo.util.lang.SystemProperties;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.NewVirtualFile;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWithId;
 import consulo.virtualFileSystem.fileType.FileNameMatcher;
@@ -133,11 +133,12 @@ import java.util.stream.Stream;
 @Singleton
 @ServiceImpl
 public final class FileBasedIndexImpl extends FileBasedIndex {
+  static final NotificationGroup NOTIFICATIONS = new NotificationGroup("Indexing", NotificationDisplayType.BALLOON, false);
+
   private static final ThreadLocal<VirtualFile> ourIndexedFile = new ThreadLocal<>();
   private static final ThreadLocal<VirtualFile> ourFileToBeIndexed = new ThreadLocal<>();
   static final Logger LOG = Logger.getInstance(FileBasedIndexImpl.class);
   private static final String CORRUPTION_MARKER_NAME = "corruption.marker";
-  private static final NotificationGroup NOTIFICATIONS = new NotificationGroup("Indexing", NotificationDisplayType.BALLOON, false);
   private static final ThreadLocal<Stack<DumbModeAccessType>> ourDumbModeAccessTypeStack = ThreadLocal.withInitial(() -> new Stack<>());
 
   private final List<ID<?, ?>> myIndicesForDirectories = new SmartList<>();

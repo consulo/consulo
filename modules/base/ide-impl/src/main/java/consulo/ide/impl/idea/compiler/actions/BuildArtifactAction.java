@@ -16,40 +16,40 @@
 package consulo.ide.impl.idea.compiler.actions;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.action.CommonShortcuts;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.ModulesConfiguratorImpl;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ide.impl.idea.openapi.ui.popup.MultiSelectionListPopupStep;
-import consulo.ui.ex.popup.BaseListPopupStep;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.ide.impl.idea.packaging.impl.artifacts.ArtifactUtil;
-import consulo.ide.impl.idea.packaging.impl.compiler.ArtifactCompileScope;
-import consulo.ide.impl.idea.packaging.impl.compiler.ArtifactsWorkspaceSettings;
-import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.compiler.CompilerManager;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.scope.CompileScope;
+import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.ModulesConfiguratorImpl;
+import consulo.ide.impl.idea.openapi.ui.popup.MultiSelectionListPopupStep;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.packaging.impl.artifacts.ArtifactUtil;
+import consulo.ide.impl.idea.packaging.impl.compiler.ArtifactCompileScope;
+import consulo.ide.impl.idea.packaging.impl.compiler.ArtifactsWorkspaceSettings;
+import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.editor.CommonDataKeys;
 import consulo.module.content.ProjectRootManager;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationType;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.CommonShortcuts;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.popup.BaseListPopupStep;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListSeparator;
 import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.image.Image;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
+import consulo.util.lang.Pair;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
@@ -64,7 +64,7 @@ import java.util.*;
  */
 @ActionImpl(id = "BuildArtifact")
 public class BuildArtifactAction extends DumbAwareAction {
-  private static final NotificationGroup NOTIFICATION_GROUP = NotificationGroup.balloonGroup("Clean artifact");
+  public static final NotificationGroup NOTIFICATION_GROUP = NotificationGroup.balloonGroup("Clean artifact");
 
   @Override
   public void update(@Nonnull AnActionEvent e) {

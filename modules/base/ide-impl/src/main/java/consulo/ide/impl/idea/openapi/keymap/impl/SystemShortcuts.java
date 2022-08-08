@@ -1,22 +1,22 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.keymap.impl;
 
-import consulo.ide.impl.idea.execution.util.ExecUtil;
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.ide.impl.idea.notification.NotificationsConfiguration;
-import consulo.ide.impl.idea.openapi.keymap.impl.ui.ActionsTreeUtil;
-import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapPanel;
-import consulo.ide.impl.idea.util.ArrayUtilRt;
-import consulo.ide.impl.idea.util.ReflectionUtil;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
+import consulo.ide.impl.idea.execution.util.ExecUtil;
+import consulo.ide.impl.idea.ide.util.PropertiesComponent;
+import consulo.ide.impl.idea.openapi.keymap.impl.ui.ActionsTreeUtil;
+import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapPanel;
+import consulo.ide.impl.idea.util.ArrayUtilRt;
+import consulo.ide.impl.idea.util.ReflectionUtil;
 import consulo.logging.Logger;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationDisplayType;
+import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationType;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.UIExAWTDataKey;
@@ -35,15 +35,12 @@ import java.util.*;
 import java.util.function.Supplier;
 
 public final class SystemShortcuts {
-  private static final Logger LOG = Logger.getInstance(SystemShortcuts.class);
-  private static final
-  @Nonnull
-  String ourNotificationGroupId = "System shortcuts conflicts";
-  private static final
-  @Nonnull
-  String ourUnknownSysAction = "Unknown action";
+  public static final NotificationGroup SYSTEM_SHORTCUTS_CONFLICTS_GROUP = new NotificationGroup("System shortcuts conflicts", NotificationDisplayType.STICKY_BALLOON, true);
 
-  private static boolean ourIsNotificationRegistered = false;
+  private static final Logger LOG = Logger.getInstance(SystemShortcuts.class);
+
+  @Nonnull
+  private static final String ourUnknownSysAction = "Unknown action";
 
   private
   @Nonnull
@@ -100,8 +97,9 @@ public final class SystemShortcuts {
 
     @Nullable
     String getUnmutedActionId(@Nonnull MuteConflictsSettings settings) {
-      for (String actId : myActionIds)
+      for (String actId : myActionIds) {
         if (!settings.isMutedAction(actId)) return actId;
+      }
       return null;
     }
   }
@@ -195,8 +193,9 @@ public final class SystemShortcuts {
   private int getUnmutedConflictsCount() {
     if (myKeymapConflicts.isEmpty()) return 0;
     int result = 0;
-    for (ConflictItem ci : myKeymapConflicts.values())
+    for (ConflictItem ci : myKeymapConflicts.values()) {
       if (ci.getUnmutedActionId(myMutedConflicts) != null) result++;
+    }
     return result;
   }
 
@@ -228,11 +227,6 @@ public final class SystemShortcuts {
   }
 
   private void doNotify(@Nonnull Keymap keymap, @Nonnull String actionId, @Nonnull KeyStroke sysKS, @Nullable String macOsShortcutAction, @Nonnull KeyboardShortcut conflicted) {
-    if (!ourIsNotificationRegistered) {
-      ourIsNotificationRegistered = true;
-      NotificationsConfiguration.getNotificationsConfiguration().register(ourNotificationGroupId, NotificationDisplayType.STICKY_BALLOON, true);
-    }
-
     final AnAction act = ActionManager.getInstance().getAction(actionId);
     final String actText = act == null ? actionId : act.getTemplateText();
     final String message = "The " +
@@ -240,7 +234,7 @@ public final class SystemShortcuts {
                            " shortcut conflicts with macOS shortcut" +
                            (macOsShortcutAction == null ? "" : " '" + macOsShortcutAction + "'") +
                            ". Modify this shortcut or change macOS system settings.";
-    final Notification notification = new Notification(ourNotificationGroupId, "Shortcuts conflicts", message, NotificationType.WARNING, null);
+    final Notification notification = SYSTEM_SHORTCUTS_CONFLICTS_GROUP.createNotification("Shortcuts conflicts", message, NotificationType.WARNING, null);
 
     final AnAction configureShortcut = DumbAwareAction.create("Modify shortcut", e -> {
       Component component = e.getDataContext().getData(UIExAWTDataKey.CONTEXT_COMPONENT);
@@ -352,7 +346,9 @@ public final class SystemShortcuts {
           }
           sysKS = KeyStroke.getKeyStroke(keyCode, shk.getModifiers());
         }
-        else sysKS = KeyStroke.getKeyStroke(shk.getKeyCode(), shk.getModifiers());
+        else {
+          sysKS = KeyStroke.getKeyStroke(shk.getKeyCode(), shk.getModifiers());
+        }
 
         myKeyStroke2SysShortcut.put(sysKS, shk);
 

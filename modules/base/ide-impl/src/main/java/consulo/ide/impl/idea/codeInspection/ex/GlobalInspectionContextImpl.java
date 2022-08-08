@@ -36,7 +36,6 @@ import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.analysis.AnalysisUIOptions;
 import consulo.ide.impl.idea.analysis.PerformAnalysisInBackgroundOption;
-import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.LocalInspectionsPass;
 import consulo.ide.impl.idea.codeInspection.GlobalSimpleInspectionTool;
 import consulo.ide.impl.idea.codeInspection.reference.RefManagerImpl;
@@ -44,7 +43,6 @@ import consulo.ide.impl.idea.codeInspection.ui.DefaultInspectionToolPresentation
 import consulo.ide.impl.idea.codeInspection.ui.InspectionResultsView;
 import consulo.ide.impl.idea.codeInspection.ui.InspectionToolPresentation;
 import consulo.ide.impl.idea.concurrency.JobLauncherImpl;
-import consulo.project.impl.internal.ProjectPathMacroManager;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
@@ -53,6 +51,7 @@ import consulo.ide.impl.idea.util.SequentialModalProgressTask;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.FileModificationService;
 import consulo.language.editor.annotation.ProblemGroup;
+import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.reference.RefElement;
 import consulo.language.editor.inspection.reference.RefEntity;
@@ -71,6 +70,7 @@ import consulo.module.content.ProjectRootManager;
 import consulo.module.content.util.ProjectUtilCore;
 import consulo.project.Project;
 import consulo.project.ProjectCoreUtil;
+import consulo.project.impl.internal.ProjectPathMacroManager;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.wm.ToolWindowId;
@@ -106,7 +106,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class GlobalInspectionContextImpl extends GlobalInspectionContextBase implements GlobalInspectionContext {
   private static final Logger LOG = Logger.getInstance(GlobalInspectionContextImpl.class);
-  private static final NotificationGroup NOTIFICATION_GROUP = NotificationGroup.toolWindowGroup("Inspection Results", ToolWindowId.INSPECTION);
+  static final NotificationGroup NOTIFICATION_GROUP = NotificationGroup.toolWindowGroup("Inspection Results", ToolWindowId.INSPECTION);
   private final NotNullLazyValue<ContentManager> myContentManager;
   private InspectionResultsView myView;
   private Content myContent;
@@ -167,10 +167,7 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
     super.doInspections(scope);
   }
 
-  public void launchInspectionsOffline(@Nonnull final AnalysisScope scope,
-                                       @Nullable final String outputPath,
-                                       final boolean runGlobalToolsOnly,
-                                       @Nonnull final List<File> inspectionsResults) {
+  public void launchInspectionsOffline(@Nonnull final AnalysisScope scope, @Nullable final String outputPath, final boolean runGlobalToolsOnly, @Nonnull final List<File> inspectionsResults) {
     performInspectionsWithProgressAndExportResults(scope, runGlobalToolsOnly, true, outputPath, inspectionsResults);
   }
 
@@ -467,8 +464,7 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
     String url = ProjectUtilCore.displayUrlRelativeToProject(virtualFile, virtualFile.getPresentableUrl(), getProject(), true, false);
     incrementJobDoneAmount(getStdJobDescriptors().LOCAL_ANALYSIS, url);
 
-    final LocalInspectionsPass pass = new LocalInspectionsPass(file, document, 0, file.getTextLength(), LocalInspectionsPass.EMPTY_PRIORITY_RANGE, true,
-                                                               HighlightInfoProcessor.getEmpty());
+    final LocalInspectionsPass pass = new LocalInspectionsPass(file, document, 0, file.getTextLength(), LocalInspectionsPass.EMPTY_PRIORITY_RANGE, true, HighlightInfoProcessor.getEmpty());
     try {
       final List<LocalInspectionToolWrapper> lTools = getWrappersFromTools(localTools, file);
       pass.doInspectInBatch(this, inspectionManager, lTools);
@@ -585,10 +581,7 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
     return PsiDocumentManager.getInstance(getProject()).getDocument(file);
   }
 
-  private void runGlobalTools(@Nonnull final AnalysisScope scope,
-                              @Nonnull final InspectionManager inspectionManager,
-                              @Nonnull List<Tools> globalTools,
-                              boolean isOfflineInspections) {
+  private void runGlobalTools(@Nonnull final AnalysisScope scope, @Nonnull final InspectionManager inspectionManager, @Nonnull List<Tools> globalTools, boolean isOfflineInspections) {
     LOG.assertTrue(!ApplicationManager.getApplication().isReadAccessAllowed() || isOfflineInspections, "Must not run under read action, too unresponsive");
     final List<InspectionToolWrapper> needRepeatSearchRequest = new ArrayList<InspectionToolWrapper>();
 
@@ -646,9 +639,7 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
     }
   }
 
-  private void appendPairedInspectionsForUnfairTools(@Nonnull List<Tools> globalTools,
-                                                     @Nonnull List<Tools> globalSimpleTools,
-                                                     @Nonnull List<Tools> localTools) {
+  private void appendPairedInspectionsForUnfairTools(@Nonnull List<Tools> globalTools, @Nonnull List<Tools> globalSimpleTools, @Nonnull List<Tools> localTools) {
     Tools[] larray = localTools.toArray(new Tools[localTools.size()]);
     for (Tools tool : larray) {
       LocalInspectionToolWrapper toolWrapper = (LocalInspectionToolWrapper)tool.getTool();
@@ -701,8 +692,7 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
   }
 
   @Nonnull
-  private ProblemDescriptionsProcessor getProblemDescriptionProcessor(@Nonnull final GlobalInspectionToolWrapper toolWrapper,
-                                                                      @Nonnull final Map<String, InspectionToolWrapper> wrappersMap) {
+  private ProblemDescriptionsProcessor getProblemDescriptionProcessor(@Nonnull final GlobalInspectionToolWrapper toolWrapper, @Nonnull final Map<String, InspectionToolWrapper> wrappersMap) {
     return new ProblemDescriptionsProcessor() {
       @Nullable
       @Override
@@ -837,11 +827,7 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
     ProgressManager.getInstance().run(task);
   }
 
-  private void cleanup(@Nonnull AnalysisScope scope,
-                       @Nonnull InspectionProfile profile,
-                       @Nonnull final Project project,
-                       @Nullable final Runnable postRunnable,
-                       @Nullable final String commandName) {
+  private void cleanup(@Nonnull AnalysisScope scope, @Nonnull InspectionProfile profile, @Nonnull final Project project, @Nullable final Runnable postRunnable, @Nullable final String commandName) {
     final int fileCount = scope.getFileCount();
     final ProgressIndicator progressIndicator = ProgressManager.getInstance().getProgressIndicator();
     final List<LocalInspectionToolWrapper> lTools = new ArrayList<LocalInspectionToolWrapper>();
@@ -887,10 +873,9 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
         }
 
         if (!lTools.isEmpty()) {
-          final LocalInspectionsPass pass =
-                  new LocalInspectionsPass(file, PsiDocumentManager.getInstance(project).getDocument(file), range != null ? range.getStartOffset() : 0,
-                                           range != null ? range.getEndOffset() : file.getTextLength(), LocalInspectionsPass.EMPTY_PRIORITY_RANGE, true,
-                                           HighlightInfoProcessor.getEmpty());
+          final LocalInspectionsPass pass = new LocalInspectionsPass(file, PsiDocumentManager.getInstance(project).getDocument(file), range != null ? range.getStartOffset() : 0,
+                                                                     range != null ? range.getEndOffset() : file.getTextLength(), LocalInspectionsPass.EMPTY_PRIORITY_RANGE, true,
+                                                                     HighlightInfoProcessor.getEmpty());
           Runnable runnable = new Runnable() {
             @Override
             public void run() {

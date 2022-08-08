@@ -91,7 +91,7 @@ public class DefaultIdeaErrorLogger {
       ourMappingFailedNotificationPosted = true;
       @SuppressWarnings("ThrowableResultOfMethodCallIgnored") String exceptionMessage = event.getThrowable().getMessage();
       String text = exceptionMessage + "<br>Possible cause: unable to allocate continuous memory chunk of necessary size.<br>" + "Reducing JVM maximum heap size (-Xmx) may help.";
-      Notifications.Bus.notify(new Notification("Memory", "Memory Mapping Failed", text, NotificationType.WARNING), null);
+      Notifications.Bus.notify(new Notification(ReportMessages.GROUP, "Memory Mapping Failed", text, NotificationType.WARNING), null);
     }
   }
 }

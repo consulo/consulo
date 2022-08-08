@@ -18,7 +18,7 @@ package consulo.navigation;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
-import consulo.application.extension.ByClassGrouper;
+import consulo.component.extension.ByClassGrouper;
 import consulo.component.extension.ExtensionPointCacheKey;
 
 import javax.annotation.Nonnull;

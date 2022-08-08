@@ -445,7 +445,7 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
     public void actionPerformed(@Nonnull AnActionEvent e) {
       String groupName = myGroup;
       if (myNewGroup) {
-        groupName = Messages.showInputDialog("New group name", "New KeymapGroupImpl", AllIcons.Nodes.NewFolder);
+        groupName = Messages.showInputDialog("New group name", "New Group", AllIcons.Nodes.NewFolder);
         if (groupName == null) {
           return;
         }

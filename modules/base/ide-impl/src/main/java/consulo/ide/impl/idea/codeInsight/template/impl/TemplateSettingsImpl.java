@@ -513,7 +513,7 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
     String groupName = root.getAttributeValue(GROUP);
     if (StringUtil.isEmpty(groupName)) {
       groupName = path.substring(path.lastIndexOf("/") + 1);
-      LOG.warn("KeymapGroupImpl attribute is empty. Path '" + path + "'. Plugin: " + ((PluginClassLoader)classLoader).getPluginId());
+      LOG.warn("Group attribute is empty. Path '" + path + "'. Plugin: " + ((PluginClassLoader)classLoader).getPluginId());
     }
 
     TemplateGroup result = new TemplateGroup(groupName, root.getAttributeValue("REPLACE"));

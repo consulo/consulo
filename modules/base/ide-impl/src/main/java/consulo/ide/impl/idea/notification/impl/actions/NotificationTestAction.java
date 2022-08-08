@@ -48,7 +48,7 @@ import java.util.List;
  * @author Sergey.Malenkov
  */
 public class NotificationTestAction extends AnAction implements DumbAware {
-  public static final String TEST_GROUP_ID = "Test Notification";
+  private static final NotificationGroup TEST_GROUP = NotificationGroup.balloonGroup("Test Notification");
   private static final NotificationGroup TEST_STICKY_GROUP = new NotificationGroup("Test Sticky Notification", NotificationDisplayType.STICKY_BALLOON, true);
   private static final NotificationGroup TEST_TOOLWINDOW_GROUP = NotificationGroup.toolWindowGroup("Test ToolWindow Notification", ToolWindowId.TODO_VIEW, true);
   private static final String MESSAGE_KEY = "NotificationTestAction_Message";
@@ -185,9 +185,9 @@ public class NotificationTestAction extends AnAction implements DumbAware {
         if (!StringUtil.isEmpty(myGroupId)) {
           icon = (Image)NotWorkingIconLoader.findIcon(myGroupId);
         }
-        String displayId = mySticky ? TEST_STICKY_GROUP.getDisplayId() : TEST_GROUP_ID;
+        NotificationGroup displayId = mySticky ? TEST_STICKY_GROUP : TEST_GROUP;
         if (myToolwindow) {
-          displayId = TEST_TOOLWINDOW_GROUP.getDisplayId();
+          displayId = TEST_TOOLWINDOW_GROUP;
         }
         String content = myContent == null ? "" : StringUtil.join(myContent, "\n");
         if (icon == null) {

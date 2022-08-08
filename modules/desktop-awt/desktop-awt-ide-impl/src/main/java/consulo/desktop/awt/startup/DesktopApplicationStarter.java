@@ -17,6 +17,7 @@ package consulo.desktop.awt.startup;
 
 import com.google.gson.Gson;
 import consulo.ide.impl.idea.ide.*;
+import consulo.ide.impl.idea.ide.plugins.PluginManagerMain;
 import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
 import consulo.ide.impl.idea.openapi.wm.impl.SystemDock;
 import consulo.ide.impl.idea.openapi.wm.impl.X11UiUtil;
@@ -280,7 +281,7 @@ public class DesktopApplicationStarter extends ApplicationStarter {
     if (pluginErrors != null) {
       for (String pluginError : pluginErrors) {
         String message = IdeBundle.message("title.plugin.notification.title");
-        Notifications.Bus.notify(new Notification(message, message, pluginError, NotificationType.ERROR, new NotificationListener() {
+        Notifications.Bus.notify(new Notification(PluginManagerMain.ourPluginsLifecycleGroup, message, pluginError, NotificationType.ERROR, new NotificationListener() {
           @RequiredUIAccess
           @Override
           public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {

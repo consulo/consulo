@@ -20,11 +20,11 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.ApplicationManager;
 import consulo.project.ui.notification.NotificationDisplayType;
 
-@ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
-public abstract class NotificationsConfiguration extends NotificationsAdapter {
+@ServiceAPI(value = ComponentScope.APPLICATION)
+public abstract class NotificationsConfiguration {
   public abstract void changeSettings(String groupDisplayName, NotificationDisplayType displayType, boolean shouldLog, boolean shouldReadAloud);
 
   public static NotificationsConfiguration getNotificationsConfiguration() {
-    return ApplicationManager.getApplication().getComponent(NotificationsConfiguration.class);
+    return ApplicationManager.getApplication().getInstance(NotificationsConfiguration.class);
   }
 }

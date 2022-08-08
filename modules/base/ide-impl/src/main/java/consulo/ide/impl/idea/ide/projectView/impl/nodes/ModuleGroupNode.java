@@ -106,7 +106,7 @@ public abstract class ModuleGroupNode extends ProjectViewNode<ModuleGroup> imple
 
   @Override
   public String getTestPresentation() {
-    return "KeymapGroupImpl: " + getValue();
+    return "Group: " + getValue();
   }
 
   @Override

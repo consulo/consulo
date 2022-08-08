@@ -15,26 +15,13 @@
  */
 package consulo.ide.impl.idea.diagnostic;
 
-import consulo.ide.impl.idea.diagnostic.errordialog.*;
-import consulo.ide.impl.idea.ide.plugins.PluginManager;
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataSink;
-import consulo.dataContext.TypeSafeDataProvider;
-import consulo.ide.impl.idea.openapi.diagnostic.ErrorReportSubmitter;
-import consulo.ide.impl.idea.openapi.diagnostic.SubmittedReportInfo;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.ui.HeaderlessTabbedPane;
-import consulo.ui.ex.awt.HyperlinkLabel;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.application.util.DateFormatUtil;
-import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.application.*;
 import consulo.application.dumb.DumbAware;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.application.ui.wm.IdeFocusManager;
+import consulo.application.util.DateFormatUtil;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.logging.IdeaLoggingEvent;
 import consulo.component.util.PluginExceptionUtil;
@@ -43,22 +30,32 @@ import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginIds;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.ide.impl.desktop.DesktopIdeFrameUtil;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.TypeSafeDataProvider;
 import consulo.externalService.ExternalService;
 import consulo.externalService.ExternalServiceConfiguration;
 import consulo.ide.ServiceManager;
 import consulo.ide.impl.base.BaseDataManager;
+import consulo.ide.impl.desktop.DesktopIdeFrameUtil;
+import consulo.ide.impl.idea.diagnostic.errordialog.*;
+import consulo.ide.impl.idea.ide.plugins.PluginManager;
+import consulo.ide.impl.idea.ide.util.PropertiesComponent;
+import consulo.ide.impl.idea.openapi.diagnostic.ErrorReportSubmitter;
+import consulo.ide.impl.idea.openapi.diagnostic.SubmittedReportInfo;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.ui.HeaderlessTabbedPane;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.xml.util.XmlStringUtil;
+import consulo.language.editor.CommonDataKeys;
 import consulo.logging.Logger;
 import consulo.logging.attachment.Attachment;
 import consulo.project.Project;
-import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.NotificationDisplayType;
 import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.notification.Notifications;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.HyperlinkLabel;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.dataholder.Key;
@@ -148,9 +145,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
           myDevelopers[0] = DevelopersLoader.fetchDevelopers(indicator);
         }
         catch (IOException e) {
-          Notifications.Bus.register("Error reporter", NotificationDisplayType.BALLOON);
-          Notifications.Bus.notify(new Notification("Error reporter", "Communication error",
-                                                    "Unable to load developers list from server.", NotificationType.WARNING));
+          ReportMessages.GROUP.createNotification("Communication error", "Unable to load developers list from server.", NotificationType.WARNING, null).notify(null);
         }
       }
 
@@ -218,7 +213,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
 
     ExternalServiceConfiguration externalServiceConfiguration = ServiceManager.getService(ExternalServiceConfiguration.class);
 
-    if(externalServiceConfiguration.getState(ExternalService.ERROR_REPORTING) == ThreeState.NO) {
+    if (externalServiceConfiguration.getState(ExternalService.ERROR_REPORTING) == ThreeState.NO) {
       actions.remove(myBlameAction);
     }
 
