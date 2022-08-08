@@ -35,7 +35,6 @@ import consulo.util.io.ResourceUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.*;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -150,13 +149,19 @@ public abstract class InspectionProfileEntry implements BatchSuppressableTool {
     if (groupDisplayName.isEmpty()) {
       groupDisplayName = GENERAL_GROUP_NAME;
     }
-    return new String[]{groupDisplayName};
+
+    Language language = getLanguage();
+    if (language != null) {
+      return new String[]{language.getDisplayName(), groupDisplayName};
+    }
+    else {
+      return new String[]{groupDisplayName};
+    }
   }
 
   @Nonnull
   public abstract String getDisplayName();
 
-  @NonNls
   @Nonnull
   public String getShortName() {
     return getShortName(getClass().getSimpleName());
@@ -170,7 +175,9 @@ public abstract class InspectionProfileEntry implements BatchSuppressableTool {
   @Nonnull
   public abstract HighlightDisplayLevel getDefaultLevel();
 
-  public abstract boolean isEnabledByDefault();
+  public boolean isEnabledByDefault() {
+    return true;
+  }
 
   /**
    * This method is called each time UI is shown.

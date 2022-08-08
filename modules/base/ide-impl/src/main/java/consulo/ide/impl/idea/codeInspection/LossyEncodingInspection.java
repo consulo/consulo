@@ -84,11 +84,6 @@ public class LossyEncodingInspection extends LocalInspectionTool {
   }
 
   @Override
-  public boolean isEnabledByDefault() {
-    return true;
-  }
-
-  @Override
   @Nls
   @Nonnull
   public String getDisplayName() {

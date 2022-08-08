@@ -59,11 +59,6 @@ public class InjectedReferencesInspection extends LocalInspectionTool {
     return HighlightDisplayLevel.ERROR;
   }
 
-  @Override
-  public boolean isEnabledByDefault() {
-    return true;
-  }
-
   @Nonnull
   @Override
   public String getGroupDisplayName() {

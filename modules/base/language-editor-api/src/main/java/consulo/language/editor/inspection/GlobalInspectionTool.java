@@ -140,12 +140,6 @@ public abstract class GlobalInspectionTool extends InspectionProfileEntry {
     return true;
   }
 
-
-  @Override
-  public boolean isEnabledByDefault() {
-    return true;
-  }
-
   /**
    * Allows the inspection to process usages of analyzed classes outside the analysis scope.
    * This method is called after the reference graph has been built and after
