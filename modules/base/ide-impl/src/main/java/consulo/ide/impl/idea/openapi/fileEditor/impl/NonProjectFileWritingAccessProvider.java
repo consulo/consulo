@@ -23,20 +23,19 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.NonProjectFileWritingAccessExtension;
 import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.NullableFunction;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.module.content.ProjectFileIndex;
 import consulo.project.Project;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.NotNullLazyKey;
 import consulo.util.dataholder.UserDataHolder;
+import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.event.VirtualFileAdapter;
 import consulo.virtualFileSystem.event.VirtualFileCopyEvent;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.TestOnly;
 
@@ -61,13 +60,6 @@ public class NonProjectFileWritingAccessProvider extends WritingAccessProvider {
 
   @Nonnull
   private final Project myProject;
-  @Nullable
-  private static NullableFunction<List<VirtualFile>, UnlockOption> ourCustomUnlocker;
-
-  @TestOnly
-  public static void setCustomUnlocker(@Nullable NullableFunction<List<VirtualFile>, UnlockOption> unlocker) {
-    ourCustomUnlocker = unlocker;
-  }
 
   @Inject
   public NonProjectFileWritingAccessProvider(@Nonnull Project project, @Nonnull VirtualFileManager virtualFileManager) {
@@ -112,8 +104,6 @@ public class NonProjectFileWritingAccessProvider extends WritingAccessProvider {
 
   @Nullable
   private UnlockOption askToUnlock(@Nonnull List<VirtualFile> files) {
-    if (ourCustomUnlocker != null) return ourCustomUnlocker.fun(files);
-
     NonProjectFileWritingAccessDialog dialog = new NonProjectFileWritingAccessDialog(myProject, files);
     if (!dialog.showAndGet()) return null;
     return dialog.getUnlockOption();
@@ -128,7 +118,7 @@ public class NonProjectFileWritingAccessProvider extends WritingAccessProvider {
 
     if (ArrayUtil.contains(file, IdeDocumentHistory.getInstance(project).getChangedFiles())) return true;
 
-    if (!getApp().isUnitTestMode() && FileUtil.isAncestor(new File(FileUtil.getTempDirectory()), VfsUtilCore.virtualToIoFile(file), true)) {
+    if (!getApp().isUnitTestMode() && FileUtil.isAncestor(new File(FileUtil.getTempDirectory()), VirtualFileUtil.virtualToIoFile(file), true)) {
       return true;
     }
 

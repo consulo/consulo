@@ -14,25 +14,39 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.refactoring.ui;
-
-import consulo.language.editor.refactoring.RefactoringBundle;
-import consulo.usage.UsageViewBundle;
-import consulo.usage.UsageViewDescriptor;
-
-/**
- * @author dsl
+/*
+ * Created by IntelliJ IDEA.
+ * User: valentin
+ * Date: 29.01.2004
+ * Time: 21:10:56
  */
-public abstract class UsageViewDescriptorAdapter implements UsageViewDescriptor {
+package consulo.virtualFileSystem.fileType;
+
+import consulo.ui.image.Image;
+
+import javax.annotation.Nonnull;
+
+public abstract class FakeFileType implements FileTypeIdentifiableByVirtualFile {
 
   @Override
-  public String getCodeReferencesText(int usagesCount, int filesCount) {
-    return RefactoringBundle.message("references.to.be.changed", UsageViewBundle.getReferencesString(usagesCount, filesCount));
+  @Nonnull
+  public String getDefaultExtension() {
+    return "fakeExtension";
+  }
+
+  @Nonnull
+  @Override
+  public Image getIcon() {
+    return Image.empty(Image.DEFAULT_ICON_SIZE);
   }
 
   @Override
-  public String getCommentReferencesText(int usagesCount, int filesCount) {
-    return null;
+  public boolean isBinary() {
+    return true;
   }
 
+  @Override
+  public boolean isReadOnly() {
+    return true;
+  }
 }

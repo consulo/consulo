@@ -17,6 +17,7 @@
 package consulo.ide.impl.idea.ide.util;
 
 import consulo.application.CommonBundle;
+import consulo.language.editor.refactoring.util.DeleteUtil;
 import consulo.localHistory.LocalHistory;
 import consulo.localHistory.LocalHistoryAction;
 import consulo.dataContext.DataManager;
@@ -47,8 +48,8 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.editor.refactoring.RefactoringBundle;
-import consulo.ide.impl.idea.refactoring.safeDelete.SafeDeleteDialog;
-import consulo.ide.impl.idea.refactoring.safeDelete.SafeDeleteProcessor;
+import consulo.language.editor.refactoring.safeDelete.SafeDeleteDialog;
+import consulo.language.editor.refactoring.safeDelete.SafeDeleteProcessor;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import consulo.language.editor.refactoring.ui.RefactoringUIUtil;
 import consulo.language.util.IncorrectOperationException;

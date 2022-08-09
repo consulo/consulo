@@ -11,7 +11,7 @@ import consulo.virtualFileSystem.fileType.DirectoryFileType;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.plain.PlainTextFileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
-import consulo.ide.impl.idea.openapi.fileTypes.ex.FakeFileType;
+import consulo.virtualFileSystem.fileType.FakeFileType;
 import consulo.virtualFileSystem.fileType.FileTypeIdentifiableByVirtualFile;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.UIUtil;

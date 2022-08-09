@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.refactoring.safeDelete;
+package consulo.language.editor.refactoring.safeDelete;
 
 import consulo.application.HelpManager;
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.util.DeleteUtil;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider;
 import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.refactoring.RefactoringSettings;
+import consulo.language.editor.refactoring.internal.RefactoringInternalHelper;
+import consulo.language.editor.refactoring.util.DeleteUtil;
 import consulo.language.editor.refactoring.util.TextOccurrencesUtil;
 import consulo.language.psi.PsiElement;
 import consulo.project.DumbService;
@@ -95,7 +94,7 @@ public class SafeDeleteDialog extends DialogWrapper {
     final GridBagConstraints gbc = new GridBagConstraints();
 
     final String promptKey = isDelete() ? "prompt.delete.elements" : "search.for.usages.and.delete.elements";
-    final String warningMessage = DeleteUtil.generateWarningMessage(IdeBundle.message(promptKey), myElements);
+    final String warningMessage = DeleteUtil.generateWarningMessage(RefactoringBundle.message(promptKey), myElements);
 
     gbc.insets = JBUI.insets(4, 8);
     gbc.weighty = 1;
@@ -113,7 +112,7 @@ public class SafeDeleteDialog extends DialogWrapper {
       gbc.weightx = 0.0;
       gbc.gridwidth = 1;
       gbc.insets = JBUI.insets(4, 8, 0, 8);
-      myCbSafeDelete = new JCheckBox(IdeBundle.message("checkbox.safe.delete.with.usage.search"));
+      myCbSafeDelete = new JCheckBox(RefactoringBundle.message("checkbox.safe.delete.with.usage.search"));
       panel.add(myCbSafeDelete, gbc);
       myCbSafeDelete.addActionListener(new ActionListener() {
         @Override
@@ -200,7 +199,7 @@ public class SafeDeleteDialog extends DialogWrapper {
       return;
     }
 
-    NonProjectFileWritingAccessProvider.disableChecksDuring(() -> {
+    RefactoringInternalHelper.getInstance().disableWriteChecksDuring(() -> {
       if (myCallback != null && isSafeDelete()) {
         myCallback.run(this);
       }

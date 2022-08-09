@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.refactoring.safeDelete;
+package consulo.language.editor.refactoring.safeDelete;
 
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.refactoring.RefactoringActionHandler;
@@ -34,6 +33,7 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
+import consulo.util.collection.ContainerUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

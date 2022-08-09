@@ -20,7 +20,7 @@ import consulo.language.editor.refactoring.RefactoringActionHandler;
 import consulo.language.editor.refactoring.RefactoringActionHandlerFactory;
 import consulo.ide.impl.idea.refactoring.move.MoveHandler;
 import consulo.language.editor.refactoring.rename.PsiElementRenameHandler;
-import consulo.ide.impl.idea.refactoring.safeDelete.SafeDeleteHandler;
+import consulo.language.editor.refactoring.safeDelete.SafeDeleteHandler;
 import jakarta.inject.Singleton;
 
 /**

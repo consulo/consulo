@@ -14,21 +14,20 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.refactoring.safeDelete;
+package consulo.language.editor.refactoring.safeDelete;
 
 import consulo.application.ApplicationManager;
 import consulo.application.util.function.Processor;
-import consulo.ide.impl.find.PsiElement2UsageTargetAdapter;
-import consulo.ide.impl.idea.refactoring.safeDelete.usageInfo.SafeDeleteCustomUsageInfo;
-import consulo.ide.impl.idea.refactoring.safeDelete.usageInfo.SafeDeleteReferenceSimpleDeleteUsageInfo;
-import consulo.ide.impl.idea.refactoring.safeDelete.usageInfo.SafeDeleteReferenceUsageInfo;
-import consulo.ide.impl.idea.refactoring.safeDelete.usageInfo.SafeDeleteUsageInfo;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.language.editor.refactoring.BaseRefactoringProcessor;
 import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.refactoring.RefactoringSupportProvider;
 import consulo.language.editor.refactoring.event.RefactoringEventData;
 import consulo.language.editor.refactoring.event.RefactoringEventListener;
+import consulo.language.editor.refactoring.internal.RefactoringInternalHelper;
+import consulo.language.editor.refactoring.safeDelete.usageInfo.SafeDeleteCustomUsageInfo;
+import consulo.language.editor.refactoring.safeDelete.usageInfo.SafeDeleteReferenceSimpleDeleteUsageInfo;
+import consulo.language.editor.refactoring.safeDelete.usageInfo.SafeDeleteReferenceUsageInfo;
+import consulo.language.editor.refactoring.safeDelete.usageInfo.SafeDeleteUsageInfo;
 import consulo.language.editor.refactoring.ui.RefactoringUIUtil;
 import consulo.language.editor.refactoring.util.NonCodeSearchDescriptionLocation;
 import consulo.language.editor.refactoring.util.TextOccurrencesUtil;
@@ -41,6 +40,7 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.usage.*;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.ref.Ref;
 
@@ -271,7 +271,7 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
     }
     UsageTarget[] targets = new UsageTarget[myElements.length];
     for (int i = 0; i < targets.length; i++) {
-      targets[i] = new PsiElement2UsageTargetAdapter(myElements[i]);
+      targets[i] = RefactoringInternalHelper.getInstance().createPsiElement2UsageTargetAdapter(myElements[i]);
     }
 
     return manager.showUsages(targets, UsageInfoToUsageConverter.convert(myElements, usages), presentation);

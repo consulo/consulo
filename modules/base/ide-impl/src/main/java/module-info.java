@@ -783,8 +783,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.refactoring.openapi.impl;
   exports consulo.ide.impl.idea.refactoring.rename;
   exports consulo.ide.impl.idea.refactoring.rename.inplace;
-  exports consulo.ide.impl.idea.refactoring.safeDelete;
-  exports consulo.ide.impl.idea.refactoring.safeDelete.usageInfo;
   exports consulo.ide.impl.idea.refactoring.ui;
   exports consulo.ide.impl.idea.refactoring.util;
   exports consulo.ide.impl.idea.reference;
@@ -1018,7 +1016,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.psi.impl.source.resolve.reference.impl.manipulators;
   exports consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers;
   exports consulo.ide.impl.psi.impl.source.tree;
-  exports consulo.ide.impl.psi.impl.source.tree.injected;
   exports consulo.ide.impl.psi.injection;
   exports consulo.ide.impl.psi.injection.impl;
   exports consulo.ide.impl.psi.meta;

@@ -16,9 +16,12 @@
 package consulo.ide.impl.language.editor.refactoring;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.ide.impl.find.PsiElement2UsageTargetAdapter;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider;
 import consulo.language.editor.refactoring.internal.RefactoringInternalHelper;
+import consulo.language.psi.PsiElement;
 import consulo.project.Project;
+import consulo.usage.UsageTarget;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Singleton;
 
@@ -39,5 +42,11 @@ public class RefactoringInternalHelperImpl implements RefactoringInternalHelper 
   @Override
   public boolean isWriteAccessAllowed(@Nonnull VirtualFile file, @Nonnull Project project) {
     return NonProjectFileWritingAccessProvider.isWriteAccessAllowed(file, project);
+  }
+
+  @Nonnull
+  @Override
+  public UsageTarget createPsiElement2UsageTargetAdapter(PsiElement element) {
+    return new PsiElement2UsageTargetAdapter(element);
   }
 }

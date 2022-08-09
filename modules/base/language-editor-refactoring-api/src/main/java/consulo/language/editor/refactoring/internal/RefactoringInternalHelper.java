@@ -18,7 +18,9 @@ package consulo.language.editor.refactoring.internal;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
+import consulo.language.psi.PsiElement;
 import consulo.project.Project;
+import consulo.usage.UsageTarget;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
@@ -40,4 +42,7 @@ public interface RefactoringInternalHelper {
   default boolean isWriteAccessAllowed(@Nonnull VirtualFile file, @Nonnull Project project) {
     return true;
   }
+
+  @Nonnull
+  UsageTarget createPsiElement2UsageTargetAdapter(PsiElement element);
 }

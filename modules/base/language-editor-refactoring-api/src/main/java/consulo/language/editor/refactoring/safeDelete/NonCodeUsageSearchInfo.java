@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.refactoring.safeDelete;
+package consulo.language.editor.refactoring.safeDelete;
 
 import consulo.util.lang.function.Condition;
 import consulo.language.psi.PsiElement;

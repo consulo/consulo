@@ -18,7 +18,7 @@
  * created at Sep 12, 2001
  * @author Jeka
  */
-package consulo.ide.impl.idea.refactoring.safeDelete;
+package consulo.language.editor.refactoring.safeDelete;
 
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
@@ -77,7 +77,7 @@ public class UnsafeUsagesDialog extends DialogWrapper {
 
   @Override
   protected String getDimensionServiceKey() {
-    return "#consulo.ide.impl.idea.refactoring.safeDelete.UnsafeUsagesDialog";
+    return "#consulo.language.editor.refactoring.safeDelete.UnsafeUsagesDialog";
   }
 
 /*

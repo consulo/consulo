@@ -14,19 +14,21 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.refactoring.safeDelete;
+package consulo.language.editor.refactoring.safeDelete;
 
-import consulo.project.Project;
-import consulo.project.content.GeneratedSourcesFilter;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.editor.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.safeDelete.usageInfo.SafeDeleteReferenceUsageInfo;
+import consulo.language.editor.refactoring.ui.RefactoringUIUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.SmartPointerManager;
 import consulo.language.psi.SmartPsiElementPointer;
-import consulo.language.editor.refactoring.RefactoringBundle;
-import consulo.ide.impl.idea.refactoring.safeDelete.usageInfo.SafeDeleteReferenceUsageInfo;
-import consulo.language.editor.refactoring.ui.RefactoringUIUtil;
+import consulo.project.Project;
+import consulo.project.content.GeneratedSourcesFilter;
 import consulo.usage.UsageInfo;
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
+import java.util.List;
 
 /**
  * @author dsl
@@ -40,7 +42,7 @@ class UsageHolder {
     Project project = element.getProject();
     myElementPointer = SmartPointerManager.getInstance(project).createSmartPsiElementPointer(element);
 
-    GeneratedSourcesFilter[] filters = GeneratedSourcesFilter.EP_NAME.getExtensions();
+    List<GeneratedSourcesFilter> filters = GeneratedSourcesFilter.EP_NAME.getExtensionList();
     for (UsageInfo usageInfo : usageInfos) {
       if (!(usageInfo instanceof SafeDeleteReferenceUsageInfo)) continue;
       final SafeDeleteReferenceUsageInfo usage = (SafeDeleteReferenceUsageInfo)usageInfo;
@@ -55,7 +57,7 @@ class UsageHolder {
     }
   }
 
-  private static boolean isInGeneratedCode(SafeDeleteReferenceUsageInfo usage, Project project, GeneratedSourcesFilter[] filters) {
+  private static boolean isInGeneratedCode(SafeDeleteReferenceUsageInfo usage, Project project, List<GeneratedSourcesFilter> filters) {
     VirtualFile file = usage.getVirtualFile();
     if (file == null) return false;
 

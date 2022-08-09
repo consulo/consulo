@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.refactoring.safeDelete;
+package consulo.language.editor.refactoring.safeDelete;
 
-import consulo.module.Module;
 import consulo.language.psi.PsiElement;
+import consulo.module.Module;
 import consulo.usage.UsageInfo;
 import consulo.usage.UsageView;
 import consulo.usage.UsageViewManager;
 import consulo.usage.UsageViewPresentation;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 
 /**

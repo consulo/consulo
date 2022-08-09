@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.psi.impl.source.tree;
+package consulo.language.impl.psi;
 
-import consulo.language.impl.psi.PsiCoreCommentImpl;
+import consulo.language.ast.IElementType;
 import consulo.language.psi.LiteralTextEscaper;
 import consulo.language.psi.PsiLanguageInjectionHost;
-import consulo.ide.impl.psi.impl.source.tree.injected.CommentLiteralEscaper;
-import consulo.language.ast.IElementType;
+
 import javax.annotation.Nonnull;
 
 public class PsiCommentImpl extends PsiCoreCommentImpl implements PsiLanguageInjectionHost {

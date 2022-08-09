@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.ide.util;
+package consulo.language.editor.refactoring.util;
 
-import consulo.ide.IdeBundle;
+import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.psi.ElementDescriptionUtil;
 import consulo.language.psi.PsiDirectoryContainer;
 import consulo.language.psi.PsiElement;
@@ -60,7 +60,7 @@ public class DeleteUtil {
     for (Map.Entry<String, Integer> entry : countMap.entrySet()) {
       if (buffer.length() > 0) {
         if (buffer.length() > 0) {
-          buffer.append(" ").append(IdeBundle.message("prompt.delete.and")).append(" ");
+          buffer.append(" ").append(RefactoringBundle.message("prompt.delete.and")).append(" ");
         }
       }
       final int count = entry.getValue().intValue();
@@ -74,7 +74,7 @@ public class DeleteUtil {
       }
 
       if (entry.getKey().equals(containerType)) {
-        buffer.append(" ").append(IdeBundle.message("prompt.delete.directory.paren", directoryCount));
+        buffer.append(" ").append(RefactoringBundle.message("prompt.delete.directory.paren", directoryCount));
       }
     }
     return MessageFormat.format(messageTemplate, buffer.toString());

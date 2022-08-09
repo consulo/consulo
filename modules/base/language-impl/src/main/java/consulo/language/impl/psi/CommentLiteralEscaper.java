@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.psi.impl.source.tree.injected;
+package consulo.language.impl.psi;
 
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.psi.impl.source.tree.PsiCommentImpl;
 import consulo.language.CodeDocumentationAwareCommenter;
 import consulo.language.Commenter;
 import consulo.language.psi.LiteralTextEscaper;

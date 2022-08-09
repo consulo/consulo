@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.refactoring.safeDelete.usageInfo;
+package consulo.language.editor.refactoring.safeDelete.usageInfo;
 
 import consulo.language.util.IncorrectOperationException;
 

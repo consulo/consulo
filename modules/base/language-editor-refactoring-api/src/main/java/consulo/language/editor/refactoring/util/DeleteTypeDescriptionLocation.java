@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.ide.util;
+package consulo.language.editor.refactoring.util;
 
-import consulo.ide.IdeBundle;
+import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.findUsage.FindUsagesProvider;
 import consulo.language.psi.*;
@@ -54,13 +54,13 @@ public class DeleteTypeDescriptionLocation extends ElementDescriptionLocation {
         final boolean plural = ((DeleteTypeDescriptionLocation)location).isPlural();
         final int count = plural ? 2 : 1;
         if (element instanceof PsiFileSystemItem && PsiUtilBase.isSymLink((PsiFileSystemItem)element)) {
-          return IdeBundle.message("prompt.delete.symlink", count);
+          return RefactoringBundle.message("prompt.delete.symlink", count);
         }
         if (element instanceof PsiFile) {
-          return IdeBundle.message("prompt.delete.file", count);
+          return RefactoringBundle.message("prompt.delete.file", count);
         }
         if (element instanceof PsiDirectory) {
-          return IdeBundle.message("prompt.delete.directory", count);
+          return RefactoringBundle.message("prompt.delete.directory", count);
         }
         if (!plural) {
           return FindUsagesProvider.forLanguage(element.getLanguage()).getType(element);

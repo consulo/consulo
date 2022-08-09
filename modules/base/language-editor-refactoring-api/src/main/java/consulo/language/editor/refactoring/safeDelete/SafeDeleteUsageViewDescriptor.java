@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.refactoring.safeDelete;
+package consulo.language.editor.refactoring.safeDelete;
 
-import consulo.language.psi.PsiElement;
 import consulo.language.editor.refactoring.RefactoringBundle;
-import consulo.ide.impl.idea.refactoring.ui.UsageViewDescriptorAdapter;
+import consulo.language.editor.refactoring.ui.UsageViewDescriptorAdapter;
+import consulo.language.psi.PsiElement;
 import consulo.usage.UsageViewBundle;
+
 import javax.annotation.Nonnull;
 
 /**

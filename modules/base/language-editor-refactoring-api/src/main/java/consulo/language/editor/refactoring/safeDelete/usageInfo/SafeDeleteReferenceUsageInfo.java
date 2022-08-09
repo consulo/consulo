@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.refactoring.safeDelete.usageInfo;
+package consulo.language.editor.refactoring.safeDelete.usageInfo;
 
-import consulo.language.util.IncorrectOperationException;
 import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
 
 /**
  * @author dsl
