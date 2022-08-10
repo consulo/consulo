@@ -1,80 +1,71 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.build;
 
+import consulo.application.AllIcons;
+import consulo.application.ApplicationManager;
+import consulo.application.dumb.DumbAware;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.util.DateFormatUtil;
+import consulo.application.util.UserHomeFileUtil;
 import consulo.build.ui.*;
 import consulo.build.ui.event.*;
-import consulo.ide.impl.idea.build.events.impl.FailureResultImpl;
-import consulo.ide.impl.idea.build.events.impl.SkippedResultImpl;
-import consulo.execution.ui.console.Filter;
-import consulo.execution.ui.console.HyperlinkInfo;
-import consulo.ide.impl.idea.execution.impl.ConsoleViewImpl;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.ui.ex.awt.*;
-import consulo.process.ProcessHandler;
-import consulo.execution.ui.console.ConsoleView;
-import consulo.execution.ui.console.ConsoleViewContentType;
-import consulo.execution.ui.ExecutionConsole;
-import consulo.application.AllIcons;
-import consulo.ui.ex.action.CommonActionsManager;
-import consulo.ide.IdeBundle;
-import consulo.ui.ex.OccurenceNavigator;
-import consulo.ide.impl.idea.ide.OccurenceNavigatorSupport;
-import consulo.ide.impl.idea.ide.actions.EditSourceAction;
-import consulo.ui.ex.awt.speedSearch.SpeedSearchComparator;
-import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
-import consulo.ui.ex.awt.util.ComponentUtil;
-import consulo.ui.ex.tree.AbstractTreeStructure;
-import consulo.ui.ex.tree.NodeDescriptor;
-import consulo.ui.ex.awt.tree.NodeRenderer;
-import consulo.ui.ex.action.ActionsBundle;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.ide.impl.idea.openapi.diagnostic.Logger;
-import consulo.dataContext.DataProvider;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
+import consulo.codeEditor.impl.SoftWrapAppliancePlaces;
+import consulo.dataContext.DataProvider;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.document.Document;
+import consulo.execution.ui.ExecutionConsole;
+import consulo.execution.ui.console.ConsoleView;
+import consulo.execution.ui.console.ConsoleViewContentType;
+import consulo.execution.ui.console.Filter;
+import consulo.execution.ui.console.HyperlinkInfo;
+import consulo.ide.IdeBundle;
+import consulo.ide.impl.idea.build.events.impl.FailureResultImpl;
+import consulo.ide.impl.idea.build.events.impl.SkippedResultImpl;
+import consulo.ide.impl.idea.execution.impl.ConsoleViewImpl;
+import consulo.ide.impl.idea.ide.OccurenceNavigatorSupport;
+import consulo.ide.impl.idea.ide.actions.EditSourceAction;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.diagnostic.Logger;
 import consulo.ide.impl.idea.openapi.editor.actions.ToggleUseSoftWrapsToolbarAction;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.codeEditor.impl.SoftWrapAppliancePlaces;
 import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.util.UISettingsUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.navigation.Navigatable;
-import consulo.navigation.NonNavigatable;
-import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.ide.impl.idea.ui.*;
-import consulo.ui.ex.awt.tree.AsyncTreeModel;
-import consulo.ui.ex.awt.tree.StructureTreeModel;
-import consulo.ui.ex.awt.tree.TreePathUtil;
-import consulo.ui.ex.awt.tree.TreeVisitor;
-import consulo.ui.ex.awt.tree.Tree;
-import consulo.ui.ex.awt.EditSourceOnDoubleClickHandler;
+import consulo.ide.impl.idea.ui.RelativeFont;
 import consulo.ide.impl.idea.util.EditSourceOnEnterKeyHandler;
 import consulo.ide.impl.idea.util.ObjectUtils;
-import consulo.util.lang.SystemProperties;
 import consulo.ide.impl.idea.util.concurrency.InvokerImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.util.collection.SmartHashSet;
-import consulo.application.util.DateFormatUtil;
-import consulo.ui.ex.awt.tree.TreeUtil;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.PlatformDataKeys;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.navigation.Navigatable;
+import consulo.navigation.NonNavigatable;
+import consulo.process.ProcessHandler;
+import consulo.project.Project;
+import consulo.ui.ex.OccurenceNavigator;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchComparator;
+import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
+import consulo.ui.ex.awt.tree.*;
+import consulo.ui.ex.awt.util.ComponentUtil;
+import consulo.ui.ex.awt.util.UISettingsUtil;
+import consulo.ui.ex.tree.AbstractTreeStructure;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.image.Image;
+import consulo.util.collection.SmartHashSet;
+import consulo.util.concurrent.Promise;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.SystemProperties;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
-import consulo.util.concurrent.Promise;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -99,13 +90,13 @@ import java.util.function.Supplier;
 import static consulo.ide.impl.idea.build.BuildConsoleUtils.getMessageTitle;
 import static consulo.ide.impl.idea.build.BuildView.CONSOLE_VIEW_NAME;
 import static consulo.ide.impl.idea.openapi.util.text.StringUtil.isEmpty;
-import static consulo.ui.ex.awt.AnimatedIcon.ANIMATION_IN_RENDERER_ALLOWED;
-import static consulo.ui.ex.SimpleTextAttributes.GRAYED_ATTRIBUTES;
-import static consulo.ui.ex.awt.util.RenderingHelper.SHRINK_LONG_RENDERER;
-import static consulo.ui.ex.awt.internal.laf.DefaultTreeUI.AUTO_EXPAND_ALLOWED;
 import static consulo.ide.impl.idea.util.ObjectUtils.chooseNotNull;
 import static consulo.ide.impl.idea.util.containers.ContainerUtil.addIfNotNull;
+import static consulo.ui.ex.SimpleTextAttributes.GRAYED_ATTRIBUTES;
+import static consulo.ui.ex.awt.AnimatedIcon.ANIMATION_IN_RENDERER_ALLOWED;
 import static consulo.ui.ex.awt.UIUtil.*;
+import static consulo.ui.ex.awt.internal.laf.DefaultTreeUI.AUTO_EXPAND_ALLOWED;
+import static consulo.ui.ex.awt.util.RenderingHelper.SHRINK_LONG_RENDERER;
 
 /**
  * @author Vladislav.Soroka
@@ -770,7 +761,7 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
     if (isEmpty(parentsPath)) {
       File userHomeDir = new File(SystemProperties.getUserHome());
       if (FileUtil.isAncestor(userHomeDir, new File(filePath), true)) {
-        relativePath = FileUtil.getLocationRelativeToUserHome(filePath, false);
+        relativePath = UserHomeFileUtil.getLocationRelativeToUserHome(filePath, false);
       }
       else {
         relativePath = filePath;
@@ -797,7 +788,7 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
     String path = ObjectUtils.notNull(FileUtil.getRelativePath(basePath, filePath, '/'), filePath);
     File userHomeDir = new File(SystemProperties.getUserHome());
     if (path.startsWith("..") && FileUtil.isAncestor(userHomeDir, new File(filePath), true)) {
-      return FileUtil.getLocationRelativeToUserHome(filePath, false);
+      return UserHomeFileUtil.getLocationRelativeToUserHome(filePath, false);
     }
     return path;
   }

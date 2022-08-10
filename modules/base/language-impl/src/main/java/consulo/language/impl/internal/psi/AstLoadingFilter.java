@@ -2,11 +2,10 @@
 package consulo.language.impl.internal.psi;
 
 import consulo.application.util.function.ThrowableComputable;
-import consulo.util.lang.function.ThrowableRunnable;
-import consulo.application.util.registry.Registry;
 import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
+import consulo.util.lang.function.ThrowableRunnable;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
@@ -74,11 +73,13 @@ public class AstLoadingFilter {
   @SuppressWarnings("SSBasedInspection")
   private static final ThreadLocal<Set<VirtualFile>> myForcedAllowedFiles = ThreadLocal.withInitial(() -> new HashSet<>());
 
+  private static final boolean AST_LOADING_FILTER = Boolean.getBoolean("consulo.ast.loading.filter");
+
   private AstLoadingFilter() {
   }
 
   public static void assertTreeLoadingAllowed(@Nonnull VirtualFile file) {
-    if (!Registry.is("ast.loading.filter")) return;
+    if (!AST_LOADING_FILTER) return;
     if (file instanceof VirtualFileWindow) return;
     Supplier<String> disallowedInfo = myDisallowedInfo.get();
     if (disallowedInfo == null) {

@@ -17,7 +17,7 @@
 package consulo.ide.impl.psi.impl.file;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.application.util.UserHomeFileUtil;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiDirectoryContainer;
 import consulo.language.psi.PsiPackageHelper;
@@ -44,7 +44,7 @@ public class PsiPackageHelperImpl extends PsiPackageHelper {
   @Nonnull
   public String getQualifiedName(@Nonnull final PsiDirectory directory, final boolean presentable) {
     if (presentable) {
-      return FileUtil.getLocationRelativeToUserHome(directory.getVirtualFile().getPresentableUrl());
+      return UserHomeFileUtil.getLocationRelativeToUserHome(directory.getVirtualFile().getPresentableUrl());
     }
     return "";
   }

@@ -37,7 +37,7 @@ import jakarta.inject.Singleton;
  * @author yole
  */
 @Singleton
-@ServiceAPI(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class DependenciesToolWindow {
   public static DependenciesToolWindow getInstance(Project project) {

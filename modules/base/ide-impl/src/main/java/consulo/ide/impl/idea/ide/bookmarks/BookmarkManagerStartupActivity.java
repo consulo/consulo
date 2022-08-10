@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.ide.bookmarks;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
+import consulo.bookmark.BookmarkManager;
 import consulo.language.psi.event.PsiDocumentListener;
 import consulo.project.Project;
 import consulo.project.startup.PostStartupActivity;
@@ -31,6 +32,6 @@ public class BookmarkManagerStartupActivity implements PostStartupActivity, Dumb
     project.getMessageBus().connect().subscribe(PsiDocumentListener.class, BookmarkManagerImpl::documentCreated);
 
     // init
-    BookmarkManagerImpl.getInstance(project);
+    BookmarkManager.getInstance(project);
   }
 }

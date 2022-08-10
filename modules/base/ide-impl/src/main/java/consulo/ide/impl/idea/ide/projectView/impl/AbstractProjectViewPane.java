@@ -12,8 +12,6 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.component.util.BusyObject;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
-import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.DefaultTreeExpander;
@@ -22,13 +20,12 @@ import consulo.ide.impl.idea.ide.dnd.DnDEventImpl;
 import consulo.ide.impl.idea.ide.dnd.TransferableWrapper;
 import consulo.ide.impl.idea.ide.dnd.aware.DnDAwareTree;
 import consulo.ide.impl.idea.ide.projectView.BaseProjectTreeBuilder;
-import consulo.ide.impl.idea.ide.projectView.ProjectView;
-import consulo.project.ui.view.tree.ProjectViewNode;
-import consulo.project.ui.view.tree.RootsProvider;
+import consulo.project.ui.view.ProjectView;
+import consulo.project.ui.view.ProjectViewPane;
+import consulo.project.ui.view.tree.*;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.AbstractModuleNode;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.AbstractProjectNode;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.ModuleGroupNode;
-import consulo.project.ui.view.tree.PsiDirectoryNode;
 import consulo.ide.impl.idea.ide.util.treeView.AbstractTreeStructureBase;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.refactoring.move.MoveHandler;
@@ -49,7 +46,6 @@ import consulo.module.content.ModuleRootManager;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.project.ui.view.SelectInTarget;
-import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.TreeExpander;
@@ -92,7 +88,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 
 @ExtensionAPI(ComponentScope.PROJECT)
-public abstract class AbstractProjectViewPane extends UserDataHolderBase implements DataProvider, Disposable, BusyObject {
+public abstract class AbstractProjectViewPane extends UserDataHolderBase implements ProjectViewPane, BusyObject {
   private static final Logger LOG = Logger.getInstance(AbstractProjectViewPane.class);
   public static final ExtensionPointName<AbstractProjectViewPane> EP_NAME = ExtensionPointName.create(AbstractProjectViewPane.class);
 

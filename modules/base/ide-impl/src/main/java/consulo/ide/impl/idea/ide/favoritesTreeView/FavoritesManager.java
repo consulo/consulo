@@ -39,6 +39,7 @@ import consulo.content.ContentIterator;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
+import consulo.project.ui.view.tree.ModuleGroup;
 import consulo.ui.ex.InputValidator;
 import consulo.ui.ex.awt.Messages;
 import consulo.util.xml.serializer.DefaultJDOMExternalizer;

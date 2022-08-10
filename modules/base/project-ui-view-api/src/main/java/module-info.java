@@ -13,6 +13,7 @@ module consulo.project.ui.view.api {
   requires transitive consulo.file.editor.api;
   requires transitive consulo.language.editor.api;
   requires transitive consulo.language.editor.ui.api;
+  requires transitive consulo.bookmark.api;
 
   exports consulo.project.ui.view;
   exports consulo.project.ui.view.tree;

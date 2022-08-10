@@ -17,11 +17,11 @@ package consulo.ide.impl.idea.openapi.project;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.application.util.SystemInfo;
+import consulo.application.util.UserHomeFileUtil;
 import consulo.fileEditor.UniqueVFilePathBuilder;
 import consulo.ide.impl.idea.openapi.application.PathManagerEx;
 import consulo.ide.impl.idea.openapi.module.ModuleUtil;
 import consulo.ide.impl.idea.openapi.roots.libraries.LibraryUtil;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.ObjectUtil;
 import consulo.ide.impl.idea.util.PathUtil;
@@ -80,7 +80,7 @@ public class ProjectUtil {
 
   @Nullable
   public static String getProjectLocationString(@Nonnull final Project project) {
-    return FileUtil.getLocationRelativeToUserHome(project.getBasePath());
+    return UserHomeFileUtil.getLocationRelativeToUserHome(project.getBasePath());
   }
 
   @Nonnull

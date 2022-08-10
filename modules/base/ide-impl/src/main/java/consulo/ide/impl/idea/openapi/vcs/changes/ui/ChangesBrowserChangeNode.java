@@ -17,17 +17,18 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
 import consulo.application.AllIcons;
-import consulo.project.Project;
+import consulo.application.util.UserHomeFileUtil;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.TreeLinkMouseListener;
+import consulo.project.Project;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.image.Image;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.ChangesUtil;
-import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.TreeLinkMouseListener;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -77,7 +78,7 @@ public class ChangesBrowserChangeNode extends ChangesBrowserNode<Change> impleme
     if (renderer.isShowFlatten()) {
       FilePath parentPath = filePath.getParentPath();
       if (parentPath != null) {
-        renderer.append(spaceAndThinSpace() + FileUtil.getLocationRelativeToUserHome(parentPath.getPath()),
+        renderer.append(spaceAndThinSpace() + UserHomeFileUtil.getLocationRelativeToUserHome(parentPath.getPath()),
                         SimpleTextAttributes.GRAYED_ATTRIBUTES);
       }
       appendSwitched(renderer, file);

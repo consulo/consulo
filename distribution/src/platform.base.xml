@@ -24,6 +24,7 @@
         <include>consulo:consulo-annotation</include>
         <include>consulo:consulo-component-api</include>
         <include>consulo:consulo-application-api</include>
+        <include>consulo:consulo-bookmark-api</include>
         <include>consulo:consulo-build-ui-api</include>
         <include>consulo:consulo-ide-impl</include>
         <include>consulo:consulo-disposer-api</include>

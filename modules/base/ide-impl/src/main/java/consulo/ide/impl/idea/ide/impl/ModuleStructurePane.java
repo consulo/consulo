@@ -22,13 +22,13 @@ package consulo.ide.impl.idea.ide.impl;
 import consulo.project.ui.view.tree.ViewSettings;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectAbstractTreeStructureBase;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectTreeStructure;
-import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPane;
+import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPaneImpl;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.StructureViewModuleNode;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.module.Module;
 import consulo.project.Project;
 
-public class ModuleStructurePane extends ProjectViewPane {
+public class ModuleStructurePane extends ProjectViewPaneImpl {
   private final Module myModule;
 
   public ModuleStructurePane(Module module) {

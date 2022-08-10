@@ -16,10 +16,11 @@
 
 package consulo.ide.impl.idea.ide.bookmarks;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.util.SystemInfo;
+import consulo.bookmark.Bookmark;
+import consulo.bookmark.BookmarkManager;
+import consulo.bookmark.event.BookmarksListener;
 import consulo.codeEditor.DocumentMarkupModel;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
@@ -37,8 +38,6 @@ import consulo.document.FileDocumentManager;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
@@ -46,6 +45,8 @@ import consulo.project.startup.StartupActivity;
 import consulo.project.startup.StartupManager;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import jakarta.inject.Inject;
@@ -65,16 +66,10 @@ import java.util.concurrent.atomic.AtomicReference;
 
 @State(name = "BookmarkManagerImpl", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 @Singleton
-@ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class BookmarkManagerImpl implements BookmarkManager, PersistentStateComponent<Element> {
 
   private static final int MAX_AUTO_DESCRIPTION_SIZE = 50;
-
-  @Nonnull
-  public static BookmarkManagerImpl getInstance(Project project) {
-    return (BookmarkManagerImpl) project.getInstance(BookmarkManager.class);
-  }
 
   private final List<BookmarkImpl> myBookmarks = new ArrayList<>();
 
@@ -94,7 +89,7 @@ public class BookmarkManagerImpl implements BookmarkManager, PersistentStateComp
   }
 
   static void documentCreated(@Nonnull final Document document, PsiFile ignored, Project project) {
-    BookmarkManagerImpl bookmarkManager = BookmarkManagerImpl.getInstance(project);
+    BookmarkManagerImpl bookmarkManager = (BookmarkManagerImpl)BookmarkManager.getInstance(project);
 
     final VirtualFile file = FileDocumentManager.getInstance().getFile(document);
     if (file == null) return;
@@ -108,7 +103,8 @@ public class BookmarkManagerImpl implements BookmarkManager, PersistentStateComp
     }
   }
 
-  public void editDescription(@Nonnull BookmarkImpl bookmark) {
+  @Override
+  public void editDescription(@Nonnull Bookmark bookmark) {
     String description = Messages.showInputDialog(myProject, IdeBundle.message("action.bookmark.edit.description.dialog.message"), IdeBundle.message("action.bookmark.edit.description.dialog.title"),
                                                   Messages.getQuestionIcon(), bookmark.getDescription(), null);
     if (description != null) {
@@ -116,6 +112,7 @@ public class BookmarkManagerImpl implements BookmarkManager, PersistentStateComp
     }
   }
 
+  @Override
   public void addEditorBookmark(Editor editor, int lineIndex) {
     Document document = editor.getDocument();
     PsiFile psiFile = PsiDocumentManager.getInstance(myProject).getPsiFile(document);
@@ -127,6 +124,7 @@ public class BookmarkManagerImpl implements BookmarkManager, PersistentStateComp
     addTextBookmark(virtualFile, lineIndex, getAutoDescription(editor, lineIndex));
   }
 
+  @Override
   public BookmarkImpl addTextBookmark(VirtualFile file, int lineIndex, String description) {
     BookmarkImpl b = new BookmarkImpl(myProject, file, lineIndex, description, true);
     myBookmarks.add(0, b);
@@ -146,6 +144,7 @@ public class BookmarkManagerImpl implements BookmarkManager, PersistentStateComp
     return autoDescription;
   }
 
+  @Override
   @Nullable
   public BookmarkImpl addFileBookmark(VirtualFile file, String description) {
     if (file == null) return null;
@@ -157,10 +156,10 @@ public class BookmarkManagerImpl implements BookmarkManager, PersistentStateComp
     return b;
   }
 
-
+  @Override
   @Nonnull
-  public List<BookmarkImpl> getValidBookmarks() {
-    List<BookmarkImpl> answer = new ArrayList<>();
+  public List<Bookmark> getValidBookmarks() {
+    List<Bookmark> answer = new ArrayList<>();
     for (BookmarkImpl bookmark : myBookmarks) {
       if (bookmark.isValid()) answer.add(bookmark);
     }
@@ -168,6 +167,7 @@ public class BookmarkManagerImpl implements BookmarkManager, PersistentStateComp
   }
 
 
+  @Override
   @Nullable
   public BookmarkImpl findEditorBookmark(@Nonnull Document document, int line) {
     for (BookmarkImpl bookmark : myBookmarks) {
@@ -179,6 +179,7 @@ public class BookmarkManagerImpl implements BookmarkManager, PersistentStateComp
     return null;
   }
 
+  @Override
   @Nullable
   public BookmarkImpl findFileBookmark(@Nonnull VirtualFile file) {
     for (BookmarkImpl bookmark : myBookmarks) {
@@ -188,6 +189,7 @@ public class BookmarkManagerImpl implements BookmarkManager, PersistentStateComp
     return null;
   }
 
+  @Override
   @Nullable
   public BookmarkImpl findBookmarkForMnemonic(char m) {
     final char mm = Character.toUpperCase(m);
@@ -197,6 +199,7 @@ public class BookmarkManagerImpl implements BookmarkManager, PersistentStateComp
     return null;
   }
 
+  @Override
   public boolean hasBookmarksWithMnemonics() {
     for (BookmarkImpl bookmark : myBookmarks) {
       if (bookmark.getMnemonic() != 0) return true;
@@ -205,9 +208,10 @@ public class BookmarkManagerImpl implements BookmarkManager, PersistentStateComp
     return false;
   }
 
-  public void removeBookmark(@Nonnull BookmarkImpl bookmark) {
+  @Override
+  public void removeBookmark(@Nonnull Bookmark bookmark) {
     myBookmarks.remove(bookmark);
-    bookmark.release();
+    ((BookmarkImpl)bookmark).release();
     myBus.syncPublisher(BookmarksListener.class).bookmarkRemoved(bookmark);
   }
 
@@ -324,7 +328,7 @@ public class BookmarkManagerImpl implements BookmarkManager, PersistentStateComp
    * @return bookmark list after moving
    */
   @Nonnull
-  public List<BookmarkImpl> moveBookmarkUp(@Nonnull BookmarkImpl bookmark) {
+  public List<? extends Bookmark> moveBookmarkUp(@Nonnull Bookmark bookmark) {
     final int index = myBookmarks.indexOf(bookmark);
     if (index > 0) {
       Collections.swap(myBookmarks, index, index - 1);
@@ -343,7 +347,7 @@ public class BookmarkManagerImpl implements BookmarkManager, PersistentStateComp
    * @return bookmark list after moving
    */
   @Nonnull
-  public List<BookmarkImpl> moveBookmarkDown(@Nonnull BookmarkImpl bookmark) {
+  public List<? extends Bookmark> moveBookmarkDown(@Nonnull Bookmark bookmark) {
     final int index = myBookmarks.indexOf(bookmark);
     if (index < myBookmarks.size() - 1) {
       Collections.swap(myBookmarks, index, index + 1);
@@ -356,11 +360,12 @@ public class BookmarkManagerImpl implements BookmarkManager, PersistentStateComp
     return myBookmarks;
   }
 
+  @Override
   @Nullable
-  public BookmarkImpl getNextBookmark(@Nonnull Editor editor, boolean isWrapped) {
-    BookmarkImpl[] bookmarksForDocument = getBookmarksForDocument(editor.getDocument());
+  public Bookmark getNextBookmark(@Nonnull Editor editor, boolean isWrapped) {
+    Bookmark[] bookmarksForDocument = getBookmarksForDocument(editor.getDocument());
     int lineNumber = editor.getCaretModel().getLogicalPosition().line;
-    for (BookmarkImpl bookmark : bookmarksForDocument) {
+    for (Bookmark bookmark : bookmarksForDocument) {
       if (bookmark.getLine() > lineNumber) return bookmark;
     }
     if (isWrapped && bookmarksForDocument.length > 0) {
@@ -369,12 +374,13 @@ public class BookmarkManagerImpl implements BookmarkManager, PersistentStateComp
     return null;
   }
 
+  @Override
   @Nullable
-  public BookmarkImpl getPreviousBookmark(@Nonnull Editor editor, boolean isWrapped) {
-    BookmarkImpl[] bookmarksForDocument = getBookmarksForDocument(editor.getDocument());
+  public Bookmark getPreviousBookmark(@Nonnull Editor editor, boolean isWrapped) {
+    Bookmark[] bookmarksForDocument = getBookmarksForDocument(editor.getDocument());
     int lineNumber = editor.getCaretModel().getLogicalPosition().line;
     for (int i = bookmarksForDocument.length - 1; i >= 0; i--) {
-      BookmarkImpl bookmark = bookmarksForDocument[i];
+      Bookmark bookmark = bookmarksForDocument[i];
       if (bookmark.getLine() < lineNumber) return bookmark;
     }
     if (isWrapped && bookmarksForDocument.length > 0) {
@@ -384,29 +390,31 @@ public class BookmarkManagerImpl implements BookmarkManager, PersistentStateComp
   }
 
   @Nonnull
-  private BookmarkImpl[] getBookmarksForDocument(@Nonnull Document document) {
-    ArrayList<BookmarkImpl> answer = new ArrayList<>();
-    for (BookmarkImpl bookmark : getValidBookmarks()) {
+  private Bookmark[] getBookmarksForDocument(@Nonnull Document document) {
+    ArrayList<Bookmark> answer = new ArrayList<>();
+    for (Bookmark bookmark : getValidBookmarks()) {
       if (document.equals(bookmark.getDocument())) {
         answer.add(bookmark);
       }
     }
 
-    BookmarkImpl[] bookmarks = answer.toArray(new BookmarkImpl[answer.size()]);
+    Bookmark[] bookmarks = answer.toArray(new Bookmark[answer.size()]);
     Arrays.sort(bookmarks, (o1, o2) -> o1.getLine() - o2.getLine());
     return bookmarks;
   }
 
-  public void setMnemonic(@Nonnull BookmarkImpl bookmark, char c) {
+  @Override
+  public void setMnemonic(@Nonnull Bookmark bookmark, char c) {
     final BookmarkImpl old = findBookmarkForMnemonic(c);
     if (old != null) removeBookmark(old);
 
-    bookmark.setMnemonic(c);
+    ((BookmarkImpl)bookmark).setMnemonic(c);
     myBus.syncPublisher(BookmarksListener.class).bookmarkChanged(bookmark);
   }
 
-  public void setDescription(@Nonnull BookmarkImpl bookmark, String description) {
-    bookmark.setDescription(description);
+  @Override
+  public void setDescription(@Nonnull Bookmark bookmark, String description) {
+    ((BookmarkImpl)bookmark).setDescription(description);
     myBus.syncPublisher(BookmarksListener.class).bookmarkChanged(bookmark);
   }
 

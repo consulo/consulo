@@ -16,15 +16,15 @@
 
 package consulo.ide.impl.idea.ide.bookmarks.actions;
 
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.bookmarks.BookmarkManagerImpl;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.application.dumb.DumbAware;
+import consulo.dataContext.DataContext;
+import consulo.ide.IdeBundle;
+import consulo.bookmark.BookmarkManager;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.ex.action.AnActionEvent;
 
 public class ToggleBookmarkAction extends BookmarksAction implements DumbAware {
   public ToggleBookmarkAction() {
@@ -40,10 +40,10 @@ public class ToggleBookmarkAction extends BookmarksAction implements DumbAware {
     if (info.getFile() == null) return;
 
     if (info.getBookmarkAtPlace() != null) {
-      BookmarkManagerImpl.getInstance(project).removeBookmark(info.getBookmarkAtPlace());
+      BookmarkManager.getInstance(project).removeBookmark(info.getBookmarkAtPlace());
     }
     else {
-      BookmarkManagerImpl.getInstance(project).addTextBookmark(info.getFile(), info.getLine(), "");
+      BookmarkManager.getInstance(project).addTextBookmark(info.getFile(), info.getLine(), "");
     }
   }
 

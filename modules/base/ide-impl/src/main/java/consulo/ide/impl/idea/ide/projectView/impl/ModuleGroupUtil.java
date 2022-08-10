@@ -25,6 +25,7 @@ package consulo.ide.impl.idea.ide.projectView.impl;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.Function;
+import consulo.project.ui.view.tree.ModuleGroup;
 
 import java.util.ArrayList;
 import java.util.Map;

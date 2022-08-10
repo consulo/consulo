@@ -1,6 +1,26 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.find.impl;
 
+import consulo.application.AllIcons;
+import consulo.application.ApplicationManager;
+import consulo.application.CommonBundle;
+import consulo.application.HelpManager;
+import consulo.application.dumb.DumbAware;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.impl.internal.progress.ProgressIndicatorBase;
+import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
+import consulo.application.impl.internal.progress.ReadTask;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.ui.UISettings;
+import consulo.application.util.SystemInfo;
+import consulo.application.util.UserHomeFileUtil;
+import consulo.application.util.registry.Registry;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.document.event.DocumentListener;
+import consulo.fileEditor.UniqueVFilePathBuilder;
+import consulo.fileEditor.VfsPresentationUtil;
+import consulo.find.*;
 import consulo.ide.impl.idea.find.SearchTextArea;
 import consulo.ide.impl.idea.find.actions.ShowUsagesAction;
 import consulo.ide.impl.idea.find.replaceInProject.ReplaceInProjectManager;
@@ -10,10 +30,8 @@ import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionToolbarImpl;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.project.DumbAwareToggleAction;
 import consulo.ide.impl.idea.openapi.ui.ComponentValidator;
-import consulo.ui.ex.awt.LoadingDecorator;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.DimensionService;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
@@ -28,25 +46,6 @@ import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.PathUtil;
 import consulo.ide.impl.idea.util.Producer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.application.AllIcons;
-import consulo.application.ApplicationManager;
-import consulo.application.CommonBundle;
-import consulo.application.HelpManager;
-import consulo.application.dumb.DumbAware;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.impl.internal.progress.ProgressIndicatorBase;
-import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
-import consulo.application.impl.internal.progress.ReadTask;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.ui.UISettings;
-import consulo.application.util.SystemInfo;
-import consulo.application.util.registry.Registry;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.document.event.DocumentListener;
-import consulo.fileEditor.UniqueVFilePathBuilder;
-import consulo.fileEditor.VfsPresentationUtil;
-import consulo.find.*;
 import consulo.ide.impl.psi.search.GlobalSearchScopeUtil;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.scratch.ScratchUtil;
@@ -57,19 +56,17 @@ import consulo.logging.Logger;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.project.event.ProjectManagerListener;
+import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
-import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.*;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awt.event.DoubleClickListener;
-import consulo.ui.ex.awt.MnemonicHelper;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.ex.action.ActionButtonComponent;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.popup.JBPopup;
@@ -848,7 +845,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
                   ? ScratchUtil.getRelativePath(project, virtualFile)
                   : VfsUtilCore.isAncestor(project.getBaseDir(), virtualFile, true)
                     ? VfsUtilCore.getRelativeLocation(virtualFile, project.getBaseDir())
-                    : FileUtil.getLocationRelativeToUserHome(virtualFile.getPath());
+                    : UserHomeFileUtil.getLocationRelativeToUserHome(virtualFile.getPath());
     return path == null ? null : maxChars < 0 ? path : StringUtil.trimMiddle(path, maxChars);
   }
 

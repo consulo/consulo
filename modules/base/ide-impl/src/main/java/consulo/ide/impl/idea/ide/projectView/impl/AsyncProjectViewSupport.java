@@ -1,36 +1,35 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.projectView.impl;
 
+import consulo.application.util.registry.Registry;
+import consulo.component.messagebus.MessageBusConnection;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.CopyPasteUtil;
-import consulo.ide.impl.idea.ide.bookmarks.BookmarkImpl;
-import consulo.ide.impl.idea.ide.bookmarks.BookmarksListener;
+import consulo.bookmark.Bookmark;
+import consulo.bookmark.event.BookmarksListener;
 import consulo.ide.impl.idea.ide.projectView.ProjectViewPsiTreeChangeListener;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPaneSelectionHelper.SelectionDescriptor;
-import consulo.project.ui.view.tree.AbstractTreeNode;
-import consulo.ui.ex.tree.AbstractTreeStructure;
-import consulo.ui.ex.tree.NodeDescriptor;
-import consulo.ui.ex.awt.tree.*;
-import consulo.disposer.Disposable;
-import consulo.project.Project;
-import consulo.disposer.Disposer;
-import consulo.application.util.registry.Registry;
-import consulo.virtualFileSystem.status.FileStatusListener;
-import consulo.virtualFileSystem.status.FileStatusManager;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.ide.impl.idea.ui.tree.RestoreSelectionListener;
+import consulo.ide.impl.idea.ui.tree.TreeCollector;
+import consulo.ide.impl.idea.ui.tree.project.ProjectFileNodeUpdater;
 import consulo.language.editor.wolfAnalyzer.ProblemListener;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.PsiUtilCore;
-import consulo.ide.impl.idea.ui.tree.*;
-import consulo.ide.impl.idea.ui.tree.project.ProjectFileNodeUpdater;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.ui.ex.awt.tree.*;
+import consulo.ui.ex.tree.AbstractTreeStructure;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.util.collection.SmartList;
-import consulo.component.messagebus.MessageBusConnection;
+import consulo.util.concurrent.Promise;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.status.FileStatusListener;
+import consulo.virtualFileSystem.status.FileStatusManager;
 
 import javax.annotation.Nonnull;
-
-import consulo.logging.Logger;
-import consulo.util.concurrent.Promise;
-
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
@@ -38,8 +37,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
-import static consulo.ui.ex.awt.tree.TreeState.expand;
 import static consulo.ide.impl.idea.ui.tree.project.ProjectFileNode.findArea;
+import static consulo.ui.ex.awt.tree.TreeState.expand;
 
 class AsyncProjectViewSupport {
   private static final Logger LOG = Logger.getInstance(AsyncProjectViewSupport.class);
@@ -75,17 +74,17 @@ class AsyncProjectViewSupport {
     MessageBusConnection connection = project.getMessageBus().connect(parent);
     connection.subscribe(BookmarksListener.class, new BookmarksListener() {
       @Override
-      public void bookmarkAdded(@Nonnull BookmarkImpl bookmark) {
+      public void bookmarkAdded(@Nonnull Bookmark bookmark) {
         updateByFile(bookmark.getFile(), false);
       }
 
       @Override
-      public void bookmarkRemoved(@Nonnull BookmarkImpl bookmark) {
+      public void bookmarkRemoved(@Nonnull Bookmark bookmark) {
         updateByFile(bookmark.getFile(), false);
       }
 
       @Override
-      public void bookmarkChanged(@Nonnull BookmarkImpl bookmark) {
+      public void bookmarkChanged(@Nonnull Bookmark bookmark) {
         updateByFile(bookmark.getFile(), false);
       }
     });

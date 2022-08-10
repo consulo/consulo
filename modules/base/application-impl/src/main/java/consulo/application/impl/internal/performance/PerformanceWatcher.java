@@ -99,7 +99,7 @@ public class PerformanceWatcher implements Disposable {
   public PerformanceWatcher(ContainerPathManager containerPathManager) {
     myContainerPathManager = containerPathManager;
     myCurHangLogDir =
-    mySessionLogDir = new File(ContainerPathManager.get().getLogPath(), "/threadDumps-" + myDateFormat.format(new Date()) + "-" + ApplicationInfo.getInstance().getBuild().asString());
+    mySessionLogDir = new File(containerPathManager.getLogPath(), "/threadDumps-" + myDateFormat.format(new Date()) + "-" + ApplicationInfo.getInstance().getBuild().asString());
     myPublisher = ApplicationManager.getApplication().getMessageBus().syncPublisher(IdePerformanceListener.class);
     myThread = JobScheduler.getScheduler().scheduleWithFixedDelay((Runnable)() -> samplePerformance(), SAMPLING_INTERVAL_MS, SAMPLING_INTERVAL_MS, TimeUnit.MILLISECONDS);
 

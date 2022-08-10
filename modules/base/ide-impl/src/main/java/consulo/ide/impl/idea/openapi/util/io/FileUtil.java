@@ -16,24 +16,23 @@
 package consulo.ide.impl.idea.openapi.util.io;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.application.CommonBundle;
+import consulo.application.util.SystemInfo;
+import consulo.application.util.function.Processor;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.ObjectUtils;
-import consulo.util.lang.function.PairProcessor;
-import consulo.util.lang.ThreeState;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.Convertor;
 import consulo.ide.impl.idea.util.io.URLUtil;
 import consulo.ide.impl.idea.util.text.FilePathHashingStrategy;
 import consulo.ide.impl.idea.util.text.StringFactory;
-import consulo.application.CommonBundle;
-import consulo.application.util.SystemInfo;
-import consulo.application.util.function.Processor;
 import consulo.logging.Logger;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.io.FileAttributes;
 import consulo.util.io.FileTooBigException;
-import consulo.util.lang.SystemProperties;
+import consulo.util.lang.ThreeState;
+import consulo.util.lang.function.PairProcessor;
 import consulo.virtualFileSystem.impl.internal.mediator.FileSystemUtil;
 import org.intellij.lang.annotations.RegExp;
 import org.jetbrains.annotations.Contract;
@@ -1230,34 +1229,6 @@ public class FileUtil extends FileUtilRt {
 
   public static boolean isWindowsAbsolutePath(@Nonnull String pathString) {
     return pathString.length() >= 2 && Character.isLetter(pathString.charAt(0)) && pathString.charAt(1) == ':';
-  }
-
-  @Contract("null -> null; !null -> !null")
-  public static String getLocationRelativeToUserHome(@Nullable String path) {
-    return getLocationRelativeToUserHome(path, true);
-  }
-
-  @Contract("null,_ -> null; !null,_ -> !null")
-  public static String getLocationRelativeToUserHome(@Nullable String path, boolean unixOnly) {
-    if (path == null) return null;
-
-    if (SystemInfo.isUnix || !unixOnly) {
-      File projectDir = new File(path);
-      File userHomeDir = new File(SystemProperties.getUserHome());
-      if (isAncestor(userHomeDir, projectDir, true)) {
-        return '~' + File.separator + getRelativePath(userHomeDir, projectDir);
-      }
-    }
-
-    return path;
-  }
-
-  @Nonnull
-  public static String expandUserHome(@Nonnull String path) {
-    if (path.startsWith("~/") || path.startsWith("~\\")) {
-      path = SystemProperties.getUserHome() + path.substring(1);
-    }
-    return path;
   }
 
   @Nonnull

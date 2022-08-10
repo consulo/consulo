@@ -2,29 +2,31 @@
 package consulo.ide.impl.idea.openapi.vcs.roots;
 
 import com.google.common.annotations.VisibleForTesting;
-import consulo.ui.ex.action.ActionsBundle;
-import consulo.project.ui.notification.Notification;
-import consulo.ide.impl.idea.notification.NotificationAction;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
-import consulo.ide.impl.idea.openapi.diagnostic.Logger;
-import consulo.ide.setting.ShowSettingsUtil;
-import consulo.ide.impl.idea.openapi.progress.util.BackgroundTaskUtil;
-import consulo.project.Project;
-import consulo.module.content.ProjectFileIndex;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.application.util.UserHomeFileUtil;
 import consulo.application.util.registry.Registry;
+import consulo.ide.impl.idea.notification.NotificationAction;
+import consulo.ide.impl.idea.openapi.diagnostic.Logger;
+import consulo.ide.impl.idea.openapi.progress.util.BackgroundTaskUtil;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.vcs.*;
-import consulo.versionControlSystem.change.ChangeListManager;
+import consulo.ide.impl.idea.openapi.vcs.VcsNotifier;
+import consulo.ide.impl.idea.openapi.vcs.VcsRootError;
+import consulo.ide.impl.idea.util.Function;
+import consulo.ide.setting.ShowSettingsUtil;
+import consulo.module.content.ProjectFileIndex;
+import consulo.project.Project;
+import consulo.project.ui.notification.Notification;
+import consulo.ui.ex.action.ActionsBundle;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.VcsDirectoryMapping;
+import consulo.versionControlSystem.change.ChangeListManager;
+import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.Function;
-import consulo.versionControlSystem.util.VcsUtil;
 import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;
@@ -318,7 +320,7 @@ public final class VcsRootProblemNotifier {
       }
     }
     if (presentablePath == null) {
-      presentablePath = FileUtil.getLocationRelativeToUserHome(toSystemDependentName(mapping));
+      presentablePath = UserHomeFileUtil.getLocationRelativeToUserHome(toSystemDependentName(mapping));
     }
     return escapeXmlEntities(presentablePath);
   }

@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.projectView.impl;
 
-import consulo.ide.impl.idea.ide.projectView.ProjectView;
+import consulo.project.ui.view.ProjectView;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.DumbAwareAction;

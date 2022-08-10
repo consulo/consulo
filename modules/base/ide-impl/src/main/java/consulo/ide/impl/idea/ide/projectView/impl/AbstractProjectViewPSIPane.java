@@ -207,6 +207,7 @@ public abstract class AbstractProjectViewPSIPane extends AbstractProjectViewPane
     selectCB(element, file, requestFocus);
   }
 
+  @Override
   @Nonnull
   public AsyncResult<Void> selectCB(Object element, VirtualFile file, boolean requestFocus) {
     if (file != null) {

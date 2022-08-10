@@ -2,7 +2,7 @@ package consulo.ide.impl.idea.ide.projectView.impl;
 
 import consulo.application.AllIcons;
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.projectView.ProjectView;
+import consulo.project.ui.view.ProjectView;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.ToggleAction;

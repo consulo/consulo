@@ -17,10 +17,10 @@ package consulo.project.ui.view;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectViewPane;
-import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.component.extension.ExtensionPointName;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.util.dataholder.KeyWithDefaultValue;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -52,7 +52,7 @@ public interface ProjectViewPaneOptionProvider<T> {
   @Nonnull
   KeyWithDefaultValue<T> getKey();
 
-  void addToolbarActions(@Nonnull AbstractProjectViewPane pane, @Nonnull DefaultActionGroup actionGroup);
+  void addToolbarActions(@Nonnull ProjectViewPane pane, @Nonnull DefaultActionGroup actionGroup);
 
   @Nonnull
   T parseValue(@Nonnull String value);

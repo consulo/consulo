@@ -13,14 +13,8 @@ import consulo.application.util.concurrent.NonUrgentExecutor;
 import consulo.container.boot.ContainerPathManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.ide.projectView.ProjectView;
-import consulo.project.ui.view.tree.ProjectViewNode;
-import consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectViewPane;
-import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPane;
+import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPaneImpl;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.ProjectViewProjectNode;
-import consulo.project.ui.view.tree.PsiDirectoryNode;
-import consulo.project.ui.view.tree.PsiFileNode;
-import consulo.project.ui.view.tree.PsiFileSystemItemFilter;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -34,9 +28,9 @@ import consulo.language.psi.*;
 import consulo.language.psi.resolve.PsiElementProcessor;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
-import consulo.project.ui.view.tree.AbstractTreeNode;
-import consulo.project.ui.view.tree.TreeStructureProvider;
-import consulo.project.ui.view.tree.ViewSettings;
+import consulo.project.ui.view.ProjectView;
+import consulo.project.ui.view.ProjectViewPane;
+import consulo.project.ui.view.tree.*;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.ui.ex.tree.TreeHelper;
 import consulo.util.collection.JBIterable;
@@ -60,12 +54,12 @@ public class ScratchTreeStructureProvider implements TreeStructureProvider, Dumb
   @Inject
   public ScratchTreeStructureProvider(Project project) {
     registerUpdaters(project, project, new Runnable() {
-      AbstractProjectViewPane updateTarget;
+      ProjectViewPane updateTarget;
 
       @Override
       public void run() {
         if (updateTarget == null) {
-          updateTarget = ProjectView.getInstance(project).getProjectViewPaneById(ProjectViewPane.ID);
+          updateTarget = ProjectView.getInstance(project).getProjectViewPaneById(ProjectViewPaneImpl.ID);
         }
         if (updateTarget != null) updateTarget.updateFromRoot(true);
       }

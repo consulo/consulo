@@ -6,6 +6,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.wm.IdeFocusManager;
+import consulo.application.util.UserHomeFileUtil;
 import consulo.colorScheme.EffectType;
 import consulo.colorScheme.TextAttributes;
 import consulo.component.util.Iconable;
@@ -424,7 +425,7 @@ public class Switcher extends AnAction implements DumbAware {
           myPanel.getAccessibleContext().setAccessibleName(c.getAccessibleContext().getAccessibleName());
           VirtualFile file = value.first;
           String presentableUrl = ObjectUtils.notNull(file.getParent(), file).getPresentableUrl();
-          String location = FileUtil.getLocationRelativeToUserHome(presentableUrl);
+          String location = UserHomeFileUtil.getLocationRelativeToUserHome(presentableUrl);
           myPanel.getAccessibleContext().setAccessibleDescription(location);
           if (!selected && list == mouseMoveSrc && index == mouseMoveListIndex) {
             setBackground(ON_MOUSE_OVER_BG_COLOR);
@@ -459,7 +460,7 @@ public class Switcher extends AnAction implements DumbAware {
           FileInfo selectedInfo = ContainerUtil.getOnlyItem(files.getSelectedValuesList());
           if (selectedInfo != null) {
             String presentableUrl = ObjectUtils.notNull(selectedInfo.first.getParent(), selectedInfo.first).getPresentableUrl();
-            pathLabel.setText(getTitle2Text(FileUtil.getLocationRelativeToUserHome(presentableUrl)));
+            pathLabel.setText(getTitle2Text(UserHomeFileUtil.getLocationRelativeToUserHome(presentableUrl)));
           }
           else {
             pathLabel.setText(" ");

@@ -27,6 +27,7 @@ import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
 import consulo.module.Module;
 import consulo.project.Project;
+import consulo.project.ui.view.tree.ModuleGroup;
 import consulo.ui.ex.action.*;
 
 import javax.annotation.Nonnull;

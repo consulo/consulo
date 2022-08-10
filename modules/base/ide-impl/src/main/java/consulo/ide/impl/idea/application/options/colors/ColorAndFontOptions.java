@@ -17,27 +17,14 @@
 package consulo.ide.impl.idea.application.options.colors;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.configurable.*;
-import consulo.configurable.OptionsContainingConfigurable;
-import consulo.ide.impl.idea.execution.impl.ConsoleViewUtil;
-import consulo.ide.impl.idea.ide.bookmarks.BookmarkManagerImpl;
-import consulo.ide.impl.idea.ide.todo.TodoConfiguration;
-import consulo.ide.impl.idea.openapi.editor.colors.impl.DefaultColorsScheme;
-import consulo.ide.impl.idea.openapi.editor.colors.impl.EditorColorsSchemeImpl;
-import consulo.ide.impl.idea.openapi.editor.colors.impl.ReadOnlyColorsScheme;
-import consulo.component.persist.scheme.ExternalizableScheme;
-import consulo.ide.impl.idea.openapi.options.colors.ColorSettingsPages;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.packageDependencies.DependencyValidationManager;
-import consulo.ide.impl.idea.packageDependencies.DependencyValidationManagerImpl;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.application.ApplicationBundle;
 import consulo.codeEditor.EditorFactory;
 import consulo.colorScheme.*;
 import consulo.colorScheme.setting.AttributesDescriptor;
 import consulo.colorScheme.setting.ColorAndFontDescriptorsProvider;
 import consulo.colorScheme.setting.ColorDescriptor;
+import consulo.component.persist.scheme.ExternalizableScheme;
+import consulo.configurable.*;
 import consulo.configurable.internal.ConfigurableWeight;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;
@@ -45,6 +32,18 @@ import consulo.content.scope.PackageSet;
 import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.execution.impl.ConsoleViewUtil;
+import consulo.bookmark.BookmarkManager;
+import consulo.ide.impl.idea.ide.bookmarks.BookmarkManagerImpl;
+import consulo.ide.impl.idea.ide.todo.TodoConfiguration;
+import consulo.ide.impl.idea.openapi.editor.colors.impl.DefaultColorsScheme;
+import consulo.ide.impl.idea.openapi.editor.colors.impl.EditorColorsSchemeImpl;
+import consulo.ide.impl.idea.openapi.editor.colors.impl.ReadOnlyColorsScheme;
+import consulo.ide.impl.idea.openapi.options.colors.ColorSettingsPages;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.packageDependencies.DependencyValidationManager;
+import consulo.ide.impl.idea.packageDependencies.DependencyValidationManagerImpl;
+import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.setting.Settings;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.editor.CommonDataKeys;
@@ -62,6 +61,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Sets;
+import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusFactory;
 import consulo.virtualFileSystem.status.FileStatusManager;
@@ -342,7 +342,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     for (Project openProject : openProjects) {
       FileStatusManager.getInstance(openProject).fileStatusesChanged();
       DaemonCodeAnalyzer.getInstance(openProject).restart();
-      BookmarkManagerImpl.getInstance(openProject).colorsChanged();
+      ((BookmarkManagerImpl)BookmarkManager.getInstance(openProject)).colorsChanged();
     }
   }
 

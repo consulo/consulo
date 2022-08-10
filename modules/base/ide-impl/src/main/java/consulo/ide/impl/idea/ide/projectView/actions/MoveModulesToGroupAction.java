@@ -19,18 +19,18 @@
  */
 package consulo.ide.impl.idea.ide.projectView.actions;
 
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.projectView.ProjectView;
-import consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectViewPane;
-import consulo.ide.impl.idea.ide.projectView.impl.ModuleGroup;
 import consulo.dataContext.DataContext;
+import consulo.ide.IdeBundle;
+import consulo.project.ui.view.tree.ModuleGroup;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.ModuleStructureConfigurable;
+import consulo.ide.setting.Settings;
 import consulo.language.editor.LangDataKeys;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import consulo.module.impl.internal.ModuleManagerImpl;
-import consulo.ide.setting.Settings;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.ModuleStructureConfigurable;
+import consulo.project.ui.view.ProjectView;
+import consulo.project.ui.view.ProjectViewPane;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
@@ -79,7 +79,7 @@ public class MoveModulesToGroupAction extends AnAction {
       }
     }
 
-    AbstractProjectViewPane pane = ProjectView.getInstance(project).getCurrentProjectViewPane();
+    ProjectViewPane pane = ProjectView.getInstance(project).getCurrentProjectViewPane();
     if (pane != null) {
       pane.updateFromRoot(true);
     }

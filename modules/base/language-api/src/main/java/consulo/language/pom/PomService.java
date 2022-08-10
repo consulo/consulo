@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 /**
  * @author peter
  */
-@ServiceAPI(ComponentScope.APPLICATION)
+@ServiceAPI(ComponentScope.PROJECT)
 public abstract class PomService {
 
   private static PomService getInstance(Project project) {

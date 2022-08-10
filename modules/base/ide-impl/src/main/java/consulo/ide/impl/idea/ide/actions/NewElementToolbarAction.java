@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.ide.IdeView;
-import consulo.ide.impl.idea.ide.projectView.ProjectView;
+import consulo.project.ui.view.ProjectView;
 import consulo.dataContext.DataManager;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;

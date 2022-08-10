@@ -16,16 +16,17 @@
 
 package consulo.ide.impl.idea.ide.bookmarks.actions;
 
-import consulo.ide.impl.idea.ide.bookmarks.BookmarkImpl;
-import consulo.ide.impl.idea.ide.bookmarks.BookmarkManagerImpl;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.ScrollType;
-import consulo.codeEditor.impl.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
+import consulo.codeEditor.impl.action.EditorAction;
+import consulo.dataContext.DataContext;
+import consulo.bookmark.Bookmark;
+import consulo.bookmark.BookmarkManager;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -43,7 +44,7 @@ abstract class GotoBookmarkActionBase extends EditorAction {
       }
 
       private void navigateToBookmark(DataContext dataContext, @Nonnull final Editor editor) {
-        final BookmarkImpl bookmark = getBookmarkToGo(dataContext, editor);
+        final Bookmark bookmark = getBookmarkToGo(dataContext, editor);
         if (bookmark == null) return;
 
         int line = bookmark.getLine();
@@ -58,10 +59,10 @@ abstract class GotoBookmarkActionBase extends EditorAction {
       }
 
       @Nullable
-      private BookmarkImpl getBookmarkToGo(DataContext dataContext, Editor editor) {
+      private Bookmark getBookmarkToGo(DataContext dataContext, Editor editor) {
         Project project = dataContext.getData(CommonDataKeys.PROJECT);
         if (project == null) return null;
-        BookmarkManagerImpl manager = BookmarkManagerImpl.getInstance(project);
+        BookmarkManager manager = BookmarkManager.getInstance(project);
         return next ? manager.getNextBookmark(editor, true) : manager.getPreviousBookmark(editor, true);
       }
     });

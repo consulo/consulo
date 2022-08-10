@@ -22,29 +22,26 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.patch;
 
+import consulo.application.util.UserHomeFileUtil;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.FileChooserFactory;
 import consulo.fileChooser.FileSaverDescriptor;
 import consulo.fileChooser.FileSaverDialog;
-import consulo.project.Project;
-import consulo.ui.ex.awt.ComboBox;
-import consulo.ui.ex.awt.TextBrowseFolderListener;
-import consulo.ui.ex.awt.TextFieldWithBrowseButton;
-import consulo.ui.ex.awt.ValidationInfo;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.versionControlSystem.VcsBundle;
+import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.project.Project;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.awt.*;
 import consulo.util.io.CharsetToolkit;
+import consulo.versionControlSystem.VcsBundle;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWrapper;
 import consulo.virtualFileSystem.encoding.EncodingProjectManager;
-import consulo.ui.ex.JBColor;
-import consulo.ide.impl.idea.util.ObjectUtils;
-import consulo.ui.ex.awt.FormBuilder;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -138,12 +135,12 @@ public class CreatePatchConfigurationPanel {
   }
 
   public String getFileName() {
-    return FileUtil.expandUserHome(myFileNameField.getText().trim());
+    return UserHomeFileUtil.expandUserHome(myFileNameField.getText().trim());
   }
 
   @Nonnull
   public String getBaseDirName() {
-    return FileUtil.expandUserHome(myBasePathField.getText().trim());
+    return UserHomeFileUtil.expandUserHome(myBasePathField.getText().trim());
   }
 
   public void setFileName(final File file) {

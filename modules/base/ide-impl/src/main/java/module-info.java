@@ -988,8 +988,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.progress.util.impl;
   exports consulo.ide.impl.project;
   exports consulo.ide.impl.projectView;
-  exports consulo.ide.impl.projectView.impl;
-  exports consulo.ide.impl.projectView.impl.nodes;
   exports consulo.ide.impl.psi;
   exports consulo.ide.impl.psi.codeStyle;
   exports consulo.ide.impl.psi.codeStyle.arrangement.engine;

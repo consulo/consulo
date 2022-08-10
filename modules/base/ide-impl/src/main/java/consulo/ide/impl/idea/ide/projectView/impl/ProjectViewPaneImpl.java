@@ -35,11 +35,11 @@ import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
 
 @ExtensionImpl
-public class ProjectViewPane extends AbstractProjectViewPSIPane {
+public class ProjectViewPaneImpl extends AbstractProjectViewPSIPane {
   public static final String ID = "ProjectPane";
 
   @Inject
-  public ProjectViewPane(Project project) {
+  public ProjectViewPaneImpl(Project project) {
     super(project);
   }
 
@@ -60,7 +60,6 @@ public class ProjectViewPane extends AbstractProjectViewPSIPane {
   public Image getIcon() {
     return AllIcons.General.ProjectTab;
   }
-
 
   @Nonnull
   @Override
@@ -143,7 +142,7 @@ public class ProjectViewPane extends AbstractProjectViewPSIPane {
 
   private class ProjectViewPaneTreeStructure extends ProjectTreeStructure {
     public ProjectViewPaneTreeStructure() {
-      super(ProjectViewPane.this.myProject, ID);
+      super(ProjectViewPaneImpl.this.myProject, ID);
     }
 
     @Override
@@ -154,7 +153,7 @@ public class ProjectViewPane extends AbstractProjectViewPSIPane {
     @Nonnull
     @Override
     public <T> T getViewOption(@Nonnull KeyWithDefaultValue<T> option) {
-      T value = ProjectViewPane.this.getUserData(option);
+      T value = ProjectViewPaneImpl.this.getUserData(option);
       assert value != null;
       return value;
     }

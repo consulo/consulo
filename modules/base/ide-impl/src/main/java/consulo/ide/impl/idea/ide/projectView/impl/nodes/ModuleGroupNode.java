@@ -23,7 +23,7 @@ import consulo.project.ui.view.tree.ProjectViewNode;
 import consulo.project.ui.view.tree.ViewSettings;
 import consulo.ide.impl.idea.ide.projectView.actions.MoveModulesToGroupAction;
 import consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectViewPane;
-import consulo.ide.impl.idea.ide.projectView.impl.ModuleGroup;
+import consulo.project.ui.view.tree.ModuleGroup;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.dataContext.DataContext;
 import consulo.module.Module;

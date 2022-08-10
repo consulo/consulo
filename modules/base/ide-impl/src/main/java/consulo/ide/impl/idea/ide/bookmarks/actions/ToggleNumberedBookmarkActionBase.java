@@ -19,12 +19,12 @@
  */
 package consulo.ide.impl.idea.ide.bookmarks.actions;
 
-import consulo.ide.impl.idea.ide.bookmarks.BookmarkImpl;
-import consulo.ide.impl.idea.ide.bookmarks.BookmarkManagerImpl;
-import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
-import consulo.language.editor.CommonDataKeys;
+import consulo.dataContext.DataContext;
+import consulo.bookmark.Bookmark;
+import consulo.bookmark.BookmarkManager;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 
@@ -35,30 +35,30 @@ public abstract class ToggleNumberedBookmarkActionBase extends AnAction implemen
     myNumber = n;
   }
 
+  @RequiredUIAccess
   @Override
   public void update(AnActionEvent e) {
-    DataContext dataContext = e.getDataContext();
-    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     e.getPresentation().setEnabled(project != null);
   }
 
   @Override
   public void actionPerformed(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
 
     BookmarksAction.BookmarkInContextInfo info = new BookmarksAction.BookmarkInContextInfo(dataContext, project).invoke();
     if (info.getFile() == null) return;
 
-    final BookmarkImpl oldBookmark = info.getBookmarkAtPlace();
+    final Bookmark oldBookmark = info.getBookmarkAtPlace();
 
-    final BookmarkManagerImpl manager = BookmarkManagerImpl.getInstance(project);
+    final BookmarkManager manager = BookmarkManager.getInstance(project);
     if (oldBookmark != null) {
       manager.removeBookmark(oldBookmark);
     }
 
     if (oldBookmark == null || oldBookmark.getMnemonic() != '0' + myNumber) {
-      final BookmarkImpl bookmark = manager.addTextBookmark(info.getFile(), info.getLine(), "");
+      final Bookmark bookmark = manager.addTextBookmark(info.getFile(), info.getLine(), "");
       manager.setMnemonic(bookmark, (char)('0' + myNumber));
     }
   }

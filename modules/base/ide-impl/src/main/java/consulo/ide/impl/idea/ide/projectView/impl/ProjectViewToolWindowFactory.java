@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.ide.projectView.impl;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.ide.projectView.ProjectView;
+import consulo.project.ui.view.ProjectView;
 import consulo.application.dumb.DumbAware;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;

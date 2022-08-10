@@ -37,11 +37,9 @@ import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.Project;
+import consulo.project.ui.view.ProjectViewPane;
 import consulo.project.ui.view.SelectInTarget;
-import consulo.project.ui.view.tree.AbstractPsiBasedNode;
-import consulo.project.ui.view.tree.AbstractTreeNode;
-import consulo.project.ui.view.tree.ProjectRootsUtil;
-import consulo.project.ui.view.tree.PsiDirectoryNode;
+import consulo.project.ui.view.tree.*;
 import consulo.ui.Tree;
 import consulo.ui.TreeNode;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -344,10 +342,10 @@ public class UnifiedProjectViewImpl implements ProjectViewEx {
   @Override
   public void setupToolWindow(@Nonnull ToolWindow toolWindow, boolean loadPaneExtensions) {
 
-    ProjectViewPane projectViewPane = null;
+    ProjectViewPaneImpl projectViewPane = null;
     for (AbstractProjectViewPane pane : AbstractProjectViewPane.EP_NAME.getExtensions(myProject)) {
-      if (pane instanceof ProjectViewPane) {
-        projectViewPane = (ProjectViewPane)pane;
+      if (pane instanceof ProjectViewPaneImpl) {
+        projectViewPane = (ProjectViewPaneImpl)pane;
       }
     }
 
@@ -479,17 +477,17 @@ public class UnifiedProjectViewImpl implements ProjectViewEx {
   }
 
   @Override
-  public void addProjectPane(AbstractProjectViewPane pane) {
+  public void addProjectPane(ProjectViewPane pane) {
 
   }
 
   @Override
-  public void removeProjectPane(AbstractProjectViewPane instance) {
+  public void removeProjectPane(ProjectViewPane instance) {
 
   }
 
   @Override
-  public AbstractProjectViewPane getProjectViewPaneById(String id) {
+  public ProjectViewPane getProjectViewPaneById(String id) {
     return null;
   }
 

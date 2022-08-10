@@ -17,15 +17,15 @@
 package consulo.ide.impl.idea.ide.scopeView;
 
 import consulo.application.AllIcons;
-import consulo.ide.impl.idea.ide.projectView.ProjectView;
-import consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectViewPane;
+import consulo.application.dumb.DumbAware;
+import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.util.scopeChooser.ScopeChooserConfigurable;
 import consulo.ide.setting.ShowSettingsUtil;
-import consulo.dataContext.DataContext;
-import consulo.application.dumb.DumbAware;
 import consulo.language.editor.CommonDataKeys;
-import consulo.project.Project;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.ui.view.ProjectView;
+import consulo.project.ui.view.ProjectViewPane;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 
@@ -63,7 +63,7 @@ public class EditScopesAction extends AnAction implements DumbAware {
     final DataContext dataContext = e.getDataContext();
     final Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project != null) {
-      final AbstractProjectViewPane projectViewPane = ProjectView.getInstance(project).getCurrentProjectViewPane();
+      final ProjectViewPane projectViewPane = ProjectView.getInstance(project).getCurrentProjectViewPane();
       if (projectViewPane != null) {
         final String scopeName = projectViewPane.getSubId();
         if (scopeName != null) {

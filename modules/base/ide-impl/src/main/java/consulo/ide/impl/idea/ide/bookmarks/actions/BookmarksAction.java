@@ -19,22 +19,22 @@
  */
 package consulo.ide.impl.idea.ide.bookmarks.actions;
 
-import consulo.ide.impl.idea.ide.bookmarks.BookmarkImpl;
-import consulo.ide.impl.idea.ide.bookmarks.BookmarkItem;
-import consulo.ide.impl.idea.ide.bookmarks.BookmarkManagerImpl;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.ide.impl.idea.ui.popup.util.DetailViewImpl;
-import consulo.ide.impl.idea.ui.popup.util.ItemWrapper;
-import consulo.ide.impl.idea.ui.popup.util.MasterDetailPopupBuilder;
 import consulo.application.dumb.DumbAware;
+import consulo.bookmark.Bookmark;
+import consulo.bookmark.BookmarkManager;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
+import consulo.ide.impl.idea.ide.bookmarks.*;
+import consulo.ide.impl.idea.ui.popup.util.DetailViewImpl;
+import consulo.ide.impl.idea.ui.popup.util.ItemWrapper;
+import consulo.ide.impl.idea.ui.popup.util.MasterDetailPopupBuilder;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
-import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
+import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CommonShortcuts;
@@ -119,7 +119,7 @@ public class BookmarksAction extends AnAction implements DumbAware, MasterDetail
   @Override
   public void handleMnemonic(KeyEvent e, Project project, JBPopup popup) {
     char mnemonic = e.getKeyChar();
-    final BookmarkImpl bookmark = BookmarkManagerImpl.getInstance(project).findBookmarkForMnemonic(mnemonic);
+    final Bookmark bookmark = BookmarkManager.getInstance(project).findBookmarkForMnemonic(mnemonic);
     if (bookmark != null) {
       popup.cancel();
       ProjectIdeFocusManager.getInstance(project).doWhenFocusSettlesDown(new Runnable() {
@@ -134,7 +134,7 @@ public class BookmarksAction extends AnAction implements DumbAware, MasterDetail
   @Override
   @Nullable
   public JComponent createAccessoryView(Project project) {
-    if (!BookmarkManagerImpl.getInstance(project).hasBookmarksWithMnemonics()) {
+    if (!BookmarkManager.getInstance(project).hasBookmarksWithMnemonics()) {
       return null;
     }
     final JLabel mnemonicLabel = new JLabel();
@@ -153,7 +153,7 @@ public class BookmarksAction extends AnAction implements DumbAware, MasterDetail
   @Override
   public void itemChosen(ItemWrapper item, Project project, JBPopup popup, boolean withEnterOrDoubleClick) {
     if (item instanceof BookmarkItem && withEnterOrDoubleClick) {
-      BookmarkImpl bookmark = ((BookmarkItem)item).getBookmark();
+      Bookmark bookmark = ((BookmarkItem)item).getBookmark();
       popup.cancel();
       bookmark.navigate(true);
     }
@@ -167,7 +167,7 @@ public class BookmarksAction extends AnAction implements DumbAware, MasterDetail
   private static DefaultListModel buildModel(Project project) {
     final DefaultListModel model = new DefaultListModel();
 
-    for (BookmarkImpl bookmark : BookmarkManagerImpl.getInstance(project).getValidBookmarks()) {
+    for (Bookmark bookmark : BookmarkManager.getInstance(project).getValidBookmarks()) {
       model.addElement(new BookmarkItem(bookmark));
     }
 
@@ -177,7 +177,7 @@ public class BookmarksAction extends AnAction implements DumbAware, MasterDetail
   protected static class BookmarkInContextInfo {
     private final DataContext myDataContext;
     private final Project myProject;
-    private BookmarkImpl myBookmarkAtPlace;
+    private Bookmark myBookmarkAtPlace;
     private VirtualFile myFile;
     private int myLine;
 
@@ -186,7 +186,7 @@ public class BookmarksAction extends AnAction implements DumbAware, MasterDetail
       myProject = project;
     }
 
-    public BookmarkImpl getBookmarkAtPlace() {
+    public Bookmark getBookmarkAtPlace() {
       return myBookmarkAtPlace;
     }
 
@@ -204,7 +204,7 @@ public class BookmarksAction extends AnAction implements DumbAware, MasterDetail
       myLine = -1;
 
 
-      BookmarkManagerImpl bookmarkManager = BookmarkManagerImpl.getInstance(myProject);
+      BookmarkManager bookmarkManager = BookmarkManager.getInstance(myProject);
       if (ToolWindowManager.getInstance(myProject).isEditorComponentActive()) {
         Editor editor = myDataContext.getData(PlatformDataKeys.EDITOR);
         if (editor != null) {
@@ -227,8 +227,8 @@ public class BookmarksAction extends AnAction implements DumbAware, MasterDetail
     }
   }
 
-  static List<BookmarkImpl> getSelectedBookmarks(JList list) {
-    List<BookmarkImpl> answer = new ArrayList<BookmarkImpl>();
+  static List<Bookmark> getSelectedBookmarks(JList list) {
+    List<Bookmark> answer = new ArrayList<>();
 
     for (Object value : list.getSelectedValues()) {
       if (value instanceof BookmarkItem) {

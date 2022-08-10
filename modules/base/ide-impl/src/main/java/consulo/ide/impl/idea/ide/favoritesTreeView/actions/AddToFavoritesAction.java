@@ -16,30 +16,30 @@
 
 package consulo.ide.impl.idea.ide.favoritesTreeView.actions;
 
+import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoriteNodeProvider;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManager;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesTreeViewPanel;
-import consulo.ide.impl.idea.ide.projectView.ProjectView;
-import consulo.project.ui.view.tree.*;
+import consulo.project.ui.view.tree.ModuleGroup;
+import consulo.ide.impl.idea.ide.projectView.impl.nodes.*;
+import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
-import consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectViewPane;
-import consulo.ide.impl.idea.ide.projectView.impl.ModuleGroup;
-import consulo.ide.impl.idea.ide.projectView.impl.nodes.*;
-import consulo.dataContext.DataContext;
-import consulo.language.editor.CommonDataKeys;
-import consulo.module.Module;
-import consulo.project.Project;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.logging.Logger;
+import consulo.module.Module;
+import consulo.project.Project;
+import consulo.project.ui.view.ProjectView;
+import consulo.project.ui.view.ProjectViewPane;
+import consulo.project.ui.view.tree.*;
+import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -153,7 +153,7 @@ public class AddToFavoritesAction extends AnAction {
     final PsiManager psiManager = PsiManager.getInstance(project);
 
     final String currentViewId = ProjectView.getInstance(project).getCurrentViewId();
-    AbstractProjectViewPane pane = ProjectView.getInstance(project).getProjectViewPaneById(currentViewId);
+    ProjectViewPane pane = ProjectView.getInstance(project).getProjectViewPaneById(currentViewId);
 
 
     //on psi elements

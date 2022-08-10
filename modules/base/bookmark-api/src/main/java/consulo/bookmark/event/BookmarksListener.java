@@ -17,18 +17,22 @@
 /*
  * @author max
  */
-package consulo.ide.impl.idea.ide.bookmarks;
+package consulo.bookmark.event;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
+import consulo.bookmark.Bookmark;
 
 import javax.annotation.Nonnull;
 
 @TopicAPI(ComponentScope.PROJECT)
 public interface BookmarksListener {
-  void bookmarkAdded(@Nonnull BookmarkImpl b);
+  default void bookmarkAdded(@Nonnull Bookmark b) {
+  }
 
-  void bookmarkRemoved(@Nonnull BookmarkImpl b);
+  default void bookmarkRemoved(@Nonnull Bookmark b) {
+  }
 
-  void bookmarkChanged(@Nonnull BookmarkImpl b);
+  default void bookmarkChanged(@Nonnull Bookmark b) {
+  }
 }

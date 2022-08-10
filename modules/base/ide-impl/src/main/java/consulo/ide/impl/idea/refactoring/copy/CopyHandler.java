@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.refactoring.copy;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.ide.impl.idea.ide.TwoPaneIdeView;
-import consulo.ide.impl.idea.ide.projectView.ProjectView;
+import consulo.project.ui.view.ProjectView;
 import consulo.language.editor.structureView.StructureViewFactoryEx;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;

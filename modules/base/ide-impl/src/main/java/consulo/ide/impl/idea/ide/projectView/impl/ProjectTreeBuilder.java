@@ -16,30 +16,30 @@
 
 package consulo.ide.impl.idea.ide.projectView.impl;
 
-import consulo.ide.impl.idea.ide.CopyPasteUtil;
-import consulo.ide.impl.idea.ide.bookmarks.BookmarkImpl;
-import consulo.ide.impl.idea.ide.bookmarks.BookmarksListener;
-import consulo.ide.impl.idea.ide.projectView.BaseProjectTreeBuilder;
-import consulo.project.ui.view.tree.ProjectViewNode;
-import consulo.ide.impl.idea.ide.projectView.ProjectViewPsiTreeChangeListener;
-import consulo.ui.ex.tree.AbstractTreeStructure;
-import consulo.ui.ex.awt.tree.AbstractTreeUpdater;
-import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.ui.ex.awt.CopyPasteManager;
-import consulo.project.Project;
-import consulo.module.content.layer.event.ModuleRootEvent;
-import consulo.module.content.layer.event.ModuleRootListener;
-import consulo.virtualFileSystem.status.FileStatusListener;
-import consulo.virtualFileSystem.status.FileStatusManager;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.component.messagebus.MessageBusConnection;
+import consulo.ide.impl.idea.ide.CopyPasteUtil;
+import consulo.bookmark.Bookmark;
+import consulo.bookmark.event.BookmarksListener;
+import consulo.ide.impl.idea.ide.projectView.BaseProjectTreeBuilder;
+import consulo.ide.impl.idea.ide.projectView.ProjectViewPsiTreeChangeListener;
 import consulo.language.editor.wolfAnalyzer.ProblemListener;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
+import consulo.module.content.layer.event.ModuleRootEvent;
+import consulo.module.content.layer.event.ModuleRootListener;
+import consulo.project.Project;
+import consulo.project.ui.view.tree.ProjectViewNode;
+import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.ex.awt.tree.AbstractTreeUpdater;
 import consulo.ui.ex.awt.util.Alarm;
+import consulo.ui.ex.tree.AbstractTreeStructure;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.util.collection.SmartList;
-import consulo.component.messagebus.MessageBusConnection;
-import consulo.annotation.access.RequiredReadAction;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.status.FileStatusListener;
+import consulo.virtualFileSystem.status.FileStatusManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -112,17 +112,17 @@ public class ProjectTreeBuilder extends BaseProjectTreeBuilder {
 
   private final class MyBookmarksListener implements BookmarksListener {
     @Override
-    public void bookmarkAdded(@Nonnull BookmarkImpl b) {
+    public void bookmarkAdded(@Nonnull Bookmark b) {
       updateForFile(b.getFile());
     }
 
     @Override
-    public void bookmarkRemoved(@Nonnull BookmarkImpl b) {
+    public void bookmarkRemoved(@Nonnull Bookmark b) {
       updateForFile(b.getFile());
     }
 
     @Override
-    public void bookmarkChanged(@Nonnull BookmarkImpl b) {
+    public void bookmarkChanged(@Nonnull Bookmark b) {
       updateForFile(b.getFile());
     }
 

@@ -17,15 +17,15 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
 import consulo.application.AllIcons;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.application.util.UserHomeFileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.status.FileStatus;
-import consulo.virtualFileSystem.status.FileStatusManager;
-import consulo.versionControlSystem.change.ChangeListManager;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.project.Project;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.versionControlSystem.change.ChangeListManager;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.status.FileStatus;
+import consulo.virtualFileSystem.status.FileStatusManager;
 
 import javax.annotation.Nonnull;
 
@@ -62,7 +62,7 @@ public class ChangesBrowserFileNode extends ChangesBrowserNode<VirtualFile> impl
     if (renderer.isShowFlatten() && file.isValid()) {
       final VirtualFile parentFile = file.getParent();
       assert parentFile != null;
-      renderer.append(spaceAndThinSpace() + FileUtil.getLocationRelativeToUserHome(parentFile.getPresentableUrl()), SimpleTextAttributes.GRAYED_ATTRIBUTES);
+      renderer.append(spaceAndThinSpace() + UserHomeFileUtil.getLocationRelativeToUserHome(parentFile.getPresentableUrl()), SimpleTextAttributes.GRAYED_ATTRIBUTES);
     }
     else if (getFileCount() != 1 || getDirectoryCount() != 0) {
       appendCount(renderer);

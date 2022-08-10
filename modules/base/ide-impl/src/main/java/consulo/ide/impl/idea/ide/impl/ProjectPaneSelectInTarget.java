@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.ide.impl;
 
 import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.ide.StandardTargetWeights;
-import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPane;
+import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPaneImpl;
 import consulo.language.psi.PsiFileSystemItem;
 import consulo.project.Project;
 import consulo.project.ui.view.SelectInContext;
@@ -37,7 +37,7 @@ public class ProjectPaneSelectInTarget extends ProjectViewSelectInTarget impleme
   public boolean canSelect(PsiFileSystemItem file) {
     if (!super.canSelect(file)) return false;
     final VirtualFile vFile = file.getVirtualFile();
-    return vFile != null && ProjectViewPane.canBeSelectedInProjectView(myProject, vFile);
+    return vFile != null && ProjectViewPaneImpl.canBeSelectedInProjectView(myProject, vFile);
   }
 
   public boolean isSubIdSelectable(String subId, SelectInContext context) {
@@ -45,7 +45,7 @@ public class ProjectPaneSelectInTarget extends ProjectViewSelectInTarget impleme
   }
 
   public String getMinorViewId() {
-    return ProjectViewPane.ID;
+    return ProjectViewPaneImpl.ID;
   }
 
   public float getWeight() {

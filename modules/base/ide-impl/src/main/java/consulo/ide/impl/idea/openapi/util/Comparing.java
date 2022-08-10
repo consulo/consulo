@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.util;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.ide.impl.idea.openapi.util.text.StringUtilRt;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -24,6 +25,8 @@ import java.util.*;
 /**
  * Null-safe {@code equal} methods.
  */
+@Deprecated
+@DeprecationInfo("Use consulo.util.lang.Comparing")
 public class Comparing {
   private Comparing() { }
 

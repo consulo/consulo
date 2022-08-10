@@ -14,16 +14,12 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.ide.projectView;
+package consulo.project.ui.view;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.ide.ServiceManager;
-import consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectViewPSIPane;
-import consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectViewPane;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
-import consulo.project.ui.view.SelectInTarget;
 import consulo.util.concurrent.AsyncResult;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -35,21 +31,21 @@ import java.util.Collection;
 public interface ProjectView {
   @Nonnull
   static ProjectView getInstance(Project project) {
-    return ServiceManager.getService(project, ProjectView.class);
+    return project.getInstance(ProjectView.class);
   }
 
   default void select(Object element, VirtualFile file, boolean requestFocus) {
-    final AbstractProjectViewPane viewPane = getCurrentProjectViewPane();
+    final ProjectViewPane viewPane = getCurrentProjectViewPane();
     if (viewPane != null) {
       viewPane.select(element, file, requestFocus);
     }
   }
 
   @Nonnull
-  default AsyncResult<Void> selectCB(Object element, VirtualFile file, boolean requestFocus){
-    final AbstractProjectViewPane viewPane = getCurrentProjectViewPane();
-    if (viewPane != null && viewPane instanceof AbstractProjectViewPSIPane) {
-      return ((AbstractProjectViewPSIPane)viewPane).selectCB(element, file, requestFocus);
+  default AsyncResult<Void> selectCB(Object element, VirtualFile file, boolean requestFocus) {
+    final ProjectViewPane viewPane = getCurrentProjectViewPane();
+    if (viewPane != null) {
+      return viewPane.selectCB(element, file, requestFocus);
     }
     select(element, file, requestFocus);
     return AsyncResult.resolved();
@@ -88,11 +84,11 @@ public interface ProjectView {
 
   void setShowModules(boolean showModules, String paneId);
 
-  void addProjectPane(final AbstractProjectViewPane pane);
+  void addProjectPane(final ProjectViewPane pane);
 
-  void removeProjectPane(AbstractProjectViewPane instance);
+  void removeProjectPane(ProjectViewPane instance);
 
-  AbstractProjectViewPane getProjectViewPaneById(String id);
+  ProjectViewPane getProjectViewPaneById(String id);
 
   boolean isAutoscrollFromSource(String paneId);
 
@@ -101,7 +97,7 @@ public interface ProjectView {
   void setAbbreviatePackageNames(boolean abbreviatePackageNames, String paneId);
 
   /**
-   * e.g. {@link consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPane#ID}
+   * e.g. {@link ProjectViewPaneImpl#ID}
    *
    * @see consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectViewPane#getId()
    */
@@ -117,7 +113,7 @@ public interface ProjectView {
 
   void setSortByType(String paneId, final boolean sortByType);
 
-  AbstractProjectViewPane getCurrentProjectViewPane();
+  ProjectViewPane getCurrentProjectViewPane();
 
   Collection<String> getPaneIds();
 

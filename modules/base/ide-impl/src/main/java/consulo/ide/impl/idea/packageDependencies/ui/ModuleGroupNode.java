@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.packageDependencies.ui;
 
 import consulo.language.editor.scope.AnalysisScopeBundle;
 import consulo.application.AllIcons;
-import consulo.ide.impl.idea.ide.projectView.impl.ModuleGroup;
+import consulo.project.ui.view.tree.ModuleGroup;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.language.psi.PsiFile;

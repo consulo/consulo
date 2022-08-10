@@ -18,8 +18,8 @@ package consulo.ide.impl.idea.ide.projectView.impl.nodes;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.project.ui.view.tree.ProjectViewNode;
 import consulo.project.ui.view.tree.ViewSettings;
-import consulo.ide.impl.idea.ide.projectView.impl.ModuleGroup;
-import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPane;
+import consulo.project.ui.view.tree.ModuleGroup;
+import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPaneImpl;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.application.Application;
 import consulo.module.Module;
@@ -91,6 +91,6 @@ public abstract class AbstractProjectNode extends ProjectViewNode<Project> {
 
   @Override
   public boolean contains(@Nonnull VirtualFile file) {
-    return ProjectViewPane.canBeSelectedInProjectView(getProject(), file);
+    return ProjectViewPaneImpl.canBeSelectedInProjectView(getProject(), file);
   }
 }

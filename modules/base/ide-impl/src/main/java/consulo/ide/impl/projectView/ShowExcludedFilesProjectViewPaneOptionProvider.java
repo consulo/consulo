@@ -16,19 +16,20 @@
 package consulo.ide.impl.projectView;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.projectView.ProjectView;
-import consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectViewPane;
-import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPane;
 import consulo.application.dumb.DumbAware;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ide.IdeBundle;
+import consulo.project.ui.view.ProjectView;
+import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPaneImpl;
+import consulo.project.Project;
+import consulo.project.ui.view.ProjectViewPane;
+import consulo.project.ui.view.ProjectViewPaneOptionProvider;
+import consulo.project.ui.view.internal.ProjectViewInternalHelper;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.util.dataholder.KeyWithDefaultValue;
-import consulo.project.ui.view.ProjectViewPaneOptionProvider;
-import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 
@@ -38,27 +39,25 @@ import javax.annotation.Nonnull;
  */
 @ExtensionImpl
 public class ShowExcludedFilesProjectViewPaneOptionProvider extends ProjectViewPaneOptionProvider.BoolValue {
-  public static final KeyWithDefaultValue<Boolean> KEY = KeyWithDefaultValue.create("show-excluded-files", Boolean.FALSE);
-
   private final class ShowExcludedFilesAction extends ToggleAction implements DumbAware {
-    private AbstractProjectViewPane myPane;
+    private ProjectViewPane myPane;
 
-    private ShowExcludedFilesAction(AbstractProjectViewPane pane) {
+    private ShowExcludedFilesAction(ProjectViewPane pane) {
       super(IdeBundle.message("action.show.excluded.files"), IdeBundle.message("action.show.hide.excluded.files"), null);
       myPane = pane;
     }
 
     @Override
     public boolean isSelected(AnActionEvent event) {
-      return myPane.getUserData(KEY);
+      return myPane.getUserData(ProjectViewInternalHelper.SHOW_EXCLUDED_FILES_KEY);
     }
 
     @Override
     public void setSelected(AnActionEvent event, boolean flag) {
-      Boolean value = myPane.getUserData(KEY);
+      Boolean value = myPane.getUserData(ProjectViewInternalHelper.SHOW_EXCLUDED_FILES_KEY);
       assert value != null;
       if (value != flag) {
-        myPane.putUserData(KEY, flag);
+        myPane.putUserData(ProjectViewInternalHelper.SHOW_EXCLUDED_FILES_KEY, flag);
         myPane.updateFromRoot(true);
       }
     }
@@ -68,7 +67,7 @@ public class ShowExcludedFilesProjectViewPaneOptionProvider extends ProjectViewP
     public void update(AnActionEvent e) {
       super.update(e);
       final Presentation presentation = e.getPresentation();
-      final ProjectView projectView = ProjectView.getInstance(e.getData(CommonDataKeys.PROJECT));
+      final ProjectView projectView = ProjectView.getInstance(e.getData(Project.KEY));
       presentation.setVisible(projectView.getCurrentProjectViewPane() == myPane);
     }
   }
@@ -76,12 +75,12 @@ public class ShowExcludedFilesProjectViewPaneOptionProvider extends ProjectViewP
   @Nonnull
   @Override
   public KeyWithDefaultValue<Boolean> getKey() {
-    return KEY;
+    return ProjectViewInternalHelper.SHOW_EXCLUDED_FILES_KEY;
   }
 
   @Override
-  public void addToolbarActions(@Nonnull AbstractProjectViewPane pane, @Nonnull DefaultActionGroup actionGroup) {
-    if (pane instanceof ProjectViewPane) {
+  public void addToolbarActions(@Nonnull ProjectViewPane pane, @Nonnull DefaultActionGroup actionGroup) {
+    if (pane instanceof ProjectViewPaneImpl) {
       actionGroup.addAction(new ShowExcludedFilesAction(pane)).setAsSecondary(true);
     }
   }

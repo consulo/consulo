@@ -28,6 +28,7 @@ import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
 import consulo.application.ui.wm.ExpirableRunnable;
 import consulo.application.ui.wm.IdeFocusManager;
+import consulo.application.util.UserHomeFileUtil;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
@@ -59,7 +60,6 @@ import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.NullUtils;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -369,7 +369,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         return text;
       }
     }
-    return FileUtil.getLocationRelativeToUserHome(file.getPresentableUrl());
+    return UserHomeFileUtil.getLocationRelativeToUserHome(file.getPresentableUrl());
   }
 
   @Override

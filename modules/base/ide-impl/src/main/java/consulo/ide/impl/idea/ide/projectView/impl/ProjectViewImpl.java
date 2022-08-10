@@ -42,6 +42,7 @@ import consulo.ide.IdeView;
 import consulo.ide.impl.idea.ide.CopyPasteDelegator;
 import consulo.ide.impl.idea.ide.impl.ProjectViewSelectInTarget;
 import consulo.ide.impl.idea.ide.projectView.HelpID;
+import consulo.project.ui.view.ProjectViewPane;
 import consulo.project.ui.view.tree.*;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.*;
 import consulo.ide.impl.idea.ide.scopeView.ScopeViewPane;
@@ -179,7 +180,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
   static final Key<ProjectViewImpl> DATA_KEY = Key.create("consulo.ide.impl.idea.ide.projectView.impl.ProjectViewImpl");
 
   private DefaultActionGroup myActionGroup;
-  private String mySavedPaneId = ProjectViewPane.ID;
+  private String mySavedPaneId = ProjectViewPaneImpl.ID;
   private String mySavedPaneSubId;
   //private static final Icon COMPACT_EMPTY_MIDDLE_PACKAGES_ICON = IconLoader.getIcon("/objectBrowser/compactEmptyPackages.png");
   //private static final Icon HIDE_EMPTY_MIDDLE_PACKAGES_ICON = IconLoader.getIcon("/objectBrowser/hideEmptyPackages.png");
@@ -379,8 +380,8 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
   }
 
   @Override
-  public synchronized void addProjectPane(@Nonnull final AbstractProjectViewPane pane) {
-    myUninitializedPanes.add(pane);
+  public synchronized void addProjectPane(@Nonnull final ProjectViewPane pane) {
+    myUninitializedPanes.add((AbstractProjectViewPane)pane);
     SelectInTarget selectInTarget = pane.createSelectInTarget();
     if (selectInTarget != null) {
       mySelectInTargets.put(pane.getId(), selectInTarget);
@@ -391,7 +392,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
   }
 
   @Override
-  public synchronized void removeProjectPane(@Nonnull AbstractProjectViewPane pane) {
+  public synchronized void removeProjectPane(@Nonnull ProjectViewPane pane) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     myUninitializedPanes.remove(pane);
     //assume we are completely initialized here
@@ -1349,7 +1350,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
       mySavedPaneId = navigatorElement.getAttributeValue(ATTRIBUTE_CURRENT_VIEW);
       mySavedPaneSubId = navigatorElement.getAttributeValue(ATTRIBUTE_CURRENT_SUBVIEW);
       if (mySavedPaneId == null) {
-        mySavedPaneId = ProjectViewPane.ID;
+        mySavedPaneId = ProjectViewPaneImpl.ID;
         mySavedPaneSubId = null;
       }
       readOption(navigatorElement.getChild(ELEMENT_FLATTEN_PACKAGES), myFlattenPackages);

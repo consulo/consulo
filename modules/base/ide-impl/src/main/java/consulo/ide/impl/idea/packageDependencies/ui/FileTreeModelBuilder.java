@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.packageDependencies.ui;
 
 import consulo.language.editor.scope.AnalysisScopeBundle;
 import consulo.ide.impl.idea.ide.dnd.aware.DnDAwareTree;
-import consulo.ide.impl.idea.ide.projectView.impl.ModuleGroup;
+import consulo.project.ui.view.tree.ModuleGroup;
 import consulo.ide.impl.idea.ide.scopeView.nodes.BasePsiNode;
 import consulo.module.Module;
 import consulo.module.ModuleManager;

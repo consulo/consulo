@@ -16,86 +16,85 @@
 
 package consulo.ide.impl.idea.ide.scopeView;
 
-import consulo.localHistory.LocalHistory;
-import consulo.localHistory.LocalHistoryAction;
-import consulo.ide.impl.idea.ide.CopyPasteDelegator;
-import consulo.content.scope.*;
-import consulo.module.content.layer.event.ModuleRootListener;
-import consulo.ui.ex.DeleteProvider;
-import consulo.ide.IdeBundle;
-import consulo.ide.IdeView;
-import consulo.ide.impl.idea.ide.dnd.aware.DnDAwareTree;
-import consulo.ide.impl.idea.ide.projectView.ProjectView;
-import consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectViewPane;
-import consulo.ide.impl.idea.ide.projectView.impl.ModuleGroup;
-import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPane;
-import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewTree;
-import consulo.ide.impl.idea.ide.scopeView.nodes.BasePsiNode;
-import consulo.ide.impl.idea.ide.ui.customization.CustomizationUtil;
-import consulo.ide.impl.idea.ide.util.DeleteHandler;
-import consulo.ide.util.DirectoryChooserUtil;
-import consulo.language.editor.util.EditorHelper;
-import consulo.ui.ex.awt.tree.TreeState;
-import consulo.language.inject.InjectedLanguageManager;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.IdeActions;
-import consulo.language.editor.LangDataKeys;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.ui.ex.awt.CopyPasteManager;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
-import consulo.versionControlSystem.change.Change;
-import consulo.versionControlSystem.change.ChangeList;
-import consulo.versionControlSystem.change.ChangeListManager;
-import consulo.versionControlSystem.change.ContentRevision;
-import consulo.virtualFileSystem.status.FileStatusListener;
-import consulo.virtualFileSystem.status.FileStatusManager;
-import consulo.ide.impl.idea.openapi.vcs.changes.*;
-import consulo.ide.impl.idea.packageDependencies.DefaultScopesProvider;
-import consulo.ide.impl.idea.packageDependencies.DependencyValidationManager;
-import consulo.ide.impl.idea.packageDependencies.ui.*;
-import consulo.language.editor.wolfAnalyzer.ProblemListener;
-import consulo.language.psi.event.PsiTreeChangeAdapter;
-import consulo.language.editor.util.PsiUtilBase;
-import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
-import consulo.ui.ex.UIBundle;
-import consulo.ui.ex.awt.EditSourceOnDoubleClickHandler;
-import consulo.ide.impl.idea.util.Function;
-import consulo.ui.ex.OpenSourceUtil;
-import consulo.ui.ex.awt.tree.TreeUtil;
-import consulo.ui.ex.awt.util.MergingUpdateQueue;
-import consulo.ui.ex.awt.util.Update;
 import consulo.application.ApplicationManager;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.application.dumb.IndexNotReadyException;
+import consulo.application.ui.wm.IdeFocusManager;
+import consulo.codeEditor.CodeInsightColors;
+import consulo.codeEditor.Editor;
+import consulo.colorScheme.EditorColorsManager;
+import consulo.colorScheme.TextAttributes;
 import consulo.component.messagebus.MessageBusConnection;
+import consulo.content.scope.InvalidPackageSet;
+import consulo.content.scope.NamedScope;
+import consulo.content.scope.NamedScopesHolder;
+import consulo.content.scope.PackageSet;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.CodeInsightColors;
-import consulo.colorScheme.EditorColorsManager;
-import consulo.colorScheme.TextAttributes;
-import consulo.ui.ex.util.TextAttributesUtil;
+import consulo.ide.IdeBundle;
+import consulo.ide.IdeView;
+import consulo.ide.impl.idea.ide.CopyPasteDelegator;
+import consulo.ide.impl.idea.ide.dnd.aware.DnDAwareTree;
+import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPaneImpl;
+import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewTree;
+import consulo.ide.impl.idea.ide.scopeView.nodes.BasePsiNode;
+import consulo.ide.impl.idea.ide.ui.customization.CustomizationUtil;
+import consulo.ide.impl.idea.ide.util.DeleteHandler;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
+import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListAdapter;
+import consulo.ide.impl.idea.packageDependencies.DefaultScopesProvider;
+import consulo.ide.impl.idea.packageDependencies.DependencyValidationManager;
+import consulo.ide.impl.idea.packageDependencies.ui.*;
+import consulo.ide.impl.idea.util.Function;
+import consulo.ide.util.DirectoryChooserUtil;
+import consulo.language.editor.LangDataKeys;
+import consulo.language.editor.PlatformDataKeys;
+import consulo.language.editor.util.EditorHelper;
+import consulo.language.editor.util.PsiUtilBase;
+import consulo.language.editor.wolfAnalyzer.ProblemListener;
+import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.*;
+import consulo.language.psi.event.PsiTreeChangeAdapter;
 import consulo.language.psi.event.PsiTreeChangeEvent;
+import consulo.localHistory.LocalHistory;
+import consulo.localHistory.LocalHistoryAction;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.content.layer.event.ModuleRootAdapter;
 import consulo.module.content.layer.event.ModuleRootEvent;
-import consulo.application.dumb.IndexNotReadyException;
+import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.project.Project;
-import consulo.application.ui.wm.IdeFocusManager;
+import consulo.project.ui.view.ProjectView;
+import consulo.project.ui.view.ProjectViewPane;
+import consulo.project.ui.view.tree.ModuleGroup;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.DeleteProvider;
+import consulo.ui.ex.OpenSourceUtil;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.UIBundle;
+import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
+import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
+import consulo.ui.ex.awt.tree.TreeState;
+import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
+import consulo.ui.ex.awt.util.MergingUpdateQueue;
+import consulo.ui.ex.awt.util.Update;
+import consulo.ui.ex.util.TextAttributesUtil;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
+import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.change.ChangeList;
+import consulo.versionControlSystem.change.ChangeListManager;
+import consulo.versionControlSystem.change.ContentRevision;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.status.FileStatusListener;
+import consulo.virtualFileSystem.status.FileStatusManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -820,7 +819,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
           final ProjectView projectView = ProjectView.getInstance(myProject);
           final NamedScopesHolder holder = NamedScopesHolder.getHolder(myProject, CURRENT_SCOPE_NAME, myDependencyValidationManager);
           if (!packageSet.contains(virtualFile, myProject, holder)) {
-            projectView.changeView(ProjectViewPane.ID);
+            projectView.changeView(ProjectViewPaneImpl.ID);
           }
           projectView.select(element, virtualFile, false);
         }
@@ -935,7 +934,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
 
   private void queueUpdate(final VirtualFile fileToRefresh, final Function<PsiFile, DefaultMutableTreeNode> rootToReloadGetter, final String scopeName) {
     if (myProject.isDisposed()) return;
-    AbstractProjectViewPane pane = ProjectView.getInstance(myProject).getCurrentProjectViewPane();
+    ProjectViewPane pane = ProjectView.getInstance(myProject).getCurrentProjectViewPane();
     if (pane == null || !ScopeViewPane.ID.equals(pane.getId()) || !scopeName.equals(pane.getSubId())) {
       return;
     }
@@ -977,7 +976,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
     }
 
     private void fireListeners(ChangeList list, @Nullable String oldName) {
-      AbstractProjectViewPane pane = ProjectView.getInstance(myProject).getCurrentProjectViewPane();
+      ProjectViewPane pane = ProjectView.getInstance(myProject).getCurrentProjectViewPane();
       if (pane == null || !ScopeViewPane.ID.equals(pane.getId())) {
         return;
       }

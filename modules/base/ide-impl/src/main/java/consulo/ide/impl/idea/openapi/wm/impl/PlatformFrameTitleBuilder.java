@@ -15,19 +15,20 @@
  */
 package consulo.ide.impl.idea.openapi.wm.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ui.UISettings;
-import consulo.project.Project;
-import consulo.project.ProjectManager;
-import consulo.module.content.util.ProjectUtilCore;
+import consulo.application.util.UserHomeFileUtil;
+import consulo.fileEditor.VfsPresentationUtil;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.module.content.util.ProjectUtilCore;
+import consulo.project.Project;
+import consulo.project.ProjectManager;
 import consulo.project.ui.wm.FrameTitleBuilder;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.fileEditor.VfsPresentationUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.annotation.access.RequiredReadAction;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -64,10 +65,10 @@ public class PlatformFrameTitleBuilder extends FrameTitleBuilder {
 
     basePath = FileUtil.toSystemDependentName(basePath);
     if (basePath.equals(project.getName()) && !myUISettings.getFullPathsInWindowHeader()) {
-      return "[" + FileUtil.getLocationRelativeToUserHome(basePath) + "]";
+      return "[" + UserHomeFileUtil.getLocationRelativeToUserHome(basePath) + "]";
     }
     else {
-      return project.getName() + " [" + FileUtil.getLocationRelativeToUserHome(basePath) + "]";
+      return project.getName() + " [" + UserHomeFileUtil.getLocationRelativeToUserHome(basePath) + "]";
     }
   }
 
@@ -90,7 +91,7 @@ public class PlatformFrameTitleBuilder extends FrameTitleBuilder {
       if (pathWithLibrary != null) {
         return pathWithLibrary;
       }
-      return FileUtil.getLocationRelativeToUserHome(file.getPresentableUrl());
+      return UserHomeFileUtil.getLocationRelativeToUserHome(file.getPresentableUrl());
     }
 
     return ProjectUtilCore.appendModuleName(file, project, fileTitle, false);

@@ -17,15 +17,16 @@ package consulo.ide.impl.idea.ide.impl;
 
 import consulo.application.ApplicationManager;
 import consulo.ide.impl.idea.ide.CompositeSelectInTarget;
-import consulo.ide.impl.idea.ide.projectView.ProjectView;
 import consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectViewPane;
-import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPane;
+import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPaneImpl;
 import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.PsiUtilCore;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.project.ui.view.ProjectView;
+import consulo.project.ui.view.ProjectViewPane;
 import consulo.project.ui.view.SelectInContext;
 import consulo.project.ui.view.SelectInTarget;
 import consulo.project.ui.view.tree.SelectableTreeStructureProvider;
@@ -64,17 +65,13 @@ public abstract class ProjectViewSelectInTarget extends SelectInTargetPsiWrapper
     final ActionCallback result = new ActionCallback();
 
     final ProjectView projectView = ProjectView.getInstance(project);
-    if (ApplicationManager.getApplication().isUnitTestMode()) {
-      AbstractProjectViewPane pane = projectView.getProjectViewPaneById(ProjectViewPane.ID);
-      pane.select(toSelect, virtualFile, requestFocus);
-      return result;
-    }
+
 
     ToolWindowManager windowManager = ToolWindowManager.getInstance(project);
     final ToolWindow projectViewToolWindow = windowManager.getToolWindow(ToolWindowId.PROJECT_VIEW);
     final Runnable runnable = () -> {
       Runnable r = () -> projectView.selectCB(toSelect, virtualFile, requestFocus).notify(result);
-      projectView.changeViewCB(ObjectUtils.chooseNotNull(viewId, ProjectViewPane.ID), subviewId).doWhenProcessed(r);
+      projectView.changeViewCB(ObjectUtils.chooseNotNull(viewId, ProjectViewPaneImpl.ID), subviewId).doWhenProcessed(r);
     };
 
     if (requestFocus) {
@@ -91,7 +88,7 @@ public abstract class ProjectViewSelectInTarget extends SelectInTargetPsiWrapper
   @Nonnull
   public Collection<SelectInTarget> getSubTargets(@Nonnull SelectInContext context) {
     List<SelectInTarget> result = new ArrayList<>();
-    AbstractProjectViewPane pane = ProjectView.getInstance(myProject).getProjectViewPaneById(getMinorViewId());
+    ProjectViewPane pane = ProjectView.getInstance(myProject).getProjectViewPaneById(getMinorViewId());
     int index = 0;
     for (String subId : pane.getSubIds()) {
       result.add(new ProjectSubViewSelectInTarget(this, subId, index++));
@@ -109,7 +106,7 @@ public abstract class ProjectViewSelectInTarget extends SelectInTargetPsiWrapper
   }
 
   public String getSubIdPresentableName(String subId) {
-    AbstractProjectViewPane pane = ProjectView.getInstance(myProject).getProjectViewPaneById(getMinorViewId());
+    ProjectViewPane pane = ProjectView.getInstance(myProject).getProjectViewPaneById(getMinorViewId());
     return pane.getPresentableSubIdName(subId);
   }
 

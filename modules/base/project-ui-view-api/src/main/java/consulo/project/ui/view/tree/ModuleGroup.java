@@ -17,16 +17,16 @@
 /**
  * @author cdr
  */
-package consulo.ide.impl.idea.ide.projectView.impl;
+package consulo.project.ui.view.tree;
 
-import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
+import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.project.Project;
-import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;

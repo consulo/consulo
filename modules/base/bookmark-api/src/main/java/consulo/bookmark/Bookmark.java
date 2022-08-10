@@ -13,22 +13,46 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.bookmarks;
+package consulo.bookmark;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ServiceAPI;
-import consulo.project.Project;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.document.Document;
+import consulo.navigation.Navigatable;
+import consulo.ui.image.Image;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 10-Aug-22
  */
-@ServiceAPI(ComponentScope.PROJECT)
-public interface BookmarkManager {
+public interface Bookmark extends Navigatable {
+  @Nullable
+  Document getDocument();
+
   @Nonnull
-  public static BookmarkManager getInstance(Project project) {
-    return project.getInstance(BookmarkManager.class);
+  VirtualFile getFile();
+
+  @Nonnull
+  @Deprecated(forRemoval = true)
+  default Image getIcon() {
+    return getIcon(true);
   }
+
+  String getDescription();
+
+  char getMnemonic();
+
+  @Nonnull
+  Image getIcon(boolean gutter);
+
+  boolean isValid();
+
+  int getLine();
+
+  @RequiredReadAction
+  @Nonnull
+  String getQualifiedName();
 }

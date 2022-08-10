@@ -27,7 +27,7 @@ import consulo.ui.ex.DeleteProvider;
 import consulo.ide.IdeBundle;
 import consulo.ide.IdeView;
 import consulo.project.ui.view.tree.ProjectViewNode;
-import consulo.ide.impl.idea.ide.projectView.impl.ModuleGroup;
+import consulo.project.ui.view.tree.ModuleGroup;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectAbstractTreeStructureBase;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.LibraryGroupElement;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.NamedLibraryElement;

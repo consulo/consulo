@@ -16,6 +16,7 @@
 
 package consulo.project.ui.view.tree;
 
+import consulo.application.util.UserHomeFileUtil;
 import consulo.language.pom.NavigatableWithText;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiPackageHelper;
@@ -26,11 +27,11 @@ import consulo.module.content.ProjectRootManager;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.library.util.ModuleContentLibraryUtil;
 import consulo.project.Project;
+import consulo.project.ui.view.ProjectView;
 import consulo.project.ui.view.internal.ProjectSettingsService;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.tree.PresentationData;
-import consulo.util.io.FileUtil;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
@@ -86,7 +87,7 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
         }
 
         if (parentValue instanceof Module || parentValue instanceof Project) {
-          final String location = FileUtil.getLocationRelativeToUserHome(directoryFile.getPresentableUrl());
+          final String location = UserHomeFileUtil.getLocationRelativeToUserHome(directoryFile.getPresentableUrl());
           data.addText(" (" + location + ")", SimpleTextAttributes.GRAYED_ATTRIBUTES);
         }
         else if (ProjectRootsUtil.isSourceOrTestRoot(directoryFile, project)) {
@@ -94,16 +95,14 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
             data.addText(" (test source root)", SimpleTextAttributes.GRAY_ATTRIBUTES);
           }
           else {
-            data.addText(" (source root)",  SimpleTextAttributes.GRAY_ATTRIBUTES);
+            data.addText(" (source root)", SimpleTextAttributes.GRAY_ATTRIBUTES);
           }
         }
         return;
       }
     }
 
-    final String name = parentValue instanceof Project
-                        ? psiDirectory.getVirtualFile().getPresentableUrl()
-                        : BaseProjectViewDirectoryHelper.getNodeName(getSettings(), parentValue, psiDirectory);
+    final String name = parentValue instanceof Project ? psiDirectory.getVirtualFile().getPresentableUrl() : BaseProjectViewDirectoryHelper.getNodeName(getSettings(), parentValue, psiDirectory);
     if (name == null) {
       setValue(null);
       return;
@@ -166,9 +165,10 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
     Project project = getProject();
 
     ProjectSettingsService service = ProjectSettingsService.getInstance(myProject);
-    return file != null && ((ProjectRootsUtil.isModuleContentRoot(file, project) && service.canOpenModuleSettings()) ||
-                            (ProjectRootsUtil.isModuleSourceRoot(file, project)  && service.canOpenContentEntriesSettings()) ||
-                            (ProjectRootsUtil.isLibraryRoot(file, project) && service.canOpenModuleLibrarySettings()));
+    return file != null &&
+           ((ProjectRootsUtil.isModuleContentRoot(file, project) && service.canOpenModuleSettings()) ||
+            (ProjectRootsUtil.isModuleSourceRoot(file, project) && service.canOpenContentEntriesSettings()) ||
+            (ProjectRootsUtil.isLibraryRoot(file, project) && service.canOpenModuleLibrarySettings()));
   }
 
   @Override
@@ -205,8 +205,7 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
     Project project = getProject();
 
     if (file != null) {
-      if (ProjectRootsUtil.isModuleContentRoot(file, project) ||
-          ProjectRootsUtil.isSourceOrTestRoot(file, project)) {
+      if (ProjectRootsUtil.isModuleContentRoot(file, project) || ProjectRootsUtil.isSourceOrTestRoot(file, project)) {
         return "Open Module Settings";
       }
       if (ProjectRootsUtil.isLibraryRoot(file, project)) {
@@ -220,7 +219,7 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
   @Override
   public int getWeight() {
     final ProjectView projectView = ProjectView.getInstance(myProject);
-    if (projectView instanceof ProjectViewImpl && !((ProjectViewImpl)projectView).isFoldersAlwaysOnTop()) {
+    if (projectView.isFoldersAlwaysOnTop()) {
       return 20;
     }
     return isFQNameShown() ? 70 : 0;

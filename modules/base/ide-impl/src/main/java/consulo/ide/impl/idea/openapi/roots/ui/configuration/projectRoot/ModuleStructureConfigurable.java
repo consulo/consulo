@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.configurable.*;
-import consulo.ide.impl.idea.ide.projectView.impl.ModuleGroup;
+import consulo.project.ui.view.tree.ModuleGroup;
 import consulo.ide.impl.idea.ide.projectView.impl.ModuleGroupUtil;
 import consulo.application.ApplicationManager;
 import consulo.dataContext.DataProvider;

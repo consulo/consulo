@@ -27,6 +27,7 @@ import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.content.*;
 import consulo.project.Project;
+import consulo.project.ui.view.internal.ProjectViewInternalHelper;
 import consulo.ui.ex.tree.TreeHelper;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
@@ -212,7 +213,7 @@ public class BaseProjectViewDirectoryHelper {
     DirectoryInfo directoryInfo = directoryIndex.getInfoForFile(dir);
     if (directoryInfo.isInProject(dir)) return true;
 
-    return settings.getViewOption(ShowExcludedFilesProjectViewPaneOptionProvider.KEY) == Boolean.TRUE && directoryInfo.isExcluded(dir);
+    return settings.getViewOption(ProjectViewInternalHelper.SHOW_EXCLUDED_FILES_KEY) == Boolean.TRUE && directoryInfo.isExcluded(dir);
   }
 
   // used only for non-flatten packages mode

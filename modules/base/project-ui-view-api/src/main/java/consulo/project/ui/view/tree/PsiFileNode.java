@@ -16,6 +16,7 @@
 package consulo.project.ui.view.tree;
 
 import consulo.application.CommonBundle;
+import consulo.application.util.UserHomeFileUtil;
 import consulo.codeEditor.CodeInsightColors;
 import consulo.component.util.Iconable;
 import consulo.language.icon.IconDescriptorUpdaters;
@@ -138,7 +139,7 @@ public class PsiFileNode extends BasePsiNode<PsiFile> implements NavigatableWith
   public String getTitle() {
     VirtualFile file = getVirtualFile();
     if (file != null) {
-      return FileUtil.getLocationRelativeToUserHome(file.getPresentableUrl());
+      return UserHomeFileUtil.getLocationRelativeToUserHome(file.getPresentableUrl());
     }
 
     return super.getTitle();

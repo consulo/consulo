@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.ide.projectView.impl.nodes;
 
 import consulo.project.ui.view.tree.PsiDirectoryNode;
 import consulo.project.ui.view.tree.ViewSettings;
-import consulo.ide.impl.idea.ide.projectView.impl.ModuleGroup;
+import consulo.project.ui.view.tree.ModuleGroup;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.module.Module;
 import consulo.project.Project;

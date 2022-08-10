@@ -20,7 +20,7 @@
 package consulo.ide.impl.idea.ide.projectView.actions;
 
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.projectView.impl.ModuleGroup;
+import consulo.project.ui.view.tree.ModuleGroup;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.LangDataKeys;

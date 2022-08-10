@@ -17,12 +17,13 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
 import consulo.application.AllIcons;
+import consulo.application.util.UserHomeFileUtil;
 import consulo.ide.impl.idea.openapi.util.SystemInfoRt;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangesUtil;
-import consulo.ui.ex.SimpleTextAttributes;
 
 import javax.annotation.Nonnull;
 
@@ -60,7 +61,7 @@ public class ChangesBrowserFilePathNode extends ChangesBrowserNode<FilePath> {
       if (renderer.isShowFlatten()) {
         renderer.append(path.getName(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
         FilePath parentPath = path.getParentPath();
-        renderer.append(spaceAndThinSpace() + FileUtil.getLocationRelativeToUserHome(parentPath.getPresentableUrl()), SimpleTextAttributes.GRAYED_ATTRIBUTES);
+        renderer.append(spaceAndThinSpace() + UserHomeFileUtil.getLocationRelativeToUserHome(parentPath.getPresentableUrl()), SimpleTextAttributes.GRAYED_ATTRIBUTES);
       }
       else {
         renderer.append(getRelativePath(path), SimpleTextAttributes.REGULAR_ATTRIBUTES);

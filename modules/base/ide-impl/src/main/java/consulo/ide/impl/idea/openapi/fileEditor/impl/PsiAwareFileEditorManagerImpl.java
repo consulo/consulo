@@ -19,6 +19,7 @@ package consulo.ide.impl.idea.openapi.fileEditor.impl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.PowerSaveModeListener;
+import consulo.application.util.UserHomeFileUtil;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorFactory;
@@ -27,7 +28,6 @@ import consulo.document.Document;
 import consulo.fileEditor.FileEditor;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.text.TextEditorPsiDataProvider;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.language.editor.wolfAnalyzer.ProblemListener;
 import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
@@ -112,7 +112,7 @@ public abstract class PsiAwareFileEditorManagerImpl extends FileEditorManagerImp
       tooltipText.append(module.getName());
       tooltipText.append("] ");
     }
-    tooltipText.append(FileUtil.getLocationRelativeToUserHome(file.getPresentableUrl()));
+    tooltipText.append(UserHomeFileUtil.getLocationRelativeToUserHome(file.getPresentableUrl()));
     return tooltipText.toString();
   }
 

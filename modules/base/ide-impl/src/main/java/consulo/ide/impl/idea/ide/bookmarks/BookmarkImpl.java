@@ -17,6 +17,7 @@
 package consulo.ide.impl.idea.ide.bookmarks;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.bookmark.Bookmark;
 import consulo.codeEditor.CodeInsightColors;
 import consulo.codeEditor.DocumentMarkupModel;
 import consulo.codeEditor.markup.*;
@@ -31,8 +32,6 @@ import consulo.fileEditor.structureView.StructureViewModel;
 import consulo.fileEditor.structureView.TreeBasedStructureViewBuilder;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.editor.structureView.PsiStructureViewFactory;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
@@ -49,7 +48,9 @@ import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.style.ComponentColors;
 import consulo.ui.style.StandardColors;
 import consulo.ui.util.LightDarkColorValue;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.Couple;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -170,6 +171,7 @@ public class BookmarkImpl implements Bookmark {
     return myHighlighter;
   }
 
+  @Override
   public Document getDocument() {
     return FileDocumentManager.getInstance().getDocument(getFile());
   }
@@ -199,6 +201,8 @@ public class BookmarkImpl implements Bookmark {
     if (!found.isNull()) found.get().dispose();
   }
 
+  @Nonnull
+  @Override
   public Image getIcon(boolean gutter) {
     if (myMnemonic == 0) {
       return getDefaultIcon(gutter);
@@ -206,12 +210,7 @@ public class BookmarkImpl implements Bookmark {
     return getMnemonicIcon(myMnemonic, gutter);
   }
 
-  @Nonnull
-  @Deprecated(forRemoval = true)
-  public Image getIcon() {
-    return getIcon(true);
-  }
-
+  @Override
   public String getDescription() {
     return myDescription;
   }
@@ -220,6 +219,7 @@ public class BookmarkImpl implements Bookmark {
     myDescription = description;
   }
 
+  @Override
   public char getMnemonic() {
     return myMnemonic;
   }
@@ -228,6 +228,7 @@ public class BookmarkImpl implements Bookmark {
     myMnemonic = Character.toUpperCase(mnemonic);
   }
 
+  @Override
   @Nonnull
   public VirtualFile getFile() {
     return myFile;
@@ -238,6 +239,7 @@ public class BookmarkImpl implements Bookmark {
     return StringUtil.isEmpty(myDescription) ? null : myDescription;
   }
 
+  @Override
   public boolean isValid() {
     if (!getFile().isValid()) {
       return false;
@@ -260,6 +262,7 @@ public class BookmarkImpl implements Bookmark {
     myTarget.navigate(requestFocus);
   }
 
+  @Override
   public int getLine() {
     RangeMarker marker = ((OpenFileDescriptorImpl)myTarget).getRangeMarker();
     if (marker != null && marker.isValid()) {
@@ -279,6 +282,7 @@ public class BookmarkImpl implements Bookmark {
     return result.toString();
   }
 
+  @Override
   @RequiredReadAction
   @Nonnull
   public String getQualifiedName() {

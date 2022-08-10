@@ -2,35 +2,35 @@
 
 package consulo.project.ui.view.tree;
 
-import consulo.language.editor.ui.PopupNavigationUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
-import consulo.ide.impl.idea.ide.bookmarks.Bookmark;
-import consulo.ide.impl.idea.ide.bookmarks.BookmarkManager;
-import consulo.ui.ex.tree.PresentationData;
-import consulo.ui.ex.awt.tree.TreeNode;
-import consulo.ui.ex.awt.tree.ValidateableNode;
-import consulo.navigation.NavigationItem;
 import consulo.application.ApplicationManager;
-import consulo.codeEditor.CodeInsightColors;
-import consulo.module.Module;
 import consulo.application.dumb.IndexNotReadyException;
-import consulo.project.Project;
+import consulo.bookmark.Bookmark;
+import consulo.bookmark.BookmarkManager;
+import consulo.codeEditor.CodeInsightColors;
 import consulo.component.util.Iconable;
-import consulo.virtualFileSystem.status.FileStatus;
-import consulo.virtualFileSystem.status.FileStatusManager;
-import consulo.virtualFileSystem.VFileProperty;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.navigation.StatePreservingNavigatable;
+import consulo.language.editor.ui.PopupNavigationUtil;
+import consulo.language.icon.IconDescriptor;
+import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
-import consulo.language.impl.internal.psi.AstLoadingFilter;
-import consulo.language.icon.IconDescriptor;
-import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.logging.Logger;
+import consulo.module.Module;
+import consulo.navigation.NavigationItem;
+import consulo.navigation.StatePreservingNavigatable;
+import consulo.project.Project;
+import consulo.project.ui.view.internal.ProjectViewInternalHelper;
+import consulo.ui.ex.awt.tree.TreeNode;
+import consulo.ui.ex.awt.tree.ValidateableNode;
+import consulo.ui.ex.tree.PresentationData;
 import consulo.ui.image.Image;
+import consulo.virtualFileSystem.VFileProperty;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.status.FileStatus;
+import consulo.virtualFileSystem.status.FileStatusManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -64,7 +64,7 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
   @Override
   @Nonnull
   public final Collection<? extends AbstractTreeNode> getChildren() {
-    return AstLoadingFilter.disallowTreeLoading(this::doGetChildren);
+    return ProjectViewInternalHelper.getInstance().disallowTreeLoading(this::doGetChildren);
   }
 
   @Nonnull
@@ -127,7 +127,7 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
 
   @Override
   public void update(@Nonnull final PresentationData data) {
-    AstLoadingFilter.disallowTreeLoading(() -> doUpdate(data));
+    ProjectViewInternalHelper.getInstance().disallowTreeLoading(() -> doUpdate(data));
   }
 
   private void doUpdate(@Nonnull PresentationData data) {

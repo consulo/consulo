@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.ide;
 
 import consulo.application.dumb.DumbAware;
+import consulo.application.util.UserHomeFileUtil;
 import consulo.ide.impl.idea.ide.impl.ProjectUtil;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.language.editor.CommonDataKeys;
@@ -51,7 +52,7 @@ public class ReopenProjectAction extends AnAction implements DumbAware {
     myExtensions = extensions;
 
     final Presentation presentation = getTemplatePresentation();
-    String text = projectPath.equals(displayName) ? FileUtil.getLocationRelativeToUserHome(projectPath) : displayName;
+    String text = projectPath.equals(displayName) ? UserHomeFileUtil.getLocationRelativeToUserHome(projectPath) : displayName;
     presentation.setText(text, false);
     presentation.setDescription(projectPath);
   }

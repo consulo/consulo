@@ -15,10 +15,11 @@
  */
 package consulo.ide.impl.idea.remote.ext;
 
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.application.util.UserHomeFileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.remote.VagrantBasedCredentialsHolder;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -46,7 +47,7 @@ public class VagrantCredentialsHandler extends RemoteCredentialsHandlerBase<Vagr
   @Override
   public String getPresentableDetails(String interpreterPath) {
     VagrantBasedCredentialsHolder cred = getCredentials();
-    String pathRelativeToHome = FileUtil.getLocationRelativeToUserHome(cred.getVagrantFolder());
+    String pathRelativeToHome = UserHomeFileUtil.getLocationRelativeToUserHome(cred.getVagrantFolder());
     return "Vagrant VM " +
            (StringUtil.isNotEmpty(cred.getMachineName()) ? "'" + cred.getMachineName() + "' " : "") +
            "at " + (pathRelativeToHome.length() < cred.getVagrantFolder().length() ? pathRelativeToHome : cred.getVagrantFolder())

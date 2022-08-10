@@ -15,25 +15,25 @@
  */
 package consulo.ide.impl.idea.dvcs.ui;
 
+import consulo.application.progress.ProgressManager;
+import consulo.application.util.UserHomeFileUtil;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.ide.impl.idea.dvcs.DvcsRememberedInputs;
 import consulo.ide.impl.idea.ide.FrameStateListener;
 import consulo.ide.impl.idea.ide.FrameStateManager;
 import consulo.ide.impl.idea.ide.impl.ProjectUtil;
-import consulo.fileChooser.FileChooserDescriptor;
-import consulo.fileChooser.FileChooserDescriptorFactory;
-import consulo.application.progress.ProgressManager;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.awt.*;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.awt.event.DocumentAdapter;
-import consulo.language.editor.ui.awt.EditorComboBox;
 import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.language.editor.ui.awt.EditorComboBox;
+import consulo.project.Project;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.event.DocumentAdapter;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -292,7 +292,7 @@ public abstract class CloneDvcsDialog extends DialogWrapper {
 
   @Nonnull
   private String getCurrentUrlText() {
-    return FileUtil.expandUserHome(myRepositoryURL.getText().trim());
+    return UserHomeFileUtil.expandUserHome(myRepositoryURL.getText().trim());
   }
 
   private void createUIComponents() {

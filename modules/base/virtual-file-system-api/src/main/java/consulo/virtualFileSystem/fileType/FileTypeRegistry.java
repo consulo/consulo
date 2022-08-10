@@ -2,14 +2,11 @@
 package consulo.virtualFileSystem.fileType;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.component.extension.ExtensionPointName;
 import consulo.component.internal.RootComponentHolder;
-import consulo.util.io.ByteSequence;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collection;
 
 /**
  * A service for retrieving file types for files.
@@ -40,7 +37,7 @@ import java.util.Collection;
 public abstract class FileTypeRegistry {
   @Nonnull
   @Deprecated
-  @DeprecationInfo("Use contructor injection")
+  @DeprecationInfo("Use constructor injection")
   public static FileTypeRegistry getInstance() {
     return RootComponentHolder.getRootComponent().getInstance(FileTypeRegistry.class);
   }

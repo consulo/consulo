@@ -16,14 +16,14 @@
 package consulo.ide.impl.idea.ide;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.disposer.Disposable;
-import consulo.project.ui.wm.event.ApplicationActivationListener;
-import consulo.application.internal.ApplicationEx;
+import consulo.application.Application;
 import consulo.component.util.BusyObject;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.project.ui.wm.IdeFrame;
-import consulo.ui.ex.awt.util.Alarm;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.project.ui.wm.IdeFrame;
+import consulo.project.ui.wm.event.ApplicationActivationListener;
+import consulo.ui.ex.awt.util.Alarm;
 import consulo.util.concurrent.AsyncResult;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -41,10 +41,10 @@ public class FrameStateManagerImpl extends FrameStateManager {
   private final Alarm mySyncAlarm;
 
   private final BusyObject.Impl myActive;
-  private final ApplicationEx myApp;
+  private final Application myApp;
 
   @Inject
-  public FrameStateManagerImpl(final ApplicationEx app) {
+  public FrameStateManagerImpl(final Application app) {
     myApp = app;
     myActive = new BusyObject.Impl() {
       @Override

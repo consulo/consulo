@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.fileWatcher;
+package consulo.virtualFileSystem.fileWatcher.impl;
 
 import consulo.project.ui.view.tree.PsiFileNode;
 import consulo.language.psi.PsiFile;

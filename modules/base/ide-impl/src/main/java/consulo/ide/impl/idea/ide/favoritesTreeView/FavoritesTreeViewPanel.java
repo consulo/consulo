@@ -34,7 +34,7 @@ import consulo.ui.ex.awt.internal.SwingDockContainer;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.LoadingNode;
 import consulo.ui.ex.tree.PresentationData;
-import consulo.ide.impl.idea.ide.projectView.impl.ModuleGroup;
+import consulo.project.ui.view.tree.ModuleGroup;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.LibraryGroupElement;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.NamedLibraryElement;
 import consulo.ide.impl.idea.ide.ui.customization.CustomizationUtil;

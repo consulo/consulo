@@ -17,6 +17,9 @@ package consulo.ide.impl.idea.ide.bookmarks;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
+import consulo.bookmark.Bookmark;
+import consulo.bookmark.BookmarkManager;
+import consulo.bookmark.event.BookmarksListener;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.favoritesTreeView.AbstractFavoritesListProvider;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManager;
@@ -40,12 +43,12 @@ import java.util.Set;
  * User: Vassiliy.Kudryashov
  */
 @ExtensionImpl
-public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider<BookmarkImpl> implements BookmarksListener {
-  private final BookmarkManagerImpl myBookmarkManager;
+public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider<Bookmark> implements BookmarksListener {
+  private final BookmarkManager myBookmarkManager;
   private final FavoritesManager myFavoritesManager;
 
   @Inject
-  public BookmarksFavoriteListProvider(Project project, BookmarkManagerImpl bookmarkManager, FavoritesManager favoritesManager) {
+  public BookmarksFavoriteListProvider(Project project, BookmarkManager bookmarkManager, FavoritesManager favoritesManager) {
     super(project, "Bookmarks");
     myBookmarkManager = bookmarkManager;
     myFavoritesManager = favoritesManager;
@@ -54,17 +57,17 @@ public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider
   }
 
   @Override
-  public void bookmarkAdded(@Nonnull BookmarkImpl b) {
+  public void bookmarkAdded(@Nonnull Bookmark b) {
     updateChildren();
   }
 
   @Override
-  public void bookmarkRemoved(@Nonnull BookmarkImpl b) {
+  public void bookmarkRemoved(@Nonnull Bookmark b) {
     updateChildren();
   }
 
   @Override
-  public void bookmarkChanged(@Nonnull BookmarkImpl b) {
+  public void bookmarkChanged(@Nonnull Bookmark b) {
     updateChildren();
   }
 
@@ -76,9 +79,9 @@ public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider
   private void updateChildren() {
     if (myProject.isDisposed()) return;
     myChildren.clear();
-    List<BookmarkImpl> bookmarks = myBookmarkManager.getValidBookmarks();
-    for (final BookmarkImpl bookmark : bookmarks) {
-      AbstractTreeNode<BookmarkImpl> child = new AbstractTreeNode<BookmarkImpl>(myProject, bookmark) {
+    List<Bookmark> bookmarks = myBookmarkManager.getValidBookmarks();
+    for (final Bookmark bookmark : bookmarks) {
+      AbstractTreeNode<Bookmark> child = new AbstractTreeNode<>(myProject, bookmark) {
         @RequiredReadAction
         @Nonnull
         @Override
@@ -134,10 +137,10 @@ public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider
           return false;
         }
         Object toEdit = selectedObjects.iterator().next();
-        return toEdit instanceof AbstractTreeNode && ((AbstractTreeNode)toEdit).getValue() instanceof BookmarkImpl;
+        return toEdit instanceof AbstractTreeNode && ((AbstractTreeNode)toEdit).getValue() instanceof Bookmark;
       case REMOVE:
         for (Object toRemove : selectedObjects) {
-          if (!(toRemove instanceof AbstractTreeNode && ((AbstractTreeNode)toRemove).getValue() instanceof BookmarkImpl)) {
+          if (!(toRemove instanceof AbstractTreeNode && ((AbstractTreeNode)toRemove).getValue() instanceof Bookmark)) {
             return false;
           }
         }
@@ -161,13 +164,13 @@ public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider
           if (bookmark == null) {
             return;
           }
-          BookmarkManagerImpl.getInstance(project).editDescription(bookmark);
+          BookmarkManager.getInstance(project).editDescription(bookmark);
         }
         return;
       case REMOVE:
         for (Object toRemove : selectedObjects) {
           BookmarkImpl bookmark = (BookmarkImpl)((AbstractTreeNode)toRemove).getValue();
-          BookmarkManagerImpl.getInstance(project).removeBookmark(bookmark);
+          BookmarkManager.getInstance(project).removeBookmark(bookmark);
         }
         return;
       default: {
@@ -191,8 +194,8 @@ public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider
                                 boolean hasFocus) {
     renderer.clear();
     renderer.setIcon(BookmarkImpl.getDefaultIcon(false));
-    if (value instanceof BookmarkImpl) {
-      BookmarkImpl bookmark = (BookmarkImpl)value;
+    if (value instanceof Bookmark) {
+      Bookmark bookmark = (Bookmark)value;
       BookmarkItem.setupRenderer(renderer, myProject, bookmark, selected);
       if (renderer.getIcon() != null) {
         renderer.setIcon(ImageEffects.appendRight(bookmark.getIcon(false), renderer.getIcon()));

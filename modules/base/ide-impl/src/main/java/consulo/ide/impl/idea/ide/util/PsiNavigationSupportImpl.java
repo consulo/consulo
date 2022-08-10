@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.ide.util;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.ide.impl.ProjectViewSelectInTarget;
-import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPane;
+import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPaneImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.language.psi.PsiNavigationSupport;
 import consulo.language.psi.util.EditSourceUtil;
@@ -42,6 +42,6 @@ public class PsiNavigationSupportImpl extends PsiNavigationSupport {
 
   @Override
   public void navigateToDirectory(@Nonnull PsiDirectory psiDirectory, boolean requestFocus) {
-    ProjectViewSelectInTarget.select(psiDirectory.getProject(), this, ProjectViewPane.ID, null, psiDirectory.getVirtualFile(), requestFocus);
+    ProjectViewSelectInTarget.select(psiDirectory.getProject(), this, ProjectViewPaneImpl.ID, null, psiDirectory.getVirtualFile(), requestFocus);
   }
 }

@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.ide.bookmarks;
 
+import consulo.bookmark.Bookmark;
+import consulo.bookmark.BookmarkManager;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
@@ -45,13 +47,13 @@ import java.awt.*;
 * To change this template use File | Settings | File Templates.
 */
 public class BookmarkItem extends ItemWrapper {
-  private final BookmarkImpl myBookmark;
+  private final Bookmark myBookmark;
 
-  public BookmarkItem(BookmarkImpl bookmark) {
+  public BookmarkItem(Bookmark bookmark) {
     myBookmark = bookmark;
   }
 
-  public BookmarkImpl getBookmark() {
+  public Bookmark getBookmark() {
     return myBookmark;
   }
 
@@ -60,7 +62,7 @@ public class BookmarkItem extends ItemWrapper {
     setupRenderer(renderer, project, myBookmark, selected);
   }
 
-  public static void setupRenderer(SimpleColoredComponent renderer, Project project, BookmarkImpl bookmark, boolean selected) {
+  public static void setupRenderer(SimpleColoredComponent renderer, Project project, Bookmark bookmark, boolean selected) {
     VirtualFile file = bookmark.getFile();
     if (!file.isValid()) {
       return;
@@ -136,6 +138,6 @@ public class BookmarkItem extends ItemWrapper {
 
   @Override
   public void removed(Project project) {
-    BookmarkManagerImpl.getInstance(project).removeBookmark(getBookmark());
+    BookmarkManager.getInstance(project).removeBookmark(getBookmark());
   }
 }

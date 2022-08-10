@@ -23,7 +23,7 @@ import consulo.content.scope.NamedScopesHolder;
 import consulo.content.scope.PackageSet;
 import consulo.disposer.Disposer;
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.projectView.ProjectView;
+import consulo.project.ui.view.ProjectView;
 import consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectViewPane;
 import consulo.ide.impl.idea.ide.projectView.impl.ShowModulesAction;
 import consulo.ide.impl.idea.packageDependencies.DependencyValidationManager;

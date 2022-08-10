@@ -18,7 +18,6 @@ package consulo.project.ui.view.internal;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.annotation.component.ServiceImpl;
 import consulo.content.library.Library;
 import consulo.module.Module;
 import consulo.module.content.layer.orderEntry.OrderEntry;
@@ -34,7 +33,6 @@ import javax.annotation.Nullable;
  */
 @Singleton
 @ServiceAPI(ComponentScope.PROJECT)
-@ServiceImpl
 public class ProjectSettingsService {
   public static ProjectSettingsService getInstance(Project project) {
     return project.getInstance(ProjectSettingsService.class);

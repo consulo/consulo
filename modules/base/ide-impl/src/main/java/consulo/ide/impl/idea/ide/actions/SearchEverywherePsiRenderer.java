@@ -1,23 +1,20 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.language.editor.ui.PsiElementListCellRenderer;
-import consulo.ide.impl.idea.ide.util.gotoByName.GotoFileCellRenderer;
-import consulo.project.Project;
-import consulo.component.util.Iconable;
 import consulo.application.util.SystemInfo;
+import consulo.application.util.UserHomeFileUtil;
+import consulo.component.util.Iconable;
+import consulo.fileEditor.VfsPresentationUtil;
+import consulo.ide.impl.idea.ide.util.gotoByName.GotoFileCellRenderer;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.fileEditor.VfsPresentationUtil;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
-import consulo.language.psi.PsiFileSystemItem;
-import consulo.language.psi.PsiNamedElement;
-import consulo.language.psi.util.SymbolPresentationUtil;
-import consulo.language.psi.PsiUtilCore;
-import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.language.editor.ui.PsiElementListCellRenderer;
+import consulo.language.psi.*;
+import consulo.language.psi.util.SymbolPresentationUtil;
+import consulo.project.Project;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -89,7 +86,7 @@ public class SearchEverywherePsiRenderer extends PsiElementListCellRenderer<PsiE
         else {
           String rootPath = Optional.ofNullable(GotoFileCellRenderer.getAnyRoot(file, project)).map(root -> FileUtil.toSystemDependentName(root.getPath()))
                   .filter(root -> basePath != null && FileUtil.isAncestor(basePath, root, true)).orElse(null);
-          text = rootPath != null ? ObjectUtils.notNull(FileUtil.getRelativePath(rootPath, text, File.separatorChar), text) : FileUtil.getLocationRelativeToUserHome(text);
+          text = rootPath != null ? ObjectUtils.notNull(FileUtil.getRelativePath(rootPath, text, File.separatorChar), text) : UserHomeFileUtil.getLocationRelativeToUserHome(text);
         }
       }
     }

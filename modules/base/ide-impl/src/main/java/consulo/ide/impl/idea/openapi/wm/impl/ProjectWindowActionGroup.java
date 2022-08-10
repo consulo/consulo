@@ -15,16 +15,15 @@
  */
 package consulo.ide.impl.idea.openapi.wm.impl;
 
+import consulo.application.util.UserHomeFileUtil;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DefaultActionGroup;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -46,9 +45,9 @@ public class ProjectWindowActionGroup extends DefaultActionGroup {
     final List<ProjectWindowAction> duplicateWindowActions = findWindowActionsWithProjectName(projectName);
     if (!duplicateWindowActions.isEmpty()) {
       for (ProjectWindowAction action : duplicateWindowActions) {
-        action.getTemplatePresentation().setText(FileUtil.getLocationRelativeToUserHome(action.getProjectLocation()));
+        action.getTemplatePresentation().setText(UserHomeFileUtil.getLocationRelativeToUserHome(action.getProjectLocation()));
       }
-      windowAction.getTemplatePresentation().setText(FileUtil.getLocationRelativeToUserHome(windowAction.getProjectLocation()));
+      windowAction.getTemplatePresentation().setText(UserHomeFileUtil.getLocationRelativeToUserHome(windowAction.getProjectLocation()));
     }
     add(windowAction);
     latest = windowAction;

@@ -20,43 +20,38 @@
 package consulo.desktop.awt.welcomeScreen;
 
 import consulo.application.AllIcons;
-import consulo.application.PowerSaveModeListener;
-import consulo.ide.impl.idea.ide.*;
+import consulo.application.ApplicationManager;
 import consulo.application.PowerSaveMode;
+import consulo.application.PowerSaveModeListener;
+import consulo.application.ui.wm.IdeFocusManager;
+import consulo.application.util.SystemInfo;
+import consulo.application.util.UniqueNameBuilder;
+import consulo.application.util.UserHomeFileUtil;
+import consulo.application.util.concurrent.AppExecutorUtil;
+import consulo.component.messagebus.MessageBusConnection;
+import consulo.dataContext.DataManager;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.ide.*;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.ui.speedSearch.ListWithFilter;
+import consulo.logging.Logger;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.ui.wm.IdeFrame;
+import consulo.project.ui.wm.event.ApplicationActivationListener;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.project.ui.wm.event.ApplicationActivationListener;
-import consulo.application.ApplicationManager;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.VerticalFlowLayout;
-import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.application.util.UniqueNameBuilder;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.dataContext.DataManager;
-import consulo.application.ui.wm.IdeFocusManager;
-import consulo.project.ui.wm.IdeFrame;
-import consulo.ui.ex.awt.ClickListener;
-import consulo.ui.ex.awt.util.ListUtil;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.awt.JBList;
-import consulo.ide.impl.idea.ui.speedSearch.ListWithFilter;
-import consulo.util.lang.SystemProperties;
-import consulo.application.util.concurrent.AppExecutorUtil;
-import consulo.component.messagebus.MessageBusConnection;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
+import consulo.ui.ex.awt.util.ListUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.logging.Logger;
-import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
+import consulo.util.lang.SystemProperties;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -466,7 +461,7 @@ public class RecentProjectPanel {
   protected String getTitle2Text(String fullText, JComponent pathLabel, int leftOffset) {
     if (StringUtil.isEmpty(fullText)) return " ";
 
-    fullText = FileUtil.getLocationRelativeToUserHome(fullText, false);
+    fullText = UserHomeFileUtil.getLocationRelativeToUserHome(fullText, false);
 
     try {
       FontMetrics fm = pathLabel.getFontMetrics(pathLabel.getFont());
