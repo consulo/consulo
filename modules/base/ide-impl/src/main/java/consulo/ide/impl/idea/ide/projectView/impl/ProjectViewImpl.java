@@ -42,7 +42,7 @@ import consulo.ide.IdeView;
 import consulo.ide.impl.idea.ide.CopyPasteDelegator;
 import consulo.ide.impl.idea.ide.impl.ProjectViewSelectInTarget;
 import consulo.ide.impl.idea.ide.projectView.HelpID;
-import consulo.ide.impl.idea.ide.projectView.ProjectViewNode;
+import consulo.project.ui.view.tree.*;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.*;
 import consulo.ide.impl.idea.ide.scopeView.ScopeViewPane;
 import consulo.ide.impl.idea.ide.util.DeleteHandler;
@@ -78,7 +78,6 @@ import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.view.ProjectViewAutoScrollFromSourceHandler;
 import consulo.project.ui.view.SelectInContext;
 import consulo.project.ui.view.SelectInTarget;
-import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.ToolWindowManagerListener;
@@ -1518,6 +1517,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
     setPaneOption(myFlattenPackages, flattenPackages, paneId, true);
   }
 
+  @Override
   public boolean isFoldersAlwaysOnTop() {
     if (isGlobalOptions()) {
       return getGlobalOptions().getFoldersAlwaysOnTop();

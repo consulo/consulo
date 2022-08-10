@@ -13,66 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.util.treeView;
+package consulo.project.ui.view.tree;
 
-import consulo.project.ui.view.tree.ViewSettings;
-import consulo.project.Project;
-import consulo.util.dataholder.Key;
-import consulo.util.dataholder.UserDataHolderEx;
-import consulo.language.psi.PsiManager;
-import consulo.language.impl.internal.psi.PsiManagerEx;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiPackage;
+import consulo.project.ui.view.internal.PsiPackageAbbreviateHelper;
 
 import javax.annotation.Nonnull;
-import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Oct 6, 2004
+ * Date: Oct 6, 2004
  */
 public class TreeViewUtil {
-  private static final int SUBPACKAGE_LIMIT = 2;
-  private static final Key<ConcurrentMap<PsiPackage, Boolean>> SHOULD_ABBREV_PACK_KEY = Key.create("PACK_ABBREV_CACHE");
-
   private static boolean shouldAbbreviateName(PsiPackage aPackage) {
-    final Project project = aPackage.getProject();
-    ConcurrentMap<PsiPackage, Boolean> map = project.getUserData(SHOULD_ABBREV_PACK_KEY);
-    if (map == null) {
-      final ConcurrentMap<PsiPackage, Boolean> newMap = ContainerUtil.createConcurrentWeakMap();
-      map = ((UserDataHolderEx)project).putUserDataIfAbsent(SHOULD_ABBREV_PACK_KEY, newMap);
-      if (map == newMap) {
-        ((PsiManagerEx)PsiManager.getInstance(project)).registerRunnableToRunOnChange(new Runnable() {
-          @Override
-          public void run() {
-            newMap.clear();
-          }
-        });
-      }
-    }
-
-    Boolean ret = map.get(aPackage);
-    if (ret != null) return ret;
-    ret = scanPackages(aPackage, 1);
-    map.put(aPackage, ret);
-    return ret;
-  }
-
-  private static boolean scanPackages(@Nonnull PsiPackage p, int packageNameOccurrencesFound) {
-    final PsiPackage[] subPackages = p.getSubPackages();
-    packageNameOccurrencesFound += subPackages.length;
-    if (packageNameOccurrencesFound > SUBPACKAGE_LIMIT) {
-      return true;
-    }
-    for (PsiPackage subPackage : subPackages) {
-      if (scanPackages(subPackage, packageNameOccurrencesFound)) {
-        return true;
-      }
-    }
-    return false;
+    return aPackage.getProject().getInstance(PsiPackageAbbreviateHelper.class).shouldAbbreviateName(aPackage);
   }
 
   @Nonnull
+  @RequiredReadAction
   public static String calcAbbreviatedPackageFQName(@Nonnull PsiPackage aPackage) {
     final StringBuilder name = new StringBuilder(aPackage.getName());
     for (PsiPackage parentPackage = aPackage.getParentPackage(); parentPackage != null; parentPackage = parentPackage.getParentPackage()) {
@@ -92,16 +51,11 @@ public class TreeViewUtil {
   }
 
   @Nonnull
-  public static String getNodeName(@Nonnull ViewSettings settings,
-                                   PsiPackage aPackage,
-                                   final PsiPackage parentPackageInTree,
-                                   @Nonnull String defaultShortName,
-                                   boolean isFQNameShown) {
+  @RequiredReadAction
+  public static String getNodeName(@Nonnull ViewSettings settings, PsiPackage aPackage, final PsiPackage parentPackageInTree, @Nonnull String defaultShortName, boolean isFQNameShown) {
     final String name;
     if (isFQNameShown) {
-      name = settings.isAbbreviatePackageNames() ?
-             aPackage == null ? defaultShortName : calcAbbreviatedPackageFQName(aPackage) :
-             aPackage == null ? defaultShortName : aPackage.getQualifiedName();
+      name = settings.isAbbreviatePackageNames() ? aPackage == null ? defaultShortName : calcAbbreviatedPackageFQName(aPackage) : aPackage == null ? defaultShortName : aPackage.getQualifiedName();
     }
     else if (parentPackageInTree != null || aPackage != null && aPackage.getParentPackage() != null) {
       PsiPackage parentPackage = aPackage.getParentPackage();

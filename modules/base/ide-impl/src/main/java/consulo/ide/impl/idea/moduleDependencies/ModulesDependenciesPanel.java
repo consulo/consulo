@@ -34,7 +34,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.ProjectSettingsService;
+import consulo.project.ui.view.internal.ProjectSettingsService;
 import consulo.ui.ex.awt.PopupHandler;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.Splitter;

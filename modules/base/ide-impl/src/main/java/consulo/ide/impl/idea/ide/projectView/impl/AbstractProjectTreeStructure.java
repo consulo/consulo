@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.ide.projectView.impl;
 
-import consulo.ide.impl.idea.ide.projectView.ProjectViewNode;
+import consulo.project.ui.view.tree.ProjectViewNode;
 import consulo.project.ui.view.tree.ViewSettings;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.ProjectViewProjectNode;
 import consulo.project.ui.view.tree.AbstractTreeNode;

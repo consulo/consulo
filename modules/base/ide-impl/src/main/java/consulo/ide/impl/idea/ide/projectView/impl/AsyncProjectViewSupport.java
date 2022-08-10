@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.ide.projectView.impl;
 
 import consulo.ide.impl.idea.ide.CopyPasteUtil;
-import consulo.ide.impl.idea.ide.bookmarks.Bookmark;
+import consulo.ide.impl.idea.ide.bookmarks.BookmarkImpl;
 import consulo.ide.impl.idea.ide.bookmarks.BookmarksListener;
 import consulo.ide.impl.idea.ide.projectView.ProjectViewPsiTreeChangeListener;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPaneSelectionHelper.SelectionDescriptor;
@@ -75,17 +75,17 @@ class AsyncProjectViewSupport {
     MessageBusConnection connection = project.getMessageBus().connect(parent);
     connection.subscribe(BookmarksListener.class, new BookmarksListener() {
       @Override
-      public void bookmarkAdded(@Nonnull Bookmark bookmark) {
+      public void bookmarkAdded(@Nonnull BookmarkImpl bookmark) {
         updateByFile(bookmark.getFile(), false);
       }
 
       @Override
-      public void bookmarkRemoved(@Nonnull Bookmark bookmark) {
+      public void bookmarkRemoved(@Nonnull BookmarkImpl bookmark) {
         updateByFile(bookmark.getFile(), false);
       }
 
       @Override
-      public void bookmarkChanged(@Nonnull Bookmark bookmark) {
+      public void bookmarkChanged(@Nonnull BookmarkImpl bookmark) {
         updateByFile(bookmark.getFile(), false);
       }
     });

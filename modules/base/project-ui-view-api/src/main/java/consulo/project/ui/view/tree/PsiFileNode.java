@@ -13,36 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.projectView.impl.nodes;
+package consulo.project.ui.view.tree;
 
 import consulo.application.CommonBundle;
-import consulo.ui.ex.tree.PresentationData;
-import consulo.project.ui.view.tree.ViewSettings;
-import consulo.ide.impl.idea.ide.projectView.impl.ProjectRootsUtil;
-import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.codeEditor.CodeInsightColors;
-import consulo.project.Project;
-import consulo.module.content.layer.orderEntry.OrderEntry;
-import consulo.ide.impl.idea.openapi.roots.libraries.LibraryUtil;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.ProjectSettingsService;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.component.util.Iconable;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.virtualFileSystem.VFileProperty;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.language.pom.NavigatableWithText;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.module.content.library.util.ModuleContentLibraryUtil;
+import consulo.project.Project;
+import consulo.project.ui.view.internal.ProjectSettingsService;
+import consulo.ui.ex.tree.PresentationData;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.Comparing;
+import consulo.virtualFileSystem.VFileProperty;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
-import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.List;
 
 public class PsiFileNode extends BasePsiNode<PsiFile> implements NavigatableWithText {
   public PsiFileNode(Project project, @Nonnull PsiFile value, ViewSettings viewSettings) {
@@ -60,7 +57,7 @@ public class PsiFileNode extends BasePsiNode<PsiFile> implements NavigatableWith
       }
     }
 
-    return ContainerUtil.emptyList();
+    return List.of();
   }
 
   private boolean isArchive() {
@@ -96,7 +93,7 @@ public class PsiFileNode extends BasePsiNode<PsiFile> implements NavigatableWith
     VirtualFile jarRoot = getArchiveRoot();
     final Project project = getProject();
     if (jarRoot != null && ProjectRootsUtil.isLibraryRoot(jarRoot, project)) {
-      final OrderEntry orderEntry = LibraryUtil.findLibraryEntry(jarRoot, project);
+      final OrderEntry orderEntry = ModuleContentLibraryUtil.findLibraryEntry(jarRoot, project);
       return orderEntry != null ;
     }
     return false;
@@ -114,7 +111,7 @@ public class PsiFileNode extends BasePsiNode<PsiFile> implements NavigatableWith
     final VirtualFile jarRoot = getArchiveRoot();
     final Project project = getProject();
     if (requestFocus && jarRoot != null && ProjectRootsUtil.isLibraryRoot(jarRoot, project)) {
-      final OrderEntry orderEntry = LibraryUtil.findLibraryEntry(jarRoot, project);
+      final OrderEntry orderEntry = ModuleContentLibraryUtil.findLibraryEntry(jarRoot, project);
       if (orderEntry != null) {
         ProjectSettingsService.getInstance(project).openLibraryOrSdkSettings(orderEntry);
         return;

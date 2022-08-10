@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.projectView.impl.nodes;
 
+import consulo.project.ui.view.tree.PackageNodeUtil;
 import consulo.project.ui.view.tree.ViewSettings;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.annotation.access.RequiredReadAction;

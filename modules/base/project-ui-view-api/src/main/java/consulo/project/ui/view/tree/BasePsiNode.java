@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.ide.projectView.impl.nodes;
+package consulo.project.ui.view.tree;
 
-import consulo.project.ui.view.tree.ViewSettings;
-import consulo.project.Project;
-import consulo.virtualFileSystem.status.FileStatus;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.status.FileStatus;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Objects;
 
 public abstract class BasePsiNode<T extends PsiElement> extends AbstractPsiBasedNode<T> {
@@ -36,6 +35,7 @@ public abstract class BasePsiNode<T extends PsiElement> extends AbstractPsiBased
     myVirtualFile = PsiUtilCore.getVirtualFile(value);
   }
 
+  @Nonnull
   @Override
   public FileStatus getFileStatus() {
     return computeFileStatus(getVirtualFile(), Objects.requireNonNull(getProject()));

@@ -23,12 +23,12 @@ import consulo.ide.impl.idea.ide.dnd.TransferableWrapper;
 import consulo.ide.impl.idea.ide.dnd.aware.DnDAwareTree;
 import consulo.ide.impl.idea.ide.projectView.BaseProjectTreeBuilder;
 import consulo.ide.impl.idea.ide.projectView.ProjectView;
-import consulo.ide.impl.idea.ide.projectView.ProjectViewNode;
-import consulo.ide.impl.idea.ide.projectView.RootsProvider;
+import consulo.project.ui.view.tree.ProjectViewNode;
+import consulo.project.ui.view.tree.RootsProvider;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.AbstractModuleNode;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.AbstractProjectNode;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.ModuleGroupNode;
-import consulo.ide.impl.idea.ide.projectView.impl.nodes.PsiDirectoryNode;
+import consulo.project.ui.view.tree.PsiDirectoryNode;
 import consulo.ide.impl.idea.ide.util.treeView.AbstractTreeStructureBase;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.refactoring.move.MoveHandler;
@@ -36,7 +36,7 @@ import consulo.ide.impl.idea.ui.tree.project.ProjectFileNode;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.projectView.impl.ProjectViewPaneOptionProvider;
+import consulo.project.ui.view.ProjectViewPaneOptionProvider;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.wolfAnalyzer.ProblemListener;
@@ -333,7 +333,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
 
   public void addToolbarActionsImpl(DefaultActionGroup actionGroup) {
     addToolbarActions(actionGroup);
-    for (ProjectViewPaneOptionProvider provider : ProjectViewPaneOptionProvider.EX_NAME.getExtensions()) {
+    for (ProjectViewPaneOptionProvider provider : ProjectViewPaneOptionProvider.EX_NAME.getExtensionList()) {
       provider.addToolbarActions(this, actionGroup);
     }
   }

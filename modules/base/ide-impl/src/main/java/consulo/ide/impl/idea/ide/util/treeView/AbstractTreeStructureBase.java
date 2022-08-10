@@ -2,7 +2,7 @@
 
 package consulo.ide.impl.idea.ide.util.treeView;
 
-import consulo.ide.impl.idea.ide.projectView.ProjectViewNode;
+import consulo.project.ui.view.tree.ProjectViewNode;
 import consulo.project.ui.view.tree.TreeStructureProvider;
 import consulo.project.ui.view.tree.ViewSettings;
 import consulo.logging.Logger;

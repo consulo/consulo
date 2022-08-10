@@ -19,9 +19,9 @@
  */
 package consulo.ide.impl.idea.ide.bookmarks.actions;
 
-import consulo.ide.impl.idea.ide.bookmarks.Bookmark;
+import consulo.ide.impl.idea.ide.bookmarks.BookmarkImpl;
 import consulo.ide.impl.idea.ide.bookmarks.BookmarkItem;
-import consulo.ide.impl.idea.ide.bookmarks.BookmarkManager;
+import consulo.ide.impl.idea.ide.bookmarks.BookmarkManagerImpl;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.ide.impl.idea.ui.popup.util.DetailViewImpl;
@@ -119,7 +119,7 @@ public class BookmarksAction extends AnAction implements DumbAware, MasterDetail
   @Override
   public void handleMnemonic(KeyEvent e, Project project, JBPopup popup) {
     char mnemonic = e.getKeyChar();
-    final Bookmark bookmark = BookmarkManager.getInstance(project).findBookmarkForMnemonic(mnemonic);
+    final BookmarkImpl bookmark = BookmarkManagerImpl.getInstance(project).findBookmarkForMnemonic(mnemonic);
     if (bookmark != null) {
       popup.cancel();
       ProjectIdeFocusManager.getInstance(project).doWhenFocusSettlesDown(new Runnable() {
@@ -134,11 +134,11 @@ public class BookmarksAction extends AnAction implements DumbAware, MasterDetail
   @Override
   @Nullable
   public JComponent createAccessoryView(Project project) {
-    if (!BookmarkManager.getInstance(project).hasBookmarksWithMnemonics()) {
+    if (!BookmarkManagerImpl.getInstance(project).hasBookmarksWithMnemonics()) {
       return null;
     }
     final JLabel mnemonicLabel = new JLabel();
-    mnemonicLabel.setFont(Bookmark.MNEMONIC_FONT);
+    mnemonicLabel.setFont(BookmarkImpl.MNEMONIC_FONT);
 
     mnemonicLabel.setPreferredSize(new JLabel("W.").getPreferredSize());
     mnemonicLabel.setOpaque(false);
@@ -153,7 +153,7 @@ public class BookmarksAction extends AnAction implements DumbAware, MasterDetail
   @Override
   public void itemChosen(ItemWrapper item, Project project, JBPopup popup, boolean withEnterOrDoubleClick) {
     if (item instanceof BookmarkItem && withEnterOrDoubleClick) {
-      Bookmark bookmark = ((BookmarkItem)item).getBookmark();
+      BookmarkImpl bookmark = ((BookmarkItem)item).getBookmark();
       popup.cancel();
       bookmark.navigate(true);
     }
@@ -167,7 +167,7 @@ public class BookmarksAction extends AnAction implements DumbAware, MasterDetail
   private static DefaultListModel buildModel(Project project) {
     final DefaultListModel model = new DefaultListModel();
 
-    for (Bookmark bookmark : BookmarkManager.getInstance(project).getValidBookmarks()) {
+    for (BookmarkImpl bookmark : BookmarkManagerImpl.getInstance(project).getValidBookmarks()) {
       model.addElement(new BookmarkItem(bookmark));
     }
 
@@ -177,7 +177,7 @@ public class BookmarksAction extends AnAction implements DumbAware, MasterDetail
   protected static class BookmarkInContextInfo {
     private final DataContext myDataContext;
     private final Project myProject;
-    private Bookmark myBookmarkAtPlace;
+    private BookmarkImpl myBookmarkAtPlace;
     private VirtualFile myFile;
     private int myLine;
 
@@ -186,7 +186,7 @@ public class BookmarksAction extends AnAction implements DumbAware, MasterDetail
       myProject = project;
     }
 
-    public Bookmark getBookmarkAtPlace() {
+    public BookmarkImpl getBookmarkAtPlace() {
       return myBookmarkAtPlace;
     }
 
@@ -204,7 +204,7 @@ public class BookmarksAction extends AnAction implements DumbAware, MasterDetail
       myLine = -1;
 
 
-      BookmarkManager bookmarkManager = BookmarkManager.getInstance(myProject);
+      BookmarkManagerImpl bookmarkManager = BookmarkManagerImpl.getInstance(myProject);
       if (ToolWindowManager.getInstance(myProject).isEditorComponentActive()) {
         Editor editor = myDataContext.getData(PlatformDataKeys.EDITOR);
         if (editor != null) {
@@ -227,8 +227,8 @@ public class BookmarksAction extends AnAction implements DumbAware, MasterDetail
     }
   }
 
-  static List<Bookmark> getSelectedBookmarks(JList list) {
-    List<Bookmark> answer = new ArrayList<Bookmark>();
+  static List<BookmarkImpl> getSelectedBookmarks(JList list) {
+    List<BookmarkImpl> answer = new ArrayList<BookmarkImpl>();
 
     for (Object value : list.getSelectedValues()) {
       if (value instanceof BookmarkItem) {

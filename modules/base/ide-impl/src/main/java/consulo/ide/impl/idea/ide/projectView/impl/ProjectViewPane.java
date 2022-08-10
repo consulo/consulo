@@ -8,7 +8,7 @@ import consulo.application.util.registry.Registry;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.impl.ProjectPaneSelectInTarget;
 import consulo.ide.impl.idea.ide.projectView.BaseProjectTreeBuilder;
-import consulo.ide.impl.idea.ide.projectView.impl.nodes.BaseProjectViewDirectoryHelper;
+import consulo.project.ui.view.tree.BaseProjectViewDirectoryHelper;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.ProjectViewProjectNode;
 import consulo.language.editor.scratch.ScratchUtil;
 import consulo.language.psi.PsiDirectory;

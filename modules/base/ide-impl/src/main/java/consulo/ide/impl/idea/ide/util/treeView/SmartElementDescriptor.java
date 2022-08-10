@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.ide.util.treeView;
 
-import consulo.ide.impl.idea.ide.projectView.impl.nodes.PsiDirectoryNode;
+import consulo.project.ui.view.tree.PsiDirectoryNode;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2012 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.project.ui.view.tree;
 
-/*
- * @author max
- */
-package consulo.ide.impl.idea.ide.bookmarks;
+import consulo.virtualFileSystem.VirtualFile;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.TopicAPI;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
 
-import javax.annotation.Nonnull;
+public interface RootsProvider {
+  @Deprecated
+  Set<VirtualFile> EMPTY_ROOTS = Collections.emptySet();
 
-@TopicAPI(ComponentScope.PROJECT)
-public interface BookmarksListener {
-  void bookmarkAdded(@Nonnull BookmarkImpl b);
-
-  void bookmarkRemoved(@Nonnull BookmarkImpl b);
-
-  void bookmarkChanged(@Nonnull BookmarkImpl b);
+  Collection<VirtualFile> getRoots();
 }

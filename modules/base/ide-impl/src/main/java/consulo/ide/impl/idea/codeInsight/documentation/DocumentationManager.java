@@ -28,7 +28,7 @@ import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNameBase;
 import consulo.ide.impl.idea.ide.util.gotoByName.QuickSearchComponent;
 import consulo.ide.impl.idea.lang.documentation.DocumentationMarkup;
 import consulo.ide.impl.idea.openapi.roots.libraries.LibraryUtil;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.ProjectSettingsService;
+import consulo.project.ui.view.internal.ProjectSettingsService;
 import consulo.ide.impl.idea.openapi.util.DimensionService;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.versionControlSystem.change.ChangeListManager;

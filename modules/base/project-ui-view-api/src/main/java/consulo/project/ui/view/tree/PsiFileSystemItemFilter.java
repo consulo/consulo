@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.projectView.impl.nodes;
+package consulo.project.ui.view.tree;
 
-import consulo.project.ui.view.tree.ViewSettings;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileSystemItem;

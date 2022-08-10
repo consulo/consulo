@@ -5,7 +5,7 @@ package consulo.ide.impl.idea.ide.todo.nodes;
 import consulo.ide.IdeBundle;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.project.ui.view.tree.ViewSettings;
-import consulo.ide.impl.idea.ide.projectView.impl.nodes.PsiDirectoryNode;
+import consulo.project.ui.view.tree.PsiDirectoryNode;
 import consulo.ide.impl.idea.ide.todo.TodoTreeBuilder;
 import consulo.ide.impl.idea.ide.todo.TodoTreeStructure;
 import consulo.project.ui.view.tree.AbstractTreeNode;

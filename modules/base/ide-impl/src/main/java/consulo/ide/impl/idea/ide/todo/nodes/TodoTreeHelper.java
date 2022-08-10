@@ -16,8 +16,8 @@
 
 package consulo.ide.impl.idea.ide.todo.nodes;
 
-import consulo.ide.impl.idea.ide.projectView.ProjectViewNode;
-import consulo.ide.impl.idea.ide.projectView.impl.nodes.PackageNodeUtil;
+import consulo.project.ui.view.tree.ProjectViewNode;
+import consulo.project.ui.view.tree.PackageNodeUtil;
 import consulo.ide.impl.idea.ide.todo.TodoFileDirAndModuleComparator;
 import consulo.ide.impl.idea.ide.todo.TodoTreeBuilder;
 import consulo.project.ui.view.tree.AbstractTreeNode;
@@ -33,7 +33,6 @@ import consulo.language.psi.PsiManager;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.projectView.impl.nodes.PackageElement;
 import consulo.language.psi.PsiPackage;
 import consulo.language.psi.PsiPackageManager;
 import consulo.language.content.LanguageContentFolderScopes;

@@ -20,8 +20,8 @@
 package consulo.ide.impl.idea.ide.bookmarks.actions;
 
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.bookmarks.Bookmark;
-import consulo.ide.impl.idea.ide.bookmarks.BookmarkManager;
+import consulo.ide.impl.idea.ide.bookmarks.BookmarkImpl;
+import consulo.ide.impl.idea.ide.bookmarks.BookmarkManagerImpl;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
@@ -44,8 +44,8 @@ public class ToggleBookmarkWithMnemonicAction extends ToggleBookmarkAction {
     final Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project == null) return;
     final BookmarkInContextInfo info = new BookmarkInContextInfo(dataContext, project).invoke();
-    final Bookmark bookmark = info.getBookmarkAtPlace();
-    final BookmarkManager bookmarks = BookmarkManager.getInstance(project);
+    final BookmarkImpl bookmark = info.getBookmarkAtPlace();
+    final BookmarkManagerImpl bookmarks = BookmarkManagerImpl.getInstance(project);
     if (bookmark != null) {
       final JBPopup[] popup = new JBPopup[1];
       MnemonicChooser mc = new MnemonicChooser() {
@@ -69,7 +69,7 @@ public class ToggleBookmarkWithMnemonicAction extends ToggleBookmarkAction {
 
       final ComponentPopupBuilder builder = JBPopupFactory.getInstance().createComponentPopupBuilder(mc, mc);
       popup[0] = builder.
-        setTitle("Bookmark Mnemonic").
+        setTitle("BookmarkImpl Mnemonic").
         setFocusable(true).
         setRequestFocus(true).
         setMovable(false).

@@ -19,7 +19,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.content.ContentFolderTypeProvider;
-import consulo.ide.impl.idea.ide.projectView.impl.ProjectRootsUtil;
+import consulo.project.ui.view.tree.ProjectRootsUtil;
 import consulo.ide.impl.roots.ContentFoldersSupportUtil;
 import consulo.language.content.PackageBasedContentFolderTypeProvider;
 import consulo.language.icon.IconDescriptor;

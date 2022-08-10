@@ -27,7 +27,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.util.dataholder.KeyWithDefaultValue;
-import consulo.ide.impl.projectView.impl.ProjectViewPaneOptionProvider;
+import consulo.project.ui.view.ProjectViewPaneOptionProvider;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

@@ -20,7 +20,7 @@ import consulo.module.Module;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.orderEntry.OrderEntry;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.ProjectSettingsService;
+import consulo.project.ui.view.internal.ProjectSettingsService;
 import consulo.navigation.Navigatable;
 import javax.annotation.Nonnull;
 

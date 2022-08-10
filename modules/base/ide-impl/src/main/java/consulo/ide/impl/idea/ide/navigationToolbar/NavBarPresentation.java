@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.ide.navigationToolbar;
 
 import consulo.application.AllIcons;
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.projectView.impl.ProjectRootsUtil;
+import consulo.project.ui.view.tree.ProjectRootsUtil;
 import consulo.application.ApplicationManager;
 import consulo.ide.navigationToolbar.NavBarModelExtension;
 import consulo.module.Module;

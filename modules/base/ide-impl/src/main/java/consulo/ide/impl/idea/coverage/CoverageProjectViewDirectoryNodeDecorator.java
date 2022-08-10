@@ -1,8 +1,6 @@
 package consulo.ide.impl.idea.coverage;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.ide.projectView.ProjectViewNode;
-import consulo.ide.impl.idea.packageDependencies.ui.PackageDependenciesNode;
 import consulo.execution.coverage.CoverageAnnotator;
 import consulo.execution.coverage.CoverageDataManager;
 import consulo.execution.coverage.CoverageSuitesBundle;
@@ -10,7 +8,7 @@ import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.SmartPsiElementPointer;
-import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
+import consulo.project.ui.view.tree.ProjectViewNode;
 import consulo.ui.ex.tree.PresentationData;
 import jakarta.inject.Inject;
 
@@ -22,29 +20,6 @@ public class CoverageProjectViewDirectoryNodeDecorator extends AbstractCoverageP
   @Inject
   public CoverageProjectViewDirectoryNodeDecorator(final CoverageDataManager coverageDataManager) {
     super(coverageDataManager);
-  }
-
-  @Override
-  public void decorate(PackageDependenciesNode node, ColoredTreeCellRenderer cellRenderer) {
-    final PsiElement element = node.getPsiElement();
-    if (element == null || !element.isValid()) {
-      return;
-    }
-
-    final CoverageDataManager manager = getCoverageDataManager();
-    final CoverageSuitesBundle currentSuite = manager.getCurrentSuitesBundle();
-    final CoverageAnnotator coverageAnnotator = currentSuite != null ? currentSuite.getAnnotator(element.getProject()) : null;
-    if (coverageAnnotator == null) {
-      // N/A
-      return;
-    }
-
-    if (element instanceof PsiDirectory) {
-      final String informationString = coverageAnnotator.getDirCoverageInformationString((PsiDirectory) element, currentSuite, manager);
-      if (informationString != null) {
-        appendCoverageInfo(cellRenderer, informationString);
-      }
-    }
   }
 
   public void decorate(ProjectViewNode node, PresentationData data) {

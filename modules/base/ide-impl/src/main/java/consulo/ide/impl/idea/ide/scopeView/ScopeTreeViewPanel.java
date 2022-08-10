@@ -26,7 +26,6 @@ import consulo.ide.IdeBundle;
 import consulo.ide.IdeView;
 import consulo.ide.impl.idea.ide.dnd.aware.DnDAwareTree;
 import consulo.ide.impl.idea.ide.projectView.ProjectView;
-import consulo.ide.impl.idea.ide.projectView.ProjectViewNodeDecorator;
 import consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectViewPane;
 import consulo.ide.impl.idea.ide.projectView.impl.ModuleGroup;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPane;
@@ -540,11 +539,6 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
         append(node.toString(), TextAttributesUtil.fromTextAttributes(textAttributes));
 
         String oldToString = toString();
-        if (!myProject.isDisposed()) {
-          for (ProjectViewNodeDecorator decorator : ProjectViewNodeDecorator.EP_NAME.getExtensionList(myProject)) {
-            decorator.decorate(node, this);
-          }
-        }
         if (toString().equals(oldToString)) {   // nothing was decorated
           final String locationString = node.getComment();
           if (locationString != null && locationString.length() > 0) {

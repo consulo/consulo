@@ -19,8 +19,8 @@
  */
 package consulo.ide.impl.idea.ide.bookmarks.actions;
 
-import consulo.ide.impl.idea.ide.bookmarks.Bookmark;
-import consulo.ide.impl.idea.ide.bookmarks.BookmarkManager;
+import consulo.ide.impl.idea.ide.bookmarks.BookmarkImpl;
+import consulo.ide.impl.idea.ide.bookmarks.BookmarkManagerImpl;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
 import consulo.language.editor.CommonDataKeys;
@@ -47,7 +47,7 @@ public abstract class GoToMnemonicBookmarkActionBase extends AnAction implements
     DataContext dataContext = e.getDataContext();
     final Project project = dataContext.getData(CommonDataKeys.PROJECT);
 
-    final Bookmark bookmark = BookmarkManager.getInstance(project).findBookmarkForMnemonic((char)('0' + myNumber));
+    final BookmarkImpl bookmark = BookmarkManagerImpl.getInstance(project).findBookmarkForMnemonic((char)('0' + myNumber));
     if (bookmark != null) {
       bookmark.navigate(true);
     }

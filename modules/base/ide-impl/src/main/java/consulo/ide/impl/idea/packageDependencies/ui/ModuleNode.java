@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.packageDependencies.ui;
 import consulo.language.editor.scope.AnalysisScopeBundle;
 import consulo.application.AllIcons;
 import consulo.module.Module;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.ProjectSettingsService;
+import consulo.project.ui.view.internal.ProjectSettingsService;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.language.pom.NavigatableWithText;
 import consulo.language.psi.PsiFile;

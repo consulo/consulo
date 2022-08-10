@@ -3,6 +3,7 @@
 package consulo.ide.impl.idea.ide.projectView;
 
 import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.project.ui.view.tree.ProjectViewNode;
 import consulo.ui.ex.UiActivity;
 import consulo.ui.ex.UiActivityMonitor;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesTreeNodeDescriptor;

@@ -1,7 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.projectView.impl;
 
-import consulo.ide.impl.idea.ide.projectView.ProjectViewNode;
+import consulo.project.ui.view.tree.ProjectViewNode;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;

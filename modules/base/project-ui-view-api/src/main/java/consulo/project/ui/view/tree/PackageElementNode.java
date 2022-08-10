@@ -13,25 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.projectView.impl.nodes;
+package consulo.project.ui.view.tree;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
-import consulo.ide.impl.idea.ide.projectView.ProjectViewNode;
-import consulo.ide.impl.idea.ide.projectView.ProjectViewNodeDecorator;
-import consulo.ide.impl.idea.ide.util.treeView.TreeViewUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.ide.impl.projectView.impl.nodes.PackageElement;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiPackage;
 import consulo.language.util.ModuleUtilCore;
 import consulo.module.Module;
 import consulo.project.Project;
-import consulo.project.ui.view.tree.AbstractTreeNode;
-import consulo.project.ui.view.tree.ViewSettings;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -58,7 +52,7 @@ public class PackageElementNode extends ProjectViewNode<PackageElement> {
 
     final PsiDirectory[] directories = getValue().getPackage().getDirectories();
     for (PsiDirectory directory : directories) {
-      if (VfsUtilCore.isAncestor(directory.getVirtualFile(), file, false)) return true;
+      if (VirtualFileUtil.isAncestor(directory.getVirtualFile(), file, false)) return true;
     }
     return false;
   }

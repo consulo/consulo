@@ -16,8 +16,8 @@
 
 package consulo.ide.impl.idea.ide.bookmarks.actions;
 
-import consulo.ide.impl.idea.ide.bookmarks.Bookmark;
-import consulo.ide.impl.idea.ide.bookmarks.BookmarkManager;
+import consulo.ide.impl.idea.ide.bookmarks.BookmarkImpl;
+import consulo.ide.impl.idea.ide.bookmarks.BookmarkManagerImpl;
 import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
@@ -43,7 +43,7 @@ abstract class GotoBookmarkActionBase extends EditorAction {
       }
 
       private void navigateToBookmark(DataContext dataContext, @Nonnull final Editor editor) {
-        final Bookmark bookmark = getBookmarkToGo(dataContext, editor);
+        final BookmarkImpl bookmark = getBookmarkToGo(dataContext, editor);
         if (bookmark == null) return;
 
         int line = bookmark.getLine();
@@ -58,10 +58,10 @@ abstract class GotoBookmarkActionBase extends EditorAction {
       }
 
       @Nullable
-      private Bookmark getBookmarkToGo(DataContext dataContext, Editor editor) {
+      private BookmarkImpl getBookmarkToGo(DataContext dataContext, Editor editor) {
         Project project = dataContext.getData(CommonDataKeys.PROJECT);
         if (project == null) return null;
-        BookmarkManager manager = BookmarkManager.getInstance(project);
+        BookmarkManagerImpl manager = BookmarkManagerImpl.getInstance(project);
         return next ? manager.getNextBookmark(editor, true) : manager.getPreviousBookmark(editor, true);
       }
     });

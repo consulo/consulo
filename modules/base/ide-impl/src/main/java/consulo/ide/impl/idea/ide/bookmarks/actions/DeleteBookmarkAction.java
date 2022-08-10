@@ -16,8 +16,8 @@
 package consulo.ide.impl.idea.ide.bookmarks.actions;
 
 import consulo.application.AllIcons;
-import consulo.ide.impl.idea.ide.bookmarks.Bookmark;
-import consulo.ide.impl.idea.ide.bookmarks.BookmarkManager;
+import consulo.ide.impl.idea.ide.bookmarks.BookmarkImpl;
+import consulo.ide.impl.idea.ide.bookmarks.BookmarkManagerImpl;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -45,11 +45,11 @@ class DeleteBookmarkAction extends DumbAwareAction {
 
   @Override
   public void actionPerformed(AnActionEvent e) {
-    List<Bookmark> bookmarks = BookmarksAction.getSelectedBookmarks(myList);
+    List<BookmarkImpl> bookmarks = BookmarksAction.getSelectedBookmarks(myList);
     ListUtil.removeSelectedItems(myList);
 
-    for (Bookmark bookmark : bookmarks) {
-      BookmarkManager.getInstance(myProject).removeBookmark(bookmark);
+    for (BookmarkImpl bookmark : bookmarks) {
+      BookmarkManagerImpl.getInstance(myProject).removeBookmark(bookmark);
     }
   }
 }

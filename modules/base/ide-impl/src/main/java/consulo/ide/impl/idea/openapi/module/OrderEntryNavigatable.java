@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.module;
 
 import consulo.module.content.layer.orderEntry.OrderEntry;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.ProjectSettingsService;
+import consulo.project.ui.view.internal.ProjectSettingsService;
 import consulo.navigation.Navigatable;
 import consulo.module.Module;
 

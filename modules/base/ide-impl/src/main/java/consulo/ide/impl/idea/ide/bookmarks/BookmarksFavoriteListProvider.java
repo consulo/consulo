@@ -40,12 +40,12 @@ import java.util.Set;
  * User: Vassiliy.Kudryashov
  */
 @ExtensionImpl
-public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider<Bookmark> implements BookmarksListener {
-  private final BookmarkManager myBookmarkManager;
+public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider<BookmarkImpl> implements BookmarksListener {
+  private final BookmarkManagerImpl myBookmarkManager;
   private final FavoritesManager myFavoritesManager;
 
   @Inject
-  public BookmarksFavoriteListProvider(Project project, BookmarkManager bookmarkManager, FavoritesManager favoritesManager) {
+  public BookmarksFavoriteListProvider(Project project, BookmarkManagerImpl bookmarkManager, FavoritesManager favoritesManager) {
     super(project, "Bookmarks");
     myBookmarkManager = bookmarkManager;
     myFavoritesManager = favoritesManager;
@@ -54,17 +54,17 @@ public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider
   }
 
   @Override
-  public void bookmarkAdded(@Nonnull Bookmark b) {
+  public void bookmarkAdded(@Nonnull BookmarkImpl b) {
     updateChildren();
   }
 
   @Override
-  public void bookmarkRemoved(@Nonnull Bookmark b) {
+  public void bookmarkRemoved(@Nonnull BookmarkImpl b) {
     updateChildren();
   }
 
   @Override
-  public void bookmarkChanged(@Nonnull Bookmark b) {
+  public void bookmarkChanged(@Nonnull BookmarkImpl b) {
     updateChildren();
   }
 
@@ -76,9 +76,9 @@ public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider
   private void updateChildren() {
     if (myProject.isDisposed()) return;
     myChildren.clear();
-    List<Bookmark> bookmarks = myBookmarkManager.getValidBookmarks();
-    for (final Bookmark bookmark : bookmarks) {
-      AbstractTreeNode<Bookmark> child = new AbstractTreeNode<Bookmark>(myProject, bookmark) {
+    List<BookmarkImpl> bookmarks = myBookmarkManager.getValidBookmarks();
+    for (final BookmarkImpl bookmark : bookmarks) {
+      AbstractTreeNode<BookmarkImpl> child = new AbstractTreeNode<BookmarkImpl>(myProject, bookmark) {
         @RequiredReadAction
         @Nonnull
         @Override
@@ -134,10 +134,10 @@ public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider
           return false;
         }
         Object toEdit = selectedObjects.iterator().next();
-        return toEdit instanceof AbstractTreeNode && ((AbstractTreeNode)toEdit).getValue() instanceof Bookmark;
+        return toEdit instanceof AbstractTreeNode && ((AbstractTreeNode)toEdit).getValue() instanceof BookmarkImpl;
       case REMOVE:
         for (Object toRemove : selectedObjects) {
-          if (!(toRemove instanceof AbstractTreeNode && ((AbstractTreeNode)toRemove).getValue() instanceof Bookmark)) {
+          if (!(toRemove instanceof AbstractTreeNode && ((AbstractTreeNode)toRemove).getValue() instanceof BookmarkImpl)) {
             return false;
           }
         }
@@ -156,18 +156,18 @@ public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider
           return;
         }
         Object toEdit = selectedObjects.iterator().next();
-        if (toEdit instanceof AbstractTreeNode && ((AbstractTreeNode)toEdit).getValue() instanceof Bookmark) {
-          Bookmark bookmark = (Bookmark)((AbstractTreeNode)toEdit).getValue();
+        if (toEdit instanceof AbstractTreeNode && ((AbstractTreeNode)toEdit).getValue() instanceof BookmarkImpl) {
+          BookmarkImpl bookmark = (BookmarkImpl)((AbstractTreeNode)toEdit).getValue();
           if (bookmark == null) {
             return;
           }
-          BookmarkManager.getInstance(project).editDescription(bookmark);
+          BookmarkManagerImpl.getInstance(project).editDescription(bookmark);
         }
         return;
       case REMOVE:
         for (Object toRemove : selectedObjects) {
-          Bookmark bookmark = (Bookmark)((AbstractTreeNode)toRemove).getValue();
-          BookmarkManager.getInstance(project).removeBookmark(bookmark);
+          BookmarkImpl bookmark = (BookmarkImpl)((AbstractTreeNode)toRemove).getValue();
+          BookmarkManagerImpl.getInstance(project).removeBookmark(bookmark);
         }
         return;
       default: {
@@ -190,9 +190,9 @@ public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider
                                 int row,
                                 boolean hasFocus) {
     renderer.clear();
-    renderer.setIcon(Bookmark.getDefaultIcon(false));
-    if (value instanceof Bookmark) {
-      Bookmark bookmark = (Bookmark)value;
+    renderer.setIcon(BookmarkImpl.getDefaultIcon(false));
+    if (value instanceof BookmarkImpl) {
+      BookmarkImpl bookmark = (BookmarkImpl)value;
       BookmarkItem.setupRenderer(renderer, myProject, bookmark, selected);
       if (renderer.getIcon() != null) {
         renderer.setIcon(ImageEffects.appendRight(bookmark.getIcon(false), renderer.getIcon()));

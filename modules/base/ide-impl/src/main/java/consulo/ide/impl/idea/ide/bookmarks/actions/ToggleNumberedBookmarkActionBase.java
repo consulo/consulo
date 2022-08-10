@@ -19,8 +19,8 @@
  */
 package consulo.ide.impl.idea.ide.bookmarks.actions;
 
-import consulo.ide.impl.idea.ide.bookmarks.Bookmark;
-import consulo.ide.impl.idea.ide.bookmarks.BookmarkManager;
+import consulo.ide.impl.idea.ide.bookmarks.BookmarkImpl;
+import consulo.ide.impl.idea.ide.bookmarks.BookmarkManagerImpl;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
 import consulo.language.editor.CommonDataKeys;
@@ -50,15 +50,15 @@ public abstract class ToggleNumberedBookmarkActionBase extends AnAction implemen
     BookmarksAction.BookmarkInContextInfo info = new BookmarksAction.BookmarkInContextInfo(dataContext, project).invoke();
     if (info.getFile() == null) return;
 
-    final Bookmark oldBookmark = info.getBookmarkAtPlace();
+    final BookmarkImpl oldBookmark = info.getBookmarkAtPlace();
 
-    final BookmarkManager manager = BookmarkManager.getInstance(project);
+    final BookmarkManagerImpl manager = BookmarkManagerImpl.getInstance(project);
     if (oldBookmark != null) {
       manager.removeBookmark(oldBookmark);
     }
 
     if (oldBookmark == null || oldBookmark.getMnemonic() != '0' + myNumber) {
-      final Bookmark bookmark = manager.addTextBookmark(info.getFile(), info.getLine(), "");
+      final BookmarkImpl bookmark = manager.addTextBookmark(info.getFile(), info.getLine(), "");
       manager.setMnemonic(bookmark, (char)('0' + myNumber));
     }
   }

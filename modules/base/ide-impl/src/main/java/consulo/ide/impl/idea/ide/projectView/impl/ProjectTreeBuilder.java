@@ -17,10 +17,10 @@
 package consulo.ide.impl.idea.ide.projectView.impl;
 
 import consulo.ide.impl.idea.ide.CopyPasteUtil;
-import consulo.ide.impl.idea.ide.bookmarks.Bookmark;
+import consulo.ide.impl.idea.ide.bookmarks.BookmarkImpl;
 import consulo.ide.impl.idea.ide.bookmarks.BookmarksListener;
 import consulo.ide.impl.idea.ide.projectView.BaseProjectTreeBuilder;
-import consulo.ide.impl.idea.ide.projectView.ProjectViewNode;
+import consulo.project.ui.view.tree.ProjectViewNode;
 import consulo.ide.impl.idea.ide.projectView.ProjectViewPsiTreeChangeListener;
 import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.awt.tree.AbstractTreeUpdater;
@@ -112,17 +112,17 @@ public class ProjectTreeBuilder extends BaseProjectTreeBuilder {
 
   private final class MyBookmarksListener implements BookmarksListener {
     @Override
-    public void bookmarkAdded(@Nonnull Bookmark b) {
+    public void bookmarkAdded(@Nonnull BookmarkImpl b) {
       updateForFile(b.getFile());
     }
 
     @Override
-    public void bookmarkRemoved(@Nonnull Bookmark b) {
+    public void bookmarkRemoved(@Nonnull BookmarkImpl b) {
       updateForFile(b.getFile());
     }
 
     @Override
-    public void bookmarkChanged(@Nonnull Bookmark b) {
+    public void bookmarkChanged(@Nonnull BookmarkImpl b) {
       updateForFile(b.getFile());
     }
 

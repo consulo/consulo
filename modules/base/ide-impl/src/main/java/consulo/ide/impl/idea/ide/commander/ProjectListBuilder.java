@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.ide.commander;
 
 import consulo.ide.impl.idea.ide.CopyPasteUtil;
-import consulo.ide.impl.idea.ide.projectView.ProjectViewNode;
+import consulo.project.ui.view.tree.ProjectViewNode;
 import consulo.project.ui.view.commander.AbstractListBuilder;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.ex.tree.AbstractTreeStructure;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.projectView.impl.nodes;
+package consulo.project.ui.view.tree;
 
-import consulo.ide.impl.idea.ide.projectView.RootsProvider;
-import consulo.ide.impl.idea.ide.projectView.impl.nodes.PackageNodeUtil;
 import consulo.module.Module;
 import consulo.application.util.Queryable;
 import consulo.util.dataholder.Key;
@@ -24,18 +22,17 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiPackage;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 /**
- * @author VISTALL
- * @since 13:58/07.07.13
+ * @author Eugene Zhuravlev
  */
-public class PackageElement implements Queryable, RootsProvider {
+public final class PackageElement implements Queryable, RootsProvider {
   public static final Key<PackageElement> DATA_KEY = Key.create("package.element");
 
   @Nullable
@@ -50,16 +47,6 @@ public class PackageElement implements Queryable, RootsProvider {
     myIsLibraryElement = isLibraryElement;
   }
 
-  @Override
-  public Collection<VirtualFile> getRoots() {
-    Set<VirtualFile> roots = new HashSet<VirtualFile>();
-    final PsiDirectory[] dirs = PackageNodeUtil.getDirectories(getPackage(), getPackage().getProject(), getModule(), isLibraryElement());
-    for (PsiDirectory each : dirs) {
-      roots.add(each.getVirtualFile());
-    }
-    return roots;
-  }
-
   @Nullable
   public Module getModule() {
     return myModule;
@@ -70,9 +57,21 @@ public class PackageElement implements Queryable, RootsProvider {
     return myElement;
   }
 
+  @Nonnull
+  @Override
+  public Collection<VirtualFile> getRoots() {
+    Set<VirtualFile> roots = new HashSet<>();
+    final PsiDirectory[] dirs = PackageNodeUtil.getDirectories(getPackage(), myModule.getProject(), myModule, isLibraryElement());
+    for (PsiDirectory each : dirs) {
+      roots.add(each.getVirtualFile());
+    }
+    return roots;
+  }
+
+  @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (o == null || o.getClass() != getClass()) return false;
+    if (!(o instanceof PackageElement)) return false;
 
     final PackageElement packageElement = (PackageElement)o;
 
@@ -83,10 +82,10 @@ public class PackageElement implements Queryable, RootsProvider {
     return true;
   }
 
+  @Override
   public int hashCode() {
-    int result;
-    result = (myModule != null ? myModule.hashCode() : 0);
-    result = 29 * result + (myElement.hashCode());
+    int result = myModule != null ? myModule.hashCode() : 0;
+    result = 29 * result + myElement.hashCode();
     result = 29 * result + (myIsLibraryElement ? 1 : 0);
     return result;
   }
@@ -94,6 +93,7 @@ public class PackageElement implements Queryable, RootsProvider {
   public boolean isLibraryElement() {
     return myIsLibraryElement;
   }
+
 
   @Override
   public void putInfo(@Nonnull Map<String, String> info) {

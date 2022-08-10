@@ -1,6 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
-package consulo.ide.impl.idea.ide.projectView.impl.nodes;
+package consulo.project.ui.view.tree;
 
 import consulo.language.editor.ui.PopupNavigationUtil;
 import consulo.annotation.access.RequiredReadAction;
@@ -8,10 +8,6 @@ import consulo.application.AllIcons;
 import consulo.ide.impl.idea.ide.bookmarks.Bookmark;
 import consulo.ide.impl.idea.ide.bookmarks.BookmarkManager;
 import consulo.ui.ex.tree.PresentationData;
-import consulo.ide.impl.idea.ide.projectView.ProjectViewNode;
-import consulo.ide.impl.idea.ide.projectView.ProjectViewNodeDecorator;
-import consulo.project.ui.view.tree.ViewSettings;
-import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.ex.awt.tree.TreeNode;
 import consulo.ui.ex.awt.tree.ValidateableNode;
 import consulo.navigation.NavigationItem;

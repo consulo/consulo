@@ -14,34 +14,29 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.ide.projectView.impl.nodes;
+package consulo.project.ui.view.tree;
 
-import consulo.ui.ex.tree.PresentationData;
-import consulo.ide.impl.idea.ide.projectView.ProjectView;
-import consulo.project.ui.view.tree.ViewSettings;
-import consulo.ide.impl.idea.ide.projectView.impl.ProjectRootsUtil;
-import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewImpl;
-import consulo.project.ui.view.tree.AbstractTreeNode;
-import consulo.virtualFileSystem.fileType.FileTypeRegistry;
-import consulo.module.Module;
-import consulo.ide.impl.idea.openapi.module.ModuleUtil;
-import consulo.project.Project;
-import consulo.module.content.layer.orderEntry.OrderEntry;
-import consulo.module.content.ProjectFileIndex;
-import consulo.module.content.ProjectRootManager;
-import consulo.ide.impl.idea.openapi.roots.libraries.LibraryUtil;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.ProjectSettingsService;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.pom.NavigatableWithText;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiPackageHelper;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
+import consulo.language.util.ModuleUtilCore;
+import consulo.module.Module;
+import consulo.module.content.ProjectFileIndex;
+import consulo.module.content.ProjectRootManager;
+import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.module.content.library.util.ModuleContentLibraryUtil;
+import consulo.project.Project;
+import consulo.project.ui.view.internal.ProjectSettingsService;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.tree.PresentationData;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.Comparing;
+import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileTypeRegistry;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -150,7 +145,7 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
       file = VirtualFilePathUtil.getLocalFile(file);
     }
 
-    if (!VfsUtilCore.isAncestor(directory, file, false)) {
+    if (!VirtualFileUtil.isAncestor(directory, file, false)) {
       return false;
     }
 
@@ -184,7 +179,7 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
   @Override
   @RequiredUIAccess
   public void navigate(final boolean requestFocus) {
-    Module module = ModuleUtil.findModuleForPsiElement(getValue());
+    Module module = ModuleUtilCore.findModuleForPsiElement(getValue());
     if (module != null) {
       final VirtualFile file = getVirtualFile();
       final Project project = getProject();
@@ -193,7 +188,7 @@ public class PsiDirectoryNode extends BasePsiNode<PsiDirectory> implements Navig
         service.openModuleSettings(module);
       }
       else if (ProjectRootsUtil.isLibraryRoot(file, project)) {
-        final OrderEntry orderEntry = LibraryUtil.findLibraryEntry(file, module.getProject());
+        final OrderEntry orderEntry = ModuleContentLibraryUtil.findLibraryEntry(file, module.getProject());
         if (orderEntry != null) {
           service.openLibraryOrSdkSettings(orderEntry);
         }

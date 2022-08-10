@@ -10,7 +10,7 @@ import consulo.ide.impl.idea.ide.navigationToolbar.ui.NavBarUI;
 import consulo.ide.impl.idea.ide.navigationToolbar.ui.NavBarUIManager;
 import consulo.ide.impl.idea.ide.projectView.ProjectView;
 import consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectViewPane;
-import consulo.ide.impl.idea.ide.projectView.impl.ProjectRootsUtil;
+import consulo.project.ui.view.tree.ProjectRootsUtil;
 import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
 import consulo.ide.impl.idea.ide.util.DeleteHandler;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;

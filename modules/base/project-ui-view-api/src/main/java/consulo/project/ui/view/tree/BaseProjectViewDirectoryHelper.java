@@ -18,43 +18,29 @@
  * User: anna
  * Date: 23-Jan-2008
  */
-package consulo.ide.impl.idea.ide.projectView.impl.nodes;
+package consulo.project.ui.view.tree;
 
-import consulo.project.ui.view.tree.ViewSettings;
-import consulo.ide.impl.idea.ide.projectView.impl.ProjectRootsUtil;
-import consulo.project.ui.view.tree.AbstractTreeNode;
-import consulo.ide.impl.idea.ide.util.treeView.TreeViewUtil;
-import consulo.language.psi.*;
-import consulo.ui.ex.tree.TreeHelper;
-import consulo.virtualFileSystem.fileType.FileTypeRegistry;
-import consulo.module.Module;
-import consulo.project.Project;
-import consulo.module.content.ModuleFileIndex;
-import consulo.module.content.ModuleRootManager;
-import consulo.module.content.ProjectFileIndex;
-import consulo.module.content.ProjectRootManager;
-import consulo.module.content.DirectoryIndex;
-import consulo.module.content.DirectoryInfo;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.editor.util.PsiUtilBase;
-import consulo.language.psi.PsiUtilCore;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.ide.impl.projectView.ShowExcludedFilesProjectViewPaneOptionProvider;
-import consulo.ide.impl.projectView.impl.nodes.PackageElement;
+import consulo.language.editor.util.PsiUtilBase;
+import consulo.language.psi.*;
 import consulo.logging.Logger;
-import consulo.language.psi.PsiPackage;
-import consulo.language.psi.PsiPackageManager;
+import consulo.module.Module;
+import consulo.module.content.*;
+import consulo.project.Project;
+import consulo.ui.ex.tree.TreeHelper;
+import consulo.util.lang.Comparing;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
+import consulo.virtualFileSystem.fileType.FileTypeRegistry;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
 public class BaseProjectViewDirectoryHelper {
-  public static final Logger LOGGER = Logger.getInstance(BaseProjectViewDirectoryHelper.class);
+  private static final Logger LOGGER = Logger.getInstance(BaseProjectViewDirectoryHelper.class);
 
   @Nullable
   @RequiredReadAction
@@ -224,9 +210,9 @@ public class BaseProjectViewDirectoryHelper {
 
   private static boolean shouldBeShown(DirectoryIndex directoryIndex, VirtualFile dir, ViewSettings settings) {
     DirectoryInfo directoryInfo = directoryIndex.getInfoForFile(dir);
-    if (directoryInfo.isInProject()) return true;
+    if (directoryInfo.isInProject(dir)) return true;
 
-    return settings.getViewOption(ShowExcludedFilesProjectViewPaneOptionProvider.KEY) == Boolean.TRUE && directoryInfo.isExcluded();
+    return settings.getViewOption(ShowExcludedFilesProjectViewPaneOptionProvider.KEY) == Boolean.TRUE && directoryInfo.isExcluded(dir);
   }
 
   // used only for non-flatten packages mode

@@ -1,6 +1,6 @@
 package consulo.ide.impl.idea.coverage;
 
-import consulo.ide.impl.idea.ide.projectView.ProjectViewNodeDecorator;
+import consulo.project.ui.view.tree.ProjectViewNodeDecorator;
 import consulo.execution.coverage.CoverageDataManager;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;

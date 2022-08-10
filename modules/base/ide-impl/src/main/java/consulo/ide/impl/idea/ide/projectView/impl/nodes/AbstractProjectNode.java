@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.ide.projectView.impl.nodes;
 
 import consulo.ui.ex.tree.PresentationData;
-import consulo.ide.impl.idea.ide.projectView.ProjectViewNode;
+import consulo.project.ui.view.tree.ProjectViewNode;
 import consulo.project.ui.view.tree.ViewSettings;
 import consulo.ide.impl.idea.ide.projectView.impl.ModuleGroup;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPane;

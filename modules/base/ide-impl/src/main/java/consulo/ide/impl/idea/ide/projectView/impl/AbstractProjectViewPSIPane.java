@@ -5,7 +5,7 @@ package consulo.ide.impl.idea.ide.projectView.impl;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.ide.PsiCopyPasteManager;
 import consulo.ide.impl.idea.ide.projectView.BaseProjectTreeBuilder;
-import consulo.ide.impl.idea.ide.projectView.impl.nodes.PsiDirectoryNode;
+import consulo.project.ui.view.tree.PsiDirectoryNode;
 import consulo.ide.impl.idea.ide.ui.customization.CustomizationUtil;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.dataContext.DataContext;

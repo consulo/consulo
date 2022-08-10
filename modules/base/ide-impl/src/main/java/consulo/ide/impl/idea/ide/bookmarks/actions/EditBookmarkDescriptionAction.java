@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.ide.bookmarks.actions;
 
 import consulo.application.AllIcons;
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.bookmarks.Bookmark;
-import consulo.ide.impl.idea.ide.bookmarks.BookmarkManager;
+import consulo.ide.impl.idea.ide.bookmarks.BookmarkImpl;
+import consulo.ide.impl.idea.ide.bookmarks.BookmarkManagerImpl;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -48,10 +48,10 @@ class EditBookmarkDescriptionAction extends DumbAwareAction {
 
   @Override
   public void actionPerformed(AnActionEvent e) {
-    Bookmark bookmark = BookmarksAction.getSelectedBookmarks(myList).get(0);
+    BookmarkImpl bookmark = BookmarksAction.getSelectedBookmarks(myList).get(0);
     myPopup.setUiVisible(false);
 
-    BookmarkManager.getInstance(myProject).editDescription(bookmark);
+    BookmarkManagerImpl.getInstance(myProject).editDescription(bookmark);
 
     myPopup.setUiVisible(true);
     final JComponent content = myPopup.getContent();

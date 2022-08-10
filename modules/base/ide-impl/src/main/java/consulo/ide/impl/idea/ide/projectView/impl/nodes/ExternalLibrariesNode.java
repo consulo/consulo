@@ -21,8 +21,9 @@ package consulo.ide.impl.idea.ide.projectView.impl.nodes;
 
 import consulo.application.AllIcons;
 import consulo.ide.IdeBundle;
+import consulo.project.ui.view.tree.PsiDirectoryNode;
 import consulo.ui.ex.tree.PresentationData;
-import consulo.ide.impl.idea.ide.projectView.ProjectViewNode;
+import consulo.project.ui.view.tree.ProjectViewNode;
 import consulo.project.ui.view.tree.ViewSettings;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.module.Module;

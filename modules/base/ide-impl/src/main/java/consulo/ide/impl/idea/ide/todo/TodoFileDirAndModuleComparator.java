@@ -19,7 +19,7 @@
  */
 package consulo.ide.impl.idea.ide.todo;
 
-import consulo.ide.impl.idea.ide.projectView.ProjectViewNode;
+import consulo.project.ui.view.tree.ProjectViewNode;
 import consulo.ide.impl.idea.ide.todo.nodes.ModuleToDoNode;
 import consulo.ui.ex.tree.NodeDescriptor;
 

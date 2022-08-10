@@ -14,24 +14,16 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.openapi.roots.ui.configuration;
+package consulo.project.ui.view.internal;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.ServiceManager;
-import consulo.module.Module;
-import consulo.ide.setting.ShowSettingsUtil;
-import consulo.project.Project;
-import consulo.project.ProjectBundle;
-import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.content.library.Library;
-import consulo.compiler.artifact.Artifact;
-import consulo.annotation.DeprecationInfo;
-import consulo.module.content.layer.orderEntry.OrderEntryType;
-import consulo.ide.setting.module.OrderEntryTypeEditor;
+import consulo.module.Module;
+import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
@@ -41,36 +33,23 @@ import javax.annotation.Nullable;
  * @author yole
  */
 @Singleton
-@Deprecated
-@DeprecationInfo("This class was proxy between SmallIDE and IDEA, but we don't need this anymore")
 @ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
-public final class ProjectSettingsService {
+public class ProjectSettingsService {
   public static ProjectSettingsService getInstance(Project project) {
-    return ServiceManager.getService(project, ProjectSettingsService.class);
-  }
-
-  private final Project myProject;
-
-  @Inject
-  public ProjectSettingsService(Project project) {
-    myProject = project;
+    return project.getInstance(ProjectSettingsService.class);
   }
 
   @RequiredUIAccess
   public void openProjectSettings() {
-    ShowSettingsUtil.getInstance().showProjectStructureDialog(myProject, c -> c.selectProjectGeneralSettings(true));
   }
 
   @RequiredUIAccess
   public void openLibrary(@Nonnull Library library) {
-    ShowSettingsUtil.getInstance().showProjectStructureDialog(myProject, c -> c.selectProjectOrGlobalLibrary(library, true));
   }
 
   @RequiredUIAccess
   public void openModuleSettings(final Module module) {
-    Project project = module.getProject();
-    ShowSettingsUtil.getInstance().showProjectStructureDialog(project, config -> config.select(module.getName(), null, true));
   }
 
   public final boolean canOpenModuleSettings() {
@@ -79,7 +58,6 @@ public final class ProjectSettingsService {
 
   @RequiredUIAccess
   public void openModuleLibrarySettings(final Module module) {
-    ShowSettingsUtil.getInstance().showProjectStructureDialog(module.getProject(), config -> config.select(module.getName(), ProjectBundle.message("modules.classpath.title"), true));
   }
 
   public final boolean canOpenModuleLibrarySettings() {
@@ -88,7 +66,6 @@ public final class ProjectSettingsService {
 
   @RequiredUIAccess
   public void openContentEntriesSettings(final Module module) {
-    ShowSettingsUtil.getInstance().showProjectStructureDialog(module.getProject(), config -> config.select(module.getName(), ProjectBundle.message("module.paths.title"), true));
   }
 
   public final boolean canOpenContentEntriesSettings() {
@@ -97,7 +74,6 @@ public final class ProjectSettingsService {
 
   @RequiredUIAccess
   public void openModuleDependenciesSettings(@Nonnull Module module, @Nullable OrderEntry orderEntry) {
-    ShowSettingsUtil.getInstance().showProjectStructureDialog(myProject, c -> c.selectOrderEntry(module, orderEntry));
   }
 
   public final boolean canOpenModuleDependenciesSettings() {
@@ -107,19 +83,9 @@ public final class ProjectSettingsService {
   @RequiredUIAccess
   @SuppressWarnings("unchecked")
   public void openLibraryOrSdkSettings(final @Nonnull OrderEntry orderEntry) {
-    OrderEntryType type = orderEntry.getType();
-
-    OrderEntryTypeEditor editor = OrderEntryTypeEditor.getEditor(type.getId());
-    editor.navigate(orderEntry);
   }
 
   @RequiredUIAccess
   public void showModuleConfigurationDialog(@Nullable String moduleToSelect, @Nullable String editorNameToSelect) {
-    ShowSettingsUtil.getInstance().showProjectStructureDialog(myProject, config -> config.select(moduleToSelect, editorNameToSelect, true));
-  }
-
-  @RequiredUIAccess
-  public void openArtifactSettings(@Nullable Artifact artifact) {
-    ShowSettingsUtil.getInstance().showProjectStructureDialog(myProject, config -> config.select(artifact, true));
   }
 }

@@ -5,7 +5,7 @@ package consulo.ide.impl.idea.ide.todo.nodes;
 import consulo.ide.IdeBundle;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.project.ui.view.tree.ViewSettings;
-import consulo.ide.impl.idea.ide.projectView.impl.nodes.PsiFileNode;
+import consulo.project.ui.view.tree.PsiFileNode;
 import consulo.ide.impl.idea.ide.todo.SmartTodoItemPointer;
 import consulo.ide.impl.idea.ide.todo.SmartTodoItemPointerComparator;
 import consulo.ide.impl.idea.ide.todo.TodoFilter;

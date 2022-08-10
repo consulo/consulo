@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.ide.bookmarks.actions;
 
 import consulo.application.AllIcons;
 import consulo.ide.impl.idea.ide.bookmarks.BookmarkItem;
-import consulo.ide.impl.idea.ide.bookmarks.BookmarkManager;
+import consulo.ide.impl.idea.ide.bookmarks.BookmarkManagerImpl;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CommonShortcuts;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -53,6 +53,6 @@ class MoveBookmarkDownAction extends DumbAwareAction {
   @Override
   public void actionPerformed(AnActionEvent e) {
     ListUtil.moveSelectedItemsDown(myList);
-    BookmarkManager.getInstance(myProject).moveBookmarkDown(BookmarksAction.getSelectedBookmarks(myList).get(0));
+    BookmarkManagerImpl.getInstance(myProject).moveBookmarkDown(BookmarksAction.getSelectedBookmarks(myList).get(0));
   }
 }

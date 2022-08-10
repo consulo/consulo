@@ -28,9 +28,9 @@ import javax.annotation.Nonnull;
 public class BookmarkManagerStartupActivity implements PostStartupActivity, DumbAware {
   @Override
   public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
-    project.getMessageBus().connect().subscribe(PsiDocumentListener.class, BookmarkManager::documentCreated);
+    project.getMessageBus().connect().subscribe(PsiDocumentListener.class, BookmarkManagerImpl::documentCreated);
 
     // init
-    BookmarkManager.getInstance(project);
+    BookmarkManagerImpl.getInstance(project);
   }
 }

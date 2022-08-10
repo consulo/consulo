@@ -13,25 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.projectView;
+package consulo.project.ui.view.tree;
 
-import consulo.project.ui.view.tree.AbstractTreeNode;
-import consulo.component.ProcessCanceledException;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.project.ui.view.tree.TreeStructureProvider;
-import consulo.project.ui.view.tree.ViewSettings;
-import consulo.util.lang.function.Condition;
+import consulo.annotation.DeprecationInfo;
 import consulo.application.util.registry.Registry;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.component.ProcessCanceledException;
+import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileSystemItem;
-import consulo.language.editor.util.PsiUtilBase;
-import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.function.Condition;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -144,7 +141,7 @@ public abstract class ProjectViewNode<Value> extends AbstractTreeNode<Value> imp
           break;
         }
 
-        if (VfsUtil.isAncestor(eachRoot, file, true)) {
+        if (VirtualFileUtil.isAncestor(eachRoot, file, true)) {
           mayContain = true;
           break;
         }

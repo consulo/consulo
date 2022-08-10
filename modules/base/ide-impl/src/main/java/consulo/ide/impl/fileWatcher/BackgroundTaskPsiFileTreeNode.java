@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.fileWatcher;
 
-import consulo.ide.impl.idea.ide.projectView.impl.nodes.PsiFileNode;
+import consulo.project.ui.view.tree.PsiFileNode;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
 import consulo.project.Project;

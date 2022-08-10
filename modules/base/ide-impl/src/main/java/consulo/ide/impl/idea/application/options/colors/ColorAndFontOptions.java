@@ -20,7 +20,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.*;
 import consulo.configurable.OptionsContainingConfigurable;
 import consulo.ide.impl.idea.execution.impl.ConsoleViewUtil;
-import consulo.ide.impl.idea.ide.bookmarks.BookmarkManager;
+import consulo.ide.impl.idea.ide.bookmarks.BookmarkManagerImpl;
 import consulo.ide.impl.idea.ide.todo.TodoConfiguration;
 import consulo.ide.impl.idea.openapi.editor.colors.impl.DefaultColorsScheme;
 import consulo.ide.impl.idea.openapi.editor.colors.impl.EditorColorsSchemeImpl;
@@ -342,7 +342,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     for (Project openProject : openProjects) {
       FileStatusManager.getInstance(openProject).fileStatusesChanged();
       DaemonCodeAnalyzer.getInstance(openProject).restart();
-      BookmarkManager.getInstance(openProject).colorsChanged();
+      BookmarkManagerImpl.getInstance(openProject).colorsChanged();
     }
   }
 

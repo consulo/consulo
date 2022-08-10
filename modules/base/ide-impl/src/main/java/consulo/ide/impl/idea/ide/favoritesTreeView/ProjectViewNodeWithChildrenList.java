@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.favoritesTreeView;
 
-import consulo.ide.impl.idea.ide.projectView.ProjectViewNode;
+import consulo.project.ui.view.tree.ProjectViewNode;
 import consulo.project.ui.view.tree.ViewSettings;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.annotation.access.RequiredReadAction;

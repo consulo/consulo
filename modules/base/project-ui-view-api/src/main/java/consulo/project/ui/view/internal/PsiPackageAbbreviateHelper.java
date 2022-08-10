@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.projectView;
+package consulo.project.ui.view.internal;
 
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.language.psi.PsiPackage;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Set;
+import javax.annotation.Nonnull;
 
-public interface RootsProvider {
-  @Deprecated
-  Set<VirtualFile> EMPTY_ROOTS = Collections.emptySet();
-
-  Collection<VirtualFile> getRoots();
+/**
+ * @author VISTALL
+ * @since 10-Aug-22
+ */
+@ServiceAPI(ComponentScope.PROJECT)
+public interface PsiPackageAbbreviateHelper {
+  boolean shouldAbbreviateName(@Nonnull PsiPackage aPackage);
 }

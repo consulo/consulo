@@ -123,4 +123,8 @@ public interface ProjectView {
 
   @Nonnull
   Collection<SelectInTarget> getSelectInTargets();
+
+  default boolean isFoldersAlwaysOnTop() {
+    return false;
+  }
 }

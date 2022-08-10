@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.ide.bookmarks.actions;
 
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.bookmarks.BookmarkManager;
+import consulo.ide.impl.idea.ide.bookmarks.BookmarkManagerImpl;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
@@ -40,10 +40,10 @@ public class ToggleBookmarkAction extends BookmarksAction implements DumbAware {
     if (info.getFile() == null) return;
 
     if (info.getBookmarkAtPlace() != null) {
-      BookmarkManager.getInstance(project).removeBookmark(info.getBookmarkAtPlace());
+      BookmarkManagerImpl.getInstance(project).removeBookmark(info.getBookmarkAtPlace());
     }
     else {
-      BookmarkManager.getInstance(project).addTextBookmark(info.getFile(), info.getLine(), "");
+      BookmarkManagerImpl.getInstance(project).addTextBookmark(info.getFile(), info.getLine(), "");
     }
   }
 
