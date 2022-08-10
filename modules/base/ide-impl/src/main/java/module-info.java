@@ -1067,8 +1067,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.usage;
   exports consulo.ide.impl.util;
   exports consulo.ide.impl.vcs;
-  exports consulo.ide.impl.vfs.impl.archive;
-  exports consulo.ide.impl.vfs.impl.zip;
   exports consulo.ide.impl.vfs.newvfs;
   exports consulo.ide.impl.vfs.newvfs.persistent;
   exports consulo.ide.impl.webBrowser;

@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.vfs.impl.zip;
+package consulo.ide.impl.virtualFileSystem.archive.zip;
 
-import consulo.ide.impl.vfs.impl.archive.ArchiveEntry;
-import consulo.ide.impl.vfs.impl.archive.ArchiveFile;
+import consulo.virtualFileSystem.archive.ArchiveEntry;
+import consulo.virtualFileSystem.archive.ArchiveFile;
 import javax.annotation.Nonnull;
 
 import java.io.IOException;

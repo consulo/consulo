@@ -18,8 +18,8 @@ package consulo.ide.impl.idea.openapi.vfs.impl.jar;
 import consulo.util.io.FileAttributes;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.openapi.vfs.impl.ZipHandler;
-import consulo.ide.impl.vfs.impl.archive.ArchiveFile;
-import consulo.ide.impl.vfs.impl.zip.ZipArchiveFile;
+import consulo.virtualFileSystem.archive.ArchiveFile;
+import consulo.ide.impl.virtualFileSystem.archive.zip.ZipArchiveFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

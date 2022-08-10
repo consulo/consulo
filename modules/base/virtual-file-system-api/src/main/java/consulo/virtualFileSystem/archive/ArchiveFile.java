@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.vfs.impl.archive;
+package consulo.virtualFileSystem.archive;
 
-import consulo.ide.impl.idea.util.containers.EmptyIterator;
+import consulo.util.collection.Iterators;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
@@ -46,7 +46,7 @@ public interface ArchiveFile {
     @Nonnull
     @Override
     public Iterator<? extends ArchiveEntry> entries() {
-      return EmptyIterator.getInstance();
+      return Iterators.empty();
     }
 
     @Override

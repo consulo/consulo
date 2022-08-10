@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.vfs.impl.archive;
+package consulo.ide.impl.virtualFileSystem.archive;
 
 import consulo.application.util.SystemInfo;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
@@ -26,6 +26,7 @@ import consulo.ide.impl.idea.openapi.vfs.newvfs.VfsImplUtil;
 import consulo.util.lang.SystemProperties;
 import consulo.ide.impl.idea.util.io.URLUtil;
 import consulo.util.collection.Sets;
+import consulo.virtualFileSystem.archive.ArchiveFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

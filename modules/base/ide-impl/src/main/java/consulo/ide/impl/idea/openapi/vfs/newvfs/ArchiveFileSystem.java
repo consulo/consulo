@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vfs.newvfs;
 
+import consulo.ide.impl.virtualFileSystem.archive.ArchiveFileSystemBase;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
@@ -40,7 +41,7 @@ import java.util.function.Function;
  *
  * @since 138.100
  * <p>
- * Only for internal use. For plugin implementation please use {@link consulo.ide.impl.vfs.impl.archive.ArchiveFileSystemBase}
+ * Only for internal use. For plugin implementation please use {@link ArchiveFileSystemBase}
  */
 @Deprecated
 public abstract class ArchiveFileSystem extends NewVirtualFileSystem {

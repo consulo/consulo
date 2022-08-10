@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.vfs.impl.archive;
+package consulo.virtualFileSystem.archive;
+
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+
+import javax.annotation.Nonnull;
+import java.io.IOException;
 
 /**
+ * Provider for creating which used for creating {@link ArchiveFileSystem}
+ *
  * @author VISTALL
- * @since 06-Aug-16
+ * @since 10-Aug-22
  */
-public interface ArchiveEntry {
-  String getName();
+@ExtensionAPI(ComponentScope.APPLICATION)
+public interface ArchiveFileSystemProvider {
+  @Nonnull
+  String getProtocol();
 
-  long getSize();
-
-  long getTime();
-
-  boolean isDirectory();
+  @Nonnull
+  ArchiveFile createArchiveFile(@Nonnull String path) throws IOException;
 }

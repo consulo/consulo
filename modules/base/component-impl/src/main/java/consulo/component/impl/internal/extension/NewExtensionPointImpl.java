@@ -240,7 +240,7 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
       catch (ProcessCanceledException e) {
         throw e;
       }
-      catch (Exception e) {
+      catch (Throwable e) {
         LOG.error(e);
       }
     }

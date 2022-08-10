@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.vfs.impl.zip;
+package consulo.ide.impl.virtualFileSystem.archive.zip;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.vfs.impl.archive.ArchiveFile;
-import consulo.ide.impl.vfs.impl.archive.ArchiveFileSystemBase;
+import consulo.virtualFileSystem.archive.ArchiveFile;
+import consulo.ide.impl.virtualFileSystem.archive.ArchiveFileSystemBase;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystemWithMacroSupport;
 import consulo.virtualFileSystem.archive.ZipArchiveFileType;
