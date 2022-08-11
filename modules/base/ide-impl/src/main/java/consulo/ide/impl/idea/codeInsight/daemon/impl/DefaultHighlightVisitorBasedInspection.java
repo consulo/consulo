@@ -5,7 +5,7 @@ package consulo.ide.impl.idea.codeInsight.daemon.impl;
 import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
 import consulo.language.editor.impl.highlight.TextEditorHighlightingPass;
 import consulo.language.editor.impl.highlight.TextEditorHighlightingPassManager;
-import consulo.ide.impl.idea.codeInspection.GlobalInspectionUtil;
+import consulo.language.editor.inspection.GlobalInspectionUtil;
 import consulo.language.editor.inspection.GlobalSimpleInspectionTool;
 import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionContextBase;
 import consulo.util.lang.Pair;

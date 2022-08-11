@@ -2,11 +2,12 @@
 
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.Lists;
 import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
@@ -29,20 +30,20 @@ class HighlightInfoComposite extends HighlightInfoImpl {
           false, 0, anchorInfo.getProblemGroup(), null, anchorInfo.getGutterIconRenderer(), anchorInfo.getGroup());
     highlighter = anchorInfo.getHighlighter();
     setGroup(anchorInfo.getGroup());
-    List<Pair<IntentionActionDescriptor, RangeMarker>> markers = ContainerUtil.emptyList();
-    List<Pair<IntentionActionDescriptor, TextRange>> ranges = ContainerUtil.emptyList();
+    List<Pair<IntentionActionDescriptor, RangeMarker>> markers = List.of();
+    List<Pair<IntentionActionDescriptor, TextRange>> ranges = List.of();
     for (HighlightInfoImpl info : infos) {
       if (info.quickFixActionMarkers != null) {
-        if (markers == ContainerUtil.<Pair<IntentionActionDescriptor, RangeMarker>>emptyList()) markers = new ArrayList<>();
+        if (markers == List.<Pair<IntentionActionDescriptor, RangeMarker>>of()) markers = new ArrayList<>();
         markers.addAll(info.quickFixActionMarkers);
       }
       if (info.quickFixActionRanges != null) {
-        if (ranges == ContainerUtil.<Pair<IntentionActionDescriptor, TextRange>>emptyList()) ranges = new ArrayList<>();
+        if (ranges == List.<Pair<IntentionActionDescriptor, TextRange>>of()) ranges = new ArrayList<>();
         ranges.addAll(info.quickFixActionRanges);
       }
     }
-    quickFixActionMarkers = ContainerUtil.createLockFreeCopyOnWriteList(markers);
-    quickFixActionRanges = ContainerUtil.createLockFreeCopyOnWriteList(ranges);
+    quickFixActionMarkers = Lists.newLockFreeCopyOnWriteList(markers);
+    quickFixActionRanges = Lists.newLockFreeCopyOnWriteList(ranges);
   }
 
   @Nullable

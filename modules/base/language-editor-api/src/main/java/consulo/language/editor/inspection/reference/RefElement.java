@@ -16,10 +16,11 @@
 package consulo.language.editor.inspection.reference;
 
 import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import consulo.language.psi.SmartPsiElementPointer;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collection;
 
 /**
@@ -100,4 +101,11 @@ public interface RefElement extends RefEntity {
 
   @Nonnull
   RefElement getContainingEntry();
+
+  @Nullable
+  PsiFile getContainingFile();
+
+  default boolean isSuppressed(@Nonnull String... toolId) {
+    return false;
+  }
 }

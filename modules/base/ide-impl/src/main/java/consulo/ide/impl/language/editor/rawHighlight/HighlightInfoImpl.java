@@ -1,12 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.language.editor.rawHighlight;
 
-import consulo.ide.impl.idea.codeInsight.daemon.impl.DefaultHighlightVisitorBasedInspection;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.SeverityRegistrarImpl;
-import consulo.language.editor.inspection.CustomSuppressableInspectionTool;
-import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionToolWrapper;
-import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
-import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.CodeInsightColors;
 import consulo.codeEditor.Editor;
@@ -19,12 +13,18 @@ import consulo.colorScheme.*;
 import consulo.document.RangeMarker;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.codeInsight.daemon.impl.DefaultHighlightVisitorBasedInspection;
+import consulo.ide.impl.idea.codeInsight.daemon.impl.SeverityRegistrarImpl;
+import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionToolWrapper;
+import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
+import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.language.ast.ASTNode;
 import consulo.language.editor.Pass;
 import consulo.language.editor.annotation.Annotation;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.annotation.ProblemGroup;
 import consulo.language.editor.annotation.SuppressableProblemGroup;
+import consulo.language.editor.inspection.CustomSuppressableInspectionTool;
 import consulo.language.editor.inspection.ProblemHighlightType;
 import consulo.language.editor.inspection.SuppressIntentionActionFromFix;
 import consulo.language.editor.inspection.SuppressQuickFix;
@@ -57,6 +57,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
 public class HighlightInfoImpl implements HighlightInfo {
@@ -705,24 +706,6 @@ public class HighlightInfoImpl implements HighlightInfo {
                  : severity == HighlightSeverity.GENERIC_SERVER_ERROR_OR_WARNING ? HighlightInfoType.GENERIC_WARNINGS_OR_ERRORS_FROM_SERVER : HighlightInfoType.INFORMATION;
   }
 
-  @Nonnull
-  public static ProblemHighlightType convertType(HighlightInfoType infoType) {
-    if (infoType == HighlightInfoType.ERROR || infoType == HighlightInfoType.WRONG_REF) return ProblemHighlightType.ERROR;
-    if (infoType == HighlightInfoType.WARNING) return ProblemHighlightType.WARNING;
-    if (infoType == HighlightInfoType.INFORMATION) return ProblemHighlightType.INFORMATION;
-    return ProblemHighlightType.WEAK_WARNING;
-  }
-
-  @Nonnull
-  @SuppressWarnings("deprecation")
-  public static ProblemHighlightType convertSeverityToProblemHighlight(HighlightSeverity severity) {
-    return severity == HighlightSeverity.ERROR
-           ? ProblemHighlightType.ERROR
-           : severity == HighlightSeverity.WARNING
-             ? ProblemHighlightType.WARNING
-             : severity == HighlightSeverity.INFO ? ProblemHighlightType.INFO : severity == HighlightSeverity.WEAK_WARNING ? ProblemHighlightType.WEAK_WARNING : ProblemHighlightType.INFORMATION;
-  }
-
   public boolean hasHint() {
     return isFlagSet(HAS_HINT_MASK);
   }
@@ -958,9 +941,21 @@ public class HighlightInfoImpl implements HighlightInfo {
     }
   }
 
+  @Override
   public void unregisterQuickFix(@Nonnull Predicate<? super IntentionAction> condition) {
     if (quickFixActionRanges != null) {
       quickFixActionRanges.removeIf(pair -> condition.test(pair.first.getAction()));
+    }
+  }
+
+  @Override
+  public void forEachQuickFix(@Nonnull BiConsumer<IntentionAction, TextRange> consumer) {
+    if (quickFixActionRanges != null) {
+      for (Pair<IntentionActionDescriptor, TextRange> range : quickFixActionRanges) {
+        IntentionAction action = range.getFirst().getAction();
+
+        consumer.accept(action, range.getSecond());
+      }
     }
   }
 }

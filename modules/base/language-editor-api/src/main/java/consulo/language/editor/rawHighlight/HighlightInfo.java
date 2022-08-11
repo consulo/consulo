@@ -34,6 +34,7 @@ import consulo.localize.LocalizeValue;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
 /**
@@ -158,4 +159,6 @@ public interface HighlightInfo extends Segment {
   void registerFix(@Nullable IntentionAction action, @Nullable List<IntentionAction> options, @Nullable String displayName, @Nullable TextRange fixRange, @Nullable HighlightDisplayKey key);
 
   void unregisterQuickFix(@Nonnull Predicate<? super IntentionAction> condition);
+
+  void forEachQuickFix(@Nonnull BiConsumer<IntentionAction, TextRange> consumer);
 }

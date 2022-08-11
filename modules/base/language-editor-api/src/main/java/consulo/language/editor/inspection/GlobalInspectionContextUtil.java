@@ -13,18 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInspection.ex;
+package consulo.language.editor.inspection;
 
-import consulo.language.editor.inspection.GlobalInspectionContext;
-import consulo.language.editor.inspection.scheme.*;
-import consulo.language.editor.inspection.InspectionExtensionsFactory;
+import consulo.content.scope.NamedScope;
 import consulo.language.editor.inspection.reference.RefElement;
-import consulo.ide.impl.idea.codeInspection.reference.RefElementImpl;
+import consulo.language.editor.inspection.scheme.*;
 import consulo.language.inject.InjectedLanguageManager;
-import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.content.scope.NamedScope;
+import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 
@@ -41,7 +38,7 @@ public class GlobalInspectionContextUtil {
 
 
   public static boolean isToCheckMember(@Nonnull RefElement owner, @Nonnull InspectionProfileEntry tool, Tools tools, ProfileManager profileManager) {
-    return isToCheckFile(((RefElementImpl)owner).getContainingFile(), tool, tools, profileManager) && !((RefElementImpl)owner).isSuppressed(tool.getShortName());
+    return isToCheckFile(owner.getContainingFile(), tool, tools, profileManager) && !owner.isSuppressed(tool.getShortName());
   }
 
   public static boolean isToCheckFile(PsiFile file, @Nonnull InspectionProfileEntry tool, Tools tools, ProfileManager profileManager) {

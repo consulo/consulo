@@ -258,6 +258,7 @@ public abstract class RefElementImpl extends RefEntityImpl implements RefElement
     mySuppressions = text.split("[, ]");
   }
 
+  @Override
   public boolean isSuppressed(@Nonnull String... toolId) {
     if (mySuppressions != null) {
       for (@NonNls String suppression : mySuppressions) {
