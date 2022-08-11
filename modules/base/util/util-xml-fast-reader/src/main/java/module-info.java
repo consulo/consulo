@@ -9,5 +9,6 @@ module consulo.util.xml.fast.reader {
   requires consulo.util.io;
   requires org.slf4j;
 
+  exports net.n3.nanoxml;
   exports consulo.util.xml.fastReader;
 }

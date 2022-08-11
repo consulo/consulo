@@ -33,7 +33,7 @@ import consulo.ide.impl.idea.util.containers.TransferToEDTQueue;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.application.ApplicationManager;
 import consulo.application.internal.ApplicationEx;
-import consulo.application.internal.concurrency.JobLauncher;
+import consulo.application.util.concurrent.JobLauncher;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.function.CommonProcessors;

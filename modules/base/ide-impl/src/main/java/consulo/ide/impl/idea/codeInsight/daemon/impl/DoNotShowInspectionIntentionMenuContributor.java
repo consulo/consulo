@@ -16,7 +16,7 @@ import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionToolWrapper;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.ide.impl.idea.codeInspection.ex.QuickFixWrapper;
-import consulo.application.internal.concurrency.JobLauncher;
+import consulo.application.util.concurrent.JobLauncher;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.ide.impl.idea.openapi.diagnostic.Attachment;
 import consulo.logging.Logger;

@@ -23,7 +23,7 @@ import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
 import consulo.application.impl.internal.progress.SensitiveProgressWrapper;
 import consulo.application.internal.ApplicationEx;
-import consulo.application.internal.concurrency.JobLauncher;
+import consulo.application.util.concurrent.JobLauncher;
 import consulo.application.progress.*;
 import consulo.application.util.function.Computable;
 import consulo.application.util.function.Processor;

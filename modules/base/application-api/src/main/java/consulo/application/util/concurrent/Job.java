@@ -17,7 +17,7 @@
 /*
  * @author max
  */
-package consulo.application.internal.concurrency;
+package consulo.application.util.concurrent;
 
 import javax.annotation.Nonnull;
 

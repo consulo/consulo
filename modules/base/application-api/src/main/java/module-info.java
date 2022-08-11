@@ -45,10 +45,6 @@ module consulo.application.api {
 
   exports consulo.application.internal.util to consulo.language.api, consulo.application.impl;
 
-          exports consulo.application.internal.concurrency to
-          consulo.ide.impl,
-          consulo.test.impl;
-
   exports consulo.application.util.mac.foundation;
 
   exports consulo.application.util;

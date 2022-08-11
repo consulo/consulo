@@ -17,7 +17,7 @@ package consulo.test.light;
 
 import consulo.application.Application;
 import consulo.application.impl.internal.progress.CoreProgressManager;
-import consulo.application.internal.concurrency.JobLauncher;
+import consulo.application.util.concurrent.JobLauncher;
 import consulo.application.macro.PathMacros;
 import consulo.application.progress.ProgressManager;
 import consulo.application.ui.UISettings;

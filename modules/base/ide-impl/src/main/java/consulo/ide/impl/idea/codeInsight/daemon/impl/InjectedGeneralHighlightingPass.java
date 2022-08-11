@@ -23,7 +23,7 @@ import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.inject.impl.internal.PlaceImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.ApplicationManager;
-import consulo.application.internal.concurrency.JobLauncher;
+import consulo.application.util.concurrent.JobLauncher;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;

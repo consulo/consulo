@@ -22,6 +22,7 @@ import consulo.application.util.function.Computable;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
+import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -250,4 +251,10 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
    * (e.g. code navigation), and which shouldn't be slowed down by CPU-intensive background tasks like highlighting or indexing.
    */
   public abstract <T, E extends Throwable> T computePrioritized(@Nonnull ThrowableComputable<T, E> computable) throws E;
+
+  @Contract(value = "null -> null; !null -> !null", pure = true)
+  public abstract WrappedProgressIndicator wrapProgressIndicator(@Nullable ProgressIndicator indicator);
+
+  @Contract(value = "null -> null; !null -> !null", pure = true)
+  public abstract ProgressIndicator unwrapProgressIndicator(WrappedProgressIndicator indicator);
 }

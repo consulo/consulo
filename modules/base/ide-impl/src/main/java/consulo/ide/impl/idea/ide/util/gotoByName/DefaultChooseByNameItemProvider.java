@@ -8,7 +8,7 @@ import consulo.ide.impl.idea.util.CollectConsumer;
 import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.SynchronizedCollectConsumer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.application.internal.concurrency.JobLauncher;
+import consulo.application.util.concurrent.JobLauncher;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.progress.ProgressManager;

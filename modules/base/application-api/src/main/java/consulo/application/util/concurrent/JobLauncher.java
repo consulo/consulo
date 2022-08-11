@@ -1,5 +1,5 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.application.internal.concurrency;
+package consulo.application.util.concurrent;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
@@ -19,7 +19,7 @@ import java.util.function.Consumer;
  * Invitation-only service for running short-lived computing-intensive IO-free tasks on all available CPU cores.
  * DO NOT USE for your tasks, IO-bound or long tasks, there are
  * {@link Application#executeOnPooledThread},
- * {@link consulo.ide.impl.idea.execution.process.ProcessIOExecutorService} and {@link consulo.ide.impl.idea.util.concurrency.NonUrgentExecutor} for that.
+ * {@link ProcessIOExecutorService} and {@link NonUrgentExecutor} for that.
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class JobLauncher {

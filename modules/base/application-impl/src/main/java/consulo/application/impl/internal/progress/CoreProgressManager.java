@@ -956,4 +956,14 @@ public class CoreProgressManager extends ProgressManager implements Disposable {
       }
     }
   }
+
+  @Override
+  public WrappedProgressIndicator wrapProgressIndicator(@Nullable ProgressIndicator indicator) {
+    return ProgressWrapper.wrap(indicator);
+  }
+
+  @Override
+  public ProgressIndicator unwrapProgressIndicator(WrappedProgressIndicator indicator) {
+    return ProgressWrapper.unwrap(indicator);
+  }
 }

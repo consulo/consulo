@@ -17,8 +17,8 @@ package consulo.test.light.impl;
 
 import consulo.application.internal.ApplicationEx;
 import consulo.application.Application;
-import consulo.application.internal.concurrency.Job;
-import consulo.application.internal.concurrency.JobLauncher;
+import consulo.application.util.concurrent.Job;
+import consulo.application.util.concurrent.JobLauncher;
 import consulo.application.util.function.Processor;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
