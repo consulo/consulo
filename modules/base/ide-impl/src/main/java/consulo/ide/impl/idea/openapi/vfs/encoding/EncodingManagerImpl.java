@@ -33,6 +33,7 @@ import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderEx;
+import consulo.virtualFileSystem.encoding.EncodingManagerListener;
 import consulo.virtualFileSystem.encoding.EncodingProjectManager;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;

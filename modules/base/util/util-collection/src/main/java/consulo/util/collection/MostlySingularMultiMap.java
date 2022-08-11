@@ -17,16 +17,15 @@
 /*
  * @author max
  */
-package consulo.ide.impl.idea.util.containers;
+package consulo.util.collection;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.Function;
-import consulo.language.util.IncorrectOperationException;
-import consulo.application.util.function.Processor;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import java.io.Serializable;
 import java.util.*;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class MostlySingularMultiMap<K, V> implements Serializable {
   private static final long serialVersionUID = 2784473565881807109L;
@@ -91,25 +90,25 @@ public class MostlySingularMultiMap<K, V> implements Serializable {
     return myMap.isEmpty();
   }
 
-  public boolean processForKey(@Nonnull K key, @Nonnull Processor<? super V> p) {
+  public boolean processForKey(@Nonnull K key, @Nonnull Predicate<? super V> p) {
     return processValue(p, myMap.get(key));
   }
 
   @SuppressWarnings("unchecked")
-  private boolean processValue(@Nonnull Processor<? super V> p, Object v) {
+  private boolean processValue(@Nonnull Predicate<? super V> p, Object v) {
     if (v instanceof MostlySingularMultiMap.ValueList) {
       for (Object o : (ValueList)v) {
-        if (!p.process((V)o)) return false;
+        if (!p.test((V)o)) return false;
       }
     }
     else if (v != null) {
-      return p.process((V)v);
+      return p.test((V)v);
     }
 
     return true;
   }
 
-  public boolean processAllValues(@Nonnull Processor<? super V> p) {
+  public boolean processAllValues(@Nonnull Predicate<? super V> p) {
     for (Object v : myMap.values()) {
       if (!processValue(p, v)) return false;
     }
@@ -163,7 +162,7 @@ public class MostlySingularMultiMap<K, V> implements Serializable {
   public String toString() {
     return "{" + StringUtil.join(myMap.entrySet(), new Function<Map.Entry<K, Object>, String>() {
       @Override
-      public String fun(Map.Entry<K, Object> entry) {
+      public String apply(Map.Entry<K, Object> entry) {
         Object value = entry.getValue();
         String s = (value instanceof MostlySingularMultiMap.ValueList ? ((ValueList)value) : Collections.singletonList(value)).toString();
         return entry.getKey() + ": " + s;
@@ -249,22 +248,22 @@ public class MostlySingularMultiMap<K, V> implements Serializable {
   private static class EmptyMap extends MostlySingularMultiMap {
     @Override
     public void add(@Nonnull Object key, @Nonnull Object value) {
-      throw new IncorrectOperationException();
+      throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean remove(@Nonnull Object key, @Nonnull Object value) {
-      throw new IncorrectOperationException();
+      throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean removeAllValues(@Nonnull Object key) {
-      throw new IncorrectOperationException();
+      throw new UnsupportedOperationException();
     }
 
     @Override
     public void clear() {
-      throw new IncorrectOperationException();
+      throw new UnsupportedOperationException();
     }
 
     @Nonnull
@@ -279,12 +278,12 @@ public class MostlySingularMultiMap<K, V> implements Serializable {
     }
 
     @Override
-    public boolean processForKey(@Nonnull Object key, @Nonnull Processor p) {
+    public boolean processForKey(@Nonnull Object key, @Nonnull Predicate p) {
       return true;
     }
 
     @Override
-    public boolean processAllValues(@Nonnull Processor p) {
+    public boolean processAllValues(@Nonnull Predicate p) {
       return true;
     }
 
@@ -301,7 +300,7 @@ public class MostlySingularMultiMap<K, V> implements Serializable {
     @Nonnull
     @Override
     public Iterable get(@Nonnull Object name) {
-      return ContainerUtil.emptyList();
+      return List.of();
     }
   }
 }

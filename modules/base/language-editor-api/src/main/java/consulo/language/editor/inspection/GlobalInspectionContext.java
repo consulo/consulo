@@ -16,11 +16,14 @@
 
 package consulo.language.editor.inspection;
 
+import consulo.language.editor.inspection.reference.RefElement;
 import consulo.language.editor.inspection.reference.RefEntity;
 import consulo.language.editor.inspection.reference.RefManager;
+import consulo.language.editor.inspection.scheme.InspectionProfileEntry;
 import consulo.language.editor.inspection.scheme.JobDescriptor;
 import consulo.language.editor.inspection.scheme.StdJobDescriptors;
 import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
@@ -49,6 +52,7 @@ public interface GlobalInspectionContext extends UserDataHolder {
    * Checks if the inspection with the specified ID is suppressed for the
    * specified reference graph node. Should not be called manually in normal case.
    * You need to check suppressions only when you use {@link GlobalInspectionTool#runInspection}
+   *
    * @param entity           the reference graph node to check.
    * @param inspectionToolId the ID of the inspection to check.
    * @return true if the inspection is suppressed, false otherwise.
@@ -59,8 +63,9 @@ public interface GlobalInspectionContext extends UserDataHolder {
   /**
    * Checks if the inspection is suppressed for the specified reference graph node. Should not be called manually in normal case.
    * You need to check suppressions only when you use {@link GlobalInspectionTool#runInspection}
-   * @param entity           the reference graph node to check.
-   * @param tool             the inspection to check.
+   *
+   * @param entity the reference graph node to check.
+   * @param tool   the inspection to check.
    * @return true if the inspection is suppressed, false otherwise.
    */
   boolean shouldCheck(RefEntity entity, GlobalInspectionTool tool);
@@ -86,4 +91,10 @@ public interface GlobalInspectionContext extends UserDataHolder {
   StdJobDescriptors getStdJobDescriptors();
 
   void cleanup();
+
+  default boolean isToCheckMember(@Nonnull RefElement owner, @Nonnull InspectionProfileEntry tool) {
+    return isToCheckFile(owner.getContainingFile(), tool) && !owner.isSuppressed(tool.getShortName());
+  }
+
+  boolean isToCheckFile(PsiFile file, @Nonnull InspectionProfileEntry tool);
 }
