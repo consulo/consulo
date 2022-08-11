@@ -26,7 +26,7 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
-import consulo.language.editor.refactoring.RefactoringActionHandler;
+import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.refactoring.action.BaseRefactoringAction;
 import consulo.language.editor.refactoring.inline.InlineActionHandler;

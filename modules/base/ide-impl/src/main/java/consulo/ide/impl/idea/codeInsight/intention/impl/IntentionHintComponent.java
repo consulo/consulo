@@ -29,7 +29,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
-import consulo.ide.impl.idea.refactoring.BaseRefactoringIntentionAction;
+import consulo.language.editor.refactoring.action.BaseRefactoringIntentionAction;
 import consulo.ui.ex.awt.HintHint;
 import consulo.ide.impl.idea.ui.LightweightHint;
 import consulo.ide.impl.idea.ui.PopupMenuListenerAdapter;

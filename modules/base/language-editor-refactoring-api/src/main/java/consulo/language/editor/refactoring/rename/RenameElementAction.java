@@ -19,7 +19,7 @@ package consulo.language.editor.refactoring.rename;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.language.Language;
-import consulo.language.editor.refactoring.RefactoringActionHandler;
+import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import consulo.language.editor.refactoring.action.BaseRefactoringAction;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

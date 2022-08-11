@@ -19,9 +19,9 @@ package consulo.ide.impl.idea.refactoring.openapi.impl;
 import consulo.annotation.component.ServiceImpl;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
-import consulo.ide.impl.idea.refactoring.RefactoringFactory;
-import consulo.ide.impl.idea.refactoring.RenameRefactoring;
-import consulo.ide.impl.idea.refactoring.SafeDeleteRefactoring;
+import consulo.language.editor.refactoring.RefactoringFactory;
+import consulo.language.editor.refactoring.RenameRefactoring;
+import consulo.language.editor.refactoring.SafeDeleteRefactoring;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 

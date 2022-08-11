@@ -20,8 +20,8 @@ import consulo.language.Language;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.refactoring.action.BaseRefactoringAction;
 import consulo.language.psi.PsiElement;
-import consulo.language.editor.refactoring.RefactoringActionHandler;
-import consulo.ide.impl.idea.refactoring.move.MoveHandler;
+import consulo.language.editor.refactoring.action.RefactoringActionHandler;
+import consulo.language.editor.refactoring.move.MoveHandler;
 import javax.annotation.Nonnull;
 
 public class MoveAction extends BaseRefactoringAction {

@@ -22,7 +22,7 @@ import consulo.codeEditor.Editor;
 import consulo.language.editor.refactoring.action.BaseRefactoringAction;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.editor.refactoring.RefactoringActionHandler;
+import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import consulo.language.editor.refactoring.safeDelete.SafeDeleteHandler;
 import consulo.language.editor.refactoring.safeDelete.SafeDeleteProcessor;
 import javax.annotation.Nonnull;

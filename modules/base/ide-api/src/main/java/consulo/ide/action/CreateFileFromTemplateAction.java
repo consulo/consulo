@@ -15,7 +15,6 @@
  */
 package consulo.ide.action;
 
-import consulo.application.Application;
 import consulo.application.WriteAction;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileTemplate.FileTemplate;
@@ -29,6 +28,7 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
+import consulo.module.content.NewFileModuleResolver;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.project.Project;
 import consulo.project.ProjectPropertiesComponent;
@@ -126,7 +126,7 @@ public abstract class CreateFileFromTemplateAction extends CreateFromTemplateAct
     if (templateFileType != null) {
       PsiDirectory parent = createdElement.getParent();
       assert parent != null;
-      Module module = CreateFileFromTemplateModuleResolver.EP.computeSafeIfAny(Application.get(), it -> it.resolveModule(parent, templateFileType));
+      Module module = NewFileModuleResolver.resolveModule(parent.getProject(), parent.getVirtualFile(), templateFileType);
       if (module != null) {
         ModifiableRootModel rootModel = ModuleRootManager.getInstance(module).getModifiableModel();
 

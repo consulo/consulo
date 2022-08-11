@@ -594,7 +594,7 @@
 
     <extensionPoint name="refactoring.extractIncludeHandler"
                     beanClass="consulo.language.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="consulo.language.editor.refactoring.RefactoringActionHandler"/>
+      <with attribute="implementationClass" implements="consulo.language.editor.refactoring.action.RefactoringActionHandler"/>
     </extensionPoint>
 
     <extensionPoint name="refactoring.changeSignatureUsageProcessor"

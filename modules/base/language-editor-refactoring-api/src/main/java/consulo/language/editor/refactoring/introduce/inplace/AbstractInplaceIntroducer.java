@@ -29,7 +29,7 @@ import consulo.document.event.DocumentEvent;
 import consulo.document.util.TextRange;
 import consulo.language.editor.WriteCommandAction;
 import consulo.language.editor.highlight.HighlightManager;
-import consulo.language.editor.refactoring.RefactoringActionHandler;
+import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import consulo.language.editor.refactoring.rename.inplace.InplaceRefactoring;
 import consulo.language.editor.template.TemplateManager;
 import consulo.language.editor.template.TemplateState;

@@ -42,7 +42,7 @@ import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.highlight.HighlightManager;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.language.editor.refactoring.NamesValidator;
-import consulo.language.editor.refactoring.RefactoringActionHandler;
+import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import consulo.language.editor.template.*;

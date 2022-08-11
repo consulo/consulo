@@ -18,7 +18,9 @@ package consulo.ide.impl.language.editor.refactoring;
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.find.PsiElement2UsageTargetAdapter;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider;
+import consulo.ide.util.DirectoryChooserUtil;
 import consulo.language.editor.refactoring.internal.RefactoringInternalHelper;
+import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 import consulo.usage.UsageTarget;
@@ -26,6 +28,8 @@ import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Map;
 
 /**
  * @author VISTALL
@@ -48,5 +52,11 @@ public class RefactoringInternalHelperImpl implements RefactoringInternalHelper 
   @Override
   public UsageTarget createPsiElement2UsageTargetAdapter(PsiElement element) {
     return new PsiElement2UsageTargetAdapter(element);
+  }
+
+  @Nullable
+  @Override
+  public PsiDirectory chooseDirectory(PsiDirectory[] targetDirectories, @Nullable PsiDirectory initialDirectory, @Nonnull Project project, Map<PsiDirectory, String> relativePathsToCreate) {
+    return DirectoryChooserUtil.chooseDirectory(targetDirectories, initialDirectory, project, relativePathsToCreate);
   }
 }

@@ -23,7 +23,7 @@ import consulo.logging.Logger;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
-import consulo.ide.impl.idea.refactoring.copy.CopyHandler;
+import consulo.language.editor.refactoring.copy.CopyHandler;
 
 public class CloneElementAction extends CopyElementAction {
   private static final Logger LOG = Logger.getInstance(CloneElementAction.class);

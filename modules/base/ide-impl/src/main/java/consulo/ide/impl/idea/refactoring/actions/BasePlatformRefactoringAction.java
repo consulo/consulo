@@ -17,11 +17,11 @@ package consulo.ide.impl.idea.refactoring.actions;
 
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.refactoring.lang.ElementsHandler;
+import consulo.language.editor.refactoring.ElementsHandler;
 import consulo.language.Language;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
-import consulo.language.editor.refactoring.RefactoringActionHandler;
+import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import consulo.language.editor.refactoring.RefactoringSupportProvider;
 import consulo.language.editor.refactoring.action.BaseRefactoringAction;
 import consulo.language.psi.PsiElement;

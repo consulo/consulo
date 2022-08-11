@@ -42,7 +42,7 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
 import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.psi.path.PsiFileSystemItemUtil;
-import consulo.language.editor.refactoring.RefactoringActionHandler;
+import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import consulo.ide.impl.idea.ui.ReplacePromptDialog;

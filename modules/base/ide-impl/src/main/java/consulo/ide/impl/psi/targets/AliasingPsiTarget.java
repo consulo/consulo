@@ -19,8 +19,8 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.pom.PomRenameableTarget;
 import consulo.language.impl.psi.DelegatePsiTarget;
 import consulo.language.psi.PsiNamedElement;
-import consulo.ide.impl.idea.refactoring.RefactoringFactory;
-import consulo.ide.impl.idea.refactoring.RenameRefactoring;
+import consulo.language.editor.refactoring.RefactoringFactory;
+import consulo.language.editor.refactoring.RenameRefactoring;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

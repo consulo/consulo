@@ -22,7 +22,7 @@ import consulo.application.util.ConcurrentFactoryMap;
 import consulo.content.scope.SearchScope;
 import consulo.ide.impl.idea.openapi.module.impl.scopes.LibraryRuntimeClasspathScope;
 import consulo.ide.impl.idea.openapi.roots.impl.LibraryScopeCache;
-import consulo.language.impl.internal.psi.FileContextUtil;
+import consulo.language.psi.FileContextUtil;
 import consulo.language.impl.internal.psi.PsiManagerImpl;
 import consulo.language.impl.psi.ResolveScopeManager;
 import consulo.language.psi.*;

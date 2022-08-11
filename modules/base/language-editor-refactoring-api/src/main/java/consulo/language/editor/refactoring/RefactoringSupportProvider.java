@@ -20,6 +20,7 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
 import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.language.Language;
+import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import consulo.language.editor.refactoring.changeSignature.ChangeSignatureHandler;
 import consulo.language.extension.ByLanguageValue;
 import consulo.language.extension.LanguageExtension;

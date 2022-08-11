@@ -28,7 +28,7 @@ import consulo.ide.impl.idea.ide.projectView.impl.nodes.AbstractProjectNode;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.ModuleGroupNode;
 import consulo.ide.impl.idea.ide.util.treeView.AbstractTreeStructureBase;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.refactoring.move.MoveHandler;
+import consulo.language.editor.refactoring.move.MoveHandler;
 import consulo.ide.impl.idea.ui.tree.project.ProjectFileNode;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.ObjectUtils;

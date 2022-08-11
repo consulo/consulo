@@ -26,7 +26,7 @@ package consulo.ide.impl.idea.refactoring.actions;
 
 import consulo.language.editor.refactoring.RefactoringSupportProvider;
 import consulo.language.psi.PsiElement;
-import consulo.language.editor.refactoring.RefactoringActionHandler;
+import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import javax.annotation.Nonnull;
 
 public class IntroduceParameterAction extends BasePlatformRefactoringAction {

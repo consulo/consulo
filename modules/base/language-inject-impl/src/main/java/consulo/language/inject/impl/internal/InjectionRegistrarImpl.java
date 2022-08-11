@@ -31,7 +31,7 @@ import consulo.language.impl.ast.FileElement;
 import consulo.language.impl.ast.TreeUtil;
 import consulo.language.impl.file.AbstractFileViewProvider;
 import consulo.language.impl.internal.psi.BooleanRunnable;
-import consulo.language.impl.internal.psi.FileContextUtil;
+import consulo.language.psi.FileContextUtil;
 import consulo.language.impl.internal.psi.PsiDocumentManagerBase;
 import consulo.language.impl.internal.psi.PsiManagerEx;
 import consulo.language.impl.internal.psi.diff.BlockSupportImpl;

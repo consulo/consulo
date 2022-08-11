@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.ui;
 import consulo.language.editor.ui.awt.EditorComboBox;
 import consulo.language.plain.PlainTextFileType;
 import consulo.project.Project;
+import consulo.ui.ex.RecentsManager;
 import consulo.ui.ex.awt.ComponentWithBrowseButton;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ui.ex.awt.TextAccessor;

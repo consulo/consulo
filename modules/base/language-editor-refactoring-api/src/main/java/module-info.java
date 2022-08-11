@@ -9,6 +9,8 @@ module consulo.language.editor.refactoring.api {
   requires transitive consulo.language.editor.ui.api;
   requires transitive consulo.ui.ex.api;
   requires transitive consulo.document.api;
+  
+  requires consulo.project.ui.view.api;
 
   requires consulo.external.service.api;
   
@@ -22,10 +24,13 @@ module consulo.language.editor.refactoring.api {
   exports consulo.language.editor.refactoring.action;
   exports consulo.language.editor.refactoring.rename;
   exports consulo.language.editor.refactoring.classMember;
+  exports consulo.language.editor.refactoring.copy;
   exports consulo.language.editor.refactoring.inline;
   exports consulo.language.editor.refactoring.rename.inplace;
   exports consulo.language.editor.refactoring.introduce.inplace;
   exports consulo.language.editor.refactoring.changeSignature;
+  exports consulo.language.editor.refactoring.move;
+  exports consulo.language.editor.refactoring.move.fileOrDirectory;
   exports consulo.language.editor.refactoring.safeDelete;
   exports consulo.language.editor.refactoring.safeDelete.usageInfo;
   exports consulo.language.editor.refactoring.util;

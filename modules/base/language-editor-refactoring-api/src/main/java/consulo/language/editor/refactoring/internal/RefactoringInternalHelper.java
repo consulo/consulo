@@ -18,12 +18,16 @@ package consulo.language.editor.refactoring.internal;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
+import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 import consulo.usage.UsageTarget;
+import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Map;
 
 /**
  * @author VISTALL
@@ -31,6 +35,8 @@ import javax.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface RefactoringInternalHelper {
+  public static final Key<Boolean> COPY_PASTE_DELEGATE_SHOW_CHOOSER_KEY = Key.create("show.dirs.chooser");
+
   static RefactoringInternalHelper getInstance() {
     return Application.get().getInstance(RefactoringInternalHelper.class);
   }
@@ -45,4 +51,7 @@ public interface RefactoringInternalHelper {
 
   @Nonnull
   UsageTarget createPsiElement2UsageTargetAdapter(PsiElement element);
+
+  @Nullable
+  PsiDirectory chooseDirectory(PsiDirectory[] targetDirectories, @Nullable PsiDirectory initialDirectory, @Nonnull Project project, Map<PsiDirectory, String> relativePathsToCreate);
 }

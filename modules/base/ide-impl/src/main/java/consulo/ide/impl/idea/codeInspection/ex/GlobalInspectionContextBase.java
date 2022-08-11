@@ -17,20 +17,15 @@
 package consulo.ide.impl.idea.codeInspection.ex;
 
 import consulo.component.ProcessCanceledException;
-import consulo.language.editor.inspection.SuppressionUtil;
+import consulo.language.editor.inspection.*;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.editor.impl.internal.daemon.DaemonProgressIndicator;
 import consulo.ide.impl.idea.codeInspection.*;
-import consulo.language.editor.inspection.GlobalInspectionContextExtension;
-import consulo.language.editor.inspection.InspectionExtensionsFactory;
 import consulo.ide.impl.idea.codeInspection.reference.*;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.progress.ProgressWrapper;
 import consulo.application.progress.*;
-import consulo.language.editor.inspection.GlobalInspectionContext;
-import consulo.language.editor.inspection.GlobalInspectionTool;
-import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.editor.inspection.reference.RefElement;
 import consulo.language.editor.inspection.reference.RefEntity;
 import consulo.language.editor.inspection.reference.RefManager;

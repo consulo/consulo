@@ -29,7 +29,6 @@ import consulo.language.editor.completion.lookup.Lookup;
 import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.refactoring.ContextAwareActionHandler;
-import consulo.language.editor.refactoring.RefactoringActionHandler;
 import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.refactoring.rename.inplace.InplaceRefactoring;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;

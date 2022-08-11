@@ -8,6 +8,7 @@ import consulo.language.editor.LangDataKeys;
 import consulo.application.TransactionGuard;
 import consulo.component.extension.ExtensionPointName;
 import consulo.dataContext.DataManager;
+import consulo.language.editor.refactoring.internal.RefactoringInternalHelper;
 import consulo.language.psi.*;
 import consulo.module.Module;
 import consulo.project.DumbService;
@@ -19,9 +20,9 @@ import consulo.util.lang.function.Conditions;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.ide.impl.idea.refactoring.copy.CopyHandler;
-import consulo.ide.impl.idea.refactoring.move.MoveCallback;
-import consulo.ide.impl.idea.refactoring.move.MoveHandler;
+import consulo.language.editor.refactoring.copy.CopyHandler;
+import consulo.language.editor.refactoring.move.MoveCallback;
+import consulo.language.editor.refactoring.move.MoveHandler;
 import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.util.collection.JBIterable;
 import javax.annotation.Nonnull;
@@ -33,7 +34,7 @@ import java.util.List;
 
 public class CopyPasteDelegator implements CopyPasteSupport {
   private static final ExtensionPointName<PasteProvider> EP_NAME = ExtensionPointName.create("consulo.filePasteProvider");
-  public static final Key<Boolean> SHOW_CHOOSER_KEY = Key.create("show.dirs.chooser");
+  public static final Key<Boolean> SHOW_CHOOSER_KEY = RefactoringInternalHelper.COPY_PASTE_DELEGATE_SHOW_CHOOSER_KEY;
 
   private final Project myProject;
   private final JComponent myKeyReceiver;

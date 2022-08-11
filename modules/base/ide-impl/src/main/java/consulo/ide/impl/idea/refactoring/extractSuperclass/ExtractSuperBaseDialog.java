@@ -28,7 +28,7 @@ import consulo.language.editor.refactoring.classMember.MemberInfoBase;
 import consulo.ide.impl.idea.refactoring.ui.DocCommentPanel;
 import consulo.language.editor.refactoring.ui.RefactoringDialog;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
-import consulo.ide.impl.idea.ui.RecentsManager;
+import consulo.ui.ex.RecentsManager;
 import consulo.language.util.IncorrectOperationException;
 
 import javax.annotation.Nullable;

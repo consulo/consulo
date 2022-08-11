@@ -25,7 +25,7 @@ import consulo.document.util.TextRange;
 import consulo.language.Language;
 import consulo.language.editor.WriteCommandAction;
 import consulo.language.editor.inject.EditorWindow;
-import consulo.language.editor.refactoring.RefactoringActionHandler;
+import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.refactoring.ResolveSnapshotProvider;
 import consulo.language.editor.refactoring.event.RefactoringElementListener;

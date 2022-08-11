@@ -33,7 +33,7 @@ import consulo.project.Project;
 import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.impl.internal.psi.PsiFileImplUtil;
-import consulo.language.impl.internal.psi.FileContextUtil;
+import consulo.language.psi.FileContextUtil;
 import consulo.language.psi.resolve.PsiElementProcessor;
 import consulo.content.scope.SearchScope;
 import consulo.language.util.IncorrectOperationException;

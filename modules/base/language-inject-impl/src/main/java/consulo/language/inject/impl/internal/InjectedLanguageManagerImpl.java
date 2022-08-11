@@ -12,7 +12,7 @@ import consulo.document.util.TextRange;
 import consulo.language.file.FileViewProvider;
 import consulo.language.file.inject.DocumentWindow;
 import consulo.language.file.inject.VirtualFileWindow;
-import consulo.language.impl.internal.psi.FileContextUtil;
+import consulo.language.psi.FileContextUtil;
 import consulo.language.impl.internal.psi.PsiDocumentManagerBase;
 import consulo.language.inject.*;
 import consulo.language.psi.*;

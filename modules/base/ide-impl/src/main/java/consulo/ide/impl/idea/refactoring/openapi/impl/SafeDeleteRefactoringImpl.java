@@ -19,7 +19,7 @@ import consulo.project.Project;
 import consulo.util.lang.EmptyRunnable;
 import consulo.language.psi.PsiElement;
 import consulo.language.editor.refactoring.RefactoringImpl;
-import consulo.ide.impl.idea.refactoring.SafeDeleteRefactoring;
+import consulo.language.editor.refactoring.SafeDeleteRefactoring;
 import consulo.language.editor.refactoring.safeDelete.SafeDeleteProcessor;
 
 import java.util.Arrays;

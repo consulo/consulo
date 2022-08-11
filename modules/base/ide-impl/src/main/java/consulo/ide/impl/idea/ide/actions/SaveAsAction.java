@@ -9,7 +9,7 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
-import consulo.ide.impl.idea.refactoring.copy.CopyHandler;
+import consulo.language.editor.refactoring.copy.CopyHandler;
 
 public class SaveAsAction extends DumbAwareAction {
 

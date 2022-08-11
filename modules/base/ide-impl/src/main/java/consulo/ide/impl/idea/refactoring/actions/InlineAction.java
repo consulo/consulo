@@ -27,7 +27,7 @@ import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.refactoring.inline.InlineRefactoringActionHandler;
 import consulo.language.Language;
 import consulo.language.editor.util.PsiUtilBase;
-import consulo.language.editor.refactoring.RefactoringActionHandler;
+import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import consulo.language.editor.refactoring.RefactoringSupportProvider;
 import consulo.language.editor.refactoring.inline.InlineActionHandler;
 import consulo.language.editor.refactoring.inline.InlineHandler;

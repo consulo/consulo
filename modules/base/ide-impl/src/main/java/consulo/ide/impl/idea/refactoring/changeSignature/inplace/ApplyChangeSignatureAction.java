@@ -19,7 +19,7 @@ import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.ide.impl.idea.refactoring.BaseRefactoringIntentionAction;
+import consulo.language.editor.refactoring.action.BaseRefactoringIntentionAction;
 import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.refactoring.changeSignature.ChangeInfo;
 import consulo.language.util.IncorrectOperationException;

@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.refactoring.lang;
 
-import consulo.ide.impl.idea.ide.util.DirectoryUtil;
+import consulo.language.editor.refactoring.util.DirectoryUtil;
 import consulo.application.ApplicationManager;
 import consulo.undoRedo.CommandProcessor;
 import consulo.fileChooser.FileChooserDescriptorFactory;

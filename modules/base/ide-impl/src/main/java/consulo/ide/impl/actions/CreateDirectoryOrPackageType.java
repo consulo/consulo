@@ -16,7 +16,7 @@
 package consulo.ide.impl.actions;
 
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.util.DirectoryUtil;
+import consulo.language.editor.refactoring.util.DirectoryUtil;
 import consulo.module.content.layer.ContentFolder;
 import consulo.module.content.ProjectFileIndex;
 import consulo.virtualFileSystem.VirtualFile;

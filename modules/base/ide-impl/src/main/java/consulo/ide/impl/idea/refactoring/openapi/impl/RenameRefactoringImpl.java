@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.refactoring.openapi.impl;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import consulo.language.editor.refactoring.RefactoringImpl;
-import consulo.ide.impl.idea.refactoring.RenameRefactoring;
+import consulo.language.editor.refactoring.RenameRefactoring;
 import consulo.language.editor.refactoring.rename.RenameProcessor;
 
 import java.util.Collection;

@@ -47,7 +47,7 @@ import consulo.language.editor.impl.intention.QuickEditAction;
 import consulo.language.editor.template.TemplateManager;
 import consulo.language.file.inject.DocumentWindow;
 import consulo.language.file.light.LightVirtualFile;
-import consulo.language.impl.internal.psi.FileContextUtil;
+import consulo.language.psi.FileContextUtil;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.inject.impl.internal.PlaceImpl;
