@@ -1,51 +1,50 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.completion;
 
-import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionServiceImpl;
+import consulo.application.ApplicationManager;
+import consulo.application.ReadAction;
+import consulo.application.event.ApplicationListener;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.util.concurrent.AppExecutorUtil;
+import consulo.codeEditor.CaretModel;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.SelectionModel;
 import consulo.codeEditor.event.CaretEvent;
 import consulo.codeEditor.event.CaretListener;
 import consulo.codeEditor.event.SelectionEvent;
 import consulo.codeEditor.event.SelectionListener;
-import consulo.language.Language;
 import consulo.disposer.Disposable;
-import consulo.application.event.ApplicationListener;
-import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.ReadAction;
-import consulo.codeEditor.CaretModel;
+import consulo.disposer.Disposer;
 import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.SelectionModel;
-import consulo.codeEditor.EditorEx;
+import consulo.document.event.DocumentEvent;
+import consulo.document.event.DocumentListener;
+import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionServiceImpl;
 import consulo.ide.impl.idea.openapi.editor.ex.FocusChangeListenerImpl;
-import consulo.language.editor.completion.CompletionConfidence;
-import consulo.language.editor.completion.CompletionContributor;
-import consulo.language.editor.completion.CompletionType;
-import consulo.project.Project;
-import consulo.util.lang.function.Condition;
-import consulo.language.psi.PsiDocumentManager;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
-import consulo.language.psi.PsiUtilCore;
 import consulo.ide.impl.idea.ui.AppUIUtil;
 import consulo.ide.impl.idea.ui.HintListener;
 import consulo.ide.impl.idea.ui.LightweightHint;
-import consulo.util.lang.ThreeState;
-import consulo.application.util.concurrent.AppExecutorUtil;
-import consulo.ui.ex.awt.accessibility.ScreenReader;
-import consulo.disposer.Disposer;
-import consulo.document.event.DocumentEvent;
-import consulo.document.event.DocumentListener;
+import consulo.language.Language;
+import consulo.language.editor.completion.CompletionConfidence;
+import consulo.language.editor.completion.CompletionContributor;
+import consulo.language.editor.completion.CompletionType;
+import consulo.language.inject.impl.internal.InjectedLanguageUtil;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiUtilCore;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.ui.ex.awt.accessibility.ScreenReader;
+import consulo.util.lang.ThreeState;
 
 import javax.annotation.Nonnull;
-
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.FocusEvent;
 import java.util.EventObject;
 import java.util.concurrent.ExecutorService;
+import java.util.function.Predicate;
 
 /**
  * @author peter
@@ -110,7 +109,7 @@ public abstract class CompletionPhase implements Disposable {
     // @ApiStatus.Internal
     public static void scheduleAsyncCompletion(@Nonnull Editor _editor,
                                                @Nonnull CompletionType completionType,
-                                               @Nullable Condition<? super PsiFile> condition,
+                                               @Nullable Predicate<? super PsiFile> condition,
                                                @Nonnull Project project,
                                                @Nullable CompletionProgressIndicator prevIndicator) {
       Editor topLevelEditor = InjectedLanguageUtil.getTopLevelEditor(_editor);
@@ -127,7 +126,7 @@ public abstract class CompletionPhase implements Disposable {
         PsiFile topLevelFile = PsiDocumentManager.getInstance(project).getPsiFile(topLevelEditor.getDocument());
         Editor completionEditor = InjectedLanguageUtil.getEditorForInjectedLanguageNoCommit(topLevelEditor, topLevelFile, offset);
         PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(completionEditor.getDocument());
-        if (file == null || autopopup && shouldSkipAutoPopup(completionEditor, file) || condition != null && !condition.value(file)) {
+        if (file == null || autopopup && shouldSkipAutoPopup(completionEditor, file) || condition != null && !condition.test(file)) {
           return null;
         }
 

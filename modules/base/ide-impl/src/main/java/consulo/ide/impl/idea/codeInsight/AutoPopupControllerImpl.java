@@ -2,33 +2,34 @@
 package consulo.ide.impl.idea.codeInsight;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.AppUIExecutor;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.application.PowerSaveMode;
+import consulo.application.dumb.IndexNotReadyException;
+import consulo.codeEditor.Editor;
+import consulo.dataContext.DataContext;
+import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.codeInsight.completion.CompletionPhase;
 import consulo.ide.impl.idea.codeInsight.completion.CompletionProgressIndicator;
-import consulo.language.editor.AutoPopupController;
-import consulo.language.editor.CodeInsightSettings;
-import consulo.language.editor.completion.CompletionType;
 import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionServiceImpl;
 import consulo.ide.impl.idea.codeInsight.hint.ShowParameterInfoHandler;
 import consulo.ide.impl.idea.ide.IdeEventQueue;
-import consulo.application.PowerSaveMode;
+import consulo.ide.impl.idea.openapi.editor.EditorActivityManager;
+import consulo.language.editor.AutoPopupController;
+import consulo.language.editor.CodeInsightSettings;
+import consulo.language.editor.completion.CompletionType;
+import consulo.language.inject.impl.internal.InjectedLanguageUtil;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.project.DumbService;
+import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.event.AnActionListener;
-import consulo.application.AppUIExecutor;
-import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.openapi.editor.EditorActivityManager;
-import consulo.project.DumbService;
-import consulo.application.dumb.IndexNotReadyException;
-import consulo.project.Project;
-import consulo.util.lang.function.Condition;
-import consulo.language.psi.PsiDocumentManager;
-import consulo.language.psi.PsiFile;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
-import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
+import consulo.ui.ex.awt.util.Alarm;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
@@ -38,10 +39,11 @@ import javax.annotation.Nullable;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.locks.LockSupport;
+import java.util.function.Predicate;
 
 @Singleton
 @ServiceImpl
-public class AutoPopupControllerImpl extends AutoPopupController {
+public class AutoPopupControllerImpl extends AutoPopupController implements Disposable {
   private final Project myProject;
   private final Alarm myAlarm = new Alarm(this);
 
@@ -65,21 +67,17 @@ public class AutoPopupControllerImpl extends AutoPopupController {
   }
 
   @Override
-  public void autoPopupMemberLookup(final Editor editor, @Nullable final Condition<? super PsiFile> condition) {
+  public void autoPopupMemberLookup(final Editor editor, @Nullable final Predicate<? super PsiFile> condition) {
     autoPopupMemberLookup(editor, CompletionType.BASIC, condition);
   }
 
   @Override
-  public void autoPopupMemberLookup(final Editor editor, CompletionType completionType, @Nullable final Condition<? super PsiFile> condition) {
+  public void autoPopupMemberLookup(final Editor editor, CompletionType completionType, @Nullable final Predicate<? super PsiFile> condition) {
     scheduleAutoPopup(editor, completionType, condition);
   }
 
   @Override
-  public void scheduleAutoPopup(@Nonnull Editor editor, @Nonnull CompletionType completionType, @Nullable final Condition<? super PsiFile> condition) {
-    //if (ApplicationManager.getApplication().isUnitTestMode() && !TestModeFlags.is(CompletionAutoPopupHandler.ourTestingAutopopup)) {
-    //  return;
-    //}
-
+  public void scheduleAutoPopup(@Nonnull Editor editor, @Nonnull CompletionType completionType, @Nullable final Predicate<? super PsiFile> condition) {
     boolean alwaysAutoPopup = Boolean.TRUE.equals(editor.getUserData(ALWAYS_AUTO_POPUP));
     if (!CodeInsightSettings.getInstance().AUTO_POPUP_COMPLETION_LOOKUP && !alwaysAutoPopup) {
       return;
@@ -105,19 +103,18 @@ public class AutoPopupControllerImpl extends AutoPopupController {
     scheduleAutoPopup(editor, CompletionType.BASIC, null);
   }
 
+  @Override
+  public void showParameterInfo(Project project, Editor editor, PsiFile file, int lbraceOffset, PsiElement highlightedElement, boolean requestFocus) {
+    ShowParameterInfoHandler.invoke(project, editor, file, lbraceOffset, highlightedElement, requestFocus);
+  }
+
   private void addRequest(final Runnable request, final int delay) {
     Runnable runnable = () -> {
       if (!myAlarm.isDisposed()) myAlarm.addRequest(request, delay);
     };
-    if (ApplicationManager.getApplication().isUnitTestMode()) {
-      runnable.run();
-    }
-    else {
-      ApplicationManager.getApplication().invokeLater(runnable);
-    }
+    ApplicationManager.getApplication().invokeLater(runnable);
   }
 
-  @Override
   public void cancelAllRequests() {
     myAlarm.cancelAllRequests();
   }
@@ -162,7 +159,6 @@ public class AutoPopupControllerImpl extends AutoPopupController {
   public void dispose() {
   }
 
-  @Override
   @TestOnly
   public void waitForDelayedActions(long timeout, @Nonnull TimeUnit unit) throws TimeoutException {
     long deadline = System.currentTimeMillis() + unit.toMillis(timeout);

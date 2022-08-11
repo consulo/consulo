@@ -6,20 +6,17 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.codeEditor.Editor;
 import consulo.language.editor.completion.CompletionType;
-import consulo.project.Project;
-import consulo.util.lang.function.Condition;
-import consulo.disposer.Disposable;
-import consulo.util.dataholder.Key;
+import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import org.jetbrains.annotations.TestOnly;
+import consulo.project.Project;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.function.Predicate;
 
 @ServiceAPI(ComponentScope.PROJECT)
-public abstract class AutoPopupController implements Disposable {
+public abstract class AutoPopupController {
   /**
    * Settings this user data key to the editor with a completion provider
    * makes the autopopup scheduling ignore the state of the corresponding setting.
@@ -41,22 +38,18 @@ public abstract class AutoPopupController implements Disposable {
 
 
   public static AutoPopupController getInstance(@Nonnull Project project) {
-    return project.getComponent(AutoPopupController.class);
+    return project.getInstance(AutoPopupController.class);
   }
 
+  public abstract void autoPopupMemberLookup(Editor editor, @Nullable Predicate<? super PsiFile> condition);
 
-  public abstract void autoPopupMemberLookup(Editor editor, @Nullable Condition<? super PsiFile> condition);
+  public abstract void autoPopupMemberLookup(Editor editor, CompletionType completionType, @Nullable Predicate<? super PsiFile> condition);
 
-  public abstract void autoPopupMemberLookup(Editor editor, CompletionType completionType, @Nullable Condition<? super PsiFile> condition);
-
-  public abstract void scheduleAutoPopup(@Nonnull Editor editor, @Nonnull CompletionType completionType, @Nullable Condition<? super PsiFile> condition);
+  public abstract void scheduleAutoPopup(@Nonnull Editor editor, @Nonnull CompletionType completionType, @Nullable Predicate<? super PsiFile> condition);
 
   public abstract void scheduleAutoPopup(Editor editor);
 
-  public abstract void cancelAllRequests();
+  public abstract void showParameterInfo(Project project, final Editor editor, PsiFile file, int lbraceOffset, PsiElement highlightedElement, boolean requestFocus);
 
   public abstract void autoPopupParameterInfo(@Nonnull Editor editor, @Nullable Object highlightedMethod);
-
-  @TestOnly
-  public abstract void waitForDelayedActions(long timeout, @Nonnull TimeUnit unit) throws TimeoutException;
 }
