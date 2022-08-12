@@ -24,7 +24,7 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtilRt;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.ArchiveFileSystem;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.ManagingFS;
+import consulo.virtualFileSystem.ManagingFS;
 import consulo.virtualFileSystem.NewVirtualFile;
 import consulo.virtualFileSystem.NewVirtualFileSystem;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.FileNameCache;

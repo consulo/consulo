@@ -7,6 +7,8 @@ module consulo.module.content.api {
   requires transitive consulo.project.content.api;
   requires transitive consulo.module.api;
 
+  requires static consulo.index.io;
+
   exports consulo.module.content;
   exports consulo.module.content.scope;
   exports consulo.module.content.util;

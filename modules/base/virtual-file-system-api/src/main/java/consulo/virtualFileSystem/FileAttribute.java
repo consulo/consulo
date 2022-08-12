@@ -17,22 +17,21 @@
 /*
  * @author max
  */
-package consulo.ide.impl.idea.openapi.vfs.newvfs;
+package consulo.virtualFileSystem;
 
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.collection.Sets;
+import consulo.util.io.FileUtil;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Set;
 
 public class FileAttribute {
-  private static final Set<String> ourRegisteredIds = ContainerUtil.newConcurrentSet();
+  private static final Set<String> ourRegisteredIds = Sets.newConcurrentHashSet();
   private static final int UNDEFINED_VERSION = -1;
   private final String myId;
   private final int myVersion;
@@ -91,13 +90,9 @@ public class FileAttribute {
   }
 
   public void writeAttributeBytes(VirtualFile file, byte[] bytes, int offset, int len) throws IOException {
-    final DataOutputStream stream = writeAttribute(file);
-    try {
+    try (DataOutputStream stream = writeAttribute(file)) {
       stream.writeInt(len);
       stream.write(bytes, offset, len);
-    }
-    finally {
-      stream.close();
     }
   }
 

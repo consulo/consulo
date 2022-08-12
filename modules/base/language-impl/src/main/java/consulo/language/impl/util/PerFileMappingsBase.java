@@ -1,13 +1,6 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.lang;
+package consulo.language.impl.util;
 
-import consulo.undoRedo.BasicUndoableAction;
-import consulo.ide.impl.idea.openapi.roots.impl.FilePropertyPusher;
-import consulo.ide.impl.idea.openapi.roots.impl.PushedFilePropertiesUpdater;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.ide.impl.idea.reference.SoftReference;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.component.persist.PersistentStateComponent;
@@ -15,13 +8,19 @@ import consulo.disposer.Disposable;
 import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.language.psi.PsiDocumentManager;
+import consulo.module.content.FilePropertyPusher;
 import consulo.module.content.ProjectFileIndex;
+import consulo.module.content.PushedFilePropertiesUpdater;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
+import consulo.undoRedo.BasicUndoableAction;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.ProjectUndoManager;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.JBIterable;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.ref.SoftReference;
 import consulo.virtualFileSystem.NonPhysicalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
@@ -29,6 +28,7 @@ import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileDeleteEvent;
 import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.util.PerFileMappingsEx;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.TestOnly;
 
@@ -374,7 +374,7 @@ public abstract class PerFileMappingsBase<T> implements PersistentStateComponent
                 navSet.addAll(myMappings.keySet());
               }
               for (VirtualFile child : navSet.tailSet(file)) {
-                if (!VfsUtilCore.isAncestor(file, child, false)) break;
+                if (!VirtualFileUtil.isAncestor(file, child, false)) break;
                 String childUrl = child.getUrl();
                 T m = myMappings.get(child);
                 removed.put(childUrl, m);

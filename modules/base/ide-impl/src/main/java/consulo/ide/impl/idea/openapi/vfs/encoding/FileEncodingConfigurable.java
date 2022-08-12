@@ -280,6 +280,12 @@ class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> implemen
       public Charset getDefaultMapping(@Nullable VirtualFile file) {
         return prjManager.getEncoding(file, true);
       }
+
+      @Nullable
+      @Override
+      public Charset getImmediateMapping(@Nullable VirtualFile file) {
+        throw new UnsupportedOperationException();
+      }
     };
   }
 }

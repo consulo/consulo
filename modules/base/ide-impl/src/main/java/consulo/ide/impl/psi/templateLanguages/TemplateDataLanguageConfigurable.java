@@ -16,19 +16,21 @@
 package consulo.ide.impl.psi.templateLanguages;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.configurable.ProjectConfigurable;
 import consulo.configurable.StandardConfigurableIds;
-import consulo.language.LangBundle;
-import consulo.language.Language;
-import consulo.application.impl.internal.ApplicationNamesInfo;
-import consulo.virtualFileSystem.fileType.UnknownFileType;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.ColoredTextContainer;
-import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.ide.impl.idea.util.ui.tree.PerFileConfigurableBase;
+import consulo.language.LangBundle;
+import consulo.language.Language;
+import consulo.language.impl.internal.template.TemplateDataLanguagePatterns;
+import consulo.language.template.TemplateDataLanguageMappings;
+import consulo.project.Project;
+import consulo.ui.ex.ColoredTextContainer;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.UnknownFileType;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.Nls;
 
@@ -41,8 +43,8 @@ import javax.annotation.Nullable;
 @ExtensionImpl
 public class TemplateDataLanguageConfigurable extends PerFileConfigurableBase<Language> implements ProjectConfigurable {
   @Inject
-  public TemplateDataLanguageConfigurable(@Nonnull Project project) {
-    super(project, TemplateDataLanguageMappings.getInstance(project));
+  public TemplateDataLanguageConfigurable(@Nonnull Project project, @Nonnull TemplateDataLanguageMappings templateDataLanguageMappings) {
+    super(project, templateDataLanguageMappings);
   }
 
   @Nonnull

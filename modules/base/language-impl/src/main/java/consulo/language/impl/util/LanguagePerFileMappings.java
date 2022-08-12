@@ -13,20 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.lang;
+package consulo.language.impl.util;
 
 import consulo.project.Project;
 import consulo.virtualFileSystem.util.PerFileMappings;
 
 import javax.annotation.Nonnull;
-
 import java.util.Objects;
 
 /**
  * @author peter
  */
 public abstract class LanguagePerFileMappings<T> extends PerFileMappingsBase<T> implements PerFileMappings<T> {
-
   public LanguagePerFileMappings(@Nonnull Project project) {
     super(project);
   }
@@ -42,5 +40,4 @@ public abstract class LanguagePerFileMappings<T> extends PerFileMappingsBase<T> 
   protected String getValueAttribute() {
     return "dialect";
   }
-
 }

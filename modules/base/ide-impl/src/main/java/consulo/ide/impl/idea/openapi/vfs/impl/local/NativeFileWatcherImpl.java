@@ -6,7 +6,7 @@ import consulo.application.ApplicationBundle;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.local.FileWatcherNotificationSink;
 import consulo.ide.impl.idea.openapi.vfs.local.PluggableFileWatcher;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.ManagingFS;
+import consulo.virtualFileSystem.ManagingFS;
 import com.sun.jna.Platform;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;

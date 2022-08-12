@@ -18,6 +18,7 @@ module consulo.language.impl {
   exports consulo.language.impl.psi.stub;
   exports consulo.language.impl.psi.path;
   exports consulo.language.impl.psi.template;
+  exports consulo.language.impl.util;
 
   // internal implementation
   exports consulo.language.impl.plain to consulo.ide.impl, consulo.test.impl;
@@ -37,4 +38,5 @@ module consulo.language.impl {
   exports consulo.language.impl.internal.psi.stub to consulo.ide.impl;
   exports consulo.language.impl.internal.pom to consulo.ide.impl;
   exports consulo.language.impl.internal.pattern.compiler to consulo.ide.impl;
+  exports consulo.language.impl.internal.template to consulo.ide.impl;
 }

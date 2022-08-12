@@ -40,7 +40,7 @@ import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.*;
 import consulo.virtualFileSystem.encoding.EncodingRegistry;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.ManagingFS;
+import consulo.virtualFileSystem.ManagingFS;
 import consulo.virtualFileSystem.NewVirtualFile;
 import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;

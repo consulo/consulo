@@ -13,21 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi.templateLanguages;
+package consulo.language.impl.internal.template;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.language.Language;
+import consulo.application.Application;
 import consulo.component.persist.PersistentStateComponent;
-import consulo.ide.ServiceManager;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import consulo.virtualFileSystem.fileType.FileNameMatcher;
+import consulo.language.Language;
 import consulo.language.file.FileTypeManager;
-import consulo.ide.impl.idea.openapi.fileTypes.impl.FileTypeAssocTable;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.language.template.TemplateDataLanguageMappings;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileNameMatcher;
+import consulo.virtualFileSystem.internal.FileTypeAssocTable;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
@@ -44,12 +46,14 @@ import java.util.Map;
 @ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class TemplateDataLanguagePatterns implements PersistentStateComponent<Element> {
-  private FileTypeAssocTable<Language> myAssocTable = new FileTypeAssocTable<Language>();
+  private FileTypeAssocTable<Language> myAssocTable = new FileTypeAssocTable<>();
 
   private static final String SEPARATOR = ";";
 
+  @Deprecated
+  @DeprecationInfo("Use constructor injecting")
   public static TemplateDataLanguagePatterns getInstance() {
-    return ServiceManager.getService(TemplateDataLanguagePatterns.class);
+    return Application.get().getInstance(TemplateDataLanguagePatterns.class);
   }
 
   public FileTypeAssocTable<Language> getAssocTable() {
@@ -67,9 +71,9 @@ public class TemplateDataLanguagePatterns implements PersistentStateComponent<El
 
   @Override
   public void loadState(Element state) {
-    myAssocTable = new FileTypeAssocTable<Language>();
+    myAssocTable = new FileTypeAssocTable<>();
 
-    final Map<String, Language> dialectMap = new HashMap<String, Language>();
+    final Map<String, Language> dialectMap = new HashMap<>();
     for (Language dialect : TemplateDataLanguageMappings.getTemplateableLanguages()) {
       dialectMap.put(dialect.getID(), dialect);
     }

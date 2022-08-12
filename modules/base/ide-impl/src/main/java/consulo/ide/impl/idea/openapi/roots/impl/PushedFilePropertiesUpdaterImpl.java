@@ -4,12 +4,11 @@ package consulo.ide.impl.idea.openapi.roots.impl;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.WriteAction;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.module.content.ModuleRootManager;
+import consulo.module.content.*;
 import consulo.component.extension.ExtensionException;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.application.ReadAction;
-import consulo.module.content.ModuleFileIndex;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.component.ProcessCanceledException;
@@ -22,8 +21,6 @@ import consulo.util.lang.function.Condition;
 import consulo.util.lang.EmptyRunnable;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.project.*;
-import consulo.module.content.ProjectFileIndex;
-import consulo.module.content.ProjectRootManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.impl.internal.psi.PsiManagerEx;
 import consulo.language.impl.internal.file.FileManagerImpl;
@@ -36,6 +33,7 @@ import consulo.application.TransactionGuard;
 import consulo.logging.Logger;
 import consulo.virtualFileSystem.event.*;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -45,6 +43,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+@Singleton
 @ServiceImpl
 public final class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesUpdater {
   private static final Logger LOG = Logger.getInstance(PushedFilePropertiesUpdater.class);

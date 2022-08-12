@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.psi.templateLanguages;
 
+import consulo.language.template.TemplateDataLanguageMappings;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
@@ -63,7 +64,7 @@ public class ChangeTemplateDataLanguageAction extends AnAction {
     if (project == null) return;
 
     final VirtualFile virtualFile = e.getData(PlatformDataKeys.VIRTUAL_FILE);
-    final TemplateDataLanguageConfigurable configurable = new TemplateDataLanguageConfigurable(project);
+    final TemplateDataLanguageConfigurable configurable = new TemplateDataLanguageConfigurable(project, TemplateDataLanguageMappings.getInstance(project));
     ShowSettingsUtil.getInstance().editConfigurable(project, configurable, new Runnable() {
       @Override
       public void run() {

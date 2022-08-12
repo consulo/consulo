@@ -22,7 +22,7 @@ import consulo.project.Project;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWithId;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.FileAttribute;
+import consulo.virtualFileSystem.FileAttribute;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.PersistentFS;
 import consulo.util.collection.FactoryMap;
 import consulo.index.io.data.DataExternalizer;

@@ -15,11 +15,11 @@
  */
 package consulo.ide.impl.idea.openapi.vfs.newvfs.persistent;
 
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.index.io.KeyDescriptor;
 import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.data.DataInputOutputUtil;
-import consulo.index.io.KeyDescriptor;
+import consulo.util.collection.Lists;
+import consulo.util.io.FileUtil;
 
 import javax.annotation.Nonnull;
 import java.io.*;
@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 // Relatively small T <-> int mapping for elements that have int numbers stored in vfs, similar to PersistentEnumerator<T>,
 // unlike later numbers assigned to T are consequent and retained in memory / expected to be small.
@@ -41,8 +42,8 @@ public class VfsDependentEnum<T> {
   // GuardedBy("myLock")
   private boolean myMarkedForInvalidation;
 
-  private final List<T> myInstances = ContainerUtil.createConcurrentList();
-  private final Map<T, Integer> myInstanceToId = ContainerUtil.newConcurrentMap();
+  private final List<T> myInstances = Lists.newLockFreeCopyOnWriteList();
+  private final Map<T, Integer> myInstanceToId = new ConcurrentHashMap<>();
   private final Object myLock = new Object();
   private boolean myTriedToLoadFile;
 

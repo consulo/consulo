@@ -11,7 +11,7 @@ import consulo.document.FileDocumentManager;
 import consulo.document.event.FileDocumentManagerListener;
 import consulo.document.util.FileContentUtilCore;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileDocumentManagerImpl;
-import consulo.ide.impl.idea.openapi.roots.impl.PushedFilePropertiesUpdater;
+import consulo.module.content.PushedFilePropertiesUpdater;
 import consulo.ide.impl.idea.openapi.roots.impl.PushedFilePropertiesUpdaterImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.file.FileTypeManager;

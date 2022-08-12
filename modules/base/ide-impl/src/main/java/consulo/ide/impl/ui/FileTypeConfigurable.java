@@ -32,7 +32,7 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.ide.impl.psi.templateLanguages.TemplateDataLanguagePatterns;
+import consulo.language.impl.internal.template.TemplateDataLanguagePatterns;
 import consulo.ide.impl.idea.ui.*;
 import consulo.ui.ex.awt.JBList;
 import consulo.ide.impl.idea.util.PairConvertor;
@@ -43,6 +43,7 @@ import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.util.ListUtil;
 import consulo.virtualFileSystem.fileType.FileNameMatcher;
 import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.internal.FileTypeAssocTable;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import jakarta.inject.Inject;
 

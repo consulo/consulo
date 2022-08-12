@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.fileTypes.impl;
+package consulo.virtualFileSystem.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.openapi.fileTypes.ExactFileNameMatcher;
-import consulo.ide.impl.idea.openapi.fileTypes.ExtensionFileNameMatcher;
-import consulo.ide.impl.idea.openapi.fileTypes.WildcardFileNameMatcher;
 import consulo.virtualFileSystem.fileType.FileNameMatcher;
 import consulo.virtualFileSystem.fileType.FileNameMatcherFactory;
+import consulo.virtualFileSystem.internal.matcher.ExactFileNameMatcher;
+import consulo.virtualFileSystem.internal.matcher.ExtensionFileNameMatcher;
+import consulo.virtualFileSystem.internal.matcher.WildcardFileNameMatcher;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;

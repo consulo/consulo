@@ -13,28 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi.templateLanguages;
+package consulo.language.impl.internal.template;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.language.DependentLanguage;
-import consulo.language.InjectableLanguage;
-import consulo.language.Language;
-import consulo.ide.impl.idea.lang.LanguagePerFileMappings;
-import consulo.ide.ServiceManager;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import consulo.language.template.TemplateLanguage;
+import consulo.language.Language;
+import consulo.language.impl.util.LanguagePerFileMappings;
+import consulo.language.template.TemplateDataLanguageMappings;
+import consulo.module.content.FilePropertyPusher;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.roots.impl.FilePropertyPusher;
-import consulo.util.lang.function.Condition;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -43,16 +36,10 @@ import java.util.List;
  */
 @Singleton
 @State(name = "TemplateDataLanguageMappings", storages = {@Storage("templateLanguages.xml")})
-@ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
-public class TemplateDataLanguageMappings extends LanguagePerFileMappings<Language> {
-
-  public static TemplateDataLanguageMappings getInstance(final Project project) {
-    return ServiceManager.getService(project, TemplateDataLanguageMappings.class);
-  }
-
+public class TemplateDataLanguageMappingsImpl extends LanguagePerFileMappings<Language> implements TemplateDataLanguageMappings {
   @Inject
-  public TemplateDataLanguageMappings(final Project project) {
+  public TemplateDataLanguageMappingsImpl(final Project project) {
     super(project);
   }
 
@@ -64,7 +51,7 @@ public class TemplateDataLanguageMappings extends LanguagePerFileMappings<Langua
   @Override
   @Nonnull
   public List<Language> getAvailableValues() {
-    return getTemplateableLanguages();
+    return TemplateDataLanguageMappings.getTemplateableLanguages();
   }
 
   @Nullable
@@ -82,19 +69,6 @@ public class TemplateDataLanguageMappings extends LanguagePerFileMappings<Langua
   @Nullable
   public static Language getDefaultMappingForFile(@Nullable VirtualFile file) {
     return file == null ? null : TemplateDataLanguagePatterns.getInstance().getTemplateDataLanguageByFileName(file);
-  }
-
-  @Nonnull
-  public static List<Language> getTemplateableLanguages() {
-    return ContainerUtil.findAll(Language.getRegisteredLanguages(), new Condition<Language>() {
-      @Override
-      public boolean value(final Language language) {
-        if (language == Language.ANY) return false;
-        if (language instanceof TemplateLanguage || language instanceof DependentLanguage || language instanceof InjectableLanguage) return false;
-        if (language.getBaseLanguage() != null) return value(language.getBaseLanguage());
-        return true;
-      }
-    });
   }
 
   private final FilePropertyPusher<Language> myPropertyPusher = new TemplateDataLanguagePusher();

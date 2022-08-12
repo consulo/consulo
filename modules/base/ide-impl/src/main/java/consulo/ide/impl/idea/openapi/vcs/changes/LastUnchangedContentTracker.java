@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.FileAttribute;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.ManagingFS;
+import consulo.virtualFileSystem.FileAttribute;
+import consulo.virtualFileSystem.ManagingFS;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.PersistentFS;
 import consulo.logging.Logger;
 

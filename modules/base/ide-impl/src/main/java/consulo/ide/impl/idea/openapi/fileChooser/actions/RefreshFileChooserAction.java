@@ -19,7 +19,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.ManagingFS;
+import consulo.virtualFileSystem.ManagingFS;
 import consulo.virtualFileSystem.RefreshQueue;
 
 /**

@@ -23,5 +23,6 @@ module consulo.virtual.file.system.api {
   exports consulo.virtualFileSystem.http.event;
   exports consulo.virtualFileSystem.util;
 
-  exports consulo.virtualFileSystem.internal to consulo.document.api, consulo.virtual.file.system.impl, consulo.ide.impl, consulo.component.store.impl, consulo.application.impl;
+  exports consulo.virtualFileSystem.internal.matcher to consulo.ide.impl, consulo.virtual.file.system.impl;
+  exports consulo.virtualFileSystem.internal to consulo.document.api, consulo.virtual.file.system.impl, consulo.ide.impl, consulo.component.store.impl, consulo.application.impl, consulo.language.impl;
 }

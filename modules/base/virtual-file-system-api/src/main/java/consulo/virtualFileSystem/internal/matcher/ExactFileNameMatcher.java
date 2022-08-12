@@ -17,7 +17,7 @@
 /*
  * @author max
  */
-package consulo.ide.impl.idea.openapi.fileTypes;
+package consulo.virtualFileSystem.internal.matcher;
 
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.fileType.FileNameMatcher;

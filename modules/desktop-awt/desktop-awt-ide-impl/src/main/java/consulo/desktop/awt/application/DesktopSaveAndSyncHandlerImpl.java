@@ -27,7 +27,7 @@ import consulo.document.FileDocumentManager;
 import consulo.fileEditor.FileEditorManager;
 import consulo.ide.impl.idea.ide.*;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileDocumentManagerImpl;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.ManagingFS;
+import consulo.virtualFileSystem.ManagingFS;
 import consulo.ide.impl.idea.util.SingleAlarm;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;

@@ -31,7 +31,6 @@ import consulo.document.FileDocumentManager;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.event.FileEditorManagerAdapter;
 import consulo.fileEditor.event.FileEditorManagerListener;
-import consulo.ide.impl.idea.lang.PerFileMappingsBase;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
@@ -43,6 +42,7 @@ import consulo.language.Language;
 import consulo.language.editor.scratch.RootType;
 import consulo.language.editor.scratch.ScratchFileService;
 import consulo.language.file.FileTypeManager;
+import consulo.language.impl.util.PerFileMappingsBase;
 import consulo.language.plain.PlainTextLanguage;
 import consulo.language.util.LanguageUtil;
 import consulo.project.Project;
@@ -61,7 +61,6 @@ import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.List;
 
-
 @Singleton
 @State(name = "ScratchFileService", storages = @Storage(value = "scratches.xml", roamingType = RoamingType.DISABLED))
 @ServiceImpl
@@ -71,10 +70,12 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
   };
 
   private final LightDirectoryIndex<RootType> myIndex;
-  private final MyLanguages myScratchMapping = new MyLanguages();
+  private final MyLanguages myScratchMapping;
 
   @Inject
   protected ScratchFileServiceImpl(Application application) {
+    myScratchMapping = new MyLanguages();
+
     Disposer.register(this, myScratchMapping);
 
     myIndex = new LightDirectoryIndex<>(application, NULL_TYPE, index -> {

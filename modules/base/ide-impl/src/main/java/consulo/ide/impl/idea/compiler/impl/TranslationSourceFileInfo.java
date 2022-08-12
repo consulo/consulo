@@ -19,7 +19,7 @@ import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.FileAttribute;
+import consulo.virtualFileSystem.FileAttribute;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.index.io.data.DataInputOutputUtil;
 import consulo.logging.Logger;

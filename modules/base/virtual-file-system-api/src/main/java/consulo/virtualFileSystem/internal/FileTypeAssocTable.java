@@ -1,14 +1,14 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.openapi.fileTypes.impl;
+package consulo.virtualFileSystem.internal;
 
-import consulo.ide.impl.idea.openapi.fileTypes.ExactFileNameMatcher;
-import consulo.ide.impl.idea.openapi.fileTypes.ExtensionFileNameMatcher;
-import consulo.virtualFileSystem.fileType.FileNameMatcher;
-import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
-import consulo.ide.impl.idea.util.ArrayUtilRt;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.CharSequenceHashingStrategy;
 import consulo.util.collection.Maps;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.Pair;
+import consulo.virtualFileSystem.fileType.FileNameMatcher;
+import consulo.virtualFileSystem.internal.matcher.ExactFileNameMatcher;
+import consulo.virtualFileSystem.internal.matcher.ExtensionFileNameMatcher;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -41,7 +41,7 @@ public class FileTypeAssocTable<T> {
     this(Collections.emptyMap(), Collections.emptyMap(), Collections.emptyMap(), Collections.emptyList());
   }
 
-  boolean isAssociatedWith(@Nonnull T type, @Nonnull FileNameMatcher matcher) {
+  public boolean isAssociatedWith(@Nonnull T type, @Nonnull FileNameMatcher matcher) {
     if (matcher instanceof ExtensionFileNameMatcher || matcher instanceof ExactFileNameMatcher) {
       return findAssociatedFileType(matcher) == type;
     }
@@ -124,7 +124,7 @@ public class FileTypeAssocTable<T> {
       if (mapping.getFirst().acceptsCharSequence(fileName)) return mapping.getSecond();
     }
 
-    return findByExtension(FileUtilRt.getExtension(fileName));
+    return findByExtension(FileUtil.getExtension(fileName));
   }
 
   @Nullable
@@ -147,20 +147,20 @@ public class FileTypeAssocTable<T> {
     return null;
   }
 
-  T findByExtension(@Nonnull CharSequence extension) {
+  public T findByExtension(@Nonnull CharSequence extension) {
     return myExtensionMappings.get(extension);
   }
 
   @Deprecated
   @Nonnull
-  String[] getAssociatedExtensions(@Nonnull T type) {
+  public String[] getAssociatedExtensions(@Nonnull T type) {
     List<String> exts = new ArrayList<>();
     for (Map.Entry<CharSequence, T> entry : myExtensionMappings.entrySet()) {
       if (entry.getValue() == type) {
         exts.add(entry.getKey().toString());
       }
     }
-    return ArrayUtilRt.toStringArray(exts);
+    return ArrayUtil.toStringArray(exts);
   }
 
   @Nonnull
@@ -196,7 +196,7 @@ public class FileTypeAssocTable<T> {
     return result;
   }
 
-  boolean hasAssociationsFor(@Nonnull T fileType) {
+  public boolean hasAssociationsFor(@Nonnull T fileType) {
     if (myExtensionMappings.containsValue(fileType) || myExactFileNameMappings.containsValue(fileType) || myExactFileNameAnyCaseMappings.containsValue(fileType)) {
       return true;
     }
@@ -209,7 +209,7 @@ public class FileTypeAssocTable<T> {
   }
 
   @Nonnull
-  Map<FileNameMatcher, T> getRemovedMappings(@Nonnull FileTypeAssocTable<T> newTable, @Nonnull Collection<? extends T> keys) {
+  public Map<FileNameMatcher, T> getRemovedMappings(@Nonnull FileTypeAssocTable<T> newTable, @Nonnull Collection<? extends T> keys) {
     Map<FileNameMatcher, T> map = new HashMap<>();
     for (T key : keys) {
       List<FileNameMatcher> associations = getAssociations(key);

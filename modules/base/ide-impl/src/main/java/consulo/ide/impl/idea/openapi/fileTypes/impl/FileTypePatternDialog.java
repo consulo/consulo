@@ -15,12 +15,12 @@
  */
 package consulo.ide.impl.idea.openapi.fileTypes.impl;
 
-import consulo.ui.ex.awt.ListCellRendererWrapper;
 import consulo.language.Language;
-import consulo.virtualFileSystem.fileType.FileType;
+import consulo.language.template.TemplateDataLanguageMappings;
 import consulo.language.template.TemplateLanguageFileType;
-import consulo.ide.impl.psi.templateLanguages.TemplateDataLanguageMappings;
+import consulo.ui.ex.awt.ListCellRendererWrapper;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nullable;
 import javax.swing.*;

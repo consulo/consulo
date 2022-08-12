@@ -7,7 +7,7 @@ import consulo.ide.impl.idea.openapi.vfs.DiskQueryRelay;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.openapi.vfs.impl.win32.Win32LocalFileSystem;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.ManagingFS;
+import consulo.virtualFileSystem.ManagingFS;
 import consulo.virtualFileSystem.NewVirtualFile;
 import consulo.virtualFileSystem.NewVirtualFileSystem;
 import consulo.virtualFileSystem.event.VFileEvent;
@@ -42,7 +42,7 @@ public abstract class PersistentFS extends ManagingFS {
   }
 
   @Nonnull
-  protected <P, R> Function<P, R> accessDiskWithCheckCanceled(Function<? super P, ? extends R> function) {
+  public <P, R> Function<P, R> accessDiskWithCheckCanceled(Function<? super P, ? extends R> function) {
     return new DiskQueryRelay<>(function)::accessDiskWithCheckCanceled;
   }
 

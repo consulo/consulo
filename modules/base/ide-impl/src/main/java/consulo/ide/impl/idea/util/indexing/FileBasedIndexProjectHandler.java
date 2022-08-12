@@ -33,7 +33,7 @@ import consulo.logging.Logger;
 import consulo.application.progress.ProgressIndicator;
 import consulo.ide.impl.idea.openapi.project.*;
 import consulo.content.ContentIterator;
-import consulo.ide.impl.idea.openapi.roots.impl.PushedFilePropertiesUpdater;
+import consulo.module.content.PushedFilePropertiesUpdater;
 import consulo.project.*;
 import consulo.project.event.DumbModeListener;
 import consulo.project.startup.StartupManager;

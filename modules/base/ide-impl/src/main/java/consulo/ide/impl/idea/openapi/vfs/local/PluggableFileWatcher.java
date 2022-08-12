@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vfs.local;
 
-import consulo.ide.impl.idea.openapi.vfs.newvfs.ManagingFS;
+import consulo.virtualFileSystem.ManagingFS;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 

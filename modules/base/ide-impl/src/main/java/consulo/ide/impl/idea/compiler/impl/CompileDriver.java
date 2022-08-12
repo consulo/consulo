@@ -26,7 +26,7 @@ import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.ManagingFS;
+import consulo.virtualFileSystem.ManagingFS;
 import consulo.virtualFileSystem.RefreshQueue;
 import consulo.ide.impl.idea.packaging.impl.artifacts.ArtifactImpl;
 import consulo.ide.impl.idea.packaging.impl.artifacts.ArtifactUtil;

@@ -28,6 +28,7 @@ import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiErrorElement;
 import consulo.language.psi.PsiFile;
+import consulo.language.template.TemplateDataLanguageMappings;
 import consulo.language.template.TemplateLanguageFileViewProvider;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
@@ -79,7 +80,7 @@ public class TemplateLanguageErrorQuickFixProvider implements ErrorQuickFixProvi
       @RequiredUIAccess
       @Override
       public void invoke(@Nonnull final Project project, final Editor editor, final PsiFile file) throws IncorrectOperationException {
-        final TemplateDataLanguageConfigurable configurable = new TemplateDataLanguageConfigurable(project);
+        final TemplateDataLanguageConfigurable configurable = new TemplateDataLanguageConfigurable(project, TemplateDataLanguageMappings.getInstance(project));
         ShowSettingsUtil.getInstance().editConfigurable(project, configurable, new Runnable() {
           @Override
           public void run() {

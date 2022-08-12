@@ -13,7 +13,7 @@ import consulo.content.CollectingContentIterator;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.module.content.internal.ProjectRootManagerEx;
-import consulo.ide.impl.idea.openapi.roots.impl.PushedFilePropertiesUpdater;
+import consulo.module.content.PushedFilePropertiesUpdater;
 import consulo.project.DumbModeTask;
 import consulo.project.DumbService;
 import consulo.project.Project;

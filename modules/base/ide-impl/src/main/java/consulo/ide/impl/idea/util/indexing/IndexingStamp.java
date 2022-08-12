@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.util.indexing;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
 import consulo.virtualFileSystem.InvalidVirtualFileAccessException;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.FileAttribute;
+import consulo.virtualFileSystem.FileAttribute;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.FSRecords;
 import consulo.language.psi.stub.StubIndexKey;
 import consulo.util.collection.SmartList;

@@ -1,13 +1,9 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.openapi.vfs.newvfs;
+package consulo.virtualFileSystem;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.ide.ServiceManager;
-import consulo.virtualFileSystem.FileSystemInterface;
-import consulo.virtualFileSystem.NewVirtualFileSystem;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.NewVirtualFile;
+import consulo.application.Application;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
@@ -22,7 +18,7 @@ import java.util.function.Function;
 @ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
 public abstract class ManagingFS implements FileSystemInterface {
   private static class ManagingFSHolder {
-    private static final ManagingFS ourInstance = ServiceManager.getService(ManagingFS.class);
+    private static final ManagingFS ourInstance = Application.get().getInstance(ManagingFS.class);
   }
 
   public static ManagingFS getInstance() {
@@ -85,5 +81,5 @@ public abstract class ManagingFS implements FileSystemInterface {
   public abstract VirtualFile findFileById(int id);
 
   @Nonnull
-  protected abstract <P, R> Function<P, R> accessDiskWithCheckCanceled(Function<? super P, ? extends R> function);
+  public abstract <P, R> Function<P, R> accessDiskWithCheckCanceled(Function<? super P, ? extends R> function);
 }

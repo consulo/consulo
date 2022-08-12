@@ -18,7 +18,7 @@ package consulo.ide.impl.psi.stubs;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ReadAction;
 import consulo.component.ProcessCanceledException;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.FileAttribute;
+import consulo.virtualFileSystem.FileAttribute;
 import consulo.virtualFileSystem.NewVirtualFile;
 import consulo.ide.impl.idea.util.indexing.*;
 import consulo.ide.impl.idea.util.indexing.impl.DebugAssertions;

@@ -26,7 +26,7 @@ import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
 import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.ManagingFS;
+import consulo.virtualFileSystem.ManagingFS;
 import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.io.storage.AbstractStorage;
 import consulo.container.boot.ContainerPathManager;

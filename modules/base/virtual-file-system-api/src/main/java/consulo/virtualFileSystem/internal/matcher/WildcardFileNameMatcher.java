@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.openapi.fileTypes;
+package consulo.virtualFileSystem.internal.matcher;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.util.lang.PatternUtil;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.fileType.FileNameMatcher;
 
 import javax.annotation.Nonnull;

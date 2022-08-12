@@ -18,6 +18,8 @@ package consulo.ide.impl.idea.openapi.fileTypes.impl;
 import consulo.virtualFileSystem.fileType.FileNameMatcherFactory;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.virtualFileSystem.internal.FileTypeAssocTable;
+
 import javax.annotation.Nonnull;
 
 import java.util.Collections;
@@ -30,7 +32,7 @@ import java.util.StringTokenizer;
  */
 public class IgnoredPatternSet {
   private final Set<String> myMasks = new LinkedHashSet<String>();
-  private final FileTypeAssocTable<Boolean> myIgnorePatterns = new FileTypeAssocTable<Boolean>().copy();
+  private final FileTypeAssocTable<Boolean> myIgnorePatterns = new FileTypeAssocTable<Boolean>();
 
   Set<String> getIgnoreMasks() {
     return Collections.unmodifiableSet(myMasks);

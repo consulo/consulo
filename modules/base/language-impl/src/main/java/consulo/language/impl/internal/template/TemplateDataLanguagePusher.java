@@ -1,35 +1,31 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.psi.templateLanguages;
+package consulo.language.impl.internal.template;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.FileIntPropertyPusher;
 import consulo.language.Language;
-import consulo.language.template.TemplateLanguage;
-import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.file.LanguageFileType;
+import consulo.language.template.TemplateDataLanguageMappings;
+import consulo.language.template.TemplateLanguage;
 import consulo.module.Module;
+import consulo.module.content.FileStringPropertyPusher;
+import consulo.module.content.PushedFilePropertiesUpdater;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.roots.impl.PushedFilePropertiesUpdater;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.FileAttribute;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.VfsDependentEnum;
-import consulo.ide.impl.idea.util.ObjectUtils;
-import consulo.index.io.EnumeratorStringDescriptor;
 import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.FileAttribute;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.IOException;
 
 /**
  * @author Konstantin.Ulitin
  */
 @ExtensionImpl
-public class TemplateDataLanguagePusher implements FileIntPropertyPusher<Language> {
+public class TemplateDataLanguagePusher implements FileStringPropertyPusher<Language> {
 
   public static final Key<Language> KEY = Key.create("TEMPLATE_DATA_LANGUAGE");
-
-  private static final VfsDependentEnum<String> ourLanguagesEnumerator = new VfsDependentEnum<>("languages", EnumeratorStringDescriptor.INSTANCE, 1);
 
   @Nonnull
   @Override
@@ -74,23 +70,21 @@ public class TemplateDataLanguagePusher implements FileIntPropertyPusher<Languag
   private static final FileAttribute PERSISTENCE = new FileAttribute("template_language", 2, true);
 
   @Override
-  public
   @Nonnull
-  FileAttribute getAttribute() {
+  public FileAttribute getAttribute() {
     return PERSISTENCE;
   }
 
   @Override
-  public int toInt(@Nonnull Language property) throws IOException {
-    return ourLanguagesEnumerator.getId(property.getID());
+  public String toString(@Nonnull Language property) throws IOException {
+    return property.getID();
   }
 
   @Nonnull
   @Override
-  public Language fromInt(int val) throws IOException {
-    String id = ourLanguagesEnumerator.getById(val);
-    Language lang = Language.findLanguageByID(id);
-    return ObjectUtils.notNull(lang, Language.ANY);
+  public Language fromString(String val) throws IOException {
+    Language language = Language.findLanguageByID(val);
+    return language == null ? Language.ANY : language;
   }
 
   @Override

@@ -34,4 +34,7 @@ public interface PerFileMappingsEx<T> extends PerFileMappings<T> {
 
   @Nullable
   T getDefaultMapping(@Nullable VirtualFile file);
+
+  @Nullable
+  T getImmediateMapping(@Nullable VirtualFile file);
 }

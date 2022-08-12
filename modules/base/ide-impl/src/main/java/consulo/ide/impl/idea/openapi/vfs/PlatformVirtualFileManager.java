@@ -19,7 +19,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.ide.impl.idea.openapi.vfs.impl.VirtualFileManagerImpl;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.ManagingFS;
+import consulo.virtualFileSystem.ManagingFS;
 import consulo.virtualFileSystem.RefreshQueue;
 import consulo.virtualFileSystem.RefreshSession;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.FileNameCache;
