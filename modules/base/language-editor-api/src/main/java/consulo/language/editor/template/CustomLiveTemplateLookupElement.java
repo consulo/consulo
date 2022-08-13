@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.template.impl;
+package consulo.language.editor.template;
 
-import consulo.language.editor.completion.lookup.InsertionContext;
-import consulo.ide.impl.idea.codeInsight.template.CustomLiveTemplateBase;
-import consulo.ide.impl.idea.codeInsight.template.CustomTemplateCallback;
 import consulo.codeEditor.Editor;
+import consulo.language.editor.completion.lookup.InsertionContext;
 import consulo.language.psi.PsiFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

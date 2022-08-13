@@ -16,34 +16,34 @@
 
 package consulo.ide.impl.idea.codeInsight.template.impl;
 
-import consulo.language.editor.CodeInsightBundle;
-import consulo.language.editor.template.context.TemplateContextType;
-import consulo.ide.impl.idea.ide.dnd.aware.DnDAwareTree;
 import consulo.application.ApplicationManager;
-import consulo.configurable.ConfigurationException;
 import consulo.component.persist.scheme.SchemeManager;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ui.ex.InputValidator;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.*;
+import consulo.configurable.ConfigurationException;
+import consulo.disposer.Disposable;
+import consulo.ide.impl.idea.ide.dnd.aware.DnDAwareTree;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.ui.*;
-import consulo.ui.ex.awt.dnd.*;
-import consulo.ui.ex.awt.event.DoubleClickListener;
-import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
-import consulo.ui.ex.awt.util.Alarm;
+import consulo.ide.impl.idea.ui.CheckboxTree;
+import consulo.ide.impl.idea.ui.CheckedTreeNode;
 import consulo.ide.impl.idea.util.NullableFunction;
 import consulo.ide.impl.idea.util.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.Convertor;
-import consulo.ui.ex.awt.tree.TreeUtil;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.awt.update.UiNotifyConnector;
-import consulo.disposer.Disposable;
+import consulo.language.editor.CodeInsightBundle;
+import consulo.language.editor.template.Template;
+import consulo.language.editor.template.context.TemplateContextType;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.ex.InputValidator;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.dnd.*;
+import consulo.ui.ex.awt.event.DoubleClickListener;
+import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
+import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.ui.ex.awt.update.UiNotifyConnector;
+import consulo.ui.ex.awt.util.Alarm;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -68,9 +68,9 @@ public class TemplateListPanel extends JPanel implements Disposable {
   private static final String TEMPLATE_SETTINGS = "TemplateSettingsImpl";
   private static final TemplateImpl MOCK_TEMPLATE = new TemplateImpl("mockTemplate-xxx", "mockTemplateGroup-yyy");
   public static final String ABBREVIATION = "<abbreviation>";
-  public static final Comparator<TemplateImpl> TEMPLATE_COMPARATOR = new Comparator<TemplateImpl>() {
+  public static final Comparator<Template> TEMPLATE_COMPARATOR = new Comparator<Template>() {
     @Override
-    public int compare(final TemplateImpl o1, final TemplateImpl o2) {
+    public int compare(final Template o1, final Template o2) {
       return o1.getKey().compareToIgnoreCase(o2.getKey());
     }
   };

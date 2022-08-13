@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.template.impl;
+package consulo.language.editor.template;
 
-import consulo.ide.impl.idea.codeInsight.lookup.RealLookupElementPresentation;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementPresentation;
+import consulo.language.editor.completion.lookup.RealLookupElementPresentation;
+import consulo.language.editor.internal.TemplateConstants;
 import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
@@ -59,8 +60,8 @@ abstract public class LiveTemplateLookupElement extends LookupElement {
     if (sudden) {
       presentation.setItemTextBold(true);
       if (!presentation.isReal() || !((RealLookupElementPresentation)presentation).isLookupSelectionTouched()) {
-        if (shortcut == TemplateSettingsImpl.DEFAULT_CHAR) {
-          shortcut = TemplateSettingsImpl.getInstanceImpl().getDefaultShortcutChar();
+        if (shortcut == TemplateConstants.DEFAULT_CHAR) {
+          shortcut = TemplateSettings.getInstance().getDefaultShortcutChar();
         }
         presentation.setTypeText("  [" + KeyEvent.getKeyText(shortcut) + "] ");
       }

@@ -1,31 +1,26 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.codeInsight.template;
+package consulo.language.editor.template;
 
-import consulo.ide.impl.idea.codeInsight.template.impl.TemplateImpl;
-import consulo.ide.impl.idea.codeInsight.template.impl.TemplateManagerImpl;
-import consulo.ide.impl.idea.codeInsight.template.impl.TemplateSettingsImpl;
-import consulo.language.editor.template.Template;
-import consulo.language.editor.template.context.TemplateActionContext;
-import consulo.language.editor.template.context.TemplateContextType;
-import consulo.language.editor.template.TemplateManager;
-import consulo.language.editor.template.event.TemplateEditingListener;
-import consulo.language.util.AttachmentFactoryUtil;
-import consulo.language.inject.InjectedLanguageManager;
-import consulo.ide.impl.idea.openapi.diagnostic.Logger;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.SelectionModel;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.project.Project;
+import consulo.document.Document;
+import consulo.language.editor.internal.LanguageEditorInternalHelper;
+import consulo.language.editor.template.context.TemplateActionContext;
+import consulo.language.editor.template.context.TemplateContextType;
+import consulo.language.editor.template.event.TemplateEditingListener;
+import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.PsiUtilCore;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
+import consulo.language.util.AttachmentFactoryUtil;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.util.collection.ContainerUtil;
+import consulo.virtualFileSystem.fileType.FileType;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +52,7 @@ public class CustomTemplateCallback {
     myFile = element != null ? element.getContainingFile() : file;
 
     myInInjectedFragment = InjectedLanguageManager.getInstance(myProject).isInjectedFragment(myFile);
-    myEditor = myInInjectedFragment ? InjectedLanguageUtil.getEditorForInjectedLanguageNoCommit(editor, file, parentEditorOffset) : editor;
+    myEditor = myInInjectedFragment ? LanguageEditorInternalHelper.getInstance().getEditorForInjectedLanguageNoCommit(editor, file, parentEditorOffset) : editor;
     myOffset = myInInjectedFragment ? getOffset(myEditor) : parentEditorOffset;
   }
 
@@ -85,14 +80,14 @@ public class CustomTemplateCallback {
   }
 
   @Nullable
-  public TemplateImpl findApplicableTemplate(@Nonnull String key) {
+  public Template findApplicableTemplate(@Nonnull String key) {
     return ContainerUtil.getFirstItem(findApplicableTemplates(key));
   }
 
   @Nonnull
-  public List<TemplateImpl> findApplicableTemplates(@Nonnull String key) {
-    List<TemplateImpl> result = new ArrayList<>();
-    for (TemplateImpl candidate : getMatchingTemplates(key)) {
+  public List<Template> findApplicableTemplates(@Nonnull String key) {
+    List<Template> result = new ArrayList<>();
+    for (Template candidate : getMatchingTemplates(key)) {
       if (isAvailableTemplate(candidate)) {
         result.add(candidate);
       }
@@ -100,11 +95,11 @@ public class CustomTemplateCallback {
     return result;
   }
 
-  private boolean isAvailableTemplate(@Nonnull TemplateImpl template) {
+  private boolean isAvailableTemplate(@Nonnull Template template) {
     if (myApplicableContextTypes == null) {
-      myApplicableContextTypes = TemplateManagerImpl.getApplicableContextTypes(TemplateActionContext.create(myFile, myEditor, myOffset, myOffset, false));
+      myApplicableContextTypes = TemplateManager.getInstance(myProject).getApplicableContextTypes(TemplateActionContext.create(myFile, myEditor, myOffset, myOffset, false));
     }
-    return !template.isDeactivated() && TemplateManagerImpl.isApplicable(template, myApplicableContextTypes);
+    return !template.isDeactivated() && TemplateManager.getInstance(myProject).isApplicable(template, myApplicableContextTypes);
   }
 
   public void startTemplate(@Nonnull Template template, Map<String, String> predefinedValues, TemplateEditingListener listener) {
@@ -115,10 +110,10 @@ public class CustomTemplateCallback {
   }
 
   @Nonnull
-  private static List<TemplateImpl> getMatchingTemplates(@Nonnull String templateKey) {
-    TemplateSettingsImpl settings = TemplateSettingsImpl.getInstanceImpl();
-    List<TemplateImpl> candidates = new ArrayList<>();
-    for (TemplateImpl template : settings.getTemplates(templateKey)) {
+  private static List<Template> getMatchingTemplates(@Nonnull String templateKey) {
+    TemplateSettings settings = TemplateSettings.getInstance();
+    List<Template> candidates = new ArrayList<>();
+    for (Template template : settings.getTemplates(templateKey)) {
       if (!template.isDeactivated()) {
         candidates.add(template);
       }

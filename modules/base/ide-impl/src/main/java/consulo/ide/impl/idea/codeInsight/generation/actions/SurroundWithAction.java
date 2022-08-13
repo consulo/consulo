@@ -4,12 +4,12 @@ package consulo.ide.impl.idea.codeInsight.generation.actions;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
-import consulo.language.editor.impl.action.BaseCodeInsightAction;
 import consulo.ide.impl.idea.codeInsight.generation.surroundWith.SurroundWithHandler;
-import consulo.ide.impl.idea.codeInsight.template.impl.TemplateManagerImpl;
 import consulo.language.Language;
 import consulo.language.editor.action.CodeInsightActionHandler;
+import consulo.language.editor.impl.action.BaseCodeInsightAction;
 import consulo.language.editor.surroundWith.SurroundDescriptor;
+import consulo.language.editor.template.TemplateManager;
 import consulo.language.editor.template.context.TemplateActionContext;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
@@ -45,7 +45,7 @@ public class SurroundWithAction extends BaseCodeInsightAction {
       return true;
     }
 
-    if (!TemplateManagerImpl.listApplicableTemplateWithInsertingDummyIdentifier(TemplateActionContext.surrounding(file, editor)).isEmpty()) {
+    if (!TemplateManager.getInstance(project).listApplicableTemplateWithInsertingDummyIdentifier(TemplateActionContext.surrounding(file, editor)).isEmpty()) {
       return true;
     }
 

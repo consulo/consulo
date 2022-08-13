@@ -21,6 +21,7 @@ import consulo.application.Application;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collection;
 
 /**
  * @author VISTALL
@@ -36,5 +37,10 @@ public interface TemplateSettings {
   @Nullable
   Template getTemplateById(@Nonnull String id);
 
+  @Nonnull
+  Collection<? extends Template> getTemplates(@Nonnull String templateKey);
+
   char getDefaultShortcutChar();
+
+  char getShortcutChar(Template template);
 }

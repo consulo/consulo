@@ -23,15 +23,20 @@ import consulo.ide.impl.psi.impl.source.codeStyle.CodeFormatterFacade;
 import consulo.language.Language;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.editor.internal.LanguageEditorInternalHelper;
+import consulo.language.inject.impl.internal.InjectedLanguageUtil;
+import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
  * @author VISTALL
  * @since 04-Aug-22
  */
+@Singleton
 @ServiceImpl
 public class LanguageEditorInternalHelperImpl implements LanguageEditorInternalHelper {
   @Override
@@ -45,5 +50,10 @@ public class LanguageEditorInternalHelperImpl implements LanguageEditorInternalH
     final CodeFormatterFacade codeFormatter = new CodeFormatterFacade(CodeStyleSettingsManager.getSettings(project), language);
 
     codeFormatter.doWrapLongLinesIfNecessary(editor, project, document, startOffset, endOffset, enabledRanges);
+  }
+
+  @Override
+  public Editor getEditorForInjectedLanguageNoCommit(@Nullable Editor editor, @Nullable PsiFile file, int offset) {
+    return InjectedLanguageUtil.getEditorForInjectedLanguageNoCommit(editor, file, offset);
   }
 }

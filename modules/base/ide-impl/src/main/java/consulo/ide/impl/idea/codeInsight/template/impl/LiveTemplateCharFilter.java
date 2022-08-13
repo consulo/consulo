@@ -20,6 +20,7 @@ import consulo.language.editor.CodeInsightSettings;
 import consulo.language.editor.completion.lookup.CharFilter;
 import consulo.language.editor.completion.lookup.Lookup;
 import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.editor.template.LiveTemplateLookupElement;
 
 /**
  * @author peter

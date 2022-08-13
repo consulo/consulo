@@ -35,37 +35,41 @@ public abstract class Template {
   public enum Property {
     USE_STATIC_IMPORT_IF_POSSIBLE
   }
+
   private static final Map<Property, Boolean> DEFAULT_PROPERTIES = new EnumMap<Property, Boolean>(Property.class);
+
   static {
     DEFAULT_PROPERTIES.put(Property.USE_STATIC_IMPORT_IF_POSSIBLE, false);
   }
 
   private final Map<Property, Boolean> myProperties = new EnumMap<Property, Boolean>(Property.class);
-  
+
   public abstract void addTextSegment(@Nonnull String text);
+
   public abstract void addVariableSegment(@NonNls String name);
 
   public Variable addVariable(@NonNls String name, @Nonnull Expression defaultValueExpression, boolean isAlwaysStopAt) {
     return addVariable(name, defaultValueExpression, defaultValueExpression, isAlwaysStopAt);
   }
+
   public abstract Variable addVariable(Expression expression, boolean isAlwaysStopAt);
 
   public Variable addVariable(@NonNls String name, Expression expression, Expression defaultValueExpression, boolean isAlwaysStopAt) {
     return addVariable(name, expression, defaultValueExpression, isAlwaysStopAt, false);
   }
 
-  public abstract Variable addVariable(@NonNls String name,
-                                       Expression expression,
-                                       Expression defaultValueExpression,
-                                       boolean isAlwaysStopAt,
-                                       boolean skipOnStart);
+  public abstract Variable addVariable(@NonNls String name, Expression expression, Expression defaultValueExpression, boolean isAlwaysStopAt, boolean skipOnStart);
+
   public abstract Variable addVariable(@NonNls String name, @NonNls String expression, @NonNls String defaultValueExpression, boolean isAlwaysStopAt);
 
   public abstract void addEndVariable();
+
   public abstract void addSelectionStartVariable();
+
   public abstract void addSelectionEndVariable();
 
   public abstract String getId();
+
   public abstract String getKey();
 
   public abstract String getDescription();
@@ -78,14 +82,23 @@ public abstract class Template {
 
   public abstract int getSegmentsCount();
 
-  public abstract String getSegmentName( int segmentIndex);
+  public abstract String getSegmentName(int segmentIndex);
 
   public abstract int getSegmentOffset(int segmentIndex);
 
   public abstract String getTemplateText();
 
+  public abstract String getGroupName();
+
   public abstract boolean isToShortenLongNames();
+
   public abstract void setToShortenLongNames(boolean toShortenLongNames);
+
+  public abstract boolean isDeactivated();
+
+  public abstract boolean isToReformat();
+
+  public abstract char getShortcutChar();
 
   public boolean getValue(@Nonnull Property key) {
     Boolean result = myProperties.get(key);

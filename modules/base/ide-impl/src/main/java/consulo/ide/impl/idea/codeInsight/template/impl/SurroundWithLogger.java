@@ -1,10 +1,12 @@
 // Copyright 2000-2021 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.template.impl;
 
-import consulo.ide.impl.idea.codeInsight.template.CustomLiveTemplate;
 import consulo.language.Language;
 import consulo.language.editor.surroundWith.Surrounder;
+import consulo.language.editor.template.CustomLiveTemplate;
+import consulo.language.editor.template.Template;
 import consulo.project.Project;
+
 import javax.annotation.Nonnull;
 
 public final class SurroundWithLogger /*extends CounterUsagesCollector*/ {
@@ -32,7 +34,7 @@ public final class SurroundWithLogger /*extends CounterUsagesCollector*/ {
   //  return data;
   //}
 
-  static void logTemplate(@Nonnull TemplateImpl template, @Nonnull Language language, @Nonnull Project project) {
+  static void logTemplate(@Nonnull Template template, @Nonnull Language language, @Nonnull Project project) {
     //final List<EventPair<?>> data = LiveTemplateRunLogger.createTemplateData(template, language);
     //if (data != null) {
     //  LIVE_TEMPLATE_EXECUTED.log(project, data);

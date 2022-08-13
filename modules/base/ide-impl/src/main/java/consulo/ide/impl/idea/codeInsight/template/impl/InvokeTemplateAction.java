@@ -1,22 +1,23 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.template.impl;
 
+import consulo.codeEditor.Editor;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
 import consulo.language.editor.CodeInsightBundle;
+import consulo.language.editor.template.Template;
 import consulo.language.editor.template.TemplateManager;
+import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.undoRedo.CommandProcessor;
-import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.document.FileDocumentManager;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.awt.UIUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collections;
 import java.util.Set;
 
@@ -24,17 +25,17 @@ import java.util.Set;
  * @author peter
  */
 public class InvokeTemplateAction extends AnAction {
-  private final TemplateImpl myTemplate;
+  private final Template myTemplate;
   private final Editor myEditor;
   private final Project myProject;
   @Nullable
   private final Runnable myCallback;
 
-  public InvokeTemplateAction(TemplateImpl template, Editor editor, Project project, Set<Character> usedMnemonicsSet) {
+  public InvokeTemplateAction(Template template, Editor editor, Project project, Set<Character> usedMnemonicsSet) {
     this(template, editor, project, usedMnemonicsSet, null);
   }
 
-  public InvokeTemplateAction(TemplateImpl template, Editor editor, Project project, Set<Character> usedMnemonicsSet, @Nullable Runnable afterInvocationCallback) {
+  public InvokeTemplateAction(Template template, Editor editor, Project project, Set<Character> usedMnemonicsSet, @Nullable Runnable afterInvocationCallback) {
     super(extractMnemonic(template.getKey(), usedMnemonicsSet) + (StringUtil.isEmptyOrSpaces(template.getDescription()) ? "" : ". " + template.getDescription()));
     myTemplate = template;
     myProject = project;
@@ -55,7 +56,7 @@ public class InvokeTemplateAction extends AnAction {
     return caption + " ";
   }
 
-  public TemplateImpl getTemplate() {
+  public Template getTemplate() {
     return myTemplate;
   }
 

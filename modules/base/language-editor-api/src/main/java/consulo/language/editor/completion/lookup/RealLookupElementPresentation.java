@@ -1,7 +1,5 @@
-package consulo.ide.impl.idea.codeInsight.lookup;
+package consulo.language.editor.completion.lookup;
 
-import consulo.language.editor.completion.lookup.Lookup;
-import consulo.language.editor.completion.lookup.LookupElementPresentation;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 

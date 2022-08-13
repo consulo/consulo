@@ -2,31 +2,35 @@
 
 package consulo.ide.impl.idea.codeInsight.lookup.impl.actions;
 
+import consulo.codeEditor.Caret;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.action.EditorActionHandler;
+import consulo.codeEditor.impl.action.EditorAction;
+import consulo.dataContext.DataContext;
+import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.idea.codeInsight.completion.CodeCompletionFeatures;
+import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
+import consulo.ide.impl.idea.codeInsight.lookup.impl.LookupImpl;
+import consulo.ide.impl.idea.codeInsight.template.impl.LiveTemplateCompletionContributor;
+import consulo.ide.impl.idea.codeInsight.template.impl.editorActions.ExpandLiveTemplateCustomAction;
+import consulo.ide.impl.idea.openapi.editor.actionSystem.LatencyAwareEditorAction;
+import consulo.ide.impl.idea.util.SlowOperations;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.completion.CompletionProcess;
 import consulo.language.editor.completion.CompletionService;
-import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.language.editor.completion.lookup.Lookup;
 import consulo.language.editor.completion.lookup.LookupFocusDegree;
 import consulo.language.editor.completion.lookup.LookupManager;
-import consulo.ide.impl.idea.codeInsight.lookup.impl.LookupImpl;
+import consulo.language.editor.template.LiveTemplateLookupElement;
+import consulo.language.editor.template.Template;
+import consulo.language.editor.template.TemplateManager;
+import consulo.language.editor.template.TemplateSettings;
 import consulo.language.editor.template.context.TemplateActionContext;
-import consulo.ide.impl.idea.codeInsight.template.impl.*;
-import consulo.ide.impl.idea.codeInsight.template.impl.editorActions.ExpandLiveTemplateCustomAction;
-import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.dataContext.DataContext;
-import consulo.codeEditor.Caret;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.impl.action.EditorAction;
-import consulo.codeEditor.action.EditorActionHandler;
-import consulo.ide.impl.idea.openapi.editor.actionSystem.LatencyAwareEditorAction;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import consulo.ide.impl.idea.util.SlowOperations;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
 
 public abstract class ChooseItemAction extends EditorAction implements HintManagerImpl.ActionToIgnore, LatencyAwareEditorAction {
@@ -120,9 +124,10 @@ public abstract class ChooseItemAction extends EditorAction implements HintManag
         return true;
       }
 
-      List<TemplateImpl> templates = SlowOperations.allowSlowOperations(() -> TemplateManagerImpl.listApplicableTemplateWithInsertingDummyIdentifier(TemplateActionContext.expanding(file, editor)));
-      TemplateImpl template = LiveTemplateCompletionContributor.findFullMatchedApplicableTemplate(editor, offset, templates);
-      if (template != null && shortcutChar == TemplateSettingsImpl.getInstanceImpl().getShortcutChar(template)) {
+      List<? extends Template> templates = SlowOperations
+              .allowSlowOperations(() -> TemplateManager.getInstance(file.getProject()).listApplicableTemplateWithInsertingDummyIdentifier(TemplateActionContext.expanding(file, editor)));
+      Template template = LiveTemplateCompletionContributor.findFullMatchedApplicableTemplate(editor, offset, templates);
+      if (template != null && shortcutChar == TemplateSettings.getInstance().getShortcutChar(template)) {
         return true;
       }
       return false;

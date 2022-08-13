@@ -15,15 +15,18 @@
  */
 package consulo.ide.impl.idea.codeInsight.template.impl;
 
-import consulo.language.editor.completion.lookup.InsertionContext;
-import consulo.language.editor.template.TemplateManager;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.language.editor.completion.lookup.InsertionContext;
+import consulo.language.editor.template.LiveTemplateLookupElement;
+import consulo.language.editor.template.Template;
+import consulo.language.editor.template.TemplateManager;
+
 import javax.annotation.Nonnull;
 
 public class LiveTemplateLookupElementImpl extends LiveTemplateLookupElement {
-  private final TemplateImpl myTemplate;
+  private final Template myTemplate;
 
-  public LiveTemplateLookupElementImpl(@Nonnull TemplateImpl template, boolean sudden) {
+  public LiveTemplateLookupElementImpl(@Nonnull Template template, boolean sudden) {
     super(template.getKey(), StringUtil.notNullize(template.getDescription()), sudden, false);
     myTemplate = template;
   }
@@ -35,7 +38,7 @@ public class LiveTemplateLookupElementImpl extends LiveTemplateLookupElement {
   }
 
   @Nonnull
-  public TemplateImpl getTemplate() {
+  public Template getTemplate() {
     return myTemplate;
   }
 

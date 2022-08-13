@@ -27,6 +27,7 @@ package consulo.ide.impl.idea.codeInsight.template.actions;
 import consulo.language.editor.impl.internal.completion.CompletionUtil;
 import consulo.language.editor.completion.OffsetKey;
 import consulo.ide.impl.idea.codeInsight.completion.OffsetsInFile;
+import consulo.language.editor.template.TemplateManager;
 import consulo.language.editor.template.context.TemplateActionContext;
 import consulo.language.editor.template.context.TemplateContextType;
 import consulo.ide.impl.idea.codeInsight.template.impl.*;
@@ -153,7 +154,7 @@ public class SaveAsTemplateAction extends AnAction {
     OffsetsInFile copy =
             TemplateManagerImpl.copyWithDummyIdentifier(offsets, editor.getSelectionModel().getSelectionStart(), editor.getSelectionModel().getSelectionEnd(), CompletionUtil.DUMMY_IDENTIFIER_TRIMMED);
 
-    Set<TemplateContextType> applicable = TemplateManagerImpl.getApplicableContextTypes(TemplateActionContext.expanding(copy.getFile(), copy.getOffsets().getOffset(startKey)));
+    Set<TemplateContextType> applicable = TemplateManager.getInstance(project).getApplicableContextTypes(TemplateActionContext.expanding(copy.getFile(), copy.getOffsets().getOffset(startKey)));
 
     for (TemplateContextType contextType : TemplateContextType.EP_NAME.getExtensionList()) {
       template.getTemplateContext().setEnabled(contextType, applicable.contains(contextType));

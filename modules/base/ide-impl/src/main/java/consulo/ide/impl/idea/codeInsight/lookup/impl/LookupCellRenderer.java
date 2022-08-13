@@ -16,7 +16,6 @@
 
 package consulo.ide.impl.idea.codeInsight.lookup.impl;
 
-import consulo.ide.impl.idea.codeInsight.lookup.*;
 import consulo.application.util.matcher.MatcherTextRange;
 import consulo.codeEditor.Editor;
 import consulo.colorScheme.EditorColorsScheme;
@@ -26,10 +25,7 @@ import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUIUtil;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.codeEditor.impl.ComplementaryFontsRegistry;
 import consulo.component.ProcessCanceledException;
-import consulo.language.editor.completion.lookup.LookupElement;
-import consulo.language.editor.completion.lookup.LookupElementPresentation;
-import consulo.language.editor.completion.lookup.LookupFocusDegree;
-import consulo.language.editor.completion.lookup.LookupValueWithUIHint;
+import consulo.language.editor.completion.lookup.*;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
 import consulo.application.util.registry.Registry;

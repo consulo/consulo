@@ -2,23 +2,25 @@
 
 package consulo.ide.impl.idea.codeInsight.template.impl;
 
-import consulo.language.editor.action.CodeInsightActionHandler;
-import consulo.language.editor.CodeInsightBundle;
-import consulo.ide.impl.idea.codeInsight.generation.surroundWith.SurroundWithHandler;
-import consulo.language.editor.hint.HintManager;
-import consulo.ide.impl.idea.codeInsight.template.CustomLiveTemplate;
-import consulo.language.editor.template.context.TemplateActionContext;
+import consulo.codeEditor.Editor;
 import consulo.dataContext.DataManager;
+import consulo.ide.impl.idea.codeInsight.generation.surroundWith.SurroundWithHandler;
+import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
+import consulo.language.editor.CodeInsightBundle;
+import consulo.language.editor.action.CodeInsightActionHandler;
+import consulo.language.editor.hint.HintManager;
+import consulo.language.editor.template.CustomLiveTemplate;
+import consulo.language.editor.template.Template;
+import consulo.language.editor.template.TemplateManager;
+import consulo.language.editor.template.context.TemplateActionContext;
+import consulo.language.psi.PsiFile;
+import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
-import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
-import consulo.language.psi.PsiFile;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 public class SurroundWithTemplateHandler implements CodeInsightActionHandler {
@@ -52,14 +54,14 @@ public class SurroundWithTemplateHandler implements CodeInsightActionHandler {
   public static List<AnAction> createActionGroup(@Nonnull Editor editor, @Nonnull PsiFile file, @Nonnull Set<Character> usedMnemonicsSet) {
     TemplateActionContext templateActionContext = TemplateActionContext.surrounding(file, editor);
     List<CustomLiveTemplate> customTemplates = TemplateManagerImpl.listApplicableCustomTemplates(templateActionContext);
-    List<TemplateImpl> templates = TemplateManagerImpl.listApplicableTemplates(templateActionContext);
+    List<? extends Template> templates = TemplateManager.getInstance(file.getProject()).listApplicableTemplates(templateActionContext);
     if (templates.isEmpty() && customTemplates.isEmpty()) {
       return Collections.emptyList();
     }
 
     List<AnAction> group = new ArrayList<>();
 
-    for (TemplateImpl template : templates) {
+    for (Template template : templates) {
       group.add(new InvokeTemplateAction(template, editor, file.getProject(), usedMnemonicsSet, () -> SurroundWithLogger.logTemplate(template, file.getLanguage(), file.getProject())));
     }
 

@@ -19,12 +19,16 @@ package consulo.language.editor.template;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.codeEditor.Editor;
+import consulo.language.editor.template.context.TemplateActionContext;
+import consulo.language.editor.template.context.TemplateContextType;
 import consulo.language.editor.template.event.TemplateEditingListener;
 import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.BiPredicate;
 
 @ServiceAPI(ComponentScope.PROJECT)
@@ -65,4 +69,12 @@ public abstract class TemplateManager {
 
   @Nullable
   public abstract TemplateState getTemplateState(@Nonnull Editor editor);
+
+  public abstract boolean isApplicable(Template template, Set<TemplateContextType> contextTypes);
+
+  public abstract List<? extends Template> listApplicableTemplates(@Nonnull TemplateActionContext templateActionContext);
+
+  public abstract List<? extends Template> listApplicableTemplateWithInsertingDummyIdentifier(@Nonnull TemplateActionContext templateActionContext);
+
+  public abstract Set<TemplateContextType> getApplicableContextTypes(@Nonnull TemplateActionContext templateActionContext);
 }

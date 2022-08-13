@@ -24,6 +24,7 @@ import consulo.language.editor.completion.lookup.Lookup;
 import consulo.language.editor.completion.lookup.LookupActionProvider;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementAction;
+import consulo.language.editor.template.Template;
 import consulo.project.Project;
 
 import java.util.function.Consumer;
@@ -36,7 +37,7 @@ public class LiveTemplateLookupActionProvider implements LookupActionProvider {
   @Override
   public void fillActions(LookupElement element, final Lookup lookup, Consumer<LookupElementAction> consumer) {
     if (element instanceof LiveTemplateLookupElementImpl) {
-      final TemplateImpl template = ((LiveTemplateLookupElementImpl)element).getTemplate();
+      final Template template = ((LiveTemplateLookupElementImpl)element).getTemplate();
       final TemplateImpl templateFromSettings = TemplateSettingsImpl.getInstanceImpl().getTemplate(template.getKey(), template.getGroupName());
 
       if (templateFromSettings != null) {
@@ -54,7 +55,7 @@ public class LiveTemplateLookupActionProvider implements LookupActionProvider {
                 ShowSettingsUtil.getInstance().editConfigurable(project, configurable, new Runnable() {
                   @Override
                   public void run() {
-                    configurable.getTemplateListPanel().editTemplate(template);
+                    configurable.getTemplateListPanel().editTemplate((TemplateImpl)template);
                   }
                 });
               }

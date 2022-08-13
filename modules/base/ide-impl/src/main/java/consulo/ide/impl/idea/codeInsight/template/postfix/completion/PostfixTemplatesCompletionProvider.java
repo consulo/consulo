@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.codeInsight.template.postfix.completion;
 import consulo.language.editor.completion.CompletionParameters;
 import consulo.language.editor.completion.CompletionResultSet;
 import consulo.application.util.matcher.PrefixMatcher;
-import consulo.ide.impl.idea.codeInsight.template.CustomTemplateCallback;
+import consulo.language.editor.template.CustomTemplateCallback;
 import consulo.ide.impl.idea.codeInsight.template.impl.LiveTemplateCompletionContributor;
 import consulo.language.editor.postfixTemplate.PostfixTemplatesSettings;
 import consulo.ide.impl.idea.codeInsight.template.postfix.templates.PostfixLiveTemplate;

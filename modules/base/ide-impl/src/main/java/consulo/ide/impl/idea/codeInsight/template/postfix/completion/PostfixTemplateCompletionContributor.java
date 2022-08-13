@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.codeInsight.template.postfix.completion;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.codeInsight.template.CustomLiveTemplate;
+import consulo.language.editor.template.CustomLiveTemplate;
 import consulo.ide.impl.idea.codeInsight.template.impl.TemplateManagerImpl;
 import consulo.ide.impl.idea.codeInsight.template.postfix.templates.PostfixLiveTemplate;
 import consulo.language.Language;

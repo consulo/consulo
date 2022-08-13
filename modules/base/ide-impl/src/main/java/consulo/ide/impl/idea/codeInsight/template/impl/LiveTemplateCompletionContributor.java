@@ -8,15 +8,12 @@ import consulo.application.util.matcher.PrefixMatcher;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.codeInsight.template.CustomLiveTemplate;
-import consulo.ide.impl.idea.codeInsight.template.CustomLiveTemplateBase;
-import consulo.ide.impl.idea.codeInsight.template.CustomTemplateCallback;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.Language;
 import consulo.language.editor.completion.*;
 import consulo.language.editor.internal.TemplateConstants;
-import consulo.language.editor.completion.CamelHumpMatcher;
+import consulo.language.editor.template.*;
 import consulo.language.editor.template.context.TemplateActionContext;
 import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.language.pattern.PatternCondition;
@@ -75,8 +72,8 @@ public class LiveTemplateCompletionContributor extends CompletionContributor imp
 
         Editor editor = parameters.getEditor();
         int offset = editor.getCaretModel().getOffset();
-        final List<TemplateImpl> availableTemplates = TemplateManagerImpl.listApplicableTemplates(TemplateActionContext.expanding(file, editor));
-        final Map<TemplateImpl, String> templates = filterTemplatesByPrefix(availableTemplates, editor, offset, false, false);
+        final List<? extends Template> availableTemplates = TemplateManager.getInstance(parameters.getPosition().getProject()).listApplicableTemplates(TemplateActionContext.expanding(file, editor));
+        final Map<Template, String> templates = filterTemplatesByPrefix(availableTemplates, editor, offset, false, false);
         boolean isAutopopup = parameters.getInvocationCount() == 0;
         if (showAllTemplates()) {
           final AtomicBoolean templatesShown = new AtomicBoolean(false);
@@ -102,13 +99,13 @@ public class LiveTemplateCompletionContributor extends CompletionContributor imp
         // custom templates should handle this situation by itself (return true from hasCompletionItems() and provide lookup element)
         // regular templates won't be shown in this case
         if (!customTemplateAvailableAndHasCompletionItem(null, editor, file, offset)) {
-          TemplateImpl template = findFullMatchedApplicableTemplate(editor, offset, availableTemplates);
+          Template template = findFullMatchedApplicableTemplate(editor, offset, availableTemplates);
           if (template != null) {
             result.withPrefixMatcher(template.getKey()).addElement(new LiveTemplateLookupElementImpl(template, true));
           }
         }
 
-        for (Map.Entry<TemplateImpl, String> possible : templates.entrySet()) {
+        for (Map.Entry<Template, String> possible : templates.entrySet()) {
           ProgressManager.checkCanceled();
           String templateKey = possible.getKey().getKey();
           String currentPrefix = possible.getValue();
@@ -137,7 +134,7 @@ public class LiveTemplateCompletionContributor extends CompletionContributor imp
     return shouldShowAllTemplates();
   }
 
-  private static void ensureTemplatesShown(AtomicBoolean templatesShown, Map<TemplateImpl, String> templates, List<TemplateImpl> availableTemplates, CompletionResultSet result, boolean isAutopopup) {
+  private static void ensureTemplatesShown(AtomicBoolean templatesShown, Map<Template, String> templates, List<? extends Template> availableTemplates, CompletionResultSet result, boolean isAutopopup) {
     if (!templatesShown.getAndSet(true)) {
       List<String> templateKeys = ContainerUtil.map(availableTemplates, template -> template.getKey());
 
@@ -147,7 +144,7 @@ public class LiveTemplateCompletionContributor extends CompletionContributor imp
           return s.length() > 1 && !Character.isJavaIdentifierPart(s.charAt(s.length() - 2)) && templateKeys.stream().anyMatch(template -> s.endsWith(template));
         }
       }));
-      for (final Map.Entry<TemplateImpl, String> entry : templates.entrySet()) {
+      for (final Map.Entry<Template, String> entry : templates.entrySet()) {
         ProgressManager.checkCanceled();
         if (isAutopopup && entry.getKey().getShortcutChar() == TemplateConstants.NONE_CHAR) continue;
         result.withPrefixMatcher(result.getPrefixMatcher().cloneWithPrefix(StringUtil.notNullize(entry.getValue()))).addElement(new LiveTemplateLookupElementImpl(entry.getKey(), false));
@@ -166,10 +163,10 @@ public class LiveTemplateCompletionContributor extends CompletionContributor imp
   }
 
   @Nullable
-  public static TemplateImpl findFullMatchedApplicableTemplate(@Nonnull Editor editor, int offset, @Nonnull Collection<? extends TemplateImpl> availableTemplates) {
-    Map<TemplateImpl, String> templates = filterTemplatesByPrefix(availableTemplates, editor, offset, true, false);
+  public static Template findFullMatchedApplicableTemplate(@Nonnull Editor editor, int offset, @Nonnull Collection<? extends Template> availableTemplates) {
+    Map<Template, String> templates = filterTemplatesByPrefix(availableTemplates, editor, offset, true, false);
     if (templates.size() == 1) {
-      TemplateImpl template = ContainerUtil.getFirstItem(templates.keySet());
+      Template template = ContainerUtil.getFirstItem(templates.keySet());
       if (template != null) {
         return template;
       }

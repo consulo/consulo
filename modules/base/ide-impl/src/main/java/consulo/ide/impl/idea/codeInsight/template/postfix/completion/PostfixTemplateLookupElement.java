@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.codeInsight.template.postfix.completion;
 
 import consulo.language.editor.completion.lookup.LookupElementPresentation;
-import consulo.ide.impl.idea.codeInsight.template.impl.CustomLiveTemplateLookupElement;
+import consulo.language.editor.template.CustomLiveTemplateLookupElement;
 import consulo.ide.impl.idea.codeInsight.template.postfix.templates.PostfixLiveTemplate;
 import consulo.language.editor.postfixTemplate.PostfixTemplate;
 import consulo.language.editor.postfixTemplate.PostfixTemplateProvider;

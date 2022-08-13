@@ -707,7 +707,8 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
     return candidates;
   }
 
-  public char getShortcutChar(TemplateImpl template) {
+  @Override
+  public char getShortcutChar(Template template) {
     char c = template.getShortcutChar();
     return c == DEFAULT_CHAR ? getDefaultShortcutChar() : c;
   }

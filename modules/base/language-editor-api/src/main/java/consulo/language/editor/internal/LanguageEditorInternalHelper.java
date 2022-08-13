@@ -22,9 +22,12 @@ import consulo.codeEditor.Editor;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
+import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -45,4 +48,9 @@ public interface LanguageEditorInternalHelper {
                                   int startOffset,
                                   int endOffset,
                                   List<? extends TextRange> enabledRanges);
+
+  @Contract("null,_,_->null;!null,_,_->!null")
+  default Editor getEditorForInjectedLanguageNoCommit(@Nullable Editor editor, @Nullable PsiFile file, final int offset) {
+    return editor;
+  }
 }
