@@ -23,6 +23,7 @@ import consulo.application.CommonBundle;
 import consulo.application.util.mac.foundation.Foundation;
 import consulo.application.util.mac.foundation.ID;
 import consulo.logging.Logger;
+import consulo.util.jna.JnaLoader;
 import consulo.util.lang.Clock;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.SyncDateFormat;
@@ -331,7 +332,7 @@ public class DateFormatUtil {
 
     boolean loaded = false;
     try {
-      if (SystemInfo.isWin7OrNewer) {
+      if (SystemInfo.isWin7OrNewer && JnaLoader.isLoaded()) {
         loaded = getWindowsFormats(formats);
       }
       else if (SystemInfo.isMac) {

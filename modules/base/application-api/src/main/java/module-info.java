@@ -17,8 +17,9 @@ module consulo.application.api {
 
   requires transitive jakarta.inject;
 
-  requires com.sun.jna;
-  requires com.sun.jna.platform;
+  requires static consulo.util.jna;
+  requires static com.sun.jna;
+  requires static com.sun.jna.platform;
 
   exports consulo.application;
   exports consulo.application.dumb;
