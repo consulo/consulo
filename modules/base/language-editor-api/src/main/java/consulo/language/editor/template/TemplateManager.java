@@ -16,6 +16,7 @@
 
 package consulo.language.editor.template;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.codeEditor.Editor;
@@ -53,9 +54,17 @@ public abstract class TemplateManager {
 
   public abstract boolean startTemplate(@Nonnull Editor editor, char shortcutChar);
 
-  public abstract Template createTemplate(@Nonnull String key, String group);
+  @Deprecated
+  @DeprecationInfo("use TemplateBuilderFactory")
+  public Template createTemplate(@Nonnull String key, String group) {
+    return TemplateBuilderFactory.getInstance().createRawTemplate(key, group);
+  }
 
-  public abstract Template createTemplate(@Nonnull String key, String group, String text);
+  @Deprecated
+  @DeprecationInfo("use TemplateBuilderFactory")
+  public Template createTemplate(@Nonnull String key, String group, String text) {
+    return TemplateBuilderFactory.getInstance().createRawTemplate(key, group, text);
+  }
 
   @Nullable
   public abstract Template getActiveTemplate(@Nonnull Editor editor);

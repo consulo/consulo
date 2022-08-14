@@ -16,8 +16,10 @@
 
 package consulo.ide.impl.idea.codeInsight.template.impl;
 
+import consulo.language.editor.impl.internal.template.TemplateImpl;
 import consulo.language.editor.internal.TemplateContext;
 import consulo.language.editor.impl.internal.template.TemplateEditorUtil;
+import consulo.language.editor.template.TemplateOptionalProcessor;
 import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.ui.CheckboxTree;

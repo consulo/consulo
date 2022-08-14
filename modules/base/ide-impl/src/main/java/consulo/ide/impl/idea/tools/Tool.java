@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.tools;
 
 import consulo.ide.impl.idea.execution.util.ExecutionErrorDialog;
-import consulo.ide.impl.idea.openapi.options.SchemeElement;
+import consulo.component.persist.scheme.SchemeElement;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.dataContext.DataContext;

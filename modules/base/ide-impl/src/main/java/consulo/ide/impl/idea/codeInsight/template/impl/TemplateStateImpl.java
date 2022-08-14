@@ -56,6 +56,7 @@ import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.completion.lookup.event.LookupAdapter;
 import consulo.language.editor.completion.lookup.event.LookupEvent;
 import consulo.language.editor.completion.lookup.event.LookupListener;
+import consulo.language.editor.impl.internal.template.TemplateImpl;
 import consulo.language.editor.refactoring.rename.inplace.InplaceRefactoring;
 import consulo.language.editor.template.*;
 import consulo.language.editor.template.event.TemplateEditingListener;

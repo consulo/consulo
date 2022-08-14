@@ -16,12 +16,11 @@
 
 package consulo.ide.impl.idea.codeInsight.template.macro;
 
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.language.editor.WriteCommandAction;
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.document.util.TextRange;
-import consulo.language.editor.util.PsiUtilBase;
+import consulo.language.editor.WriteCommandAction;
 import consulo.language.editor.completion.lookup.Lookup;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupManager;
@@ -29,6 +28,7 @@ import consulo.language.editor.completion.lookup.event.LookupAdapter;
 import consulo.language.editor.completion.lookup.event.LookupEvent;
 import consulo.language.editor.template.*;
 import consulo.language.editor.template.macro.Macro;
+import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.undoRedo.CommandProcessor;
@@ -60,12 +60,7 @@ public abstract class BaseCompleteMacro extends Macro {
 
   @Override
   public final Result calculateResult(@Nonnull Expression[] params, final ExpressionContext context) {
-    return new InvokeActionResult(new Runnable() {
-      @Override
-      public void run() {
-        invokeCompletion(context);
-      }
-    });
+    return new InvokeActionResult(() -> invokeCompletion(context));
   }
 
   private void invokeCompletion(final ExpressionContext context) {
@@ -94,12 +89,8 @@ public abstract class BaseCompleteMacro extends Macro {
         }, "", null);
       }
     };
-    if (ApplicationManager.getApplication().isUnitTestMode()) {
-      runnable.run();
-    }
-    else {
-      ApplicationManager.getApplication().invokeLater(runnable);
-    }
+
+    ApplicationManager.getApplication().invokeLater(runnable);
   }
 
   private static void considerNextTab(Editor editor) {
@@ -162,13 +153,9 @@ public abstract class BaseCompleteMacro extends Macro {
           }.execute();
         }
       };
-      if (ApplicationManager.getApplication().isUnitTestMode()) {
-        runnable.run();
-      }
-      else {
-        ApplicationManager.getApplication().invokeLater(runnable, IdeaModalityState.current(), project.getDisposed());
-      }
 
+      Application application = Application.get();
+      application.invokeLater(runnable, application.getCurrentModalityState(), project.getDisposed());
     }
   }
 }

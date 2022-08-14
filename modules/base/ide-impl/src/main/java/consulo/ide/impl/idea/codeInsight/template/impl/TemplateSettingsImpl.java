@@ -26,6 +26,7 @@ import consulo.component.persist.scheme.SchemeManager;
 import consulo.component.persist.scheme.SchemeManagerFactory;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
+import consulo.language.editor.impl.internal.template.TemplateImpl;
 import consulo.language.editor.internal.TemplateConstants;
 import consulo.language.editor.template.DefaultLiveTemplatesProvider;
 import consulo.language.editor.template.Template;

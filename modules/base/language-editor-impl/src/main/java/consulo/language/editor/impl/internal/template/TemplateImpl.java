@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.template.impl;
+package consulo.language.editor.impl.internal.template;
 
-import consulo.ide.impl.idea.openapi.options.SchemeElement;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.component.persist.scheme.SchemeElement;
 import consulo.language.ast.IElementType;
+import consulo.language.editor.internal.TemplateConstants;
 import consulo.language.editor.internal.TemplateContext;
-import consulo.language.editor.impl.internal.template.TemplateTextLexer;
-import consulo.language.editor.impl.internal.template.TemplateTokenType;
 import consulo.language.editor.internal.TemplateEx;
 import consulo.language.editor.template.Expression;
 import consulo.language.editor.template.Template;
+import consulo.language.editor.template.TemplateOptionalProcessor;
 import consulo.language.editor.template.Variable;
 import consulo.language.editor.template.context.TemplateContextType;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -40,7 +40,7 @@ public class TemplateImpl extends TemplateEx implements SchemeElement {
   private String myString = null;
   private String myDescription;
   private String myGroupName;
-  private char myShortcutChar = TemplateSettingsImpl.DEFAULT_CHAR;
+  private char myShortcutChar = TemplateConstants.DEFAULT_CHAR;
   private final ArrayList<Variable> myVariables = new ArrayList<>();
   private ArrayList<Segment> mySegments = null;
   private String myTemplateText = null;
@@ -166,6 +166,7 @@ public class TemplateImpl extends TemplateEx implements SchemeElement {
     return myId;
   }
 
+  @Nonnull
   @Override
   public TemplateImpl copy() {
     TemplateImpl template = new TemplateImpl(myKey, myString, myGroupName);
@@ -189,6 +190,7 @@ public class TemplateImpl extends TemplateEx implements SchemeElement {
     return template;
   }
 
+  @Override
   public boolean isToReformat() {
     return isToReformat;
   }
@@ -217,10 +219,12 @@ public class TemplateImpl extends TemplateEx implements SchemeElement {
     isToShortenLongNames = toShortenLongNames;
   }
 
+  @Override
   public void setDeactivated(boolean isDeactivated) {
     this.isDeactivated = isDeactivated;
   }
 
+  @Override
   public boolean isDeactivated() {
     return isDeactivated;
   }
@@ -330,30 +334,37 @@ public class TemplateImpl extends TemplateEx implements SchemeElement {
     myVariables.remove(i);
   }
 
+  @Override
   public int getVariableCount() {
     return myVariables.size();
   }
 
+  @Override
   public String getVariableNameAt(int i) {
     return myVariables.get(i).getName();
   }
 
+  @Override
   public String getExpressionStringAt(int i) {
     return myVariables.get(i).getExpressionString();
   }
 
+  @Override
   public Expression getExpressionAt(int i) {
     return myVariables.get(i).getExpression();
   }
 
+  @Override
   public String getDefaultValueStringAt(int i) {
     return myVariables.get(i).getDefaultValueString();
   }
 
+  @Override
   public Expression getDefaultValueAt(int i) {
     return myVariables.get(i).getDefaultValueExpression();
   }
 
+  @Override
   public boolean isAlwaysStopAt(int i) {
     return myVariables.get(i).isAlwaysStopAt();
   }
@@ -363,6 +374,7 @@ public class TemplateImpl extends TemplateEx implements SchemeElement {
     return myKey;
   }
 
+  @Override
   public void setKey(String key) {
     myKey = key;
   }
@@ -373,6 +385,7 @@ public class TemplateImpl extends TemplateEx implements SchemeElement {
     return myString;
   }
 
+  @Override
   public void setString(String string) {
     myString = string;
   }
@@ -382,18 +395,22 @@ public class TemplateImpl extends TemplateEx implements SchemeElement {
     return myDescription;
   }
 
+  @Override
   public void setDescription(String description) {
     myDescription = description;
   }
 
+  @Override
   public char getShortcutChar() {
     return myShortcutChar;
   }
 
+  @Override
   public void setShortcutChar(char shortcutChar) {
     myShortcutChar = shortcutChar;
   }
 
+  @Override
   public String getGroupName() {
     return myGroupName;
   }
@@ -424,20 +441,14 @@ public class TemplateImpl extends TemplateEx implements SchemeElement {
 
   public Map<TemplateOptionalProcessor, Boolean> createOptions() {
     Map<TemplateOptionalProcessor, Boolean> context = new LinkedHashMap<>();
-    for (TemplateOptionalProcessor processor : TemplateOptionalProcessor.EP_NAME.getExtensionList()) {
-      context.put(processor, processor.isEnabled(this));
-    }
+    TemplateOptionalProcessor.EP_NAME.forEachExtensionSafe(processor -> context.put(processor, processor.isEnabled(this)));
     return context;
   }
 
   public Map<TemplateContextType, Boolean> createContext() {
-
     Map<TemplateContextType, Boolean> context = new LinkedHashMap<>();
-    for (TemplateContextType processor : TemplateContextType.EP_NAME.getExtensionList()) {
-      context.put(processor, getTemplateContext().isEnabled(processor));
-    }
+    TemplateContextType.EP_NAME.forEachExtensionSafe(it -> context.put(it, getTemplateContext().isEnabled(it)));
     return context;
-
   }
 
   public boolean contextsEqual(TemplateImpl defaultTemplate) {
@@ -446,13 +457,13 @@ public class TemplateImpl extends TemplateEx implements SchemeElement {
 
   public void applyOptions(final Map<TemplateOptionalProcessor, Boolean> context) {
     for (Map.Entry<TemplateOptionalProcessor, Boolean> entry : context.entrySet()) {
-      entry.getKey().setEnabled(this, entry.getValue().booleanValue());
+      entry.getKey().setEnabled(this, entry.getValue());
     }
   }
 
   public void applyContext(final Map<TemplateContextType, Boolean> context) {
     for (Map.Entry<TemplateContextType, Boolean> entry : context.entrySet()) {
-      getTemplateContext().setEnabled(entry.getKey(), entry.getValue().booleanValue());
+      getTemplateContext().setEnabled(entry.getKey(), entry.getValue());
     }
   }
 

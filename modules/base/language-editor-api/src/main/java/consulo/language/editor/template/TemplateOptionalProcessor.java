@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.template.impl;
+package consulo.language.editor.template;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
@@ -22,7 +22,6 @@ import consulo.codeEditor.Editor;
 import consulo.component.extension.ExtensionPointName;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
-import consulo.language.editor.template.Template;
 import consulo.project.Project;
 import org.jetbrains.annotations.Nls;
 

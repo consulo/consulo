@@ -192,8 +192,7 @@ public class TemplateBuilderImpl implements TemplateBuilder {
   }
 
   public Template buildTemplate() {
-    TemplateManager manager = TemplateManager.getInstance(myFile.getProject());
-    final Template template = manager.createTemplate("", "");
+    final Template template = TemplateBuilderFactory.getInstance().createRawTemplate("", "");
 
     String text = getDocumentTextFragment(myContainerElement.getStartOffset(), myContainerElement.getEndOffset());
     final int containerStart = myContainerElement.getStartOffset();

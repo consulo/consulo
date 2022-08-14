@@ -27,6 +27,7 @@ package consulo.ide.impl.idea.codeInsight.template.actions;
 import consulo.language.editor.impl.internal.completion.CompletionUtil;
 import consulo.language.editor.completion.OffsetKey;
 import consulo.ide.impl.idea.codeInsight.completion.OffsetsInFile;
+import consulo.language.editor.impl.internal.template.TemplateImpl;
 import consulo.language.editor.template.TemplateManager;
 import consulo.language.editor.template.context.TemplateActionContext;
 import consulo.language.editor.template.context.TemplateContextType;

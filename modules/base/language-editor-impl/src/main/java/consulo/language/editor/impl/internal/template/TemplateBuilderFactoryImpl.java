@@ -17,6 +17,7 @@
 package consulo.language.editor.impl.internal.template;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.language.editor.template.Template;
 import consulo.language.editor.template.TemplateBuilder;
 import consulo.language.editor.template.TemplateBuilderFactory;
 import consulo.language.psi.PsiElement;
@@ -33,5 +34,15 @@ public class TemplateBuilderFactoryImpl extends TemplateBuilderFactory {
   @Override
   public TemplateBuilder createTemplateBuilder(@Nonnull PsiElement element) {
     return new TemplateBuilderImpl(element);
+  }
+
+  @Override
+  public Template createRawTemplate(@Nonnull String key, String group) {
+    return new TemplateImpl(key, group);
+  }
+
+  @Override
+  public Template createRawTemplate(@Nonnull String key, String group, String text) {
+    return new TemplateImpl(key, text, group);
   }
 }

@@ -21,6 +21,8 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.language.psi.PsiElement;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author yole
  */
@@ -31,4 +33,8 @@ public abstract class TemplateBuilderFactory {
   }
 
   public abstract TemplateBuilder createTemplateBuilder(PsiElement element);
+
+  public abstract Template createRawTemplate(@Nonnull String key, String group);
+
+  public abstract Template createRawTemplate(@Nonnull String key, String group, String text);
 }

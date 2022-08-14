@@ -24,7 +24,5 @@ import consulo.language.editor.template.Template;
  * @since 17-Jul-22
  */
 public abstract class TemplateEx extends Template {
-  public abstract String getString();
-
   public abstract TemplateContext getTemplateContext();
 }

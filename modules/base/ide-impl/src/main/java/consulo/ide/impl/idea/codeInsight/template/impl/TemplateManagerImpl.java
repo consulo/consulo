@@ -34,6 +34,7 @@ import consulo.language.Language;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.completion.OffsetKey;
 import consulo.language.editor.impl.internal.completion.CompletionUtil;
+import consulo.language.editor.impl.internal.template.TemplateImpl;
 import consulo.language.editor.internal.TemplateEx;
 import consulo.language.editor.template.*;
 import consulo.language.editor.template.context.TemplateActionContext;
@@ -96,16 +97,6 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
 
   private static void disposeState(@Nonnull TemplateStateImpl state) {
     Disposer.dispose(state);
-  }
-
-  @Override
-  public Template createTemplate(@Nonnull String key, String group) {
-    return new TemplateImpl(key, group);
-  }
-
-  @Override
-  public Template createTemplate(@Nonnull String key, String group, String text) {
-    return new TemplateImpl(key, text, group);
   }
 
   @Nullable

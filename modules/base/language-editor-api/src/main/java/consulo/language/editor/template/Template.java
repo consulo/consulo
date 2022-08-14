@@ -16,8 +16,6 @@
 
 package consulo.language.editor.template;
 
-import org.jetbrains.annotations.NonNls;
-
 import javax.annotation.Nonnull;
 import java.util.EnumMap;
 import java.util.Map;
@@ -46,21 +44,21 @@ public abstract class Template {
 
   public abstract void addTextSegment(@Nonnull String text);
 
-  public abstract void addVariableSegment(@NonNls String name);
+  public abstract void addVariableSegment(String name);
 
-  public Variable addVariable(@NonNls String name, @Nonnull Expression defaultValueExpression, boolean isAlwaysStopAt) {
+  public Variable addVariable(String name, @Nonnull Expression defaultValueExpression, boolean isAlwaysStopAt) {
     return addVariable(name, defaultValueExpression, defaultValueExpression, isAlwaysStopAt);
   }
 
   public abstract Variable addVariable(Expression expression, boolean isAlwaysStopAt);
 
-  public Variable addVariable(@NonNls String name, Expression expression, Expression defaultValueExpression, boolean isAlwaysStopAt) {
+  public Variable addVariable(String name, Expression expression, Expression defaultValueExpression, boolean isAlwaysStopAt) {
     return addVariable(name, expression, defaultValueExpression, isAlwaysStopAt, false);
   }
 
-  public abstract Variable addVariable(@NonNls String name, Expression expression, Expression defaultValueExpression, boolean isAlwaysStopAt, boolean skipOnStart);
+  public abstract Variable addVariable(String name, Expression expression, Expression defaultValueExpression, boolean isAlwaysStopAt, boolean skipOnStart);
 
-  public abstract Variable addVariable(@NonNls String name, @NonNls String expression, @NonNls String defaultValueExpression, boolean isAlwaysStopAt);
+  public abstract Variable addVariable(String name, String expression, String defaultValueExpression, boolean isAlwaysStopAt);
 
   public abstract void addEndVariable();
 
@@ -72,7 +70,11 @@ public abstract class Template {
 
   public abstract String getKey();
 
+  public abstract void setKey(String key);
+
   public abstract String getDescription();
+
+  public abstract void setDescription(String description);
 
   public abstract void setToReformat(boolean toReformat);
 
@@ -96,9 +98,36 @@ public abstract class Template {
 
   public abstract boolean isDeactivated();
 
+  public abstract void setDeactivated(boolean isDeactivated);
+
   public abstract boolean isToReformat();
 
   public abstract char getShortcutChar();
+
+  public abstract void setShortcutChar(char shortcutChar);
+
+  public abstract int getVariableCount();
+
+  public abstract void removeVariable(int i);
+
+  public abstract String getVariableNameAt(int i);
+
+  public abstract String getExpressionStringAt(int i);
+
+  public abstract Expression getExpressionAt(int i);
+
+  public abstract String getDefaultValueStringAt(int i);
+
+  public abstract boolean isAlwaysStopAt(int i);
+
+  public abstract Expression getDefaultValueAt(int i);
+
+  public abstract void setString(String string);
+
+  public abstract String getString();
+
+  @Nonnull
+  public abstract Template copy();
 
   public boolean getValue(@Nonnull Property key) {
     Boolean result = myProperties.get(key);

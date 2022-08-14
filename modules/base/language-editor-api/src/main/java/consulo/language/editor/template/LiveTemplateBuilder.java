@@ -13,14 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.template;
+package consulo.language.editor.template;
 
-import consulo.ide.impl.idea.codeInsight.template.impl.TemplateImpl;
-import consulo.application.ApplicationManager;
-import consulo.language.editor.template.Template;
-import consulo.language.editor.template.Variable;
 import consulo.logging.Logger;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -28,15 +23,15 @@ import java.util.*;
 /**
  * @author Eugene.Kudelevsky
  */
-public class LiveTemplateBuilder {
-  @NonNls private static final String END_PREFIX = "____END";
+public final class LiveTemplateBuilder {
+  private static final String END_PREFIX = "____END";
   private static final Logger LOGGER = Logger.getInstance(LiveTemplateBuilder.class);
 
   private final StringBuilder myText = new StringBuilder();
-  private final List<Variable> myVariables = new ArrayList<Variable>();
-  private final Set<String> myVarNames = new HashSet<String>();
-  private final List<VarOccurence> myVariableOccurrences = new ArrayList<VarOccurence>();
-  private final List<Marker> myMarkers = new ArrayList<Marker>();
+  private final List<Variable> myVariables = new ArrayList<>();
+  private final Set<String> myVarNames = new HashSet<>();
+  private final List<VarOccurence> myVariableOccurrences = new ArrayList<>();
+  private final List<Marker> myMarkers = new ArrayList<>();
   private final int mySegmentLimit;
   private String myLastEndVarName;
   private boolean myIsToReformat = false;
@@ -77,9 +72,9 @@ public class LiveTemplateBuilder {
   }
 
   @Nonnull
-  public TemplateImpl buildTemplate() {
+  public Template buildTemplate() {
     List<Variable> variables = getListWithLimit(myVariables);
-    if (!findVarOccurence(TemplateImpl.END)) {
+    if (!findVarOccurence(Template.END)) {
       if (myLastEndVarName == null) {
         for (Variable variable : variables) {
           if (isEndVariable(variable.getName())) {
@@ -106,27 +101,24 @@ public class LiveTemplateBuilder {
               it1.remove();
             }
           }
-          myVariableOccurrences.add(new VarOccurence(TemplateImpl.END, endOffset));
+          myVariableOccurrences.add(new VarOccurence(Template.END, endOffset));
         }
       }
     }
-    TemplateImpl template = new TemplateImpl("", "");
+    Template template = TemplateBuilderFactory.getInstance().createRawTemplate("", "");
     for (Variable variable : variables) {
       template.addVariable(variable.getName(), variable.getExpressionString(), variable.getDefaultValueString(), variable.isAlwaysStopAt());
     }
 
     List<VarOccurence> variableOccurrences = getListWithLimit(myVariableOccurrences);
-    Collections.sort(variableOccurrences, new Comparator<VarOccurence>() {
-      @Override
-      public int compare(VarOccurence o1, VarOccurence o2) {
-        if (o1.myOffset < o2.myOffset) {
-          return -1;
-        }
-        if (o1.myOffset > o2.myOffset) {
-          return 1;
-        }
-        return 0;
+    Collections.sort(variableOccurrences, (o1, o2) -> {
+      if (o1.myOffset < o2.myOffset) {
+        return -1;
       }
+      if (o1.myOffset > o2.myOffset) {
+        return 1;
+      }
+      return 0;
     });
     int last = 0;
     for (VarOccurence occurence : variableOccurrences) {
@@ -140,9 +132,6 @@ public class LiveTemplateBuilder {
   }
 
   private <T> List<T> getListWithLimit(List<T> list) {
-    if (ApplicationManager.getApplication().isUnitTestMode()) {
-      return list;
-    }
     if (mySegmentLimit == 0) {
       return Collections.emptyList();
     }
@@ -209,14 +198,14 @@ public class LiveTemplateBuilder {
     return prefix + i;
   }
 
-  public int insertTemplate(int offset, TemplateImpl template, Map<String, String> predefinedVarValues) {
+  public int insertTemplate(int offset, Template template, Map<String, String> predefinedVarValues) {
     myIsToReformat = myText.length() > 0 || template.isToReformat();
     removeEndVarAtOffset(offset);
 
     String text = template.getTemplateText();
     insertText(offset, text, false);
-    Map<String, String> newVarNames = new HashMap<String, String>();
-    Set<String> oldVarNames = new HashSet<String>();
+    Map<String, String> newVarNames = new HashMap<>();
+    Set<String> oldVarNames = new HashSet<>();
     for (int i = 0; i < template.getVariableCount(); i++) {
       String varName = template.getVariableNameAt(i);
       oldVarNames.add(varName);
@@ -239,8 +228,7 @@ public class LiveTemplateBuilder {
         else {
           newVarName = varName;
         }
-        Variable var =
-                new Variable(newVarName, template.getExpressionStringAt(i), template.getDefaultValueStringAt(i), template.isAlwaysStopAt(i));
+        Variable var = new Variable(newVarName, template.getExpressionStringAt(i), template.getDefaultValueStringAt(i), template.isAlwaysStopAt(i));
         myVariables.add(var);
         myVarNames.add(newVarName);
       }
@@ -250,7 +238,7 @@ public class LiveTemplateBuilder {
     for (int i = 0; i < template.getSegmentsCount(); i++) {
       String segmentName = template.getSegmentName(i);
       int localOffset = template.getSegmentOffset(i);
-      if (TemplateImpl.END.equals(segmentName)) {
+      if (Template.END.equals(segmentName)) {
         end = offset + localOffset;
       }
       else {
@@ -267,10 +255,7 @@ public class LiveTemplateBuilder {
       }
     }
     int endOffset = end >= 0 ? end : offset + text.length();
-    if (endOffset > 0 &&
-        endOffset != offset + text.length() &&
-        endOffset < myText.length() &&
-        !hasVarAtOffset(endOffset)) {
+    if (endOffset > 0 && endOffset != offset + text.length() && endOffset < myText.length() && !hasVarAtOffset(endOffset)) {
       myLastEndVarName = generateUniqueVarName(myVarNames, true);
       myVariables.add(new Variable(myLastEndVarName, "", "", true));
       myVarNames.add(myLastEndVarName);
@@ -280,14 +265,14 @@ public class LiveTemplateBuilder {
   }
 
   private void removeEndVarAtOffset(int offset) {
-    for (Iterator<VarOccurence> it = myVariableOccurrences.iterator(); it.hasNext();) {
+    for (Iterator<VarOccurence> it = myVariableOccurrences.iterator(); it.hasNext(); ) {
       VarOccurence occurence = it.next();
       if (!isEndVariable(occurence.myName)) {
         continue;
       }
       if (occurence.myOffset == offset) {
         it.remove();
-        for (Iterator<Variable> it1 = myVariables.iterator(); it1.hasNext();) {
+        for (Iterator<Variable> it1 = myVariables.iterator(); it1.hasNext(); ) {
           Variable variable = it1.next();
           if (occurence.myName.equals(variable.getName())) {
             it1.remove();
