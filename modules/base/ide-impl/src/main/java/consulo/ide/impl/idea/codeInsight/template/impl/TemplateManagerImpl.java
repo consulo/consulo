@@ -303,6 +303,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
     return templateStart;
   }
 
+  @Override
   public Map<Template, String> findMatchingTemplates(final PsiFile file, Editor editor, @Nullable Character shortcutChar, TemplateSettings templateSettings) {
     final Document document = editor.getDocument();
     CharSequence text = document.getCharsSequence();
@@ -334,6 +335,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
     return candidate2Argument;
   }
 
+  @Override
   @Nullable
   public Runnable startNonCustomTemplates(final Map<Template, String> template2argument, final Editor editor, @Nullable final PairProcessor<String, String> processor) {
     final int caretOffset = editor.getCaretModel().getOffset();

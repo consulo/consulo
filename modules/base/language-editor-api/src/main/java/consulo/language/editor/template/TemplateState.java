@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.template;
 
+import consulo.codeEditor.Editor;
 import consulo.document.util.TextRange;
 
 import javax.annotation.Nonnull;
@@ -27,6 +28,8 @@ import javax.annotation.Nullable;
 public interface TemplateState {
   @Nullable
   TextRange getCurrentVariableRange();
+
+  int getCurrentVariableNumber();
 
   @Nullable
   TextResult getVariableValue(@Nonnull String name);
@@ -48,4 +51,7 @@ public interface TemplateState {
 
   @Nullable
   TextRange getVariableRange(String varName);
+
+  @Nonnull
+  Editor getEditor();
 }

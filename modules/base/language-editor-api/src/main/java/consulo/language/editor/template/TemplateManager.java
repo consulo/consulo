@@ -23,7 +23,9 @@ import consulo.codeEditor.Editor;
 import consulo.language.editor.template.context.TemplateActionContext;
 import consulo.language.editor.template.context.TemplateContextType;
 import consulo.language.editor.template.event.TemplateEditingListener;
+import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.util.lang.function.PairProcessor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -86,4 +88,9 @@ public abstract class TemplateManager {
   public abstract List<? extends Template> listApplicableTemplateWithInsertingDummyIdentifier(@Nonnull TemplateActionContext templateActionContext);
 
   public abstract Set<TemplateContextType> getApplicableContextTypes(@Nonnull TemplateActionContext templateActionContext);
+
+  public abstract Map<Template, String> findMatchingTemplates(final PsiFile file, Editor editor, @Nullable Character shortcutChar, TemplateSettings templateSettings);
+
+  @Nullable
+  public abstract Runnable startNonCustomTemplates(final Map<Template, String> template2argument, final Editor editor, @Nullable final PairProcessor<String, String> processor);
 }
