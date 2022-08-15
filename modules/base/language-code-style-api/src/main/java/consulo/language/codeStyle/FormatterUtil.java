@@ -25,7 +25,6 @@ import consulo.undoRedo.CommandProcessor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collection;
 import java.util.Set;
 
 public class FormatterUtil {
@@ -33,7 +32,7 @@ public class FormatterUtil {
   public static final String REFORMAT_COMMAND_NAME = "Reformat Code";
   public static final String REFORMAT_BEFORE_COMMIT_COMMAND_NAME = "Reformat Code Before Commit";
 
-  public static final Collection<String> FORMATTER_ACTION_NAMES = Set.of(REFORMAT_COMMAND_NAME, REFORMAT_BEFORE_COMMIT_COMMAND_NAME);
+  public static final Set<String> FORMATTER_ACTION_NAMES = Set.of(REFORMAT_COMMAND_NAME, REFORMAT_BEFORE_COMMIT_COMMAND_NAME);
 
   private FormatterUtil() {
   }
@@ -234,6 +233,7 @@ public class FormatterUtil {
    * @return <code>true</code> explicitly called 'reformat' is in  progress at the moment; <code>false</code> otherwise
    */
   public static boolean isFormatterCalledExplicitly() {
-    return FORMATTER_ACTION_NAMES.contains(CommandProcessor.getInstance().getCurrentCommandName());
+    String commandName = CommandProcessor.getInstance().getCurrentCommandName();
+    return commandName != null && FORMATTER_ACTION_NAMES.contains(commandName);
   }
 }
