@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl;
 
-import consulo.ide.impl.idea.ui.components.JBRadioButton;
+import consulo.ui.ex.awt.JBRadioButton;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;

@@ -13,19 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.editor.completion.internal;
+package consulo.language.editor.internal;
 
-import consulo.util.dataholder.Key;
-
-import javax.annotation.Nullable;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.application.Application;
+import consulo.language.editor.rawHighlight.HighlightInfo;
+import consulo.language.editor.rawHighlight.HighlightInfoType;
 
 /**
  * @author VISTALL
- * @since 12-Mar-22
+ * @since 13-Feb-22
  */
-public interface OffsetTranslator {
-  Key<OffsetTranslator> RANGE_TRANSLATION = Key.create("completion.rangeTranslation");
+@ServiceAPI(ComponentScope.APPLICATION)
+public interface HighlightInfoFactory {
+  static HighlightInfoFactory getInstance() {
+    return Application.get().getInstance(HighlightInfoFactory.class);
+  }
 
-  @Nullable
-  Integer translateOffset(Integer offset);
+  HighlightInfo.Builder createBuilder(HighlightInfoType infoType);
 }

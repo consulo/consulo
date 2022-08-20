@@ -13,22 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.generation;
+package consulo.language;
 
-import consulo.language.Commenter;
-import javax.annotation.Nonnull;
+import consulo.util.dataholder.UserDataHolderBase;
 
 /**
- * Defines the support for line comments with suffix.
- *
- * @author traff
- */
-public interface CommenterWithLineSuffix extends Commenter {
-  /**
-   * Returns the string which suffixes a line comment in the language.
-   *
-   * @return the line comment text
-   */
-  @Nonnull
-  String getLineCommentSuffix();
-}
+* User: Maxim.Mossienko
+* Date: 18.06.2010
+*/
+public abstract class CommenterDataHolder extends UserDataHolderBase {}

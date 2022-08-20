@@ -19,8 +19,8 @@ import consulo.application.util.matcher.Matcher;
 import consulo.application.util.matcher.MatcherTextRange;
 import consulo.application.util.matcher.MinusculeMatcher;
 import consulo.application.util.registry.Registry;
+import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.awt.SpeedSearchUtilBase;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 
@@ -36,7 +36,7 @@ public final class SpeedSearchUtil {
   private SpeedSearchUtil() {
   }
 
-  public static void applySpeedSearchHighlighting(@Nonnull JComponent speedSearchEnabledComponent, @Nonnull SimpleColoredComponent coloredComponent, boolean mainTextOnly, boolean selected) {
+  public static void applySpeedSearchHighlighting(@Nonnull JComponent speedSearchEnabledComponent, @Nonnull ColoredTextContainer coloredComponent, boolean mainTextOnly, boolean selected) {
     SpeedSearchUtilBase.applySpeedSearchHighlighting(speedSearchEnabledComponent, coloredComponent, mainTextOnly, selected);
   }
 
@@ -44,12 +44,11 @@ public final class SpeedSearchUtil {
                                                    @Nonnull String text,
                                                    @Nonnull SimpleTextAttributes attributes,
                                                    boolean selected,
-                                                   @Nonnull SimpleColoredComponent simpleColoredComponent) {
+                                                   @Nonnull ColoredTextContainer simpleColoredComponent) {
     SpeedSearchUtilBase.appendFragmentsForSpeedSearch(speedSearchEnabledComponent, text, attributes, selected, simpleColoredComponent);
   }
 
-  public static void appendColoredFragmentForMatcher(@Nonnull String text,
-                                                     SimpleColoredComponent component,
+  public static void appendColoredFragmentForMatcher(@Nonnull String text, ColoredTextContainer component,
                                                      @Nonnull final SimpleTextAttributes attributes,
                                                      Matcher matcher,
                                                      Color selectedBg,
@@ -72,7 +71,7 @@ public final class SpeedSearchUtil {
     }
   }
 
-  public static void appendColoredFragments(final SimpleColoredComponent simpleColoredComponent,
+  public static void appendColoredFragments(final ColoredTextContainer simpleColoredComponent,
                                             final String text,
                                             Iterable<MatcherTextRange> colored,
                                             final SimpleTextAttributes plain,

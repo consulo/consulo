@@ -54,4 +54,6 @@ public interface TemplateState {
 
   @Nonnull
   Editor getEditor();
+
+  boolean isFinished();
 }

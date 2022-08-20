@@ -24,10 +24,13 @@ import consulo.document.util.TextRange;
 import consulo.language.Language;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.ui.ex.ColoredTextContainer;
+import consulo.ui.ex.SimpleTextAttributes;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.swing.*;
 import java.util.List;
 
 /**
@@ -52,5 +55,13 @@ public interface LanguageEditorInternalHelper {
   @Contract("null,_,_->null;!null,_,_->!null")
   default Editor getEditorForInjectedLanguageNoCommit(@Nullable Editor editor, @Nullable PsiFile file, final int offset) {
     return editor;
+  }
+
+  default void appendFragmentsForSpeedSearch(@Nonnull JComponent speedSearchEnabledComponent,
+                                             @Nonnull String text,
+                                             @Nonnull SimpleTextAttributes attributes,
+                                             boolean selected,
+                                             @Nonnull ColoredTextContainer simpleColoredComponent) {
+    // [VISTALL] hack due we don't have hard dependency to AWT impl
   }
 }

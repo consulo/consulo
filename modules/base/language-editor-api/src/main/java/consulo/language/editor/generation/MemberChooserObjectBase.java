@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.generation;
+package consulo.language.editor.generation;
 
-import consulo.ui.ex.awt.SimpleColoredComponent;
+import consulo.language.editor.internal.LanguageEditorInternalHelper;
+import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 
 /**
@@ -41,8 +40,8 @@ public class MemberChooserObjectBase implements MemberChooserObject {
   }
 
   @Override
-  public void renderTreeNode(SimpleColoredComponent component, JTree tree) {
-    SpeedSearchUtil.appendFragmentsForSpeedSearch(tree, getText(), getTextAttributes(tree), false, component);
+  public void renderTreeNode(ColoredTextContainer component, JTree tree) {
+    LanguageEditorInternalHelper.getInstance().appendFragmentsForSpeedSearch(tree, getText(), getTextAttributes(tree), false, component);
     component.setIcon(myIcon);
   }
 

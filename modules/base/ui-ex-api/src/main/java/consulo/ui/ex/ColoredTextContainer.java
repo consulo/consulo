@@ -5,6 +5,7 @@ import consulo.ui.image.Image;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
+import java.util.Iterator;
 
 /**
  * Base interface for color text container.
@@ -26,4 +27,25 @@ public interface ColoredTextContainer {
 
   default void setFont(Font font) {
   }
+
+  @Nonnull
+  CharSequence getCharSequence(boolean mainOnly);
+
+  @Nonnull
+  ColoredIterator iterator();
+
+  public interface ColoredIterator extends Iterator<String> {
+    int getOffset();
+
+    int getEndOffset();
+
+    @Nonnull
+    String getFragment();
+
+    @Nonnull
+    SimpleTextAttributes getTextAttributes();
+
+    int split(int offset, @Nonnull SimpleTextAttributes attributes);
+  }
+
 }

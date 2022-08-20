@@ -31,7 +31,7 @@ import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.ui.PortField;
 import consulo.ide.impl.idea.ui.RelativeFont;
-import consulo.ide.impl.idea.ui.components.JBRadioButton;
+import consulo.ui.ex.awt.JBRadioButton;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 

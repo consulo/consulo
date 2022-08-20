@@ -31,7 +31,6 @@ module consulo.language.editor.api {
   exports consulo.language.editor.hierarchy;
   exports consulo.language.editor.inject;
   exports consulo.language.editor.generation;
-  exports consulo.language.editor.completion.internal to consulo.ide.impl;
   exports consulo.language.editor.highlight.usage;
   exports consulo.language.editor.rawHighlight;
   exports consulo.language.editor.inspection;
@@ -44,7 +43,6 @@ module consulo.language.editor.api {
   exports consulo.language.editor.inspection.scheme.event;
   exports consulo.language.editor.intention;
   exports consulo.language.editor.structureView;
-  exports consulo.language.editor.internal to consulo.ide.impl, consulo.language.editor.impl;
   exports consulo.language.editor.scope;
   exports consulo.language.editor.template;
   exports consulo.language.editor.postfixTemplate;
@@ -56,7 +54,8 @@ module consulo.language.editor.api {
   exports consulo.language.editor.wolfAnalyzer;
   exports consulo.language.editor.scratch;
   exports consulo.language.editor.util;
-  exports consulo.language.editor.rawHighlight.internal to consulo.ide.impl;
+
+  exports consulo.language.editor.internal to consulo.ide.impl, consulo.language.editor.impl, consulo.desktop.awt.ide.impl;
   exports consulo.language.editor.internal.intention to consulo.ide.impl, consulo.language.editor.impl;
   exports consulo.language.editor.internal.postfixTemplate to consulo.ide.impl, consulo.language.editor.impl;
 

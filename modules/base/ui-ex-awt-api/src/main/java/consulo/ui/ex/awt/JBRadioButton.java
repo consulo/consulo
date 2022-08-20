@@ -1,8 +1,6 @@
-package consulo.ide.impl.idea.ui.components;
+package consulo.ui.ex.awt;
 
-import consulo.ui.ex.awt.AnchorableComponent;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 

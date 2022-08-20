@@ -18,13 +18,15 @@ package consulo.sandboxPlugin.ide.generation;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
 import consulo.language.Language;
+import consulo.language.editor.generation.ClassMember;
+import consulo.language.editor.generation.MemberChooserBuilder;
 import consulo.language.editor.generation.OverrideMethodHandler;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.sandboxPlugin.lang.SandLanguage;
-import consulo.ui.Alerts;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.dataholder.KeyWithDefaultValue;
 
 import javax.annotation.Nonnull;
 
@@ -42,7 +44,17 @@ public class SandOverrideMethodHandler implements OverrideMethodHandler {
   @RequiredUIAccess
   @Override
   public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
-    Alerts.okInfo(LocalizeValue.localizeTODO("override methods called")).showAsync();
+    SandClassNode parent = new SandClassNode();
+
+    MemberChooserBuilder<ClassMember> builder = MemberChooserBuilder.create(new ClassMember[]{new SandClassMember(parent)});
+    builder.withTitle(LocalizeValue.localizeTODO("Select Test"));
+    builder.withOption(KeyWithDefaultValue.create("Option 1", () -> Boolean.FALSE), LocalizeValue.localizeTODO("Option 1"));
+    builder.withOption(KeyWithDefaultValue.create("Option 2", () -> Boolean.FALSE), LocalizeValue.localizeTODO("Option 2"));
+    builder.withOption(KeyWithDefaultValue.create("Option 3", () -> Boolean.TRUE), LocalizeValue.localizeTODO("Option 3"));
+
+    builder.showAsync(project, dataHolder -> {
+      
+    });
   }
 
   @Nonnull

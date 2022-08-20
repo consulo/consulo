@@ -38,7 +38,7 @@ import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.ScrollingUtil;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.JBList;
-import consulo.ide.impl.idea.ui.components.JBRadioButton;
+import consulo.ui.ex.awt.JBRadioButton;
 import consulo.ide.impl.idea.util.FunctionUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.container.plugin.PluginDescriptor;

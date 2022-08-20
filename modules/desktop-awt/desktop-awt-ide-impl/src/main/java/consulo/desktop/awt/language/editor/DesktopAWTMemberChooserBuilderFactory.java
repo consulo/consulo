@@ -13,23 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.language.editor.rawHighlight;
+package consulo.desktop.awt.language.editor;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.language.editor.rawHighlight.HighlightInfo;
-import consulo.language.editor.rawHighlight.HighlightInfoType;
-import consulo.language.editor.internal.HighlightInfoFactory;
+import consulo.language.editor.generation.ClassMember;
+import consulo.language.editor.generation.MemberChooserBuilder;
+import consulo.language.editor.internal.MemberChooserBuilderFactory;
 import jakarta.inject.Singleton;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 01-Apr-22
+ * @since 20-Aug-22
  */
 @Singleton
 @ServiceImpl
-public class HighlightInfoFactoryImpl implements HighlightInfoFactory {
+public class DesktopAWTMemberChooserBuilderFactory implements MemberChooserBuilderFactory {
+  @Nonnull
   @Override
-  public HighlightInfo.Builder createBuilder(HighlightInfoType infoType) {
-    return HighlightInfoImpl.newHighlightInfo(infoType);
+  public <T extends ClassMember> MemberChooserBuilder<T> newBuilder(T[] elements) {
+    return new DesktopAWTMemberChooserBuilder<>(elements);
   }
 }

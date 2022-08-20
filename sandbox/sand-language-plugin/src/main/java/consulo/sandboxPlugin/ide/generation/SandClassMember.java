@@ -13,23 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.language.editor.rawHighlight;
+package consulo.sandboxPlugin.ide.generation;
 
-import consulo.annotation.component.ServiceImpl;
-import consulo.language.editor.rawHighlight.HighlightInfo;
-import consulo.language.editor.rawHighlight.HighlightInfoType;
-import consulo.language.editor.internal.HighlightInfoFactory;
-import jakarta.inject.Singleton;
+import consulo.language.editor.generation.ClassMember;
+import consulo.language.editor.generation.MemberChooserObject;
+import consulo.language.editor.generation.MemberChooserObjectBase;
+import consulo.platform.base.icon.PlatformIconGroup;
 
 /**
  * @author VISTALL
- * @since 01-Apr-22
+ * @since 20-Aug-22
  */
-@Singleton
-@ServiceImpl
-public class HighlightInfoFactoryImpl implements HighlightInfoFactory {
+public class SandClassMember extends MemberChooserObjectBase implements ClassMember {
+  private final SandClassNode myParent;
+
+  public SandClassMember(SandClassNode parent) {
+    super("Sand", PlatformIconGroup.nodesMethod());
+    myParent = parent;
+  }
+
   @Override
-  public HighlightInfo.Builder createBuilder(HighlightInfoType infoType) {
-    return HighlightInfoImpl.newHighlightInfo(infoType);
+  public MemberChooserObject getParentNodeDelegate() {
+    return myParent;
   }
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.generation;
+package consulo.language.editor.generation;
 
 import consulo.language.psi.PsiElement;
 import consulo.ui.image.Image;
@@ -39,6 +39,7 @@ public class PsiElementMemberChooserObject extends MemberChooserObjectBase {
     return myPsiElement;
   }
 
+  @Override
   public boolean equals(final Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
@@ -50,6 +51,7 @@ public class PsiElementMemberChooserObject extends MemberChooserObjectBase {
     return true;
   }
 
+  @Override
   public int hashCode() {
     return myPsiElement.hashCode();
   }

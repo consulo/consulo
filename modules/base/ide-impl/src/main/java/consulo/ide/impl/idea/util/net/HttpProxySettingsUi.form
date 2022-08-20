@@ -133,7 +133,7 @@
           <grid row="11" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
         </constraints>
       </vspacer>
-      <component id="862df" class="consulo.ide.impl.idea.ui.components.JBRadioButton" binding="myAutoDetectProxyRb" default-binding="true">
+      <component id="862df" class="consulo.ui.ex.awt.JBRadioButton" binding="myAutoDetectProxyRb" default-binding="true">
         <constraints>
           <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -142,7 +142,7 @@
           <toolTipText resource-bundle="consulo/application/CommonBundle" key="tooltip.http.proxy.pac"/>
         </properties>
       </component>
-      <component id="9e485" class="consulo.ide.impl.idea.ui.components.JBRadioButton" binding="myUseHTTPProxyRb" default-binding="true">
+      <component id="9e485" class="consulo.ui.ex.awt.JBRadioButton" binding="myUseHTTPProxyRb" default-binding="true">
         <constraints>
           <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -160,7 +160,7 @@
           <verticalTextPosition value="1"/>
         </properties>
       </component>
-      <component id="b027d" class="consulo.ide.impl.idea.ui.components.JBRadioButton" binding="myNoProxyRb">
+      <component id="b027d" class="consulo.ui.ex.awt.JBRadioButton" binding="myNoProxyRb">
         <constraints>
           <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -176,7 +176,7 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="5a9f8" class="consulo.ide.impl.idea.ui.components.JBRadioButton" binding="myHTTP">
+          <component id="5a9f8" class="consulo.ui.ex.awt.JBRadioButton" binding="myHTTP">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="2" use-parent-layout="false"/>
             </constraints>
@@ -184,7 +184,7 @@
               <text resource-bundle="consulo/application/CommonBundle" key="http.proxy.type"/>
             </properties>
           </component>
-          <component id="2538c" class="consulo.ide.impl.idea.ui.components.JBRadioButton" binding="mySocks">
+          <component id="2538c" class="consulo.ui.ex.awt.JBRadioButton" binding="mySocks">
             <constraints>
               <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="2" use-parent-layout="false"/>
             </constraints>

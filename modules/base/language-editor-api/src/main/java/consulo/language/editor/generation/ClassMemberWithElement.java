@@ -13,21 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.generation;
 
-import consulo.ui.ex.awt.SimpleColoredComponent;
+package consulo.language.editor.generation;
 
-import javax.swing.*;
+import consulo.language.psi.PsiElement;
 
 /**
- * @author peter
+ * @author yole
  */
-public interface MemberChooserObject {
-  void renderTreeNode(SimpleColoredComponent component, JTree tree);
-
-  String getText();
-
-  boolean equals(Object o);
-
-  int hashCode();
+public interface ClassMemberWithElement extends ClassMember {
+  PsiElement getElement();
 }

@@ -59,12 +59,6 @@ public class SandLibraryType extends ModuleAwareLibraryType<DummyLibraryProperti
 
   @Nullable
   @Override
-  public NewLibraryConfiguration createNewLibrary(@Nonnull JComponent parentComponent, @Nullable VirtualFile contextDirectory, @Nonnull Project project) {
-    return null;
-  }
-
-  @Nullable
-  @Override
   public LibraryPropertiesEditor createPropertiesEditor(@Nonnull LibraryEditorComponent<DummyLibraryProperties> editorComponent) {
     return null;
   }

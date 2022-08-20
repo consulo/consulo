@@ -64,6 +64,18 @@ public class SimpleColoredText implements ColoredTextContainer {
   public void setToolTipText(@Nullable String text) {
   }
 
+  @Nonnull
+  @Override
+  public CharSequence getCharSequence(boolean mainOnly) {
+    return toString();
+  }
+
+  @Nonnull
+  @Override
+  public ColoredIterator iterator() {
+    throw new UnsupportedOperationException();
+  }
+
   public void clear() {
     myTexts.clear();
     myCachedToString = null;

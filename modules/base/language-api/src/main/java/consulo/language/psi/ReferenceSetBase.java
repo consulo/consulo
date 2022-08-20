@@ -14,15 +14,12 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.psi.util;
+package consulo.language.psi;
 
 import consulo.document.util.TextRange;
-import consulo.language.psi.ElementManipulators;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiReference;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -78,7 +75,7 @@ public abstract class ReferenceSetBase<T extends PsiReference> {
     return next;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   protected T createReference(final TextRange range, final int index) {
     return null;
   }

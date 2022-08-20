@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.generation;
+package consulo.language.editor.generation;
 
-import consulo.language.Commenter;
-import consulo.document.Document;
-import consulo.document.RangeMarker;
+import consulo.util.dataholder.Key;
+
+import java.util.List;
 
 /**
- * @author Dmitry Avdeev
+ * @author peter
  */
-public interface EscapingCommenter extends Commenter {
+public interface ClassMember extends MemberChooserObject {
+  ClassMember[] EMPTY_ARRAY = new ClassMember[0];
 
-  void escape(Document document, RangeMarker range);
+  Key<List<ClassMember>> KEY_OF_LIST = Key.create("List of ClassMember");
 
-  void unescape(Document document, RangeMarker range);
+  /**
+   * @return should override equals() and hashCode()
+   */
+  MemberChooserObject getParentNodeDelegate();
 }

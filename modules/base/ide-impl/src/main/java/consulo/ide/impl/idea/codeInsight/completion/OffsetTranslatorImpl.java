@@ -7,7 +7,7 @@ import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import consulo.document.impl.event.DocumentEventImpl;
-import consulo.language.editor.completion.internal.OffsetTranslator;
+import consulo.language.editor.internal.OffsetTranslator;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiModificationTrackerListener;
 

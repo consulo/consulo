@@ -38,9 +38,8 @@ import java.util.List;
  * &nbsp;&nbsp;&lt;library.type implementation="qualified-class-name"/&gt;<br>
  * &lt;/extensions&gt;
  *
- * @see ModuleAwareLibraryType
- *
  * @author nik
+ * @see ModuleAwareLibraryType
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class LibraryType<P extends LibraryProperties> extends LibraryPresentationProvider<P> {
@@ -58,7 +57,7 @@ public abstract class LibraryType<P extends LibraryProperties> extends LibraryPr
   @Nonnull
   @Override
   public PersistentLibraryKind<P> getKind() {
-    return (PersistentLibraryKind<P>) super.getKind();
+    return (PersistentLibraryKind<P>)super.getKind();
   }
 
   /**
@@ -71,15 +70,22 @@ public abstract class LibraryType<P extends LibraryProperties> extends LibraryPr
    * Called when a new library of this type is created in Project Structure dialog
    */
   @Nullable
-  public abstract NewLibraryConfiguration createNewLibrary(@Nonnull JComponent parentComponent, @Nullable VirtualFile contextDirectory,
-                                                           @Nonnull Project project);
+  public NewLibraryConfiguration createNewLibrary(@Nonnull JComponent parentComponent, @Nullable VirtualFile contextDirectory, @Nonnull Project project) {
+    LibraryRootsComponentDescriptor descriptor = createLibraryRootsComponentDescriptor();
+    if (descriptor == null) {
+      return null;
+    }
+    return LibraryTypeService.getInstance().createLibraryFromFiles(descriptor, parentComponent, contextDirectory, this, project);
+  }
+
   public boolean isAvailable() {
     return true;
   }
 
   /**
    * Override this method to customize the library roots editor
-   * @return {@link consulo.ide.impl.idea.openapi.roots.libraries.ui.LibraryRootsComponentDescriptor} instance
+   *
+   * @return {@link LibraryRootsComponentDescriptor} instance
    */
   @Nullable
   public LibraryRootsComponentDescriptor createLibraryRootsComponentDescriptor() {
@@ -96,7 +102,7 @@ public abstract class LibraryType<P extends LibraryProperties> extends LibraryPr
 
   /**
    * @return Root types to collect library files which do not belong to the project and therefore
-   *         indicate that the library is external.
+   * indicate that the library is external.
    */
   public OrderRootType[] getExternalRootTypes() {
     return getDefaultExternalRootTypes();

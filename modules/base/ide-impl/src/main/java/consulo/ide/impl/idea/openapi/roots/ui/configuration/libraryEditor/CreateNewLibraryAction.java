@@ -25,7 +25,7 @@ import consulo.project.Project;
 import consulo.content.impl.internal.library.LibraryEx;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryType;
-import consulo.ide.impl.idea.openapi.roots.libraries.LibraryTypeService;
+import consulo.content.library.LibraryTypeService;
 import consulo.content.library.NewLibraryConfiguration;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryEditingUtil;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.BaseLibrariesConfigurable;

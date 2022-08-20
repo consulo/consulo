@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.language;
 
-package consulo.ide.impl.idea.codeInsight.generation;
-
-import consulo.language.psi.PsiElement;
+import consulo.document.Document;
+import consulo.document.RangeMarker;
 
 /**
- * @author yole
+ * @author Dmitry Avdeev
  */
-public interface ClassMemberWithElement extends ClassMember {
-  PsiElement getElement();
+public interface EscapingCommenter extends Commenter {
+
+  void escape(Document document, RangeMarker range);
+
+  void unescape(Document document, RangeMarker range);
 }

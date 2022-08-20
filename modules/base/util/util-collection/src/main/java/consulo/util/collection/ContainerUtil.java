@@ -1403,4 +1403,15 @@ public class ContainerUtil {
     }
   }
 
+  @Nullable
+  @Contract(pure = true)
+  public static <T> T iterateAndGetLastItem(@Nonnull Iterable<T> items) {
+    Iterator<T> itr = items.iterator();
+    T res = null;
+    while (itr.hasNext()) {
+      res = itr.next();
+    }
+
+    return res;
+  }
 }

@@ -13,23 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.editor.rawHighlight.internal;
+package consulo.language.editor.internal;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.application.Application;
-import consulo.language.editor.rawHighlight.HighlightInfo;
-import consulo.language.editor.rawHighlight.HighlightInfoType;
+import consulo.language.editor.generation.ClassMember;
+import consulo.language.editor.generation.MemberChooserBuilder;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 13-Feb-22
+ * @since 20-Aug-22
  */
 @ServiceAPI(ComponentScope.APPLICATION)
-public interface HighlightInfoFactory {
-  static HighlightInfoFactory getInstance() {
-    return Application.get().getInstance(HighlightInfoFactory.class);
-  }
-
-  HighlightInfo.Builder createBuilder(HighlightInfoType infoType);
+public interface MemberChooserBuilderFactory {
+  @Nonnull
+  <T extends ClassMember> MemberChooserBuilder<T> newBuilder(T[] elements);
 }

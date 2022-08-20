@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.generation;
+package consulo.language.editor.internal;
 
-import consulo.util.dataholder.UserDataHolderBase;
+import consulo.util.dataholder.Key;
+
+import javax.annotation.Nullable;
 
 /**
-* Created by IntelliJ IDEA.
-* User: Maxim.Mossienko
-* Date: 18.06.2010
-*/
-public abstract class CommenterDataHolder extends UserDataHolderBase {}
+ * @author VISTALL
+ * @since 12-Mar-22
+ */
+public interface OffsetTranslator {
+  Key<OffsetTranslator> RANGE_TRANSLATION = Key.create("completion.rangeTranslation");
+
+  @Nullable
+  Integer translateOffset(Integer offset);
+}

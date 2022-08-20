@@ -50,6 +50,18 @@ public  class ColoredStringBuilder implements ColoredTextContainer {
   public void setToolTipText(@Nullable String text) {
   }
 
+  @Nonnull
+  @Override
+  public CharSequence getCharSequence(boolean mainOnly) {
+    return myBuilder;
+  }
+
+  @Nonnull
+  @Override
+  public ColoredIterator iterator() {
+    throw new UnsupportedOperationException();
+  }
+
   public StringBuilder getBuilder() {
     return myBuilder;
   }

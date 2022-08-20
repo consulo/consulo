@@ -13,19 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.roots.libraries;
+package consulo.content.library;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.ide.ServiceManager;
-import consulo.content.library.LibraryType;
-import consulo.content.library.NewLibraryConfiguration;
-import consulo.project.Project;
+import consulo.application.Application;
 import consulo.content.library.ui.LibraryRootsComponentDescriptor;
+import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 
 /**
@@ -34,7 +32,7 @@ import javax.swing.*;
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class LibraryTypeService {
   public static LibraryTypeService getInstance() {
-    return ServiceManager.getService(LibraryTypeService.class);
+    return Application.get().getInstance(LibraryTypeService.class);
   }
 
   @Nullable

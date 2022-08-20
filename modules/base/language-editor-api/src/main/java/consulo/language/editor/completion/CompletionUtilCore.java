@@ -20,7 +20,7 @@ import consulo.application.util.concurrent.ThreadDumper;
 import consulo.application.util.matcher.CompositeStringHolder;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
-import consulo.language.editor.completion.internal.OffsetTranslator;
+import consulo.language.editor.internal.OffsetTranslator;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupValueWithPsiElement;
 import consulo.language.file.inject.DocumentWindow;

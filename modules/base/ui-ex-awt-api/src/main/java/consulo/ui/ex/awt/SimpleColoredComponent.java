@@ -50,7 +50,6 @@ import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
 import java.text.CharacterIterator;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -137,6 +136,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
     UISettingsUtil.setupComponentAntialiasing(this);
   }
 
+  @Override
   @Nonnull
   public ColoredIterator iterator() {
     return new MyIterator();
@@ -282,6 +282,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
    *
    * @param icon icon
    */
+  @Override
   public final void setIcon(@Nullable final Image icon) {
     myIcon = icon;
     revalidateAndRepaint();
@@ -953,6 +954,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
     }
   }
 
+  @Override
   @Nonnull
   public CharSequence getCharSequence(boolean mainOnly) {
     List<String> fragments = mainOnly && myMainTextLastIndex > -1 && myMainTextLastIndex + 1 < myFragments.size() ? myFragments.subList(0, myMainTextLastIndex + 1) : myFragments;
@@ -1024,20 +1026,6 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
     public void run() {
       Platform.current().openInBrowser(myUrl);
     }
-  }
-
-  public interface ColoredIterator extends Iterator<String> {
-    int getOffset();
-
-    int getEndOffset();
-
-    @Nonnull
-    String getFragment();
-
-    @Nonnull
-    SimpleTextAttributes getTextAttributes();
-
-    int split(int offset, @Nonnull SimpleTextAttributes attributes);
   }
 
   private class MyIterator implements ColoredIterator {

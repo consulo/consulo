@@ -16,9 +16,9 @@
 package consulo.ui.ex.awt;
 
 import consulo.application.util.matcher.MatcherTextRange;
+import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
-import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
 
@@ -37,7 +37,7 @@ public class SpeedSearchUtilBase {
   private SpeedSearchUtilBase() {
   }
 
-  public static void applySpeedSearchHighlighting(@Nonnull JComponent speedSearchEnabledComponent, @Nonnull SimpleColoredComponent coloredComponent, boolean mainTextOnly, boolean selected) {
+  public static void applySpeedSearchHighlighting(@Nonnull JComponent speedSearchEnabledComponent, @Nonnull ColoredTextContainer coloredComponent, boolean mainTextOnly, boolean selected) {
     SpeedSearchSupply speedSearch = SpeedSearchSupply.getSupply(speedSearchEnabledComponent);
     // The bad thing is that SpeedSearch model is decoupled from UI presentation so we don't know the real matched text.
     // Our best guess is to get strgin from the ColoredComponent. We can only provide main-text-only option.
@@ -82,7 +82,7 @@ public class SpeedSearchUtilBase {
                                                    @Nonnull String text,
                                                    @Nonnull SimpleTextAttributes attributes,
                                                    boolean selected,
-                                                   @Nonnull SimpleColoredComponent simpleColoredComponent) {
+                                                   @Nonnull ColoredTextContainer simpleColoredComponent) {
     final SpeedSearchSupply speedSearch = SpeedSearchSupply.getSupply(speedSearchEnabledComponent);
     if (speedSearch != null) {
       final Iterable<MatcherTextRange> fragments = speedSearch.matchingFragments(text);
@@ -99,7 +99,7 @@ public class SpeedSearchUtilBase {
     simpleColoredComponent.append(text, attributes);
   }
 
-  public static void appendColoredFragments(final SimpleColoredComponent simpleColoredComponent,
+  public static void appendColoredFragments(final ColoredTextContainer simpleColoredComponent,
                                             final String text,
                                             Iterable<MatcherTextRange> colored,
                                             final SimpleTextAttributes plain,
@@ -125,7 +125,7 @@ public class SpeedSearchUtilBase {
     }
   }
 
-  public static void applySpeedSearchHighlightingFiltered(JTree tree, Object value, ColoredTreeCellRenderer coloredTreeCellRenderer, boolean b, boolean selected) {
+  public static void applySpeedSearchHighlightingFiltered(JTree tree, Object value, ColoredTextContainer coloredTreeCellRenderer, boolean b, boolean selected) {
     SpeedSearchSupply speedSearch = SpeedSearchSupply.getSupply(tree);
     if (speedSearch != null && !speedSearch.isObjectFilteredOut(value)) {
       applySpeedSearchHighlighting(tree, coloredTreeCellRenderer, b, selected);

@@ -16,19 +16,15 @@
 package consulo.ide.impl.idea.openapi.roots.impl.libraries;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.openapi.roots.libraries.LibraryTypeService;
-import consulo.ide.impl.idea.openapi.roots.libraries.ui.impl.RootDetectionUtil;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.util.PathUtil;
-import consulo.content.library.LibraryProperties;
-import consulo.content.library.LibraryType;
-import consulo.content.library.NewLibraryConfiguration;
-import consulo.content.library.OrderRoot;
+import consulo.content.library.*;
 import consulo.content.library.ui.LibraryEditor;
 import consulo.content.library.ui.LibraryRootsComponentDescriptor;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.IdeaFileChooser;
+import consulo.ide.impl.idea.openapi.roots.libraries.ui.impl.RootDetectionUtil;
+import consulo.ide.impl.idea.util.PathUtil;
 import consulo.project.Project;
+import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Singleton;
 

@@ -27,7 +27,7 @@ import consulo.language.ast.ASTNode;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.annotation.ProblemGroup;
 import consulo.language.editor.intention.IntentionAction;
-import consulo.language.editor.rawHighlight.internal.HighlightInfoFactory;
+import consulo.language.editor.internal.HighlightInfoFactory;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
 

@@ -14,27 +14,23 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.ide.actions;
+package consulo.ide.action;
 
-import consulo.ide.action.CreateFileAction;
-import consulo.ide.action.CreateFromTemplateAction;
-import consulo.ide.IdeView;
-import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
-import consulo.language.editor.LangDataKeys;
-import consulo.module.Module;
-import consulo.language.util.ModuleUtilCore;
-import consulo.project.DumbService;
-import consulo.project.Project;
-import consulo.module.content.ProjectFileIndex;
-import consulo.module.content.ProjectRootManager;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.IdeView;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
-import consulo.language.util.IncorrectOperationException;
-import consulo.localize.LocalizeValue;
 import consulo.language.psi.PsiPackageSupportProvider;
+import consulo.language.util.IncorrectOperationException;
+import consulo.language.util.ModuleUtilCore;
+import consulo.localize.LocalizeValue;
+import consulo.module.Module;
+import consulo.module.content.ProjectFileIndex;
+import consulo.module.content.ProjectRootManager;
+import consulo.project.DumbService;
+import consulo.project.Project;
 import consulo.ui.image.Image;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -68,13 +64,13 @@ public abstract class CreateTemplateInPackageAction<T extends PsiElement> extend
   @Override
   @SuppressWarnings("unchecked")
   protected boolean isAvailable(final DataContext dataContext) {
-    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final Project project = dataContext.getData(Project.KEY);
     final IdeView view = dataContext.getData(IdeView.KEY);
     if (project == null || view == null || view.getDirectories().length == 0) {
       return false;
     }
 
-    final Module module = dataContext.getData(LangDataKeys.MODULE);
+    final Module module = dataContext.getData(Module.KEY);
     if (module == null) {
       return false;
     }

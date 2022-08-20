@@ -26,10 +26,14 @@ import consulo.language.editor.internal.LanguageEditorInternalHelper;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.ui.ex.ColoredTextContainer;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.swing.*;
 import java.util.List;
 
 /**
@@ -55,5 +59,14 @@ public class LanguageEditorInternalHelperImpl implements LanguageEditorInternalH
   @Override
   public Editor getEditorForInjectedLanguageNoCommit(@Nullable Editor editor, @Nullable PsiFile file, int offset) {
     return InjectedLanguageUtil.getEditorForInjectedLanguageNoCommit(editor, file, offset);
+  }
+
+  @Override
+  public void appendFragmentsForSpeedSearch(@Nonnull JComponent speedSearchEnabledComponent,
+                                            @Nonnull String text,
+                                            @Nonnull SimpleTextAttributes attributes,
+                                            boolean selected,
+                                            @Nonnull ColoredTextContainer simpleColoredComponent) {
+    SpeedSearchUtil.appendFragmentsForSpeedSearch(speedSearchEnabledComponent, text, attributes, selected, simpleColoredComponent);
   }
 }
