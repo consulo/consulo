@@ -24,8 +24,10 @@ import consulo.ide.IdeView;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNameIdentifierOwner;
+import consulo.language.util.ModuleUtilCore;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.module.Module;
 import consulo.module.extension.ModuleExtension;
 import consulo.project.Project;
 import consulo.project.ProjectPropertiesComponent;
@@ -141,7 +143,24 @@ public abstract class CreateFromTemplateAction<T extends PsiElement> extends AnA
   protected boolean isAvailable(DataContext dataContext) {
     final Project project = dataContext.getData(Project.KEY);
     final IdeView view = dataContext.getData(IdeView.KEY);
-    return project != null && view != null && view.getDirectories().length != 0;
+    if (project == null || view == null) {
+      return false;
+    }
+
+    if (view.getDirectories().length != 0) {
+      Module module = dataContext.getData(Module.KEY);
+      if (module == null) {
+        return false;
+      }
+
+      final Class moduleExtensionClass = getModuleExtensionClass();
+      if (moduleExtensionClass != null && ModuleUtilCore.getExtension(module, moduleExtensionClass) == null) {
+        return false;
+      }
+      
+      return true;
+    }
+    return false;
   }
 
   protected abstract String getActionName(PsiDirectory directory, String newName, String templateName);
