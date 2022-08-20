@@ -2495,4 +2495,20 @@ public class StringUtil {
     }
     return result;
   }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String escapeSlashes(@Nonnull final String str) {
+    return escapeChar(str, '/');
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String escapeBackSlashes(@Nonnull final String str) {
+    return escapeChar(str, '\\');
+  }
+
+  public static void escapeSlashes(@Nonnull final StringBuilder buf) {
+    escapeChar(buf, '/');
+  }
 }

@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.template;
+package consulo.language.editor.template;
 
 import consulo.document.Document;
-import consulo.language.editor.template.Result;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 

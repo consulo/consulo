@@ -22,7 +22,7 @@ import consulo.language.editor.completion.OffsetMap;
 import consulo.language.editor.completion.lookup.PrioritizedLookupElement;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementDecorator;
-import consulo.ide.impl.idea.codeInsight.template.TemplateLookupSelectionHandler;
+import consulo.language.editor.template.TemplateLookupSelectionHandler;
 import consulo.application.Result;
 import consulo.language.editor.WriteCommandAction;
 import consulo.codeEditor.Editor;

@@ -31,6 +31,7 @@ import consulo.content.ContentFolderTypeProvider;
 import consulo.language.content.ProductionContentFolderTypeProvider;
 import consulo.language.content.TestContentFolderTypeProvider;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.util.Set;
 
@@ -47,7 +48,7 @@ public class CompilerPathsImpl extends CompilerPathsEx {
    * @return a directory to which the sources (or test sources depending on the second partameter) should be compiled.
    *         Null is returned if output directory is not specified or is not valid
    */
-  @javax.annotation.Nullable
+  @Nullable
   public static VirtualFile getModuleOutputDirectory(final Module module, boolean forTestClasses) {
     final ModuleCompilerPathsManager manager = ModuleCompilerPathsManager.getInstance(module);
     VirtualFile outPath;
@@ -77,7 +78,7 @@ public class CompilerPathsImpl extends CompilerPathsEx {
    * The same as {@link #getModuleOutputDirectory} but returns String.
    * The method still returns a non-null value if the output path is specified in Settings but does not exist on disk.
    */
-  @javax.annotation.Nullable
+  @Nullable
   @Deprecated
   public static String getModuleOutputPath(final Module module, final boolean forTestClasses) {
     final String outPathUrl;
@@ -101,7 +102,7 @@ public class CompilerPathsImpl extends CompilerPathsEx {
     return outPathUrl != null ? VirtualFileManager.extractPath(outPathUrl) : null;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public static String getModuleOutputPath(final Module module, final ContentFolderTypeProvider contentFolderType) {
     final String outPathUrl;
     final Application application = ApplicationManager.getApplication();

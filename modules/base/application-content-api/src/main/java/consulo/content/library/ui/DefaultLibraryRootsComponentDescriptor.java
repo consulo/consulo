@@ -13,15 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.roots.ui.configuration.libraryEditor;
+package consulo.content.library.ui;
 
 import consulo.application.Application;
-import consulo.content.OrderRootType;
 import consulo.content.base.DocumentationOrderRootType;
-import consulo.content.library.ui.*;
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.openapi.projectRoots.ui.DocumentationUtil;
-import consulo.ide.ui.OrderRootTypeUIFactory;
 import consulo.project.ProjectBundle;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -35,11 +31,6 @@ import java.util.List;
  * @author nik
  */
 public class DefaultLibraryRootsComponentDescriptor extends LibraryRootsComponentDescriptor {
-  @Override
-  public OrderRootTypePresentation getRootTypePresentation(@Nonnull OrderRootType type) {
-    return getDefaultPresentation(type);
-  }
-
   @Nonnull
   @Override
   public List<? extends AttachRootButtonDescriptor> createAttachButtons() {
@@ -52,10 +43,6 @@ public class DefaultLibraryRootsComponentDescriptor extends LibraryRootsComponen
     return Application.get().getExtensionList(RootDetector.class);
   }
 
-  public static OrderRootTypePresentation getDefaultPresentation(OrderRootType type) {
-    final OrderRootTypeUIFactory factory = OrderRootTypeUIFactory.forOrderType(type);
-    return new OrderRootTypePresentation(factory.getNodeText(), factory.getIcon());
-  }
   private static class AttachUrlJavadocDescriptor extends AttachRootButtonDescriptor {
     private AttachUrlJavadocDescriptor() {
       super(DocumentationOrderRootType.getInstance(), ProjectBundle.message("module.libraries.javadoc.url.button"));

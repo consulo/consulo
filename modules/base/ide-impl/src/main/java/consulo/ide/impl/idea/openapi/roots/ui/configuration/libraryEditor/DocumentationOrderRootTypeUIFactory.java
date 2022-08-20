@@ -26,7 +26,7 @@ import consulo.content.base.DocumentationOrderRootType;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkType;
 import consulo.fileChooser.FileChooserDescriptorFactory;
-import consulo.ide.impl.idea.openapi.projectRoots.ui.DocumentationUtil;
+import consulo.content.library.ui.DocumentationUtil;
 import consulo.ide.impl.idea.util.IconUtil;
 import consulo.ide.ui.OrderRootTypeUIFactory;
 import consulo.ide.ui.SdkPathEditor;

@@ -41,7 +41,7 @@ import consulo.document.internal.DocumentEx;
 import consulo.document.util.DocumentUtil;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.codeInsight.lookup.impl.LookupImpl;
-import consulo.ide.impl.idea.codeInsight.template.RecalculatableResult;
+import consulo.language.editor.template.RecalculatableResult;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.ObjectUtils;

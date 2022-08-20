@@ -295,7 +295,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.codeInsight.navigation.actions;
   exports consulo.ide.impl.idea.codeInsight.preview;
   exports consulo.ide.impl.idea.codeInsight.problems;
-  exports consulo.ide.impl.idea.codeInsight.template;
   exports consulo.ide.impl.idea.codeInsight.template.actions;
   exports consulo.ide.impl.idea.codeInsight.template.impl;
   exports consulo.ide.impl.idea.codeInsight.template.impl.actions;

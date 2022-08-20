@@ -15,18 +15,19 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.libraryEditor;
 
-import consulo.ui.ex.tree.AbstractTreeStructure;
-import consulo.ui.ex.tree.NodeDescriptor;
-import consulo.content.library.ui.LibraryEditor;
-import consulo.project.ProjectBundle;
 import consulo.content.OrderRootType;
+import consulo.content.library.ui.LibraryEditor;
 import consulo.content.library.ui.LibraryRootsComponentDescriptor;
 import consulo.content.library.ui.OrderRootTypePresentation;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import javax.annotation.Nonnull;
+import consulo.ide.ui.OrderRootTypeUIFactory;
+import consulo.project.ProjectBundle;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.tree.AbstractTreeStructure;
+import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.util.collection.ArrayUtil;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -47,6 +48,7 @@ public class LibraryTreeStructure extends AbstractTreeStructure {
         myName = ProjectBundle.message("library.root.node");
         return false;
       }
+
       @Override
       public Object getElement() {
         return this;
@@ -54,22 +56,24 @@ public class LibraryTreeStructure extends AbstractTreeStructure {
     };
   }
 
+  @Nonnull
   @Override
   public Object getRootElement() {
     return myRootElementDescriptor;
   }
 
+  @Nonnull
   @Override
-  public Object[] getChildElements(Object element) {
+  public Object[] getChildElements(@Nonnull Object element) {
     final LibraryEditor libraryEditor = myParentEditor.getLibraryEditor();
     if (element == myRootElementDescriptor) {
-      ArrayList<LibraryTableTreeContentElement> elements = new ArrayList<LibraryTableTreeContentElement>(3);
+      ArrayList<LibraryTableTreeContentElement> elements = new ArrayList<>(3);
       for (OrderRootType type : myComponentDescriptor.getRootTypes()) {
         final String[] urls = libraryEditor.getUrls(type);
         if (urls.length > 0) {
           OrderRootTypePresentation presentation = myComponentDescriptor.getRootTypePresentation(type);
           if (presentation == null) {
-            presentation = DefaultLibraryRootsComponentDescriptor.getDefaultPresentation(type);
+            presentation = getDefaultPresentation(type);
           }
           elements.add(new OrderRootTypeElement(myRootElementDescriptor, type, presentation.getNodeText(), presentation.getIcon()));
         }
@@ -80,7 +84,7 @@ public class LibraryTreeStructure extends AbstractTreeStructure {
     if (element instanceof OrderRootTypeElement) {
       OrderRootTypeElement rootTypeElement = (OrderRootTypeElement)element;
       OrderRootType orderRootType = rootTypeElement.getOrderRootType();
-      ArrayList<ItemElement> items = new ArrayList<ItemElement>();
+      ArrayList<ItemElement> items = new ArrayList<>();
       final String[] urls = libraryEditor.getUrls(orderRootType).clone();
       Arrays.sort(urls, LibraryRootsComponent.ourUrlComparator);
       for (String url : urls) {
@@ -91,9 +95,9 @@ public class LibraryTreeStructure extends AbstractTreeStructure {
 
     if (element instanceof ItemElement) {
       ItemElement itemElement = (ItemElement)element;
-      List<String> excludedUrls = new ArrayList<String>();
+      List<String> excludedUrls = new ArrayList<>();
       for (String excludedUrl : libraryEditor.getExcludedRootUrls()) {
-        if (VfsUtilCore.isEqualOrAncestor(itemElement.getUrl(), excludedUrl)) {
+        if (VirtualFileUtil.isEqualOrAncestor(itemElement.getUrl(), excludedUrl)) {
           excludedUrls.add(excludedUrl);
         }
       }
@@ -107,6 +111,11 @@ public class LibraryTreeStructure extends AbstractTreeStructure {
     return ArrayUtil.EMPTY_OBJECT_ARRAY;
   }
 
+  private static OrderRootTypePresentation getDefaultPresentation(OrderRootType type) {
+    final OrderRootTypeUIFactory factory = OrderRootTypeUIFactory.forOrderType(type);
+    return new OrderRootTypePresentation(factory.getNodeText(), factory.getIcon());
+  }
+
   @Override
   public void commit() {
   }
@@ -117,13 +126,13 @@ public class LibraryTreeStructure extends AbstractTreeStructure {
   }
 
   @Override
-  public Object getParentElement(Object element) {
+  public Object getParentElement(@Nonnull Object element) {
     return ((NodeDescriptor)element).getParentDescriptor();
   }
 
   @Override
   @Nonnull
-  public NodeDescriptor createDescriptor(Object element, NodeDescriptor parentDescriptor) {
+  public NodeDescriptor createDescriptor(@Nonnull Object element, NodeDescriptor parentDescriptor) {
     return (NodeDescriptor)element;
   }
 }

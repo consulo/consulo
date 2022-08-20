@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.content.internal;
 
-package consulo.ide.impl.idea.codeInsight.template;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
 
-import consulo.language.editor.completion.lookup.LookupElement;
-import consulo.document.Document;
-import consulo.util.dataholder.Key;
-import consulo.language.psi.PsiFile;
+import javax.annotation.Nullable;
+import javax.swing.*;
 
 /**
- * @author yole
+ * @author VISTALL
+ * @since 20-Aug-22
  */
-public interface TemplateLookupSelectionHandler {
-  Key<TemplateLookupSelectionHandler> KEY_IN_LOOKUP_ITEM = Key.create("templateLookupSelectionHandler");
-
-  void itemSelected(LookupElement item, final PsiFile psiFile, final Document document, final int segmentStart, final int segmentEnd);
+@ServiceAPI(ComponentScope.APPLICATION)
+public interface ContentInternalHelper {
+  @Nullable
+  String showSpecifyJavadocUrlDialog(JComponent parent, String initialValue);
 }

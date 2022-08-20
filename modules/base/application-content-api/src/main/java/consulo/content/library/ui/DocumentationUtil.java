@@ -13,17 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.projectRoots.ui;
+package consulo.content.library.ui;
 
-import consulo.project.ProjectBundle;
-import consulo.ui.ex.InputValidator;
-import consulo.ui.ex.awt.Messages;
+import consulo.application.Application;
+import consulo.content.internal.ContentInternalHelper;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 
 import javax.swing.*;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 /**
  * @author MYakovlev
@@ -37,30 +34,10 @@ public class DocumentationUtil {
   }
 
   public static VirtualFile showSpecifyJavadocUrlDialog(JComponent parent, String initialValue) {
-    final String url = Messages.showInputDialog(parent, ProjectBundle.message("sdk.configure.javadoc.url.prompt"), ProjectBundle.message("sdk.configure.javadoc.url.title"), Messages.getQuestionIcon(),
-                                                initialValue, new InputValidator() {
-              @Override
-              public boolean checkInput(String inputString) {
-                return true;
-              }
-
-              @Override
-              public boolean canClose(String inputString) {
-                try {
-                  new URL(inputString);
-                  return true;
-                }
-                catch (MalformedURLException e1) {
-                  Messages.showErrorDialog(e1.getMessage(), ProjectBundle.message("sdk.configure.javadoc.url.title"));
-                }
-                return false;
-              }
-            });
+    final String url = Application.get().getInstance(ContentInternalHelper.class).showSpecifyJavadocUrlDialog(parent, initialValue);
     if (url == null) {
       return null;
     }
     return VirtualFileManager.getInstance().findFileByUrl(url);
   }
-
-
 }

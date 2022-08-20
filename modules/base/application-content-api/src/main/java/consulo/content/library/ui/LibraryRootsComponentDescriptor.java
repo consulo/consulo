@@ -32,10 +32,14 @@ import java.util.List;
 public abstract class LibraryRootsComponentDescriptor {
   /**
    * Defines presentation for root type nodes in the library roots editor
+   *
    * @return custom presentation or {@code null} if default presentation should be used
    */
   @Nullable
-  public abstract OrderRootTypePresentation getRootTypePresentation(@Nonnull OrderRootType type);
+  public OrderRootTypePresentation getRootTypePresentation(@Nonnull OrderRootType type) {
+    // will use default impl
+    return null;
+  }
 
   /**
    * Provides separate detectors for root types supported by the library type.
