@@ -1,10 +1,9 @@
-package consulo.ide.impl.idea.codeInsight.documentation;
+package consulo.language.editor.documentation;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.ServiceManager;
-import consulo.language.editor.documentation.DocumentationManagerProtocol;
+import consulo.application.Application;
 import consulo.language.psi.PsiElement;
 import jakarta.inject.Singleton;
 
@@ -13,10 +12,9 @@ import jakarta.inject.Singleton;
 @ServiceImpl
 public class DocumentationManagerUtil {
   public static DocumentationManagerUtil getInstance() {
-    return ServiceManager.getService(DocumentationManagerUtil.class);
+    return Application.get().getInstance(DocumentationManagerUtil.class);
   }
 
-  @SuppressWarnings({"HardCodedStringLiteral", "MethodMayBeStatic", "UnusedParameters"})
   protected void createHyperlinkImpl(StringBuilder buffer, PsiElement refElement, String refText, String label, boolean plainLink) {
     buffer.append("<a href=\"");
     buffer.append(DocumentationManagerProtocol.PSI_ELEMENT_PROTOCOL); // :-)

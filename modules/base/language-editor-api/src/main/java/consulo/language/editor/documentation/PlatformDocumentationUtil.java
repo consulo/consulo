@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.documentation;
+package consulo.language.editor.documentation;
 
 import consulo.logging.Logger;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.http.HttpFileSystem;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,13 +32,19 @@ public class PlatformDocumentationUtil {
 
   private static final Logger LOG = Logger.getInstance(PlatformDocumentationUtil.class);
 
-  private static final @NonNls Pattern ourLtFixupPattern = Pattern.compile("<([^/^\\w^!])");
-  private static final @NonNls Pattern ourToQuote = Pattern.compile("[\\\\\\.\\^\\$\\?\\*\\+\\|\\)\\}\\]\\{\\(\\[]");
-  private static final @NonNls String LT_ENTITY = "&lt;";
+  private static final Pattern ourLtFixupPattern = Pattern.compile("<([^/^\\w^!])");
+  private static final Pattern ourToQuote = Pattern.compile("[\\\\\\.\\^\\$\\?\\*\\+\\|\\)\\}\\]\\{\\(\\[]");
+  private static final String LT_ENTITY = "&lt;";
+  private static final Pattern ourAnchorSuffix = Pattern.compile("#(.*)$");
+
+  public static String getDocURL(String url) {
+    Matcher anchorMatcher = ourAnchorSuffix.matcher(url);
+    return anchorMatcher.find() ? anchorMatcher.reset().replaceAll("") : url;
+  }
 
   @Nullable
   public static List<String> getHttpRoots(final String[] roots, String relPath) {
-    final ArrayList<String> result = new ArrayList<String>();
+    final ArrayList<String> result = new ArrayList<>();
     for (String root : roots) {
       final VirtualFile virtualFile = VirtualFileManager.getInstance().findFileByUrl(root);
       if (virtualFile != null) {
@@ -68,7 +73,7 @@ public class PlatformDocumentationUtil {
 
   public static String fixupText(CharSequence docText) {
     Matcher fixupMatcher = ourLtFixupPattern.matcher(docText);
-    LinkedList<String> secondSymbols = new LinkedList<String>();
+    LinkedList<String> secondSymbols = new LinkedList<>();
 
     while (fixupMatcher.find()) {
       String s = fixupMatcher.group(1);

@@ -55,6 +55,18 @@ public class URLUtil {
   public static final Pattern URL_PATTERN = Pattern.compile("\\b(mailto:|(news|(ht|f)tp(s?))://|((?<![\\p{L}0-9_.])(www\\.)))[-A-Za-z0-9+$&@#/%?=~_|!:,.;]*[-A-Za-z0-9+$&@#/%=~_|]");
   public static final Pattern FILE_URL_PATTERN = Pattern.compile("\\b(file:///)[-A-Za-z0-9+$&@#/%?=~_|!:,.;]*[-A-Za-z0-9+$&@#/%=~_|]");
 
+  // The pattern for 'scheme' mainly according to RFC1738.
+  // We have to violate the RFC since we need to distinguish
+  // real schemes from local Windows paths; The only difference
+  // with RFC is that we do not allow schemes with length=1 (in other case
+  // local paths like "C:/temp/index.html" would be erroneously interpreted as
+  // external URLs.)
+  private static final Pattern ourExternalPrefix = Pattern.compile("^[\\w\\+\\.\\-]{2,}:");
+
+  public static boolean isAbsoluteURL(@Nonnull String url) {
+    return ourExternalPrefix.matcher(url.toLowerCase()).find();
+  }
+
   /**
    * @return if false, then the line contains no URL; if true, then more heavy {@link #URL_PATTERN} check should be used.
    */

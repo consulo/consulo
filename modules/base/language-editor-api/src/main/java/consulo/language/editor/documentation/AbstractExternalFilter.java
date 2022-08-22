@@ -13,26 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.documentation;
+package consulo.language.editor.documentation;
 
-import consulo.ide.impl.idea.ide.BrowserUtil;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.logging.Logger;
-import consulo.component.ProcessCanceledException;
 import consulo.application.util.function.Computable;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtilRt;
+import consulo.component.ProcessCanceledException;
+import consulo.http.HttpRequests;
+import consulo.language.psi.PsiElement;
+import consulo.logging.Logger;
 import consulo.util.io.CharsetToolkit;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import consulo.language.psi.PsiElement;
-import consulo.http.HttpRequests;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.*;
 import java.net.URL;
 import java.util.Locale;
@@ -75,7 +73,7 @@ public abstract class AbstractExternalFilter {
     protected abstract String convertReference(String root, String href);
 
     public CharSequence refFilter(final String root, @Nonnull CharSequence read) {
-      CharSequence toMatch = StringUtilRt.toUpperCase(read);
+      CharSequence toMatch = StringUtil.toUpperCase(read);
       StringBuilder ready = new StringBuilder();
       int prev = 0;
       Matcher matcher = mySelector.matcher(toMatch);
@@ -185,7 +183,7 @@ public abstract class AbstractExternalFilter {
     @NonNls String greatestEndSection = "<!-- ========= END OF CLASS DATA ========= -->";
 
     data.append(HTML);
-    URL baseUrl = VfsUtilCore.convertToURL(url);
+    URL baseUrl = VirtualFileUtil.convertToURL(url);
     if (baseUrl != null) {
       data.append("<base href=\"").append(baseUrl).append("\">");
     }
@@ -364,13 +362,13 @@ public abstract class AbstractExternalFilter {
         }
 
         if (url.startsWith(JAR_PROTOCOL)) {
-          VirtualFile file = VirtualFileManager.getInstance().findFileByUrl(BrowserUtil.getDocURL(url));
+          VirtualFile file = VirtualFileManager.getInstance().findFileByUrl(PlatformDocumentationUtil.getDocURL(url));
           if (file != null) {
-            myBuilder.buildFromStream(url, new StringReader(VfsUtilCore.loadText(file)), data);
+            myBuilder.buildFromStream(url, new InputStreamReader(file.getInputStream()), data);
           }
         }
         else {
-          URL parsedUrl = BrowserUtil.getURL(url);
+          URL parsedUrl = VirtualFileUtil.getURL(url);
           if (parsedUrl != null) {
             HttpRequests.request(parsedUrl.toString()).gzip(false).connect(new HttpRequests.RequestProcessor<Void>() {
               @Override
@@ -378,8 +376,7 @@ public abstract class AbstractExternalFilter {
                 byte[] bytes = request.readBytes(null);
                 String contentEncoding = null;
                 ByteArrayInputStream stream = new ByteArrayInputStream(bytes);
-                BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-                try {
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
                   for (String htmlLine = reader.readLine(); htmlLine != null; htmlLine = reader.readLine()) {
                     contentEncoding = parseContentEncoding(htmlLine);
                     if (contentEncoding != null) {
@@ -388,7 +385,6 @@ public abstract class AbstractExternalFilter {
                   }
                 }
                 finally {
-                  reader.close();
                   stream.reset();
                 }
 

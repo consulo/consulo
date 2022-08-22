@@ -54,11 +54,17 @@ public final class VirtualFileUtil {
 
   public static final char VFS_SEPARATOR_CHAR = '/';
   private static final String PROTOCOL_DELIMITER = ":";
+  private static final String MAILTO = "mailto";
 
   @Nullable
   public static VirtualFile getUserHomeDir() {
     final Path path = Platform.current().user().homePath();
     return LocalFileSystem.getInstance().findFileByNioFile(path);
+  }
+
+  @Nullable
+  public static URL getURL(String url) throws MalformedURLException {
+    return URLUtil.isAbsoluteURL(url) ? convertToURL(url) : new URL("file", "", url);
   }
 
   /**
@@ -106,6 +112,57 @@ public final class VirtualFileUtil {
 
     path = URLUtil.unescapePercentSequences(path);
     return protocol + "://" + path;
+  }
+
+  /**
+   * Converts VsfUrl info {@link URL}.
+   *
+   * @param vfsUrl VFS url (as constructed by {@link VirtualFile#getUrl()}
+   * @return converted URL or null if error has occurred.
+   */
+  @Nullable
+  public static URL convertToURL(@Nonnull String vfsUrl) {
+    if (vfsUrl.startsWith("jar://") || vfsUrl.startsWith(StandardFileSystems.ZIP_PROTOCOL_PREFIX)) {
+      try {
+        // jar:// and zip:// have the same lenght
+        return new URL("jar:file:///" + vfsUrl.substring(StandardFileSystems.ZIP_PROTOCOL_PREFIX.length()));
+      }
+      catch (MalformedURLException e) {
+        return null;
+      }
+    }
+
+    if (vfsUrl.startsWith(MAILTO)) {
+      try {
+        return new URL(vfsUrl);
+      }
+      catch (MalformedURLException e) {
+        return null;
+      }
+    }
+
+    String[] split = vfsUrl.split("://");
+
+    if (split.length != 2) {
+      LOG.debug("Malformed VFS URL: " + vfsUrl);
+      return null;
+    }
+
+    String protocol = split[0];
+    String path = split[1];
+
+    try {
+      if (protocol.equals(StandardFileSystems.FILE_PROTOCOL)) {
+        return new URL(StandardFileSystems.FILE_PROTOCOL, "", path);
+      }
+      else {
+        return URLUtil.internProtocol(new URL(vfsUrl));
+      }
+    }
+    catch (MalformedURLException e) {
+      LOG.debug("MalformedURLException occurred:" + e.getMessage());
+      return null;
+    }
   }
 
   /**

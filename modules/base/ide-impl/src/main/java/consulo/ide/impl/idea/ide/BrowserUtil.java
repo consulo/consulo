@@ -15,18 +15,20 @@
  */
 package consulo.ide.impl.idea.ide;
 
-import consulo.process.cmd.GeneralCommandLine;
-import consulo.ide.impl.idea.execution.util.ExecUtil;
-import consulo.webBrowser.BrowserLauncher;
-import consulo.ide.impl.idea.ide.browsers.BrowserLauncherAppless;
 import consulo.application.ApplicationManager;
 import consulo.application.util.SystemInfo;
+import consulo.ide.impl.idea.execution.util.ExecUtil;
+import consulo.ide.impl.idea.ide.browsers.BrowserLauncherAppless;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
+import consulo.language.editor.documentation.PlatformDocumentationUtil;
+import consulo.process.cmd.GeneralCommandLine;
+import consulo.util.io.URLUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.webBrowser.BrowserLauncher;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -34,31 +36,21 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static consulo.ide.impl.idea.util.containers.ContainerUtilRt.newArrayList;
 
 public class BrowserUtil {
-  // The pattern for 'scheme' mainly according to RFC1738.
-  // We have to violate the RFC since we need to distinguish
-  // real schemes from local Windows paths; The only difference
-  // with RFC is that we do not allow schemes with length=1 (in other case
-  // local paths like "C:/temp/index.html" would be erroneously interpreted as
-  // external URLs.)
-  private static final Pattern ourExternalPrefix = Pattern.compile("^[\\w\\+\\.\\-]{2,}:");
-  private static final Pattern ourAnchorSuffix = Pattern.compile("#(.*)$");
-
   private BrowserUtil() {
   }
 
   public static boolean isAbsoluteURL(String url) {
-    return ourExternalPrefix.matcher(url.toLowerCase()).find();
+    return URLUtil.isAbsoluteURL(url);
   }
 
+  @Deprecated
   public static String getDocURL(String url) {
-    Matcher anchorMatcher = ourAnchorSuffix.matcher(url);
-    return anchorMatcher.find() ? anchorMatcher.reset().replaceAll("") : url;
+    return PlatformDocumentationUtil.getDocURL(url);
   }
 
   @Nullable

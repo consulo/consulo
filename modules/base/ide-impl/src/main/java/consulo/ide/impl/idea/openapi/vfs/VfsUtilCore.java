@@ -36,7 +36,6 @@ import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 
@@ -44,8 +43,6 @@ import static consulo.virtualFileSystem.util.VirtualFileVisitor.VisitorException
 
 public class VfsUtilCore {
   private static final Logger LOG = Logger.getInstance(VfsUtilCore.class);
-
-  private static final String MAILTO = "mailto";
 
   public static final String LOCALHOST_URI_PATH_PREFIX = URLUtil.LOCALHOST_URI_PATH_PREFIX;
   public static final char VFS_SEPARATOR_CHAR = VirtualFileUtil.VFS_SEPARATOR_CHAR;
@@ -281,47 +278,7 @@ public class VfsUtilCore {
    */
   @Nullable
   public static URL convertToURL(@Nonnull String vfsUrl) {
-    if (vfsUrl.startsWith("jar://") || vfsUrl.startsWith(StandardFileSystems.ZIP_PROTOCOL_PREFIX)) {
-      try {
-        // jar:// and zip:// have the same lenght
-        return new URL("jar:file:///" + vfsUrl.substring(StandardFileSystems.ZIP_PROTOCOL_PREFIX.length()));
-      }
-      catch (MalformedURLException e) {
-        return null;
-      }
-    }
-
-    if (vfsUrl.startsWith(MAILTO)) {
-      try {
-        return new URL(vfsUrl);
-      }
-      catch (MalformedURLException e) {
-        return null;
-      }
-    }
-
-    String[] split = vfsUrl.split("://");
-
-    if (split.length != 2) {
-      LOG.debug("Malformed VFS URL: " + vfsUrl);
-      return null;
-    }
-
-    String protocol = split[0];
-    String path = split[1];
-
-    try {
-      if (protocol.equals(StandardFileSystems.FILE_PROTOCOL)) {
-        return new URL(StandardFileSystems.FILE_PROTOCOL, "", path);
-      }
-      else {
-        return URLUtil.internProtocol(new URL(vfsUrl));
-      }
-    }
-    catch (MalformedURLException e) {
-      LOG.debug("MalformedURLException occurred:" + e.getMessage());
-      return null;
-    }
+    return VirtualFileUtil.convertToURL(vfsUrl);
   }
 
   @Nonnull
