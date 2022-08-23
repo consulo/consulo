@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.template.macro;
+package consulo.ide.impl.idea.codeInsight.template.impl;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.template.ExpressionContext;

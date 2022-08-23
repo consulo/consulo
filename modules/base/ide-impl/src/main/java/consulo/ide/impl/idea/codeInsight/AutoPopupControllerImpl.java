@@ -10,6 +10,7 @@ import consulo.application.dumb.IndexNotReadyException;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
+import consulo.ide.impl.idea.codeInsight.completion.CodeCompletionHandlerBase;
 import consulo.ide.impl.idea.codeInsight.completion.CompletionPhase;
 import consulo.ide.impl.idea.codeInsight.completion.CompletionProgressIndicator;
 import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionServiceImpl;
@@ -153,6 +154,11 @@ public class AutoPopupControllerImpl extends AutoPopupController implements Disp
 
       addRequest(() -> documentManager.performLaterWhenAllCommitted(request), settings.PARAMETER_INFO_DELAY);
     }
+  }
+
+  @Override
+  public void showCompletionPopup(@Nonnull Editor editor, @Nonnull CompletionType completionType, boolean invokedExplicitly, boolean autopopup, boolean synchronous) {
+    new CodeCompletionHandlerBase(completionType, invokedExplicitly, autopopup, synchronous).invokeCompletion(myProject, editor);
   }
 
   @Override

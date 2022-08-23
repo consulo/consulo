@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.template.macro;
+package consulo.language.editor.template.macro;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.codeInsight.completion.CodeCompletionHandlerBase;
-import consulo.language.editor.completion.CompletionType;
 import consulo.codeEditor.Editor;
+import consulo.language.editor.AutoPopupController;
+import consulo.language.editor.completion.CompletionType;
 import consulo.project.Project;
 
 @ExtensionImpl
@@ -30,6 +30,6 @@ public class CompleteSmartMacro extends BaseCompleteMacro {
 
   @Override
   protected void invokeCompletionHandler(Project project, Editor editor) {
-    new CodeCompletionHandlerBase(CompletionType.SMART).invokeCompletion(project, editor, 1);
+    AutoPopupController.getInstance(project).showCompletionPopup(editor, CompletionType.SMART, true, false, true);
   }
 }

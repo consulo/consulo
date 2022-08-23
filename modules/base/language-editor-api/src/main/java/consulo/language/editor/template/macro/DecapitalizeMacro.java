@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,32 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.template.macro;
+
+package consulo.language.editor.template.macro;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.CodeInsightBundle;
+import consulo.language.editor.template.Expression;
+import consulo.language.editor.template.ExpressionContext;
+import consulo.language.editor.template.Result;
 import consulo.language.editor.template.TextResult;
-import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 
 /**
- * @author Nikolay Matveev
+ * @author Konstantin Bulenkov
  */
 @ExtensionImpl
-public class FileNameWithoutExtensionMacro extends FileNameMacro {
-
-  @Override
-  public String getName() {
-    return "fileNameWithoutExtension";
+public class DecapitalizeMacro extends MacroBase {
+  public DecapitalizeMacro() {
+    super("decapitalize", CodeInsightBundle.message("macro.decapitalize.string"));
   }
 
   @Override
-  public String getPresentableName() {
-    return CodeInsightBundle.message("macro.file.name.without.extension");
-  }
-
-  @Override
-  protected TextResult calculateResult(@Nonnull VirtualFile virtualFile) {
-    return new TextResult(virtualFile.getNameWithoutExtension());
+  protected Result calculateResult(@Nonnull Expression[] params, ExpressionContext context, boolean quick) {
+    String text = getTextResult(params, context);
+    if (text != null && text.length() > 0) {
+      text = text.substring(0, 1).toLowerCase() + text.substring(1, text.length());
+      return new TextResult(text);
+    }
+    return null;
   }
 }

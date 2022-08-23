@@ -14,24 +14,24 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.template.macro;
+package consulo.language.editor.template.macro;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.codeInsight.completion.CodeCompletionHandlerBase;
-import consulo.language.editor.completion.CompletionType;
-import consulo.application.ApplicationManager;
-import consulo.codeEditor.Editor;
-import consulo.project.Project;
+import consulo.language.editor.template.Expression;
+import consulo.language.editor.template.ExpressionContext;
+import consulo.platform.Platform;
 
+/**
+ * @author yole
+ */
 @ExtensionImpl
-public class CompleteMacro extends BaseCompleteMacro {
-  public CompleteMacro() {
-    super("complete");
+public class CurrentUserMacro extends SimpleMacro {
+  public CurrentUserMacro() {
+    super("user");
   }
 
   @Override
-  protected void invokeCompletionHandler(Project project, Editor editor) {
-    new CodeCompletionHandlerBase(CompletionType.BASIC, ApplicationManager.getApplication().isUnitTestMode(), false, true)
-      .invokeCompletion(project, editor, 1);
+  protected String evaluateSimpleMacro(Expression[] params, final ExpressionContext context) {
+    return Platform.current().user().name();
   }
 }

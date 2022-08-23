@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.template.macro;
+package consulo.language.editor.template.macro;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
@@ -27,7 +27,6 @@ import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.completion.lookup.event.LookupAdapter;
 import consulo.language.editor.completion.lookup.event.LookupEvent;
 import consulo.language.editor.template.*;
-import consulo.language.editor.template.macro.Macro;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;

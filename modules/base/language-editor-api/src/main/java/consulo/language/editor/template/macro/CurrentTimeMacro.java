@@ -14,16 +14,23 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.ide.util;
+package consulo.language.editor.template.macro;
 
-import consulo.fileEditor.structureView.tree.Filter;
-import consulo.ui.ex.action.Shortcut;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.editor.template.Expression;
+import consulo.language.editor.template.ExpressionContext;
 
 /**
  * @author yole
  */
-public interface FileStructureFilter extends Filter {
-  String getCheckBoxText();
+@ExtensionImpl
+public class CurrentTimeMacro extends SimpleMacro {
+  public CurrentTimeMacro() {
+    super("time");
+  }
 
-  Shortcut[] getShortcut();
+  @Override
+  protected String evaluateSimpleMacro(Expression[] params, final ExpressionContext context) {
+    return CurrentDateMacro.formatUserDefined(params, context, false);
+  }
 }

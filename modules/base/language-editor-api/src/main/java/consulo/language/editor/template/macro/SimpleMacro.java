@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.template.macro;
+package consulo.language.editor.template.macro;
 
-import consulo.language.editor.template.*;
-import consulo.language.editor.template.macro.Macro;
-import org.jetbrains.annotations.NonNls;
+import consulo.language.editor.template.Expression;
+import consulo.language.editor.template.ExpressionContext;
+import consulo.language.editor.template.Result;
+import consulo.language.editor.template.TextResult;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -32,7 +34,6 @@ public abstract class SimpleMacro extends Macro {
   }
 
   @Override
-  @NonNls
   public String getName() {
     return myName;
   }
@@ -44,7 +45,6 @@ public abstract class SimpleMacro extends Macro {
 
   @Override
   @Nonnull
-  @NonNls
   public String getDefaultValue() {
     return "11.11.1111";
   }

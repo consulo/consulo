@@ -14,24 +14,15 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.template.macro;
+package consulo.fileEditor.structureView.tree;
 
-import consulo.annotation.component.ExtensionImpl;
-import consulo.language.editor.template.Expression;
-import consulo.language.editor.template.ExpressionContext;
-import consulo.platform.Platform;
+import consulo.ui.ex.action.Shortcut;
 
 /**
  * @author yole
  */
-@ExtensionImpl
-public class CurrentUserMacro extends SimpleMacro {
-  public CurrentUserMacro() {
-    super("user");
-  }
+public interface FileStructureFilter extends Filter {
+  String getCheckBoxText();
 
-  @Override
-  protected String evaluateSimpleMacro(Expression[] params, final ExpressionContext context) {
-    return Platform.current().user().name();
-  }
+  Shortcut[] getShortcut();
 }

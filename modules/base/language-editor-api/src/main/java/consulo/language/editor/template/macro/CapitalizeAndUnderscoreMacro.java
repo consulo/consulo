@@ -13,16 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.template.macro;
+package consulo.language.editor.template.macro;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.util.matcher.NameUtil;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.template.Expression;
 import consulo.language.editor.template.ExpressionContext;
 import consulo.language.editor.template.Result;
 import consulo.language.editor.template.TextResult;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.application.util.matcher.NameUtil;
+import consulo.util.lang.StringUtil;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -36,7 +37,7 @@ public class CapitalizeAndUnderscoreMacro extends MacroBase {
 
   @Override
   protected Result calculateResult(@Nonnull Expression[] params, ExpressionContext context, boolean quick) {
-    String text = getTextResult(params, context, true);
+    String text = MacroBase.getTextResult(params, context, true);
     if (text != null && text.length() > 0) {
       final String[] words = NameUtil.nameToWords(text);
       boolean insertUnderscore = false;

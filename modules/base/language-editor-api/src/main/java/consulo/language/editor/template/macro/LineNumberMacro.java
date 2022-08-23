@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.template.macro;
+package consulo.language.editor.template.macro;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.CodeInsightBundle;
@@ -22,24 +22,31 @@ import consulo.language.editor.template.Expression;
 import consulo.language.editor.template.ExpressionContext;
 import consulo.language.editor.template.Result;
 import consulo.language.editor.template.TextResult;
+
 import javax.annotation.Nonnull;
 
-/**
- * @author Konstantin Bulenkov
- */
 @ExtensionImpl
-public class DecapitalizeMacro extends MacroBase {
-  public DecapitalizeMacro() {
-    super("decapitalize", CodeInsightBundle.message("macro.decapitalize.string"));
+public class LineNumberMacro extends Macro {
+  @Override
+  public String getName() {
+    return "lineNumber";
   }
 
   @Override
-  protected Result calculateResult(@Nonnull Expression[] params, ExpressionContext context, boolean quick) {
-    String text = getTextResult(params, context);
-    if (text != null && text.length() > 0) {
-      text = text.substring(0, 1).toLowerCase() + text.substring(1, text.length());
-      return new TextResult(text);
-    }
-    return null;
+  public String getPresentableName() {
+    return CodeInsightBundle.message("macro.linenumber");
   }
+
+  @Override
+  public Result calculateResult(@Nonnull Expression[] params, ExpressionContext context) {
+    final int offset = context.getStartOffset();
+    int line = context.getEditor().offsetToLogicalPosition(offset).line + 1;
+    return new TextResult("" + line);
+  }
+
+  @Override
+  public Result calculateQuickResult(@Nonnull Expression[] params, ExpressionContext context) {
+    return calculateResult(params, context);
+  }
+
 }

@@ -2528,4 +2528,15 @@ public final class StringUtil {
       return null;
     }
   }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String fixVariableNameDerivedFromPropertyName(@Nonnull String name) {
+    if (isEmptyOrSpaces(name)) return name;
+    char c = name.charAt(0);
+    if (isVowel(c)) {
+      return "an" + Character.toUpperCase(c) + name.substring(1);
+    }
+    return "a" + Character.toUpperCase(c) + name.substring(1);
+  }
 }

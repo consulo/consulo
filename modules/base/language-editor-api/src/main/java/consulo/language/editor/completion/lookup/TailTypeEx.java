@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight;
+package consulo.language.editor.completion.lookup;
 
 import consulo.codeEditor.Editor;
-import consulo.language.editor.completion.lookup.TailType;
 import org.jetbrains.annotations.NonNls;
 
 /**

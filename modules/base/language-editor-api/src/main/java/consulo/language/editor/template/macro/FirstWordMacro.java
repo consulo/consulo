@@ -14,23 +14,34 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.template.macro;
+package consulo.language.editor.template.macro;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.template.Expression;
 import consulo.language.editor.template.ExpressionContext;
+import consulo.language.editor.template.Result;
+import consulo.language.editor.template.TextResult;
+
+import javax.annotation.Nonnull;
 
 /**
- * @author yole
+ * @author ven
+ * @author Konstantin Bulenkov
  */
 @ExtensionImpl
-public class CurrentTimeMacro extends SimpleMacro {
-  public CurrentTimeMacro() {
-    super("time");
+public class FirstWordMacro extends MacroBase {
+  public FirstWordMacro() {
+    super("firstWord", CodeInsightBundle.message("macro.firstWord.string"));
   }
 
   @Override
-  protected String evaluateSimpleMacro(Expression[] params, final ExpressionContext context) {
-    return CurrentDateMacro.formatUserDefined(params, context, false);
+  protected Result calculateResult(@Nonnull Expression[] params, ExpressionContext context, boolean quick) {
+    final String text = getTextResult(params, context);
+    if (text != null) {
+      final int index = text.indexOf(' ');
+      return index >= 0 ? new TextResult(text.substring(0, index)) : new TextResult(text);
+    }
+    return null;
   }
 }

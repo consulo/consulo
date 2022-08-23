@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2012 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,38 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package consulo.ide.impl.idea.codeInsight.template.macro;
+package consulo.language.editor.template.macro;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.CodeInsightBundle;
-import consulo.language.editor.template.*;
-import consulo.language.editor.template.macro.Macro;
+import consulo.language.editor.template.TextResult;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 
+/**
+ * @author Nikolay Matveev
+ */
 @ExtensionImpl
-public class LineNumberMacro extends Macro {
+public class FileNameWithoutExtensionMacro extends FileNameMacro {
+
   @Override
   public String getName() {
-    return "lineNumber";
+    return "fileNameWithoutExtension";
   }
 
   @Override
   public String getPresentableName() {
-    return CodeInsightBundle.message("macro.linenumber");
+    return CodeInsightBundle.message("macro.file.name.without.extension");
   }
 
   @Override
-  public Result calculateResult(@Nonnull Expression[] params, ExpressionContext context) {
-    final int offset = context.getStartOffset();
-    int line = context.getEditor().offsetToLogicalPosition(offset).line + 1;
-    return new TextResult("" + line);
+  protected TextResult calculateResult(@Nonnull VirtualFile virtualFile) {
+    return new TextResult(virtualFile.getNameWithoutExtension());
   }
-
-  @Override
-  public Result calculateQuickResult(@Nonnull Expression[] params, ExpressionContext context) {
-    return calculateResult(params, context);
-  }
-
 }

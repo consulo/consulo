@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.template.macro;
+
+package consulo.language.editor.template.macro;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.CodeInsightBundle;
@@ -21,35 +22,24 @@ import consulo.language.editor.template.Expression;
 import consulo.language.editor.template.ExpressionContext;
 import consulo.language.editor.template.Result;
 import consulo.language.editor.template.TextResult;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-import java.util.List;
+import javax.annotation.Nonnull;
 
 /**
+ * @author Roman.Chernyatchik
  * @author Konstantin Bulenkov
  */
 @ExtensionImpl
-public class ReplaceUnderscoresToCamelCaseMacro extends MacroBase {
-  public ReplaceUnderscoresToCamelCaseMacro() {
-    super("underscoresToCamelCase", CodeInsightBundle.message("macro.undescoresToCamelCase.string"));
+public class ReplaceUnderscoresWithSpacesMacro extends MacroBase {
+  public ReplaceUnderscoresWithSpacesMacro() {
+    super("underscoresToSpaces", CodeInsightBundle.message("macro.undescoresToSpaces.string"));
   }
 
-  @Nullable
   @Override
   protected Result calculateResult(@Nonnull Expression[] params, ExpressionContext context, boolean quick) {
-    final String text = getTextResult(params, context, true);
+    final String text = getTextResult(params, context);
     if (text != null) {
-      final List<String> strings = StringUtil.split(text, "_");
-      if (strings.size() > 0) {
-        final StringBuilder buf = new StringBuilder();
-        buf.append(strings.get(0).toLowerCase());
-        for (int i = 1; i < strings.size(); i++) {
-          buf.append(StringUtil.capitalize(strings.get(i).toLowerCase()));
-        }
-        return new TextResult(buf.toString());
-      }
+      return new TextResult(text.replace('_', ' '));
     }
     return null;
   }

@@ -52,4 +52,6 @@ public abstract class AutoPopupController {
   public abstract void showParameterInfo(Project project, final Editor editor, PsiFile file, int lbraceOffset, PsiElement highlightedElement, boolean requestFocus);
 
   public abstract void autoPopupParameterInfo(@Nonnull Editor editor, @Nullable Object highlightedMethod);
+
+  public abstract void showCompletionPopup(@Nonnull Editor editor, @Nonnull CompletionType completionType, boolean invokedExplicitly, boolean autopopup, boolean synchronous);
 }
