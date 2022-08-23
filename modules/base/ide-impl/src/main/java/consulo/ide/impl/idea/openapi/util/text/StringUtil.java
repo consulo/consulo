@@ -2431,18 +2431,7 @@ public class StringUtil extends StringUtilRt {
   @Nullable
   @Contract(pure = true)
   public static String getPropertyName(@NonNls @Nonnull String methodName) {
-    if (methodName.startsWith("get")) {
-      return decapitalize(methodName.substring(3));
-    }
-    else if (methodName.startsWith("is")) {
-      return decapitalize(methodName.substring(2));
-    }
-    else if (methodName.startsWith("set")) {
-      return decapitalize(methodName.substring(3));
-    }
-    else {
-      return null;
-    }
+   return consulo.util.lang.StringUtil.getPropertyName(methodName)
   }
 
   @Contract(pure = true)

@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
 /**
  * Based on IDEA code
  */
-public class StringUtil {
+public final class StringUtil {
   /**
    * Expirable CharSequence. Very useful to control external library execution time,
    * i.e. when java.util.regex.Pattern match goes out of control.
@@ -2510,5 +2510,22 @@ public class StringUtil {
 
   public static void escapeSlashes(@Nonnull final StringBuilder buf) {
     escapeChar(buf, '/');
+  }
+
+  @Nullable
+  @Contract(pure = true)
+  public static String getPropertyName(@Nonnull String methodName) {
+    if (methodName.startsWith("get")) {
+      return decapitalize(methodName.substring(3));
+    }
+    else if (methodName.startsWith("is")) {
+      return decapitalize(methodName.substring(2));
+    }
+    else if (methodName.startsWith("set")) {
+      return decapitalize(methodName.substring(3));
+    }
+    else {
+      return null;
+    }
   }
 }
