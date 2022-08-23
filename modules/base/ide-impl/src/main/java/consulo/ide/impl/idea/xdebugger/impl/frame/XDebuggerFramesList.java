@@ -20,7 +20,7 @@ import consulo.execution.debug.XDebuggerBundle;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.frame.XStackFrame;
 import consulo.ide.impl.idea.openapi.ui.popup.ListItemDescriptorAdapter;
-import consulo.ide.impl.idea.ui.FileColorManager;
+import consulo.language.editor.FileColorManager;
 import consulo.ide.impl.idea.ui.popup.list.GroupedItemsListRenderer;
 import consulo.ide.impl.idea.util.ui.TextTransferable;
 import consulo.ide.impl.psi.search.scope.NonProjectFilesScope;

@@ -4,7 +4,7 @@ package consulo.ide.impl.psi.search;
 import consulo.application.util.ColoredItem;
 import consulo.component.util.WeighedItem;
 import consulo.content.scope.NamedScope;
-import consulo.ide.impl.idea.ui.FileColorManager;
+import consulo.language.editor.FileColorManager;
 import consulo.language.psi.scope.DelegatingGlobalSearchScope;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.scope.GlobalSearchScopesCore;

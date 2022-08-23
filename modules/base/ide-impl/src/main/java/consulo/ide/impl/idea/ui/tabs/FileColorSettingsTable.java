@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.ui.tabs;
 
-import consulo.ide.impl.idea.ui.FileColorManager;
+import consulo.language.editor.FileColorManager;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.ui.ex.awt.EditableModel;
 import consulo.ui.ex.awt.EmptyIcon;

@@ -36,7 +36,7 @@ import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
 import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
 import consulo.ide.impl.idea.reference.SoftReference;
-import consulo.ide.impl.idea.ui.FileColorManager;
+import consulo.language.editor.FileColorManager;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.PopupUpdateProcessor;
 import consulo.ide.impl.idea.ui.tabs.FileColorManagerImpl;

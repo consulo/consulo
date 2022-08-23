@@ -21,7 +21,7 @@ import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
-import consulo.ide.impl.idea.ui.FileColorManager;
+import consulo.language.editor.FileColorManager;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ide.impl.idea.ui.popup.util.DetailView;
 import consulo.ide.impl.idea.ui.popup.util.ItemWrapper;

@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 import consulo.application.AllIcons;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.TypeSafeDataProvider;
+import consulo.language.editor.FileColorManager;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.ui.ex.CopyProvider;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewTree;

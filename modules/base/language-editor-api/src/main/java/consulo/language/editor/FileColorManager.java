@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.ui;
+package consulo.language.editor;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.ide.ServiceManager;
+import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
 import java.util.Collection;
 
@@ -34,7 +33,7 @@ import java.util.Collection;
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class FileColorManager {
   public static FileColorManager getInstance(@Nonnull final Project project) {
-    return ServiceManager.getService(project, FileColorManager.class);
+    return project.getInstance(FileColorManager.class);
   }
 
   public abstract boolean isEnabled();
@@ -47,11 +46,9 @@ public abstract class FileColorManager {
 
   public abstract Project getProject();
 
-  @SuppressWarnings({"MethodMayBeStatic"})
   @Nullable
   public abstract Color getColor(@Nonnull String name);
 
-  @SuppressWarnings({"MethodMayBeStatic"})
   public abstract Collection<String> getColorNames();
 
   @Nullable

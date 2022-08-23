@@ -6,7 +6,7 @@ import consulo.fileEditor.EditorTabColorProvider;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.ui.FileColorManager;
+import consulo.language.editor.FileColorManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

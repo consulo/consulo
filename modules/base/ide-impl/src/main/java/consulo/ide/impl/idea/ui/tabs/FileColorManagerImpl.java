@@ -21,9 +21,8 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
-import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.ide.impl.idea.ui.FileColorManager;
+import consulo.language.editor.FileColorManager;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
@@ -74,7 +73,7 @@ public class FileColorManagerImpl extends FileColorManager implements Persistent
 
   private void initProjectLevelConfigurations() {
     if (mySharedConfigurationManager == null) {
-      mySharedConfigurationManager = ServiceManager.getService(myProject, FileColorSharedConfigurationManager.class);
+      mySharedConfigurationManager = myProject.getInstance(FileColorSharedConfigurationManager.class);
     }
   }
 

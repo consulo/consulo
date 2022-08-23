@@ -20,7 +20,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.*;
 import consulo.project.Project;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.ui.FileColorManager;
+import consulo.language.editor.FileColorManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.Nls;
