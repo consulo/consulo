@@ -2431,7 +2431,7 @@ public class StringUtil extends StringUtilRt {
   @Nullable
   @Contract(pure = true)
   public static String getPropertyName(@NonNls @Nonnull String methodName) {
-   return consulo.util.lang.StringUtil.getPropertyName(methodName)
+    return consulo.util.lang.StringUtil.getPropertyName(methodName);
   }
 
   @Contract(pure = true)
