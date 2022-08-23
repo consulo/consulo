@@ -102,7 +102,7 @@ class MultipleRootsInjectedFileViewProvider extends MultiplePsiFilesPerDocumentF
   @Nonnull
   @Override
   protected MultiplePsiFilesPerDocumentFileViewProvider cloneInner(@Nonnull VirtualFile fileCopy) {
-    return (MultiplePsiFilesPerDocumentFileViewProvider)getManager().getFileManager().createFileViewProvider(fileCopy, false);
+    return (MultiplePsiFilesPerDocumentFileViewProvider)((PsiManagerEx)getManager()).getFileManager().createFileViewProvider(fileCopy, false);
   }
 
   @Override
@@ -120,7 +120,7 @@ class MultipleRootsInjectedFileViewProvider extends MultiplePsiFilesPerDocumentF
   @Override
   public final void forceCachedPsi(@Nonnull PsiFile psiFile) {
     myRoots.put(psiFile.getLanguage(), (PsiFileImpl)psiFile);
-    getManager().getFileManager().setViewProvider(getVirtualFile(), this);
+    ((PsiManagerEx)getManager()).getFileManager().setViewProvider(getVirtualFile(), this);
   }
 
   public void doNotInterruptMeWhileImPatchingLeaves(@Nonnull Runnable runnable) {

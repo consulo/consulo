@@ -41,7 +41,7 @@ public class CapitalizeAndUnderscoreMacro extends MacroBase {
     if (text != null && text.length() > 0) {
       final String[] words = NameUtil.nameToWords(text);
       boolean insertUnderscore = false;
-      final StringBuffer buf = new StringBuffer();
+      final StringBuilder buf = new StringBuilder();
       for (String word : words) {
         if (insertUnderscore) {
           buf.append("_");

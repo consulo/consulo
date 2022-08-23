@@ -139,7 +139,7 @@ public abstract class AbstractFileViewProvider extends UserDataHolderBase implem
 
   @Override
   @Nonnull
-  public final PsiManagerEx getManager() {
+  public final PsiManager getManager() {
     return myManager;
   }
 
@@ -176,7 +176,7 @@ public abstract class AbstractFileViewProvider extends UserDataHolderBase implem
   @Nullable
   public final PsiFile getPsi(@Nonnull Language target) {
     if (!isPhysical()) {
-      FileManager fileManager = getManager().getFileManager();
+      FileManager fileManager = ((PsiManagerEx)getManager()).getFileManager();
       VirtualFile virtualFile = getVirtualFile();
       if (fileManager.findCachedViewProvider(virtualFile) == null && getCachedPsiFiles().isEmpty()) {
         fileManager.setViewProvider(virtualFile, this);

@@ -7,6 +7,7 @@ import consulo.language.file.light.LightVirtualFile;
 import consulo.language.impl.ast.FileElement;
 import consulo.language.impl.ast.LeafElement;
 import consulo.language.impl.file.AbstractFileViewProvider;
+import consulo.language.impl.internal.psi.PsiManagerEx;
 import consulo.language.impl.internal.psi.SharedPsiElementImplUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -57,7 +58,7 @@ public class DummyHolderViewProvider extends AbstractFileViewProvider {
 
   @Override
   public PsiFile getCachedPsi(@Nonnull Language target) {
-    getManager().getFileManager().setViewProvider(getVirtualFile(), this);
+    ((PsiManagerEx)getManager()).getFileManager().setViewProvider(getVirtualFile(), this);
     return target == getBaseLanguage() ? myHolder : null;
   }
 

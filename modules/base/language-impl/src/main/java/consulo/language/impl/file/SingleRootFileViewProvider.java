@@ -20,6 +20,7 @@ import consulo.language.Language;
 import consulo.language.file.FileViewProvider;
 import consulo.language.impl.DebugUtil;
 import consulo.language.impl.ast.FileElement;
+import consulo.language.impl.internal.psi.PsiManagerEx;
 import consulo.language.psi.PsiFileEx;
 import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.plain.PlainTextLanguage;
@@ -200,7 +201,7 @@ public class SingleRootFileViewProvider extends AbstractFileViewProvider impleme
         break;
       }
     }
-    getManager().getFileManager().setViewProvider(getVirtualFile(), this);
+    ((PsiManagerEx)getManager()).getFileManager().setViewProvider(getVirtualFile(), this);
   }
 
   // region deprecated methods

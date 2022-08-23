@@ -34,10 +34,7 @@ import consulo.language.impl.internal.psi.*;
 import consulo.language.impl.psi.ASTDelegatePsiElement;
 import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.impl.psi.SourceTreeToPsiMap;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
-import consulo.language.psi.PsiInvalidElementAccessException;
-import consulo.language.psi.StubBasedPsiElement;
+import consulo.language.psi.*;
 import consulo.language.psi.internal.PsiFileWithStubSupport;
 import consulo.language.psi.stub.*;
 import consulo.language.psi.util.PsiTreeUtil;
@@ -275,13 +272,14 @@ public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegateP
     return mySubstrateRef.isValid();
   }
 
+  @Nonnull
   @Override
-  public PsiManagerEx getManager() {
+  public PsiManager getManager() {
     Project project = SingleProjectHolder.theOnlyOpenProject();
     if (project != null) {
-      return PsiManagerEx.getInstanceEx(project);
+      return PsiManager.getInstance(project);
     }
-    return (PsiManagerEx)getContainingFile().getManager();
+    return getContainingFile().getManager();
   }
 
   @Override
