@@ -30,7 +30,7 @@ import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.text.TextEditorProvider;
 import consulo.ide.impl.idea.diff.DiffContext;
 import consulo.ide.impl.idea.diff.util.DiffUtil;
-import consulo.ide.impl.idea.openapi.fileTypes.UIBasedFileType;
+import consulo.virtualFileSystem.fileType.UIBasedFileType;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.ex.awt.UIUtil;

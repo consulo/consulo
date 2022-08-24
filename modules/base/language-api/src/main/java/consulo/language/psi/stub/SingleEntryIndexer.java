@@ -14,15 +14,12 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.util.indexing;
+package consulo.language.psi.stub;
 
 import consulo.index.io.DataIndexer;
-import consulo.language.psi.stub.FileBasedIndex;
-import consulo.language.psi.stub.FileContent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collections;
 import java.util.Map;
 

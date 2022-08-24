@@ -25,7 +25,7 @@ import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.openapi.project.NoAccessDuringPsiEvents;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.indexing.FileBasedIndexImpl;
-import consulo.ide.impl.idea.util.indexing.SingleEntryFileBasedIndexExtension;
+import consulo.language.psi.stub.SingleEntryFileBasedIndexExtension;
 import consulo.language.file.FileViewProvider;
 import consulo.language.impl.DebugUtil;
 import consulo.language.impl.internal.psi.PsiManagerEx;

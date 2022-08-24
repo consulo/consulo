@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.util.indexing;
+package consulo.language.psi.stub;
 
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.language.psi.stub.FileBasedIndexExtension;
@@ -28,7 +28,6 @@ import javax.annotation.Nonnull;
  *
  * @author Eugene Zhuravlev
  */
-//@ApiStatus.OverrideOnly
 public abstract class SingleEntryFileBasedIndexExtension<V> extends FileBasedIndexExtension<Integer, V> {
   @Nonnull
   @Override

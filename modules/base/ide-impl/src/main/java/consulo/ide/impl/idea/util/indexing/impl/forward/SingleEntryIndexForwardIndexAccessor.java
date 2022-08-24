@@ -13,6 +13,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.index.io.ID;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.index.io.IndexExtension;
+import consulo.language.psi.stub.SingleEntryFileBasedIndexExtension;
 import consulo.logging.Logger;
 import consulo.util.io.ByteArraySequence;
 import consulo.util.lang.ref.Ref;

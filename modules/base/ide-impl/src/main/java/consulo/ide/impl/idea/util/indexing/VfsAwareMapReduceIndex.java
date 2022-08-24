@@ -19,6 +19,7 @@ import consulo.language.psi.stub.FileBasedIndex;
 import consulo.language.psi.stub.FileBasedIndexExtension;
 import consulo.language.psi.stub.IdFilter;
 import consulo.index.io.IndexExtension;
+import consulo.language.psi.stub.SingleEntryFileBasedIndexExtension;
 import consulo.logging.Logger;
 import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.collection.primitive.ints.IntObjectMap;

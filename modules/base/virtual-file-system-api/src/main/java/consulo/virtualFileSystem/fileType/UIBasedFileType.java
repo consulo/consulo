@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.fileTypes;
-
-import consulo.virtualFileSystem.fileType.FileType;
+package consulo.virtualFileSystem.fileType;
 
 /**
  * Markup interface for file types based on some non-binary format (text, xml, etc).
