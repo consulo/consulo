@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.ide;
+package consulo.language.editor;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.ide.ServiceManager;
-import consulo.project.Project;
+import consulo.application.Application;
 import consulo.language.psi.PsiElement;
+import consulo.project.Project;
+import consulo.ui.ex.CopyPasteSupport;
 import consulo.ui.ex.DeleteProvider;
 
 import javax.swing.*;
@@ -31,7 +32,7 @@ import javax.swing.*;
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class PsiActionSupportFactory {
   public static PsiActionSupportFactory getInstance() {
-    return ServiceManager.getService(PsiActionSupportFactory.class);
+    return Application.get().getInstance(PsiActionSupportFactory.class);
   }
 
   public static interface PsiElementSelector {

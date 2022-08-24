@@ -13,11 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide;
-
-import consulo.ui.ex.CopyProvider;
-import consulo.ui.ex.CutProvider;
-import consulo.ui.ex.PasteProvider;
+package consulo.ui.ex;
 
 public interface CopyPasteSupport {
   CutProvider getCutProvider();

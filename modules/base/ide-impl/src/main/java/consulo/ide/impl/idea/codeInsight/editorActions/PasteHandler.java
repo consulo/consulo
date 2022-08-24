@@ -47,6 +47,7 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.ex.CustomPasteProvider;
 import consulo.ui.ex.PasteProvider;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.CopyPasteManager;
@@ -128,7 +129,7 @@ public class PasteHandler extends EditorActionHandler implements EditorTextInser
     DumbService.getInstance(project).setAlternativeResolveEnabled(true);
     document.startGuardedBlockChecking();
     try {
-      for (PasteProvider provider : Application.get().getExtensionList(PasteProvider.class)) {
+      for (PasteProvider provider : Application.get().getExtensionList(CustomPasteProvider.class)) {
         if (provider.isPasteEnabled(context)) {
           provider.performPaste(context);
           return;

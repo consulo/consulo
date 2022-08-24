@@ -16,14 +16,11 @@
 
 package consulo.ui.ex;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ExtensionAPI;
 import consulo.dataContext.DataContext;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 
-@ExtensionAPI(ComponentScope.APPLICATION)
 public interface PasteProvider {
   Key<PasteProvider> KEY = Key.create(PasteProvider.class);
 

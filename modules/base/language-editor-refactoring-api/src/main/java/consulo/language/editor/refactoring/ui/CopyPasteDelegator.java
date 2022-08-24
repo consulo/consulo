@@ -1,39 +1,41 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
-package consulo.ide.impl.idea.ide;
+package consulo.language.editor.refactoring.ui;
 
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
-import consulo.language.editor.LangDataKeys;
+import consulo.application.Application;
 import consulo.application.TransactionGuard;
-import consulo.component.extension.ExtensionPointName;
+import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.FilePasteProvider;
+import consulo.language.editor.LangDataKeys;
+import consulo.language.editor.PsiCopyPasteManager;
+import consulo.language.editor.refactoring.copy.CopyHandler;
 import consulo.language.editor.refactoring.internal.RefactoringInternalHelper;
+import consulo.language.editor.refactoring.move.MoveCallback;
+import consulo.language.editor.refactoring.move.MoveHandler;
 import consulo.language.psi.*;
+import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.module.Module;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.ex.CopyPasteSupport;
 import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.CutProvider;
 import consulo.ui.ex.PasteProvider;
-import consulo.util.lang.function.Conditions;
-import consulo.util.dataholder.Key;
-import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.language.editor.refactoring.copy.CopyHandler;
-import consulo.language.editor.refactoring.move.MoveCallback;
-import consulo.language.editor.refactoring.move.MoveHandler;
-import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.util.collection.JBIterable;
+import consulo.util.dataholder.Key;
+import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.function.Conditions;
+import consulo.virtualFileSystem.LocalFileSystem;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.io.File;
 import java.util.List;
 
 public class CopyPasteDelegator implements CopyPasteSupport {
-  private static final ExtensionPointName<PasteProvider> EP_NAME = ExtensionPointName.create("consulo.filePasteProvider");
   public static final Key<Boolean> SHOW_CHOOSER_KEY = RefactoringInternalHelper.COPY_PASTE_DELEGATE_SHOW_CHOOSER_KEY;
 
   private final Project myProject;
@@ -49,7 +51,7 @@ public class CopyPasteDelegator implements CopyPasteSupport {
   @Nonnull
   protected PsiElement[] getSelectedElements() {
     DataContext dataContext = DataManager.getInstance().getDataContext(myKeyReceiver);
-    return ObjectUtils.notNull(dataContext.getData(LangDataKeys.PSI_ELEMENT_ARRAY), PsiElement.EMPTY_ARRAY);
+    return ObjectUtil.notNull(dataContext.getData(LangDataKeys.PSI_ELEMENT_ARRAY), PsiElement.EMPTY_ARRAY);
   }
 
   @Nonnull
@@ -127,7 +129,7 @@ public class CopyPasteDelegator implements CopyPasteSupport {
     @Override
     public void performPaste(@Nonnull DataContext dataContext) {
       if (!performDefaultPaste(dataContext)) {
-        for (PasteProvider provider : EP_NAME.getExtensionList()) {
+        for (PasteProvider provider : Application.get().getExtensionList(FilePasteProvider.class)) {
           if (provider.isPasteEnabled(dataContext)) {
             provider.performPaste(dataContext);
             break;
@@ -238,7 +240,7 @@ public class CopyPasteDelegator implements CopyPasteSupport {
       if (isDefaultPasteEnabled(dataContext)) {
         return true;
       }
-      for (PasteProvider provider : EP_NAME.getExtensionList()) {
+      for (PasteProvider provider : Application.get().getExtensionList(FilePasteProvider.class)) {
         if (provider.isPasteEnabled(dataContext)) {
           return true;
         }

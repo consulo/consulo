@@ -17,7 +17,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
-import consulo.ui.ex.PasteProvider;
+import consulo.ui.ex.CustomPasteProvider;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.undoRedo.CommandProcessor;
 
@@ -27,7 +27,7 @@ import java.awt.datatransfer.Transferable;
 import java.util.function.Supplier;
 
 @ExtensionImpl
-public class PasteReferenceProvider implements PasteProvider {
+public class PasteReferenceProvider implements CustomPasteProvider {
   @Override
   public void performPaste(@Nonnull DataContext dataContext) {
     final Project project = dataContext.getData(CommonDataKeys.PROJECT);

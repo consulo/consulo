@@ -39,7 +39,7 @@ import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ide.IdeBundle;
 import consulo.ide.IdeView;
-import consulo.ide.impl.idea.ide.CopyPasteDelegator;
+import consulo.language.editor.refactoring.ui.CopyPasteDelegator;
 import consulo.ide.impl.idea.ide.impl.ProjectViewSelectInTarget;
 import consulo.ide.impl.idea.ide.projectView.HelpID;
 import consulo.project.ui.view.ProjectViewPane;

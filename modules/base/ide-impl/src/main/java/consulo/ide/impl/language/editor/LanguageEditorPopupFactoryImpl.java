@@ -17,7 +17,7 @@ package consulo.ide.impl.language.editor;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.find.FindUtil;
-import consulo.ide.impl.idea.ide.PsiCopyPasteManager;
+import consulo.ide.impl.idea.ide.PsiCopyPasteManagerImpl;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.ide.impl.idea.ui.popup.list.PopupListElementRenderer;
@@ -122,7 +122,7 @@ public class LanguageEditorPopupFactoryImpl implements LanguageEditorPopupFactor
             for (int i = 0; i < selectedValues.length; i++) {
               copy[i] = (PsiElement)selectedValues[i];
             }
-            return new PsiCopyPasteManager.MyTransferable(copy);
+            return new PsiCopyPasteManagerImpl.MyTransferable(copy);
           }
 
           @Override

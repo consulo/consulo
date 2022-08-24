@@ -18,8 +18,11 @@ package consulo.ide.impl.idea.ide;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.ide.util.DeleteHandler;
+import consulo.language.editor.PsiActionSupportFactory;
+import consulo.language.editor.refactoring.ui.CopyPasteDelegator;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
+import consulo.ui.ex.CopyPasteSupport;
 import consulo.ui.ex.DeleteProvider;
 import jakarta.inject.Singleton;
 

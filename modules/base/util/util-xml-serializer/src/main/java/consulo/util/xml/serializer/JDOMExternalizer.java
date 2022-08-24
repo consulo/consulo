@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.util;
+package consulo.util.xml.serializer;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtilRt;
-import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -51,7 +51,7 @@ public class JDOMExternalizer {
   }
 
   public static int readInteger(Element root, String name, int defaultValue) {
-    return StringUtilRt.parseInt(readString(root, name), defaultValue);
+    return StringUtil.parseInt(readString(root, name), defaultValue);
   }
 
   @Nullable

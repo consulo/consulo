@@ -25,7 +25,7 @@ import consulo.language.editor.refactoring.copy.CopyFilesOrDirectoriesHandler;
 import consulo.language.editor.refactoring.move.fileOrDirectory.MoveFilesOrDirectoriesHandler;
 import consulo.language.psi.*;
 import consulo.project.Project;
-import consulo.ui.ex.PasteProvider;
+import consulo.language.editor.FilePasteProvider;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
@@ -39,8 +39,8 @@ import java.util.List;
 /**
  * @author yole
  */
-@ExtensionImpl
-public class FileListPasteProvider implements PasteProvider {
+@ExtensionImpl(id = "fileList")
+public class FileListPasteProvider implements FilePasteProvider {
   @Override
   public void performPaste(@Nonnull DataContext dataContext) {
     final Project project = dataContext.getData(Project.KEY);
@@ -54,7 +54,7 @@ public class FileListPasteProvider implements PasteProvider {
     final List<File> fileList = FileCopyPasteUtil.getFileList(contents);
     if (fileList == null) return;
 
-    final List<PsiElement> elements = new ArrayList<PsiElement>();
+    final List<PsiElement> elements = new ArrayList<>();
     for (File file : fileList) {
       final VirtualFile vFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(file);
       if (vFile != null) {

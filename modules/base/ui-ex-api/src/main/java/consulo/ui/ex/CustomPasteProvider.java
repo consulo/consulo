@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.ui.ex;
 
-package consulo.ide.impl.idea.ide;
-
-import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.openapi.ide.CutElementMarker;
-import consulo.language.editor.PsiCopyPasteManager;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 
 /**
- * @author yole
+ * @author VISTALL
+ * @since 24-Aug-22
  */
-@ExtensionImpl
-public class PsiCutElementMarker implements CutElementMarker {
-  @Override
-  public boolean isCutElement(final Object element) {
-    return PsiCopyPasteManager.getInstance().isCutElement(element);
-  }
+@ExtensionAPI(ComponentScope.APPLICATION)
+public interface CustomPasteProvider extends PasteProvider {
 }

@@ -20,7 +20,7 @@ import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.localHistory.LocalHistory;
 import consulo.localHistory.LocalHistoryAction;
-import consulo.ide.impl.idea.ide.CopyPasteDelegator;
+import consulo.language.editor.refactoring.ui.CopyPasteDelegator;
 import consulo.project.ui.view.commander.AbstractListBuilder;
 import consulo.project.ui.view.commander.TopLevelNode;
 import consulo.ui.ex.DeleteProvider;

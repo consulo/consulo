@@ -15,24 +15,23 @@
  */
 package consulo.ide.impl.idea.ide;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.ide.dnd.LinuxDragAndDropSupport;
+import consulo.application.AccessRule;
 import consulo.application.Application;
-import consulo.ide.ServiceManager;
-import consulo.ui.ex.awt.CopyPasteManager;
-import consulo.language.psi.*;
+import consulo.ide.impl.idea.ide.dnd.LinuxDragAndDropSupport;
+import consulo.language.editor.PsiCopyPasteManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiNamedElement;
+import consulo.language.psi.SmartPointerManager;
+import consulo.language.psi.SmartPsiElementPointer;
+import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.event.ProjectManagerListener;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.util.io.CharsetToolkit;
-import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.application.AccessRule;
-import consulo.logging.Logger;
+import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.util.collection.ArrayUtil;
+import consulo.util.io.CharsetToolkit;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -50,20 +49,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Singleton
-@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
-public class PsiCopyPasteManager {
-  public static PsiCopyPasteManager getInstance() {
-    return ServiceManager.getService(PsiCopyPasteManager.class);
-  }
-
-  private static final Logger LOG = Logger.getInstance(PsiCopyPasteManager.class);
+public class PsiCopyPasteManagerImpl implements PsiCopyPasteManager {
+  private static final Logger LOG = Logger.getInstance(PsiCopyPasteManagerImpl.class);
 
   private MyData myRecentData;
   private final CopyPasteManagerEx myCopyPasteManager;
 
   @Inject
-  public PsiCopyPasteManager(Application application, CopyPasteManager copyPasteManager) {
+  public PsiCopyPasteManagerImpl(Application application, CopyPasteManager copyPasteManager) {
     myCopyPasteManager = (CopyPasteManagerEx) copyPasteManager;
     application.getMessageBus().connect().subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
       @Override
@@ -75,6 +69,7 @@ public class PsiCopyPasteManager {
     });
   }
 
+  @Override
   @Nullable
   public PsiElement[] getElements(boolean[] isCopied) {
     try {
@@ -117,16 +112,19 @@ public class PsiCopyPasteManager {
     return transferData instanceof MyData ? ((MyData)transferData).getElements() : null;
   }
 
+  @Override
   public void clear() {
     myRecentData = null;
     myCopyPasteManager.setContents(new StringSelection(""));
   }
 
+  @Override
   public void setElements(PsiElement[] elements, boolean copied) {
     myRecentData = new MyData(elements, copied);
     myCopyPasteManager.setContents(new MyTransferable(myRecentData));
   }
 
+  @Override
   public boolean isCutElement(Object element) {
     if (myRecentData == null) return false;
     if (myRecentData.isCopied()) return false;
@@ -216,7 +214,7 @@ public class PsiCopyPasteManager {
     }
 
     public MyTransferable(PsiElement[] selectedValues) {
-      this(new PsiCopyPasteManager.MyData(selectedValues, true));
+      this(new PsiCopyPasteManagerImpl.MyData(selectedValues, true));
     }
 
     @Override
@@ -269,7 +267,7 @@ public class PsiCopyPasteManager {
 
     @Nullable
     private List<File> getDataAsFileList() {
-      return AccessRule.read(() -> asFileList(myDataProxy.getElements()));
+      return AccessRule.read(() -> PsiCopyPasteManager.asFileList(myDataProxy.getElements()));
     }
 
     @Override
@@ -285,30 +283,5 @@ public class PsiCopyPasteManager {
     public PsiElement[] getElements() {
       return myDataProxy.getElements();
     }
-  }
-
-  @Nullable
-  public static List<File> asFileList(final PsiElement[] elements) {
-    final List<File> result = new ArrayList<>();
-    for (PsiElement element : elements) {
-      final PsiFileSystemItem psiFile;
-      if (element instanceof PsiFileSystemItem) {
-        psiFile = (PsiFileSystemItem)element;
-      }
-      else if (element instanceof PsiDirectoryContainer) {
-        final PsiDirectory[] directories = ((PsiDirectoryContainer)element).getDirectories();
-        psiFile = directories[0];
-      }
-      else {
-        psiFile = element.getContainingFile();
-      }
-      if (psiFile != null) {
-        VirtualFile vFile = psiFile.getVirtualFile();
-        if (vFile != null && vFile.getFileSystem() instanceof LocalFileSystem) {
-          result.add(new File(vFile.getPath()));
-        }
-      }
-    }
-    return result.isEmpty() ? null : result;
   }
 }

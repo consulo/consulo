@@ -34,7 +34,7 @@ public class CopyPasteUtil {
   private CopyPasteUtil() { }
 
   public static PsiElement[] getElementsInTransferable(Transferable t) {
-    final PsiElement[] elts = PsiCopyPasteManager.getElements(t);
+    final PsiElement[] elts = PsiCopyPasteManagerImpl.getElements(t);
     return elts != null ? elts : PsiElement.EMPTY_ARRAY;
   }
 

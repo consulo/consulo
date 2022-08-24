@@ -23,7 +23,7 @@ import consulo.ide.impl.idea.openapi.fileTypes.*;
 import consulo.ide.impl.idea.openapi.fileTypes.ex.ExternalizableFileType;
 import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeChooser;
 import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeManagerEx;
-import consulo.ide.impl.idea.openapi.util.JDOMExternalizer;
+import consulo.util.xml.serializer.JDOMExternalizer;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.virtualFileSystem.FileAttribute;
 import consulo.ide.impl.idea.util.*;

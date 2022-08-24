@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.ide.util;
 
 import consulo.language.editor.DaemonCodeAnalyzer;
-import consulo.ide.impl.idea.ide.CopyPasteDelegator;
+import consulo.language.editor.refactoring.ui.CopyPasteDelegator;
 import consulo.ide.impl.idea.ide.DefaultTreeExpander;
 import consulo.ide.IdeBundle;
 import consulo.ui.ex.TreeExpander;

@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.remote;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import consulo.ide.impl.idea.openapi.util.JDOMExternalizer;
+import consulo.util.xml.serializer.JDOMExternalizer;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.PathMappingSettings;
 import org.jdom.Element;
