@@ -18,7 +18,6 @@ package consulo.container.plugin;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
 
 import java.io.File;
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -76,8 +75,6 @@ public interface PluginDescriptor {
   String getVendorUrl();
 
   String getUrl();
-
-  Collection<HelpSetPath> getHelpSets();
 
   String getDownloads();
 

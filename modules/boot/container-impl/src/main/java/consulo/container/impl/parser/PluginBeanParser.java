@@ -80,19 +80,6 @@ public class PluginBeanParser {
       pluginBean.vendor = vendor;
     }
 
-    List<PluginHelpSet> pluginHelpSets = new ArrayList<PluginHelpSet>();
-    for (SimpleXmlElement helpsetTag : rootTag.getChildren("helpset")) {
-      PluginHelpSet pluginHelpSet = new PluginHelpSet();
-      pluginHelpSet.file = helpsetTag.getAttributeValue("file");
-      pluginHelpSet.path = helpsetTag.getAttributeValue("path");
-
-      pluginHelpSets.add(pluginHelpSet);
-    }
-
-    if (!pluginHelpSets.isEmpty()) {
-      pluginBean.helpSets = pluginHelpSets;
-    }
-
     List<PluginDependency> pluginDependencies = new ArrayList<PluginDependency>();
     for (SimpleXmlElement dependsElement : rootTag.getChildren("depends")) {
       PluginDependency pluginDependency = new PluginDependency();

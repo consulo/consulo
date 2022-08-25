@@ -5,7 +5,6 @@ import consulo.util.nodep.ArrayUtilRt;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
 
 import java.io.File;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -13,7 +12,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
- * @author VISTALL * @since 2019-07-17
+ * @author VISTALL
+ * @since 2019-07-17
  */
 public abstract class PluginDescriptorStub implements PluginDescriptor {
   private final ConcurrentMap<Object, Object> myUserData = new ConcurrentHashMap<Object, Object>();
@@ -155,11 +155,6 @@ public abstract class PluginDescriptorStub implements PluginDescriptor {
   @Override
   public String getUrl() {
     return null;
-  }
-
-  @Override
-  public Collection<HelpSetPath> getHelpSets() {
-    return Collections.emptyList();
   }
 
   @Override

@@ -16,10 +16,16 @@
 package consulo.container.impl.classloader;
 
 import consulo.container.classloader.PluginClassLoader;
+import consulo.container.impl.PluginDescriptorImpl;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginId;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author VISTALL
@@ -27,12 +33,23 @@ import java.util.List;
  */
 public class PluginClassLoaderFactory {
   @SuppressWarnings("unchecked")
-  public static <C extends ClassLoader & PluginClassLoader> C create(List<URL> urls, ClassLoader parent, PluginDescriptor pluginDescriptor) {
-    return (C)new PluginClassLoaderImpl(urls, parent, pluginDescriptor);
+  public static <C extends ClassLoader & PluginClassLoader> C create(Set<PluginId> enabledPluginIds, ClassLoader parent, PluginDescriptor pluginDescriptor) throws IOException {
+    PluginDescriptorImpl impl = (PluginDescriptorImpl)pluginDescriptor;
+    return (C)new PluginClassLoaderImpl(filesToUrls(impl.getClassPath(enabledPluginIds)), parent, pluginDescriptor);
   }
 
   @SuppressWarnings("unchecked")
-  public static <C extends ClassLoader & PluginClassLoader> C create(List<URL> urls, ClassLoader[] parents, PluginDescriptor pluginDescriptor) {
-    return (C)new PluginClassLoaderImpl(urls, parents, pluginDescriptor);
+  public static <C extends ClassLoader & PluginClassLoader> C create(Set<PluginId> enabledPluginIds, ClassLoader[] parents, PluginDescriptor pluginDescriptor) throws IOException {
+    PluginDescriptorImpl impl = (PluginDescriptorImpl)pluginDescriptor;
+    return (C)new PluginClassLoaderImpl(filesToUrls(impl.getClassPath(enabledPluginIds)), parents, pluginDescriptor);
+  }
+
+  private static List<URL> filesToUrls(List<File> files) throws IOException {
+    List<URL> urls = new ArrayList<>(files.size());
+
+    for (File file : files) {
+      urls.add(file.toURI().toURL());
+    }
+    return urls;
   }
 }

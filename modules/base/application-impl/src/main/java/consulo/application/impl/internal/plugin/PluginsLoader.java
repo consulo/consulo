@@ -17,8 +17,8 @@ package consulo.application.impl.internal.plugin;
 
 import consulo.application.Application;
 import consulo.application.ApplicationProperties;
-import consulo.application.internal.ApplicationInfo;
 import consulo.application.impl.internal.start.StartupProgress;
+import consulo.application.internal.ApplicationInfo;
 import consulo.component.util.BuildNumber;
 import consulo.component.util.graph.*;
 import consulo.container.boot.ContainerPathManager;
@@ -37,7 +37,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.*;
 import java.util.function.IntConsumer;
 
@@ -135,7 +134,7 @@ public class PluginsLoader {
         default:
           descriptor.setEnabled(false);
           disabledPluginNames.put(descriptor.getPluginId().getIdString(), descriptor.getName());
-          initClassLoader(parentLoader, descriptor);
+          initClassLoader(Collections.emptySet(), parentLoader, descriptor);
           break;
       }
     }
@@ -206,17 +205,15 @@ public class PluginsLoader {
     for (final PluginDescriptorImpl pluginDescriptor : result) {
       // platform plugin already have classloader
       if (!PluginIds.isPlatformPlugin(pluginDescriptor.getPluginId())) {
-        final List<File> classPath = pluginDescriptor.getClassPath();
         final PluginId[] dependentPluginIds = pluginDescriptor.getDependentPluginIds();
         final ClassLoader[] parentLoaders = getParentLoaders(idToDescriptorMap, dependentPluginIds);
 
-        final ClassLoader pluginClassLoader =
-                createPluginClassLoader(classPath.toArray(new File[classPath.size()]), parentLoaders.length > 0 ? parentLoaders : new ClassLoader[]{parentLoader}, pluginDescriptor);
+        final ClassLoader pluginClassLoader = createPluginClassLoader(idToDescriptorMap.keySet(), parentLoaders.length > 0 ? parentLoaders : new ClassLoader[]{parentLoader}, pluginDescriptor);
 
         if (System.getProperty("jdk.module.path") != null) {
           List<ModuleLayer> parentModuleLayer = getParentModuleLayer(idToDescriptorMap, dependentPluginIds);
 
-          pluginDescriptor.setModuleLayer(Java9ModuleInitializer.initializeEtcModules(parentModuleLayer, pluginDescriptor.getClassPath(), pluginClassLoader));
+          pluginDescriptor.setModuleLayer(Java9ModuleInitializer.initializeEtcModules(parentModuleLayer, pluginDescriptor.getClassPath(idToDescriptorMap.keySet()), pluginClassLoader));
         }
 
         pluginDescriptor.setLoader(pluginClassLoader);
@@ -503,21 +500,14 @@ public class PluginsLoader {
     return result;
   }
 
-  static void initClassLoader(@Nonnull ClassLoader parentLoader, @Nonnull PluginDescriptorImpl descriptor) {
-    final List<File> classPath = descriptor.getClassPath();
-    final ClassLoader loader = createPluginClassLoader(classPath.toArray(new File[classPath.size()]), new ClassLoader[]{parentLoader}, descriptor);
-    descriptor.setLoader(loader);
+  static void initClassLoader(@Nonnull Set<PluginId> enabledPluginIds, @Nonnull ClassLoader parentLoader, @Nonnull PluginDescriptorImpl descriptor) {
+    descriptor.setLoader(createPluginClassLoader(enabledPluginIds, new ClassLoader[]{parentLoader}, descriptor));
   }
 
   @Nullable
-  static ClassLoader createPluginClassLoader(@Nonnull File[] classPath, @Nonnull ClassLoader[] parentLoaders, @Nonnull PluginDescriptor pluginDescriptor) {
+  static ClassLoader createPluginClassLoader(@Nonnull Set<PluginId> enabledPluginIds, @Nonnull ClassLoader[] parentLoaders, @Nonnull PluginDescriptor pluginDescriptor) {
     try {
-      final List<URL> urls = new ArrayList<>(classPath.length);
-      for (File aClassPath : classPath) {
-        final File file = aClassPath.getCanonicalFile(); // it is critical not to have "." and ".." in classpath elements
-        urls.add(file.toURI().toURL());
-      }
-      return PluginClassLoaderFactory.create(urls, parentLoaders, pluginDescriptor);
+      return PluginClassLoaderFactory.create(enabledPluginIds, parentLoaders, pluginDescriptor);
     }
     catch (IOException e) {
       getLogger().error(e);

@@ -30,7 +30,7 @@ class PluginClassLoaderImpl extends UrlClassLoader implements PluginClassLoader,
 
   private final ClassLoader[] myParents;
   private final PluginDescriptor myPluginDescriptor;
-  private final List<String> myLibDirectories;
+  private final List<File> myLibDirectories;
 
   private ConcurrentMap<ProxyDescription, ProxyFactory> myProxyFactories = new ConcurrentHashMap<ProxyDescription, ProxyFactory>();
 
@@ -42,7 +42,7 @@ class PluginClassLoaderImpl extends UrlClassLoader implements PluginClassLoader,
     myParents = new ClassLoader[]{parent};
     myPluginDescriptor = pluginDescriptor;
     File libDir = new File(pluginDescriptor.getPath(), "lib");
-    myLibDirectories = libDir.exists() ? Collections.singletonList(libDir.getAbsolutePath()) : Collections.<String>emptyList();
+    myLibDirectories = libDir.exists() ? Collections.singletonList(libDir) : Collections.emptyList();
   }
 
   public PluginClassLoaderImpl(List<URL> urls, ClassLoader[] parents, PluginDescriptor pluginDescriptor) {
@@ -50,7 +50,7 @@ class PluginClassLoaderImpl extends UrlClassLoader implements PluginClassLoader,
     myParents = parents;
     myPluginDescriptor = pluginDescriptor;
     File libDir = new File(myPluginDescriptor.getPath(), "lib");
-    myLibDirectories = libDir.exists() ? Collections.singletonList(libDir.getAbsolutePath()) : Collections.<String>emptyList();
+    myLibDirectories = libDir.exists() ? Collections.singletonList(libDir) : Collections.emptyList();
   }
 
   @Override
@@ -288,9 +288,8 @@ class PluginClassLoaderImpl extends UrlClassLoader implements PluginClassLoader,
   protected String findLibrary(String libName) {
     if (!myLibDirectories.isEmpty()) {
       String libFileName = System.mapLibraryName(libName);
-      ListIterator<String> i = myLibDirectories.listIterator(myLibDirectories.size());
-      while (i.hasPrevious()) {
-        File libFile = new File(i.previous(), libFileName);
+      for (File libDirectory : myLibDirectories) {
+        File libFile = new File(libDirectory, libFileName);
         if (libFile.exists()) {
           return libFile.getAbsolutePath();
         }

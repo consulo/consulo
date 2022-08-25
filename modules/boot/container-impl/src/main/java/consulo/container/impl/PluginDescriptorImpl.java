@@ -15,10 +15,11 @@
  */
 package consulo.container.impl;
 
-import consulo.container.impl.parser.*;
+import consulo.container.impl.parser.PluginBean;
+import consulo.container.impl.parser.PluginBeanParser;
+import consulo.container.impl.parser.PluginDependency;
 import consulo.container.plugin.*;
 import consulo.util.nodep.io.FileUtilRt;
-import consulo.util.nodep.map.SimpleMultiMap;
 import consulo.util.nodep.text.StringUtilRt;
 import consulo.util.nodep.xml.SimpleXmlParsingException;
 import consulo.util.nodep.xml.SimpleXmlReader;
@@ -66,8 +67,6 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
   private boolean myDeleted = false;
   private ClassLoader myLoader;
   private ModuleLayer myModuleLayer;
-
-  private Collection<HelpSetPath> myHelpSets = Collections.emptyList();
 
   private Set<String> myTags = Collections.emptySet();
 
@@ -153,14 +152,6 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
 
     myDependencies = dependentPlugins.isEmpty() ? PluginId.EMPTY_ARRAY : dependentPlugins.toArray(new PluginId[dependentPlugins.size()]);
     myOptionalDependencies = optionalDependentPlugins.isEmpty() ? PluginId.EMPTY_ARRAY : optionalDependentPlugins.toArray(new PluginId[optionalDependentPlugins.size()]);
-
-    if (!pluginBean.helpSets.isEmpty()) {
-      myHelpSets = new ArrayList<HelpSetPath>(pluginBean.helpSets.size());
-      List<PluginHelpSet> sets = pluginBean.helpSets;
-      for (PluginHelpSet pluginHelpSet : sets) {
-        myHelpSets.add(new HelpSetPath(pluginHelpSet.file, pluginHelpSet.path));
-      }
-    }
 
     if (!pluginBean.tags.isEmpty()) {
       myTags = Collections.unmodifiableSet(pluginBean.tags);
@@ -257,7 +248,6 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
     return myChangeNotes;
   }
 
-
   @Override
   public byte[] getIconBytes(boolean isDarkTheme) {
     if (isDarkTheme && myDarkIconBytes.length > 0) {
@@ -272,17 +262,14 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
   }
 
   @Override
-
   public PluginId[] getDependentPluginIds() {
     return myDependencies;
   }
 
   @Override
-
   public PluginId[] getOptionalDependentPluginIds() {
     return myOptionalDependencies;
   }
-
 
   @Override
   public PluginId[] getIncompatibleWithPlugindIds() {
@@ -309,7 +296,6 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
     return myResourceBundleBaseName;
   }
 
-
   @Override
   public String getLocalize() {
     return myLocalize;
@@ -331,10 +317,26 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
     myCategory = category;
   }
 
-  public List<File> getClassPath() {
+  public List<File> getClassPath(Set<PluginId> enabledPluginIds) {
     if (myPath.isDirectory()) {
       final List<File> result = new ArrayList<File>();
-      fillLibs(new File(myPath, "lib"), result);
+      File libDir = new File(myPath, "lib");
+      fillLibs(libDir, result);
+
+      PluginId[] dependentPluginIds = getDependentPluginIds();
+      // first plugin it's platform
+      if (!enabledPluginIds.isEmpty() && dependentPluginIds.length > 1) {
+        for (PluginId pluginId : dependentPluginIds) {
+          if (PluginIds.isPlatformPlugin(pluginId)) {
+            continue;
+          }
+          
+          File pluginDepDir = new File(libDir, pluginId.getIdString());
+          if (pluginDepDir.exists()) {
+            fillLibs(pluginDepDir, result);
+          }
+        }
+      }
       return result;
     }
     else {
@@ -423,11 +425,6 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
   @Override
   public int hashCode() {
     return myName != null ? myName.hashCode() : 0;
-  }
-
-  @Override
-  public Collection<HelpSetPath> getHelpSets() {
-    return myHelpSets;
   }
 
   @Override

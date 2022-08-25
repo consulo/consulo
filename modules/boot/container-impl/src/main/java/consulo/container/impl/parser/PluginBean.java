@@ -50,10 +50,6 @@ public class PluginBean {
 
   public List<String> incompatibleWith = Collections.emptyList();
 
-  //@Property(surroundWithTag = false)
-  //@AbstractCollection(surroundWithTag = false)
-  public List<PluginHelpSet> helpSets = Collections.emptyList();
-
   public List<String> imports = Collections.emptyList();
 
   //@Tag("category")

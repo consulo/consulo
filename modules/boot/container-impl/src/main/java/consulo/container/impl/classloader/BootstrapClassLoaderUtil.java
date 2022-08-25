@@ -65,10 +65,10 @@ public class BootstrapClassLoaderUtil {
 
       ClassLoader basePluginClassLoader = base.getPluginClassLoader();
 
-      ClassLoader loader = PluginClassLoaderFactory.create(filesToUrls(descriptor.getClassPath()), basePluginClassLoader, descriptor);
+      ClassLoader loader = PluginClassLoaderFactory.create(Collections.emptySet(), basePluginClassLoader, descriptor);
 
       if (processor.isEnabledModules()) {
-        descriptor.setModuleLayer(Java9ModuleInitializer.initializeEtcModules(Collections.singletonList(base.getModuleLayer()), descriptor.getClassPath(), loader));
+        descriptor.setModuleLayer(Java9ModuleInitializer.initializeEtcModules(Collections.singletonList(base.getModuleLayer()), descriptor.getClassPath(Collections.emptySet()), loader));
       }
 
       descriptors.add(descriptor);
@@ -117,10 +117,10 @@ public class BootstrapClassLoaderUtil {
 
     ClassLoader parent = BootstrapClassLoaderUtil.class.getClassLoader();
 
-    ClassLoader loader = PluginClassLoaderFactory.create(filesToUrls(platformBasePlugin.getClassPath()), parent, platformBasePlugin);
+    ClassLoader loader = PluginClassLoaderFactory.create(Collections.emptySet(), parent, platformBasePlugin);
 
     if (processor.isEnabledModules()) {
-      platformBasePlugin.setModuleLayer(Java9ModuleInitializer.initializeBaseModules(platformBasePlugin.getClassPath(), loader, containerLogger, processor));
+      platformBasePlugin.setModuleLayer(Java9ModuleInitializer.initializeBaseModules(platformBasePlugin.getClassPath(Collections.emptySet()), loader, containerLogger, processor));
     }
 
     platformBasePlugin.setLoader(loader);
@@ -128,15 +128,6 @@ public class BootstrapClassLoaderUtil {
     Thread.currentThread().setContextClassLoader(loader);
 
     return platformBasePlugin;
-  }
-
-  private static List<URL> filesToUrls(List<File> files) throws Exception {
-    List<URL> urls = new ArrayList<>(files.size());
-
-    for (File file : files) {
-      urls.add(file.toURI().toURL());
-    }
-    return urls;
   }
 
   public static File getModulesDirectory() throws Exception {
