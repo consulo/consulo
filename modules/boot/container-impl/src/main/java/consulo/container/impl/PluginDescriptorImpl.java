@@ -455,7 +455,7 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
   @Override
   public ClassLoader getPluginClassLoader() {
     if (myLoader == null) {
-      throw new IllegalArgumentException("Do not call #getPluginClassLoader() is plugin is not loaded");
+      throw new IllegalArgumentException("Do not call #getPluginClassLoader() when plugin is not loaded");
     }
     return myLoader;
   }
