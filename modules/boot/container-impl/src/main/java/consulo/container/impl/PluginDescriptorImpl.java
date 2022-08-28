@@ -75,6 +75,8 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
   private Boolean mySkipped;
   private boolean myExperimental;
 
+  private List<ClassPathItem> myClassPathItems;
+
   public PluginDescriptorImpl(File pluginPath, byte[] iconBytes, byte[] darkIconBytes, boolean isPreInstalled) {
     myPath = pluginPath;
     myIconBytes = iconBytes;
@@ -318,46 +320,64 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
   }
 
   public List<File> getClassPath(Set<PluginId> enabledPluginIds) {
-    if (myPath.isDirectory()) {
-      final List<File> result = new ArrayList<File>();
-      File libDir = new File(myPath, "lib");
-      fillLibs(libDir, result);
+    if (myClassPathItems == null) {
+      myClassPathItems = analyzeClassPath();
+    }
 
-      PluginId[] dependentPluginIds = getDependentPluginIds();
-      // first plugin it's platform
-      if (!enabledPluginIds.isEmpty() && dependentPluginIds.length > 1) {
-        for (PluginId pluginId : dependentPluginIds) {
-          if (PluginIds.isPlatformPlugin(pluginId)) {
-            continue;
-          }
-          
-          File pluginDepDir = new File(libDir, pluginId.getIdString());
-          if (pluginDepDir.exists()) {
-            fillLibs(pluginDepDir, result);
-          }
-        }
+    List<File> files = new ArrayList<>(myClassPathItems.size());
+    for (ClassPathItem classPathItem : myClassPathItems) {
+      if (classPathItem.accept(enabledPluginIds)) {
+        files.add(classPathItem.getPath());
       }
-      return result;
     }
-    else {
-      return Collections.singletonList(myPath);
-    }
+    return files;
   }
 
-  private static void fillLibs(File libDirectory, List<File> result) {
+  private List<ClassPathItem> analyzeClassPath() {
+    if (!myPath.isDirectory()) {
+      return Collections.emptyList();
+    }
+
+    final List<ClassPathItem> result = new ArrayList<ClassPathItem>();
+    File libDir = new File(myPath, "lib");
+    fillLibs(libDir, result);
+    return result;
+  }
+
+  private static void fillLibs(File libDirectory, List<ClassPathItem> result) {
     final File[] files = libDirectory.listFiles();
     if (files != null && files.length > 0) {
       for (final File f : files) {
-        if (f.isFile()) {
-          if (FileUtilRt.isJarOrZip(f)) {
-            result.add(f);
+        if (FileUtilRt.isJarOrZip(f)) {
+          File requiresFile = new File(f.getParentFile(), f.getName() + ".requires");
+          if (requiresFile.exists()) {
+            List<ClassPathPluginSet> pluginSets = readRequires(requiresFile);
+            result.add(new ClassPathItem(f, pluginSets));
+
+          } else {
+            result.add(new ClassPathItem(f, Collections.emptyList()));
           }
-        }
-        else {
-          result.add(f);
         }
       }
     }
+  }
+
+  private static List<ClassPathPluginSet> readRequires(File xmlRequires) {
+    try {
+      List<ClassPathPluginSet> sets = new ArrayList<>();
+      SimpleXmlElement rootElement = SimpleXmlReader.parse(xmlRequires);
+      for (SimpleXmlElement plugins : rootElement.getChildren("plugins")) {
+        ClassPathPluginSet set = new ClassPathPluginSet();
+        sets.add(set);
+        for (SimpleXmlElement plugin : plugins.getChildren("plugin")) {
+          set.add(PluginId.getId(plugin.getText()));
+        }
+      }
+      return sets;
+    }
+    catch (SimpleXmlParsingException ignored) {
+    }
+    return Collections.emptyList();
   }
 
   @Override
