@@ -15,27 +15,28 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
-import consulo.codeEditor.action.EditorActionUtil;
-import consulo.dataContext.DataContext;
-import consulo.undoRedo.CommandProcessor;
+import consulo.annotation.access.RequiredWriteAction;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.CaretAction;
 import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.codeEditor.action.EditorActionHandler;
+import consulo.codeEditor.action.EditorActionUtil;
+import consulo.codeEditor.action.ExtensionEditorActionHandler;
+import consulo.dataContext.DataContext;
+import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.ide.impl.idea.openapi.editor.actionSystem.EditorWriteActionHandler;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUIUtil;
+import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.CopyPasteManager;
-import consulo.annotation.access.RequiredWriteAction;
+import consulo.undoRedo.CommandProcessor;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class DeleteSelectionHandler extends EditorWriteActionHandler {
-  private final EditorActionHandler myOriginalHandler;
-
-  public DeleteSelectionHandler(EditorActionHandler handler) {
-    myOriginalHandler = handler;
-  }
+@ExtensionImpl(id = "delete.for.selection")
+public class DeleteSelectionHandler extends EditorWriteActionHandler implements ExtensionEditorActionHandler {
+  private EditorActionHandler myOriginalHandler;
 
   @RequiredWriteAction
   @Override
@@ -55,5 +56,16 @@ public class DeleteSelectionHandler extends EditorWriteActionHandler {
     else {
       myOriginalHandler.execute(editor, caret, dataContext);
     }
+  }
+
+  @Override
+  public void init(@Nullable EditorActionHandler originalHandler) {
+    myOriginalHandler = originalHandler;
+  }
+
+  @Nonnull
+  @Override
+  public String getActionId() {
+    return IdeActions.ACTION_EDITOR_DELETE;
   }
 }

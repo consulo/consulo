@@ -15,16 +15,19 @@
  */
 package consulo.ide.impl.idea.refactoring.changeSignature.inplace;
 
-import consulo.dataContext.DataContext;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
+import consulo.codeEditor.action.ExtensionEditorActionHandler;
+import consulo.dataContext.DataContext;
+import consulo.ui.ex.action.IdeActions;
 
-public class EscapeHandler extends EditorActionHandler {
-  private final EditorActionHandler myOriginalHandler;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-  public EscapeHandler(EditorActionHandler originalHandler) {
-    myOriginalHandler = originalHandler;
-  }
+@ExtensionImpl(id = "changeSignatureEscape", order = "before hide-search")
+public class EscapeHandler extends EditorActionHandler implements ExtensionEditorActionHandler {
+  private EditorActionHandler myOriginalHandler;
 
   @Override
   public void execute(Editor editor, DataContext dataContext) {
@@ -46,5 +49,16 @@ public class EscapeHandler extends EditorActionHandler {
       return true;
     }
     return myOriginalHandler.isEnabled(editor, dataContext);
+  }
+
+  @Override
+  public void init(@Nullable EditorActionHandler originalHandler) {
+    myOriginalHandler = originalHandler;
+  }
+
+  @Nonnull
+  @Override
+  public String getActionId() {
+    return IdeActions.ACTION_EDITOR_ESCAPE;
   }
 }

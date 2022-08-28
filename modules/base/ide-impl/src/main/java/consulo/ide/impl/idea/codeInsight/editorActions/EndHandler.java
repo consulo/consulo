@@ -16,7 +16,9 @@
 
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
+import consulo.codeEditor.action.ExtensionEditorActionHandler;
 import consulo.language.editor.CodeInsightSettings;
 import consulo.dataContext.DataManager;
 import consulo.language.editor.CommonDataKeys;
@@ -33,15 +35,17 @@ import consulo.language.psi.PsiFile;
 import consulo.language.codeStyle.CodeStyleManager;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.document.Document;
+import consulo.ui.ex.action.IdeActions;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-public class EndHandler extends EditorActionHandler {
-  private final EditorActionHandler myOriginalHandler;
+@ExtensionImpl(order = "first")
+public class EndHandler extends EditorActionHandler implements ExtensionEditorActionHandler {
+  private EditorActionHandler myOriginalHandler;
 
-  public EndHandler(EditorActionHandler originalHandler) {
+  public EndHandler() {
     super(true);
-    myOriginalHandler = originalHandler;
   }
 
   @Override
@@ -134,5 +138,16 @@ public class EndHandler extends EditorActionHandler {
       if (c == '\t') result += tabSize;
     }
     return result;
+  }
+
+  @Override
+  public void init(@Nullable EditorActionHandler originalHandler) {
+    myOriginalHandler = originalHandler;
+  }
+
+  @Nonnull
+  @Override
+  public String getActionId() {
+    return IdeActions.ACTION_EDITOR_MOVE_LINE_END;
   }
 }

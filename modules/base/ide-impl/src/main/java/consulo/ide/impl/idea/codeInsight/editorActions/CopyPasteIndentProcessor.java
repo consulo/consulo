@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionUtil;
@@ -25,6 +26,7 @@ import consulo.document.impl.DocumentImpl;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
+import consulo.language.codeStyle.PreserveIndentOnPaste;
 import consulo.language.editor.CodeInsightSettings;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
@@ -32,6 +34,7 @@ import consulo.project.Project;
 import consulo.util.lang.CharFilter;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.fileType.FileType;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 import java.awt.datatransfer.DataFlavor;
@@ -46,6 +49,13 @@ import java.util.List;
  */
 @ExtensionImpl
 public class CopyPasteIndentProcessor extends CopyPastePostProcessor<IndentTransferableData> {
+  private final Application myApplication;
+
+  @Inject
+  public CopyPasteIndentProcessor(Application application) {
+    myApplication = application;
+  }
+
   @Nonnull
   @Override
   public List<IndentTransferableData> collectTransferableData(PsiFile file,
@@ -58,13 +68,8 @@ public class CopyPasteIndentProcessor extends CopyPastePostProcessor<IndentTrans
     return Collections.singletonList(new IndentTransferableData(editor.getCaretModel().getOffset()));
   }
 
-  private static boolean acceptFileType(FileType fileType) {
-    for(PreserveIndentOnPasteBean bean: PreserveIndentOnPasteBean.EP_NAME.getExtensionList()) {
-      if (fileType.getName().equals(bean.fileType)) {
-        return true;
-      }
-    }
-    return false;
+  private boolean acceptFileType(FileType fileType) {
+    return myApplication.getExtensionPoint(PreserveIndentOnPaste.class).computeSafeIfAny(it -> it.accept(fileType)) != null;
   }
 
   @Nonnull
@@ -80,10 +85,7 @@ public class CopyPasteIndentProcessor extends CopyPastePostProcessor<IndentTrans
         }
       }
     }
-    catch (UnsupportedFlavorException e) {
-      // do nothing
-    }
-    catch (IOException e) {
+    catch (UnsupportedFlavorException | IOException e) {
       // do nothing
     }
     return Collections.singletonList(indentData);

@@ -978,57 +978,29 @@
 
 
 
-    <projectService serviceInterface="consulo.ide.impl.idea.ide.errorTreeView.impl.ErrorTreeViewConfiguration"
-                    serviceImplementation="consulo.ide.impl.idea.ide.errorTreeView.impl.ErrorTreeViewConfiguration"/>
 
 
-
-    <projectService serviceImplementation="consulo.execution.test.export.ExportTestResultsConfiguration"/>
-
-
-
-    <projectService serviceInterface="consulo.ide.impl.idea.execution.testframework.sm.TestHistoryConfiguration"
-                    serviceImplementation="consulo.ide.impl.idea.execution.testframework.sm.TestHistoryConfiguration"/>
-
-    
-
-
-
+<!--
     <editorActionHandler action="EditorEscape" implementationClass="consulo.ide.impl.idea.codeInsight.hint.EscapeHandler" id="hide-hints"/>
+-->
 
-    <editorActionHandler action="EditorDelete" implementationClass="consulo.ide.impl.idea.openapi.editor.actions.DeleteSelectionHandler"
-                         id="delete.for.selection"/>
-    <editorActionHandler action="EditorBackSpace" implementationClass="consulo.ide.impl.idea.openapi.editor.actions.DeleteSelectionHandler"
-                         id="backspace.for.selection" order="after backspace.lookup"/>
+    <!--<editorActionHandler action="EditorDelete" implementationClass="consulo.ide.impl.idea.openapi.editor.actions.DeleteSelectionHandler"-->
+                         <!--id="delete.for.selection"/>-->
+    <!--<editorActionHandler action="EditorBackSpace" implementationClass="consulo.ide.impl.idea.openapi.editor.actions.DeleteSelectionHandler"-->
+                         <!--id="backspace.for.selection" order="after backspace.lookup"/>-->
 
-    <editorActionHandler action="EditorDelete" implementationClass="consulo.ide.impl.idea.openapi.editor.actions.DeleteInColumnModeHandler"
-                         id="delete.in.column.mode"/>
+    <!--<editorActionHandler action="EditorDelete" implementationClass="consulo.ide.impl.idea.openapi.editor.actions.DeleteInColumnModeHandler"-->
+                         <!--id="delete.in.column.mode"/>-->
 
 
     <patch.extension implementation="consulo.ide.impl.idea.openapi.diff.impl.patch.BaseRevisionTextPatchEP"/>
     <patch.extension implementation="consulo.ide.impl.idea.openapi.diff.impl.patch.CharsetEP"/>
 
-    <localInspection shortName="InconsistentLineSeparators" bundle="consulo.language.editor.inspection.InspectionsBundle" key="inconsistent.line.separators"
-                     groupKey="group.names.portability.issues" enabledByDefault="false" level="WARNING"
-                     implementationClass="consulo.ide.impl.idea.codeStyle.InconsistentLineSeparatorsInspection"/>
-
-
-    <projectService serviceInterface="consulo.ide.impl.idea.openapi.vcs.AbstractVcsHelper"
-                    serviceImplementation="consulo.ide.impl.idea.openapi.vcs.impl.AbstractVcsHelperImpl"/>
-    
-
-
-
-    <packaging.sourceItemProvider
-        implementation="consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.ModulesAndLibrariesSourceItemsProvider"/>
-    <packaging.sourceItemProvider
-        implementation="consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.ArtifactsSourceItemsProvider"/>
 
 
     <checkoutListener implementation="consulo.ide.impl.idea.openapi.vcs.checkout.ProjectImporterCheckoutListener"/>
 
 
-    <copyPastePostProcessor implementation="consulo.ide.impl.idea.codeInsight.editorActions.CopyPasteFoldingProcessor"/>
 
 
 
@@ -1057,12 +1029,6 @@
 
 
     <patternDialectProvider implementation="consulo.ide.impl.idea.packageDependencies.ui.ProjectPatternProvider" id="file"/>
-    <customScopesProvider implementation="consulo.ide.impl.idea.packageDependencies.DefaultScopesProvider"/>
-    <customScopesProvider implementation="consulo.ide.impl.packageDependencies.SourceScopeProvider"/>
-    <customScopesProvider implementation="consulo.ide.impl.idea.packageDependencies.TestScopeProvider"/>
-    <customScopesProvider implementation="consulo.ide.impl.packageDependencies.ResourceScopeProvider"/>
-    <customScopesProvider implementation="consulo.ide.impl.packageDependencies.TestResourceScopeProvider"/>
-    <customScopesProvider implementation="consulo.ide.impl.idea.vcs.changes.ChangeListsScopesProvider" order="last"/>
 
 
 
@@ -1121,18 +1087,18 @@
 
     <!-- CodeInsightSettings -->
     <!--<editorActionHandler action="EditorEnter" implementationClass="consulo.ide.impl.idea.codeInsight.editorActions.EnterHandler" id="editorEnter"/>-->
-    <editorActionHandler action="EditorLineEnd" implementationClass="consulo.ide.impl.idea.codeInsight.editorActions.EndHandler"/>
-    <editorActionHandler action="EditorSelectWord" implementationClass="consulo.ide.impl.idea.codeInsight.editorActions.SelectWordHandler"/>
-    <editorActionHandler action="EditorUnSelectWord" implementationClass="consulo.ide.impl.idea.codeInsight.editorActions.UnSelectWordHandler"/>
+    <!--<editorActionHandler action="EditorLineEnd" implementationClass="consulo.ide.impl.idea.codeInsight.editorActions.EndHandler"/>-->
+    <!--<editorActionHandler action="EditorSelectWord" implementationClass="consulo.ide.impl.idea.codeInsight.editorActions.SelectWordHandler"/>-->
+    <!--<editorActionHandler action="EditorUnSelectWord" implementationClass="consulo.ide.impl.idea.codeInsight.editorActions.UnSelectWordHandler"/>-->
     <!--<editorActionHandler action="EditorPaste" implementationClass="consulo.ide.impl.idea.codeInsight.editorActions.PasteHandler"/>-->
     <!--<editorActionHandler action="EditorCopy" implementationClass="consulo.ide.impl.idea.codeInsight.editorActions.CopyHandler"/>-->
     <!--<editorActionHandler action="EditorCut" implementationClass="consulo.ide.impl.idea.codeInsight.editorActions.CutHandler"/>-->
-    <editorActionHandler action="EditorJoinLines" implementationClass="consulo.ide.impl.idea.codeInsight.editorActions.JoinLinesHandler"/>
-    <editorActionHandler action="EditorBackSpace" implementationClass="consulo.ide.impl.idea.codeInsight.editorActions.BackspaceHandler"/>
-    <editorActionHandler action="EditorDeleteToWordStart"
-                         implementationClass="consulo.ide.impl.idea.codeInsight.editorActions.BackspaceToWordStartHandler"/>
+    <!--<editorActionHandler action="EditorJoinLines" implementationClass="consulo.ide.impl.idea.codeInsight.editorActions.JoinLinesHandler"/>-->
+    <!--<editorActionHandler action="EditorBackSpace" implementationClass="consulo.ide.impl.idea.codeInsight.editorActions.BackspaceHandler"/>-->
+    <!--<editorActionHandler action="EditorDeleteToWordStart"-->
+                         <!--implementationClass="consulo.ide.impl.idea.codeInsight.editorActions.BackspaceToWordStartHandler"/>-->
 
-    <editorActionHandler action="EditorDuplicate" implementationClass="consulo.ide.impl.idea.openapi.editor.actions.NamedElementDuplicateHandler"/>
+    <!--<editorActionHandler action="EditorDuplicate" implementationClass="consulo.ide.impl.idea.openapi.editor.actions.NamedElementDuplicateHandler"/>-->
 
     <!-- LookupManagerActions -->
     <!--<editorActionHandler action="EditorUp" implementationClass="consulo.ide.impl.idea.codeInsight.lookup.impl.LookupActionUpHandler"/>-->
@@ -1148,24 +1114,26 @@
     <!--<editorActionHandler action="EditorBackSpace" implementationClass="consulo.ide.impl.idea.codeInsight.lookup.impl.BackspaceHandler"/>-->
 
     <!-- TemplateManagerActions -->
-    <editorActionHandler action="EditorEscape" implementationClass="consulo.ide.impl.idea.codeInsight.template.impl.editorActions.EscapeHandler"
-                         id="templateEscape" order="before hide-hints"/>
-    <editorActionHandler action="EditorEnter" implementationClass="consulo.ide.impl.idea.codeInsight.template.impl.editorActions.EnterHandler"
-                         id="templateEnter" order="before editorEnter"/>
-    <editorActionHandler action="EditorLineStart" implementationClass="consulo.ide.impl.idea.codeInsight.template.impl.editorActions.TemplateLineStartHandler"/>
-    <editorActionHandler action="EditorLineStartWithSelection"
-                         implementationClass="consulo.ide.impl.idea.codeInsight.template.impl.editorActions.TemplateLineStartWithSelectionHandler"/>
+    <!--<editorActionHandler action="EditorEscape" implementationClass="consulo.ide.impl.idea.codeInsight.template.impl.editorActions.EscapeHandler"-->
+                         <!--id="templateEscape" order="before hide-hints"/>-->
+    <!--<editorActionHandler action="EditorEnter" implementationClass="consulo.ide.impl.idea.codeInsight.template.impl.editorActions.EnterHandler"-->
+                         <!--id="templateEnter" order="before editorEnter"/>-->
+    <!--<editorActionHandler action="EditorLineStart" implementationClass="consulo.ide.impl.idea.codeInsight.template.impl.editorActions.TemplateLineStartHandler"/>-->
+    <!--<editorActionHandler action="EditorLineStartWithSelection"-->
+                         <!--implementationClass="consulo.ide.impl.idea.codeInsight.template.impl.editorActions.TemplateLineStartWithSelectionHandler"/>-->
+<!--
     <editorActionHandler action="EditorLineEnd" implementationClass="consulo.ide.impl.idea.codeInsight.template.impl.editorActions.TemplateLineEndHandler"/>
-    <editorActionHandler action="EditorLineEndWithSelection"
-                         implementationClass="consulo.ide.impl.idea.codeInsight.template.impl.editorActions.TemplateLineEndWithSelectionHandler"/>
-    <editorActionHandler action="$SelectAll" implementationClass="consulo.ide.impl.idea.codeInsight.template.impl.editorActions.SelectAllHandler"/>
+-->
+    <!--<editorActionHandler action="EditorLineEndWithSelection"-->
+                         <!--implementationClass="consulo.ide.impl.idea.codeInsight.template.impl.editorActions.TemplateLineEndWithSelectionHandler"/>-->
+    <!--<editorActionHandler action="$SelectAll" implementationClass="consulo.ide.impl.idea.codeInsight.template.impl.editorActions.SelectAllHandler"/>-->
 
 
     <!-- HighlightManagerActions -->
-    <editorActionHandler action="EditorEscape" implementationClass="consulo.ide.impl.idea.codeInsight.highlighting.EscapeHandler"
-                         order="after hide-hints"/>
-    <editorActionHandler action="EditorEscape" implementationClass="consulo.ide.impl.idea.refactoring.rename.inplace.EscapeHandler"
-                         order="before hide-hints"/>
+    <!--<editorActionHandler action="EditorEscape" implementationClass="consulo.ide.impl.idea.codeInsight.highlighting.EscapeHandler"-->
+                         <!--order="after hide-hints"/>-->
+    <!--<editorActionHandler action="EditorEscape" implementationClass="consulo.ide.impl.idea.refactoring.rename.inplace.EscapeHandler"-->
+                         <!--order="before hide-hints"/>-->
 
     <!--<editorTypedHandler implementationClass="consulo.ide.impl.idea.codeInsight.lookup.impl.LookupTypedHandler" id="lookup"/>-->
 
@@ -1187,12 +1155,12 @@
                 conditionClass="consulo.ide.impl.idea.execution.dashboard.RunDashboardToolWindowFactory"/>
 
 
-    <globalInspection shortName="Annotator" displayName="Annotator" groupKey="inspection.general.tools.group.name" groupBundle="consulo.language.editor.inspection.InspectionsBundle"
-                      enabledByDefault="true" level="ERROR"
-                      implementationClass="consulo.ide.impl.idea.codeInsight.daemon.impl.DefaultHighlightVisitorBasedInspection$AnnotatorBasedInspection"/>
-    <globalInspection shortName="SyntaxError" displayName="Syntax error" groupKey="inspection.general.tools.group.name" groupBundle="consulo.language.editor.inspection.InspectionsBundle"
-                      enabledByDefault="true" level="ERROR"
-                      implementationClass="consulo.ide.impl.idea.codeInsight.daemon.impl.DefaultHighlightVisitorBasedInspection$SyntaxErrorInspection"/>
+    <!--<globalInspection shortName="Annotator" displayName="Annotator" groupKey="inspection.general.tools.group.name" groupBundle="consulo.language.editor.inspection.InspectionsBundle"-->
+                      <!--enabledByDefault="true" level="ERROR"-->
+                      <!--implementationClass="consulo.ide.impl.idea.codeInsight.daemon.impl.DefaultHighlightVisitorBasedInspection$AnnotatorBasedInspection"/>-->
+    <!--&lt;!&ndash;<globalInspection shortName="SyntaxError" displayName="Syntax error" groupKey="inspection.general.tools.group.name" groupBundle="consulo.language.editor.inspection.InspectionsBundle"&ndash;&gt;-->
+                      <!--enabledByDefault="true" level="ERROR"-->
+                      <!--implementationClass="consulo.ide.impl.idea.codeInsight.daemon.impl.DefaultHighlightVisitorBasedInspection$SyntaxErrorInspection"/>-->
 
 
 
@@ -1206,13 +1174,15 @@
 
 
 
-    <statistics.usagesCollector implementation="consulo.ide.impl.idea.execution.impl.statistics.RunConfigurationTypeUsagesCollector"/>
+    <!--<statistics.usagesCollector implementation="consulo.ide.impl.idea.execution.impl.statistics.RunConfigurationTypeUsagesCollector"/>-->
+<!--
     <statistics.usagesCollector implementation="consulo.ide.impl.idea.execution.impl.statistics.TemporaryRunConfigurationTypeUsagesCollector"/>
-    <statistics.usagesCollector implementation="consulo.ide.impl.idea.openapi.fileTypes.FileTypeUsagesCollector"/>
+-->
+    <!--<statistics.usagesCollector implementation="consulo.ide.impl.idea.openapi.fileTypes.FileTypeUsagesCollector"/>-->
 
 
-    <refactoring.moveDirectoryWithClassesHelper
-			implementation="consulo.ide.impl.idea.refactoring.move.moveClassesOrPackages.MoveDirectoryWithClassesHelper$Default" order="last"/>
+    <!--<refactoring.moveDirectoryWithClassesHelper-->
+			<!--implementation="consulo.ide.impl.idea.refactoring.move.moveClassesOrPackages.MoveDirectoryWithClassesHelper$Default" order="last"/>-->
 
 
 
@@ -1237,13 +1207,8 @@
 
 
 
-    <copyPastePostProcessor implementation="consulo.ide.impl.idea.openapi.editor.richcopy.TextWithMarkupProcessor"/>
-    <!--the following binding uses 'first' order to make sure it captures raw text before any other processor modifies it -->
-    <copyPastePreProcessor implementation="consulo.ide.impl.idea.openapi.editor.richcopy.TextWithMarkupProcessor$RawTextSetter" order="first" id="richcopy"/>
-
-
-    <editorActionHandler action="EditorEscape" implementationClass="consulo.ide.impl.idea.refactoring.changeSignature.inplace.EscapeHandler" id="changeSignatureEscape"
-						 order="before hide-search"/>
+    <!--<editorActionHandler action="EditorEscape" implementationClass="consulo.ide.impl.idea.refactoring.changeSignature.inplace.EscapeHandler" id="changeSignatureEscape"-->
+						 <!--order="before hide-search"/>-->
 
 
 

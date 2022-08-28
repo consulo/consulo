@@ -16,26 +16,27 @@
 
 package consulo.ide.impl.idea.codeInsight.template.impl.editorActions;
 
-import consulo.ide.impl.idea.codeInsight.template.impl.TemplateManagerImpl;
-import consulo.ide.impl.idea.codeInsight.template.impl.TemplateStateImpl;
-import consulo.dataContext.DataContext;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.action.EditorActionHandler;
+import consulo.codeEditor.action.ExtensionEditorActionHandler;
+import consulo.dataContext.DataContext;
 import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.codeInsight.template.impl.TemplateManagerImpl;
+import consulo.ide.impl.idea.codeInsight.template.impl.TemplateStateImpl;
+import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public abstract class TemplateLineStartEndHandler extends EditorActionHandler {
-  private final EditorActionHandler myOriginalHandler;
+public abstract class TemplateLineStartEndHandler extends EditorActionHandler implements ExtensionEditorActionHandler {
+  private EditorActionHandler myOriginalHandler;
   private final boolean myIsHomeHandler;
   private final boolean myWithSelection;
 
-  public TemplateLineStartEndHandler(final EditorActionHandler originalHandler, boolean isHomeHandler, boolean withSelection) {
+  public TemplateLineStartEndHandler(boolean isHomeHandler, boolean withSelection) {
     super(true);
-    myOriginalHandler = originalHandler;
     myIsHomeHandler = isHomeHandler;
     myWithSelection = withSelection;
   }
@@ -52,7 +53,7 @@ public abstract class TemplateLineStartEndHandler extends EditorActionHandler {
   }
 
   @Override
-  protected void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
+  protected void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
     final TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
     if (templateState != null && !templateState.isFinished()) {
       final TextRange range = templateState.getCurrentVariableRange();
@@ -76,7 +77,11 @@ public abstract class TemplateLineStartEndHandler extends EditorActionHandler {
   }
 
   private boolean shouldStayInsideVariable(TextRange varRange, int caretOffset) {
-    return varRange.containsOffset(caretOffset) &&
-           caretOffset != (myIsHomeHandler ? varRange.getStartOffset() : varRange.getEndOffset());
+    return varRange.containsOffset(caretOffset) && caretOffset != (myIsHomeHandler ? varRange.getStartOffset() : varRange.getEndOffset());
+  }
+
+  @Override
+  public void init(@Nullable EditorActionHandler originalHandler) {
+    myOriginalHandler = originalHandler;
   }
 }

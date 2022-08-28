@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.template.impl.editorActions;
+package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ui.ex.action.IdeActions;
 
 import javax.annotation.Nonnull;
 
 @ExtensionImpl
-public class TemplateLineEndWithSelectionHandler extends TemplateLineStartEndHandler {
-  public TemplateLineEndWithSelectionHandler() {
+public class AnnotatorBasedInspection extends DefaultHighlightVisitorBasedInspection {
+  private static final String ANNOTATOR_SHORT_NAME = "Annotator";
+
+  public AnnotatorBasedInspection() {
     super(false, true);
   }
 
-  @Nonnull
   @Override
-  public String getActionId() {
-    return IdeActions.ACTION_EDITOR_MOVE_LINE_END_WITH_SELECTION;
+  @Nonnull
+  public String getDisplayName() {
+    return "Annotator";
+  }
+
+  @Override
+  @Nonnull
+  public String getShortName() {
+    return ANNOTATOR_SHORT_NAME;
   }
 }

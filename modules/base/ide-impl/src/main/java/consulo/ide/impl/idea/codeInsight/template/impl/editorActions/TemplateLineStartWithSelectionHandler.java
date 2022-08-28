@@ -15,10 +15,20 @@
  */
 package consulo.ide.impl.idea.codeInsight.template.impl.editorActions;
 
-import consulo.codeEditor.action.EditorActionHandler;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.ui.ex.action.IdeActions;
 
+import javax.annotation.Nonnull;
+
+@ExtensionImpl
 public class TemplateLineStartWithSelectionHandler extends TemplateLineStartEndHandler {
-  public TemplateLineStartWithSelectionHandler(final EditorActionHandler originalHandler) {
-    super(originalHandler, true, true);
+  public TemplateLineStartWithSelectionHandler() {
+    super(true, true);
+  }
+
+  @Nonnull
+  @Override
+  public String getActionId() {
+    return IdeActions.ACTION_EDITOR_MOVE_LINE_START_WITH_SELECTION;
   }
 }

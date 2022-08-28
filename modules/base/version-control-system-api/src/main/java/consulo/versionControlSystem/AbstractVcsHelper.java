@@ -15,6 +15,8 @@
  */
 package consulo.versionControlSystem;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 import consulo.ui.ex.errorTreeView.HotfixData;
 import consulo.versionControlSystem.annotate.AnnotationProvider;
@@ -40,6 +42,7 @@ import java.util.*;
 /**
  * Component which provides means to invoke different VCS-related services.
  */
+@ServiceAPI(ComponentScope.PROJECT)
 public abstract class AbstractVcsHelper {
 
   protected final Project myProject;

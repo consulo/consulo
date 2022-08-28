@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.folding.CodeFoldingManager;
 import consulo.ide.impl.idea.codeInsight.folding.impl.CodeFoldingManagerImpl;
 import consulo.codeEditor.Editor;
@@ -34,7 +35,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-
+@ExtensionImpl
 public class CopyPasteFoldingProcessor extends CopyPastePostProcessor<FoldingTransferableData> {
   @Nonnull
   @Override

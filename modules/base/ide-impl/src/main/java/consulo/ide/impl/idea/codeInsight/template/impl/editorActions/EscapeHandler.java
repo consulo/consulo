@@ -16,23 +16,26 @@
 
 package consulo.ide.impl.idea.codeInsight.template.impl.editorActions;
 
-import consulo.language.editor.CodeInsightBundle;
-import consulo.language.editor.completion.lookup.LookupManager;
-import consulo.ide.impl.idea.codeInsight.lookup.impl.LookupImpl;
-import consulo.ide.impl.idea.codeInsight.template.impl.TemplateManagerImpl;
-import consulo.ide.impl.idea.codeInsight.template.impl.TemplateStateImpl;
-import consulo.dataContext.DataContext;
-import consulo.undoRedo.CommandProcessor;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.SelectionModel;
 import consulo.codeEditor.action.EditorActionHandler;
+import consulo.codeEditor.action.ExtensionEditorActionHandler;
+import consulo.dataContext.DataContext;
+import consulo.ide.impl.idea.codeInsight.lookup.impl.LookupImpl;
+import consulo.ide.impl.idea.codeInsight.template.impl.TemplateManagerImpl;
+import consulo.ide.impl.idea.codeInsight.template.impl.TemplateStateImpl;
+import consulo.language.editor.CodeInsightBundle;
+import consulo.language.editor.completion.lookup.LookupManager;
+import consulo.ui.ex.action.IdeActions;
+import consulo.undoRedo.CommandProcessor;
 
-public class EscapeHandler extends EditorActionHandler {
-  private final EditorActionHandler myOriginalHandler;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-  public EscapeHandler(EditorActionHandler originalHandler) {
-    myOriginalHandler = originalHandler;
-  }
+@ExtensionImpl(id = "templateEscape", order = "before hide-hints")
+public class EscapeHandler extends EditorActionHandler implements ExtensionEditorActionHandler {
+  private EditorActionHandler myOriginalHandler;
 
   @Override
   public void execute(Editor editor, DataContext dataContext) {
@@ -65,5 +68,16 @@ public class EscapeHandler extends EditorActionHandler {
       return true;
     }
     return myOriginalHandler.isEnabled(editor, dataContext);
+  }
+
+  @Override
+  public void init(@Nullable EditorActionHandler originalHandler) {
+    myOriginalHandler = originalHandler;
+  }
+
+  @Nonnull
+  @Override
+  public String getActionId() {
+    return IdeActions.ACTION_EDITOR_ESCAPE;
   }
 }

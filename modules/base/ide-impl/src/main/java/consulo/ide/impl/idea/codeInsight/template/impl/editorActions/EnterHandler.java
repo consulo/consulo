@@ -15,25 +15,30 @@
  */
 package consulo.ide.impl.idea.codeInsight.template.impl.editorActions;
 
-import consulo.ide.impl.idea.codeInsight.editorActions.BaseEnterHandler;
-import consulo.language.editor.template.TemplateManager;
-import consulo.ide.impl.idea.codeInsight.template.impl.TemplateSettingsImpl;
-import consulo.dataContext.DataContext;
+import consulo.annotation.access.RequiredWriteAction;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
+import consulo.codeEditor.action.ExtensionEditorActionHandler;
+import consulo.dataContext.DataContext;
+import consulo.ide.impl.idea.codeInsight.editorActions.BaseEnterHandler;
+import consulo.ide.impl.idea.codeInsight.template.impl.TemplateSettingsImpl;
+import consulo.language.editor.template.TemplateManager;
 import consulo.project.Project;
-import consulo.annotation.access.RequiredWriteAction;
-import javax.annotation.Nonnull;
+import consulo.ui.ex.action.IdeActions;
 import jakarta.inject.Inject;
 
-public class EnterHandler extends BaseEnterHandler {
-  private final EditorActionHandler myOriginalHandler;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+@ExtensionImpl(id = "templateEnter", order = "before editorEnter")
+public class EnterHandler extends BaseEnterHandler implements ExtensionEditorActionHandler {
+  private EditorActionHandler myOriginalHandler;
 
   @Inject
-  public EnterHandler(EditorActionHandler originalHandler) {
+  public EnterHandler() {
     super(true);
-    myOriginalHandler = originalHandler;
   }
 
   @Override
@@ -52,5 +57,16 @@ public class EnterHandler extends BaseEnterHandler {
     if (myOriginalHandler != null) {
       myOriginalHandler.execute(editor, caret, dataContext);
     }
+  }
+
+  @Override
+  public void init(@Nullable EditorActionHandler originalHandler) {
+    myOriginalHandler = originalHandler;
+  }
+
+  @Nonnull
+  @Override
+  public String getActionId() {
+    return IdeActions.ACTION_EDITOR_ENTER;
   }
 }

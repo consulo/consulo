@@ -15,20 +15,21 @@
  */
 package consulo.ide.impl.idea.codeInsight.hint;
 
-import consulo.dataContext.DataContext;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
+import consulo.codeEditor.action.ExtensionEditorActionHandler;
+import consulo.dataContext.DataContext;
 import consulo.language.editor.hint.HintManager;
+import consulo.ui.ex.action.IdeActions;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-public class EscapeHandler extends EditorActionHandler {
-  private final EditorActionHandler myOriginalHandler;
-
-  public EscapeHandler(EditorActionHandler originalHandler) {
-    myOriginalHandler = originalHandler;
-  }
+@ExtensionImpl(id = "hide-hints")
+public class EscapeHandler extends EditorActionHandler implements ExtensionEditorActionHandler {
+  private EditorActionHandler myOriginalHandler;
 
   @Override
   public void doExecute(@Nonnull Editor editor, Caret caret, DataContext dataContext) {
@@ -42,5 +43,16 @@ public class EscapeHandler extends EditorActionHandler {
   public boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
     HintManagerImpl hintManager = HintManagerImpl.getInstanceImpl();
     return hintManager.isEscapeHandlerEnabled() || myOriginalHandler.isEnabled(editor, caret, dataContext);
+  }
+
+  @Override
+  public void init(@Nullable EditorActionHandler originalHandler) {
+    myOriginalHandler = originalHandler;
+  }
+
+  @Nonnull
+  @Override
+  public String getActionId() {
+    return IdeActions.ACTION_EDITOR_ESCAPE;
   }
 }

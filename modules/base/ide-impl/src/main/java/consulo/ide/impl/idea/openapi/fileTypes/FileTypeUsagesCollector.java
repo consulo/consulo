@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.fileTypes;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.externalService.statistic.AbstractApplicationUsagesCollector;
 import consulo.externalService.statistic.CollectUsagesException;
 import consulo.externalService.statistic.UsageDescriptor;
@@ -37,6 +38,7 @@ import java.util.Set;
 /**
  * @author Nikolay Matveev
  */
+@ExtensionImpl
 public class FileTypeUsagesCollector extends AbstractApplicationUsagesCollector {
   @Nonnull
   @Override

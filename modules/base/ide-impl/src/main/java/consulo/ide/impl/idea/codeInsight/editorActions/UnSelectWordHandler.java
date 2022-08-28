@@ -16,26 +16,32 @@
 
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
-import consulo.dataContext.DataManager;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
-import consulo.document.Document;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.util.function.Processor;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.action.EditorActionHandler;
+import consulo.codeEditor.action.ExtensionEditorActionHandler;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
+import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.action.SelectWordUtil;
 import consulo.language.psi.*;
 import consulo.project.Project;
+import consulo.ui.ex.action.IdeActions;
 import consulo.util.lang.ref.Ref;
-import consulo.document.util.TextRange;
-import consulo.application.util.function.Processor;
 
-public class UnSelectWordHandler extends EditorActionHandler {
-  private final EditorActionHandler myOriginalHandler;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-  public UnSelectWordHandler(EditorActionHandler originalHandler) {
+@ExtensionImpl(order = "first")
+public class UnSelectWordHandler extends EditorActionHandler implements ExtensionEditorActionHandler {
+  private EditorActionHandler myOriginalHandler;
+
+  public UnSelectWordHandler() {
     super(true);
-    myOriginalHandler = originalHandler;
   }
 
   @Override
@@ -70,9 +76,7 @@ public class UnSelectWordHandler extends EditorActionHandler {
 
     int cursorOffset = editor.getCaretModel().getOffset();
 
-    if (cursorOffset > 0 && cursorOffset < text.length() &&
-        !Character.isJavaIdentifierPart(text.charAt(cursorOffset)) &&
-        Character.isJavaIdentifierPart(text.charAt(cursorOffset - 1))) {
+    if (cursorOffset > 0 && cursorOffset < text.length() && !Character.isJavaIdentifierPart(text.charAt(cursorOffset)) && Character.isJavaIdentifierPart(text.charAt(cursorOffset - 1))) {
       cursorOffset--;
     }
 
@@ -110,9 +114,11 @@ public class UnSelectWordHandler extends EditorActionHandler {
     SelectWordUtil.processRanges(element, text, cursorOffset, editor, new Processor<TextRange>() {
       @Override
       public boolean process(TextRange range) {
-        if (selectionRange.contains(range) && !range.equals(selectionRange) &&
+        if (selectionRange.contains(range) &&
+            !range.equals(selectionRange) &&
             (range.contains(finalCursorOffset) || finalCursorOffset == range.getEndOffset()) &&
-            !isOffsetCollapsed(range.getStartOffset()) && !isOffsetCollapsed(range.getEndOffset())) {
+            !isOffsetCollapsed(range.getStartOffset()) &&
+            !isOffsetCollapsed(range.getEndOffset())) {
           if (maximumRange.get() == null || range.contains(maximumRange.get())) {
             maximumRange.set(range);
           }
@@ -135,5 +141,16 @@ public class UnSelectWordHandler extends EditorActionHandler {
     else {
       editor.getSelectionModel().setSelection(range.getStartOffset(), range.getEndOffset());
     }
+  }
+
+  @Override
+  public void init(@Nullable EditorActionHandler originalHandler) {
+    myOriginalHandler = originalHandler;
+  }
+
+  @Nonnull
+  @Override
+  public String getActionId() {
+    return IdeActions.ACTION_EDITOR_UNSELECT_WORD_AT_CARET;
   }
 }

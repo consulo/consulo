@@ -2,24 +2,19 @@
 
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
-import consulo.language.editor.impl.highlight.TextEditorHighlightingPass;
-import consulo.language.editor.impl.highlight.TextEditorHighlightingPassManager;
-import consulo.language.editor.inspection.GlobalInspectionUtil;
-import consulo.language.editor.inspection.GlobalSimpleInspectionTool;
-import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionContextBase;
-import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.editor.impl.internal.daemon.DaemonProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionContextBase;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.annotation.HighlightSeverity;
-import consulo.language.editor.inspection.GlobalInspectionContext;
-import consulo.language.editor.inspection.ProblemDescriptionsProcessor;
-import consulo.language.editor.inspection.ProblemsHolder;
+import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
+import consulo.language.editor.impl.highlight.TextEditorHighlightingPass;
+import consulo.language.editor.impl.highlight.TextEditorHighlightingPassManager;
+import consulo.language.editor.impl.internal.daemon.DaemonProgressIndicator;
+import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.editor.rawHighlight.HighlightInfo;
@@ -29,9 +24,9 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiElementVisitor;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -45,51 +40,6 @@ public abstract class DefaultHighlightVisitorBasedInspection extends GlobalSimpl
   protected DefaultHighlightVisitorBasedInspection(boolean highlightErrorElements, boolean runAnnotators) {
     this.highlightErrorElements = highlightErrorElements;
     this.runAnnotators = runAnnotators;
-  }
-
-  public static class AnnotatorBasedInspection extends DefaultHighlightVisitorBasedInspection {
-    private static final
-    @NonNls
-    String ANNOTATOR_SHORT_NAME = "Annotator";
-
-    public AnnotatorBasedInspection() {
-      super(false, true);
-    }
-
-    @Override
-    public
-    @Nls
-    @Nonnull
-    String getDisplayName() {
-      return "Annotator";
-    }
-
-    @Override
-    public
-    @Nonnull
-    String getShortName() {
-      return ANNOTATOR_SHORT_NAME;
-    }
-
-  }
-
-  public static class SyntaxErrorInspection extends DefaultHighlightVisitorBasedInspection {
-    public SyntaxErrorInspection() {
-      super(true, false);
-    }
-
-    @Nls
-    @Nonnull
-    @Override
-    public String getDisplayName() {
-      return "Syntax error";
-    }
-
-    @Nonnull
-    @Override
-    public String getShortName() {
-      return "SyntaxError";
-    }
   }
 
   @Nonnull

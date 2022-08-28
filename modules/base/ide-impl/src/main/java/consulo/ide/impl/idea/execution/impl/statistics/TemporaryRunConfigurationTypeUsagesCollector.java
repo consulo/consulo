@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.execution.impl.statistics;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.execution.RunManager;
 import consulo.execution.configuration.RunConfiguration;
 
@@ -23,6 +24,7 @@ import javax.annotation.Nonnull;
 /**
  * @author Nikolay Matveev
  */
+@ExtensionImpl
 public class TemporaryRunConfigurationTypeUsagesCollector extends AbstractRunConfigurationTypeUsagesCollector {
   @Nonnull
   @Override

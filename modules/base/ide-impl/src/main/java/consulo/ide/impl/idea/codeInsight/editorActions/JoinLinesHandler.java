@@ -2,6 +2,7 @@
 
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.progress.ProgressIndicator;
@@ -11,6 +12,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.action.EditorActionHandler;
+import consulo.codeEditor.action.ExtensionEditorActionHandler;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.document.Document;
@@ -32,6 +34,7 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.ex.action.IdeActions;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -42,13 +45,13 @@ import java.util.List;
 
 import static consulo.language.editor.action.JoinLinesHandlerDelegate.CANNOT_JOIN;
 
-public class JoinLinesHandler extends EditorActionHandler {
+@ExtensionImpl(order = "first")
+public class JoinLinesHandler extends EditorActionHandler implements ExtensionEditorActionHandler {
   private static final Logger LOG = Logger.getInstance(JoinLinesHandler.class);
-  private final EditorActionHandler myOriginalHandler;
+  private EditorActionHandler myOriginalHandler;
 
-  public JoinLinesHandler(EditorActionHandler originalHandler) {
+  public JoinLinesHandler() {
     super(true);
-    myOriginalHandler = originalHandler;
   }
 
   @Override
@@ -92,6 +95,17 @@ public class JoinLinesHandler extends EditorActionHandler {
       JoinLineProcessor processor = new JoinLineProcessor(doc, psiFile, line, indicator);
       processor.process(editor, caret, lineCount);
     });
+  }
+
+  @Override
+  public void init(@Nullable EditorActionHandler originalHandler) {
+    myOriginalHandler = originalHandler;
+  }
+
+  @Nonnull
+  @Override
+  public String getActionId() {
+    return IdeActions.ACTION_EDITOR_JOIN_LINES;
   }
 
   private static class JoinLineProcessor {

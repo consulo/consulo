@@ -17,8 +17,10 @@
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.*;
 import consulo.codeEditor.action.EditorActionHandler;
+import consulo.codeEditor.action.ExtensionEditorActionHandler;
 import consulo.dataContext.DataContext;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
@@ -35,6 +37,7 @@ import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.ui.ex.action.IdeActions;
 import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.inject.Inject;
 
@@ -42,13 +45,13 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class BackspaceHandler extends EditorWriteActionHandler {
-  protected final EditorActionHandler myOriginalHandler;
+@ExtensionImpl(order = "first")
+public class BackspaceHandler extends EditorWriteActionHandler implements ExtensionEditorActionHandler {
+  protected EditorActionHandler myOriginalHandler;
 
   @Inject
-  public BackspaceHandler(EditorActionHandler originalHandler) {
+  public BackspaceHandler() {
     super(true);
-    myOriginalHandler = originalHandler;
   }
 
   @RequiredWriteAction
@@ -87,7 +90,7 @@ public class BackspaceHandler extends EditorWriteActionHandler {
 
     final List<BackspaceHandlerDelegate> delegates = BackspaceHandlerDelegate.EP_NAME.getExtensionList();
     if (!toWordStart) {
-      for(BackspaceHandlerDelegate delegate: delegates) {
+      for (BackspaceHandlerDelegate delegate : delegates) {
         delegate.beforeCharDeleted(c, file, editor);
       }
     }
@@ -101,7 +104,7 @@ public class BackspaceHandler extends EditorWriteActionHandler {
     myOriginalHandler.execute(originalEditor, caret, dataContext);
 
     if (!toWordStart) {
-      for(BackspaceHandlerDelegate delegate: delegates) {
+      for (BackspaceHandlerDelegate delegate : delegates) {
         if (delegate.charDeleted(c, file, editor)) {
           return true;
         }
@@ -111,20 +114,18 @@ public class BackspaceHandler extends EditorWriteActionHandler {
     if (offset >= editor.getDocument().getTextLength()) return true;
 
     chars = editor.getDocument().getCharsSequence();
-    if (c == '(' || c == '[' || c == '{'){
+    if (c == '(' || c == '[' || c == '{') {
       char c1 = chars.charAt(offset);
       if (c1 != getRightChar(c)) return true;
 
       HighlighterIterator iterator = ((EditorEx)editor).getHighlighter().createIterator(offset);
       BraceMatcher braceMatcher = BraceMatchingUtil.getBraceMatcher(fileType, iterator);
-      if (!braceMatcher.isLBraceToken(iterator, chars, fileType) &&
-          !braceMatcher.isRBraceToken(iterator, chars, fileType)
-              ) {
+      if (!braceMatcher.isLBraceToken(iterator, chars, fileType) && !braceMatcher.isRBraceToken(iterator, chars, fileType)) {
         return true;
       }
 
       int rparenOffset = BraceMatchingUtil.findRightmostRParen(iterator, (IElementType)iterator.getTokenType(), chars, fileType);
-      if (rparenOffset >= 0){
+      if (rparenOffset >= 0) {
         iterator = ((EditorEx)editor).getHighlighter().createIterator(rparenOffset);
         boolean matched = BraceMatchingUtil.matchBrace(chars, fileType, iterator, false);
         if (matched) return true;
@@ -132,13 +133,13 @@ public class BackspaceHandler extends EditorWriteActionHandler {
 
       editor.getDocument().deleteString(offset, offset + 1);
     }
-    else if (c == '"' || c == '\'' || c == '`'){
+    else if (c == '"' || c == '\'' || c == '`') {
       char c1 = chars.charAt(offset);
       if (c1 != c) return true;
       if (wasClosingQuote) return true;
 
       HighlighterIterator iterator = ((EditorEx)editor).getHighlighter().createIterator(offset);
-      if (quoteHandler == null || !quoteHandler.isOpeningQuote(iterator,offset)) return true;
+      if (quoteHandler == null || !quoteHandler.isOpeningQuote(iterator, offset)) return true;
 
       editor.getDocument().deleteString(offset, offset + 1);
     }
@@ -160,7 +161,7 @@ public class BackspaceHandler extends EditorWriteActionHandler {
     }
     PsiFile injectedFile = ((EditorWindow)injectedEditor).getInjectedFile();
     InjectedLanguageManager ilm = InjectedLanguageManager.getInstance(injectedFile.getProject());
-    TextRange rangeToEdit = new TextRange(injectedOffset - 1, injectedOffset+1);
+    TextRange rangeToEdit = new TextRange(injectedOffset - 1, injectedOffset + 1);
     List<TextRange> editables = ilm.intersectWithAllEditableFragments(injectedFile, rangeToEdit);
 
     return editables.size() == 1 && editables.get(0).equals(rangeToEdit);
@@ -199,7 +200,7 @@ public class BackspaceHandler extends EditorWriteActionHandler {
     final LogicalPosition caretPos = editor.getCaretModel().getLogicalPosition();
     final CharSequence charSeq = editor.getDocument().getCharsSequence();
     // smart backspace is activated only if all characters in the check range are whitespace characters
-    for(int pos=0; pos<caretPos.column; pos++) {
+    for (int pos = 0; pos < caretPos.column; pos++) {
       // use logicalPositionToOffset to make sure tabs are handled correctly
       final LogicalPosition checkPos = new LogicalPosition(caretPos.line, pos);
       final int offset = editor.logicalPositionToOffset(checkPos);
@@ -211,5 +212,16 @@ public class BackspaceHandler extends EditorWriteActionHandler {
       }
     }
     return true;
+  }
+
+  @Override
+  public void init(@Nullable EditorActionHandler originalHandler) {
+    myOriginalHandler = originalHandler;
+  }
+
+  @Nonnull
+  @Override
+  public String getActionId() {
+    return IdeActions.ACTION_EDITOR_BACKSPACE;
   }
 }

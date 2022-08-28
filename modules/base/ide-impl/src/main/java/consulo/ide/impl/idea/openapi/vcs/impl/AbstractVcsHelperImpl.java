@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ui.ex.action.CloseTabToolbarAction;
 import consulo.ui.ex.errorTreeView.*;
 import consulo.fileEditor.FileEditor;
@@ -106,6 +107,7 @@ import static consulo.ide.impl.idea.util.ui.ConfirmationDialog.requestForConfirm
 import static java.text.MessageFormat.format;
 
 @Singleton
+@ServiceImpl
 public class AbstractVcsHelperImpl extends AbstractVcsHelper {
   private static final Logger LOG = Logger.getInstance(AbstractVcsHelperImpl.class);
 

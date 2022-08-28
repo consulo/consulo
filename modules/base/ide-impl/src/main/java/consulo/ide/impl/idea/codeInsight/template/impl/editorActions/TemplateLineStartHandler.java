@@ -16,13 +16,23 @@
 
 package consulo.ide.impl.idea.codeInsight.template.impl.editorActions;
 
-import consulo.codeEditor.action.EditorActionHandler;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.ui.ex.action.IdeActions;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
  */
+@ExtensionImpl
 public class TemplateLineStartHandler extends TemplateLineStartEndHandler {
-  public TemplateLineStartHandler(final EditorActionHandler originalHandler) {
-    super(originalHandler, true, false);
+  public TemplateLineStartHandler() {
+    super(true, false);
+  }
+
+  @Nonnull
+  @Override
+  public String getActionId() {
+    return IdeActions.ACTION_EDITOR_MOVE_LINE_START;
   }
 }

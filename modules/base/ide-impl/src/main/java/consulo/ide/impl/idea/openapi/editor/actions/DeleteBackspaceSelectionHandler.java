@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.template.impl.editorActions;
+package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.ui.ex.action.IdeActions;
 
 import javax.annotation.Nonnull;
 
-@ExtensionImpl
-public class TemplateLineEndWithSelectionHandler extends TemplateLineStartEndHandler {
-  public TemplateLineEndWithSelectionHandler() {
-    super(false, true);
-  }
-
+/**
+ * @author VISTALL
+ * @since 28-Aug-22
+ */
+@ExtensionImpl(id = "backspace.for.selection", order = "after backspace.lookup")
+public class DeleteBackspaceSelectionHandler extends DeleteSelectionHandler {
   @Nonnull
   @Override
   public String getActionId() {
-    return IdeActions.ACTION_EDITOR_MOVE_LINE_END_WITH_SELECTION;
+    return IdeActions.ACTION_EDITOR_BACKSPACE;
   }
 }

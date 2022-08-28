@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.editorActions;
+package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.component.extension.ExtensionPointName;
-import consulo.util.xml.serializer.annotation.Attribute;
+import consulo.annotation.component.ExtensionImpl;
+import org.jetbrains.annotations.Nls;
 
-/**
- * @author yole
- */
-public class PreserveIndentOnPasteBean {
-  public static final ExtensionPointName<PreserveIndentOnPasteBean> EP_NAME = ExtensionPointName.create("consulo.preserveIndentOnPaste");
+import javax.annotation.Nonnull;
 
-  @Attribute("fileType")
-  public String fileType;
+@ExtensionImpl
+public class SyntaxErrorInspection extends DefaultHighlightVisitorBasedInspection {
+  public SyntaxErrorInspection() {
+    super(true, false);
+  }
+
+  @Nls
+  @Nonnull
+  @Override
+  public String getDisplayName() {
+    return "Syntax error";
+  }
+
+  @Nonnull
+  @Override
+  public String getShortName() {
+    return "SyntaxError";
+  }
 }

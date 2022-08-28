@@ -1,28 +1,27 @@
 // Copyright 2000-2017 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.editor.actions;
 
-import consulo.codeEditor.action.EditorActionUtil;
-import consulo.dataContext.DataContext;
-import consulo.undoRedo.CommandProcessor;
+import consulo.annotation.access.RequiredWriteAction;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
+import consulo.codeEditor.action.EditorActionUtil;
+import consulo.codeEditor.action.ExtensionEditorActionHandler;
+import consulo.dataContext.DataContext;
+import consulo.document.util.DocumentUtil;
 import consulo.ide.impl.idea.openapi.editor.actionSystem.EditorWriteActionHandler;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUIUtil;
+import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.CopyPasteManager;
-import consulo.document.util.DocumentUtil;
-import consulo.annotation.access.RequiredWriteAction;
-import jakarta.inject.Inject;
+import consulo.undoRedo.CommandProcessor;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class DeleteInColumnModeHandler extends EditorWriteActionHandler {
-  private final EditorActionHandler myOriginalHandler;
-
-  @Inject
-  public DeleteInColumnModeHandler(EditorActionHandler handler) {
-    myOriginalHandler = handler;
-  }
+@ExtensionImpl(id = "delete.in.column.mode")
+public class DeleteInColumnModeHandler extends EditorWriteActionHandler implements ExtensionEditorActionHandler {
+  private EditorActionHandler myOriginalHandler;
 
   @RequiredWriteAction
   @Override
@@ -41,5 +40,16 @@ public class DeleteInColumnModeHandler extends EditorWriteActionHandler {
     else {
       myOriginalHandler.execute(editor, caret, dataContext);
     }
+  }
+
+  @Override
+  public void init(@Nullable EditorActionHandler originalHandler) {
+    myOriginalHandler = originalHandler;
+  }
+
+  @Nonnull
+  @Override
+  public String getActionId() {
+    return IdeActions.ACTION_EDITOR_DELETE;
   }
 }

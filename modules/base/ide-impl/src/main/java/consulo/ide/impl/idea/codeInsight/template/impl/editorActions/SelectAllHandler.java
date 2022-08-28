@@ -16,21 +16,22 @@
 
 package consulo.ide.impl.idea.codeInsight.template.impl.editorActions;
 
-import consulo.ide.impl.idea.codeInsight.template.impl.TemplateManagerImpl;
-import consulo.ide.impl.idea.codeInsight.template.impl.TemplateStateImpl;
-import consulo.dataContext.DataContext;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
+import consulo.codeEditor.action.ExtensionEditorActionHandler;
+import consulo.dataContext.DataContext;
 import consulo.document.util.TextRange;
-import jakarta.inject.Inject;
+import consulo.ide.impl.idea.codeInsight.template.impl.TemplateManagerImpl;
+import consulo.ide.impl.idea.codeInsight.template.impl.TemplateStateImpl;
+import consulo.ui.ex.action.IdeActions;
 
-public class SelectAllHandler extends EditorActionHandler {
-  private final EditorActionHandler myOriginalHandler;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-  @Inject
-  public SelectAllHandler(final EditorActionHandler originalHandler) {
-    myOriginalHandler = originalHandler;
-  }
+@ExtensionImpl
+public class SelectAllHandler extends EditorActionHandler implements ExtensionEditorActionHandler {
+  private EditorActionHandler myOriginalHandler;
 
   @Override
   public void execute(Editor editor, DataContext dataContext) {
@@ -44,5 +45,16 @@ public class SelectAllHandler extends EditorActionHandler {
       }
     }
     myOriginalHandler.execute(editor, dataContext);
+  }
+
+  @Override
+  public void init(@Nullable EditorActionHandler originalHandler) {
+    myOriginalHandler = originalHandler;
+  }
+
+  @Nonnull
+  @Override
+  public String getActionId() {
+    return IdeActions.ACTION_SELECT_ALL;
   }
 }

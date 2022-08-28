@@ -62,7 +62,7 @@ import java.awt.datatransfer.Transferable;
 import java.util.*;
 import java.util.function.Supplier;
 
-@ExtensionImpl
+@ExtensionImpl(order = "first")
 public class PasteHandler extends EditorActionHandler implements EditorTextInsertHandler, ExtensionEditorActionHandler {
   private static final Logger LOG = Logger.getInstance(PasteHandler.class);
 

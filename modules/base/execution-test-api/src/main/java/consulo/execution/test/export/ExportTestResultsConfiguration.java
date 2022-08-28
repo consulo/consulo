@@ -15,6 +15,9 @@
  */
 package consulo.execution.test.export;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
@@ -25,6 +28,8 @@ import jakarta.inject.Singleton;
 
 @Singleton
 @State(name = "ExportTestResults", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
+@ServiceAPI(ComponentScope.PROJECT)
+@ServiceImpl
 public class ExportTestResultsConfiguration implements PersistentStateComponent<ExportTestResultsConfiguration.State> {
 
   public enum ExportFormat {

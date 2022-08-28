@@ -40,7 +40,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-@ExtensionImpl
+@ExtensionImpl(order = "first")
 public class CutHandler extends EditorWriteActionHandler implements ExtensionEditorActionHandler {
   private EditorActionHandler myOriginalHandler;
 

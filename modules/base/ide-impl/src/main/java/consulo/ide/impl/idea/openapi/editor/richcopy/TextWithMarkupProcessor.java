@@ -1,8 +1,12 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.editor.richcopy;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.util.registry.Registry;
-import consulo.codeEditor.*;
+import consulo.codeEditor.Caret;
+import consulo.codeEditor.DocumentMarkupModel;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorHighlighter;
 import consulo.codeEditor.markup.MarkupModel;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.document.Document;
@@ -16,16 +20,13 @@ import consulo.ide.impl.idea.openapi.editor.richcopy.settings.RichCopySettings;
 import consulo.ide.impl.idea.openapi.editor.richcopy.view.HtmlTransferableData;
 import consulo.ide.impl.idea.openapi.editor.richcopy.view.RawTextWithMarkup;
 import consulo.ide.impl.idea.openapi.editor.richcopy.view.RtfTransferableData;
-import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.util.ObjectUtils;
-import consulo.language.editor.action.CopyPastePreProcessor;
 import consulo.language.editor.highlight.HighlighterFactory;
 import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
-import consulo.project.Project;
+import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -38,6 +39,7 @@ import static consulo.ide.impl.idea.openapi.editor.richcopy.SyntaxInfoBuilder.cr
  * Interoperability with the following applications was tested:
  * MS Office 2010 (Word, PowerPoint, Outlook), OpenOffice (Writer, Impress), Gmail, Mac TextEdit, Mac Mail, Mac Keynote.
  */
+@ExtensionImpl
 public class TextWithMarkupProcessor extends CopyPastePostProcessor<RawTextWithMarkup> {
   private static final Logger LOG = Logger.getInstance(TextWithMarkupProcessor.class);
 
@@ -127,7 +129,7 @@ public class TextWithMarkupProcessor extends CopyPastePostProcessor<RawTextWithM
     myResult.add(new RtfTransferableData(syntaxInfo));
   }
 
-  private void setRawText(String rawText) {
+  protected void setRawText(String rawText) {
     if (myResult == null) {
       return;
     }
@@ -202,24 +204,4 @@ public class TextWithMarkupProcessor extends CopyPastePostProcessor<RawTextWithM
     return Pair.create(startOffsetToUse, maximumCommonIndent);
   }
 
-  final static class RawTextSetter implements CopyPastePreProcessor {
-    private final TextWithMarkupProcessor myProcessor;
-
-    RawTextSetter() {
-      myProcessor = CopyPastePostProcessor.EP_NAME.findExtensionOrFail(TextWithMarkupProcessor.class);
-    }
-
-    @Nullable
-    @Override
-    public String preprocessOnCopy(PsiFile file, int[] startOffsets, int[] endOffsets, String text) {
-      myProcessor.setRawText(text);
-      return null;
-    }
-
-    @Nonnull
-    @Override
-    public String preprocessOnPaste(Project project, PsiFile file, Editor editor, String text, RawText rawText) {
-      return text;
-    }
-  }
 }

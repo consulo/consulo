@@ -15,22 +15,25 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
-import consulo.dataContext.DataContext;
+import consulo.annotation.access.RequiredWriteAction;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.VisualPosition;
 import consulo.codeEditor.action.EditorActionHandler;
+import consulo.codeEditor.action.ExtensionEditorActionHandler;
+import consulo.dataContext.DataContext;
+import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.editor.actionSystem.EditorWriteActionHandler;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.project.Project;
-import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiNameIdentifierOwner;
-import consulo.ide.impl.idea.util.text.CharArrayUtil;
-import consulo.annotation.access.RequiredWriteAction;
+import consulo.project.Project;
+import consulo.ui.ex.action.IdeActions;
 import consulo.util.lang.Pair;
 import jakarta.inject.Inject;
 
@@ -40,13 +43,13 @@ import javax.annotation.Nullable;
 /**
  * @author peter
  */
-public class NamedElementDuplicateHandler extends EditorWriteActionHandler {
-  private final EditorActionHandler myOriginal;
+@ExtensionImpl
+public class NamedElementDuplicateHandler extends EditorWriteActionHandler implements ExtensionEditorActionHandler {
+  private EditorActionHandler myOriginal;
 
   @Inject
-  public NamedElementDuplicateHandler(EditorActionHandler original) {
+  public NamedElementDuplicateHandler() {
     super(true);
-    myOriginal = original;
   }
 
   @Override
@@ -92,5 +95,16 @@ public class NamedElementDuplicateHandler extends EditorWriteActionHandler {
       psi = psi.getParent();
     }
     return named;
+  }
+
+  @Override
+  public void init(@Nullable EditorActionHandler originalHandler) {
+    myOriginal = originalHandler;
+  }
+
+  @Nonnull
+  @Override
+  public String getActionId() {
+    return IdeActions.ACTION_EDITOR_DUPLICATE;
   }
 }

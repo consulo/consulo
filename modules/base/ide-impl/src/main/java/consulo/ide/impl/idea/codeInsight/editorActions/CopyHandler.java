@@ -39,7 +39,7 @@ import java.awt.datatransfer.Transferable;
 import java.util.ArrayList;
 import java.util.List;
 
-@ExtensionImpl
+@ExtensionImpl(order = "first")
 public class CopyHandler extends EditorActionHandler implements ExtensionEditorActionHandler {
   private EditorActionHandler myOriginalAction;
 

@@ -13,7 +13,7 @@ import consulo.colorScheme.*;
 import consulo.document.RangeMarker;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.DefaultHighlightVisitorBasedInspection;
+import consulo.ide.impl.idea.codeInsight.daemon.impl.AnnotatorBasedInspection;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.SeverityRegistrarImpl;
 import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionToolWrapper;
 import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
@@ -826,7 +826,7 @@ public class HighlightInfoImpl implements HighlightInfo {
         IntentionAction fixAllIntention = intentionManager.createFixAllIntention(toolWrapper, myAction);
         InspectionProfileEntry wrappedTool =
                 toolWrapper instanceof LocalInspectionToolWrapper ? ((LocalInspectionToolWrapper)toolWrapper).getTool() : ((GlobalInspectionToolWrapper)toolWrapper).getTool();
-        if (wrappedTool instanceof DefaultHighlightVisitorBasedInspection.AnnotatorBasedInspection) {
+        if (wrappedTool instanceof AnnotatorBasedInspection) {
           List<IntentionAction> actions = Collections.emptyList();
           if (myProblemGroup instanceof SuppressableProblemGroup) {
             actions = Arrays.asList(((SuppressableProblemGroup)myProblemGroup).getSuppressActions(element));

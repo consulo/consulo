@@ -15,25 +15,31 @@
  */
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
-import consulo.dataContext.DataContext;
+import consulo.annotation.access.RequiredWriteAction;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.action.EditorActionHandler;
-import consulo.annotation.access.RequiredWriteAction;
+import consulo.dataContext.DataContext;
+import consulo.ui.ex.action.IdeActions;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
  */
+@ExtensionImpl(order = "first")
 public class BackspaceToWordStartHandler extends BackspaceHandler {
-  public BackspaceToWordStartHandler(EditorActionHandler originalHandler) {
-    super(originalHandler);
-  }
-
   @RequiredWriteAction
   @Override
   public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
     if (!handleBackspace(editor, caret, dataContext, true)) {
       myOriginalHandler.execute(editor, caret, dataContext);
     }
+  }
+
+  @Nonnull
+  @Override
+  public String getActionId() {
+    return IdeActions.ACTION_EDITOR_DELETE_TO_WORD_START;
   }
 }

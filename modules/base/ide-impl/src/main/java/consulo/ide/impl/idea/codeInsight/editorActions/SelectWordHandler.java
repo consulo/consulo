@@ -16,6 +16,8 @@
 
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.codeEditor.action.ExtensionEditorActionHandler;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.dataContext.DataManager;
 import consulo.language.editor.action.SelectWordUtil;
@@ -31,6 +33,7 @@ import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.project.Project;
+import consulo.ui.ex.action.IdeActions;
 import consulo.util.lang.ref.Ref;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
@@ -40,14 +43,14 @@ import javax.annotation.Nullable;
 
 import java.util.List;
 
-public class SelectWordHandler extends EditorActionHandler {
+@ExtensionImpl(order = "first")
+public class SelectWordHandler extends EditorActionHandler implements ExtensionEditorActionHandler {
   private static final Logger LOG = Logger.getInstance(SelectWordHandler.class);
 
-  private final EditorActionHandler myOriginalHandler;
+  private EditorActionHandler myOriginalHandler;
 
-  public SelectWordHandler(EditorActionHandler originalHandler) {
+  public SelectWordHandler() {
     super(true);
-    myOriginalHandler = originalHandler;
   }
 
   @Override
@@ -216,4 +219,14 @@ public class SelectWordHandler extends EditorActionHandler {
     return false;
   }
 
+  @Override
+  public void init(@Nullable EditorActionHandler originalHandler) {
+    myOriginalHandler = originalHandler;
+  }
+
+  @Nonnull
+  @Override
+  public String getActionId() {
+    return IdeActions.ACTION_EDITOR_SELECT_WORD_AT_CARET;
+  }
 }

@@ -15,24 +15,23 @@
  */
 package consulo.ide.impl.idea.ide.errorTreeView.impl;
 
-import consulo.component.persist.StoragePathMacros;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
+import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
+import consulo.component.persist.StoragePathMacros;
 import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import consulo.util.xml.serializer.XmlSerializerUtil;
-import consulo.component.persist.PersistentStateComponent;
 import jakarta.inject.Singleton;
 
 
 @Singleton
-@State(
-  name = "ErrorTreeViewConfiguration",
-  storages = {
-    @Storage(
-      file = StoragePathMacros.WORKSPACE_FILE
-    )}
-)
+@State(name = "ErrorTreeViewConfiguration", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
+@ServiceAPI(ComponentScope.PROJECT)
+@ServiceImpl
 public class ErrorTreeViewConfiguration implements PersistentStateComponent<ErrorTreeViewConfiguration> {
   public boolean IS_AUTOSCROLL_TO_SOURCE = false;
   public boolean SHOW_WARNINGS = true;
