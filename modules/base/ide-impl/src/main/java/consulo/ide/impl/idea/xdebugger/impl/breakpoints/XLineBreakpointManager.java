@@ -28,6 +28,7 @@ import consulo.codeEditor.event.EditorMouseListener;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.event.EditorColorsListener;
+import consulo.component.messagebus.MessageBusConnection;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
@@ -41,26 +42,27 @@ import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.ide.impl.idea.execution.impl.ConsoleViewUtil;
-import consulo.project.internal.StartupManagerEx;
-import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ide.impl.idea.openapi.editor.event.EditorMouseMotionAdapter;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.xdebugger.impl.XSourcePositionImpl;
 import consulo.ide.impl.idea.xdebugger.impl.ui.DebuggerUIUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.project.Project;
+import consulo.project.internal.StartupManagerEx;
 import consulo.project.startup.StartupManager;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
+import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.util.collection.BidirectionalMap;
 import consulo.util.collection.SmartList;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
 import consulo.util.concurrent.AsyncResult;
+import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.event.BulkFileListener;
+import consulo.virtualFileSystem.event.BulkVirtualFileListenerAdapter;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
 import consulo.virtualFileSystem.event.VirtualFileUrlChangeAdapter;
 
@@ -91,10 +93,12 @@ public class XLineBreakpointManager {
       editorEventMulticaster.addEditorMouseListener(new MyEditorMouseListener(), project);
       editorEventMulticaster.addEditorMouseMotionListener(new MyEditorMouseMotionListener(), project);
 
+      MessageBusConnection busConnection = project.getMessageBus().connect();
+
       final MyDependentBreakpointListener myDependentBreakpointListener = new MyDependentBreakpointListener();
       myDependentBreakpointManager.addListener(myDependentBreakpointListener);
       Disposer.register(project, () -> myDependentBreakpointManager.removeListener(myDependentBreakpointListener));
-      VirtualFileManager.getInstance().addVirtualFileListener(new VirtualFileUrlChangeAdapter() {
+      busConnection.subscribe(BulkFileListener.class, new BulkVirtualFileListenerAdapter(new VirtualFileUrlChangeAdapter() {
         @Override
         protected void fileUrlChanged(String oldUrl, String newUrl) {
           for (XLineBreakpointImpl breakpoint : myBreakpoints.keySet()) {
@@ -115,7 +119,7 @@ public class XLineBreakpointManager {
           }
           removeBreakpoints(toRemove);
         }
-      }, project);
+      }));
     }
     myBreakpointsUpdateQueue = new MergingUpdateQueue("XLine breakpoints", 300, true, null, project);
 
