@@ -16,19 +16,19 @@
 
 package consulo.ide.impl.idea.util.indexing;
 
+import consulo.content.scope.SearchScope;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.indexing.impl.ChangeTrackingValueContainer;
 import consulo.ide.impl.idea.util.indexing.impl.DebugAssertions;
 import consulo.ide.impl.idea.util.indexing.impl.IndexStorage;
 import consulo.ide.impl.idea.util.indexing.impl.UpdatableValueContainer;
-import consulo.application.util.function.Processor;
-import consulo.content.scope.SearchScope;
 import consulo.index.io.ID;
 import consulo.language.psi.stub.IdFilter;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Predicate;
 
 /**
  * This storage is needed for indexing yet unsaved data without saving those changes to 'main' backend storage
@@ -127,21 +127,21 @@ public class MemoryIndexStorage<Key, Value> implements VfsAwareIndexStorage<Key,
   }
 
   @Override
-  public boolean processKeys(@Nonnull final Processor<? super Key> processor, SearchScope scope, IdFilter idFilter) throws StorageException {
+  public boolean processKeys(@Nonnull final Predicate<? super Key> processor, SearchScope scope, IdFilter idFilter) throws StorageException {
     final Set<Key> stopList = new HashSet<>();
 
-    Processor<Key> decoratingProcessor = key -> {
+    Predicate<Key> decoratingProcessor = key -> {
       if (stopList.contains(key)) return true;
 
       final UpdatableValueContainer<Value> container = myMap.get(key);
       if (container != null && container.size() == 0) {
         return true;
       }
-      return processor.process(key);
+      return processor.test(key);
     };
 
     for (Key key : myMap.keySet()) {
-      if (!decoratingProcessor.process(key)) {
+      if (!decoratingProcessor.test(key)) {
         return false;
       }
       stopList.add(key);

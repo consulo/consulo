@@ -16,20 +16,18 @@
 
 package consulo.ide.impl.idea.util.indexing;
 
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.psi.search.ProjectAndLibrariesScope;
-import consulo.ide.impl.psi.search.ProjectScopeImpl;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.indexing.impl.MapIndexStorage;
-import consulo.index.io.AppendableStorageBackedByResizableMappedFile;
-import consulo.index.io.DifferentSerializableBytesImplyNonEqualityPolicy;
-import consulo.index.io.PagedFileStorage;
 import consulo.application.progress.ProgressManager;
-import consulo.application.util.function.Processor;
-import consulo.util.lang.function.ThrowableRunnable;
 import consulo.container.boot.ContainerPathManager;
 import consulo.content.scope.SearchScope;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.indexing.impl.MapIndexStorage;
+import consulo.ide.impl.psi.search.ProjectAndLibrariesScope;
+import consulo.ide.impl.psi.search.ProjectScopeImpl;
+import consulo.index.io.AppendableStorageBackedByResizableMappedFile;
+import consulo.index.io.DifferentSerializableBytesImplyNonEqualityPolicy;
 import consulo.index.io.KeyDescriptor;
+import consulo.index.io.PagedFileStorage;
 import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.data.DataInputOutputUtil;
 import consulo.index.io.data.DataOutputStream;
@@ -41,12 +39,14 @@ import consulo.project.Project;
 import consulo.project.content.scope.ProjectAwareSearchScope;
 import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
 import consulo.util.lang.SystemProperties;
+import consulo.util.lang.function.ThrowableRunnable;
 import gnu.trove.TIntHashSet;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
+import java.util.function.Predicate;
 
 /**
  * @author Eugene Zhuravlev
@@ -151,7 +151,7 @@ public final class VfsAwareMapIndexStorage<Key, Value> extends MapIndexStorage<K
   }
 
   @Override
-  public boolean processKeys(@Nonnull final Processor<? super Key> processor, SearchScope scope, final IdFilter idFilter) throws StorageException {
+  public boolean processKeys(@Nonnull final Predicate<? super Key> processor, SearchScope scope, final IdFilter idFilter) throws StorageException {
     l.lock();
     try {
       myCache.clear(); // this will ensure that all new keys are made into the map
@@ -207,7 +207,7 @@ public final class VfsAwareMapIndexStorage<Key, Value> extends MapIndexStorage<K
         final TIntHashSet finalHashMaskSet = hashMaskSet;
         return myMap.processKeys(key -> {
           if (!finalHashMaskSet.contains(myKeyDescriptor.hashCode(key))) return true;
-          return processor.process(key);
+          return processor.test(key);
         });
       }
       return myMap.processKeys(processor);

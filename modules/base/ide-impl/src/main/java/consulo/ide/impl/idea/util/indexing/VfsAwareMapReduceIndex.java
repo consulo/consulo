@@ -2,23 +2,22 @@
 
 package consulo.ide.impl.idea.util.indexing;
 
-import consulo.ide.impl.idea.openapi.application.impl.ApplicationInfoImpl;
-import consulo.ide.impl.psi.impl.cache.impl.id.IdIndex;
-import consulo.ide.impl.idea.util.ConcurrencyUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.indexing.impl.*;
-import consulo.ide.impl.idea.util.indexing.impl.forward.*;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
 import consulo.application.progress.ProgressManager;
-import consulo.application.util.function.Processor;
 import consulo.content.scope.SearchScope;
+import consulo.ide.impl.idea.openapi.application.impl.ApplicationInfoImpl;
+import consulo.ide.impl.idea.util.ConcurrencyUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.indexing.impl.*;
+import consulo.ide.impl.idea.util.indexing.impl.forward.*;
+import consulo.ide.impl.psi.impl.cache.impl.id.IdIndex;
 import consulo.index.io.ID;
+import consulo.index.io.IndexExtension;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.language.psi.stub.FileBasedIndexExtension;
 import consulo.language.psi.stub.IdFilter;
-import consulo.index.io.IndexExtension;
 import consulo.language.psi.stub.SingleEntryFileBasedIndexExtension;
 import consulo.logging.Logger;
 import consulo.util.collection.primitive.ints.IntMaps;
@@ -35,6 +34,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
+import java.util.function.Predicate;
 
 /**
  * @author Eugene Zhuravlev
@@ -249,7 +249,7 @@ public class VfsAwareMapReduceIndex<Key, Value, Input> extends MapReduceIndex<Ke
   }
 
   @Override
-  public boolean processAllKeys(@Nonnull Processor<? super Key> processor, @Nonnull SearchScope scope, @Nullable IdFilter idFilter) throws StorageException {
+  public boolean processAllKeys(@Nonnull Predicate<? super Key> processor, @Nonnull SearchScope scope, @Nullable IdFilter idFilter) throws StorageException {
     final Lock lock = getReadLock();
     lock.lock();
     try {

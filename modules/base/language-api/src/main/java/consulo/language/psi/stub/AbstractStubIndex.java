@@ -15,13 +15,12 @@
  */
 package consulo.language.psi.stub;
 
-import consulo.language.psi.stub.StubIndexExtension;
-import consulo.project.Project;
 import consulo.language.psi.PsiElement;
-import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.application.util.function.Processor;
+import consulo.project.Project;
+import consulo.project.content.scope.ProjectAwareSearchScope;
 
 import java.util.Collection;
+import java.util.function.Predicate;
 
 /**
  * @author max
@@ -31,13 +30,16 @@ public abstract class AbstractStubIndex<Key, Psi extends PsiElement> implements 
     return StubIndex.getInstance().getAllKeys(getKey(), project);
   }
 
-  public boolean processAllKeys(Project project, Processor<Key> processor) {
+  public boolean processAllKeys(Project project, Predicate<Key> processor) {
     return StubIndex.getInstance().processAllKeys(getKey(), project, processor);
   }
 
-  public Collection<Psi> get(Key key, final Project project, final GlobalSearchScope scope) {
+  public Collection<Psi> get(Key key, final Project project, final ProjectAwareSearchScope scope) {
     return StubIndex.getInstance().get(getKey(), key, project, scope);
   }
 
-  public int getCacheSize() { return 2 * 1024; }
+  @Override
+  public int getCacheSize() {
+    return 2 * 1024;
+  }
 }

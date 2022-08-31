@@ -1,14 +1,19 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.util.indexing.hash;
 
-import consulo.ide.impl.idea.util.indexing.*;
+import consulo.application.util.function.Computable;
+import consulo.content.scope.SearchScope;
+import consulo.ide.impl.idea.util.indexing.FileBasedIndexImpl;
+import consulo.ide.impl.idea.util.indexing.StorageException;
+import consulo.ide.impl.idea.util.indexing.UpdatableIndex;
+import consulo.ide.impl.idea.util.indexing.ValueContainer;
 import consulo.ide.impl.idea.util.indexing.impl.AbstractUpdateData;
 import consulo.ide.impl.idea.util.indexing.provided.ProvidedIndexExtension;
-import consulo.application.util.function.Computable;
-import consulo.application.util.function.Processor;
-import consulo.content.scope.SearchScope;
 import consulo.index.io.IndexExtension;
-import consulo.language.psi.stub.*;
+import consulo.language.psi.stub.FileBasedIndex;
+import consulo.language.psi.stub.FileBasedIndexExtension;
+import consulo.language.psi.stub.FileContent;
+import consulo.language.psi.stub.IdFilter;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.TestOnly;
 
@@ -21,6 +26,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
+import java.util.function.Predicate;
 
 public class MergedInvertedIndex<Key, Value> implements UpdatableIndex<Key, Value, FileContent> {
   @Nonnull
@@ -94,7 +100,7 @@ public class MergedInvertedIndex<Key, Value> implements UpdatableIndex<Key, Valu
   }
 
   @Override
-  public boolean processAllKeys(@Nonnull Processor<? super Key> processor, @Nonnull SearchScope scope, @Nullable IdFilter idFilter) throws StorageException {
+  public boolean processAllKeys(@Nonnull Predicate<? super Key> processor, @Nonnull SearchScope scope, @Nullable IdFilter idFilter) throws StorageException {
     return myBaseIndex.processAllKeys(processor, scope, idFilter) && myProvidedIndex.processAllKeys(processor, scope, idFilter);
   }
 

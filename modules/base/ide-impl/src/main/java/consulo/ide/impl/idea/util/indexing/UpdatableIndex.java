@@ -16,11 +16,10 @@
 
 package consulo.ide.impl.idea.util.indexing;
 
-import consulo.ide.impl.idea.util.indexing.impl.AbstractUpdateData;
-import consulo.application.util.function.Processor;
 import consulo.content.scope.SearchScope;
-import consulo.language.psi.stub.IdFilter;
+import consulo.ide.impl.idea.util.indexing.impl.AbstractUpdateData;
 import consulo.index.io.IndexExtension;
+import consulo.language.psi.stub.IdFilter;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.TestOnly;
 
@@ -30,13 +29,14 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
+import java.util.function.Predicate;
 
 /**
  * @author Eugene Zhuravlev
  */
 public interface UpdatableIndex<Key, Value, Input> extends InvertedIndex<Key, Value, Input> {
 
-  boolean processAllKeys(@Nonnull Processor<? super Key> processor, @Nonnull SearchScope scope, @Nullable IdFilter idFilter) throws StorageException;
+  boolean processAllKeys(@Nonnull Predicate<? super Key> processor, @Nonnull SearchScope scope, @Nullable IdFilter idFilter) throws StorageException;
 
   @Nonnull
   Lock getReadLock();

@@ -18,6 +18,7 @@ import consulo.index.io.data.DataExternalizer;
 import consulo.language.psi.stub.*;
 import consulo.project.Project;
 import consulo.component.util.ModificationTracker;
+import consulo.project.content.scope.ProjectAwareSearchScope;
 import consulo.util.io.BufferExposingByteArrayOutputStream;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
@@ -57,6 +58,7 @@ import java.util.*;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.ReadWriteLock;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 @Singleton
@@ -372,10 +374,10 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
   public <Key, Psi extends PsiElement> boolean processElements(@Nonnull final StubIndexKey<Key, Psi> indexKey,
                                                                @Nonnull final Key key,
                                                                @Nonnull final Project project,
-                                                               @Nullable final GlobalSearchScope scope,
+                                                               @Nullable final ProjectAwareSearchScope scope,
                                                                @Nullable IdFilter idFilter,
                                                                @Nonnull final Class<Psi> requiredClass,
-                                                               @Nonnull final Processor<? super Psi> processor) {
+                                                               @Nonnull final Predicate<? super Psi> processor) {
     IdIterator ids = getContainingIds(indexKey, key, project, idFilter, scope);
     UpdatableIndex<Integer, SerializedStubTree, FileContent> stubUpdatingIndex = getStubUpdatingIndex();
     if (stubUpdatingIndex == null) return true;
@@ -472,7 +474,7 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
   }
 
   @Override
-  public <K> boolean processAllKeys(@Nonnull StubIndexKey<K, ?> indexKey, @Nonnull Processor<? super K> processor, @Nonnull GlobalSearchScope scope, @Nullable IdFilter idFilter) {
+  public <K> boolean processAllKeys(@Nonnull StubIndexKey<K, ?> indexKey, @Nonnull Predicate<? super K> processor, @Nonnull ProjectAwareSearchScope scope, @Nullable IdFilter idFilter) {
     final UpdatableIndex<K, Void, FileContent> index = getIndex(indexKey); // wait for initialization to finish
     if (index == null) return true;
     FileBasedIndex.getInstance().ensureUpToDate(StubUpdatingIndex.INDEX_ID, scope.getProject(), scope);
@@ -495,7 +497,7 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
 
   @Nonnull
   @Override
-  public <Key> IdIterator getContainingIds(@Nonnull StubIndexKey<Key, ?> indexKey, @Nonnull Key dataKey, @Nonnull final Project project, @Nullable final GlobalSearchScope scope) {
+  public <Key> IdIterator getContainingIds(@Nonnull StubIndexKey<Key, ?> indexKey, @Nonnull Key dataKey, @Nonnull final Project project, @Nullable final ProjectAwareSearchScope scope) {
     return getContainingIds(indexKey, dataKey, project, null, scope);
   }
 
@@ -504,7 +506,7 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
                                             @Nonnull Key dataKey,
                                             @Nonnull final Project project,
                                             @Nullable IdFilter idFilter,
-                                            @Nullable final GlobalSearchScope scope) {
+                                            @Nullable final ProjectAwareSearchScope scope) {
     final FileBasedIndexImpl fileBasedIndex = (FileBasedIndexImpl)FileBasedIndex.getInstance();
     ID<Integer, SerializedStubTree> stubUpdatingIndexId = StubUpdatingIndex.INDEX_ID;
     final UpdatableIndex<Key, Void, FileContent> index = getIndex(indexKey);   // wait for initialization to finish

@@ -15,25 +15,25 @@
  */
 package consulo.ide.impl.psi.stubs;
 
-import consulo.language.psi.stub.*;
-import consulo.logging.Logger;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.psi.PsiBinaryFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.psi.internal.PsiFileWithStubSupport;
+import consulo.language.psi.stub.*;
 import consulo.language.psi.stub.internal.StubbedSpine;
-import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.application.util.function.Processor;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.content.scope.ProjectAwareSearchScope;
+import consulo.util.collection.ContainerUtil;
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * Author: dmitrylomov
@@ -44,8 +44,8 @@ public abstract class StubProcessingHelperBase {
   public <Psi extends PsiElement> boolean processStubsInFile(@Nonnull Project project,
                                                              @Nonnull VirtualFile file,
                                                              @Nonnull StubIdList value,
-                                                             @Nonnull Processor<? super Psi> processor,
-                                                             @Nullable GlobalSearchScope scope,
+                                                             @Nonnull Predicate<? super Psi> processor,
+                                                             @Nullable ProjectAwareSearchScope scope,
                                                              @Nonnull Class<Psi> requiredClass) {
     PsiFile psiFile = PsiManager.getInstance(project).findFile(file);
     if (psiFile == null) {
@@ -56,7 +56,7 @@ public abstract class StubProcessingHelperBase {
 
     if (value.size() == 1 && value.get(0) == 0) {
       //noinspection unchecked
-      return !checkType(requiredClass, psiFile, psiFile) || processor.process((Psi)psiFile);
+      return !checkType(requiredClass, psiFile, psiFile) || processor.test((Psi)psiFile);
     }
 
     List<StubbedSpine> spines = getAllSpines(psiFile);
@@ -68,7 +68,7 @@ public abstract class StubProcessingHelperBase {
       PsiElement psi = getStubPsi(spines, value.get(i));
       if (!checkType(requiredClass, psiFile, psi)) break;
       //noinspection unchecked
-      if (!processor.process((Psi)psi)) return false;
+      if (!processor.test((Psi)psi)) return false;
     }
     return true;
   }
@@ -105,7 +105,7 @@ public abstract class StubProcessingHelperBase {
   }
 
   // e.g. DOM indices
-  private <Psi extends PsiElement> boolean handleNonPsiStubs(@Nonnull VirtualFile file, @Nonnull Processor<? super Psi> processor, @Nonnull Class<Psi> requiredClass, @Nonnull PsiFile psiFile) {
+  private <Psi extends PsiElement> boolean handleNonPsiStubs(@Nonnull VirtualFile file, @Nonnull Predicate<? super Psi> processor, @Nonnull Class<Psi> requiredClass, @Nonnull PsiFile psiFile) {
     if (BinaryFileStubBuilder.forFileType(psiFile.getFileType()) == null) {
       LOG.error("unable to get stub builder for " + psiFile.getFileType() + ", " + StubTreeLoader.getFileViewProviderMismatchDiagnostics(psiFile.getViewProvider()));
       onInternalError(file);
@@ -135,7 +135,7 @@ public abstract class StubProcessingHelperBase {
       return true;
     }
     //noinspection unchecked
-    return processor.process((Psi)psiFile);
+    return processor.test((Psi)psiFile);
   }
 
   private void inconsistencyDetected(@Nullable ObjectStubTree stubTree, @Nonnull PsiFileWithStubSupport psiFile) {
@@ -149,6 +149,4 @@ public abstract class StubProcessingHelperBase {
   }
 
   protected abstract void onInternalError(VirtualFile file);
-
-
 }
