@@ -2539,4 +2539,31 @@ public final class StringUtil {
     }
     return "a" + Character.toUpperCase(c) + name.substring(1);
   }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String sanitizeJavaIdentifier(@Nonnull String name) {
+    final StringBuilder result = new StringBuilder(name.length());
+
+    for (int i = 0; i < name.length(); i++) {
+      final char ch = name.charAt(i);
+      if (Character.isJavaIdentifierPart(ch)) {
+        if (result.length() == 0 && !Character.isJavaIdentifierStart(ch)) {
+          result.append("_");
+        }
+        result.append(ch);
+      }
+    }
+
+    return result.toString();
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String capitalizeWithJavaBeanConvention(@Nonnull String s) {
+    if (s.length() > 1 && Character.isUpperCase(s.charAt(1))) {
+      return s;
+    }
+    return capitalize(s);
+  }
 }

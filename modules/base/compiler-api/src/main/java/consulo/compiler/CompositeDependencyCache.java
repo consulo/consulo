@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.compiler.make;
+package consulo.compiler;
 
-import consulo.compiler.*;
 import consulo.project.Project;
 import consulo.util.lang.Pair;
 import consulo.util.lang.Trinity;

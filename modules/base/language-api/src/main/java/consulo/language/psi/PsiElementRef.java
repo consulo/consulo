@@ -13,11 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi;
+package consulo.language.psi;
 
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiManager;
-import consulo.language.psi.PsiRefElementCreator;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

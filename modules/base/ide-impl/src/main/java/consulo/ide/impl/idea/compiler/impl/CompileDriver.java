@@ -53,7 +53,7 @@ import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactManager;
 import consulo.compiler.SourceInstrumentingCompiler;
 import consulo.compiler.generic.GenericCompiler;
-import consulo.ide.impl.compiler.make.CompositeDependencyCache;
+import consulo.compiler.CompositeDependencyCache;
 import consulo.compiler.scope.CompileScope;
 import consulo.compiler.scope.FileIndexCompileScope;
 import consulo.component.ProcessCanceledException;

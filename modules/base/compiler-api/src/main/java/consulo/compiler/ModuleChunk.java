@@ -13,31 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.compiler.impl;
+package consulo.compiler;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
-import consulo.compiler.CompilerManager;
-import consulo.ide.impl.compiler.CompileContextEx;
-import consulo.module.Module;
-import consulo.project.Project;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkType;
+import consulo.module.Module;
+import consulo.module.content.layer.OrderEnumerator;
 import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
-import consulo.module.content.layer.OrderEnumerator;
-import consulo.application.util.function.Computable;
-import consulo.util.lang.function.Condition;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.project.Project;
 import consulo.util.collection.Chunk;
-import consulo.virtualFileSystem.util.PathsList;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.OrderedSet;
-import consulo.annotation.DeprecationInfo;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.PathsList;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.*;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
  * @author Eugene Zhuravlev
@@ -139,14 +137,14 @@ public class ModuleChunk extends Chunk<Module> {
       return VirtualFile.EMPTY_ARRAY;
     }
 
-    return Application.get().runReadAction((Computable<VirtualFile[]>)() -> filterRoots(getAllSourceRoots(), getNodes().iterator().next().getProject(), sourcesFilter));
+    return Application.get().runReadAction((Supplier<VirtualFile[]>)() -> filterRoots(getAllSourceRoots(), getNodes().iterator().next().getProject(), sourcesFilter));
   }
 
   public VirtualFile[] getSourceRoots(final Module module) {
     if (!getNodes().contains(module)) {
       return VirtualFile.EMPTY_ARRAY;
     }
-    return Application.get().runReadAction((Computable<VirtualFile[]>)() -> filterRoots(myContext.getSourceRoots(module), module.getProject(), mySourcesFilter));
+    return Application.get().runReadAction((Supplier<VirtualFile[]>)() -> filterRoots(myContext.getSourceRoots(module), module.getProject(), mySourcesFilter));
   }
 
   private VirtualFile[] filterRoots(VirtualFile[] roots, Project project, final int sourcesFilter) {
@@ -169,7 +167,7 @@ public class ModuleChunk extends Chunk<Module> {
       }
       filteredRoots.add(root);
     }
-    return VfsUtil.toVirtualFileArray(filteredRoots);
+    return VirtualFileUtil.toVirtualFileArray(filteredRoots);
   }
 
   private VirtualFile[] getAllSourceRoots() {
@@ -178,7 +176,7 @@ public class ModuleChunk extends Chunk<Module> {
     for (final Module module : modules) {
       ContainerUtil.addAll(roots, myContext.getSourceRoots(module));
     }
-    return VfsUtil.toVirtualFileArray(roots);
+    return VirtualFileUtil.toVirtualFileArray(roots);
   }
 
   public String getCompilationClasspath(SdkType sdkType) {
@@ -201,7 +199,7 @@ public class ModuleChunk extends Chunk<Module> {
     return cpFiles;
   }
 
-  private OrderEnumerator orderEnumerator(Module module, boolean exportedOnly, Condition<OrderEntry> condition) {
+  private OrderEnumerator orderEnumerator(Module module, boolean exportedOnly, Predicate<OrderEntry> condition) {
     OrderEnumerator enumerator = OrderEnumerator.orderEntries(module).compileOnly().satisfying(condition);
     if ((mySourcesFilter & TEST_SOURCES) == 0) {
       enumerator = enumerator.productionOnly();
@@ -280,7 +278,7 @@ public class ModuleChunk extends Chunk<Module> {
     return myContext.getProject();
   }
 
-  private static class BeforeSdkOrderEntryCondition implements Condition<OrderEntry> {
+  private static class BeforeSdkOrderEntryCondition implements Predicate<OrderEntry> {
     private boolean mySdkFound;
     private final SdkType mySdkType;
     private final Module myOwnerModule;
@@ -291,7 +289,7 @@ public class ModuleChunk extends Chunk<Module> {
     }
 
     @Override
-    public boolean value(OrderEntry orderEntry) {
+    public boolean test(OrderEntry orderEntry) {
       if (orderEntry instanceof ModuleExtensionWithSdkOrderEntry && myOwnerModule.equals(orderEntry.getOwnerModule())) {
         final Sdk sdk = ((ModuleExtensionWithSdkOrderEntry)orderEntry).getSdk();
         if (sdk == null || sdk.getSdkType() != mySdkType) {
@@ -304,7 +302,7 @@ public class ModuleChunk extends Chunk<Module> {
     }
   }
 
-  private static class AfterSdkOrderEntryCondition implements Condition<OrderEntry> {
+  private static class AfterSdkOrderEntryCondition implements Predicate<OrderEntry> {
     private final SdkType mySdkType;
     private boolean mySdkFound;
 
@@ -313,7 +311,7 @@ public class ModuleChunk extends Chunk<Module> {
     }
 
     @Override
-    public boolean value(OrderEntry orderEntry) {
+    public boolean test(OrderEntry orderEntry) {
       if (orderEntry instanceof ModuleExtensionWithSdkOrderEntry) {
         final Sdk sdk = ((ModuleExtensionWithSdkOrderEntry)orderEntry).getSdk();
         if (sdk == null || sdk.getSdkType() != mySdkType) {

@@ -16,11 +16,11 @@
 package consulo.ide.impl.idea.compiler.impl;
 
 import consulo.compiler.Compiler;
-import consulo.ide.impl.compiler.make.CompositeDependencyCache;
+import consulo.compiler.CompositeDependencyCache;
 import consulo.compiler.scope.CompileScope;
 import consulo.compiler.CompilerMessage;
 import consulo.compiler.CompilerMessageCategory;
-import consulo.ide.impl.compiler.CompileContextEx;
+import consulo.compiler.CompileContextEx;
 import consulo.module.Module;
 import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;

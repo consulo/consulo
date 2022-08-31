@@ -13,10 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi;
-
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiRefElementCreator;
+package consulo.language.psi;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -49,5 +46,4 @@ public abstract class PsiChildLink<Parent extends PsiElement, Child extends PsiE
     }
     return PsiElementRef.imaginary(parentRef, this);
   }
-
 }

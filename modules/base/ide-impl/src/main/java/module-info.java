@@ -180,7 +180,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.command;
   exports consulo.ide.impl.compiler;
   exports consulo.ide.impl.compiler.build;
-  exports consulo.ide.impl.compiler.make;
   exports consulo.ide.impl.compiler.packagingCompiler;
   exports consulo.ide.impl.compiler.resourceCompiler;
   exports consulo.ide.impl.compiler.setting;

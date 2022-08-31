@@ -13,18 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.compiler;
+package consulo.compiler;
 
-import consulo.compiler.Compiler;
-import consulo.ide.impl.compiler.make.CompositeDependencyCache;
-import consulo.compiler.CompileContext;
 import consulo.compiler.scope.CompileScope;
-import consulo.compiler.CompilerMessage;
 import consulo.module.Module;
 import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collection;
 import java.util.Set;
 
@@ -56,5 +52,5 @@ public interface CompileContextEx extends CompileContext {
 
   boolean isGenerated(VirtualFile file);
 
-  void assignModule(@Nonnull VirtualFile root, @Nonnull Module module, boolean isTestSource, @javax.annotation.Nullable Compiler compiler);
+  void assignModule(@Nonnull VirtualFile root, @Nonnull Module module, boolean isTestSource, @Nullable Compiler compiler);
 }
