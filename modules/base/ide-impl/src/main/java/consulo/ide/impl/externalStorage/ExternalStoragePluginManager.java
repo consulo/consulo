@@ -156,10 +156,10 @@ public class ExternalStoragePluginManager implements PluginActionListener {
             if (plugin == null) {
               if(InstalledPluginsState.getInstance().getInstalledPlugins().contains(pluginId)) {
                 if (bean.state == StoragePluginState.ENABLED) {
-                  PluginManager.enablePlugin(pluginId.toString());
+                  PluginManager.enablePlugin(pluginId);
                 }
                 else {
-                  PluginManager.disablePlugin(pluginId.toString());
+                  PluginManager.disablePlugin(pluginId);
                 }
                 continue;
               }
@@ -236,10 +236,10 @@ public class ExternalStoragePluginManager implements PluginActionListener {
               downloader.install(indicator, true);
 
               if (pluginEnabled) {
-                PluginManager.enablePlugin(entry.getKey().toString());
+                PluginManager.enablePlugin(entry.getKey());
               }
               else {
-                PluginManager.disablePlugin(entry.getKey().toString());
+                PluginManager.disablePlugin(entry.getKey());
               }
               break;
             case NO:

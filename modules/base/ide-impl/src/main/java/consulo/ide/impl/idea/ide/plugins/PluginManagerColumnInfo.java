@@ -107,7 +107,7 @@ public abstract class PluginManagerColumnInfo extends ColumnInfo<PluginDescripto
 
 
   public static boolean isDownloaded(@Nonnull PluginDescriptor node) {
-    if (node instanceof PluginNode && ((PluginNode)node).getStatus() == PluginNode.STATUS_DOWNLOADED) return true;
+    if (node instanceof PluginNode && ((PluginNode)node).getInstallStatus() == PluginNode.STATUS_DOWNLOADED) return true;
     final PluginId pluginId = node.getPluginId();
     if (PluginManager.isPluginInstalled(pluginId)) {
       return false;
@@ -123,8 +123,8 @@ public abstract class PluginManagerColumnInfo extends ColumnInfo<PluginDescripto
       final int up = defaultSortKey != null && defaultSortKey.getSortOrder() == SortOrder.ASCENDING ? -1 : 1;
       return (o1, o2) -> {
         if (o1 instanceof PluginNode && o2 instanceof PluginNode) {
-          final int status1 = ((PluginNode)o1).getStatus();
-          final int status2 = ((PluginNode)o2).getStatus();
+          final int status1 = ((PluginNode)o1).getInstallStatus();
+          final int status2 = ((PluginNode)o2).getInstallStatus();
           if (isDownloaded((PluginNode)o1)){
             if (!isDownloaded((PluginNode)o2)) return up;
             return comparator.compare(o1, o2);
@@ -215,7 +215,7 @@ public abstract class PluginManagerColumnInfo extends ColumnInfo<PluginDescripto
   }
 
   public static int getRealNodeState(PluginNode node) {
-    if (node.getStatus() == PluginNode.STATUS_DOWNLOADED) return PluginNode.STATUS_DOWNLOADED;
+    if (node.getInstallStatus() == PluginNode.STATUS_DOWNLOADED) return PluginNode.STATUS_DOWNLOADED;
     return PluginNode.STATUS_MISSING;
   }
 

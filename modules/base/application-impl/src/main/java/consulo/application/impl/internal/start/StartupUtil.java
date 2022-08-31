@@ -226,7 +226,7 @@ public class StartupUtil {
       LoggerHolder.ourLogger.warn(t);
 
       if (!ApplicationProperties.isInSandbox()) {
-        PluginManager.disablePlugin(pluginId.getIdString());
+        PluginManager.disablePlugin(pluginId);
       }
 
       StringWriter message = new StringWriter();

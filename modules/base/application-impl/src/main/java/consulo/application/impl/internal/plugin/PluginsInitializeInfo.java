@@ -15,6 +15,8 @@
  */
 package consulo.application.impl.internal.plugin;
 
+import consulo.container.plugin.PluginId;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -28,11 +30,11 @@ public class PluginsInitializeInfo {
   public static final String ENABLE = "enable";
   public static final String EDIT = "edit";
 
-  private List<String> myPluginErrors = null;
-  private List<String> myPlugins2Disable = null;
-  private Set<String> myPlugins2Enable = null;
+  private List<CompositeMessage> myPluginErrors = null;
+  private Set<PluginId> myPlugins2Disable = null;
+  private Set<PluginId> myPlugins2Enable = null;
 
-  public void addPluginErrors(List<String> problems) {
+  public void addPluginErrors(List<CompositeMessage> problems) {
     if (myPluginErrors == null) {
       myPluginErrors = new ArrayList<>(problems);
     }
@@ -41,23 +43,23 @@ public class PluginsInitializeInfo {
     }
   }
 
-  public void setPluginsForDisable(List<String> pluginsForDisable) {
+  public void setPluginsForDisable(Set<PluginId> pluginsForDisable) {
     myPlugins2Disable = pluginsForDisable;
   }
 
-  public void setPluginsForEnable(Set<String> pluginsForEnable) {
+  public void setPluginsForEnable(Set<PluginId> pluginsForEnable) {
     myPlugins2Enable = pluginsForEnable;
   }
 
-  public List<String> getPluginErrors() {
+  public List<CompositeMessage> getPluginErrors() {
     return myPluginErrors;
   }
 
-  public List<String> getPlugins2Disable() {
+  public Set<PluginId> getPlugins2Disable() {
     return myPlugins2Disable;
   }
 
-  public Set<String> getPlugins2Enable() {
+  public Set<PluginId> getPlugins2Enable() {
     return myPlugins2Enable;
   }
 }

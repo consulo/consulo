@@ -97,9 +97,11 @@ public interface PluginDescriptor {
   //@DeprecationInfo("This method is obsolete now. Bundled plugin is always platform modules - it can't load plugins")
   boolean isBundled();
 
+  @Deprecated
+  // see getStatus()
   boolean isEnabled();
 
-  void setEnabled(boolean enabled);
+  PluginDescriptorStatus getStatus();
 
   boolean isLoaded();
 

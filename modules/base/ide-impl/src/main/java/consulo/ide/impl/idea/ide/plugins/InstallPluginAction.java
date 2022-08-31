@@ -71,7 +71,7 @@ public class InstallPluginAction extends AnAction implements DumbAware {
         enabled &= !ourInstallingNodes.contains(descr);
         if (descr instanceof PluginNode) {
           enabled &= !PluginManagerColumnInfo.isDownloaded(descr);
-          if (((PluginNode)descr).getStatus() == PluginNode.STATUS_INSTALLED) {
+          if (((PluginNode)descr).getInstallStatus() == PluginNode.STATUS_INSTALLED) {
             presentation.setTextValue(IdeLocalize.actionUpdatePlugin());
             presentation.setDescriptionValue(IdeLocalize.actionUpdatePlugin());
             enabled &= InstalledPluginsTableModel.hasNewerVersion(descr.getPluginId());

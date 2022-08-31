@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.ide.plugins.pluginsAdvertisement;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
 import consulo.container.plugin.SimpleExtension;
 import consulo.fileEditor.EditorNotifications;
@@ -78,9 +79,9 @@ public class PluginsAdvertiser implements BackgroundStartupActivity, DumbAware {
       for (UnknownExtension feature : unknownExtensions) {
         final Set<PluginDescriptor> descriptors = findByFeature(pluginDescriptors, feature);
         //do not suggest to download disabled plugins
-        final List<String> disabledPlugins = PluginManager.getDisabledPlugins();
+        final Set<PluginId> disabledPlugins = PluginManager.getDisabledPlugins();
         for (PluginDescriptor id : descriptors) {
-          if (!disabledPlugins.contains(id.getPluginId().getIdString())) {
+          if (!disabledPlugins.contains(id.getPluginId())) {
             ids.add(id);
           }
         }

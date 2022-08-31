@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,24 +16,18 @@
 package consulo.container.plugin;
 
 /**
- * @author max
+ * @author VISTALL
+ * @since 30-Aug-22
  */
-public class HelpSetPath {
-  public static final HelpSetPath[] EMPTY = new HelpSetPath[0];
-
-  private final String file;
-  private final String path;
-
-  public HelpSetPath(String file, String path) {
-    this.file = file;
-    this.path = path;
-  }
-
-  public String getFile() {
-    return file;
-  }
-
-  public String getPath() {
-    return path;
-  }
+public enum PluginDescriptorStatus {
+  // enabled and loaded
+  OK,
+  // enabled, but not loaded due wrong platform, not error for user
+  WRONG_PLATFORM,
+  // enabled, not loaded, due dependency status is not OK
+  DEPENDENCY_NOT_LOADED,
+  // enabled, but loaded due platform version wrong - will show error for user
+  WRONG_PLATFORM_VERSION,
+  // not loaded, disabled by user
+  DISABLED_BY_USER
 }

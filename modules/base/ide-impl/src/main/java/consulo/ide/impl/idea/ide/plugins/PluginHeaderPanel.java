@@ -83,7 +83,7 @@ public class PluginHeaderPanel {
       myRating.setRate(node.getRating());
       myDownloads.setText(node.getDownloads() + " downloads");
       myUpdated.setText("Updated " + DateFormatUtil.formatDate(node.getDate()));
-      switch (node.getStatus()) {
+      switch (node.getInstallStatus()) {
         case PluginNode.STATUS_INSTALLED:
           myActionId = ACTION_ID.UNINSTALL;
           break;

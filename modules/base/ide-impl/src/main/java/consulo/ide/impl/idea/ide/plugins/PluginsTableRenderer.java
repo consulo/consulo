@@ -15,26 +15,22 @@
  */
 package consulo.ide.impl.idea.ide.plugins;
 
-import consulo.ide.IdeBundle;
-import consulo.application.impl.internal.ApplicationNamesInfo;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.status.FileStatus;
-import consulo.ui.ex.Gray;
-import consulo.ui.ex.JBColor;
-import consulo.ui.ex.awt.SimpleColoredComponent;
-import consulo.ui.ex.awt.JBLabel;
-import consulo.ui.ex.awt.HorizontalLayout;
-import consulo.ide.impl.idea.ui.components.panels.VerticalLayout;
+import consulo.application.Application;
 import consulo.application.util.DateFormatUtil;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.BorderLayoutPanel;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.container.plugin.PluginDescriptor;
-import consulo.container.plugin.PluginId;
+import consulo.container.impl.PluginValidator;
+import consulo.container.plugin.*;
+import consulo.container.plugin.PluginManager;
+import consulo.ide.IdeBundle;
+import consulo.ide.impl.idea.ui.components.panels.VerticalLayout;
 import consulo.ide.impl.plugins.PluginDescriptionPanel;
 import consulo.ide.impl.plugins.PluginIconHolder;
 import consulo.localize.LocalizeValue;
+import consulo.ui.ex.Gray;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.status.FileStatus;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -160,13 +156,13 @@ public class PluginsTableRenderer extends DefaultTableCellRenderer {
   }
 
   protected void updatePresentation(boolean isSelected, @Nonnull PluginDescriptor pluginNode, TableModel model) {
-    final PluginDescriptor installed = PluginManager.getPlugin(myPluginDescriptor.getPluginId());
+    final PluginDescriptor installed = PluginManager.findPlugin(myPluginDescriptor.getPluginId());
     if (PluginManagerColumnInfo.isDownloaded(pluginNode) || installed != null && InstalledPluginsTableModel.wasUpdated(installed.getPluginId())) {
       if (!isSelected) {
         myName.setForeground(TargetAWT.to(FileStatus.ADDED.getColor()));
       }
     }
-    else if (pluginNode instanceof PluginNode && ((PluginNode)pluginNode).getStatus() == PluginNode.STATUS_INSTALLED || installed != null) {
+    else if (pluginNode instanceof PluginNode && ((PluginNode)pluginNode).getInstallStatus() == PluginNode.STATUS_INSTALLED || installed != null) {
       PluginId pluginId = pluginNode.getPluginId();
       final boolean hasNewerVersion = InstalledPluginsTableModel.hasNewerVersion(pluginId);
       if (hasNewerVersion) {
@@ -180,17 +176,24 @@ public class PluginsTableRenderer extends DefaultTableCellRenderer {
     if (isIncompatible(myPluginDescriptor, model)) {
       myPanel.setToolTipText(whyIncompatible(myPluginDescriptor, model));
       if (!isSelected) {
-        myName.setForeground(JBColor.RED);
+        myName.setForeground(myPluginDescriptor.getStatus() == PluginDescriptorStatus.WRONG_PLATFORM ? JBColor.GRAY : JBColor.RED);
       }
     }
   }
 
   private static boolean isIncompatible(PluginDescriptor descriptor, TableModel model) {
-    return PluginManagerCore.isIncompatible(descriptor) ||
-           model instanceof InstalledPluginsTableModel && ((InstalledPluginsTableModel)model).hasProblematicDependencies(descriptor.getPluginId());
+    PluginDescriptorStatus status = descriptor.getStatus();
+    if (status != PluginDescriptorStatus.OK && status != PluginDescriptorStatus.DISABLED_BY_USER) {
+      return true;
+    }
+    return PluginValidator.isIncompatible(descriptor) || model instanceof InstalledPluginsTableModel && ((InstalledPluginsTableModel)model).hasProblematicDependencies(descriptor.getPluginId());
   }
 
   private static String whyIncompatible(PluginDescriptor descriptor, TableModel model) {
+    if (descriptor.getStatus() == PluginDescriptorStatus.WRONG_PLATFORM) {
+      return IdeBundle.message("plugin.manager.wrong.platform.not.loaded.tooltip", descriptor.getName());
+    }
+    
     if (model instanceof InstalledPluginsTableModel) {
       InstalledPluginsTableModel installedModel = (InstalledPluginsTableModel)model;
       Set<PluginId> required = installedModel.getRequiredPlugins(descriptor.getPluginId());
@@ -203,7 +206,7 @@ public class PluginsTableRenderer extends DefaultTableCellRenderer {
         }
 
         String deps = StringUtil.join(required, id -> {
-          PluginDescriptor plugin = PluginManager.getPlugin(id);
+          PluginDescriptor plugin = PluginManager.findPlugin(id);
           return plugin != null ? plugin.getName() : id.getIdString();
         }, ", ");
         sb.append(IdeBundle.message("plugin.manager.incompatible.deps.tooltip", required.size(), deps));
@@ -212,6 +215,6 @@ public class PluginsTableRenderer extends DefaultTableCellRenderer {
       }
     }
 
-    return IdeBundle.message("plugin.manager.incompatible.tooltip", ApplicationNamesInfo.getInstance().getFullProductName());
+    return IdeBundle.message("plugin.manager.incompatible.tooltip", Application.get().getName());
   }
 }

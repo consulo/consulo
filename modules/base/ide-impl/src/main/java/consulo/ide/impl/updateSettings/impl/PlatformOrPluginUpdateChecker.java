@@ -374,13 +374,13 @@ public class PlatformOrPluginUpdateChecker {
 
     final Map<PluginId, PluginDescriptor> ourPlugins = new HashMap<>();
     final List<PluginDescriptor> installedPlugins = PluginManager.getPlugins();
-    final List<String> disabledPlugins = PluginManager.getDisabledPlugins();
+    final Set<PluginId> disabledPlugins = PluginManager.getDisabledPlugins();
     for (PluginDescriptor installedPlugin : installedPlugins) {
       if (PluginIds.isPlatformPlugin(installedPlugin.getPluginId())) {
         continue;
       }
 
-      if (!disabledPlugins.contains(installedPlugin.getPluginId().getIdString())) {
+      if (!disabledPlugins.contains(installedPlugin.getPluginId())) {
         ourPlugins.put(installedPlugin.getPluginId(), installedPlugin);
       }
     }

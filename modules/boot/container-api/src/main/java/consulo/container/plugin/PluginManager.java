@@ -16,8 +16,6 @@
 package consulo.container.plugin;
 
 import consulo.container.internal.PluginManagerInternal;
-import consulo.util.nodep.function.Condition;
-import consulo.util.nodep.function.Function;
 
 import java.io.File;
 import java.util.*;
@@ -90,66 +88,26 @@ public final class PluginManager {
   }
 
   public static boolean shouldSkipPlugin(PluginDescriptor descriptor) {
-    return ourInternal.shouldSkipPlugin(descriptor);
+    return descriptor.getStatus() != PluginDescriptorStatus.OK;
   }
 
-  public static PluginSkipReason calcPluginSkipReason(PluginDescriptor pluginDescriptor) {
-    return ourInternal.calcPluginSkipReason(pluginDescriptor);
-  }
-
-  public static boolean disablePlugin(String id) {
+  public static boolean disablePlugin(PluginId id) {
     return ourInternal.disablePlugin(id);
   }
 
-  public static boolean enablePlugin(String id) {
+  public static boolean enablePlugin(PluginId id) {
     return ourInternal.enablePlugin(id);
   }
 
-  public static void replaceDisabledPlugins(List<String> ids) {
+  public static void replaceDisabledPlugins(Set<PluginId> ids) {
     ourInternal.replaceDisabledPlugins(ids);
   }
 
-  public static List<String> getDisabledPlugins() {
+  public static Set<PluginId> getDisabledPlugins() {
     return ourInternal.getDisabledPlugins();
   }
 
   public static boolean isInitialized() {
     return ourInternal.isInitialized();
-  }
-
-  @SuppressWarnings("unchecked")
-  public static <T> Class<T> resolveClass(String className, PluginDescriptor descriptor) {
-    try {
-      return (Class<T>)Class.forName(className, true, descriptor == null ? PluginManager.class.getClassLoader() : descriptor.getPluginClassLoader());
-    }
-    catch (ClassNotFoundException e) {
-      return null;
-    }
-  }
-
-  public static void checkDependants(final PluginDescriptor pluginDescriptor, final Function<PluginId, PluginDescriptor> pluginId2Descriptor, final Condition<PluginId> check) {
-    checkDependants(pluginDescriptor, pluginId2Descriptor, check, new HashSet<PluginId>());
-  }
-
-  private static boolean checkDependants(final PluginDescriptor pluginDescriptor,
-                                         final Function<PluginId, PluginDescriptor> pluginId2Descriptor,
-                                         final Condition<PluginId> check,
-                                         final Set<PluginId> processed) {
-    processed.add(pluginDescriptor.getPluginId());
-    final PluginId[] dependentPluginIds = pluginDescriptor.getDependentPluginIds();
-    final Set<PluginId> optionalDependencies = new HashSet<PluginId>(Arrays.asList(pluginDescriptor.getOptionalDependentPluginIds()));
-    for (final PluginId dependentPluginId : dependentPluginIds) {
-      if (processed.contains(dependentPluginId)) continue;
-      if (!optionalDependencies.contains(dependentPluginId)) {
-        if (!check.value(dependentPluginId)) {
-          return false;
-        }
-        final PluginDescriptor dependantPluginDescriptor = pluginId2Descriptor.fun(dependentPluginId);
-        if (dependantPluginDescriptor != null && !checkDependants(dependantPluginDescriptor, pluginId2Descriptor, check, processed)) {
-          return false;
-        }
-      }
-    }
-    return true;
   }
 }

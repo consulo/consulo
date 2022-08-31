@@ -25,6 +25,7 @@ import consulo.application.util.DateFormatUtil;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.logging.IdeaLoggingEvent;
 import consulo.component.util.PluginExceptionUtil;
+import consulo.container.impl.PluginValidator;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginIds;
@@ -419,7 +420,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
 
     PluginDescriptor plugin = consulo.container.plugin.PluginManager.findPlugin(pluginId);
     final SimpleReference<Boolean> hasDependants = SimpleReference.create(false);
-    consulo.container.plugin.PluginManager.checkDependants(plugin, PluginManager::getPlugin, pluginId1 -> {
+    PluginValidator.checkDependants(plugin, PluginManager::getPlugin, pluginId1 -> {
       if (PluginIds.isPlatformPlugin(pluginId1)) {
         return true;
       }
@@ -434,10 +435,10 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
       case CANCEL_EXIT_CODE:
         return;
       case DisablePluginWarningDialog.DISABLE_EXIT_CODE:
-        consulo.container.plugin.PluginManager.disablePlugin(pluginId.getIdString());
+        consulo.container.plugin.PluginManager.disablePlugin(pluginId);
         break;
       case DisablePluginWarningDialog.DISABLE_AND_RESTART_EXIT_CODE:
-        consulo.container.plugin.PluginManager.disablePlugin(pluginId.getIdString());
+        consulo.container.plugin.PluginManager.disablePlugin(pluginId);
         app.restart();
         break;
     }

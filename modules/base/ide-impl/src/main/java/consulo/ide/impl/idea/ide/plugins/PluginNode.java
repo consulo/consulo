@@ -55,11 +55,11 @@ public class PluginNode extends PluginDescriptorStub {
   private List<PluginId> myDependencies = Collections.emptyList();
   private List<PluginId> myOptionalDependencies = Collections.emptyList();
 
-  private int status = STATUS_UNKNOWN;
+  private int myInstallStatus = STATUS_UNKNOWN;
 
   private String myInstalledVersion;
 
-  private boolean myEnabled = true;
+  private PluginDescriptorStatus myStatus = PluginDescriptorStatus.OK;
   private String myRating;
   private boolean myExperimental;
 
@@ -261,12 +261,12 @@ public class PluginNode extends PluginDescriptorStub {
    *
    * @return Status of plugin
    */
-  public int getStatus() {
-    return status;
+  public int getInstallStatus() {
+    return myInstallStatus;
   }
 
-  public void setStatus(int status) {
-    this.status = status;
+  public void setInstallStatus(int installStatus) {
+    this.myInstallStatus = installStatus;
   }
 
   @Override
@@ -375,13 +375,12 @@ public class PluginNode extends PluginDescriptorStub {
   }
 
   @Override
-  public boolean isEnabled() {
-    return myEnabled;
+  public PluginDescriptorStatus getStatus() {
+    return myStatus;
   }
 
-  @Override
-  public void setEnabled(boolean enabled) {
-    myEnabled = enabled;
+  public void setStatus(PluginDescriptorStatus status) {
+    myStatus = status;
   }
 
   @Override
@@ -401,7 +400,7 @@ public class PluginNode extends PluginDescriptorStub {
 
   @Nullable
   public String getStatusText() {
-    switch (status) {
+    switch (myInstallStatus) {
       case STATUS_UNKNOWN:
         return "Available";
       case STATUS_INSTALLED:

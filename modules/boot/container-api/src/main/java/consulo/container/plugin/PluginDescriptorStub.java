@@ -174,11 +174,12 @@ public abstract class PluginDescriptorStub implements PluginDescriptor {
 
   @Override
   public boolean isEnabled() {
-    return false;
+    return getStatus() == PluginDescriptorStatus.OK;
   }
 
   @Override
-  public void setEnabled(boolean enabled) {
+  public PluginDescriptorStatus getStatus() {
+    return PluginDescriptorStatus.OK;
   }
 
   @Override

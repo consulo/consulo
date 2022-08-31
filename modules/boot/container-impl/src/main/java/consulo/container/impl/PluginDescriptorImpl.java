@@ -71,8 +71,7 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
   private Set<String> myTags = Collections.emptySet();
 
   private String myDescriptionChildText;
-  private boolean myEnabled = true;
-  private Boolean mySkipped;
+  private PluginDescriptorStatus myStatus = PluginDescriptorStatus.OK;
   private boolean myExperimental;
 
   private List<ClassPathItem> myClassPathItems;
@@ -461,15 +460,13 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
   }
 
   @Override
-  public boolean isEnabled() {
-    return myEnabled;
+  public PluginDescriptorStatus getStatus() {
+    return myStatus;
   }
 
-  @Override
-  public void setEnabled(final boolean enabled) {
-    myEnabled = enabled;
+  public void setStatus(PluginDescriptorStatus status) {
+    myStatus = status;
   }
-
 
   public Map<PluginId, String> getOptionalConfigs() {
     return myOptionalConfigs;
@@ -482,14 +479,6 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
 
   public void setOptionalDescriptors(final Map<PluginId, PluginDescriptorImpl> optionalDescriptors) {
     myOptionalDescriptors = optionalDescriptors;
-  }
-
-  public Boolean getSkipped() {
-    return mySkipped;
-  }
-
-  public void setSkipped(final Boolean skipped) {
-    mySkipped = skipped;
   }
 
   @Override

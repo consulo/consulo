@@ -16,10 +16,12 @@
 package consulo.container.internal;
 
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
 
 import java.io.File;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author VISTALL
@@ -34,15 +36,11 @@ public interface PluginManagerInternal {
 
   PluginDescriptor getPlugin(Class<?> pluginClass);
 
-  List<String> getDisabledPlugins();
+  Set<PluginId> getDisabledPlugins();
 
-  boolean shouldSkipPlugin(PluginDescriptor descriptor);
+  boolean disablePlugin(PluginId id);
 
-  PluginManager.PluginSkipReason calcPluginSkipReason(final PluginDescriptor descriptor);
+  boolean enablePlugin(PluginId id);
 
-  boolean disablePlugin(String id);
-
-  boolean enablePlugin(String id);
-
-  void replaceDisabledPlugins(List<String> ids);
+  void replaceDisabledPlugins(Set<PluginId> ids);
 }

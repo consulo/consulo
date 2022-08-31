@@ -15,24 +15,27 @@
  */
 package consulo.ide.impl.idea.ide.plugins;
 
-import consulo.application.impl.internal.start.StartupProgress;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.annotation.DeprecationInfo;
+import consulo.application.impl.internal.plugin.PluginsLoader;
+import consulo.application.impl.internal.start.StartupProgress;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.classloader.PluginClassLoader;
 import consulo.container.impl.PluginDescriptorImpl;
 import consulo.container.impl.PluginDescriptorLoader;
 import consulo.container.impl.PluginValidator;
 import consulo.container.impl.classloader.PluginLoadStatistics;
-import consulo.container.plugin.*;
+import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginId;
+import consulo.container.plugin.PluginIds;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.logging.Logger;
-import consulo.application.impl.internal.plugin.PluginsLoader;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Deprecated
 @DeprecationInfo("Use consulo.container.plugin.PluginManager")
@@ -58,18 +61,8 @@ public class PluginManagerCore {
 
   @Nonnull
   @Deprecated
-  public static List<String> getDisabledPlugins() {
+  public static Set<PluginId> getDisabledPlugins() {
     return consulo.container.plugin.PluginManager.getDisabledPlugins();
-  }
-
-  @Deprecated
-  public static boolean enablePlugin(String id) {
-    return consulo.container.plugin.PluginManager.enablePlugin(id);
-  }
-
-  @Deprecated
-  public static boolean disablePlugin(String id) {
-    return consulo.container.plugin.PluginManager.disablePlugin(id);
   }
 
   @Nullable

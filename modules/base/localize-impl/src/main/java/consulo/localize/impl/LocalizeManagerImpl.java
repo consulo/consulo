@@ -196,6 +196,10 @@ public class LocalizeManagerImpl extends LocalizeManager {
   @Nonnull
   @Override
   public String getUnformattedText(@Nonnull LocalizeKey key) {
+    if (!myInitialized.get()) {
+      throw new IllegalArgumentException("not initialized");
+    }
+
     if (StringUtil.isEmptyOrSpaces(key.getKey())) {
       return "";
     }

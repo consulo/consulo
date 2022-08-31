@@ -15,14 +15,17 @@
  */
 package consulo.ide.impl.idea.notification;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import javax.annotation.Nonnull;
 
 /**
  * @author gregsh
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class EventLogCategory {
-  public static final ExtensionPointName<EventLogCategory> EP_NAME = ExtensionPointName.create("consulo.eventLogCategory");
+  public static final ExtensionPointName<EventLogCategory> EP_NAME = ExtensionPointName.create(EventLogCategory.class);
 
   private final String myDisplayName;
 

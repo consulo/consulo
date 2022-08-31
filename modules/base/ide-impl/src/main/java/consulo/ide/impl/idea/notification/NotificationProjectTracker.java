@@ -22,7 +22,6 @@ import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAwareRunnable;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl;
-import consulo.ide.impl.idea.util.ObjectUtil;
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;
 import consulo.project.ui.notification.Notification;
@@ -30,6 +29,7 @@ import consulo.project.ui.wm.StatusBar;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.collection.Lists;
 import consulo.util.collection.impl.map.ConcurrentHashMap;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.ShutDownTracker;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -48,6 +48,11 @@ import java.util.Map;
 @ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class NotificationProjectTracker implements Disposable {
+
+  static NotificationProjectTracker getInstance(Project project) {
+    return project.getInstance(NotificationProjectTracker.class);
+  }
+
   private final Map<String, EventLogConsole> myCategoryMap = new ConcurrentHashMap<>();
   private final List<Notification> myInitial = Lists.newLockFreeCopyOnWriteList();
   private final Project myProject;
@@ -59,10 +64,10 @@ public class NotificationProjectTracker implements Disposable {
   public NotificationProjectTracker(@Nonnull final Project project, EventLog eventLog) {
     myProject = project;
     myEventLog = eventLog;
-
-
     myProjectModel = new LogModel(project, project);
+  }
 
+  public void printToProjectEventLog() {
     for (Notification notification : myEventLog.myModel.takeNotifications()) {
       printNotification(notification);
     }
@@ -117,13 +122,10 @@ public class NotificationProjectTracker implements Disposable {
   protected void showNotification(@Nonnull final String groupId, @Nonnull final List<String> ids) {
     ToolWindow eventLog = EventLog.getEventLog(myProject);
     if (eventLog != null) {
-      EventLog.activate(eventLog, groupId, new Runnable() {
-        @Override
-        public void run() {
-          EventLogConsole console = NotificationProjectTracker.this.getConsole(groupId);
-          if (console != null) {
-            console.showNotification(ids);
-          }
+      EventLog.activate(eventLog, groupId, () -> {
+        EventLogConsole console = NotificationProjectTracker.this.getConsole(groupId);
+        if (console != null) {
+          console.showNotification(ids);
         }
       });
     }

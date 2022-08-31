@@ -16,24 +16,16 @@
 package consulo.desktop.awt.startup;
 
 import com.google.gson.Gson;
-import consulo.ide.impl.idea.ide.*;
-import consulo.ide.impl.idea.ide.plugins.PluginManagerMain;
-import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
-import consulo.ide.impl.idea.openapi.wm.impl.SystemDock;
-import consulo.ide.impl.idea.openapi.wm.impl.X11UiUtil;
-import consulo.ide.impl.idea.ui.AppUIUtil;
 import consulo.application.Application;
 import consulo.application.ApplicationProperties;
 import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.impl.internal.plugin.CompositeMessage;
 import consulo.application.impl.internal.plugin.PluginsInitializeInfo;
 import consulo.application.impl.internal.start.ApplicationStarter;
 import consulo.application.impl.internal.start.CommandLineArgs;
 import consulo.application.impl.internal.start.StartupProgress;
 import consulo.application.internal.ApplicationEx;
-import consulo.ide.impl.builtInServer.http.HttpRequestHandler;
-import consulo.ide.impl.builtInServer.json.JsonBaseRequestHandler;
-import consulo.ide.impl.builtInServer.json.JsonGetRequestHandler;
-import consulo.ide.impl.builtInServer.json.JsonPostRequestHandler;
+import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
 import consulo.container.util.StatCollector;
 import consulo.desktop.application.util.WindowsAutoRestartManager;
@@ -44,10 +36,24 @@ import consulo.desktop.awt.uiOld.DesktopAppUIUtil;
 import consulo.desktop.awt.wm.impl.DesktopWindowManagerImpl;
 import consulo.desktop.awt.wm.impl.MacTopMenuInitializer;
 import consulo.desktop.awt.wm.impl.TopMenuInitializer;
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.plugins.PluginsConfigurable;
-import consulo.ide.setting.ShowSettingsUtil;
 import consulo.externalService.statistic.UsageTrigger;
+import consulo.ide.IdeBundle;
+import consulo.ide.impl.builtInServer.http.HttpRequestHandler;
+import consulo.ide.impl.builtInServer.json.JsonBaseRequestHandler;
+import consulo.ide.impl.builtInServer.json.JsonGetRequestHandler;
+import consulo.ide.impl.builtInServer.json.JsonPostRequestHandler;
+import consulo.ide.impl.idea.ide.CommandLineProcessor;
+import consulo.ide.impl.idea.ide.IdeEventQueue;
+import consulo.ide.impl.idea.ide.RecentProjectsManager;
+import consulo.ide.impl.idea.ide.RecentProjectsManagerBase;
+import consulo.ide.impl.idea.ide.plugins.PluginManagerMain;
+import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
+import consulo.ide.impl.idea.openapi.wm.impl.SystemDock;
+import consulo.ide.impl.idea.openapi.wm.impl.X11UiUtil;
+import consulo.ide.impl.idea.ui.AppUIUtil;
+import consulo.ide.impl.plugins.PluginsConfigurable;
+import consulo.ide.impl.start.WelcomeFrameManager;
+import consulo.ide.setting.ShowSettingsUtil;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.project.Project;
@@ -57,7 +63,6 @@ import consulo.project.ui.notification.Notifications;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
-import consulo.ide.impl.start.WelcomeFrameManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.internal.AppIconUtil;
 import consulo.util.concurrent.AsyncResult;
@@ -181,7 +186,8 @@ public class DesktopApplicationStarter extends ApplicationStarter {
 
     if (myPlatform.os().isMac()) {
       MacTopMenuInitializer.installAutoUpdateMenu();
-    } else if(myPlatform.os().isWindowsVistaOrNewer()) {
+    }
+    else if (myPlatform.os().isWindowsVistaOrNewer()) {
       WindowsAutoRestartManager.register();
     }
 
@@ -273,15 +279,15 @@ public class DesktopApplicationStarter extends ApplicationStarter {
   }
 
   static void reportPluginError(PluginsInitializeInfo info) {
-    java.util.List<String> pluginErrors = info.getPluginErrors();
+    java.util.List<CompositeMessage> pluginErrors = info.getPluginErrors();
 
-    java.util.List<String> plugins2Disable = info.getPlugins2Disable();
-    Set<String> plugins2Enable = info.getPlugins2Enable();
+    Set<PluginId> plugins2Disable = info.getPlugins2Disable();
+    Set<PluginId> plugins2Enable = info.getPlugins2Enable();
 
     if (pluginErrors != null) {
-      for (String pluginError : pluginErrors) {
+      for (CompositeMessage pluginError : pluginErrors) {
         String message = IdeBundle.message("title.plugin.notification.title");
-        Notifications.Bus.notify(new Notification(PluginManagerMain.ourPluginsLifecycleGroup, message, pluginError, NotificationType.ERROR, new NotificationListener() {
+        Notifications.Bus.notify(new Notification(PluginManagerMain.ourPluginsLifecycleGroup, message, pluginError.toString(), NotificationType.ERROR, new NotificationListener() {
           @RequiredUIAccess
           @Override
           public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
@@ -294,9 +300,9 @@ public class DesktopApplicationStarter extends ApplicationStarter {
               return;
             }
 
-            List<String> disabledPlugins = PluginManager.getDisabledPlugins();
+            Set<PluginId> disabledPlugins = PluginManager.getDisabledPlugins();
             if (plugins2Disable != null && PluginsInitializeInfo.DISABLE.equals(description)) {
-              for (String pluginId : plugins2Disable) {
+              for (PluginId pluginId : plugins2Disable) {
                 if (!disabledPlugins.contains(pluginId)) {
                   disabledPlugins.add(pluginId);
                 }

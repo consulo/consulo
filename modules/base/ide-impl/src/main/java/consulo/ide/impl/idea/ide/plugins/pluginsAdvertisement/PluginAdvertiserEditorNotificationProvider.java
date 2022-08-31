@@ -41,10 +41,7 @@ import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -101,11 +98,11 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
     String extension = virtualFile.getExtension();
 
     builder.withText(LocalizeValue.localizeTODO(IdeBundle.message("plugin.advestiser.notification.text", plugins.size())));
-    final PluginDescriptor disabledPlugin = getDisabledPlugin(plugins.stream().map(x -> x.getPluginId().getIdString()).collect(Collectors.toSet()));
+    final PluginDescriptor disabledPlugin = getDisabledPlugin(plugins.stream().map(PluginDescriptor::getPluginId).collect(Collectors.toSet()));
     if (disabledPlugin != null) {
       builder.withAction(LocalizeValue.localizeTODO("Enable " + disabledPlugin.getName() + " plugin"), () -> {
         myEnabledExtensions.add(extension);
-        consulo.container.plugin.PluginManager.enablePlugin(disabledPlugin.getPluginId().getIdString());
+        consulo.container.plugin.PluginManager.enablePlugin(disabledPlugin.getPluginId());
         myNotifications.updateAllNotifications();
         PluginManagerMain.notifyPluginsWereUpdated("Plugin was successfully enabled", null);
       });
@@ -150,11 +147,11 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
   }
 
   @Nullable
-  private static PluginDescriptor getDisabledPlugin(Set<String> plugins) {
-    final List<String> disabledPlugins = new ArrayList<>(PluginManagerCore.getDisabledPlugins());
+  private static PluginDescriptor getDisabledPlugin(Set<PluginId> plugins) {
+    final List<PluginId> disabledPlugins = new ArrayList<>(PluginManagerCore.getDisabledPlugins());
     disabledPlugins.retainAll(plugins);
     if (disabledPlugins.size() == 1) {
-      return PluginManager.getPlugin(PluginId.getId(disabledPlugins.get(0)));
+      return PluginManager.getPlugin(disabledPlugins.get(0));
     }
     return null;
   }

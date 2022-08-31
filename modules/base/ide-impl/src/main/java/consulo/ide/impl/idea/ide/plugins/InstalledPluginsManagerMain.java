@@ -17,6 +17,8 @@ package consulo.ide.impl.idea.ide.plugins;
 
 import consulo.application.CommonBundle;
 import consulo.application.AllIcons;
+import consulo.container.impl.PluginDescriptorImpl;
+import consulo.container.plugin.PluginDescriptorStatus;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.ide.startup.StartupActionScriptManager;
 import consulo.ui.ex.action.ActionGroup;
@@ -278,10 +280,10 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
         return true;
       }
     }
-    final List<String> disabledPlugins = consulo.container.plugin.PluginManager.getDisabledPlugins();
+    final Set<PluginId> disabledPlugins = consulo.container.plugin.PluginManager.getDisabledPlugins();
     for (Map.Entry<PluginId, Boolean> entry : ((InstalledPluginsTableModel)myPluginsModel).getEnabledMap().entrySet()) {
       final Boolean enabled = entry.getValue();
-      if (enabled != null && !enabled && !disabledPlugins.contains(entry.getKey().toString())) {
+      if (enabled != null && !enabled && !disabledPlugins.contains(entry.getKey())) {
         return true;
       }
     }
@@ -296,23 +298,34 @@ public class InstalledPluginsManagerMain extends PluginManagerMain {
     for (int i = 0; i < myPluginTable.getRowCount(); i++) {
       final PluginDescriptor pluginDescriptor = myPluginsModel.getObjectAt(i);
       final Boolean enabled = (Boolean)myPluginsModel.getValueAt(i, InstalledPluginsTableModel.getCheckboxColumn());
-      pluginDescriptor.setEnabled(enabled != null && enabled);
-    }
-    for (PluginDescriptor descriptor : myPluginsModel.filtered) {
-      descriptor.setEnabled(((InstalledPluginsTableModel)myPluginsModel).isEnabled(descriptor.getPluginId()));
+      setEnabled(pluginDescriptor, enabled != null && enabled);
     }
 
-    final ArrayList<String> ids = new ArrayList<>();
+    for (PluginDescriptor descriptor : myPluginsModel.filtered) {
+      setEnabled(descriptor, ((InstalledPluginsTableModel)myPluginsModel).isEnabled(descriptor.getPluginId()));
+    }
+
+    final Set<PluginId> ids = new LinkedHashSet<>();
     for (Map.Entry<PluginId, Boolean> entry : ((InstalledPluginsTableModel)myPluginsModel).getEnabledMap().entrySet()) {
       final Boolean value = entry.getValue();
       if (value != null && !value) {
-        ids.add(entry.getKey().getIdString());
+        ids.add(entry.getKey());
       }
     }
 
     consulo.container.plugin.PluginManager.replaceDisabledPlugins(ids);
 
     return null;
+  }
+
+  private void setEnabled(PluginDescriptor descriptor, boolean enabled) {
+    if (descriptor instanceof PluginNode pluginNode) {
+      pluginNode.setStatus(enabled ? PluginDescriptorStatus.OK : PluginDescriptorStatus.DISABLED_BY_USER);
+    } else if (descriptor instanceof PluginDescriptorImpl pluginDescriptor) {
+      pluginDescriptor.setStatus(enabled ? PluginDescriptorStatus.OK : PluginDescriptorStatus.DISABLED_BY_USER);
+    } else {
+      throw new IllegalArgumentException("Unknown plugin class" + descriptor.getPluginId());
+    }
   }
 
   @Override

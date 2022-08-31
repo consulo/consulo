@@ -15,30 +15,27 @@
  */
 package consulo.ide.impl.idea.openapi.wm.impl.status;
 
+import consulo.application.ApplicationManager;
+import consulo.application.util.DateFormatUtil;
 import consulo.ide.impl.idea.ide.ClipboardSynchronizer;
 import consulo.ide.impl.idea.notification.EventLog;
+import consulo.logging.Logger;
+import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
+import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.IdeActions;
-import consulo.application.ApplicationManager;
-import consulo.project.Project;
-import consulo.project.ProjectManager;
+import consulo.ui.ex.awt.ClickListener;
 import consulo.ui.ex.awt.JBMenuItem;
 import consulo.ui.ex.awt.JBPopupMenu;
-import consulo.util.lang.Trinity;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.project.ui.wm.IdeFrame;
-import consulo.project.ui.wm.WindowManager;
-import consulo.ui.ex.awt.ClickListener;
-import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.util.Alarm;
-import consulo.application.util.DateFormatUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.logging.Logger;
+import consulo.util.lang.StringUtil;
+import consulo.util.lang.Trinity;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -46,6 +43,7 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.function.Supplier;
 
 /**
  * @author peter
@@ -93,8 +91,12 @@ class StatusPanel extends JPanel {
     }
   };
 
-  StatusPanel() {
+  private final Supplier<Project> myProjectSupplier;
+
+  StatusPanel(@Nonnull Supplier<Project> getProjectFunc) {
     super(new BorderLayout());
+
+    myProjectSupplier = getProjectFunc;
 
     setOpaque(false);
 
@@ -103,7 +105,7 @@ class StatusPanel extends JPanel {
       @Override
       public boolean onClick(MouseEvent e, int clickCount) {
         if (myCurrentNotification != null || myAfterClick) {
-          EventLog.toggleLog(getActiveProject(), myCurrentNotification);
+          EventLog.toggleLog(getProject(), myCurrentNotification);
           myAfterClick = true;
           myTextPanel.setExplicitSize(myTextPanel.getSize());
           myTextPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -164,18 +166,8 @@ class StatusPanel extends JPanel {
 
 
   @Nullable
-  private Project getActiveProject() {
-    // a better way of finding a project would be great
-    for (Project project : ProjectManager.getInstance().getOpenProjects()) {
-      IdeFrame ideFrame = WindowManager.getInstance().getIdeFrame(project);
-      if (ideFrame != null) {
-        final JComponent frame = ideFrame.getComponent();
-        if (SwingUtilities.isDescendingFrom(myTextPanel, frame)) {
-          return project;
-        }
-      }
-    }
-    return null;
+  private Project getProject() {
+    return myProjectSupplier.get();
   }
 
   // Returns the alarm used for displaying status messages in the status bar, or null if the status bar is attached to a floating
@@ -184,7 +176,7 @@ class StatusPanel extends JPanel {
   private Alarm getAlarm() {
     if (myLogAlarm == null || myLogAlarm.isDisposed()) {
       myLogAlarm = null; //Welcome screen
-      Project project = getActiveProject();
+      Project project = getProject();
       if (project != null) {
         myLogAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD, project);
       }
@@ -195,7 +187,7 @@ class StatusPanel extends JPanel {
   public boolean updateText(@Nullable String nonLogText) {
     ApplicationManager.getApplication().assertIsDispatchThread();
 
-    final Project project = getActiveProject();
+    final Project project = getProject();
     final Trinity<Notification, String, Long> statusMessage = EventLog.getStatusMessage(project);
     final Alarm alarm = getAlarm();
     myCurrentNotification = StringUtil.isEmpty(nonLogText) && statusMessage != null && alarm != null ? statusMessage.first : null;

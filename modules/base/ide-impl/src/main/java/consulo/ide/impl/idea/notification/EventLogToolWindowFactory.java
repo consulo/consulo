@@ -60,7 +60,7 @@ public class EventLogToolWindowFactory implements ToolWindowFactory, DumbAware {
   @RequiredUIAccess
   @Override
   public void createToolWindowContent(@Nonnull final Project project, @Nonnull ToolWindow toolWindow) {
-    EventLog.getProjectComponent(project).initDefaultContent();
+    NotificationProjectTracker.getInstance(project).initDefaultContent();
   }
 
   @Nonnull

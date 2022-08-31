@@ -32,6 +32,7 @@ import consulo.ide.impl.ui.impl.BalloonLayoutEx;
 import consulo.ide.impl.ui.impl.ToolWindowPanelImplEx;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.project.Project;
 import consulo.project.ui.wm.CustomStatusBarWidget;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.StatusBar;
@@ -55,6 +56,8 @@ import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
 import consulo.util.collection.JBIterable;
 import consulo.util.collection.MultiValuesMap;
+import consulo.util.lang.Couple;
+import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -66,12 +69,13 @@ import java.awt.event.MouseEvent;
 import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.*;
+import java.util.function.Supplier;
 
 public class InfoAndProgressPanel extends JPanel implements CustomStatusBarWidget {
   private static final Logger LOG = Logger.getInstance(InfoAndProgressPanel.class);
   private final ProcessPopup myPopup;
 
-  private final StatusPanel myInfoPanel = new StatusPanel();
+  private final StatusPanel myInfoPanel;
   private final JPanel myRefreshAndInfoPanel = new JPanel();
   private final NotNullLazyValue<AsyncProcessIcon> myProgressIcon = new NotNullLazyValue<AsyncProcessIcon>() {
     @Nonnull
@@ -132,12 +136,13 @@ public class InfoAndProgressPanel extends JPanel implements CustomStatusBarWidge
   @SuppressWarnings("FieldAccessedSynchronizedAndUnsynchronized")
   private LinkLabel<Object> myMultiProcessLink;
 
-  public InfoAndProgressPanel() {
+  public InfoAndProgressPanel(@Nonnull Supplier<Project> getProjectSupplier) {
     setOpaque(false);
     setBorder(JBUI.Borders.empty());
 
     myRefreshIcon.setVisible(false);
 
+    myInfoPanel = new StatusPanel(getProjectSupplier);
     myRefreshAndInfoPanel.setLayout(new BorderLayout());
     myRefreshAndInfoPanel.setOpaque(false);
     myRefreshAndInfoPanel.add(myRefreshIcon, BorderLayout.WEST);
@@ -224,13 +229,13 @@ public class InfoAndProgressPanel extends JPanel implements CustomStatusBarWidge
   }
 
   @Nonnull
-  public List<consulo.util.lang.Pair<TaskInfo, ProgressIndicator>> getBackgroundProcesses() {
+  public List<Pair<TaskInfo, ProgressIndicator>> getBackgroundProcesses() {
     synchronized (myOriginals) {
       if (myOriginals.isEmpty()) return Collections.emptyList();
 
-      List<consulo.util.lang.Pair<TaskInfo, ProgressIndicator>> result = new ArrayList<>(myOriginals.size());
+      List<Pair<TaskInfo, ProgressIndicator>> result = new ArrayList<>(myOriginals.size());
       for (int i = 0; i < myOriginals.size(); i++) {
-        result.add(consulo.util.lang.Pair.create(myInfos.get(i), myOriginals.get(i)));
+        result.add(Pair.create(myInfos.get(i), myOriginals.get(i)));
       }
 
       return Collections.unmodifiableList(result);
@@ -522,14 +527,14 @@ public class InfoAndProgressPanel extends JPanel implements CustomStatusBarWidge
     return pane != null && pane.isBottomSideToolWindowsVisible();
   }
 
-  public consulo.util.lang.Couple<String> setText(@Nullable final String text, @Nullable final String requestor) {
+  public Couple<String> setText(@Nullable final String text, @Nullable final String requestor) {
     if (StringUtil.isEmpty(text) && !Comparing.equal(requestor, myCurrentRequestor) && !EventLog.LOG_REQUESTOR.equals(requestor)) {
-      return consulo.util.lang.Couple.of(myInfoPanel.getText(), myCurrentRequestor);
+      return Couple.of(myInfoPanel.getText(), myCurrentRequestor);
     }
 
     boolean logMode = myInfoPanel.updateText(EventLog.LOG_REQUESTOR.equals(requestor) ? "" : text);
     myCurrentRequestor = logMode ? EventLog.LOG_REQUESTOR : requestor;
-    return consulo.util.lang.Couple.of(text, requestor);
+    return Couple.of(text, requestor);
   }
 
   public void setRefreshVisible(final boolean visible) {

@@ -15,15 +15,16 @@
  */
 package consulo.ide.impl.idea.ide.plugins;
 
-import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.awt.table.BooleanTableCellEditor;
-import consulo.ui.ex.awt.BooleanTableCellRenderer;
-import consulo.container.plugin.PluginIds;
-import consulo.ui.ex.awt.ColumnInfo;
+import consulo.container.impl.PluginValidator;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
+import consulo.container.plugin.PluginIds;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.plugins.InstalledPluginsState;
+import consulo.ui.ex.awt.BooleanTableCellRenderer;
+import consulo.ui.ex.awt.ColumnInfo;
+import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.table.BooleanTableCellEditor;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -105,9 +106,9 @@ public class InstalledPluginsTableModel extends PluginTableModel {
   }
 
   private void setEnabled(PluginDescriptor ideaPluginDescriptor, final boolean enabled) {
-    final Collection<String> disabledPlugins = PluginManager.getDisabledPlugins();
+    final Collection<PluginId> disabledPlugins = PluginManager.getDisabledPlugins();
     final PluginId pluginId = ideaPluginDescriptor.getPluginId();
-    if (!enabled && !disabledPlugins.contains(pluginId.toString())) {
+    if (!enabled && !disabledPlugins.contains(pluginId)) {
       myEnabled.put(pluginId, null);
     }
     else {
@@ -148,7 +149,7 @@ public class InstalledPluginsTableModel extends PluginTableModel {
       if (descriptor.isDeleted()) continue;
       final Boolean enabled = myEnabled.get(pluginId);
       if (enabled == null || enabled) {
-        consulo.container.plugin.PluginManager.checkDependants(descriptor, PluginManager::getPlugin, dependantPluginId -> {
+        PluginValidator.checkDependants(descriptor, PluginManager::getPlugin, dependantPluginId -> {
           final Boolean enabled1 = myEnabled.get(dependantPluginId);
           if ((enabled1 == null && !updatedPlugins.contains(dependantPluginId)) || (enabled1 != null && !enabled1)) {
             Set<PluginId> required = myDependentToRequiredListMap.get(pluginId);
@@ -375,7 +376,7 @@ public class InstalledPluginsTableModel extends PluginTableModel {
     }
 
     for (final PluginDescriptor ideaPluginDescriptor : descriptorsToCheckDependencies) {
-      consulo.container.plugin.PluginManager.checkDependants(ideaPluginDescriptor, PluginManager::getPlugin, pluginId -> {
+      PluginValidator.checkDependants(ideaPluginDescriptor, PluginManager::getPlugin, pluginId -> {
         Boolean enabled = myEnabled.get(pluginId);
         if (enabled == null) {
           return false;

@@ -19,32 +19,36 @@ package consulo.ide.impl.idea.notification;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.codeEditor.markup.RangeHighlighter;
+import consulo.document.Document;
+import consulo.document.RangeMarker;
+import consulo.document.impl.DocumentImpl;
+import consulo.document.util.TextRange;
 import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.ide.impl.idea.notification.impl.NotificationsManagerImpl;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.ui.BalloonLayoutData;
+import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.ide.impl.idea.util.Function;
+import consulo.ide.impl.idea.util.ObjectUtil;
+import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.ide.impl.idea.util.text.CharArrayUtil;
+import consulo.project.Project;
+import consulo.project.ProjectManager;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
 import consulo.project.ui.notification.event.NotificationListener;
-import consulo.ui.ex.action.AnAction;
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
-import consulo.document.Document;
-import consulo.document.RangeMarker;
-import consulo.document.impl.DocumentImpl;
-import consulo.codeEditor.markup.RangeHighlighter;
-import consulo.project.Project;
-import consulo.project.ProjectManager;
-import consulo.project.ui.wm.*;
-import consulo.ui.ex.awt.IJSwingUtilities;
-import consulo.ui.ex.popup.Balloon;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.ui.BalloonLayoutData;
+import consulo.project.ui.wm.IdeFrame;
+import consulo.project.ui.wm.ToolWindowManager;
+import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.awt.IJSwingUtilities;
 import consulo.ui.ex.content.Content;
-import consulo.ide.impl.idea.util.*;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.text.CharArrayUtil;
-import consulo.document.util.TextRange;
+import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.lang.Pair;
 import consulo.util.lang.Trinity;
@@ -68,13 +72,18 @@ import java.util.regex.Pattern;
 @ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
 @ServiceImpl
 public class EventLog {
+
+  public static EventLog getApplicationComponent() {
+    return ApplicationManager.getApplication().getComponent(EventLog.class);
+  }
+
   public static final String LOG_REQUESTOR = "Internal log requestor";
   public static final String LOG_TOOL_WINDOW_ID = "Event Log";
   public static final String HELP_ID = "reference.toolwindows.event.log";
   private static final String A_CLOSING = "</a>";
   private static final Pattern TAG_PATTERN = Pattern.compile("<[^>]*>");
   private static final Pattern A_PATTERN = Pattern.compile("<a ([^>]* )?href=[\"\']([^>]*)[\"\'][^>]*>");
-  private static final Set<String> NEW_LINES = ContainerUtil.newHashSet("<br>", "</br>", "<br/>", "<p>", "</p>", "<p/>");
+  private static final Set<String> NEW_LINES = Set.of("<br>", "</br>", "<br/>", "<p>", "</p>", "<p/>");
   protected static final String DEFAULT_CATEGORY = "";
 
   protected final LogModel myModel;
@@ -91,7 +100,7 @@ public class EventLog {
           myModel.addNotification(notification);
         }
         for (Project p : openProjects) {
-          getProjectComponent(p).printNotification(notification);
+          NotificationProjectTracker.getInstance(p).printNotification(notification);
         }
       }
     });
@@ -100,21 +109,17 @@ public class EventLog {
   public static void expireNotification(@Nonnull Notification notification) {
     getApplicationComponent().myModel.removeNotification(notification);
     for (Project p : ProjectManager.getInstance().getOpenProjects()) {
-      getProjectComponent(p).myProjectModel.removeNotification(notification);
+      NotificationProjectTracker.getInstance(p).myProjectModel.removeNotification(notification);
     }
   }
 
   public static void showNotification(@Nonnull Project project, @Nonnull String groupId, @Nonnull List<String> ids) {
-    getProjectComponent(project).showNotification(groupId, ids);
-  }
-
-  private static EventLog getApplicationComponent() {
-    return ApplicationManager.getApplication().getComponent(EventLog.class);
+    NotificationProjectTracker.getInstance(project).showNotification(groupId, ids);
   }
 
   @Nonnull
   public static LogModel getLogModel(@Nullable Project project) {
-    return project != null ? getProjectComponent(project).myProjectModel : getApplicationComponent().myModel;
+    return project != null ? NotificationProjectTracker.getInstance(project).myProjectModel : getApplicationComponent().myModel;
   }
 
   public static void markAllAsRead(@Nullable Project project) {
@@ -132,7 +137,7 @@ public class EventLog {
   }
 
   public static void clearNMore(@Nonnull Project project, @Nonnull Collection<String> groups) {
-    getProjectComponent(project).clearNMore(groups);
+    NotificationProjectTracker.getInstance(project).clearNMore(groups);
   }
 
   @Nullable
@@ -481,10 +486,6 @@ public class EventLog {
     return DEFAULT_CATEGORY;
   }
 
-  static NotificationProjectTracker getProjectComponent(Project project) {
-    return project.getComponent(NotificationProjectTracker.class);
-  }
-
   private static class NotificationHyperlinkInfo implements HyperlinkInfo {
     private final Notification myNotification;
     private final String myHref;
@@ -498,7 +499,7 @@ public class EventLog {
     public void navigate(Project project) {
       NotificationListener listener = myNotification.getListener();
       if (listener != null) {
-        EventLogConsole console = ObjectUtils.assertNotNull(getProjectComponent(project).getConsole(myNotification));
+        EventLogConsole console = ObjectUtils.assertNotNull(NotificationProjectTracker.getInstance(project).getConsole(myNotification));
         JComponent component = console.getConsoleEditor().getContentComponent();
         listener.hyperlinkUpdate(myNotification, IJSwingUtilities.createHyperlinkEvent(myHref, component));
       }
@@ -525,7 +526,7 @@ public class EventLog {
         hideBalloon(notification);
       }
 
-      EventLogConsole console = ObjectUtil.assertNotNull(getProjectComponent(project).getConsole(myNotification));
+      EventLogConsole console = ObjectUtil.assertNotNull(NotificationProjectTracker.getInstance(project).getConsole(myNotification));
       if (myRangeHighlighter == null || !myRangeHighlighter.isValid()) {
         return;
       }

@@ -63,7 +63,7 @@ public final class StoreUtil {
       }
       else {
         if (!ApplicationProperties.isInSandbox()) {
-          PluginManager.disablePlugin(pluginId.getIdString());
+          PluginManager.disablePlugin(pluginId);
         }
 
         StorageNotificationService.getInstance()
@@ -102,7 +102,7 @@ public final class StoreUtil {
         }
         else {
           if (!ApplicationProperties.isInSandbox()) {
-            PluginManager.disablePlugin(pluginId.getIdString());
+            PluginManager.disablePlugin(pluginId);
           }
 
           StorageNotificationService.getInstance()

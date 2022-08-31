@@ -121,30 +121,35 @@ public class PluginsLoader {
     final ClassLoader parentLoader = Application.class.getClassLoader();
 
     final List<PluginDescriptorImpl> result = new ArrayList<>();
-    final Map<String, String> disabledPluginNames = new HashMap<>();
+    final Map<PluginId, String> disabledPluginNames = new HashMap<>();
     List<String> brokenPluginsList = new SmartList<>();
+
+    Set<PluginId> disabledPlugins = PluginValidator.getDisabledPlugins();
+
     for (PluginDescriptorImpl descriptor : pluginDescriptors) {
-      PluginManager.PluginSkipReason pluginSkipReason = PluginManager.calcPluginSkipReason(descriptor);
-      switch (pluginSkipReason) {
-        case NO:
-          result.add(descriptor);
-          break;
-        case INCOMPATIBLE:
-          brokenPluginsList.add(descriptor.getName());
-        default:
-          descriptor.setEnabled(false);
-          disabledPluginNames.put(descriptor.getPluginId().getIdString(), descriptor.getName());
-          initClassLoader(Collections.emptySet(), parentLoader, descriptor);
-          break;
+      // platform plugins not controlled by user, always enabled
+      if (PluginIds.isPlatformPlugin(descriptor.getPluginId())) {
+        result.add(descriptor);
+        continue;
+      }
+
+      if (disabledPlugins.contains(descriptor.getPluginId())) {
+        descriptor.setStatus(PluginDescriptorStatus.DISABLED_BY_USER);
+      } else if (PluginValidator.isIncompatible(descriptor)) {
+        descriptor.setStatus(PluginDescriptorStatus.WRONG_PLATFORM_VERSION);
+
+        brokenPluginsList.add(descriptor.getName());
+      } else {
+        result.add(descriptor);
       }
     }
 
-    List<String> problemsWithPlugins = new SmartList<>();
+    List<CompositeMessage> problemsWithPlugins = new SmartList<>();
     if (!brokenPluginsList.isEmpty()) {
-      problemsWithPlugins.add("Following plugins are incompatible with current IDE build: " + StringUtil.join(brokenPluginsList, ", "));
+      problemsWithPlugins.add(new CompositeMessage().append("Following plugins are incompatible with current IDE build: " + StringUtil.join(brokenPluginsList, ", ")));
     }
 
-    String badPluginMessage = filterBadPlugins(info, result, disabledPluginNames);
+    CompositeMessage badPluginMessage = filterBadPlugins(info, result, disabledPluginNames);
     if (badPluginMessage != null) {
       problemsWithPlugins.add(badPluginMessage);
     }
@@ -185,7 +190,7 @@ public class PluginsLoader {
         final PluginId parentId = circularDependency.getSecond();
         cyclePresentation = id + "->" + parentId + "->...->" + id;
       }
-      problemsWithPlugins.add(IdeLocalize.errorPluginsShouldNotHaveCyclicDependencies(cyclePresentation).get());
+      problemsWithPlugins.add(new CompositeMessage().append(IdeLocalize.errorPluginsShouldNotHaveCyclicDependencies(cyclePresentation)));
     }
 
     prepareLoadingPluginsErrorMessage(info, problemsWithPlugins, isHeadlessMode);
@@ -229,12 +234,12 @@ public class PluginsLoader {
     return info;
   }
 
-  static void prepareLoadingPluginsErrorMessage(PluginsInitializeInfo info, final List<String> problems, boolean isHeadlessMode) {
+  static void prepareLoadingPluginsErrorMessage(PluginsInitializeInfo info, final List<CompositeMessage> problems, boolean isHeadlessMode) {
     if (!isHeadlessMode) {
       info.addPluginErrors(problems);
     }
     else {
-      for (String problem : problems) {
+      for (CompositeMessage problem : problems) {
         getLogger().error(problem);
       }
     }
@@ -343,56 +348,63 @@ public class PluginsLoader {
   }
 
   @Nullable
-  static String filterBadPlugins(PluginsInitializeInfo info, List<? extends PluginDescriptor> result, final Map<String, String> disabledPluginNames) {
+  static CompositeMessage filterBadPlugins(PluginsInitializeInfo info, List<PluginDescriptorImpl> result, final Map<PluginId, String> disabledPluginNames) {
     final Map<PluginId, PluginDescriptor> idToDescriptorMap = new HashMap<>();
-    final StringBuilder message = new StringBuilder();
+    final CompositeMessage message = new CompositeMessage();
     for (Iterator<? extends PluginDescriptor> it = result.iterator(); it.hasNext(); ) {
       final PluginDescriptor descriptor = it.next();
       final PluginId id = descriptor.getPluginId();
 
       if (idToDescriptorMap.containsKey(id)) {
         message.append("<br>");
-        message.append(IdeLocalize.messageDuplicatePluginId().get());
-        message.append(id);
+        message.append(IdeLocalize.messageDuplicatePluginId());
+        message.append(id.getIdString());
         it.remove();
       }
-      else if (descriptor.isEnabled()) {
+      else if (descriptor.getStatus() == PluginDescriptorStatus.OK) {
         idToDescriptorMap.put(id, descriptor);
       }
     }
 
-    final List<String> disabledPluginIds = new ArrayList<>();
-    final LinkedHashSet<String> faultyDescriptors = new LinkedHashSet<>();
-    for (final Iterator<? extends PluginDescriptor> it = result.iterator(); it.hasNext(); ) {
-      final PluginDescriptor pluginDescriptor = it.next();
-      PluginManager.checkDependants(pluginDescriptor, idToDescriptorMap::get, pluginId -> {
+    final Set<PluginId> disabledPluginIds = new LinkedHashSet<>();
+    final Set<PluginId> faultyDescriptors = new LinkedHashSet<>();
+    for (final Iterator<PluginDescriptorImpl> it = result.iterator(); it.hasNext(); ) {
+      final PluginDescriptorImpl pluginDescriptor = it.next();
+      PluginValidator.checkDependants(pluginDescriptor, idToDescriptorMap::get, pluginId -> {
         if (!idToDescriptorMap.containsKey(pluginId)) {
-          pluginDescriptor.setEnabled(false);
-          faultyDescriptors.add(pluginId.getIdString());
-          disabledPluginIds.add(pluginDescriptor.getPluginId().getIdString());
-          message.append("<br>");
-          final String name = pluginDescriptor.getName();
-          final PluginDescriptor descriptor = idToDescriptorMap.get(pluginId);
-          String pluginName;
-          if (descriptor == null) {
-            pluginName = pluginId.getIdString();
-            if (disabledPluginNames.containsKey(pluginName)) {
-              pluginName = disabledPluginNames.get(pluginName);
+          pluginDescriptor.setStatus(PluginIds.isPlatformImplementationPlugin(pluginId) ? PluginDescriptorStatus.WRONG_PLATFORM : PluginDescriptorStatus.DEPENDENCY_NOT_LOADED);
+
+          // if dependent plugin is platform - do not show error, just disable it
+          if (!PluginIds.isPlatformImplementationPlugin(pluginId)) {
+            faultyDescriptors.add(pluginId);
+            disabledPluginIds.add(pluginDescriptor.getPluginId());
+            message.append("<br>");
+            final String name = pluginDescriptor.getName();
+            final PluginDescriptor descriptor = idToDescriptorMap.get(pluginId);
+
+            String pluginName;
+            if (descriptor == null) {
+              pluginName = pluginId.getIdString();
+              if (disabledPluginNames.containsKey(pluginId)) {
+                pluginName = disabledPluginNames.get(pluginId);
+              }
             }
-          }
-          else {
-            pluginName = descriptor.getName();
+            else {
+              pluginName = descriptor.getName();
+            }
+
+            message.append(
+                    PluginManager.getDisabledPlugins().contains(pluginId) ? IdeLocalize.errorRequiredPluginDisabled(name, pluginName) : IdeLocalize.errorRequiredPluginNotInstalled(name, pluginName));
           }
 
-          message.append(PluginManager.getDisabledPlugins().contains(pluginId.getIdString())
-                         ? IdeLocalize.errorRequiredPluginDisabled(name, pluginName).get()
-                         : IdeLocalize.errorRequiredPluginNotInstalled(name, pluginName).get());
           it.remove();
+
           return false;
         }
         return true;
       });
     }
+    
     if (!disabledPluginIds.isEmpty()) {
       info.setPluginsForDisable(disabledPluginIds);
       info.setPluginsForEnable(faultyDescriptors);
@@ -400,7 +412,7 @@ public class PluginsLoader {
       message.append("<br>");
       message.append("<br>").append("<a href=\"" + PluginsInitializeInfo.DISABLE + "\">Disable ");
       if (disabledPluginIds.size() == 1) {
-        final PluginId pluginId2Disable = PluginId.getId(disabledPluginIds.iterator().next());
+        final PluginId pluginId2Disable = disabledPluginIds.iterator().next();
         message.append(idToDescriptorMap.containsKey(pluginId2Disable) ? idToDescriptorMap.get(pluginId2Disable).getName() : pluginId2Disable.getIdString());
       }
       else {
@@ -408,7 +420,7 @@ public class PluginsLoader {
       }
       message.append("</a>");
       boolean possibleToEnable = true;
-      for (String descriptor : faultyDescriptors) {
+      for (PluginId descriptor : faultyDescriptors) {
         if (disabledPluginNames.get(descriptor) == null) {
           possibleToEnable = false;
           break;
@@ -420,8 +432,8 @@ public class PluginsLoader {
       }
       message.append("<br>").append("<a href=\"" + PluginsInitializeInfo.EDIT + "\">Open plugin manager</a>");
     }
-    if (message.length() > 0) {
-      return message.toString();
+    if (!message.isEmpty()) {
+      return message;
     }
     return null;
   }
@@ -498,10 +510,6 @@ public class PluginsLoader {
       }
     }
     return result;
-  }
-
-  static void initClassLoader(@Nonnull Set<PluginId> enabledPluginIds, @Nonnull ClassLoader parentLoader, @Nonnull PluginDescriptorImpl descriptor) {
-    descriptor.setLoader(createPluginClassLoader(enabledPluginIds, new ClassLoader[]{parentLoader}, descriptor));
   }
 
   @Nullable
