@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.ide.fileTemplates.impl;
 import consulo.fileTemplate.FileTemplate;
 import consulo.fileTemplate.FileTemplateUtil;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
-import consulo.ide.impl.idea.ui.ListSpeedSearch;
+import consulo.ui.ex.awt.speedSearch.ListSpeedSearch;
 import consulo.ui.ex.awt.JBList;
 import consulo.ui.image.Image;
 

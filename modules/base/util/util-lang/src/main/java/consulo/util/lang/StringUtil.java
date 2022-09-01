@@ -2566,4 +2566,12 @@ public final class StringUtil {
     }
     return capitalize(s);
   }
+
+  @Contract(pure = true)
+  public static String getQualifiedName(@Nullable String packageName, String className) {
+    if (packageName == null || packageName.isEmpty()) {
+      return className;
+    }
+    return packageName + '.' + className;
+  }
 }

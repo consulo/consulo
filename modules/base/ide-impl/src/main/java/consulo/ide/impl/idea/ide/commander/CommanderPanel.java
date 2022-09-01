@@ -50,6 +50,7 @@ import consulo.ui.ex.awt.PopupHandler;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.ScrollingUtil;
 import consulo.ui.ex.awt.event.DoubleClickListener;
+import consulo.ui.ex.awt.speedSearch.ListSpeedSearch;
 import consulo.util.dataholder.Key;
 import consulo.application.util.SystemInfo;
 import consulo.application.ui.wm.IdeFocusManager;

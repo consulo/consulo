@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.ui;
 
 import consulo.ide.impl.idea.util.PairConvertor;
 import consulo.ui.ex.awt.ScrollingUtil;
+import consulo.ui.ex.awt.speedSearch.ListSpeedSearch;
 
 import javax.annotation.Nonnull;
 

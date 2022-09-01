@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ui;
+package consulo.ui.ex.awt.speedSearch;
 
 import consulo.ui.ex.awt.ScrollingUtil;
-import consulo.ui.ex.awt.speedSearch.SpeedSearchBase;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

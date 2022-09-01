@@ -13,14 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.unscramble;
+package consulo.execution.unscramble;
 
 import consulo.application.AllIcons;
 import consulo.execution.ui.console.ConsoleView;
-import consulo.execution.unscramble.AnalyzeStacktraceUtil;
-import consulo.execution.unscramble.ThreadOperation;
-import consulo.execution.unscramble.ThreadState;
-import consulo.ide.impl.idea.ui.ListSpeedSearch;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationType;
@@ -29,6 +25,7 @@ import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.speedSearch.ListSpeedSearch;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchComparator;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
@@ -47,7 +44,7 @@ import static consulo.application.AllIcons.Debugger.ThreadStates.*;
  * @author Jeka
  * @author Konstantin Bulenkov
  */
-public class ThreadDumpPanel extends JPanel {
+class ThreadDumpPanel extends JPanel {
   private static final Image PAUSE_ICON_DAEMON = ImageEffects.layered(Paused, Daemon_sign);
   private static final Image LOCKED_ICON_DAEMON = ImageEffects.layered(Locked, Daemon_sign);
   private static final Image RUNNING_ICON_DAEMON = ImageEffects.layered(Running, Daemon_sign);
@@ -57,7 +54,7 @@ public class ThreadDumpPanel extends JPanel {
   private static final Image IO_ICON_DAEMON = ImageEffects.layered(IO, Daemon_sign);
   private final JBList<ThreadState> myThreadList;
 
-  public ThreadDumpPanel(Project project, final ConsoleView consoleView, final DefaultActionGroup toolbarActions, final List<ThreadState> threadDump) {
+  ThreadDumpPanel(Project project, final ConsoleView consoleView, final DefaultActionGroup toolbarActions, final List<ThreadState> threadDump) {
     super(new BorderLayout());
     final ThreadState[] data = threadDump.toArray(new ThreadState[threadDump.size()]);
     DefaultListModel<ThreadState> model = new DefaultListModel();

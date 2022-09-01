@@ -19,6 +19,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.util.EditSourceOnEnterKeyHandler;
 import consulo.ui.ex.awt.EditSourceOnDoubleClickHandler;
 import consulo.ui.ex.awt.JBList;
+import consulo.ui.ex.awt.speedSearch.ListSpeedSearch;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.ui.ex.awt.tree.Tree;

@@ -20,10 +20,7 @@ import consulo.application.Application;
 import consulo.application.ApplicationPropertiesComponent;
 import consulo.application.HelpManager;
 import consulo.execution.ui.RunContentDescriptor;
-import consulo.execution.unscramble.AnalyzeStacktraceUtil;
-import consulo.execution.unscramble.StacktraceAnalyzer;
-import consulo.execution.unscramble.ThreadState;
-import consulo.execution.unscramble.UnscrambleSupport;
+import consulo.execution.unscramble.*;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.IdeaFileChooser;
@@ -398,9 +395,10 @@ public class UnscrambleDialog extends DialogWrapper {
       message = IdeBundle.message("unscramble.unscrambled.deadlock.tab");
       icon = AllIcons.Debugger.KillProcess;
     }
-    return AnalyzeStacktraceUtil
-            .addConsole(project, threadDump.size() > 1 ? (consoleView, toolbarActions) -> new ThreadDumpPanel(project, consoleView, toolbarActions, threadDump) : null, message, unscrambledTrace,
-                        icon);
+    return AnalyzeStacktraceUtil.addConsole(project, threadDump.size() > 1 ? (consoleView, toolbarActions) -> {
+      ThreadDumpConsoleFactory factory = new ThreadDumpConsoleFactory(project, threadDump);
+      return factory.createConsoleComponent(consoleView, toolbarActions);
+    } : null, message, unscrambledTrace, icon);
   }
 
   @Override
