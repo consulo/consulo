@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.unscramble;
 
+import consulo.execution.unscramble.AnalyzeStacktraceUtil;
 import consulo.ide.impl.idea.diagnostic.IdeErrorsDialog;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.CommonDataKeys;

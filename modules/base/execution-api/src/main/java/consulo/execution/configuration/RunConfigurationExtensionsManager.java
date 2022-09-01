@@ -13,29 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.execution.configuration;
+package consulo.execution.configuration;
 
-import consulo.process.ExecutionException;
+import consulo.application.Application;
 import consulo.execution.action.Location;
-import consulo.process.cmd.GeneralCommandLine;
-import consulo.execution.configuration.RunConfigurationBase;
-import consulo.execution.configuration.RunnerSettings;
-import consulo.process.ProcessHandler;
-import consulo.component.extension.ExtensionPointName;
 import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.execution.configuration.ui.SettingsEditorGroup;
-import consulo.util.xml.serializer.InvalidDataException;
-import consulo.ide.impl.idea.openapi.util.JDOMUtil;
-import consulo.util.xml.serializer.WriteExternalException;
+import consulo.process.ExecutionException;
+import consulo.process.ProcessHandler;
+import consulo.process.cmd.GeneralCommandLine;
 import consulo.util.collection.SmartList;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.dataholder.Key;
+import consulo.util.jdom.interner.JDOMInterner;
+import consulo.util.xml.serializer.InvalidDataException;
+import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 /**
@@ -46,10 +45,10 @@ public class RunConfigurationExtensionsManager<U extends RunConfigurationBase, T
   private static final String EXT_ID_ATTR = "ID";
   private static final String EXTENSION_ROOT_ATTR = "EXTENSION";
 
-  private final ExtensionPointName<T> myExtensionPointName;
+  private final Class<T> myExtensionClass;
 
-  public RunConfigurationExtensionsManager(ExtensionPointName<T> extensionPointName) {
-    myExtensionPointName = extensionPointName;
+  public RunConfigurationExtensionsManager(Class<T> extensionClass) {
+    myExtensionClass = extensionClass;
   }
 
   public void readExternal(@Nonnull U configuration, @Nonnull Element parentNode) throws InvalidDataException {
@@ -72,7 +71,7 @@ public class RunConfigurationExtensionsManager<U extends RunConfigurationBase, T
       }
     }
     if (hasUnknownExtension) {
-      List<Element> copy = children.stream().map(JDOMUtil::internElement).collect(Collectors.toList());
+      List<Element> copy = children.stream().map(JDOMInterner::internElement).collect(Collectors.toList());
       configuration.putCopyableUserData(RUN_EXTENSIONS, copy);
     }
   }
@@ -88,7 +87,7 @@ public class RunConfigurationExtensionsManager<U extends RunConfigurationBase, T
   }
 
   public void writeExternal(@Nonnull U configuration, @Nonnull Element parentNode) {
-    Map<String, Element> map = ContainerUtil.newTreeMap();
+    Map<String, Element> map = new TreeMap<>();
     final List<Element> elements = configuration.getCopyableUserData(RUN_EXTENSIONS);
     if (elements != null) {
       for (Element element : elements) {
@@ -116,27 +115,23 @@ public class RunConfigurationExtensionsManager<U extends RunConfigurationBase, T
     }
   }
 
-  public <V extends U> void appendEditors(@Nonnull final U configuration,
-                                          @Nonnull final SettingsEditorGroup<V> group) {
+  public <V extends U> void appendEditors(@Nonnull final U configuration, @Nonnull final SettingsEditorGroup<V> group) {
     for (T extension : getApplicableExtensions(configuration)) {
-      @SuppressWarnings("unchecked")
-      final SettingsEditor<V> editor = extension.createEditor((V)configuration);
+      @SuppressWarnings("unchecked") final SettingsEditor<V> editor = extension.createEditor((V)configuration);
       if (editor != null) {
         group.addEditor(extension.getEditorTitle(), editor);
       }
     }
   }
 
-  public void validateConfiguration(@Nonnull final U configuration,
-                                    final boolean isExecution) throws Exception {
+  public void validateConfiguration(@Nonnull final U configuration, final boolean isExecution) throws Exception {
     // only for enabled extensions
     for (T extension : getEnabledExtensions(configuration, null)) {
       extension.validateConfiguration(configuration, isExecution);
     }
   }
 
-  public void extendCreatedConfiguration(@Nonnull final U configuration,
-                                         @Nonnull final Location location) {
+  public void extendCreatedConfiguration(@Nonnull final U configuration, @Nonnull final Location location) {
     for (T extension : getApplicableExtensions(configuration)) {
       extension.extendCreatedConfiguration(configuration, location);
     }
@@ -148,19 +143,15 @@ public class RunConfigurationExtensionsManager<U extends RunConfigurationBase, T
     }
   }
 
-  public void patchCommandLine(@Nonnull final U configuration,
-                               final RunnerSettings runnerSettings,
-                               @Nonnull final GeneralCommandLine cmdLine,
-                               @Nonnull final String runnerId) throws ExecutionException {
+  public void patchCommandLine(@Nonnull final U configuration, final RunnerSettings runnerSettings, @Nonnull final GeneralCommandLine cmdLine, @Nonnull final String runnerId)
+          throws ExecutionException {
     // only for enabled extensions
     for (T extension : getEnabledExtensions(configuration, runnerSettings)) {
       extension.patchCommandLine(configuration, runnerSettings, cmdLine, runnerId);
     }
   }
 
-  public void attachExtensionsToProcess(@Nonnull final U configuration,
-                                        @Nonnull final ProcessHandler handler,
-                                        RunnerSettings runnerSettings) {
+  public void attachExtensionsToProcess(@Nonnull final U configuration, @Nonnull final ProcessHandler handler, RunnerSettings runnerSettings) {
     // only for enabled extensions
     for (T extension : getEnabledExtensions(configuration, runnerSettings)) {
       extension.attachToProcess(configuration, handler, runnerSettings);
@@ -170,7 +161,7 @@ public class RunConfigurationExtensionsManager<U extends RunConfigurationBase, T
   @Nonnull
   protected List<T> getApplicableExtensions(@Nonnull U configuration) {
     List<T> extensions = new SmartList<>();
-    for (T extension : myExtensionPointName.getExtensionList()) {
+    for (T extension : Application.get().getExtensionList(myExtensionClass)) {
       if (extension.isApplicableFor(configuration)) {
         extensions.add(extension);
       }
@@ -179,9 +170,9 @@ public class RunConfigurationExtensionsManager<U extends RunConfigurationBase, T
   }
 
   @Nonnull
-  protected List<T> getEnabledExtensions(@Nonnull U configuration, @javax.annotation.Nullable RunnerSettings runnerSettings) {
+  protected List<T> getEnabledExtensions(@Nonnull U configuration, @Nullable RunnerSettings runnerSettings) {
     List<T> extensions = new SmartList<>();
-    for (T extension : myExtensionPointName.getExtensionList()) {
+    for (T extension : Application.get().getExtensionList(myExtensionClass)) {
       if (extension.isApplicableFor(configuration) && extension.isEnabledFor(configuration, runnerSettings)) {
         extensions.add(extension);
       }

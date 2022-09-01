@@ -1,30 +1,26 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.execution.impl;
+package consulo.execution.ui.console;
 
-import consulo.ide.impl.idea.ide.ui.LafManager;
-import consulo.ide.impl.idea.ide.ui.LafManagerListener;
-import consulo.colorScheme.*;
-import consulo.undoRedo.util.UndoUtil;
-import consulo.colorScheme.DelegateColorScheme;
-import consulo.codeEditor.EditorEx;
-import consulo.ide.impl.idea.openapi.editor.impl.EditorFactoryImpl;
-import consulo.language.editor.highlight.SyntaxHighlighter;
-import consulo.language.editor.highlight.SyntaxHighlighterFactory;
-import consulo.application.util.ConcurrentFactoryMap;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.text.StringTokenizer;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.UISettings;
+import consulo.application.util.ConcurrentFactoryMap;
+import consulo.codeEditor.*;
+import consulo.codeEditor.internal.InternalEditorFactory;
+import consulo.colorScheme.*;
 import consulo.content.scope.SearchScope;
 import consulo.document.Document;
-import consulo.codeEditor.*;
-import consulo.language.editor.highlight.EmptyEditorHighlighter;
-import consulo.execution.ui.console.*;
 import consulo.language.ast.IElementType;
+import consulo.language.editor.highlight.EmptyEditorHighlighter;
+import consulo.language.editor.highlight.SyntaxHighlighter;
+import consulo.language.editor.highlight.SyntaxHighlighterFactory;
 import consulo.language.lexer.Lexer;
 import consulo.project.Project;
 import consulo.ui.color.ColorValue;
+import consulo.ui.style.StyleManager;
+import consulo.undoRedo.util.UndoUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.text.StringTokenizer;
 import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;
@@ -48,7 +44,7 @@ public class ConsoleViewUtil {
   @Nonnull
   public static EditorEx setupConsoleEditor(Project project, final boolean foldingOutlineShown, final boolean lineMarkerAreaShown) {
     EditorFactory editorFactory = EditorFactory.getInstance();
-    Document document = ((EditorFactoryImpl)editorFactory).createDocument(true);
+    Document document = ((InternalEditorFactory)editorFactory).createDocument(true);
     UndoUtil.disableUndoFor(document);
     EditorEx editor = (EditorEx)editorFactory.createViewer(document, project, EditorKind.CONSOLE);
     setupConsoleEditor(editor, foldingOutlineShown, lineMarkerAreaShown);
@@ -152,15 +148,6 @@ public class ConsoleViewUtil {
   }
 
   private static class ColorCache {
-    static {
-      LafManager.getInstance().addLafManagerListener(new LafManagerListener() {
-        @Override
-        public void lookAndFeelChanged(@Nonnull LafManager source) {
-          mergedTextAttributes.clear();
-        }
-      });
-    }
-
     static final Map<Key, List<TextAttributesKey>> textAttributeKeys = new ConcurrentHashMap<>();
     static final Map<Key, TextAttributes> mergedTextAttributes = ConcurrentFactoryMap.createMap(contentKey -> {
       EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
@@ -191,6 +178,12 @@ public class ConsoleViewUtil {
       ConsoleViewContentType.registerNewConsoleViewType(newKey, contentType);
       return newKey;
     });
+
+    static {
+      StyleManager.get().addChangeListener((oldStyle, newStyle) -> {
+        mergedTextAttributes.clear();
+      });
+    }
   }
 
   public static void printWithHighlighting(@Nonnull ConsoleView console, @Nonnull String text, @Nonnull SyntaxHighlighter highlighter) {

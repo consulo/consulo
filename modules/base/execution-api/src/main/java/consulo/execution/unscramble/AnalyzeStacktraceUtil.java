@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.unscramble;
+package consulo.execution.unscramble;
 
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
@@ -27,18 +28,16 @@ import consulo.document.Document;
 import consulo.execution.ExecutionManager;
 import consulo.execution.executor.DefaultRunExecutor;
 import consulo.execution.executor.Executor;
+import consulo.execution.internal.AnalyzeStacktraceService;
 import consulo.execution.ui.ExecutionConsole;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.execution.ui.console.*;
-import consulo.ide.impl.idea.execution.impl.ConsoleViewImpl;
-import consulo.ide.impl.idea.execution.impl.ConsoleViewUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -88,12 +87,12 @@ public class AnalyzeStacktraceUtil {
 
     final Executor executor = DefaultRunExecutor.getRunExecutorInstance();
     for (AnAction action : consoleView.createConsoleActions()) {
-      toolbarActions.add(action);
+      toolbarActions.add(action);                                     
     }
-    final ConsoleViewImpl console = (ConsoleViewImpl)consoleView;
-    ConsoleViewUtil.enableReplaceActionForConsoleViewEditor(console.getEditor());
-    console.getEditor().getSettings().setCaretRowShown(true);
-    toolbarActions.add(new AnnotateStackTraceAction(console.getEditor(), console.getHyperlinks()));
+    ConsoleViewUtil.enableReplaceActionForConsoleViewEditor(consoleView.getEditor());
+    consoleView.getEditor().getSettings().setCaretRowShown(true);
+    AnalyzeStacktraceService analyzeStacktraceService = Application.get().getInstance(AnalyzeStacktraceService.class);
+    toolbarActions.add(analyzeStacktraceService.createAnnotateStackTraceAction(consoleView));
     ExecutionManager.getInstance(project).getContentManager().showRunContent(executor, descriptor);
     consoleView.allowHeavyFilters();
     if (consoleFactory == null) {
@@ -106,9 +105,13 @@ public class AnalyzeStacktraceUtil {
     public MyConsolePanel(ExecutionConsole consoleView, ActionGroup toolbarActions) {
       super(new BorderLayout());
       JPanel toolbarPanel = new JPanel(new BorderLayout());
-      toolbarPanel.add(ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, toolbarActions, false).getComponent());
+      ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, toolbarActions, false);
+      
+      JComponent component = consoleView.getComponent();
+      toolbar.setTargetComponent(component);
+      toolbarPanel.add(toolbar.getComponent());
       add(toolbarPanel, BorderLayout.WEST);
-      add(consoleView.getComponent(), BorderLayout.CENTER);
+      add(component, BorderLayout.CENTER);
     }
   }
 
@@ -142,7 +145,7 @@ public class AnalyzeStacktraceUtil {
 
     @Override
     public Object getData(@Nonnull Key<?> dataId) {
-      if (CommonDataKeys.EDITOR == dataId) {
+      if (Editor.KEY == dataId) {
         return myEditor;
       }
       return null;

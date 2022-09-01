@@ -16,28 +16,32 @@
 
 package consulo.ide.impl.idea.unscramble;
 
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
+import consulo.annotation.component.ActionImpl;
+import consulo.annotation.component.ActionParentRef;
+import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.IdeActions;
 
 /**
- * Simple variant of Analyze Stacktrace that doesn't handle unscramblers or multiple-thread
- * thread dumps.
- *
  * @author yole
  */
+@ActionImpl(id = "AnalyzeStacktrace", parents = @ActionParentRef(@ActionRef(id = IdeActions.GROUP_ANALYZE)))
 public class AnalyzeStacktraceAction extends AnAction implements DumbAware {
+  @RequiredUIAccess
   @Override
   public void actionPerformed(AnActionEvent e) {
-    Project project = e.getDataContext().getData(CommonDataKeys.PROJECT);
-    AnalyzeStacktraceDialog dialog = new AnalyzeStacktraceDialog(project);
-    dialog.show();
+    Project project = e.getDataContext().getData(Project.KEY);
+    UnscrambleDialog dialog = new UnscrambleDialog(project, null);
+    dialog.showAsync();
   }
 
+  @RequiredUIAccess
   @Override
   public void update(AnActionEvent e) {
-    e.getPresentation().setEnabled(e.getData(CommonDataKeys.PROJECT) != null);
+    e.getPresentation().setEnabled(e.getData(Project.KEY) != null);
   }
 }

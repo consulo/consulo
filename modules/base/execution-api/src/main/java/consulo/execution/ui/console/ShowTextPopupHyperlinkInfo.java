@@ -1,17 +1,16 @@
-package consulo.ide.impl.idea.execution.filters;
+package consulo.execution.ui.console;
 
 import consulo.application.Application;
-import consulo.document.Document;
-import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.EditorEx;
-import consulo.language.plain.PlainTextFileType;
-import consulo.execution.ui.console.HyperlinkInfo;
-import consulo.project.Project;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.project.ui.wm.WindowManager;
+import consulo.codeEditor.EditorFactory;
+import consulo.document.Document;
 import consulo.language.editor.ui.awt.EditorTextField;
+import consulo.language.plain.PlainTextFileType;
+import consulo.project.Project;
+import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.util.lang.StringUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -44,20 +43,14 @@ public class ShowTextPopupHyperlinkInfo implements HyperlinkInfo {
       };
 
       Window frame = TargetAWT.to(WindowManager.getInstance().getWindow(project));
-      if(frame != null) {
+      if (frame != null) {
         Dimension size = frame.getSize();
-        if(size != null) {
+        if (size != null) {
           textField.setPreferredSize(new Dimension(size.width / 2, size.height / 2));
         }
       }
 
-      JBPopupFactory.getInstance()
-              .createComponentPopupBuilder(textField, textField)
-              .setTitle(myTitle)
-              .setResizable(true)
-              .setMovable(true)
-              .setRequestFocus(true)
-              .createPopup()
+      JBPopupFactory.getInstance().createComponentPopupBuilder(textField, textField).setTitle(myTitle).setResizable(true).setMovable(true).setRequestFocus(true).createPopup()
               .showCenteredInCurrentWindow(project);
     });
   }

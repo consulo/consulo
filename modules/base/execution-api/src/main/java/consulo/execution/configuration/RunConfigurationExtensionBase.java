@@ -13,18 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.execution.configuration;
+package consulo.execution.configuration;
 
+import consulo.execution.action.Location;
+import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.execution.runner.ProgramRunner;
 import consulo.process.ExecutionException;
-import consulo.execution.action.Location;
-import consulo.process.cmd.GeneralCommandLine;
-import consulo.execution.configuration.RunConfigurationBase;
-import consulo.execution.configuration.RunnerSettings;
 import consulo.process.ProcessHandler;
-import consulo.execution.configuration.ui.SettingsEditor;
+import consulo.process.cmd.GeneralCommandLine;
 import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -71,7 +70,7 @@ public abstract class RunConfigurationExtensionBase<T extends RunConfigurationBa
    * @param configuration the configuration being edited.
    * @return the editor component, or null if this extension doesn't provide any UI for editing the settings.
    */
-  @javax.annotation.Nullable
+  @Nullable
   protected <P extends T> SettingsEditor<P> createEditor(@Nonnull final P configuration) {
     return null;
   }
@@ -111,7 +110,7 @@ public abstract class RunConfigurationExtensionBase<T extends RunConfigurationBa
    * @throws ExecutionException if there was an error configuring the command line and the execution should be canceled.
    */
   protected abstract void patchCommandLine(@Nonnull final T configuration,
-                                           @javax.annotation.Nullable RunnerSettings runnerSettings,
+                                           @Nullable RunnerSettings runnerSettings,
                                            @Nonnull final GeneralCommandLine cmdLine,
                                            @Nonnull final String runnerId) throws ExecutionException;
 
@@ -124,7 +123,7 @@ public abstract class RunConfigurationExtensionBase<T extends RunConfigurationBa
    */
   protected void attachToProcess(@Nonnull final T configuration,
                                  @Nonnull final ProcessHandler handler,
-                                 @javax.annotation.Nullable RunnerSettings runnerSettings) {
+                                 @Nullable RunnerSettings runnerSettings) {
 
   }
 

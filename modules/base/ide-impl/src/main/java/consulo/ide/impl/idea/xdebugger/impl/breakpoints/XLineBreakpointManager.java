@@ -41,7 +41,7 @@ import consulo.execution.debug.breakpoint.XLineBreakpoint;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
-import consulo.ide.impl.idea.execution.impl.ConsoleViewUtil;
+import consulo.execution.ui.console.ConsoleViewUtil;
 import consulo.ide.impl.idea.openapi.editor.event.EditorMouseMotionAdapter;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.xdebugger.impl.XSourcePositionImpl;

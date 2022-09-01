@@ -22,7 +22,7 @@ import consulo.task.Comment;
 import consulo.task.Task;
 import consulo.ui.ex.awt.CollectionListModel;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
-import consulo.ide.impl.idea.unscramble.AnalyzeStacktraceUtil;
+import consulo.execution.unscramble.AnalyzeStacktraceUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 

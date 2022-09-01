@@ -13,21 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.codeEditor.internal;
+package consulo.ide.impl.idea.unscramble;
 
-import consulo.codeEditor.EditorFactory;
-import consulo.document.Document;
+import consulo.annotation.component.ServiceImpl;
+import consulo.execution.internal.AnalyzeStacktraceService;
+import consulo.execution.ui.console.ConsoleView;
+import consulo.ui.ex.action.AnAction;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 28-Mar-22
+ * @since 01-Sep-22
  */
-public abstract class InternalEditorFactory extends EditorFactory {
-  @Nonnull
-  public abstract Document createUnsafeDocument(String text, boolean allowInAWT);
-
-  @Nonnull
-  public abstract Document createDocument(boolean allowUpdatesWithoutWriteAction);
+@Singleton
+@ServiceImpl
+public class AnalyzeStacktraceServiceImpl implements AnalyzeStacktraceService {
+  @Override
+  public AnAction createAnnotateStackTraceAction(@Nonnull ConsoleView consoleView) {
+    return new AnnotateStackTraceAction(consoleView);
+  }
 }

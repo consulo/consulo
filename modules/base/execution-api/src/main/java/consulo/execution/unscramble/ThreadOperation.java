@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2022 consulo.io
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.codeEditor.internal;
-
-import consulo.codeEditor.EditorFactory;
-import consulo.document.Document;
-
-import javax.annotation.Nonnull;
+package consulo.execution.unscramble;
 
 /**
- * @author VISTALL
- * @since 28-Mar-22
+ * @author yole
  */
-public abstract class InternalEditorFactory extends EditorFactory {
-  @Nonnull
-  public abstract Document createUnsafeDocument(String text, boolean allowInAWT);
+public class ThreadOperation {
+  public static final ThreadOperation Socket = new ThreadOperation("socket operation");
+  public static final ThreadOperation IO = new ThreadOperation("I/O");
 
-  @Nonnull
-  public abstract Document createDocument(boolean allowUpdatesWithoutWriteAction);
+  private final String myName;
+
+  ThreadOperation(final String name) {
+    myName = name;
+  }
+
+  @Override
+  public String toString() {
+    return myName;
+  }
 }

@@ -30,7 +30,7 @@ public class ClipboardUtil {
 
   public static <E> E handleClipboardSafely(@Nonnull Supplier<? extends E> supplier, @Nonnull Supplier<? extends E> onFail) {
     try {
-      return useLegacyMergeSort(supplier);
+      return supplier.get();
     }
     catch (IllegalStateException e) {
       if (SystemInfo.isWindows) {
@@ -47,21 +47,6 @@ public class ClipboardUtil {
       LOG.warn("Java bug #7173464", e);
     }
     return onFail.get();
-  }
-
-  private static final String USE_LEGACY_MERGE_SORT_PROPERTY_NAME = "java.util.Arrays.useLegacyMergeSort";
-
-  private static <T> T useLegacyMergeSort(Supplier<T> supplier) {
-    String originalValue = System.getProperty(USE_LEGACY_MERGE_SORT_PROPERTY_NAME);
-    System.setProperty(USE_LEGACY_MERGE_SORT_PROPERTY_NAME, "true");
-    try {
-      return supplier.get();
-    }
-    finally {
-      if (originalValue != null) {
-        System.setProperty(USE_LEGACY_MERGE_SORT_PROPERTY_NAME, originalValue);
-      }
-    }
   }
 
   @Nullable

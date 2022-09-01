@@ -1031,15 +1031,15 @@ action.ViewOfflineInspection.text:
 action.ViewOfflineInspection.description:
   text: Load offline inspection results
 action.ShowPackageDeps.text:
-  text: Analyze _Dependencies...
+  text: _Dependencies...
 action.ShowPackageDeps.description:
   text: Browse code chosen analysis item depends on
 action.ShowBackwardPackageDeps.text:
-  text: Analyze _Backward Dependencies...
+  text: _Backward Dependencies...
 action.ShowBackwardPackageDeps.description:
   text: Browse code chosen analysis item used in
 action.ShowModulesDependencies.text:
-  text: Analyze _Module Dependencies...
+  text: _Module Dependencies...
 action.ShowModulesDependencies.description:
   text: Show dependencies between modules in project
 group.RefactoringMenu.text:
@@ -2758,3 +2758,5 @@ group.OverrideFileTypeAction.fromNamedPlugin:
   text: from ''{0}'' plugin
 action.ChangeToThisFileTypeAction.description:
   text: Override File Type to ''{0}''
+action.AnalyzeStacktrace.text:
+  text: _Stack Trace or Thread Dump...

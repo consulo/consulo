@@ -127,6 +127,7 @@ public abstract class EditorFactoryImpl extends InternalEditorFactory {
     return new DocumentImpl(text, allowInAWT);
   }
 
+  @Override
   @Nonnull
   public Document createDocument(boolean allowUpdatesWithoutWriteAction) {
     DocumentEx document = new DocumentImpl("", allowUpdatesWithoutWriteAction);

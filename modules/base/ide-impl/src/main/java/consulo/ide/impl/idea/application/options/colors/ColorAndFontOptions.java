@@ -32,7 +32,7 @@ import consulo.content.scope.PackageSet;
 import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.execution.impl.ConsoleViewUtil;
+import consulo.execution.ui.console.ConsoleViewUtil;
 import consulo.bookmark.BookmarkManager;
 import consulo.ide.impl.idea.ide.bookmarks.BookmarkManagerImpl;
 import consulo.ide.impl.idea.ide.todo.TodoConfiguration;

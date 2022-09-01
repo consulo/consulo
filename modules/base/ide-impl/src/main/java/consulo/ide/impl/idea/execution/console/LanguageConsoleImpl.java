@@ -21,7 +21,7 @@ import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ide.impl.idea.execution.impl.ConsoleViewImpl;
-import consulo.ide.impl.idea.execution.impl.ConsoleViewUtil;
+import consulo.execution.ui.console.ConsoleViewUtil;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.editor.impl.EditorFactoryImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;

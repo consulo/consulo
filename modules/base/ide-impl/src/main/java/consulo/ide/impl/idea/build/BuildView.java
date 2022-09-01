@@ -9,6 +9,7 @@ import consulo.build.ui.ViewManager;
 import consulo.build.ui.event.BuildEvent;
 import consulo.build.ui.event.OutputBuildEvent;
 import consulo.build.ui.event.StartBuildEvent;
+import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.build.events.impl.StartBuildEventImpl;
 import consulo.build.ui.process.BuildProcessHandler;
 import consulo.ide.impl.idea.execution.actions.StopAction;

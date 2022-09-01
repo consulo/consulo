@@ -21,7 +21,7 @@ import consulo.project.Project;
 import consulo.task.Comment;
 import consulo.task.LocalTask;
 import consulo.task.Task;
-import consulo.ide.impl.idea.unscramble.AnalyzeStacktraceUtil;
+import consulo.execution.unscramble.AnalyzeStacktraceUtil;
 
 /**
  * @author Dmitry Avdeev

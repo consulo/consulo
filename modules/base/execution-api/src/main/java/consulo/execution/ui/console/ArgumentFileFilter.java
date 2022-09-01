@@ -1,11 +1,11 @@
-package consulo.ide.impl.idea.execution.filters;
+package consulo.execution.ui.console;
 
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.execution.ui.console.Filter;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * from Kotlin
@@ -25,12 +25,12 @@ public class ArgumentFileFilter implements Filter {
 
   public void setPath(String path) throws IOException {
     myFilePath = path;
-    myFileText = FileUtil.loadFile(new File(path));
+    myFileText = Files.readString(Path.of(path));
   }
 
   @Nullable
   @Override
-  public Result applyFilter(String line, int entireLength) {
+  public Result applyFilter(@Nonnull String line, int entireLength) {
     if(!myTriggred) {
       String path = myFilePath;
       String text = myFileText;

@@ -1,6 +1,6 @@
 package consulo.ide.impl.idea.find.editorHeaderActions;
 
-import consulo.ide.impl.idea.execution.impl.ConsoleViewUtil;
+import consulo.execution.ui.console.ConsoleViewUtil;
 import consulo.ide.impl.idea.find.EditorSearchSession;
 import consulo.find.FindModel;
 import consulo.ide.impl.idea.find.FindUtil;

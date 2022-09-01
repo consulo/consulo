@@ -15,12 +15,14 @@
  */
 package consulo.execution.ui.console;
 
+import consulo.codeEditor.Editor;
 import consulo.execution.ui.ExecutionConsole;
 import consulo.process.ProcessHandler;
 import consulo.ui.ex.action.AnAction;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @see TextConsoleBuilder
@@ -60,5 +62,10 @@ public interface ConsoleView extends ExecutionConsole {
   void allowHeavyFilters();
 
   default void requestScrollingToEnd() {
+  }
+
+  @Nullable
+  default Editor getEditor() {
+    return null;
   }
 }

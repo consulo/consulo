@@ -2,7 +2,7 @@
 
 package consulo.ide.impl.idea.find;
 
-import consulo.ide.impl.idea.execution.impl.ConsoleViewUtil;
+import consulo.execution.ui.console.ConsoleViewUtil;
 import consulo.ide.impl.idea.find.editorHeaderActions.*;
 import consulo.ide.impl.idea.find.impl.HelpID;
 import consulo.ide.impl.idea.find.impl.livePreview.LivePreviewController;

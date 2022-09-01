@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2022 consulo.io
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.codeEditor.internal;
+package consulo.execution.unscramble;
 
-import consulo.codeEditor.EditorFactory;
-import consulo.document.Document;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-/**
- * @author VISTALL
- * @since 28-Mar-22
- */
-public abstract class InternalEditorFactory extends EditorFactory {
+@ExtensionAPI(ComponentScope.APPLICATION)
+public interface UnscrambleSupport {
   @Nonnull
-  public abstract Document createUnsafeDocument(String text, boolean allowInAWT);
+  String getId();
 
   @Nonnull
-  public abstract Document createDocument(boolean allowUpdatesWithoutWriteAction);
+  LocalizeValue getName();
+
+  boolean isAvailable(@Nonnull StacktraceAnalyzer analyzer);
+
+  @Nullable
+  String unscramble(Project project, String text, String logName);
 }

@@ -1,11 +1,13 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.unscramble;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
+import consulo.application.util.DateFormatUtil;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorGutterAction;
 import consulo.codeEditor.EditorGutterComponentEx;
@@ -14,24 +16,13 @@ import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.colorScheme.EditorColorKey;
 import consulo.colorScheme.EditorFontType;
 import consulo.disposer.Disposer;
-import consulo.execution.ui.console.HyperlinkInfo;
+import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.console.FileHyperlinkInfo;
+import consulo.execution.ui.console.HyperlinkInfo;
+import consulo.ide.impl.idea.execution.impl.ConsoleViewImpl;
 import consulo.ide.impl.idea.execution.impl.EditorHyperlinkSupport;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.vcs.*;
-import consulo.versionControlSystem.*;
-import consulo.versionControlSystem.action.VcsContextFactory;
-import consulo.versionControlSystem.annotate.AnnotationSource;
-import consulo.versionControlSystem.annotate.FileAnnotation;
 import consulo.ide.impl.idea.openapi.vcs.annotate.ShowAllAffectedGenericAction;
-import consulo.versionControlSystem.history.VcsFileRevision;
-import consulo.versionControlSystem.history.VcsHistoryProvider;
-import consulo.versionControlSystem.history.VcsHistorySession;
-import consulo.versionControlSystem.history.VcsRevisionNumber;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.application.util.DateFormatUtil;
 import consulo.ide.impl.idea.vcs.history.VcsHistoryProviderEx;
-import consulo.versionControlSystem.util.VcsUtil;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.logging.Logger;
 import consulo.navigation.OpenFileDescriptor;
@@ -43,7 +34,18 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.MultiMap;
+import consulo.util.lang.StringUtil;
+import consulo.versionControlSystem.*;
+import consulo.versionControlSystem.action.VcsContextFactory;
+import consulo.versionControlSystem.annotate.AnnotationSource;
+import consulo.versionControlSystem.annotate.FileAnnotation;
+import consulo.versionControlSystem.history.VcsFileRevision;
+import consulo.versionControlSystem.history.VcsHistoryProvider;
+import consulo.versionControlSystem.history.VcsHistorySession;
+import consulo.versionControlSystem.history.VcsRevisionNumber;
+import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
@@ -60,18 +62,20 @@ public class AnnotateStackTraceAction extends DumbAwareAction {
 
   private boolean myIsLoading = false;
 
-  public AnnotateStackTraceAction(@Nonnull Editor editor, @Nonnull EditorHyperlinkSupport hyperlinks) {
+  public AnnotateStackTraceAction(@Nonnull ConsoleView consoleView) {
     super("Show files modification info", null, AllIcons.Actions.Annotate);
-    myHyperlinks = hyperlinks;
-    myEditor = editor;
+    myHyperlinks = ((ConsoleViewImpl)consoleView).getHyperlinks();
+    myEditor = consoleView.getEditor();
   }
 
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     boolean isShown = myEditor.getGutter().isAnnotationsShown();
     e.getPresentation().setEnabled(!isShown && !myIsLoading);
   }
 
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull final AnActionEvent e) {
     myIsLoading = true;
@@ -82,11 +86,13 @@ public class AnnotateStackTraceAction extends DumbAwareAction {
 
       private MyActiveAnnotationGutter myGutter;
 
+      @RequiredUIAccess
       @Override
       public void onCancel() {
         myEditor.getGutter().closeAllAnnotations();
       }
 
+      @RequiredUIAccess
       @Override
       public void onFinished() {
         myIsLoading = false;
@@ -134,7 +140,7 @@ public class AnnotateStackTraceAction extends DumbAwareAction {
         ApplicationManager.getApplication().invokeLater(() -> updateGutter(indicator, revisions));
       }
 
-      @CalledInAwt
+      @RequiredUIAccess
       private void updateGutter(@Nonnull ProgressIndicator indicator, @Nonnull Map<Integer, LastRevision> revisions) {
         if (indicator.isCanceled()) return;
 
@@ -161,7 +167,7 @@ public class AnnotateStackTraceAction extends DumbAwareAction {
           VcsHistoryProvider historyProvider = vcs.getVcsHistoryProvider();
           if (historyProvider == null) return null;
 
-          FilePath filePath = VcsContextFactory.SERVICE.getInstance().createFilePathOn(file);
+          FilePath filePath = VcsContextFactory.getInstance().createFilePathOn(file);
 
           if (historyProvider instanceof VcsHistoryProviderEx) {
             VcsFileRevision revision = ((VcsHistoryProviderEx)historyProvider).getLastRevision(filePath);
@@ -187,7 +193,7 @@ public class AnnotateStackTraceAction extends DumbAwareAction {
   }
 
   @Nullable
-  //@CalledWithReadLock
+  @RequiredReadAction
   private static VirtualFile getHyperlinkVirtualFile(@Nonnull List<RangeHighlighter> links) {
     RangeHighlighter key = ContainerUtil.getLastItem(links);
     if (key == null) return null;
