@@ -1,6 +1,9 @@
 package consulo.ide.impl.idea.openapi.externalSystem.model.task;
 
 import consulo.application.progress.ProgressIndicator;
+import consulo.externalSystem.model.task.ExternalSystemTaskId;
+import consulo.externalSystem.model.task.ExternalSystemTaskNotificationListener;
+
 import javax.annotation.Nonnull;
 
 /**

@@ -16,14 +16,14 @@
 package consulo.ide.impl.idea.openapi.externalSystem.service.internal;
 
 import consulo.ide.ServiceManager;
-import consulo.ide.impl.idea.openapi.externalSystem.model.ProjectSystemId;
-import consulo.ide.impl.idea.openapi.externalSystem.model.execution.ExternalTaskPojo;
-import consulo.ide.impl.idea.openapi.externalSystem.model.settings.ExternalSystemExecutionSettings;
-import consulo.ide.impl.idea.openapi.externalSystem.model.task.ExternalSystemTaskType;
+import consulo.externalSystem.model.ProjectSystemId;
+import consulo.externalSystem.model.execution.ExternalTaskPojo;
+import consulo.externalSystem.model.setting.ExternalSystemExecutionSettings;
+import consulo.externalSystem.model.task.ExternalSystemTaskType;
 import consulo.ide.impl.idea.openapi.externalSystem.service.ExternalSystemFacadeManager;
 import consulo.ide.impl.idea.openapi.externalSystem.service.RemoteExternalSystemFacade;
 import consulo.ide.impl.idea.openapi.externalSystem.service.remote.RemoteExternalSystemTaskManager;
-import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemApiUtil;
+import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.project.Project;
 import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

@@ -15,10 +15,12 @@
  */
 package consulo.ide.impl.idea.openapi.externalSystem.service.execution;
 
-import consulo.ide.impl.idea.openapi.externalSystem.ExternalSystemManager;
-import consulo.ide.impl.idea.openapi.externalSystem.ExternalSystemUiAware;
-import consulo.ide.impl.idea.openapi.externalSystem.model.ProjectSystemId;
-import consulo.ide.impl.idea.openapi.externalSystem.model.execution.ExternalSystemTaskExecutionSettings;
+import consulo.externalSystem.ExternalSystemManager;
+import consulo.externalSystem.ExternalSystemUiAware;
+import consulo.externalSystem.model.ProjectSystemId;
+import consulo.externalSystem.model.execution.ExternalSystemTaskExecutionSettings;
+import consulo.externalSystem.util.ExternalSystemApiUtil;
+import consulo.externalSystem.util.ExternalSystemConstants;
 import consulo.ide.impl.idea.openapi.externalSystem.service.ui.ExternalProjectPathField;
 import consulo.ide.impl.idea.openapi.externalSystem.util.*;
 import consulo.fileChooser.FileChooserDescriptor;
@@ -38,7 +40,7 @@ import javax.annotation.Nullable;
 
 import java.awt.*;
 
-import static consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemApiUtil.normalizePath;
+import static consulo.externalSystem.util.ExternalSystemApiUtil.normalizePath;
 
 /**
  * @author Denis Zhdanov

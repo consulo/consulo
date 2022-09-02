@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.externalSystem.module.extension;
 
+import consulo.externalSystem.service.module.extension.ExternalSystemModuleExtension;
 import consulo.module.extension.MutableModuleExtension;
 
 import javax.annotation.Nonnull;

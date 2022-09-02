@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.externalSystem.service.ui;
 
 import consulo.application.Application;
-import consulo.ide.impl.idea.openapi.externalSystem.ExternalSystemUiAware;
+import consulo.externalSystem.ExternalSystemUiAware;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.ui.image.Image;
 import consulo.ide.impl.externalSystem.ExternalSystemIcons;

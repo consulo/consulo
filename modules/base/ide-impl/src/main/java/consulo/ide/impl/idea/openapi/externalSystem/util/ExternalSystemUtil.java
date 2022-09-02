@@ -22,6 +22,13 @@ import consulo.execution.executor.DefaultRunExecutor;
 import consulo.execution.event.ExecutionListener;
 import consulo.execution.executor.Executor;
 import consulo.execution.executor.ExecutorRegistry;
+import consulo.externalSystem.model.DataNode;
+import consulo.externalSystem.model.ExternalSystemException;
+import consulo.externalSystem.model.ProjectKeys;
+import consulo.externalSystem.model.ProjectSystemId;
+import consulo.externalSystem.util.DisposeAwareProjectChange;
+import consulo.externalSystem.util.ExternalSystemApiUtil;
+import consulo.externalSystem.util.ExternalSystemConstants;
 import consulo.process.ExecutionException;
 import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
@@ -40,16 +47,16 @@ import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ReadAction;
 import consulo.application.internal.ApplicationEx;
 import consulo.ide.ServiceManager;
-import consulo.ide.impl.idea.openapi.externalSystem.ExternalSystemManager;
+import consulo.externalSystem.ExternalSystemManager;
 import consulo.ide.impl.idea.openapi.externalSystem.importing.ImportSpec;
 import consulo.ide.impl.idea.openapi.externalSystem.importing.ImportSpecBuilder;
 import consulo.ide.impl.idea.openapi.externalSystem.model.*;
-import consulo.ide.impl.idea.openapi.externalSystem.model.execution.ExternalSystemTaskExecutionSettings;
-import consulo.ide.impl.idea.openapi.externalSystem.model.execution.ExternalTaskExecutionInfo;
-import consulo.ide.impl.idea.openapi.externalSystem.model.project.ModuleData;
-import consulo.ide.impl.idea.openapi.externalSystem.model.project.ProjectData;
-import consulo.ide.impl.idea.openapi.externalSystem.model.task.ExternalSystemTaskNotificationListener;
-import consulo.ide.impl.idea.openapi.externalSystem.model.task.ExternalSystemTaskType;
+import consulo.externalSystem.model.execution.ExternalSystemTaskExecutionSettings;
+import consulo.externalSystem.model.execution.ExternalTaskExecutionInfo;
+import consulo.externalSystem.model.project.ModuleData;
+import consulo.externalSystem.service.project.ProjectData;
+import consulo.externalSystem.model.task.ExternalSystemTaskNotificationListener;
+import consulo.externalSystem.model.task.ExternalSystemTaskType;
 import consulo.ide.impl.idea.openapi.externalSystem.service.ImportCanceledException;
 import consulo.ide.impl.idea.openapi.externalSystem.service.execution.AbstractExternalSystemTaskConfigurationType;
 import consulo.ide.impl.idea.openapi.externalSystem.service.execution.ExternalSystemRunConfiguration;
@@ -64,9 +71,9 @@ import consulo.ide.impl.idea.openapi.externalSystem.service.project.manage.Modul
 import consulo.ide.impl.idea.openapi.externalSystem.service.project.manage.ProjectDataManager;
 import consulo.ide.impl.idea.openapi.externalSystem.service.settings.ExternalSystemConfigLocator;
 import consulo.ide.impl.idea.openapi.externalSystem.service.task.ui.ExternalSystemRecentTasksList;
-import consulo.ide.impl.idea.openapi.externalSystem.settings.AbstractExternalSystemLocalSettings;
-import consulo.ide.impl.idea.openapi.externalSystem.settings.AbstractExternalSystemSettings;
-import consulo.ide.impl.idea.openapi.externalSystem.settings.ExternalProjectSettings;
+import consulo.externalSystem.setting.AbstractExternalSystemLocalSettings;
+import consulo.externalSystem.setting.AbstractExternalSystemSettings;
+import consulo.externalSystem.setting.ExternalProjectSettings;
 import consulo.ide.impl.idea.openapi.externalSystem.task.TaskCallback;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
@@ -270,7 +277,7 @@ public class ExternalSystemUtil {
     if (manager == null) {
       return;
     }
-    AbstractExternalSystemSettings<?, ?, ?> settings = manager.getSettingsProvider().fun(spec.getProject());
+    AbstractExternalSystemSettings<?, ?, ?> settings = manager.getSettingsProvider().apply(spec.getProject());
     final Collection<? extends ExternalProjectSettings> projectsSettings = settings.getLinkedProjectsSettings();
     if (projectsSettings.isEmpty()) {
       return;
@@ -282,7 +289,7 @@ public class ExternalSystemUtil {
     ExternalProjectRefreshCallback callback =
             new MyMultiExternalProjectRefreshCallback(spec.getProject(), projectDataManager, counter, spec.getExternalSystemId());
 
-    Map<String, Long> modificationStamps = manager.getLocalSettingsProvider().fun(spec.getProject()).getExternalConfigModificationStamps();
+    Map<String, Long> modificationStamps = manager.getLocalSettingsProvider().apply(spec.getProject()).getExternalConfigModificationStamps();
     Set<String> toRefresh = ContainerUtilRt.newHashSet();
     for (ExternalProjectSettings setting : projectsSettings) {
 
@@ -493,13 +500,13 @@ public class ExternalSystemUtil {
             }
 
             String projectPath = externalProject.getData().getLinkedExternalProjectPath();
-            ExternalProjectSettings linkedProjectSettings = manager.getSettingsProvider().fun(project).getLinkedProjectSettings(projectPath);
+            ExternalProjectSettings linkedProjectSettings = manager.getSettingsProvider().apply(project).getLinkedProjectSettings(projectPath);
             if (linkedProjectSettings != null) {
               linkedProjectSettings.setModules(externalModulePaths);
 
               long stamp = getTimeStamp(linkedProjectSettings, externalSystemId);
               if (stamp > 0) {
-                manager.getLocalSettingsProvider().fun(project).getExternalConfigModificationStamps().put(externalProjectPath, stamp);
+                manager.getLocalSettingsProvider().apply(project).getExternalConfigModificationStamps().put(externalProjectPath, stamp);
               }
             }
           }
@@ -522,7 +529,7 @@ public class ExternalSystemUtil {
         if (manager == null) {
           return;
         }
-        AbstractExternalSystemSettings<?, ?, ?> settings = manager.getSettingsProvider().fun(project);
+        AbstractExternalSystemSettings<?, ?, ?> settings = manager.getSettingsProvider().apply(project);
         ExternalProjectSettings projectSettings = settings.getLinkedProjectSettings(externalProjectPath);
         if (projectSettings == null || !reportRefreshError) {
           return;
@@ -751,7 +758,7 @@ public class ExternalSystemUtil {
 
     ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(externalSystemId);
     assert manager != null;
-    AbstractExternalSystemLocalSettings settings = manager.getLocalSettingsProvider().fun(project);
+    AbstractExternalSystemLocalSettings settings = manager.getLocalSettingsProvider().apply(project);
     settings.setRecentTasks(recentTasksList.getModel().getTasks());
   }
 

@@ -1,9 +1,9 @@
 package consulo.ide.impl.idea.openapi.externalSystem.service.project;
 
-import consulo.ide.impl.idea.openapi.externalSystem.model.project.LibraryData;
-import consulo.ide.impl.idea.openapi.externalSystem.model.project.ModuleData;
-import consulo.ide.impl.idea.openapi.externalSystem.model.project.ModuleDependencyData;
-import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemApiUtil;
+import consulo.externalSystem.model.project.LibraryData;
+import consulo.externalSystem.model.project.ModuleData;
+import consulo.externalSystem.model.project.ModuleDependencyData;
+import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.content.ModuleRootManager;

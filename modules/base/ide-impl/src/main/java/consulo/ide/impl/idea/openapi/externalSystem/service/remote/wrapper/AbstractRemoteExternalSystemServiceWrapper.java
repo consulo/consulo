@@ -15,11 +15,11 @@
  */
 package consulo.ide.impl.idea.openapi.externalSystem.service.remote.wrapper;
 
-import consulo.ide.impl.idea.openapi.externalSystem.model.task.ExternalSystemTaskId;
-import consulo.ide.impl.idea.openapi.externalSystem.model.task.ExternalSystemTaskType;
+import consulo.externalSystem.model.task.ExternalSystemTaskId;
+import consulo.externalSystem.model.task.ExternalSystemTaskType;
 import consulo.ide.impl.idea.openapi.externalSystem.service.RemoteExternalSystemService;
-import consulo.ide.impl.idea.openapi.externalSystem.model.settings.ExternalSystemExecutionSettings;
-import consulo.ide.impl.idea.openapi.externalSystem.model.task.ExternalSystemTaskNotificationListener;
+import consulo.externalSystem.model.setting.ExternalSystemExecutionSettings;
+import consulo.externalSystem.model.task.ExternalSystemTaskNotificationListener;
 import javax.annotation.Nonnull;
 
 import java.rmi.RemoteException;

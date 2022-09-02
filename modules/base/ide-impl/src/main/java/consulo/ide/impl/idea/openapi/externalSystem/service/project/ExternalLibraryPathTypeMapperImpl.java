@@ -20,7 +20,7 @@ import consulo.content.OrderRootType;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.base.DocumentationOrderRootType;
 import consulo.content.base.SourcesOrderRootType;
-import consulo.ide.impl.idea.openapi.externalSystem.model.project.LibraryPathType;
+import consulo.externalSystem.model.project.LibraryPathType;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;

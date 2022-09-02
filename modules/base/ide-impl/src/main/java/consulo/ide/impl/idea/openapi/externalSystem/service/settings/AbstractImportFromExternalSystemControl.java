@@ -15,12 +15,12 @@
  */
 package consulo.ide.impl.idea.openapi.externalSystem.service.settings;
 
-import consulo.ide.impl.idea.openapi.externalSystem.ExternalSystemManager;
-import consulo.ide.impl.idea.openapi.externalSystem.model.ProjectSystemId;
-import consulo.ide.impl.idea.openapi.externalSystem.settings.AbstractExternalSystemSettings;
-import consulo.ide.impl.idea.openapi.externalSystem.settings.ExternalProjectSettings;
-import consulo.ide.impl.idea.openapi.externalSystem.settings.ExternalSystemSettingsListener;
-import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemApiUtil;
+import consulo.externalSystem.ExternalSystemManager;
+import consulo.externalSystem.model.ProjectSystemId;
+import consulo.externalSystem.setting.AbstractExternalSystemSettings;
+import consulo.externalSystem.setting.ExternalProjectSettings;
+import consulo.externalSystem.setting.ExternalSystemSettingsListener;
+import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemBundle;
 import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemSettingsControl;
 import consulo.configurable.ConfigurationException;
@@ -105,7 +105,7 @@ public abstract class AbstractImportFromExternalSystemControl<ProjectSettings ex
     else if (currentProject != null) {
       ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(myExternalSystemId);
       assert manager != null;
-      AbstractExternalSystemSettings<?, ?, ?> settings = manager.getSettingsProvider().fun(currentProject);
+      AbstractExternalSystemSettings<?, ?, ?> settings = manager.getSettingsProvider().apply(currentProject);
       if (settings.getLinkedProjectSettings(linkedProjectPath) != null) {
         throw new ConfigurationException(ExternalSystemBundle.message("error.project.already.registered"));
       }

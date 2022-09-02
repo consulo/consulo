@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.externalSystem.service.notification;
 
-import consulo.ide.impl.idea.openapi.externalSystem.model.ProjectSystemId;
+import consulo.externalSystem.model.ProjectSystemId;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import gnu.trove.TObjectIntHashMap;
 

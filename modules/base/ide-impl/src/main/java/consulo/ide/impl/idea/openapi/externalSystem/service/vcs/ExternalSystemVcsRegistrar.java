@@ -15,11 +15,11 @@
  */
 package consulo.ide.impl.idea.openapi.externalSystem.service.vcs;
 
-import consulo.ide.impl.idea.openapi.externalSystem.ExternalSystemManager;
-import consulo.ide.impl.idea.openapi.externalSystem.settings.AbstractExternalSystemSettings;
-import consulo.ide.impl.idea.openapi.externalSystem.settings.ExternalProjectSettings;
+import consulo.externalSystem.ExternalSystemManager;
+import consulo.externalSystem.setting.AbstractExternalSystemSettings;
+import consulo.externalSystem.setting.ExternalProjectSettings;
 import consulo.ide.impl.idea.openapi.externalSystem.settings.ExternalSystemSettingsListenerAdapter;
-import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemApiUtil;
+import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
@@ -54,7 +54,7 @@ public class ExternalSystemVcsRegistrar {
   @SuppressWarnings("unchecked")
   public static void handle(@Nonnull final Project project) {
     for (final ExternalSystemManager<?, ?, ?, ?, ?> manager : ExternalSystemApiUtil.getAllManagers()) {
-      final AbstractExternalSystemSettings settings = manager.getSettingsProvider().fun(project);
+      final AbstractExternalSystemSettings settings = manager.getSettingsProvider().apply(project);
       settings.subscribe(new ExternalSystemSettingsListenerAdapter() {
         @Override
         public void onProjectsLinked(@Nonnull final Collection linked) {

@@ -1,8 +1,8 @@
 package consulo.ide.impl.idea.openapi.externalSystem.service.remote.wrapper;
 
-import consulo.ide.impl.idea.openapi.externalSystem.model.settings.ExternalSystemExecutionSettings;
-import consulo.ide.impl.idea.openapi.externalSystem.model.task.ExternalSystemTaskId;
-import consulo.ide.impl.idea.openapi.externalSystem.model.task.ExternalSystemTaskType;
+import consulo.externalSystem.model.setting.ExternalSystemExecutionSettings;
+import consulo.externalSystem.model.task.ExternalSystemTaskId;
+import consulo.externalSystem.model.task.ExternalSystemTaskType;
 import consulo.ide.impl.idea.openapi.externalSystem.service.RemoteExternalSystemFacade;
 import consulo.ide.impl.idea.openapi.externalSystem.service.remote.RemoteExternalSystemProgressNotificationManager;
 import consulo.ide.impl.idea.openapi.externalSystem.service.remote.RemoteExternalSystemProjectResolver;

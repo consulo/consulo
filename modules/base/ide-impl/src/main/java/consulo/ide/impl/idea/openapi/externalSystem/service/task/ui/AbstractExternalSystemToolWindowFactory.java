@@ -16,9 +16,9 @@
 package consulo.ide.impl.idea.openapi.externalSystem.service.task.ui;
 
 import consulo.project.ui.notification.NotificationGroup;
-import consulo.ide.impl.idea.openapi.externalSystem.ExternalSystemManager;
-import consulo.ide.impl.idea.openapi.externalSystem.model.ProjectSystemId;
-import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemApiUtil;
+import consulo.externalSystem.ExternalSystemManager;
+import consulo.externalSystem.model.ProjectSystemId;
+import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.ui.ex.toolWindow.ToolWindow;

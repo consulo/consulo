@@ -15,14 +15,15 @@
  */
 package consulo.ide.impl.idea.openapi.externalSystem.util;
 
-import consulo.ide.impl.idea.openapi.externalSystem.ExternalSystemManager;
-import consulo.ide.impl.idea.openapi.externalSystem.ExternalSystemUiAware;
-import consulo.ide.impl.idea.openapi.externalSystem.model.ProjectSystemId;
-import consulo.ide.impl.idea.openapi.externalSystem.model.execution.ExternalTaskPojo;
-import consulo.ide.impl.idea.openapi.externalSystem.model.project.ExternalProjectPojo;
+import consulo.externalSystem.ExternalSystemManager;
+import consulo.externalSystem.ExternalSystemUiAware;
+import consulo.externalSystem.model.ProjectSystemId;
+import consulo.externalSystem.util.ExternalSystemApiUtil;
+import consulo.externalSystem.model.execution.ExternalTaskPojo;
+import consulo.externalSystem.model.project.ExternalProjectPojo;
 import consulo.ide.impl.idea.openapi.externalSystem.service.task.ui.ExternalSystemTasksTreeModel;
 import consulo.ide.impl.idea.openapi.externalSystem.service.ui.DefaultExternalSystemUiAware;
-import consulo.ide.impl.idea.openapi.externalSystem.settings.AbstractExternalSystemLocalSettings;
+import consulo.externalSystem.setting.AbstractExternalSystemLocalSettings;
 import consulo.ui.ex.awt.GridBag;
 import consulo.application.ApplicationManager;
 import consulo.dataContext.DataContext;

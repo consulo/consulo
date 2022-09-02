@@ -15,9 +15,10 @@
  */
 package consulo.ide.impl.idea.openapi.externalSystem.model;
 
+import consulo.externalSystem.model.ProjectSystemId;
 import consulo.project.ui.notification.NotificationGroup;
-import consulo.ide.impl.idea.openapi.externalSystem.model.execution.ExternalTaskPojo;
-import consulo.ide.impl.idea.openapi.externalSystem.model.project.ExternalProjectPojo;
+import consulo.externalSystem.model.execution.ExternalTaskPojo;
+import consulo.externalSystem.model.project.ExternalProjectPojo;
 import consulo.ide.impl.idea.openapi.externalSystem.service.task.ui.ExternalSystemRecentTasksList;
 import consulo.ide.impl.idea.openapi.externalSystem.service.task.ui.ExternalSystemTasksTreeModel;
 import consulo.util.dataholder.Key;

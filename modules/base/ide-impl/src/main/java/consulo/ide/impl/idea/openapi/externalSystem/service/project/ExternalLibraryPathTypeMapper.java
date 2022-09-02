@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.externalSystem.service.project;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.ide.impl.idea.openapi.externalSystem.model.project.LibraryPathType;
+import consulo.externalSystem.model.project.LibraryPathType;
 import consulo.content.OrderRootType;
 import javax.annotation.Nonnull;
 

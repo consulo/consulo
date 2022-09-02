@@ -1,8 +1,8 @@
 package consulo.ide.impl.idea.openapi.externalSystem.service.remote;
 
 import javax.annotation.Nonnull;
-import consulo.ide.impl.idea.openapi.externalSystem.model.task.ExternalSystemTaskId;
-import consulo.ide.impl.idea.openapi.externalSystem.model.task.ExternalSystemTaskNotificationEvent;
+import consulo.externalSystem.model.task.ExternalSystemTaskId;
+import consulo.externalSystem.model.task.ExternalSystemTaskNotificationEvent;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.externalSystem.model;
 
-import consulo.ide.impl.idea.openapi.externalSystem.model.project.IExternalSystemSourceType;
+import consulo.externalSystem.model.project.IExternalSystemSourceType;
 import javax.annotation.Nonnull;
 
 import java.io.Serializable;

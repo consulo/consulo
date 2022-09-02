@@ -16,12 +16,12 @@
 package consulo.ide.impl.idea.openapi.externalSystem.service.task.ui;
 
 import consulo.execution.executor.DefaultRunExecutor;
-import consulo.ide.impl.idea.openapi.externalSystem.ExternalSystemUiAware;
-import consulo.ide.impl.idea.openapi.externalSystem.model.ProjectSystemId;
-import consulo.ide.impl.idea.openapi.externalSystem.model.execution.ExternalSystemTaskExecutionSettings;
-import consulo.ide.impl.idea.openapi.externalSystem.model.execution.ExternalTaskExecutionInfo;
-import consulo.ide.impl.idea.openapi.externalSystem.model.execution.ExternalTaskPojo;
-import consulo.ide.impl.idea.openapi.externalSystem.model.project.ExternalProjectPojo;
+import consulo.externalSystem.ExternalSystemUiAware;
+import consulo.externalSystem.model.ProjectSystemId;
+import consulo.externalSystem.model.execution.ExternalSystemTaskExecutionSettings;
+import consulo.externalSystem.model.execution.ExternalTaskExecutionInfo;
+import consulo.externalSystem.model.execution.ExternalTaskPojo;
+import consulo.externalSystem.model.project.ExternalProjectPojo;
 import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemUiUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
 import consulo.ui.image.Image;

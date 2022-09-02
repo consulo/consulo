@@ -1,8 +1,8 @@
 package consulo.ide.impl.idea.openapi.externalSystem.service;
 
 import consulo.ide.impl.idea.openapi.externalSystem.service.internal.ExternalSystemTaskAware;
-import consulo.ide.impl.idea.openapi.externalSystem.model.settings.ExternalSystemExecutionSettings;
-import consulo.ide.impl.idea.openapi.externalSystem.model.task.ExternalSystemTaskNotificationListener;
+import consulo.externalSystem.model.setting.ExternalSystemExecutionSettings;
+import consulo.externalSystem.model.task.ExternalSystemTaskNotificationListener;
 import javax.annotation.Nonnull;
 
 import java.rmi.Remote;

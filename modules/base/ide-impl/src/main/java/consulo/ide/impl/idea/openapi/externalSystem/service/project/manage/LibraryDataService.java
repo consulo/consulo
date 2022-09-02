@@ -1,17 +1,18 @@
 package consulo.ide.impl.idea.openapi.externalSystem.service.project.manage;
 
+import consulo.externalSystem.service.project.manage.ProjectDataService;
 import consulo.logging.Logger;
-import consulo.ide.impl.idea.openapi.externalSystem.model.DataNode;
-import consulo.ide.impl.idea.openapi.externalSystem.model.Key;
-import consulo.ide.impl.idea.openapi.externalSystem.model.ProjectKeys;
-import consulo.ide.impl.idea.openapi.externalSystem.model.project.LibraryData;
-import consulo.ide.impl.idea.openapi.externalSystem.model.project.LibraryPathType;
+import consulo.externalSystem.model.DataNode;
+import consulo.externalSystem.model.Key;
+import consulo.externalSystem.model.ProjectKeys;
+import consulo.externalSystem.model.project.LibraryData;
+import consulo.externalSystem.model.project.LibraryPathType;
 import consulo.ide.impl.idea.openapi.externalSystem.service.project.ExternalLibraryPathTypeMapper;
 import consulo.ide.impl.idea.openapi.externalSystem.service.project.ProjectStructureHelper;
-import consulo.ide.impl.idea.openapi.externalSystem.util.DisposeAwareProjectChange;
-import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemApiUtil;
-import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemConstants;
-import consulo.ide.impl.idea.openapi.externalSystem.util.Order;
+import consulo.externalSystem.util.DisposeAwareProjectChange;
+import consulo.externalSystem.util.ExternalSystemApiUtil;
+import consulo.externalSystem.util.ExternalSystemConstants;
+import consulo.externalSystem.util.Order;
 import consulo.project.Project;
 import consulo.content.OrderRootType;
 import consulo.ide.impl.idea.openapi.roots.impl.libraries.ProjectLibraryTable;

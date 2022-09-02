@@ -1,11 +1,15 @@
 package consulo.ide.impl.idea.openapi.externalSystem.service;
 
+import consulo.externalSystem.model.task.ExternalSystemTaskId;
+import consulo.externalSystem.model.task.ExternalSystemTaskNotificationEvent;
+import consulo.externalSystem.model.task.ExternalSystemTaskNotificationListener;
+import consulo.externalSystem.model.task.ExternalSystemTaskType;
 import consulo.util.rmi.RemoteServer;
-import consulo.ide.impl.idea.openapi.externalSystem.model.settings.ExternalSystemExecutionSettings;
+import consulo.externalSystem.model.setting.ExternalSystemExecutionSettings;
 import consulo.ide.impl.idea.openapi.externalSystem.model.task.*;
-import consulo.ide.impl.idea.openapi.externalSystem.service.project.ExternalSystemProjectResolver;
+import consulo.externalSystem.service.project.ExternalSystemProjectResolver;
 import consulo.ide.impl.idea.openapi.externalSystem.service.remote.*;
-import consulo.ide.impl.idea.openapi.externalSystem.task.ExternalSystemTaskManager;
+import consulo.externalSystem.task.ExternalSystemTaskManager;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
 import javax.annotation.Nonnull;

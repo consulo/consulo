@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.externalSystem.util;
 
-import consulo.ide.impl.idea.openapi.externalSystem.model.ProjectSystemId;
+import consulo.externalSystem.model.ProjectSystemId;
 import consulo.project.Project;
 import javax.annotation.Nonnull;
 

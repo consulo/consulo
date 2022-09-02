@@ -15,11 +15,12 @@
  */
 package consulo.ide.impl.idea.openapi.externalSystem.service.project.manage;
 
-import consulo.ide.impl.idea.openapi.externalSystem.model.project.AbstractDependencyData;
-import consulo.ide.impl.idea.openapi.externalSystem.util.DisposeAwareProjectChange;
-import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemApiUtil;
-import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemConstants;
-import consulo.ide.impl.idea.openapi.externalSystem.util.Order;
+import consulo.externalSystem.service.project.manage.ProjectDataService;
+import consulo.externalSystem.model.project.AbstractDependencyData;
+import consulo.externalSystem.util.DisposeAwareProjectChange;
+import consulo.externalSystem.util.ExternalSystemApiUtil;
+import consulo.externalSystem.util.ExternalSystemConstants;
+import consulo.externalSystem.util.Order;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.ModifiableRootModel;
@@ -42,7 +43,7 @@ import java.util.Map;
  */
 @Order(ExternalSystemConstants.BUILTIN_SERVICE_ORDER)
 public abstract class AbstractDependencyDataService<E extends AbstractDependencyData<?>, I extends ExportableOrderEntry>
-  implements ProjectDataService<E, I>
+        implements ProjectDataService<E, I>
 {
 
   public void setScope(@Nonnull final DependencyScope scope, @Nonnull final ExportableOrderEntry dependency, boolean synchronous) {

@@ -18,9 +18,10 @@ package consulo.ide.impl.idea.openapi.externalSystem.service.project.manage;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.openapi.externalSystem.model.DataNode;
-import consulo.ide.impl.idea.openapi.externalSystem.model.Key;
-import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemApiUtil;
+import consulo.externalSystem.model.DataNode;
+import consulo.externalSystem.model.Key;
+import consulo.externalSystem.service.project.manage.ProjectDataService;
+import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
@@ -54,7 +55,7 @@ public class ProjectDataManager {
     @Override
     protected Map<Key<?>, List<ProjectDataService<?, ?>>> compute() {
       Map<Key<?>, List<ProjectDataService<?, ?>>> result = new HashMap<>();
-      for (ProjectDataService<?, ?> service : ProjectDataService.EP_NAME.getExtensionList()) {
+      for (ProjectDataService service : ProjectDataService.EP_NAME.getExtensionList()) {
         List<ProjectDataService<?, ?>> services = result.get(service.getTargetDataKey());
         if (services == null) {
           result.put(service.getTargetDataKey(), services = ContainerUtilRt.newArrayList());

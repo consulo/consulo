@@ -15,10 +15,10 @@
  */
 package consulo.ide.impl.idea.openapi.externalSystem.service.remote;
 
-import consulo.ide.impl.idea.openapi.externalSystem.model.ExternalSystemException;
-import consulo.ide.impl.idea.openapi.externalSystem.model.settings.ExternalSystemExecutionSettings;
-import consulo.ide.impl.idea.openapi.externalSystem.model.task.ExternalSystemTaskId;
-import consulo.ide.impl.idea.openapi.externalSystem.task.ExternalSystemTaskManager;
+import consulo.externalSystem.model.ExternalSystemException;
+import consulo.externalSystem.model.setting.ExternalSystemExecutionSettings;
+import consulo.externalSystem.model.task.ExternalSystemTaskId;
+import consulo.externalSystem.task.ExternalSystemTaskManager;
 import consulo.ide.impl.idea.util.Producer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

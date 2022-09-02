@@ -17,13 +17,13 @@ package consulo.ide.impl.idea.openapi.externalSystem.service;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
-import consulo.ide.impl.idea.openapi.externalSystem.ExternalSystemManager;
+import consulo.externalSystem.ExternalSystemManager;
 import consulo.ide.impl.idea.openapi.externalSystem.model.ExternalSystemDataKeys;
 import consulo.ide.impl.idea.openapi.externalSystem.service.project.ProjectRenameAware;
 import consulo.ide.impl.idea.openapi.externalSystem.service.project.autoimport.ExternalSystemAutoImporter;
 import consulo.ide.impl.idea.openapi.externalSystem.service.ui.ExternalToolWindowManager;
 import consulo.ide.impl.idea.openapi.externalSystem.service.vcs.ExternalSystemVcsRegistrar;
-import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemApiUtil;
+import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemUtil;
 import consulo.project.Project;
 import consulo.project.startup.BackgroundStartupActivity;

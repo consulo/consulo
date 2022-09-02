@@ -3,15 +3,15 @@ package consulo.ide.impl.idea.openapi.externalSystem.service.execution;
 import consulo.execution.configuration.ConfigurationFactory;
 import consulo.execution.configuration.ConfigurationType;
 import consulo.execution.configuration.RunConfiguration;
-import consulo.ide.impl.idea.openapi.externalSystem.ExternalSystemManager;
-import consulo.ide.impl.idea.openapi.externalSystem.ExternalSystemUiAware;
-import consulo.ide.impl.idea.openapi.externalSystem.model.ProjectSystemId;
-import consulo.ide.impl.idea.openapi.externalSystem.model.execution.ExternalSystemTaskExecutionSettings;
-import consulo.ide.impl.idea.openapi.externalSystem.model.execution.ExternalTaskPojo;
+import consulo.externalSystem.ExternalSystemManager;
+import consulo.externalSystem.ExternalSystemUiAware;
+import consulo.externalSystem.model.ProjectSystemId;
+import consulo.externalSystem.model.execution.ExternalSystemTaskExecutionSettings;
+import consulo.externalSystem.model.execution.ExternalTaskPojo;
 import consulo.ide.impl.idea.openapi.externalSystem.service.ui.DefaultExternalSystemUiAware;
-import consulo.ide.impl.idea.openapi.externalSystem.settings.AbstractExternalSystemSettings;
-import consulo.ide.impl.idea.openapi.externalSystem.settings.ExternalProjectSettings;
-import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemApiUtil;
+import consulo.externalSystem.setting.AbstractExternalSystemSettings;
+import consulo.externalSystem.setting.ExternalProjectSettings;
+import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemBundle;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
@@ -127,7 +127,7 @@ public abstract class AbstractExternalSystemTaskConfigurationType implements Con
   {
     ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(externalSystemId);
     assert manager != null;
-    AbstractExternalSystemSettings<?, ?,?> s = manager.getSettingsProvider().fun(project);
+    AbstractExternalSystemSettings<?, ?,?> s = manager.getSettingsProvider().apply(project);
     Map<String/* project dir path */, String/* project file path */> rootProjectPaths = ContainerUtilRt.newHashMap();
     for (ExternalProjectSettings projectSettings : s.getLinkedProjectsSettings()) {
       String path = projectSettings.getExternalProjectPath();

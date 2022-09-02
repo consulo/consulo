@@ -18,12 +18,12 @@ package consulo.ide.impl.idea.openapi.externalSystem.service;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.openapi.externalSystem.ExternalSystemManager;
-import consulo.ide.impl.idea.openapi.externalSystem.model.ProjectSystemId;
+import consulo.externalSystem.ExternalSystemManager;
+import consulo.externalSystem.model.ProjectSystemId;
 import consulo.ide.impl.idea.openapi.externalSystem.service.notification.ExternalSystemProgressNotificationManager;
 import consulo.ide.impl.idea.openapi.externalSystem.service.remote.ExternalSystemProgressNotificationManagerImpl;
 import consulo.ide.impl.idea.openapi.externalSystem.service.remote.wrapper.ExternalSystemFacadeWrapper;
-import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemApiUtil;
+import consulo.externalSystem.util.ExternalSystemApiUtil;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 

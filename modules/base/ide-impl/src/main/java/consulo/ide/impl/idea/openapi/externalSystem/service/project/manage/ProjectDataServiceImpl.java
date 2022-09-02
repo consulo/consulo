@@ -15,11 +15,16 @@
  */
 package consulo.ide.impl.idea.openapi.externalSystem.service.project.manage;
 
-import consulo.ide.impl.idea.openapi.externalSystem.model.DataNode;
-import consulo.ide.impl.idea.openapi.externalSystem.model.Key;
-import consulo.ide.impl.idea.openapi.externalSystem.model.ProjectKeys;
-import consulo.ide.impl.idea.openapi.externalSystem.model.ProjectSystemId;
-import consulo.ide.impl.idea.openapi.externalSystem.model.project.ProjectData;
+import consulo.externalSystem.model.DataNode;
+import consulo.externalSystem.model.Key;
+import consulo.externalSystem.service.project.manage.ProjectDataService;
+import consulo.externalSystem.util.DisposeAwareProjectChange;
+import consulo.externalSystem.util.ExternalSystemApiUtil;
+import consulo.externalSystem.util.ExternalSystemConstants;
+import consulo.externalSystem.util.Order;
+import consulo.externalSystem.model.ProjectKeys;
+import consulo.externalSystem.model.ProjectSystemId;
+import consulo.externalSystem.service.project.ProjectData;
 import consulo.ide.impl.idea.openapi.externalSystem.util.*;
 import consulo.project.Project;
 import consulo.project.internal.ProjectEx;

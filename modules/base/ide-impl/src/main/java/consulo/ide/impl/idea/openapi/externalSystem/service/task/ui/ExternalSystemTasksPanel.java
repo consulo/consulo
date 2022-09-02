@@ -23,14 +23,14 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.dataContext.DataProvider;
-import consulo.ide.impl.idea.openapi.externalSystem.ExternalSystemManager;
+import consulo.externalSystem.ExternalSystemManager;
 import consulo.ide.impl.idea.openapi.externalSystem.model.ExternalSystemDataKeys;
-import consulo.ide.impl.idea.openapi.externalSystem.model.ProjectSystemId;
-import consulo.ide.impl.idea.openapi.externalSystem.model.execution.ExternalTaskExecutionInfo;
-import consulo.ide.impl.idea.openapi.externalSystem.model.project.ExternalProjectPojo;
+import consulo.externalSystem.model.ProjectSystemId;
+import consulo.externalSystem.model.execution.ExternalTaskExecutionInfo;
+import consulo.externalSystem.model.project.ExternalProjectPojo;
 import consulo.ide.impl.idea.openapi.externalSystem.service.execution.ExternalSystemTaskLocation;
-import consulo.ide.impl.idea.openapi.externalSystem.settings.AbstractExternalSystemLocalSettings;
-import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemApiUtil;
+import consulo.externalSystem.setting.AbstractExternalSystemLocalSettings;
+import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemBundle;
 import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemUiUtil;
 import consulo.language.plain.PlainTextFileType;
@@ -52,7 +52,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import static consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemConstants.*;
+import static consulo.externalSystem.util.ExternalSystemConstants.*;
 
 /**
  * @author Denis Zhdanov
@@ -87,7 +87,7 @@ public class ExternalSystemTasksPanel extends SimpleToolWindowPanel implements D
 
     ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(externalSystemId);
     assert manager != null;
-    AbstractExternalSystemLocalSettings settings = manager.getLocalSettingsProvider().fun(project);
+    AbstractExternalSystemLocalSettings settings = manager.getLocalSettingsProvider().apply(project);
 
     ExternalSystemRecentTaskListModel recentTasksModel = new ExternalSystemRecentTaskListModel(externalSystemId, project);
     recentTasksModel.setTasks(settings.getRecentTasks());

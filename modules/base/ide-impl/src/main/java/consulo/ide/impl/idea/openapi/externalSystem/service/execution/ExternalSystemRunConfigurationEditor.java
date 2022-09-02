@@ -1,6 +1,6 @@
 package consulo.ide.impl.idea.openapi.externalSystem.service.execution;
 
-import consulo.ide.impl.idea.openapi.externalSystem.model.ProjectSystemId;
+import consulo.externalSystem.model.ProjectSystemId;
 import consulo.ide.impl.idea.openapi.externalSystem.util.PaintAwarePanel;
 import consulo.configurable.ConfigurationException;
 import consulo.execution.configuration.ui.SettingsEditor;

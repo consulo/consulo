@@ -15,12 +15,12 @@
  */
 package consulo.ide.impl.idea.openapi.externalSystem.service.task;
 
-import consulo.ide.impl.idea.openapi.externalSystem.model.DataNode;
+import consulo.externalSystem.model.DataNode;
 import consulo.ide.impl.idea.openapi.externalSystem.model.ExternalSystemDataKeys;
-import consulo.ide.impl.idea.openapi.externalSystem.model.project.ExternalEntityData;
-import consulo.ide.impl.idea.openapi.externalSystem.service.project.manage.ProjectDataService;
+import consulo.externalSystem.service.project.ExternalEntityData;
+import consulo.externalSystem.service.project.manage.ProjectDataService;
 import consulo.ide.impl.idea.openapi.externalSystem.service.task.ui.ExternalSystemTasksTreeModel;
-import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemApiUtil;
+import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemUtil;
 import consulo.project.Project;
 import javax.annotation.Nonnull;

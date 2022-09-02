@@ -16,16 +16,17 @@
 package consulo.ide.impl.idea.openapi.externalSystem.service.project.manage;
 
 import consulo.content.OrderRootType;
+import consulo.externalSystem.model.project.*;
+import consulo.externalSystem.service.project.ProjectData;
 import consulo.logging.Logger;
-import consulo.ide.impl.idea.openapi.externalSystem.model.DataNode;
-import consulo.ide.impl.idea.openapi.externalSystem.model.Key;
-import consulo.ide.impl.idea.openapi.externalSystem.model.ProjectKeys;
-import consulo.ide.impl.idea.openapi.externalSystem.model.project.*;
+import consulo.externalSystem.model.DataNode;
+import consulo.externalSystem.model.Key;
+import consulo.externalSystem.model.ProjectKeys;
 import consulo.ide.impl.idea.openapi.externalSystem.service.project.ProjectStructureHelper;
-import consulo.ide.impl.idea.openapi.externalSystem.util.DisposeAwareProjectChange;
-import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemApiUtil;
-import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemConstants;
-import consulo.ide.impl.idea.openapi.externalSystem.util.Order;
+import consulo.externalSystem.util.DisposeAwareProjectChange;
+import consulo.externalSystem.util.ExternalSystemApiUtil;
+import consulo.externalSystem.util.ExternalSystemConstants;
+import consulo.externalSystem.util.Order;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.ModifiableRootModel;
@@ -46,7 +47,7 @@ import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.*;
 
-import static consulo.ide.impl.idea.openapi.externalSystem.model.ProjectKeys.MODULE;
+import static consulo.externalSystem.model.ProjectKeys.MODULE;
 
 /**
  * @author Denis Zhdanov

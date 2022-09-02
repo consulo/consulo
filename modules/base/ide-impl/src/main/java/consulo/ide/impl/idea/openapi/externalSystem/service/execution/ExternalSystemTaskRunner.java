@@ -25,7 +25,7 @@ import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.GenericProgramRunner;
 import consulo.execution.runner.RunContentBuilder;
 import consulo.execution.ui.RunContentDescriptor;
-import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemConstants;
+import consulo.externalSystem.util.ExternalSystemConstants;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

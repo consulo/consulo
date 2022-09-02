@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.externalSystem.service.settings;
 
-import consulo.ide.impl.idea.openapi.externalSystem.settings.ExternalProjectSettings;
+import consulo.externalSystem.setting.ExternalProjectSettings;
 import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemBundle;
 import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemSettingsControl;
 import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemUiUtil;

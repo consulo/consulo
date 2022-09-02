@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.externalSystem.service.execution;
 
 import consulo.execution.action.PsiLocation;
-import consulo.ide.impl.idea.openapi.externalSystem.model.execution.ExternalTaskExecutionInfo;
+import consulo.externalSystem.model.execution.ExternalTaskExecutionInfo;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;

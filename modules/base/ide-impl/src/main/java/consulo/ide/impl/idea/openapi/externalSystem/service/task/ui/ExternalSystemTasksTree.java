@@ -15,9 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.externalSystem.service.task.ui;
 
-import consulo.ide.impl.idea.openapi.externalSystem.model.ProjectSystemId;
-import consulo.ide.impl.idea.openapi.externalSystem.model.execution.ExternalSystemTaskExecutionSettings;
-import consulo.ide.impl.idea.openapi.externalSystem.model.execution.ExternalTaskExecutionInfo;
+import consulo.externalSystem.model.ProjectSystemId;
+import consulo.externalSystem.model.execution.ExternalSystemTaskExecutionSettings;
+import consulo.externalSystem.model.execution.ExternalTaskExecutionInfo;
 import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemUtil;
 import consulo.project.Project;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;

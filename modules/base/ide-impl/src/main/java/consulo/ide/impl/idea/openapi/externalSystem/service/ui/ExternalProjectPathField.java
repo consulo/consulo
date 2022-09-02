@@ -21,15 +21,15 @@ import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.FoldingModel;
-import consulo.ide.impl.idea.openapi.externalSystem.ExternalSystemManager;
-import consulo.ide.impl.idea.openapi.externalSystem.ExternalSystemUiAware;
-import consulo.ide.impl.idea.openapi.externalSystem.model.ProjectSystemId;
-import consulo.ide.impl.idea.openapi.externalSystem.model.project.ExternalProjectPojo;
+import consulo.externalSystem.ExternalSystemManager;
+import consulo.externalSystem.ExternalSystemUiAware;
+import consulo.externalSystem.model.ProjectSystemId;
+import consulo.externalSystem.model.project.ExternalProjectPojo;
 import consulo.ide.impl.idea.openapi.externalSystem.service.task.ui.ExternalSystemNode;
 import consulo.ide.impl.idea.openapi.externalSystem.service.task.ui.ExternalSystemTasksTree;
 import consulo.ide.impl.idea.openapi.externalSystem.service.task.ui.ExternalSystemTasksTreeModel;
-import consulo.ide.impl.idea.openapi.externalSystem.settings.AbstractExternalSystemLocalSettings;
-import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemApiUtil;
+import consulo.externalSystem.setting.AbstractExternalSystemLocalSettings;
+import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemBundle;
 import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemUiUtil;
 import consulo.fileChooser.FileChooserDescriptor;
@@ -158,7 +158,7 @@ public class ExternalProjectPathField extends ComponentWithBrowseButton<External
     
     ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(externalSystemId);
     assert manager != null;
-    AbstractExternalSystemLocalSettings settings = manager.getLocalSettingsProvider().fun(project);
+    AbstractExternalSystemLocalSettings settings = manager.getLocalSettingsProvider().apply(project);
     Map<ExternalProjectPojo, Collection<ExternalProjectPojo>> projects = settings.getAvailableProjects();
     List<ExternalProjectPojo> rootProjects = ContainerUtilRt.newArrayList(projects.keySet());
     ContainerUtil.sort(rootProjects);
@@ -172,7 +172,7 @@ public class ExternalProjectPathField extends ComponentWithBrowseButton<External
   private static EditorTextField createTextField(@Nonnull final Project project, @Nonnull final ProjectSystemId externalSystemId) {
     ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(externalSystemId);
     assert manager != null;
-    final AbstractExternalSystemLocalSettings settings = manager.getLocalSettingsProvider().fun(project);
+    final AbstractExternalSystemLocalSettings settings = manager.getLocalSettingsProvider().apply(project);
     final ExternalSystemUiAware uiAware = ExternalSystemUiUtil.getUiAware(externalSystemId);
     TextFieldCompletionProvider provider = new TextFieldCompletionProviderDumbAware() {
       @Override
@@ -225,7 +225,7 @@ public class ExternalProjectPathField extends ComponentWithBrowseButton<External
   {
     ExternalSystemManager<?,?,?,?,?> manager = ExternalSystemApiUtil.getManager(externalSystemId);
     assert manager != null;
-    final AbstractExternalSystemLocalSettings settings = manager.getLocalSettingsProvider().fun(project);
+    final AbstractExternalSystemLocalSettings settings = manager.getLocalSettingsProvider().apply(project);
     final ExternalSystemUiAware uiAware = ExternalSystemUiUtil.getUiAware(externalSystemId);
 
     String rawText = editor.getDocument().getText();

@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.externalSystem.service.project.autoimport;
 
-import consulo.ide.impl.idea.openapi.externalSystem.ExternalSystemAutoImportAware;
+import consulo.externalSystem.ExternalSystemAutoImportAware;
 import consulo.project.Project;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;

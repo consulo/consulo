@@ -1,10 +1,10 @@
 package consulo.ide.impl.idea.openapi.externalSystem.service.ui;
 
-import consulo.ide.impl.idea.openapi.externalSystem.ExternalSystemManager;
-import consulo.ide.impl.idea.openapi.externalSystem.model.ProjectSystemId;
-import consulo.ide.impl.idea.openapi.externalSystem.settings.AbstractExternalSystemSettings;
+import consulo.externalSystem.ExternalSystemManager;
+import consulo.externalSystem.model.ProjectSystemId;
+import consulo.externalSystem.setting.AbstractExternalSystemSettings;
 import consulo.ide.impl.idea.openapi.externalSystem.settings.ExternalSystemSettingsListenerAdapter;
-import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemApiUtil;
+import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.project.Project;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.ToolWindowManager;
@@ -29,7 +29,7 @@ public class ExternalToolWindowManager {
   @SuppressWarnings("unchecked")
   public static void handle(@Nonnull final Project project) {
     for (final ExternalSystemManager<?, ?, ?, ?, ?> manager : ExternalSystemApiUtil.getAllManagers()) {
-      final AbstractExternalSystemSettings settings = manager.getSettingsProvider().fun(project);
+      final AbstractExternalSystemSettings settings = manager.getSettingsProvider().apply(project);
       settings.subscribe(new ExternalSystemSettingsListenerAdapter() {
         @Override
         public void onProjectsLinked(@Nonnull Collection linked) {

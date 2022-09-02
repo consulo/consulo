@@ -15,11 +15,11 @@
  */
 package consulo.ide.impl.idea.openapi.externalSystem.service.settings;
 
-import consulo.ide.impl.idea.openapi.externalSystem.ExternalSystemManager;
+import consulo.externalSystem.ExternalSystemManager;
 import consulo.ide.impl.idea.openapi.externalSystem.model.ExternalSystemDataKeys;
-import consulo.ide.impl.idea.openapi.externalSystem.model.ProjectSystemId;
-import consulo.ide.impl.idea.openapi.externalSystem.settings.AbstractExternalSystemSettings;
-import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemApiUtil;
+import consulo.externalSystem.model.ProjectSystemId;
+import consulo.externalSystem.setting.AbstractExternalSystemSettings;
+import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.project.Project;
 import consulo.util.lang.function.Condition;
 import javax.annotation.Nonnull;
@@ -46,7 +46,7 @@ public abstract class AbstractExternalSystemToolWindowCondition implements Condi
     if (manager == null) {
       return false;
     }
-    AbstractExternalSystemSettings<?, ?,?> settings = manager.getSettingsProvider().fun(project);
+    AbstractExternalSystemSettings<?, ?,?> settings = manager.getSettingsProvider().apply(project);
     return settings != null && !settings.getLinkedProjectsSettings().isEmpty();
   }
 }

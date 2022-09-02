@@ -1,8 +1,8 @@
 package consulo.ide.impl.idea.openapi.externalSystem.service.settings;
 
 import consulo.component.extension.ExtensionPointName;
-import consulo.ide.impl.idea.openapi.externalSystem.model.ProjectSystemId;
-import consulo.ide.impl.idea.openapi.externalSystem.settings.ExternalProjectSettings;
+import consulo.externalSystem.model.ProjectSystemId;
+import consulo.externalSystem.setting.ExternalProjectSettings;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

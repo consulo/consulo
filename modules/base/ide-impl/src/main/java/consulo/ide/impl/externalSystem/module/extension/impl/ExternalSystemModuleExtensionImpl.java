@@ -16,7 +16,7 @@
 package consulo.ide.impl.externalSystem.module.extension.impl;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.ide.impl.externalSystem.module.extension.ExternalSystemModuleExtension;
+import consulo.externalSystem.service.module.extension.ExternalSystemModuleExtension;
 import consulo.module.content.layer.extension.ModuleExtensionBase;
 import consulo.module.content.layer.ModuleRootLayer;
 import org.jdom.Element;

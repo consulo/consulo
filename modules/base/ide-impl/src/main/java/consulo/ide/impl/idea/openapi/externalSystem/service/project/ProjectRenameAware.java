@@ -16,11 +16,11 @@
 package consulo.ide.impl.idea.openapi.externalSystem.service.project;
 
 import consulo.ide.ServiceManager;
-import consulo.ide.impl.idea.openapi.externalSystem.ExternalSystemManager;
+import consulo.externalSystem.ExternalSystemManager;
 import consulo.ide.impl.idea.openapi.externalSystem.service.ExternalSystemFacadeManager;
-import consulo.ide.impl.idea.openapi.externalSystem.settings.AbstractExternalSystemSettings;
+import consulo.externalSystem.setting.AbstractExternalSystemSettings;
 import consulo.ide.impl.idea.openapi.externalSystem.settings.ExternalSystemSettingsListenerAdapter;
-import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemApiUtil;
+import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.project.Project;
 import javax.annotation.Nonnull;
 
@@ -35,7 +35,7 @@ public class ProjectRenameAware {
   public static void beAware(@Nonnull Project project) {
     final ExternalSystemFacadeManager facadeManager = ServiceManager.getService(ExternalSystemFacadeManager.class);
     for (ExternalSystemManager<?, ?, ?, ?, ?> manager : ExternalSystemApiUtil.getAllManagers()) {
-      AbstractExternalSystemSettings settings = manager.getSettingsProvider().fun(project);
+      AbstractExternalSystemSettings settings = manager.getSettingsProvider().apply(project);
       //noinspection unchecked
       settings.subscribe(new ExternalSystemSettingsListenerAdapter() {
         @Override

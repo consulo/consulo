@@ -15,24 +15,27 @@
  */
 package consulo.ide.impl.idea.openapi.externalSystem.service.settings;
 
-import consulo.ide.impl.idea.openapi.externalSystem.ExternalSystemManager;
-import consulo.ide.impl.idea.openapi.externalSystem.model.ProjectSystemId;
-import consulo.ide.impl.idea.openapi.externalSystem.settings.AbstractExternalSystemSettings;
-import consulo.ide.impl.idea.openapi.externalSystem.settings.ExternalProjectSettings;
-import consulo.ide.impl.idea.openapi.externalSystem.settings.ExternalSystemSettingsListener;
-import consulo.ide.impl.idea.openapi.externalSystem.util.*;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
+import consulo.disposer.Disposable;
+import consulo.externalSystem.ExternalSystemManager;
+import consulo.externalSystem.model.ProjectSystemId;
+import consulo.externalSystem.setting.AbstractExternalSystemSettings;
+import consulo.externalSystem.setting.ExternalProjectSettings;
+import consulo.externalSystem.setting.ExternalSystemSettingsListener;
+import consulo.externalSystem.util.ExternalSystemApiUtil;
+import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemBundle;
+import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemSettingsControl;
+import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemUiUtil;
+import consulo.ide.impl.idea.openapi.externalSystem.util.PaintAwarePanel;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.JBScrollPane;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
 import consulo.ui.ex.awt.JBUI;
-import consulo.disposer.Disposable;
-import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;
@@ -54,34 +57,30 @@ import java.util.List;
  *   |   linked project-specific settings           |
  *   |----------------------------------------------
  *   |   external system-wide settings (optional)   |
-      ----------------------------------------------
+ * ----------------------------------------------
  * </pre>
- * 
+ *
  * @author Denis Zhdanov
  * @since 4/30/13 12:50 PM
  */
-public abstract class AbstractExternalSystemConfigurable<
-  ProjectSettings extends ExternalProjectSettings,
-  L extends ExternalSystemSettingsListener<ProjectSettings>,
-  SystemSettings extends AbstractExternalSystemSettings<SystemSettings, ProjectSettings, L>
-  > implements SearchableConfigurable, Configurable.NoScroll
-{
+public abstract class AbstractExternalSystemConfigurable<ProjectSettings extends ExternalProjectSettings, L extends ExternalSystemSettingsListener<ProjectSettings>, SystemSettings extends AbstractExternalSystemSettings<SystemSettings, ProjectSettings, L>>
+        implements SearchableConfigurable, Configurable.NoScroll {
 
   @Nonnull
-  private final List<ExternalSystemSettingsControl<ProjectSettings>> myProjectSettingsControls = ContainerUtilRt.newArrayList();
+  private final List<ExternalSystemSettingsControl<ProjectSettings>> myProjectSettingsControls = new ArrayList<>();
 
   @Nonnull
   private final ProjectSystemId myExternalSystemId;
   @Nonnull
-  private final Project         myProject;
+  private final Project myProject;
 
   @Nullable
-  private ExternalSystemSettingsControl<SystemSettings>  mySystemSettingsControl;
+  private ExternalSystemSettingsControl<SystemSettings> mySystemSettingsControl;
   @Nullable
   private ExternalSystemSettingsControl<ProjectSettings> myActiveProjectSettingsControl;
 
-  private PaintAwarePanel  myComponent;
-  private JBList<String>           myProjectsList;
+  private PaintAwarePanel myComponent;
+  private JBList<String> myProjectsList;
   private DefaultListModel<String> myProjectsModel;
 
   protected AbstractExternalSystemConfigurable(@Nonnull Project project, @Nonnull ProjectSystemId externalSystemId) {
@@ -112,10 +111,9 @@ public abstract class AbstractExternalSystemConfigurable<
   @SuppressWarnings("unchecked")
   @Nonnull
   private SystemSettings getSettings() {
-    ExternalSystemManager<ProjectSettings, L, SystemSettings, ?, ?> manager =
-      (ExternalSystemManager<ProjectSettings, L, SystemSettings, ?, ?>)ExternalSystemApiUtil.getManager(myExternalSystemId);
+    ExternalSystemManager<ProjectSettings, L, SystemSettings, ?, ?> manager = (ExternalSystemManager<ProjectSettings, L, SystemSettings, ?, ?>)ExternalSystemApiUtil.getManager(myExternalSystemId);
     assert manager != null;
-    return manager.getSettingsProvider().fun(myProject);
+    return manager.getSettingsProvider().apply(myProject);
   }
 
   private void prepareProjectSettings(@Nonnull SystemSettings s, Disposable uiDisposable) {
@@ -155,13 +153,13 @@ public abstract class AbstractExternalSystemConfigurable<
       myActiveProjectSettingsControl.showUi(true);
     });
 
-    
+
     if (!myProjectsModel.isEmpty()) {
       addTitle(ExternalSystemBundle.message("settings.title.system.settings", myExternalSystemId.getReadableName()));
       myProjectsList.setSelectedIndex(0);
     }
   }
-  
+
   private void addTitle(@Nonnull String title) {
     JPanel panel = new JPanel(new GridBagLayout());
     panel.setBorder(IdeBorderFactory.createTitledBorder(title, false, JBUI.insetsTop(ExternalSystemUiUtil.INSETS)));
@@ -170,13 +168,13 @@ public abstract class AbstractExternalSystemConfigurable<
 
   /**
    * Creates a control for managing given project settings.
-   * 
-   * @param settings  target external project settings
-   * @return          control for managing given project settings
+   *
+   * @param settings target external project settings
+   * @return control for managing given project settings
    */
   @Nonnull
   protected abstract ExternalSystemSettingsControl<ProjectSettings> createProjectSettingsControl(@Nonnull ProjectSettings settings);
-  
+
   @SuppressWarnings("MethodMayBeStatic")
   @Nonnull
   protected String getProjectName(@Nonnull String path) {
@@ -193,10 +191,10 @@ public abstract class AbstractExternalSystemConfigurable<
 
   /**
    * Creates a control for managing given system-level settings (if any).
-   * 
-   * @param settings  target system settings
-   * @return          a control for managing given system-level settings;
-   *                  <code>null</code> if current external system doesn't have system-level settings (only project-level settings)
+   *
+   * @param settings target system settings
+   * @return a control for managing given system-level settings;
+   * <code>null</code> if current external system doesn't have system-level settings (only project-level settings)
    */
   @Nullable
   protected abstract ExternalSystemSettingsControl<SystemSettings> createSystemSettingsControl(@Nonnull SystemSettings settings);
@@ -227,7 +225,7 @@ public abstract class AbstractExternalSystemConfigurable<
       }
       systemSettings.setLinkedProjectsSettings(projectSettings);
       for (ExternalSystemSettingsControl<ProjectSettings> control : myProjectSettingsControls) {
-        if(control instanceof AbstractExternalProjectSettingsControl){
+        if (control instanceof AbstractExternalProjectSettingsControl) {
           AbstractExternalProjectSettingsControl.class.cast(control).updateInitialSettings();
         }
       }
@@ -241,7 +239,7 @@ public abstract class AbstractExternalSystemConfigurable<
   }
 
   /**
-   * @return    new empty project-level settings object
+   * @return new empty project-level settings object
    */
   @Nonnull
   protected abstract ProjectSettings newProjectSettings();

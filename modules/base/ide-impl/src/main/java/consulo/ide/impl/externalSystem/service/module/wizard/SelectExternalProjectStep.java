@@ -15,10 +15,11 @@
  */
 package consulo.ide.impl.externalSystem.service.module.wizard;
 
-import consulo.ide.impl.idea.openapi.externalSystem.ExternalSystemManager;
-import consulo.ide.impl.idea.openapi.externalSystem.model.ProjectSystemId;
+import consulo.externalSystem.ExternalSystemManager;
+import consulo.externalSystem.model.ProjectSystemId;
+import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.ide.impl.idea.openapi.externalSystem.service.settings.AbstractImportFromExternalSystemControl;
-import consulo.ide.impl.idea.openapi.externalSystem.settings.AbstractExternalSystemSettings;
+import consulo.externalSystem.setting.AbstractExternalSystemSettings;
 import consulo.ide.impl.idea.openapi.externalSystem.util.*;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.configurable.ConfigurationException;
@@ -152,7 +153,7 @@ public class SelectExternalProjectStep<C extends AbstractImportFromExternalSyste
       else if (project != null) {
         ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(externalSystemId);
         assert manager != null;
-        AbstractExternalSystemSettings<?, ?, ?> settings = manager.getSettingsProvider().fun(project);
+        AbstractExternalSystemSettings<?, ?, ?> settings = manager.getSettingsProvider().apply(project);
         if (settings.getLinkedProjectSettings(linkedProjectPath) != null) {
           throw new ConfigurationException(ExternalSystemBundle.message("error.project.already.registered"));
         }

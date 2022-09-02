@@ -15,17 +15,17 @@
  */
 package consulo.ide.impl.idea.openapi.externalSystem.service.project.manage;
 
-import consulo.ide.impl.idea.openapi.externalSystem.model.DataNode;
-import consulo.ide.impl.idea.openapi.externalSystem.model.Key;
-import consulo.ide.impl.idea.openapi.externalSystem.model.ProjectKeys;
-import consulo.ide.impl.idea.openapi.externalSystem.model.project.ModuleData;
-import consulo.ide.impl.idea.openapi.externalSystem.model.project.ModuleDependencyData;
-import consulo.ide.impl.idea.openapi.externalSystem.model.project.ProjectData;
+import consulo.externalSystem.model.DataNode;
+import consulo.externalSystem.model.Key;
+import consulo.externalSystem.model.ProjectKeys;
+import consulo.externalSystem.model.project.ModuleData;
+import consulo.externalSystem.model.project.ModuleDependencyData;
+import consulo.externalSystem.service.project.ProjectData;
 import consulo.ide.impl.idea.openapi.externalSystem.service.project.ProjectStructureHelper;
-import consulo.ide.impl.idea.openapi.externalSystem.util.DisposeAwareProjectChange;
-import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemApiUtil;
-import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemConstants;
-import consulo.ide.impl.idea.openapi.externalSystem.util.Order;
+import consulo.externalSystem.util.DisposeAwareProjectChange;
+import consulo.externalSystem.util.ExternalSystemApiUtil;
+import consulo.externalSystem.util.ExternalSystemConstants;
+import consulo.externalSystem.util.Order;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.ModifiableRootModel;
@@ -46,7 +46,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static consulo.ide.impl.idea.openapi.externalSystem.model.ProjectKeys.MODULE;
+import static consulo.externalSystem.model.ProjectKeys.MODULE;
 
 /**
  * @author Denis Zhdanov

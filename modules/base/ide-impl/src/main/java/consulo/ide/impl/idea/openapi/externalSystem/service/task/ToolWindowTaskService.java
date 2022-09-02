@@ -15,21 +15,21 @@
  */
 package consulo.ide.impl.idea.openapi.externalSystem.service.task;
 
-import consulo.ide.impl.idea.openapi.externalSystem.ExternalSystemManager;
-import consulo.ide.impl.idea.openapi.externalSystem.model.DataNode;
-import consulo.ide.impl.idea.openapi.externalSystem.model.Key;
-import consulo.ide.impl.idea.openapi.externalSystem.model.ProjectKeys;
-import consulo.ide.impl.idea.openapi.externalSystem.model.ProjectSystemId;
-import consulo.ide.impl.idea.openapi.externalSystem.model.project.ExternalConfigPathAware;
-import consulo.ide.impl.idea.openapi.externalSystem.model.project.ModuleData;
-import consulo.ide.impl.idea.openapi.externalSystem.model.execution.ExternalTaskPojo;
-import consulo.ide.impl.idea.openapi.externalSystem.model.task.TaskData;
+import consulo.externalSystem.ExternalSystemManager;
+import consulo.externalSystem.model.DataNode;
+import consulo.externalSystem.model.Key;
+import consulo.externalSystem.model.ProjectKeys;
+import consulo.externalSystem.model.ProjectSystemId;
+import consulo.externalSystem.service.project.ExternalConfigPathAware;
+import consulo.externalSystem.model.project.ModuleData;
+import consulo.externalSystem.model.execution.ExternalTaskPojo;
+import consulo.externalSystem.model.task.TaskData;
 import consulo.ide.impl.idea.openapi.externalSystem.service.task.ui.ExternalSystemTasksTreeModel;
-import consulo.ide.impl.idea.openapi.externalSystem.settings.AbstractExternalSystemLocalSettings;
-import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemApiUtil;
-import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemConstants;
+import consulo.externalSystem.setting.AbstractExternalSystemLocalSettings;
+import consulo.externalSystem.util.ExternalSystemApiUtil;
+import consulo.externalSystem.util.ExternalSystemConstants;
 import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemUiUtil;
-import consulo.ide.impl.idea.openapi.externalSystem.util.Order;
+import consulo.externalSystem.util.Order;
 import consulo.project.Project;
 import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.NullableFunction;
@@ -90,7 +90,7 @@ public class ToolWindowTaskService extends AbstractToolWindowService<TaskData> {
       data.put(entry.getKey().getLinkedExternalProjectPath(), ContainerUtilRt.map2List(entry.getValue(), MAPPER));
     }
 
-    AbstractExternalSystemLocalSettings settings = manager.getLocalSettingsProvider().fun(project);
+    AbstractExternalSystemLocalSettings settings = manager.getLocalSettingsProvider().apply(project);
     Map<String, Collection<ExternalTaskPojo>> availableTasks = ContainerUtilRt.newHashMap(settings.getAvailableTasks());
     availableTasks.putAll(data);
     settings.setAvailableTasks(availableTasks);

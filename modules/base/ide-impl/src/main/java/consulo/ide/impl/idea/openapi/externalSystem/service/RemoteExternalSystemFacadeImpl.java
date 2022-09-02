@@ -15,10 +15,10 @@
  */
 package consulo.ide.impl.idea.openapi.externalSystem.service;
 
-import consulo.ide.impl.idea.openapi.externalSystem.model.settings.ExternalSystemExecutionSettings;
-import consulo.ide.impl.idea.openapi.externalSystem.service.project.ExternalSystemProjectResolver;
-import consulo.ide.impl.idea.openapi.externalSystem.task.ExternalSystemTaskManager;
-import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemConstants;
+import consulo.externalSystem.model.setting.ExternalSystemExecutionSettings;
+import consulo.externalSystem.service.project.ExternalSystemProjectResolver;
+import consulo.externalSystem.task.ExternalSystemTaskManager;
+import consulo.externalSystem.util.ExternalSystemConstants;
 import consulo.application.util.registry.Registry;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import javax.annotation.Nonnull;
