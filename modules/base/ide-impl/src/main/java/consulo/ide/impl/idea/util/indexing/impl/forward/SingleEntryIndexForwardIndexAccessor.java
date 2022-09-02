@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.util.indexing.impl.forward;
 
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.VolatileNotNullLazyValue;
+import consulo.application.util.VolatileNotNullLazyValue;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.indexing.*;
 import consulo.ide.impl.idea.util.indexing.impl.InputData;

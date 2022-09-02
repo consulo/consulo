@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.util;
+package consulo.application.util;
+
+import consulo.annotation.DeprecationInfo;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -22,18 +24,9 @@ import java.util.function.Supplier;
 /**
  * @author peter
  */
+@Deprecated
+@DeprecationInfo("Use LazyValue")
 public abstract class NullableLazyValue<T> {
-  @Deprecated(forRemoval = true)
-  public static <E> NullableLazyValue<E> createValue(@Nonnull final Factory<? extends E> factory) {
-    return new NullableLazyValue<E>() {
-      @Nullable
-      @Override
-      protected E compute() {
-        return factory.create();
-      }
-    };
-  }
-
   public static <E> NullableLazyValue<E> createValue(@Nonnull final Supplier<? extends E> factory) {
     return new NullableLazyValue<E>() {
       @Nullable
@@ -44,13 +37,7 @@ public abstract class NullableLazyValue<T> {
     };
   }
 
-  @Deprecated(forRemoval = true)
   public static <E> NullableLazyValue<E> of(@Nonnull final Supplier<E> factory) {
-    return createValue(factory);
-  }
-
-  @Deprecated(forRemoval = true)
-  public static <E> NullableLazyValue<E> of(@Nonnull final Factory<E> factory) {
     return createValue(factory);
   }
 

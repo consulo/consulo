@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.application.options.codeStyle.arrangement.component;
 
-import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
+import consulo.application.util.NotNullLazyValue;
 import consulo.language.codeStyle.arrangement.std.ArrangementSettingsToken;
 import consulo.language.codeStyle.arrangement.std.ArrangementUiComponent;
 import consulo.ide.impl.idea.util.containers.ContainerUtilRt;

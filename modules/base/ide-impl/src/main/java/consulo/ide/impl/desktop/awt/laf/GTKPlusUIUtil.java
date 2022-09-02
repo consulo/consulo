@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.desktop.awt.laf;
 
-import consulo.ide.impl.idea.openapi.util.ClearableLazyValue;
+import consulo.application.util.ClearableLazyValue;
 import consulo.ui.ex.awt.UIUtil;
 
 import javax.annotation.Nonnull;

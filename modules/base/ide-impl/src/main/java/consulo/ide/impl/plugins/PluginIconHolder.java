@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.plugins;
 
-import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
+import consulo.application.util.NotNullLazyValue;
 import consulo.ui.ex.IconDeferrer;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.logging.Logger;

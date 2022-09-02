@@ -13,28 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.roots.impl;
+package consulo.module.content;
 
 import consulo.application.progress.ProgressManager;
-import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
-import consulo.ide.impl.idea.openapi.util.VolatileNotNullLazyValue;
 import consulo.application.util.registry.Registry;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.MultiMap;
+import consulo.util.lang.StringUtil;
+import consulo.util.lang.lazy.LazyValue;
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 
 /**
  * @author peter
  */
 public class PackageDirectoryCache {
   private final MultiMap<String, VirtualFile> myRootsByPackagePrefix;
-  private final Map<String, PackageInfo> myDirectoriesByPackageNameCache = ContainerUtil.newConcurrentMap();
-  private final Set<String> myNonExistentPackages = ContainerUtil.newConcurrentSet();
+  private final Map<String, PackageInfo> myDirectoriesByPackageNameCache = new ConcurrentHashMap<>();
+  private final Set<String> myNonExistentPackages = ConcurrentHashMap.newKeySet();
 
   public PackageDirectoryCache(@Nonnull MultiMap<String, VirtualFile> rootsByPackagePrefix) {
     myRootsByPackagePrefix = rootsByPackagePrefix;
@@ -60,7 +60,7 @@ public class PackageDirectoryCache {
         return null;
       }
 
-      List<VirtualFile> result = ContainerUtil.newSmartList();
+      List<VirtualFile> result = new ArrayList<>();
 
       if (StringUtil.isNotEmpty(packageName) && !StringUtil.startsWithChar(packageName, '.')) {
         int i = packageName.lastIndexOf('.');
@@ -83,7 +83,8 @@ public class PackageDirectoryCache {
 
       if (!result.isEmpty()) {
         myDirectoriesByPackageNameCache.put(packageName, info = new PackageInfo(packageName, result));
-      } else {
+      }
+      else {
         myNonExistentPackages.add(packageName);
       }
     }
@@ -93,16 +94,18 @@ public class PackageDirectoryCache {
 
   public Set<String> getSubpackageNames(@Nonnull final String packageName) {
     final PackageInfo info = getPackageInfo(packageName);
-    return info == null ? Collections.emptySet() : Collections.unmodifiableSet(info.mySubPackages.getValue().keySet());
+    return info == null ? Collections.emptySet() : Collections.unmodifiableSet(info.mySubPackages.get().keySet());
   }
 
   private class PackageInfo {
     final String myQname;
     final List<VirtualFile> myPackageDirectories;
-    final NotNullLazyValue<MultiMap<String, VirtualFile>> mySubPackages = new VolatileNotNullLazyValue<MultiMap<String, VirtualFile>>() {
-      @Nonnull
-      @Override
-      protected MultiMap<String, VirtualFile> compute() {
+    final Supplier<MultiMap<String, VirtualFile>> mySubPackages;
+
+    PackageInfo(String qname, List<VirtualFile> packageDirectories) {
+      myQname = qname;
+      myPackageDirectories = packageDirectories;
+      mySubPackages = LazyValue.notNull(() -> {
         MultiMap<String, VirtualFile> result = MultiMap.createLinked();
         for (VirtualFile directory : myPackageDirectories) {
           for (VirtualFile child : directory.getChildren()) {
@@ -114,17 +117,12 @@ public class PackageDirectoryCache {
           }
         }
         return result;
-      }
-    };
-
-    PackageInfo(String qname, List<VirtualFile> packageDirectories) {
-      myQname = qname;
-      myPackageDirectories = packageDirectories;
+      });
     }
 
     @Nonnull
     Collection<VirtualFile> getSubPackageDirectories(String shortName) {
-      return mySubPackages.getValue().get(shortName);
+      return mySubPackages.get().get(shortName);
     }
   }
 

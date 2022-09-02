@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,43 +14,44 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.openapi.util;
+package consulo.application.util;
+
+import consulo.annotation.DeprecationInfo;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import java.util.Objects;
+import java.util.function.Supplier;
 
 /**
  * @author peter
  */
-public abstract class AtomicNullableLazyValue<T> extends NullableLazyValue<T> {
-  @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
+@Deprecated
+@DeprecationInfo("Use LazyValue")
+public abstract class AtomicNotNullLazyValue<T> extends NotNullLazyValue<T> {
   @Nonnull
-  public static <T> AtomicNullableLazyValue<T> createValue(@Nonnull final Factory<? extends T> value) {
-    return new AtomicNullableLazyValue<T>() {
-      @Nullable
+  public static <K> AtomicNotNullLazyValue<K> createValue(@Nonnull final Supplier<K> value) {
+    return new AtomicNotNullLazyValue<K>() {
+      @Nonnull
       @Override
-      protected T compute() {
-        return value.create();
+      protected K compute() {
+        return Objects.requireNonNull(value.get());
       }
     };
   }
 
   private volatile T myValue;
-  private volatile boolean myComputed;
 
   @Override
+  @Nonnull
   public final T getValue() {
-    boolean computed = myComputed;
     T value = myValue;
-    if (computed) {
+    if (value != null) {
       return value;
     }
     synchronized (this) {
-      computed = myComputed;
       value = myValue;
-      if (!computed) {
+      if (value == null) {
         myValue = value = compute();
-        myComputed = true;
       }
     }
     return value;

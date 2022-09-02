@@ -23,7 +23,7 @@ import consulo.project.ui.notification.NotificationType;
 import consulo.index.io.data.DataExternalizer;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
+import consulo.application.util.NotNullLazyValue;
 import consulo.util.lang.ShutDownTracker;
 import consulo.index.io.data.DataInputOutputUtil;
 import consulo.util.io.FileAttributes;

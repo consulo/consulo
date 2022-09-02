@@ -2583,4 +2583,12 @@ public final class StringUtil {
     }
     return false;
   }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String escapeCharCharacters(@Nonnull String s) {
+    StringBuilder buffer = new StringBuilder(s.length());
+    escapeStringCharacters(s.length(), s, "\'", buffer);
+    return buffer.toString();
+  }
 }

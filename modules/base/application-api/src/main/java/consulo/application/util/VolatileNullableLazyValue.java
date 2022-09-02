@@ -1,8 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.openapi.util;
+package consulo.application.util;
 
-import consulo.application.util.RecursionGuard;
-import consulo.application.util.RecursionManager;
+import consulo.annotation.DeprecationInfo;
 
 import javax.annotation.Nonnull;
 
@@ -15,6 +14,8 @@ import java.util.function.Supplier;
  *
  * @author peter
  */
+@Deprecated
+@DeprecationInfo("Use LazyValue")
 public abstract class VolatileNullableLazyValue<T> extends NullableLazyValue<T> {
   private volatile boolean myComputed;
   @Nullable

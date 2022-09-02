@@ -19,7 +19,7 @@ import consulo.process.cmd.GeneralCommandLine;
 import consulo.ide.impl.idea.execution.util.ExecUtil;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ide.impl.idea.openapi.fileChooser.FileSystemTree;
-import consulo.ide.impl.idea.openapi.util.NullableLazyValue;
+import consulo.application.util.NullableLazyValue;
 import consulo.application.util.SystemInfo;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;

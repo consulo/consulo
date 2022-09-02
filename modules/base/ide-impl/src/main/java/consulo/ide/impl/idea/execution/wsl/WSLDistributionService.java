@@ -9,7 +9,7 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.ide.ServiceManager;
-import consulo.ide.impl.idea.openapi.util.AtomicNullableLazyValue;
+import consulo.application.util.AtomicNullableLazyValue;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.util.xml.serializer.annotation.Tag;

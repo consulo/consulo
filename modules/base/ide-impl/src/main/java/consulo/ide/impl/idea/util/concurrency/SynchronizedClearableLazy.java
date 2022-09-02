@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.util.concurrency;
 
-import consulo.ide.impl.idea.openapi.util.AtomicClearableLazyValue;
+import consulo.application.util.AtomicClearableLazyValue;
 
 import javax.annotation.Nonnull;
 import java.util.function.Supplier;

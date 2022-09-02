@@ -16,7 +16,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.impl.internal.progress.ProgressWrapper;
 import consulo.ide.impl.idea.openapi.project.*;
-import consulo.ide.impl.idea.openapi.util.ClearableLazyValue;
+import consulo.application.util.ClearableLazyValue;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.EmptyRunnable;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;

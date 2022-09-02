@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.util.io;
 
-import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
+import consulo.application.util.NotNullLazyValue;
 
 import javax.annotation.Nonnull;
 import java.math.BigInteger;

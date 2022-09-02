@@ -22,6 +22,7 @@ import consulo.language.psi.*;
 import consulo.project.Project;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -85,4 +86,8 @@ public interface ResolveCache {
                                                                                 @Nonnull final PsiFile containingFile);
 
   <TRef extends PsiReference, TResult> TResult resolveWithCaching(@Nonnull TRef ref, @Nonnull AbstractResolver<TRef, TResult> resolver, boolean needToPreventRecursion, boolean incompleteCode);
+
+  @Nullable
+    // null means not cached
+  <T extends PsiPolyVariantReference> ResolveResult[] getCachedResults(@Nonnull T ref, boolean physical, boolean incompleteCode, boolean isPoly);
 }

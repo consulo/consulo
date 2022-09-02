@@ -21,7 +21,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.ide.impl.StructureViewWrapperImpl;
 import consulo.ide.impl.idea.ide.structureView.newStructureView.StructureViewComponent;
-import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
+import consulo.application.util.NotNullLazyValue;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
 import consulo.ide.impl.idea.util.ReflectionUtil;

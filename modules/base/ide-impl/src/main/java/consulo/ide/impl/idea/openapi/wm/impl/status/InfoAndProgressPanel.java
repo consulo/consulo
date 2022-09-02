@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.openapi.progress.impl.ProgressSuspender;
 import consulo.ide.impl.idea.openapi.project.ProjectUtil;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
+import consulo.application.util.NotNullLazyValue;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.ide.impl.idea.ui.InplaceButton;

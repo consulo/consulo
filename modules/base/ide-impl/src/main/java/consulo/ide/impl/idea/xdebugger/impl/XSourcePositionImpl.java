@@ -6,7 +6,7 @@ import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.AtomicNotNullLazyValue;
+import consulo.application.util.AtomicNotNullLazyValue;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.http.HttpVirtualFile;
 import consulo.navigation.Navigatable;

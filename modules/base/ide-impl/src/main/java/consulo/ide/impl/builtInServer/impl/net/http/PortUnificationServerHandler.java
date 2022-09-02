@@ -17,7 +17,7 @@ package consulo.ide.impl.builtInServer.impl.net.http;
 
 import consulo.application.Application;
 import consulo.logging.Logger;
-import consulo.ide.impl.idea.openapi.util.AtomicNotNullLazyValue;
+import consulo.application.util.AtomicNotNullLazyValue;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.*;
 import io.netty.handler.codec.compression.ZlibCodecFactory;

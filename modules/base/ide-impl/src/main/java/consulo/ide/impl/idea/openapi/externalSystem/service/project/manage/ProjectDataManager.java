@@ -22,7 +22,7 @@ import consulo.externalSystem.model.DataNode;
 import consulo.externalSystem.model.Key;
 import consulo.externalSystem.service.project.manage.ProjectDataService;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
-import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
+import consulo.application.util.NotNullLazyValue;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
 import consulo.logging.Logger;

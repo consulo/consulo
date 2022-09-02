@@ -5,7 +5,7 @@ import consulo.application.AllIcons;
 import consulo.build.ui.BuildBundle;
 import consulo.build.ui.ExecutionNode;
 import consulo.build.ui.event.*;
-import consulo.ide.impl.idea.openapi.util.NullableLazyValue;
+import consulo.application.util.NullableLazyValue;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;

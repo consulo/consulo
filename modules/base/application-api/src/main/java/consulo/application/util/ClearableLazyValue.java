@@ -13,27 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.util;
+package consulo.application.util;
 
-import consulo.application.util.RecursionGuard;
-import consulo.application.util.RecursionManager;
-import consulo.application.util.function.Computable;
+import consulo.annotation.DeprecationInfo;
 
 import javax.annotation.Nonnull;
+import java.util.function.Supplier;
 
 /**
  * Lazy value with ability to reset (and recompute) the value.
  * Thread-safe version: {@link AtomicClearableLazyValue}.
  */
+@Deprecated
+@DeprecationInfo("Use consulo.util.lang.lazy.ClearableLazyValue")
 public abstract class ClearableLazyValue<T> {
 
   @Nonnull
-  public static <T> ClearableLazyValue<T> create(final Computable<? extends T> computable) {
+  public static <T> ClearableLazyValue<T> create(final Supplier<? extends T> computable) {
     return new ClearableLazyValue<T>() {
       @Nonnull
       @Override
       protected T compute() {
-        return computable.compute();
+        return computable.get();
       }
     };
   }

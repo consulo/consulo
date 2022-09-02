@@ -1,7 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.execution.wsl;
 
-import consulo.ide.impl.idea.openapi.util.AtomicNullableLazyValue;
+import consulo.application.util.AtomicNullableLazyValue;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import javax.annotation.Nonnull;

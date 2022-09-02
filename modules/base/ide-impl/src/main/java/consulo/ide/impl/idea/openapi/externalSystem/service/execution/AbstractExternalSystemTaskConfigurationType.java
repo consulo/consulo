@@ -14,7 +14,7 @@ import consulo.externalSystem.setting.ExternalProjectSettings;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemBundle;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
+import consulo.application.util.NotNullLazyValue;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtilRt;

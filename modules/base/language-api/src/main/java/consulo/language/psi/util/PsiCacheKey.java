@@ -17,18 +17,19 @@
 /*
  * @author max
  */
-package consulo.ide.impl.psi.util;
+package consulo.language.psi.util;
 
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiModificationTracker;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
-import consulo.ide.impl.idea.reference.SoftReference;
-import consulo.ide.impl.idea.util.Function;
+import consulo.util.lang.ref.SoftReference;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Function;
 
 public class PsiCacheKey<T, H extends PsiElement> extends Key<SoftReference<Pair<Long, T>>> {
   private final Function<H, T> myFunction;
@@ -50,7 +51,7 @@ public class PsiCacheKey<T, H extends PsiElement> extends Key<SoftReference<Pair
       return result;
     }
 
-    result = myFunction.fun(h);
+    result = myFunction.apply(h);
     final long count = getModificationCount(h);
     h.putUserData(this, new SoftReference<Pair<Long, T>>(new Pair<Long, T>(count, result)));
     return result;

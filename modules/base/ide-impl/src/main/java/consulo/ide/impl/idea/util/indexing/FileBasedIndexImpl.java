@@ -37,7 +37,7 @@ import consulo.ide.impl.idea.openapi.project.NoAccessDuringPsiEvents;
 import consulo.ide.impl.idea.openapi.project.ProjectUtil;
 import consulo.ide.impl.idea.openapi.roots.impl.PushedFilePropertiesUpdaterImpl;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
+import consulo.application.util.NotNullLazyValue;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.AsyncEventSupport;

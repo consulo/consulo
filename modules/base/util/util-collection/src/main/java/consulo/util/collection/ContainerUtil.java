@@ -1414,4 +1414,15 @@ public class ContainerUtil {
 
     return res;
   }
+
+  @Nonnull
+  public static <T> T[] copyAndClear(@Nonnull Collection<T> collection, @Nonnull ArrayFactory<T> factory, boolean clear) {
+    int size = collection.size();
+    T[] a = factory.create(size);
+    if (size > 0) {
+      a = collection.toArray(a);
+      if (clear) collection.clear();
+    }
+    return a;
+  }
 }

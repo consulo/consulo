@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.execution.wsl;
 
 import consulo.process.ExecutionException;
 import consulo.process.local.ProcessOutput;
-import consulo.ide.impl.idea.openapi.util.AtomicNotNullLazyValue;
+import consulo.application.util.AtomicNotNullLazyValue;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.util.xml.serializer.annotation.Tag;
 import javax.annotation.Nonnull;

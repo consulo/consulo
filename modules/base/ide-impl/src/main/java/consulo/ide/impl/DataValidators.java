@@ -21,7 +21,7 @@ import consulo.language.editor.PlatformDataKeys;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
-import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
+import consulo.application.util.NotNullLazyValue;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;

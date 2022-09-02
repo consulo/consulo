@@ -33,7 +33,7 @@ import consulo.disposer.Disposer;
 import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.diff.util.DiffUtil;
 import consulo.ide.impl.idea.openapi.util.Factory;
-import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
+import consulo.application.util.NotNullLazyValue;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.IgnoredSettingsAction;
 import consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelveChangesManager;

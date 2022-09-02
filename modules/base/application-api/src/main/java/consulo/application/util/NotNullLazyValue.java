@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.util;
+package consulo.application.util;
 
-import consulo.application.util.RecursionGuard;
-import consulo.application.util.RecursionManager;
+import consulo.annotation.DeprecationInfo;
 
 import javax.annotation.Nonnull;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
@@ -28,6 +28,8 @@ import java.util.function.Supplier;
  *
  * @author peter
  */
+@Deprecated
+@DeprecationInfo("Use LazyValue")
 public abstract class NotNullLazyValue<T> implements Supplier<T> {
   private T myValue;
 
@@ -68,23 +70,12 @@ public abstract class NotNullLazyValue<T> implements Supplier<T> {
   }
 
   @Nonnull
-  public static <T> NotNullLazyValue<T> createValue(@Nonnull final NotNullFactory<T> value) {
-    return new NotNullLazyValue<T>() {
-      @Nonnull
-      @Override
-      protected T compute() {
-        return value.create();
-      }
-    };
-  }
-
-  @Nonnull
   public static <T> NotNullLazyValue<T> createValue(@Nonnull final Supplier<T> value) {
     return new NotNullLazyValue<T>() {
       @Nonnull
       @Override
       protected T compute() {
-        return value.get();
+        return Objects.requireNonNull(value.get());
       }
     };
   }

@@ -28,7 +28,7 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.ide.impl.idea.codeInspection.InspectionManagerBase;
 import consulo.ide.impl.idea.ide.ui.search.SearchableOptionsRegistrar;
-import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
+import consulo.application.util.NotNullLazyValue;
 import consulo.ide.impl.idea.profile.codeInspection.ui.header.InspectionToolsConfigurable;
 import consulo.ide.impl.idea.ui.content.TabbedPaneContentUI;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

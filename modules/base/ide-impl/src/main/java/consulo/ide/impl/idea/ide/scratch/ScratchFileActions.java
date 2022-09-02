@@ -9,7 +9,7 @@ import consulo.dataContext.DataContext;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.IdeView;
 import consulo.ide.impl.idea.ide.actions.NewActionGroup;
-import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
+import consulo.application.util.NotNullLazyValue;
 import consulo.ide.impl.idea.util.Consumer;
 import consulo.language.Language;
 import consulo.language.editor.CommonDataKeys;

@@ -20,7 +20,7 @@ import consulo.language.codeStyle.Block;
 import consulo.language.codeStyle.Indent;
 import consulo.language.codeStyle.Spacing;
 import consulo.language.ast.ASTNode;
-import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
+import consulo.application.util.NotNullLazyValue;
 import consulo.util.lang.Pair;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;

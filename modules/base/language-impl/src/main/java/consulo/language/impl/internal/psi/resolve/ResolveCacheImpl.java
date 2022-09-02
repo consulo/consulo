@@ -192,6 +192,7 @@ public class ResolveCacheImpl implements ResolveCache {
     }
   }
 
+  @Override
   @Nullable // null means not cached
   public <T extends PsiPolyVariantReference> ResolveResult[] getCachedResults(@Nonnull T ref, boolean physical, boolean incompleteCode, boolean isPoly) {
     Map<T, ResolveResult[]> map = getMap(physical, getIndex(incompleteCode, isPoly));

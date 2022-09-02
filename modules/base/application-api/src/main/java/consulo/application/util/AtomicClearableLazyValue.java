@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2012 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,25 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.application.util;
 
-package consulo.ide.impl.idea.openapi.util;
+import consulo.annotation.DeprecationInfo;
 
 import javax.annotation.Nonnull;
 
-/**
- * @author peter
- */
-public abstract class VolatileNotNullLazyValue<T> extends NotNullLazyValue<T> {
-
-  private volatile T myValue;
-
+@Deprecated
+@DeprecationInfo("Use consulo.util.lang.lazy.ClearableLazyValue")
+public abstract class AtomicClearableLazyValue<T> extends ClearableLazyValue<T> {
   @Nonnull
-  public final T getValue() {
-    T value = myValue;
-    if (value != null) {
-      return value;
-    }
-    value = myValue = compute();
-    return value;
+  @Override
+  public final synchronized T getValue() {
+    return super.getValue();
+  }
+
+  @Override
+  public final synchronized void drop() {
+    super.drop();
   }
 }

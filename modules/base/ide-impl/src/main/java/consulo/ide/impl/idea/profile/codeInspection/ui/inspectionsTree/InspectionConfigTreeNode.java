@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.profile.codeInspection.ui.inspectionsTree;
 
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.ide.impl.idea.codeInspection.ex.Descriptor;
-import consulo.ide.impl.idea.openapi.util.ClearableLazyValue;
+import consulo.application.util.ClearableLazyValue;
 import consulo.ide.impl.idea.profile.codeInspection.ui.ToolDescriptors;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

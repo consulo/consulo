@@ -16,7 +16,7 @@ import consulo.language.editor.CommonDataKeys;
 import consulo.logging.Logger;
 import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
+import consulo.application.util.NotNullLazyValue;
 import consulo.application.util.registry.Registry;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.application.util.matcher.NameUtil;

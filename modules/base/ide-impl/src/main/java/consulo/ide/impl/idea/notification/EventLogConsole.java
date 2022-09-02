@@ -35,7 +35,7 @@ import consulo.ide.impl.idea.notification.impl.NotificationsManagerImpl;
 import consulo.ide.impl.idea.notification.impl.ui.NotificationsUtil;
 import consulo.ide.impl.idea.openapi.editor.ex.EditorMarkupModel;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
+import consulo.application.util.NotNullLazyValue;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

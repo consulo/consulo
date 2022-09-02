@@ -36,7 +36,7 @@ import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.EditorSettings;
 import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
+import consulo.application.util.NotNullLazyValue;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;

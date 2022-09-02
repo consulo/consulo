@@ -193,6 +193,12 @@ public interface PsiSearchHelper {
                                          @Nullable PsiFile fileToIgnoreOccurencesIn,
                                          @Nullable ProgressIndicator progress);
 
+  public boolean processFilesWithText(@Nonnull final GlobalSearchScope scope,
+                                      final short searchContext,
+                                      final boolean caseSensitively,
+                                      @Nonnull String text,
+                                      @Nonnull final Processor<VirtualFile> processor);
+
   enum SearchCostResult {
     ZERO_OCCURRENCES,
     FEW_OCCURRENCES,

@@ -18,7 +18,7 @@ package consulo.sandboxPlugin.lang.version;
 import consulo.language.parser.PsiParser;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
+import consulo.application.util.NotNullLazyValue;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;

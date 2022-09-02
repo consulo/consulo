@@ -8,7 +8,7 @@ import consulo.build.ui.progress.BuildProgressListener;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.openapi.util.AtomicClearableLazyValue;
+import consulo.application.util.AtomicClearableLazyValue;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.DisposableWrapperList;
