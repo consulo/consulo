@@ -307,7 +307,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.codeInspection.export;
   exports consulo.ide.impl.idea.codeInspection.offline;
   exports consulo.ide.impl.idea.codeInspection.offlineViewer;
-  exports consulo.ide.impl.idea.codeInspection.reference;
   exports consulo.ide.impl.idea.codeInspection.ui;
   exports consulo.ide.impl.idea.codeInspection.ui.actions;
   exports consulo.ide.impl.idea.codeInspection.util;

@@ -11,6 +11,6 @@ module consulo.project.impl {
   requires consulo.module.impl;
   requires consulo.project.ui.api;
 
-  exports consulo.project.impl.internal to consulo.ide.impl;
+  exports consulo.project.impl.internal to consulo.ide.impl, consulo.language.editor.impl;
   exports consulo.project.impl.internal.store to consulo.ide.impl;
 }

@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInspection.reference;
+package consulo.language.editor.impl.inspection.reference;
 
-import consulo.project.impl.internal.ProjectPathMacroManager;
 import consulo.application.ApplicationManager;
 import consulo.language.editor.inspection.reference.RefElement;
 import consulo.language.editor.inspection.reference.RefFile;
@@ -24,12 +23,12 @@ import consulo.language.editor.inspection.reference.RefVisitor;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
+import consulo.project.impl.internal.ProjectPathMacroManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 
 public class RefFileImpl extends RefElementImpl implements RefFile {
   public RefFileImpl(PsiFile elem, RefManager manager) {

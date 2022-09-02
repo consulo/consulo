@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.codeInspection.ex;
 
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.reference.RefElement;
-import consulo.ide.impl.idea.codeInspection.reference.RefManagerImpl;
+import consulo.language.editor.impl.inspection.reference.RefManagerImpl;
 import consulo.ide.impl.idea.codeInspection.ui.InspectionToolPresentation;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;

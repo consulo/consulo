@@ -26,7 +26,7 @@ package consulo.ide.impl.idea.codeInspection.ex;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.ide.impl.idea.codeInspection.export.HTMLExporter;
-import consulo.ide.impl.idea.codeInspection.reference.RefElementImpl;
+import consulo.language.editor.impl.inspection.reference.RefElementImpl;
 import consulo.language.Language;
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.reference.*;

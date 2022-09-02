@@ -22,7 +22,7 @@ import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.editor.inspection.reference.RefElement;
 import consulo.language.editor.inspection.reference.RefEntity;
-import consulo.ide.impl.idea.codeInspection.reference.RefManagerImpl;
+import consulo.language.editor.impl.inspection.reference.RefManagerImpl;
 import consulo.ide.impl.idea.codeInspection.ui.InspectionResultsView;
 import consulo.ide.impl.idea.codeInspection.ui.InspectionTree;
 import consulo.application.AllIcons;

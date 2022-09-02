@@ -17,11 +17,12 @@
 package consulo.ide.impl.idea.codeInspection.ex;
 
 import consulo.component.ProcessCanceledException;
+import consulo.language.editor.impl.inspection.reference.RefElementImpl;
+import consulo.language.editor.impl.inspection.reference.RefManagerImpl;
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.editor.impl.internal.daemon.DaemonProgressIndicator;
 import consulo.ide.impl.idea.codeInspection.*;
-import consulo.ide.impl.idea.codeInspection.reference.*;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.progress.ProgressWrapper;

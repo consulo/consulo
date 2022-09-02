@@ -1,16 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
-package consulo.ide.impl.idea.codeInspection.reference;
+package consulo.language.editor.impl.inspection.reference;
 
-import consulo.project.impl.internal.ProjectPathMacroManager;
-import consulo.ide.impl.idea.openapi.diagnostic.Attachment;
-import consulo.ide.impl.idea.openapi.diagnostic.RuntimeExceptionWithAttachments;
-import consulo.ide.impl.idea.openapi.util.NullableFactory;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.ide.impl.idea.util.ConcurrencyUtil;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.application.dumb.IndexNotReadyException;
@@ -30,23 +21,33 @@ import consulo.language.impl.psi.PsiAnchor;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
+import consulo.logging.attachment.AttachmentFactory;
+import consulo.logging.attachment.RuntimeExceptionWithAttachments;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.content.util.ProjectUtilCore;
 import consulo.project.Project;
+import consulo.project.impl.internal.ProjectPathMacroManager;
+import consulo.util.collection.Lists;
+import consulo.util.collection.Maps;
 import consulo.util.dataholder.Key;
 import consulo.util.interner.Interner;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.VirtualFileWithId;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public class RefManagerImpl extends RefManager {
@@ -61,11 +62,11 @@ public class RefManagerImpl extends RefManager {
 
   private final BitSet myUnprocessedFiles = new BitSet();
   private final boolean processExternalElements = Registry.is("batch.inspections.process.external.elements");
-  private final ConcurrentMap<PsiAnchor, RefElement> myRefTable = ContainerUtil.newConcurrentMap();
+  private final ConcurrentMap<PsiAnchor, RefElement> myRefTable = new ConcurrentHashMap<>();
 
   private volatile List<RefElement> myCachedSortedRefs; // holds cached values from myPsiToRefTable/myRefTable sorted by containing virtual file; benign data race
 
-  private final ConcurrentMap<Module, RefModule> myModules = ContainerUtil.newConcurrentMap();
+  private final ConcurrentMap<Module, RefModule> myModules = new ConcurrentHashMap<>();
   private final ProjectIterator myProjectIterator = new ProjectIterator();
   private final AtomicBoolean myDeclarationsFound = new AtomicBoolean(false);
   private final PsiManager myPsiManager;
@@ -374,7 +375,7 @@ public class RefManagerImpl extends RefManager {
 
     answer = new ArrayList<>(myRefTable.values());
     List<RefElement> list = answer;
-    ReadAction.run(() -> ContainerUtil.quickSort(list, (o1, o2) -> {
+    ReadAction.run(() -> Lists.quickSort(list, (o1, o2) -> {
       VirtualFile v1 = ((RefElementImpl)o1).getVirtualFile();
       VirtualFile v2 = ((RefElementImpl)o2).getVirtualFile();
       return (v1 != null ? v1.hashCode() : 0) - (v2 != null ? v2.hashCode() : 0);
@@ -520,7 +521,7 @@ public class RefManagerImpl extends RefManager {
           throw e;
         }
         catch (Throwable e) {
-          LOG.error(new RuntimeExceptionWithAttachments(e, new Attachment("diagnostics.txt", file.getName())));
+          LOG.error(new RuntimeExceptionWithAttachments(e, AttachmentFactory.get().create("diagnostics.txt", file.getName())));
         }
       }
       myPsiManager.dropResolveCaches();
@@ -583,7 +584,7 @@ public class RefManagerImpl extends RefManager {
       return getRefProject();
     }
     if (SmartRefElementPointer.DIR.equals(type)) {
-      String url = VfsUtilCore.pathToUrl(ProjectPathMacroManager.getInstance(getProject()).expandPath(fqName));
+      String url = VirtualFileUtil.pathToUrl(ProjectPathMacroManager.getInstance(getProject()).expandPath(fqName));
       VirtualFile vFile = VirtualFileManager.getInstance().findFileByUrl(url);
       if (vFile != null) {
         final PsiDirectory dir = PsiManager.getInstance(getProject()).findDirectory(vFile);
@@ -594,12 +595,12 @@ public class RefManagerImpl extends RefManager {
   }
 
   @Nullable
-  public <T extends RefElement> T getFromRefTableOrCache(final PsiElement element, @Nonnull NullableFactory<? extends T> factory) {
+  public <T extends RefElement> T getFromRefTableOrCache(final PsiElement element, @Nonnull Supplier<? extends T> factory) {
     return getFromRefTableOrCache(element, factory, null);
   }
 
   @Nullable
-  private <T extends RefElement> T getFromRefTableOrCache(@Nonnull PsiElement element, @Nonnull NullableFactory<? extends T> factory, @Nullable Consumer<? super T> whenCached) {
+  private <T extends RefElement> T getFromRefTableOrCache(@Nonnull PsiElement element, @Nonnull Supplier<? extends T> factory, @Nullable Consumer<? super T> whenCached) {
 
     PsiAnchor psiAnchor = createAnchor(element);
     //noinspection unchecked
@@ -612,7 +613,7 @@ public class RefManagerImpl extends RefManager {
       return null;
     }
 
-    result = factory.create();
+    result = factory.get();
     if (result == null) return null;
 
     myCachedSortedRefs = null;
@@ -622,7 +623,7 @@ public class RefManagerImpl extends RefManager {
       result = (T)prev;
     }
     else if (whenCached != null) {
-      whenCached.consume(result);
+      whenCached.accept(result);
     }
 
     return result;
@@ -635,7 +636,7 @@ public class RefManagerImpl extends RefManager {
     }
     RefModule refModule = myModules.get(module);
     if (refModule == null) {
-      refModule = ConcurrencyUtil.cacheOrGet(myModules, module, new RefModuleImpl(module, this));
+      refModule = Maps.cacheOrGet(myModules, module, new RefModuleImpl(module, this));
     }
     return refModule;
   }

@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInspection.reference;
+package consulo.language.editor.inspection.reference;
 
-import consulo.language.editor.inspection.reference.RefEntity;
-import consulo.language.editor.inspection.reference.RefManager;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 

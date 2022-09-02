@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInspection.reference;
+package consulo.language.editor.inspection.reference;
 
 import consulo.language.editor.ImplicitUsageProvider;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.language.editor.inspection.reference.RefEntity;
 import consulo.language.psi.PsiElement;
-import javax.annotation.Nonnull;
+import consulo.util.lang.Comparing;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 
 /**

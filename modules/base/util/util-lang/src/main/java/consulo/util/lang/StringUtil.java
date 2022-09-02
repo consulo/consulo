@@ -2574,4 +2574,13 @@ public final class StringUtil {
     }
     return packageName + '.' + className;
   }
+
+  @Contract(pure = true)
+  public static boolean containsLineBreak(@Nonnull CharSequence text) {
+    for (int i = 0; i < text.length(); i++) {
+      char c = text.charAt(i);
+      if (isLineBreak(c)) return true;
+    }
+    return false;
+  }
 }

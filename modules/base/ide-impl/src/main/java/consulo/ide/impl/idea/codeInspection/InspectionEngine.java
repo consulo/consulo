@@ -24,7 +24,7 @@ import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.language.editor.inspection.reference.RefElement;
 import consulo.language.editor.inspection.reference.RefEntity;
-import consulo.ide.impl.idea.codeInspection.reference.RefManagerImpl;
+import consulo.language.editor.impl.inspection.reference.RefManagerImpl;
 import consulo.language.editor.inspection.reference.RefVisitor;
 import consulo.application.util.concurrent.JobLauncher;
 import consulo.language.Language;

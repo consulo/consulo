@@ -26,7 +26,7 @@ import consulo.ide.impl.idea.codeInspection.ex.*;
 import consulo.ide.impl.idea.codeInspection.offline.OfflineProblemDescriptor;
 import consulo.language.editor.inspection.reference.RefElement;
 import consulo.language.editor.inspection.reference.RefEntity;
-import consulo.ide.impl.idea.codeInspection.reference.SmartRefElementPointer;
+import consulo.language.editor.inspection.reference.SmartRefElementPointer;
 import consulo.ide.impl.idea.codeInspection.ui.*;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;

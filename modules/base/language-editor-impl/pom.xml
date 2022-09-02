@@ -95,6 +95,12 @@
       <optional>true</optional>
     </dependency>
     <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-project-impl</artifactId>
+      <version>${project.version}</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
       <groupId>consulo.internal</groupId>
       <artifactId>forms_rt</artifactId>
       <optional>true</optional>

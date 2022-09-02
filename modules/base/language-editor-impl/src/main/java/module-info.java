@@ -12,10 +12,12 @@ module consulo.language.editor.impl {
   requires consulo.language.inject.impl;
   requires consulo.external.service.api;
   requires consulo.application.impl;
+  requires consulo.project.impl;
 
   exports consulo.language.editor.impl.action;
   exports consulo.language.editor.impl.intention;
   exports consulo.language.editor.impl.highlight;
+  exports consulo.language.editor.impl.inspection.reference;
 
   exports consulo.language.editor.impl.internal.daemon to consulo.ide.impl;
   exports consulo.language.editor.impl.internal.completion to consulo.ide.impl, consulo.desktop.awt.ide.impl;

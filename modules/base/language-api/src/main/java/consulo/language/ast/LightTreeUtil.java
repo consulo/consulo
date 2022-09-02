@@ -13,18 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi.impl.source.tree;
+package consulo.language.ast;
 
-import consulo.language.ast.LighterAST;
-import consulo.language.ast.LighterASTNode;
-import consulo.language.ast.LighterASTTokenNode;
-import consulo.language.ast.LighterLazyParseableNode;
 import consulo.application.progress.ProgressManager;
-import consulo.language.ast.IElementType;
-import consulo.language.ast.TokenSet;
-import consulo.util.collection.SmartList;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.SmartList;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

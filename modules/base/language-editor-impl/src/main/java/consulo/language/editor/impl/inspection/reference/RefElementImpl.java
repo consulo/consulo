@@ -14,26 +14,22 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInspection.reference;
+package consulo.language.editor.impl.inspection.reference;
 
-import consulo.language.editor.inspection.SuppressionUtil;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.component.util.Iconable;
-import consulo.language.editor.inspection.reference.RefElement;
-import consulo.language.editor.inspection.reference.RefEntity;
-import consulo.language.editor.inspection.reference.RefManager;
-import consulo.language.editor.inspection.reference.RefModule;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.editor.inspection.SuppressionUtil;
+import consulo.language.editor.inspection.reference.*;
+import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.SmartPointerManager;
 import consulo.language.psi.SmartPsiElementPointer;
-import consulo.ide.impl.idea.util.ObjectUtils;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;
+import consulo.util.lang.ObjectUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -165,13 +161,13 @@ public abstract class RefElementImpl extends RefEntityImpl implements RefElement
   @Override
   @Nonnull
   public synchronized Collection<RefElement> getOutReferences() {
-    return ObjectUtils.notNull(myOutReferences, ContainerUtil.emptyList());
+    return ObjectUtil.notNull(myOutReferences, List.of());
   }
 
   @Override
   @Nonnull
   public synchronized Collection<RefElement> getInReferences() {
-    return ObjectUtils.notNull(myInReferences, ContainerUtil.emptyList());
+    return ObjectUtil.notNull(myInReferences, List.of());
   }
 
   @Override

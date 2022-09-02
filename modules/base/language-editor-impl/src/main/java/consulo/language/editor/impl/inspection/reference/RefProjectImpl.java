@@ -22,7 +22,7 @@
  * To change template for new class use
  * Code Style | Class Templates options (Tools | IDE Options).
  */
-package consulo.ide.impl.idea.codeInspection.reference;
+package consulo.language.editor.impl.inspection.reference;
 
 import consulo.application.Application;
 import consulo.language.editor.inspection.reference.RefManager;

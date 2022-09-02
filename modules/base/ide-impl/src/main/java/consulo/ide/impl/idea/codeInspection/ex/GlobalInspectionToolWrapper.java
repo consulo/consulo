@@ -19,7 +19,7 @@ import consulo.language.editor.inspection.GlobalInspectionContext;
 import consulo.language.editor.inspection.GlobalInspectionTool;
 import consulo.language.editor.inspection.LocalInspectionTool;
 import consulo.language.editor.inspection.reference.RefGraphAnnotator;
-import consulo.ide.impl.idea.codeInspection.reference.RefManagerImpl;
+import consulo.language.editor.impl.inspection.reference.RefManagerImpl;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.language.editor.inspection.scheme.InspectionProfileEntry;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;

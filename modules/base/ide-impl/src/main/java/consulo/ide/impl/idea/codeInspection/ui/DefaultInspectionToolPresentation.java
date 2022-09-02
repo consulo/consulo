@@ -19,7 +19,7 @@ import consulo.ide.impl.idea.codeInsight.daemon.impl.SeverityRegistrarImpl;
 import consulo.ide.impl.idea.codeInspection.ActionClassHolder;
 import consulo.language.editor.inspection.ProblemDescriptorUtil;
 import consulo.ide.impl.idea.codeInspection.ex.*;
-import consulo.ide.impl.idea.codeInspection.reference.RefUtil;
+import consulo.language.editor.inspection.reference.RefUtil;
 import consulo.project.impl.internal.ProjectPathMacroManager;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;

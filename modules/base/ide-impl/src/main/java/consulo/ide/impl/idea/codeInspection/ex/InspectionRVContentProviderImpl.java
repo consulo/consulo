@@ -21,12 +21,8 @@
 package consulo.ide.impl.idea.codeInspection.ex;
 
 import consulo.language.editor.inspection.CommonProblemDescriptor;
-import consulo.ide.impl.idea.codeInspection.reference.*;
 import consulo.ide.impl.idea.codeInspection.ui.*;
-import consulo.language.editor.inspection.reference.RefDirectory;
-import consulo.language.editor.inspection.reference.RefElement;
-import consulo.language.editor.inspection.reference.RefEntity;
-import consulo.language.editor.inspection.reference.RefModule;
+import consulo.language.editor.inspection.reference.*;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.Comparing;

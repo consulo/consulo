@@ -14,20 +14,18 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInspection.reference;
+package consulo.language.editor.impl.inspection.reference;
 
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
-import consulo.language.editor.inspection.reference.RefDirectory;
-import consulo.language.editor.inspection.reference.RefManager;
-import consulo.language.editor.inspection.reference.RefModule;
-import consulo.language.editor.inspection.reference.RefVisitor;
-import consulo.language.util.ModuleUtilCore;
-import consulo.module.content.ProjectFileIndex;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.editor.inspection.reference.*;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.language.util.ModuleUtilCore;
+import consulo.module.content.ProjectFileIndex;
+import consulo.util.lang.ObjectUtil;
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -40,7 +38,7 @@ public class RefDirectoryImpl extends RefElementImpl implements RefDirectory {
 
   @Override
   public void initialize() {
-    PsiDirectory psiElement = ObjectUtils.tryCast(getPsiElement(), PsiDirectory.class);
+    PsiDirectory psiElement = ObjectUtil.tryCast(getPsiElement(), PsiDirectory.class);
     LOG.assertTrue(psiElement != null);
     final PsiDirectory parentDirectory = psiElement.getParentDirectory();
     if (parentDirectory != null && ProjectFileIndex.getInstance(psiElement.getProject()).isInSourceContent(parentDirectory.getVirtualFile())) {

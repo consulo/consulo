@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInspection.reference;
+package consulo.language.editor.impl.inspection.reference;
 
 import consulo.application.ApplicationManager;
-import consulo.util.lang.BitUtil;
-import consulo.ide.impl.idea.util.ObjectUtils;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.inspection.reference.RefEntity;
 import consulo.language.editor.inspection.reference.RefManager;
 import consulo.language.editor.inspection.reference.RefVisitor;
+import consulo.language.editor.inspection.reference.WritableRefEntity;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.BitUtil;
+import consulo.util.lang.ObjectUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -60,7 +60,7 @@ public abstract class RefEntityImpl implements RefEntity, WritableRefEntity {
   @Nonnull
   @Override
   public synchronized List<RefEntity> getChildren() {
-    return ObjectUtils.notNull(myChildren, ContainerUtil.emptyList());
+    return ObjectUtil.notNull(myChildren, List.of());
   }
 
   @Override

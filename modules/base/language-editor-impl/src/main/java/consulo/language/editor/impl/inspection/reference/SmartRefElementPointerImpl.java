@@ -14,25 +14,23 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInspection.reference;
+package consulo.language.editor.impl.inspection.reference;
 
 import consulo.language.editor.inspection.reference.RefElement;
 import consulo.language.editor.inspection.reference.RefEntity;
 import consulo.language.editor.inspection.reference.RefManager;
+import consulo.language.editor.inspection.reference.SmartRefElementPointer;
 import consulo.logging.Logger;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.SmartPsiElementPointer;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class SmartRefElementPointerImpl implements SmartRefElementPointer {
-  @NonNls
   public static final String FQNAME_ATTR = "FQNAME";
-  @NonNls
   public static final String TYPE_ATTR = "TYPE";
-  @NonNls
   public static final String ENTRY_POINT = "entry_point";
   private static final Logger LOG = Logger.getInstance(SmartRefElementPointerImpl.class);
 

@@ -38,7 +38,7 @@ import consulo.ide.impl.idea.analysis.AnalysisUIOptions;
 import consulo.ide.impl.idea.analysis.PerformAnalysisInBackgroundOption;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.LocalInspectionsPass;
 import consulo.language.editor.inspection.GlobalSimpleInspectionTool;
-import consulo.ide.impl.idea.codeInspection.reference.RefManagerImpl;
+import consulo.language.editor.impl.inspection.reference.RefManagerImpl;
 import consulo.ide.impl.idea.codeInspection.ui.DefaultInspectionToolPresentation;
 import consulo.ide.impl.idea.codeInspection.ui.InspectionResultsView;
 import consulo.ide.impl.idea.codeInspection.ui.InspectionToolPresentation;

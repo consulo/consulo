@@ -14,12 +14,8 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.psi.impl.source.tree;
+package consulo.language.ast;
 
-import consulo.language.ast.LighterAST;
-import consulo.language.ast.LighterASTNode;
-import consulo.language.ast.LighterASTTokenNode;
-import consulo.language.ast.LighterLazyParseableNode;
 import consulo.util.collection.util.WalkingState;
 import consulo.util.collection.Stack;
 import javax.annotation.Nonnull;

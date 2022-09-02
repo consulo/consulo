@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.language.ast;
 
-package consulo.ide.impl.idea.codeInspection.reference;
+import javax.annotation.Nonnull;
 
-import consulo.language.editor.inspection.reference.RefGraphAnnotator;
-import consulo.language.editor.inspection.reference.RefManager;
+public abstract class LighterASTNodeVisitor {
+  public abstract void visitNode(@Nonnull LighterASTNode node);
 
-public class RefGraphAnnotatorEx extends RefGraphAnnotator {
-  /**
-   * @param refManager to ask for additional flags {@link RefManager#getLastUsedMask()}
-   */
-  public void initialize(RefManager refManager) {
+  public void visitTokenNode(@Nonnull LighterASTTokenNode node) {
+    visitNode(node);
+  }
+
+  public void visitLazyParseableNode(@Nonnull LighterLazyParseableNode node) {
+    visitNode(node);
   }
 }
