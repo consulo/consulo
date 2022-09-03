@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.ide.scratch;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.content.scope.SearchScope;
-import consulo.ide.impl.psi.search.UseScopeEnlarger;
+import consulo.language.psi.UseScopeEnlarger;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.scope.LocalSearchScope;
 

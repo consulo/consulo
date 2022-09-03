@@ -47,7 +47,7 @@ import consulo.disposer.Disposer;
 import consulo.language.cacheBuilder.CacheManager;
 import consulo.ide.impl.psi.impl.cache.impl.id.IdIndex;
 import consulo.language.psi.stub.IdIndexEntry;
-import consulo.ide.impl.psi.search.UseScopeEnlarger;
+import consulo.language.psi.UseScopeEnlarger;
 import consulo.language.content.FileIndexFacade;
 import consulo.language.impl.internal.psi.PsiManagerEx;
 import consulo.language.psi.*;
