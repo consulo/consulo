@@ -21,7 +21,7 @@ import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
-import consulo.ide.impl.idea.packaging.ui.PackagingElementWeights;
+import consulo.compiler.artifact.ui.PackagingElementWeights;
 import consulo.compiler.artifact.ui.TreeNodePresentation;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.content.ContentFolderTypeProvider;

@@ -38,10 +38,10 @@ public interface ModuleScopeProvider {
    * @return scope including sources and tests, excluding libraries and dependencies.
    */
   @Nonnull
-  ModuleAwareSearchScope getModuleScope();
+  ModuleWithDependenciesScope getModuleScope();
 
   @Nonnull
-  ModuleAwareSearchScope getModuleScope(boolean includeTests);
+  ModuleWithDependenciesScope getModuleScope(boolean includeTests);
 
   /**
    * Returns module scope including sources, tests, and libraries, excluding dependencies.
@@ -49,7 +49,7 @@ public interface ModuleScopeProvider {
    * @return scope including sources, tests, and libraries, excluding dependencies.
    */
   @Nonnull
-  ModuleAwareSearchScope getModuleWithLibrariesScope();
+  ModuleWithDependenciesScope getModuleWithLibrariesScope();
 
   /**
    * Returns module scope including sources, tests, and dependencies, excluding libraries.
@@ -57,16 +57,16 @@ public interface ModuleScopeProvider {
    * @return scope including sources, tests, and dependencies, excluding libraries.
    */
   @Nonnull
-  ModuleAwareSearchScope getModuleWithDependenciesScope();
+  ModuleWithDependenciesScope getModuleWithDependenciesScope();
 
   @Nonnull
-  ModuleAwareSearchScope getModuleContentScope();
+  ModuleWithDependenciesScope getModuleContentScope();
 
   @Nonnull
-  ModuleAwareSearchScope getModuleContentWithDependenciesScope();
+  ModuleWithDependenciesScope getModuleContentWithDependenciesScope();
 
   @Nonnull
-  ModuleAwareSearchScope getModuleWithDependenciesAndLibrariesScope(boolean includeTests);
+  ModuleWithDependenciesScope getModuleWithDependenciesAndLibrariesScope(boolean includeTests);
 
   @Nonnull
   ModuleAwareSearchScope getModuleWithDependentsScope();
@@ -75,5 +75,5 @@ public interface ModuleScopeProvider {
   ModuleAwareSearchScope getModuleTestsWithDependentsScope();
 
   @Nonnull
-  ModuleAwareSearchScope getModuleRuntimeScope(boolean includeTests);
+  ModuleWithDependenciesScope getModuleRuntimeScope(boolean includeTests);
 }

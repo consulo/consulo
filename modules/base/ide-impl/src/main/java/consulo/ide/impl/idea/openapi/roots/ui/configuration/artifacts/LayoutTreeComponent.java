@@ -33,7 +33,7 @@ import consulo.compiler.artifact.element.CompositePackagingElement;
 import consulo.compiler.artifact.element.PackagingElement;
 import consulo.compiler.artifact.element.PackagingElementFactory;
 import consulo.compiler.artifact.element.PackagingElementType;
-import consulo.ide.impl.idea.packaging.impl.elements.DirectoryPackagingElement;
+import consulo.compiler.artifact.element.DirectoryPackagingElement;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.artifact.ui.PackagingElementPropertiesPanel;
 import consulo.compiler.artifact.ui.PackagingSourceItem;

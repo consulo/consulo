@@ -20,7 +20,7 @@ import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactProperties;
 import consulo.compiler.artifact.ArtifactPropertiesProvider;
 import consulo.compiler.artifact.ModifiableArtifact;
-import consulo.ide.impl.idea.packaging.impl.artifacts.ArtifactUtil;
+import consulo.compiler.artifact.ArtifactUtil;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.artifact.ui.ArtifactPropertiesEditor;
 import consulo.ui.ex.awt.TabbedPaneWrapper;

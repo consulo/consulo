@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.nodes.PackagingElementNode;
 import consulo.compiler.artifact.element.PackagingElement;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
-import consulo.ide.impl.idea.packaging.impl.artifacts.ArtifactUtil;
+import consulo.compiler.artifact.ArtifactUtil;
 import consulo.ui.ex.awt.tree.SimpleNode;
 import javax.annotation.Nonnull;
 

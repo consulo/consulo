@@ -39,7 +39,7 @@ import consulo.content.library.LibraryTable;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.ModulePointerManager;
-import consulo.ide.impl.packaging.impl.elements.ZipArchivePackagingElement;
+import consulo.compiler.artifact.element.ZipArchivePackagingElement;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
@@ -249,27 +249,6 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
   @Nonnull
   public CompositePackagingElement<?> createZipArchive(@Nonnull @NonNls String archiveFileName) {
     return new ZipArchivePackagingElement(archiveFileName);
-  }
-
-  @Nullable
-  private static PackagingElement<?> findArchiveOrDirectoryByName(@Nonnull CompositePackagingElement<?> parent, @Nonnull String name) {
-    for (PackagingElement<?> element : parent.getChildren()) {
-      if (element instanceof ArchivePackagingElement && ((ArchivePackagingElement)element).getArchiveFileName().equals(name) ||
-          element instanceof DirectoryPackagingElement && ((DirectoryPackagingElement)element).getDirectoryName().equals(name)) {
-        return element;
-      }
-    }
-    return null;
-  }
-
-  @Nonnull
-  public static String suggestFileName(@Nonnull CompositePackagingElement<?> parent, @NonNls @Nonnull String prefix, @NonNls @Nonnull String suffix) {
-    String name = prefix + suffix;
-    int i = 2;
-    while (findArchiveOrDirectoryByName(parent, name) != null) {
-      name = prefix + i++ + suffix;
-    }
-    return name;
   }
 
   @Nonnull

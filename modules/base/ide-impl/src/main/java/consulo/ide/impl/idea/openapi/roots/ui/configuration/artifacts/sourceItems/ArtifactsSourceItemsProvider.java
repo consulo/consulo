@@ -20,7 +20,7 @@ import consulo.application.AllIcons;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.element.PackagingElement;
-import consulo.ide.impl.idea.packaging.impl.elements.ArtifactElementType;
+import consulo.compiler.artifact.element.ArtifactElementType;
 import consulo.ide.impl.idea.packaging.ui.*;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.artifact.ui.PackagingSourceItem;

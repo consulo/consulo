@@ -17,25 +17,25 @@ package consulo.ide.impl.compiler.resourceCompiler;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.compiler.CompilerBundle;
-import consulo.configurable.ProjectConfigurable;
-import consulo.configurable.StandardConfigurableIds;
-import consulo.ide.impl.compiler.MalformedPatternException;
-import consulo.ui.ex.Gray;
-import consulo.ui.ex.JBColor;
+import consulo.compiler.resourceCompiler.ResourceCompilerConfiguration;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
-import consulo.project.Project;
-import consulo.ui.ex.InputValidatorEx;
-import consulo.ui.ex.awt.Messages;
+import consulo.configurable.ProjectConfigurable;
+import consulo.configurable.StandardConfigurableIds;
 import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.project.Project;
+import consulo.ui.ex.Gray;
+import consulo.ui.ex.InputValidatorEx;
+import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.*;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.Nls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
+import java.util.regex.PatternSyntaxException;
 
 /**
  * @author VISTALL
@@ -159,7 +159,7 @@ public class ResourceCompilerConfigurable implements ProjectConfigurable, Config
       try {
         myResourceCompilerConfiguration.addResourceFilePattern(namePattern);
       }
-      catch (MalformedPatternException e) {
+      catch (PatternSyntaxException e) {
       }
     }
   }

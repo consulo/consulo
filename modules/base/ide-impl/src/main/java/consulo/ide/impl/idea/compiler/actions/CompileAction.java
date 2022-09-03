@@ -39,7 +39,7 @@ import consulo.ide.impl.idea.packaging.impl.artifacts.ArtifactBySourceFileFinder
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
-import consulo.ide.impl.compiler.resourceCompiler.ResourceCompilerConfiguration;
+import consulo.compiler.resourceCompiler.ResourceCompilerConfiguration;
 import consulo.language.psi.PsiPackage;
 import consulo.language.psi.PsiPackageManager;
 import javax.annotation.Nonnull;

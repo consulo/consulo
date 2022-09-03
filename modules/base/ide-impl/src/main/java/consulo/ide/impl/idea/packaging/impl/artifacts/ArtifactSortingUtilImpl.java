@@ -16,12 +16,11 @@
 package consulo.ide.impl.idea.packaging.impl.artifacts;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.compiler.artifact.*;
 import consulo.project.Project;
-import consulo.compiler.artifact.Artifact;
-import consulo.compiler.artifact.ArtifactManager;
 import consulo.compiler.artifact.element.PackagingElementResolvingContext;
-import consulo.ide.impl.idea.packaging.impl.elements.ArtifactElementType;
-import consulo.ide.impl.idea.packaging.impl.elements.ArtifactPackagingElement;
+import consulo.compiler.artifact.element.ArtifactElementType;
+import consulo.compiler.artifact.element.ArtifactPackagingElement;
 import consulo.application.util.CachedValue;
 import consulo.application.util.CachedValueProvider;
 import consulo.application.util.CachedValuesManager;

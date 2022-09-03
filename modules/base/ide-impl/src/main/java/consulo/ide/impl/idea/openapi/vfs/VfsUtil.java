@@ -31,10 +31,7 @@ import consulo.util.io.Url;
 import consulo.util.io.Urls;
 import consulo.util.lang.SystemProperties;
 import consulo.virtualFileSystem.*;
-import consulo.virtualFileSystem.archive.ArchiveFileSystem;
-import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
-import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jetbrains.annotations.NonNls;
 
@@ -341,17 +338,7 @@ public class VfsUtil extends VfsUtilCore {
   }
 
   public static String getUrlForLibraryRoot(@Nonnull File libraryRoot) {
-    String path = FileUtil.toSystemIndependentName(libraryRoot.getAbsolutePath());
-    final FileType fileTypeByFileName = FileTypeManager.getInstance().getFileTypeByFileName(libraryRoot.getName());
-    if (fileTypeByFileName instanceof ArchiveFileType) {
-
-      final String protocol = ((ArchiveFileType)fileTypeByFileName).getProtocol();
-
-      return VirtualFileManager.constructUrl(protocol, path + ArchiveFileSystem.ARCHIVE_SEPARATOR);
-    }
-    else {
-      return VirtualFileManager.constructUrl(LocalFileSystem.getInstance().getProtocol(), path);
-    }
+    return VirtualFileUtil.getUrlForLibraryRoot(libraryRoot);
   }
 
   public static VirtualFile createChildSequent(Object requestor, @Nonnull VirtualFile dir, @Nonnull String prefix, @Nonnull String extension) throws IOException {

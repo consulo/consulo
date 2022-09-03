@@ -22,12 +22,12 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.*
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.element.CompositePackagingElement;
 import consulo.compiler.artifact.element.PackagingElement;
-import consulo.ide.impl.idea.packaging.impl.artifacts.ArtifactUtil;
-import consulo.ide.impl.idea.packaging.impl.artifacts.PackagingElementPath;
-import consulo.ide.impl.idea.packaging.impl.artifacts.PackagingElementProcessor;
-import consulo.ide.impl.idea.packaging.impl.elements.ArtifactPackagingElement;
+import consulo.compiler.artifact.ArtifactUtil;
+import consulo.compiler.artifact.PackagingElementPath;
+import consulo.compiler.artifact.PackagingElementProcessor;
+import consulo.compiler.artifact.element.ArtifactPackagingElement;
 import consulo.ide.impl.idea.packaging.impl.elements.LibraryPackagingElement;
-import consulo.ide.impl.idea.packaging.impl.elements.ModuleOutputPackagingElement;
+import consulo.compiler.artifact.element.ModuleOutputPackagingElement;
 import consulo.ide.setting.module.ModulesConfigurator;
 
 import javax.annotation.Nonnull;

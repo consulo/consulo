@@ -25,7 +25,7 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.compiler.artifact.element.CompositePackagingElement;
-import consulo.ide.impl.idea.packaging.impl.elements.ArchivePackagingElement;
+import consulo.compiler.artifact.element.ArchivePackagingElement;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import org.jetbrains.annotations.NonNls;
 

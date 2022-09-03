@@ -27,8 +27,10 @@ import consulo.util.io.URLUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.*;
+import consulo.virtualFileSystem.archive.ArchiveFileSystem;
+import consulo.virtualFileSystem.archive.ArchiveFileType;
+import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
-import consulo.virtualFileSystem.NewVirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -748,5 +750,19 @@ public final class VirtualFileUtil {
     List<VirtualFile> list = markDirty(recursive, reloadChildren, files);
     if (list.isEmpty()) return;
     LocalFileSystem.getInstance().refreshFiles(list, async, recursive, null);
+  }
+
+  public static String getUrlForLibraryRoot(@Nonnull File libraryRoot) {
+    String path = FileUtil.toSystemIndependentName(libraryRoot.getAbsolutePath());
+    final FileType fileTypeByFileName = FileTypeRegistry.getInstance().getFileTypeByFileName(libraryRoot.getName());
+    if (fileTypeByFileName instanceof ArchiveFileType) {
+
+      final String protocol = ((ArchiveFileType)fileTypeByFileName).getProtocol();
+
+      return VirtualFileManager.constructUrl(protocol, path + ArchiveFileSystem.ARCHIVE_SEPARATOR);
+    }
+    else {
+      return VirtualFileManager.constructUrl(LocalFileSystem.getInstance().getProtocol(), path);
+    }
   }
 }

@@ -27,7 +27,7 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.ModuleEditor;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.ModulesConfiguratorImpl;
 import consulo.module.content.layer.ModulesProvider;
 import consulo.compiler.artifact.element.CompositePackagingElement;
-import consulo.ide.impl.idea.packaging.impl.artifacts.ArtifactUtil;
+import consulo.compiler.artifact.ArtifactUtil;
 import consulo.ide.impl.idea.packaging.impl.artifacts.DefaultPackagingElementResolvingContext;
 import consulo.disposer.Disposer;
 import consulo.ide.setting.module.LibrariesConfigurator;

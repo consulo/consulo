@@ -21,8 +21,8 @@ import consulo.compiler.artifact.ArtifactType;
 import consulo.compiler.artifact.element.CompositePackagingElement;
 import consulo.compiler.artifact.element.PackagingElementFactory;
 import consulo.compiler.artifact.element.PackagingElementOutputKind;
-import consulo.ide.impl.idea.packaging.impl.artifacts.ArtifactUtil;
-import consulo.ide.impl.packaging.impl.elements.ZipArchivePackagingElement;
+import consulo.compiler.artifact.ArtifactUtil;
+import consulo.compiler.artifact.element.ZipArchivePackagingElement;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

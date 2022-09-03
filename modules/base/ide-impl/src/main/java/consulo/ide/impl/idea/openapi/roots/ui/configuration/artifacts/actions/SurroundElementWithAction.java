@@ -30,7 +30,7 @@ import consulo.compiler.artifact.element.CompositePackagingElement;
 import consulo.compiler.artifact.element.CompositePackagingElementType;
 import consulo.compiler.artifact.element.PackagingElement;
 import consulo.compiler.artifact.element.PackagingElementFactory;
-import consulo.ide.impl.idea.packaging.impl.artifacts.ArtifactUtil;
+import consulo.compiler.artifact.ArtifactUtil;
 import consulo.ide.impl.idea.util.PathUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.ApplicationManager;

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.packaging.impl.elements;
 
+import consulo.compiler.artifact.element.*;
 import consulo.module.Module;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
@@ -26,10 +27,6 @@ import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.compiler.artifact.ArtifactType;
-import consulo.compiler.artifact.element.ComplexPackagingElement;
-import consulo.compiler.artifact.element.PackagingElement;
-import consulo.compiler.artifact.element.PackagingElementOutputKind;
-import consulo.compiler.artifact.element.PackagingElementResolvingContext;
 import consulo.ide.impl.idea.packaging.impl.ui.LibraryElementPresentation;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.artifact.ui.PackagingElementPresentation;

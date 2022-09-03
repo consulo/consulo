@@ -28,7 +28,7 @@ import consulo.content.base.BinariesOrderRootType;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.artifact.ui.PackagingElementPresentation;
-import consulo.ide.impl.idea.packaging.ui.PackagingElementWeights;
+import consulo.compiler.artifact.ui.PackagingElementWeights;
 import consulo.ui.ex.SimpleTextAttributes;
 import javax.annotation.Nonnull;
 

@@ -29,7 +29,7 @@ import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.ManagingFS;
 import consulo.virtualFileSystem.RefreshQueue;
 import consulo.ide.impl.idea.packaging.impl.artifacts.ArtifactImpl;
-import consulo.ide.impl.idea.packaging.impl.artifacts.ArtifactUtil;
+import consulo.compiler.artifact.ArtifactUtil;
 import consulo.ide.impl.idea.packaging.impl.compiler.ArtifactCompileScope;
 import consulo.ide.impl.idea.packaging.impl.compiler.ArtifactCompilerUtil;
 import consulo.ide.impl.idea.util.Function;

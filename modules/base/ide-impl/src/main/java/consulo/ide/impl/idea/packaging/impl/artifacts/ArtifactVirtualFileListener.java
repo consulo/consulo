@@ -15,11 +15,10 @@
  */
 package consulo.ide.impl.idea.packaging.impl.artifacts;
 
+import consulo.compiler.artifact.*;
 import consulo.util.collection.MultiValuesMap;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.compiler.artifact.Artifact;
-import consulo.compiler.artifact.ModifiableArtifactModel;
-import consulo.ide.impl.idea.packaging.impl.elements.FileOrDirectoryCopyPackagingElement;
+import consulo.compiler.artifact.element.FileOrDirectoryCopyPackagingElement;
 import consulo.application.util.CachedValue;
 import consulo.application.util.CachedValueProvider;
 import consulo.application.util.CachedValuesManager;

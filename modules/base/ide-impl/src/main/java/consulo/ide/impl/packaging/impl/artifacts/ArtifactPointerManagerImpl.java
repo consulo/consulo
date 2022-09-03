@@ -16,8 +16,12 @@
 package consulo.ide.impl.packaging.impl.artifacts;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.compiler.artifact.*;
+import consulo.compiler.artifact.Artifact;
+import consulo.compiler.artifact.ArtifactManager;
+import consulo.compiler.artifact.ArtifactModel;
+import consulo.compiler.artifact.ArtifactPointer;
 import consulo.compiler.artifact.event.ArtifactListener;
+import consulo.compiler.artifact.internal.ArtifactPointerManagerEx;
 import consulo.component.impl.util.NamedPointerImpl;
 import consulo.component.impl.util.NamedPointerManagerImpl;
 import consulo.ide.impl.idea.packaging.impl.artifacts.ArtifactPointerImpl;
@@ -35,7 +39,7 @@ import java.util.List;
  */
 @Singleton
 @ServiceImpl
-public class ArtifactPointerManagerImpl extends NamedPointerManagerImpl<Artifact> implements ArtifactPointerManager {
+public class ArtifactPointerManagerImpl extends NamedPointerManagerImpl<Artifact> implements ArtifactPointerManagerEx {
   private final Provider<ArtifactManager> myArtifactManagerProvider;
 
   @Inject
@@ -79,8 +83,9 @@ public class ArtifactPointerManagerImpl extends NamedPointerManagerImpl<Artifact
   /**
    * Special method for serialization, while target artifact manager did not provide recursion.
    *
-   * It will be called from consulo.ide.impl.idea.packaging.impl.elements.ArtifactPackagingElement, while ArtifactManager#loadState()
+   * It will be called from consulo.compiler.artifact.element.ArtifactPackagingElement, while ArtifactManager#loadState()
    */
+  @Override
   @Nonnull
   public ArtifactPointer create(@Nonnull ArtifactManager artifactManager, @Nonnull String name) {
     return (ArtifactPointer)create(name, artifactManager::findArtifact);

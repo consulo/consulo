@@ -27,8 +27,8 @@ import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.element.ArtifactRootElement;
 import consulo.compiler.artifact.element.CompositePackagingElement;
 import consulo.compiler.artifact.element.PackagingElement;
-import consulo.ide.impl.idea.packaging.impl.artifacts.ArtifactUtil;
-import consulo.ide.impl.idea.packaging.impl.elements.ArtifactPackagingElement;
+import consulo.compiler.artifact.ArtifactUtil;
+import consulo.compiler.artifact.element.ArtifactPackagingElement;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 
 import java.util.Collections;

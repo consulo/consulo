@@ -12,4 +12,6 @@ module consulo.compiler.artifact.api {
   exports consulo.compiler.artifact.event;
   exports consulo.compiler.artifact.element;
   exports consulo.compiler.artifact.ui;
+
+  exports consulo.compiler.artifact.internal to consulo.ide.impl;
 }

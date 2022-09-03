@@ -26,7 +26,7 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.ModulesConfiguratorI
 import consulo.ide.impl.idea.openapi.ui.popup.MultiSelectionListPopupStep;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.packaging.impl.artifacts.ArtifactUtil;
+import consulo.compiler.artifact.ArtifactUtil;
 import consulo.ide.impl.idea.packaging.impl.compiler.ArtifactCompileScope;
 import consulo.ide.impl.idea.packaging.impl.compiler.ArtifactsWorkspaceSettings;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
