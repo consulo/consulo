@@ -46,7 +46,7 @@ import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.PathUtil;
 import consulo.ide.impl.idea.util.Producer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.psi.search.GlobalSearchScopeUtil;
+import consulo.language.psi.scope.GlobalSearchScopeUtil;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.scratch.ScratchUtil;
 import consulo.language.editor.ui.awt.EditorTextField;

@@ -17,13 +17,12 @@
 /*
  * @author max
  */
-package consulo.ide.impl.psi.search;
+package consulo.language.psi.resolve;
 
-import consulo.application.util.ReadActionProcessor;
-import consulo.language.psi.PsiElement;
-import consulo.application.util.function.Processor;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.language.psi.resolve.PsiElementProcessor;
+import consulo.application.util.ReadActionProcessor;
+import consulo.application.util.function.Processor;
+import consulo.language.psi.PsiElement;
 
 public class PsiElementProcessorAdapter<T extends PsiElement> extends ReadActionProcessor<T> implements Processor<T> {
   private final PsiElementProcessor<T> myProcessor;

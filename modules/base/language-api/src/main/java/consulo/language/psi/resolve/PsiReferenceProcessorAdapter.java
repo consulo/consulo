@@ -17,7 +17,7 @@
 /*
  * @author max
  */
-package consulo.ide.impl.psi.search;
+package consulo.language.psi.resolve;
 
 import consulo.application.util.ReadActionProcessor;
 import consulo.language.psi.PsiReference;

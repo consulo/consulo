@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi.search;
+package consulo.language.psi.resolve;
 
 import consulo.language.psi.PsiReference;
 
@@ -21,10 +21,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
-public interface PsiReferenceProcessor{
+public interface PsiReferenceProcessor {
   boolean execute(PsiReference element);
 
-  class CollectElements implements PsiReferenceProcessor{
+  class CollectElements implements PsiReferenceProcessor {
     private final Collection<PsiReference> myCollection;
 
     public CollectElements(Collection<PsiReference> collection) {
@@ -35,11 +35,11 @@ public interface PsiReferenceProcessor{
       this(new ArrayList<PsiReference>());
     }
 
-    public PsiReference[] toArray(){
+    public PsiReference[] toArray() {
       return myCollection.toArray(new PsiReference[myCollection.size()]);
     }
 
-    public PsiReference[] toArray(PsiReference[] array){
+    public PsiReference[] toArray(PsiReference[] array) {
       return myCollection.toArray(array);
     }
 
@@ -50,7 +50,7 @@ public interface PsiReferenceProcessor{
     }
   }
 
-  class FindElement implements PsiReferenceProcessor{
+  class FindElement implements PsiReferenceProcessor {
     private volatile PsiReference myFoundElement = null;
 
     public boolean isFound() {

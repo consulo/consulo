@@ -17,10 +17,9 @@
 /*
  * @author max
  */
-package consulo.ide.impl.psi.search;
+package consulo.language.psi.resolve;
 
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.language.psi.resolve.PsiFileSystemItemProcessor;
+import consulo.util.io.FileUtil;
 
 public abstract class SpecificNameItemProcessor implements PsiFileSystemItemProcessor {
   private final String myName;

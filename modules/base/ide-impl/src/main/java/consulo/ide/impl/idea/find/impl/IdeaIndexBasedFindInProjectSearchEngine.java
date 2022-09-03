@@ -5,7 +5,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.find.FindInProjectSearchEngine;
 import consulo.find.FindModel;
 import consulo.ide.impl.idea.find.ngrams.TrigramIndex;
-import consulo.ide.impl.psi.search.GlobalSearchScopeUtil;
+import consulo.language.psi.scope.GlobalSearchScopeUtil;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.scope.LocalSearchScope;
 import consulo.language.psi.search.PsiSearchHelper;

@@ -26,7 +26,7 @@ import consulo.content.scope.SearchScope;
 import consulo.find.FindBundle;
 import consulo.find.FindModel;
 import consulo.ide.impl.psi.impl.search.PsiSearchHelperImpl;
-import consulo.ide.impl.psi.search.GlobalSearchScopeUtil;
+import consulo.language.psi.scope.GlobalSearchScopeUtil;
 import consulo.language.file.FileTypeManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
