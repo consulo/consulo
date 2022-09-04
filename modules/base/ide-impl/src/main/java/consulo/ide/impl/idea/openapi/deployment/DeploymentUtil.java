@@ -15,46 +15,21 @@
  */
 package consulo.ide.impl.idea.openapi.deployment;
 
-import consulo.util.lang.StringUtil;
+import consulo.compiler.artifact.ArtifactUtil;
 
 import javax.annotation.Nonnull;
-import java.io.File;
 
+@Deprecated
 public abstract class DeploymentUtil {
   public static String trimForwardSlashes(@Nonnull String path) {
-    while (path.length() != 0 && (path.charAt(0) == '/' || path.charAt(0) == File.separatorChar)) {
-      path = path.substring(1);
-    }
-    return path;
+    return ArtifactUtil.trimForwardSlashes(path);
   }
 
   public static String concatPaths(String... paths) {
-    final StringBuilder builder = new StringBuilder();
-    for (String path : paths) {
-      if (path.length() == 0) continue;
-
-      final int len = builder.length();
-      if (len > 0 && builder.charAt(len - 1) != '/' && builder.charAt(len - 1) != File.separatorChar) {
-        builder.append('/');
-      }
-      builder.append(len != 0 ? trimForwardSlashes(path) : path);
-    }
-    return builder.toString();
+    return ArtifactUtil.concatPaths(paths);
   }
 
   public static String appendToPath(@Nonnull String basePath, @Nonnull String relativePath) {
-    final boolean endsWithSlash = StringUtil.endsWithChar(basePath, '/') || StringUtil.endsWithChar(basePath, '\\');
-    final boolean startsWithSlash = StringUtil.startsWithChar(relativePath, '/') || StringUtil.startsWithChar(relativePath, '\\');
-    String tail;
-    if (endsWithSlash && startsWithSlash) {
-      tail = trimForwardSlashes(relativePath);
-    }
-    else if (!endsWithSlash && !startsWithSlash && basePath.length() > 0 && relativePath.length() > 0) {
-      tail = "/" + relativePath;
-    }
-    else {
-      tail = relativePath;
-    }
-    return basePath + tail;
+    return ArtifactUtil.appendToPath(basePath, relativePath);
   }
 }

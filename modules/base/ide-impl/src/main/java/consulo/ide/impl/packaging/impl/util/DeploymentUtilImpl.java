@@ -36,7 +36,7 @@ import java.util.Set;
  * @since 11:43/11.06.13
  */
 public class DeploymentUtilImpl extends DeploymentUtil {
-  private static final Logger LOGGER = Logger.getInstance(DeploymentUtilImpl.class);
+  private static final Logger LOG = Logger.getInstance(DeploymentUtilImpl.class);
 
   public static void copyFile(@Nonnull final File fromFile,
                        @Nonnull final File toFile,
@@ -44,8 +44,8 @@ public class DeploymentUtilImpl extends DeploymentUtil {
                        @Nullable Set<String> writtenPaths,
                        @Nullable FileFilter fileFilter) throws IOException {
     if (fileFilter != null && !fileFilter.accept(fromFile)) {
-      if (LOGGER.isDebugEnabled()) {
-        LOGGER.debug("Skipping " + fromFile.getAbsolutePath() + ": it wasn't accepted by filter " + fileFilter);
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Skipping " + fromFile.getAbsolutePath() + ": it wasn't accepted by filter " + fileFilter);
       }
       return;
     }
@@ -65,22 +65,22 @@ public class DeploymentUtilImpl extends DeploymentUtil {
       return;
     }
     if (FileUtil.filesEqual(fromFile, toFile) || writtenPaths != null && !writtenPaths.add(toFile.getPath())) {
-      if (LOGGER.isDebugEnabled()) {
-        LOGGER.debug("Skipping " + fromFile.getAbsolutePath() + ": " + toFile.getAbsolutePath() + " is already written");
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Skipping " + fromFile.getAbsolutePath() + ": " + toFile.getAbsolutePath() + " is already written");
       }
       return;
     }
     if (!FileUtil.isFilePathAcceptable(toFile, fileFilter)) {
-      if (LOGGER.isDebugEnabled()) {
-        LOGGER.debug("Skipping " + fromFile.getAbsolutePath() + ": " + toFile.getAbsolutePath() + " wasn't accepted by filter " + fileFilter);
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Skipping " + fromFile.getAbsolutePath() + ": " + toFile.getAbsolutePath() + " wasn't accepted by filter " + fileFilter);
       }
       return;
     }
     context.getProgressIndicator().setText("Copying files");
     context.getProgressIndicator().setText2(fromFile.getPath());
     try {
-      if (LOGGER.isDebugEnabled()) {
-        LOGGER.debug("Copy file '" + fromFile + "' to '"+toFile+"'");
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Copy file '" + fromFile + "' to '" + toFile + "'");
       }
       if (toFile.exists() && !SystemInfo.isFileSystemCaseSensitive) {
         File canonicalFile = toFile.getCanonicalFile();
@@ -103,7 +103,7 @@ public class DeploymentUtilImpl extends DeploymentUtil {
       String filepath = path.substring(0,i-1);
       File filepart = new File(filepath);
       if (filepart.exists() && !filepart.isDirectory()) {
-        LOGGER.error("Incorrect file path: '" + path + '\'');
+        LOG.error("Incorrect file path: '" + path + '\'');
       }
     }
   }
