@@ -16,16 +16,16 @@
 package consulo.ide.impl.idea.codeStyle;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.codeInsight.daemon.GroupNames;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.impl.internal.psi.LoadTextUtil;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiElementVisitor;
 import consulo.language.psi.PsiFile;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -47,7 +47,7 @@ public class InconsistentLineSeparatorsInspection extends LocalInspectionTool {
   @Nonnull
   @Override
   public String getGroupDisplayName() {
-    return GroupNames.PORTABILITY_GROUP_NAME;
+    return InspectionsBundle.message("group.names.portability.issues");
   }
 
   @Nonnull
