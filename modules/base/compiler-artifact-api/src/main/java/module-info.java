@@ -13,5 +13,7 @@ module consulo.compiler.artifact.api {
   exports consulo.compiler.artifact.element;
   exports consulo.compiler.artifact.ui;
 
+  opens consulo.compiler.artifact.element to consulo.util.xml.serializer;
+
   exports consulo.compiler.artifact.internal to consulo.ide.impl;
 }

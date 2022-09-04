@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.libraryEditor;
 
 import consulo.content.OrderRootType;
-import consulo.content.impl.internal.library.LibraryEx;
+import consulo.content.internal.LibraryEx;
 import consulo.content.library.LibraryProperties;
 import consulo.content.library.LibraryType;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;

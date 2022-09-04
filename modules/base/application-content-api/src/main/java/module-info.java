@@ -22,5 +22,5 @@ module consulo.application.content.api {
   exports consulo.content.library;
   exports consulo.content.library.ui;
 
-  exports consulo.content.internal to consulo.ide.impl;
+  exports consulo.content.internal to consulo.ide.impl, consulo.compiler.artifact.api, consulo.application.content.impl, consulo.module.impl;
 }

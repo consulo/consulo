@@ -19,7 +19,7 @@
  */
 package consulo.ide.impl.idea.openapi.roots.libraries;
 
-import consulo.content.impl.internal.library.LibraryEx;
+import consulo.content.internal.LibraryEx;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.util.PathUtil;
 import consulo.ide.impl.idea.util.text.StringTokenizer;

@@ -28,7 +28,7 @@ import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.ModuleRootModel;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.impl.internal.ModuleRootManagerImpl;
-import consulo.content.impl.internal.library.LibraryEx;
+import consulo.content.internal.LibraryEx;
 import consulo.content.impl.internal.library.LibraryTableBase;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;

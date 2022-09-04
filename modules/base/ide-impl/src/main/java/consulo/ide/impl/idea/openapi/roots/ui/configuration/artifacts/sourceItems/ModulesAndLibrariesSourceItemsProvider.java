@@ -34,7 +34,7 @@ import consulo.compiler.artifact.ArtifactUtil;
 import consulo.compiler.artifact.element.FileCopyElementType;
 import consulo.compiler.artifact.element.FileCopyPackagingElement;
 import consulo.compiler.artifact.element.ModuleOutputPackagingElement;
-import consulo.ide.impl.idea.packaging.impl.elements.moduleContent.ModuleOutputElementTypeBase;
+import consulo.compiler.artifact.element.ModuleOutputElementTypeBase;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.artifact.ui.PackagingSourceItem;
 import consulo.ide.impl.idea.packaging.ui.PackagingSourceItemsProvider;

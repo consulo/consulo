@@ -30,7 +30,7 @@ import consulo.compiler.artifact.ArtifactUtil;
 import consulo.compiler.artifact.element.ArtifactElementType;
 import consulo.compiler.artifact.element.ArtifactPackagingElement;
 import consulo.compiler.artifact.element.ModuleOutputPackagingElement;
-import consulo.ide.impl.idea.packaging.impl.elements.moduleContent.ProductionModuleOutputElementType;
+import consulo.compiler.artifact.element.ProductionModuleOutputElementType;
 import consulo.application.util.function.Processor;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

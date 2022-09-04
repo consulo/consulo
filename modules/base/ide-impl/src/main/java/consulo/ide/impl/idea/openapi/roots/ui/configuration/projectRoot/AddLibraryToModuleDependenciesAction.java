@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
-import consulo.content.impl.internal.library.LibraryEx;
+import consulo.content.internal.LibraryEx;
 import consulo.content.library.Library;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryEditingUtil;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.LibraryProjectStructureElement;

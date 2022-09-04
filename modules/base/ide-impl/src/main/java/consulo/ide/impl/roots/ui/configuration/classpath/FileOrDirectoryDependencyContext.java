@@ -21,7 +21,7 @@ import consulo.fileChooser.FileChooserDescriptor;
 import consulo.ide.impl.idea.openapi.fileChooser.impl.FileChooserUtil;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
-import consulo.content.impl.internal.library.LibraryEx;
+import consulo.content.internal.LibraryEx;
 import consulo.content.impl.internal.library.LibraryTableBase;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;

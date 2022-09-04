@@ -23,7 +23,7 @@ import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
-import consulo.content.impl.internal.library.LibraryEx;
+import consulo.content.internal.LibraryEx;
 import consulo.content.impl.internal.library.LibraryImpl;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;

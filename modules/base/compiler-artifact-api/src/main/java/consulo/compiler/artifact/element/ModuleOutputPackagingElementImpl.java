@@ -13,38 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.packaging.impl.elements.moduleContent;
+package consulo.compiler.artifact.element;
 
-import consulo.compiler.artifact.element.*;
-import consulo.module.Module;
+import consulo.application.AccessRule;
+import consulo.compiler.ModuleCompilerPathsManager;
+import consulo.compiler.artifact.ArtifactManager;
+import consulo.compiler.artifact.ArtifactType;
+import consulo.compiler.artifact.ui.ArtifactEditorContext;
+import consulo.compiler.artifact.ui.DelegatedPackagingElementPresentation;
+import consulo.compiler.artifact.ui.ModuleElementPresentation;
+import consulo.compiler.artifact.ui.PackagingElementPresentation;
+import consulo.component.util.pointer.NamedPointer;
+import consulo.component.util.pointer.NamedPointerUtil;
+import consulo.content.ContentFolderTypeProvider;
+import consulo.language.content.LanguageContentFolderScopes;
 import consulo.language.util.ModuleUtilCore;
-import consulo.project.Project;
+import consulo.module.Module;
 import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ContentFolder;
 import consulo.module.content.layer.ModuleRootModel;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.DefaultModulesProvider;
 import consulo.module.content.layer.ModulesProvider;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.compiler.artifact.ArtifactManager;
-import consulo.compiler.artifact.ArtifactType;
-import consulo.compiler.artifact.element.ModuleOutputPackagingElement;
-import consulo.compiler.artifact.ui.DelegatedPackagingElementPresentation;
-import consulo.ide.impl.idea.packaging.impl.ui.ModuleElementPresentation;
-import consulo.compiler.artifact.ui.ArtifactEditorContext;
-import consulo.compiler.artifact.ui.PackagingElementPresentation;
-import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.project.Project;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.xml.serializer.annotation.Attribute;
-import consulo.application.AccessRule;
-import consulo.compiler.ModuleCompilerPathsManager;
-import consulo.language.content.LanguageContentFolderScopes;
-import consulo.content.ContentFolderTypeProvider;
-import consulo.component.util.pointer.NamedPointer;
-import consulo.component.util.pointer.NamedPointerUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -52,18 +50,15 @@ import java.util.List;
 /**
  * @author nik
  */
-public class ModuleOutputPackagingElementImpl
-        extends PackagingElement<ModuleOutputPackagingElementImpl.ModuleOutputPackagingElementState> implements ModuleOutputPackagingElement {
-  @NonNls public static final String MODULE_NAME_ATTRIBUTE = "name";
+public class ModuleOutputPackagingElementImpl extends PackagingElement<ModuleOutputPackagingElementImpl.ModuleOutputPackagingElementState> implements ModuleOutputPackagingElement {
+  @NonNls
+  public static final String MODULE_NAME_ATTRIBUTE = "name";
 
   protected NamedPointer<Module> myModulePointer;
   protected final ContentFolderTypeProvider myContentFolderType;
   protected final Project myProject;
 
-  public ModuleOutputPackagingElementImpl(PackagingElementType type,
-                                          Project project,
-                                          NamedPointer<Module> modulePointer,
-                                          ContentFolderTypeProvider contentFolderType) {
+  public ModuleOutputPackagingElementImpl(PackagingElementType type, Project project, NamedPointer<Module> modulePointer, ContentFolderTypeProvider contentFolderType) {
     super(type);
     myProject = project;
     myModulePointer = modulePointer;
@@ -102,7 +97,7 @@ public class ModuleOutputPackagingElementImpl
     ModuleRootModel rootModel = context.getModulesProvider().getRootModel(module);
     for (ContentEntry entry : rootModel.getContentEntries()) {
       for (ContentFolder folder : entry.getFolders(LanguageContentFolderScopes.of(myContentFolderType))) {
-        ContainerUtil.addIfNotNull(folder.getFile(), roots);
+        ContainerUtil.addIfNotNull(roots, folder.getFile());
       }
     }
     return roots;
@@ -144,7 +139,7 @@ public class ModuleOutputPackagingElementImpl
   }
 
   @Override
-  @javax.annotation.Nullable
+  @Nullable
   public String getModuleName() {
     return NamedPointerUtil.getName(myModulePointer);
   }
@@ -161,13 +156,12 @@ public class ModuleOutputPackagingElementImpl
   }
 
   @Override
-  @javax.annotation.Nullable
+  @Nullable
   public Module findModule(PackagingElementResolvingContext context) {
     final Module module = NamedPointerUtil.get(myModulePointer);
     final ModulesProvider modulesProvider = context.getModulesProvider();
     if (module != null) {
-      if (modulesProvider instanceof DefaultModulesProvider//optimization
-          || ArrayUtil.contains(module, modulesProvider.getModules())) {
+      if (ArrayUtil.contains(module, modulesProvider.getModules())) {
         return module;
       }
     }

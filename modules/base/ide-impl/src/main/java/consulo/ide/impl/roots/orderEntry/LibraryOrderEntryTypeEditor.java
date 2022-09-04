@@ -17,7 +17,7 @@ package consulo.ide.impl.roots.orderEntry;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.content.base.BinariesOrderRootType;
-import consulo.content.impl.internal.library.LibraryEx;
+import consulo.content.internal.LibraryEx;
 import consulo.content.library.Library;
 import consulo.ide.setting.module.ClasspathTableItem;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.classpath.LibraryClasspathTableItem;

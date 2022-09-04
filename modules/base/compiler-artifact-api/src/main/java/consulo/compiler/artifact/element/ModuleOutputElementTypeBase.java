@@ -13,23 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.packaging.impl.elements.moduleContent;
+package consulo.compiler.artifact.element;
 
-import com.google.common.base.Predicates;
-import consulo.module.Module;
+import consulo.compiler.artifact.Artifact;
+import consulo.compiler.artifact.ui.ArtifactEditorContext;
+import consulo.component.util.pointer.NamedPointer;
+import consulo.content.ContentFolderTypeProvider;
+import consulo.language.content.LanguageContentFolderScopes;
 import consulo.language.util.ModuleUtilCore;
-import consulo.project.Project;
-import consulo.project.ProjectBundle;
+import consulo.module.Module;
 import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ModulesProvider;
-import consulo.compiler.artifact.Artifact;
-import consulo.compiler.artifact.element.CompositePackagingElement;
-import consulo.compiler.artifact.element.PackagingElement;
-import consulo.compiler.artifact.element.PackagingElementType;
-import consulo.compiler.artifact.ui.ArtifactEditorContext;
-import consulo.content.ContentFolderTypeProvider;
+import consulo.project.Project;
+import consulo.project.ProjectBundle;
 import consulo.ui.image.Image;
-import consulo.component.util.pointer.NamedPointer;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -54,7 +51,7 @@ public abstract class ModuleOutputElementTypeBase extends PackagingElementType<M
 
   public boolean isSuitableModule(ModulesProvider modulesProvider, Module module) {
     for (ContentEntry entry : modulesProvider.getRootModel(module).getContentEntries()) {
-      if (entry.getFolders(Predicates.equalTo(myContentFolderTypeProvider)).length != 0) {
+      if (entry.getFolders(LanguageContentFolderScopes.of(myContentFolderTypeProvider)).length != 0) {
         return true;
       }
     }

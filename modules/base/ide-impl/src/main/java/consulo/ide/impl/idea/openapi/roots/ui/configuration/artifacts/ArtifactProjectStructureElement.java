@@ -26,7 +26,7 @@ import consulo.compiler.artifact.ArtifactUtil;
 import consulo.compiler.artifact.PackagingElementPath;
 import consulo.compiler.artifact.PackagingElementProcessor;
 import consulo.compiler.artifact.element.ArtifactPackagingElement;
-import consulo.ide.impl.idea.packaging.impl.elements.LibraryPackagingElement;
+import consulo.compiler.artifact.element.LibraryPackagingElement;
 import consulo.compiler.artifact.element.ModuleOutputPackagingElement;
 import consulo.ide.setting.module.ModulesConfigurator;
 

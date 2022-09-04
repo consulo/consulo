@@ -13,21 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.packaging.impl.elements;
+package consulo.compiler.artifact.element;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.compiler.CompilerBundle;
-import consulo.project.Project;
-import consulo.project.ProjectBundle;
+import consulo.compiler.artifact.Artifact;
+import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTablesRegistrar;
-import consulo.compiler.artifact.Artifact;
-import consulo.compiler.artifact.element.ComplexPackagingElementType;
-import consulo.compiler.artifact.element.CompositePackagingElement;
-import consulo.compiler.artifact.ui.ArtifactEditorContext;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.project.Project;
+import consulo.project.ProjectBundle;
 import consulo.ui.image.Image;
+import consulo.util.collection.ContainerUtil;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -57,6 +55,7 @@ public class LibraryElementType extends ComplexPackagingElementType<LibraryPacka
     return !getAllLibraries(context).isEmpty();
   }
 
+  @Override
   @Nonnull
   public List<? extends LibraryPackagingElement> chooseAndCreate(@Nonnull ArtifactEditorContext context, @Nonnull Artifact artifact,
                                                                  @Nonnull CompositePackagingElement<?> parent) {

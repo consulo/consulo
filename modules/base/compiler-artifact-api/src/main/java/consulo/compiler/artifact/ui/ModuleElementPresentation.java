@@ -13,19 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.packaging.impl.ui;
+package consulo.compiler.artifact.ui;
 
-import consulo.ui.ex.tree.PresentationData;
 import consulo.compiler.CompilerBundle;
+import consulo.component.util.pointer.NamedPointer;
+import consulo.content.ContentFolderTypeProvider;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.compiler.artifact.ui.ArtifactEditorContext;
-import consulo.compiler.artifact.ui.PackagingElementWeights;
-import consulo.compiler.artifact.ui.TreeNodePresentation;
 import consulo.ui.ex.SimpleTextAttributes;
-import consulo.content.ContentFolderTypeProvider;
-import consulo.component.util.pointer.NamedPointer;
+import consulo.ui.ex.tree.PresentationData;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -38,9 +35,7 @@ public class ModuleElementPresentation extends TreeNodePresentation {
   private final ArtifactEditorContext myContext;
   private final ContentFolderTypeProvider myContentFolderType;
 
-  public ModuleElementPresentation(@Nullable NamedPointer<Module> modulePointer,
-                                   @Nonnull ArtifactEditorContext context,
-                                   final ContentFolderTypeProvider contentFolderType) {
+  public ModuleElementPresentation(@Nullable NamedPointer<Module> modulePointer, @Nonnull ArtifactEditorContext context, final ContentFolderTypeProvider contentFolderType) {
     myModulePointer = modulePointer;
     myContext = context;
     myContentFolderType = contentFolderType;
@@ -70,9 +65,7 @@ public class ModuleElementPresentation extends TreeNodePresentation {
   }
 
   @Override
-  public void render(@Nonnull PresentationData presentationData,
-                     SimpleTextAttributes mainAttributes,
-                     SimpleTextAttributes commentAttributes) {
+  public void render(@Nonnull PresentationData presentationData, SimpleTextAttributes mainAttributes, SimpleTextAttributes commentAttributes) {
     final Module module = findModule();
     presentationData.setIcon(myContentFolderType.getIcon());
 
@@ -94,9 +87,8 @@ public class ModuleElementPresentation extends TreeNodePresentation {
       moduleName = "<unknown>";
     }
 
-    presentationData
-      .addText(CompilerBundle.message("node.text.0.1.compile.output", moduleName, StringUtil.toLowerCase(myContentFolderType.getName())),
-               module != null ? mainAttributes : SimpleTextAttributes.ERROR_ATTRIBUTES);
+    presentationData.addText(CompilerBundle.message("node.text.0.1.compile.output", moduleName, StringUtil.toLowerCase(myContentFolderType.getName())),
+                             module != null ? mainAttributes : SimpleTextAttributes.ERROR_ATTRIBUTES);
   }
 
   @Override

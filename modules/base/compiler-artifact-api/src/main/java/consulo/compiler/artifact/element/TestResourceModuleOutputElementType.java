@@ -13,23 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.packaging.impl.elements.moduleContent;
+package consulo.compiler.artifact.element;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.packaging.impl.elements.moduleContent.ModuleOutputElementTypeBase;
-import consulo.language.content.ProductionResourceContentFolderTypeProvider;
+import consulo.language.content.TestResourceContentFolderTypeProvider;
 
 /**
  * @author VISTALL
  * @since 9:54/31.05.13
  */
 @ExtensionImpl
-public class ProductionResourceModuleOutputElementType extends ModuleOutputElementTypeBase {
-  public static ProductionResourceModuleOutputElementType getInstance() {
-    return getInstance(ProductionResourceModuleOutputElementType.class);
+public class TestResourceModuleOutputElementType extends ModuleOutputElementTypeBase {
+  public static TestResourceModuleOutputElementType getInstance() {
+    return getInstance(TestResourceModuleOutputElementType.class);
   }
 
-  public ProductionResourceModuleOutputElementType() {
-    super("module-production-resource-output", ProductionResourceContentFolderTypeProvider.getInstance());
+  public TestResourceModuleOutputElementType() {
+    super("module-test-resource-output", TestResourceContentFolderTypeProvider.getInstance());
   }
 }

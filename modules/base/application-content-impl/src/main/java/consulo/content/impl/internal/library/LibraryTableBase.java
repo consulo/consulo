@@ -19,6 +19,7 @@ package consulo.content.impl.internal.library;
 import consulo.application.ApplicationManager;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.content.base.BinariesOrderRootType;
+import consulo.content.internal.LibraryEx;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
 import consulo.content.library.PersistentLibraryKind;

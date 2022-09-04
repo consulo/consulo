@@ -19,7 +19,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.AllIcons;
 import consulo.content.library.*;
 import consulo.project.Project;
-import consulo.content.impl.internal.library.LibraryEx;
+import consulo.content.internal.LibraryEx;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.LibrariesContainer;
 import consulo.virtualFileSystem.VirtualFile;

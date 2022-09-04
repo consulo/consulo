@@ -25,9 +25,9 @@ import consulo.disposer.Disposable;
 import consulo.module.Module;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.module.content.library.ModuleLibraryTablePresentation;
 import consulo.module.impl.internal.layer.ModuleRootLayerImpl;
 import consulo.module.impl.internal.layer.orderEntry.ModuleLibraryOrderEntryImpl;
-import consulo.project.ProjectBundle;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.ConvertingIterator;
 import consulo.util.collection.FilteringIterator;
@@ -46,22 +46,6 @@ public class ModuleLibraryTable implements LibraryTable, LibraryTableBase.Modifi
   private static final ModuleLibraryOrderEntryCondition MODULE_LIBRARY_ORDER_ENTRY_FILTER = new ModuleLibraryOrderEntryCondition();
   private static final OrderEntryToLibraryConvertor ORDER_ENTRY_TO_LIBRARY_CONVERTOR = new OrderEntryToLibraryConvertor();
   private final ModuleRootLayerImpl myRootLayer;
-  public static final LibraryTablePresentation MODULE_LIBRARY_TABLE_PRESENTATION = new LibraryTablePresentation() {
-    @Override
-    public String getDisplayName(boolean plural) {
-      return ProjectBundle.message("module.library.display.name", plural ? 2 : 1);
-    }
-
-    @Override
-    public String getDescription() {
-      return ProjectBundle.message("libraries.node.text.module");
-    }
-
-    @Override
-    public String getLibraryTableEditorTitle() {
-      return ProjectBundle.message("library.configure.module.title");
-    }
-  };
 
   public ModuleLibraryTable(ModuleRootLayerImpl rootLayer) {
     myRootLayer = rootLayer;
@@ -125,7 +109,7 @@ public class ModuleLibraryTable implements LibraryTable, LibraryTableBase.Modifi
 
   @Override
   public LibraryTablePresentation getPresentation() {
-    return MODULE_LIBRARY_TABLE_PRESENTATION;
+    return ModuleLibraryTablePresentation.INSTANCE;
   }
 
   @Override

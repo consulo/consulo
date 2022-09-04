@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.packaging.impl.elements.moduleContent;
+package consulo.compiler.artifact.element;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.content.ProductionContentFolderTypeProvider;

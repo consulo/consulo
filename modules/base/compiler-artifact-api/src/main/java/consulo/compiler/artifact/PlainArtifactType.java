@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.packaging.impl.artifacts;
+package consulo.compiler.artifact;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.compiler.CompilerBundle;
-import consulo.compiler.artifact.ArtifactType;
+import consulo.compiler.artifact.element.ArtifactRootElementImpl;
 import consulo.compiler.artifact.element.CompositePackagingElement;
 import consulo.compiler.artifact.element.PackagingElementFactory;
 import consulo.compiler.artifact.element.PackagingElementOutputKind;
-import consulo.ide.impl.idea.packaging.impl.elements.ArtifactRootElementImpl;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

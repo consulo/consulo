@@ -29,7 +29,7 @@ import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.project.Project;
-import consulo.content.impl.internal.library.LibraryEx;
+import consulo.content.internal.LibraryEx;
 import consulo.content.library.Library;
 import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;

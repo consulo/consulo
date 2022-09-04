@@ -47,7 +47,7 @@ public abstract class PackagingElementFactory {
   @Nonnull
   public abstract CompositePackagingElement<?> createZipArchive(@Nonnull @NonNls String archiveFileName);
 
-  public abstract PackagingElement<?> createFileCopy(@Nonnull String filePath, @javax.annotation.Nullable String outputFileName);
+  public abstract PackagingElement<?> createFileCopy(@Nonnull String filePath, @Nullable String outputFileName);
 
   @Nonnull
   @Deprecated
@@ -114,7 +114,7 @@ public abstract class PackagingElementFactory {
   
   public abstract CompositePackagingElementType<?>[] getCompositeElementTypes();
 
-  @javax.annotation.Nullable
+  @Nullable
   public abstract PackagingElementType<?> findElementType(String id);
 
   @Nonnull

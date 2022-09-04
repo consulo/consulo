@@ -15,9 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.deployment;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import javax.annotation.Nonnull;
+import consulo.util.lang.StringUtil;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 
 public abstract class DeploymentUtil {

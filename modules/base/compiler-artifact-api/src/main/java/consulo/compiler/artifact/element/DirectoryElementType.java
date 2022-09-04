@@ -18,7 +18,7 @@ package consulo.compiler.artifact.element;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.compiler.CompilerBundle;
-import consulo.compiler.artifact.internal.ArtifactInternalUtil;
+import consulo.compiler.artifact.ArtifactUtil;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
@@ -66,7 +66,7 @@ public class DirectoryElementType extends CompositePackagingElementType<Director
   public CompositePackagingElement<?> createComposite(CompositePackagingElement<?> parent,
                                                       String baseName,
                                                       @Nonnull ArtifactEditorContext context) {
-    final String initialValue = ArtifactInternalUtil.suggestFileName(parent, baseName != null ? baseName : "folder", "");
+    final String initialValue = ArtifactUtil.suggestFileName(parent, baseName != null ? baseName : "folder", "");
     String path = Messages
       .showInputDialog(context.getProject(), "Enter directory name: ", "New Directory", null, initialValue, new FilePathValidator());
     if (path == null) {

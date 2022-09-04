@@ -13,24 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.packaging.impl.ui;
+package consulo.compiler.artifact.ui;
 
 import consulo.application.AllIcons;
-import consulo.ui.ex.tree.PresentationData;
-import consulo.module.Module;
-import consulo.project.ProjectBundle;
-import consulo.module.impl.internal.layer.library.ModuleLibraryTable;
-import consulo.content.impl.internal.library.LibraryImpl;
+import consulo.content.base.BinariesOrderRootType;
+import consulo.content.internal.LibraryEx;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
 import consulo.content.library.LibraryTablePresentation;
-import consulo.content.base.BinariesOrderRootType;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.compiler.artifact.ui.ArtifactEditorContext;
-import consulo.compiler.artifact.ui.PackagingElementPresentation;
-import consulo.compiler.artifact.ui.PackagingElementWeights;
+import consulo.module.Module;
+import consulo.module.content.library.ModuleLibraryTablePresentation;
+import consulo.project.ProjectBundle;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.tree.PresentationData;
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author nik
@@ -42,7 +41,7 @@ public class LibraryElementPresentation extends PackagingElementPresentation {
   private final String myLibraryName;
   private final ArtifactEditorContext myContext;
 
-  public LibraryElementPresentation(String libraryName, String level, @javax.annotation.Nullable String moduleName, Library library, ArtifactEditorContext context) {
+  public LibraryElementPresentation(String libraryName, String level, @Nullable String moduleName, Library library, ArtifactEditorContext context) {
     myLevel = level;
     myModuleName = moduleName;
     myLibrary = library;
@@ -85,7 +84,7 @@ public class LibraryElementPresentation extends PackagingElementPresentation {
 
   public static String getLibraryTableDisplayName(final Library library) {
     LibraryTable table = library.getTable();
-    LibraryTablePresentation presentation = table != null ? table.getPresentation() : ModuleLibraryTable.MODULE_LIBRARY_TABLE_PRESENTATION;
+    LibraryTablePresentation presentation = table != null ? table.getPresentation() : ModuleLibraryTablePresentation.INSTANCE;
     return presentation.getDisplayName(false);
   }
 
@@ -96,7 +95,7 @@ public class LibraryElementPresentation extends PackagingElementPresentation {
       displayName = libraryTable.getPresentation().getDisplayName(false);
     }
     else {
-      Module module = (Module)((LibraryImpl)library).getModule();
+      Module module = (Module)((LibraryEx)library).getModule();
       String tableName = getLibraryTableDisplayName(library);
       displayName = module != null ? "'" + module.getName() + "' " + tableName : tableName;
     }

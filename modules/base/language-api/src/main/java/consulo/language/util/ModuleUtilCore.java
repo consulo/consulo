@@ -31,6 +31,8 @@ import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.module.content.layer.ContentFolder;
+import consulo.module.content.layer.ModuleRootModel;
+import consulo.module.content.layer.ModulesProvider;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
@@ -276,5 +278,20 @@ public class ModuleUtilCore {
   @RequiredReadAction
   public static NamedPointer<Module> createPointer(@Nonnull Project project, @Nonnull String name) {
     return ModulePointerManager.getInstance(project).create(name);
+  }
+
+  public static boolean hasModuleExtension(@Nonnull ModulesProvider modulesProvider, @Nonnull Class<? extends ModuleExtension> clazz) {
+    for (Module module : modulesProvider.getModules()) {
+      ModuleRootModel rootModel = modulesProvider.getRootModel(module);
+      if (rootModel == null) {
+        continue;
+      }
+
+      ModuleExtension extension = rootModel.getExtension(clazz);
+      if (extension != null) {
+        return true;
+      }
+    }
+    return false;
   }
 }

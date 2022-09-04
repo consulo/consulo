@@ -19,29 +19,12 @@
  */
 package consulo.ide.impl.idea.openapi.module;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.language.util.ModuleUtilCore;
-import consulo.module.content.layer.ModuleRootModel;
-import consulo.module.content.layer.ModulesProvider;
-import consulo.module.Module;
-import consulo.module.extension.ModuleExtension;
-import javax.annotation.Nonnull;
 
+@Deprecated
+@DeprecationInfo("Use ModuleUtilCore")
 public class ModuleUtil extends ModuleUtilCore {
   private ModuleUtil() {
-  }
-
-  public static boolean hasModuleExtension(@Nonnull ModulesProvider modulesProvider, @Nonnull Class<? extends ModuleExtension> clazz) {
-    for (Module module : modulesProvider.getModules()) {
-      ModuleRootModel rootModel = modulesProvider.getRootModel(module);
-      if (rootModel == null) {
-        continue;
-      }
-
-      ModuleExtension extension = rootModel.getExtension(clazz);
-      if (extension != null) {
-        return true;
-      }
-    }
-    return false;
   }
 }

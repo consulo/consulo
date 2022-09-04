@@ -18,7 +18,7 @@ package consulo.compiler.artifact.element;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.compiler.CompilerBundle;
-import consulo.compiler.artifact.internal.ArtifactInternalUtil;
+import consulo.compiler.artifact.ArtifactUtil;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
@@ -59,7 +59,7 @@ public class ZipArchiveElementType extends CompositePackagingElementType<ZipArch
   public CompositePackagingElement<?> createComposite(CompositePackagingElement<?> parent,
                                                       @Nullable String baseName,
                                                       @Nonnull ArtifactEditorContext context) {
-    final String initialValue = ArtifactInternalUtil.suggestFileName(parent, baseName != null ? baseName : "archive", ".zip");
+    final String initialValue = ArtifactUtil.suggestFileName(parent, baseName != null ? baseName : "archive", ".zip");
     String path =
       Messages.showInputDialog(context.getProject(), "Enter archive name: ", "New Archive", null, initialValue, new FilePathValidator());
     if (path == null) {

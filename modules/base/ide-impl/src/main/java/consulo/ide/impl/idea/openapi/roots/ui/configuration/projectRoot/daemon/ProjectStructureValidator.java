@@ -21,7 +21,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
-import consulo.content.impl.internal.library.LibraryEx;
+import consulo.content.internal.LibraryEx;
 import consulo.content.library.Library;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.ChooseModulesDialog;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryEditingUtil;

@@ -13,19 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.packaging.impl.elements;
+package consulo.compiler.artifact.element;
 
-import consulo.ui.ex.tree.PresentationData;
 import consulo.compiler.CompilerBundle;
 import consulo.compiler.artifact.ArtifactManager;
 import consulo.compiler.artifact.ArtifactType;
-import consulo.compiler.artifact.element.ArtifactIncrementalCompilerContext;
-import consulo.compiler.artifact.element.ArtifactRootElement;
-import consulo.compiler.artifact.element.IncrementalCompilerInstructionCreator;
-import consulo.compiler.artifact.element.PackagingElementResolvingContext;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.artifact.ui.PackagingElementPresentation;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.tree.PresentationData;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -33,7 +30,7 @@ import javax.annotation.Nonnull;
  */
 public class ArtifactRootElementImpl extends ArtifactRootElement<Object> {
   public ArtifactRootElementImpl() {
-    super(PackagingElementFactoryImpl.ARTIFACT_ROOT_ELEMENT_TYPE);
+    super(ArtifactRootElementType.INSTANCE);
   }
 
   @Override

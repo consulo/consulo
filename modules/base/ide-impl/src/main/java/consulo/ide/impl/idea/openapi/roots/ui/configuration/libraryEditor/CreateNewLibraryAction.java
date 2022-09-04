@@ -23,7 +23,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.WriteAction;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
-import consulo.content.impl.internal.library.LibraryEx;
+import consulo.content.internal.LibraryEx;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryType;
 import consulo.content.library.LibraryTypeService;

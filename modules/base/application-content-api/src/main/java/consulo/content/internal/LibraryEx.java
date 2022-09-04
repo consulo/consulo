@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.content.impl.internal.library;
+package consulo.content.internal;
 
 import consulo.component.ComponentManager;
 import consulo.content.OrderRootType;

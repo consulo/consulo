@@ -16,33 +16,33 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries;
 
 import consulo.application.AllIcons;
-import consulo.ide.IdeBundle;
-import consulo.content.library.*;
-import consulo.module.Module;
-import consulo.ide.setting.ShowSettingsUtil;
-import consulo.module.content.library.ModuleAwareLibraryType;
-import consulo.project.Project;
-import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
-import consulo.module.content.layer.ModuleRootModel;
-import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.content.OrderRootType;
-import consulo.module.impl.internal.layer.library.ModuleLibraryTable;
-import consulo.content.impl.internal.library.LibraryEx;
 import consulo.content.impl.internal.library.LibraryImpl;
-import consulo.module.impl.internal.layer.library.LibraryTableImplUtil;
-import consulo.ide.setting.module.ClasspathPanel;
+import consulo.content.internal.LibraryEx;
+import consulo.content.library.*;
+import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.LibrariesModifiableModel;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureValidator;
-import consulo.ui.ex.popup.PopupStep;
-import consulo.ui.ex.popup.BaseListPopupStep;
-import consulo.util.lang.function.Condition;
-import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.ArchiveFileSystem;
 import consulo.ide.impl.idea.util.ParameterizedRunnable;
 import consulo.ide.setting.ProjectStructureSettingsUtil;
-import consulo.logging.Logger;
+import consulo.ide.setting.ShowSettingsUtil;
+import consulo.ide.setting.module.ClasspathPanel;
 import consulo.ide.setting.module.ModulesConfigurator;
+import consulo.logging.Logger;
+import consulo.module.Module;
+import consulo.module.content.layer.ModuleRootModel;
+import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
+import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.module.content.library.ModuleAwareLibraryType;
+import consulo.module.content.library.ModuleLibraryTablePresentation;
+import consulo.module.impl.internal.layer.library.LibraryTableImplUtil;
+import consulo.project.Project;
+import consulo.ui.ex.popup.BaseListPopupStep;
+import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.image.Image;
+import consulo.util.lang.function.Condition;
+import consulo.virtualFileSystem.VirtualFileManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -142,7 +142,7 @@ public class LibraryEditingUtil {
 
   public static LibraryTablePresentation getLibraryTablePresentation(@Nonnull Project project, @Nonnull String level) {
     if (level.equals(LibraryTableImplUtil.MODULE_LEVEL)) {
-      return ModuleLibraryTable.MODULE_LIBRARY_TABLE_PRESENTATION;
+      return ModuleLibraryTablePresentation.INSTANCE;
     }
     final LibraryTable table = LibraryTablesRegistrar.getInstance().getLibraryTableByLevel(level, project);
     LOG.assertTrue(table != null, level);

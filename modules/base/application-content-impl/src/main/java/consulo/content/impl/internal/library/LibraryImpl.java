@@ -7,6 +7,7 @@ import consulo.component.persist.ComponentSerializationUtil;
 import consulo.content.OrderRootType;
 import consulo.content.RootProvider;
 import consulo.content.base.BinariesOrderRootType;
+import consulo.content.internal.LibraryEx;
 import consulo.content.library.*;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

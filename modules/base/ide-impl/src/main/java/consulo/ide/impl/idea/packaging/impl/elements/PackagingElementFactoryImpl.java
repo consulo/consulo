@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.packaging.impl.elements;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.AllIcons;
 import consulo.content.impl.internal.library.LibraryImpl;
 import consulo.module.impl.internal.layer.library.LibraryTableImplUtil;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
@@ -25,10 +24,9 @@ import consulo.ide.impl.idea.openapi.vfs.newvfs.ArchiveFileSystem;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactPointer;
 import consulo.compiler.artifact.ArtifactPointerManager;
-import consulo.ide.impl.idea.packaging.impl.elements.moduleContent.ProductionModuleOutputElementType;
-import consulo.ide.impl.idea.packaging.impl.elements.moduleContent.TestModuleOutputElementType;
+import consulo.compiler.artifact.element.ProductionModuleOutputElementType;
+import consulo.compiler.artifact.element.TestModuleOutputElementType;
 import consulo.compiler.artifact.element.*;
-import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.ide.impl.idea.util.PathUtil;
 import consulo.ide.impl.idea.util.io.URLUtil;
 import consulo.annotation.access.RequiredReadAction;
@@ -41,7 +39,6 @@ import consulo.module.Module;
 import consulo.module.ModulePointerManager;
 import consulo.compiler.artifact.element.ZipArchivePackagingElement;
 import consulo.project.Project;
-import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import jakarta.inject.Inject;
@@ -62,7 +59,7 @@ import java.util.List;
 public class PackagingElementFactoryImpl extends PackagingElementFactory {
   private static final Logger LOG = Logger.getInstance(PackagingElementFactoryImpl.class);
 
-  public static final PackagingElementType<ArtifactRootElement<?>> ARTIFACT_ROOT_ELEMENT_TYPE = new ArtifactRootElementType();
+  public static final PackagingElementType<ArtifactRootElement<?>> ARTIFACT_ROOT_ELEMENT_TYPE = ArtifactRootElementType.INSTANCE;
 
   private final ArtifactPointerManager myArtifactPointerManager;
   private final ModulePointerManager myModulePointerManager;
@@ -310,34 +307,5 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
     final CompositePackagingElement<?> last = getOrCreateDirectory(root, pathTail);
     last.addOrFindChildren(elements);
     return Collections.singletonList(root);
-  }
-
-  private static class ArtifactRootElementType extends PackagingElementType<ArtifactRootElement<?>> {
-    protected ArtifactRootElementType() {
-      super("root", "");
-    }
-
-    @Nonnull
-    @Override
-    public Image getIcon() {
-      return AllIcons.Nodes.Artifact;
-    }
-
-    @Override
-    public boolean isAvailableForAdd(@Nonnull ArtifactEditorContext context, @Nonnull Artifact artifact) {
-      return false;
-    }
-
-    @Override
-    @Nonnull
-    public List<? extends ArtifactRootElement<?>> chooseAndCreate(@Nonnull ArtifactEditorContext context, @Nonnull Artifact artifact, @Nonnull CompositePackagingElement<?> parent) {
-      throw new UnsupportedOperationException("'create' not implemented in " + getClass().getName());
-    }
-
-    @Override
-    @Nonnull
-    public ArtifactRootElement<?> createEmpty(@Nonnull Project project) {
-      return new ArtifactRootElementImpl();
-    }
   }
 }

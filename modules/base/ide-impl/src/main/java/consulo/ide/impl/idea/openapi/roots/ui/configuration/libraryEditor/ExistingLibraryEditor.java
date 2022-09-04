@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.libraryEditor;
 
 import consulo.content.OrderRootType;
-import consulo.content.impl.internal.library.LibraryEx;
+import consulo.content.internal.LibraryEx;
 import consulo.content.library.*;
 import consulo.disposer.Disposable;
 import consulo.content.base.BinariesOrderRootType;

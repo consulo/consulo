@@ -23,7 +23,7 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.compiler.artifact.ArtifactType;
-import consulo.ide.impl.idea.packaging.impl.artifacts.PlainArtifactType;
+import consulo.compiler.artifact.PlainArtifactType;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 

@@ -21,7 +21,7 @@ import consulo.ide.setting.Settings;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.content.OrderRootType;
-import consulo.content.impl.internal.library.LibraryEx;
+import consulo.content.internal.LibraryEx;
 import consulo.content.impl.internal.library.LibraryImpl;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;

@@ -22,7 +22,7 @@ import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.Project;
-import consulo.content.impl.internal.library.LibraryEx;
+import consulo.content.internal.LibraryEx;
 import consulo.content.impl.internal.library.LibraryTableBase;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;

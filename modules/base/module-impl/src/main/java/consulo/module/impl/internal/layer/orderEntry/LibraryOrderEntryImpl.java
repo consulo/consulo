@@ -17,7 +17,7 @@
 package consulo.module.impl.internal.layer.orderEntry;
 
 import consulo.content.RootProvider;
-import consulo.content.impl.internal.library.LibraryEx;
+import consulo.content.internal.LibraryEx;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
 import consulo.content.library.LibraryTablesRegistrar;

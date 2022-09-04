@@ -17,7 +17,7 @@ package consulo.sandboxPlugin.ide.artifact;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.openapi.module.ModuleUtil;
-import consulo.ide.impl.idea.packaging.impl.elements.ArtifactRootElementImpl;
+import consulo.compiler.artifact.element.ArtifactRootElementImpl;
 import consulo.application.AllIcons;
 import consulo.compiler.artifact.ArtifactType;
 import consulo.compiler.artifact.element.CompositePackagingElement;

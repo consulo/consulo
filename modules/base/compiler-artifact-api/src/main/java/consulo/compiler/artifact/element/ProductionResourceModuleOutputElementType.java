@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2013-2016 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.packaging.impl.elements.moduleContent;
+package consulo.compiler.artifact.element;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.language.content.TestContentFolderTypeProvider;
+import consulo.language.content.ProductionResourceContentFolderTypeProvider;
 
 /**
- * @author nik
+ * @author VISTALL
+ * @since 9:54/31.05.13
  */
 @ExtensionImpl
-public class TestModuleOutputElementType extends ModuleOutputElementTypeBase {
-  public static TestModuleOutputElementType getInstance() {
-    return getInstance(TestModuleOutputElementType.class);
+public class ProductionResourceModuleOutputElementType extends ModuleOutputElementTypeBase {
+  public static ProductionResourceModuleOutputElementType getInstance() {
+    return getInstance(ProductionResourceModuleOutputElementType.class);
   }
 
-  public TestModuleOutputElementType() {
-    super("module-test-output", TestContentFolderTypeProvider.getInstance());
+  public ProductionResourceModuleOutputElementType() {
+    super("module-production-resource-output", ProductionResourceContentFolderTypeProvider.getInstance());
   }
 }

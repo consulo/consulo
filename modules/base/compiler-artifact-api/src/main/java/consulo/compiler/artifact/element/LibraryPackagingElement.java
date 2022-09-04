@@ -13,28 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.packaging.impl.elements;
+package consulo.compiler.artifact.element;
 
-import consulo.compiler.artifact.element.*;
+import consulo.compiler.artifact.ArtifactManager;
+import consulo.compiler.artifact.ArtifactType;
+import consulo.compiler.artifact.ui.ArtifactEditorContext;
+import consulo.compiler.artifact.ui.LibraryElementPresentation;
+import consulo.compiler.artifact.ui.PackagingElementPresentation;
+import consulo.content.base.BinariesOrderRootType;
+import consulo.content.library.Library;
 import consulo.module.Module;
+import consulo.module.content.layer.ModulesProvider;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
-import consulo.content.library.Library;
-import consulo.compiler.artifact.ArtifactManager;
-import consulo.content.base.BinariesOrderRootType;
-import consulo.module.content.layer.ModulesProvider;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.compiler.artifact.ArtifactType;
-import consulo.ide.impl.idea.packaging.impl.ui.LibraryElementPresentation;
-import consulo.compiler.artifact.ui.ArtifactEditorContext;
-import consulo.compiler.artifact.ui.PackagingElementPresentation;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.Comparing;
 import consulo.util.xml.serializer.annotation.Attribute;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 

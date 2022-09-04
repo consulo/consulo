@@ -33,6 +33,7 @@ import consulo.util.lang.Trinity;
 import consulo.util.lang.function.Condition;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
+import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -594,6 +595,27 @@ public class ArtifactUtil {
 
   public static String suggestArtifactFileName(String artifactName) {
     return PathUtil.suggestFileName(artifactName, true, true);
+  }
+
+  @Nullable
+  private static PackagingElement<?> findArchiveOrDirectoryByName(@Nonnull CompositePackagingElement<?> parent, @Nonnull String name) {
+    for (PackagingElement<?> element : parent.getChildren()) {
+      if (element instanceof ArchivePackagingElement && ((ArchivePackagingElement)element).getArchiveFileName().equals(name) ||
+          element instanceof DirectoryPackagingElement && ((DirectoryPackagingElement)element).getDirectoryName().equals(name)) {
+        return element;
+      }
+    }
+    return null;
+  }
+
+  @Nonnull
+  public static String suggestFileName(@Nonnull CompositePackagingElement<?> parent, @NonNls @Nonnull String prefix, @NonNls @Nonnull String suffix) {
+    String name = prefix + suffix;
+    int i = 2;
+    while (findArchiveOrDirectoryByName(parent, name) != null) {
+      name = prefix + i++ + suffix;
+    }
+    return name;
   }
 }
 
