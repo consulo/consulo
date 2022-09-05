@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.roots.orderEntry;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.setting.module.OrderEntryTypeEditor;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -29,6 +30,7 @@ import java.util.function.Consumer;
  * @author VISTALL
  * @since 06-Jun-16
  */
+@ExtensionImpl
 public class UnknownOrderEntryTypeEditor implements OrderEntryTypeEditor<OrderEntry> {
   @Nonnull
   @Override
