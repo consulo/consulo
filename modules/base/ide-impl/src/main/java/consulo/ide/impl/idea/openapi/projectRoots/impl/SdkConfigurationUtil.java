@@ -17,26 +17,22 @@
 package consulo.ide.impl.idea.openapi.projectRoots.impl;
 
 import consulo.application.ApplicationManager;
-import consulo.content.impl.internal.bundle.SdkImpl;
-import consulo.fileChooser.FileChooserDescriptor;
-import consulo.project.ProjectBundle;
-import consulo.content.bundle.Sdk;
-import consulo.content.bundle.SdkAdditionalData;
-import consulo.content.bundle.SdkTable;
-import consulo.content.bundle.SdkType;
-import consulo.ui.ex.awt.Messages;
 import consulo.application.util.function.Computable;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.content.bundle.*;
+import consulo.content.impl.internal.bundle.SdkImpl;
+import consulo.fileChooser.FileChooser;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.ide.impl.idea.util.Consumer;
+import consulo.project.ProjectBundle;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.Messages;
+import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.fileChooser.FileChooser;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.util.*;
+import java.util.Collection;
 
 /**
  * @author yole
@@ -148,12 +144,7 @@ public class SdkConfigurationUtil {
    */
   @Nullable
   public static Sdk createAndAddSDK(final String path, SdkType sdkType, boolean predefined) {
-    VirtualFile sdkHome = ApplicationManager.getApplication().runWriteAction(new Computable<VirtualFile>() {
-      @Override
-      public VirtualFile compute() {
-        return LocalFileSystem.getInstance().refreshAndFindFileByPath(path);
-      }
-    });
+    VirtualFile sdkHome = ApplicationManager.getApplication().runWriteAction((Computable<VirtualFile>)() -> LocalFileSystem.getInstance().refreshAndFindFileByPath(path));
     if (sdkHome != null) {
       final Sdk newSdk = setupSdk(SdkTable.getInstance().getAllSdks(), sdkHome, sdkType, true, predefined, null, null);
       if (newSdk != null) {
@@ -164,21 +155,14 @@ public class SdkConfigurationUtil {
     return null;
   }
 
+  @Deprecated
   public static String createUniqueSdkName(SdkType type, String home, final Sdk[] sdks) {
-    return createUniqueSdkName(type.suggestSdkName(null, home), sdks);
+    return SdkUtil.createUniqueSdkName(type, home, sdks);
   }
 
+  @Deprecated
   public static String createUniqueSdkName(final String suggestedName, final Sdk[] sdks) {
-    final Set<String> names = new HashSet<String>();
-    for (Sdk jdk : sdks) {
-      names.add(jdk.getName());
-    }
-    String newSdkName = suggestedName;
-    int i = 0;
-    while (names.contains(newSdkName)) {
-      newSdkName = suggestedName + " (" + (++i) + ")";
-    }
-    return newSdkName;
+    return SdkUtil.createUniqueSdkName(suggestedName, sdks);
   }
 
   @RequiredUIAccess

@@ -24,8 +24,8 @@ import consulo.content.impl.internal.bundle.SdkPointerManagerImpl;
 import consulo.content.impl.internal.bundle.SdkTableImpl;
 import consulo.ide.impl.idea.openapi.application.PreloadingActivity;
 import consulo.ide.impl.idea.openapi.projectRoots.impl.SdkConfigurationUtil;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.logging.Logger;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.SystemProperties;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
@@ -54,7 +54,7 @@ public class PredefinedBundlesLoader extends PreloadingActivity {
     @Nonnull
     public Sdk createSdkWithName(@Nonnull SdkType sdkType, @Nonnull String suggestName) {
       Sdk[] sdks = ArrayUtil.mergeArrayAndCollection(mySdkTable.getAllSdks(), myBundles, Sdk.ARRAY_FACTORY);
-      String uniqueSdkName = SdkConfigurationUtil.createUniqueSdkName(suggestName + SdkConfigurationUtil.PREDEFINED_PREFIX, sdks);
+      String uniqueSdkName = SdkUtil.createUniqueSdkName(suggestName + SdkConfigurationUtil.PREDEFINED_PREFIX, sdks);
       Sdk sdk = mySdkTable.createSdk(uniqueSdkName, sdkType);
       myBundles.add(sdk);
       return sdk;

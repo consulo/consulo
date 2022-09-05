@@ -23,12 +23,33 @@ import consulo.ui.image.ImageEffects;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author VISTALL
  * @since 21.08.14
  */
 public class SdkUtil {
+  @Nonnull
+  public static String createUniqueSdkName(@Nonnull SdkType type, String home, final Sdk[] sdks) {
+    return createUniqueSdkName(type.suggestSdkName(null, home), sdks);
+  }
+
+  @Nonnull
+  public static String createUniqueSdkName(final String suggestedName, final Sdk[] sdks) {
+    final Set<String> names = new HashSet<>();
+    for (Sdk jdk : sdks) {
+      names.add(jdk.getName());
+    }
+    String newSdkName = suggestedName;
+    int i = 0;
+    while (names.contains(newSdkName)) {
+      newSdkName = suggestedName + " (" + (++i) + ")";
+    }
+    return newSdkName;
+  }
+
   @Nonnull
   @DeprecationInfo(value = "Use SdkPointerManager.getInstance()")
   public static NamedPointer<Sdk> createPointer(@Nonnull Sdk sdk) {
