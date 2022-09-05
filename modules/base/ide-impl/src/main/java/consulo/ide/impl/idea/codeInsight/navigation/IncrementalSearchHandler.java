@@ -49,7 +49,7 @@ import consulo.util.dataholder.Key;
 import consulo.ui.ex.awt.HintHint;
 import consulo.ui.ex.JBColor;
 import consulo.ide.impl.idea.ui.LightweightHint;
-import consulo.ide.impl.idea.util.text.StringSearcher;
+import consulo.application.util.StringSearcher;
 import consulo.ui.ex.awt.UIUtil;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

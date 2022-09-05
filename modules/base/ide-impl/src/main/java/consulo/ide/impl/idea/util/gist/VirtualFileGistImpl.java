@@ -16,24 +16,27 @@
 package consulo.ide.impl.idea.util.gist;
 
 import consulo.application.ApplicationManager;
-import consulo.logging.Logger;
 import consulo.application.progress.ProgressManager;
-import consulo.project.Project;
-import consulo.util.lang.Pair;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileWithId;
-import consulo.virtualFileSystem.FileAttribute;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.PersistentFS;
-import consulo.util.collection.FactoryMap;
 import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.data.DataInputOutputUtil;
+import consulo.language.psi.stub.gist.GistManager;
+import consulo.language.psi.stub.gist.VirtualFileGist;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.util.collection.FactoryMap;
+import consulo.util.lang.Pair;
+import consulo.virtualFileSystem.FileAttribute;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileWithId;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Map;
+import java.util.function.BiFunction;
 
 /**
  * @author peter
@@ -46,11 +49,11 @@ class VirtualFileGistImpl<Data> implements VirtualFileGist<Data> {
   private final String myId;
   private final int myVersion;
   @Nonnull
-  private final GistCalculator<Data> myCalculator;
+  private final BiFunction<Project, VirtualFile, Data> myCalculator;
   @Nonnull
   private final DataExternalizer<Data> myExternalizer;
 
-  VirtualFileGistImpl(@Nonnull String id, int version, @Nonnull DataExternalizer<Data> externalizer, @Nonnull GistCalculator<Data> calcData) {
+  VirtualFileGistImpl(@Nonnull String id, int version, @Nonnull DataExternalizer<Data> externalizer, @Nonnull BiFunction<Project, VirtualFile, Data> calcData) {
     myId = id;
     myVersion = version;
     myExternalizer = externalizer;
@@ -62,7 +65,7 @@ class VirtualFileGistImpl<Data> implements VirtualFileGist<Data> {
     ApplicationManager.getApplication().assertReadAccessAllowed();
     ProgressManager.checkCanceled();
 
-    if (!(file instanceof VirtualFileWithId)) return myCalculator.calcData(project, file);
+    if (!(file instanceof VirtualFileWithId)) return myCalculator.apply(project, file);
 
     int stamp = PersistentFS.getInstance().getModificationCount(file) + ((GistManagerImpl)GistManager.getInstance()).getReindexCount();
 
@@ -75,7 +78,7 @@ class VirtualFileGistImpl<Data> implements VirtualFileGist<Data> {
       LOG.error(e);
     }
 
-    Data result = myCalculator.calcData(project, file);
+    Data result = myCalculator.apply(project, file);
     cacheResult(stamp, result, project, file);
     return result;
   }

@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.util.gist;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicImpl;
+import consulo.language.psi.stub.gist.GistManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileEvent;

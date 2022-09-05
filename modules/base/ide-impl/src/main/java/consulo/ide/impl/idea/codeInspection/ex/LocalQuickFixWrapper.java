@@ -26,6 +26,7 @@ import consulo.language.editor.inspection.CommonProblemDescriptor;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.editor.inspection.QuickFix;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
+import consulo.language.editor.intention.BatchQuickFix;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;

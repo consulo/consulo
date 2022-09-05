@@ -32,7 +32,7 @@ public class ProximityLocation implements UserDataHolder {
   private final Module myPositionModule;
   private final ProcessingContext myContext;
 
-  public ProximityLocation(@javax.annotation.Nullable final PsiElement position, final Module positionModule) {
+  public ProximityLocation(@Nullable final PsiElement position, final Module positionModule) {
     this(position, positionModule, new ProcessingContext());
   }
 
@@ -42,17 +42,17 @@ public class ProximityLocation implements UserDataHolder {
     myContext = context;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public Module getPositionModule() {
     return myPositionModule;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public PsiElement getPosition() {
     return myPosition;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public Project getProject() {
     return myPosition != null ? myPosition.getProject() : null;
   }

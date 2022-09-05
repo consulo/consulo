@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.psi.util;
+package consulo.language.psi.util;
 
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiRecursiveElementVisitor;

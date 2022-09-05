@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.openapi.progress.util.TooManyUsagesStatus;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.text.StringSearcher;
+import consulo.application.util.StringSearcher;
 import consulo.application.AccessRule;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.IndexNotReadyException;

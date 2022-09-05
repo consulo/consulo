@@ -42,7 +42,7 @@ import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.editor.impl.EditorMouseHoverPopupControl;
 import consulo.ide.impl.idea.openapi.project.ProjectUtil;
 import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
-import consulo.ide.impl.psi.RefResolveService;
+import consulo.language.psi.resolve.RefResolveService;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.DaemonListener;

@@ -45,7 +45,7 @@ import consulo.ide.impl.idea.openapi.fileEditor.impl.text.AsyncEditorLoader;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.FileTypeManagerImpl;
 import consulo.ide.impl.idea.packageDependencies.DependencyValidationManager;
 import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
-import consulo.ide.impl.psi.RefResolveService;
+import consulo.language.psi.resolve.RefResolveService;
 import consulo.language.editor.*;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.gutter.LineMarkerInfo;

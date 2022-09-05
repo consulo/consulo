@@ -4,21 +4,26 @@ package consulo.ide.impl.idea.util.gist;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.ide.impl.idea.util.NullableFunction;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.index.io.data.DataExternalizer;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
+import consulo.language.psi.stub.gist.GistManager;
+import consulo.language.psi.stub.gist.PsiFileGist;
+import consulo.language.psi.stub.gist.VirtualFileGist;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.ex.awt.internal.GuiUtils;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 @Singleton
 @ServiceImpl
@@ -30,7 +35,7 @@ public final class GistManagerImpl extends GistManager {
 
   @Nonnull
   @Override
-  public <Data> VirtualFileGist<Data> newVirtualFileGist(@Nonnull String id, int version, @Nonnull DataExternalizer<Data> externalizer, @Nonnull VirtualFileGist.GistCalculator<Data> calcData) {
+  public <Data> VirtualFileGist<Data> newVirtualFileGist(@Nonnull String id, int version, @Nonnull DataExternalizer<Data> externalizer, @Nonnull BiFunction<Project, VirtualFile, Data> calcData) {
     if (!ourKnownIds.add(id)) {
       throw new IllegalArgumentException("Gist '" + id + "' is already registered");
     }
@@ -40,7 +45,7 @@ public final class GistManagerImpl extends GistManager {
 
   @Nonnull
   @Override
-  public <Data> PsiFileGist<Data> newPsiFileGist(@Nonnull String id, int version, @Nonnull DataExternalizer<Data> externalizer, @Nonnull NullableFunction<PsiFile, Data> calculator) {
+  public <Data> PsiFileGist<Data> newPsiFileGist(@Nonnull String id, int version, @Nonnull DataExternalizer<Data> externalizer, @Nonnull Function<PsiFile, Data> calculator) {
     return new PsiFileGistImpl<>(id, version, externalizer, calculator);
   }
 

@@ -13,17 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util.gist;
+package consulo.language.psi.stub.gist;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.ApplicationManager;
-import consulo.language.psi.PsiFile;
-import consulo.ide.impl.idea.util.NullableFunction;
 import consulo.index.io.data.DataExternalizer;
-import consulo.annotation.DeprecationInfo;
+import consulo.language.psi.PsiFile;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 /**
  * A helper class for working with file gists: associating persistent data with current VFS or PSI file contents.
@@ -54,7 +57,7 @@ public abstract class GistManager {
   public abstract <Data> VirtualFileGist<Data> newVirtualFileGist(@Nonnull String id,
                                                                   int version,
                                                                   @Nonnull DataExternalizer<Data> externalizer,
-                                                                  @Nonnull VirtualFileGist.GistCalculator<Data> calcData);
+                                                                  @Nonnull BiFunction<Project, VirtualFile, Data> calcData);
 
   /**
    * Create a new {@link PsiFileGist}.
@@ -67,7 +70,7 @@ public abstract class GistManager {
    * @return the gist object, where {@link PsiFileGist#getFileData} can later be used to retrieve the cached data
    */
   @Nonnull
-  public abstract <Data> PsiFileGist<Data> newPsiFileGist(@Nonnull String id, int version, @Nonnull DataExternalizer<Data> externalizer, @Nonnull NullableFunction<PsiFile, Data> calcData);
+  public abstract <Data> PsiFileGist<Data> newPsiFileGist(@Nonnull String id, int version, @Nonnull DataExternalizer<Data> externalizer, @Nonnull Function<PsiFile, Data> calcData);
 
   /**
    * Force all gists to be recalculated on the next request.

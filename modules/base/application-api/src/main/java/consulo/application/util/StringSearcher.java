@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util.text;
+package consulo.application.util;
 
 import consulo.logging.Logger;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
+import consulo.util.lang.CharArrayCharSequence;
 import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
@@ -219,7 +220,7 @@ public class StringSearcher {
    * @deprecated Use {@link #scan(CharSequence)} instead
    */
   public int scan(char[] text, int startOffset, int endOffset){
-    final int res = scan(new CharArrayCharSequence(text),text, startOffset, endOffset);
+    final int res = scan(new CharArrayCharSequence(text), text, startOffset, endOffset);
     return res >= 0 ? res: -1;
   }
 

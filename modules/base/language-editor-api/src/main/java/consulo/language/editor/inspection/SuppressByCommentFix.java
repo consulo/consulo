@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.daemon.impl.actions;
+package consulo.language.editor.inspection;
 
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
-import consulo.language.editor.inspection.AbstractBatchSuppressByNoInspectionCommentFix;
-import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.PsiTreeUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

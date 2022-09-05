@@ -44,7 +44,7 @@ import consulo.ide.impl.idea.ui.LightweightHint;
 import consulo.ide.impl.idea.ui.ReplacePromptDialog;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
-import consulo.ide.impl.idea.util.text.StringSearcher;
+import consulo.application.util.StringSearcher;
 import consulo.language.internal.custom.CustomHighlighterTokenType;
 import consulo.language.Language;
 import consulo.language.ast.IElementType;

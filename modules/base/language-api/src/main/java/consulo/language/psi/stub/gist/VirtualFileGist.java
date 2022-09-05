@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util.gist;
+package consulo.language.psi.stub.gist;
 
+import consulo.language.psi.stub.FileBasedIndexExtension;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.stub.FileBasedIndexExtension;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -48,14 +49,4 @@ public interface VirtualFileGist<Data> {
    * Calculate or get the cached data by the current virtual file content in the given project (or null, if the data is project-independent).
    */
   Data getFileData(@Nullable Project project, @Nonnull VirtualFile file);
-
-  /**
-   * Used by {@link VirtualFileGist} to calculate the data when it's needed and to recalculate it after file changes.
-   */
-  @FunctionalInterface
-  interface GistCalculator<Data> {
-
-    @Nullable
-    Data calcData(Project project, @Nonnull VirtualFile file);
-  }
 }

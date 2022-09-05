@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi;
+package consulo.language.psi.resolve;
 
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;

@@ -13,10 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi.util;
+package consulo.language.psi.util;
 
 import consulo.language.psi.PsiElement;
 
-public interface PsiMatcherExpression {
-  Boolean match(PsiElement element);
+public interface PsiMatcher {
+  PsiMatcher parent(PsiMatcherExpression e);
+  PsiMatcher firstChild(PsiMatcherExpression e);
+  PsiMatcher ancestor(PsiMatcherExpression e);
+  PsiMatcher descendant(PsiMatcherExpression e);
+  PsiMatcher dot(PsiMatcherExpression e);
+
+  PsiElement getElement();
 }

@@ -50,7 +50,7 @@ import consulo.ide.impl.idea.util.ArrayUtilRt;
 import consulo.ide.impl.idea.util.ConcurrencyUtil;
 import consulo.ide.impl.idea.util.ThrowableConvertor;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.gist.GistManager;
+import consulo.language.psi.stub.gist.GistManager;
 import consulo.ide.impl.idea.util.indexing.hash.FileContentHashIndex;
 import consulo.ide.impl.idea.util.indexing.hash.FileContentHashIndexExtension;
 import consulo.ide.impl.idea.util.indexing.impl.InvertedIndexValueIterator;

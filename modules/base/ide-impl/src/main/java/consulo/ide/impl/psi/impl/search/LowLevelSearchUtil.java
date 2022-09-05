@@ -33,7 +33,7 @@ import consulo.language.psi.search.TextOccurenceProcessor;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.ConcurrencyUtil;
-import consulo.ide.impl.idea.util.text.StringSearcher;
+import consulo.application.util.StringSearcher;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.logging.Logger;
 import consulo.util.collection.HashingStrategy;

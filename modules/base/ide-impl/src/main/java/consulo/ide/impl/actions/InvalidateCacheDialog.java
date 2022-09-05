@@ -20,7 +20,7 @@ import consulo.application.Application;
 import consulo.application.internal.ApplicationEx;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ide.impl.idea.util.gist.GistManager;
+import consulo.language.psi.stub.gist.GistManager;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.localize.LocalizeValue;

@@ -16,26 +16,31 @@
 package consulo.ide.impl.idea.util.gist;
 
 import consulo.application.ApplicationManager;
-import consulo.document.Document;
-import consulo.document.FileDocumentManager;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.language.file.LanguageFileType;
-import consulo.project.Project;
-import consulo.util.dataholder.Key;
-import consulo.component.util.ModificationTracker;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.NewVirtualFile;
-import consulo.language.psi.PsiDocumentManager;
-import consulo.language.psi.PsiFile;
-import consulo.language.psi.PsiManager;
-import consulo.language.impl.psi.PsiFileImpl;
 import consulo.application.util.CachedValue;
 import consulo.application.util.CachedValueProvider;
 import consulo.application.util.CachedValuesManager;
-import consulo.ide.impl.idea.util.NullableFunction;
-import consulo.language.impl.internal.psi.stub.FileContentImpl;
+import consulo.component.util.ModificationTracker;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
 import consulo.index.io.data.DataExternalizer;
+import consulo.language.file.LanguageFileType;
+import consulo.language.impl.internal.psi.stub.FileContentImpl;
+import consulo.language.impl.psi.PsiFileImpl;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
+import consulo.language.psi.stub.gist.GistManager;
+import consulo.language.psi.stub.gist.PsiFileGist;
+import consulo.language.psi.stub.gist.VirtualFileGist;
+import consulo.project.Project;
+import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.NewVirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
+
 import javax.annotation.Nonnull;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 /**
  * @author peter
@@ -43,13 +48,13 @@ import javax.annotation.Nonnull;
 class PsiFileGistImpl<Data> implements PsiFileGist<Data> {
   private static final ModificationTracker ourReindexTracker = () -> ((GistManagerImpl)GistManager.getInstance()).getReindexCount();
   private final VirtualFileGist<Data> myPersistence;
-  private final VirtualFileGist.GistCalculator<Data> myCalculator;
+  private final BiFunction<Project, VirtualFile, Data> myCalculator;
   private final Key<CachedValue<Data>> myCacheKey;
 
-  PsiFileGistImpl(@Nonnull String id, int version, @Nonnull DataExternalizer<Data> externalizer, @Nonnull NullableFunction<PsiFile, Data> calculator) {
+  PsiFileGistImpl(@Nonnull String id, int version, @Nonnull DataExternalizer<Data> externalizer, @Nonnull Function<PsiFile, Data> calculator) {
     myCalculator = (project, file) -> {
       PsiFile psiFile = getPsiFile(project, file);
-      return psiFile == null ? null : calculator.fun(psiFile);
+      return psiFile == null ? null : calculator.apply(psiFile);
     };
     myPersistence = GistManager.getInstance().newVirtualFileGist(id, version, externalizer, myCalculator);
     myCacheKey = Key.create("PsiFileGist " + id);
@@ -61,7 +66,7 @@ class PsiFileGistImpl<Data> implements PsiFileGist<Data> {
 
     if (shouldUseMemoryStorage(file)) {
       return CachedValuesManager.getManager(file.getProject()).getCachedValue(file, myCacheKey, () -> {
-        Data data = myCalculator.calcData(file.getProject(), file.getViewProvider().getVirtualFile());
+        Data data = myCalculator.apply(file.getProject(), file.getViewProvider().getVirtualFile());
         return CachedValueProvider.Result.create(data, file, ourReindexTracker);
       }, false);
     }
