@@ -16,60 +16,59 @@
 package consulo.ide.impl.idea.execution.impl;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
 import consulo.application.CommonBundle;
-import consulo.execution.event.ExecutionListener;
-import consulo.execution.internal.RunManagerConfig;
-import consulo.execution.internal.RunManagerEx;
-import consulo.execution.configuration.CompatibilityAwareRunProfile;
+import consulo.application.TransactionGuard;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.component.ProcessCanceledException;
+import consulo.dataContext.DataContext;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.execution.*;
+import consulo.execution.configuration.CompatibilityAwareRunProfile;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.configuration.RunProfile;
 import consulo.execution.configuration.RunProfileState;
+import consulo.execution.event.ExecutionListener;
 import consulo.execution.executor.Executor;
 import consulo.execution.executor.ExecutorRegistry;
-import consulo.process.ExecutionException;
-import consulo.process.KillableProcess;
-import consulo.process.event.ProcessAdapter;
-import consulo.process.event.ProcessEvent;
-import consulo.process.ProcessHandler;
+import consulo.execution.internal.RunManagerConfig;
+import consulo.execution.internal.RunManagerEx;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.ExecutionEnvironmentBuilder;
-import consulo.execution.ExecutionUtil;
 import consulo.execution.runner.ProgramRunner;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.execution.ui.RunContentManager;
-import consulo.ide.impl.idea.execution.ui.RunContentManagerImpl;
 import consulo.execution.ui.layout.RunnerLayoutUi;
-import consulo.ide.impl.idea.ide.SaveAndSyncHandler;
-import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.TransactionGuard;
 import consulo.ide.ServiceManager;
-import consulo.component.ProcessCanceledException;
+import consulo.ide.impl.idea.execution.ui.RunContentManagerImpl;
+import consulo.ide.impl.idea.ide.SaveAndSyncHandler;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.ui.AppUIUtil;
+import consulo.ide.impl.idea.util.ObjectUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.logging.Logger;
+import consulo.process.ExecutionException;
+import consulo.process.ProcessHandler;
+import consulo.process.ProcessHandlerStopper;
+import consulo.process.event.ProcessAdapter;
+import consulo.process.event.ProcessEvent;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.Messages;
-import consulo.util.lang.function.Condition;
-import consulo.util.lang.Trinity;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.project.ui.wm.ToolWindowManager;
-import consulo.ide.impl.idea.ui.AppUIUtil;
 import consulo.project.ui.wm.dock.DockManager;
-import consulo.ui.ex.awt.util.Alarm;
-import consulo.ide.impl.idea.util.ObjectUtil;
-import consulo.util.collection.SmartList;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.util.Alarm;
+import consulo.util.collection.SmartList;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Trinity;
+import consulo.util.lang.function.Condition;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -122,23 +121,7 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
       return;
     }
 
-    processHandler.putUserData(ProcessHandler.TERMINATION_REQUESTED, Boolean.TRUE);
-
-    if (processHandler instanceof KillableProcess && processHandler.isProcessTerminating()) {
-      // process termination was requested, but it's still alive
-      // in this case 'force quit' will be performed
-      ((KillableProcess)processHandler).killProcess();
-      return;
-    }
-
-    if (!processHandler.isProcessTerminated()) {
-      if (processHandler.detachIsDefault()) {
-        processHandler.detachProcess();
-      }
-      else {
-        processHandler.destroyProcess();
-      }
-    }
+    ProcessHandlerStopper.stop(processHandler);
   }
 
   @Override

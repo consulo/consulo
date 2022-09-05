@@ -18,6 +18,8 @@ package consulo.ide.impl.idea.execution.actions;
 import consulo.process.KillableProcess;
 import consulo.process.ProcessHandler;
 import consulo.application.AllIcons;
+import consulo.process.ProcessHandlerStopper;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
@@ -39,6 +41,7 @@ public class StopProcessAction extends DumbAwareAction implements AnAction.Trans
     myProcessHandler = processHandler;
   }
 
+  @RequiredUIAccess
   @Override
   public void update(final AnActionEvent e) {
     update(e.getPresentation(), getTemplatePresentation(), myProcessHandler);
@@ -67,25 +70,9 @@ public class StopProcessAction extends DumbAwareAction implements AnAction.Trans
   }
 
 
+  @RequiredUIAccess
   @Override
   public void actionPerformed(AnActionEvent e) {
-    stopProcess(myProcessHandler);
+    ProcessHandlerStopper.stop(myProcessHandler);
   }
-
-  public static void stopProcess(@Nonnull ProcessHandler processHandler) {
-    if (processHandler instanceof KillableProcess && processHandler.isProcessTerminating()) {
-      // process termination was requested, but it's still alive
-      // in this case 'force quit' will be performed
-      ((KillableProcess)processHandler).killProcess();
-      return;
-    }
-
-    if (processHandler.detachIsDefault()) {
-      processHandler.detachProcess();
-    }
-    else {
-      processHandler.destroyProcess();
-    }
-  }
-
 }
