@@ -22,10 +22,12 @@ import consulo.codeEditor.EditorHighlighter;
 import consulo.codeEditor.HighlighterIterator;
 import consulo.document.Document;
 import consulo.language.Language;
-import consulo.language.PairedBraceMatcher;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.highlight.BraceMatcher;
+import consulo.language.editor.highlight.LanguageBraceMatcher;
+import consulo.language.editor.highlight.VirtualFileBraceMatcher;
 import consulo.language.editor.highlight.XmlAwareBraceMatcher;
+import consulo.language.editor.internal.BraceMatcherInternal;
 import consulo.language.file.LanguageFileType;
 import consulo.language.psi.PsiFile;
 import consulo.util.collection.Stack;
@@ -35,8 +37,6 @@ import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.Map;
 
 public class BraceMatchingUtil {
   public static final int UNDEFINED_TOKEN_GROUP = -1;
@@ -54,13 +54,6 @@ public class BraceMatchingUtil {
       // Do nothing
     }
     return true;
-  }
-
-  private static final Map<FileType, BraceMatcher> BRACE_MATCHERS = new HashMap<>();
-
-  @Deprecated
-  public static void registerBraceMatcher(@Nonnull FileType fileType, @Nonnull BraceMatcher braceMatcher) {
-    BRACE_MATCHERS.put(fileType, braceMatcher);
   }
 
   @TestOnly
@@ -386,14 +379,9 @@ public class BraceMatchingUtil {
 
   @Nonnull
   public static BraceMatcher getBraceMatcher(@Nonnull FileType fileType, @Nonnull Language lang) {
-    PairedBraceMatcher matcher = PairedBraceMatcher.forLanguage(lang);
+    BraceMatcher matcher = LanguageBraceMatcher.forLanguage(lang);
     if (matcher != null) {
-      if (matcher instanceof XmlAwareBraceMatcher) {
-        return (XmlAwareBraceMatcher)matcher;
-      }
-      else {
-        return new PairedBraceMatcherAdapter(fileType, matcher, lang);
-      }
+     return matcher;
     }
 
     final BraceMatcher byFileType = getBraceMatcherByFileType(fileType);
@@ -410,9 +398,9 @@ public class BraceMatchingUtil {
           }
         }
 
-        matcher = PairedBraceMatcher.forLanguage(language);
+        matcher = LanguageBraceMatcher.forLanguage(language);
         if (matcher != null) {
-          return new PairedBraceMatcherAdapter(fileType, matcher, language);
+          return matcher;
         }
       }
     }
@@ -422,10 +410,10 @@ public class BraceMatchingUtil {
 
   @Nullable
   private static BraceMatcher getBraceMatcherByFileType(@Nonnull FileType fileType) {
-    BraceMatcher braceMatcher = BRACE_MATCHERS.get(fileType);
+    BraceMatcher braceMatcher = BraceMatcherInternal.getMatcher(fileType);
     if (braceMatcher != null) return braceMatcher;
 
-    BraceMatcher matcher = BraceMatcher.forFileType(fileType);
+    BraceMatcher matcher = VirtualFileBraceMatcher.forFileType(fileType);
     if (matcher != null) {
       return matcher;
     }
@@ -485,12 +473,6 @@ public class BraceMatchingUtil {
     @Override
     public int getCodeConstructStart(final PsiFile file, final int openingBraceOffset) {
       return openingBraceOffset;
-    }
-
-    @Nonnull
-    @Override
-    public FileType getFileType() {
-      throw new UnsupportedOperationException();
     }
   }
 }

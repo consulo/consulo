@@ -21,8 +21,7 @@ import consulo.language.BracePair;
 import consulo.language.Language;
 import consulo.language.PairedBraceMatcher;
 import consulo.language.ast.IElementType;
-import consulo.language.editor.action.PairedBraceMatcherAdapter;
-import consulo.language.plain.PlainTextFileType;
+import consulo.language.editor.internal.PairedBraceMatcherAdapter;
 import consulo.language.plain.PlainTextLanguage;
 
 import javax.annotation.Nonnull;
@@ -63,7 +62,7 @@ public class CustomFileTypeBraceMatcher implements PairedBraceMatcher {
 
   @Nonnull
   public static PairedBraceMatcherAdapter createBraceMatcher() {
-    return new PairedBraceMatcherAdapter(PlainTextFileType.INSTANCE, new CustomFileTypeBraceMatcher(), IDENTIFIER.getLanguage()) {
+    return new PairedBraceMatcherAdapter(new CustomFileTypeBraceMatcher(), IDENTIFIER.getLanguage()) {
       @Override
       public int getBraceTokenGroupId(IElementType tokenType) {
         int id = super.getBraceTokenGroupId(tokenType);

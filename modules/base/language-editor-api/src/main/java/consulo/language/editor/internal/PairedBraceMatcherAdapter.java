@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.language.editor.action;
+package consulo.language.editor.internal;
 
 import consulo.codeEditor.HighlighterIterator;
 import consulo.language.BracePair;
@@ -22,6 +22,7 @@ import consulo.language.Language;
 import consulo.language.PairedBraceMatcher;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.highlight.BraceMatcherTerminationAspect;
+import consulo.language.editor.highlight.LanguageBraceMatcher;
 import consulo.language.editor.highlight.NontrivialBraceMatcher;
 import consulo.language.psi.PsiFile;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -32,21 +33,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class PairedBraceMatcherAdapter implements NontrivialBraceMatcher {
-  private final FileType myFileType;
+@SuppressWarnings("ExtensionImplIsNotAnnotatedInspection")
+public class PairedBraceMatcherAdapter implements NontrivialBraceMatcher, LanguageBraceMatcher {
   private final PairedBraceMatcher myMatcher;
   private final Language myLanguage;
 
-  public PairedBraceMatcherAdapter(FileType fileType, final PairedBraceMatcher matcher, Language language) {
-    myFileType = fileType;
+  public PairedBraceMatcherAdapter(final PairedBraceMatcher matcher, Language language) {
     myMatcher = matcher;
     myLanguage = language;
-  }
-
-  @Nonnull
-  @Override
-  public final FileType getFileType() {
-    return myFileType;
   }
 
   @Override
@@ -146,5 +140,11 @@ public class PairedBraceMatcherAdapter implements NontrivialBraceMatcher {
       return ((BraceMatcherTerminationAspect)myMatcher).shouldStopMatch(forward, braceType, iterator);
     }
     return false;
+  }
+
+  @Nonnull
+  @Override
+  public Language getLanguage() {
+    return myLanguage;
   }
 }

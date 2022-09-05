@@ -26,5 +26,7 @@ public interface NontrivialBraceMatcher extends BraceMatcher {
   @Nonnull
   List<IElementType> getOppositeBraceTokenTypes(@Nonnull IElementType type);
 
-  boolean shouldStopMatch(boolean forward, @Nonnull IElementType braceType, @Nonnull HighlighterIterator iterator);
+  default boolean shouldStopMatch(boolean forward, @Nonnull IElementType braceType, @Nonnull HighlighterIterator iterator) {
+    return false;
+  }
 }

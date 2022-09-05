@@ -18,15 +18,15 @@ package consulo.ide.impl.idea.ide.highlighter.custom.impl;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.codeInsight.editorActions.TypedHandler;
-import consulo.language.Language;
-import consulo.language.editor.action.BraceMatchingUtil;
 import consulo.ide.impl.idea.ide.highlighter.FileTypeRegistrator;
-import consulo.language.internal.custom.SyntaxTable;
+import consulo.ide.impl.idea.openapi.fileTypes.impl.AbstractFileType;
 import consulo.language.Commenter;
+import consulo.language.Language;
+import consulo.language.editor.internal.BraceMatcherInternal;
+import consulo.language.internal.custom.CustomSyntaxTableFileType;
+import consulo.language.internal.custom.SyntaxTable;
 import consulo.language.plain.PlainTextLanguage;
 import consulo.virtualFileSystem.fileType.FileType;
-import consulo.ide.impl.idea.openapi.fileTypes.impl.AbstractFileType;
-import consulo.language.internal.custom.CustomSyntaxTableFileType;
 
 import javax.annotation.Nonnull;
 
@@ -48,7 +48,7 @@ public class StandardFileTypeRegistrator implements FileTypeRegistrator {
     }
 
     if (table.isHasBraces() || table.isHasBrackets() || table.isHasParens()) {
-      BraceMatchingUtil.registerBraceMatcher(abstractFileType, CustomFileTypeBraceMatcher.createBraceMatcher());
+      BraceMatcherInternal.registerBraceMatcher(abstractFileType, CustomFileTypeBraceMatcher.createBraceMatcher());
     }
 
     TypedHandler.registerQuoteHandler(abstractFileType, new CustomFileTypeQuoteHandler(abstractFileType));
