@@ -912,7 +912,7 @@ public final class DocumentationManager extends DockablePopupManager<Documentati
       DocumentationProvider provider = getProviderFromElement(psiElement);
       PsiElement targetElement = provider.getDocumentationElementForLink(manager, refText, psiElement);
       if (targetElement == null) {
-        for (DocumentationProvider documentationProvider : Application.get().getExtensionList(DocumentationProvider.class)) {
+        for (DocumentationProvider documentationProvider : Application.get().getExtensionList(UnrestrictedDocumentationProvider.class)) {
           targetElement = documentationProvider.getDocumentationElementForLink(manager, refText, psiElement);
           if (targetElement != null) {
             break;

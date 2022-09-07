@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.codeStyle.setting;
+package consulo.language.editor.documentation;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 
 /**
- * @author peter
+ * @author VISTALL
+ * @since 07-Sep-22
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
-public abstract class CodeStyleSettingsProvider implements CodeStyleSettingsBase {
-  public static final ExtensionPointName<CodeStyleSettingsProvider> EXTENSION_POINT_NAME = ExtensionPointName.create(CodeStyleSettingsProvider.class);
+public interface UnrestrictedDocumentationProvider extends DocumentationProvider {
 }

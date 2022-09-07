@@ -56,7 +56,7 @@ public class CompositeDocumentationProvider extends DocumentationProviderEx impl
 
   @Nonnull
   public List<DocumentationProvider> getAllProviders() {
-    return ContainerUtil.concat(getProviders(), Application.get().getExtensionList(DocumentationProvider.class));
+    return ContainerUtil.concat(getProviders(), Application.get().getExtensionList(UnrestrictedDocumentationProvider.class));
   }
 
   @Nonnull

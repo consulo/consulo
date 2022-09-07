@@ -1,6 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.codeStyle;
 
+import consulo.application.Application;
 import consulo.application.util.function.Processor;
 import consulo.component.extension.ExtensionException;
 import consulo.component.persist.UnknownElementCollector;
@@ -99,13 +100,15 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
     initImportsByDefault();
 
     if (loadExtensions) {
-      final List<CodeStyleSettingsProvider> codeStyleSettingsProviders = CodeStyleSettingsProvider.EXTENSION_POINT_NAME.getExtensionList();
-      for (final CodeStyleSettingsProvider provider : codeStyleSettingsProviders) {
+      Application application = Application.get();
+
+      application.getExtensionPoint(CodeStyleSettingsProvider.class).forEachExtensionSafe(provider -> {
         addCustomSettings(provider.createCustomSettings(this));
-      }
-      for (CodeStyleSettingsProvider provider : LanguageCodeStyleSettingsProvider.getSettingsPagesProviders()) {
+      });
+
+      application.getExtensionPoint(LanguageCodeStyleSettingsProvider.class).forEachExtensionSafe(provider -> {
         addCustomSettings(provider.createCustomSettings(this));
-      }
+      });
     }
   }
 

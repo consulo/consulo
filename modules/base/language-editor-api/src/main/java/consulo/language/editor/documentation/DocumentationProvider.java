@@ -19,7 +19,8 @@ import java.util.List;
  * @see DocumentationProviderEx
  * @see ExternalDocumentationProvider
  * @see ExternalDocumentationHandler
- * @see LanguageDocumentationProvider
+ *
+ * {@link UnrestrictedDocumentationProvider} and {@link LanguageDocumentationProvider} are extension api
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface DocumentationProvider {

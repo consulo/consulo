@@ -23,7 +23,7 @@ import java.util.Set;
  * Base class and extension point for common code style settings for a specific language.
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
-public abstract class LanguageCodeStyleSettingsProvider extends CodeStyleSettingsProvider {
+public abstract class LanguageCodeStyleSettingsProvider implements CodeStyleSettingsBase {
   public static final ExtensionPointName<LanguageCodeStyleSettingsProvider> EP_NAME = ExtensionPointName.create(LanguageCodeStyleSettingsProvider.class);
 
   public enum SettingsType {
@@ -305,16 +305,6 @@ public abstract class LanguageCodeStyleSettingsProvider extends CodeStyleSetting
    * @return A list of providers implementing {@link #createSettingsPage(CodeStyleSettings, CodeStyleSettings)}
    */
   public static List<LanguageCodeStyleSettingsProvider> getSettingsPagesProviders() {
-    List<LanguageCodeStyleSettingsProvider> settingsPagesProviders = new ArrayList<>();
-    for (LanguageCodeStyleSettingsProvider provider : EP_NAME.getExtensionList()) {
-      try {
-        provider.getClass().getDeclaredMethod("createSettingsPage", CodeStyleSettings.class, CodeStyleSettings.class);
-        settingsPagesProviders.add(provider);
-      }
-      catch (NoSuchMethodException e) {
-        // Do not add the provider.
-      }
-    }
-    return settingsPagesProviders;
+    return EP_NAME.getExtensionList();
   }
 }
