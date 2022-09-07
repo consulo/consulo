@@ -1,8 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.editor.documentation;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ExtensionAPI;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
 import consulo.project.Project;
@@ -22,7 +20,6 @@ import java.util.List;
  *
  * {@link UnrestrictedDocumentationProvider} and {@link LanguageDocumentationProvider} are extension api
  */
-@ExtensionAPI(ComponentScope.APPLICATION)
 public interface DocumentationProvider {
   /**
    * Returns the text to show in the Ctrl-hover popup for the specified element.

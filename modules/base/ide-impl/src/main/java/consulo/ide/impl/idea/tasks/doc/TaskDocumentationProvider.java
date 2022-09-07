@@ -16,14 +16,14 @@
 package consulo.ide.impl.idea.tasks.doc;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.language.editor.documentation.AbstractDocumentationProvider;
+import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.language.editor.documentation.ExternalDocumentationProvider;
-import consulo.project.Project;
+import consulo.language.editor.documentation.UnrestrictedDocumentationProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
+import consulo.project.Project;
 import consulo.task.Comment;
 import consulo.task.Task;
-import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -33,7 +33,7 @@ import java.util.List;
  * @author Dennis.Ushakov
  */
 @ExtensionImpl
-public class TaskDocumentationProvider extends AbstractDocumentationProvider implements ExternalDocumentationProvider {
+public class TaskDocumentationProvider implements UnrestrictedDocumentationProvider, ExternalDocumentationProvider {
 
   @Override
   public List<String> getUrlFor(PsiElement element, PsiElement originalElement) {
