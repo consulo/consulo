@@ -16,15 +16,15 @@
 
 package consulo.ide.impl.idea.application.options.colors;
 
-import consulo.language.editor.rawHighlight.HighlightInfoType;
-import consulo.language.editor.rawHighlight.SeveritiesProvider;
 import consulo.codeEditor.CodeInsightColors;
 import consulo.colorScheme.TextAttributesKey;
-import consulo.configurable.OptionsBundle;
 import consulo.colorScheme.setting.AttributesDescriptor;
-import consulo.colorScheme.setting.ColorAndFontDescriptorsProvider;
-import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
+import consulo.colorScheme.setting.ColorAndFontDescriptors;
+import consulo.configurable.OptionsBundle;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
+import consulo.language.editor.rawHighlight.HighlightInfoType;
+import consulo.language.editor.rawHighlight.SeveritiesProvider;
 import consulo.localize.LocalizeValue;
 
 import javax.annotation.Nonnull;
@@ -48,7 +48,7 @@ public class ColorSettingsUtil {
     return displayText;
   }
 
-  public static List<AttributesDescriptor> getAllAttributeDescriptors(ColorAndFontDescriptorsProvider provider) {
+  public static List<AttributesDescriptor> getAllAttributeDescriptors(ColorAndFontDescriptors provider) {
     List<AttributesDescriptor> result = new ArrayList<AttributesDescriptor>();
     Collections.addAll(result, provider.getAttributeDescriptors());
     if (isInspectionColorsPage(provider)) {
@@ -57,7 +57,7 @@ public class ColorSettingsUtil {
     return result;
   }
 
-  private static boolean isInspectionColorsPage(ColorAndFontDescriptorsProvider provider) {
+  private static boolean isInspectionColorsPage(ColorAndFontDescriptors provider) {
     // the first registered page implementing InspectionColorSettingsPage
     // gets the inspection attribute descriptors added to its list
     if (!(provider instanceof InspectionColorSettingsPage)) return false;

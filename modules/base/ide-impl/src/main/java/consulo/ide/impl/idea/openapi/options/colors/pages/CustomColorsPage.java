@@ -16,15 +16,14 @@
 package consulo.ide.impl.idea.openapi.options.colors.pages;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.colorScheme.TextAttributesKey;
+import consulo.colorScheme.setting.AttributesDescriptor;
+import consulo.configurable.OptionsBundle;
 import consulo.ide.impl.idea.ide.highlighter.custom.CustomFileHighlighter;
 import consulo.ide.impl.idea.ide.highlighter.custom.CustomHighlighterColors;
-import consulo.language.internal.custom.SyntaxTable;
-import consulo.colorScheme.TextAttributesKey;
-import consulo.language.editor.highlight.SyntaxHighlighter;
-import consulo.configurable.OptionsBundle;
-import consulo.colorScheme.setting.AttributesDescriptor;
-import consulo.colorScheme.setting.ColorDescriptor;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
+import consulo.language.editor.highlight.SyntaxHighlighter;
+import consulo.language.internal.custom.SyntaxTable;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -74,12 +73,6 @@ public class CustomColorsPage implements ColorSettingsPage {
   @Nonnull
   public AttributesDescriptor[] getAttributeDescriptors() {
     return ATTRS;
-  }
-
-  @Override
-  @Nonnull
-  public ColorDescriptor[] getColorDescriptors() {
-    return ColorDescriptor.EMPTY_ARRAY;
   }
 
   @Override

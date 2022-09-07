@@ -97,7 +97,7 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
     };
   }
 
-  private FileTemplateSettings getSettings() {
+  private FileTemplateSettingsBase getSettings() {
     return myScheme == FileTemplatesScheme.DEFAULT ? myDefaultSettings : myProjectSettings;
   }
 

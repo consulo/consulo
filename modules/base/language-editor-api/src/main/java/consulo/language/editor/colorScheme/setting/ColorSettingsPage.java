@@ -18,7 +18,7 @@ package consulo.language.editor.colorScheme.setting;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.colorScheme.TextAttributesKey;
-import consulo.colorScheme.setting.ColorAndFontDescriptorsProvider;
+import consulo.colorScheme.setting.ColorAndFontDescriptors;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 
@@ -30,7 +30,7 @@ import java.util.Map;
  * Interface for a custom page shown in the "Colors and Fonts" settings dialog.
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
-public interface ColorSettingsPage extends ColorAndFontDescriptorsProvider {
+public interface ColorSettingsPage extends ColorAndFontDescriptors {
   ExtensionPointName<ColorSettingsPage> EP_NAME = ExtensionPointName.create(ColorSettingsPage.class);
 
   /**

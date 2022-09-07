@@ -34,8 +34,8 @@ import javax.annotation.Nonnull;
 @Singleton
 @ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
-@State(name = "ExportableFileTemplateSettings", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/" + ExportableFileTemplateSettings.EXPORTABLE_SETTINGS_FILE)})
-public class ExportableFileTemplateSettings extends FileTemplateSettings {
+@State(name = "ExportableFileTemplateSettings", storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/" + ExportableFileTemplateSettings.EXPORTABLE_SETTINGS_FILE))
+public class ExportableFileTemplateSettings extends FileTemplateSettingsBase {
   @Inject
   public ExportableFileTemplateSettings(@Nonnull FileTypeManager typeManager) {
     super(typeManager, null);

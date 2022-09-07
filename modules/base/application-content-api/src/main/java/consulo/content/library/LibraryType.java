@@ -32,17 +32,11 @@ import javax.swing.*;
 import java.util.List;
 
 /**
- * Override this class to provide custom library type. The implementation should be registered in plugin.xml:
- * <p>
- * &lt;extensions defaultExtensionNs="com.intellij"&gt;<br>
- * &nbsp;&nbsp;&lt;library.type implementation="qualified-class-name"/&gt;<br>
- * &lt;/extensions&gt;
- *
  * @author nik
  * @see ModuleAwareLibraryType
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
-public abstract class LibraryType<P extends LibraryProperties> extends LibraryPresentationProvider<P> {
+public abstract class LibraryType<P extends LibraryProperties> implements LibraryPresentation<P> {
   public static final ExtensionPointName<LibraryType> EP_NAME = ExtensionPointName.create(LibraryType.class);
 
   @Nonnull
@@ -50,14 +44,16 @@ public abstract class LibraryType<P extends LibraryProperties> extends LibraryPr
     return new OrderRootType[]{BinariesOrderRootType.getInstance()};
   }
 
+  private final PersistentLibraryKind<P> myKind;
+
   protected LibraryType(@Nonnull PersistentLibraryKind<P> libraryKind) {
-    super(libraryKind);
+    myKind = libraryKind;
   }
 
   @Nonnull
   @Override
   public PersistentLibraryKind<P> getKind() {
-    return (PersistentLibraryKind<P>)super.getKind();
+    return myKind;
   }
 
   /**

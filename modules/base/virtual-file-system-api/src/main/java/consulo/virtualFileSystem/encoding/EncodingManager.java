@@ -1,9 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.virtualFileSystem.encoding;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ServiceAPI;
-import consulo.application.Application;
+import consulo.annotation.DeprecationInfo;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
@@ -11,14 +9,19 @@ import javax.annotation.Nullable;
 import java.nio.charset.Charset;
 import java.util.Collection;
 
-@ServiceAPI(ComponentScope.APPLICATION)
+/**
+ * @see ApplicationEncodingManager
+ * @see EncodingProjectManager
+ */
 public abstract class EncodingManager extends EncodingRegistry {
   public static final String PROP_NATIVE2ASCII_SWITCH = "native2ascii";
   public static final String PROP_PROPERTIES_FILES_ENCODING = "propertiesFilesEncoding";
 
   @Nonnull
+  @Deprecated
+  @DeprecationInfo("Use ApplicationEncodingManager class")
   public static EncodingManager getInstance() {
-    return Application.get().getInstance(EncodingManager.class);
+    return ApplicationEncodingManager.getInstance();
   }
 
   @Nonnull

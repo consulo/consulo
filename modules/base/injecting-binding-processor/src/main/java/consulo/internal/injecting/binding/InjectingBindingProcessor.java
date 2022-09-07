@@ -95,7 +95,7 @@ public class InjectingBindingProcessor extends AbstractProcessor {
         TypeElement typeElement = (TypeElement)element;
         AnnotationResolveInfo apiInfo = findAnnotationInSuper(typeElement, apiClass);
         if (apiInfo == null) {
-          processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "Can't find @" + apiClass + " annotation for: " + typeElement.getQualifiedName(), typeElement);
+          processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "Can't find single @" + apiClass + " annotation for: " + typeElement.getQualifiedName() + " in super classes.", typeElement);
           return false;
         }
 
@@ -115,7 +115,7 @@ public class InjectingBindingProcessor extends AbstractProcessor {
 
           bindBuilder.addMethod(MethodSpec.methodBuilder("getApiClassName").returns(String.class).addModifiers(Modifier.PUBLIC)
                                         .addCode(CodeBlock.of("return $S;", apiInfo.typeElement().getQualifiedName().toString())).build());
-          
+
           bindBuilder.addMethod(MethodSpec.methodBuilder("getImplClass").returns(Class.class).addModifiers(Modifier.PUBLIC).addCode(CodeBlock.of("return $T.class;", typeElement)).build());
 
           bindBuilder.addMethod(MethodSpec.methodBuilder("getComponentAnnotationClass").addModifiers(Modifier.PUBLIC).returns(Class.class)
@@ -396,30 +396,57 @@ public class InjectingBindingProcessor extends AbstractProcessor {
     return true;
   }
 
+  // TODO cache it ? per super type
   private static <T extends Annotation> AnnotationResolveInfo findAnnotationInSuper(TypeElement typeElement, Class<T> annotationClass) {
+    Set<AnnotationResolveInfo> targets = new LinkedHashSet<>();
+    findAnnotationInSuper(typeElement, annotationClass, new HashSet<>(), targets);
+
+    // FIXME [VISTALL] this is dirty hack since we have two api annotations
+    if (annotationClass == ActionAPI.class) {
+      AnnotationResolveInfo actionGroupInfo = null;
+      AnnotationResolveInfo actionInfo = null;
+
+      for (AnnotationResolveInfo target : targets) {
+        String qName = target.typeElement().getQualifiedName().toString();
+        if (qName.equals("consulo.ui.ex.action.AnAction")) {
+          actionInfo = target;
+        } else if (qName.equals("consulo.ui.ex.action.ActionGroup")) {
+          actionGroupInfo = target;
+        }
+      }
+
+      if (actionInfo != null && actionGroupInfo != null) {
+        targets.remove(actionInfo);
+      }
+    }
+
+    if (targets.isEmpty() || targets.size() != 1) {
+      return null;
+    }
+    return targets.iterator().next();
+  }
+
+  private static <T extends Annotation> void findAnnotationInSuper(TypeElement typeElement, Class<T> annotationClass, Set<TypeElement> processed, Set<AnnotationResolveInfo> targets) {
+    if (!processed.add(typeElement)) {
+      return;
+    }
+
     T annotation = typeElement.getAnnotation(annotationClass);
     if (annotation != null) {
-      return new AnnotationResolveInfo(annotation, typeElement);
+      targets.add(new AnnotationResolveInfo(annotation, typeElement));
     }
 
     TypeMirror superclass = typeElement.getSuperclass();
     if (superclass != null) {
       if (superclass instanceof DeclaredType) {
-        AnnotationResolveInfo inSuper = findAnnotationInSuper((TypeElement)((DeclaredType)superclass).asElement(), annotationClass);
-        if (inSuper != null) {
-          return inSuper;
-        }
+        findAnnotationInSuper((TypeElement)((DeclaredType)superclass).asElement(), annotationClass, processed, targets);
       }
     }
 
     for (TypeMirror typeMirror : typeElement.getInterfaces()) {
       if (typeMirror instanceof DeclaredType) {
-        AnnotationResolveInfo inSuper = findAnnotationInSuper((TypeElement)((DeclaredType)typeMirror).asElement(), annotationClass);
-        if (inSuper != null) {
-          return inSuper;
-        }
+        findAnnotationInSuper((TypeElement)((DeclaredType)typeMirror).asElement(), annotationClass, processed, targets);
       }
     }
-    return null;
   }
 }

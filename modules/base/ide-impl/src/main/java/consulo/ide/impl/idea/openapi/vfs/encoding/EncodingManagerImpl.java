@@ -2,43 +2,44 @@
 package consulo.ide.impl.idea.openapi.vfs.encoding;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.concurrency.JobSchedulerImpl;
-import consulo.ide.impl.idea.ide.AppLifecycleListener;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
+import consulo.application.util.concurrent.AppExecutorUtil;
+import consulo.codeEditor.EditorFactory;
+import consulo.codeEditor.event.EditorFactoryEvent;
+import consulo.codeEditor.event.EditorFactoryListener;
+import consulo.component.messagebus.MessageBus;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import consulo.ide.impl.idea.openapi.diagnostic.Logger;
+import consulo.disposer.Disposable;
 import consulo.document.Document;
-import consulo.codeEditor.EditorFactory;
+import consulo.document.FileDocumentManager;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
-import consulo.codeEditor.event.EditorFactoryEvent;
-import consulo.codeEditor.event.EditorFactoryListener;
-import consulo.document.FileDocumentManager;
 import consulo.fileEditor.FileEditorManager;
-import consulo.virtualFileSystem.encoding.EncodingManager;
+import consulo.ide.impl.idea.concurrency.JobSchedulerImpl;
+import consulo.ide.impl.idea.ide.AppLifecycleListener;
+import consulo.ide.impl.idea.openapi.diagnostic.Logger;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.impl.internal.psi.LoadTextUtil;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
 import consulo.project.ProjectManager;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.util.concurrent.BoundedTaskExecutor;
-import consulo.component.messagebus.MessageBus;
-import consulo.util.xml.serializer.annotation.Attribute;
-import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderEx;
+import consulo.util.xml.serializer.annotation.Attribute;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.encoding.ApplicationEncodingManager;
+import consulo.virtualFileSystem.encoding.EncodingManager;
 import consulo.virtualFileSystem.encoding.EncodingManagerListener;
 import consulo.virtualFileSystem.encoding.EncodingProjectManager;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
@@ -54,7 +55,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Singleton
 @ServiceImpl
 @State(name = "Encoding", storages = @Storage("encoding.xml"))
-public class EncodingManagerImpl extends EncodingManager implements PersistentStateComponent<EncodingManagerImpl.State>, Disposable {
+public class EncodingManagerImpl extends ApplicationEncodingManager implements PersistentStateComponent<EncodingManagerImpl.State>, Disposable {
   private static final Logger LOG = Logger.getInstance(EncodingManagerImpl.class);
 
   static final class State {

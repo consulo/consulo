@@ -69,7 +69,7 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.ThrowableSupplier;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.util.lang.reflect.ReflectionUtil;
-import consulo.virtualFileSystem.encoding.EncodingManager;
+import consulo.virtualFileSystem.encoding.ApplicationEncodingManager;
 import consulo.virtualFileSystem.encoding.EncodingRegistry;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 
@@ -232,7 +232,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
     builder.bind(FileTypeRegistry.class).to(FileTypeManager::getInstance);
     builder.bind(ProgressIndicatorProvider.class).to(this::getProgressManager);
-    builder.bind(EncodingRegistry.class).to(EncodingManager::getInstance);
+    builder.bind(EncodingRegistry.class).to(ApplicationEncodingManager::getInstance);
   }
 
   protected void fireApplicationExiting() {

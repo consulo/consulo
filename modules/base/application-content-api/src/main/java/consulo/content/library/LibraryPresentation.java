@@ -15,11 +15,8 @@
  */
 package consulo.content.library;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.image.Image;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -28,28 +25,18 @@ import java.util.List;
 /**
  * @author nik
  */
-@ExtensionAPI(ComponentScope.APPLICATION)
-public abstract class LibraryPresentationProvider<P extends LibraryProperties> implements LibraryPresentation<P> {
-  public static final ExtensionPointName<LibraryPresentationProvider> EP_NAME = ExtensionPointName.create(LibraryPresentationProvider.class);
-  private final LibraryKind myKind;
-
-  protected LibraryPresentationProvider(@Nonnull LibraryKind kind) {
-    myKind = kind;
-  }
-
+public interface LibraryPresentation<P extends LibraryProperties> {
   @Nonnull
-  public LibraryKind getKind() {
-    return myKind;
-  }
+  LibraryKind getKind();
 
   @Nullable
-  public abstract Image getIcon();
+  Image getIcon();
 
   @Nullable
-  public String getDescription(@Nonnull P properties) {
+  default String getDescription(@Nonnull P properties) {
     return null;
   }
 
   @Nullable
-  public abstract P detect(@Nonnull List<VirtualFile> classesRoots);
+  P detect(@Nonnull List<VirtualFile> classesRoots);
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.colorScheme.setting;
+package consulo.virtualFileSystem.encoding;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
+import consulo.annotation.component.ServiceAPI;
+import consulo.application.Application;
+
+import javax.annotation.Nonnull;
 
 /**
- * Defines interface for extending set of text/color descriptors operated by color schemes. 
- * 
- * @author Denis Zhdanov
- * @since 1/19/12 1:10 PM
+ * @author VISTALL
+ * @since 06-Sep-22
  */
-@ExtensionAPI(ComponentScope.APPLICATION)
-public interface ColorAndFontDescriptorsProvider extends ColorAndFontDescriptors {
-  ExtensionPointName<ColorAndFontDescriptorsProvider> EP_NAME = ExtensionPointName.create(ColorAndFontDescriptorsProvider.class);
+@ServiceAPI(ComponentScope.APPLICATION)
+public abstract class ApplicationEncodingManager extends EncodingManager {
+  @Nonnull
+  public static ApplicationEncodingManager getInstance() {
+    return Application.get().getInstance(ApplicationEncodingManager.class);
+  }
 }

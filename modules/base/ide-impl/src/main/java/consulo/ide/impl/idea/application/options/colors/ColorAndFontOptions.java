@@ -21,6 +21,7 @@ import consulo.application.ApplicationBundle;
 import consulo.codeEditor.EditorFactory;
 import consulo.colorScheme.*;
 import consulo.colorScheme.setting.AttributesDescriptor;
+import consulo.colorScheme.setting.ColorAndFontDescriptors;
 import consulo.colorScheme.setting.ColorAndFontDescriptorsProvider;
 import consulo.colorScheme.setting.ColorDescriptor;
 import consulo.component.persist.scheme.ExternalizableScheme;
@@ -536,7 +537,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     }
   }
 
-  private static void initDescriptions(@Nonnull ColorAndFontDescriptorsProvider provider, @Nonnull List<EditorSchemeAttributeDescriptor> descriptions, @Nonnull MyColorScheme scheme) {
+  private static void initDescriptions(@Nonnull ColorAndFontDescriptors provider, @Nonnull List<EditorSchemeAttributeDescriptor> descriptions, @Nonnull MyColorScheme scheme) {
     LocalizeValue group = LocalizeValue.of(provider.getDisplayName());
     
     List<AttributesDescriptor> attributeDescriptors = ColorSettingsUtil.getAllAttributeDescriptors(provider);

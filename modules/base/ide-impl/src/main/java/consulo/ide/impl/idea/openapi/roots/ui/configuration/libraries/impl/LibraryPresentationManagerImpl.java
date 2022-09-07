@@ -40,12 +40,12 @@ import java.util.*;
 @Singleton
 @ServiceImpl
 public class LibraryPresentationManagerImpl extends LibraryPresentationManager {
-  private Map<LibraryKind, LibraryPresentationProvider<?>> myPresentationProviders;
+  private Map<LibraryKind, LibraryPresentation<?>> myPresentationProviders;
 
   @SuppressWarnings("unchecked")
   private <P extends LibraryProperties> LibraryPresentationProvider<P> getPresentationProvider(LibraryKind kind) {
     if (myPresentationProviders == null) {
-      final Map<LibraryKind, LibraryPresentationProvider<?>> providers = new HashMap<>();
+      final Map<LibraryKind, LibraryPresentation<?>> providers = new HashMap<>();
       for (LibraryType<?> type : LibraryType.EP_NAME.getExtensionList()) {
         providers.put(type.getKind(), type);
       }

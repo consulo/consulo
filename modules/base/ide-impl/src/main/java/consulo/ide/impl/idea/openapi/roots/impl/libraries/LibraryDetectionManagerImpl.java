@@ -77,7 +77,7 @@ public class LibraryDetectionManagerImpl extends LibraryDetectionManager {
     final SmartList<Pair<LibraryKind, LibraryProperties>> result = new SmartList<Pair<LibraryKind, LibraryProperties>>();
     final LibraryType<?>[] libraryTypes = LibraryType.EP_NAME.getExtensions();
     final LibraryPresentationProvider[] presentationProviders = LibraryPresentationProvider.EP_NAME.getExtensions();
-    for (LibraryPresentationProvider provider : ContainerUtil.concat(libraryTypes, presentationProviders)) {
+    for (LibraryPresentation provider : ContainerUtil.concat(libraryTypes, presentationProviders)) {
       final LibraryProperties properties = provider.detect(files);
       if (properties != null) {
         result.add(Pair.create(provider.getKind(), properties));
