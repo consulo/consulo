@@ -30,7 +30,7 @@ public interface TreeAction {
    * Returns the presentation for the action.
    *
    * @return the action presentation.
-   * @see ActionPresentationData#ActionPresentationData(String, String, javax.swing.Icon)
+   * @see ActionPresentationData#ActionPresentationData(String, String, consulo.ui.image.Image)
    */
   @Nonnull
   ActionPresentation getPresentation();
@@ -42,4 +42,13 @@ public interface TreeAction {
    */
   @Nonnull
   String getName();
+
+  /**
+   * Return identifier which will be store state in {@link consulo.component.PropertiesComponent}
+   * @return property identifier
+   */
+  @Nonnull
+  default String getSerializePropertyName() {
+    return getName();
+  }
 }
