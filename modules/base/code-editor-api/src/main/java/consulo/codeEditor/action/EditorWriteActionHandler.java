@@ -13,24 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.editor.actionSystem;
+package consulo.codeEditor.action;
 
-import consulo.language.editor.CommonDataKeys;
-import consulo.codeEditor.action.EditorActionManager;
-import consulo.dataContext.DataContext;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.ApplicationManager;
+import consulo.codeEditor.Caret;
+import consulo.codeEditor.Editor;
+import consulo.dataContext.DataContext;
+import consulo.document.Document;
 import consulo.document.DocumentRunnable;
 import consulo.document.FileDocumentManager;
 import consulo.document.ReadOnlyFragmentModificationException;
-import consulo.codeEditor.Caret;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.action.EditorActionHandler;
 import consulo.project.Project;
-import consulo.annotation.access.RequiredWriteAction;
-import consulo.document.Document;
 import consulo.ui.annotation.RequiredUIAccess;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -53,7 +50,7 @@ public abstract class EditorWriteActionHandler extends EditorActionHandler {
     if (editor.isViewer()) return;
 
     if (dataContext != null) {
-      Project project = dataContext.getData(CommonDataKeys.PROJECT);
+      Project project = dataContext.getData(Project.KEY);
       if (project != null && !FileDocumentManager.getInstance().requestWriting(editor.getDocument(), project)) return;
     }
 

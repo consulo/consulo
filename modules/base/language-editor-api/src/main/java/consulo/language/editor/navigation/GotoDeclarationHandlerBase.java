@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.navigation.actions;
+package consulo.language.editor.navigation;
 
-import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
+import consulo.dataContext.DataContext;
 import consulo.language.psi.PsiElement;
 
 import javax.annotation.Nullable;

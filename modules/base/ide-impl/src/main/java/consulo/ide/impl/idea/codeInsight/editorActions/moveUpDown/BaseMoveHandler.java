@@ -21,7 +21,7 @@ import consulo.dataContext.DataContext;
 import consulo.codeEditor.Caret;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.openapi.editor.actionSystem.EditorWriteActionHandler;
+import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.language.editor.moveUpDown.LineRange;
 import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;

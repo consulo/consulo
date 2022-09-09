@@ -22,19 +22,26 @@ import consulo.document.util.TextRange;
 import consulo.ide.impl.psi.impl.source.codeStyle.CodeFormatterFacade;
 import consulo.language.Language;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
+import consulo.language.editor.gutter.LineMarkerInfo;
 import consulo.language.editor.internal.LanguageEditorInternalHelper;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.JBLabel;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.SelectionAwareListCellRenderer;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
+import consulo.ui.image.Image;
+import consulo.util.lang.Pair;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * @author VISTALL
@@ -68,5 +75,16 @@ public class LanguageEditorInternalHelperImpl implements LanguageEditorInternalH
                                             boolean selected,
                                             @Nonnull ColoredTextContainer simpleColoredComponent) {
     SpeedSearchUtil.appendFragmentsForSpeedSearch(speedSearchEnabledComponent, text, attributes, selected, simpleColoredComponent);
+  }
+
+  @Override
+  public ListCellRenderer<LineMarkerInfo> createMergeableLineMarkerRender(Function<LineMarkerInfo, Pair<String, Image>> function) {
+    return new SelectionAwareListCellRenderer<>(lineMarkerInfo -> {
+      Pair<String, Image> info = function.apply(lineMarkerInfo);
+
+      final JBLabel label = new JBLabel(info.getFirst(), info.getSecond(), SwingConstants.LEFT);
+      label.setBorder(JBUI.Borders.empty(2));
+      return label;
+    });
   }
 }

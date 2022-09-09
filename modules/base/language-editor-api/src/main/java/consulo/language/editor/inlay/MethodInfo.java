@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.hints;
+package consulo.language.editor.inlay;
 
 import javax.annotation.Nonnull;
 
@@ -25,8 +25,8 @@ import java.util.Objects;
  * from kotlin
  */
 public class MethodInfo {
-  private String myFullyQualifiedName;
-  private List<String> myParamNames;
+  private final String myFullyQualifiedName;
+  private final List<String> myParamNames;
 
   public MethodInfo(@Nonnull String fullyQualifiedName, @Nonnull List<String> paramNames) {
     myFullyQualifiedName = fullyQualifiedName;

@@ -19,7 +19,7 @@ import consulo.dataContext.DataContext;
 import consulo.codeEditor.Caret;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.openapi.editor.actionSystem.EditorWriteActionHandler;
+import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import javax.annotation.Nonnull;

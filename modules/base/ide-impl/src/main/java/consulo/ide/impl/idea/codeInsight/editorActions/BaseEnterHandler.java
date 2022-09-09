@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.codeInsight.editorActions;
 
 import consulo.codeEditor.Editor;
 import consulo.document.DocCommandGroupId;
-import consulo.ide.impl.idea.openapi.editor.actionSystem.EditorWriteActionHandler;
+import consulo.codeEditor.action.EditorWriteActionHandler;
 
 public abstract class BaseEnterHandler extends EditorWriteActionHandler {
   private static final String GROUP_ID = "EnterHandler.GROUP_ID";

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.hints;
+package consulo.language.editor.inlay;
 
 import javax.annotation.Nonnull;
 
@@ -24,8 +24,8 @@ import java.util.Objects;
  * from kotlin
  */
 public class InlayInfo {
-  private String myText;
-  private int myOffset;
+  private final String myText;
+  private final int myOffset;
 
   public InlayInfo(@Nonnull String text, int offset) {
     myText = text;

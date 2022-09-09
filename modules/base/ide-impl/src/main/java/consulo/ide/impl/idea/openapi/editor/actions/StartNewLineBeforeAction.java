@@ -23,7 +23,7 @@ import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.impl.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionManager;
-import consulo.ide.impl.idea.openapi.editor.actionSystem.EditorWriteActionHandler;
+import consulo.codeEditor.action.EditorWriteActionHandler;
 import javax.annotation.Nonnull;
 import consulo.annotation.access.RequiredWriteAction;
 

@@ -22,16 +22,20 @@ import consulo.codeEditor.Editor;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
+import consulo.language.editor.gutter.LineMarkerInfo;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.image.Image;
+import consulo.util.lang.Pair;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * @author VISTALL
@@ -63,5 +67,9 @@ public interface LanguageEditorInternalHelper {
                                              boolean selected,
                                              @Nonnull ColoredTextContainer simpleColoredComponent) {
     // [VISTALL] hack due we don't have hard dependency to AWT impl
+  }
+
+  default ListCellRenderer<LineMarkerInfo> createMergeableLineMarkerRender(Function<LineMarkerInfo, Pair<String, Image>> function) {
+    throw new UnsupportedOperationException();
   }
 }

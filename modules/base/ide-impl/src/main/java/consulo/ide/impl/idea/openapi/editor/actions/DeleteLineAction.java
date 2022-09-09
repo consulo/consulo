@@ -24,7 +24,7 @@ import consulo.codeEditor.Caret;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.VisualPosition;
-import consulo.ide.impl.idea.openapi.editor.actionSystem.EditorWriteActionHandler;
+import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.document.util.TextRange;

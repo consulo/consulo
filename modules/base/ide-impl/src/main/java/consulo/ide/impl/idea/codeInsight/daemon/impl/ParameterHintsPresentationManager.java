@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.codeInsight.daemon.impl;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.codeInsight.hints.InlayParameterHintsProvider;
+import consulo.language.editor.inlay.InlayParameterHintsProvider;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.ide.ServiceManager;
 import consulo.codeEditor.DefaultLanguageHighlighterColors;

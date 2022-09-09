@@ -29,7 +29,7 @@ import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.impl.action.EditorAction;
-import consulo.ide.impl.idea.openapi.editor.actionSystem.EditorWriteActionHandler;
+import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.codeEditor.EditorEx;
 import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;

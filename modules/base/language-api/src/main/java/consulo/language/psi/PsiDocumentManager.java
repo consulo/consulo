@@ -281,4 +281,11 @@ public abstract class PsiDocumentManager {
   public boolean isUnderSynchronization(@Nonnull Document document) {
     return false;
   }
+
+  /**
+   * Check file content and document content for equals, and drop error into log if not
+   */
+  public boolean checkConsistency(@Nonnull PsiFile psiFile, @Nonnull Document document) {
+    return true;
+  }
 }

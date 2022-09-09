@@ -25,7 +25,7 @@ import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.document.util.DocumentUtil;
 import consulo.ide.impl.idea.openapi.editor.IndentStrategy;
-import consulo.ide.impl.idea.openapi.editor.actionSystem.EditorWriteActionHandler;
+import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.Language;
 import consulo.language.codeStyle.CodeStyleSettingsManager;

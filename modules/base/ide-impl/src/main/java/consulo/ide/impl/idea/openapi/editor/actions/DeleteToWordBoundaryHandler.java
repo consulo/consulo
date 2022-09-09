@@ -7,7 +7,7 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
-import consulo.ide.impl.idea.openapi.editor.actionSystem.EditorWriteActionHandler;
+import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.document.util.TextRange;
 import javax.annotation.Nonnull;

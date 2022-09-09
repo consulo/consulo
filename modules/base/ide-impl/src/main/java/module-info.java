@@ -175,7 +175,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.codeEditor;
   exports consulo.ide.impl.codeInsight;
   exports consulo.ide.impl.codeInsight.daemon.impl;
-  exports consulo.ide.impl.codeInsight.navigation.actions;
   exports consulo.ide.impl.codeInspection.ui;
   exports consulo.ide.impl.command;
   exports consulo.ide.impl.compiler;

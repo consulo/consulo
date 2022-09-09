@@ -26,7 +26,7 @@ import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.fileEditor.EditorNotifications;
 import consulo.fileEditor.FileEditorManager;
-import consulo.ide.impl.idea.codeInsight.hints.InlayParameterHintsProvider;
+import consulo.language.editor.inlay.InlayParameterHintsProvider;
 import consulo.ide.impl.idea.codeInsight.hints.settings.ParameterNameHintsConfigurable;
 import consulo.ide.impl.idea.codeStyle.CodeStyleFacade;
 import consulo.ide.impl.idea.openapi.editor.impl.EditorHighlighterCache;

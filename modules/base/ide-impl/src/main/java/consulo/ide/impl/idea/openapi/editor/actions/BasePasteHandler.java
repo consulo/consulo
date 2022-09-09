@@ -21,7 +21,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorCopyPasteHelper;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
-import consulo.ide.impl.idea.openapi.editor.actionSystem.EditorWriteActionHandler;
+import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

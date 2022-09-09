@@ -6,7 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.function.Function;
 
-public class SelectionAwareListCellRenderer<T> extends DefaultListCellRenderer {
+public class SelectionAwareListCellRenderer<T> implements ListCellRenderer<T> {
   private final Function<? super T, ? extends JComponent> myFun;
 
   public SelectionAwareListCellRenderer(Function<? super T, ? extends JComponent> fun) {

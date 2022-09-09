@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.codeInsight.navigation.actions;
+package consulo.language.editor.ui.navigation;
 
-import consulo.ide.impl.idea.codeInsight.navigation.actions.GotoDeclarationHandler;
+import consulo.language.editor.navigation.GotoDeclarationHandler;
 import consulo.language.editor.ui.PsiElementListCellRenderer;
 import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;

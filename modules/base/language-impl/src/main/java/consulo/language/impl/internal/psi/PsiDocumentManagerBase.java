@@ -989,7 +989,8 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
     return !myProject.isDisposed() && !virtualFile.getFileType().isBinary();
   }
 
-  public static boolean checkConsistency(@Nonnull PsiFile psiFile, @Nonnull Document document) {
+  @Override
+  public boolean checkConsistency(@Nonnull PsiFile psiFile, @Nonnull Document document) {
     //todo hack
     if (psiFile.getVirtualFile() == null) return true;
 

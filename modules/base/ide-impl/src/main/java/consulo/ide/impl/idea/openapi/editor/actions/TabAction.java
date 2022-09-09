@@ -32,7 +32,7 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.ide.impl.idea.openapi.editor.*;
 import consulo.codeEditor.impl.action.EditorAction;
 import consulo.codeEditor.action.EditorActionManager;
-import consulo.ide.impl.idea.openapi.editor.actionSystem.EditorWriteActionHandler;
+import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.codeEditor.EditorEx;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUIUtil;
 import consulo.document.ReadOnlyFragmentModificationException;

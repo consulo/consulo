@@ -55,6 +55,8 @@ module consulo.language.editor.api {
   exports consulo.language.editor.surroundWith;
   exports consulo.language.editor.wolfAnalyzer;
   exports consulo.language.editor.scratch;
+  exports consulo.language.editor.inlay;
+  exports consulo.language.editor.navigation;
   exports consulo.language.editor.util;
 
   exports consulo.language.editor.internal to consulo.ide.impl, consulo.language.editor.impl, consulo.desktop.awt.ide.impl;

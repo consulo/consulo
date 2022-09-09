@@ -6,7 +6,6 @@
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.language.editor.impl.highlight.TextEditorHighlightingPass;
-import consulo.ide.impl.idea.codeInsight.daemon.*;
 import consulo.language.editor.highlight.HighlightingLevelManager;
 import consulo.language.editor.gutter.*;
 import consulo.language.editor.util.CollectHighlightsUtil;

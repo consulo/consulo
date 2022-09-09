@@ -30,7 +30,7 @@ import consulo.dataContext.DataContext;
 import consulo.undoRedo.CommandProcessor;
 import consulo.ide.impl.idea.openapi.editor.*;
 import consulo.codeEditor.impl.action.EditorAction;
-import consulo.ide.impl.idea.openapi.editor.actionSystem.EditorWriteActionHandler;
+import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.ui.ex.awt.util.MacUIUtil;
 import javax.annotation.Nonnull;
 import consulo.annotation.access.RequiredWriteAction;

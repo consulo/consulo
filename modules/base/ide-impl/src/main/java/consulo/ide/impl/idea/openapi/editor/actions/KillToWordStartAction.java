@@ -20,7 +20,7 @@ import consulo.dataContext.DataContext;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.CaretModel;
 import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.openapi.editor.actionSystem.EditorWriteActionHandler;
+import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.ide.impl.idea.openapi.ide.KillRingTransferable;
 import consulo.annotation.access.RequiredWriteAction;
 

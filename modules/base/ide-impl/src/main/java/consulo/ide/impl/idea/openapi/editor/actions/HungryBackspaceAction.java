@@ -23,7 +23,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.SelectionModel;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionManager;
-import consulo.ide.impl.idea.openapi.editor.actionSystem.EditorWriteActionHandler;
+import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.annotation.access.RequiredWriteAction;

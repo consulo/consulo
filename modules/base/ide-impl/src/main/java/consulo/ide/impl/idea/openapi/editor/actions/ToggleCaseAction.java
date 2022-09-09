@@ -24,7 +24,7 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
-import consulo.ide.impl.idea.openapi.editor.actionSystem.EditorWriteActionHandler;
+import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.codeEditor.*;
 import consulo.dataContext.DataContext;

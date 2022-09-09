@@ -454,7 +454,7 @@ class InjectionRegistrarImpl implements MultiHostRegistrar {
                                                                                                   psiFile.getVirtualFile() +
                                                                                                   "; " +
                                                                                                   injectedFileViewProvider.getVirtualFile();
-    PsiDocumentManagerBase.checkConsistency(psiFile, frozenWindow);
+    documentManager.checkConsistency(psiFile, frozenWindow);
   }
 
   void addToResults(@Nonnull InjectionResult result) {

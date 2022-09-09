@@ -21,7 +21,7 @@ import consulo.ui.ex.action.IdeActions;
 import consulo.codeEditor.impl.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionManager;
-import consulo.ide.impl.idea.openapi.editor.actionSystem.EditorWriteActionHandler;
+import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.codeEditor.EditorEx;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.document.Document;

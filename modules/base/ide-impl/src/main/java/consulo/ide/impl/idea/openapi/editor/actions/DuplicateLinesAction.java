@@ -20,7 +20,7 @@ import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.VisualPosition;
 import consulo.codeEditor.impl.action.EditorAction;
-import consulo.ide.impl.idea.openapi.editor.actionSystem.EditorWriteActionHandler;
+import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.util.lang.Pair;
 

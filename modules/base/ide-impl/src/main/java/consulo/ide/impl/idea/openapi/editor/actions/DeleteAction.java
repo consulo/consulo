@@ -21,7 +21,7 @@ import consulo.dataContext.DataContext;
 import consulo.undoRedo.CommandProcessor;
 import consulo.ide.impl.idea.openapi.editor.*;
 import consulo.codeEditor.impl.action.EditorAction;
-import consulo.ide.impl.idea.openapi.editor.actionSystem.EditorWriteActionHandler;
+import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUIUtil;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ui.ex.awt.CopyPasteManager;

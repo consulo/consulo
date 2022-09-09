@@ -30,7 +30,7 @@ import consulo.codeEditor.CaretAction;
 import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.codeEditor.impl.action.EditorAction;
-import consulo.ide.impl.idea.openapi.editor.actionSystem.EditorWriteActionHandler;
+import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.application.util.registry.Registry;
 import consulo.annotation.access.RequiredWriteAction;
 

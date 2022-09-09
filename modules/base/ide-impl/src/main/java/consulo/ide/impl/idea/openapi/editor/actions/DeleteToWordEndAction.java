@@ -30,7 +30,7 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.codeEditor.Caret;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.openapi.editor.actionSystem.EditorWriteActionHandler;
+import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.annotation.access.RequiredWriteAction;
 

@@ -26,7 +26,7 @@ import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.codeInsight.editorActions.enter.EnterAfterUnmatchedBraceHandler;
 import consulo.ide.impl.idea.codeInsight.template.impl.TemplateManagerImpl;
 import consulo.ide.impl.idea.codeInsight.template.impl.TemplateStateImpl;
-import consulo.ide.impl.idea.openapi.editor.actionSystem.EditorWriteActionHandler;
+import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.language.Language;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.action.SmartEnterProcessor;

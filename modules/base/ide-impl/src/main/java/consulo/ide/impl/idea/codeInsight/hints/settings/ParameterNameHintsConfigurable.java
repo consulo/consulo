@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.hints.settings;
 
-import consulo.ide.impl.idea.codeInsight.hints.InlayParameterHintsProvider;
+import consulo.language.editor.inlay.InlayParameterHintsProvider;
 import consulo.ide.impl.idea.codeInsight.hints.filtering.MatcherConstructor;
 import consulo.language.Language;
 import consulo.document.Document;

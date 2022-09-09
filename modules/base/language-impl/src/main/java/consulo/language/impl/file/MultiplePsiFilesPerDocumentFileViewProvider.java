@@ -132,7 +132,7 @@ public abstract class MultiplePsiFilesPerDocumentFileViewProvider extends Abstra
     for (PsiFile root : roots) {
       Document document = documentManager.getDocument(root);
       assert document != null;
-      PsiDocumentManagerBase.checkConsistency(root, document);
+      documentManager.checkConsistency(root, document);
       assert root.getText().equals(document.getText());
     }
   }

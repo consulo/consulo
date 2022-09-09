@@ -24,7 +24,7 @@ import consulo.codeEditor.action.ExtensionEditorActionHandler;
 import consulo.dataContext.DataContext;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
-import consulo.ide.impl.idea.openapi.editor.actionSystem.EditorWriteActionHandler;
+import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.language.ast.IElementType;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.editor.action.BackspaceHandlerDelegate;
