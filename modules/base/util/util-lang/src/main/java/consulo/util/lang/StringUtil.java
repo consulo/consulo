@@ -2591,4 +2591,35 @@ public final class StringUtil {
     escapeStringCharacters(s.length(), s, "\'", buffer);
     return buffer.toString();
   }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String unescapeSlashes(@Nonnull final String str) {
+    final StringBuilder buf = new StringBuilder(str.length());
+    unescapeChar(buf, str, '/');
+    return buf.toString();
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String unescapeBackSlashes(@Nonnull final String str) {
+    final StringBuilder buf = new StringBuilder(str.length());
+    unescapeChar(buf, str, '\\');
+    return buf.toString();
+  }
+
+  private static void unescapeChar(@Nonnull StringBuilder buf, @Nonnull String str, char unescapeChar) {
+    final int length = str.length();
+    final int last = length - 1;
+    for (int i = 0; i < length; i++) {
+      char ch = str.charAt(i);
+      if (ch == '\\' && i != last) {
+        i++;
+        ch = str.charAt(i);
+        if (ch != unescapeChar) buf.append('\\');
+      }
+
+      buf.append(ch);
+    }
+  }
 }

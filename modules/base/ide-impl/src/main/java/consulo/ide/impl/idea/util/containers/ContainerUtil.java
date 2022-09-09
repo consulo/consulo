@@ -1248,31 +1248,9 @@ public class ContainerUtil extends ContainerUtilRt {
 
   @Nonnull
   @Contract(pure = true)
+  @Deprecated
   public static <T> Iterable<T> iterateBackward(@Nonnull final List<? extends T> list) {
-    return new Iterable<T>() {
-      @Nonnull
-      @Override
-      public Iterator<T> iterator() {
-        return new Iterator<T>() {
-          private final ListIterator<? extends T> it = list.listIterator(list.size());
-
-          @Override
-          public boolean hasNext() {
-            return it.hasPrevious();
-          }
-
-          @Override
-          public T next() {
-            return it.previous();
-          }
-
-          @Override
-          public void remove() {
-            it.remove();
-          }
-        };
-      }
-    };
+    return Lists.iterateBackward(list);
   }
 
   @Nonnull

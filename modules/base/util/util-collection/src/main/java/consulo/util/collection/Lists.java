@@ -20,9 +20,7 @@ import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 import static consulo.util.collection.ContainerUtil.swapElements;
 
@@ -141,5 +139,34 @@ public final class Lists {
     for (int i = 0; i < n; i++, a++, b++) {
       swapElements(x, a, b);
     }
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static <T> Iterable<T> iterateBackward(@Nonnull final List<? extends T> list) {
+    return new Iterable<T>() {
+      @Nonnull
+      @Override
+      public Iterator<T> iterator() {
+        return new Iterator<T>() {
+          private final ListIterator<? extends T> it = list.listIterator(list.size());
+
+          @Override
+          public boolean hasNext() {
+            return it.hasPrevious();
+          }
+
+          @Override
+          public T next() {
+            return it.previous();
+          }
+
+          @Override
+          public void remove() {
+            it.remove();
+          }
+        };
+      }
+    };
   }
 }
