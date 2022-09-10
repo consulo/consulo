@@ -227,7 +227,9 @@ public class PluginsLoader {
 
           pluginDescriptor.setLoader(pluginClassLoader);
         }
-        catch (Exception e) {
+        catch (Throwable e) {
+          pluginDescriptor.setStatus(PluginDescriptorStatus.ERROR_WHILE_LOADING);
+
           getLogger().error(e);
         }
       }

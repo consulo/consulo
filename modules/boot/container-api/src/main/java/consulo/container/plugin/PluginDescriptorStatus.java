@@ -29,5 +29,7 @@ public enum PluginDescriptorStatus {
   // enabled, but loaded due platform version wrong - will show error for user
   WRONG_PLATFORM_VERSION,
   // not loaded, disabled by user
-  DISABLED_BY_USER
+  DISABLED_BY_USER,
+  // plugin throw error while loading
+  ERROR_WHILE_LOADING
 }
