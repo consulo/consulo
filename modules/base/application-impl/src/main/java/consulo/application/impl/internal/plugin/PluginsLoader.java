@@ -209,19 +209,27 @@ public class PluginsLoader {
     int i = 0;
     for (final PluginDescriptorImpl pluginDescriptor : result) {
       // platform plugin already have classloader
-      if (!PluginIds.isPlatformPlugin(pluginDescriptor.getPluginId())) {
-        final PluginId[] dependentPluginIds = pluginDescriptor.getDependentPluginIds();
-        final ClassLoader[] parentLoaders = getParentLoaders(idToDescriptorMap, dependentPluginIds);
+      if (PluginIds.isPlatformPlugin(pluginDescriptor.getPluginId())) {
+        continue;
+      }
+      else {
+        try {
+          final PluginId[] dependentPluginIds = pluginDescriptor.getDependentPluginIds();
+          final ClassLoader[] parentLoaders = getParentLoaders(idToDescriptorMap, dependentPluginIds);
 
-        final ClassLoader pluginClassLoader = createPluginClassLoader(idToDescriptorMap.keySet(), parentLoaders.length > 0 ? parentLoaders : new ClassLoader[]{parentLoader}, pluginDescriptor);
+          final ClassLoader pluginClassLoader = createPluginClassLoader(idToDescriptorMap.keySet(), parentLoaders.length > 0 ? parentLoaders : new ClassLoader[]{parentLoader}, pluginDescriptor);
 
-        if (System.getProperty("jdk.module.path") != null) {
-          List<ModuleLayer> parentModuleLayer = getParentModuleLayer(idToDescriptorMap, dependentPluginIds);
+          if (System.getProperty("jdk.module.path") != null) {
+            List<ModuleLayer> parentModuleLayer = getParentModuleLayer(idToDescriptorMap, dependentPluginIds);
 
-          pluginDescriptor.setModuleLayer(Java9ModuleInitializer.initializeEtcModules(parentModuleLayer, pluginDescriptor.getClassPath(idToDescriptorMap.keySet()), pluginClassLoader));
+            pluginDescriptor.setModuleLayer(Java9ModuleInitializer.initializeEtcModules(parentModuleLayer, pluginDescriptor.getClassPath(idToDescriptorMap.keySet()), pluginClassLoader));
+          }
+
+          pluginDescriptor.setLoader(pluginClassLoader);
         }
-
-        pluginDescriptor.setLoader(pluginClassLoader);
+        catch (Exception e) {
+          getLogger().error(e);
+        }
       }
 
       if (progress != null) {
