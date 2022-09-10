@@ -15,12 +15,15 @@
  */
 package consulo.fileEditor.structureView;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
 import consulo.fileEditor.FileEditor;
 import consulo.project.Project;
 
 /**
  * Factory interface for creating instances of the standard structure view component.
  */
+@ServiceAPI(ComponentScope.PROJECT)
 public abstract class StructureViewFactory {
   public static StructureViewFactory getInstance(Project project) {
     return project.getInstance(StructureViewFactory.class);

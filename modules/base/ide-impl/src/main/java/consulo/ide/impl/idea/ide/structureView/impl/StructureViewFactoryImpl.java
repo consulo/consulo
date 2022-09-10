@@ -16,15 +16,8 @@
 
 package consulo.ide.impl.idea.ide.structureView.impl;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.ide.impl.StructureViewWrapperImpl;
-import consulo.ide.impl.idea.ide.structureView.newStructureView.StructureViewComponent;
-import consulo.application.util.NotNullLazyValue;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
-import consulo.ide.impl.idea.util.ReflectionUtil;
+import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
@@ -33,11 +26,17 @@ import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.structureView.StructureView;
 import consulo.fileEditor.structureView.StructureViewModel;
 import consulo.fileEditor.structureView.StructureViewWrapper;
+import consulo.ide.impl.idea.ide.impl.StructureViewWrapperImpl;
+import consulo.ide.impl.idea.ide.structureView.newStructureView.StructureViewComponent;
+import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
 import consulo.language.editor.structureView.StructureViewExtension;
 import consulo.language.editor.structureView.StructureViewFactoryEx;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
+import consulo.util.collection.MultiMap;
 import consulo.util.collection.MultiValuesMap;
+import consulo.util.lang.StringUtil;
+import consulo.util.lang.reflect.ReflectionUtil;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -53,7 +52,6 @@ import java.util.HashSet;
 
 @Singleton
 @State(name = "StructureViewFactory", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
-@ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public final class StructureViewFactoryImpl extends StructureViewFactoryEx implements PersistentStateComponent<StructureViewFactoryImpl.State> {
   public static class State {
@@ -71,17 +69,16 @@ public final class StructureViewFactoryImpl extends StructureViewFactoryEx imple
   private State myState = new State();
   private Runnable myRunWhenInitialized = null;
 
-  private static final NotNullLazyValue<MultiValuesMap<Class<? extends PsiElement>, StructureViewExtension>> myExtensions = new NotNullLazyValue<>() {
-    @Nonnull
-    @Override
-    protected MultiValuesMap<Class<? extends PsiElement>, StructureViewExtension> compute() {
-      MultiValuesMap<Class<? extends PsiElement>, StructureViewExtension> map = new MultiValuesMap<>();
-      for (StructureViewExtension extension : StructureViewExtension.EXTENSION_POINT_NAME.getExtensionList()) {
-        map.put(extension.getType(), extension);
-      }
-      return map;
-    }
-  };
+  private static final ExtensionPointCacheKey<StructureViewExtension, MultiMap<Class<? extends PsiElement>, StructureViewExtension>> CACHE_KEY =
+          ExtensionPointCacheKey.create("StructureViewExtension", structureViewExtensions -> {
+            MultiMap<Class<? extends PsiElement>, StructureViewExtension> map = new MultiMap<>();
+            for (StructureViewExtension extension : structureViewExtensions) {
+              map.putValue(extension.getType(), extension);
+            }
+            return map;
+          });
+
+
   private final MultiValuesMap<Class<? extends PsiElement>, StructureViewExtension> myImplExtensions = new MultiValuesMap<>();
 
   @Inject
@@ -117,7 +114,7 @@ public final class StructureViewFactoryImpl extends StructureViewFactoryEx imple
   public Collection<StructureViewExtension> getAllExtensions(Class<? extends PsiElement> type) {
     Collection<StructureViewExtension> result = myImplExtensions.get(type);
     if (result == null) {
-      MultiValuesMap<Class<? extends PsiElement>, StructureViewExtension> map = myExtensions.getValue();
+      MultiMap<Class<? extends PsiElement>, StructureViewExtension> map = myProject.getApplication().getExtensionPoint(StructureViewExtension.class).getOrBuildCache(CACHE_KEY);
       for (Class<? extends PsiElement> registeredType : map.keySet()) {
         if (ReflectionUtil.isAssignable(registeredType, type)) {
           final Collection<StructureViewExtension> extensions = map.get(registeredType);
