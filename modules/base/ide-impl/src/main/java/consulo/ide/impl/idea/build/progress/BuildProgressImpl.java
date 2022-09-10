@@ -11,6 +11,7 @@ import consulo.build.ui.event.EventResult;
 import consulo.build.ui.event.FinishEvent;
 import consulo.build.ui.event.MessageEvent;
 import consulo.build.ui.event.StartEvent;
+import consulo.compiler.CompilerManager;
 import consulo.ide.impl.idea.build.events.impl.*;
 import consulo.build.ui.issue.BuildIssue;
 import consulo.project.Project;
@@ -110,7 +111,7 @@ class BuildProgressImpl implements BuildProgress<BuildProgressDescriptor> {
       }
     }
     String detailedMessage = fileLink.toString() + '\n' + message;
-    FileMessageEventImpl event = new FileMessageEventImpl(getId(), kind, null, title, detailedMessage, filePosition);
+    FileMessageEventImpl event = new FileMessageEventImpl(getId(), kind, CompilerManager.NOTIFICATION_GROUP, title, detailedMessage, filePosition);
     myListener.onEvent(getBuildId(), event);
     return this;
   }
