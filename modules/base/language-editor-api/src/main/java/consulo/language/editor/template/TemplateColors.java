@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.language.editor.impl.internal.template;
+package consulo.language.editor.template;
 
 import consulo.colorScheme.TextAttributesKey;
 

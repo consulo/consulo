@@ -17,6 +17,7 @@
 package consulo.language.editor.impl.internal.template;
 
 import consulo.language.editor.internal.TemplateContext;
+import consulo.language.editor.template.TemplateColors;
 import consulo.language.editor.template.context.TemplateContextType;
 import consulo.dataContext.DataManager;
 import consulo.language.lexer.CompositeLexer;

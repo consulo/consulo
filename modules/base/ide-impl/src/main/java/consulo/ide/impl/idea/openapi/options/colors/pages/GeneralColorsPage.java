@@ -25,7 +25,7 @@ import consulo.colorScheme.setting.ColorDescriptor;
 import consulo.configurable.OptionsBundle;
 import consulo.configurable.internal.ConfigurableWeight;
 import consulo.ide.impl.idea.application.options.colors.InspectionColorSettingsPage;
-import consulo.language.editor.impl.internal.template.TemplateColors;
+import consulo.language.editor.template.TemplateColors;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
 import consulo.language.editor.highlight.DefaultSyntaxHighlighter;
