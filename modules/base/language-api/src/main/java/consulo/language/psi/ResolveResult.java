@@ -20,7 +20,7 @@ import consulo.util.collection.ArrayFactory;
 import javax.annotation.Nullable;
 
 /**
- * Represents the result of resolving a {@link com.intellij.psi.PsiPolyVariantReference}.
+ * Represents the result of resolving a {@link PsiPolyVariantReference}.
  *
  * @see PsiElementResolveResult
  */
