@@ -23,6 +23,7 @@ import consulo.application.util.registry.Registry;
 import consulo.document.util.TextRange;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.FileASTNode;
+import consulo.language.psi.ReparseRangeUtil;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
@@ -40,7 +41,9 @@ public abstract class BlockSupport {
     return project.getInstance(BlockSupport.class);
   }
 
-  public abstract void reparseRange(@Nonnull PsiFile file, int startOffset, int endOffset, @NonNls @Nonnull CharSequence newText) throws IncorrectOperationException;
+  public void reparseRange(@Nonnull PsiFile file, int startOffset, int endOffset, @NonNls @Nonnull CharSequence newText) throws IncorrectOperationException {
+    ReparseRangeUtil.reparseRange(file, startOffset, endOffset, newText);
+  }
 
   @Nonnull
   public abstract DiffLog reparseRange(@Nonnull PsiFile file,

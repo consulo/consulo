@@ -46,16 +46,6 @@ public class BlockSupportImpl extends BlockSupport {
   private static final Logger LOG = Logger.getInstance(BlockSupportImpl.class);
 
   @Override
-  public void reparseRange(@Nonnull PsiFile file, int startOffset, int endOffset, @Nonnull CharSequence newText) throws IncorrectOperationException {
-    LOG.assertTrue(file.isValid());
-    final PsiFileImpl psiFile = (PsiFileImpl)file;
-    final Document document = psiFile.getViewProvider().getDocument();
-    assert document != null;
-    document.replaceString(startOffset, endOffset, newText);
-    PsiDocumentManager.getInstance(psiFile.getProject()).commitDocument(document);
-  }
-
-  @Override
   @Nonnull
   public DiffLog reparseRange(@Nonnull final PsiFile file,
                               @Nonnull FileASTNode oldFileNode,
