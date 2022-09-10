@@ -15,14 +15,12 @@
  */
 package consulo.ide.impl.idea.ui;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.awt.hacking.AWTAccessorHacking;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.popup.Balloon;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,12 +33,12 @@ import java.util.function.BooleanSupplier;
 public class AppUIUtil {
 
   public static void invokeLaterIfProjectAlive(@Nonnull final Project project, @Nonnull final Runnable runnable) {
-    final Application application = ApplicationManager.getApplication();
+    final Application application = Application.get();
     if (application.isDispatchThread()) {
       runnable.run();
     }
     else {
-      application.invokeLater(runnable, o -> !project.isOpen() || project.isDisposed());
+      application.invokeLater(runnable, () -> !project.isOpen() || project.isDisposed());
     }
   }
 
@@ -49,7 +47,7 @@ public class AppUIUtil {
   }
 
   public static void invokeOnEdt(Runnable runnable, @Nullable BooleanSupplier condition) {
-    Application application = ApplicationManager.getApplication();
+    final Application application = Application.get();
     if (application.isDispatchThread()) {
       runnable.run();
     }
@@ -62,7 +60,7 @@ public class AppUIUtil {
   }
 
   public static String getFrameClass() {
-    String name = ApplicationNamesInfo.getInstance().getProductName().toLowerCase();
+    String name = Application.get().getName().toLowerCase().get();
     String wmClass = StringUtil.replaceChar(name, ' ', '-');
     if ("true".equals(System.getProperty("idea.debug.mode"))) {
       wmClass += "-debug";
