@@ -1,35 +1,29 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.browsers;
 
-import consulo.ide.impl.idea.ide.GeneralSettings;
-import consulo.ide.IdeBundle;
-import consulo.ide.setting.ShowSettingsUtil;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.util.Function;
-import consulo.ide.impl.idea.util.PathUtil;
-import consulo.ui.ex.awt.ColumnInfo;
-import consulo.ui.ex.awt.table.ListTableModel;
-import consulo.ide.impl.idea.util.ui.LocalPathCellEditor;
-import consulo.ide.impl.idea.util.ui.table.IconTableCellRenderer;
-import consulo.ide.impl.idea.util.ui.table.TableModelEditor;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
-import consulo.webBrowser.WebSearchEngine;
-import consulo.webBrowser.WebSearchOptions;
-import consulo.ui.ex.FileChooserTextBoxBuilder;
+import consulo.ide.IdeBundle;
+import consulo.ide.impl.idea.ide.GeneralSettings;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.util.PathUtil;
+import consulo.ide.impl.idea.util.ui.LocalPathCellEditor;
+import consulo.ide.impl.idea.util.ui.table.IconTableCellRenderer;
+import consulo.ide.impl.idea.util.ui.table.TableModelEditor;
+import consulo.ide.setting.ShowSettingsUtil;
 import consulo.localize.LocalizeValue;
 import consulo.ui.CheckBox;
 import consulo.ui.ComboBox;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.FileChooserTextBoxBuilder;
+import consulo.ui.ex.awt.ColumnInfo;
+import consulo.ui.ex.awt.table.ListTableModel;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.LabeledBuilder;
-import consulo.webBrowser.BrowserFamily;
-import consulo.webBrowser.BrowserSpecificSettings;
-import consulo.webBrowser.DefaultBrowserPolicy;
-import consulo.webBrowser.WebBrowser;
+import consulo.webBrowser.*;
 import jakarta.inject.Provider;
 
 import javax.annotation.Nonnull;
@@ -41,6 +35,7 @@ import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.UUID;
+import java.util.function.Function;
 
 import static consulo.ide.impl.idea.util.ui.table.TableModelEditor.EditableColumnInfo;
 
@@ -205,7 +200,7 @@ final class BrowserSettingsPanel {
         }
 
         ShowSettingsUtil.getInstance().editConfigurable(browsersTable, settings.createConfigurable()).doWhenDone(() -> {
-          mutator.fun(browser).setSpecificSettings(settings);
+          mutator.apply(browser).setSpecificSettings(settings);
         });
       }
 

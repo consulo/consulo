@@ -15,25 +15,24 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.patch;
 
-import consulo.ide.impl.idea.openapi.diff.impl.patch.*;
-import consulo.ide.impl.idea.openapi.diff.impl.patch.formove.PatchApplier;
-import consulo.versionControlSystem.change.CommitContext;
-import consulo.versionControlSystem.change.LocalChangeList;
-import consulo.ide.impl.idea.openapi.vcs.ui.VcsBalloonProblemNotifier;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.ide.impl.idea.util.Function;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.component.extension.Extensions;
+import consulo.ide.impl.idea.openapi.diff.impl.patch.*;
+import consulo.ide.impl.idea.openapi.diff.impl.patch.formove.PatchApplier;
+import consulo.ide.impl.idea.openapi.vcs.ui.VcsBalloonProblemNotifier;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationType;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.MultiMap;
+import consulo.versionControlSystem.change.CommitContext;
+import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.Consumer;
 
 public class ApplyPatchDefaultExecutor implements ApplyPatchExecutor<AbstractFilePatchInProgress> {
   protected final Project myProject;
@@ -50,7 +49,8 @@ public class ApplyPatchDefaultExecutor implements ApplyPatchExecutor<AbstractFil
 
   @RequiredUIAccess
   @Override
-  public void apply(@Nonnull List<FilePatch> remaining, @Nonnull MultiMap<VirtualFile, AbstractFilePatchInProgress> patchGroupsToApply,
+  public void apply(@Nonnull List<FilePatch> remaining,
+                    @Nonnull MultiMap<VirtualFile, AbstractFilePatchInProgress> patchGroupsToApply,
                     @javax.annotation.Nullable LocalChangeList localList,
                     @Nullable String fileName,
                     @Nullable ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo) {
@@ -77,14 +77,7 @@ public class ApplyPatchDefaultExecutor implements ApplyPatchExecutor<AbstractFil
                                                       @Nonnull CommitContext commitContext) {
     final Collection<PatchApplier> appliers = new LinkedList<>();
     for (VirtualFile base : patchGroups.keySet()) {
-      appliers.add(new PatchApplier<BinaryFilePatch>(myProject, base,
-                                                     ContainerUtil
-                                                             .map(patchGroups.get(base), new Function<AbstractFilePatchInProgress, FilePatch>() {
-                                                               @Override
-                                                               public FilePatch fun(AbstractFilePatchInProgress patchInProgress) {
-                                                                 return patchInProgress.getPatch();
-                                                               }
-                                                             }), localList, null, commitContext));
+      appliers.add(new PatchApplier<BinaryFilePatch>(myProject, base, ContainerUtil.map(patchGroups.get(base), patchInProgress -> patchInProgress.getPatch()), localList, null, commitContext));
     }
     return appliers;
   }
@@ -93,28 +86,19 @@ public class ApplyPatchDefaultExecutor implements ApplyPatchExecutor<AbstractFil
   public static void applyAdditionalInfoBefore(final Project project,
                                                @Nullable ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo,
                                                CommitContext commitContext) {
-    applyAdditionalInfoImpl(project, additionalInfo, commitContext, new Consumer<InfoGroup>() {
-      @Override
-      public void consume(InfoGroup infoGroup) {
-        infoGroup.myPatchEP.consumeContentBeforePatchApplied(infoGroup.myPath, infoGroup.myContent, infoGroup.myCommitContext);
-      }
-    });
+    applyAdditionalInfoImpl(project, additionalInfo, commitContext, infoGroup -> infoGroup.myPatchEP.consumeContentBeforePatchApplied(infoGroup.myPath, infoGroup.myContent, infoGroup.myCommitContext));
   }
 
   private static void applyAdditionalInfo(final Project project,
                                           @Nullable ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo,
                                           CommitContext commitContext) {
-    applyAdditionalInfoImpl(project, additionalInfo, commitContext, new Consumer<InfoGroup>() {
-      @Override
-      public void consume(InfoGroup infoGroup) {
-        infoGroup.myPatchEP.consumeContent(infoGroup.myPath, infoGroup.myContent, infoGroup.myCommitContext);
-      }
-    });
+    applyAdditionalInfoImpl(project, additionalInfo, commitContext, infoGroup -> infoGroup.myPatchEP.consumeContent(infoGroup.myPath, infoGroup.myContent, infoGroup.myCommitContext));
   }
 
   private static void applyAdditionalInfoImpl(final Project project,
                                               @javax.annotation.Nullable ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo,
-                                              CommitContext commitContext, final Consumer<InfoGroup> worker) {
+                                              CommitContext commitContext,
+                                              final Consumer<InfoGroup> worker) {
     final PatchEP[] extensions = Extensions.getExtensions(PatchEP.EP_NAME, project);
     if (extensions.length == 0) return;
     if (additionalInfo != null) {
@@ -126,14 +110,13 @@ public class ApplyPatchDefaultExecutor implements ApplyPatchExecutor<AbstractFil
           for (PatchEP extension : extensions) {
             final CharSequence charSequence = innerMap.get(extension.getName());
             if (charSequence != null) {
-              worker.consume(new InfoGroup(extension, path, charSequence, commitContext));
+              worker.accept(new InfoGroup(extension, path, charSequence, commitContext));
             }
           }
         }
       }
       catch (PatchSyntaxException e) {
-        VcsBalloonProblemNotifier
-                .showOverChangesView(project, "Can not apply additional patch info: " + e.getMessage(), NotificationType.ERROR);
+        VcsBalloonProblemNotifier.showOverChangesView(project, "Can not apply additional patch info: " + e.getMessage(), NotificationType.ERROR);
       }
     }
   }

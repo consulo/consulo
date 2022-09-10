@@ -16,7 +16,6 @@
 
 package consulo.ide.impl.idea.vcs.log.graph.impl.permanent;
 
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.versionControlSystem.log.graph.GraphCommit;
 import consulo.ide.impl.idea.vcs.log.graph.api.permanent.PermanentCommitsInfo;
@@ -29,6 +28,7 @@ import consulo.logging.Logger;
 import javax.annotation.Nonnull;
 
 import java.util.*;
+import java.util.function.Function;
 
 public class PermanentCommitsInfoImpl<CommitId> implements PermanentCommitsInfo<CommitId> {
   private static final Logger LOG = Logger.getInstance(PermanentCommitsInfoImpl.class);
@@ -45,12 +45,7 @@ public class PermanentCommitsInfoImpl<CommitId> implements PermanentCommitsInfo<
       commitIdIndex = (List<CommitId>)createCompressedIntList((List<? extends GraphCommit<Integer>>)graphCommits);
     }
     else {
-      commitIdIndex = ContainerUtil.map(graphCommits, new Function<GraphCommit<CommitId>, CommitId>() {
-        @Override
-        public CommitId fun(GraphCommit<CommitId> graphCommit) {
-          return graphCommit.getId();
-        }
-      });
+      commitIdIndex = ContainerUtil.map(graphCommits, (Function<GraphCommit<CommitId>, CommitId>)graphCommit -> graphCommit.getId());
     }
     return new PermanentCommitsInfoImpl<>(timestampGetter, commitIdIndex, notLoadedCommits);
   }
@@ -150,28 +145,18 @@ public class PermanentCommitsInfoImpl<CommitId> implements PermanentCommitsInfo<
 
   @Nonnull
   public List<CommitId> convertToCommitIdList(@Nonnull Collection<Integer> commitIndexes) {
-    return ContainerUtil.map(commitIndexes, new Function<Integer, CommitId>() {
-      @Override
-      public CommitId fun(Integer integer) {
-        return getCommitId(integer);
-      }
-    });
+    return ContainerUtil.map(commitIndexes, integer -> getCommitId(integer));
   }
 
   @Nonnull
   public Set<CommitId> convertToCommitIdSet(@Nonnull Collection<Integer> commitIndexes) {
-    return ContainerUtil.map2Set(commitIndexes, new Function<Integer, CommitId>() {
-      @Override
-      public CommitId fun(Integer integer) {
-        return getCommitId(integer);
-      }
-    });
+    return ContainerUtil.map2Set(commitIndexes, integer -> getCommitId(integer));
   }
 
   @Nonnull
   public Set<Integer> convertToNodeIds(@Nonnull Collection<CommitId> commitIds) {
     return convertToNodeIds(commitIds, false);
-  }
+  }                                                                                                   
 
   @Nonnull
   public Set<Integer> convertToNodeIds(@Nonnull Collection<CommitId> commitIds, boolean reportNotFound) {

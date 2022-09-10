@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.history.core;
 
 import consulo.ide.impl.idea.history.core.changes.ChangeSet;
-import consulo.ide.impl.idea.util.Consumer;
+import java.util.function.Consumer;
 import consulo.util.collection.primitive.ints.IntSet;
 
 import javax.annotation.Nullable;

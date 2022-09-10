@@ -19,13 +19,16 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.versionControlSystem.AbstractVcs;
+
 import javax.annotation.Nonnull;
 
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface VcsIgnoredFilesHolder extends IgnoredFilesHolder {
   ExtensionPointName<VcsIgnoredFilesHolder> VCS_IGNORED_FILES_HOLDER_EP = ExtensionPointName.create(VcsIgnoredFilesHolder.class);
 
-  default boolean isInUpdatingMode() {return false;}
+  default boolean isInUpdatingMode() {
+    return false;
+  }
 
   @Nonnull
   AbstractVcs getVcs();

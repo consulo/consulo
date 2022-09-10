@@ -59,7 +59,6 @@ import consulo.ide.impl.idea.profile.codeInspection.ui.ErrorsConfigurable;
 import consulo.ide.impl.idea.profile.codeInspection.ui.SingleInspectionProfilePanel;
 import consulo.ui.ex.awt.ListCellRendererWrapper;
 import consulo.ui.ex.awt.util.Alarm;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.util.lang.SystemProperties;
 import consulo.util.collection.SmartHashSet;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -78,6 +77,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
+import java.util.function.Consumer;
 
 public abstract class InspectionToolsConfigurable implements ErrorsConfigurable, SearchableConfigurable, Configurable.HoldPreferredFocusedComponent, Configurable.NoScroll {
   private static final Logger LOG = Logger.getInstance(InspectionToolsConfigurable.class);
@@ -292,7 +292,7 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
         descriptor.setDescription("Choose directory to store profile file");
         IdeaFileChooser.chooseFile(descriptor, getProject(), myWholePanel, null, new Consumer<VirtualFile>() {
           @Override
-          public void consume(VirtualFile file) {
+          public void accept(VirtualFile file) {
             final Element element = new Element("inspections");
             try {
               final SingleInspectionProfilePanel panel = getSelectedPanel();
@@ -330,7 +330,7 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
         descriptor.setDescription("Choose profile file");
         IdeaFileChooser.chooseFile(descriptor, getProject(), myWholePanel, null, new Consumer<VirtualFile>() {
           @Override
-          public void consume(VirtualFile file) {
+          public void accept(VirtualFile file) {
             if (file == null) return;
             InspectionProfileImpl profile = new InspectionProfileImpl("TempProfile", InspectionToolRegistrar.getInstance(), myProfileManager);
             try {

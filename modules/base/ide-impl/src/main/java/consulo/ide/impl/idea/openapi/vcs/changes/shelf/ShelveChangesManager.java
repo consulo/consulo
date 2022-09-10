@@ -29,36 +29,32 @@ import consulo.application.progress.Task;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.Topic;
 import consulo.component.persist.RoamingType;
+import consulo.component.persist.scheme.BaseSchemeProcessor;
+import consulo.component.persist.scheme.SchemeManager;
+import consulo.component.persist.scheme.SchemeManagerFactory;
 import consulo.component.util.text.UniqueNameGenerator;
 import consulo.disposer.Disposer;
-import consulo.component.persist.scheme.SchemeManagerFactory;
-import consulo.project.impl.internal.ProjectPathMacroManager;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.*;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.ApplyFilePatchBase;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.formove.CustomBinaryPatchApplier;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.formove.PatchApplier;
-import consulo.component.persist.scheme.BaseSchemeProcessor;
-import consulo.component.persist.scheme.SchemeManager;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.CalledInAny;
-import consulo.versionControlSystem.change.BinaryContentRevision;
-import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListUtil;
-import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.ApplyPatchDefaultExecutor;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.PatchFileType;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.PatchNameChecker;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.RollbackChangesDialog;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.RollbackWorker;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.PathUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.text.CharArrayCharSequence;
 import consulo.ide.impl.idea.vcsUtil.FilesProgress;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.project.impl.internal.ProjectPathMacroManager;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.SmartList;
 import consulo.util.io.CharsetToolkit;
@@ -70,10 +66,7 @@ import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.JDOMExternalizerUtil;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.versionControlSystem.*;
-import consulo.versionControlSystem.change.Change;
-import consulo.versionControlSystem.change.CommitContext;
-import consulo.versionControlSystem.change.ContentRevision;
-import consulo.versionControlSystem.change.LocalChangeList;
+import consulo.versionControlSystem.change.*;
 import consulo.virtualFileSystem.RawFileLoader;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
@@ -90,6 +83,7 @@ import java.io.*;
 import java.util.*;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 @Singleton
 @ServiceAPI(ComponentScope.PROJECT)
@@ -492,10 +486,10 @@ public class ShelveChangesManager implements JDOMExternalizable {
           }
         }
         catch (IOException e) {
-          exceptionConsumer.consume(new VcsException(e));
+          exceptionConsumer.accept(new VcsException(e));
         }
         catch (PatchSyntaxException e) {
-          exceptionConsumer.consume(new VcsException(e));
+          exceptionConsumer.accept(new VcsException(e));
         }
       }
     }

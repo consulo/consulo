@@ -23,7 +23,6 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.language.editor.gutter.*;
 import consulo.language.editor.util.PsiUtilBase;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.FunctionUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
@@ -38,6 +37,7 @@ import consulo.ui.image.ImageEffects;
 import javax.annotation.Nonnull;
 import java.awt.event.MouseEvent;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * @author Konstantin Bulenkov

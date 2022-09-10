@@ -34,6 +34,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -57,7 +58,7 @@ public class StringUtil extends StringUtilRt {
   public static final NotNullFunction<String, String> QUOTER = new NotNullFunction<String, String>() {
     @Override
     @Nonnull
-    public String fun(String s) {
+    public String apply(String s) {
       return "\"" + s + "\"";
     }
   };
@@ -65,7 +66,7 @@ public class StringUtil extends StringUtilRt {
   public static final NotNullFunction<String, String> SINGLE_QUOTER = new NotNullFunction<String, String>() {
     @Override
     @Nonnull
-    public String fun(String s) {
+    public String apply(String s) {
       return "'" + s + "'";
     }
   };
@@ -109,7 +110,7 @@ public class StringUtil extends StringUtilRt {
   public static Function<String, String> TRIMMER = new Function<String, String>() {
     @Nullable
     @Override
-    public String fun(@Nullable String s) {
+    public String apply(@Nullable String s) {
       return trim(s);
     }
   };
@@ -570,7 +571,7 @@ public class StringUtil extends StringUtilRt {
     return new NotNullFunction<String, String>() {
       @Nonnull
       @Override
-      public String fun(@Nonnull String dom) {
+      public String apply(@Nonnull String dom) {
         final StringBuilder builder = new StringBuilder(dom.length());
         escapeStringCharacters(dom.length(), dom, additionalChars, escapeSlash, builder);
         return builder.toString();

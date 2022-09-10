@@ -22,7 +22,6 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.progress.ProgressManager;
 import consulo.ide.ServiceManager;
-import consulo.ide.impl.idea.openapi.util.Factory;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.inspection.GlobalInspectionTool;
 import consulo.language.editor.inspection.InspectionsBundle;
@@ -73,7 +72,7 @@ public class InspectionToolRegistrar {
    * make sure that it is not too late
    */
   @Nonnull
-  public Factory<InspectionToolWrapper> registerInspectionToolFactory(@Nonnull Factory<InspectionToolWrapper> factory, boolean store) {
+  public Supplier<InspectionToolWrapper> registerInspectionToolFactory(@Nonnull Supplier<InspectionToolWrapper> factory, boolean store) {
     if (store) {
       myInspectionToolFactories.add(factory);
     }
@@ -81,12 +80,12 @@ public class InspectionToolRegistrar {
   }
 
   @Nonnull
-  private Factory<InspectionToolWrapper> registerLocalInspection(final Class toolClass, boolean store) {
+  private Supplier<InspectionToolWrapper> registerLocalInspection(final Class toolClass, boolean store) {
     return registerInspectionToolFactory(() -> new LocalInspectionToolWrapper((LocalInspectionTool)Application.get().getInjectingContainer().getUnbindedInstance(toolClass)), store);
   }
 
   @Nonnull
-  private Factory<InspectionToolWrapper> registerGlobalInspection(@Nonnull final Class aClass, boolean store) {
+  private Supplier<InspectionToolWrapper> registerGlobalInspection(@Nonnull final Class aClass, boolean store) {
     return registerInspectionToolFactory(() -> new GlobalInspectionToolWrapper((GlobalInspectionTool)Application.get().getInjectingContainer().getUnbindedInstance(aClass)), store);
   }
 

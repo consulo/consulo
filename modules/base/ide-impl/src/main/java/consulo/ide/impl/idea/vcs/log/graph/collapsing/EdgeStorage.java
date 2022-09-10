@@ -15,14 +15,13 @@
  */
 package consulo.ide.impl.idea.vcs.log.graph.collapsing;
 
-import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.graph.api.elements.GraphEdgeType;
 import consulo.ide.impl.idea.vcs.log.graph.utils.IntIntMultiMap;
+import consulo.util.lang.Pair;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
 
 
@@ -64,12 +63,7 @@ public class EdgeStorage {
   }
 
   public List<Pair<Integer, GraphEdgeType>> getEdges(int nodeId) {
-    return ContainerUtil.map(myEdges.get(nodeId), new Function<Integer, Pair<Integer, GraphEdgeType>>() {
-      @Override
-      public Pair<Integer, GraphEdgeType> fun(Integer compressEdge) {
-        return Pair.create(convertToInteger(retrievedNodeId(compressEdge)), retrievedType(compressEdge));
-      }
-    });
+    return ContainerUtil.map(myEdges.get(nodeId), compressEdge -> Pair.create(convertToInteger(retrievedNodeId(compressEdge)), retrievedType(compressEdge)));
   }
 
   public int[] getKnownIds() {

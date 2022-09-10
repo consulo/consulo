@@ -15,29 +15,29 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
-import consulo.logging.Logger;
-import consulo.component.ProcessCanceledException;
-import consulo.project.Project;
 import consulo.application.util.function.Computable;
+import consulo.component.ProcessCanceledException;
 import consulo.ide.impl.idea.openapi.util.Getter;
+import consulo.logging.Logger;
+import consulo.project.Project;
 import consulo.util.lang.Pair;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsConfiguration;
-import consulo.versionControlSystem.root.VcsRoot;
+import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.change.ContentRevision;
 import consulo.versionControlSystem.diff.DiffProvider;
 import consulo.versionControlSystem.diff.ItemLatestState;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
-import consulo.versionControlSystem.change.Change;
-import consulo.versionControlSystem.change.ContentRevision;
+import consulo.versionControlSystem.root.VcsRoot;
+import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.versionControlSystem.util.VcsUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * for vcses where it is reasonable to ask revision of each item separately
@@ -251,7 +251,7 @@ public class RemoteRevisionsNumbersCache implements ChangesOnServerTracker {
       myVcsRoot = vcsRoot;
     }
 
-    public void consume(String s) {
+    public void accept(String s) {
       LOG.debug("update for: " + s);
       //todo check canceled - check VCS's ready for asynchronous queries
       // get last remote revision for file

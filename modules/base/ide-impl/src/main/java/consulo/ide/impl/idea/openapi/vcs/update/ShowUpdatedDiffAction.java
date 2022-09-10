@@ -45,13 +45,13 @@ import consulo.versionControlSystem.FilePath;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ChangeGoToChangePopupAction;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.ui.annotation.RequiredUIAccess;
 import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class ShowUpdatedDiffAction extends AnAction implements DumbAware {
   @RequiredUIAccess

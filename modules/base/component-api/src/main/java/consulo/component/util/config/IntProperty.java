@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util;
 
-import javax.annotation.Nullable;
+package consulo.component.util.config;
 
-/**
- * @author Konstantin Bulenkov
- */
-public final class NullableConstantFunction<Param, Result> implements NullableFunction<Param, Result> {
-  private final Result value;
+import org.jetbrains.annotations.NonNls;
 
-  public NullableConstantFunction(@Nullable Result value) {
-    this.value = value;
+public class IntProperty extends ValueProperty<Integer> {
+  public IntProperty(@NonNls String name, int defaultValue) {
+    super(name, new Integer(defaultValue));
   }
 
-  @Nullable
-  @Override
-  public Result fun(Param param) {
-    return value;
+  public int value(AbstractPropertyContainer container) {
+    return get(container).intValue();
+  }
+
+  public void primSet(AbstractPropertyContainer container, int value) {
+    set(container, new Integer(value));
   }
 }

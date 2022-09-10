@@ -29,7 +29,7 @@ import consulo.project.Project;
 import consulo.content.bundle.SdkTable;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.DefaultSdksModel;
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ide.impl.idea.util.Function;
+import java.util.function.Function;
 import consulo.ui.ex.update.Activatable;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.disposer.Disposer;

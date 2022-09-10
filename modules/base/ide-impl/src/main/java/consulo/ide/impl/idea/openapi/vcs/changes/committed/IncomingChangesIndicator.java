@@ -16,30 +16,32 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
 import consulo.application.AllIcons;
-import consulo.dataContext.DataManager;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
 import consulo.application.Application;
-import consulo.project.Project;
+import consulo.component.messagebus.MessageBusConnection;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentManager;
+import consulo.language.editor.CommonDataKeys;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.ui.wm.StatusBar;
+import consulo.project.ui.wm.StatusBarWidget;
+import consulo.project.ui.wm.ToolWindowManager;
+import consulo.project.ui.wm.WindowManager;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.component.messagebus.MessageBusConnection;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.logging.Logger;
-import consulo.project.ui.wm.*;
-import consulo.ui.ex.toolWindow.ToolWindow;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import jakarta.inject.Singleton;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author yole
@@ -156,22 +158,19 @@ public class IncomingChangesIndicator {
 
     @Override
     public Consumer<MouseEvent> getClickConsumer() {
-      return new Consumer<MouseEvent>() {
-        @Override
-        public void consume(final MouseEvent mouseEvent) {
-          if (myStatusBar != null) {
-          DataContext dataContext = DataManager.getInstance().getDataContext((Component) myStatusBar);
-            final Project project = dataContext.getData(CommonDataKeys.PROJECT);
-          if (project != null) {
-            ToolWindow changesView = ToolWindowManager.getInstance(project).getToolWindow(ChangesViewContentManager.TOOLWINDOW_ID);
-            changesView.show(new Runnable() {
-              @Override
-              public void run() {
-                ChangesViewContentManager.getInstance(project).selectContent("Incoming");
-              }
-            });
-          }
-          }
+      return mouseEvent -> {
+        if (myStatusBar != null) {
+        DataContext dataContext = DataManager.getInstance().getDataContext((Component) myStatusBar);
+          final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+        if (project != null) {
+          ToolWindow changesView = ToolWindowManager.getInstance(project).getToolWindow(ChangesViewContentManager.TOOLWINDOW_ID);
+          changesView.show(new Runnable() {
+            @Override
+            public void run() {
+              ChangesViewContentManager.getInstance(project).selectContent("Incoming");
+            }
+          });
+        }
         }
       };
     }

@@ -32,7 +32,6 @@ import consulo.ide.impl.idea.diff.util.DiffUtil;
 import consulo.ide.impl.idea.diff.util.LineRange;
 import consulo.ide.impl.idea.openapi.util.BooleanGetter;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
@@ -43,6 +42,7 @@ import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.IntUnaryOperator;
 
 /*
@@ -726,7 +726,7 @@ public class FoldingModelSupport {
 
       @Override
       public V next() {
-        return mapping.fun(it.next());
+        return mapping.apply(it.next());
       }
 
       @Override

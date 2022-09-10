@@ -101,8 +101,8 @@ import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.JBScrollPane;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.ide.impl.idea.util.Function;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import consulo.application.util.Semaphore;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
@@ -359,12 +359,7 @@ public class ExternalSystemUtil {
 
         final CheckBoxList<Module> orphanModulesList = new CheckBoxList<Module>();
         orphanModulesList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        orphanModulesList.setItems(orphanModules, new Function<Module, String>() {
-          @Override
-          public String fun(Module module) {
-            return module.getName();
-          }
-        });
+        orphanModulesList.setItems(orphanModules, module -> module.getName());
         for (Module module : orphanModules) {
           orphanModulesList.setItemSelected(module, true);
         }
@@ -849,7 +844,7 @@ public class ExternalSystemUtil {
       public void onSuccess(@Nullable final DataNode<ProjectData> externalProject) {
         if (externalProject == null) {
           if (executionResultCallback != null) {
-            executionResultCallback.consume(false);
+            executionResultCallback.accept(false);
           }
           return;
         }
@@ -872,14 +867,14 @@ public class ExternalSystemUtil {
           }
         });
         if (executionResultCallback != null) {
-          executionResultCallback.consume(true);
+          executionResultCallback.accept(true);
         }
       }
 
       @Override
       public void onFailure(@Nonnull String errorMessage, @Nullable String errorDetails) {
         if (executionResultCallback != null) {
-          executionResultCallback.consume(false);
+          executionResultCallback.accept(false);
         }
       }
     };

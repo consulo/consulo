@@ -40,6 +40,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.util.collection.Lists;
 import consulo.virtualFileSystem.status.FileStatus;
 
 import javax.annotation.Nonnull;
@@ -189,9 +190,9 @@ public class PlatformOrPluginDialog extends DialogWrapper {
       }
     }
 
-    ContainerUtil.sort(toShowPluginList, (o1, o2) -> o1.getName().compareTo(o2.getName()));
+    Lists.quickSort(toShowPluginList, (o1, o2) -> o1.getName().compareTo(o2.getName()));
 
-    ContainerUtil.weightSort(toShowPluginList, pluginDescriptor -> {
+    Lists.weightSort(toShowPluginList, pluginDescriptor -> {
       if (PlatformOrPluginUpdateChecker.isPlatform(pluginDescriptor.getPluginId())) {
         return 100;
       }

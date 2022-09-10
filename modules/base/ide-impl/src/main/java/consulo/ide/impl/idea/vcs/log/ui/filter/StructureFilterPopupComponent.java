@@ -117,7 +117,7 @@ class StructureFilterPopupComponent extends FilterPopupComponent<VcsLogFileFilte
     }
     else {
       F firstFile = Collections.min(files, comparator);
-      String firstFileName = getText.fun(firstFile);
+      String firstFileName = getText.apply(firstFile);
       if (files.size() == 1) {
         return firstFileName;
       }

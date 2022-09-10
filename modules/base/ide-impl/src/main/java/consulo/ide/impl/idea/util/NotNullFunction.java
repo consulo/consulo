@@ -25,5 +25,5 @@ import javax.annotation.Nonnull;
 public interface NotNullFunction<Param, Result> extends NullableFunction<Param, Result> {
   @Override
   @Nonnull
-  Result fun(final Param dom);
+  Result apply(final Param dom);
 }

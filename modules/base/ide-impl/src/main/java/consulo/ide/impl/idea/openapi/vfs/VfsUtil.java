@@ -21,7 +21,6 @@ import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.SystemInfoRt;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.PathUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.Convertor;
@@ -45,6 +44,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
+import java.util.function.Function;
 
 public class VfsUtil extends VfsUtilCore {
   private static final Logger LOG = Logger.getInstance(VfsUtil.class);
@@ -418,7 +418,7 @@ public class VfsUtil extends VfsUtilCore {
     InputStream stream = null;
     try {
       stream = file.getInputStream();
-      return function.fun(stream);
+      return function.apply(stream);
     }
     catch (IOException e) {
       LOG.error(e);

@@ -18,58 +18,60 @@ package consulo.ide.impl.intelliLang;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
+import consulo.application.util.function.Processor;
+import consulo.configurable.Configurable;
 import consulo.configurable.ProjectConfigurable;
+import consulo.configurable.SearchableConfigurable;
 import consulo.configurable.StandardConfigurableIds;
+import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
-import consulo.language.editor.LangDataKeys;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.SimpleColoredText;
-import consulo.ui.ex.awt.*;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.awt.event.DoubleClickListener;
-import consulo.ui.ex.awt.util.TableUtil;
-import consulo.util.lang.function.Condition;
-import consulo.dataContext.DataContext;
-import consulo.language.Language;
-import consulo.fileChooser.IdeaFileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserFactory;
 import consulo.fileChooser.FileSaverDescriptor;
-import consulo.ui.ex.action.*;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.language.plain.PlainTextFileType;
-import consulo.configurable.Configurable;
-import consulo.configurable.SearchableConfigurable;
-import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ide.impl.idea.openapi.util.*;
+import consulo.fileChooser.IdeaFileChooser;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileWrapper;
-import consulo.ide.impl.idea.ui.*;
-import consulo.ui.ex.awt.table.TableView;
-import consulo.ide.impl.idea.util.*;
+import consulo.ide.impl.idea.ui.TableViewSpeedSearch;
+import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.ide.impl.idea.util.FileContentUtil;
+import consulo.ide.impl.idea.util.IconUtil;
+import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.Convertor;
-import consulo.ui.ex.awt.table.ListTableModel;
-import consulo.application.util.function.Processor;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.virtualFileSystem.archive.ArchiveFileType;
-import consulo.logging.Logger;
-import consulo.ide.impl.psi.injection.AbstractLanguageInjectionSupport;
-import consulo.ide.impl.psi.injection.LanguageInjectionSupport;
-import consulo.ide.impl.psi.injection.impl.ProjectInjectionConfiguration;
-import consulo.ui.image.Image;
-import consulo.util.collection.HashingStrategy;
-import consulo.util.collection.Sets;
-import jakarta.inject.Inject;
 import consulo.ide.impl.intelliLang.inject.InjectedLanguage;
 import consulo.ide.impl.intelliLang.inject.InjectorUtils;
 import consulo.ide.impl.intelliLang.inject.config.BaseInjection;
 import consulo.ide.impl.intelliLang.inject.config.InjectionPlace;
+import consulo.ide.impl.psi.injection.AbstractLanguageInjectionSupport;
+import consulo.ide.impl.psi.injection.LanguageInjectionSupport;
+import consulo.ide.impl.psi.injection.impl.ProjectInjectionConfiguration;
+import consulo.language.Language;
+import consulo.language.editor.LangDataKeys;
+import consulo.language.plain.PlainTextFileType;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.SimpleColoredText;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.event.DoubleClickListener;
+import consulo.ui.ex.awt.table.ListTableModel;
+import consulo.ui.ex.awt.table.TableView;
+import consulo.ui.ex.awt.util.TableUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ui.image.Image;
+import consulo.util.collection.HashingStrategy;
+import consulo.util.collection.Sets;
+import consulo.util.lang.function.Condition;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileWrapper;
+import consulo.virtualFileSystem.archive.ArchiveFileType;
+import consulo.virtualFileSystem.fileType.FileType;
+import jakarta.inject.Inject;
 import org.jdom.Document;
 import org.jetbrains.annotations.Nls;
 
@@ -84,6 +86,8 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.List;
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * @author Gregory.Shrago
@@ -122,18 +126,10 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
   }
 
   private DefaultActionGroup createActions() {
-    final Consumer<BaseInjection> consumer = new Consumer<BaseInjection>() {
-      @Override
-      public void consume(final BaseInjection injection) {
-        addInjection(injection);
-      }
-    };
-    final Factory<BaseInjection> producer = new NullableFactory<BaseInjection>() {
-      @Override
-      public BaseInjection create() {
-        final InjInfo info = getSelectedInjection();
-        return info == null ? null : info.injection;
-      }
+    final Consumer<BaseInjection> consumer = injection -> addInjection(injection);
+    final Supplier<BaseInjection> producer = () -> {
+      final InjInfo info = getSelectedInjection();
+      return info == null ? null : info.injection;
     };
     for (LanguageInjectionSupport support : InjectorUtils.getActiveInjectionSupports()) {
       ContainerUtil.addAll(myAddActions, support.createAddActions(myProject, consumer));
@@ -971,19 +967,14 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
       this.cfg = cfg;
       this.title = title;
       bundledInjections.addAll(cfg.getDefaultInjections());
-      originalInjections = ContainerUtil.concat(InjectorUtils.getActiveInjectionSupportIds(), new Function<String, Collection<? extends BaseInjection>>() {
-        @Override
-        public Collection<? extends BaseInjection> fun(final String s) {
-          return ContainerUtil
-                  .findAll(CfgInfo.this.cfg instanceof ProjectInjectionConfiguration ? ((ProjectInjectionConfiguration)CfgInfo.this.cfg).getOwnInjections(s) : CfgInfo.this.cfg.getInjections(s),
-                           new Condition<BaseInjection>() {
-                             @Override
-                             public boolean value(final BaseInjection injection) {
-                               return InjectedLanguage.findLanguageById(injection.getInjectedLanguageId()) != null;
-                             }
-                           });
-        }
-      });
+      originalInjections = ContainerUtil.concat(InjectorUtils.getActiveInjectionSupportIds(), s -> ContainerUtil
+              .findAll(CfgInfo.this.cfg instanceof ProjectInjectionConfiguration ? ((ProjectInjectionConfiguration)CfgInfo.this.cfg).getOwnInjections(s) : CfgInfo.this.cfg.getInjections(s),
+                       new Condition<BaseInjection>() {
+                         @Override
+                         public boolean value(final BaseInjection injection) {
+                           return InjectedLanguage.findLanguageById(injection.getInjectedLanguageId()) != null;
+                         }
+                       }));
       sortInjections(originalInjections);
       reset();
     }

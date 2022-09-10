@@ -120,7 +120,7 @@ public class WelcomeDesktopBalloonLayoutImpl extends DesktopBalloonLayoutImpl {
         @Nonnull
         @Override
         public List<BalloonImpl.ActionButton> createActions() {
-          myAction = myPopupBalloon.new ActionButton(AllIcons.Ide.Notification.Close, null, null, consulo.ide.impl.idea.util.Consumer.EMPTY_CONSUMER);
+          myAction = myPopupBalloon.new ActionButton(AllIcons.Ide.Notification.Close, null, null, event -> {});
           return Collections.singletonList(myAction);
         }
 

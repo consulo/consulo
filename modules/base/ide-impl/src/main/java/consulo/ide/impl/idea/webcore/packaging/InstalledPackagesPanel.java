@@ -225,7 +225,7 @@ public class InstalledPackagesPanel extends JPanel {
     final PackageManagementService selPackageManagementService = myPackageManagementService;
     myPackageManagementService.fetchPackageVersions(pkg.getName(), new CatchingConsumer<>() {
       @Override
-      public void consume(List<String> releases) {
+      public void accept(List<String> releases) {
         if (!releases.isEmpty() && !isUpdateAvailable(pkg.getVersion(), releases.get(0))) {
           return;
         }
@@ -273,7 +273,7 @@ public class InstalledPackagesPanel extends JPanel {
       }
 
       @Override
-      public void consume(Exception e) {
+      public void accept(Exception e) {
         ApplicationManager.getApplication()
                 .invokeLater(() -> Messages.showErrorDialog(IdeBundle.message("error.occurred.please.check.your.internet.connection"), IdeBundle.message("upgrade.package.failed.title")),
                              IdeaModalityState.any());
@@ -476,13 +476,13 @@ public class InstalledPackagesPanel extends JPanel {
         }
 
         @Override
-        public void consume(Exception e) {
+        public void accept(Exception e) {
           UIUtil.invokeLaterIfNeeded(() -> decrement());
           LOG.warn("Cannot fetch the latest version of the installed package " + pkg, e);
         }
 
         @Override
-        public void consume(@Nullable final String latestVersion) {
+        public void accept(@Nullable final String latestVersion) {
           UIUtil.invokeLaterIfNeeded(() -> {
             if (finalIndex < myPackagesTableModel.getRowCount()) {
               InstalledPackage p = getInstalledPackageAt(finalIndex);

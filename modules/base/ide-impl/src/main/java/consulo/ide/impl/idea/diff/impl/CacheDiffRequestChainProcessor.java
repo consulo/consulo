@@ -15,30 +15,30 @@
  */
 package consulo.ide.impl.idea.diff.impl;
 
-import consulo.ide.impl.idea.diff.actions.impl.GoToChangePopupBuilder;
+import consulo.application.AllIcons;
+import consulo.application.progress.ProgressIndicator;
+import consulo.component.ProcessCanceledException;
+import consulo.diff.DiffUserDataKeys;
 import consulo.diff.chain.DiffRequestChain;
 import consulo.diff.chain.DiffRequestProducer;
 import consulo.diff.chain.DiffRequestProducerException;
-import consulo.ide.impl.idea.diff.requests.*;
-import consulo.ide.impl.idea.diff.tools.util.SoftHardCacheMap;
-import consulo.ide.impl.idea.diff.util.DiffTaskQueue;
-import consulo.diff.DiffUserDataKeys;
-import consulo.ide.impl.idea.diff.util.DiffUserDataKeysEx.ScrollToPolicy;
-import consulo.application.AllIcons;
 import consulo.diff.request.DiffRequest;
 import consulo.diff.request.NoDiffRequest;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.component.ProcessCanceledException;
-import consulo.application.progress.ProgressIndicator;
+import consulo.ide.impl.idea.diff.actions.impl.GoToChangePopupBuilder;
+import consulo.ide.impl.idea.diff.requests.ErrorDiffRequest;
+import consulo.ide.impl.idea.diff.requests.LoadingDiffRequest;
+import consulo.ide.impl.idea.diff.requests.OperationCanceledDiffRequest;
+import consulo.ide.impl.idea.diff.tools.util.SoftHardCacheMap;
+import consulo.ide.impl.idea.diff.util.DiffTaskQueue;
+import consulo.ide.impl.idea.diff.util.DiffUserDataKeysEx.ScrollToPolicy;
 import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.project.Project;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -52,8 +52,7 @@ public class CacheDiffRequestChainProcessor extends DiffRequestProcessor {
   private final DiffRequestChain myRequestChain;
 
   @Nonnull
-  private final SoftHardCacheMap<DiffRequestProducer, DiffRequest> myRequestCache =
-          new SoftHardCacheMap<DiffRequestProducer, DiffRequest>(5, 5);
+  private final SoftHardCacheMap<DiffRequestProducer, DiffRequest> myRequestCache = new SoftHardCacheMap<DiffRequestProducer, DiffRequest>(5, 5);
 
   @Nonnull
   private final DiffTaskQueue myQueue = new DiffTaskQueue();
@@ -96,29 +95,22 @@ public class CacheDiffRequestChainProcessor extends DiffRequestProcessor {
       return;
     }
 
-    myQueue.executeAndTryWait(
-            new Function<ProgressIndicator, Runnable>() {
-              @Override
-              public Runnable fun(ProgressIndicator indicator) {
-                final DiffRequest request = loadRequest(producer, indicator);
-                return new Runnable() {
-                  @RequiredUIAccess
-                  @Override
-                  public void run() {
-                    myRequestCache.put(producer, request);
-                    applyRequest(request, force, scrollToChangePolicy);
-                  }
-                };
-              }
-            },
-            new Runnable() {
-              @Override
-              public void run() {
-                applyRequest(new LoadingDiffRequest(producer.getName()), force, scrollToChangePolicy);
-              }
-            },
-            ProgressWindow.DEFAULT_PROGRESS_DIALOG_POSTPONE_TIME_MILLIS
-    );
+    myQueue.executeAndTryWait(indicator -> {
+      final DiffRequest request1 = loadRequest(producer, indicator);
+      return new Runnable() {
+        @RequiredUIAccess
+        @Override
+        public void run() {
+          myRequestCache.put(producer, request1);
+          applyRequest(request1, force, scrollToChangePolicy);
+        }
+      };
+    }, new Runnable() {
+      @Override
+      public void run() {
+        applyRequest(new LoadingDiffRequest(producer.getName()), force, scrollToChangePolicy);
+      }
+    }, ProgressWindow.DEFAULT_PROGRESS_DIALOG_POSTPONE_TIME_MILLIS);
   }
 
   @Nullable
@@ -161,13 +153,7 @@ public class CacheDiffRequestChainProcessor extends DiffRequestProcessor {
   @Nonnull
   @Override
   protected List<AnAction> getNavigationActions() {
-    return ContainerUtil.list(
-            new MyPrevDifferenceAction(),
-            new MyNextDifferenceAction(),
-            new MyPrevChangeAction(),
-            new MyNextChangeAction(),
-            createGoToChangeAction()
-    );
+    return ContainerUtil.list(new MyPrevDifferenceAction(), new MyNextDifferenceAction(), new MyPrevChangeAction(), new MyNextChangeAction(), createGoToChangeAction());
   }
 
   //
@@ -212,13 +198,10 @@ public class CacheDiffRequestChainProcessor extends DiffRequestProcessor {
 
   @Nonnull
   private AnAction createGoToChangeAction() {
-    return GoToChangePopupBuilder.create(myRequestChain, new Consumer<Integer>() {
-      @Override
-      public void consume(Integer index) {
-        if (index >= 0 && index != myRequestChain.getIndex()) {
-          myRequestChain.setIndex(index);
-          updateRequest();
-        }
+    return GoToChangePopupBuilder.create(myRequestChain, index -> {
+      if (index >= 0 && index != myRequestChain.getIndex()) {
+        myRequestChain.setIndex(index);
+        updateRequest();
       }
     });
   }

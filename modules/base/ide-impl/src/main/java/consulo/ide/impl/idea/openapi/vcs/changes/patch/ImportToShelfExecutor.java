@@ -15,29 +15,28 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.patch;
 
+import consulo.application.progress.ProgressManager;
+import consulo.application.util.function.ThrowableComputable;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.FilePatch;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.PatchEP;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.PatchSyntaxException;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.TextFilePatch;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.versionControlSystem.AbstractVcsHelper;
-import consulo.versionControlSystem.VcsException;
-import consulo.versionControlSystem.change.CommitContext;
-import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelveChangesManager;
 import consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelvedChangeList;
 import consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelvedChangesViewManager;
 import consulo.ide.impl.idea.openapi.vcs.ui.VcsBalloonProblemNotifier;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.PathUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcsUtil.VcsCatchingRunnable;
-import consulo.application.progress.ProgressManager;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationType;
 import consulo.util.collection.MultiMap;
+import consulo.versionControlSystem.AbstractVcsHelper;
+import consulo.versionControlSystem.VcsException;
+import consulo.versionControlSystem.change.CommitContext;
+import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
@@ -62,7 +61,8 @@ public class ImportToShelfExecutor implements ApplyPatchExecutor<TextFilePatchIn
   }
 
   @Override
-  public void apply(@Nonnull List<FilePatch> remaining, @Nonnull final MultiMap<VirtualFile, TextFilePatchInProgress> patchGroupsToApply,
+  public void apply(@Nonnull List<FilePatch> remaining,
+                    @Nonnull final MultiMap<VirtualFile, TextFilePatchInProgress> patchGroupsToApply,
                     @javax.annotation.Nullable LocalChangeList localList,
                     @Nullable final String fileName,
                     @Nullable ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo) {
@@ -78,13 +78,11 @@ public class ImportToShelfExecutor implements ApplyPatchExecutor<TextFilePatchIn
         final List<FilePatch> allPatches = new ArrayList<>();
         for (VirtualFile virtualFile : patchGroupsToApply.keySet()) {
           final File ioCurrentBase = new File(virtualFile.getPath());
-          allPatches.addAll(ContainerUtil.map(patchGroupsToApply.get(virtualFile), new Function<TextFilePatchInProgress, TextFilePatch>() {
-            public TextFilePatch fun(TextFilePatchInProgress patchInProgress) {
-              final TextFilePatch was = patchInProgress.getPatch();
-              was.setBeforeName(PathUtil.toSystemIndependentName(FileUtil.getRelativePath(ioBase, new File(ioCurrentBase, was.getBeforeName()))));
-              was.setAfterName(PathUtil.toSystemIndependentName(FileUtil.getRelativePath(ioBase, new File(ioCurrentBase, was.getAfterName()))));
-              return was;
-            }
+          allPatches.addAll(ContainerUtil.map(patchGroupsToApply.get(virtualFile), patchInProgress -> {
+            final TextFilePatch was = patchInProgress.getPatch();
+            was.setBeforeName(PathUtil.toSystemIndependentName(FileUtil.getRelativePath(ioBase, new File(ioCurrentBase, was.getBeforeName()))));
+            was.setAfterName(PathUtil.toSystemIndependentName(FileUtil.getRelativePath(ioBase, new File(ioCurrentBase, was.getAfterName()))));
+            return was;
           }));
         }
         if (!allPatches.isEmpty()) {
@@ -108,8 +106,7 @@ public class ImportToShelfExecutor implements ApplyPatchExecutor<TextFilePatchIn
               patchTransitExtensions = values.toArray(new PatchEP[values.size()]);
             }
             catch (PatchSyntaxException e) {
-              VcsBalloonProblemNotifier
-                      .showOverChangesView(myProject, "Can not import additional patch info: " + e.getMessage(), NotificationType.ERROR);
+              VcsBalloonProblemNotifier.showOverChangesView(myProject, "Can not import additional patch info: " + e.getMessage(), NotificationType.ERROR);
             }
           }
           try {
@@ -124,7 +121,7 @@ public class ImportToShelfExecutor implements ApplyPatchExecutor<TextFilePatchIn
       }
     };
     ProgressManager.getInstance().runProcessWithProgressSynchronously(vcsCatchingRunnable, "Import Patch to Shelf", true, myProject);
-    if (! vcsCatchingRunnable.get().isEmpty()) {
+    if (!vcsCatchingRunnable.get().isEmpty()) {
       AbstractVcsHelper.getInstance(myProject).showErrors(vcsCatchingRunnable.get(), IMPORT_TO_SHELF);
     }
   }
@@ -155,9 +152,7 @@ public class ImportToShelfExecutor implements ApplyPatchExecutor<TextFilePatchIn
     }
 
     @Override
-    public void consumeContentBeforePatchApplied(@Nonnull String path,
-                                                 @Nonnull CharSequence content,
-                                                 CommitContext commitContext) {
+    public void consumeContentBeforePatchApplied(@Nonnull String path, @Nonnull CharSequence content, CommitContext commitContext) {
       throw new UnsupportedOperationException();
     }
 

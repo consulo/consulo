@@ -47,7 +47,7 @@ public class ManageRepoDialog extends DialogWrapper {
     final DefaultListModel<String> repoModel = new DefaultListModel<>();
     controller.fetchAllRepositories(new CatchingConsumer<>() {
       @Override
-      public void consume(List<String> repoUrls) {
+      public void accept(List<String> repoUrls) {
         ApplicationManager.getApplication().invokeLater(() -> {
           if (isDisposed()) return;
           myList.setPaintBusy(false);
@@ -58,7 +58,7 @@ public class ManageRepoDialog extends DialogWrapper {
       }
 
       @Override
-      public void consume(Exception e) {
+      public void accept(Exception e) {
         ApplicationManager.getApplication().invokeLater(() -> {
           if (isDisposed()) return;
           myList.setPaintBusy(false);

@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.vcs.log.graph.impl.facade;
 
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.vcs.log.graph.api.EdgeFilter;
 import consulo.ide.impl.idea.vcs.log.graph.api.LinearGraph;
 import consulo.ide.impl.idea.vcs.log.graph.api.elements.GraphEdge;
@@ -25,9 +24,9 @@ import consulo.ide.impl.idea.vcs.log.graph.api.elements.GraphNodeType;
 import consulo.ide.impl.idea.vcs.log.graph.api.permanent.PermanentGraphInfo;
 import consulo.ide.impl.idea.vcs.log.graph.impl.facade.bek.BekChecker;
 import consulo.ide.impl.idea.vcs.log.graph.impl.facade.bek.BekIntMap;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
 
 import static consulo.ide.impl.idea.util.containers.ContainerUtil.map;
@@ -72,8 +71,7 @@ public class BekBaseController extends CascadeController {
       Integer convertedUpIndex = upIndex == null ? null : myBekIntMap.getUsualIndex(upIndex);
       Integer convertedDownIndex = downIndex == null ? null : myBekIntMap.getUsualIndex(downIndex);
 
-      return new GraphEdge(convertedUpIndex, convertedDownIndex, ((GraphEdge)graphElement).getTargetId(),
-                           ((GraphEdge)graphElement).getType());
+      return new GraphEdge(convertedUpIndex, convertedDownIndex, ((GraphEdge)graphElement).getTargetId(), ((GraphEdge)graphElement).getType());
     }
     else if (graphElement instanceof GraphNode) {
       return new GraphNode(myBekIntMap.getUsualIndex((((GraphNode)graphElement).getNodeIndex())), ((GraphNode)graphElement).getType());
@@ -113,13 +111,8 @@ public class BekBaseController extends CascadeController {
     @Nonnull
     @Override
     public List<GraphEdge> getAdjacentEdges(int nodeIndex, @Nonnull EdgeFilter filter) {
-      return map(myLinearGraph.getAdjacentEdges(myBekIntMap.getUsualIndex(nodeIndex), filter), new Function<GraphEdge, GraphEdge>() {
-        @Override
-        public GraphEdge fun(GraphEdge edge) {
-          return new GraphEdge(getNodeIndex(edge.getUpNodeIndex()), getNodeIndex(edge.getDownNodeIndex()), edge.getTargetId(),
-                               edge.getType());
-        }
-      });
+      return map(myLinearGraph.getAdjacentEdges(myBekIntMap.getUsualIndex(nodeIndex), filter),
+                 edge -> new GraphEdge(getNodeIndex(edge.getUpNodeIndex()), getNodeIndex(edge.getDownNodeIndex()), edge.getTargetId(), edge.getType()));
     }
 
     @Nonnull

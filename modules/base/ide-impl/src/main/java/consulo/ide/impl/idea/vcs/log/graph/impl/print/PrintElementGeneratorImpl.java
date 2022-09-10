@@ -16,11 +16,8 @@
 
 package consulo.ide.impl.idea.vcs.log.graph.impl.print;
 
-import consulo.logging.Logger;
 import consulo.ide.impl.idea.util.NullableFunction;
-import consulo.util.collection.SmartList;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.util.collection.SLRUMap;
 import consulo.ide.impl.idea.vcs.log.graph.api.EdgeFilter;
 import consulo.ide.impl.idea.vcs.log.graph.api.LinearGraph;
 import consulo.ide.impl.idea.vcs.log.graph.api.elements.GraphEdge;
@@ -29,10 +26,12 @@ import consulo.ide.impl.idea.vcs.log.graph.api.elements.GraphElement;
 import consulo.ide.impl.idea.vcs.log.graph.api.elements.GraphNode;
 import consulo.ide.impl.idea.vcs.log.graph.api.printer.PrintElementManager;
 import consulo.ide.impl.idea.vcs.log.graph.utils.NormalEdge;
-import javax.annotation.Nonnull;
-
+import consulo.logging.Logger;
+import consulo.util.collection.SLRUMap;
+import consulo.util.collection.SmartList;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 import static consulo.ide.impl.idea.vcs.log.graph.utils.LinearGraphUtils.*;
@@ -177,7 +176,7 @@ public class PrintElementGeneratorImpl extends AbstractPrintElementGenerator {
         int nodeIndex = ((GraphNode)element).getNodeIndex();
         for (GraphEdge edge : myLinearGraph.getAdjacentEdges(nodeIndex, EdgeFilter.ALL)) {
           if (isEdgeDown(edge, nodeIndex)) {
-            Integer endPos = endPosition.fun(edge);
+            Integer endPos = endPosition.apply(edge);
             if (endPos != null) result.add(new ShortEdge(edge, startPosition, endPos));
           }
         }
@@ -185,7 +184,7 @@ public class PrintElementGeneratorImpl extends AbstractPrintElementGenerator {
 
       if (element instanceof GraphEdge) {
         GraphEdge edge = (GraphEdge)element;
-        Integer endPos = endPosition.fun(edge);
+        Integer endPos = endPosition.apply(edge);
         if (endPos != null) result.add(new ShortEdge(edge, startPosition, endPos));
       }
     }

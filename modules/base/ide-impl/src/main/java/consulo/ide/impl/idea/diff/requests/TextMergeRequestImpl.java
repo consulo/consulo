@@ -17,16 +17,16 @@ package consulo.ide.impl.idea.diff.requests;
 
 import consulo.diff.content.DocumentContent;
 import consulo.diff.merge.MergeResult;
+import consulo.diff.util.ThreeSide;
 import consulo.ide.impl.idea.diff.merge.TextMergeRequest;
 import consulo.ide.impl.idea.diff.util.DiffUtil;
-import consulo.diff.util.ThreeSide;
-import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.Consumer;
+import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class TextMergeRequestImpl extends TextMergeRequest {
   @Nullable private final Project myProject;
@@ -120,6 +120,6 @@ public class TextMergeRequestImpl extends TextMergeRequest {
       });
     }
 
-    if (myApplyCallback != null) myApplyCallback.consume(result);
+    if (myApplyCallback != null) myApplyCallback.accept(result);
   }
 }

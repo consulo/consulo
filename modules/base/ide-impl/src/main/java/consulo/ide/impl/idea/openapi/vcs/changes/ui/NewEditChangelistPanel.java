@@ -27,7 +27,6 @@ import consulo.ide.impl.idea.ui.EditorTextFieldProvider;
 import consulo.ide.impl.idea.ui.HorizontalScrollBarEditorCustomization;
 import consulo.ide.impl.idea.ui.OneLineEditorCustomization;
 import consulo.ide.impl.idea.ui.SoftWrapsEditorCustomization;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.ui.EditorCustomization;
 import consulo.language.editor.ui.SpellCheckerCustomization;
@@ -40,6 +39,7 @@ import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Set;
+import java.util.function.Consumer;
 
 public abstract class NewEditChangelistPanel extends JPanel {
   protected final EditorTextField myNameTextField;
@@ -129,7 +129,7 @@ public abstract class NewEditChangelistPanel extends JPanel {
 
   public void changelistCreatedOrChanged(LocalChangeList list) {
     if (myConsumer != null) {
-      myConsumer.consume(list);
+      myConsumer.accept(list);
     }
   }
 

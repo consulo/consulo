@@ -15,12 +15,15 @@
  */
 package consulo.ide.impl.intelliLang.inject.config;
 
-import consulo.language.Language;
-import consulo.component.persist.PersistentStateComponent;
 import consulo.application.progress.ProgressManager;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.component.persist.PersistentStateComponent;
 import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.intelliLang.inject.InjectorUtils;
+import consulo.language.Language;
 import consulo.language.pattern.StringPattern;
 import consulo.language.pattern.compiler.PatternCompiler;
 import consulo.language.pattern.compiler.PatternCompilerFactory;
@@ -28,14 +31,10 @@ import consulo.language.psi.ElementManipulators;
 import consulo.language.psi.LiteralTextEscaper;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiLanguageInjectionHost;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.Function;
-import consulo.util.collection.SmartList;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
+import consulo.util.collection.SmartList;
 import consulo.util.dataholder.Key;
 import org.intellij.lang.annotations.RegExp;
-import consulo.ide.impl.intelliLang.inject.InjectorUtils;
 import org.jdom.CDATA;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -149,12 +148,7 @@ public class BaseInjection implements Injection, PersistentStateComponent<Elemen
       final StringBuilder sb = new StringBuilder();
       textEscaper.decode(textRange, sb);
       final List<TextRange> ranges = getMatchingRanges(myCompiledValuePattern.matcher(StringPattern.newBombedCharSequence(sb)), sb.length());
-      return !ranges.isEmpty() ? ContainerUtil.map(ranges, new Function<TextRange, TextRange>() {
-        @Override
-        public TextRange fun(TextRange s) {
-          return new TextRange(textEscaper.getOffsetInHost(s.getStartOffset(), textRange), textEscaper.getOffsetInHost(s.getEndOffset(), textRange));
-        }
-      }) : Collections.<TextRange>emptyList();
+      return !ranges.isEmpty() ? ContainerUtil.map(ranges, s -> new TextRange(textEscaper.getOffsetInHost(s.getStartOffset(), textRange), textEscaper.getOffsetInHost(s.getEndOffset(), textRange))) : Collections.<TextRange>emptyList();
     }
   }
 

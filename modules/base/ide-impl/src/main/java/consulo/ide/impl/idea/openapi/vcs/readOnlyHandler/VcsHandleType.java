@@ -26,7 +26,7 @@ import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.InvokeAfterUpdateMode;
 import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.ide.impl.idea.util.Function;
+import java.util.function.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.Messages;
 import consulo.virtualFileSystem.VirtualFile;

@@ -19,7 +19,6 @@ import consulo.ide.impl.idea.openapi.vcs.*;
 import consulo.ide.impl.idea.openapi.vcs.ex.ProjectLevelVcsManagerEx;
 import consulo.ide.impl.idea.openapi.vcs.ui.VcsBalloonProblemNotifier;
 import consulo.ide.impl.idea.util.BufferedListConsumer;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.ContentUtilEx;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
@@ -38,6 +37,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static consulo.ide.impl.idea.openapi.vcs.history.FileHistoryPanelImpl.sameHistories;
 

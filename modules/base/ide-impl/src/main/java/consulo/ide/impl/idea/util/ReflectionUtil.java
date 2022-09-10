@@ -30,6 +30,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.*;
 import java.util.*;
+import java.util.function.Function;
 
 public class ReflectionUtil {
   private static final Logger LOG = Logger.getInstance(ReflectionUtil.class);
@@ -561,12 +562,7 @@ public class ReflectionUtil {
     return new JBTreeTraverser<Class>(CLASS_STRUCTURE).unique().withRoot(root);
   }
 
-  private static final Function<Class, Iterable<Class>> CLASS_STRUCTURE = new Function<Class, Iterable<Class>>() {
-    @Override
-    public Iterable<Class> fun(Class aClass) {
-      return JBIterable.of(aClass.getSuperclass()).append(aClass.getInterfaces());
-    }
-  };
+  private static final Function<Class, Iterable<Class>> CLASS_STRUCTURE = aClass -> JBIterable.of(aClass.getSuperclass()).append(aClass.getInterfaces());
 
   public static boolean comparePublicNonFinalFields(@Nonnull Object first, @Nonnull Object second) {
     Set<Field> firstFields = ContainerUtil.newHashSet(first.getClass().getFields());

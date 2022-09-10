@@ -29,7 +29,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
-import consulo.ide.impl.idea.util.Function;
+import java.util.function.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 
 import javax.annotation.Nonnull;

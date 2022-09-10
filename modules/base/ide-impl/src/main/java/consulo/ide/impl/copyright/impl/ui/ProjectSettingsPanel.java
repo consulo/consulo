@@ -25,8 +25,6 @@ import consulo.ide.impl.idea.ide.util.scopeChooser.ScopeChooserConfigurable;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.packageDependencies.DefaultScopesProvider;
 import consulo.ide.impl.idea.packageDependencies.DependencyValidationManager;
-import consulo.ui.ex.awt.JBComboBoxTableCellEditorComponent;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.psi.search.scope.packageSet.CustomScopesProviderEx;
 import consulo.ide.setting.Settings;
 import consulo.language.copyright.config.CopyrightManager;
@@ -288,12 +286,7 @@ public class ProjectSettingsPanel {
           myProfilesChooser.setCell(table, row, column);
           myProfilesChooser.setOptions(copyrights.toArray());
           myProfilesChooser.setDefaultValue(scopeSetting.getProfile());
-          myProfilesChooser.setToString(new Function<Object, String>() {
-            @Override
-            public String fun(Object o) {
-              return ((CopyrightProfile)o).getName();
-            }
-          });
+          myProfilesChooser.setToString(o -> ((CopyrightProfile)o).getName());
           return myProfilesChooser;
         }
       };

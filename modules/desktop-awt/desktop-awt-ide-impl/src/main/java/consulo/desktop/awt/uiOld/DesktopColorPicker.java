@@ -16,23 +16,22 @@
 package consulo.desktop.awt.uiOld;
 
 import consulo.application.AllIcons;
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.util.lang.Pair;
 import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.project.ui.wm.WindowManager;
-import consulo.ide.impl.idea.ui.ColorPickerListener;
-import consulo.ui.ex.awt.util.ColorUtil;
-import consulo.ui.ex.awt.util.Alarm;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.disposer.Disposable;
 import consulo.desktop.awt.ui.impl.window.JDialogAsUIWindow;
 import consulo.desktop.awt.ui.impl.window.JFrameAsUIWindow;
+import consulo.disposer.Disposable;
+import consulo.ide.impl.idea.ide.util.PropertiesComponent;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.ui.ColorPickerListener;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.project.ui.wm.WindowManager;
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.util.Alarm;
+import consulo.ui.ex.awt.util.ColorUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -425,12 +424,9 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
 
       myBrightnessComponent = new SlideComponent("Brightness", true);
       myBrightnessComponent.setToolTipText("Brightness");
-      myBrightnessComponent.addListener(new Consumer<Integer>() {
-        @Override
-        public void consume(Integer value) {
-          myColorWheel.setBrightness(1f - (value / 255f));
-          myColorWheel.repaint();
-        }
+      myBrightnessComponent.addListener(value -> {
+        myColorWheel.setBrightness(1f - (value / 255f));
+        myColorWheel.repaint();
       });
 
       add(myBrightnessComponent, BorderLayout.EAST);
@@ -439,12 +435,9 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
         myOpacityComponent = new SlideComponent("Opacity", false);
         myOpacityComponent.setUnits(opacityInPercent ? SlideComponent.Unit.PERCENT : SlideComponent.Unit.LEVEL);
         myOpacityComponent.setToolTipText("Opacity");
-        myOpacityComponent.addListener(new Consumer<Integer>() {
-          @Override
-          public void consume(Integer integer) {
-            myColorWheel.setOpacity(integer.intValue());
-            myColorWheel.repaint();
-          }
+        myOpacityComponent.addListener(integer -> {
+          myColorWheel.setOpacity(integer.intValue());
+          myColorWheel.repaint();
         });
 
         add(myOpacityComponent, BorderLayout.SOUTH);

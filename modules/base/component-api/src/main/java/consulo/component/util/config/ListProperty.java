@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.util.config;
+package consulo.component.util.config;
 
-import consulo.component.util.config.AbstractProperty;
 import org.jetbrains.annotations.NonNls;
 
 import java.util.ArrayList;

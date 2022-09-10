@@ -19,6 +19,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.util.Semaphore;
 
 import java.util.ArrayDeque;
+import java.util.function.Consumer;
 
 /**
  * @author irengrig
@@ -104,7 +105,7 @@ public class ProducerConsumer<T> {
       synchronized (myLock) {
         while (myIsAlive) {
           if (! myQueue.isEmpty()) {
-            myConsumer.consume(myQueue.removeFirst());
+            myConsumer.accept(myQueue.removeFirst());
           } else {
             try {
               myLock.wait(10);

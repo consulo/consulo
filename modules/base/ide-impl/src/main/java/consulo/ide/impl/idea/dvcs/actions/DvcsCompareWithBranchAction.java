@@ -15,22 +15,16 @@
  */
 package consulo.ide.impl.idea.dvcs.actions;
 
-import consulo.ide.impl.idea.dvcs.DvcsUtil;
-import consulo.versionControlSystem.distributed.repository.AbstractRepositoryManager;
-import consulo.versionControlSystem.distributed.repository.Repository;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
-import consulo.versionControlSystem.VcsException;
-import consulo.ide.impl.idea.openapi.vcs.VcsNotifier;
-import consulo.versionControlSystem.change.Change;
-import consulo.ide.impl.idea.openapi.vcs.history.VcsDiffUtil;
-import consulo.ide.impl.idea.util.Function;
-import consulo.ide.impl.idea.util.ObjectUtils;
-import consulo.versionControlSystem.util.VcsUtil;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
+import consulo.ide.impl.idea.dvcs.DvcsUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
+import consulo.ide.impl.idea.openapi.vcs.VcsNotifier;
+import consulo.ide.impl.idea.openapi.vcs.history.VcsDiffUtil;
+import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
+import consulo.language.editor.CommonDataKeys;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -38,6 +32,11 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.JBList;
+import consulo.versionControlSystem.VcsException;
+import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.distributed.repository.AbstractRepositoryManager;
+import consulo.versionControlSystem.distributed.repository.Repository;
+import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
@@ -71,12 +70,7 @@ public abstract class DvcsCompareWithBranchAction<T extends Repository> extends 
     JBList list = new JBList(branchNames);
     new PopupChooserBuilder<>(list).setTitle("Select branch to compare")
             .setItemChoosenCallback(new OnBranchChooseRunnable(project, file, presentableRevisionName, list)).setAutoselectOnMouseMove(true)
-            .setFilteringEnabled(new Function<Object, String>() {
-              @Override
-              public String fun(Object o) {
-                return o.toString();
-              }
-            }).createPopup().showCenteredInCurrentWindow(project);
+            .setFilteringEnabled(o -> o.toString()).createPopup().showCenteredInCurrentWindow(project);
   }
 
   @Nonnull

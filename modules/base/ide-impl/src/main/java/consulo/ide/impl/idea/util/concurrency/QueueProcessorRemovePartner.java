@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.util.concurrency;
 
 import consulo.application.util.concurrent.QueueProcessor;
 import consulo.project.Project;
-import consulo.ide.impl.idea.util.Consumer;
+import java.util.function.Consumer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,13 +39,13 @@ public class QueueProcessorRemovePartner<Key, Task> {
     myLock = new Object();
     myProcessor = new QueueProcessor<Key>(new Consumer<Key>() {
       @Override
-      public void consume(Key key) {
+      public void accept(Key key) {
         final Task task;
         synchronized (myLock) {
           task = myMap.remove(key);
         }
         if (task != null) {
-          myConsumer.consume(task);
+          myConsumer.accept(task);
         }
       }
     }, project.getDisposed(), true);

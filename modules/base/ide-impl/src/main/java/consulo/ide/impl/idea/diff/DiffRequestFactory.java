@@ -26,7 +26,7 @@ import consulo.document.Document;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.Consumer;
+import java.util.function.Consumer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

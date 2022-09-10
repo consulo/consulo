@@ -15,10 +15,12 @@
  */
 package consulo.ide.impl.idea.util;
 
+import java.util.function.Consumer;
+
 public class EmptyConsumer {
 
   @SuppressWarnings("unchecked")
   public static <T> Consumer<T> getInstance() {
-    return Consumer.EMPTY_CONSUMER;
+    return t -> {};
   }
 }

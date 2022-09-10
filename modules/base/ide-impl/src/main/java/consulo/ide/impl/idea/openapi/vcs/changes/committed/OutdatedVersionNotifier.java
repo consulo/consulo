@@ -16,22 +16,21 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
 import consulo.application.ApplicationManager;
+import consulo.application.util.DateFormatUtil;
+import consulo.component.messagebus.MessageBusConnection;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.event.FileEditorManagerListener;
+import consulo.ide.impl.idea.ui.EditorNotificationPanel;
+import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Pair;
 import consulo.versionControlSystem.CachingCommittedChangesProvider;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
-import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.ui.EditorNotificationPanel;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.component.messagebus.MessageBusConnection;
-import consulo.application.util.DateFormatUtil;
-import consulo.logging.Logger;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -86,12 +85,9 @@ public class OutdatedVersionNotifier {
     debug("Requesting load of incoming changes");
     if (!myIncomingChangesRequested) {
       myIncomingChangesRequested = true;
-      myCache.loadIncomingChangesAsync(new Consumer<List<CommittedChangeList>>() {
-        @Override
-        public void consume(final List<CommittedChangeList> committedChangeLists) {
-          myIncomingChangesRequested = false;
-          updateAllEditorsLater();
-        }
+      myCache.loadIncomingChangesAsync(committedChangeLists -> {
+        myIncomingChangesRequested = false;
+        updateAllEditorsLater();
       }, true);
     }
   }

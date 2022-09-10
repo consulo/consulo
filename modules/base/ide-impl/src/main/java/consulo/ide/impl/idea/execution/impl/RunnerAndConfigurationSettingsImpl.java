@@ -16,25 +16,26 @@
 
 package consulo.ide.impl.idea.execution.impl;
 
-import consulo.ide.impl.idea.execution.configurations.*;
+import consulo.component.extension.ExtensionException;
 import consulo.execution.*;
 import consulo.execution.configuration.*;
 import consulo.execution.executor.Executor;
 import consulo.execution.runner.ProgramRunner;
-import consulo.component.extension.ExtensionException;
-import consulo.ide.impl.idea.openapi.util.*;
+import consulo.ide.impl.idea.execution.configurations.UnknownRunConfiguration;
+import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.logging.Logger;
 import consulo.util.collection.SmartList;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.WriteExternalException;
-import consulo.logging.Logger;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.Supplier;
 
 /**
  * @author dyoma
@@ -141,10 +142,10 @@ public class RunnerAndConfigurationSettingsImpl implements JDOMExternalizable, C
   }
 
   @Override
-  public Factory<RunnerAndConfigurationSettings> createFactory() {
-    return new Factory<RunnerAndConfigurationSettings>() {
+  public Supplier<RunnerAndConfigurationSettings> createFactory() {
+    return new Supplier<RunnerAndConfigurationSettings>() {
       @Override
-      public RunnerAndConfigurationSettings create() {
+      public RunnerAndConfigurationSettings get() {
         RunConfiguration configuration = myConfiguration.getFactory().createConfiguration(ExecutionBundle.message("default.run.configuration.name"), myConfiguration);
         return new RunnerAndConfigurationSettingsImpl(myManager, configuration, false);
       }

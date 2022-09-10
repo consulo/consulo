@@ -2,29 +2,28 @@
 
 package consulo.ide.impl.idea.codeInsight.hint;
 
+import consulo.application.ApplicationManager;
+import consulo.application.util.SystemInfo;
+import consulo.application.util.registry.Registry;
+import consulo.codeEditor.Editor;
+import consulo.colorScheme.EditorFontType;
+import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.lang.parameterInfo.ParameterInfoUIContextEx;
+import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.language.editor.parameterInfo.ParameterInfoHandler;
-import consulo.ide.impl.idea.lang.parameterInfo.ParameterInfoUIContextEx;
 import consulo.language.editor.ui.awt.HintUtil;
-import consulo.ui.ex.action.IdeActions;
-import consulo.application.ApplicationManager;
-import consulo.codeEditor.Editor;
-import consulo.colorScheme.EditorFontType;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.application.util.SystemInfo;
-import consulo.document.util.TextRange;
-import consulo.application.util.registry.Registry;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiElement;
-import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.JBColor;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ide.impl.idea.util.Function;
+import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
-import consulo.ide.impl.idea.xml.util.XmlStringUtil;
+import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jetbrains.annotations.TestOnly;
 
@@ -36,6 +35,7 @@ import javax.swing.border.CompoundBorder;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -446,7 +446,7 @@ public class ParameterInfoComponent extends JPanel {
 
     private String escapeString(String line, Function<? super String, String> escapeFunction) {
       line = XmlStringUtil.escapeString(line);
-      return escapeFunction == null ? line : escapeFunction.fun(line);
+      return escapeFunction == null ? line : escapeFunction.apply(line);
     }
 
     public String setup(final ParameterInfoController.Model result,

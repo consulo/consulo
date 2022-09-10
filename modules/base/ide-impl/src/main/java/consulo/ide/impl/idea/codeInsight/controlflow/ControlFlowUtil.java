@@ -18,12 +18,12 @@ package consulo.ide.impl.idea.codeInsight.controlflow;
 import consulo.logging.Logger;
 import consulo.application.progress.ProgressManager;
 import consulo.language.psi.PsiElement;
-import consulo.ide.impl.idea.util.Function;
 import consulo.application.util.function.Processor;
 import consulo.util.collection.primitive.ints.IntStack;
 import javax.annotation.Nonnull;
 
 import java.util.Arrays;
+import java.util.function.Function;
 
 /**
  * @author oleg
@@ -120,7 +120,7 @@ public class ControlFlowUtil {
       ProgressManager.checkCanceled();
       final int num = stack.pop();
       final Instruction instr = instructions[num];
-      final Operation nextOperation = closure.fun(instr);
+      final Operation nextOperation = closure.apply(instr);
       // Just ignore previous instructions for current node and move further
       if (nextOperation == Operation.CONTINUE) {
         continue;

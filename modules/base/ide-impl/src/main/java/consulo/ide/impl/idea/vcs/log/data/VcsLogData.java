@@ -33,7 +33,6 @@ import consulo.versionControlSystem.log.Hash;
 import consulo.versionControlSystem.log.VcsLogProvider;
 import consulo.versionControlSystem.log.VcsUser;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.util.lang.function.ThrowableConsumer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.*;
@@ -51,6 +50,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 
 public class VcsLogData implements Disposable, VcsLogDataProvider {
   private static final Logger LOG = Logger.getInstance(VcsLogData.class);

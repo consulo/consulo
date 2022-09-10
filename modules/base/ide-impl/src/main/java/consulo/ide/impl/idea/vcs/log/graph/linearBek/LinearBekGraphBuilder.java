@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.vcs.log.graph.linearBek;
 
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.graph.api.EdgeFilter;
 import consulo.ide.impl.idea.vcs.log.graph.api.GraphLayout;
@@ -30,6 +29,7 @@ import consulo.util.collection.primitive.ints.IntSets;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.Function;
 
 class LinearBekGraphBuilder {
   private static final int MAX_BLOCK_SIZE = 200;
@@ -336,7 +336,7 @@ class LinearBekGraphBuilder {
 
   private static class GraphEdgeToDownNode implements Function<GraphEdge, Integer> {
     @Override
-    public Integer fun(GraphEdge graphEdge) {
+    public Integer apply(GraphEdge graphEdge) {
       return graphEdge.getDownNodeIndex();
     }
   }

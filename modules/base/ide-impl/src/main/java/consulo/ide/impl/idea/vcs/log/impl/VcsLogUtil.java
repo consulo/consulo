@@ -17,24 +17,24 @@ package consulo.ide.impl.idea.vcs.log.impl;
 
 import consulo.externalService.statistic.ConvertUsagesUtil;
 import consulo.externalService.statistic.UsageTrigger;
-import consulo.ui.ex.action.AnActionEvent;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.versionControlSystem.FilePath;
-import consulo.versionControlSystem.VcsException;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.versionControlSystem.log.*;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.vcs.log.*;
+import consulo.ide.impl.idea.vcs.log.VcsLogRefs;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogData;
 import consulo.ide.impl.idea.vcs.log.graph.VisibleGraph;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.VcsException;
+import consulo.versionControlSystem.log.*;
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
+import java.util.function.Function;
 
 import static consulo.ide.impl.idea.util.ObjectUtils.notNull;
 import static consulo.ide.impl.idea.util.containers.ContainerUtil.getFirstItem;
@@ -52,7 +52,7 @@ public class VcsLogUtil {
   private static <T> Map<VirtualFile, Set<T>> groupByRoot(@Nonnull Collection<T> items, @Nonnull Function<T, VirtualFile> rootGetter) {
     Map<VirtualFile, Set<T>> map = new TreeMap<>(Comparator.comparing(VirtualFile::getPresentableUrl));
     for (T item : items) {
-      VirtualFile root = rootGetter.fun(item);
+      VirtualFile root = rootGetter.apply(item);
       Set<T> set = map.get(root);
       if (set == null) {
         set = ContainerUtil.newHashSet();

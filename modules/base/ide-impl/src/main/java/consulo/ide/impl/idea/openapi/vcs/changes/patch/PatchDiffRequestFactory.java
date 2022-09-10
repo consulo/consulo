@@ -42,7 +42,7 @@ import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ChangeDiffRequestP
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.tool.ApplyPatchDiffRequest;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.tool.ApplyPatchMergeRequest;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.Consumer;
+import java.util.function.Consumer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -22,7 +22,6 @@ import consulo.application.util.registry.RegistryValue;
 import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.ui.ex.awt.paint.PaintUtil;
 import consulo.ui.ex.awt.JBUIScale;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.application.util.function.Processor;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.ImageUtil;
@@ -43,6 +42,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.VolatileImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author Pavel Fatin
@@ -179,7 +179,7 @@ class ImmediatePainter {
       paintWithDoubleBuffering(g, painter);
     }
     else {
-      painter.consume(g);
+      painter.accept(g);
     }
 
     g.setClip(originalClip);
@@ -204,7 +204,7 @@ class ImmediatePainter {
 
     UIUtil.useSafely(myImage.getGraphics(), imageGraphics -> {
       imageGraphics.translate(-bounds.x, -bounds.y);
-      painter.consume(imageGraphics);
+      painter.accept(imageGraphics);
     });
 
     UIUtil.drawImage(graphics, myImage, bounds.x, bounds.y, null);

@@ -1,28 +1,27 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.project;
 
-import consulo.ide.impl.idea.ide.caches.FileContent;
 import consulo.application.Application;
-import consulo.application.event.ApplicationListener;
 import consulo.application.ApplicationManager;
+import consulo.application.event.ApplicationListener;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.internal.ApplicationEx;
-import consulo.application.internal.ApplicationManagerEx;
-import consulo.component.ProcessCanceledException;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.ProgressManager;
 import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
 import consulo.application.impl.internal.progress.ProgressWrapper;
+import consulo.application.internal.ApplicationEx;
+import consulo.application.internal.ApplicationManagerEx;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
 import consulo.application.util.registry.Registry;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.ConcurrencyUtil;
-import consulo.ide.impl.idea.util.Consumer;
+import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.ide.caches.FileContent;
+import consulo.ide.impl.idea.util.ConcurrencyUtil;
 import consulo.logging.Logger;
+import consulo.project.Project;
 import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
@@ -31,6 +30,7 @@ import java.util.Set;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 
 public class CacheUpdateRunner {
   private static final Logger LOG = Logger.getInstance(CacheUpdateRunner.class);
@@ -235,7 +235,7 @@ public class CacheUpdateRunner {
               try {
                 myProgressUpdater.processingStarted(file);
                 if (!file.isDirectory() && !Boolean.TRUE.equals(file.getUserData(FAILED_TO_INDEX))) {
-                  myProcessor.consume(fileContent);
+                  myProcessor.accept(fileContent);
                 }
                 myProgressUpdater.processingSuccessfullyFinished(file);
               }

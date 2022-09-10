@@ -15,27 +15,29 @@
  */
 package consulo.ide.impl.idea.diff.tools.simple;
 
-import consulo.ide.impl.idea.diff.DiffContext;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorEx;
 import consulo.diff.fragment.MergeLineFragment;
 import consulo.diff.request.ContentDiffRequest;
+import consulo.diff.util.Side;
+import consulo.diff.util.ThreeSide;
+import consulo.disposer.Disposable;
+import consulo.document.event.DocumentEvent;
+import consulo.ide.impl.idea.diff.DiffContext;
 import consulo.ide.impl.idea.diff.tools.util.*;
 import consulo.ide.impl.idea.diff.tools.util.base.TextDiffViewerUtil;
 import consulo.ide.impl.idea.diff.tools.util.side.ThreesideTextDiffViewer;
-import consulo.ide.impl.idea.diff.util.*;
+import consulo.ide.impl.idea.diff.util.DiffDividerDrawUtil;
 import consulo.ide.impl.idea.diff.util.DiffDividerDrawUtil.DividerPaintable;
+import consulo.ide.impl.idea.diff.util.DiffDrawUtil;
 import consulo.ide.impl.idea.diff.util.DiffUserDataKeysEx.ScrollToPolicy;
+import consulo.ide.impl.idea.diff.util.DiffUtil;
+import consulo.ide.impl.idea.diff.util.LineRange;
 import consulo.ide.impl.idea.openapi.diff.DiffBundle;
-import consulo.codeEditor.Editor;
-import consulo.diff.util.Side;
-import consulo.diff.util.ThreeSide;
-import consulo.document.event.DocumentEvent;
-import consulo.codeEditor.EditorEx;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.Function;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import org.jetbrains.annotations.NonNls;
@@ -46,6 +48,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Function;
 
 public abstract class ThreesideTextDiffViewerEx extends ThreesideTextDiffViewer {
   public static final Logger LOG = Logger.getInstance(ThreesideTextDiffViewerEx.class);
@@ -420,7 +423,7 @@ public abstract class ThreesideTextDiffViewerEx extends ThreesideTextDiffViewer 
                         @Nonnull FoldingModelSupport.Settings settings) {
       Iterator<int[]> it = map(fragments, new Function<MergeLineFragment, int[]>() {
         @Override
-        public int[] fun(MergeLineFragment fragment) {
+        public int[] apply(MergeLineFragment fragment) {
           return new int[]{
                   fragment.getStartLine(ThreeSide.LEFT),
                   fragment.getEndLine(ThreeSide.LEFT),

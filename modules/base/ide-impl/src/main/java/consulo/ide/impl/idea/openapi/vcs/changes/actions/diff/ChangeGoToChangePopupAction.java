@@ -1,18 +1,10 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.actions.diff;
 
-import consulo.ide.impl.idea.diff.actions.impl.GoToChangePopupBuilder;
 import consulo.diff.chain.DiffRequestChain;
 import consulo.diff.chain.DiffRequestProducer;
-import consulo.language.editor.CommonDataKeys;
-import consulo.versionControlSystem.FilePath;
-import consulo.virtualFileSystem.status.FileStatus;
-import consulo.versionControlSystem.VcsException;
-import consulo.versionControlSystem.change.Change;
-import consulo.versionControlSystem.change.ContentRevision;
+import consulo.ide.impl.idea.diff.actions.impl.GoToChangePopupBuilder;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesBrowser;
-import consulo.versionControlSystem.history.VcsRevisionNumber;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
@@ -20,7 +12,14 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.lang.ref.Ref;
+import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.VcsException;
+import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.change.ContentRevision;
+import consulo.versionControlSystem.history.VcsRevisionNumber;
+import consulo.virtualFileSystem.status.FileStatus;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -28,6 +27,7 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 public abstract class ChangeGoToChangePopupAction<Chain extends DiffRequestChain>
         extends GoToChangePopupBuilder.BaseGoToChangePopupAction<Chain>{
@@ -119,7 +119,7 @@ public abstract class ChangeGoToChangePopupAction<Chain extends DiffRequestChain
         @Override
         public void run() {
           //noinspection unchecked
-          myOnSelected.consume(index);
+          myOnSelected.accept(index);
         }
       });
     }

@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.util.config;
+package consulo.component.util.config;
 
-import consulo.ide.impl.idea.openapi.util.Factory;
-import consulo.component.util.config.Storage;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.WriteExternalException;
@@ -25,10 +23,12 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
 import java.util.Iterator;
+import java.util.function.Supplier;
 
 public interface Externalizer<T> {
-  @NonNls String VALUE_ATTRIBUTE = "value";
-  Externalizer<String> STRING = new BaseExternalizer<String>(){
+  @NonNls
+  String VALUE_ATTRIBUTE = "value";
+  Externalizer<String> STRING = new BaseExternalizer<String>() {
     @Override
     public String readValue(Element dataElement) {
       return dataElement.getAttributeValue(VALUE_ATTRIBUTE);
@@ -39,7 +39,8 @@ public interface Externalizer<T> {
     public Integer readValue(Element dataElement) {
       try {
         return new Integer(dataElement.getAttributeValue(VALUE_ATTRIBUTE));
-      } catch(NumberFormatException e) {
+      }
+      catch (NumberFormatException e) {
         return null;
       }
     }
@@ -53,6 +54,7 @@ public interface Externalizer<T> {
       dataElement.setAttribute(VALUE_ATTRIBUTE, value.toString());
     }
   }
+
   Externalizer<Boolean> BOOLEAN = new BaseExternalizer<Boolean>() {
     @Override
     public Boolean readValue(Element dataElement) {
@@ -65,15 +67,15 @@ public interface Externalizer<T> {
   void writeValue(Element dataElement, T value);
 
   class FactoryBased<T extends JDOMExternalizable> implements Externalizer<T> {
-    private final Factory<T> myFactory;
+    private final Supplier<T> myFactory;
 
-    public FactoryBased(Factory<T> factory) {
+    public FactoryBased(Supplier<T> factory) {
       myFactory = factory;
     }
 
     @Override
     public T readValue(Element dataElement) {
-      T data = myFactory.create();
+      T data = myFactory.get();
       try {
         data.readExternal(dataElement);
       }
@@ -93,15 +95,18 @@ public interface Externalizer<T> {
       }
     }
 
-    public static <T extends JDOMExternalizable> FactoryBased<T> create(Factory<T> factory) {
+    public static <T extends JDOMExternalizable> FactoryBased<T> create(Supplier<T> factory) {
       return new FactoryBased<T>(factory);
     }
   }
 
   class StorageExternalizer implements Externalizer<Storage> {
-    @NonNls private static final String ITEM_TAG = "item";
-    @NonNls private static final String KEY_ATTR = "key";
-    @NonNls private static final String VALUE_ATTR = "value";
+    @NonNls
+    private static final String ITEM_TAG = "item";
+    @NonNls
+    private static final String KEY_ATTR = "key";
+    @NonNls
+    private static final String VALUE_ATTR = "value";
 
     @Override
     public Storage readValue(Element dataElement) {

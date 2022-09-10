@@ -2,17 +2,16 @@
 package consulo.ide.impl.idea.codeInsight.completion;
 
 import consulo.application.ApplicationManager;
+import consulo.application.impl.internal.progress.ProgressWrapper;
 import consulo.application.internal.ApplicationManagerEx;
-import consulo.language.editor.completion.CompletionResult;
-import consulo.logging.Logger;
-import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.application.impl.internal.progress.ProgressWrapper;
-import consulo.application.util.function.Computable;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.ide.impl.idea.util.concurrency.FutureResult;
 import consulo.application.util.Semaphore;
+import consulo.application.util.function.Computable;
+import consulo.component.ProcessCanceledException;
+import consulo.ide.impl.idea.util.concurrency.FutureResult;
+import consulo.language.editor.completion.CompletionResult;
+import consulo.logging.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +19,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 /**
  * @author peter
@@ -56,7 +56,7 @@ class SyncCompletion extends CompletionThreadingBase {
       }
 
       @Override
-      public void consume(CompletionResult result) {
+      public void accept(CompletionResult result) {
         if (ourIsInBatchUpdate.get().booleanValue()) {
           myBatchList.add(result);
         }
@@ -140,7 +140,7 @@ class AsyncCompletion extends CompletionThreadingBase {
       }
 
       @Override
-      public void consume(final CompletionResult result) {
+      public void accept(final CompletionResult result) {
         if (ourIsInBatchUpdate.get().booleanValue()) {
           myBatchList.add(result);
         }

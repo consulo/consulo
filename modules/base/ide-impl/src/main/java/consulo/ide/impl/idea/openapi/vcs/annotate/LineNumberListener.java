@@ -12,7 +12,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.annotate;
 
-import consulo.ide.impl.idea.util.Consumer;
+import java.util.function.Consumer;
 
 /**
  * @author Konstantin Bulenkov

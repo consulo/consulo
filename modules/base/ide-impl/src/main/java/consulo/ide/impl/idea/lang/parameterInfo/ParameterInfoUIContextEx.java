@@ -16,13 +16,13 @@
 
 package consulo.ide.impl.idea.lang.parameterInfo;
 
-import consulo.ide.impl.idea.util.Function;
 import consulo.language.editor.parameterInfo.ParameterInfoUIContext;
 
 import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.EnumSet;
+import java.util.function.Function;
 
 /**
  * Richer interface for describing a popup hint contents.

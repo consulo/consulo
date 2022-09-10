@@ -227,7 +227,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
     final Tree tree;
     final NullableFunction<Object, PsiElement> toPsiConverter = new NullableFunction<Object, PsiElement>() {
       @Override
-      public PsiElement fun(Object o) {
+      public PsiElement apply(Object o) {
         if (o instanceof HierarchyNodeDescriptor) {
           return ((HierarchyNodeDescriptor)o).getContainingFile();
         }
@@ -250,7 +250,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
 
         @Override
         public Color getFileColorFor(Object object) {
-          return ProjectViewTree.getColorForElement(toPsiConverter.fun(object));
+          return ProjectViewTree.getColorForElement(toPsiConverter.apply(object));
         }
       };
 
@@ -311,7 +311,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
 
         @Override
         public Color getFileColorFor(Object object) {
-          return ProjectViewTree.getColorForElement(toPsiConverter.fun(object));
+          return ProjectViewTree.getColorForElement(toPsiConverter.apply(object));
         }
       };
     }

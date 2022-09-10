@@ -32,7 +32,7 @@ public class PseudoMap<Key, Value> implements PairConsumer<Key, Value>, Nullable
     return new HashMap<Key, Value>();
   }
 
-  public Value fun(Key key) {
+  public Value apply(Key key) {
     return myMap.get(key);
   }
 

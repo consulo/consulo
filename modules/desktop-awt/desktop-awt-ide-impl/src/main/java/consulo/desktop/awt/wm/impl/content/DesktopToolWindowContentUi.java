@@ -15,50 +15,47 @@
  */
 package consulo.desktop.awt.wm.impl.content;
 
+import consulo.dataContext.DataProvider;
+import consulo.desktop.awt.wm.impl.DesktopToolWindowImpl;
+import consulo.desktop.awt.wm.impl.DesktopToolWindowManagerImpl;
+import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.ide.impl.idea.ide.actions.CloseAction;
 import consulo.ide.impl.idea.ide.actions.ShowContentAction;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionManagerImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ui.ex.awt.Splitter;
 import consulo.ide.impl.idea.openapi.ui.ThreeComponentsSplitter;
-import consulo.project.ui.wm.*;
-import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ide.impl.idea.ui.content.TabbedContent;
+import consulo.ide.impl.idea.ui.content.tabs.PinToolwindowTabAction;
+import consulo.ide.impl.idea.ui.content.tabs.TabbedContentAction;
+import consulo.ide.impl.idea.ui.popup.PopupState;
+import consulo.ide.impl.idea.util.ContentUtilEx;
+import consulo.ide.impl.wm.impl.ToolWindowContentUI;
+import consulo.language.editor.PlatformDataKeys;
+import consulo.project.ui.wm.IdeFrame;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.PopupHandler;
+import consulo.ui.ex.awt.Splitter;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.util.Alarm;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.content.event.ContentManagerEvent;
 import consulo.ui.ex.content.event.ContentManagerListener;
-import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
-import consulo.util.lang.Pair;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.ex.toolWindow.ToolWindowContentUiType;
 import consulo.ui.ex.toolWindow.ToolWindowType;
-import consulo.util.lang.ref.Ref;
-import consulo.dataContext.DataProvider;
-import consulo.desktop.awt.wm.impl.DesktopToolWindowImpl;
-import consulo.desktop.awt.wm.impl.DesktopToolWindowManagerImpl;
-import consulo.ui.ex.awt.PopupHandler;
-import consulo.ide.impl.idea.ui.content.*;
-import consulo.ide.impl.idea.ui.content.tabs.PinToolwindowTabAction;
-import consulo.ide.impl.idea.ui.content.tabs.TabbedContentAction;
-import consulo.ide.impl.idea.ui.popup.PopupState;
-import consulo.ui.ex.awt.util.Alarm;
-import consulo.ide.impl.idea.util.ContentUtilEx;
-import consulo.ide.impl.idea.util.Function;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.disposer.Disposer;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
-import consulo.ide.impl.wm.impl.ToolWindowContentUI;
+import consulo.util.lang.Pair;
+import consulo.util.lang.ref.Ref;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 import org.jetbrains.annotations.NonNls;
@@ -71,6 +68,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class DesktopToolWindowContentUi extends JPanel implements ToolWindowContentUI, PropertyChangeListener, DataProvider {
@@ -107,7 +105,7 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
         for (int i = 0; i < nmembers; i++) {
           Component m = target.getComponent(i);
           if (m.isVisible()) {
-            Dimension d = dimensionSupplier.fun(m);
+            Dimension d = dimensionSupplier.apply(m);
             dim.height = Math.max(dim.height, d.height);
             if (firstVisibleComponent) {
               firstVisibleComponent = false;

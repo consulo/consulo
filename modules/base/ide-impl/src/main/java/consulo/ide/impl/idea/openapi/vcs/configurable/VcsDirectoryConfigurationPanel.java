@@ -16,30 +16,29 @@
 
 package consulo.ide.impl.idea.openapi.vcs.configurable;
 
-import consulo.ui.ex.awt.*;
-import consulo.configurable.ConfigurationException;
-import consulo.project.Project;
-import consulo.ui.ex.awt.table.ListTableModel;
-import consulo.util.lang.function.Condition;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.application.util.registry.Registry;
+import consulo.configurable.ConfigurationException;
+import consulo.disposer.Disposable;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.vcs.*;
+import consulo.ide.impl.idea.openapi.vcs.VcsRootChecker;
+import consulo.ide.impl.idea.openapi.vcs.VcsRootError;
 import consulo.ide.impl.idea.openapi.vcs.impl.DefaultVcsRootPolicy;
-import consulo.versionControlSystem.*;
 import consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman.NewMappings;
 import consulo.ide.impl.idea.openapi.vcs.roots.VcsRootErrorsFinder;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.awt.ColoredTableCellRenderer;
-import consulo.ui.ex.JBColor;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.awt.table.TableView;
-import consulo.ide.impl.idea.util.Function;
-import consulo.util.io.UriUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
-import consulo.disposer.Disposable;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.table.ListTableModel;
+import consulo.ui.ex.awt.table.TableView;
+import consulo.util.io.UriUtil;
+import consulo.util.lang.function.Condition;
+import consulo.versionControlSystem.*;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
@@ -54,10 +53,10 @@ import java.io.File;
 import java.util.List;
 import java.util.*;
 
-import static consulo.versionControlSystem.VcsConfiguration.getInstance;
-import static consulo.versionControlSystem.VcsConfiguration.ourMaximumFileForBaseRevisionSize;
 import static consulo.ui.ex.awt.UIUtil.DEFAULT_HGAP;
 import static consulo.ui.ex.awt.UIUtil.DEFAULT_VGAP;
+import static consulo.versionControlSystem.VcsConfiguration.getInstance;
+import static consulo.versionControlSystem.VcsConfiguration.ourMaximumFileForBaseRevisionSize;
 
 /**
  * @author yole
@@ -482,12 +481,8 @@ public class VcsDirectoryConfigurationPanel extends JPanel {
     Collection<MapInfo> selection = myDirectoryMappingTable.getSelection();
     mappings.removeAll(selection);
 
-    Collection<MapInfo> removedValidRoots = ContainerUtil.mapNotNull(selection, new Function<MapInfo, MapInfo>() {
-      @Override
-      public MapInfo fun(MapInfo info) {
-        return info.type == MapInfo.Type.NORMAL && myCheckers.get(info.mapping.getVcs()) != null ? MapInfo.unregistered(info.mapping.getDirectory(), info.mapping.getVcs()) : null;
-      }
-    });
+    Collection<MapInfo> removedValidRoots = ContainerUtil.mapNotNull(selection, info -> info.type == MapInfo.Type.NORMAL && myCheckers.get(info.mapping.getVcs()) != null ? MapInfo
+            .unregistered(info.mapping.getDirectory(), info.mapping.getVcs()) : null);
     mappings.addAll(removedValidRoots);
     sortAndAddSeparatorIfNeeded(mappings);
 

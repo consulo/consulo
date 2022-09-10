@@ -15,13 +15,13 @@
  */
 package consulo.ide.impl.idea.openapi.vcs;
 
-import consulo.versionControlSystem.FilePath;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.NotNullFunction;
 import consulo.ide.impl.idea.util.containers.Convertor;
+import consulo.versionControlSystem.FilePath;
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,7 +38,7 @@ public class ObjectsConvertor {
   }
 
   public static <Sup, Sub extends Sup> List<Sup> downcast(List<Sub> list) {
-    return convert(list, (Convertor<Sub, Sup>) DOWN_CAST);
+    return convert(list, (Convertor<Sub, Sup>)DOWN_CAST);
   }
 
   public static final Convertor<FilePath, VirtualFile> FILEPATH_TO_VIRTUAL = new Convertor<FilePath, VirtualFile>() {
@@ -67,7 +67,7 @@ public class ObjectsConvertor {
 
   public static final NotNullFunction<Object, Boolean> NOT_NULL = new NotNullFunction<Object, Boolean>() {
     @Nonnull
-    public Boolean fun(final Object o) {
+    public Boolean apply(final Object o) {
       return o != null;
     }
   };
@@ -87,16 +87,15 @@ public class ObjectsConvertor {
     return convert(in, FILEPATH_FILE);
   }
 
-  public static <T,S> List<S> convert(@Nonnull final Collection<T> in, final Convertor<T,S> convertor) {
+  public static <T, S> List<S> convert(@Nonnull final Collection<T> in, final Convertor<T, S> convertor) {
     return convert(in, convertor, null);
   }
 
-  public static <T,U, S extends U> List<S> convert(@Nonnull final Collection<T> in, final Convertor<T,S> convertor,
-                                                   @Nullable final NotNullFunction<U, Boolean> outFilter) {
+  public static <T, U, S extends U> List<S> convert(@Nonnull final Collection<T> in, final Convertor<T, S> convertor, @Nullable final NotNullFunction<U, Boolean> outFilter) {
     final List<S> out = new ArrayList<S>();
     for (T t : in) {
       final S converted = convertor.convert(t);
-      if ((outFilter != null) && (! Boolean.TRUE.equals(outFilter.fun(converted)))) continue;
+      if ((outFilter != null) && (!Boolean.TRUE.equals(outFilter.apply(converted)))) continue;
       out.add(converted);
     }
     return out;

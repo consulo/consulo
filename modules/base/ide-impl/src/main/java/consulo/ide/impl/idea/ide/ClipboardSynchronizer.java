@@ -13,7 +13,6 @@ import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import consulo.application.util.mac.foundation.Foundation;
 import consulo.application.util.mac.foundation.ID;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.ReflectionUtil;
 import consulo.ide.impl.idea.util.concurrency.FutureResult;
 import com.sun.jna.IntegerType;
@@ -36,6 +35,7 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -90,7 +90,7 @@ public class ClipboardSynchronizer implements Disposable {
 
     Boolean available = availabilitySupplier.get();
     if (available) {
-      callback.consume(available);
+      callback.accept(available);
     }
     else {
       AtomicInteger counter = new AtomicInteger();
@@ -102,7 +102,7 @@ public class ClipboardSynchronizer implements Disposable {
         if (counter.incrementAndGet() > 3 || a) {
           timer.stop();
         }
-        callback.consume(a);
+        callback.accept(a);
       });
       timer.start();
     }
@@ -113,7 +113,7 @@ public class ClipboardSynchronizer implements Disposable {
 
     Transferable transferable = transferableSupplier.get();
     if (transferable != null) {
-      callback.consume(transferable);
+      callback.accept(transferable);
     }
     else {
       AtomicInteger counter = new AtomicInteger();
@@ -125,7 +125,7 @@ public class ClipboardSynchronizer implements Disposable {
         if (counter.incrementAndGet() > 3) {
           timer.stop();
         }
-        callback.consume(t);
+        callback.accept(t);
       });
       timer.start();
     }

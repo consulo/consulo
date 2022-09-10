@@ -15,36 +15,35 @@
  */
 package consulo.ide.impl.idea.refactoring.extractMethod;
 
-import consulo.language.editor.highlight.HighlightManager;
-import consulo.find.FindManager;
+import consulo.application.AccessRule;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.ApplicationNamesInfo;
-import consulo.undoRedo.CommandProcessor;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.LogicalPosition;
-import consulo.codeEditor.ScrollType;
-import consulo.codeEditor.EditorColors;
-import consulo.colorScheme.EditorColorsManager;
-import consulo.codeEditor.markup.RangeHighlighter;
-import consulo.colorScheme.TextAttributes;
-import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
+import consulo.application.util.function.Computable;
+import consulo.application.util.function.ThrowableComputable;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorColors;
+import consulo.codeEditor.LogicalPosition;
+import consulo.codeEditor.ScrollType;
+import consulo.codeEditor.markup.RangeHighlighter;
+import consulo.colorScheme.EditorColorsManager;
+import consulo.colorScheme.TextAttributes;
+import consulo.component.ProcessCanceledException;
+import consulo.find.FindManager;
+import consulo.ide.impl.idea.ui.ReplacePromptDialog;
+import consulo.language.editor.highlight.HighlightManager;
+import consulo.language.editor.refactoring.RefactoringBundle;
+import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
-import consulo.application.util.function.Computable;
+import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.Pair;
-import consulo.application.util.function.ThrowableComputable;
-import consulo.language.psi.PsiElement;
-import consulo.language.editor.refactoring.RefactoringBundle;
-import consulo.ide.impl.idea.ui.ReplacePromptDialog;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.application.AccessRule;
 
 import javax.annotation.Nonnull;
-
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * @author Dennis.Ushakov
@@ -175,7 +174,7 @@ public class ExtractMethodHelper {
 
   private static void replaceDuplicate(final Project project, final Consumer<Pair<SimpleMatch, PsiElement>> replacer,
                                        final Pair<SimpleMatch, PsiElement> replacement) {
-    CommandProcessor.getInstance().executeCommand(project, () -> ApplicationManager.getApplication().runWriteAction(() -> replacer.consume(replacement)), "Replace duplicate", null);
+    CommandProcessor.getInstance().executeCommand(project, () -> ApplicationManager.getApplication().runWriteAction(() -> replacer.accept(replacement)), "Replace duplicate", null);
   }
 
 

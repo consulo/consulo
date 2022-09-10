@@ -15,27 +15,26 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
+import consulo.application.ApplicationManager;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.Task;
 import consulo.ide.impl.idea.openapi.progress.BackgroundTaskQueue;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.vcs.Details;
 import consulo.ide.impl.idea.openapi.vcs.GenericDetailsLoader;
-import consulo.versionControlSystem.VcsException;
 import consulo.ide.impl.idea.openapi.vcs.ui.VcsBalloonProblemNotifier;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.util.lang.function.PairConsumer;
 import consulo.ide.impl.idea.util.Ticket;
 import consulo.ide.impl.idea.util.continuation.ModalityIgnorantBackgroundableTask;
-import consulo.application.ApplicationManager;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.Task;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationType;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.Change;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
+import java.util.function.Consumer;
 
 /**
  * For presentation, which is itself in GenericDetails (not necessarily) - shown from time to time, but cached, and
@@ -61,23 +60,15 @@ public abstract class AbstractRefreshablePanel<T> implements RefreshablePanel<Ch
     myDetailsPanel.loading();
     myDetailsPanel.layout();
     
-    myDetailsLoader = new GenericDetailsLoader<Ticket, T>(new Consumer<Ticket>() {
-      @Override
-      public void consume(Ticket ticket) {
-        final Loader loader = new Loader(project, loadingTitle, myTicket.copy());
-        loader.runSteadily(new Consumer<Task.Backgroundable>() {
-          @Override
-          public void consume(Task.Backgroundable backgroundable) {
-            myQueue.run(backgroundable);
-          }
-        });
-      }
-    }, new PairConsumer<Ticket, T>() {
-      @Override
-      public void consume(Ticket ticket, T t) {
-        acceptData(t);
-      }
-    });
+    myDetailsLoader = new GenericDetailsLoader<Ticket, T>(ticket -> {
+      final Loader loader = new Loader(project, loadingTitle, myTicket.copy());
+      loader.runSteadily(new Consumer<>() {
+        @Override
+        public void accept(Task.Backgroundable backgroundable) {
+          myQueue.run(backgroundable);
+        }
+      });
+    }, (ticket, t) -> acceptData(t));
   }
 
   @Override

@@ -23,7 +23,6 @@ import consulo.disposer.Disposer;
 import consulo.language.editor.highlight.HighlightLevelUtil;
 import consulo.language.editor.highlight.HighlightingLevelManager;
 import consulo.ide.impl.idea.profile.codeInspection.ui.ErrorsConfigurable;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.Language;
 import consulo.language.editor.DaemonCodeAnalyzer;
@@ -55,6 +54,7 @@ import javax.swing.event.HyperlinkListener;
 import java.awt.*;
 import java.lang.ref.WeakReference;
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * User: anna
@@ -204,7 +204,7 @@ public class HectorComponent extends JPanel {
   }
 
   public void showComponent(@Nonnull Component component, @Nonnull Function<? super Dimension, ? extends Point> offset) {
-    showComponent(new RelativePoint(component, offset.fun(getPreferredSize())));
+    showComponent(new RelativePoint(component, offset.apply(getPreferredSize())));
   }
 
   public void showComponent(@Nonnull RelativePoint point) {

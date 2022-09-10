@@ -41,7 +41,7 @@ import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesListView;
 import consulo.versionControlSystem.VcsException;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.Consumer;
+import java.util.function.Consumer;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
 

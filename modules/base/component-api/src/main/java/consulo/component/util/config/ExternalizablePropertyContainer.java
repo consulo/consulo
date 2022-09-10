@@ -13,21 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util.config;
+package consulo.component.util.config;
 
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.Factory;
-import consulo.component.util.config.AbstractProperty;
-import consulo.component.util.config.BooleanProperty;
-import consulo.util.xml.serializer.JDOMExternalizable;
-import consulo.ide.impl.idea.openapi.util.JDOMUtil;
-import consulo.util.collection.SmartList;
 import consulo.logging.Logger;
+import consulo.util.collection.SmartList;
+import consulo.util.jdom.JDOMUtil;
+import consulo.util.lang.Comparing;
+import consulo.util.xml.serializer.JDOMExternalizable;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import java.util.*;
+import java.util.function.Supplier;
 
 public class ExternalizablePropertyContainer extends AbstractProperty.AbstractPropertyContainer {
   private static final Logger LOG = Logger.getInstance(ExternalizablePropertyContainer.class);
@@ -68,7 +66,7 @@ public class ExternalizablePropertyContainer extends AbstractProperty.AbstractPr
   /**
    * @deprecated
    */
-  public <T extends JDOMExternalizable> void  registerProperty(ListProperty<T> property, @NonNls String itemTagName, Factory<T> factory) {
+  public <T extends JDOMExternalizable> void  registerProperty(ListProperty<T> property, @NonNls String itemTagName, Supplier<T> factory) {
     registerProperty(property, itemTagName, Externalizer.FactoryBased.create(factory));
   }
 

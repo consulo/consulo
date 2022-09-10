@@ -16,21 +16,18 @@
 
 package consulo.ide.impl.idea.tasks.actions;
 
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.openapi.ui.playback.commands.ActionCommand;
 import consulo.ide.impl.idea.openapi.ui.popup.MultiSelectionListPopupStep;
-import consulo.versionControlSystem.change.ChangeListManager;
-import consulo.versionControlSystem.change.LocalChangeList;
+import consulo.ide.impl.idea.tasks.impl.TaskManagerImpl;
+import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.editor.CommonDataKeys;
+import consulo.project.Project;
 import consulo.task.ChangeListInfo;
 import consulo.task.LocalTask;
 import consulo.task.TaskManager;
-import consulo.ide.impl.idea.tasks.impl.TaskManagerImpl;
-import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
-import consulo.ide.impl.idea.util.NullableFunction;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.dataContext.DataContext;
-import consulo.dataContext.DataManager;
-import consulo.language.editor.CommonDataKeys;
-import consulo.project.Project;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIExAWTDataKey;
@@ -40,6 +37,8 @@ import consulo.ui.ex.popup.ListSeparator;
 import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.image.Image;
 import consulo.util.lang.ref.Ref;
+import consulo.versionControlSystem.change.ChangeListManager;
+import consulo.versionControlSystem.change.LocalChangeList;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -224,11 +223,9 @@ public class SwitchTaskAction extends BaseTaskAction {
     else {
 
       List<ChangeListInfo> infos = task.getChangeLists();
-      List<LocalChangeList> lists = ContainerUtil.mapNotNull(infos, new NullableFunction<ChangeListInfo, LocalChangeList>() {
-        public LocalChangeList fun(ChangeListInfo changeListInfo) {
-          LocalChangeList changeList = ChangeListManager.getInstance(project).getChangeList(changeListInfo.id);
-          return changeList != null && !changeList.isDefault() ? changeList : null;
-        }
+      List<LocalChangeList> lists = ContainerUtil.mapNotNull(infos, changeListInfo -> {
+        LocalChangeList changeList = ChangeListManager.getInstance(project).getChangeList(changeListInfo.id);
+        return changeList != null && !changeList.isDefault() ? changeList : null;
       });
 
       boolean removeIt = true;

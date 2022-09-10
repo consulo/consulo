@@ -15,7 +15,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.ide.impl.idea.openapi.wm.impl.status.EditorBasedWidget;
-import consulo.ide.impl.idea.util.Consumer;
+import java.util.function.Consumer;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;

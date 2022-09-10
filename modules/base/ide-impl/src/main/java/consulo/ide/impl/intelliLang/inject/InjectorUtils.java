@@ -276,7 +276,7 @@ public class InjectorUtils {
     return findNearestComment(context, new NullableFunction<PsiComment, BaseInjection>() {
       @Nullable
       @Override
-      public BaseInjection fun(PsiComment comment) {
+      public BaseInjection apply(PsiComment comment) {
         if (causeRef != null) {
           causeRef.set(comment);
         }
@@ -336,7 +336,7 @@ public class InjectorUtils {
         if (!checkDepth(otherHosts, element, comment)) {
           continue;
         }
-        T value = processor.fun(comment);
+        T value = processor.apply(comment);
         if (value != null) {
           return value;
         }
@@ -361,7 +361,7 @@ public class InjectorUtils {
           if (!checkDepth(otherHosts, element, comment)) {
             continue;
           }
-          T value = processor.fun(comment);
+          T value = processor.apply(comment);
           if (value != null) {
             return value;
           }

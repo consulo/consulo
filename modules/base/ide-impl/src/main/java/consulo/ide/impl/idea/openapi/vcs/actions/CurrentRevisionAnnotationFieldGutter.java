@@ -24,10 +24,10 @@ import consulo.versionControlSystem.annotate.FileAnnotation;
 import consulo.versionControlSystem.annotate.LineAnnotationAspect;
 import consulo.ide.impl.idea.openapi.vcs.annotate.TextAnnotationPresentation;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.ui.color.ColorValue;
 
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * shown additionally only when merge
@@ -71,7 +71,7 @@ class CurrentRevisionAnnotationFieldGutter extends AspectAnnotationFieldGutter i
   }
 
   @Override
-  public void consume(final AnnotationSource annotationSource) {
+  public void accept(final AnnotationSource annotationSource) {
     myTurnedOn = annotationSource.showMerged();
   }
 }

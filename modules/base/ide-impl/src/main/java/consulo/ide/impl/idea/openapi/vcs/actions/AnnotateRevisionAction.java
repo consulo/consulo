@@ -95,7 +95,7 @@ abstract class AnnotateRevisionAction extends AnnotateRevisionActionBase impleme
   }
 
   @Override
-  public void consume(Integer integer) {
+  public void accept(Integer integer) {
     currentLine = integer;
   }
 }

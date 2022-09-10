@@ -19,26 +19,20 @@ import consulo.codeEditor.Editor;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
-import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.vcs.impl.BackgroundableActionLock;
 import consulo.ide.impl.idea.openapi.vcs.impl.VcsBackgroundableActions;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 class VcsAnnotateUtil {
   @Nonnull
   public static List<Editor> getEditors(@Nonnull Project project, @Nonnull VirtualFile file) {
     FileEditor[] editors = FileEditorManager.getInstance(project).getEditors(file);
-    return ContainerUtil.mapNotNull(editors, new Function<FileEditor, Editor>() {
-      @Override
-      public Editor fun(FileEditor fileEditor) {
-        return fileEditor instanceof TextEditor ? ((TextEditor)fileEditor).getEditor() : null;
-      }
-    });
+    return ContainerUtil.mapNotNull(editors, fileEditor -> fileEditor instanceof TextEditor ? ((TextEditor)fileEditor).getEditor() : null);
   }
 
   @Nonnull

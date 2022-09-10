@@ -15,17 +15,17 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
+import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListEditHandler;
+import consulo.ide.impl.idea.openapi.vcs.changes.LocalChangeListImpl;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.versionControlSystem.change.ChangeList;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListEditHandler;
 import consulo.versionControlSystem.change.LocalChangeList;
-import consulo.ide.impl.idea.openapi.vcs.changes.LocalChangeListImpl;
-import consulo.ide.impl.idea.util.NullableConsumer;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.util.Collection;
+import java.util.function.Consumer;
 
 /**
  * @author max
@@ -51,8 +51,8 @@ public class ChangeListChooser extends DialogWrapper {
       }
     }
 
-    myPanel = new ChangeListChooserPanel(myProject, new NullableConsumer<String>() {
-      public void consume(final @javax.annotation.Nullable String errorMessage) {
+    myPanel = new ChangeListChooserPanel(myProject, new Consumer<String>() {
+      public void accept(final @javax.annotation.Nullable String errorMessage) {
         setOKActionEnabled(errorMessage == null);
         setErrorText(errorMessage);
       }

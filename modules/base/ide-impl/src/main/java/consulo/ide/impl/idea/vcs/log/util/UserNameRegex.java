@@ -16,8 +16,9 @@
 package consulo.ide.impl.idea.vcs.log.util;
 
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.Function;
+
 import javax.annotation.Nonnull;
+import java.util.function.Function;
 
 public class UserNameRegex implements Function<String, String> {
   @Nonnull
@@ -33,7 +34,7 @@ public class UserNameRegex implements Function<String, String> {
   }
 
   @Override
-  public String fun(String s) {
+  public String apply(String s) {
     return "^" + StringUtil.escapeChars(StringUtil.escapeBackSlashes(s), myExtended ? EXTENDED_REGEX_CHARS : BASIC_REGEX_CHARS) + "$";
   }
 }

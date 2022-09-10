@@ -24,6 +24,7 @@ import consulo.language.psi.PsiFile;
 import consulo.navigation.NavigationItem;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ import java.util.List;
  * @author VISTALL
  * @since 21-Jul-22
  */
+@Singleton
 @ServiceImpl
 public class SMTestHelperImpl implements SMTestHelper {
   @Nonnull

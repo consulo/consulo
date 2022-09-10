@@ -15,18 +15,14 @@
  */
 package consulo.ide.impl.idea.ide.favoritesTreeView;
 
-import consulo.ui.ex.tree.PresentationData;
-import consulo.project.ui.view.tree.ViewSettings;
-import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
-import consulo.usage.UsageInfo;
-import consulo.usage.UsageViewUtil;
-import consulo.usage.TextChunk;
-import consulo.usage.UsageInfo2UsageAdapter;
-import consulo.usage.UsagePresentation;
-import consulo.ide.impl.idea.util.Function;
+import consulo.project.Project;
+import consulo.project.ui.view.tree.ViewSettings;
+import consulo.ui.ex.tree.PresentationData;
+import consulo.usage.*;
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -63,12 +59,7 @@ public class UsageProjectTreeNode extends ProjectViewNodeWithChildrenList<UsageI
     presentation.setTooltip(myUsagePresentation.getTooltipText());
     final TextChunk[] text = myUsagePresentation.getText();
     updatePresentationWithTextChunks(presentation, text);
-    presentation.setPresentableText(StringUtil.join(text, new Function<TextChunk, String>() {
-      @Override
-      public String fun(TextChunk chunk) {
-        return chunk.getText();
-      }
-    }, ""));
+    presentation.setPresentableText(StringUtil.join(text, TextChunk::getText, ""));
   }
 
   public static void updatePresentationWithTextChunks(PresentationData presentation, TextChunk[] text) {

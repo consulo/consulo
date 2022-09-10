@@ -15,33 +15,32 @@
  */
 package consulo.ide.impl.idea.vcs.log.ui.actions;
 
+import consulo.application.ApplicationManager;
+import consulo.application.progress.ProgressManager;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.textCompletion.DefaultTextCompletionValueDescriptor;
+import consulo.ide.impl.idea.util.textCompletion.ValuesCompletionProvider;
+import consulo.ide.impl.idea.vcs.log.VcsLogRefs;
+import consulo.ide.impl.idea.vcs.log.ui.VcsLogColorManager;
+import consulo.ide.impl.idea.vcs.log.ui.frame.VcsLogGraphTable;
+import consulo.ide.impl.idea.vcsUtil.VcsImplUtil;
 import consulo.language.editor.completion.CompletionParameters;
 import consulo.language.editor.completion.CompletionResultSet;
 import consulo.language.editor.completion.lookup.InsertHandler;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementBuilder;
-import consulo.application.ApplicationManager;
-import consulo.application.progress.ProgressManager;
+import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.ex.awt.JBLabel;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.awt.JBLabel;
-import consulo.ide.impl.idea.util.Function;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.textCompletion.DefaultTextCompletionValueDescriptor;
-import consulo.ide.impl.idea.util.textCompletion.ValuesCompletionProvider;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ide.impl.idea.vcs.log.VcsLogRefs;
-import consulo.versionControlSystem.log.VcsRef;
-import consulo.ide.impl.idea.vcs.log.ui.VcsLogColorManager;
-import consulo.ide.impl.idea.vcs.log.ui.frame.VcsLogGraphTable;
-import consulo.ide.impl.idea.vcsUtil.VcsImplUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.logging.Logger;
 import consulo.ui.image.ImageEffects;
+import consulo.versionControlSystem.log.VcsRef;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -53,6 +52,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -67,8 +67,10 @@ public class GoToHashOrRefPopup {
   private final Function<VcsRef, Future> myOnSelectedRef;
   @Nonnull
   private final JBPopup myPopup;
-  @Nullable private Future myFuture;
-  @Nullable private VcsRef mySelectedRef;
+  @Nullable
+  private Future myFuture;
+  @Nullable
+  private VcsRef mySelectedRef;
 
   public GoToHashOrRefPopup(@Nonnull final Project project,
                             @Nonnull VcsLogRefs variants,
@@ -79,35 +81,32 @@ public class GoToHashOrRefPopup {
                             @Nonnull Comparator<VcsRef> comparator) {
     myOnSelectedHash = onSelectedHash;
     myOnSelectedRef = onSelectedRef;
-    myTextField =
-      new TextFieldWithProgress(project, new VcsRefCompletionProvider(project, variants, roots, colorManager, comparator)) {
-        @Override
-        public void onOk() {
-          if (myFuture == null) {
-            final Future future = ((mySelectedRef == null || (!mySelectedRef.getName().equals(getText().trim())))
-                                   ? myOnSelectedHash.fun(getText().trim())
-                                   : myOnSelectedRef.fun(mySelectedRef));
-            myFuture = future;
-            showProgress();
-            ApplicationManager.getApplication().executeOnPooledThread(() -> {
-              try {
-                future.get();
-                okPopup();
-              }
-              catch (CancellationException ex) {
-                cancelPopup();
-              }
-              catch (InterruptedException ex) {
-                cancelPopup();
-              }
-              catch (ExecutionException ex) {
-                LOG.error(ex);
-                cancelPopup();
-              }
-            });
-          }
+    myTextField = new TextFieldWithProgress(project, new VcsRefCompletionProvider(project, variants, roots, colorManager, comparator)) {
+      @Override
+      public void onOk() {
+        if (myFuture == null) {
+          final Future future = ((mySelectedRef == null || (!mySelectedRef.getName().equals(getText().trim()))) ? myOnSelectedHash.apply(getText().trim()) : myOnSelectedRef.apply(mySelectedRef));
+          myFuture = future;
+          showProgress();
+          ApplicationManager.getApplication().executeOnPooledThread(() -> {
+            try {
+              future.get();
+              okPopup();
+            }
+            catch (CancellationException ex) {
+              cancelPopup();
+            }
+            catch (InterruptedException ex) {
+              cancelPopup();
+            }
+            catch (ExecutionException ex) {
+              LOG.error(ex);
+              cancelPopup();
+            }
+          });
         }
-      };
+      }
+    };
     myTextField.setAlignmentX(Component.LEFT_ALIGNMENT);
 
     JBLabel label = new JBLabel("Enter hash or branch/tag name:");
@@ -121,8 +120,8 @@ public class GoToHashOrRefPopup {
     panel.add(myTextField);
     panel.setBorder(new EmptyBorder(2, 2, 2, 2));
 
-    myPopup = JBPopupFactory.getInstance().createComponentPopupBuilder(panel, myTextField.getPreferableFocusComponent())
-      .setCancelOnClickOutside(true).setCancelOnWindowDeactivation(true).setCancelKeyEnabled(true).setRequestFocus(true).createPopup();
+    myPopup = JBPopupFactory.getInstance().createComponentPopupBuilder(panel, myTextField.getPreferableFocusComponent()).setCancelOnClickOutside(true).setCancelOnWindowDeactivation(true)
+            .setCancelKeyEnabled(true).setRequestFocus(true).createPopup();
     myPopup.addListener(new JBPopupListener.Adapter() {
       @Override
       public void onClosed(LightweightWindowEvent event) {
@@ -167,13 +166,10 @@ public class GoToHashOrRefPopup {
     }
 
     @Override
-    public void fillCompletionVariants(@Nonnull CompletionParameters parameters,
-                                       @Nonnull String prefix,
-                                       @Nonnull CompletionResultSet result) {
+    public void fillCompletionVariants(@Nonnull CompletionParameters parameters, @Nonnull String prefix, @Nonnull CompletionResultSet result) {
       addValues(result, filterAndSort(result, myRefs.getBranches().stream()));
 
-      Future<List<VcsRef>> future = ApplicationManager.getApplication()
-        .executeOnPooledThread(() -> filterAndSort(result, myRefs.stream().filter(ref -> !ref.getType().isBranch())));
+      Future<List<VcsRef>> future = ApplicationManager.getApplication().executeOnPooledThread(() -> filterAndSort(result, myRefs.stream().filter(ref -> !ref.getType().isBranch())));
       while (true) {
         try {
           List<VcsRef> tags = future.get(TIMEOUT, TimeUnit.MILLISECONDS);
@@ -204,9 +200,7 @@ public class GoToHashOrRefPopup {
 
     @Nonnull
     private List<VcsRef> filterAndSort(@Nonnull CompletionResultSet result, @Nonnull Stream<VcsRef> stream) {
-      return ContainerUtil
-        .sorted(stream.filter(ref -> myRoots.contains(ref.getRoot()) && result.getPrefixMatcher().prefixMatches(ref.getName()))
-                  .collect(Collectors.toList()), myDescriptor);
+      return ContainerUtil.sorted(stream.filter(ref -> myRoots.contains(ref.getRoot()) && result.getPrefixMatcher().prefixMatches(ref.getName())).collect(Collectors.toList()), myDescriptor);
     }
   }
 
@@ -220,10 +214,7 @@ public class GoToHashOrRefPopup {
     @Nonnull
     private final Map<VirtualFile, String> myCachedRootNames = ContainerUtil.newHashMap();
 
-    private VcsRefDescriptor(@Nonnull Project project,
-                             @Nonnull VcsLogColorManager manager,
-                             @Nonnull Comparator<VcsRef> comparator,
-                             @Nonnull Collection<VirtualFile> roots) {
+    private VcsRefDescriptor(@Nonnull Project project, @Nonnull VcsLogColorManager manager, @Nonnull Comparator<VcsRef> comparator, @Nonnull Collection<VirtualFile> roots) {
       myProject = project;
       myColorManager = manager;
       myReferenceComparator = comparator;
@@ -239,10 +230,7 @@ public class GoToHashOrRefPopup {
     public LookupElementBuilder createLookupBuilder(@Nonnull VcsRef item) {
       LookupElementBuilder lookupBuilder = super.createLookupBuilder(item);
       if (myColorManager.isMultipleRoots()) {
-        lookupBuilder = lookupBuilder
-          .withTypeText(getTypeText(item),
-                        ImageEffects.colorFilled(15, 15, TargetAWT.from(VcsLogGraphTable.getRootBackgroundColor(item.getRoot(), myColorManager))),
-                        true);
+        lookupBuilder = lookupBuilder.withTypeText(getTypeText(item), ImageEffects.colorFilled(15, 15, TargetAWT.from(VcsLogGraphTable.getRootBackgroundColor(item.getRoot(), myColorManager))), true);
       }
       return lookupBuilder;
     }

@@ -15,14 +15,13 @@
  */
 package consulo.ide.impl.idea.vcs.log.data;
 
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Collects incoming requests into a list, and provides them to the underlying background task via {@link #popRequests()}. <br/>
@@ -98,7 +97,7 @@ public abstract class SingleTaskController<Request, Result> {
    */
   protected final void taskCompleted(@Nullable Result result) {
     if (result != null) {
-      myResultHandler.consume(result);
+      myResultHandler.accept(result);
       LOG.debug("Handled result: " + result);
     }
     synchronized (LOCK) {

@@ -16,12 +16,12 @@
 package consulo.ide.impl.idea.vcs.log.util;
 
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.util.lang.function.ThrowableConsumer;
 import consulo.application.util.concurrent.QueueProcessor;
 import consulo.disposer.Disposer;
 
 import javax.annotation.Nonnull;
+import java.util.function.Consumer;
 
 /**
  * Queue with a limited number of tasks, and with higher priority for new tasks, than for older ones.
@@ -57,7 +57,7 @@ public class SequentialLimitedLifoExecutor<Task> implements Disposable {
 
   private class DetailsLoadingTask implements Consumer<Task> {
     @Override
-    public void consume(final Task task) {
+    public void accept(final Task task) {
       try {
         myLoader.dismissLastTasks(myMaxTasks);
         myLoadProcess.consume(task);

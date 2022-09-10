@@ -37,7 +37,7 @@ public class NullableLazyKey<T,H extends UserDataHolder> extends Key<T> {
   public final T getValue(H h) {
     T data = h.getUserData(this);
     if (data == null) {
-      data = myFunction.fun(h);
+      data = myFunction.apply(h);
       h.putUserData(this, data == null ? (T)ObjectUtil.NULL : data);
     }
     return data == ObjectUtil.NULL ? null : data;

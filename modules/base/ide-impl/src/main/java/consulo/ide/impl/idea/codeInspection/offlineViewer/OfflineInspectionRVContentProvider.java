@@ -20,41 +20,41 @@
  */
 package consulo.ide.impl.idea.codeInspection.offlineViewer;
 
+import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionContextImpl;
+import consulo.ide.impl.idea.codeInspection.ex.InspectionRVContentProvider;
+import consulo.ide.impl.idea.codeInspection.ex.QuickFixAction;
+import consulo.ide.impl.idea.codeInspection.offline.OfflineProblemDescriptor;
+import consulo.ide.impl.idea.codeInspection.ui.*;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.inspection.CommonProblemDescriptor;
 import consulo.language.editor.inspection.QuickFix;
-import consulo.ide.impl.idea.codeInspection.ex.*;
-import consulo.ide.impl.idea.codeInspection.offline.OfflineProblemDescriptor;
 import consulo.language.editor.inspection.reference.RefElement;
 import consulo.language.editor.inspection.reference.RefEntity;
 import consulo.language.editor.inspection.reference.SmartRefElementPointer;
-import consulo.ide.impl.idea.codeInspection.ui.*;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.util.Function;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.tree.TreeUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import java.util.*;
+import java.util.function.Function;
 
 public class OfflineInspectionRVContentProvider extends InspectionRVContentProvider {
   private final Map<String, Map<String, Set<OfflineProblemDescriptor>>> myContent;
 
-  public OfflineInspectionRVContentProvider(@Nonnull Map<String, Map<String, Set<OfflineProblemDescriptor>>> content,
-                                            @Nonnull Project project) {
+  public OfflineInspectionRVContentProvider(@Nonnull Map<String, Map<String, Set<OfflineProblemDescriptor>>> content, @Nonnull Project project) {
     super(project);
     myContent = content;
   }
 
   @Override
-  public boolean checkReportedProblems(@Nonnull GlobalInspectionContextImpl context,
-                                       @Nonnull final InspectionToolWrapper toolWrapper) {
+  public boolean checkReportedProblems(@Nonnull GlobalInspectionContextImpl context, @Nonnull final InspectionToolWrapper toolWrapper) {
     final Map<String, Set<OfflineProblemDescriptor>> content = getFilteredContent(context, toolWrapper);
     return content != null && !content.values().isEmpty();
   }
@@ -120,13 +120,7 @@ public class OfflineInspectionRVContentProvider extends InspectionRVContentProvi
     InspectionToolWrapper toolWrapper = toolNode.getToolWrapper();
     final Map<String, Set<OfflineProblemDescriptor>> filteredContent = getFilteredContent(context, toolWrapper);
     if (filteredContent != null && !filteredContent.values().isEmpty()) {
-      final Function<OfflineProblemDescriptor, UserObjectContainer<OfflineProblemDescriptor>> computeContainer =
-        new Function<OfflineProblemDescriptor, UserObjectContainer<OfflineProblemDescriptor>>() {
-          @Override
-          public UserObjectContainer<OfflineProblemDescriptor> fun(final OfflineProblemDescriptor descriptor) {
-            return new OfflineProblemDescriptorContainer(descriptor);
-          }
-        };
+      final Function<OfflineProblemDescriptor, UserObjectContainer<OfflineProblemDescriptor>> computeContainer = descriptor -> new OfflineProblemDescriptorContainer(descriptor);
       final List<InspectionTreeNode> list = buildTree(context, filteredContent, false, toolWrapper, computeContainer, showStructure);
       for (InspectionTreeNode node : list) {
         toolNode.add(node);
@@ -137,8 +131,7 @@ public class OfflineInspectionRVContentProvider extends InspectionRVContentProvi
 
   @Nullable
   @SuppressWarnings({"UnusedAssignment"})
-  private Map<String, Set<OfflineProblemDescriptor>> getFilteredContent(@Nonnull GlobalInspectionContextImpl context,
-                                                                        @Nonnull InspectionToolWrapper toolWrapper) {
+  private Map<String, Set<OfflineProblemDescriptor>> getFilteredContent(@Nonnull GlobalInspectionContextImpl context, @Nonnull InspectionToolWrapper toolWrapper) {
     Map<String, Set<OfflineProblemDescriptor>> content = myContent.get(toolWrapper.getShortName());
     if (content == null) return null;
     if (context.getUIOptions().FILTER_RESOLVED_ITEMS) {
@@ -156,10 +149,10 @@ public class OfflineInspectionRVContentProvider extends InspectionRVContentProvi
   }
 
   private static void excludeProblem(final String externalName, final Map<String, Set<OfflineProblemDescriptor>> content) {
-    for (Iterator<String> iter = content.keySet().iterator(); iter.hasNext();) {
+    for (Iterator<String> iter = content.keySet().iterator(); iter.hasNext(); ) {
       final String packageName = iter.next();
       final Set<OfflineProblemDescriptor> excluded = new HashSet<OfflineProblemDescriptor>(content.get(packageName));
-      for (Iterator<OfflineProblemDescriptor> it = excluded.iterator(); it.hasNext();) {
+      for (Iterator<OfflineProblemDescriptor> it = excluded.iterator(); it.hasNext(); ) {
         final OfflineProblemDescriptor ex = it.next();
         if (Comparing.strEqual(ex.getFQName(), externalName)) {
           it.remove();
@@ -167,7 +160,8 @@ public class OfflineInspectionRVContentProvider extends InspectionRVContentProvi
       }
       if (excluded.isEmpty()) {
         iter.remove();
-      } else {
+      }
+      else {
         content.put(packageName, excluded);
       }
     }
@@ -182,8 +176,7 @@ public class OfflineInspectionRVContentProvider extends InspectionRVContentProvi
     InspectionToolPresentation presentation = context.getPresentation(toolWrapper);
     final RefElementNode elemNode = addNodeToParent(container, presentation, packageNode);
     if (toolWrapper instanceof LocalInspectionToolWrapper) {
-      elemNode.add(new OfflineProblemDescriptorNode(((OfflineProblemDescriptorContainer)container).getUserObject(),
-                                                    (LocalInspectionToolWrapper)toolWrapper, presentation));
+      elemNode.add(new OfflineProblemDescriptorNode(((OfflineProblemDescriptorContainer)container).getUserObject(), (LocalInspectionToolWrapper)toolWrapper, presentation));
     }
   }
 

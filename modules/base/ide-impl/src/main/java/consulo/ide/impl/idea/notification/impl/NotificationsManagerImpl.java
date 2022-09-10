@@ -31,13 +31,11 @@ import consulo.ide.impl.idea.notification.impl.ui.NotificationsUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.ui.*;
 import consulo.ide.impl.idea.ui.components.GradientViewport;
-import consulo.logging.Logger;
-import consulo.ui.ex.awt.HorizontalLayout;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.IconUtil;
 import consulo.ide.impl.start.WelcomeFrameManager;
 import consulo.ide.impl.ui.impl.BalloonLayoutEx;
+import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.startup.StartupManager;
@@ -82,6 +80,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * @author spleaner
@@ -818,7 +817,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
           JBInsets.addTo(bounds, (Insets)p.second);
         }
         else {
-          bounds = ((Function<Component, Rectangle>)p.second).fun(component);
+          bounds = ((Function<Component, Rectangle>)p.second).apply(component);
         }
         if (bounds.contains(SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), component.getParent()))) {
           if (myLastComponent != null && myLastComponent != component) {
@@ -1103,10 +1102,10 @@ public class NotificationsManagerImpl extends NotificationsManager {
     }
 
     private Dimension layoutSize(@Nonnull Function<Component, Dimension> size) {
-      Dimension titleSize = myTitleComponent == null ? new Dimension() : size.fun(myTitleComponent);
-      Dimension centeredSize = myCenteredComponent == null ? new Dimension() : size.fun(myCenteredComponent);
-      Dimension actionSize = myActionPanel == null ? new Dimension() : size.fun(myActionPanel);
-      Dimension expandSize = myExpandAction == null || myLayoutData.showMinSize ? new Dimension() : size.fun(myExpandAction);
+      Dimension titleSize = myTitleComponent == null ? new Dimension() : size.apply(myTitleComponent);
+      Dimension centeredSize = myCenteredComponent == null ? new Dimension() : size.apply(myCenteredComponent);
+      Dimension actionSize = myActionPanel == null ? new Dimension() : size.apply(myActionPanel);
+      Dimension expandSize = myExpandAction == null || myLayoutData.showMinSize ? new Dimension() : size.apply(myExpandAction);
 
       int height = myLayoutData.configuration.topSpaceHeight + titleSize.height + centeredSize.height + Math.max(actionSize.height, expandSize.height) + myLayoutData.configuration.bottomSpaceHeight;
 

@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.vcs.log.data;
 
 import consulo.versionControlSystem.log.*;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.graph.GraphColorManagerImpl;
 import consulo.versionControlSystem.log.graph.GraphCommit;
@@ -28,6 +27,7 @@ import gnu.trove.TIntHashSet;
 import javax.annotation.Nonnull;
 
 import java.util.*;
+import java.util.function.Function;
 
 public class DataPack extends DataPackBase {
   public static final DataPack EMPTY = createEmptyInstance();

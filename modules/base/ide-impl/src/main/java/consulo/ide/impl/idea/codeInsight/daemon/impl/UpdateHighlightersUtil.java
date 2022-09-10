@@ -17,7 +17,7 @@ import consulo.document.internal.DocumentEx;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.util.Consumer;
+import java.util.function.Consumer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.annotation.HighlightSeverity;

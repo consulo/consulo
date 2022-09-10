@@ -18,7 +18,6 @@ import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.awt.util.Alarm;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.event.BulkAwareDocumentListener;
@@ -30,6 +29,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.function.Consumer;
 
 public final class PositionPanel extends EditorBasedWidget
         implements StatusBarWidget.Multiframe, StatusBarWidget.TextPresentation, CaretListener, SelectionListener, BulkAwareDocumentListener.Simple, PropertyChangeListener {

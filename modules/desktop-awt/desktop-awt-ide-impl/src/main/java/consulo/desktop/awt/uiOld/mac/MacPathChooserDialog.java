@@ -34,7 +34,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.UIBundle;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.ui.OwnerOptional;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
@@ -47,6 +46,7 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 /**

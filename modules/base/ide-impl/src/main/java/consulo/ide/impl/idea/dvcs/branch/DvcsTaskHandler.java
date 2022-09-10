@@ -15,22 +15,21 @@
  */
 package consulo.ide.impl.idea.dvcs.branch;
 
-import consulo.versionControlSystem.distributed.repository.AbstractRepositoryManager;
-import consulo.versionControlSystem.distributed.repository.Repository;
 import consulo.application.ApplicationManager;
-import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
-import consulo.util.lang.function.Condition;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.versionControlSystem.VcsTaskHandler;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.NullableFunction;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.project.Project;
+import consulo.ui.ex.awt.Messages;
 import consulo.util.collection.FactoryMap;
 import consulo.util.collection.MultiMap;
+import consulo.util.lang.function.Condition;
+import consulo.versionControlSystem.VcsTaskHandler;
+import consulo.versionControlSystem.distributed.repository.AbstractRepositoryManager;
+import consulo.versionControlSystem.distributed.repository.Repository;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 
 public abstract class DvcsTaskHandler<R extends Repository> extends VcsTaskHandler {
@@ -81,12 +80,7 @@ public abstract class DvcsTaskHandler<R extends Repository> extends VcsTaskHandl
     }
 
     map.addAll(repositories);
-    return new TaskInfo(taskName, ContainerUtil.map(map, new Function<R, String>() {
-      @Override
-      public String fun(R r) {
-        return r.getPresentableUrl();
-      }
-    }));
+    return new TaskInfo(taskName, ContainerUtil.map(map, r -> r.getPresentableUrl()));
   }
 
   @Override
@@ -152,17 +146,14 @@ public abstract class DvcsTaskHandler<R extends Repository> extends VcsTaskHandl
         tasks.putValue(branch.getName(), branch);
       }
     }
-    return ContainerUtil.map2Array(tasks.entrySet(), TaskInfo.class, new Function<Map.Entry<String, Collection<TaskInfo>>, TaskInfo>() {
-      @Override
-      public TaskInfo fun(Map.Entry<String, Collection<TaskInfo>> entry) {
-        Set<String> repositories = new HashSet<>();
-        boolean remote = false;
-        for (TaskInfo info : entry.getValue()) {
-          remote |= info.isRemote();
-          repositories.addAll(info.getRepositories());
-        }
-        return new TaskInfo(entry.getKey(), repositories, remote);
+    return ContainerUtil.map2Array(tasks.entrySet(), TaskInfo.class, entry -> {
+      Set<String> repositories1 = new HashSet<>();
+      boolean remote = false;
+      for (TaskInfo info : entry.getValue()) {
+        remote |= info.isRemote();
+        repositories1.addAll(info.getRepositories());
       }
+      return new TaskInfo(entry.getKey(), repositories1, remote);
     });
   }
 
@@ -172,19 +163,13 @@ public abstract class DvcsTaskHandler<R extends Repository> extends VcsTaskHandl
     return ContainerUtil.mapNotNull(urls, new NullableFunction<String, R>() {
       @Nullable
       @Override
-      public R fun(final String s) {
-
-        return ContainerUtil.find(repositories, new Condition<R>() {
-          @Override
-          public boolean value(R repository) {
-            return s.equals(repository.getPresentableUrl());
-          }
-        });
+      public R apply(final String s) {
+        return ContainerUtil.find(repositories, repository -> s.equals(repository.getPresentableUrl()));
       }
     });
   }
 
-  protected abstract void checkout(@Nonnull String taskName, @Nonnull List<R> repos, @javax.annotation.Nullable Runnable callInAwtLater);
+  protected abstract void checkout(@Nonnull String taskName, @Nonnull List<R> repos, @Nullable Runnable callInAwtLater);
 
   protected abstract void checkoutAsNewBranch(@Nonnull String name, @Nonnull List<R> repositories);
 

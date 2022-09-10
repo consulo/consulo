@@ -86,7 +86,6 @@ import consulo.ide.impl.idea.ui.dualView.TreeTableView;
 import consulo.ui.ex.awt.table.TableView;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.application.util.function.AsynchConsumer;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.util.lang.TreeItem;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.util.DateFormatUtil;
@@ -111,6 +110,7 @@ import java.awt.datatransfer.StringSelection;
 import java.io.IOException;
 import java.util.List;
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * author: lesya

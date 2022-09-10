@@ -16,22 +16,21 @@
 
 package consulo.ide.impl.idea.ide.ui.search;
 
-import consulo.ide.impl.idea.application.options.SkipSelfSearchComponent;
-import consulo.ide.impl.ui.impl.PopupChooserBuilder;
-import consulo.ui.ex.JBColor;
 import consulo.configurable.Configurable;
-import consulo.ui.ex.awt.*;
 import consulo.configurable.SearchableConfigurable;
+import consulo.ide.impl.base.BaseShowSettingsUtil;
+import consulo.ide.impl.idea.application.options.SkipSelfSearchComponent;
 import consulo.ide.impl.idea.openapi.options.ex.GlassPanel;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.project.Project;
+import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.util.lang.function.Condition;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.awt.util.Alarm;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.base.BaseShowSettingsUtil;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -46,6 +45,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.List;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -535,7 +535,7 @@ public class SearchUtil {
             SwingUtilities.invokeLater(new Runnable() {
               public void run() {     //do not show look up again
                 showHintAlarm.cancelAllRequests();
-                selectConfigurable.consume(description.getConfigurableId());
+                selectConfigurable.accept(description.getConfigurableId());
               }
             });
           }
@@ -604,7 +604,7 @@ public class SearchUtil {
                                                 final Consumer<String> selectConfigurable,
                                                 final Project project) {
     final Consumer<Integer> shower = new Consumer<Integer>() {
-      public void consume(final Integer direction) {
+      public void accept(final Integer direction) {
         if (activePopup[0] != null) {
           activePopup[0].cancel();
         }
@@ -623,12 +623,12 @@ public class SearchUtil {
     };
     searchField.registerKeyboardAction(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        shower.consume(1);
+        shower.accept(1);
       }
     }, KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
     searchField.registerKeyboardAction(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        shower.consume(-1);
+        shower.accept(-1);
       }
     }, KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
 

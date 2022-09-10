@@ -16,15 +16,14 @@
 
 package consulo.ide.impl.idea.history.core;
 
+import consulo.application.ApplicationManager;
 import consulo.ide.impl.idea.history.core.changes.Change;
 import consulo.ide.impl.idea.history.core.changes.ChangeSet;
 import consulo.ide.impl.idea.history.core.changes.ChangeVisitor;
 import consulo.ide.impl.idea.history.utils.LocalHistoryLog;
-import consulo.application.ApplicationManager;
-import consulo.util.lang.Clock;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
+import consulo.util.lang.Clock;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.ArrayList;
@@ -173,11 +172,9 @@ public class ChangeList {
   }
 
   public synchronized void purgeObsolete(long period) {
-    myStorage.purge(period, myIntervalBetweenActivities, new Consumer<ChangeSet>() {
-      public void consume(ChangeSet changeSet) {
-        for (Content each : changeSet.getContentsToPurge()) {
-          each.release();
-        }
+    myStorage.purge(period, myIntervalBetweenActivities, changeSet -> {
+      for (Content each : changeSet.getContentsToPurge()) {
+        each.release();
       }
     });
   }

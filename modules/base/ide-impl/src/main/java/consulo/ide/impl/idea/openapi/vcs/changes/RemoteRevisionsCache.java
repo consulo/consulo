@@ -27,18 +27,16 @@ import consulo.ide.impl.idea.openapi.util.Getter;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.PlusMinus;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.RemoteStatusChangeNodeDecorator;
 import consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
-import consulo.versionControlSystem.VcsInitObject;
 import consulo.ide.impl.idea.openapi.vcs.update.UpdateFilesHelper;
-import consulo.versionControlSystem.*;
-import consulo.versionControlSystem.change.ChangesUtil;
-import consulo.versionControlSystem.root.VcsRoot;
-import consulo.versionControlSystem.update.UpdatedFiles;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.lang.Couple;
 import consulo.util.lang.Pair;
+import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.change.ChangesUtil;
+import consulo.versionControlSystem.root.VcsRoot;
+import consulo.versionControlSystem.update.UpdatedFiles;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -46,6 +44,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.function.Consumer;
 
 @Singleton
 @ServiceAPI(ComponentScope.PROJECT)
@@ -191,7 +190,7 @@ public class RemoteRevisionsCache implements PlusMinus<Pair<String, AbstractVcs>
     final Collection<String> newForTree = new LinkedList<>();
     final Collection<String> newForUsual = new LinkedList<>();
     UpdateFilesHelper.iterateAffectedFiles(updatedFiles, new Consumer<Couple<String>>() {
-      public void consume(final Couple<String> pair) {
+      public void accept(final Couple<String> pair) {
         final String vcsName = pair.getSecond();
         RemoteDifferenceStrategy strategy = strategyMap.get(vcsName);
         if (strategy == null) {

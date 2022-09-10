@@ -95,6 +95,8 @@ import java.io.File;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static consulo.versionControlSystem.ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED;
@@ -1241,7 +1243,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
       }, updateMode, VcsBundle.message("change.lists.manager.add.unversioned"), null);
 
       if (changesConsumer != null) {
-        changesConsumer.consume(foundChanges.get());
+        changesConsumer.accept(foundChanges.get());
       }
     }
     else {

@@ -22,7 +22,6 @@ import consulo.content.bundle.*;
 import consulo.content.impl.internal.bundle.SdkImpl;
 import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.project.ProjectBundle;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
@@ -33,6 +32,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.function.Consumer;
 
 /**
  * @author yole
@@ -171,20 +171,20 @@ public class SdkConfigurationUtil {
     if (ApplicationManager.getApplication().isUnitTestMode()) {
       Sdk sdk = SdkTable.getInstance().findMostRecentSdkOfType(sdkType);
       if (sdk == null) throw new RuntimeException("No SDK of type " + sdkType + " found");
-      consumer.consume(sdk.getHomePath());
+      consumer.accept(sdk.getHomePath());
       return;
     }
 
     FileChooser.chooseFiles(descriptor, null, getSuggestedSdkPath(sdkType)).doWhenDone(virtualFiles -> {
       final String path = virtualFiles[0].getPath();
       if (sdkType.isValidSdkHome(path)) {
-        consumer.consume(path);
+        consumer.accept(path);
         return;
       }
 
       final String adjustedPath = sdkType.adjustSelectedSdkHome(path);
       if (sdkType.isValidSdkHome(adjustedPath)) {
-        consumer.consume(adjustedPath);
+        consumer.accept(adjustedPath);
       }
     });
   }

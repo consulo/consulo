@@ -19,7 +19,6 @@ import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.impl.ArchiveHandler;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.util.lang.function.PairFunction;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.Application;
@@ -36,6 +35,7 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
 import static consulo.util.lang.Pair.pair;
 
@@ -215,7 +215,7 @@ public class VfsImplUtil {
     int index = rootPath.lastIndexOf('/');
     while (index > 0) {
       String containingDirectoryPath = rootPath.substring(0, index);
-      consumer.consume(containingDirectoryPath);
+      consumer.accept(containingDirectoryPath);
       index = rootPath.lastIndexOf('/', index - 1);
     }
   }

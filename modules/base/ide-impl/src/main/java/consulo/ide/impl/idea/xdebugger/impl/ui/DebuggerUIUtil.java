@@ -36,7 +36,6 @@ import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.RelativePoint;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.execution.debug.Obsolescent;
 import consulo.execution.debug.XDebuggerBundle;
 import consulo.execution.debug.XDebuggerManager;
@@ -76,6 +75,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
 public class DebuggerUIUtil {
   @NonNls public static final String FULL_VALUE_POPUP_DIMENSION_KEY = "XDebugger.FullValuePopup";
@@ -430,7 +430,7 @@ public class DebuggerUIUtil {
       public void errorOccurred(@Nonnull final String errorMessage) {
         AppUIUtil.invokeOnEdt(() -> {
           tree.rebuildAndRestore(treeState);
-          errorConsumer.consume(errorMessage);
+          errorConsumer.accept(errorMessage);
         });
         XDebuggerUtilImpl.rebuildAllSessionsViews(project);
       }

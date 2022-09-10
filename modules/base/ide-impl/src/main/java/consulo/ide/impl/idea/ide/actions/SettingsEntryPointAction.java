@@ -22,7 +22,7 @@ import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.awt.util.PopupUtil;
 import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetsManager;
 import consulo.ui.ex.awt.AnActionButton;
-import consulo.ide.impl.idea.util.Consumer;
+import java.util.function.Consumer;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.updateSettings.UpdateSettings;

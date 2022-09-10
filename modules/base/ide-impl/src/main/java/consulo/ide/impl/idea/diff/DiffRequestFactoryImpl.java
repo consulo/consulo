@@ -35,7 +35,7 @@ import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.versionControlSystem.FilePath;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.Consumer;
+import java.util.function.Consumer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.versionControlSystem.util.VcsUtil;
 import jakarta.inject.Singleton;

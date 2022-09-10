@@ -47,7 +47,6 @@ import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.util.lang.TreeItem;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -63,6 +62,7 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.Consumer;
 
 @Singleton
 @ServiceAPI(ComponentScope.PROJECT)
@@ -620,7 +620,7 @@ public class FavoritesManager implements PersistentStateComponent<Element> {
     queue.addAll(coll);
     while (!queue.isEmpty()) {
       final TreeItem<Pair<AbstractUrl, String>> item = queue.removeFirst();
-      consumer.consume(item);
+      consumer.accept(item);
       final List<TreeItem<Pair<AbstractUrl, String>>> children = item.getChildren();
       if (children != null && !children.isEmpty()) {
         queue.addAll(children);
@@ -650,7 +650,7 @@ public class FavoritesManager implements PersistentStateComponent<Element> {
           final AbstractUrl finalChildUrl = childUrl;
           iterateTreeItems(roots, new Consumer<TreeItem<Pair<AbstractUrl, String>>>() {
             @Override
-            public void consume(TreeItem<Pair<AbstractUrl, String>> item) {
+            public void accept(TreeItem<Pair<AbstractUrl, String>> item) {
               final Pair<AbstractUrl, String> root = item.getData();
               final Object[] path = root.first.createPath(myProject);
               if (path == null || path.length < 1 || path[0] == null) {

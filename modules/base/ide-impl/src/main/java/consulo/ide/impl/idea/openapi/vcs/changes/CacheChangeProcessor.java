@@ -15,35 +15,36 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
-import consulo.diff.chain.DiffRequestProducerException;
-import consulo.ide.impl.idea.diff.impl.DiffRequestProcessor;
-import consulo.ide.impl.idea.diff.requests.*;
-import consulo.ide.impl.idea.diff.tools.util.SoftHardCacheMap;
-import consulo.ide.impl.idea.diff.util.DiffTaskQueue;
-import consulo.diff.DiffUserDataKeys;
-import consulo.ide.impl.idea.diff.util.DiffUserDataKeysEx.ScrollToPolicy;
 import consulo.application.AllIcons;
+import consulo.application.progress.ProgressIndicator;
+import consulo.component.ProcessCanceledException;
+import consulo.diff.DiffUserDataKeys;
+import consulo.diff.chain.DiffRequestProducerException;
 import consulo.diff.request.DiffRequest;
 import consulo.diff.request.NoDiffRequest;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.component.ProcessCanceledException;
-import consulo.application.progress.ProgressIndicator;
+import consulo.ide.impl.idea.diff.impl.DiffRequestProcessor;
+import consulo.ide.impl.idea.diff.requests.ErrorDiffRequest;
+import consulo.ide.impl.idea.diff.requests.LoadingDiffRequest;
+import consulo.ide.impl.idea.diff.requests.OperationCanceledDiffRequest;
+import consulo.ide.impl.idea.diff.tools.util.SoftHardCacheMap;
+import consulo.ide.impl.idea.diff.util.DiffTaskQueue;
+import consulo.ide.impl.idea.diff.util.DiffUserDataKeysEx.ScrollToPolicy;
 import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.project.Project;
-import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.vcs.CalledInAwt;
 import consulo.ide.impl.idea.openapi.vcs.CalledInBackground;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ChangeDiffRequestProducer;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.util.lang.Pair;
 import consulo.versionControlSystem.change.Change;
 import org.jetbrains.annotations.Contract;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collections;
 import java.util.List;
 
@@ -51,10 +52,10 @@ public abstract class CacheChangeProcessor extends DiffRequestProcessor {
   private static final Logger LOG = Logger.getInstance(CacheChangeProcessor.class);
 
   @Nonnull
-  private final SoftHardCacheMap<Change, Pair<Change, DiffRequest>> myRequestCache =
-          new SoftHardCacheMap<Change, Pair<Change, DiffRequest>>(5, 5);
+  private final SoftHardCacheMap<Change, Pair<Change, DiffRequest>> myRequestCache = new SoftHardCacheMap<Change, Pair<Change, DiffRequest>>(5, 5);
 
-  @Nullable private Change myCurrentChange;
+  @Nullable
+  private Change myCurrentChange;
 
   @Nonnull
   private final DiffTaskQueue myQueue = new DiffTaskQueue();
@@ -105,29 +106,22 @@ public abstract class CacheChangeProcessor extends DiffRequestProcessor {
     }
 
     // TODO: check if current loading change is the same as we want to load now? (and not interrupt loading)
-    myQueue.executeAndTryWait(
-            new Function<ProgressIndicator, Runnable>() {
-              @Override
-              public Runnable fun(ProgressIndicator indicator) {
-                final DiffRequest request = loadRequest(change, indicator);
-                return new Runnable() {
-                  @Override
-                  @CalledInAwt
-                  public void run() {
-                    myRequestCache.put(change, Pair.create(change, request));
-                    applyRequest(request, force, scrollToChangePolicy);
-                  }
-                };
-              }
-            },
-            new Runnable() {
-              @Override
-              public void run() {
-                applyRequest(new LoadingDiffRequest(ChangeDiffRequestProducer.getRequestTitle(change)), force, scrollToChangePolicy);
-              }
-            },
-            ProgressWindow.DEFAULT_PROGRESS_DIALOG_POSTPONE_TIME_MILLIS
-    );
+    myQueue.executeAndTryWait(indicator -> {
+      final DiffRequest request = loadRequest(change, indicator);
+      return new Runnable() {
+        @Override
+        @CalledInAwt
+        public void run() {
+          myRequestCache.put(change, Pair.create(change, request));
+          applyRequest(request, force, scrollToChangePolicy);
+        }
+      };
+    }, new Runnable() {
+      @Override
+      public void run() {
+        applyRequest(new LoadingDiffRequest(ChangeDiffRequestProducer.getRequestTitle(change)), force, scrollToChangePolicy);
+      }
+    }, ProgressWindow.DEFAULT_PROGRESS_DIALOG_POSTPONE_TIME_MILLIS);
   }
 
   @Nullable

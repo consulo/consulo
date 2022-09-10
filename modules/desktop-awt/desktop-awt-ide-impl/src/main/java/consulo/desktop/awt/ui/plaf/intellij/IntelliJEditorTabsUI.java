@@ -15,26 +15,26 @@
  */
 package consulo.desktop.awt.ui.plaf.intellij;
 
-import consulo.ui.ex.awt.GraphicsConfig;
-import consulo.ui.ex.awt.util.ColorUtil;
-import consulo.ui.ex.Gray;
-import consulo.ui.ex.JBColor;
-import consulo.ui.ex.awt.paint.LinePainter2D;
-import consulo.ui.ex.awt.paint.RectanglePainter2D;
 import consulo.ide.impl.idea.ui.tabs.JBTabsPosition;
 import consulo.ide.impl.idea.ui.tabs.TabInfo;
 import consulo.ide.impl.idea.ui.tabs.impl.JBTabsImpl;
 import consulo.ide.impl.idea.ui.tabs.impl.ShapeTransform;
 import consulo.ide.impl.idea.ui.tabs.impl.TabLabel;
-import consulo.ide.impl.idea.util.Function;
+import consulo.ide.impl.ui.laf.JBEditorTabsUI;
+import consulo.ui.ex.Gray;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.awt.GraphicsConfig;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ide.impl.ui.laf.JBEditorTabsUI;
+import consulo.ui.ex.awt.paint.LinePainter2D;
+import consulo.ui.ex.awt.paint.RectanglePainter2D;
+import consulo.ui.ex.awt.util.ColorUtil;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * @author VISTALL
@@ -93,7 +93,7 @@ public class IntelliJEditorTabsUI extends JBEditorTabsUI {
     for (TabInfo each : tabs.getVisibleInfos()) {
       final JComponent c = each.getComponent();
       if (c != null) {
-        final Dimension eachSize = transform.fun(c);
+        final Dimension eachSize = transform.apply(c);
         size.width = Math.max(eachSize.width, size.width);
         size.height = Math.max(eachSize.height, size.height);
       }

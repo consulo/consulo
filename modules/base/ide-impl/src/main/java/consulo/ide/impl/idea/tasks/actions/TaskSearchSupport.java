@@ -16,21 +16,19 @@
 
 package consulo.ide.impl.idea.tasks.actions;
 
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.util.matcher.Matcher;
+import consulo.application.util.matcher.NameUtil;
+import consulo.ide.impl.idea.tasks.impl.TaskManagerImpl;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.task.Task;
+import consulo.task.TaskManager;
+import consulo.util.lang.function.Condition;
+
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
-
-import javax.annotation.Nonnull;
-
-import consulo.application.progress.ProgressIndicator;
-import consulo.util.lang.function.Condition;
-import consulo.application.util.matcher.NameUtil;
-import consulo.task.Task;
-import consulo.task.TaskManager;
-import consulo.ide.impl.idea.tasks.impl.TaskManagerImpl;
-import consulo.ide.impl.idea.util.NullableFunction;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.application.util.matcher.Matcher;
 
 /**
  * @author Dmitry Avdeev
@@ -55,11 +53,7 @@ public class TaskSearchSupport {
 
   public static List<Task> filterTasks(final String pattern, final List<Task> tasks) {
     final Matcher matcher = getMatcher(pattern);
-    return ContainerUtil.mapNotNull(tasks, new NullableFunction<Task, Task>() {
-      public Task fun(Task task) {
-        return matcher.matches(task.getId()) || matcher.matches(task.getSummary()) ? task : null;
-      }
-    });
+    return ContainerUtil.mapNotNull(tasks, task -> matcher.matches(task.getId()) || matcher.matches(task.getSummary()) ? task : null);
   }
 
   public static List<Task> getRepositoriesTasks(final TaskManager myManager,
@@ -74,10 +68,7 @@ public class TaskSearchSupport {
     return tasks;
   }
 
-  public static List<Task> getItems(final TaskManager myManager,
-                                    String pattern,
-                                    boolean cached,
-                                    boolean autopopup) {
+  public static List<Task> getItems(final TaskManager myManager, String pattern, boolean cached, boolean autopopup) {
     return filterTasks(pattern, getTasks(pattern, cached, autopopup, myManager));
   }
 

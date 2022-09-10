@@ -110,7 +110,7 @@ public class InspectionsConfigTreeTable extends TreeTable {
           return new TextTransferable(StringUtil.join(ContainerUtil.mapNotNull(path.getPath(), new NullableFunction<Object, String>() {
             @Nullable
             @Override
-            public String fun(Object o) {
+            public String apply(Object o) {
               return o == path.getPath()[0] ? null : o.toString();
             }
           }), " | "));

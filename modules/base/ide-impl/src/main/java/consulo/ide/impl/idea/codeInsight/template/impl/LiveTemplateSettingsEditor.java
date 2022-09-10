@@ -16,17 +16,6 @@
 
 package consulo.ide.impl.idea.codeInsight.template.impl;
 
-import consulo.language.editor.impl.internal.template.TemplateImpl;
-import consulo.language.editor.internal.TemplateContext;
-import consulo.language.editor.impl.internal.template.TemplateEditorUtil;
-import consulo.language.editor.template.TemplateOptionalProcessor;
-import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.ui.CheckboxTree;
-import consulo.ide.impl.idea.ui.CheckedTreeNode;
-import consulo.ide.impl.idea.util.Function;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.GridBag;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ui.wm.IdeFocusManager;
@@ -36,9 +25,17 @@ import consulo.codeEditor.EditorFactory;
 import consulo.document.Document;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.ui.CheckboxTree;
+import consulo.ide.impl.idea.ui.CheckedTreeNode;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.DaemonCodeAnalyzer;
+import consulo.language.editor.impl.internal.template.TemplateEditorUtil;
+import consulo.language.editor.impl.internal.template.TemplateImpl;
+import consulo.language.editor.internal.TemplateContext;
 import consulo.language.editor.template.Template;
+import consulo.language.editor.template.TemplateOptionalProcessor;
 import consulo.language.editor.template.Variable;
 import consulo.language.editor.template.context.EverywhereContextType;
 import consulo.language.editor.template.context.TemplateContextType;
@@ -47,19 +44,17 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.awt.ClickListener;
-import consulo.ui.ex.awt.IdeBorderFactory;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.tree.TreeUtil;
-import consulo.ui.ex.update.Activatable;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.event.JBPopupAdapter;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
+import consulo.ui.ex.update.Activatable;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.MultiMap;
+import consulo.util.lang.Pair;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -95,7 +90,9 @@ public class LiveTemplateSettingsEditor extends JPanel {
   public LiveTemplateSettingsEditor(TemplateImpl template,
                                     final String defaultShortcut,
                                     Map<TemplateOptionalProcessor, Boolean> options,
-                                    Map<TemplateContextType, Boolean> context, final Runnable nodeChanged, boolean allowNoContext) {
+                                    Map<TemplateContextType, Boolean> context,
+                                    final Runnable nodeChanged,
+                                    boolean allowNoContext) {
     super(new BorderLayout());
     myOptions = options;
     myContext = context;
@@ -103,8 +100,8 @@ public class LiveTemplateSettingsEditor extends JPanel {
     myTemplate = template;
     myDefaultShortcutItem = CodeInsightBundle.message("dialog.edit.template.shortcut.default", defaultShortcut);
 
-    myKeyField=new JTextField();
-    myDescription=new JTextField();
+    myKeyField = new JTextField();
+    myDescription = new JTextField();
     myTemplateEditor = TemplateEditorUtil.createEditor(false, myTemplate.getString(), context);
     myTemplate.setId(null);
 
@@ -153,7 +150,7 @@ public class LiveTemplateSettingsEditor extends JPanel {
     JPanel panel = new JPanel(new GridBagLayout());
 
     GridBag gb = new GridBag().setDefaultInsets(4, 4, 4, 4).setDefaultWeightY(1).setDefaultFill(GridBagConstraints.BOTH);
-    
+
     JPanel editorPanel = new JPanel(new BorderLayout(4, 4));
     editorPanel.setPreferredSize(new Dimension(250, 100));
     editorPanel.setMinimumSize(editorPanel.getPreferredSize());
@@ -172,26 +169,22 @@ public class LiveTemplateSettingsEditor extends JPanel {
 
     panel.add(createShortContextPanel(allowNoContexts), gb.nextLine().next().weighty(0).fillCellNone().anchor(GridBagConstraints.WEST));
 
-    myTemplateEditor.getDocument().addDocumentListener(
-      new DocumentAdapter() {
-        @Override
-        public void documentChanged(DocumentEvent e) {
-          validateEditVariablesButton();
+    myTemplateEditor.getDocument().addDocumentListener(new DocumentAdapter() {
+      @Override
+      public void documentChanged(DocumentEvent e) {
+        validateEditVariablesButton();
 
-          myTemplate.setString(myTemplateEditor.getDocument().getText());
-          applyVariables(updateVariablesByTemplateText());
-        }
+        myTemplate.setString(myTemplateEditor.getDocument().getText());
+        applyVariables(updateVariablesByTemplateText());
       }
-    );
+    });
 
-    myEditVariablesButton.addActionListener(
-      new ActionListener(){
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          editVariables();
-        }
+    myEditVariablesButton.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        editVariables();
       }
-    );
+    });
 
     add(createNorthPanel(), BorderLayout.NORTH);
     add(panel, BorderLayout.CENTER);
@@ -200,8 +193,7 @@ public class LiveTemplateSettingsEditor extends JPanel {
   private void applyVariables(final List<Variable> variables) {
     myTemplate.removeAllParsed();
     for (Variable variable : variables) {
-      myTemplate.addVariable(variable.getName(), variable.getExpressionString(), variable.getDefaultValueString(),
-                             variable.isAlwaysStopAt());
+      myTemplate.addVariable(variable.getName(), variable.getExpressionString(), variable.getDefaultValueString(), variable.isAlwaysStopAt());
     }
     myTemplate.parseSegments();
   }
@@ -228,8 +220,7 @@ public class LiveTemplateSettingsEditor extends JPanel {
 
   private JPanel createTemplateOptionsPanel() {
     JPanel panel = new JPanel();
-    panel.setBorder(IdeBorderFactory.createTitledBorder(CodeInsightBundle.message("dialog.edit.template.options.title"),
-                                                        true));
+    panel.setBorder(IdeBorderFactory.createTitledBorder(CodeInsightBundle.message("dialog.edit.template.options.title"), true));
     panel.setLayout(new GridBagLayout());
     GridBagConstraints gbConstraints = new GridBagConstraints();
     gbConstraints.fill = GridBagConstraints.BOTH;
@@ -247,23 +238,23 @@ public class LiveTemplateSettingsEditor extends JPanel {
       @Override
       public void itemStateChanged(ItemEvent e) {
         Object selectedItem = myExpandByCombo.getSelectedItem();
-        if(myDefaultShortcutItem.equals(selectedItem)) {
+        if (myDefaultShortcutItem.equals(selectedItem)) {
           myTemplate.setShortcutChar(TemplateSettingsImpl.DEFAULT_CHAR);
         }
-        else if(TAB.equals(selectedItem)) {
+        else if (TAB.equals(selectedItem)) {
           myTemplate.setShortcutChar(TemplateSettingsImpl.TAB_CHAR);
         }
-        else if(ENTER.equals(selectedItem)) {
+        else if (ENTER.equals(selectedItem)) {
           myTemplate.setShortcutChar(TemplateSettingsImpl.ENTER_CHAR);
         }
         else {
           myTemplate.setShortcutChar(TemplateSettingsImpl.SPACE_CHAR);
         }
-        
+
       }
     });
     expandWithLabel.setLabelFor(myExpandByCombo);
-    
+
     panel.add(myExpandByCombo, gbConstraints);
     gbConstraints.weightx = 1;
     gbConstraints.gridx = 2;
@@ -275,7 +266,7 @@ public class LiveTemplateSettingsEditor extends JPanel {
     myCbReformat = new JCheckBox(CodeInsightBundle.message("dialog.edit.template.checkbox.reformat.according.to.style"));
     panel.add(myCbReformat, gbConstraints);
 
-    for (final TemplateOptionalProcessor processor: myOptions.keySet()) {
+    for (final TemplateOptionalProcessor processor : myOptions.keySet()) {
       if (!processor.isVisible(myTemplate)) continue;
       gbConstraints.gridy++;
       final JCheckBox cb = new JCheckBox(processor.getOptionName());
@@ -291,7 +282,7 @@ public class LiveTemplateSettingsEditor extends JPanel {
 
     gbConstraints.weighty = 1;
     gbConstraints.gridy++;
-    panel.add(new JPanel(), gbConstraints);          
+    panel.add(new JPanel(), gbConstraints);
 
     return panel;
   }
@@ -359,7 +350,7 @@ public class LiveTemplateSettingsEditor extends JPanel {
           content.setPreferredSize(new Dimension(Math.max(prefSize.width, myLastSize.width), Math.max(prefSize.height, myLastSize.height)));
         }
         myContextPopup = JBPopupFactory.getInstance().createComponentPopupBuilder(content, null).setResizable(true).createPopup();
-        myContextPopup.show(new RelativePoint(change, new Point(change.getWidth() , -content.getPreferredSize().height - 10)));
+        myContextPopup.show(new RelativePoint(change, new Point(change.getWidth(), -content.getPreferredSize().height - 10)));
         myContextPopup.addListener(new JBPopupAdapter() {
           @Override
           public void onClosed(LightweightWindowEvent event) {
@@ -444,9 +435,7 @@ public class LiveTemplateSettingsEditor extends JPanel {
     return panel;
   }
 
-  private void addContextNode(MultiMap<TemplateContextType, TemplateContextType> hierarchy,
-                              CheckedTreeNode parent,
-                              TemplateContextType type) {
+  private void addContextNode(MultiMap<TemplateContextType, TemplateContextType> hierarchy, CheckedTreeNode parent, TemplateContextType type) {
     final Collection<TemplateContextType> children = hierarchy.get(type);
     final String name = UIUtil.removeMnemonic(type.getPresentableName());
     final CheckedTreeNode node = new CheckedTreeNode(Pair.create(children.isEmpty() ? type : null, name));
@@ -473,7 +462,7 @@ public class LiveTemplateSettingsEditor extends JPanel {
       }
       hasNonExpandable = true;
     }
-    
+
     return !hasNonExpandable;
   }
 
@@ -485,7 +474,7 @@ public class LiveTemplateSettingsEditor extends JPanel {
       TemplateEditorUtil.setHighlighter(myTemplateEditor, contextByType);
       return;
     }
-    ((EditorEx) myTemplateEditor).repaint(0, myTemplateEditor.getDocument().getTextLength());
+    ((EditorEx)myTemplateEditor).repaint(0, myTemplateEditor.getDocument().getTextLength());
   }
 
   private void validateEditVariablesButton() {
@@ -496,21 +485,20 @@ public class LiveTemplateSettingsEditor extends JPanel {
     myKeyField.setText(myTemplate.getKey());
     myDescription.setText(myTemplate.getDescription());
 
-    if(myTemplate.getShortcutChar() == TemplateSettingsImpl.DEFAULT_CHAR) {
+    if (myTemplate.getShortcutChar() == TemplateSettingsImpl.DEFAULT_CHAR) {
       myExpandByCombo.setSelectedItem(myDefaultShortcutItem);
     }
-    else if(myTemplate.getShortcutChar() == TemplateSettingsImpl.TAB_CHAR) {
+    else if (myTemplate.getShortcutChar() == TemplateSettingsImpl.TAB_CHAR) {
       myExpandByCombo.setSelectedItem(TAB);
     }
-    else if(myTemplate.getShortcutChar() == TemplateSettingsImpl.ENTER_CHAR) {
+    else if (myTemplate.getShortcutChar() == TemplateSettingsImpl.ENTER_CHAR) {
       myExpandByCombo.setSelectedItem(ENTER);
     }
     else {
       myExpandByCombo.setSelectedItem(SPACE);
     }
 
-    CommandProcessor.getInstance().executeCommand(
-      null, new Runnable() {
+    CommandProcessor.getInstance().executeCommand(null, new Runnable() {
       @Override
       public void run() {
         ApplicationManager.getApplication().runWriteAction(new Runnable() {
@@ -521,10 +509,7 @@ public class LiveTemplateSettingsEditor extends JPanel {
           }
         });
       }
-    },
-      "",
-      null
-    );
+    }, "", null);
 
     myCbReformat.setSelected(myTemplate.isToReformat());
     myCbReformat.addActionListener(new ActionListener() {
@@ -552,18 +537,12 @@ public class LiveTemplateSettingsEditor extends JPanel {
 
   private ArrayList<Variable> updateVariablesByTemplateText() {
     List<Variable> oldVariables = getCurrentVariables();
-    
-    Set<String> oldVariableNames = ContainerUtil.map2Set(oldVariables, new Function<Variable, String>() {
-      @Override
-      public String fun(Variable variable) {
-        return variable.getName();
-      }
-    });
-    
+
+    Set<String> oldVariableNames = ContainerUtil.map2Set(oldVariables, variable -> variable.getName());
 
     ArrayList<Variable> parsedVariables = parseVariables(myTemplateEditor.getDocument().getCharsSequence());
 
-    Map<String,String> newVariableNames = new HashMap<String, String>();
+    Map<String, String> newVariableNames = new HashMap<String, String>();
     for (Object parsedVariable : parsedVariables) {
       Variable newVariable = (Variable)parsedVariable;
       String name = newVariable.getName();
@@ -571,19 +550,19 @@ public class LiveTemplateSettingsEditor extends JPanel {
     }
 
     int oldVariableNumber = 0;
-    for(int i = 0; i < parsedVariables.size(); i++){
+    for (int i = 0; i < parsedVariables.size(); i++) {
       Variable variable = parsedVariables.get(i);
-      if(oldVariableNames.contains(variable.getName())) {
+      if (oldVariableNames.contains(variable.getName())) {
         Variable oldVariable = null;
-        for(;oldVariableNumber<oldVariables.size(); oldVariableNumber++) {
+        for (; oldVariableNumber < oldVariables.size(); oldVariableNumber++) {
           oldVariable = oldVariables.get(oldVariableNumber);
-          if(newVariableNames.get(oldVariable.getName()) != null) {
+          if (newVariableNames.get(oldVariable.getName()) != null) {
             break;
           }
           oldVariable = null;
         }
         oldVariableNumber++;
-        if(oldVariable != null) {
+        if (oldVariable != null) {
           parsedVariables.set(i, oldVariable);
         }
       }
@@ -595,11 +574,8 @@ public class LiveTemplateSettingsEditor extends JPanel {
   private List<Variable> getCurrentVariables() {
     List<Variable> myVariables = new ArrayList<Variable>();
 
-    for(int i = 0; i < myTemplate.getVariableCount(); i++) {
-      myVariables.add(new Variable(myTemplate.getVariableNameAt(i),
-                                   myTemplate.getExpressionStringAt(i),
-                                   myTemplate.getDefaultValueStringAt(i),
-                                   myTemplate.isAlwaysStopAt(i)));
+    for (int i = 0; i < myTemplate.getVariableCount(); i++) {
+      myVariables.add(new Variable(myTemplate.getVariableNameAt(i), myTemplate.getExpressionStringAt(i), myTemplate.getDefaultValueStringAt(i), myTemplate.isAlwaysStopAt(i)));
     }
     return myVariables;
   }

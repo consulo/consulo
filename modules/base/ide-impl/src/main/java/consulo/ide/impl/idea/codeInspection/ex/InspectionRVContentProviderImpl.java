@@ -20,23 +20,22 @@
  */
 package consulo.ide.impl.idea.codeInspection.ex;
 
-import consulo.language.editor.inspection.CommonProblemDescriptor;
 import consulo.ide.impl.idea.codeInspection.ui.*;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.language.editor.inspection.CommonProblemDescriptor;
 import consulo.language.editor.inspection.reference.*;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.virtualFileSystem.status.FileStatus;
-import consulo.ide.impl.idea.util.Function;
 
 import javax.annotation.Nonnull;
-
 import javax.annotation.Nullable;
 import javax.swing.tree.DefaultTreeModel;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 
 public class InspectionRVContentProviderImpl extends InspectionRVContentProvider {
   public InspectionRVContentProviderImpl(final Project project) {
@@ -70,12 +69,7 @@ public class InspectionRVContentProviderImpl extends InspectionRVContentProvider
                                     DefaultTreeModel model) {
     final InspectionToolWrapper toolWrapper = toolNode.getToolWrapper();
 
-    Function<RefEntity, UserObjectContainer<RefEntity>> computeContainer = new Function<RefEntity, UserObjectContainer<RefEntity>>() {
-      @Override
-      public UserObjectContainer<RefEntity> fun(final RefEntity refElement) {
-        return new RefElementContainer(refElement, problems.get(refElement));
-      }
-    };
+    Function<RefEntity, UserObjectContainer<RefEntity>> computeContainer = refElement -> new RefElementContainer(refElement, problems.get(refElement));
     InspectionToolPresentation presentation = context.getPresentation(toolWrapper);
     final Set<RefModule> moduleProblems = presentation.getModuleProblems();
     if (moduleProblems != null && !moduleProblems.isEmpty()) {
@@ -94,12 +88,7 @@ public class InspectionRVContentProviderImpl extends InspectionRVContentProvider
 
     if (presentation.isOldProblemsIncluded()) {
       final Map<RefEntity, CommonProblemDescriptor[]> oldProblems = presentation.getOldProblemElements();
-      computeContainer = new Function<RefEntity, UserObjectContainer<RefEntity>>() {
-        @Override
-        public UserObjectContainer<RefEntity> fun(final RefEntity refElement) {
-          return new RefElementContainer(refElement, oldProblems != null ? oldProblems.get(refElement) : null);
-        }
-      };
+      computeContainer = refElement -> new RefElementContainer(refElement, oldProblems != null ? oldProblems.get(refElement) : null);
 
       list = buildTree(context, presentation.getOldContent(), true, toolWrapper, computeContainer, showStructure);
 

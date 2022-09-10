@@ -15,15 +15,15 @@
  */
 package consulo.ide.impl.idea.openapi.vcs;
 
-import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.application.util.function.Processor;
 import consulo.ide.impl.idea.util.containers.ReadonlyList;
 import consulo.ide.impl.idea.util.containers.StepList;
-import javax.annotation.Nullable;
+import consulo.util.lang.Pair;
 
+import javax.annotation.Nullable;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author irengrig
@@ -65,7 +65,7 @@ public class ReadonlyListsMerger<T> {
         }
       }
       if (minIdxs == null) return;
-      myConsumer.consume(minIdxs);
+      myConsumer.accept(minIdxs);
       final int memberIdx = minIdxs.getMemberNumber();
       idxs[memberIdx] = (myLists.get(memberIdx).getSize() == (idxs[memberIdx] + 1) ? -1 : idxs[memberIdx] + 1);
     }
@@ -84,14 +84,11 @@ public class ReadonlyListsMerger<T> {
       if (idx > 0) --idx;
     }
     final ReadonlyList<T> remergePart = first.cut(idx);
-    merge(remergePart, second, comparator, new Consumer<T>() {
-      @Override
-      public void consume(T t) {
-        if (beforeAddListener != null) {
-          beforeAddListener.consume(t);
-        }
-        first.add(t);
+    merge(remergePart, second, comparator, t -> {
+      if (beforeAddListener != null) {
+        beforeAddListener.accept(t);
       }
+      first.add(t);
     }, filter);
   }
 
@@ -109,10 +106,10 @@ public class ReadonlyListsMerger<T> {
       }
       final int comp = comparator.compare(firstOne, two.get(idx2));
       if (comp <= 0) {
-        adder.consume(firstOne);
+        adder.accept(firstOne);
         ++ idx1;
       } else {
-        adder.consume(two.get(idx2));
+        adder.accept(two.get(idx2));
         ++ idx2;
       }
     }
@@ -122,11 +119,11 @@ public class ReadonlyListsMerger<T> {
         ++ idx1;
         continue;
       }
-      adder.consume(one.get(idx1));
+      adder.accept(one.get(idx1));
       ++ idx1;
     }
     while (idx2 < two.getSize()) {
-      adder.consume(two.get(idx2));
+      adder.accept(two.get(idx2));
       ++ idx2;
     }
   }

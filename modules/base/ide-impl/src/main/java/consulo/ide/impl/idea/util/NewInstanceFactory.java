@@ -16,11 +16,12 @@
 package consulo.ide.impl.idea.util;
 
 import consulo.logging.Logger;
-import consulo.ide.impl.idea.openapi.util.Factory;
 
 import java.lang.reflect.Constructor;
+import java.util.function.Supplier;
 
-public class NewInstanceFactory<T> implements Factory<T> {
+@Deprecated
+public class NewInstanceFactory<T> implements Supplier<T> {
   private static final Logger LOG = Logger.getInstance(NewInstanceFactory.class);
   private final Constructor myConstructor;
   private final Object[] myArgs;
@@ -30,7 +31,8 @@ public class NewInstanceFactory<T> implements Factory<T> {
     myArgs = args;
   }
 
-  public T create() {
+  @Override
+  public T get() {
     try {
       return (T)myConstructor.newInstance(myArgs);
     }
@@ -40,13 +42,13 @@ public class NewInstanceFactory<T> implements Factory<T> {
     }
   }
 
-  public static <T> Factory<T> fromClass(final Class<T> clazz) {
+  public static <T> Supplier<T> fromClass(final Class<T> clazz) {
     try {
       return new NewInstanceFactory<T>(clazz.getConstructor(ArrayUtil.EMPTY_CLASS_ARRAY), ArrayUtil.EMPTY_OBJECT_ARRAY);
     }
     catch (NoSuchMethodException e) {
-      return new Factory<T>() {
-        public T create() {
+      return new Supplier<T>() {
+        public T get() {
           try {
             return clazz.newInstance();
           } catch (Exception e) {

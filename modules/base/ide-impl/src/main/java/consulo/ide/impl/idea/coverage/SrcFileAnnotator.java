@@ -40,7 +40,7 @@ import consulo.ide.impl.execution.coverage.CoverageLineMarkerRenderer;
 import consulo.ide.impl.idea.openapi.module.ModuleUtil;
 import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.ide.impl.idea.ui.EditorNotificationPanel;
-import consulo.ide.impl.idea.util.Function;
+import java.util.function.Function;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.impl.internal.psi.LoadTextUtil;
 import consulo.language.psi.PsiFile;
@@ -461,19 +461,15 @@ public class SrcFileAnnotator implements Disposable {
     final int endOffset = myDocument.getLineEndOffset(lineNumberInCurrent);
     final RangeHighlighter highlighter =
       markupModel.addRangeHighlighter(startOffset, endOffset, HighlighterLayer.SELECTION - 1, textAttributes, HighlighterTargetArea.LINES_IN_RANGE);
-    final Function<Integer, Integer> newToOldConverter = new Function<Integer, Integer>() {
-      public Integer fun(final Integer newLine) {
-        if (myEditor == null) return -1;
-        final TIntIntHashMap oldLineMapping = getNewToOldLineMapping(date);
-        return oldLineMapping != null ? oldLineMapping.get(newLine.intValue()) : newLine.intValue();
-      }
+    final Function<Integer, Integer> newToOldConverter = newLine -> {
+      if (myEditor == null) return -1;
+      final TIntIntHashMap oldLineMapping = getNewToOldLineMapping(date);
+      return oldLineMapping != null ? oldLineMapping.get(newLine.intValue()) : newLine.intValue();
     };
-    final Function<Integer, Integer> oldToNewConverter = new Function<Integer, Integer>() {
-      public Integer fun(final Integer newLine) {
-        if (myEditor == null) return -1;
-        final TIntIntHashMap newLineMapping = getOldToNewLineMapping(date);
-        return newLineMapping != null ? newLineMapping.get(newLine.intValue()) : newLine.intValue();
-      }
+    final Function<Integer, Integer> oldToNewConverter = newLine -> {
+      if (myEditor == null) return -1;
+      final TIntIntHashMap newLineMapping = getOldToNewLineMapping(date);
+      return newLineMapping != null ? newLineMapping.get(newLine.intValue()) : newLine.intValue();
     };
     final CoverageLineMarkerRenderer markerRenderer = CoverageLineMarkerRenderer.getRenderer(line, className, executableLines, coverageByTestApplicable, coverageSuite, newToOldConverter,
                              oldToNewConverter, CoverageDataManager.getInstance(myProject).isSubCoverageActive());

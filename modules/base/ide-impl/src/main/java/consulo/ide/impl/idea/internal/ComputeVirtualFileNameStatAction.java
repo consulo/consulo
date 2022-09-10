@@ -20,16 +20,15 @@
  */
 package consulo.ide.impl.idea.internal;
 
+import consulo.application.dumb.DumbAware;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.application.dumb.DumbAware;
 import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.ManagingFS;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;
-import consulo.ide.impl.idea.util.Function;
+import consulo.virtualFileSystem.VirtualFile;
 import gnu.trove.TObjectIntHashMap;
 import gnu.trove.TObjectIntProcedure;
 
@@ -43,6 +42,7 @@ public class ComputeVirtualFileNameStatAction extends AnAction implements DumbAw
   public static void main(String[] args) {
     new ComputeVirtualFileNameStatAction().actionPerformed(null);
   }
+
   @Override
   public void actionPerformed(AnActionEvent e) {
     long start = System.currentTimeMillis();
@@ -54,7 +54,7 @@ public class ComputeVirtualFileNameStatAction extends AnAction implements DumbAw
       compute(root);
     }
 
-    final List<Pair<String,Integer>> names = new ArrayList<Pair<String, Integer>>(nameCount.size());
+    final List<Pair<String, Integer>> names = new ArrayList<Pair<String, Integer>>(nameCount.size());
     nameCount.forEachEntry(new TObjectIntProcedure<String>() {
       @Override
       public boolean execute(String name, int count) {
@@ -69,7 +69,7 @@ public class ComputeVirtualFileNameStatAction extends AnAction implements DumbAw
       }
     });
 
-    System.out.println("Most frequent names ("+names.size()+" total):");
+    System.out.println("Most frequent names (" + names.size() + " total):");
     int saveByIntern = 0;
     for (Pair<String, Integer> pair : names) {
       int count = pair.second;
@@ -78,11 +78,11 @@ public class ComputeVirtualFileNameStatAction extends AnAction implements DumbAw
       saveByIntern += count * name.length();
       if (count == 1) break;
     }
-    System.out.println("Total save if names were interned: "+saveByIntern+"; ------------");
+    System.out.println("Total save if names were interned: " + saveByIntern + "; ------------");
 
     //System.out.println("Prefixes: ("+prefixes.size()+" total)");
     //show(prefixes);
-    System.out.println("Suffix counts:("+suffixes.size()+" total)");
+    System.out.println("Suffix counts:(" + suffixes.size() + " total)");
     show(suffixes);
 
 
@@ -96,7 +96,7 @@ public class ComputeVirtualFileNameStatAction extends AnAction implements DumbAw
       }
     });
 
-    System.out.println("Supposed save by stripping suffixes: ("+save.size()+" total)");
+    System.out.println("Supposed save by stripping suffixes: (" + save.size() + " total)");
     final List<Pair<String, Integer>> saveSorted = show(save);
 
 
@@ -121,7 +121,7 @@ public class ComputeVirtualFileNameStatAction extends AnAction implements DumbAw
       Pair<String, Integer> cp = saveSorted.get(0);
       final String candidate = cp.first;
       picked.add(candidate);
-      System.out.println("Candidate: '"+candidate+"', save = "+cp.second);
+      System.out.println("Candidate: '" + candidate + "', save = " + cp.second);
       Collections.sort(picked, new Comparator<String>() {
         @Override
         public int compare(String o1, String o2) {
@@ -153,12 +153,7 @@ public class ComputeVirtualFileNameStatAction extends AnAction implements DumbAw
       });
     }
 
-    System.out.println("Picked: "+ StringUtil.join(picked, new Function<String, String>() {
-      @Override
-      public String fun(String s) {
-        return "\""+s+"\"";
-      }
-    }, ","));
+    System.out.println("Picked: " + StringUtil.join(picked, s -> "\"" + s + "\"", ","));
     Collections.sort(picked, new Comparator<String>() {
       @Override
       public int compare(String o1, String o2) {
@@ -170,7 +165,7 @@ public class ComputeVirtualFileNameStatAction extends AnAction implements DumbAw
     for (int i = 0; i < picked.size(); i++) {
       String s = picked.get(i);
       int count = suffixes.get(s);
-      for (int k=0; k<i;k++) {
+      for (int k = 0; k < i; k++) {
         String prev = picked.get(k);
         if (prev.endsWith(s)) {
           count -= suffixes.get(prev);
@@ -183,8 +178,8 @@ public class ComputeVirtualFileNameStatAction extends AnAction implements DumbAw
     System.out.println("Time spent: " + (System.currentTimeMillis() - start));
   }
 
-  private static List<Pair<String,Integer>> show(final TObjectIntHashMap<String> prefixes) {
-    final List<Pair<String,Integer>> prefs = new ArrayList<Pair<String, Integer>>(prefixes.size());
+  private static List<Pair<String, Integer>> show(final TObjectIntHashMap<String> prefixes) {
+    final List<Pair<String, Integer>> prefs = new ArrayList<Pair<String, Integer>>(prefixes.size());
     prefixes.forEachEntry(new TObjectIntProcedure<String>() {
       @Override
       public boolean execute(String s, int count) {
@@ -198,7 +193,7 @@ public class ComputeVirtualFileNameStatAction extends AnAction implements DumbAw
         return o2.second.compareTo(o1.second);
       }
     });
-    int i =0;
+    int i = 0;
     for (Pair<String, Integer> pref : prefs) {
       Integer count = pref.second;
       System.out.printf("%60.60s : %d\n", pref.first, count);
@@ -213,14 +208,15 @@ public class ComputeVirtualFileNameStatAction extends AnAction implements DumbAw
   //TObjectIntHashMap<String> prefixes = new TObjectIntHashMap<String>();
   TObjectIntHashMap<String> suffixes = new TObjectIntHashMap<String>();
   TObjectIntHashMap<String> nameCount = new TObjectIntHashMap<String>();
+
   private void compute(VirtualFile root) {
     String name = root.getName();
     if (!nameCount.increment(name)) nameCount.put(name, 1);
-    for (int i=1; i<=name.length(); i++) {
+    for (int i = 1; i <= name.length(); i++) {
       //String prefix = name.substring(0, i);
       //if (!prefixes.increment(prefix)) prefixes.put(prefix, 1);
 
-      String suffix = name.substring(name.length()-i);
+      String suffix = name.substring(name.length() - i);
       if (!suffixes.increment(suffix)) suffixes.put(suffix, 1);
     }
     Collection<VirtualFile> cachedChildren = ((VirtualFileSystemEntry)root).getCachedChildren();

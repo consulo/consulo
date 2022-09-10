@@ -15,20 +15,19 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.shelf;
 
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ui.ex.awt.Messages;
-import consulo.versionControlSystem.AbstractVcsHelper;
-import consulo.versionControlSystem.VcsException;
-import consulo.ide.impl.idea.openapi.vcs.ui.VcsBalloonProblemNotifier;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.application.progress.ProgressManager;
 import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
+import consulo.ide.impl.idea.openapi.vcs.ui.VcsBalloonProblemNotifier;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationType;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.awt.Messages;
+import consulo.versionControlSystem.AbstractVcsHelper;
+import consulo.versionControlSystem.VcsException;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
@@ -81,12 +80,7 @@ public class ImportIntoShelfAction extends DumbAwareAction {
         @Override
         public void run() {
           final List<VcsException> exceptions = new ArrayList<VcsException>();
-          final List<ShelvedChangeList> lists = shelveChangesManager.importChangeLists(patchTypeFiles, new Consumer<VcsException>() {
-            @Override
-            public void consume(VcsException e) {
-              exceptions.add(e);
-            }
-          });
+          final List<ShelvedChangeList> lists = shelveChangesManager.importChangeLists(patchTypeFiles, e1 -> exceptions.add(e1));
           if (!lists.isEmpty()) {
             ShelvedChangesViewManager.getInstance(project).activateView(lists.get(lists.size() - 1));
           }

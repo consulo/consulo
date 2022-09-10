@@ -15,8 +15,6 @@
  */
 package consulo.ide.impl.idea.vcs.log.graph.collapsing;
 
-import consulo.util.lang.function.Condition;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.graph.actions.GraphAction;
 import consulo.ide.impl.idea.vcs.log.graph.api.EdgeFilter;
@@ -35,9 +33,10 @@ import consulo.ide.impl.idea.vcs.log.graph.impl.visible.LinearFragmentGenerator;
 import consulo.ide.impl.idea.vcs.log.graph.impl.visible.LinearFragmentGenerator.GraphFragment;
 import consulo.ide.impl.idea.vcs.log.graph.utils.LinearGraphUtils;
 import consulo.ide.impl.idea.vcs.log.graph.utils.UnsignedBitSet;
+import consulo.util.lang.function.Condition;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -145,12 +144,7 @@ class CollapsedActionManager {
 
     @Nonnull
     Set<Integer> convertToDelegateNodeIndex(@Nonnull Collection<Integer> compiledNodeIndexes) {
-      return ContainerUtil.map2Set(compiledNodeIndexes, new Function<Integer, Integer>() {
-        @Override
-        public Integer fun(Integer nodeIndex) {
-          return convertToDelegateNodeIndex(nodeIndex);
-        }
-      });
+      return ContainerUtil.map2Set(compiledNodeIndexes, nodeIndex -> convertToDelegateNodeIndex(nodeIndex));
     }
 
     @Nonnull
@@ -221,12 +215,7 @@ class CollapsedActionManager {
       int upNodeIndex = context.convertToDelegateNodeIndex(fragment.upNodeIndex);
       int downNodeIndex = context.convertToDelegateNodeIndex(fragment.downNodeIndex);
       Set<Integer> middleNodes = context.convertToDelegateNodeIndex(middleCompiledNodes);
-      Set<GraphEdge> dottedEdges = ContainerUtil.map2Set(dottedCompiledEdges, new Function<GraphEdge, GraphEdge>() {
-        @Override
-        public GraphEdge fun(GraphEdge edge) {
-          return context.convertToDelegateEdge(edge);
-        }
-      });
+      Set<GraphEdge> dottedEdges = ContainerUtil.map2Set(dottedCompiledEdges, edge -> context.convertToDelegateEdge(edge));
 
       CollapsedGraph.Modification modification = context.myCollapsedGraph.startModification();
       for (GraphEdge edge : dottedEdges) modification.removeEdge(edge);

@@ -13,16 +13,16 @@
 package consulo.ide.impl.idea.openapi.vcs;
 
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.util.lang.function.PairConsumer;
 import consulo.ide.impl.idea.util.containers.ReadonlyList;
 import consulo.ide.impl.idea.util.containers.StepList;
+import consulo.util.lang.function.PairConsumer;
 
 import java.util.Comparator;
+import java.util.function.Consumer;
 
 /**
  * @author irengrig
- *
+ * <p>
  * two group header can NOT immediately follow one another
  */
 public abstract class GroupingMerger<T, S> {
@@ -33,10 +33,15 @@ public abstract class GroupingMerger<T, S> {
   }
 
   protected abstract void willBeRecountFrom(int idx, int wasSize);
+
   protected abstract S getGroup(final T t);
+
   protected abstract T wrapGroup(final S s, T item);
+
   protected abstract void oldBecame(final int was, final int is);
+
   protected abstract void afterConsumed(final T t, int i);
+
   protected T wrapItem(final T t) {
     return t;
   }
@@ -45,8 +50,7 @@ public abstract class GroupingMerger<T, S> {
     return myCurrentGroup;
   }
 
-  public int firstPlusSecond(final StepList<T> first, final ReadonlyList<T> second, final Comparator<T> comparator,
-                             final int idxFrom) {
+  public int firstPlusSecond(final StepList<T> first, final ReadonlyList<T> second, final Comparator<T> comparator, final int idxFrom) {
     final int wasSize = first.getSize();
     if (second.getSize() == 0) {
       return wasSize;
@@ -55,14 +59,15 @@ public abstract class GroupingMerger<T, S> {
     if (idxFrom == -1) {
       idx = stolenBinarySearch(first, second.get(0), comparator, 0);
       if (idx < 0) {
-        idx = - (idx + 1);
+        idx = -(idx + 1);
       }
-    } else {
+    }
+    else {
       idx = idxFrom;
     }
     // for group headers to not be left alone without its group
-    if (idx > 0 && (! filter(first.get(idx - 1)))) {
-      -- idx;
+    if (idx > 0 && (!filter(first.get(idx - 1)))) {
+      --idx;
       //if (idx > 0) --idx;         // todo whether its ok
     }
     final ReadonlyList<T> remergePart = first.cut(idx);
@@ -72,91 +77,89 @@ public abstract class GroupingMerger<T, S> {
     final int finalIdx = idx;
     willBeRecountFrom(idx, wasSize);
     merge(remergePart, second, comparator, new PairConsumer<T, Integer>() {
-            @Override
-            public void consume(T t, Integer integer) {
-              doForGroup(t, first);
-              first.add(t);
-              int was = integer + finalIdx;
-              //System.out.println("was " + integer + "became " + (first.getSize() - 1));
-              oldBecame(was, first.getSize() - 1);
-            }
-          }, new Consumer<T>() {
       @Override
-      public void consume(T t) {
+      public void consume(T t, Integer integer) {
         doForGroup(t, first);
-
-        final T wrapped = wrapItem(t);
-        first.add(wrapped);
-        afterConsumed(wrapped, first.getSize() - 1);
+        first.add(t);
+        int was = integer + finalIdx;
+        //System.out.println("was " + integer + "became " + (first.getSize() - 1));
+        oldBecame(was, first.getSize() - 1);
       }
+    }, t -> {
+      doForGroup(t, first);
+
+      final T wrapped = wrapItem(t);
+      first.add(wrapped);
+      afterConsumed(wrapped, first.getSize() - 1);
     });
     return idx;
   }
 
   private void doForGroup(T t, StepList<T> first) {
     final S newGroup = getGroup(t);
-    if (newGroup != null && ! Comparing.equal(newGroup, myCurrentGroup)) {
+    if (newGroup != null && !Comparing.equal(newGroup, myCurrentGroup)) {
       first.add(wrapGroup(newGroup, t));
       myCurrentGroup = newGroup;
     }
   }
 
-  public void merge(final ReadonlyList<T> one,
-                              final ReadonlyList<T> two,
-                              final Comparator<T> comparator,
-                              final PairConsumer<T, Integer> oldAdder, final Consumer<T> newAdder) {
+  public void merge(final ReadonlyList<T> one, final ReadonlyList<T> two, final Comparator<T> comparator, final PairConsumer<T, Integer> oldAdder, final Consumer<T> newAdder) {
     int idx1 = 0;
     int idx2 = 0;
     while (idx1 < one.getSize() && idx2 < two.getSize()) {
       final T firstOne = one.get(idx1);
-      if (! filter(firstOne)) {
-        ++ idx1;
+      if (!filter(firstOne)) {
+        ++idx1;
         continue;
       }
       final int comp = comparator.compare(firstOne, two.get(idx2));
       if (comp <= 0) {
         oldAdder.consume(firstOne, idx1);
-        ++ idx1;
+        ++idx1;
         if (comp == 0) {
           // take only one
-          ++ idx2;
+          ++idx2;
         }
-      } else {
-        newAdder.consume(two.get(idx2));
-        ++ idx2;
+      }
+      else {
+        newAdder.accept(two.get(idx2));
+        ++idx2;
       }
     }
     while (idx1 < one.getSize()) {
       final T firstOne = one.get(idx1);
-      if (! filter(firstOne)) {
-        ++ idx1;
+      if (!filter(firstOne)) {
+        ++idx1;
         continue;
       }
       oldAdder.consume(one.get(idx1), idx1);
-      ++ idx1;
+      ++idx1;
     }
     while (idx2 < two.getSize()) {
-      newAdder.consume(two.get(idx2));
-      ++ idx2;
+      newAdder.accept(two.get(idx2));
+      ++idx2;
     }
   }
 
   private static <T> int stolenBinarySearch(ReadonlyList<? extends T> l, T key, Comparator<? super T> c, final int from) {
-      int low = from;
-      int high = (l.getSize() - from) -1;
+    int low = from;
+    int high = (l.getSize() - from) - 1;
 
-      while (low <= high) {
-          int mid = (low + high) >>> 1;
-          T midVal = l.get(mid);
-          int cmp = c.compare(midVal, key);
+    while (low <= high) {
+      int mid = (low + high) >>> 1;
+      T midVal = l.get(mid);
+      int cmp = c.compare(midVal, key);
 
-          if (cmp < 0)
-              low = mid + 1;
-          else if (cmp > 0)
-              high = mid - 1;
-          else
-              return mid; // key found
+      if (cmp < 0) {
+        low = mid + 1;
       }
-      return -(low + 1);  // key not found
+      else if (cmp > 0) {
+        high = mid - 1;
+      }
+      else {
+        return mid; // key found
+      }
+    }
+    return -(low + 1);  // key not found
   }
 }

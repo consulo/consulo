@@ -27,7 +27,7 @@ public abstract class PackageManagementService {
    * An async version of {@link #getAllRepositories()}.
    */
   public void fetchAllRepositories(@Nonnull CatchingConsumer<? super List<String>, ? super Exception> consumer) {
-    consumer.consume(getAllRepositories());
+    consumer.accept(getAllRepositories());
   }
 
   /**

@@ -17,31 +17,31 @@ package consulo.ide.impl.idea.codeInsight.actions;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.ide.ServiceManager;
-import consulo.logging.Logger;
-import consulo.document.Document;
-import consulo.module.ModifiableModuleModel;
-import consulo.module.Module;
-import consulo.module.ModuleManager;
-import consulo.project.Project;
-import consulo.module.content.ModuleRootManager;
-import consulo.util.dataholder.Key;
-import consulo.document.util.TextRange;
+import consulo.application.AccessRule;
+import consulo.application.util.diff.FilesTooBigForDiffException;
 import consulo.application.util.function.ThrowableComputable;
-import consulo.versionControlSystem.change.Change;
-import consulo.versionControlSystem.change.ChangeListManager;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
+import consulo.ide.ServiceManager;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import consulo.ide.impl.idea.util.Function;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.application.util.diff.FilesTooBigForDiffException;
-import consulo.application.AccessRule;
+import consulo.logging.Logger;
+import consulo.module.ModifiableModuleModel;
+import consulo.module.Module;
+import consulo.module.ModuleManager;
+import consulo.module.content.ModuleRootManager;
+import consulo.project.Project;
+import consulo.util.dataholder.Key;
+import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.change.ChangeListManager;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Function;
 
 @ServiceAPI(ComponentScope.APPLICATION)
 public class FormatChangedTextUtil {
@@ -167,7 +167,7 @@ public class FormatChangedTextUtil {
       private PsiManager myPsiManager = PsiManager.getInstance(project);
 
       @Override
-      public PsiFile fun(Change change) {
+      public PsiFile apply(Change change) {
         VirtualFile vFile = change.getVirtualFile();
         return vFile != null ? myPsiManager.findFile(vFile) : null;
       }

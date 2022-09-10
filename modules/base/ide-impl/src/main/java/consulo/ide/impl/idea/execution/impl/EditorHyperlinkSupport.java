@@ -7,7 +7,6 @@ import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.codeEditor.markup.RangeHighlighterEx;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.application.util.function.FilteringProcessor;
 import consulo.application.util.function.CommonProcessors;
 import consulo.codeEditor.CodeInsightColors;
@@ -35,6 +34,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * @author peter
@@ -330,7 +330,7 @@ public class EditorHyperlinkSupport {
         boolean inCollapsedRegion = editor.getFoldingModel().getCollapsedRegionAtOffset(next.getStartOffset()) != null;
         if (!inCollapsedRegion) {
           return new OccurenceNavigator.OccurenceInfo(requestFocus -> {
-            action.consume(next);
+            action.accept(next);
             linkFollowed(editor, ranges, next);
           }, newIndex == -1 ? -1 : newIndex + 1, ranges.size());
         }

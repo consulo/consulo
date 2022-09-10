@@ -15,19 +15,19 @@
  */
 package consulo.ide.impl.idea.vcs.log.graph.collapsing;
 
-import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.Functions;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.graph.api.EdgeFilter;
 import consulo.ide.impl.idea.vcs.log.graph.api.LinearGraph;
 import consulo.ide.impl.idea.vcs.log.graph.api.elements.GraphEdge;
 import consulo.ide.impl.idea.vcs.log.graph.api.elements.GraphEdgeType;
+import consulo.util.lang.Pair;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 
 import static consulo.ide.impl.idea.vcs.log.graph.utils.LinearGraphUtils.intEqual;
 
@@ -40,17 +40,7 @@ public class EdgeStorageWrapper {
   private final Function<Integer, Integer> myGetNodeIdByIndex;
 
   public EdgeStorageWrapper(@Nonnull EdgeStorage edgeStorage, @Nonnull final LinearGraph graph) {
-    this(edgeStorage, new Function<Integer, Integer>() {
-      @Override
-      public Integer fun(Integer nodeId) {
-        return graph.getNodeIndex(nodeId);
-      }
-    }, new Function<Integer, Integer>() {
-      @Override
-      public Integer fun(Integer nodeIndex) {
-        return graph.getNodeId(nodeIndex);
-      }
-    });
+    this(edgeStorage, nodeId -> graph.getNodeIndex(nodeId), nodeIndex -> graph.getNodeId(nodeIndex));
   }
 
   public EdgeStorageWrapper(@Nonnull EdgeStorage edgeStorage,
@@ -72,8 +62,8 @@ public class EdgeStorageWrapper {
   }
 
   public boolean hasEdge(int fromIndex, int toIndex) {
-    int toId = myGetNodeIdByIndex.fun(toIndex);
-    for (Pair<Integer, GraphEdgeType> edge : myEdgeStorage.getEdges(myGetNodeIdByIndex.fun(fromIndex))) {
+    int toId = myGetNodeIdByIndex.apply(toIndex);
+    for (Pair<Integer, GraphEdgeType> edge : myEdgeStorage.getEdges(myGetNodeIdByIndex.apply(fromIndex))) {
       if (edge.second.isNormalEdge() && intEqual(edge.first, toId)) return true;
     }
     return false;
@@ -82,7 +72,7 @@ public class EdgeStorageWrapper {
   @Nonnull
   public List<GraphEdge> getAdjacentEdges(int nodeIndex, @Nonnull EdgeFilter filter) {
     List<GraphEdge> result = ContainerUtil.newSmartList();
-    for (Pair<Integer, GraphEdgeType> retrievedEdge : myEdgeStorage.getEdges(myGetNodeIdByIndex.fun(nodeIndex))) {
+    for (Pair<Integer, GraphEdgeType> retrievedEdge : myEdgeStorage.getEdges(myGetNodeIdByIndex.apply(nodeIndex))) {
       GraphEdge edge = decompressEdge(nodeIndex, retrievedEdge.first, retrievedEdge.second);
       if (matchedEdge(nodeIndex, edge, filter)) result.add(edge);
     }
@@ -93,7 +83,7 @@ public class EdgeStorageWrapper {
   public Set<GraphEdge> getEdges() {
     Set<GraphEdge> result = ContainerUtil.newHashSet();
     for (int id : myEdgeStorage.getKnownIds()) {
-      result.addAll(getAdjacentEdges(myGetNodeIndexById.fun(id), EdgeFilter.ALL));
+      result.addAll(getAdjacentEdges(myGetNodeIndexById.apply(id), EdgeFilter.ALL));
     }
     return result;
   }
@@ -101,9 +91,9 @@ public class EdgeStorageWrapper {
   @Nonnull
   private Pair<Integer, Integer> getNodeIds(@Nonnull GraphEdge graphEdge) {
     if (graphEdge.getUpNodeIndex() != null) {
-      Integer mainId = myGetNodeIdByIndex.fun(graphEdge.getUpNodeIndex());
+      Integer mainId = myGetNodeIdByIndex.apply(graphEdge.getUpNodeIndex());
       if (graphEdge.getDownNodeIndex() != null) {
-        return Pair.create(mainId, myGetNodeIdByIndex.fun(graphEdge.getDownNodeIndex()));
+        return Pair.create(mainId, myGetNodeIdByIndex.apply(graphEdge.getDownNodeIndex()));
       }
       else {
         return Pair.create(mainId, convertToInt(graphEdge.getTargetId()));
@@ -111,15 +101,15 @@ public class EdgeStorageWrapper {
     }
     else {
       assert graphEdge.getDownNodeIndex() != null;
-      return Pair.create(myGetNodeIdByIndex.fun(graphEdge.getDownNodeIndex()), convertToInt(graphEdge.getTargetId()));
+      return Pair.create(myGetNodeIdByIndex.apply(graphEdge.getDownNodeIndex()), convertToInt(graphEdge.getTargetId()));
     }
   }
 
   @Nullable
-  private GraphEdge decompressEdge(int nodeIndex, @javax.annotation.Nullable Integer targetId, @Nonnull GraphEdgeType edgeType) {
+  private GraphEdge decompressEdge(int nodeIndex, @Nullable Integer targetId, @Nonnull GraphEdgeType edgeType) {
     if (edgeType.isNormalEdge()) {
       assert targetId != null;
-      Integer anotherNodeIndex = myGetNodeIndexById.fun(targetId);
+      Integer anotherNodeIndex = myGetNodeIndexById.apply(targetId);
       if (anotherNodeIndex == null) return null; // todo edge to hide node
 
       return GraphEdge.createNormalEdge(nodeIndex, anotherNodeIndex, edgeType);

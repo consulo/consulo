@@ -23,7 +23,7 @@ import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileMana
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.ui.ex.UIBundle;
-import consulo.ide.impl.idea.util.Consumer;
+import java.util.function.Consumer;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;

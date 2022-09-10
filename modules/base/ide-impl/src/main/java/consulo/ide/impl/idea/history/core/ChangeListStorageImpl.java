@@ -16,22 +16,21 @@
 
 package consulo.ide.impl.idea.history.core;
 
+import consulo.container.boot.ContainerPathManager;
 import consulo.ide.impl.idea.history.core.changes.ChangeSet;
 import consulo.ide.impl.idea.history.utils.LocalHistoryLog;
 import consulo.ide.impl.idea.ide.BrowserUtil;
 import consulo.ide.impl.idea.ide.actions.ShowFilePathAction;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.util.io.storage.AbstractStorage;
 import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.event.NotificationListener;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
-import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.virtualFileSystem.ManagingFS;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.ide.impl.idea.util.io.storage.AbstractStorage;
-import consulo.container.boot.ContainerPathManager;
+import consulo.project.ui.notification.event.NotificationListener;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
+import consulo.util.lang.Pair;
+import consulo.virtualFileSystem.ManagingFS;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -41,6 +40,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.MessageFormat;
+import java.util.function.Consumer;
 
 public class ChangeListStorageImpl implements ChangeListStorage {
   private static final int VERSION = 5;
@@ -249,7 +249,7 @@ public class ChangeListStorageImpl implements ChangeListStorage {
       int eachBlockId = firstObsoleteId;
 
       while (eachBlockId != 0) {
-        processor.consume(doReadBlock(eachBlockId).changeSet);
+        processor.accept(doReadBlock(eachBlockId).changeSet);
         eachBlockId = doReadPrevSafely(eachBlockId, recursionGuard);
       }
       myStorage.deleteRecordsUpTo(firstObsoleteId);

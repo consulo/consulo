@@ -15,11 +15,10 @@
  */
 package consulo.ide.impl.idea.openapi.externalSystem.util;
 
-import consulo.ide.impl.idea.util.Consumer;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
+import java.util.function.Consumer;
 
 /**
  * @author Denis Zhdanov
@@ -40,7 +39,7 @@ public class PaintAwarePanel extends JPanel {
   @Override
   public void paint(Graphics g) {
     if (myPaintCallback != null) {
-      myPaintCallback.consume(g);
+      myPaintCallback.accept(g);
     }
     super.paint(g);
   }

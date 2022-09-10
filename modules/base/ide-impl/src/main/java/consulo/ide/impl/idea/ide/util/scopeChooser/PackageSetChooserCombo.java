@@ -15,17 +15,16 @@
  */
 package consulo.ide.impl.idea.ide.util.scopeChooser;
 
-import consulo.ui.ex.awt.ListCellRendererWrapper;
+import consulo.content.scope.NamedScope;
+import consulo.content.scope.PackageSet;
+import consulo.ide.impl.idea.packageDependencies.DefaultScopesProvider;
+import consulo.ide.impl.idea.packageDependencies.DependencyValidationManager;
+import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ex.awt.ComponentWithBrowseButton;
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ide.impl.idea.packageDependencies.DefaultScopesProvider;
-import consulo.ide.impl.idea.packageDependencies.DependencyValidationManager;
-import consulo.content.scope.NamedScope;
-import consulo.content.scope.PackageSet;
 import consulo.ui.ex.awt.JBComboBoxTableCellEditorComponent;
-import consulo.ide.impl.idea.util.Function;
-import consulo.logging.Logger;
+import consulo.ui.ex.awt.ListCellRendererWrapper;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -109,9 +108,7 @@ public class PackageSetChooserCombo extends ComponentWithBrowseButton<JComponent
       });
     }
     else {
-      ((JBComboBoxTableCellEditorComponent)component).setToString(new Function<Object, String>() {
-        @Override public String fun(Object o) { return o == null ? "" : ((NamedScope)o).getName(); }
-      });
+      ((JBComboBoxTableCellEditorComponent)component).setToString(o -> o == null ? "" : ((NamedScope)o).getName());
     }
 
     rebuild();

@@ -6,11 +6,12 @@ import consulo.util.collection.SmartList;
 import javax.annotation.Nonnull;
 
 import java.util.Collection;
+import java.util.function.Consumer;
 
 /**
  * @author peter
  */
-public class CollectConsumer<T> implements Consumer<T>, java.util.function.Consumer<T> {
+public class CollectConsumer<T> implements Consumer<T> {
   private final Collection<T> myResult;
 
   public CollectConsumer(@Nonnull Collection<T> result) {
@@ -29,10 +30,5 @@ public class CollectConsumer<T> implements Consumer<T>, java.util.function.Consu
   @Nonnull
   public Collection<T> getResult() {
     return myResult;
-  }
-
-  @Override
-  public void consume(T t) {
-    accept(t);
   }
 }

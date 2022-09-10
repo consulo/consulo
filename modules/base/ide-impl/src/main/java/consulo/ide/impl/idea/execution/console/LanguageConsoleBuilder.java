@@ -30,7 +30,6 @@ import consulo.document.event.DocumentEvent;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.editor.impl.EditorComponentImpl;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.language.Language;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.file.light.LightVirtualFile;
@@ -49,6 +48,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
+import java.util.function.Consumer;
 
 /**
  * @experimental
@@ -128,7 +128,7 @@ public final class LanguageConsoleBuilder {
     ConsoleExecuteAction.ConsoleExecuteActionHandler handler = new ConsoleExecuteAction.ConsoleExecuteActionHandler(true) {
       @Override
       void doExecute(@Nonnull String text, @Nonnull LanguageConsoleView consoleView) {
-        executeActionHandler.consume(text);
+        executeActionHandler.accept(text);
       }
     };
 

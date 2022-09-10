@@ -15,17 +15,17 @@
  */
 package consulo.ide.impl.idea.util.continuation;
 
-import consulo.logging.Logger;
 import consulo.application.progress.PerformInBackgroundOption;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
+import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.ide.impl.idea.util.Consumer;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import consulo.ui.annotation.RequiredUIAccess;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
+import java.util.function.Consumer;
 
 /**
  * Created by IntelliJ IDEA.
@@ -35,7 +35,7 @@ import javax.swing.*;
  */
 public abstract class ModalityIgnorantBackgroundableTask extends Task.Backgroundable {
   private final static Logger LOG = Logger.getInstance(ModalityIgnorantBackgroundableTask.class);
-  private Consumer<Task.Backgroundable> myRunner;
+  private Consumer<Backgroundable> myRunner;
   private int myCnt;
 
   public ModalityIgnorantBackgroundableTask(@javax.annotation.Nullable Project project,
@@ -66,7 +66,7 @@ public abstract class ModalityIgnorantBackgroundableTask extends Task.Background
   public void runSteadily(final Consumer<Backgroundable> consumer) {
     myRunner = consumer;
     myCnt = 100;
-    consumer.consume(this);
+    consumer.accept(this);
   }
 
   @Override
@@ -83,7 +83,7 @@ public abstract class ModalityIgnorantBackgroundableTask extends Task.Background
         catch (InterruptedException e) {
           //
         }
-        myRunner.consume(this);
+        myRunner.accept(this);
         return;
       }
       SwingUtilities.invokeLater(new Runnable() {

@@ -22,11 +22,12 @@ import consulo.usage.UsageGroup;
 import consulo.usage.UsageTarget;
 import consulo.usage.rule.UsageFilteringRule;
 import consulo.usage.rule.UsageGroupingRule;
-import consulo.ide.impl.idea.util.Consumer;
+
 import javax.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author max

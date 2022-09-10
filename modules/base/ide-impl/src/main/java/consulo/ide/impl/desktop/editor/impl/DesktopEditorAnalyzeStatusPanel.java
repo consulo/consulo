@@ -32,7 +32,6 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.ui.AncestorListenerAdapter;
 import consulo.ide.impl.idea.ui.components.labels.DropDownLink;
 import consulo.ide.impl.idea.ui.popup.util.PopupState;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ui.ex.awt.IJSwingUtilities;
 import consulo.ide.impl.idea.util.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -86,6 +85,7 @@ import java.awt.event.*;
 import java.util.List;
 import java.util.*;
 import java.util.function.BooleanSupplier;
+import java.util.function.Function;
 
 /**
  * @author VISTALL

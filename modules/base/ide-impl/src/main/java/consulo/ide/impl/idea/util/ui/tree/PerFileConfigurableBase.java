@@ -1,58 +1,55 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.util.ui.tree;
 
-import consulo.application.CommonBundle;
-import consulo.language.file.inject.VirtualFileWindow;
-import consulo.language.LangBundle;
-import consulo.language.impl.util.LanguagePerFileMappings;
-import consulo.language.impl.util.PerFileMappingsBase;
-import consulo.ui.ex.SimpleColoredText;
-import consulo.ui.ex.awt.speedSearch.TableSpeedSearch;
-import consulo.virtualFileSystem.util.PerFileMappingsEx;
-import consulo.ui.ex.awt.action.ComboBoxAction;
-import consulo.ui.ex.awt.action.CustomComponentAction;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.application.ApplicationManager;
+import consulo.application.CommonBundle;
 import consulo.component.util.Iconable;
-import consulo.dataContext.DataContext;
-import consulo.fileChooser.IdeaFileChooser;
-import consulo.fileChooser.FileChooserDescriptor;
-import consulo.fileChooser.FileChooserDescriptorFactory;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.project.Project;
+import consulo.dataContext.DataContext;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDescriptorFactory;
+import consulo.fileChooser.IdeaFileChooser;
+import consulo.ide.impl.VfsIconUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
+import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.openapi.util.Getter;
+import consulo.ide.impl.idea.openapi.util.Setter;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.LangBundle;
+import consulo.language.file.inject.VirtualFileWindow;
+import consulo.language.impl.util.LanguagePerFileMappings;
+import consulo.language.impl.util.PerFileMappingsBase;
 import consulo.module.content.ProjectFileIndex;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.*;
+import consulo.project.Project;
 import consulo.ui.ex.ColoredTextContainer;
-import consulo.ui.ex.action.*;
+import consulo.ui.ex.SimpleColoredText;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.action.ComboBoxAction;
+import consulo.ui.ex.awt.action.ComboBoxButton;
+import consulo.ui.ex.awt.action.CustomComponentAction;
 import consulo.ui.ex.awt.event.DocumentAdapter;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
+import consulo.ui.ex.awt.speedSearch.TableSpeedSearch;
+import consulo.ui.ex.awt.table.JBTable;
 import consulo.ui.ex.awt.util.TableUtil;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ide.impl.idea.openapi.util.*;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.util.lang.Trinity;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
-import consulo.ui.ex.awt.table.JBTable;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.ide.impl.idea.util.Function;
-import consulo.ide.impl.idea.util.ObjectUtils;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.AbstractTableCellEditor;
-import consulo.ui.ex.awt.action.ComboBoxButton;
-import consulo.ide.impl.VfsIconUtil;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.KeyWithDefaultValue;
+import consulo.util.lang.Trinity;
+import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.PerFileMappingsEx;
 import gnu.trove.TIntArrayList;
 
 import javax.annotation.Nonnull;
@@ -65,11 +62,13 @@ import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static consulo.util.lang.Pair.pair;
 import static consulo.ui.ex.awt.IdeBorderFactory.*;
+import static consulo.util.lang.Pair.pair;
 
 /**
  * @author peter
@@ -343,7 +342,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
   public void apply() throws ConfigurationException {
     myMappings.setMappings(getNewMappings());
     for (Trinity<String, Supplier<T>, Consumer<T>> prop : myDefaultProps) {
-      prop.third.consume(myDefaultVals.get(prop.first));
+      prop.third.accept(myDefaultVals.get(prop.first));
     }
   }
 
@@ -752,7 +751,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
                                            @Nonnull Consumer<? super T> onChosen,
                                            @Nonnull Runnable onCommit) {
     return createValueEditorActionListPopup(target, onDispose, dataContext, chosen -> {
-      onChosen.consume(chosen);
+      onChosen.accept(chosen);
       onCommit.run();
     });
   }
@@ -793,14 +792,14 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
       AnAction a = new DumbAwareAction(renderValue(t, nullValue), "", getActionListIcon(target, t)) {
         @Override
         public void actionPerformed(@Nonnull AnActionEvent e) {
-          onChosen.consume(t);
+          onChosen.accept(t);
         }
       };
       a.getTemplatePresentation().setText(renderValue(t, nullValue));
       return a;
     };
     if (clearText != null) {
-      group.add(choseAction.fun(null));
+      group.add(choseAction.apply(null));
     }
     SimpleColoredText text = new SimpleColoredText();
     List<T> values = new ArrayList<>(getValueVariants(target));
@@ -811,10 +810,10 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
         renderValue(target, o, text);
         return text.toString();
       };
-      values.sort((o1, o2) -> StringUtil.naturalCompare(toString.fun(o1), toString.fun(o2)));
+      values.sort((o1, o2) -> StringUtil.naturalCompare(toString.apply(o1), toString.apply(o2)));
     }
     for (T t : values) {
-      group.add(choseAction.fun(t));
+      group.add(choseAction.apply(t));
     }
     return group;
   }

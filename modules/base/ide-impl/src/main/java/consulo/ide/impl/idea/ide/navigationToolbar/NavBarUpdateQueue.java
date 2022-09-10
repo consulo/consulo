@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.ide.navigationToolbar;
 import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ide.impl.idea.ui.LightweightHint;
-import consulo.ide.impl.idea.util.Consumer;
+import java.util.function.Consumer;
 import consulo.application.util.registry.Registry;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;

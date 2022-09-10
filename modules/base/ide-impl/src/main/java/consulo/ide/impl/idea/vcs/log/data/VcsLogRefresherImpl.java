@@ -18,28 +18,27 @@ package consulo.ide.impl.idea.vcs.log.data;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
-import consulo.project.Project;
-import consulo.util.lang.Pair;
-import consulo.versionControlSystem.VcsException;
-import consulo.versionControlSystem.log.*;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.NotNullFunction;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.ide.impl.idea.vcs.log.data.index.VcsLogIndex;
-import consulo.versionControlSystem.log.graph.GraphCommit;
 import consulo.ide.impl.idea.vcs.log.graph.GraphCommitImpl;
 import consulo.ide.impl.idea.vcs.log.graph.PermanentGraph;
 import consulo.ide.impl.idea.vcs.log.impl.RequirementsImpl;
 import consulo.ide.impl.idea.vcs.log.util.StopWatch;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.util.lang.Pair;
+import consulo.versionControlSystem.VcsException;
+import consulo.versionControlSystem.log.*;
+import consulo.versionControlSystem.log.graph.GraphCommit;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class VcsLogRefresherImpl implements VcsLogRefresher {
@@ -93,7 +92,7 @@ public class VcsLogRefresherImpl implements VcsLogRefresher {
 
     mySingleTaskController = new SingleTaskController<RefreshRequest, DataPack>(dataPack -> {
       myDataPack = dataPack;
-      dataPackUpdateHandler.consume(dataPack);
+      dataPackUpdateHandler.accept(dataPack);
     }) {
       @Override
       protected void startNewBackgroundTask() {
@@ -128,7 +127,7 @@ public class VcsLogRefresherImpl implements VcsLogRefresher {
       return myDataPack;
     }
     catch (VcsException e) {
-      myExceptionHandler.consume(e);
+      myExceptionHandler.accept(e);
       return DataPack.EMPTY;
     }
   }
@@ -180,7 +179,7 @@ public class VcsLogRefresherImpl implements VcsLogRefresher {
     List<GraphCommit<Integer>> map = ContainerUtil.map(commits, new Function<TimedVcsCommit, GraphCommit<Integer>>() {
       @Nonnull
       @Override
-      public GraphCommit<Integer> fun(@Nonnull TimedVcsCommit commit) {
+      public GraphCommit<Integer> apply(@Nonnull TimedVcsCommit commit) {
         return compactCommit(commit, root);
       }
     });
@@ -281,7 +280,7 @@ public class VcsLogRefresherImpl implements VcsLogRefresher {
         return loadFullLog();
       }
       catch (Exception e) {
-        myExceptionHandler.consume(e);
+        myExceptionHandler.accept(e);
         return DataPack.EMPTY;
       }
       finally {

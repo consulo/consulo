@@ -20,6 +20,8 @@ import consulo.application.ApplicationManager;
 import consulo.component.ProcessCanceledException;
 import consulo.project.Project;
 
+import java.util.function.Consumer;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Irina.Chernushina
@@ -42,7 +44,7 @@ public class MessageBusUtil {
       @Override
       public void run() {
         if (project.isDisposed()) throw new ProcessCanceledException();
-        listener.consume(project.getMessageBus().syncPublisher(topic));
+        listener.accept(project.getMessageBus().syncPublisher(topic));
       }
     };
   }

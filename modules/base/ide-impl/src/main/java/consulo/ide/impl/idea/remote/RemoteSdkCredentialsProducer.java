@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.remote;
 
 import consulo.process.ExecutionException;
 import consulo.project.Project;
-import consulo.ide.impl.idea.util.Consumer;
+import java.util.function.Consumer;
 import javax.annotation.Nullable;
 
 /**

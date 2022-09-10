@@ -22,11 +22,10 @@ import consulo.ide.impl.idea.history.integration.IdeaGateway;
 import consulo.ide.impl.idea.history.integration.revertion.Reverter;
 import consulo.ide.impl.idea.history.integration.revertion.SelectionReverter;
 import consulo.ide.impl.idea.history.integration.ui.models.*;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.project.Project;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.Function;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,27 +49,15 @@ public class SelectionHistoryDialogModel extends FileHistoryDialogModel {
 
   @Override
   public FileDifferenceModel getDifferenceModel() {
-    return new SelectionDifferenceModel(myProject,
-                                        myGateway,
-                                        getCalculator(),
-                                        getLeftRevision(),
-                                        getRightRevision(),
-                                        myFrom,
-                                        myTo,
-                                        isCurrentRevisionSelected());
+    return new SelectionDifferenceModel(myProject, myGateway, getCalculator(), getLeftRevision(), getRightRevision(), myFrom, myTo, isCurrentRevisionSelected());
   }
 
   private SelectionCalculator getCalculator() {
     if (myCalculatorCache == null) {
       List<Revision> revisionList = new ArrayList<Revision>();
       revisionList.add(getCurrentRevision());
-      
-      revisionList.addAll(ContainerUtil.map(getRevisions(), new Function<RevisionItem, Revision>() {
-        @Override
-        public Revision fun(RevisionItem revisionItem) {
-          return revisionItem.revision;
-        }
-      }));
+
+      revisionList.addAll(ContainerUtil.map(getRevisions(), revisionItem -> revisionItem.revision));
       myCalculatorCache = new SelectionCalculator(myGateway, revisionList, myFrom, myTo);
     }
     return myCalculatorCache;

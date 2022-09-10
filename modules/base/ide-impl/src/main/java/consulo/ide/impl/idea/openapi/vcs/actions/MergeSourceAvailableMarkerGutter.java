@@ -23,10 +23,10 @@ import consulo.versionControlSystem.annotate.AnnotationSourceSwitcher;
 import consulo.versionControlSystem.annotate.FileAnnotation;
 import consulo.ide.impl.idea.openapi.vcs.annotate.TextAnnotationPresentation;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.ui.color.ColorValue;
 
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * @author Konstantin Bulenkov
@@ -55,7 +55,7 @@ class MergeSourceAvailableMarkerGutter extends AnnotationFieldGutter implements 
   }
 
   @Override
-  public void consume(final AnnotationSource annotationSource) {
+  public void accept(final AnnotationSource annotationSource) {
     myTurnedOn = annotationSource.showMerged();
   }
 }

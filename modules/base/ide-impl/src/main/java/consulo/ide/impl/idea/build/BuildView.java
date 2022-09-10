@@ -9,7 +9,6 @@ import consulo.build.ui.ViewManager;
 import consulo.build.ui.event.BuildEvent;
 import consulo.build.ui.event.OutputBuildEvent;
 import consulo.build.ui.event.StartBuildEvent;
-import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.build.events.impl.StartBuildEventImpl;
 import consulo.build.ui.process.BuildProcessHandler;
 import consulo.ide.impl.idea.execution.actions.StopAction;
@@ -26,7 +25,7 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.dataContext.DataProvider;
 import consulo.project.Project;
-import consulo.ide.impl.idea.util.Consumer;
+import java.util.function.Consumer;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.concurrent.EdtExecutorService;
@@ -215,7 +214,7 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
   private void delegateToConsoleView(Consumer<? super ConsoleView> viewConsumer) {
     ExecutionConsole console = getConsoleView();
     if (console instanceof ConsoleView) {
-      viewConsumer.consume((ConsoleView)console);
+      viewConsumer.accept((ConsoleView)console);
     }
   }
 

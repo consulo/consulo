@@ -15,25 +15,24 @@
  */
 package consulo.ide.impl.idea.openapi.diff.impl.patch.apply;
 
+import consulo.application.util.LineTokenizer;
+import consulo.document.util.TextRange;
+import consulo.document.util.UnfairTextRange;
 import consulo.ide.impl.idea.diff.util.IntPair;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.ApplyPatchStatus;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.PatchHunk;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.PatchLine;
-import consulo.util.lang.Pair;
-import consulo.document.util.TextRange;
-import consulo.document.util.UnfairTextRange;
-import consulo.application.util.LineTokenizer;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.AppliedTextPatch;
 import consulo.ide.impl.idea.util.BeforeAfter;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
+import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
+import java.util.function.Consumer;
 
 import static consulo.ide.impl.idea.openapi.diff.impl.patch.ApplyPatchStatus.ALREADY_APPLIED;
 
@@ -711,12 +710,12 @@ public class GenericPatchApplier {
 
       if (myForward) {
         for (BeforeAfter<List<String>> step : steps) {
-          stepConsumer.consume(step);
+          stepConsumer.accept(step);
         }
       } else {
         for (int i = steps.size() - 1; i >= 0; i--) {
           BeforeAfter<List<String>> step = steps.get(i);
-          stepConsumer.consume(step);
+          stepConsumer.accept(step);
         }
       }
     }
@@ -1078,7 +1077,7 @@ public class GenericPatchApplier {
   // indexes are passed inclusive
   private void iterateTransformations(final Consumer<TextRange> consumerExcluded, final Consumer<TextRange> consumerIncluded) {
     if (myTransformations.isEmpty()) {
-      consumerExcluded.consume(new UnfairTextRange(0, myLines.size() - 1));
+      consumerExcluded.accept(new UnfairTextRange(0, myLines.size() - 1));
     } else {
       final Set<Map.Entry<TextRange,MyAppliedData>> entries = myTransformations.entrySet();
       final Iterator<Map.Entry<TextRange, MyAppliedData>> iterator = entries.iterator();
@@ -1087,20 +1086,20 @@ public class GenericPatchApplier {
       final Map.Entry<TextRange, MyAppliedData> first = iterator.next();
       final TextRange range = first.getKey();
       if (range.getStartOffset() > 0) {
-        consumerExcluded.consume(new TextRange(0, range.getStartOffset() - 1));
+        consumerExcluded.accept(new TextRange(0, range.getStartOffset() - 1));
       }
-      consumerIncluded.consume(range);
+      consumerIncluded.accept(range);
 
       int previousEnd = range.getEndOffset() + 1;
       while (iterator.hasNext() && previousEnd < myLines.size()) {
         final Map.Entry<TextRange, MyAppliedData> entry = iterator.next();
         final TextRange key = entry.getKey();
-        consumerExcluded.consume(new UnfairTextRange(previousEnd, key.getStartOffset() - 1));
-        consumerIncluded.consume(key);
+        consumerExcluded.accept(new UnfairTextRange(previousEnd, key.getStartOffset() - 1));
+        consumerIncluded.accept(key);
         previousEnd = key.getEndOffset() + 1;
       }
       if (previousEnd < myLines.size()) {
-        consumerExcluded.consume(new TextRange(previousEnd, myLines.size() - 1));
+        consumerExcluded.accept(new TextRange(previousEnd, myLines.size() - 1));
       }
     }
   }

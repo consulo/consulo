@@ -20,7 +20,6 @@ import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.ide.impl.idea.ide.dnd.aware.DnDAwareTree;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.ex.action.AnAction;
@@ -38,6 +37,7 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Created with IntelliJ IDEA.
@@ -207,7 +207,7 @@ public class TaskDefaultFavoriteListProvider extends AbstractFavoritesListProvid
       public void actionPerformed(AnActionEvent e) {
         popup.closeOk(e.getInputEvent());
         unregisterCustomShortcutSet(content);
-        after.consume(textArea.getText());
+        after.accept(textArea.getText());
       }
     };
     action.registerCustomShortcutSet(CommonShortcuts.CTRL_ENTER, content);

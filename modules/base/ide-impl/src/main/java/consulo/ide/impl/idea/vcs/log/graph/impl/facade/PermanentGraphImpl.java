@@ -19,11 +19,12 @@ package consulo.ide.impl.idea.vcs.log.graph.impl.facade;
 
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
-import consulo.util.lang.function.Condition;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.NotNullFunction;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.vcs.log.graph.*;
+import consulo.ide.impl.idea.vcs.log.graph.GraphColorManager;
+import consulo.ide.impl.idea.vcs.log.graph.GraphCommitImpl;
+import consulo.ide.impl.idea.vcs.log.graph.PermanentGraph;
+import consulo.ide.impl.idea.vcs.log.graph.VisibleGraph;
 import consulo.ide.impl.idea.vcs.log.graph.api.permanent.PermanentGraphInfo;
 import consulo.ide.impl.idea.vcs.log.graph.collapsing.BranchFilterController;
 import consulo.ide.impl.idea.vcs.log.graph.collapsing.CollapsedController;
@@ -34,11 +35,15 @@ import consulo.ide.impl.idea.vcs.log.graph.linearBek.LinearBekController;
 import consulo.ide.impl.idea.vcs.log.graph.utils.LinearGraphUtils;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
+import consulo.util.lang.function.Condition;
 import consulo.versionControlSystem.log.graph.GraphCommit;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class PermanentGraphImpl<CommitId> implements PermanentGraph<CommitId>, PermanentGraphInfo<CommitId> {
 
@@ -164,12 +169,7 @@ public class PermanentGraphImpl<CommitId> implements PermanentGraph<CommitId>, P
   @Nonnull
   @Override
   public Condition<CommitId> getContainedInBranchCondition(@Nonnull final Collection<CommitId> heads) {
-    List<Integer> headIds = ContainerUtil.map(heads, new Function<CommitId, Integer>() {
-      @Override
-      public Integer fun(CommitId head) {
-        return myPermanentCommitsInfo.getNodeId(head);
-      }
-    });
+    List<Integer> headIds = ContainerUtil.map(heads, head -> myPermanentCommitsInfo.getNodeId(head));
     if (!heads.isEmpty() && ContainerUtil.getFirstItem(heads) instanceof Integer) {
       final IntSet branchNodes = IntSets.newHashSet();
       myReachableNodes.walk(headIds, node -> branchNodes.add((Integer)myPermanentCommitsInfo.getCommitId(node)));
@@ -212,7 +212,7 @@ public class PermanentGraphImpl<CommitId> implements PermanentGraph<CommitId>, P
 
     @Nonnull
     @Override
-    public Integer fun(CommitId dom) {
+    public Integer apply(CommitId dom) {
       int nodeId = -(myNotLoadedCommits.size() + 2);
       myNotLoadedCommits.put(nodeId, dom);
       return nodeId;

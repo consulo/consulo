@@ -17,12 +17,12 @@ package consulo.ide.impl.idea.util.continuation;
 
 import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
-import consulo.ide.impl.idea.util.Consumer;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import consulo.ui.annotation.RequiredUIAccess;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
 * @author irengrig
@@ -56,12 +56,12 @@ abstract class GeneralRunner implements ContinuationContext {
     synchronized (myQueueLock) {
       myHandlersMap.put(clazz, new Consumer<Exception>() {
         @Override
-        public void consume(Exception e) {
+        public void accept(Exception e) {
           if (!clazz.isAssignableFrom(e.getClass())) {
             throw new RuntimeException(e);
           }
           //noinspection unchecked
-          consumer.consume((T)e);
+          consumer.accept((T)e);
         }
       });
     }
@@ -98,12 +98,12 @@ abstract class GeneralRunner implements ContinuationContext {
         final Class<? extends Exception> aClass = e.getClass();
         Consumer<Exception> consumer = myHandlersMap.get(e.getClass());
         if (consumer != null) {
-          consumer.consume(e);
+          consumer.accept(e);
           return true;
         }
         for (Map.Entry<Class<? extends Exception>, Consumer<Exception>> entry : myHandlersMap.entrySet()) {
           if (entry.getKey().isAssignableFrom(aClass)) {
-            entry.getValue().consume(e);
+            entry.getValue().accept(e);
             return true;
           }
         }
@@ -202,7 +202,7 @@ abstract class GeneralRunner implements ContinuationContext {
   private void patchTasks(final List<TaskDescriptor> next) {
     for (TaskDescriptor descriptor : next) {
       for (Consumer<TaskDescriptor> tasksPatcher : myTasksPatchers) {
-        tasksPatcher.consume(descriptor);
+        tasksPatcher.accept(descriptor);
       }
     }
   }

@@ -5,45 +5,43 @@ package consulo.ide.impl.idea.find.replaceInProject;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.ApplicationManager;
+import consulo.application.TransactionGuard;
+import consulo.application.WriteAction;
+import consulo.application.internal.ApplicationEx;
+import consulo.application.progress.ProgressManager;
+import consulo.application.ui.wm.IdeFocusManager;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
+import consulo.document.Document;
+import consulo.find.*;
+import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.find.actions.FindInPathAction;
 import consulo.ide.impl.idea.find.findInProject.FindInProjectManager;
 import consulo.ide.impl.idea.find.impl.FindInProjectUtil;
 import consulo.ide.impl.idea.find.impl.FindManagerImpl;
-import consulo.find.*;
-import consulo.usage.UsageViewManager;
-import consulo.application.WriteAction;
-import consulo.application.internal.ApplicationEx;
-import consulo.undoRedo.CommandProcessor;
-import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.ui.MessageDialogBuilder;
-import consulo.ui.ex.awt.Messages;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.Factory;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.usage.*;
-import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.ide.impl.idea.usages.impl.UsageViewImpl;
-import consulo.usage.rule.UsageInFile;
 import consulo.ide.impl.idea.util.AdapterProcessor;
-import consulo.application.ApplicationManager;
-import consulo.application.TransactionGuard;
-import consulo.application.progress.ProgressManager;
-import consulo.dataContext.DataContext;
-import consulo.dataContext.DataManager;
-import consulo.document.Document;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
-import consulo.application.ui.wm.IdeFocusManager;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.KeyboardShortcut;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.content.Content;
+import consulo.undoRedo.CommandProcessor;
+import consulo.usage.*;
+import consulo.usage.rule.UsageInFile;
 import consulo.util.lang.ref.Ref;
+import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -55,6 +53,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.util.*;
+import java.util.function.Supplier;
 
 @Singleton
 @ServiceAPI(ComponentScope.PROJECT)
@@ -202,7 +201,7 @@ public class ReplaceInProjectManager {
   }
 
   public void searchAndShowUsages(@Nonnull UsageViewManager manager,
-                                  @Nonnull Factory<UsageSearcher> usageSearcherFactory,
+                                  @Nonnull Supplier<UsageSearcher> usageSearcherFactory,
                                   @Nonnull final FindModel findModelCopy,
                                   @Nonnull UsageViewPresentation presentation,
                                   @Nonnull FindUsagesProcessPresentation processPresentation) {
@@ -566,7 +565,7 @@ public class ReplaceInProjectManager {
     return !myIsFindInProgress && !FindInProjectManager.getInstance(myProject).isWorkInProgress();
   }
 
-  private class UsageSearcherFactory implements Factory<UsageSearcher> {
+  private class UsageSearcherFactory implements Supplier<UsageSearcher> {
     private final FindModel myFindModelCopy;
     private final FindUsagesProcessPresentation myProcessPresentation;
 
@@ -576,7 +575,7 @@ public class ReplaceInProjectManager {
     }
 
     @Override
-    public UsageSearcher create() {
+    public UsageSearcher get() {
       return processor -> {
         try {
           myIsFindInProgress = true;

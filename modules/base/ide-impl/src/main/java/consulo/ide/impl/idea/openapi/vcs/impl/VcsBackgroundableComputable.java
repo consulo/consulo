@@ -18,15 +18,16 @@ package consulo.ide.impl.idea.openapi.vcs.impl;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
-import consulo.project.Project;
 import consulo.application.util.function.ThrowableComputable;
+import consulo.ide.impl.idea.openapi.vcs.changes.BackgroundFromStartOption;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsException;
-import consulo.ide.impl.idea.openapi.vcs.changes.BackgroundFromStartOption;
-import consulo.ide.impl.idea.util.Consumer;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.ui.annotation.RequiredUIAccess;
+import java.util.function.Consumer;
 
 public class VcsBackgroundableComputable<T> extends Task.Backgroundable {
   private final String myErrorTitle;
@@ -133,7 +134,7 @@ public class VcsBackgroundableComputable<T> extends Task.Backgroundable {
     commonFinish();
     if (myException == null) {
       if (myAwtSuccessContinuation != null) {
-        myAwtSuccessContinuation.consume(myResult);
+        myAwtSuccessContinuation.accept(myResult);
       }
     } else {
       if (myAwtErrorContinuation != null) {

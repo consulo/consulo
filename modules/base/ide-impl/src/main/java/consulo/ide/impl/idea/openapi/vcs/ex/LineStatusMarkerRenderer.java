@@ -15,30 +15,29 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.ex;
 
-import consulo.ide.impl.idea.openapi.diff.DiffColors;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorColors;
-import consulo.colorScheme.EditorColorsManager;
-import consulo.colorScheme.EditorColorsScheme;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorGutterComponentEx;
+import consulo.codeEditor.markup.*;
+import consulo.colorScheme.EditorColorsManager;
+import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
 import consulo.document.util.TextRange;
-import consulo.versionControlSystem.VcsBundle;
-import consulo.ide.impl.idea.util.Function;
-import consulo.util.lang.function.PairConsumer;
+import consulo.ide.impl.idea.openapi.diff.DiffColors;
+import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.codeEditor.markup.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.color.ColorValue;
+import consulo.util.lang.function.PairConsumer;
+import consulo.versionControlSystem.VcsBundle;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.List;
+import java.util.function.Function;
 
 import static consulo.ide.impl.idea.diff.util.DiffDrawUtil.lineToY;
 
@@ -80,7 +79,7 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
 
       @Override
       public void doAction(Editor editor, MouseEvent e) {
-        LineStatusMarkerPopup popup = popupBuilder != null ? popupBuilder.fun(editor) : null;
+        LineStatusMarkerPopup popup = popupBuilder != null ? popupBuilder.apply(editor) : null;
         if (popup != null) popup.showHint(e);
       }
     };

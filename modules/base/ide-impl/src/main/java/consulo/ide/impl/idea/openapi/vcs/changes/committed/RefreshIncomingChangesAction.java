@@ -15,12 +15,11 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
+import consulo.application.dumb.DumbAware;
+import consulo.language.editor.CommonDataKeys;
+import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
-import consulo.ide.impl.idea.util.Consumer;
 
 /**
  * @author yole
@@ -35,14 +34,12 @@ public class RefreshIncomingChangesAction extends AnAction implements DumbAware 
 
   public static void doRefresh(final Project project) {
     final CommittedChangesCache cache = CommittedChangesCache.getInstance(project);
-    cache.hasCachesForAnyRoot(new Consumer<Boolean>() {
-      public void consume(final Boolean notEmpty) {
-        if ((! notEmpty) && (!CacheSettingsDialog.showSettingsDialog(project))) {
-          return;
-        }
-        cache.refreshAllCachesAsync(true, false);
-        cache.refreshIncomingChangesAsync();
+    cache.hasCachesForAnyRoot(notEmpty -> {
+      if ((!notEmpty) && (!CacheSettingsDialog.showSettingsDialog(project))) {
+        return;
       }
+      cache.refreshAllCachesAsync(true, false);
+      cache.refreshIncomingChangesAsync();
     });
   }
 

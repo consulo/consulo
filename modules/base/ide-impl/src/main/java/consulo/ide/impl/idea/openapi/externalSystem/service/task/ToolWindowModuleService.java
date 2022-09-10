@@ -28,7 +28,6 @@ import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.externalSystem.util.ExternalSystemConstants;
 import consulo.externalSystem.util.Order;
 import consulo.ide.impl.idea.openapi.externalSystem.service.task.ui.ExternalSystemTasksTreeModel;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
 import consulo.project.Project;
 
@@ -37,6 +36,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 
 /**
  * Ensures that all external system sub-projects are correctly represented at the external system tool window.
@@ -48,12 +48,7 @@ import java.util.Set;
 public class ToolWindowModuleService extends AbstractToolWindowService<ModuleData> {
 
   @Nonnull
-  public static final Function<DataNode<ModuleData>, ExternalProjectPojo> MAPPER = new Function<DataNode<ModuleData>, ExternalProjectPojo>() {
-    @Override
-    public ExternalProjectPojo fun(DataNode<ModuleData> node) {
-      return ExternalProjectPojo.from(node.getData());
-    }
-  };
+  public static final Function<DataNode<ModuleData>, ExternalProjectPojo> MAPPER = node -> ExternalProjectPojo.from(node.getData());
 
   @Nonnull
   @Override

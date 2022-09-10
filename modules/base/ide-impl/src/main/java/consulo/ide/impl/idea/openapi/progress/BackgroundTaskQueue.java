@@ -25,7 +25,6 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.application.util.concurrent.QueueProcessor;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -36,6 +35,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import java.util.function.BooleanSupplier;
+import java.util.function.Consumer;
 
 import static consulo.application.util.concurrent.QueueProcessor.ThreadToUse;
 
@@ -58,7 +58,7 @@ public class BackgroundTaskQueue {
     myTitle = title;
 
     BooleanSupplier disposeCondition = project != null ? project.getDisposed() : ApplicationManager.getApplication().getDisposed();
-    myProcessor = new QueueProcessor<>(TaskData::consume, true, ThreadToUse.AWT, disposeCondition);
+    myProcessor = new QueueProcessor<>(TaskData::accept, true, ThreadToUse.AWT, disposeCondition);
   }
 
   public void clear() {
@@ -138,7 +138,7 @@ public class BackgroundTaskQueue {
     }
 
     @Override
-    public void consume(@Nonnull Runnable continuation) {
+    public void accept(@Nonnull Runnable continuation) {
       Task.Backgroundable task = myTask;
       ProgressIndicator indicator = myIndicator;
       if (indicator == null) {

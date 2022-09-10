@@ -15,18 +15,17 @@
  */
 package consulo.ide.impl.idea.util.ui;
 
-import consulo.ui.ex.awt.AbstractTableCellEditor;
-import consulo.ui.ex.awt.CellEditorComponentWithBrowseButton;
-import consulo.ui.ex.awt.TextFieldWithBrowseButton;
 import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.ide.impl.idea.util.PathUtil;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.IdeaFileChooser;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.PathUtil;
 import consulo.project.Project;
+import consulo.ui.ex.awt.AbstractTableCellEditor;
+import consulo.ui.ex.awt.CellEditorComponentWithBrowseButton;
+import consulo.ui.ex.awt.TextFieldWithBrowseButton;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
@@ -35,6 +34,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.function.Consumer;
 
 public class LocalPathCellEditor extends AbstractTableCellEditor {
   private final String myTitle;
@@ -92,7 +92,7 @@ public class LocalPathCellEditor extends AbstractTableCellEditor {
         VirtualFile initialFile = StringUtil.isNotEmpty(initial) ? LocalFileSystem.getInstance().findFileByPath(initial) : null;
         IdeaFileChooser.chooseFile(getFileChooserDescriptor(), myProject, table, initialFile, new Consumer<VirtualFile>() {
           @Override
-          public void consume(VirtualFile file) {
+          public void accept(VirtualFile file) {
             String path = file.getPresentableUrl();
             if (SystemInfo.isWindows && path.length() == 2 && Character.isLetter(path.charAt(0)) && path.charAt(1) == ':') {
               path += "\\"; // make path absolute

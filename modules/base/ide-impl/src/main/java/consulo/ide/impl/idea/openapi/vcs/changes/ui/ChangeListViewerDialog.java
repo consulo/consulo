@@ -174,7 +174,7 @@ public class ChangeListViewerDialog extends DialogWrapper implements DataProvide
           final Change[] convertedChanges = new Change[changesArray.length];
           for (int i = 0; i < changesArray.length; i++) {
             Change change = changesArray[i];
-            convertedChanges[i] = myConvertor.fun(change);
+            convertedChanges[i] = myConvertor.apply(change);
           }
           super.showDiffForChanges(convertedChanges, indexInSelection);
         } else {

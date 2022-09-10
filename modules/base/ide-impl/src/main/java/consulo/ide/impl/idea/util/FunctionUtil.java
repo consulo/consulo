@@ -19,6 +19,7 @@ import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Function;
 
 /**
  * @author nik
@@ -28,8 +29,7 @@ public class FunctionUtil {
 
   @Nonnull
   public static <T> Function<T, T> id() {
-    @SuppressWarnings("unchecked") Function<T, T> id = Function.ID;
-    return id;
+    return Function.identity();
   }
 
   @Nonnull
@@ -40,18 +40,12 @@ public class FunctionUtil {
 
   @Nonnull
   public static <T> Function<T, String> string() {
-    @SuppressWarnings("unchecked") Function<T, String> function = Function.TO_STRING;
-    return function;
+    return Object::toString;
   }
 
   @Nonnull
   public static <A, B> Function<A, B> constant(final B b) {
-    return new Function<A, B>() {
-      @Override
-      public B fun(A a) {
-        return b;
-      }
-    };
+    return a -> b;
   }
 
   @Nonnull
@@ -59,8 +53,8 @@ public class FunctionUtil {
     return new NotNullFunction<A, C>() {
       @Override
       @Nonnull
-      public C fun(A a) {
-        return f.fun(g.fun(a));
+      public C apply(A a) {
+        return f.apply(g.apply(a));
       }
     };
   }

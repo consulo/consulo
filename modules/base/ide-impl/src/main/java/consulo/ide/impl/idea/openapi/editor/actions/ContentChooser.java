@@ -15,31 +15,27 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
-import consulo.application.CommonBundle;
 import consulo.application.AllIcons;
-import consulo.ui.ex.awt.*;
-import consulo.document.Document;
+import consulo.application.CommonBundle;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.EditorFontType;
-import consulo.project.Project;
-import consulo.ui.ex.awt.DialogWrapper;
+import consulo.document.Document;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.awt.JBList;
-import consulo.ui.ex.awt.speedSearch.FilteringListModel;
 import consulo.ide.impl.idea.ui.speedSearch.ListWithFilter;
-import consulo.ui.ex.awt.event.DoubleClickListener;
-import consulo.ui.ex.awt.util.Alarm;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.ObjectUtil;
+import consulo.project.Project;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.event.DoubleClickListener;
+import consulo.ui.ex.awt.speedSearch.FilteringListModel;
+import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
-
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -54,15 +50,15 @@ import java.util.List;
 
 public abstract class ContentChooser<Data> extends DialogWrapper {
   private List<Data> myAllContents;
-  private Editor     myViewer;
+  private Editor myViewer;
 
   private final boolean myUseIdeaEditor;
 
-  private final JList      myList;
+  private final JList myList;
   private final JBSplitter mySplitter;
-  private final Project    myProject;
-  private final boolean    myAllowMultipleSelections;
-  private final Alarm      myUpdateAlarm;
+  private final Project myProject;
+  private final boolean myAllowMultipleSelections;
+  private final Alarm myUpdateAlarm;
   private Image myListEntryIcon = AllIcons.FileTypes.Text;
 
   public ContentChooser(Project project, String title, boolean useIdeaEditor) {
@@ -100,8 +96,7 @@ public abstract class ContentChooser<Data> extends DialogWrapper {
 
   @Override
   protected JComponent createCenterPanel() {
-    final int selectionMode = myAllowMultipleSelections ? ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
-                                                        : ListSelectionModel.SINGLE_SELECTION;
+    final int selectionMode = myAllowMultipleSelections ? ListSelectionModel.MULTIPLE_INTERVAL_SELECTION : ListSelectionModel.SINGLE_SELECTION;
     myList.setSelectionMode(selectionMode);
     if (myUseIdeaEditor) {
       EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
@@ -134,7 +129,7 @@ public abstract class ContentChooser<Data> extends DialogWrapper {
               newSelectionIndex = i;
             }
           }
-          
+
           rebuildListContent();
           if (myAllContents.isEmpty()) {
             close(CANCEL_EXIT_CODE);
@@ -160,12 +155,7 @@ public abstract class ContentChooser<Data> extends DialogWrapper {
       }
     });
 
-    mySplitter.setFirstComponent(ListWithFilter.wrap(myList, ScrollPaneFactory.createScrollPane(myList), new Function<Object, String>() {
-      @Override
-      public String fun(Object o) {
-        return ((Item)o).longText;
-      }
-    }));
+    mySplitter.setFirstComponent(ListWithFilter.wrap(myList, ScrollPaneFactory.createScrollPane(myList), o -> ((Item)o).longText));
     mySplitter.setSecondComponent(new JPanel());
     rebuildListContent();
 
@@ -220,7 +210,8 @@ public abstract class ContentChooser<Data> extends DialogWrapper {
       JComponent component = myViewer.getComponent();
       component.setPreferredSize(new Dimension(300, 500));
       mySplitter.setSecondComponent(component);
-    } else {
+    }
+    else {
       final JTextArea textArea = new JTextArea(fullString);
       textArea.setRows(3);
       textArea.setWrapStyleWord(true);
@@ -268,11 +259,11 @@ public abstract class ContentChooser<Data> extends DialogWrapper {
         fullString = StringUtil.convertLineSeparators(fullString);
         int newLineIdx = fullString.indexOf('\n');
         if (newLineIdx == -1) {
-          shortString = fullString.trim(); 
+          shortString = fullString.trim();
         }
         else {
           int lastLooked = 0;
-          do  {
+          do {
             int nextLineIdx = fullString.indexOf("\n", lastLooked);
             if (nextLineIdx > lastLooked) {
               shortString = fullString.substring(lastLooked, nextLineIdx).trim() + " ...";
@@ -283,9 +274,10 @@ public abstract class ContentChooser<Data> extends DialogWrapper {
               break;
             }
             lastLooked = nextLineIdx + 1;
-          } while (true);
+          }
+          while (true);
         }
-        items.add(new Item(i ++, shortString, fullString));
+        items.add(new Item(i++, shortString, fullString));
       }
     }
     myAllContents = contents;
@@ -305,9 +297,9 @@ public abstract class ContentChooser<Data> extends DialogWrapper {
 
   public int getSelectedIndex() {
     Object o = myList.getSelectedValue();
-    return o == null? -1 : ((Item)o).index;
+    return o == null ? -1 : ((Item)o).index;
   }
-  
+
   public void setSelectedIndex(int index) {
     myList.setSelectedIndex(index);
     ScrollingUtil.ensureIndexIsVisible(myList, index, 0);
@@ -337,7 +329,7 @@ public abstract class ContentChooser<Data> extends DialogWrapper {
     }
     return sb.toString();
   }
-  
+
   private class MyListCellRenderer extends ColoredListCellRenderer {
     @Override
     protected void customizeCellRenderer(JList list, Object value, int index, boolean selected, boolean hasFocus) {
@@ -365,7 +357,7 @@ public abstract class ContentChooser<Data> extends DialogWrapper {
       append(text, SimpleTextAttributes.REGULAR_ATTRIBUTES);
     }
   }
-  
+
   private static class Item {
     final int index;
     final String shortText;

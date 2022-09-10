@@ -16,16 +16,15 @@
 package consulo.ide.impl.script;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.util.lang.ClassLoaderUtil;
-import consulo.ide.impl.idea.util.Function;
-import consulo.ide.impl.idea.util.ObjectUtils;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.application.util.concurrent.PooledThreadExecutor;
 import consulo.application.util.function.Computable;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
-import consulo.application.util.concurrent.PooledThreadExecutor;
+import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
+import consulo.util.lang.ClassLoaderUtil;
 import consulo.util.lang.StringHash;
 import jakarta.inject.Singleton;
 
@@ -66,12 +65,7 @@ public class Jsr223IdeScriptEngineManagerImpl extends IdeScriptEngineManager {
   @Nonnull
   @Override
   public List<String> getLanguages() {
-    return ContainerUtil.map(getScriptEngineManager().getEngineFactories(), new Function<ScriptEngineFactory, String>() {
-      @Override
-      public String fun(ScriptEngineFactory factory) {
-        return factory.getLanguageName();
-      }
-    });
+    return ContainerUtil.map(getScriptEngineManager().getEngineFactories(), factory -> factory.getLanguageName());
   }
 
   @Nonnull

@@ -15,10 +15,8 @@
  */
 package consulo.ide.impl.idea.vcs.log.graph.impl.facade;
 
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.NotNullFunction;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.versionControlSystem.log.graph.GraphCommit;
 import consulo.ide.impl.idea.vcs.log.graph.GraphCommitImpl;
 import consulo.ide.impl.idea.vcs.log.graph.api.GraphLayout;
 import consulo.ide.impl.idea.vcs.log.graph.api.LinearGraph;
@@ -36,6 +34,7 @@ import consulo.ide.impl.idea.vcs.log.graph.utils.impl.CompressedIntList;
 import consulo.ide.impl.idea.vcs.log.graph.utils.impl.IntTimestampGetter;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;
+import consulo.versionControlSystem.log.graph.GraphCommit;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
@@ -87,14 +86,10 @@ public class SimpleGraphInfo<CommitId> implements PermanentGraphInfo<CommitId> {
       int nodeId = linearGraph.getNodeId(row);
       CommitId commit = permanentCommitsInfo.getCommitId(nodeId);
       List<CommitId> parents = ContainerUtil.newSmartList();
-      parents.addAll(ContainerUtil.mapNotNull(asLiteLinearGraph(linearGraph).getNodes(row, LiteLinearGraph.NodeFilter.DOWN),
-                                              new Function<Integer, CommitId>() {
-                                                @Override
-                                                public CommitId fun(Integer row) {
-                                                  if (row < start || row >= end) return null;
-                                                  return permanentCommitsInfo.getCommitId(linearGraph.getNodeId(row));
-                                                }
-                                              }));
+      parents.addAll(ContainerUtil.mapNotNull(asLiteLinearGraph(linearGraph).getNodes(row, LiteLinearGraph.NodeFilter.DOWN), row1 -> {
+        if (row1 < start || row1 >= end) return null;
+        return permanentCommitsInfo.getCommitId(linearGraph.getNodeId(row1));
+      }));
       graphCommits.add(new GraphCommitImpl<>(commit, parents, permanentCommitsInfo.getTimestamp(nodeId)));
       commitsIdMap.add(commit);
     }
@@ -129,8 +124,7 @@ public class SimpleGraphInfo<CommitId> implements PermanentGraphInfo<CommitId> {
 
     GraphLayoutImpl newLayout = new GraphLayoutImpl(layoutIndexes, headNodeIndexes, starts);
 
-    return new SimpleGraphInfo<>(newLinearGraph, newLayout, function, timestampGetter,
-                                 LinearGraphUtils.convertIdsToNodeIndexes(linearGraph, branchNodeIds));
+    return new SimpleGraphInfo<>(newLinearGraph, newLayout, function, timestampGetter, LinearGraphUtils.convertIdsToNodeIndexes(linearGraph, branchNodeIds));
   }
 
   @Nonnull
@@ -165,7 +159,7 @@ public class SimpleGraphInfo<CommitId> implements PermanentGraphInfo<CommitId> {
       @Nonnull
       @Override
       public CommitId getCommitId(int nodeId) {
-        return myFunction.fun(nodeId);
+        return myFunction.apply(nodeId);
       }
 
       @Override
@@ -176,7 +170,7 @@ public class SimpleGraphInfo<CommitId> implements PermanentGraphInfo<CommitId> {
       @Override
       public int getNodeId(@Nonnull CommitId commitId) {
         for (int id = 0; id < myLinearGraph.nodesCount(); id++) {
-          if (myFunction.fun(id).equals(commitId)) {
+          if (myFunction.apply(id).equals(commitId)) {
             return id;
           }
         }
@@ -188,7 +182,7 @@ public class SimpleGraphInfo<CommitId> implements PermanentGraphInfo<CommitId> {
       public Set<Integer> convertToNodeIds(@Nonnull Collection<CommitId> heads) {
         Set<Integer> result = ContainerUtil.newHashSet();
         for (int id = 0; id < myLinearGraph.nodesCount(); id++) {
-          if (heads.contains(myFunction.fun(id))) {
+          if (heads.contains(myFunction.apply(id))) {
             result.add(id);
           }
         }
@@ -224,7 +218,7 @@ public class SimpleGraphInfo<CommitId> implements PermanentGraphInfo<CommitId> {
 
     @Nonnull
     @Override
-    public CommitId fun(Integer dom) {
+    public CommitId apply(Integer dom) {
       return myCommitsIdMap.get(dom);
     }
   }
@@ -238,7 +232,7 @@ public class SimpleGraphInfo<CommitId> implements PermanentGraphInfo<CommitId> {
 
     @Nonnull
     @Override
-    public Integer fun(Integer dom) {
+    public Integer apply(Integer dom) {
       return myCommitsIdMap.get(dom);
     }
   }

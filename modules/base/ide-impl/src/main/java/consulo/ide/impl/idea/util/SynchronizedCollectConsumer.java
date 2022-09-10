@@ -28,8 +28,8 @@ public class SynchronizedCollectConsumer<T> extends CollectConsumer<T> {
   }
 
   @Override
-  public synchronized void consume(T t) {
-    super.consume(t);
+  public synchronized void accept(T t) {
+    super.accept(t);
   }
 
   @Nonnull

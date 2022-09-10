@@ -26,7 +26,7 @@ import java.util.function.Supplier;
  */
 @Deprecated
 @DeprecationInfo("Use LazyValue")
-public abstract class NullableLazyValue<T> {
+public abstract class NullableLazyValue<T> implements Supplier<T>{
   public static <E> NullableLazyValue<E> createValue(@Nonnull final Supplier<? extends E> factory) {
     return new NullableLazyValue<E>() {
       @Nullable
@@ -55,5 +55,10 @@ public abstract class NullableLazyValue<T> {
       myComputed = true;
     }
     return myValue;
+  }
+
+  @Override
+  public T get() {
+    return getValue();
   }
 }

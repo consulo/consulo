@@ -76,6 +76,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Function;
 import java.util.stream.StreamSupport;
 
 @Singleton
@@ -1469,7 +1470,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
     StringTokenizer tokenizer = new StringTokenizer(semicolonDelimited, FileTypeConsumer.EXTENSION_DELIMITER, false);
     ArrayList<FileNameMatcher> list = new ArrayList<>(semicolonDelimited.length() / "py;".length());
     while (tokenizer.hasMoreTokens()) {
-      list.add(matcherFactory.fun(tokenizer.nextToken().trim()));
+      list.add(matcherFactory.apply(tokenizer.nextToken().trim()));
     }
     return list;
   }

@@ -20,12 +20,13 @@ import consulo.versionControlSystem.log.VcsRef;
 import javax.annotation.Nonnull;
 
 import java.util.Collection;
+import java.util.function.Consumer;
 
 import static consulo.versionControlSystem.log.VcsLogProvider.Requirements;
 
 /**
  * Extension of the standard {@link Requirements} which contains data used by some VCSs. <br/>
- * An object of this object is actually passed to {@link #readFirstBlock(consulo.ide.impl.idea.util.Consumer}, but VcsLogProviders
+ * An object of this object is actually passed to {@link #readFirstBlock(Consumer }, but VcsLogProviders
  * which need this additional information must check for instanceof before casting & be able to fallback.
  */
 public interface VcsLogProviderRequirementsEx extends Requirements {

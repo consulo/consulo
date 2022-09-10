@@ -16,21 +16,18 @@
 package consulo.desktop.awt.action;
 
 import consulo.application.AllIcons;
-import consulo.ui.ex.awt.dnd.DnDActionInfo;
+import consulo.ide.impl.idea.util.IconUtil;
+import consulo.language.editor.CommonDataKeys;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.dnd.DnDDragStartBean;
 import consulo.ui.ex.awt.dnd.DnDImage;
 import consulo.ui.ex.awt.dnd.DnDSupport;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.JBList;
-import consulo.ide.impl.idea.util.Function;
-import consulo.ide.impl.idea.util.IconUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 
 /**
@@ -50,18 +47,8 @@ public class TestDnd extends AnAction {
       protected JComponent createCenterPanel() {
         JBList list = new JBList(new String[]{"1111111", "222222", "333333", "44444", "555555555555555555555555"});
         DnDSupport.createBuilder(list)
-          .setBeanProvider(new Function<DnDActionInfo, DnDDragStartBean>() {
-            @Override
-            public DnDDragStartBean fun(DnDActionInfo info) {
-              return new DnDDragStartBean("something");
-            }
-          })
-          .setImageProvider(new Function<DnDActionInfo, DnDImage>() {
-            @Override
-            public DnDImage fun(DnDActionInfo info) {
-              return new DnDImage(IconUtil.toImage(TargetAWT.to(AllIcons.Icon32)));
-            }
-          })
+          .setBeanProvider(info -> new DnDDragStartBean("something"))
+          .setImageProvider(info -> new DnDImage(IconUtil.toImage(TargetAWT.to(AllIcons.Icon32))))
           .install();
 
         return list;

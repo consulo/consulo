@@ -18,11 +18,11 @@ package consulo.ide.impl.idea.openapi.vcs.changes;
 import consulo.application.util.function.Computable;
 import consulo.ide.impl.idea.openapi.util.Getter;
 import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * need to update:
@@ -127,7 +127,7 @@ public class LazyRefreshingSelfQueue<T> {
 
     LOG.debug("found something to update: " + (! dirty.isEmpty()));
     for (T t : dirty) {
-      myUpdater.consume(t);
+      myUpdater.accept(t);
       synchronized (myLock) {
         // output value of remove() is tracked not to process items that were removed from myInProgress in forceRemove()
         // TODO: Probably more clear logic should be implemented

@@ -16,49 +16,46 @@
 package consulo.ide.impl.idea.refactoring.changeSignature;
 
 import consulo.application.AllIcons;
+import consulo.application.ui.wm.IdeFocusManager;
+import consulo.application.util.registry.Registry;
+import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposable;
-import consulo.language.editor.refactoring.changeSignature.ChangeSignatureHandler;
-import consulo.language.editor.refactoring.changeSignature.ParameterInfo;
-import consulo.language.editor.refactoring.ui.RefactoringDialog;
-import consulo.language.editor.refactoring.ui.StringTableCellEditor;
-import consulo.language.editor.ui.awt.EditorTextField;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.disposer.Disposer;
-import consulo.logging.Logger;
 import consulo.document.Document;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
+import consulo.ide.impl.idea.refactoring.ui.*;
+import consulo.ide.impl.idea.util.ui.table.JBListTable;
+import consulo.ide.impl.idea.util.ui.table.JBTableRowEditor;
+import consulo.language.editor.refactoring.BaseRefactoringProcessor;
+import consulo.language.editor.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.changeSignature.ChangeSignatureHandler;
+import consulo.language.editor.refactoring.changeSignature.ParameterInfo;
+import consulo.language.editor.refactoring.ui.RefactoringDialog;
+import consulo.language.editor.refactoring.ui.StringTableCellEditor;
+import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
+import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.language.file.LanguageFileType;
-import consulo.component.ProcessCanceledException;
-import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.*;
-import consulo.util.lang.Pair;
-import consulo.ui.ex.awt.util.TableUtil;
-import consulo.util.lang.ref.Ref;
-import consulo.application.util.registry.Registry;
-import consulo.application.ui.wm.IdeFocusManager;
 import consulo.language.psi.PsiCodeFragment;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
-import consulo.language.editor.refactoring.BaseRefactoringProcessor;
-import consulo.language.editor.refactoring.RefactoringBundle;
-import consulo.ide.impl.idea.refactoring.ui.*;
-import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.CustomShortcutSet;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.ui.ex.awt.table.TableView;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.util.Alarm;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.ide.impl.idea.util.ui.table.JBListTable;
-import consulo.ide.impl.idea.util.ui.table.JBTableRowEditor;
+import consulo.ui.ex.awt.util.TableUtil;
 import consulo.ui.image.ImageEffects;
+import consulo.util.lang.Pair;
+import consulo.util.lang.ref.Ref;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
@@ -73,16 +70,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 
 /**
  * @author Konstantin Bulenkov
  */
-public abstract class ChangeSignatureDialogBase<ParamInfo extends ParameterInfo,
-  Method extends PsiElement,
-  Visibility,
-  Descriptor extends MethodDescriptor<ParamInfo, Visibility>,
-  ParameterTableModelItem extends ParameterTableModelItemBase<ParamInfo>,
-  ParameterTableModel extends ParameterTableModelBase<ParamInfo, ParameterTableModelItem>>
+public abstract class ChangeSignatureDialogBase<ParamInfo extends ParameterInfo, Method extends PsiElement, Visibility, Descriptor extends MethodDescriptor<ParamInfo, Visibility>, ParameterTableModelItem extends ParameterTableModelItemBase<ParamInfo>, ParameterTableModel extends ParameterTableModelBase<ParamInfo, ParameterTableModelItem>>
         extends RefactoringDialog {
 
   private static final Logger LOG = Logger.getInstance(ChangeSignatureDialogBase.class);
@@ -218,11 +211,7 @@ public abstract class ChangeSignatureDialogBase<ParamInfo extends ParameterInfo,
   @Override
   protected JComponent createNorthPanel() {
     final JPanel panel = new JPanel(new GridBagLayout());
-    GridBagConstraints gbc = new GridBagConstraints(0, 0, 1, 1, 0, 1,
-                                                    GridBagConstraints.WEST,
-                                                    GridBagConstraints.HORIZONTAL,
-                                                    new Insets(0, 0, 0, 0),
-                                                    0, 0);
+    GridBagConstraints gbc = new GridBagConstraints(0, 0, 1, 1, 0, 1, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0);
 
     myNamePanel = new JPanel(new BorderLayout(0, 2));
     myNameField = new EditorTextField(myMethod.getName());
@@ -347,28 +336,25 @@ public abstract class ChangeSignatureDialogBase<ParamInfo extends ParameterInfo,
     }
 
     myPropagateParamChangesButton =
-      new AnActionButton(RefactoringBundle.message("changeSignature.propagate.parameters.title"), null, ImageEffects.layered(AllIcons.Nodes.Parameter, AllIcons.Actions.New)) {
-        @Override
-        public void actionPerformed(AnActionEvent e) {
-          final Ref<CallerChooserBase<Method>> chooser = new Ref<CallerChooserBase<Method>>();
-          Consumer<Set<Method>> callback = new Consumer<Set<Method>>() {
-            @Override
-            public void consume(Set<Method> callers) {
-              myMethodsToPropagateParameters = callers;
-              myParameterPropagationTreeToReuse = chooser.get().getTree();
-            }
-          };
-          try {
-            String message = RefactoringBundle.message("changeSignature.parameter.caller.chooser");
-            chooser.set(createCallerChooser(message, myParameterPropagationTreeToReuse, callback));
-          }
-          catch (ProcessCanceledException ex) {
-            // user cancelled initial callers search, don't show dialog
-            return;
-          }
-          chooser.get().show();
-        }
-      };
+            new AnActionButton(RefactoringBundle.message("changeSignature.propagate.parameters.title"), null, ImageEffects.layered(AllIcons.Nodes.Parameter, AllIcons.Actions.New)) {
+              @Override
+              public void actionPerformed(AnActionEvent e) {
+                final Ref<CallerChooserBase<Method>> chooser = new Ref<CallerChooserBase<Method>>();
+                Consumer<Set<Method>> callback = callers -> {
+                  myMethodsToPropagateParameters = callers;
+                  myParameterPropagationTreeToReuse = chooser.get().getTree();
+                };
+                try {
+                  String message = RefactoringBundle.message("changeSignature.parameter.caller.chooser");
+                  chooser.set(createCallerChooser(message, myParameterPropagationTreeToReuse, callback));
+                }
+                catch (ProcessCanceledException ex) {
+                  // user cancelled initial callers search, don't show dialog
+                  return;
+                }
+                chooser.get().show();
+              }
+            };
 
     final JPanel result = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP));
     result.add(panel);
@@ -492,17 +478,12 @@ public abstract class ChangeSignatureDialogBase<ParamInfo extends ParameterInfo,
           return editor;
         }
       };
-      final JPanel buttonsPanel = ToolbarDecorator.createDecorator(myParametersList.getTable())
-        .addExtraAction(myPropagateParamChangesButton)
-        .createPanel();
+      final JPanel buttonsPanel = ToolbarDecorator.createDecorator(myParametersList.getTable()).addExtraAction(myPropagateParamChangesButton).createPanel();
       myParametersList.getTable().getModel().addTableModelListener(mySignatureUpdater);
       return buttonsPanel;
     }
     else {
-      final JPanel buttonsPanel =
-        ToolbarDecorator.createDecorator(getTableComponent())
-          .addExtraAction(myPropagateParamChangesButton)
-          .createPanel();
+      final JPanel buttonsPanel = ToolbarDecorator.createDecorator(getTableComponent()).addExtraAction(myPropagateParamChangesButton).createPanel();
 
       myPropagateParamChangesButton.setEnabled(false);
       myPropagateParamChangesButton.setVisible(false);
@@ -638,8 +619,7 @@ public abstract class ChangeSignatureDialogBase<ParamInfo extends ParameterInfo,
       return;
     }
     if (myMethodsToPropagateParameters != null && !mayPropagateParameters()) {
-      Messages.showWarningDialog(myProject, RefactoringBundle.message("changeSignature.parameters.wont.propagate"),
-                                 ChangeSignatureHandler.REFACTORING_NAME);
+      Messages.showWarningDialog(myProject, RefactoringBundle.message("changeSignature.parameters.wont.propagate"), ChangeSignatureHandler.REFACTORING_NAME);
       myMethodsToPropagateParameters = null;
     }
 

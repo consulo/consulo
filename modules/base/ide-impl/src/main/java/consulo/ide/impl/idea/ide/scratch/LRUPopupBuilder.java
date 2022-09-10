@@ -2,33 +2,30 @@
 package consulo.ide.impl.idea.ide.scratch;
 
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.language.LangBundle;
-import consulo.language.editor.scratch.ScratchUtil;
-import consulo.undoRedo.ProjectUndoManager;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.language.Language;
-import consulo.language.util.LanguageUtil;
-import consulo.virtualFileSystem.util.PerFileMappings;
-import consulo.language.editor.WriteCommandAction;
-import consulo.undoRedo.BasicUndoableAction;
-import consulo.undoRedo.UnexpectedUndoException;
-import consulo.language.file.LanguageFileType;
-import consulo.project.Project;
-import consulo.ui.ex.popup.BaseListPopupStep;
-import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.ui.ex.popup.*;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.ArrayUtilRt;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.util.collection.JBIterable;
-import consulo.ui.ex.awt.EmptyIcon;
+import consulo.language.LangBundle;
+import consulo.language.Language;
+import consulo.language.editor.WriteCommandAction;
+import consulo.language.editor.scratch.ScratchUtil;
+import consulo.language.file.LanguageFileType;
+import consulo.language.util.LanguageUtil;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.ui.ex.awt.EmptyIcon;
+import consulo.ui.ex.popup.*;
 import consulo.ui.image.Image;
+import consulo.undoRedo.BasicUndoableAction;
+import consulo.undoRedo.ProjectUndoManager;
+import consulo.undoRedo.UnexpectedUndoException;
+import consulo.util.collection.JBIterable;
+import consulo.util.lang.Pair;
+import consulo.virtualFileSystem.ReadonlyStatusHandler;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.PerFileMappings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -37,6 +34,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * @author gregsh
@@ -197,7 +195,7 @@ public abstract class LRUPopupBuilder<T> {
           storeLRUItems(t);
         }
         if (myOnChosen != null) {
-          doFinalStep(() -> myOnChosen.consume(t));
+          doFinalStep(() -> myOnChosen.accept(t));
         }
         return null;
       }

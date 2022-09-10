@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.openapi.util.Getter;
 import consulo.document.util.TextRange;
 import consulo.language.psi.search.PsiTodoSearchHelper;
 import consulo.language.psi.search.TodoItem;
-import consulo.ide.impl.idea.util.Consumer;
+import java.util.function.Consumer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +55,7 @@ public class TodoForBaseRevision extends TodoForRanges {
     final TodoItem[] todoItems = getTodoForText(PsiTodoSearchHelper.getInstance(myProject));
     if (todoItems != null) {
       final TodoItemData[] arr = convertTodo(todoItems);
-      mySaver.consume(arr);
+      mySaver.accept(arr);
       return arr;
     }
     return null;

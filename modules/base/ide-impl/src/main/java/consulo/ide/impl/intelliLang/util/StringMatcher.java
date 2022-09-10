@@ -17,9 +17,8 @@
 package consulo.ide.impl.intelliLang.util;
 
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.language.pattern.StringPattern;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.pattern.StringPattern;
 
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -171,11 +170,7 @@ public abstract class StringMatcher<T> {
 
     protected MatcherSet(Set<StringMatcher> target) {
       super(target);
-      myPattern = StringUtil.join(target, new Function<StringMatcher, String>() {
-        public String fun(StringMatcher s) {
-          return s.getPattern();
-        }
-      }, "|");
+      myPattern = StringUtil.join(target, s -> s.getPattern(), "|");
     }
 
     public static StringMatcher create(Set<StringMatcher> matchers) {

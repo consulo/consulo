@@ -18,19 +18,19 @@ package consulo.ide.impl.idea.tasks.impl;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.document.Document;
-import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.EditChangelistSupport;
+import consulo.ide.impl.idea.tasks.actions.TaskAutoCompletionListProvider;
+import consulo.language.editor.ui.awt.EditorTextField;
+import consulo.language.editor.ui.awt.TextFieldWithAutoCompletionContributor;
+import consulo.project.Project;
 import consulo.task.ChangeListInfo;
 import consulo.task.LocalTask;
 import consulo.task.TaskManager;
-import consulo.ide.impl.idea.tasks.actions.TaskAutoCompletionListProvider;
-import consulo.language.editor.ui.awt.TextFieldWithAutoCompletionContributor;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.language.editor.ui.awt.EditorTextField;
-import consulo.project.Project;
+import consulo.versionControlSystem.change.LocalChangeList;
 import jakarta.inject.Inject;
 
 import javax.swing.*;
+import java.util.function.Consumer;
 
 /**
  * @author Dmitry Avdeev
@@ -61,29 +61,26 @@ public class TaskChangelistSupport implements EditChangelistSupport {
     checkBox.setToolTipText("Reload context (e.g. open editors) when changelist is set active");
     checkBox.setSelected(initial == null ? myTaskManager.isTrackContextForNewChangelist() : myTaskManager.getAssociatedTask(initial) != null);
     bottomPanel.add(checkBox);
-    return new Consumer<LocalChangeList>() {
-      @Override
-      public void consume(LocalChangeList changeList) {
-        if (initial == null) {
-          myTaskManager.setTrackContextForNewChangelist(checkBox.isSelected());
-          if (checkBox.isSelected()) {
+    return changeList -> {
+      if (initial == null) {
+        myTaskManager.setTrackContextForNewChangelist(checkBox.isSelected());
+        if (checkBox.isSelected()) {
+          myTaskManager.trackContext(changeList);
+        }
+        else {
+          myTaskManager.getActiveTask().addChangelist(new ChangeListInfo(changeList));
+        }
+      }
+      else {
+        final LocalTask associatedTask = myTaskManager.getAssociatedTask(changeList);
+        if (checkBox.isSelected()) {
+          if (associatedTask == null) {
             myTaskManager.trackContext(changeList);
-          }
-          else {
-            myTaskManager.getActiveTask().addChangelist(new ChangeListInfo(changeList));
           }
         }
         else {
-          final LocalTask associatedTask = myTaskManager.getAssociatedTask(changeList);
-          if (checkBox.isSelected()) {
-            if (associatedTask == null) {
-              myTaskManager.trackContext(changeList);
-            }
-          }
-          else {
-            if (associatedTask != null) {
-              myTaskManager.removeTask(associatedTask);
-            }
+          if (associatedTask != null) {
+            myTaskManager.removeTask(associatedTask);
           }
         }
       }

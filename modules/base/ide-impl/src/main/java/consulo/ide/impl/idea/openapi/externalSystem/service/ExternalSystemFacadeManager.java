@@ -9,12 +9,11 @@ import consulo.externalSystem.ExternalSystemManager;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.setting.ExternalSystemExecutionSettings;
 import consulo.externalSystem.model.task.ExternalSystemTaskId;
+import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.ide.impl.idea.openapi.externalSystem.service.notification.ExternalSystemProgressNotificationManager;
 import consulo.ide.impl.idea.openapi.externalSystem.service.remote.RemoteExternalSystemProgressNotificationManager;
 import consulo.ide.impl.idea.openapi.externalSystem.service.remote.wrapper.ExternalSystemFacadeWrapper;
-import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.ide.impl.idea.openapi.externalSystem.util.IntegrationKey;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
 import consulo.project.Project;
@@ -35,6 +34,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Consumer;
 
 /**
  * Entry point to work with remote {@link RemoteExternalSystemFacade}.
@@ -110,7 +110,7 @@ public class ExternalSystemFacadeManager {
       data.remove(key);
       if (value instanceof Consumer) {
         //noinspection unchecked
-        ((Consumer)value).consume(newKey);
+        ((Consumer)value).accept(newKey);
       }
     }
   }

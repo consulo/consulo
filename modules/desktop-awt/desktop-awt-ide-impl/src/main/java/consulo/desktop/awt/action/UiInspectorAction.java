@@ -17,42 +17,36 @@ package consulo.desktop.awt.action;
 
 import com.google.common.base.MoreObjects;
 import consulo.application.AllIcons;
-import consulo.application.ui.UISettings;
-import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.notification.Notifications;
-import consulo.project.ui.notification.NotificationsManager;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.*;
+import consulo.application.ui.UISettings;
+import consulo.desktop.awt.ui.impl.window.JDialogAsUIWindow;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.ui.StripeTable;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.awt.JBScrollPane;
-import consulo.ui.ex.awt.JBTextField;
-import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
 import consulo.ide.impl.idea.util.ExceptionUtil;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.ide.impl.idea.util.ReflectionUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.ui.ColorIcon;
-import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.Notifications;
+import consulo.project.ui.notification.NotificationsManager;
+import consulo.ui.AntialiasingType;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
 import consulo.ui.ex.awt.speedSearch.TableSpeedSearch;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.awt.tree.TreeUtil;
-import consulo.ui.ex.awt.JBCurrentTheme;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.action.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.ui.AntialiasingType;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.desktop.awt.ui.impl.window.JDialogAsUIWindow;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import net.miginfocom.swing.MigLayout;
@@ -82,6 +76,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.List;
 import java.util.*;
+import java.util.function.Function;
 
 import static java.util.Locale.ENGLISH;
 
@@ -1241,7 +1236,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
     public void setValueAt(Object value, int row, int col) {
       PropertyBean bean = myProperties.get(row);
       try {
-        myProperties.set(row, new PropertyBean(bean.propertyName, ObjectUtils.notNull(updater(bean)).fun(value)));
+        myProperties.set(row, new PropertyBean(bean.propertyName, ObjectUtils.notNull(updater(bean)).apply(value)));
       }
       catch (Exception ignored) {
       }

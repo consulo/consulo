@@ -18,7 +18,6 @@ import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.openapi.vfs.impl.local.LocalFileSystemBase;
 import consulo.ide.impl.idea.util.ArrayUtilRt;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.util.lang.SystemProperties;
 import consulo.util.dataholder.Key;
 
@@ -29,6 +28,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static consulo.ide.impl.idea.execution.wsl.WSLUtil.LOG;
@@ -113,7 +113,7 @@ public class WSLDistribution {
     GeneralCommandLine commandLine = createWslCommandLine(args);
     CapturingProcessHandler processHandler = new CapturingProcessHandler(commandLine);
     if (processHandlerConsumer != null) {
-      processHandlerConsumer.consume(processHandler);
+      processHandlerConsumer.accept(processHandler);
     }
     return WSLUtil.addInputCloseListener(processHandler).runProcess(timeout);
   }

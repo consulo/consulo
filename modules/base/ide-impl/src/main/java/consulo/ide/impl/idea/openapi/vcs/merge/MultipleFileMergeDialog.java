@@ -16,42 +16,36 @@
 
 package consulo.ide.impl.idea.openapi.vcs.merge;
 
+import consulo.application.ApplicationManager;
 import consulo.application.CommonBundle;
 import consulo.diff.DiffManager;
-import consulo.ide.impl.idea.diff.DiffRequestFactory;
-import consulo.ide.impl.idea.diff.InvalidDiffRequestException;
 import consulo.diff.merge.MergeRequest;
 import consulo.diff.merge.MergeResult;
-import consulo.ide.impl.idea.diff.merge.MergeUtil;
-import consulo.ide.impl.idea.diff.util.DiffUtil;
-import consulo.versionControlSystem.merge.*;
-import consulo.virtualFileSystem.VirtualFilePresentation;
-import consulo.application.ApplicationManager;
-import consulo.undoRedo.CommandProcessor;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.project.Project;
-import consulo.project.internal.ProjectManagerEx;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.Messages;
-import consulo.util.lang.ref.Ref;
+import consulo.ide.impl.idea.diff.DiffRequestFactory;
+import consulo.ide.impl.idea.diff.InvalidDiffRequestException;
+import consulo.ide.impl.idea.diff.merge.MergeUtil;
+import consulo.ide.impl.idea.diff.util.DiffUtil;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.internal.ProjectManagerEx;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.table.ListTableModel;
+import consulo.ui.ex.awt.table.TableView;
+import consulo.undoRedo.CommandProcessor;
+import consulo.util.collection.SmartList;
+import consulo.util.lang.ref.Ref;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.VcsDirtyScopeManager;
+import consulo.versionControlSystem.merge.*;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.awt.ColoredTableCellRenderer;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.awt.JBLabel;
-import consulo.ui.ex.awt.table.TableView;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.util.collection.SmartList;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.ColumnInfo;
-import consulo.ui.ex.awt.table.ListTableModel;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.logging.Logger;
+import consulo.virtualFileSystem.VirtualFilePresentation;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -64,6 +58,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * @author yole
@@ -336,7 +331,7 @@ public class MultipleFileMergeDialog extends DialogWrapper {
 
       Consumer<MergeResult> callback = new Consumer<MergeResult>() {
         @Override
-        public void consume(final MergeResult result) {
+        public void accept(final MergeResult result) {
           Document document = FileDocumentManager.getInstance().getCachedDocument(file);
           if (document != null) FileDocumentManager.getInstance().saveDocument(document);
           checkMarkModifiedProject(file);

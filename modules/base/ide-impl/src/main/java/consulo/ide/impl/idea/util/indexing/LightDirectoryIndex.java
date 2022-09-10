@@ -16,21 +16,21 @@
 package consulo.ide.impl.idea.util.indexing;
 
 import consulo.application.ApplicationManager;
+import consulo.component.messagebus.MessageBusConnection;
+import consulo.disposer.Disposable;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.file.event.FileTypeEvent;
 import consulo.language.file.event.FileTypeListener;
+import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWithId;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileEvent;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.component.messagebus.MessageBusConnection;
-import consulo.disposer.Disposable;
-import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * This is a light version of DirectoryIndexImpl
@@ -74,7 +74,7 @@ public final class LightDirectoryIndex<T> {
 
   public void resetIndex() {
     myInfoCache.clear();
-    myInitializer.consume(this);
+    myInitializer.accept(this);
   }
 
   public void putInfo(@Nullable VirtualFile file, @Nonnull T value) {

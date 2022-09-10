@@ -17,24 +17,24 @@ package consulo.ide.impl.psi.injection;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.ide.impl.idea.openapi.util.Factory;
-import consulo.ui.ex.SimpleColoredText;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.configurable.Configurable;
+import consulo.ide.impl.intelliLang.Configuration;
+import consulo.ide.impl.intelliLang.inject.InjectedLanguage;
+import consulo.ide.impl.intelliLang.inject.config.BaseInjection;
 import consulo.language.Language;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiLanguageInjectionHost;
 import consulo.project.Project;
+import consulo.ui.ex.SimpleColoredText;
 import consulo.ui.ex.action.AnAction;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.Ref;
-import consulo.ide.impl.intelliLang.Configuration;
-import consulo.ide.impl.intelliLang.inject.InjectedLanguage;
-import consulo.ide.impl.intelliLang.inject.config.BaseInjection;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * @author Gregory.Shrago
@@ -76,5 +76,5 @@ public abstract class LanguageInjectionSupport {
 
   public abstract AnAction[] createAddActions(final Project project, final Consumer<BaseInjection> consumer);
 
-  public abstract AnAction createEditAction(final Project project, final Factory<BaseInjection> producer);
+  public abstract AnAction createEditAction(final Project project, final Supplier<BaseInjection> producer);
 }

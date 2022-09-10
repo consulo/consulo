@@ -23,13 +23,13 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.application.util.function.AsynchConsumer;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.ui.AdjustComponentWhenShown;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author max
@@ -101,7 +101,7 @@ public class ChangesBrowserDialog extends DialogWrapper {
       new AdjustComponentWhenShown() {
         @Override
         protected boolean init() {
-          myInitRunnable.consume(ChangesBrowserDialog.this);
+          myInitRunnable.accept(ChangesBrowserDialog.this);
           return true;
         }
       }.install(myCommittedChangesBrowser);

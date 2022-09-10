@@ -26,7 +26,7 @@ public abstract class RunAnythingGroupBase extends RunAnythingGroup {
     for (RunAnythingItem runConfigurationItem : getGroupItems(dataContext, pattern)) {
       Matcher matcher = getMatcher(dataContext, pattern);
       if (matcher == null) {
-        matcher = RUN_ANYTHING_MATCHER_BUILDER.fun(pattern).build();
+        matcher = RUN_ANYTHING_MATCHER_BUILDER.apply(pattern).build();
       }
       if (addToList(model, result, runConfigurationItem.getCommand(), isInsertionMode, runConfigurationItem, matcher)) break;
       cancellationChecker.run();

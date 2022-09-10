@@ -39,7 +39,6 @@ import consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelvedBinaryFilePatch;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.versionControlSystem.util.VcsUtil;
 import javax.annotation.Nonnull;
@@ -47,6 +46,7 @@ import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Function;
 
 public class PathsVerifier<BinaryType extends FilePatch> {
   // in
@@ -208,12 +208,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
               }
             });
     myTextPatches.removeAll(failedTextPatches);
-    return ContainerUtil.map(failedTextPatches, new Function<Pair<VirtualFile, ApplyTextFilePatch>, FilePatch>() {
-      @Override
-      public FilePatch fun(Pair<VirtualFile, ApplyTextFilePatch> patchInfo) {
-        return patchInfo.getSecond().getPatch();
-      }
-    });
+    return ContainerUtil.map(failedTextPatches, (Function<Pair<VirtualFile, ApplyTextFilePatch>, FilePatch>)patchInfo -> patchInfo.getSecond().getPatch());
   }
 
   private boolean isFileTypeOk(@Nonnull VirtualFile file) {

@@ -16,54 +16,53 @@
 
 package consulo.ide.impl.idea.openapi.vcs.changes.patch;
 
+import consulo.application.ApplicationManager;
+import consulo.application.util.function.Computable;
 import consulo.diff.DiffManager;
-import consulo.ide.impl.idea.diff.InvalidDiffRequestException;
 import consulo.diff.merge.MergeRequest;
 import consulo.diff.merge.MergeResult;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
+import consulo.fileChooser.FileChooser;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.ide.impl.idea.diff.InvalidDiffRequestException;
 import consulo.ide.impl.idea.diff.merge.MergeTool;
 import consulo.ide.impl.idea.diff.util.DiffUserDataKeysEx;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.application.ApplicationManager;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.*;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.ApplyFilePatch;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.ApplyFilePatchBase;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.GenericPatchApplier;
-import consulo.document.Document;
-import consulo.fileChooser.FileChooserDescriptor;
-import consulo.document.FileDocumentManager;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
-import consulo.application.util.function.Computable;
-import consulo.util.lang.function.Condition;
 import consulo.ide.impl.idea.openapi.util.Getter;
-import consulo.util.lang.ref.Ref;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.versionControlSystem.VcsApplicationSettings;
-import consulo.versionControlSystem.VcsBundle;
 import consulo.ide.impl.idea.openapi.vcs.VcsNotifier;
-import consulo.versionControlSystem.change.ChangeListManager;
-import consulo.versionControlSystem.change.CommitContext;
-import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.versionControlSystem.util.VcsUtil;
+import consulo.language.editor.CommonDataKeys;
 import consulo.logging.Logger;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.fileChooser.FileChooser;
+import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.awt.Messages;
+import consulo.util.lang.function.Condition;
+import consulo.util.lang.ref.Ref;
+import consulo.versionControlSystem.VcsApplicationSettings;
+import consulo.versionControlSystem.VcsBundle;
+import consulo.versionControlSystem.change.ChangeListManager;
+import consulo.versionControlSystem.change.CommitContext;
+import consulo.versionControlSystem.util.VcsUtil;
+import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static consulo.ide.impl.idea.openapi.vcs.changes.patch.PatchFileType.isPatchFile;
 
@@ -192,12 +191,9 @@ public class ApplyPatchAction extends DumbAwareAction {
     if (localContent == null) return ApplyPatchStatus.FAILURE;
 
     final Ref<ApplyPatchStatus> applyPatchStatusReference = new Ref<>();
-    Consumer<MergeResult> callback = new Consumer<MergeResult>() {
-      @Override
-      public void consume(MergeResult result) {
-        FileDocumentManager.getInstance().saveDocument(document);
-        applyPatchStatusReference.setIfNull(result != MergeResult.CANCEL ? ApplyPatchStatus.SUCCESS : ApplyPatchStatus.FAILURE);
-      }
+    Consumer<MergeResult> callback = result1 -> {
+      FileDocumentManager.getInstance().saveDocument(document);
+      applyPatchStatusReference.setIfNull(result1 != MergeResult.CANCEL ? ApplyPatchStatus.SUCCESS : ApplyPatchStatus.FAILURE);
     };
 
     try {
@@ -226,12 +222,7 @@ public class ApplyPatchAction extends DumbAwareAction {
         final AppliedTextPatch appliedTextPatch = AppliedTextPatch.create(applier.getAppliedInfo());
         request = PatchDiffRequestFactory.createBadMergeRequest(project, document, file, localContent, appliedTextPatch, callback);
       }
-      request.putUserData(DiffUserDataKeysEx.MERGE_ACTION_CAPTIONS, new Function<MergeResult, String>() {
-        @Override
-        public String fun(MergeResult result) {
-          return result.equals(MergeResult.CANCEL) ? "Abort..." : null;
-        }
-      });
+      request.putUserData(DiffUserDataKeysEx.MERGE_ACTION_CAPTIONS, result12 -> result12.equals(MergeResult.CANCEL) ? "Abort..." : null);
       request.putUserData(DiffUserDataKeysEx.MERGE_CANCEL_HANDLER, new Condition<MergeTool.MergeViewer>() {
         @Override
         public boolean value(MergeTool.MergeViewer viewer) {

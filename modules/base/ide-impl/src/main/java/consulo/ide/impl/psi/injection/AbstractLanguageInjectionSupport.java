@@ -16,32 +16,32 @@
 
 package consulo.ide.impl.psi.injection;
 
-import consulo.language.Language;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.file.FileTypeManager;
 import consulo.configurable.Configurable;
-import consulo.project.Project;
-import consulo.ui.ex.awt.DialogBuilder;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.Factory;
-import consulo.util.lang.ref.Ref;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiLanguageInjectionHost;
-import consulo.ui.ex.SimpleColoredText;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.ui.image.Image;
 import consulo.ide.impl.intelliLang.Configuration;
 import consulo.ide.impl.intelliLang.inject.InjectorUtils;
 import consulo.ide.impl.intelliLang.inject.config.BaseInjection;
 import consulo.ide.impl.intelliLang.inject.config.ui.BaseInjectionPanel;
+import consulo.language.Language;
+import consulo.language.file.FileTypeManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiLanguageInjectionHost;
+import consulo.project.Project;
+import consulo.ui.ex.SimpleColoredText;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.awt.DialogBuilder;
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.Messages;
+import consulo.ui.image.Image;
+import consulo.util.lang.ref.Ref;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * @author Gregory.Shrago
@@ -100,15 +100,15 @@ public abstract class AbstractLanguageInjectionSupport extends LanguageInjection
   }
 
   @Override
-  public AnAction createEditAction(final Project project, final Factory<BaseInjection> producer) {
+  public AnAction createEditAction(final Project project, final Supplier<BaseInjection> producer) {
     return createDefaultEditAction(project, producer);
   }
 
-  public static AnAction createDefaultEditAction(final Project project, final Factory<BaseInjection> producer) {
+  public static AnAction createDefaultEditAction(final Project project, final Supplier<BaseInjection> producer) {
     return new AnAction() {
       @Override
       public void actionPerformed(AnActionEvent e) {
-        final BaseInjection originalInjection = producer.create();
+        final BaseInjection originalInjection = producer.get();
         final BaseInjection newInjection = showDefaultInjectionUI(project, originalInjection.copy());
         if (newInjection != null) {
           originalInjection.copyFrom(newInjection);
@@ -128,7 +128,7 @@ public abstract class AbstractLanguageInjectionSupport extends LanguageInjection
         injection.setDisplayName("New "+ StringUtil.capitalize(support.getId())+" Injection");
         final BaseInjection newInjection = showDefaultInjectionUI(project, injection);
         if (newInjection != null) {
-          consumer.consume(injection);
+          consumer.accept(injection);
         }
       }
     };

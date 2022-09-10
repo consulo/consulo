@@ -15,10 +15,9 @@
  */
 package consulo.ide.impl.idea.designer;
 
-import consulo.ide.impl.idea.util.Function;
-
 import javax.swing.*;
 import java.awt.*;
+import java.util.function.Function;
 
 /**
  * @author Alexander Lobas
@@ -57,28 +56,18 @@ public class LightFillLayout implements LayoutManager2 {
 
   @Override
   public Dimension preferredLayoutSize(Container parent) {
-    return layoutSize(parent, new Function<Component, Dimension>() {
-      @Override
-      public Dimension fun(Component component) {
-        return component.getPreferredSize();
-      }
-    });
+    return layoutSize(parent, component -> component.getPreferredSize());
   }
 
   @Override
   public Dimension minimumLayoutSize(Container parent) {
-    return layoutSize(parent, new Function<Component, Dimension>() {
-      @Override
-      public Dimension fun(Component component) {
-        return component.getMinimumSize();
-      }
-    });
+    return layoutSize(parent, component -> component.getMinimumSize());
   }
 
   private static Dimension layoutSize(Container parent, Function<Component, Dimension> getSize) {
     Component toolbar = parent.getComponent(0);
-    Dimension toolbarSize = toolbar.isVisible() ? getSize.fun(toolbar) : new Dimension();
-    Dimension contentSize = getSize.fun(parent.getComponent(1));
+    Dimension toolbarSize = toolbar.isVisible() ? getSize.apply(toolbar) : new Dimension();
+    Dimension contentSize = getSize.apply(parent.getComponent(1));
     int extraWidth = 0;
     JComponent jParent = (JComponent)parent;
     if (jParent.getClientProperty(LightToolWindow.LEFT_MIN_KEY) != null) {

@@ -28,7 +28,6 @@ import consulo.virtualFileSystem.NewVirtualFile;
 import consulo.virtualFileSystem.RefreshQueue;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.VfsImplUtil;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.PersistentFS;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.ObjectUtil;
 import consulo.ide.impl.idea.util.io.URLUtil;
 import consulo.util.collection.Maps;
@@ -44,6 +43,7 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 @ExtensionImpl
 public final class LocalFileSystemImpl extends LocalFileSystemBase implements RefreshableFileSystem, VirtualFilePointerCapableFileSystem {
@@ -189,7 +189,7 @@ public final class LocalFileSystemImpl extends LocalFileSystemBase implements Re
 
   private static void visitTree(TreeNode rootNode, Consumer<TreeNode> consumer) {
     for (TreeNode node : rootNode.nodes.values()) {
-      consumer.consume(node);
+      consumer.accept(node);
       visitTree(node, consumer);
     }
   }

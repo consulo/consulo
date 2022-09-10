@@ -15,17 +15,18 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.patch.tool;
 
+import consulo.application.ApplicationManager;
+import consulo.application.util.function.Computable;
 import consulo.diff.content.DocumentContent;
 import consulo.diff.merge.MergeRequest;
 import consulo.diff.merge.MergeResult;
-import consulo.application.ApplicationManager;
+import consulo.ide.impl.idea.openapi.vcs.changes.patch.AppliedTextPatch;
 import consulo.language.editor.WriteCommandAction;
 import consulo.project.Project;
-import consulo.application.util.function.Computable;
-import consulo.ide.impl.idea.openapi.vcs.changes.patch.AppliedTextPatch;
-import consulo.ide.impl.idea.util.Consumer;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Consumer;
 
 public class ApplyPatchMergeRequest extends MergeRequest implements ApplyPatchRequest {
   @Nullable private final Project myProject;
@@ -155,6 +156,6 @@ public class ApplyPatchMergeRequest extends MergeRequest implements ApplyPatchRe
       }.execute();
     }
 
-    if (myCallback != null) myCallback.consume(result);
+    if (myCallback != null) myCallback.accept(result);
   }
 }

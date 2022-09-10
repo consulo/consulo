@@ -33,7 +33,7 @@ import consulo.ide.impl.idea.openapi.vcs.changes.ui.EditSourceForDialogAction;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.ide.impl.idea.ui.*;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.Function;
+import java.util.function.Function;
 import consulo.application.util.function.Processor;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.ui.ThreeStateCheckBox;

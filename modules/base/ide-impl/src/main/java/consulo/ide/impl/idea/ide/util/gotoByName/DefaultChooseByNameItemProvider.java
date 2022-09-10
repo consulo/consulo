@@ -1,22 +1,20 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
-import consulo.ide.impl.idea.ide.actions.searcheverywhere.FoundItemDescriptor;
-import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.CollectConsumer;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.ide.impl.idea.util.SynchronizedCollectConsumer;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.application.util.concurrent.JobLauncher;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.progress.ProgressManager;
+import consulo.application.util.concurrent.JobLauncher;
 import consulo.application.util.function.Processor;
 import consulo.application.util.matcher.MatcherTextRange;
 import consulo.application.util.matcher.MinusculeMatcher;
 import consulo.application.util.matcher.NameUtil;
 import consulo.component.ProcessCanceledException;
+import consulo.ide.impl.idea.ide.actions.searcheverywhere.FoundItemDescriptor;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.CollectConsumer;
+import consulo.ide.impl.idea.util.SynchronizedCollectConsumer;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.psi.util.proximity.PsiProximityComparator;
 import consulo.language.psi.PsiCompiledElement;
 import consulo.language.psi.PsiElement;
@@ -28,10 +26,12 @@ import consulo.logging.Logger;
 import consulo.project.content.scope.ProjectAwareSearchScope;
 import consulo.util.collection.FList;
 import consulo.util.collection.SmartList;
+import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class DefaultChooseByNameItemProvider implements ChooseByNameInScopeItemProvider {
@@ -177,7 +177,7 @@ public class DefaultChooseByNameItemProvider implements ChooseByNameInScopeItemP
         indicator.checkCanceled();
         MatchResult result = matches(base, fullPattern, matcher, sequence);
         if (result != null) {
-          collect.consume(result);
+          collect.accept(result);
           return true;
         }
         return false;
@@ -341,7 +341,7 @@ public class DefaultChooseByNameItemProvider implements ChooseByNameInScopeItemP
       ProgressManager.checkCanceled();
       MatchResult result = matches(base, pattern, matcher, name);
       if (result != null) {
-        consumer.consume(result);
+        consumer.accept(result);
       }
       return true;
     };

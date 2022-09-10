@@ -13,7 +13,7 @@ import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.VcsNotifier;
 import consulo.ide.impl.idea.openapi.vcs.VcsRootError;
-import consulo.ide.impl.idea.util.Function;
+import java.util.function.Function;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.module.content.ProjectFileIndex;
 import consulo.project.Project;
@@ -225,7 +225,7 @@ public final class VcsRootProblemNotifier {
     if (!unregisteredRoots.isEmpty()) {
       if (unregisteredRoots.size() == 1) {
         VcsRootError unregisteredRoot = unregisteredRoots.iterator().next();
-        description.append(ROOT_TO_PRESENTABLE.fun(unregisteredRoot));
+        description.append(ROOT_TO_PRESENTABLE.apply(unregisteredRoot));
       }
       else {
         description.append(joinRootsForPresentation(unregisteredRoots));
@@ -237,7 +237,7 @@ public final class VcsRootProblemNotifier {
   @VisibleForTesting
   @Nonnull
   String getInvalidRootDescriptionItem(@Nonnull VcsRootError rootError, @Nonnull String vcsName) {
-    return VcsBundle.message("roots.notification.content.directory.registered.as.root.but.no.repositories.were.found.there", ROOT_TO_PRESENTABLE.fun(rootError), vcsName);
+    return VcsBundle.message("roots.notification.content.directory.registered.as.root.but.no.repositories.were.found.there", ROOT_TO_PRESENTABLE.apply(rootError), vcsName);
   }
 
   @Nonnull

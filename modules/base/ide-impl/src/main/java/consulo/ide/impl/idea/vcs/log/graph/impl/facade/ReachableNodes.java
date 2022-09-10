@@ -16,7 +16,6 @@
 
 package consulo.ide.impl.idea.vcs.log.graph.impl.facade;
 
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.vcs.log.graph.api.LinearGraph;
 import consulo.ide.impl.idea.vcs.log.graph.api.LiteLinearGraph;
 import consulo.ide.impl.idea.vcs.log.graph.utils.DfsUtil;
@@ -24,13 +23,14 @@ import consulo.ide.impl.idea.vcs.log.graph.utils.Flags;
 import consulo.ide.impl.idea.vcs.log.graph.utils.LinearGraphUtils;
 import consulo.ide.impl.idea.vcs.log.graph.utils.UnsignedBitSet;
 import consulo.ide.impl.idea.vcs.log.graph.utils.impl.BitSetFlags;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Consumer;
 
 public class ReachableNodes {
   @Nonnull
@@ -55,12 +55,7 @@ public class ReachableNodes {
 
     final UnsignedBitSet result = new UnsignedBitSet();
     ReachableNodes getter = new ReachableNodes(LinearGraphUtils.asLiteLinearGraph(permanentGraph));
-    getter.walk(headNodeIndexes, new Consumer<Integer>() {
-      @Override
-      public void consume(Integer node) {
-        result.set(node, true);
-      }
-    });
+    getter.walk(headNodeIndexes, node -> result.set(node, true));
 
     return result;
   }
@@ -68,11 +63,8 @@ public class ReachableNodes {
   public Set<Integer> getContainingBranches(int nodeIndex, @Nonnull final Collection<Integer> branchNodeIndexes) {
     final Set<Integer> result = new HashSet<>();
 
-    walk(Collections.singletonList(nodeIndex), false, new Consumer<Integer>() {
-      @Override
-      public void consume(Integer integer) {
-        if (branchNodeIndexes.contains(integer)) result.add(integer);
-      }
+    walk(Collections.singletonList(nodeIndex), false, integer -> {
+      if (branchNodeIndexes.contains(integer)) result.add(integer);
     });
 
     return result;
@@ -90,7 +82,7 @@ public class ReachableNodes {
         if (start < 0) continue;
         if (myTempFlags.get(start)) continue;
         myTempFlags.set(start, true);
-        consumer.consume(start);
+        consumer.accept(start);
 
         myDfsUtil.nodeDfsIterator(start, new DfsUtil.NextNode() {
           @Override
@@ -98,7 +90,7 @@ public class ReachableNodes {
             for (int downNode : myGraph.getNodes(currentNode, goDown ? LiteLinearGraph.NodeFilter.DOWN : LiteLinearGraph.NodeFilter.UP)) {
               if (!myTempFlags.get(downNode)) {
                 myTempFlags.set(downNode, true);
-                consumer.consume(downNode);
+                consumer.accept(downNode);
                 return downNode;
               }
             }

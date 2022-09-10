@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.vcs.log.data.index;
 
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.index.io.DataIndexer;
 import consulo.ide.impl.idea.util.indexing.StorageException;
@@ -33,6 +32,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import static consulo.ide.impl.idea.vcs.log.data.index.VcsLogPersistentIndex.getVersion;
 
@@ -79,7 +79,7 @@ public class VcsLogUserIndex extends VcsLogFullDetailsIndex<Void> {
         result.put(myRegistry.getUserId(inputData.getAuthor()), null);
       }
       catch (IOException e) {
-        myFatalErrorConsumer.consume(e);
+        myFatalErrorConsumer.accept(e);
       }
 
       return result;

@@ -15,25 +15,25 @@
  */
 package consulo.ide.impl.idea.openapi.externalSystem.service.internal;
 
-import consulo.ide.ServiceManager;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.execution.ExternalTaskPojo;
 import consulo.externalSystem.model.setting.ExternalSystemExecutionSettings;
 import consulo.externalSystem.model.task.ExternalSystemTaskType;
+import consulo.externalSystem.util.ExternalSystemApiUtil;
+import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.openapi.externalSystem.service.ExternalSystemFacadeManager;
 import consulo.ide.impl.idea.openapi.externalSystem.service.RemoteExternalSystemFacade;
 import consulo.ide.impl.idea.openapi.externalSystem.service.remote.RemoteExternalSystemTaskManager;
-import consulo.externalSystem.util.ExternalSystemApiUtil;
-import consulo.project.Project;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
 import consulo.process.cmd.ParametersListUtil;
+import consulo.project.Project;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * @author Denis Zhdanov
@@ -42,12 +42,7 @@ import java.util.List;
 public class ExternalSystemExecuteTaskTask extends AbstractExternalSystemTask {
 
   @Nonnull
-  private static final Function<ExternalTaskPojo, String> MAPPER = new Function<ExternalTaskPojo, String>() {
-    @Override
-    public String fun(ExternalTaskPojo task) {
-      return task.getName();
-    }
-  };
+  private static final Function<ExternalTaskPojo, String> MAPPER = task -> task.getName();
 
   @Nonnull
   private final List<ExternalTaskPojo> myTasksToExecute;

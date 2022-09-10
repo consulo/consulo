@@ -15,26 +15,25 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
-import consulo.ui.ex.action.Presentation;
 import consulo.document.FileDocumentManager;
-import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
-import consulo.versionControlSystem.AbstractVcs;
-import consulo.versionControlSystem.ProjectLevelVcsManager;
-import consulo.versionControlSystem.VcsBundle;
-import consulo.versionControlSystem.history.VcsHistoryProvider;
 import consulo.ide.impl.idea.openapi.vcs.history.VcsHistoryProviderBackgroundableProxy;
-import consulo.versionControlSystem.history.VcsHistorySession;
 import consulo.ide.impl.idea.openapi.vcs.history.impl.VcsSelectionHistoryDialog;
 import consulo.ide.impl.idea.openapi.vcs.impl.BackgroundableActionEnabledHandler;
 import consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
 import consulo.ide.impl.idea.openapi.vcs.impl.VcsBackgroundableActions;
-import consulo.versionControlSystem.action.VcsContext;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.versionControlSystem.history.VcsSelection;
 import consulo.ide.impl.idea.vcsUtil.VcsSelectionUtil;
+import consulo.project.Project;
+import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.awt.Messages;
+import consulo.versionControlSystem.AbstractVcs;
+import consulo.versionControlSystem.ProjectLevelVcsManager;
+import consulo.versionControlSystem.VcsBundle;
+import consulo.versionControlSystem.action.VcsContext;
+import consulo.versionControlSystem.history.VcsHistoryProvider;
+import consulo.versionControlSystem.history.VcsSelection;
 import consulo.versionControlSystem.util.VcsUtil;
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 
 public class SelectedBlockHistoryAction extends AbstractVcsAction {
@@ -85,17 +84,13 @@ public class SelectedBlockHistoryAction extends AbstractVcsAction {
       final int selectionEnd = selection.getSelectionEndLineNumber();
 
       new VcsHistoryProviderBackgroundableProxy(activeVcs, provider, activeVcs.getDiffProvider()).
-              createSessionFor(activeVcs.getKeyInstanceMethod(), VcsUtil.getFilePath(file), new Consumer<VcsHistorySession>() {
-                @Override
-                public void consume(VcsHistorySession session) {
-                  if (session == null) return;
-                  final VcsSelectionHistoryDialog vcsHistoryDialog =
-                          new VcsSelectionHistoryDialog(project, file, selection.getDocument(), provider, session, activeVcs,
-                                                        Math.min(selectionStart, selectionEnd), Math.max(selectionStart, selectionEnd),
-                                                        selection.getDialogTitle());
+              createSessionFor(activeVcs.getKeyInstanceMethod(), VcsUtil.getFilePath(file), session -> {
+                if (session == null) return;
+                final VcsSelectionHistoryDialog vcsHistoryDialog =
+                        new VcsSelectionHistoryDialog(project, file, selection.getDocument(), provider, session, activeVcs, Math.min(selectionStart, selectionEnd),
+                                                      Math.max(selectionStart, selectionEnd), selection.getDialogTitle());
 
-                  vcsHistoryDialog.show();
-                }
+                vcsHistoryDialog.show();
               }, VcsBackgroundableActions.HISTORY_FOR_SELECTION, false, null);
     }
     catch (Exception exception) {

@@ -18,27 +18,26 @@ package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.codeEditor.EditorEx;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangeListRenderer;
+import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.editor.ui.awt.EditorTextField;
+import consulo.language.editor.ui.awt.StringComboboxEditor;
 import consulo.language.plain.PlainTextFileType;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.ComboBox;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.LocalChangeList;
-import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangeListRenderer;
-import consulo.ui.ex.awt.ColoredListCellRenderer;
-import consulo.language.editor.ui.awt.EditorTextField;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.language.editor.ui.awt.StringComboboxEditor;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.NullableConsumer;
-import consulo.ide.impl.idea.util.ObjectUtils;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.ui.annotation.RequiredUIAccess;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
@@ -46,6 +45,7 @@ import java.awt.event.FocusEvent;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static consulo.ide.impl.idea.codeInsight.completion.ComboEditorCompletionContributor.CONTINUE_RUN_COMPLETION;
 
@@ -53,12 +53,12 @@ public class ChangeListChooserPanel extends JPanel {
 
   private final MyEditorComboBox myExistingListsCombo;
   private final NewEditChangelistPanel myListPanel;
-  private final NullableConsumer<String> myOkEnabledListener;
+  private final Consumer<String> myOkEnabledListener;
   private final Project myProject;
   private String myLastTypedDescription;
   private boolean myNewNameSuggested = false;
 
-  public ChangeListChooserPanel(final Project project, @Nonnull final NullableConsumer<String> okEnabledListener) {
+  public ChangeListChooserPanel(final Project project, @Nonnull final Consumer<String> okEnabledListener) {
     super(new BorderLayout());
     myProject = project;
     myExistingListsCombo = new MyEditorComboBox(project);
@@ -110,7 +110,7 @@ public class ChangeListChooserPanel extends JPanel {
       protected void nameChanged(String errorMessage) {
         //invoke later because of undo manager problem: when you try to undo changelist after description was already changed manually
         ApplicationManager.getApplication().invokeLater(() -> updateDescription(), IdeaModalityState.current());
-        myOkEnabledListener.consume(errorMessage);
+        myOkEnabledListener.accept(errorMessage);
       }
 
       @Override

@@ -58,7 +58,7 @@ public class JBLoadingPanel extends JPanel {
     myPanel = manager == null ? new JPanel() : new JPanel(manager);
     myPanel.setOpaque(false);
     myPanel.setFocusable(false);
-    myDecorator = createLoadingDecorator.fun(myPanel);
+    myDecorator = createLoadingDecorator.apply(myPanel);
     super.add(myDecorator.getComponent(), BorderLayout.CENTER);
   }
 

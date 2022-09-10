@@ -15,31 +15,30 @@
  */
 package consulo.ide.impl.idea.profile.codeInspection.ui.table;
 
-import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
-import consulo.language.editor.rawHighlight.HighlightDisplayKey;
+import consulo.content.scope.NamedScope;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.codeInspection.ex.Descriptor;
 import consulo.ide.impl.idea.codeInspection.ex.InspectionProfileImpl;
-import consulo.language.editor.inspection.scheme.ScopeToolState;
-import consulo.dataContext.DataManager;
-import consulo.language.editor.annotation.HighlightSeverity;
-import consulo.dataContext.DataContext;
-import consulo.project.Project;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ui.ex.popup.ListPopup;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.profile.codeInspection.ui.ScopeOrderComparator;
 import consulo.ide.impl.idea.profile.codeInspection.ui.ScopesChooser;
 import consulo.ide.impl.idea.profile.codeInspection.ui.inspectionsTree.InspectionConfigTreeNode;
-import consulo.content.scope.NamedScope;
-import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.awt.table.JBTable;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.Function;
-import consulo.util.collection.SmartList;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.EditableModel;
+import consulo.language.editor.annotation.HighlightSeverity;
+import consulo.language.editor.inspection.scheme.ScopeToolState;
+import consulo.language.editor.rawHighlight.HighlightDisplayKey;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.awt.EditableModel;
+import consulo.ui.ex.awt.table.JBTable;
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.image.Image;
+import consulo.util.collection.SmartList;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -411,12 +410,7 @@ public class ScopesAndSeveritiesTable extends JBTable {
 
     @Override
     public void addRow() {
-      final List<Descriptor> descriptors = ContainerUtil.map(myTableSettings.getNodes(), new Function<InspectionConfigTreeNode, Descriptor>() {
-        @Override
-        public Descriptor fun(InspectionConfigTreeNode inspectionConfigTreeNode) {
-          return inspectionConfigTreeNode.getDefaultDescriptor();
-        }
-      });
+      final List<Descriptor> descriptors = ContainerUtil.map(myTableSettings.getNodes(), inspectionConfigTreeNode -> inspectionConfigTreeNode.getDefaultDescriptor());
       final ScopesChooser scopesChooser = new ScopesChooser(descriptors, myInspectionProfile, myProject, myScopeNames) {
         @Override
         protected void onScopeAdded() {

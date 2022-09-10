@@ -23,7 +23,6 @@ import consulo.component.persist.scheme.ExternalizableScheme;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.profile.DefaultProjectProfileManager;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.ApplicationManager;
 import consulo.application.util.function.Computable;
@@ -56,6 +55,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * @author max
@@ -617,7 +617,7 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
       return ContainerUtil.map(mySource.getDefaultStates(project), new Function<ScopeToolState, InspectionToolWrapper>() {
         @Nonnull
         @Override
-        public InspectionToolWrapper fun(@Nonnull ScopeToolState state) {
+        public InspectionToolWrapper apply(@Nonnull ScopeToolState state) {
           return state.getTool();
         }
       });

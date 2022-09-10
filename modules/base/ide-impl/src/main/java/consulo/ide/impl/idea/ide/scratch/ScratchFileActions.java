@@ -10,7 +10,6 @@ import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.IdeView;
 import consulo.ide.impl.idea.ide.actions.NewActionGroup;
 import consulo.application.util.NotNullLazyValue;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.language.Language;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
@@ -41,6 +40,7 @@ import javax.annotation.Nullable;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import static consulo.util.lang.function.Conditions.not;
 import static consulo.util.lang.function.Conditions.notNull;
@@ -94,7 +94,7 @@ public class ScratchFileActions {
         doCreateNewScratch(project, context);
       };
       if (context.language != null) {
-        consumer.consume(context.language);
+        consumer.accept(context.language);
       }
       else {
         LRUPopupBuilder.forFileLanguages(project, ActionsBundle.message("action.NewScratchFile.text.with.new"), null, consumer).showCenteredInCurrentWindow(project);

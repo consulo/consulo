@@ -73,10 +73,10 @@ class AnnotationPresentation implements TextAnnotationPresentation {
     int correctedNumber = myUpToDateLineNumberProvider.getLineNumber(line);
     for (AnAction action : myActions) {
       UpToDateLineNumberListener upToDateListener = ObjectUtils.tryCast(action, UpToDateLineNumberListener.class);
-      if (upToDateListener != null) upToDateListener.consume(correctedNumber);
+      if (upToDateListener != null) upToDateListener.accept(correctedNumber);
 
       LineNumberListener listener = ObjectUtils.tryCast(action, LineNumberListener.class);
-      if (listener != null) listener.consume(line);
+      if (listener != null) listener.accept(line);
     }
 
     return myActions;

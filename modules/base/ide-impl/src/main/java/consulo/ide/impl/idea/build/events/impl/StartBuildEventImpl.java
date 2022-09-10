@@ -25,11 +25,11 @@ import consulo.execution.ui.console.Filter;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.ui.ex.action.AnAction;
-import consulo.ide.impl.idea.util.Consumer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**

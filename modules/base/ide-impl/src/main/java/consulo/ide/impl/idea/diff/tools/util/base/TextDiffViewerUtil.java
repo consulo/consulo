@@ -37,7 +37,6 @@ import consulo.application.dumb.DumbAware;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.util.lang.function.Condition;
 import consulo.ide.impl.idea.ui.ToggleActionButton;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -50,6 +49,7 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 
 public class TextDiffViewerUtil {
   public static final Logger LOG = Logger.getInstance(TextDiffViewerUtil.class);
@@ -130,31 +130,18 @@ public class TextDiffViewerUtil {
   }
 
   public static boolean areEqualLineSeparators(@Nonnull List<? extends DiffContent> contents) {
-    return areEqualDocumentContentProperties(contents, new Function<DocumentContent, Object>() {
-      @Override
-      public Object fun(DocumentContent documentContent) {
-        return documentContent.getLineSeparator();
-      }
-    });
+    return areEqualDocumentContentProperties(contents, documentContent -> documentContent.getLineSeparator());
   }
 
   public static boolean areEqualCharsets(@Nonnull List<? extends DiffContent> contents) {
-    return areEqualDocumentContentProperties(contents, new Function<DocumentContent, Object>() {
-      @Override
-      public Object fun(DocumentContent documentContent) {
-        return documentContent.getCharset();
-      }
-    });
+    return areEqualDocumentContentProperties(contents, documentContent -> documentContent.getCharset());
   }
 
   private static <T> boolean areEqualDocumentContentProperties(@Nonnull List<? extends DiffContent> contents,
                                                                @Nonnull final Function<DocumentContent, T> propertyGetter) {
-    List<T> properties = ContainerUtil.mapNotNull(contents, new Function<DiffContent, T>() {
-      @Override
-      public T fun(DiffContent content) {
-        if (content instanceof EmptyContent) return null;
-        return propertyGetter.fun((DocumentContent)content);
-      }
+    List<T> properties = ContainerUtil.mapNotNull(contents, (Function<DiffContent, T>)content -> {
+      if (content instanceof EmptyContent) return null;
+      return propertyGetter.apply((DocumentContent)content);
     });
 
     if (properties.size() < 2) return true;

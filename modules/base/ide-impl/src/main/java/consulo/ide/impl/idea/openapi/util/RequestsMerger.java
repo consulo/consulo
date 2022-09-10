@@ -16,17 +16,16 @@
 package consulo.ide.impl.idea.openapi.util;
 
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.logging.Logger;
 import consulo.util.lang.Couple;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * For exactly same refresh requests buffering:
@@ -132,7 +131,7 @@ public class RequestsMerger {
     if (exitActions != null) {
       for (MyExitAction exitAction : exitActions) {
         if (MyExitAction.submitRequestToExecutor.equals(exitAction)) {
-          myAlarm.consume(myWorker);
+          myAlarm.accept(myWorker);
           //myAlarm.addRequest(myWorker, ourDelay);
           //ApplicationManager.getApplication().executeOnPooledThread(myWorker);
         }

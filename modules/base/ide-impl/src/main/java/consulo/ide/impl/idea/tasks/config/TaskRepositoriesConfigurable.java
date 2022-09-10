@@ -6,15 +6,13 @@ import consulo.configurable.*;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.actions.IconWithTextAction;
 import consulo.ide.impl.idea.openapi.util.Disposer;
+import consulo.ide.impl.idea.tasks.impl.TaskManagerImpl;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.project.Project;
 import consulo.task.TaskManager;
 import consulo.task.TaskRepository;
 import consulo.task.TaskRepositorySubtype;
 import consulo.task.TaskRepositoryType;
-import consulo.ide.impl.idea.tasks.impl.TaskManagerImpl;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.ide.impl.idea.util.Function;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.project.Project;
 import consulo.task.ui.TaskRepositoryEditor;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.AnAction;
@@ -34,6 +32,7 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * @author Dmitry Avdeev
@@ -164,11 +163,7 @@ public class TaskRepositoriesConfigurable extends BaseConfigurable implements Co
       }
     });
 
-    myChangeListener = new Consumer<TaskRepository>() {
-      public void consume(TaskRepository repository) {
-        ((CollectionListModel)myRepositoriesList.getModel()).contentsChanged(repository);
-      }
-    };
+    myChangeListener = repository -> ((CollectionListModel)myRepositoriesList.getModel()).contentsChanged(repository);
   }
 
   private void addRepository(TaskRepository repository) {
@@ -227,11 +222,7 @@ public class TaskRepositoriesConfigurable extends BaseConfigurable implements Co
   }
 
   public void apply() throws ConfigurationException {
-    List<TaskRepository> newRepositories = ContainerUtil.map(myRepositories, new Function<TaskRepository, TaskRepository>() {
-      public TaskRepository fun(TaskRepository taskRepository) {
-        return taskRepository.clone();
-      }
-    });
+    List<TaskRepository> newRepositories = ContainerUtil.map(myRepositories, taskRepository -> taskRepository.clone());
     myManager.setRepositories(newRepositories);
     myManager.updateIssues(null);
     RecentTaskRepositories.getInstance().addRepositories(myRepositories);

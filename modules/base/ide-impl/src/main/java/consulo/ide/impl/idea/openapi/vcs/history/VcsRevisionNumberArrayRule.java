@@ -16,25 +16,24 @@
 package consulo.ide.impl.idea.openapi.vcs.history;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.dataContext.GetDataRule;
 import consulo.dataContext.DataProvider;
-import consulo.util.dataholder.Key;
+import consulo.dataContext.GetDataRule;
 import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
-import consulo.versionControlSystem.change.ChangeList;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangeListByDateComparator;
-import consulo.versionControlSystem.history.VcsFileRevision;
-import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.ide.impl.idea.openapi.vcs.versionBrowser.VcsRevisionNumberAware;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.dataholder.Key;
+import consulo.versionControlSystem.change.ChangeList;
+import consulo.versionControlSystem.history.VcsFileRevision;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
+import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * @author Konstantin Kolosovsky.
@@ -94,7 +93,7 @@ public class VcsRevisionNumberArrayRule implements GetDataRule<VcsRevisionNumber
      * TODO: Decide if this is reasonable.
      */
     @Override
-    public VcsRevisionNumber fun(CommittedChangeList changeList) {
+    public VcsRevisionNumber apply(CommittedChangeList changeList) {
       return changeList instanceof VcsRevisionNumberAware ? ((VcsRevisionNumberAware)changeList).getRevisionNumber() : null;
     }
   }
@@ -104,7 +103,7 @@ public class VcsRevisionNumberArrayRule implements GetDataRule<VcsRevisionNumber
     private static final FileRevisionToRevisionNumberFunction INSTANCE = new FileRevisionToRevisionNumberFunction();
 
     @Override
-    public VcsRevisionNumber fun(VcsFileRevision fileRevision) {
+    public VcsRevisionNumber apply(VcsFileRevision fileRevision) {
       return fileRevision.getRevisionNumber();
     }
   }

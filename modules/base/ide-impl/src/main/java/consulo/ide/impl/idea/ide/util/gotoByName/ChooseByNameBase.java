@@ -21,7 +21,6 @@ import consulo.ide.impl.idea.ui.popup.PopupUpdateProcessor;
 import consulo.ide.impl.idea.usages.UsageLimitUtil;
 import consulo.ide.impl.idea.usages.impl.UsageViewManagerImpl;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
@@ -91,6 +90,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
 import java.util.*;
+import java.util.function.Consumer;
 
 public abstract class ChooseByNameBase implements ChooseByNameViewModel {
   public static final String TEMPORARILY_FOCUSABLE_COMPONENT_KEY = "ChooseByNameBase.TemporarilyFocusableComponent";
@@ -1329,7 +1329,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
 
           Set<Object> filtered = resultSet.getElements();
           backgroundCalculationFinished(filtered, mySelectionPolicy);
-          myCallback.consume(filtered);
+          myCallback.accept(filtered);
         }
       }, myModalityState);
     }

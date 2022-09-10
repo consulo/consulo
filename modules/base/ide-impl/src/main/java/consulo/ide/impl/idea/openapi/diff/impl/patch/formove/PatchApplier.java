@@ -15,44 +15,46 @@
  */
 package consulo.ide.impl.idea.openapi.diff.impl.patch.formove;
 
-import consulo.localHistory.Label;
-import consulo.localHistory.LocalHistory;
-import consulo.localHistory.LocalHistoryException;
-import consulo.undoRedo.CommandProcessor;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.application.progress.ProgressManager;
+import consulo.application.util.function.Computable;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.ApplyPatchContext;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.ApplyPatchStatus;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.FilePatch;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.ApplyFilePatchBase;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.ApplyTextFilePatch;
-import consulo.ui.ex.awt.Messages;
-import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.openapi.vcs.*;
+import consulo.ide.impl.idea.openapi.vcs.CalledInAwt;
+import consulo.ide.impl.idea.openapi.vcs.VcsFileListenerContextHelper;
+import consulo.ide.impl.idea.openapi.vcs.VcsNotifier;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.ApplyPatchAction;
 import consulo.ide.impl.idea.openapi.vcs.ui.VcsBalloonProblemNotifier;
-import consulo.versionControlSystem.*;
-import consulo.versionControlSystem.change.*;
-import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.ide.impl.idea.util.Function;
-import consulo.project.util.WaitForProgressToShow;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.versionControlSystem.util.VcsUtil;
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
-import consulo.application.progress.ProgressManager;
-import consulo.application.util.function.Computable;
+import consulo.localHistory.Label;
+import consulo.localHistory.LocalHistory;
+import consulo.localHistory.LocalHistoryException;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationType;
+import consulo.project.util.WaitForProgressToShow;
+import consulo.ui.ex.awt.Messages;
+import consulo.undoRedo.CommandProcessor;
+import consulo.util.lang.Pair;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.ref.Ref;
+import consulo.versionControlSystem.*;
+import consulo.versionControlSystem.change.*;
+import consulo.versionControlSystem.util.VcsUtil;
+import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * for patches. for shelve.
@@ -78,10 +80,15 @@ public class PatchApplier<BinaryType extends FilePatch> {
   @javax.annotation.Nullable
   private final String myRightConflictPanelTitle;
 
-  public PatchApplier(@Nonnull Project project, final VirtualFile baseDirectory, @Nonnull  final List<FilePatch> patches,
+  public PatchApplier(@Nonnull Project project,
+                      final VirtualFile baseDirectory,
+                      @Nonnull final List<FilePatch> patches,
                       @javax.annotation.Nullable final Consumer<Collection<FilePath>> toTargetListsMover,
-                      final CustomBinaryPatchApplier<BinaryType> customForBinaries, final CommitContext commitContext,
-                      boolean reverseConflict, @javax.annotation.Nullable String leftConflictPanelTitle, @javax.annotation.Nullable String rightConflictPanelTitle) {
+                      final CustomBinaryPatchApplier<BinaryType> customForBinaries,
+                      final CommitContext commitContext,
+                      boolean reverseConflict,
+                      @javax.annotation.Nullable String leftConflictPanelTitle,
+                      @javax.annotation.Nullable String rightConflictPanelTitle) {
     myProject = project;
     myBaseDirectory = baseDirectory;
     myPatches = patches;
@@ -107,20 +114,27 @@ public class PatchApplier<BinaryType extends FilePatch> {
     });
   }
 
-  public PatchApplier(final Project project, final VirtualFile baseDirectory, @Nonnull final List<FilePatch> patches,
-                      final LocalChangeList targetChangeList, final CustomBinaryPatchApplier<BinaryType> customForBinaries,
+  public PatchApplier(final Project project,
+                      final VirtualFile baseDirectory,
+                      @Nonnull final List<FilePatch> patches,
+                      final LocalChangeList targetChangeList,
+                      final CustomBinaryPatchApplier<BinaryType> customForBinaries,
                       final CommitContext commitContext,
-                      boolean reverseConflict, @javax.annotation.Nullable String leftConflictPanelTitle, @javax.annotation.Nullable String rightConflictPanelTitle) {
-    this(project, baseDirectory, patches, createMover(project, targetChangeList), customForBinaries, commitContext,
-         reverseConflict, leftConflictPanelTitle, rightConflictPanelTitle);
+                      boolean reverseConflict,
+                      @javax.annotation.Nullable String leftConflictPanelTitle,
+                      @javax.annotation.Nullable String rightConflictPanelTitle) {
+    this(project, baseDirectory, patches, createMover(project, targetChangeList), customForBinaries, commitContext, reverseConflict, leftConflictPanelTitle, rightConflictPanelTitle);
   }
 
   public void setIgnoreContentRootsCheck() {
     myVerifier.setIgnoreContentRootsCheck(true);
   }
 
-  public PatchApplier(final Project project, final VirtualFile baseDirectory, @Nonnull final List<FilePatch> patches,
-                      final LocalChangeList targetChangeList, final CustomBinaryPatchApplier<BinaryType> customForBinaries,
+  public PatchApplier(final Project project,
+                      final VirtualFile baseDirectory,
+                      @Nonnull final List<FilePatch> patches,
+                      final LocalChangeList targetChangeList,
+                      final CustomBinaryPatchApplier<BinaryType> customForBinaries,
                       final CommitContext commitContext) {
     this(project, baseDirectory, patches, targetChangeList, customForBinaries, commitContext, false, null, null);
   }
@@ -148,13 +162,7 @@ public class PatchApplier<BinaryType extends FilePatch> {
 
   @Nonnull
   public List<BinaryType> getBinaryPatches() {
-    return ContainerUtil.mapNotNull(myVerifier.getBinaryPatches(),
-                                    new Function<Pair<VirtualFile, ApplyFilePatchBase<BinaryType>>, BinaryType>() {
-                                      @Override
-                                      public BinaryType fun(Pair<VirtualFile, ApplyFilePatchBase<BinaryType>> patchInfo) {
-                                        return patchInfo.getSecond().getPatch();
-                                      }
-                                    });
+    return ContainerUtil.mapNotNull(myVerifier.getBinaryPatches(), patchInfo -> patchInfo.getSecond().getPatch());
   }
 
   @CalledInAwt
@@ -182,8 +190,7 @@ public class PatchApplier<BinaryType extends FilePatch> {
       final Label beforeLabel = LocalHistory.getInstance().putSystemLabel(myProject, "Before patch");
       final TriggerAdditionOrDeletion trigger = new TriggerAdditionOrDeletion(myProject);
       final ApplyPatchStatus applyStatus = getApplyPatchStatus(trigger);
-      myStatus = ApplyPatchStatus.SUCCESS.equals(patchStatus) ? applyStatus :
-                 ApplyPatchStatus.and(patchStatus, applyStatus);
+      myStatus = ApplyPatchStatus.SUCCESS.equals(patchStatus) ? applyStatus : ApplyPatchStatus.and(patchStatus, applyStatus);
       // listeners finished, all 'legal' file additions/deletions with VCS are done
       trigger.processIt();
       LocalHistory.getInstance().putSystemLabel(myProject, "After patch"); // insert a label to be visible in local history dialog
@@ -193,7 +200,7 @@ public class PatchApplier<BinaryType extends FilePatch> {
       else if (myStatus == ApplyPatchStatus.ABORT) {
         rollbackUnderProgress(myProject, myProject.getBaseDir(), beforeLabel);
       }
-      if(myShowNotification || !ApplyPatchStatus.SUCCESS.equals(myStatus)) {
+      if (myShowNotification || !ApplyPatchStatus.SUCCESS.equals(myStatus)) {
         showApplyStatus(myProject, myStatus);
       }
       refreshFiles(trigger.getAffected());
@@ -294,11 +301,12 @@ public class PatchApplier<BinaryType extends FilePatch> {
           }
         }
       }, VcsBundle.message("patch.apply.command"), null);
-    } finally {
+    }
+    finally {
       VcsFileListenerContextHelper.getInstance(project).clearContext();
       LocalHistory.getInstance().putSystemLabel(project, "After patch");
     }
-    result =  refStatus.get();
+    result = refStatus.get();
     result = result == null ? ApplyPatchStatus.FAILURE : result;
 
     trigger.processIt();
@@ -322,48 +330,31 @@ public class PatchApplier<BinaryType extends FilePatch> {
   }
 
   private static void suggestRollback(@Nonnull Project project, @Nonnull Collection<PatchApplier> group, @Nonnull Label beforeLabel) {
-    Collection<FilePatch> allFailed = ContainerUtil.concat(group, new Function<PatchApplier, Collection<? extends FilePatch>>() {
-      @Override
-      public Collection<FilePatch> fun(PatchApplier applier) {
-        return applier.getFailedPatches();
-      }
-    });
+    Collection<FilePatch> allFailed = ContainerUtil.concat(group, (Function<PatchApplier, Collection<? extends FilePatch>>)applier -> applier.getFailedPatches());
     boolean shouldInformAboutBinaries = ContainerUtil.exists(group, new Condition<PatchApplier>() {
       @Override
       public boolean value(PatchApplier applier) {
         return !applier.getBinaryPatches().isEmpty();
       }
     });
-    final UndoApplyPatchDialog undoApplyPatchDialog =
-            new UndoApplyPatchDialog(project, ContainerUtil.map(allFailed, new Function<FilePatch, FilePath>() {
-              @Override
-              public FilePath fun(FilePatch filePatch) {
-                String path =
-                        filePatch.getAfterName() == null
-                        ? filePatch.getBeforeName()
-                        : filePatch.getAfterName();
-                return VcsUtil.getFilePath(path);
-              }
-            }), shouldInformAboutBinaries);
+    final UndoApplyPatchDialog undoApplyPatchDialog = new UndoApplyPatchDialog(project, ContainerUtil.map(allFailed, filePatch -> {
+      String path = filePatch.getAfterName() == null ? filePatch.getBeforeName() : filePatch.getAfterName();
+      return VcsUtil.getFilePath(path);
+    }), shouldInformAboutBinaries);
     undoApplyPatchDialog.show();
     if (undoApplyPatchDialog.isOK()) {
       rollbackUnderProgress(project, project.getBaseDir(), beforeLabel);
     }
   }
 
-  private static void rollbackUnderProgress(@Nonnull final Project project,
-                                            @Nonnull final VirtualFile virtualFile,
-                                            @Nonnull final Label labelToRevert) {
+  private static void rollbackUnderProgress(@Nonnull final Project project, @Nonnull final VirtualFile virtualFile, @Nonnull final Label labelToRevert) {
     ProgressManager.getInstance().runProcessWithProgressSynchronously(() -> {
       try {
         labelToRevert.revert(project, virtualFile);
-        VcsNotifier.getInstance(project)
-                .notifyImportantWarning("Apply Patch Aborted", "All files changed during apply patch action were rolled back");
+        VcsNotifier.getInstance(project).notifyImportantWarning("Apply Patch Aborted", "All files changed during apply patch action were rolled back");
       }
       catch (LocalHistoryException e) {
-        VcsNotifier.getInstance(project)
-                .notifyImportantWarning("Rollback Failed", String.format("Try using local history dialog for %s and perform revert manually.",
-                                                                         virtualFile.getName()));
+        VcsNotifier.getInstance(project).notifyImportantWarning("Rollback Failed", String.format("Try using local history dialog for %s and perform revert manually.", virtualFile.getName()));
       }
     }, "Rollback Applied Changes...", true, project);
   }
@@ -383,9 +374,7 @@ public class PatchApplier<BinaryType extends FilePatch> {
     final boolean applyAll = skipped.isEmpty();
     myPatches.removeAll(skipped);
     if (!failedPreCheck.isEmpty()) return ApplyPatchStatus.FAILURE;
-    return applyAll
-           ? ApplyPatchStatus.SUCCESS
-           : ((skipped.size() == myPatches.size()) ? ApplyPatchStatus.ALREADY_APPLIED : ApplyPatchStatus.PARTIAL);
+    return applyAll ? ApplyPatchStatus.SUCCESS : ((skipped.size() == myPatches.size()) ? ApplyPatchStatus.ALREADY_APPLIED : ApplyPatchStatus.PARTIAL);
   }
 
   @javax.annotation.Nullable
@@ -457,28 +446,21 @@ public class PatchApplier<BinaryType extends FilePatch> {
     if (project.isDisposed()) return;
 
     final ChangeListManager changeListManager = ChangeListManager.getInstance(project);
-    if (! directlyAffected.isEmpty() && targetChangelistMover != null) {
+    if (!directlyAffected.isEmpty() && targetChangelistMover != null) {
       changeListManager.invokeAfterUpdate(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                              targetChangelistMover.consume(directlyAffected);
-                                            }
-                                          }, InvokeAfterUpdateMode.SYNCHRONOUS_CANCELLABLE,
-                                          VcsBundle.message("change.lists.manager.move.changes.to.list"),
-                                          new Consumer<VcsDirtyScopeManager>() {
-                                            @Override
-                                            public void consume(final VcsDirtyScopeManager vcsDirtyScopeManager) {
-                                              markDirty(vcsDirtyScopeManager, directlyAffected, indirectlyAffected);
-                                            }
-                                          }, null);
-    } else {
+        @Override
+        public void run() {
+          targetChangelistMover.accept(directlyAffected);
+        }
+      }, InvokeAfterUpdateMode.SYNCHRONOUS_CANCELLABLE, VcsBundle.message("change.lists.manager.move.changes.to.list"),
+                                          vcsDirtyScopeManager -> markDirty(vcsDirtyScopeManager, directlyAffected, indirectlyAffected), null);
+    }
+    else {
       markDirty(VcsDirtyScopeManager.getInstance(project), directlyAffected, indirectlyAffected);
     }
   }
 
-  private static void markDirty(@Nonnull VcsDirtyScopeManager vcsDirtyScopeManager,
-                                @Nonnull Collection<FilePath> directlyAffected,
-                                @Nonnull Collection<VirtualFile> indirectlyAffected) {
+  private static void markDirty(@Nonnull VcsDirtyScopeManager vcsDirtyScopeManager, @Nonnull Collection<FilePath> directlyAffected, @Nonnull Collection<VirtualFile> indirectlyAffected) {
     vcsDirtyScopeManager.filePathsDirty(directlyAffected, null);
     vcsDirtyScopeManager.filesDirty(indirectlyAffected, null);
   }
@@ -514,8 +496,7 @@ public class PatchApplier<BinaryType extends FilePatch> {
     return status;
   }
 
-  private void moveForCustomBinaries(final List<Pair<VirtualFile, ApplyFilePatchBase<BinaryType>>> patches,
-                                     final List<FilePatch> appliedPatches) throws IOException {
+  private void moveForCustomBinaries(final List<Pair<VirtualFile, ApplyFilePatchBase<BinaryType>>> patches, final List<FilePatch> appliedPatches) throws IOException {
     for (Pair<VirtualFile, ApplyFilePatchBase<BinaryType>> patch : patches) {
       if (appliedPatches.contains(patch.getSecond().getPatch())) {
         myVerifier.doMoveIfNeeded(patch.getFirst());
@@ -528,8 +509,8 @@ public class PatchApplier<BinaryType extends FilePatch> {
                                                                                             ApplyPatchStatus status,
                                                                                             CommitContext commiContext) throws IOException {
     for (Pair<VirtualFile, T> patch : patches) {
-      ApplyPatchStatus patchStatus = ApplyPatchAction.applyOnly(myProject, patch.getSecond(), context, patch.getFirst(), commiContext,
-                                                                myReverseConflict, myLeftConflictPanelTitle, myRightConflictPanelTitle);
+      ApplyPatchStatus patchStatus =
+              ApplyPatchAction.applyOnly(myProject, patch.getSecond(), context, patch.getFirst(), commiContext, myReverseConflict, myLeftConflictPanelTitle, myRightConflictPanelTitle);
 
       if (patchStatus == ApplyPatchStatus.ABORT) return patchStatus;
       status = ApplyPatchStatus.and(status, patchStatus);
@@ -551,7 +532,8 @@ public class PatchApplier<BinaryType extends FilePatch> {
     }
     else if (status == ApplyPatchStatus.PARTIAL) {
       showError(project, VcsBundle.message("patch.apply.partially.applied"), false);
-    } else if (ApplyPatchStatus.SUCCESS.equals(status)) {
+    }
+    else if (ApplyPatchStatus.SUCCESS.equals(status)) {
       final String message = VcsBundle.message("patch.apply.success.applied.text");
       VcsBalloonProblemNotifier.NOTIFICATION_GROUP.createNotification(message, NotificationType.INFORMATION).notify(project);
     }
@@ -602,9 +584,9 @@ public class PatchApplier<BinaryType extends FilePatch> {
     }
 
     @Override
-    public void consume(Collection<FilePath> directlyAffected) {
+    public void accept(Collection<FilePath> directlyAffected) {
       List<Change> changes = new ArrayList<>();
-      for(FilePath file: directlyAffected) {
+      for (FilePath file : directlyAffected) {
         final Change change = myChangeListManager.getChange(file);
         if (change != null) {
           changes.add(change);

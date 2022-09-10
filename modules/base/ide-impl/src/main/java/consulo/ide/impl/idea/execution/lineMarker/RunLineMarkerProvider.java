@@ -20,7 +20,6 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.execution.lineMarker.RunLineMarkerContributor;
-import consulo.ide.impl.idea.util.Function;
 import consulo.language.Language;
 import consulo.language.editor.Pass;
 import consulo.language.editor.gutter.LineMarkerInfo;
@@ -35,6 +34,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * @author Dmitry Avdeev

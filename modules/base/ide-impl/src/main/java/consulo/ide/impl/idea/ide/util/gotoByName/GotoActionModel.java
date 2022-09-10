@@ -3,27 +3,16 @@
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
 import com.google.common.annotations.VisibleForTesting;
-import consulo.ide.impl.idea.ide.actions.ApplyIntentionAction;
-import consulo.ide.impl.idea.ide.ui.search.BooleanOptionDescription;
-import consulo.ide.impl.idea.ide.ui.search.OptionDescription;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.application.util.NotNullLazyValue;
-import consulo.application.util.VolatileNotNullLazyValue;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.ArrayUtilRt;
-import consulo.ide.impl.idea.util.Function;
-import consulo.ide.impl.idea.util.ObjectUtils;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.ui.UISettings;
+import consulo.application.util.NotNullLazyValue;
 import consulo.application.util.Semaphore;
 import consulo.application.util.SystemInfo;
+import consulo.application.util.VolatileNotNullLazyValue;
 import consulo.application.util.matcher.MatcherTextRange;
 import consulo.application.util.matcher.WordPrefixMatcher;
 import consulo.codeEditor.Editor;
@@ -34,6 +23,16 @@ import consulo.configurable.SearchableConfigurable;
 import consulo.dataContext.DataContext;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.base.BaseShowSettingsUtil;
+import consulo.ide.impl.idea.ide.actions.ApplyIntentionAction;
+import consulo.ide.impl.idea.ide.ui.search.BooleanOptionDescription;
+import consulo.ide.impl.idea.ide.ui.search.OptionDescription;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.ArrayUtilRt;
+import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
@@ -58,6 +57,7 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -798,7 +798,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
           addOnOffButton(panel, selected);
         }
         else {
-          JLabel settingsLabel = new JLabel(myGroupNamer.fun((OptionDescription)value));
+          JLabel settingsLabel = new JLabel(myGroupNamer.apply((OptionDescription)value));
           settingsLabel.setForeground(groupFg);
           settingsLabel.setBackground(bg);
           settingsLabel.setBorder(eastBorder);

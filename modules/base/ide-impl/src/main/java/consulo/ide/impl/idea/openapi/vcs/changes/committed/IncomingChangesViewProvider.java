@@ -15,30 +15,30 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
-import consulo.versionControlSystem.RepositoryLocation;
-import consulo.versionControlSystem.VcsBundle;
-import consulo.versionControlSystem.VcsException;
-import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentProvider;
-import consulo.ide.impl.idea.openapi.vcs.ui.VcsBalloonProblemNotifier;
-import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.application.ApplicationManager;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentProvider;
+import consulo.ide.impl.idea.openapi.vcs.ui.VcsBalloonProblemNotifier;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationType;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.versionControlSystem.RepositoryLocation;
+import consulo.versionControlSystem.VcsBundle;
+import consulo.versionControlSystem.VcsException;
+import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author yole
@@ -53,18 +53,13 @@ public class IncomingChangesViewProvider implements ChangesViewContentProvider {
   public IncomingChangesViewProvider(final Project project) {
     myProject = project;
     myBus = project.getMessageBus();
-    myListConsumer = new Consumer<List<CommittedChangeList>>() {
+    myListConsumer = lists -> UIUtil.invokeLaterIfNeeded(new Runnable() {
       @Override
-      public void consume(final List<CommittedChangeList> lists) {
-        UIUtil.invokeLaterIfNeeded(new Runnable() {
-          @Override
-          public void run() {
-            myBrowser.getEmptyText().setText(VcsBundle.message("incoming.changes.empty.message"));
-            myBrowser.setItems(lists, CommittedChangesBrowserUseCase.INCOMING);
-          }
-        });
+      public void run() {
+        myBrowser.getEmptyText().setText(VcsBundle.message("incoming.changes.empty.message"));
+        myBrowser.setItems(lists, CommittedChangesBrowserUseCase.INCOMING);
       }
-    };
+    });
   }
 
   public JComponent initContent() {
@@ -102,19 +97,17 @@ public class IncomingChangesViewProvider implements ChangesViewContentProvider {
 
   private void loadChangesToBrowser(final boolean inBackground, final boolean refresh) {
     final CommittedChangesCache cache = CommittedChangesCache.getInstance(myProject);
-    cache.hasCachesForAnyRoot(new Consumer<Boolean>() {
-      public void consume(final Boolean notEmpty) {
-        if (Boolean.TRUE.equals(notEmpty)) {
-          final List<CommittedChangeList> list = cache.getCachedIncomingChanges();
-          if (list != null) {
-            myBrowser.getEmptyText().setText(VcsBundle.message("incoming.changes.empty.message"));
-            myBrowser.setItems(list, CommittedChangesBrowserUseCase.INCOMING);
-          } else if (refresh) {
-            cache.loadIncomingChangesAsync(myListConsumer, inBackground);
-          } else {
-            myBrowser.getEmptyText().setText(VcsBundle.message("incoming.changes.empty.message"));
-            myBrowser.setItems(Collections.<CommittedChangeList>emptyList(), CommittedChangesBrowserUseCase.INCOMING);
-          }
+    cache.hasCachesForAnyRoot(notEmpty -> {
+      if (Boolean.TRUE.equals(notEmpty)) {
+        final List<CommittedChangeList> list = cache.getCachedIncomingChanges();
+        if (list != null) {
+          myBrowser.getEmptyText().setText(VcsBundle.message("incoming.changes.empty.message"));
+          myBrowser.setItems(list, CommittedChangesBrowserUseCase.INCOMING);
+        } else if (refresh) {
+          cache.loadIncomingChangesAsync(myListConsumer, inBackground);
+        } else {
+          myBrowser.getEmptyText().setText(VcsBundle.message("incoming.changes.empty.message"));
+          myBrowser.setItems(Collections.<CommittedChangeList>emptyList(), CommittedChangesBrowserUseCase.INCOMING);
         }
       }
     });
@@ -126,7 +119,7 @@ public class IncomingChangesViewProvider implements ChangesViewContentProvider {
     }
 
     public void incomingChangesUpdated(final List<CommittedChangeList> receivedChanges) {
-      updateModel(true, true);
+      updateModel(true, true);                                                              
     }
 
     @Override

@@ -16,13 +16,12 @@
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.application.ApplicationManager;
+import consulo.ide.impl.idea.openapi.vcs.FilePathImpl;
 import consulo.project.Project;
 import consulo.versionControlSystem.AbstractVcs;
-import consulo.ide.impl.idea.openapi.vcs.FilePathImpl;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.change.VcsDirtyScope;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.Consumer;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -64,12 +63,7 @@ abstract class AbstractIgnoredFilesHolder implements FileHolder, IgnoredFilesHol
   protected boolean isFileDirty(final VcsDirtyScope scope, final VirtualFile file) {
     if (! file.isValid()) return true;
     final AbstractVcs vcsArr[] = new AbstractVcs[1];
-    if (scope.belongsTo(new FilePathImpl(file), new Consumer<AbstractVcs>() {
-      @Override
-      public void consume(AbstractVcs vcs) {
-        vcsArr[0] = vcs;
-      }
-    })) {
+    if (scope.belongsTo(new FilePathImpl(file), vcs -> vcsArr[0] = vcs)) {
       return true;
     }
 

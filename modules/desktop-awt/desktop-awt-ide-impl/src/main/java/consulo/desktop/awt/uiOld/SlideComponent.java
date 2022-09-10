@@ -15,21 +15,21 @@
  */
 package consulo.desktop.awt.uiOld;
 
-import consulo.language.editor.ui.awt.HintUtil;
-import consulo.ui.ex.popup.Balloon;
-import consulo.ui.ex.Gray;
-import consulo.ui.ex.awt.HintHint;
 import consulo.ide.impl.idea.ui.LightweightHint;
-import consulo.ui.ex.RelativePoint;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.editor.ui.awt.HintUtil;
+import consulo.ui.ex.Gray;
+import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.awt.HintHint;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.popup.Balloon;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author Alexey Pegov
@@ -181,7 +181,7 @@ class SlideComponent extends JComponent {
 
   private void fireValueChanged() {
     for (Consumer<Integer> listener : myListeners) {
-      listener.consume(myValue);
+      listener.accept(myValue);
     }
   }
 

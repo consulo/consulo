@@ -5,13 +5,13 @@ import consulo.util.dataholder.UserDataHolderBase;
 import consulo.ide.impl.idea.diff.actions.impl.GoToChangePopupBuilder;
 import consulo.diff.chain.DiffRequestChain;
 import consulo.versionControlSystem.change.Change;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class ChangeDiffRequestChain extends UserDataHolderBase implements DiffRequestChain, GoToChangePopupBuilder.Chain {
   @Nonnull
@@ -56,12 +56,7 @@ public class ChangeDiffRequestChain extends UserDataHolderBase implements DiffRe
       @Nonnull
       @Override
       protected List<Change> getChanges() {
-        return ContainerUtil.mapNotNull(myChain.getRequests(), new Function<ChangeDiffRequestProducer, Change>() {
-          @Override
-          public Change fun(ChangeDiffRequestProducer presentable) {
-            return presentable.getChange();
-          }
-        });
+        return ContainerUtil.mapNotNull(myChain.getRequests(), (Function<ChangeDiffRequestProducer, Change>)presentable -> presentable.getChange());
       }
 
       @javax.annotation.Nullable

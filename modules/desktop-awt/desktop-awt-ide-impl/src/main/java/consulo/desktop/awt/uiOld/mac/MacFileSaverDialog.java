@@ -18,7 +18,7 @@ package consulo.desktop.awt.uiOld.mac;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.ui.ex.UIBundle;
-import consulo.ide.impl.idea.util.Consumer;
+import java.util.function.Consumer;
 import consulo.ide.impl.idea.util.ui.OwnerOptional;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileSaverDescriptor;

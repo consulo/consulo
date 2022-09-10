@@ -35,13 +35,14 @@ import consulo.ide.impl.idea.tasks.actions.TaskSearchSupport;
 import consulo.ide.impl.idea.tasks.config.TaskRepositoriesConfigurable;
 import consulo.ide.impl.idea.tasks.context.WorkingContextManager;
 import consulo.ide.impl.idea.util.EventDispatcher;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.containers.Convertor;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;
-import consulo.project.ui.notification.*;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.task.*;
 import consulo.task.event.TaskListener;
@@ -575,12 +576,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
   @Override
   @Nonnull
   public Config getState() {
-    myConfig.tasks = ContainerUtil.map(myTasks.values(), new Function<Task, LocalTaskImpl>() {
-      @Override
-      public LocalTaskImpl fun(Task task) {
-        return new LocalTaskImpl(task);
-      }
-    });
+    myConfig.tasks = ContainerUtil.map(myTasks.values(), task -> new LocalTaskImpl(task));
     myConfig.servers = XmlSerializer.serialize(getAllRepositories());
     return myConfig;
   }

@@ -53,7 +53,7 @@ public class CopyRevisionNumberFromAnnotateAction extends AnAction implements Up
   }
 
   @Override
-  public void consume(Integer integer) {
+  public void accept(Integer integer) {
     myLineNumber = integer;
   }
 }

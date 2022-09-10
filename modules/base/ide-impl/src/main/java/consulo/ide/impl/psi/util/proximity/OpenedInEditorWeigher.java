@@ -35,7 +35,7 @@ public class OpenedInEditorWeigher extends ProximityWeigher {
   private static final NotNullLazyKey<VirtualFile[], ProximityLocation> OPENED_EDITORS = NotNullLazyKey.create("openedEditors", new NotNullFunction<ProximityLocation, VirtualFile[]>() {
     @Nonnull
     @Override
-    public VirtualFile[] fun(ProximityLocation location) {
+    public VirtualFile[] apply(ProximityLocation location) {
       return FileEditorManager.getInstance(location.getProject()).getOpenFiles();
     }
   });

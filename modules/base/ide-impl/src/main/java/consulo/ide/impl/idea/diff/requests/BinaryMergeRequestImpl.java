@@ -18,21 +18,21 @@ package consulo.ide.impl.idea.diff.requests;
 import consulo.application.CommonBundle;
 import consulo.diff.content.DiffContent;
 import consulo.diff.content.FileContent;
-import consulo.ide.impl.idea.diff.merge.BinaryMergeRequest;
 import consulo.diff.merge.MergeResult;
-import consulo.ide.impl.idea.diff.util.DiffUtil;
 import consulo.diff.util.ThreeSide;
+import consulo.ide.impl.idea.diff.merge.BinaryMergeRequest;
+import consulo.ide.impl.idea.diff.util.DiffUtil;
 import consulo.language.editor.WriteCommandAction;
+import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class BinaryMergeRequestImpl extends BinaryMergeRequest {
   private static final Logger LOG = Logger.getInstance(BinaryMergeRequestImpl.class);
@@ -145,6 +145,6 @@ public class BinaryMergeRequestImpl extends BinaryMergeRequest {
       }.execute();
     }
 
-    if (myApplyCallback != null) myApplyCallback.consume(result);
+    if (myApplyCallback != null) myApplyCallback.accept(result);
   }
 }

@@ -25,7 +25,6 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.ex.popup.ListPopup;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.VcsLogDataKeys;
 import consulo.ide.impl.idea.vcs.log.VcsLogUi;
@@ -38,6 +37,7 @@ import consulo.ide.impl.idea.vcs.log.VcsLogIcons;
 import javax.annotation.Nonnull;
 
 import java.awt.*;
+import java.util.function.Function;
 
 public class IntelliSortChooserPopupAction extends DumbAwareAction {
   public IntelliSortChooserPopupAction() {

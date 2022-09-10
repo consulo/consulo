@@ -27,12 +27,14 @@ import consulo.diff.fragment.MergeLineFragment;
 import consulo.diff.fragment.MergeWordFragment;
 import consulo.ide.impl.idea.diff.comparison.iterables.DiffIterable;
 import consulo.ide.impl.idea.diff.comparison.iterables.FairDiffIterable;
-import consulo.ide.impl.idea.diff.fragments.*;
+import consulo.ide.impl.idea.diff.fragments.DiffFragmentImpl;
+import consulo.ide.impl.idea.diff.fragments.LineFragmentImpl;
+import consulo.ide.impl.idea.diff.fragments.MergeLineFragmentImpl;
+import consulo.ide.impl.idea.diff.fragments.MergeWordFragmentImpl;
 import consulo.ide.impl.idea.diff.util.IntPair;
 import consulo.ide.impl.idea.diff.util.MergeRange;
 import consulo.ide.impl.idea.diff.util.Range;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.util.lang.CharSequenceSubSequence;
@@ -42,6 +44,7 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 @Singleton
 @ServiceImpl
@@ -280,12 +283,12 @@ public class ComparisonManagerImpl extends ComparisonManager {
     int startIndex = 0;
     for (int i = 1; i < oldFragments.size(); i++) {
       if (!isAdjoining(oldFragments.get(i - 1), oldFragments.get(i))) {
-        consumer.consume(oldFragments.subList(startIndex, i));
+        consumer.accept(oldFragments.subList(startIndex, i));
         startIndex = i;
       }
     }
     if (startIndex < oldFragments.size()) {
-      consumer.consume(oldFragments.subList(startIndex, oldFragments.size()));
+      consumer.accept(oldFragments.subList(startIndex, oldFragments.size()));
     }
   }
 

@@ -15,49 +15,46 @@
  */
 package consulo.ide.impl.idea.refactoring.changeSignature;
 
-import consulo.language.editor.highlight.HighlightManager;
-import consulo.language.editor.highlight.HighlighterFactory;
 import consulo.application.ApplicationManager;
-import consulo.document.Document;
+import consulo.application.util.query.Query;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.EditorColors;
-import consulo.colorScheme.EditorColorsManager;
 import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.EditorFactory;
+import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributes;
 import consulo.component.ProcessCanceledException;
-import consulo.project.Project;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.IdeBorderFactory;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.awt.Splitter;
+import consulo.document.Document;
+import consulo.ide.impl.idea.ui.CheckboxTree;
+import consulo.ide.impl.idea.ui.CheckboxTreeBase;
+import consulo.ide.impl.idea.ui.CheckedTreeNode;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.editor.highlight.HighlightManager;
+import consulo.language.editor.highlight.HighlighterFactory;
+import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;
 import consulo.language.psi.scope.LocalSearchScope;
 import consulo.language.psi.search.ReferencesSearch;
-import consulo.language.editor.refactoring.RefactoringBundle;
-import consulo.ide.impl.idea.ui.*;
+import consulo.project.Project;
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.IdeBorderFactory;
+import consulo.ui.ex.awt.ScrollPaneFactory;
+import consulo.ui.ex.awt.Splitter;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.util.Alarm;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.ide.impl.idea.util.Function;
-import consulo.application.util.query.Query;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import java.util.HashSet;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Consumer;
 
 public abstract class CallerChooserBase<M extends PsiElement> extends DialogWrapper {
   private final M myMethod;
@@ -169,12 +166,7 @@ public abstract class CallerChooserBase<M extends PsiElement> extends DialogWrap
 
   protected Collection<PsiElement> findElementsToHighlight(M caller, PsiElement callee) {
     Query<PsiReference> references = ReferencesSearch.search(callee, new LocalSearchScope(caller), false);
-    return ContainerUtil.mapNotNull(references, new Function<PsiReference, PsiElement>() {
-      @Override
-      public PsiElement fun(PsiReference psiReference) {
-        return psiReference.getElement();
-      }
-    });
+    return ContainerUtil.mapNotNull(references, psiReference -> psiReference.getElement());
   }
 
   @Override
@@ -293,7 +285,7 @@ public abstract class CallerChooserBase<M extends PsiElement> extends DialogWrap
   protected void doOKAction() {
     final Set<M> selectedMethods = new HashSet<M>();
     getSelectedMethods(selectedMethods);
-    myCallback.consume(selectedMethods);
+    myCallback.accept(selectedMethods);
     super.doOKAction();
   }
 

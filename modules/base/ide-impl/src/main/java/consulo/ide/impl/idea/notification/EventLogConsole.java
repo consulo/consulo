@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.notification;
 
 import consulo.application.AllIcons;
 import consulo.application.util.DateFormatUtil;
+import consulo.application.util.NotNullLazyValue;
 import consulo.application.util.function.Processor;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.EditorMouseEvent;
@@ -26,8 +27,8 @@ import consulo.colorScheme.event.EditorColorsListener;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.execution.ui.console.ConsoleViewContentType;
-import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.execution.ui.console.ConsoleViewUtil;
+import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.ide.impl.idea.execution.impl.EditorHyperlinkSupport;
 import consulo.ide.impl.idea.notification.impl.NotificationSettings;
 import consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl;
@@ -35,9 +36,7 @@ import consulo.ide.impl.idea.notification.impl.NotificationsManagerImpl;
 import consulo.ide.impl.idea.notification.impl.ui.NotificationsUtil;
 import consulo.ide.impl.idea.openapi.editor.ex.EditorMarkupModel;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.application.util.NotNullLazyValue;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
@@ -286,14 +285,12 @@ class EventLogConsole {
 
     TextAttributes attributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(key);
     int layer = HighlighterLayer.CARET_ROW + 1;
-    RangeHighlighter highlighter =
-            editor.getMarkupModel().addRangeHighlighter(msgStart, document.getTextLength(), layer, attributes, HighlighterTargetArea.EXACT_RANGE);
+    RangeHighlighter highlighter = editor.getMarkupModel().addRangeHighlighter(msgStart, document.getTextLength(), layer, attributes, HighlighterTargetArea.EXACT_RANGE);
     GROUP_ID.set(highlighter, notification.getGroupId());
     NOTIFICATION_ID.set(highlighter, notification.id);
 
     for (Pair<TextRange, HyperlinkInfo> link : pair.links) {
-      final RangeHighlighter rangeHighlighter =
-              myHyperlinkSupport.getValue().createHyperlink(link.first.getStartOffset() + msgStart, link.first.getEndOffset() + msgStart, null, link.second);
+      final RangeHighlighter rangeHighlighter = myHyperlinkSupport.getValue().createHyperlink(link.first.getStartOffset() + msgStart, link.first.getEndOffset() + msgStart, null, link.second);
       if (link.second instanceof EventLog.ShowBalloon) {
         ((EventLog.ShowBalloon)link.second).setRangeHighlighter(rangeHighlighter);
       }
@@ -335,20 +332,12 @@ class EventLogConsole {
     }
   }
 
-  private void highlightNotification(final Notification notification,
-                                     String message,
-                                     final int startLine,
-                                     final int endLine,
-                                     int titleOffset,
-                                     int titleLength) {
+  private void highlightNotification(final Notification notification, String message, final int startLine, final int endLine, int titleOffset, int titleLength) {
 
     final MarkupModel markupModel = getConsoleEditor().getMarkupModel();
     TextAttributes bold = new TextAttributes(null, null, null, null, Font.BOLD);
-    final RangeHighlighter colorHighlighter =
-            markupModel.addRangeHighlighter(titleOffset, titleOffset + titleLength, HighlighterLayer.CARET_ROW + 1, bold, HighlighterTargetArea.EXACT_RANGE);
-    ColorValue color = notification.getType() == NotificationType.ERROR
-                  ? StandardColors.RED
-                  : notification.getType() == NotificationType.WARNING ? StandardColors.YELLOW : StandardColors.GREEN;
+    final RangeHighlighter colorHighlighter = markupModel.addRangeHighlighter(titleOffset, titleOffset + titleLength, HighlighterLayer.CARET_ROW + 1, bold, HighlighterTargetArea.EXACT_RANGE);
+    ColorValue color = notification.getType() == NotificationType.ERROR ? StandardColors.RED : notification.getType() == NotificationType.WARNING ? StandardColors.YELLOW : StandardColors.GREEN;
     colorHighlighter.setErrorStripeMarkColor(color);
     colorHighlighter.setErrorStripeTooltip(message);
 
@@ -362,8 +351,7 @@ class EventLogConsole {
         TextAttributes italic = new TextAttributes(null, null, null, null, Font.ITALIC);
         for (int line = startLine; line < endLine; line++) {
           for (RangeHighlighter highlighter : myHyperlinkSupport.getValue().findAllHyperlinksOnLine(line)) {
-            markupModel.addRangeHighlighter(highlighter.getStartOffset(), highlighter.getEndOffset(), HighlighterLayer.CARET_ROW + 2, italic,
-                                            HighlighterTargetArea.EXACT_RANGE);
+            markupModel.addRangeHighlighter(highlighter.getStartOffset(), highlighter.getEndOffset(), HighlighterLayer.CARET_ROW + 2, italic, HighlighterTargetArea.EXACT_RANGE);
             myHyperlinkSupport.getValue().removeHyperlink(highlighter);
           }
         }
@@ -396,13 +384,7 @@ class EventLogConsole {
     myNMoreHighlighters = new ArrayList<>();
 
     EditorEx editor = (EditorEx)getConsoleEditor();
-    List<RangeHighlighterEx> highlighters =
-            ContainerUtil.mapNotNull(ids, new Function<String, RangeHighlighterEx>() {
-              @Override
-              public RangeHighlighterEx fun(String id) {
-                return EventLogConsole.this.findHighlighter(id);
-              }
-            });
+    List<RangeHighlighterEx> highlighters = ContainerUtil.mapNotNull(ids, id -> EventLogConsole.this.findHighlighter(id));
 
     if (!highlighters.isEmpty()) {
       editor.getCaretModel().moveToOffset(highlighters.get(0).getStartOffset());
@@ -424,8 +406,7 @@ class EventLogConsole {
       }
 
       //noinspection UseJBColor
-      TextAttributes attributes =
-              new TextAttributes(null, TargetAWT.from(ColorUtil.mix(TargetAWT.to(editor.getBackgroundColor()), new Color(0x808080), 0.1)), null, EffectType.BOXED, Font.PLAIN);
+      TextAttributes attributes = new TextAttributes(null, TargetAWT.from(ColorUtil.mix(TargetAWT.to(editor.getBackgroundColor()), new Color(0x808080), 0.1)), null, EffectType.BOXED, Font.PLAIN);
       MarkupModelEx markupModel = editor.getMarkupModel();
 
       for (Point range : ranges) {

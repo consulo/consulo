@@ -15,18 +15,22 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.ui;
 
-import consulo.dataContext.DataManager;
-import consulo.dataContext.DataSink;
-import consulo.ide.ServiceManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
+import consulo.dataContext.DataSink;
+import consulo.disposer.Disposable;
+import consulo.ide.ServiceManager;
+import consulo.ide.impl.idea.openapi.vcs.AbstractDataProviderPanel;
+import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
+import consulo.ide.impl.idea.ui.*;
 import consulo.language.editor.ui.EditorCustomization;
 import consulo.language.editor.ui.SpellCheckerCustomization;
 import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.language.plain.PlainTextLanguage;
-import consulo.dataContext.DataContext;
 import consulo.project.Project;
-import consulo.disposer.Disposable;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
@@ -34,10 +38,6 @@ import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.awt.SeparatorFactory;
 import consulo.ui.ex.awt.TitledSeparator;
 import consulo.util.dataholder.Key;
-import consulo.ide.impl.idea.openapi.vcs.*;
-import consulo.application.ui.wm.IdeFocusManager;
-import consulo.ide.impl.idea.ui.*;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.versionControlSystem.CommitMessageI;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsConfiguration;
@@ -46,6 +46,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Consumer;
 
 public class CommitMessage extends AbstractDataProviderPanel implements Disposable, CommitMessageI {
 
@@ -164,7 +165,7 @@ public class CommitMessage extends AbstractDataProviderPanel implements Disposab
     final String text = initialMessage == null ? "" : initialMessage;
     myEditorField.setText(text);
     if (myMessageConsumer != null) {
-      myMessageConsumer.consume(text);
+      myMessageConsumer.accept(text);
     }
   }
 

@@ -15,42 +15,41 @@
  */
 package consulo.ide.impl.idea.internal;
 
+import consulo.application.AllIcons;
+import consulo.application.util.function.Computable;
+import consulo.component.PropertyName;
+import consulo.dataContext.DataManager;
+import consulo.dataContext.DataProvider;
 import consulo.ide.impl.idea.codeInsight.documentation.DocumentationManager;
 import consulo.ide.impl.idea.codeInsight.hint.ImplementationViewComponent;
-import consulo.application.AllIcons;
+import consulo.ide.impl.idea.ide.util.PropertiesComponent;
+import consulo.ide.impl.idea.openapi.module.ModuleUtil;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.ui.popup.NotLookupOrSearchCondition;
+import consulo.ide.impl.idea.util.NotNullFunction;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.language.editor.PlatformDataKeys;
-import consulo.ui.ex.awt.*;
-import consulo.ui.ex.awt.util.ColorUtil;
-import consulo.dataContext.DataManager;
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.component.PropertyName;
-import consulo.dataContext.DataProvider;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
-import consulo.ide.impl.idea.openapi.module.ModuleUtil;
 import consulo.project.Project;
+import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
+import consulo.ui.ex.awt.tree.Tree;
+import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.application.util.function.Computable;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
-import consulo.language.psi.PsiManager;
-import consulo.ui.ex.RelativePoint;
-import consulo.ide.impl.idea.ui.popup.NotLookupOrSearchCondition;
-import consulo.ui.ex.awt.tree.Tree;
-import consulo.ide.impl.idea.util.Function;
-import consulo.ide.impl.idea.util.NotNullFunction;
-import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -150,7 +149,7 @@ public class ImageDuplicateResultsDialog extends DialogWrapper {
     final NotNullFunction<Object, JComponent> modulesRenderer = new NotNullFunction<Object, JComponent>() {
       @Nonnull
       @Override
-      public JComponent fun(Object dom) {
+      public JComponent apply(Object dom) {
         return new JBLabel(dom instanceof Module ? ((Module)dom).getName() : dom.toString(), AllIcons.Nodes.Package, SwingConstants.LEFT);
       }
     };
@@ -170,12 +169,7 @@ public class ImageDuplicateResultsDialog extends DialogWrapper {
           modules.installCellRenderer(modulesRenderer);
           new PopupChooserBuilder<>(modules)
             .setTitle("Add Resource Module")
-            .setFilteringEnabled(new Function<Object, String>() {
-              @Override
-              public String fun(Object o) {
-                return ((Module)o).getName();
-              }
-            })
+            .setFilteringEnabled(o -> ((Module)o).getName())
             .setItemChoosenCallback(new Runnable() {
               @Override
               public void run() {

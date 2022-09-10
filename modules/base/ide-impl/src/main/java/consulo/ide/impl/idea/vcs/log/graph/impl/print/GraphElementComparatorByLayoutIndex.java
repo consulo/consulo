@@ -89,6 +89,6 @@ public class GraphElementComparatorByLayoutIndex implements Comparator<GraphElem
   }
 
   private int getLayoutIndex(int nodeIndex) {
-    return myLayoutIndexGetter.fun(nodeIndex);
+    return myLayoutIndexGetter.apply(nodeIndex);
   }
 }

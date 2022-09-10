@@ -21,28 +21,27 @@ import consulo.application.impl.internal.IdeaModalityState;
 import consulo.disposer.Disposer;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.projectView.BaseProjectTreeBuilder;
-import consulo.project.ui.view.tree.ProjectViewNode;
 import consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectTreeStructure;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectAbstractTreeStructureBase;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectTreeBuilder;
-import consulo.project.ui.view.tree.PsiFileNode;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNameModel;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNamePanel;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNamePopupComponent;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoFileCellRenderer;
 import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.psi.search.FileTypeIndex;
-import consulo.language.psi.search.FilenameIndex;
 import consulo.language.editor.ui.PsiElementListCellRenderer;
 import consulo.language.editor.ui.TreeFileChooser;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.search.FileTypeIndex;
+import consulo.language.psi.search.FilenameIndex;
 import consulo.project.Project;
+import consulo.project.ui.view.tree.ProjectViewNode;
+import consulo.project.ui.view.tree.PsiFileNode;
 import consulo.project.ui.view.tree.TreeStructureProvider;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.ScrollPaneFactory;
@@ -423,12 +422,7 @@ public final class TreeFileChooserDialog extends DialogWrapper implements TreeFi
       if (myFileType != null && myProject != null) {
         GlobalSearchScope scope = myShowLibraryContents ? GlobalSearchScope.allScope(myProject) : GlobalSearchScope.projectScope(myProject);
         Collection<VirtualFile> virtualFiles = FileTypeIndex.getFiles(myFileType, scope);
-        fileNames = ContainerUtil.map2Array(virtualFiles, String.class, new Function<VirtualFile, String>() {
-          @Override
-          public String fun(VirtualFile file) {
-            return file.getName();
-          }
-        });
+        fileNames = ContainerUtil.map2Array(virtualFiles, String.class, file -> file.getName());
       }
       else {
         fileNames = FilenameIndex.getAllFilenames(myProject);

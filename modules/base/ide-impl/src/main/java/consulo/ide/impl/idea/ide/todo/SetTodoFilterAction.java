@@ -24,11 +24,11 @@ import consulo.ui.ex.awt.action.CustomComponentAction;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.*;
 
 import javax.swing.*;
+import java.util.function.Consumer;
 
 /**
  * @author irengrig
@@ -134,7 +134,7 @@ public class SetTodoFilterAction extends AnAction implements CustomComponentActi
     @Override
     public void setSelected(AnActionEvent e, boolean state) {
       if (state) {
-        myTodoFilterConsumer.consume(myFilter);
+        myTodoFilterConsumer.accept(myFilter);
         //setTodoFilter(myFilter);
       }
     }

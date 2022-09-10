@@ -16,13 +16,13 @@
 package consulo.ide.impl.idea.ui;
 
 import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.util.Function;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Function;
 
 public class ExcludingTraversalPolicy extends FocusTraversalPolicy {
   private final FocusTraversalPolicy myWrappee;
@@ -47,11 +47,7 @@ public class ExcludingTraversalPolicy extends FocusTraversalPolicy {
     try {
       if (!myRecursionGuard.add("getComponentAfter")) return null;
 
-      return traverse(aContainer, aComponent, new Function<Pair<Container, Component>, Component>() {
-        public Component fun(Pair<Container, Component> param) {
-          return myWrappee.getComponentAfter(param.first, param.second);
-        }
-      });
+      return traverse(aContainer, aComponent, param -> myWrappee.getComponentAfter(param.first, param.second));
     }
     finally {
       myRecursionGuard.clear();
@@ -63,11 +59,7 @@ public class ExcludingTraversalPolicy extends FocusTraversalPolicy {
     try {
       if (!myRecursionGuard.add("getComponentBefore")) return null;
 
-      return traverse(aContainer, aComponent, new Function<Pair<Container, Component>, Component>() {
-        public Component fun(Pair<Container, Component> param) {
-          return myWrappee.getComponentBefore(param.first, param.second);
-        }
-      });
+      return traverse(aContainer, aComponent, param -> myWrappee.getComponentBefore(param.first, param.second));
     }
     finally {
       myRecursionGuard.clear();
@@ -78,7 +70,7 @@ public class ExcludingTraversalPolicy extends FocusTraversalPolicy {
     Set<Component> loopGuard = new HashSet<Component>();
     do {
       if (!loopGuard.add(aComponent)) return null;
-      aComponent = func.fun(Pair.create(aContainer, aComponent));
+      aComponent = func.apply(Pair.create(aContainer, aComponent));
     }
     while (aComponent != null && myExcludes.contains(aComponent));
     return aComponent;

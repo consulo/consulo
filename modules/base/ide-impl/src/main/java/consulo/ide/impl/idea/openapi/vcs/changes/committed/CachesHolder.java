@@ -88,7 +88,7 @@ public class CachesHolder {
         for (VirtualFile root : map.keySet()) {
           final RepositoryLocation location = map.get(root);
           final ChangesCacheFile cacheFile = getCacheFile(vcs, root, location);
-          if (Boolean.TRUE.equals(consumer.fun(cacheFile))) {
+          if (Boolean.TRUE.equals(consumer.apply(cacheFile))) {
             return;
           }
         }
@@ -107,7 +107,7 @@ public class CachesHolder {
     final List<ChangesCacheFile> result = new ArrayList<ChangesCacheFile>();
     iterateAllCaches(new NotNullFunction<ChangesCacheFile, Boolean>() {
       @Nonnull
-      public Boolean fun(final ChangesCacheFile changesCacheFile) {
+      public Boolean apply(final ChangesCacheFile changesCacheFile) {
         result.add(changesCacheFile);
         return false;
       }

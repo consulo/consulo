@@ -49,7 +49,7 @@ import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ChangeGoToChangePo
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.ApplyPatchForBaseRevisionTexts;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.PatchDiffRequestFactory;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.Consumer;
+import java.util.function.Consumer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.versionControlSystem.util.VcsUtil;
 import javax.annotation.Nonnull;

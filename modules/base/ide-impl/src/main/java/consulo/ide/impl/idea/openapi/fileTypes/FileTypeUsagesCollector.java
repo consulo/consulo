@@ -16,19 +16,18 @@
 package consulo.ide.impl.idea.openapi.fileTypes;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.ApplicationManager;
 import consulo.externalService.statistic.AbstractApplicationUsagesCollector;
 import consulo.externalService.statistic.CollectUsagesException;
 import consulo.externalService.statistic.UsageDescriptor;
-import consulo.application.ApplicationManager;
-import consulo.language.file.FileTypeManager;
-import consulo.project.Project;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.search.FileTypeIndex;
-import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.ide.impl.idea.util.NotNullFunction;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.file.FileTypeManager;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.search.FileTypeIndex;
 import consulo.language.psi.stub.FileBasedIndex;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 
 import javax.annotation.Nonnull;
@@ -74,12 +73,6 @@ public class FileTypeUsagesCollector extends AbstractApplicationUsagesCollector 
       });
     }
     usedFileTypes.add(UnknownFileType.INSTANCE);
-    return ContainerUtil.map2Set(usedFileTypes, new NotNullFunction<FileType, UsageDescriptor>() {
-      @Nonnull
-      @Override
-      public UsageDescriptor fun(FileType fileType) {
-        return new UsageDescriptor(fileType.getId(), 1);
-      }
-    });
+    return ContainerUtil.map2Set(usedFileTypes, fileType -> new UsageDescriptor(fileType.getId(), 1));
   }
 }

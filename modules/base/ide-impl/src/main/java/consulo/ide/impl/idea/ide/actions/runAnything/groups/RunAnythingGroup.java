@@ -6,7 +6,7 @@ import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;
 import consulo.application.util.matcher.NameUtil;
 import consulo.ui.ex.awt.CollectionListModel;
-import consulo.ide.impl.idea.util.Function;
+import java.util.function.Function;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
 

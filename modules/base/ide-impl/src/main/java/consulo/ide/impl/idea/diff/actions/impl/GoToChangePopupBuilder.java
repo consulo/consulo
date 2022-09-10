@@ -17,21 +17,21 @@ package consulo.ide.impl.idea.diff.actions.impl;
 
 import consulo.diff.chain.DiffRequestChain;
 import consulo.diff.chain.DiffRequestProducer;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.PopupStep;
-import consulo.ui.ex.popup.BaseListPopupStep;
-import consulo.ui.ex.RelativePoint;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
+import java.util.function.Consumer;
 
 public class GoToChangePopupBuilder {
   public interface Chain extends DiffRequestChain {
@@ -125,7 +125,7 @@ public class GoToChangePopupBuilder {
           @Override
           public void run() {
             int index = myChain.getRequests().indexOf(selectedValue);
-            myOnSelected.consume(index);
+            myOnSelected.accept(index);
           }
         });
       }

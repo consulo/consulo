@@ -17,31 +17,31 @@ package consulo.ide.impl.idea.openapi.vcs.history;
 
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
-import consulo.project.Project;
 import consulo.application.util.function.ThrowableComputable;
-import consulo.versionControlSystem.diff.DiffProvider;
-import consulo.versionControlSystem.diff.ItemLatestState;
+import consulo.component.ProcessCanceledException;
 import consulo.ide.impl.idea.openapi.vcs.impl.BackgroundableActionEnabledHandler;
 import consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
 import consulo.ide.impl.idea.openapi.vcs.impl.VcsBackgroundableActions;
 import consulo.ide.impl.idea.openapi.vcs.impl.VcsBackgroundableComputable;
+import consulo.ide.impl.idea.vcs.history.VcsHistoryProviderEx;
+import consulo.project.Project;
 import consulo.versionControlSystem.*;
+import consulo.versionControlSystem.diff.DiffProvider;
+import consulo.versionControlSystem.diff.ItemLatestState;
 import consulo.versionControlSystem.history.*;
+import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.ide.impl.idea.vcs.history.VcsHistoryProviderEx;
-import consulo.versionControlSystem.util.VcsUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * also uses memory cache
@@ -227,7 +227,7 @@ public class VcsHistoryProviderBackgroundableProxy {
     @Override
     public void finished() {
       myPartner.finished();
-      myFinish.consume(myCopy);
+      myFinish.accept(myCopy);
     }
 
     @Override
@@ -258,7 +258,7 @@ public class VcsHistoryProviderBackgroundableProxy {
     public VcsHistorySession compute() throws VcsException {
       VcsHistorySession session = createSessionWithLimitCheck(myFilePath);
       if (myConsumer != null) {
-        myConsumer.consume(session);
+        myConsumer.accept(session);
       }
       return session;
     }
@@ -305,7 +305,7 @@ public class VcsHistoryProviderBackgroundableProxy {
         myVcsHistoryCache.put(myFilePath, correctedPath, myVcsKey, (VcsAbstractHistorySession)session.copy(), delegate, true);
       }
       if (myConsumer != null) {
-        myConsumer.consume(session);
+        myConsumer.accept(session);
       }
       return session;
     }

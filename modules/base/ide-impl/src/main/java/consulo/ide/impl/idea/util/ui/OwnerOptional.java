@@ -1,16 +1,16 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.util.ui;
 
+import consulo.application.util.SystemInfo;
 import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.ide.impl.idea.ide.IdePopupManager;
-import consulo.application.util.SystemInfo;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
-import consulo.ide.impl.idea.util.Consumer;
+import consulo.ui.ex.awt.UIUtil;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.function.Consumer;
 
 /**
  * @author Denis Fokin
@@ -71,21 +71,21 @@ public class OwnerOptional {
 
   public OwnerOptional ifDialog(Consumer<? super Dialog> consumer) {
     if (myPermanentOwner instanceof Dialog) {
-      consumer.consume((Dialog)myPermanentOwner);
+      consumer.accept((Dialog)myPermanentOwner);
     }
     return this;
   }
 
   public OwnerOptional ifNull(Consumer<? super Frame> consumer) {
     if (myPermanentOwner == null) {
-      consumer.consume(null);
+      consumer.accept(null);
     }
     return this;
   }
 
   public OwnerOptional ifWindow(Consumer<? super Window> consumer) {
     if (myPermanentOwner != null) {
-      consumer.consume(myPermanentOwner);
+      consumer.accept(myPermanentOwner);
     }
     return this;
   }
@@ -96,7 +96,7 @@ public class OwnerOptional {
         IdeFrame.Child ideFrameChild = (IdeFrame.Child)myPermanentOwner;
         myPermanentOwner = WindowManager.getInstance().getFrame(ideFrameChild.getProject());
       }
-      consumer.consume((Frame)this.myPermanentOwner);
+      consumer.accept((Frame)this.myPermanentOwner);
     }
     return this;
   }

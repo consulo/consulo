@@ -20,25 +20,25 @@
  */
 package consulo.ide.impl.idea.codeInspection.ex;
 
+import consulo.application.ApplicationManager;
+import consulo.ide.impl.idea.codeInspection.ui.*;
 import consulo.language.editor.inspection.CommonProblemDescriptor;
 import consulo.language.editor.inspection.reference.RefEntity;
-import consulo.ide.impl.idea.codeInspection.ui.*;
-import consulo.application.ApplicationManager;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.project.Project;
-import consulo.util.lang.ref.Ref;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ui.ex.awt.tree.TreeUtil;
-import javax.annotation.Nonnull;
+import consulo.util.lang.ref.Ref;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 import java.util.*;
+import java.util.function.Function;
 
 public abstract class InspectionRVContentProvider {
   private static final Logger LOG = Logger.getInstance(InspectionRVContentProvider.class);
@@ -114,7 +114,7 @@ public abstract class InspectionRVContentProvider {
     for (String packageName : packageContents.keySet()) {
       final Set<T> elements = packageContents.get(packageName);
       for (T userObject : elements) {
-        final UserObjectContainer<T> container = computeContainer.fun(userObject);
+        final UserObjectContainer<T> container = computeContainer.apply(userObject);
         supportStructure &= container.supportStructure();
         final String moduleName = showStructure ? container.getModule() : null;
         Map<String, InspectionPackageNode> packageNodes = module2PackageMap.get(moduleName);

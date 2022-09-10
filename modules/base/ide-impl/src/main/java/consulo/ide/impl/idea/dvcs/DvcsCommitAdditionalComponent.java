@@ -15,33 +15,33 @@
  */
 package consulo.ide.impl.idea.dvcs;
 
-import consulo.ide.impl.idea.dvcs.ui.DvcsBundle;
 import consulo.application.progress.ProgressManager;
-import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
-import consulo.util.lang.ref.Ref;
 import consulo.application.util.function.ThrowableComputable;
+import consulo.ide.impl.idea.dvcs.ui.DvcsBundle;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.versionControlSystem.checkin.CheckinProjectPanel;
-import consulo.versionControlSystem.FilePath;
 import consulo.ide.impl.idea.openapi.vcs.FilePathImpl;
-import consulo.versionControlSystem.VcsException;
-import consulo.versionControlSystem.ui.RefreshableOnComponent;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.awt.NonFocusableCheckBox;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.NonFocusableCheckBox;
+import consulo.util.lang.ref.Ref;
+import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.VcsException;
+import consulo.versionControlSystem.checkin.CheckinProjectPanel;
+import consulo.versionControlSystem.ui.RefreshableOnComponent;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
-
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.*;
 import java.util.List;
+import java.util.*;
+import java.util.function.Function;
 
 public abstract class DvcsCommitAdditionalComponent implements RefreshableOnComponent {
 
@@ -49,13 +49,13 @@ public abstract class DvcsCommitAdditionalComponent implements RefreshableOnComp
 
   protected final JPanel myPanel;
   protected final JCheckBox myAmend;
-  @javax.annotation.Nullable
+  @Nullable
   private String myPreviousMessage;
-  @javax.annotation.Nullable
+  @Nullable
   private String myAmendedMessage;
   @Nonnull
   protected final CheckinProjectPanel myCheckinPanel;
-  @javax.annotation.Nullable
+  @Nullable
   private  Map<VirtualFile, String> myMessagesForRoots;
 
   public DvcsCommitAdditionalComponent(@Nonnull final Project project, @Nonnull CheckinProjectPanel panel) {
@@ -150,7 +150,7 @@ public abstract class DvcsCommitAdditionalComponent implements RefreshableOnComp
     }
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   private Map<VirtualFile, String> getLastCommitMessages() throws VcsException {
     Map<VirtualFile, String> messagesForRoots = new HashMap<VirtualFile, String>();
     Collection<VirtualFile> roots = myCheckinPanel.getRoots(); //all committed vcs roots, not only selected
@@ -167,18 +167,13 @@ public abstract class DvcsCommitAdditionalComponent implements RefreshableOnComp
 
   @Nonnull
   private List<FilePath> getSelectedFilePaths() {
-    return ContainerUtil.map(myCheckinPanel.getFiles(), new Function<File, FilePath>() {
-      @Override
-      public FilePath fun(File file) {
-        return new FilePathImpl(file, file.isDirectory());
-      }
-    });
+    return ContainerUtil.map(myCheckinPanel.getFiles(), (Function<File, FilePath>)file -> new FilePathImpl(file, file.isDirectory()));
   }
 
   @Nonnull
   protected abstract Set<VirtualFile> getVcsRoots(@Nonnull Collection<FilePath> files);
 
-  @javax.annotation.Nullable
+  @Nullable
   protected abstract String getLastCommitMessage(@Nonnull VirtualFile repo) throws VcsException;
 
   public boolean isAmend() {

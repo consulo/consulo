@@ -8,7 +8,6 @@ import consulo.fileEditor.FileEditorsSplitters;
 import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.fileEditor.internal.FileEditorManagerEx;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.io.ReadOnlyAttributeUtil;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
@@ -23,6 +22,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.util.function.Consumer;
 
 public final class ToggleReadOnlyAttributePanel implements StatusBarWidget.Multiframe, StatusBarWidget.IconPresentation {
   private StatusBar myStatusBar;

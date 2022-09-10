@@ -16,16 +16,16 @@
 
 package consulo.ide.impl.idea.packageDependencies.ui;
 
-import consulo.language.editor.scope.AnalysisScopeBundle;
 import consulo.application.impl.internal.progress.ProgressIndicatorBase;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.ui.ex.concurrent.EdtExecutorService;
+import consulo.language.editor.scope.AnalysisScopeBundle;
 import consulo.localize.LocalizeValue;
+import consulo.ui.ex.concurrent.EdtExecutorService;
 
 import javax.swing.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 /*
  * Created by IntelliJ IDEA.
@@ -48,7 +48,7 @@ public class PanelProgressIndicator extends ProgressIndicatorBase {
   @Override
   public void start() {
     super.start();
-    myComponentUpdater.consume(myProgressPanel.myPanel);
+    myComponentUpdater.accept(myProgressPanel.myPanel);
   }
 
   @Override
@@ -57,7 +57,7 @@ public class PanelProgressIndicator extends ProgressIndicatorBase {
     if (isCanceled()) {
       JLabel label = new JLabel(AnalysisScopeBundle.message("usage.view.canceled"));
       label.setHorizontalAlignment(SwingConstants.CENTER);
-      myComponentUpdater.consume(label);
+      myComponentUpdater.accept(label);
     }
   }
 

@@ -16,49 +16,45 @@
 
 package consulo.ide.impl.idea.moduleDependencies;
 
+import consulo.application.AllIcons;
 import consulo.application.CommonBundle;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
+import consulo.component.util.graph.DFSTBuilder;
+import consulo.component.util.graph.Graph;
 import consulo.dataContext.DataProvider;
+import consulo.disposer.Disposable;
+import consulo.ide.impl.idea.ide.util.PropertiesComponent;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.containers.Convertor;
+import consulo.ide.impl.idea.util.graph.GraphAlgorithms;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.scope.AnalysisScopeBundle;
-import consulo.application.AllIcons;
-import consulo.ui.ex.action.CommonActionsManager;
-import consulo.ui.ex.TreeExpander;
-import consulo.ui.ex.action.ContextHelpAction;
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
+import consulo.language.pom.NavigatableWithText;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.ProgressManager;
-import consulo.project.Project;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
+import consulo.project.Project;
 import consulo.project.ui.view.internal.ProjectSettingsService;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.TreeExpander;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.PopupHandler;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.Splitter;
-import consulo.disposer.Disposable;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
-import consulo.util.dataholder.Key;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.language.pom.NavigatableWithText;
-import consulo.ui.ex.content.Content;
 import consulo.ui.ex.awt.tree.Tree;
-import consulo.ide.impl.idea.util.Function;
-import consulo.ide.impl.idea.util.containers.Convertor;
-import consulo.component.util.graph.DFSTBuilder;
-import consulo.component.util.graph.Graph;
-import consulo.ide.impl.idea.util.graph.GraphAlgorithms;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.ui.ex.content.Content;
+import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
@@ -69,8 +65,8 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * User: anna
@@ -341,15 +337,12 @@ public class ModulesDependenciesPanel extends JPanel implements ModuleRootListen
         final TreePath selectionPath = myLeftTree.getSelectionPath();
         if (selectionPath != null) {
 
-          myPathField.setText(StringUtil.join(selectionPath.getPath(), new Function<Object, String>() {
-            @Override
-            public String fun(Object o) {
-              final Object userObject = ((DefaultMutableTreeNode)o).getUserObject();
-              if (userObject instanceof MyUserObject) {
-                return ((MyUserObject)userObject).getModule().getName();
-              }
-              return "";
+          myPathField.setText(StringUtil.join(selectionPath.getPath(), o -> {
+            final Object userObject = ((DefaultMutableTreeNode)o).getUserObject();
+            if (userObject instanceof MyUserObject) {
+              return ((MyUserObject)userObject).getModule().getName();
             }
+            return "";
           }, ":"));
 
           final DefaultMutableTreeNode selection = (DefaultMutableTreeNode)selectionPath.getLastPathComponent();

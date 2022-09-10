@@ -17,10 +17,9 @@ package consulo.ide.impl.idea.ide.dnd;
 
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.Function;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -84,12 +83,7 @@ public class LinuxDragAndDropSupport {
 
   @Nonnull
   public static String toUriList(@Nonnull final List<File> files) {
-    return StringUtil.join(files, new Function<File, String>() {
-      @Override
-      public String fun(final File file) {
-        return file.toURI().toString();
-      }
-    }, "\n");
+    return StringUtil.join(files, file -> file.toURI().toString(), "\n");
   }
 
   public static boolean isMoveOperation(@Nonnull final Transferable transferable) {

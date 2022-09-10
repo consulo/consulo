@@ -36,7 +36,6 @@ import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.versionControlSystem.merge.MergeData;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.dataholder.Key;
 
@@ -45,6 +44,7 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.List;
+import java.util.function.Function;
 
 public class MergeUtil {
   @Nonnull
@@ -67,7 +67,7 @@ public class MergeUtil {
   @Nonnull
   public static String getResolveActionTitle(@Nonnull MergeResult result, @Nonnull MergeRequest request, @Nonnull MergeContext context) {
     Function<MergeResult, String> getter = DiffUtil.getUserData(request, context, DiffUserDataKeysEx.MERGE_ACTION_CAPTIONS);
-    String message = getter != null ? getter.fun(result) : null;
+    String message = getter != null ? getter.apply(result) : null;
     if (message != null) return message;
 
     switch (result) {

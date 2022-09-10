@@ -16,30 +16,29 @@
 
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.actions;
 
-import consulo.ui.ex.DeleteProvider;
-import consulo.ide.impl.idea.ide.TitledHandler;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
-import consulo.language.editor.LangDataKeys;
 import consulo.application.ApplicationManager;
-import consulo.undoRedo.CommandProcessor;
+import consulo.dataContext.DataContext;
+import consulo.ide.impl.idea.ide.TitledHandler;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.ArrayUtilRt;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.LangDataKeys;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
-import consulo.project.Project;
-import consulo.project.ProjectBundle;
+import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.orderEntry.ModuleOrderEntry;
-import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.impl.internal.layer.ModifiableModelCommitter;
+import consulo.project.Project;
+import consulo.project.ProjectBundle;
+import consulo.ui.ex.DeleteProvider;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.ArrayUtilRt;
-import consulo.ide.impl.idea.util.Function;
+import consulo.undoRedo.CommandProcessor;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -57,12 +56,7 @@ public class ModuleDeleteProvider  implements DeleteProvider, TitledHandler  {
     final Module[] modules = dataContext.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
     assert modules != null;
     final Project project = dataContext.getData(CommonDataKeys.PROJECT);
-    String names = StringUtil.join(Arrays.asList(modules), new Function<Module, String>() {
-      @Override
-      public String fun(final Module module) {
-        return "\'" + module.getName() + "\'";
-      }
-    }, ", ");
+    String names = StringUtil.join(Arrays.asList(modules), module -> "\'" + module.getName() + "\'", ", ");
     int ret = Messages.showOkCancelDialog(getConfirmationText(modules, names), getActionTitle(), Messages.getQuestionIcon());
     if (ret != 0) return;
     CommandProcessor.getInstance().executeCommand(project, new Runnable() {

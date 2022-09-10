@@ -16,13 +16,13 @@
 package consulo.ide.impl.idea.openapi.vcs;
 
 import consulo.application.ApplicationManager;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.util.lang.function.PairConsumer;
 import consulo.disposer.Disposable;
+import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.lang.function.PairConsumer;
 
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 
 /**
  * @author irengrig
@@ -53,7 +53,7 @@ public class GenericDetailsLoader<Id, Data> implements Details<Id,Data>, Disposa
 
     final Id wasId = myCurrentlySelected.getAndSet(id);
     if (force || ! Comparing.equal(id, wasId)) {
-      myLoader.consume(id);
+      myLoader.accept(id);
     }
   }
 

@@ -20,10 +20,10 @@ import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.vcs.IssueNavigationConfiguration;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ide.impl.idea.util.Consumer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author yole
@@ -42,12 +42,7 @@ public class IssueLinkRenderer {
   }
 
   public List<String> appendTextWithLinks(final String text, final SimpleTextAttributes baseStyle) {
-    return appendTextWithLinks(text, baseStyle, new Consumer<String>() {
-      @Override
-      public void consume(String s) {
-        append(s, baseStyle);
-      }
-    });
+    return appendTextWithLinks(text, baseStyle, s -> append(s, baseStyle));
   }
 
   public List<String> appendTextWithLinks(final String text, final SimpleTextAttributes baseStyle, final Consumer<String> consumer) {
@@ -60,7 +55,7 @@ public class IssueLinkRenderer {
       if (textRange.getStartOffset() > pos) {
         final String piece = text.substring(pos, textRange.getStartOffset());
         pieces.add(piece);
-        consumer.consume(piece);
+        consumer.accept(piece);
       }
       final String piece = textRange.substring(text);
       pieces.add(piece);
@@ -70,7 +65,7 @@ public class IssueLinkRenderer {
     if (pos < text.length()) {
       final String piece = text.substring(pos);
       pieces.add(piece);
-      consumer.consume(piece);
+      consumer.accept(piece);
     }
     return pieces;
   }

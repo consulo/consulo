@@ -120,7 +120,7 @@ public class ModuleWithDependenciesScopeImpl extends GlobalSearchScope implement
       Collections.addAll(roots, en.roots(new NotNullFunction<>() {
         @Nonnull
         @Override
-        public OrderRootType fun(OrderEntry entry) {
+        public OrderRootType apply(OrderEntry entry) {
           if (entry instanceof ModuleOrderEntry || entry instanceof ModuleSourceOrderEntry) {
             return SourcesOrderRootType.getInstance();
           }

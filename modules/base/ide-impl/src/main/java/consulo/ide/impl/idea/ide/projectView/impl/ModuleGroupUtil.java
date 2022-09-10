@@ -23,12 +23,12 @@
 package consulo.ide.impl.idea.ide.projectView.impl;
 
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.ide.impl.idea.util.Function;
 import consulo.project.ui.view.tree.ModuleGroup;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class ModuleGroupUtil {
   private ModuleGroupUtil() {
@@ -46,9 +46,9 @@ public class ModuleGroupUtil {
       final ModuleGroup moduleGroup = new ModuleGroup(ArrayUtil.toStringArray(path));
       T moduleGroupNode = map.get(moduleGroup);
       if (moduleGroupNode == null) {
-        moduleGroupNode = createNewNode.fun(moduleGroup);
+        moduleGroupNode = createNewNode.apply(moduleGroup);
         map.put(moduleGroup, moduleGroupNode);
-        insertNode.consume(new ParentChildRelation<T>(parentNode, moduleGroupNode));
+        insertNode.accept(new ParentChildRelation<T>(parentNode, moduleGroupNode));
       }
       parentNode = moduleGroupNode;
     }
@@ -65,10 +65,10 @@ public class ModuleGroupUtil {
     for (String pathElement : groupPath) {
       path.add(pathElement);
       final ModuleGroup moduleGroup = new ModuleGroup(ArrayUtil.toStringArray(path));
-      T moduleGroupNode = needToCreateNode.fun(moduleGroup);
+      T moduleGroupNode = needToCreateNode.apply(moduleGroup);
       if (moduleGroupNode == null) {
-        moduleGroupNode = createNewNode.fun(moduleGroup);
-        insertNode.consume(new ParentChildRelation<T>(parentNode, moduleGroupNode));
+        moduleGroupNode = createNewNode.apply(moduleGroup);
+        insertNode.accept(new ParentChildRelation<T>(parentNode, moduleGroupNode));
       }
       parentNode = moduleGroupNode;
     }

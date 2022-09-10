@@ -16,22 +16,21 @@
 package consulo.ide.impl.idea.openapi.vcs.roots;
 
 import consulo.application.ApplicationManager;
-import consulo.project.Project;
-import consulo.util.lang.function.Condition;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.vcs.*;
+import consulo.ide.impl.idea.openapi.vcs.VcsNotifier;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.project.Project;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.util.lang.function.Condition;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsDirectoryMapping;
 import consulo.versionControlSystem.root.VcsRoot;
 import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.Function;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.UIUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 import static consulo.ide.impl.idea.openapi.util.text.StringUtil.pluralize;
@@ -89,12 +88,7 @@ public abstract class VcsIntegrationEnabler<VcsT extends AbstractVcs> {
 
   @Nonnull
   public static String joinRootsPaths(@Nonnull Collection<VirtualFile> roots) {
-    return StringUtil.join(roots, new Function<VirtualFile, String>() {
-      @Override
-      public String fun(VirtualFile virtualFile) {
-        return virtualFile.getPresentableUrl();
-      }
-    }, ", ");
+    return StringUtil.join(roots, virtualFile -> virtualFile.getPresentableUrl(), ", ");
   }
 
   protected abstract boolean initOrNotifyError(@Nonnull final VirtualFile projectDir);

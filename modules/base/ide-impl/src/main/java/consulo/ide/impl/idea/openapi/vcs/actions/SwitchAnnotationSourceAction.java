@@ -21,10 +21,10 @@ import consulo.codeEditor.EditorGutterComponentEx;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.annotate.AnnotationSource;
 import consulo.versionControlSystem.annotate.AnnotationSourceSwitcher;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author Konstantin Bulenkov
@@ -57,7 +57,7 @@ class SwitchAnnotationSourceAction extends AnAction {
     final AnnotationSource newSource = AnnotationSource.getInstance(myShowMerged);
     mySwitcher.switchTo(newSource);
     for (Consumer<AnnotationSource> listener : myListeners) {
-      listener.consume(newSource);
+      listener.accept(newSource);
     }
     myGutter.revalidateMarkup();
   }

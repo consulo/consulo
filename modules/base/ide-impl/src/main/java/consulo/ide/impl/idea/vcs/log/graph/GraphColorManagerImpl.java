@@ -15,18 +15,18 @@
  */
 package consulo.ide.impl.idea.vcs.log.graph;
 
+import consulo.ide.impl.idea.vcs.log.data.RefsModel;
 import consulo.logging.Logger;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.Function;
 import consulo.versionControlSystem.log.Hash;
 import consulo.versionControlSystem.log.VcsLogRefManager;
 import consulo.versionControlSystem.log.VcsRef;
-import consulo.ide.impl.idea.vcs.log.data.RefsModel;
-import javax.annotation.Nonnull;
+import consulo.virtualFileSystem.VirtualFile;
 
+import javax.annotation.Nonnull;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 public class GraphColorManagerImpl implements GraphColorManager<Integer> {
 
@@ -93,7 +93,7 @@ public class GraphColorManagerImpl implements GraphColorManager<Integer> {
     public void reportNoRefs(int head) {
       if (!myErrorWasReported.containsKey(head)) {
         myErrorWasReported.put(head, head);
-        LOG.warn("No references found at head " + head + " which corresponds to hash " + myHashGetter.fun(head));
+        LOG.warn("No references found at head " + head + " which corresponds to hash " + myHashGetter.apply(head));
       }
     }
 
@@ -118,7 +118,7 @@ public class GraphColorManagerImpl implements GraphColorManager<Integer> {
         return -1;
       }
       if (ref1.equals(ref2)) {
-        LOG.warn("Different heads " + myHashGetter.fun(head1) + " and " + myHashGetter.fun(head2) + " contain the same reference " + ref1);
+        LOG.warn("Different heads " + myHashGetter.apply(head1) + " and " + myHashGetter.apply(head2) + " contain the same reference " + ref1);
       }
 
       VirtualFile root1 = ref1.getRoot();

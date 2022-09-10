@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.util;
 
 import javax.annotation.Nullable;
+import java.util.function.Function;
 
 /**
  * @author peter
@@ -23,7 +24,7 @@ import javax.annotation.Nullable;
 public interface NullableFunction<Param, Result> extends Function<Param, Result> {
   @Override
   @Nullable
-  Result fun(final Param param);
+  Result apply(final Param param);
 
   /**
    * @see FunctionUtil#nullConstant()

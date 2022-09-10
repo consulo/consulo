@@ -53,7 +53,7 @@ class PrintElementManagerImpl implements PrintElementManager {
     myGraphElementComparator = new GraphElementComparatorByLayoutIndex(new NotNullFunction<Integer, Integer>() {
       @Nonnull
       @Override
-      public Integer fun(Integer nodeIndex) {
+      public Integer apply(Integer nodeIndex) {
         int nodeId = linearGraph.getNodeId(nodeIndex);
         if (nodeId < 0) return nodeId;
         return myPermanentGraph.getPermanentGraphLayout().getLayoutIndex(nodeId);

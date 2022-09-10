@@ -38,7 +38,7 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.ide.impl.idea.openapi.updateSettings.impl.CheckForUpdateAction;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.Consumer;
+import java.util.function.Consumer;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
@@ -141,7 +141,7 @@ public class ITNReporter extends ErrorReportSubmitter {
       ourPreviousErrorReporterId = id;
       String shortId = id.substring(0, 8);
       final SubmittedReportInfo reportInfo = new SubmittedReportInfo(WebServiceApi.ERROR_REPORT.buildUrl("#" + id), shortId, SubmittedReportInfo.SubmissionStatus.NEW_ISSUE);
-      callback.consume(reportInfo);
+      callback.accept(reportInfo);
 
       ApplicationManager.getApplication().invokeLater(() -> {
         StringBuilder text = new StringBuilder();
@@ -172,7 +172,7 @@ public class ITNReporter extends ErrorReportSubmitter {
         msg = DiagnosticBundle.message("error.report.sending.failure");
       }
       if (e instanceof UpdateAvailableException) {
-        callback.consume(new SubmittedReportInfo(null, "0", SubmittedReportInfo.SubmissionStatus.FAILED));
+        callback.accept(new SubmittedReportInfo(null, "0", SubmittedReportInfo.SubmissionStatus.FAILED));
 
         Notification notification =
                 ReportMessages.GROUP.createNotification(DiagnosticBundle.message("error.report.update.required.message"), NotificationType.INFORMATION);
@@ -188,7 +188,7 @@ public class ITNReporter extends ErrorReportSubmitter {
         notification.notify(project);
       }
       else if (showYesNoDialog(parentComponent, project, msg, ReportMessages.ERROR_REPORT, Messages.getErrorIcon()) != 0) {
-        callback.consume(new SubmittedReportInfo(null, "0", SubmittedReportInfo.SubmissionStatus.FAILED));
+        callback.accept(new SubmittedReportInfo(null, "0", SubmittedReportInfo.SubmissionStatus.FAILED));
       }
       else {
         if (e instanceof AuthorizationFailedException) {

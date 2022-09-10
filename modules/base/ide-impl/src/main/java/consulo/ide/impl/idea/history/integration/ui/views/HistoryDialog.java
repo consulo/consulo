@@ -54,7 +54,6 @@ import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
 import consulo.ide.impl.idea.ui.*;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.JBLayeredPane;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.ui.ex.awt.internal.ImageLoader;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
@@ -73,6 +72,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static consulo.ide.impl.idea.history.integration.LocalHistoryBundle.message;
 
@@ -132,7 +132,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
   protected void scheduleRevisionsUpdate(@Nullable final Consumer<T> configRunnable) {
     doScheduleUpdate(UPDATE_REVS, () -> {
       synchronized (myModel) {
-        if (configRunnable != null) configRunnable.consume(myModel);
+        if (configRunnable != null) configRunnable.accept(myModel);
         myModel.clearRevisions();
         myModel.getRevisions();// force load
       }

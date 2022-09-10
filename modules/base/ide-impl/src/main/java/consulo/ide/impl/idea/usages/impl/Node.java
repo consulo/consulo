@@ -17,12 +17,12 @@ package consulo.ide.impl.idea.usages.impl;
 
 import consulo.usage.UsageView;
 import consulo.util.lang.BitUtil;
-import consulo.ide.impl.idea.util.Consumer;
 import org.intellij.lang.annotations.MagicConstant;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.Vector;
+import java.util.function.Consumer;
 
 /**
  * @author max
@@ -108,7 +108,7 @@ public abstract class Node extends DefaultMutableTreeNode {
 
       myCachedTextHash = text.hashCode();
       updateNotify();
-      edtNodeChangedQueue.consume(this);
+      edtNodeChangedQueue.accept(this);
     }
     setFlag(UPDATED_MASK, true);
   }
@@ -137,6 +137,6 @@ public abstract class Node extends DefaultMutableTreeNode {
 
   void setExcluded(boolean excluded, @Nonnull Consumer<Node> edtNodeChangedQueue) {
     setFlag(EXCLUDED_MASK, excluded);
-    edtNodeChangedQueue.consume(this);
+    edtNodeChangedQueue.accept(this);
   }
 }

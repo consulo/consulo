@@ -15,17 +15,16 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.annotate;
 
+import consulo.codeEditor.EditorGutterComponentEx;
+import consulo.ide.impl.idea.openapi.vcs.actions.CompareWithSelectedRevisionAction;
+import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.codeEditor.EditorGutterComponentEx;
-import consulo.project.Project;
 import consulo.versionControlSystem.VcsBundle;
-import consulo.ide.impl.idea.openapi.vcs.actions.CompareWithSelectedRevisionAction;
 import consulo.versionControlSystem.annotate.FileAnnotation;
 import consulo.versionControlSystem.history.VcsFileRevision;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.Consumer;
 
 import java.util.Arrays;
 import java.util.List;
@@ -36,8 +35,7 @@ public class HighlightAnnotationsActions {
   private final RemoveHighlightingAction myRemove;
   private final EditorGutterComponentEx myGutter;
 
-  public HighlightAnnotationsActions(final Project project, final VirtualFile virtualFile, final FileAnnotation fileAnnotation,
-                                     final EditorGutterComponentEx gutter) {
+  public HighlightAnnotationsActions(final Project project, final VirtualFile virtualFile, final FileAnnotation fileAnnotation, final EditorGutterComponentEx gutter) {
     myGutter = gutter;
     myBefore = new HightlightAction(true, project, virtualFile, fileAnnotation, myGutter, null);
     final List<VcsFileRevision> fileRevisionList = fileAnnotation.getRevisions();
@@ -52,10 +50,10 @@ public class HighlightAnnotationsActions {
 
   public boolean isLineBold(final int lineNumber) {
     if (turnedOn()) {
-      if (myBefore.isTurnedOn() && (! myBefore.isBold(lineNumber))) {
+      if (myBefore.isTurnedOn() && (!myBefore.isBold(lineNumber))) {
         return false;
       }
-      if (myAfter.isTurnedOn() && (! myAfter.isBold(lineNumber))) {
+      if (myAfter.isTurnedOn() && (!myAfter.isBold(lineNumber))) {
         return false;
       }
       return true;
@@ -90,8 +88,12 @@ public class HighlightAnnotationsActions {
     private VcsFileRevision mySelectedRevision;
     private Boolean myShowComments;
 
-    private HightlightAction(final boolean before, final Project project, final VirtualFile virtualFile, final FileAnnotation fileAnnotation,
-                             final EditorGutterComponentEx gutter, @javax.annotation.Nullable final VcsFileRevision selectedRevision) {
+    private HightlightAction(final boolean before,
+                             final Project project,
+                             final VirtualFile virtualFile,
+                             final FileAnnotation fileAnnotation,
+                             final EditorGutterComponentEx gutter,
+                             @javax.annotation.Nullable final VcsFileRevision selectedRevision) {
       myBefore = before;
       myProject = project;
       myVirtualFile = virtualFile;
@@ -107,12 +109,15 @@ public class HighlightAnnotationsActions {
       final String text;
       final String description;
       if (myBefore) {
-        text = (mySelectedRevision == null) ? VcsBundle.message("highlight.annotation.before.not.selected.text") :
-               VcsBundle.message("highlight.annotation.before.selected.text", mySelectedRevision.getRevisionNumber().asString());
+        text = (mySelectedRevision == null)
+               ? VcsBundle.message("highlight.annotation.before.not.selected.text")
+               : VcsBundle.message("highlight.annotation.before.selected.text", mySelectedRevision.getRevisionNumber().asString());
         description = VcsBundle.message("highlight.annotation.before.description");
-      } else {
-        text = (mySelectedRevision == null) ? VcsBundle.message("highlight.annotation.after.not.selected.text") :
-               VcsBundle.message("highlight.annotation.after.selected.text", mySelectedRevision.getRevisionNumber().asString());
+      }
+      else {
+        text = (mySelectedRevision == null)
+               ? VcsBundle.message("highlight.annotation.after.not.selected.text")
+               : VcsBundle.message("highlight.annotation.after.selected.text", mySelectedRevision.getRevisionNumber().asString());
         description = VcsBundle.message("highlight.annotation.after.description");
       }
       e.getPresentation().setText(text);
@@ -126,13 +131,10 @@ public class HighlightAnnotationsActions {
         if (myShowComments == null) {
           initShowComments(fileRevisionList);
         }
-        CompareWithSelectedRevisionAction.showListPopup(fileRevisionList, myProject,
-                                                        new Consumer<VcsFileRevision>() {
-                                                          public void consume(final VcsFileRevision vcsFileRevision) {
-                                                            mySelectedRevision = vcsFileRevision;
-                                                            myGutter.revalidateMarkup();
-                                                          }
-                                                        }, myShowComments.booleanValue());
+        CompareWithSelectedRevisionAction.showListPopup(fileRevisionList, myProject, vcsFileRevision -> {
+          mySelectedRevision = vcsFileRevision;
+          myGutter.revalidateMarkup();
+        }, myShowComments.booleanValue());
       }
     }
 
@@ -159,7 +161,7 @@ public class HighlightAnnotationsActions {
         final VcsRevisionNumber number = myFileAnnotation.originalRevision(line);
         if (number != null) {
           final int compareResult = number.compareTo(mySelectedRevision.getRevisionNumber());
-          return (myBefore && compareResult <= 0) || ((! myBefore) && (compareResult >= 0));
+          return (myBefore && compareResult <= 0) || ((!myBefore) && (compareResult >= 0));
         }
       }
       return false;

@@ -2,15 +2,14 @@
 package consulo.ide.impl.idea.ui.components.labels;
 
 import consulo.application.AllIcons;
-import consulo.ui.ex.popup.IPopupChooserBuilder;
+import consulo.ide.impl.idea.ui.popup.util.PopupState;
+import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.JBUIScale;
 import consulo.ui.ex.awt.LinkLabel;
+import consulo.ui.ex.popup.IPopupChooserBuilder;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ui.ex.RelativePoint;
-import consulo.ide.impl.idea.ui.popup.util.PopupState;
-import consulo.ui.ex.awt.JBUIScale;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.ui.ex.awt.JBUI;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -18,6 +17,7 @@ import javax.swing.*;
 import javax.swing.plaf.metal.MetalLabelUI;
 import java.awt.*;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class DropDownLink<T> extends LinkLabel<Object> {
@@ -55,7 +55,7 @@ public class DropDownLink<T> extends LinkLabel<Object> {
                 }
 
                 if (itemChosenAction != null && !linkLabel.chosenItem.equals(t)) {
-                  itemChosenAction.consume(t);
+                  itemChosenAction.accept(t);
                 }
                 linkLabel.chosenItem = t;
               });

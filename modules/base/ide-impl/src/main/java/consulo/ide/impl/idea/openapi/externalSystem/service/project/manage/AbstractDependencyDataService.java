@@ -15,12 +15,13 @@
  */
 package consulo.ide.impl.idea.openapi.externalSystem.service.project.manage;
 
-import consulo.externalSystem.service.project.manage.ProjectDataService;
 import consulo.externalSystem.model.project.AbstractDependencyData;
+import consulo.externalSystem.service.project.manage.ProjectDataService;
 import consulo.externalSystem.util.DisposeAwareProjectChange;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.externalSystem.util.ExternalSystemConstants;
 import consulo.externalSystem.util.Order;
+import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.ModifiableRootModel;
@@ -28,35 +29,26 @@ import consulo.module.content.layer.orderEntry.DependencyScope;
 import consulo.module.content.layer.orderEntry.ExportableOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.Project;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
-
 import java.util.Collection;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * @author Denis Zhdanov
  * @since 4/14/13 11:21 PM
  */
 @Order(ExternalSystemConstants.BUILTIN_SERVICE_ORDER)
-public abstract class AbstractDependencyDataService<E extends AbstractDependencyData<?>, I extends ExportableOrderEntry>
-        implements ProjectDataService<E, I>
-{
+public abstract class AbstractDependencyDataService<E extends AbstractDependencyData<?>, I extends ExportableOrderEntry> implements ProjectDataService<E, I> {
 
   public void setScope(@Nonnull final DependencyScope scope, @Nonnull final ExportableOrderEntry dependency, boolean synchronous) {
     ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new DisposeAwareProjectChange(dependency.getOwnerModule()) {
       @RequiredUIAccess
       @Override
       public void execute() {
-        doForDependency(dependency, new Consumer<ExportableOrderEntry>() {
-          @Override
-          public void consume(ExportableOrderEntry entry) {
-            entry.setScope(scope);
-          }
-        });
+        doForDependency(dependency, entry -> entry.setScope(scope));
       }
     });
   }
@@ -66,16 +58,11 @@ public abstract class AbstractDependencyDataService<E extends AbstractDependency
       @RequiredUIAccess
       @Override
       public void execute() {
-        doForDependency(dependency, new Consumer<ExportableOrderEntry>() {
-          @Override
-          public void consume(ExportableOrderEntry entry) {
-            entry.setExported(exported);
-          }
-        });
+        doForDependency(dependency, entry -> entry.setExported(exported));
       }
     });
   }
-  
+
   private static void doForDependency(@Nonnull ExportableOrderEntry entry, @Nonnull Consumer<ExportableOrderEntry> consumer) {
     // We need to get an up-to-date modifiable model to work with.
     ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(entry.getOwnerModule());
@@ -86,7 +73,7 @@ public abstract class AbstractDependencyDataService<E extends AbstractDependency
       // entry object from the model instead.
       for (OrderEntry e : moduleRootModel.getOrderEntries()) {
         if (e instanceof ExportableOrderEntry && e.getPresentableName().equals(entry.getPresentableName())) {
-          consumer.consume((ExportableOrderEntry)e);
+          consumer.accept((ExportableOrderEntry)e);
           break;
         }
       }
@@ -120,7 +107,7 @@ public abstract class AbstractDependencyDataService<E extends AbstractDependency
     }
     return result;
   }
-  
+
   public void removeData(@Nonnull Collection<? extends ExportableOrderEntry> toRemove, @Nonnull final Module module, boolean synchronous) {
     if (toRemove.isEmpty()) {
       return;
@@ -139,8 +126,7 @@ public abstract class AbstractDependencyDataService<E extends AbstractDependency
             for (OrderEntry entry : moduleRootModel.getOrderEntries()) {
               if (entry instanceof ExportableOrderEntry) {
                 ExportableOrderEntry orderEntry = (ExportableOrderEntry)entry;
-                if (orderEntry.getPresentableName().equals(dependency.getPresentableName()) &&
-                    orderEntry.getScope().equals(dependency.getScope())) {
+                if (orderEntry.getPresentableName().equals(dependency.getPresentableName()) && orderEntry.getScope().equals(dependency.getScope())) {
                   moduleRootModel.removeOrderEntry(entry);
                   break;
                 }

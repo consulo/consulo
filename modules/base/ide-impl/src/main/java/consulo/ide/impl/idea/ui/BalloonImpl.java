@@ -32,7 +32,7 @@ import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.IdeGlassPane;
 import consulo.ide.impl.idea.openapi.wm.WeakFocusStackManager;
 import consulo.ui.ex.awt.util.Alarm;
-import consulo.ide.impl.idea.util.Consumer;
+import java.util.function.Consumer;
 import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.ide.impl.idea.util.ui.*;
 import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
@@ -1632,7 +1632,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
       myButton = new BaseButtonBehavior(this, TimedDeadzone.NULL) {
         @Override
         protected void execute(MouseEvent e) {
-          myListener.consume(e);
+          myListener.accept(e);
         }
       };
     }

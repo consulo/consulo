@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.util.containers;
 
 import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.util.ArrayUtilRt;
-import consulo.ide.impl.idea.util.Function;
 import consulo.annotation.DeprecationInfo;
 import consulo.util.collection.Stack;
 import org.jetbrains.annotations.Contract;
@@ -31,6 +30,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Function;
 
 @SuppressWarnings("UtilityClassWithoutPrivateConstructor")
 @Deprecated
@@ -376,7 +376,7 @@ public class ContainerUtilRt {
     if (collection.isEmpty()) return emptyList();
     List<V> list = new ArrayList<V>(collection.size());
     for (final T t : collection) {
-      list.add(mapper.fun(t));
+      list.add(mapper.apply(t));
     }
     return list;
   }
@@ -399,7 +399,7 @@ public class ContainerUtilRt {
     if (collection.isEmpty()) return Collections.emptySet();
     Set <V> set = new HashSet<V>(collection.size());
     for (final T t : collection) {
-      set.add(mapper.fun(t));
+      set.add(mapper.apply(t));
     }
     return set;
   }

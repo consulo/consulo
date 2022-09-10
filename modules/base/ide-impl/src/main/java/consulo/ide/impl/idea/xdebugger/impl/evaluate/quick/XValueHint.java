@@ -15,31 +15,11 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.evaluate.quick;
 
-import consulo.language.editor.ui.awt.HintUtil;
-import consulo.ide.impl.idea.execution.console.LanguageConsoleView;
-import consulo.ide.impl.idea.execution.impl.ConsoleViewImpl;
-import consulo.execution.ui.console.ConsoleView;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.ShortcutSet;
 import consulo.application.ApplicationManager;
+import consulo.codeEditor.Editor;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.logging.Logger;
-import consulo.codeEditor.Editor;
 import consulo.document.FileDocumentManager;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.project.Project;
-import consulo.util.dataholder.Key;
-import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.LinkMouseListenerBase;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.awt.SimpleColoredComponent;
-import consulo.ui.ex.SimpleColoredText;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XDebuggerUtil;
 import consulo.execution.debug.XSourcePosition;
@@ -50,24 +30,43 @@ import consulo.execution.debug.frame.XFullValueEvaluator;
 import consulo.execution.debug.frame.XValue;
 import consulo.execution.debug.frame.XValuePlace;
 import consulo.execution.debug.frame.presentation.XValuePresentation;
+import consulo.execution.debug.ui.XDebuggerUIConstants;
+import consulo.execution.ui.console.ConsoleView;
+import consulo.ide.impl.idea.execution.console.LanguageConsoleView;
+import consulo.ide.impl.idea.execution.impl.ConsoleViewImpl;
+import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.LinkMouseListenerBase;
 import consulo.ide.impl.idea.xdebugger.impl.XDebugSessionImpl;
 import consulo.ide.impl.idea.xdebugger.impl.actions.handlers.XDebuggerEvaluateActionHandler;
 import consulo.ide.impl.idea.xdebugger.impl.evaluate.quick.common.AbstractValueHint;
 import consulo.ide.impl.idea.xdebugger.impl.evaluate.quick.common.ValueHintType;
 import consulo.ide.impl.idea.xdebugger.impl.frame.XValueMarkers;
 import consulo.ide.impl.idea.xdebugger.impl.ui.DebuggerUIUtil;
-import consulo.execution.debug.ui.XDebuggerUIConstants;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.XEvaluationCallbackBase;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.XValueNodePresentationConfigurator;
+import consulo.language.editor.ui.awt.HintUtil;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.ui.ex.SimpleColoredText;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.ShortcutSet;
+import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.image.Image;
+import consulo.util.dataholder.Key;
+import consulo.util.lang.Pair;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.util.function.Consumer;
 
 /**
  * @author nik
@@ -79,14 +78,20 @@ public class XValueHint extends AbstractValueHint {
   private final XDebugSession myDebugSession;
   private final String myExpression;
   private final String myValueName;
-  private final @Nullable XSourcePosition myExpressionPosition;
+  private final
+  @Nullable
+  XSourcePosition myExpressionPosition;
   private final ExpressionInfo myExpressionInfo;
   private Disposable myDisposable;
 
   private static final Key<XValueHint> HINT_KEY = Key.create("allows only one value hint per editor");
 
-  public XValueHint(@Nonnull Project project, @Nonnull Editor editor, @Nonnull Point point, @Nonnull ValueHintType type,
-                    @Nonnull ExpressionInfo expressionInfo, @Nonnull XDebuggerEvaluator evaluator,
+  public XValueHint(@Nonnull Project project,
+                    @Nonnull Editor editor,
+                    @Nonnull Point point,
+                    @Nonnull ValueHintType type,
+                    @Nonnull ExpressionInfo expressionInfo,
+                    @Nonnull XDebuggerEvaluator evaluator,
                     @Nonnull XDebugSession session) {
     super(project, editor, point, type, expressionInfo.getTextRange());
 
@@ -170,9 +175,7 @@ public class XValueHint extends AbstractValueHint {
           private boolean myShown = false;
 
           @Override
-          public void applyPresentation(@Nullable Image icon,
-                                        @Nonnull XValuePresentation valuePresenter,
-                                        boolean hasChildren) {
+          public void applyPresentation(@Nullable Image icon, @Nonnull XValuePresentation valuePresenter, boolean hasChildren) {
             if (isHintHidden()) {
               return;
             }
@@ -186,12 +189,7 @@ public class XValueHint extends AbstractValueHint {
               text.appendToComponent(component);
               if (myFullValueEvaluator != null) {
                 component.append(myFullValueEvaluator.getLinkText(), XDebuggerTreeNodeHyperlink.TEXT_ATTRIBUTES,
-                                 new Consumer<MouseEvent>() {
-                                   @Override
-                                   public void consume(MouseEvent event) {
-                                     DebuggerUIUtil.showValuePopup(myFullValueEvaluator, event, getProject(), getEditor());
-                                   }
-                                 });
+                                 (Consumer<MouseEvent>)event -> DebuggerUIUtil.showValuePopup(myFullValueEvaluator, event, getProject(), getEditor()));
                 LinkMouseListenerBase.installSingleTagOn(component);
               }
               showHint(component);
@@ -203,8 +201,7 @@ public class XValueHint extends AbstractValueHint {
             }
             else {
               if (getType() == ValueHintType.MOUSE_OVER_HINT) {
-                text.insert(0, "(" + KeymapUtil.getFirstKeyboardShortcutText("ShowErrorDescription") + ") ",
-                            SimpleTextAttributes.GRAYED_ATTRIBUTES);
+                text.insert(0, "(" + KeymapUtil.getFirstKeyboardShortcutText("ShowErrorDescription") + ") ", SimpleTextAttributes.GRAYED_ATTRIBUTES);
               }
 
               JComponent component = createExpandableHintComponent(text, () -> showTree(result));
@@ -236,9 +233,8 @@ public class XValueHint extends AbstractValueHint {
   }
 
   private void showTree(@Nonnull XValue value) {
-    XValueMarkers<?,?> valueMarkers = ((XDebugSessionImpl)myDebugSession).getValueMarkers();
-    XDebuggerTreeCreator creator = new XDebuggerTreeCreator(myDebugSession.getProject(), myDebugSession.getDebugProcess().getEditorsProvider(),
-                                                            myDebugSession.getCurrentPosition(), valueMarkers);
+    XValueMarkers<?, ?> valueMarkers = ((XDebugSessionImpl)myDebugSession).getValueMarkers();
+    XDebuggerTreeCreator creator = new XDebuggerTreeCreator(myDebugSession.getProject(), myDebugSession.getDebugProcess().getEditorsProvider(), myDebugSession.getCurrentPosition(), valueMarkers);
     showTreePopup(creator, Pair.create(value, myValueName));
   }
 }

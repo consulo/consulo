@@ -32,7 +32,6 @@ import consulo.ide.impl.idea.packaging.impl.artifacts.ArtifactImpl;
 import consulo.compiler.artifact.ArtifactUtil;
 import consulo.ide.impl.idea.packaging.impl.compiler.ArtifactCompileScope;
 import consulo.ide.impl.idea.packaging.impl.compiler.ArtifactCompilerUtil;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.StringBuilderSpinAllocator;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.annotation.access.RequiredReadAction;
@@ -96,6 +95,7 @@ import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.io.*;
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * @author: Eugene Zhuravlev
@@ -983,7 +983,7 @@ public class CompileDriver {
           int round = 0;
           boolean compiledSomethingForThisChunk = false;
           Collection<VirtualFile> dependentFiles = Collections.emptyList();
-          final Function<consulo.util.lang.Pair<int[], Set<VirtualFile>>, consulo.util.lang.Pair<int[], Set<VirtualFile>>> dependencyFilter = new DependentClassesCumulativeFilter();
+          final Function<Pair<int[], Set<VirtualFile>>, Pair<int[], Set<VirtualFile>>> dependencyFilter = new DependentClassesCumulativeFilter();
 
           do {
             for (int currentCompiler = 0, translatorsLength = translators.length; currentCompiler < translatorsLength; currentCompiler++) {
@@ -2230,7 +2230,7 @@ CompilerManagerImpl.addDeletedPath(outputPath.getPath());
       final int nextCompilerIdx = myCurrentCompilerIdx + 1;
       try {
         if (nextCompilerIdx < myCompilers.length) {
-          final Map<String, Collection<TranslatingCompiler.OutputItem>> updateNow = new java.util.HashMap<>();
+          final Map<String, Collection<TranslatingCompiler.OutputItem>> updateNow = new HashMap<>();
           // process postponed
           for (Map.Entry<String, Collection<TranslatingCompiler.OutputItem>> entry : myPostponedItems.entrySet()) {
             final String outputDir = entry.getKey();
@@ -2321,13 +2321,13 @@ CompilerManagerImpl.addDeletedPath(outputPath.getPath());
     }
   }
 
-  private static class DependentClassesCumulativeFilter implements Function<consulo.util.lang.Pair<int[], Set<VirtualFile>>, consulo.util.lang.Pair<int[], Set<VirtualFile>>> {
+  private static class DependentClassesCumulativeFilter implements Function<Pair<int[], Set<VirtualFile>>, Pair<int[], Set<VirtualFile>>> {
 
     private final IntSet myProcessedNames = IntSets.newHashSet();
     private final Set<VirtualFile> myProcessedFiles = new HashSet<>();
 
     @Override
-    public consulo.util.lang.Pair<int[], Set<VirtualFile>> fun(consulo.util.lang.Pair<int[], Set<VirtualFile>> deps) {
+    public Pair<int[], Set<VirtualFile>> apply(Pair<int[], Set<VirtualFile>> deps) {
       final IntSet currentDeps = IntSets.newHashSet(deps.getFirst());
       currentDeps.removeAll(myProcessedNames.toArray());
       myProcessedNames.addAll(deps.getFirst());
@@ -2335,7 +2335,7 @@ CompilerManagerImpl.addDeletedPath(outputPath.getPath());
       final Set<VirtualFile> depFiles = new HashSet<>(deps.getSecond());
       depFiles.removeAll(myProcessedFiles);
       myProcessedFiles.addAll(deps.getSecond());
-      return consulo.util.lang.Pair.create(currentDeps.toArray(), depFiles);
+      return Pair.create(currentDeps.toArray(), depFiles);
     }
   }
 }

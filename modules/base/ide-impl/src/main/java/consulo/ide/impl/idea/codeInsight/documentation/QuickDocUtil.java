@@ -1,41 +1,41 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.documentation;
 
-import consulo.language.editor.ui.awt.HintUtil;
-import consulo.ide.impl.idea.codeInsight.navigation.DocPreviewUtil;
-import consulo.application.impl.internal.progress.SensitiveProgressWrapper;
-import consulo.language.editor.documentation.DocumentationProvider;
-import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
-import consulo.ide.impl.idea.openapi.editor.EditorMouseHoverPopupManager;
-import consulo.component.ProcessCanceledException;
+import consulo.application.impl.internal.progress.SensitiveProgressWrapper;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.progress.ProgressManager;
-import consulo.project.Project;
-import consulo.ui.ex.popup.JBPopup;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.component.ProcessCanceledException;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.util.lang.ref.Ref;
+import consulo.ide.impl.idea.codeInsight.navigation.DocPreviewUtil;
+import consulo.ide.impl.idea.openapi.editor.EditorMouseHoverPopupManager;
+import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.project.ui.wm.ToolWindowId;
-import consulo.project.ui.wm.ToolWindowManager;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiQualifiedNamedElement;
-import consulo.ui.ex.content.Content;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.ObjectUtil;
 import consulo.ide.impl.idea.util.SingleAlarm;
+import consulo.language.editor.documentation.DocumentationProvider;
+import consulo.language.editor.ui.awt.HintUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiQualifiedNamedElement;
+import consulo.project.Project;
+import consulo.project.ui.wm.ToolWindowId;
+import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.content.Content;
+import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.util.lang.ref.Ref;
 import org.jetbrains.annotations.Contract;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
 import static consulo.application.impl.internal.progress.ProgressIndicatorUtils.runInReadActionWithWriteActionPriority;
 
@@ -162,7 +162,7 @@ public class QuickDocUtil {
     }, 100, alarmDisposable);
     ApplicationManager.getApplication().executeOnPooledThread(() -> {
       try {
-        provider.consume(str -> {
+        provider.accept(str -> {
           ProgressManager.checkCanceled();
           if (stop.get()) throw new ProcessCanceledException();
           queue.add(str);

@@ -6,10 +6,8 @@ import consulo.disposer.Disposer;
 import consulo.fileChooser.FileTypeDescriptor;
 import consulo.fileChooser.IdeaFileChooser;
 import consulo.http.impl.internal.ssl.*;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.tree.Tree;
-import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 
@@ -34,7 +32,8 @@ import static consulo.http.impl.internal.ssl.ConfirmingTrustManager.MutableTrust
 @ExtensionImpl
 public class CertificateConfigurable implements SearchableConfigurable, Configurable.NoScroll, CertificateListener, ApplicationConfigurable {
   private static final FileTypeDescriptor CERTIFICATE_DESCRIPTOR = new FileTypeDescriptor("Choose Certificate", ".crt", ".cer", ".pem");
-  @NonNls public static final String EMPTY_PANEL = "empty.panel";
+  @NonNls
+  public static final String EMPTY_PANEL = "empty.panel";
 
   private JPanel myRootPanel;
 
@@ -73,23 +72,20 @@ public class CertificateConfigurable implements SearchableConfigurable, Configur
       @Override
       public void run(AnActionButton button) {
         // show choose file dialog, add certificate
-        IdeaFileChooser.chooseFile(CERTIFICATE_DESCRIPTOR, null, null, new Consumer<VirtualFile>() {
-          @Override
-          public void consume(VirtualFile file) {
-            String path = file.getPath();
-            X509Certificate certificate = CertificateUtil.loadX509Certificate(path);
-            if (certificate == null) {
-              Messages.showErrorDialog(myRootPanel, "Malformed X509 server certificate", "Not Imported");
-            }
-            else if (myCertificates.contains(certificate)) {
-              Messages.showWarningDialog(myRootPanel, "Certificate already exists", "Not Imported");
-            }
-            else {
-              myCertificates.add(certificate);
-              myTreeBuilder.addCertificate(certificate);
-              addCertificatePanel(certificate);
-              myTreeBuilder.selectCertificate(certificate);
-            }
+        IdeaFileChooser.chooseFile(CERTIFICATE_DESCRIPTOR, null, null, file -> {
+          String path = file.getPath();
+          X509Certificate certificate = CertificateUtil.loadX509Certificate(path);
+          if (certificate == null) {
+            Messages.showErrorDialog(myRootPanel, "Malformed X509 server certificate", "Not Imported");
+          }
+          else if (myCertificates.contains(certificate)) {
+            Messages.showWarningDialog(myRootPanel, "Certificate already exists", "Not Imported");
+          }
+          else {
+            myCertificates.add(certificate);
+            myTreeBuilder.addCertificate(certificate);
+            addCertificatePanel(certificate);
+            myTreeBuilder.selectCertificate(certificate);
           }
         });
       }

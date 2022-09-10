@@ -17,13 +17,13 @@ package consulo.ide.impl.idea.openapi.vcs.changes.issueLinks;
 
 import consulo.ui.ex.awt.ClickListener;
 import consulo.ui.ex.awt.SimpleColoredComponent;
-import consulo.ide.impl.idea.util.Consumer;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.util.function.Consumer;
 
 public abstract class LinkMouseListenerBase<T> extends ClickListener implements MouseMotionListener {
   public static void installSingleTagOn(@Nonnull SimpleColoredComponent component) {
@@ -38,7 +38,7 @@ public abstract class LinkMouseListenerBase<T> extends ClickListener implements 
       @Override
       protected void handleTagClick(@Nullable Consumer<MouseEvent> tag, @Nonnull MouseEvent event) {
         if (tag != null) {
-          tag.consume(event);
+          tag.accept(event);
         }
       }
     }.installOn(component);

@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.vcs.log.data.index;
 import consulo.application.progress.ProgressManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.indexing.*;
 import consulo.ide.impl.idea.util.indexing.impl.IndexStorage;
 import consulo.ide.impl.idea.util.indexing.impl.MapIndexStorage;
@@ -44,6 +43,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.ObjIntConsumer;
 
 import static consulo.ide.impl.idea.vcs.log.data.index.VcsLogPersistentIndex.getVersion;
@@ -115,7 +115,7 @@ public class VcsLogFullDetailsIndex<T> implements Disposable {
   private void iterateCommitIds(int key, @Nonnull Consumer<Integer> consumer) throws StorageException {
     ValueContainer<T> data = myMapReduceIndex.getData(key);
     data.forEach((id, value) -> {
-      consumer.consume(id);
+      consumer.accept(id);
       return true;
     });
   }

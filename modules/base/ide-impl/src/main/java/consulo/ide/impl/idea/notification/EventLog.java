@@ -31,7 +31,6 @@ import consulo.ide.impl.idea.notification.impl.NotificationsManagerImpl;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.ui.BalloonLayoutData;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.ObjectUtil;
 import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
@@ -62,6 +61,7 @@ import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -177,7 +177,7 @@ public class EventLog {
         private int index;
 
         @Override
-        public String fun(AnAction action) {
+        public String apply(AnAction action) {
           return "<a href=\"" + index++ + "\">" + action.getTemplatePresentation().getText() + "</a>";
         }
       }, isLongLine(actions) ? "<br>" : "&nbsp;") + "</p>";

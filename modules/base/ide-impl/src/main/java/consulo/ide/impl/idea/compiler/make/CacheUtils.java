@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.compiler.make;
 
-import consulo.ide.impl.idea.util.Function;
 import consulo.compiler.*;
 import consulo.compiler.CompileContextEx;
 import consulo.logging.Logger;
@@ -31,6 +30,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Function;
 
 /**
  * @author Eugene Zhuravlev

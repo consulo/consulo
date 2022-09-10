@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.util.continuation;
 
 import consulo.project.Project;
-import consulo.ide.impl.idea.util.Consumer;
+import java.util.function.Consumer;
 
 import java.util.List;
 

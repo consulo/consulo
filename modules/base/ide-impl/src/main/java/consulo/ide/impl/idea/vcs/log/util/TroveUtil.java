@@ -15,19 +15,22 @@
  */
 package consulo.ide.impl.idea.vcs.log.util;
 
-import consulo.util.lang.ref.Ref;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
-import gnu.trove.*;
+import consulo.util.lang.ref.Ref;
+import gnu.trove.TIntHashSet;
+import gnu.trove.TIntIterator;
+import gnu.trove.TIntObjectHashMap;
+import gnu.trove.TIntObjectIterator;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.util.List;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.IntFunction;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -130,7 +133,7 @@ public class TroveUtil {
       batch.get().add(commit);
       if (batch.get().size() >= batchSize) {
         try {
-          consumer.consume(batch.get());
+          consumer.accept(batch.get());
         }
         finally {
           batch.set(new TIntHashSet());
@@ -139,7 +142,7 @@ public class TroveUtil {
     });
 
     if (!batch.get().isEmpty()) {
-      consumer.consume(batch.get());
+      consumer.accept(batch.get());
     }
   }
 }

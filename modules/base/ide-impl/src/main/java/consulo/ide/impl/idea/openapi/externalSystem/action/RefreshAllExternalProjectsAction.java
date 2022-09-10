@@ -1,22 +1,21 @@
 package consulo.ide.impl.idea.openapi.externalSystem.action;
 
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ide.ServiceManager;
+import consulo.application.dumb.DumbAware;
+import consulo.document.FileDocumentManager;
 import consulo.externalSystem.ExternalSystemManager;
-import consulo.ide.impl.idea.openapi.externalSystem.model.ExternalSystemDataKeys;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.task.ExternalSystemTaskType;
+import consulo.ide.ServiceManager;
+import consulo.ide.impl.idea.openapi.externalSystem.model.ExternalSystemDataKeys;
 import consulo.ide.impl.idea.openapi.externalSystem.service.internal.ExternalSystemProcessingManager;
 import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemBundle;
 import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemUtil;
-import consulo.document.FileDocumentManager;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.editor.CommonDataKeys;
+import consulo.project.Project;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 
 import java.util.List;
 
@@ -48,12 +47,7 @@ public class RefreshAllExternalProjectsAction extends AnAction implements DumbAw
       return;
     }
 
-    final String name = StringUtil.join(systemIds, new Function<ProjectSystemId, String>() {
-      @Override
-      public String fun(ProjectSystemId projectSystemId) {
-        return projectSystemId.getReadableName();
-      }
-    }, ",");
+    final String name = StringUtil.join(systemIds, projectSystemId -> projectSystemId.getReadableName(), ",");
     e.getPresentation().setText(ExternalSystemBundle.message("action.refresh.all.projects.text", name));
     e.getPresentation().setDescription(ExternalSystemBundle.message("action.refresh.all.projects.description", name));
 

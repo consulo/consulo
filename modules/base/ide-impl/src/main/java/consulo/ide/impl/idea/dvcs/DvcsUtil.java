@@ -46,8 +46,9 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.WindowManager;
 import consulo.language.editor.ui.util.StatusBarUtil;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.ide.impl.idea.util.Function;
+
+import java.util.function.Consumer;
+import java.util.function.Function;
 import consulo.application.util.function.Processor;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.util.DateFormatUtil;
@@ -101,12 +102,7 @@ public class DvcsUtil {
   @Nonnull
   public static List<VirtualFile> findVirtualFilesWithRefresh(@Nonnull List<File> files) {
     RefreshVFsSynchronously.refreshFiles(files);
-    return ContainerUtil.mapNotNull(files, new Function<File, VirtualFile>() {
-      @Override
-      public VirtualFile fun(File file) {
-        return VfsUtil.findFileByIoFile(file, false);
-      }
-    });
+    return ContainerUtil.mapNotNull(files, file -> VfsUtil.findFileByIoFile(file, false));
   }
 
   /**
@@ -125,12 +121,7 @@ public class DvcsUtil {
 
   @Nonnull
   public static String getShortNames(@Nonnull Collection<? extends Repository> repositories) {
-    return StringUtil.join(repositories, new Function<Repository, String>() {
-      @Override
-      public String fun(Repository repository) {
-        return getShortRepositoryName(repository);
-      }
-    }, ", ");
+    return StringUtil.join(repositories, repository -> getShortRepositoryName(repository), ", ");
   }
 
   @Nonnull
@@ -395,7 +386,7 @@ public class DvcsUtil {
     }
 
     @Override
-    public void consume(Object dummy) {
+    public void accept(Object dummy) {
       if (!Disposer.isDisposed(myRepository)) {
         myRepository.update();
       }
@@ -499,12 +490,7 @@ public class DvcsUtil {
 
   @Nonnull
   public static String joinShortNames(@Nonnull Collection<? extends Repository> repositories, int limit) {
-    return joinWithAnd(ContainerUtil.map(repositories, new Function<Repository, String>() {
-      @Override
-      public String fun(@Nonnull Repository repository) {
-        return getShortRepositoryName(repository);
-      }
-    }), limit);
+    return joinWithAnd(ContainerUtil.map(repositories, repository -> getShortRepositoryName(repository)), limit);
   }
 
   @Nonnull

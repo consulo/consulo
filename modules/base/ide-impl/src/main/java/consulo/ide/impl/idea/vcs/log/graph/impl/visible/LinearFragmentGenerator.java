@@ -16,7 +16,6 @@
 
 package consulo.ide.impl.idea.vcs.log.graph.impl.visible;
 
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.vcs.log.graph.api.LiteLinearGraph;
 import consulo.ide.impl.idea.vcs.log.graph.api.elements.GraphEdge;
 import consulo.ide.impl.idea.vcs.log.graph.api.elements.GraphElement;
@@ -29,6 +28,7 @@ import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 
 import static consulo.ide.impl.idea.vcs.log.graph.api.LiteLinearGraph.NodeFilter.DOWN;
 import static consulo.ide.impl.idea.vcs.log.graph.api.LiteLinearGraph.NodeFilter.UP;
@@ -45,14 +45,14 @@ public class LinearFragmentGenerator {
 
   private final Function<Integer, List<Integer>> upNodesFun = new Function<Integer, List<Integer>>() {
     @Override
-    public List<Integer> fun(Integer integer) {
+    public List<Integer> apply(Integer integer) {
       return myLinearGraph.getNodes(integer, UP);
     }
   };
 
   private final Function<Integer, List<Integer>> downNodesFun = new Function<Integer, List<Integer>>() {
     @Override
-    public List<Integer> fun(Integer integer) {
+    public List<Integer> apply(Integer integer) {
       return myLinearGraph.getNodes(integer, DOWN);
     }
   };
@@ -155,13 +155,13 @@ public class LinearFragmentGenerator {
     blackNodes.add(startNode);
 
     Set<Integer> grayNodes = new HashSet<>();
-    grayNodes.addAll(getNextNodes.fun(startNode));
+    grayNodes.addAll(getNextNodes.apply(startNode));
 
     int endNode = -1;
     while (blackNodes.size() < SHORT_FRAGMENT_MAX_SIZE) {
       int nextBlackNode = -1;
       for (int grayNode : grayNodes) {
-        if (blackNodes.containsAll(getPrevNodes.fun(grayNode))) {
+        if (blackNodes.containsAll(getPrevNodes.apply(grayNode))) {
           nextBlackNode = grayNode;
           break;
         }
@@ -174,7 +174,7 @@ public class LinearFragmentGenerator {
         break;
       }
 
-      List<Integer> nextGrayNodes = getNextNodes.fun(nextBlackNode);
+      List<Integer> nextGrayNodes = getNextNodes.apply(nextBlackNode);
       if (nextGrayNodes.isEmpty() || thisNodeCantBeInMiddle.contains(nextBlackNode)) return null;
 
       blackNodes.add(nextBlackNode);

@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.util;
 
+import java.util.function.Consumer;
+
 /**
  * @author traff
  */

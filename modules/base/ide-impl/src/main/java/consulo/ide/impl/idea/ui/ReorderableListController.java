@@ -16,22 +16,21 @@
 package consulo.ide.impl.idea.ui;
 
 import consulo.application.AllIcons;
+import consulo.ide.impl.idea.util.IconUtil;
+import consulo.ide.impl.idea.util.containers.Convertor;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.UIBundle;
-import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.ScrollingUtil;
 import consulo.ui.ex.awt.SortedListModel;
 import consulo.ui.ex.awt.util.ListUtil;
-import consulo.util.lang.function.Condition;
-import consulo.ide.impl.idea.openapi.util.Factory;
-import consulo.ide.impl.idea.util.IconUtil;
-import consulo.ide.impl.idea.util.containers.Convertor;
-import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
+import consulo.util.lang.function.Condition;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.*;
+import java.util.function.Supplier;
 
 /**
  * @author dyoma
@@ -56,13 +55,13 @@ public abstract class ReorderableListController <T> {
 
   protected abstract void addActionDescription(ActionDescription description);
 
-  public AddActionDescription addAddAction(final String actionName, final Factory<T> creator, final boolean createShortcut) {
+  public AddActionDescription addAddAction(final String actionName, final Supplier<T> creator, final boolean createShortcut) {
     final AddActionDescription description = new AddActionDescription(actionName, creator, createShortcut);
     addActionDescription(description);
     return description;
   }
 
-  public AddMultipleActionDescription addAddMultipleAction(final String actionName, final Factory<Collection<T>> creator, final boolean createShortcut) {
+  public AddMultipleActionDescription addAddMultipleAction(final String actionName, final Supplier<Collection<T>> creator, final boolean createShortcut) {
     final AddMultipleActionDescription description = new AddMultipleActionDescription(actionName, creator, createShortcut);
     addActionDescription(description);
     return description;
@@ -266,11 +265,11 @@ public abstract class ReorderableListController <T> {
 
   public abstract class AddActionDescriptionBase<V> extends CustomActionDescription<V> {
     private final String myActionDescription;
-    private final Factory<V> myAddHandler;
+    private final Supplier<V> myAddHandler;
     private final boolean myCreateShortcut;
     private Image myIcon = AllIcons.General.Add;
 
-    public AddActionDescriptionBase(final String actionDescription, final Factory<V> addHandler, final boolean createShortcut) {
+    public AddActionDescriptionBase(final String actionDescription, final Supplier<V> addHandler, final boolean createShortcut) {
       myActionDescription = actionDescription;
       myAddHandler = addHandler;
       myCreateShortcut = createShortcut;
@@ -281,7 +280,7 @@ public abstract class ReorderableListController <T> {
       final ActionBehaviour<V> behaviour = new ActionBehaviour<V>() {
         @Override
         public V performAction(final AnActionEvent e) {
-          return addInternal(myAddHandler.create());
+          return addInternal(myAddHandler.get());
         }
 
         @Override
@@ -313,7 +312,7 @@ public abstract class ReorderableListController <T> {
   }
 
   public class AddActionDescription extends AddActionDescriptionBase<T> {
-    public AddActionDescription(final String actionDescription, final Factory<T> addHandler, final boolean createShortcut) {
+    public AddActionDescription(final String actionDescription, final Supplier<T> addHandler, final boolean createShortcut) {
       super(actionDescription, addHandler, createShortcut);
     }
 
@@ -327,7 +326,7 @@ public abstract class ReorderableListController <T> {
   }
 
   public class AddMultipleActionDescription extends AddActionDescriptionBase<Collection<T>> {
-    public AddMultipleActionDescription(final String actionDescription, final Factory<Collection<T>> addHandler, final boolean createShortcut) {
+    public AddMultipleActionDescription(final String actionDescription, final Supplier<Collection<T>> addHandler, final boolean createShortcut) {
       super(actionDescription, addHandler, createShortcut);
     }
 

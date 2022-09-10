@@ -4,7 +4,7 @@ package consulo.ide.impl.psi.impl.source;
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.util.NullableComputable;
 import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.util.Function;
+import java.util.function.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.application.Application;

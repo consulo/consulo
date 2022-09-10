@@ -41,7 +41,6 @@ import consulo.ide.impl.idea.ui.popup.PopupUpdateProcessor;
 import consulo.ide.impl.idea.ui.speedSearch.ElementFilter;
 import consulo.ide.impl.idea.ui.treeStructure.filtered.FilteringTreeStructure;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.Functions;
 import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -99,6 +98,7 @@ import java.awt.event.*;
 import java.util.List;
 import java.util.*;
 import java.util.function.BiPredicate;
+import java.util.function.Function;
 
 /**
  * @author Konstantin Bulenkov
@@ -391,7 +391,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
     };
     Function<TreePath, Promise<TreePath>> fallback = new Function<TreePath, Promise<TreePath>>() {
       @Override
-      public Promise<TreePath> fun(TreePath path) {
+      public Promise<TreePath> apply(TreePath path) {
         if (path == null && stage[0] == 2) {
           // Some structure views merge unrelated psi elements into a structure node (MarkdownStructureViewModel).
           // So turn off the isAncestor() optimization and retry once.
@@ -404,7 +404,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
             Object minChild = findClosestPsiElement((PsiElement)element, adjusted, myAsyncTreeModel);
             if (minChild != null) adjusted = adjusted.pathByAddingChild(minChild);
           }
-          return adjusted == null ? Promises.rejectedPromise() : action.fun(adjusted);
+          return adjusted == null ? Promises.rejectedPromise() : action.apply(adjusted);
         }
       }
     };

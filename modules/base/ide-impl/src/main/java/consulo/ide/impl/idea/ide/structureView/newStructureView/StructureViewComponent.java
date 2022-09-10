@@ -23,7 +23,6 @@ import consulo.fileEditor.structureView.StructureViewTreeElement;
 import consulo.fileEditor.structureView.event.FileEditorPositionListener;
 import consulo.fileEditor.structureView.event.ModelListener;
 import consulo.fileEditor.structureView.tree.*;
-import consulo.ide.impl.idea.ide.PsiCopyPasteManagerImpl;
 import consulo.ide.impl.idea.ide.dnd.aware.DnDAwareTree;
 import consulo.ide.impl.idea.ide.structureView.impl.StructureViewFactoryImpl;
 import consulo.ide.impl.idea.ide.ui.customization.CustomizationUtil;
@@ -35,7 +34,7 @@ import consulo.ide.impl.idea.openapi.keymap.impl.IdeMouseEventDispatcher;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.ui.treeStructure.filtered.FilteringTreeStructure;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.Function;
+import java.util.function.Function;
 import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.ide.impl.idea.util.SingleAlarm;
 import consulo.ide.ui.popup.HintUpdateSupply;
@@ -427,7 +426,7 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
     };
     Function<TreePath, Promise<TreePath>> fallback = new Function<TreePath, Promise<TreePath>>() {
       @Override
-      public Promise<TreePath> fun(TreePath path) {
+      public Promise<TreePath> apply(TreePath path) {
         if (myCurrentFocusPromise != result) {
           result.setError("rejected");
           return Promises.rejectedPromise();
@@ -440,7 +439,7 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
         }
         else {
           TreePath adjusted = path == null ? deepestPath[0] : path;
-          return adjusted == null ? Promises.rejectedPromise() : action.fun(adjusted);
+          return adjusted == null ? Promises.rejectedPromise() : action.apply(adjusted);
         }
       }
     };

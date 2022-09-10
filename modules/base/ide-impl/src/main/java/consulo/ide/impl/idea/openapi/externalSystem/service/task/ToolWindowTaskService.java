@@ -20,26 +20,26 @@ import consulo.externalSystem.model.DataNode;
 import consulo.externalSystem.model.Key;
 import consulo.externalSystem.model.ProjectKeys;
 import consulo.externalSystem.model.ProjectSystemId;
-import consulo.externalSystem.service.project.ExternalConfigPathAware;
-import consulo.externalSystem.model.project.ModuleData;
 import consulo.externalSystem.model.execution.ExternalTaskPojo;
+import consulo.externalSystem.model.project.ModuleData;
 import consulo.externalSystem.model.task.TaskData;
-import consulo.ide.impl.idea.openapi.externalSystem.service.task.ui.ExternalSystemTasksTreeModel;
+import consulo.externalSystem.service.project.ExternalConfigPathAware;
 import consulo.externalSystem.setting.AbstractExternalSystemLocalSettings;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.externalSystem.util.ExternalSystemConstants;
-import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemUiUtil;
 import consulo.externalSystem.util.Order;
-import consulo.project.Project;
-import consulo.ide.impl.idea.util.Function;
+import consulo.ide.impl.idea.openapi.externalSystem.service.task.ui.ExternalSystemTasksTreeModel;
+import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemUiUtil;
 import consulo.ide.impl.idea.util.NullableFunction;
 import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
+import consulo.project.Project;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * @author Denis Zhdanov
@@ -51,20 +51,19 @@ public class ToolWindowTaskService extends AbstractToolWindowService<TaskData> {
   @Nonnull
   public static final Function<DataNode<TaskData>, ExternalTaskPojo> MAPPER = new Function<DataNode<TaskData>, ExternalTaskPojo>() {
     @Override
-    public ExternalTaskPojo fun(DataNode<TaskData> node) {
+    public ExternalTaskPojo apply(DataNode<TaskData> node) {
       return ExternalTaskPojo.from(node.getData());
     }
   };
 
-  public static final NullableFunction<DataNode<TaskData>, ExternalConfigPathAware> TASK_HOLDER_RETRIEVAL_STRATEGY =
-    new NullableFunction<DataNode<TaskData>, ExternalConfigPathAware>() {
-      @Nullable
-      @Override
-      public ExternalConfigPathAware fun(DataNode<TaskData> node) {
-        ModuleData moduleData = node.getData(ProjectKeys.MODULE);
-        return moduleData == null ? node.getData(ProjectKeys.PROJECT) : moduleData;
-      }
-    };
+  public static final NullableFunction<DataNode<TaskData>, ExternalConfigPathAware> TASK_HOLDER_RETRIEVAL_STRATEGY = new NullableFunction<DataNode<TaskData>, ExternalConfigPathAware>() {
+    @Nullable
+    @Override
+    public ExternalConfigPathAware apply(DataNode<TaskData> node) {
+      ModuleData moduleData = node.getData(ProjectKeys.MODULE);
+      return moduleData == null ? node.getData(ProjectKeys.PROJECT) : moduleData;
+    }
+  };
 
   @Nonnull
   @Override
@@ -73,10 +72,7 @@ public class ToolWindowTaskService extends AbstractToolWindowService<TaskData> {
   }
 
   @Override
-  protected void processData(@Nonnull Collection<DataNode<TaskData>> nodes,
-                             @Nonnull Project project,
-                             @Nullable final ExternalSystemTasksTreeModel model)
-  {
+  protected void processData(@Nonnull Collection<DataNode<TaskData>> nodes, @Nonnull Project project, @Nullable final ExternalSystemTasksTreeModel model) {
     if (nodes.isEmpty()) {
       return;
     }

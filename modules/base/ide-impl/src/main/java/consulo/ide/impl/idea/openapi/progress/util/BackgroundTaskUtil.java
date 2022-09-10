@@ -28,9 +28,9 @@ import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import consulo.disposer.Disposer;
 import consulo.util.lang.Pair;
-import consulo.application.util.function.ThrowableComputable;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.ide.impl.idea.util.Function;
+
+import java.util.function.Consumer;
+import java.util.function.Function;
 import consulo.language.util.IncorrectOperationException;
 import consulo.util.lang.function.PairConsumer;
 import consulo.application.util.concurrent.AppExecutorUtil;
@@ -77,7 +77,7 @@ public class BackgroundTaskUtil {
     if (forceEDT) {
       ProgressIndicator indicator = new EmptyProgressIndicator(modality);
       try {
-        Runnable callback = backgroundTask.fun(indicator);
+        Runnable callback = backgroundTask.apply(indicator);
         finish(callback, indicator);
       }
       catch (ProcessCanceledException ignore) {
@@ -134,7 +134,7 @@ public class BackgroundTaskUtil {
   @Nullable
   public static <T> T computeInBackgroundAndTryWait(@Nonnull Computable<T> computable, @Nonnull Consumer<T> asyncCallback, long waitMillis) {
     Pair<T, ProgressIndicator> pair =
-            computeInBackgroundAndTryWait(indicator -> computable.compute(), (result, indicator) -> asyncCallback.consume(result), IdeaModalityState.defaultModalityState(), waitMillis);
+            computeInBackgroundAndTryWait(indicator -> computable.compute(), (result, indicator) -> asyncCallback.accept(result), IdeaModalityState.defaultModalityState(), waitMillis);
     return pair.first;
   }
 
@@ -158,7 +158,7 @@ public class BackgroundTaskUtil {
     indicator.start();
     ApplicationManager.getApplication().executeOnPooledThread(() -> ProgressManager.getInstance().executeProcessUnderProgress(() -> {
       try {
-        T result = task.fun(indicator);
+        T result = task.apply(indicator);
         if (!helper.setResult(result)) {
           asyncCallback.consume(result, indicator);
         }

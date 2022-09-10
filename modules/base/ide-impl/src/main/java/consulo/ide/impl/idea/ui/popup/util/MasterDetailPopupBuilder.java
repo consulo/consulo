@@ -15,12 +15,9 @@
  */
 package consulo.ide.impl.idea.ui.popup.util;
 
-import consulo.ui.ex.awt.ColoredListCellRenderer;
-import consulo.ide.impl.idea.ui.InplaceButton;
-import consulo.ide.impl.idea.util.Function;
 import consulo.application.AllIcons;
 import consulo.application.util.SystemInfo;
-import consulo.ui.ex.popup.IconButton;
+import consulo.ide.impl.idea.ui.InplaceButton;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
@@ -29,6 +26,7 @@ import consulo.ui.ex.Gray;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.speedSearch.FilteringListModel;
+import consulo.ui.ex.popup.IconButton;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
@@ -207,12 +205,7 @@ public class MasterDetailPopupBuilder implements MasterController {
       setCloseOnEnter(myCloseOnEnter).
       setMayBeParent(true).
       setDimensionServiceKey(myDimensionServiceKey).
-      setFilteringEnabled(new Function<Object, String>() {
-        @Override
-        public String fun(Object o) {
-          return ((ItemWrapper)o).speedSearchText();
-        }
-      });
+      setFilteringEnabled(o -> ((ItemWrapper)o).speedSearchText());
 
     if (myMinSize != null) {
       builder.setMinSize(myMinSize);

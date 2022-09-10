@@ -15,11 +15,6 @@
  */
 package consulo.desktop.application.util;
 
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.io.StreamUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.Consumer;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 import com.sun.jna.WString;
@@ -31,16 +26,19 @@ import consulo.application.util.SystemInfo;
 import consulo.component.util.NativeFileLoader;
 import consulo.container.boot.ContainerPathManager;
 import consulo.platform.Platform;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.io.FilePermissionCopier;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.TimeoutUtil;
 
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class Restarter {
   private Restarter() {
@@ -95,20 +93,9 @@ public class Restarter {
     if (beforeRestart.length == 0) return;
 
     try {
-      Process process = Runtime.getRuntime().exec(beforeRestart);
+      Process process = new ProcessBuilder(beforeRestart).inheritIO().start();
 
-      Thread outThread = new Thread(new StreamRedirector(process.getInputStream(), System.out));
-      Thread errThread = new Thread(new StreamRedirector(process.getErrorStream(), System.err));
-      outThread.start();
-      errThread.start();
-
-      try {
-        process.waitFor();
-      }
-      finally {
-        outThread.join();
-        errThread.join();
-      }
+      process.waitFor();
     }
     catch (InterruptedException ignore) {
     }
@@ -165,14 +152,14 @@ public class Restarter {
   private static void doScheduleRestart(File restarterFile, File workingDirectory, Consumer<List<String>> argumentsBuilder) throws IOException {
     List<String> commands = new ArrayList<>();
     commands.add(createTempExecutable(restarterFile).getPath());
-    argumentsBuilder.consume(commands);
+    argumentsBuilder.accept(commands);
     Runtime.getRuntime().exec(ArrayUtil.toStringArray(commands), null, workingDirectory);
   }
 
   public static File createTempExecutable(File executable) throws IOException {
     String ext = FileUtil.getExtension(executable.getName());
     File copy = FileUtil.createTempFile(FileUtil.getNameWithoutExtension(executable.getName()), StringUtil.isEmptyOrSpaces(ext) ? ".tmp" : ("." + ext), false);
-    FileUtil.copy(executable, copy);
+    FileUtil.copy(executable, copy, FilePermissionCopier.BY_NIO2);
     if (!copy.setExecutable(executable.canExecute())) throw new IOException("Cannot make file executable: " + copy);
     return copy;
   }
@@ -187,24 +174,5 @@ public class Restarter {
 
   private interface Shell32 extends StdCallLibrary {
     Pointer CommandLineToArgvW(WString command_line, IntByReference argc);
-  }
-
-  private static class StreamRedirector implements Runnable {
-    private final InputStream myIn;
-    private final OutputStream myOut;
-
-    private StreamRedirector(InputStream in, OutputStream out) {
-      myIn = in;
-      myOut = out;
-    }
-
-    @Override
-    public void run() {
-      try {
-        StreamUtil.copyStreamContent(myIn, myOut);
-      }
-      catch (IOException ignore) {
-      }
-    }
   }
 }

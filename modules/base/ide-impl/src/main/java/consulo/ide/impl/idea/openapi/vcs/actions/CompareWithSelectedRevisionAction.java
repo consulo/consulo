@@ -15,36 +15,34 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
+import consulo.application.util.DateFormatUtil;
+import consulo.ide.impl.idea.openapi.vcs.FilePathImpl;
+import consulo.ide.impl.idea.openapi.vcs.history.VcsHistoryProviderBackgroundableProxy;
+import consulo.ide.impl.idea.openapi.vcs.impl.VcsBackgroundableActions;
+import consulo.ide.impl.idea.ui.dualView.TreeTableView;
+import consulo.ide.impl.idea.ui.treeStructure.treetable.ListTreeTableModelOnColumns;
+import consulo.ide.impl.ui.impl.PopupChooserBuilder;
+import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
-import consulo.project.Project;
-import consulo.ui.ex.popup.JBPopup;
-import consulo.ide.impl.ui.impl.PopupChooserBuilder;
-import consulo.versionControlSystem.AbstractVcs;
-import consulo.ide.impl.idea.openapi.vcs.FilePathImpl;
-import consulo.versionControlSystem.ProjectLevelVcsManager;
-import consulo.versionControlSystem.VcsBundle;
-import consulo.versionControlSystem.diff.DiffProvider;
-import consulo.ide.impl.idea.openapi.vcs.history.*;
-import consulo.ide.impl.idea.openapi.vcs.impl.VcsBackgroundableActions;
-import consulo.versionControlSystem.action.VcsContext;
-import consulo.versionControlSystem.history.HistoryAsTreeProvider;
-import consulo.versionControlSystem.history.VcsFileRevision;
-import consulo.versionControlSystem.history.VcsHistoryProvider;
-import consulo.versionControlSystem.history.VcsHistorySession;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.ui.ex.awt.ColumnInfo;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchBase;
-import consulo.ui.ex.awt.util.TableUtil;
-import consulo.ide.impl.idea.ui.dualView.TreeTableView;
-import consulo.ui.ex.awt.table.TableView;
-import consulo.ide.impl.idea.ui.treeStructure.treetable.ListTreeTableModelOnColumns;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.util.lang.TreeItem;
-import consulo.application.util.DateFormatUtil;
-import consulo.ui.ex.awt.ColumnInfo;
 import consulo.ui.ex.awt.table.ListTableModel;
+import consulo.ui.ex.awt.table.TableView;
+import consulo.ui.ex.awt.util.TableUtil;
+import consulo.ui.ex.popup.JBPopup;
+import consulo.util.lang.TreeItem;
+import consulo.versionControlSystem.AbstractVcs;
+import consulo.versionControlSystem.ProjectLevelVcsManager;
+import consulo.versionControlSystem.VcsBundle;
+import consulo.versionControlSystem.action.VcsContext;
+import consulo.versionControlSystem.diff.DiffProvider;
+import consulo.versionControlSystem.history.HistoryAsTreeProvider;
+import consulo.versionControlSystem.history.VcsFileRevision;
+import consulo.versionControlSystem.history.VcsHistoryProvider;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -53,28 +51,29 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 import java.util.Date;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class CompareWithSelectedRevisionAction extends AbstractVcsAction {
 
-  private static final ColumnInfo<TreeNodeAdapter,String> BRANCH_COLUMN = new ColumnInfo<TreeNodeAdapter, String>(VcsBundle.message("column.name.revisions.list.branch")){
+  private static final ColumnInfo<TreeNodeAdapter, String> BRANCH_COLUMN = new ColumnInfo<TreeNodeAdapter, String>(VcsBundle.message("column.name.revisions.list.branch")) {
     public String valueOf(final TreeNodeAdapter object) {
       return object.getRevision().getBranchName();
     }
   };
 
-  private static final ColumnInfo<TreeNodeAdapter,String> REVISION_COLUMN = new ColumnInfo<TreeNodeAdapter, String>(VcsBundle.message("column.name.revision.list.revision")){
+  private static final ColumnInfo<TreeNodeAdapter, String> REVISION_COLUMN = new ColumnInfo<TreeNodeAdapter, String>(VcsBundle.message("column.name.revision.list.revision")) {
     public String valueOf(final TreeNodeAdapter object) {
       return object.getRevision().getRevisionNumber().asString();
     }
   };
 
-  private static final ColumnInfo<TreeNodeAdapter,String> DATE_COLUMN = new ColumnInfo<TreeNodeAdapter, String>(VcsBundle.message("column.name.revisions.list.filter")){
+  private static final ColumnInfo<TreeNodeAdapter, String> DATE_COLUMN = new ColumnInfo<TreeNodeAdapter, String>(VcsBundle.message("column.name.revisions.list.filter")) {
     public String valueOf(final TreeNodeAdapter object) {
       return DateFormatUtil.formatPrettyDateTime(object.getRevision().getRevisionDate());
     }
   };
 
-  private static final ColumnInfo<TreeNodeAdapter,String> AUTHOR_COLUMN = new ColumnInfo<TreeNodeAdapter, String>(VcsBundle.message("column.name.revision.list.author")){
+  private static final ColumnInfo<TreeNodeAdapter, String> AUTHOR_COLUMN = new ColumnInfo<TreeNodeAdapter, String>(VcsBundle.message("column.name.revision.list.author")) {
     public String valueOf(final TreeNodeAdapter object) {
       return object.getRevision().getAuthor();
     }
@@ -93,13 +92,13 @@ public class CompareWithSelectedRevisionAction extends AbstractVcsAction {
     }
   };
 
-  private static final ColumnInfo<VcsFileRevision,String> AUTHOR_TABLE_COLUMN = new ColumnInfo<VcsFileRevision, String>(VcsBundle.message("column.name.revision.list.author")){
+  private static final ColumnInfo<VcsFileRevision, String> AUTHOR_TABLE_COLUMN = new ColumnInfo<VcsFileRevision, String>(VcsBundle.message("column.name.revision.list.author")) {
     public String valueOf(final VcsFileRevision vcsFileRevision) {
       return vcsFileRevision.getAuthor();
     }
   };
 
-  private static final ColumnInfo<VcsFileRevision,String> BRANCH_TABLE_COLUMN = new ColumnInfo<VcsFileRevision, String>(VcsBundle.message("column.name.revisions.list.branch")){
+  private static final ColumnInfo<VcsFileRevision, String> BRANCH_TABLE_COLUMN = new ColumnInfo<VcsFileRevision, String>(VcsBundle.message("column.name.revisions.list.branch")) {
     public String valueOf(final VcsFileRevision vcsFileRevision) {
       return vcsFileRevision.getBranchName();
     }
@@ -121,31 +120,23 @@ public class CompareWithSelectedRevisionAction extends AbstractVcsAction {
     final VcsHistoryProvider vcsHistoryProvider = vcs.getVcsHistoryProvider();
 
     new VcsHistoryProviderBackgroundableProxy(vcs, vcsHistoryProvider, vcs.getDiffProvider()).
-      createSessionFor(vcs.getKeyInstanceMethod(), new FilePathImpl(file),
-        new Consumer<VcsHistorySession>() {
-          public void consume(VcsHistorySession session) {
-            if (session == null) return;
-            final List<VcsFileRevision> revisions = session.getRevisionList();
-            final HistoryAsTreeProvider treeHistoryProvider = session.getHistoryAsTreeProvider();
-            if (treeHistoryProvider != null) {
-              showTreePopup(treeHistoryProvider.createTreeOn(revisions), file, project, vcs.getDiffProvider());
-            }
-            else {
-              showListPopup(revisions, project, new Consumer<VcsFileRevision>() {
-                public void consume(final VcsFileRevision revision) {
-                  DiffActionExecutor.showDiff(vcs.getDiffProvider(), revision.getRevisionNumber(), file, project,
-                                              VcsBackgroundableActions.COMPARE_WITH);
-                }
-              }, true);
-            }
-          }
-        }, VcsBackgroundableActions.COMPARE_WITH, false, null);
+            createSessionFor(vcs.getKeyInstanceMethod(), new FilePathImpl(file), session -> {
+              if (session == null) return;
+              final List<VcsFileRevision> revisions = session.getRevisionList();
+              final HistoryAsTreeProvider treeHistoryProvider = session.getHistoryAsTreeProvider();
+              if (treeHistoryProvider != null) {
+                showTreePopup(treeHistoryProvider.createTreeOn(revisions), file, project, vcs.getDiffProvider());
+              }
+              else {
+                showListPopup(revisions, project, revision -> DiffActionExecutor.showDiff(vcs.getDiffProvider(), revision.getRevisionNumber(), file, project, VcsBackgroundableActions.COMPARE_WITH),
+                              true);
+              }
+            }, VcsBackgroundableActions.COMPARE_WITH, false, null);
   }
 
   private static void showTreePopup(final List<TreeItem<VcsFileRevision>> roots, final VirtualFile file, final Project project, final DiffProvider diffProvider) {
-    final TreeTableView treeTable = new TreeTableView(new ListTreeTableModelOnColumns(new TreeNodeAdapter(null, null, roots),
-                                                                                      new ColumnInfo[]{BRANCH_COLUMN, REVISION_COLUMN,
-                                                                                      DATE_COLUMN, AUTHOR_COLUMN}));
+    final TreeTableView treeTable =
+            new TreeTableView(new ListTreeTableModelOnColumns(new TreeNodeAdapter(null, null, roots), new ColumnInfo[]{BRANCH_COLUMN, REVISION_COLUMN, DATE_COLUMN, AUTHOR_COLUMN}));
     Runnable runnable = new Runnable() {
       public void run() {
         int index = treeTable.getSelectionModel().getMinSelectionIndex();
@@ -162,13 +153,13 @@ public class CompareWithSelectedRevisionAction extends AbstractVcsAction {
     treeTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
     new PopupChooserBuilder(treeTable).
-      setTitle(VcsBundle.message("lookup.title.vcs.file.revisions")).
-      setItemChoosenCallback(runnable).
-      setSouthComponent(createCommentsPanel(treeTable)).
-      setResizable(true).
-      setDimensionServiceKey("Vcs.CompareWithSelectedRevision.Popup").
-      createPopup().
-      showCenteredInCurrentWindow(project);
+            setTitle(VcsBundle.message("lookup.title.vcs.file.revisions")).
+            setItemChoosenCallback(runnable).
+            setSouthComponent(createCommentsPanel(treeTable)).
+            setResizable(true).
+            setDimensionServiceKey("Vcs.CompareWithSelectedRevision.Popup").
+            createPopup().
+            showCenteredInCurrentWindow(project);
   }
 
 
@@ -177,7 +168,8 @@ public class CompareWithSelectedRevisionAction extends AbstractVcsAction {
     final List items = treeTable.getItems();
     if (items.size() <= index) {
       return null;
-    } else {
+    }
+    else {
       return ((TreeNodeAdapter)items.get(index)).getRevision();
     }
 
@@ -191,11 +183,13 @@ public class CompareWithSelectedRevisionAction extends AbstractVcsAction {
         final int index = treeTable.getSelectionModel().getMinSelectionIndex();
         if (index == -1) {
           textArea.setText("");
-        } else {
+        }
+        else {
           final VcsFileRevision revision = getRevisionAt(treeTable, index);
           if (revision != null) {
             textArea.setText(revision.getCommitMessage());
-          } else {
+          }
+          else {
             textArea.setText("");
           }
         }
@@ -203,8 +197,7 @@ public class CompareWithSelectedRevisionAction extends AbstractVcsAction {
     });
     final JScrollPane textScrollPane = ScrollPaneFactory.createScrollPane(textArea);
     panel.add(textScrollPane, BorderLayout.CENTER);
-    textScrollPane.setBorder(IdeBorderFactory.createTitledBorder(VcsBundle.message("border.selected.revision.commit.message"), false
-    ));
+    textScrollPane.setBorder(IdeBorderFactory.createTitledBorder(VcsBundle.message("border.selected.revision.commit.message"), false));
     return panel;
   }
 
@@ -217,24 +210,21 @@ public class CompareWithSelectedRevisionAction extends AbstractVcsAction {
     return textArea;
   }
 
-  public static void showListPopup(final List<VcsFileRevision> revisions, final Project project, final Consumer<VcsFileRevision> selectedRevisionConsumer,
-                                   final boolean showComments) {
-    ColumnInfo[] columns = new ColumnInfo[] { REVISION_TABLE_COLUMN, DATE_TABLE_COLUMN, AUTHOR_TABLE_COLUMN };
-    for(VcsFileRevision revision: revisions) {
+  public static void showListPopup(final List<VcsFileRevision> revisions, final Project project, final Consumer<VcsFileRevision> selectedRevisionConsumer, final boolean showComments) {
+    ColumnInfo[] columns = new ColumnInfo[]{REVISION_TABLE_COLUMN, DATE_TABLE_COLUMN, AUTHOR_TABLE_COLUMN};
+    for (VcsFileRevision revision : revisions) {
       if (revision.getBranchName() != null) {
-        columns = new ColumnInfo[] { REVISION_TABLE_COLUMN, BRANCH_TABLE_COLUMN, DATE_TABLE_COLUMN, AUTHOR_TABLE_COLUMN };
+        columns = new ColumnInfo[]{REVISION_TABLE_COLUMN, BRANCH_TABLE_COLUMN, DATE_TABLE_COLUMN, AUTHOR_TABLE_COLUMN};
         break;
       }
     }
     final TableView<VcsFileRevision> table = new TableView<VcsFileRevision>(new ListTableModel<VcsFileRevision>(columns, revisions, 0));
     table.setShowHorizontalLines(false);
     table.setTableHeader(null);
-    Runnable runnable = new Runnable() {
-      public void run() {
-        VcsFileRevision revision = table.getSelectedObject();
-        if (revision != null) {
-          selectedRevisionConsumer.consume(revision);
-        }
+    Runnable runnable = () -> {
+      VcsFileRevision revision = table.getSelectedObject();
+      if (revision != null) {
+        selectedRevisionConsumer.accept(revision);
       }
     };
 
@@ -257,13 +247,13 @@ public class CompareWithSelectedRevisionAction extends AbstractVcsAction {
       }
 
       protected String getElementText(Object element) {
-        VcsFileRevision revision = (VcsFileRevision) element;
+        VcsFileRevision revision = (VcsFileRevision)element;
         return revision.getRevisionNumber().asString() + " " + revision.getBranchName() + " " + revision.getAuthor();
       }
 
       protected void selectElement(Object element, String selectedText) {
-        VcsFileRevision revision = (VcsFileRevision) element;
-        TableUtil.selectRows(myComponent, new int[] {myComponent.convertRowIndexToView(revisions.indexOf(revision))});
+        VcsFileRevision revision = (VcsFileRevision)element;
+        TableUtil.selectRows(myComponent, new int[]{myComponent.convertRowIndexToView(revisions.indexOf(revision))});
         TableUtil.scrollSelectionToVisible(myComponent);
       }
     };
@@ -276,11 +266,11 @@ public class CompareWithSelectedRevisionAction extends AbstractVcsAction {
     }
 
     builder.setTitle(VcsBundle.message("lookup.title.vcs.file.revisions")).
-        setItemChoosenCallback(runnable).
-        setResizable(true).
-        setDimensionServiceKey("Vcs.CompareWithSelectedRevision.Popup").setMinSize(new Dimension(300, 300));
+            setItemChoosenCallback(runnable).
+            setResizable(true).
+            setDimensionServiceKey("Vcs.CompareWithSelectedRevision.Popup").setMinSize(new Dimension(300, 300));
     final JBPopup popup = builder.createPopup();
-    
+
     popup.showCenteredInCurrentWindow(project);
   }
 
@@ -291,7 +281,8 @@ public class CompareWithSelectedRevisionAction extends AbstractVcsAction {
         final VcsFileRevision revision = table.getSelectedObject();
         if (revision == null) {
           textArea.setText("");
-        } else {
+        }
+        else {
           textArea.setText(revision.getCommitMessage());
           textArea.select(0, 0);
         }
@@ -300,8 +291,7 @@ public class CompareWithSelectedRevisionAction extends AbstractVcsAction {
 
     JPanel jPanel = new JPanel(new BorderLayout());
     final JScrollPane textScrollPane = ScrollPaneFactory.createScrollPane(textArea);
-    textScrollPane.setBorder(IdeBorderFactory.createTitledBorder(VcsBundle.message("border.selected.revision.commit.message"), false
-    ));
+    textScrollPane.setBorder(IdeBorderFactory.createTitledBorder(VcsBundle.message("border.selected.revision.commit.message"), false));
     jPanel.add(textScrollPane, BorderLayout.SOUTH);
 
     jPanel.setPreferredSize(new Dimension(300, 100));

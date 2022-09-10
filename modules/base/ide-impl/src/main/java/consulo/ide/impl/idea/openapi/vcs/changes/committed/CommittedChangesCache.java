@@ -18,40 +18,38 @@ package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.impl.internal.JobScheduler;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.component.persist.StoragePathMacros;
-import consulo.util.lang.Pair;
-import consulo.versionControlSystem.*;
-import consulo.versionControlSystem.change.Change;
-import consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
-import consulo.versionControlSystem.VcsInitObject;
-import consulo.ide.impl.idea.openapi.vcs.ui.VcsBalloonProblemNotifier;
-import consulo.versionControlSystem.change.commited.RepositoryLocationGroup;
-import consulo.versionControlSystem.change.commited.VcsCommittedListsZipper;
-import consulo.versionControlSystem.update.UpdatedFiles;
-import consulo.versionControlSystem.versionBrowser.ChangeBrowserSettings;
-import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.ide.impl.idea.util.MessageBusUtil;
-import consulo.ide.impl.idea.util.NotNullFunction;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.vcs.ProgressManagerQueue;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.component.ProcessCanceledException;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.impl.internal.JobScheduler;
 import consulo.application.util.function.Computable;
+import consulo.component.ProcessCanceledException;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
+import consulo.component.persist.StoragePathMacros;
 import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
+import consulo.ide.impl.idea.openapi.vcs.ui.VcsBalloonProblemNotifier;
+import consulo.ide.impl.idea.util.MessageBusUtil;
+import consulo.ide.impl.idea.util.NotNullFunction;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.vcs.ProgressManagerQueue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationType;
 import consulo.util.collection.MultiMap;
+import consulo.util.lang.Pair;
 import consulo.util.lang.ref.Ref;
+import consulo.versionControlSystem.*;
+import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.change.commited.RepositoryLocationGroup;
+import consulo.versionControlSystem.change.commited.VcsCommittedListsZipper;
+import consulo.versionControlSystem.update.UpdatedFiles;
+import consulo.versionControlSystem.versionBrowser.ChangeBrowserSettings;
+import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -65,6 +63,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 /**
  * @author yole
@@ -307,10 +306,10 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
             return;
           }
           if (myExceptions.size() > 0) {
-            myErrorConsumer.consume(myExceptions);
+            myErrorConsumer.accept(myExceptions);
           }
           else if (!myDisposed) {
-            myConsumer.consume(new ArrayList<CommittedChangeList>(myResult));
+            myConsumer.accept(new ArrayList<CommittedChangeList>(myResult));
           }
         }
       }, IdeaModalityState.NON_MODAL);
@@ -405,7 +404,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
         ApplicationManager.getApplication().invokeLater(new Runnable() {
           @Override
           public void run() {
-            continuation.consume(success.get());
+            continuation.accept(success.get());
           }
         }, myProject.getDisposed());
       }
@@ -426,7 +425,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
     myCachesHolder.iterateAllCaches(new NotNullFunction<ChangesCacheFile, Boolean>() {
       @Override
       @Nonnull
-      public Boolean fun(final ChangesCacheFile changesCacheFile) {
+      public Boolean apply(final ChangesCacheFile changesCacheFile) {
         try {
           if (changesCacheFile.isEmpty() == emptiness) {
             resultRef.set(true);
@@ -525,7 +524,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
   private void fireChangesLoaded(final RepositoryLocation location, final List<CommittedChangeList> changes) {
     MessageBusUtil.invokeLaterIfNeededOnSyncPublisher(myProject, CommittedChangesListener.class, new Consumer<CommittedChangesListener>() {
       @Override
-      public void consume(CommittedChangesListener listener) {
+      public void accept(CommittedChangesListener listener) {
         listener.changesLoaded(location, changes);
       }
     });
@@ -534,7 +533,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
   private void fireIncomingReloaded() {
     MessageBusUtil.invokeLaterIfNeededOnSyncPublisher(myProject, CommittedChangesListener.class, new Consumer<CommittedChangesListener>() {
       @Override
-      public void consume(CommittedChangesListener listener) {
+      public void accept(CommittedChangesListener listener) {
         listener.incomingChangesUpdated(Collections.<CommittedChangeList>emptyList());
       }
     });
@@ -739,7 +738,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
       public void run() {
         final List<CommittedChangeList> list = loadIncomingChanges(inBackground);
         if (consumer != null) {
-          consumer.consume(new ArrayList<CommittedChangeList>(list));
+          consumer.accept(new ArrayList<CommittedChangeList>(list));
         }
       }
     };
@@ -755,7 +754,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
         continuation.run();
         MessageBusUtil.invokeLaterIfNeededOnSyncPublisher(myProject, CommittedChangesListener.class, new Consumer<CommittedChangesListener>() {
           @Override
-          public void consume(CommittedChangesListener listener) {
+          public void accept(CommittedChangesListener listener) {
             listener.changesCleared();
           }
         });
@@ -812,7 +811,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
     if (myPendingUpdateCount == 0) {
       notifyIncomingChangesUpdated(myNewIncomingChanges);
       if (incomingChangesConsumer != null) {
-        incomingChangesConsumer.consume(ContainerUtil.newArrayList(myNewIncomingChanges));
+        incomingChangesConsumer.accept(ContainerUtil.newArrayList(myNewIncomingChanges));
       }
       myNewIncomingChanges.clear();
     }

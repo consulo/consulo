@@ -26,7 +26,7 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.ui.ex.awt.table.TableView;
-import consulo.ide.impl.idea.util.Function;
+import java.util.function.Function;
 import consulo.ide.impl.idea.util.FunctionUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.ui.CollectionItemEditor;

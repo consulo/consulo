@@ -19,7 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.versionControlSystem.change.LocalChangeList;
-import consulo.ide.impl.idea.util.Consumer;
+import java.util.function.Consumer;
 import consulo.language.editor.ui.awt.EditorTextField;
 
 import javax.annotation.Nullable;

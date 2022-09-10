@@ -21,7 +21,6 @@ import consulo.application.util.SystemInfo;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.change.Change;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.PathUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.indexing.StorageException;
@@ -46,6 +45,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import static consulo.ide.impl.idea.util.containers.ContainerUtil.newTroveSet;
 import static consulo.ide.impl.idea.vcs.log.data.index.VcsLogPersistentIndex.getVersion;
@@ -176,7 +176,7 @@ public class VcsLogPathsIndex extends VcsLogFullDetailsIndex<Integer> {
           result.put(myPathsEnumerator.enumerate(changedPath), null);
         }
         catch (IOException e) {
-          myFatalErrorConsumer.consume(e);
+          myFatalErrorConsumer.accept(e);
         }
       });
       moves.forEach(renamedPaths -> {
@@ -188,7 +188,7 @@ public class VcsLogPathsIndex extends VcsLogFullDetailsIndex<Integer> {
           result.put(afterId, beforeId);
         }
         catch (IOException e) {
-          myFatalErrorConsumer.consume(e);
+          myFatalErrorConsumer.accept(e);
         }
       });
 

@@ -35,7 +35,6 @@ import consulo.ide.impl.idea.ui.SmartExpander;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.usage.UsageViewBundle;
 import consulo.ui.ex.awt.EditSourceOnDoubleClickHandler;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.application.AllIcons;
 import consulo.application.CommonBundle;
@@ -91,6 +90,7 @@ import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
+import java.util.function.Function;
 
 public class DependenciesPanel extends JPanel implements Disposable, DataProvider {
   private final Map<PsiFile, Set<PsiFile>> myDependencies;
@@ -806,18 +806,10 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
     public void actionPerformed(final AnActionEvent e) {
       @NonNls final String delim = "&nbsp;-&gt;&nbsp;";
       final StringBuffer buf = new StringBuffer();
-      processDependencies(getSelectedScope(myLeftTree), getSelectedScope(myRightTree), new Processor<List<PsiFile>>() {
-        @Override
-        public boolean process(final List<PsiFile> path) {
-          if (buf.length() > 0) buf.append("<br>");
-          buf.append(StringUtil.join(path, new Function<PsiFile, String>() {
-            @Override
-            public String fun(final PsiFile psiFile) {
-              return psiFile.getName();
-            }
-          }, delim));
-          return true;
-        }
+      processDependencies(getSelectedScope(myLeftTree), getSelectedScope(myRightTree), path -> {
+        if (buf.length() > 0) buf.append("<br>");
+        buf.append(StringUtil.join(path, psiFile -> psiFile.getName(), delim));
+        return true;
       });
       final JEditorPane pane = new JEditorPane(UIUtil.HTML_MIME, XmlStringUtil.wrapInHtml(buf));
       pane.setForeground(JBColor.foreground());

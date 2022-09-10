@@ -16,18 +16,6 @@
 
 package consulo.ide.impl.idea.find.findUsages;
 
-import consulo.language.editor.hint.HintManager;
-import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
-import consulo.language.editor.ui.awt.HintUtil;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.progress.impl.ProgressManagerImpl;
-import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.Factory;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.ui.LightweightHint;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.AccessRule;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.IndexNotReadyException;
@@ -40,16 +28,25 @@ import consulo.application.util.function.Processor;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.codeEditor.Editor;
 import consulo.component.ProcessCanceledException;
-import consulo.component.extension.Extensions;
 import consulo.content.scope.SearchScope;
 import consulo.document.Document;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorLocation;
 import consulo.fileEditor.TextEditor;
 import consulo.find.*;
-import consulo.ide.impl.find.PsiElement2UsageTargetAdapter;
 import consulo.find.ui.AbstractFindUsagesDialog;
+import consulo.ide.impl.find.PsiElement2UsageTargetAdapter;
+import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
+import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.ide.impl.idea.openapi.progress.impl.ProgressManagerImpl;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.ui.LightweightHint;
+import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.language.psi.IdePsiManagerImpl;
+import consulo.language.editor.hint.HintManager;
+import consulo.language.editor.ui.awt.HintUtil;
 import consulo.language.psi.*;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.scope.LocalSearchScope;
@@ -66,6 +63,7 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.content.Content;
 import consulo.usage.*;
 import consulo.util.dataholder.Key;
@@ -78,6 +76,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Supplier;
 
 /**
  * see {@link consulo.ide.impl.idea.find.impl.FindManagerImpl#getFindUsagesManager()}
@@ -437,7 +436,7 @@ public class FindUsagesManager {
     PsiElement2UsageTargetAdapter[] primaryTargets = convertToUsageTargets(Arrays.asList(primaryElements), findUsagesOptions);
     PsiElement2UsageTargetAdapter[] secondaryTargets = convertToUsageTargets(Arrays.asList(secondaryElements), findUsagesOptions);
     PsiElement2UsageTargetAdapter[] targets = ArrayUtil.mergeArrays(primaryTargets, secondaryTargets);
-    Factory<UsageSearcher> factory = () -> createUsageSearcher(primaryTargets, secondaryTargets, handler, findUsagesOptions, null);
+    Supplier<UsageSearcher> factory = () -> createUsageSearcher(primaryTargets, secondaryTargets, handler, findUsagesOptions, null);
     UsageView usageView = myAnotherManager.searchAndShowUsages(targets, factory, !toSkipUsagePanelWhenOneUsage, true,
                                                                createPresentation(primaryElements[0], findUsagesOptions, shouldOpenInNewTab()), null);
     myHistory.add(targets[0]);

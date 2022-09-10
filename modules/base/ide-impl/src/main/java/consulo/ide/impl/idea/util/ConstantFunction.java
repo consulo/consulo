@@ -29,7 +29,7 @@ public class ConstantFunction<Param, Result> implements NotNullFunction<Param, R
 
   @Nonnull
   @Override
-  public Result fun(Param param) {
+  public Result apply(Param param) {
     return value;
   }
 }

@@ -15,9 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.externalSystem.service.ui;
 
-import consulo.language.editor.completion.CompletionResultSet;
 import consulo.application.AllIcons;
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.FoldingModel;
@@ -25,40 +23,35 @@ import consulo.externalSystem.ExternalSystemManager;
 import consulo.externalSystem.ExternalSystemUiAware;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.project.ExternalProjectPojo;
+import consulo.externalSystem.setting.AbstractExternalSystemLocalSettings;
+import consulo.externalSystem.util.ExternalSystemApiUtil;
+import consulo.fileChooser.FileChooser;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.externalSystem.service.task.ui.ExternalSystemNode;
 import consulo.ide.impl.idea.openapi.externalSystem.service.task.ui.ExternalSystemTasksTree;
 import consulo.ide.impl.idea.openapi.externalSystem.service.task.ui.ExternalSystemTasksTreeModel;
-import consulo.externalSystem.setting.AbstractExternalSystemLocalSettings;
-import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemBundle;
 import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemUiUtil;
-import consulo.fileChooser.FileChooserDescriptor;
-import consulo.project.Project;
-import consulo.ui.ex.awt.ComponentWithBrowseButton;
-import consulo.ui.ex.awt.FixedSizeButton;
-import consulo.ui.ex.popup.JBPopup;
-import consulo.ide.impl.ui.impl.PopupChooserBuilder;
-import consulo.util.lang.ref.Ref;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.editor.ui.awt.EditorTextField;
-import consulo.ui.ex.awt.IdeBorderFactory;
-import consulo.ui.ex.awt.TextAccessor;
-import consulo.ui.ex.awt.tree.Tree;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.language.editor.ui.awt.TextFieldCompletionProvider;
-import consulo.language.editor.ui.awt.TextFieldCompletionProviderDumbAware;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
-import consulo.ui.ex.awt.GridBag;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ide.impl.ui.impl.PopupChooserBuilder;
+import consulo.language.editor.completion.CompletionResultSet;
+import consulo.language.editor.ui.awt.EditorTextField;
+import consulo.language.editor.ui.awt.TextFieldCompletionProvider;
+import consulo.language.editor.ui.awt.TextFieldCompletionProviderDumbAware;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.fileChooser.FileChooser;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.tree.Tree;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.popup.JBPopup;
+import consulo.util.lang.ref.Ref;
+import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
-
 import javax.swing.*;
 import javax.swing.tree.TreePath;
 import java.awt.*;
@@ -195,12 +188,9 @@ public class ExternalProjectPathField extends ComponentWithBrowseButton<External
         result.stopHere();
       }
     };
-    EditorTextField result = provider.createEditor(project, false, new Consumer<Editor>() {
-      @Override
-      public void consume(Editor editor) {
-        collapseIfPossible(editor, externalSystemId, project);
-        editor.getSettings().setShowIntentionBulb(false);
-      }
+    EditorTextField result = provider.createEditor(project, false, editor -> {
+      collapseIfPossible(editor, externalSystemId, project);
+      editor.getSettings().setShowIntentionBulb(false);
     });
     result.setBorder(UIUtil.getTextFieldBorder());
     result.setOneLineMode(true);

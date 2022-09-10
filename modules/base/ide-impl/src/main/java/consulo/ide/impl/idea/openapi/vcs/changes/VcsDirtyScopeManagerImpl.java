@@ -20,22 +20,21 @@ import consulo.application.ReadAction;
 import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.versionControlSystem.AbstractVcs;
-import consulo.versionControlSystem.FilePath;
-import consulo.versionControlSystem.ProjectLevelVcsManager;
-import consulo.versionControlSystem.VcsDirectoryMapping;
 import consulo.ide.impl.idea.openapi.vcs.impl.DefaultVcsRootPolicy;
 import consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.versionControlSystem.change.ChangeListManager;
-import consulo.versionControlSystem.util.VcsUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.reflect.ReflectionUtil;
+import consulo.versionControlSystem.AbstractVcs;
+import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.ProjectLevelVcsManager;
+import consulo.versionControlSystem.VcsDirectoryMapping;
+import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.VcsDirtyScopeManager;
 import consulo.versionControlSystem.change.VcsInvalidated;
+import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -176,12 +175,7 @@ public class VcsDirtyScopeManagerImpl extends VcsDirtyScopeManager implements Di
   @Nonnull
   private static Collection<FilePath> toFilePaths(@Nullable Collection<VirtualFile> files) {
     if (files == null) return Collections.emptyList();
-    return ContainerUtil.map(files, new Function<VirtualFile, FilePath>() {
-      @Override
-      public FilePath fun(VirtualFile virtualFile) {
-        return VcsUtil.getFilePath(virtualFile);
-      }
-    });
+    return ContainerUtil.map(files, virtualFile -> VcsUtil.getFilePath(virtualFile));
   }
 
   @Override
@@ -289,17 +283,7 @@ public class VcsDirtyScopeManagerImpl extends VcsDirtyScopeManager implements Di
 
   @Nonnull
   private static String toString(@Nonnull final MultiMap<AbstractVcs, FilePath> filesByVcs) {
-    return StringUtil.join(filesByVcs.keySet(), new Function<AbstractVcs, String>() {
-      @Override
-      public String fun(@Nonnull AbstractVcs vcs) {
-        return vcs.getName() + ": " + StringUtil.join(filesByVcs.get(vcs), new Function<FilePath, String>() {
-          @Override
-          public String fun(@Nonnull FilePath path) {
-            return path.getPath();
-          }
-        }, "\n");
-      }
-    }, "\n");
+    return StringUtil.join(filesByVcs.keySet(), vcs -> vcs.getName() + ": " + StringUtil.join(filesByVcs.get(vcs), FilePath::getPath, "\n"), "\n");
   }
 
   @Nullable

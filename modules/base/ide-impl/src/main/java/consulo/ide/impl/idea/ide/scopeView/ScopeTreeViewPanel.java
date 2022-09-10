@@ -34,7 +34,6 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.IdeBundle;
 import consulo.ide.IdeView;
-import consulo.language.editor.refactoring.ui.CopyPasteDelegator;
 import consulo.ide.impl.idea.ide.dnd.aware.DnDAwareTree;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPaneImpl;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewTree;
@@ -46,10 +45,10 @@ import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListAdapter;
 import consulo.ide.impl.idea.packageDependencies.DefaultScopesProvider;
 import consulo.ide.impl.idea.packageDependencies.DependencyValidationManager;
 import consulo.ide.impl.idea.packageDependencies.ui.*;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.util.DirectoryChooserUtil;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
+import consulo.language.editor.refactoring.ui.CopyPasteDelegator;
 import consulo.language.editor.util.EditorHelper;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.editor.wolfAnalyzer.ProblemListener;
@@ -111,6 +110,7 @@ import java.awt.event.KeyEvent;
 import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * User: anna
@@ -916,7 +916,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
     queueUpdate(file, new Function<PsiFile, DefaultMutableTreeNode>() {
       @Override
       @Nullable
-      public DefaultMutableTreeNode fun(final PsiFile psiFile) {
+      public DefaultMutableTreeNode apply(final PsiFile psiFile) {
         return myBuilder.addFileNode(psiFile);
       }
     }, scopeName);
@@ -926,7 +926,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
     queueUpdate(file, new Function<PsiFile, DefaultMutableTreeNode>() {
       @Override
       @Nullable
-      public DefaultMutableTreeNode fun(final PsiFile psiFile) {
+      public DefaultMutableTreeNode apply(final PsiFile psiFile) {
         return myBuilder.removeNode(psiFile, psiFile.getContainingDirectory());
       }
     }, scopeName);
@@ -944,7 +944,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
         if (myProject.isDisposed() || !fileToRefresh.isValid()) return;
         final PsiFile psiFile = PsiManager.getInstance(myProject).findFile(fileToRefresh);
         if (psiFile != null) {
-          reload(rootToReloadGetter.fun(psiFile));
+          reload(rootToReloadGetter.apply(psiFile));
         }
       }
 

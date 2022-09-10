@@ -72,7 +72,7 @@ class ShowDiffFromAnnotation extends DumbAwareAction implements UpToDateLineNumb
   }
 
   @Override
-  public void consume(Integer integer) {
+  public void accept(Integer integer) {
     currentLine = integer;
   }
 

@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.util.continuation;
 
-import consulo.ide.impl.idea.util.Consumer;
+import java.util.function.Consumer;
 
 /**
  * @author irengrig
@@ -28,12 +28,7 @@ public class ContinuationFinalTasksInserter {
 
   public ContinuationFinalTasksInserter(ContinuationContext context) {
     myContext = context;
-    myPatcher = new Consumer<TaskDescriptor>() {
-      @Override
-      public void consume(TaskDescriptor taskDescriptor) {
-        taskDescriptor.setHaveMagicCure(true);
-      }
-    };
+    myPatcher = taskDescriptor -> taskDescriptor.setHaveMagicCure(true);
   }
 
   public void allNextAreFinal() {

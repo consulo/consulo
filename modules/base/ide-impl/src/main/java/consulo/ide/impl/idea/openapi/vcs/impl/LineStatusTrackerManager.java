@@ -41,7 +41,7 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.versionControlSystem.VcsApplicationSettings;
 import consulo.ide.impl.idea.openapi.vcs.ex.LineStatusTracker;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
-import consulo.ide.impl.idea.util.Consumer;
+import java.util.function.Consumer;
 import consulo.ide.impl.idea.util.concurrency.QueueProcessorRemovePartner;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.file.light.LightVirtualFile;

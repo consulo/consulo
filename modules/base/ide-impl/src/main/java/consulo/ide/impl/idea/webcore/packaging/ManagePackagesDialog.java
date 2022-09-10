@@ -465,7 +465,7 @@ public class ManagePackagesDialog extends DialogWrapper {
         if (myVersionCheckBox.isEnabled()) {
           myController.fetchPackageVersions(packageName, new CatchingConsumer<>() {
             @Override
-            public void consume(final List<String> releases) {
+            public void accept(final List<String> releases) {
               ApplicationManager.getApplication().invokeLater(() -> {
                 if (myPackages.getSelectedValue() == pyPackage) {
                   myVersionComboBox.removeAllItems();
@@ -477,7 +477,7 @@ public class ManagePackagesDialog extends DialogWrapper {
             }
 
             @Override
-            public void consume(Exception e) {
+            public void accept(Exception e) {
               LOG.info("Error retrieving releases", e);
             }
           });
@@ -486,7 +486,7 @@ public class ManagePackagesDialog extends DialogWrapper {
 
         myController.fetchPackageDetails(packageName, new CatchingConsumer<String, Exception>() {
           @Override
-          public void consume(final @Nls String details) {
+          public void accept(final @Nls String details) {
             UIUtil.invokeLaterIfNeeded(() -> {
               if (myPackages.getSelectedValue() == pyPackage) {
                 myDescriptionTextArea.setText(details);
@@ -498,7 +498,7 @@ public class ManagePackagesDialog extends DialogWrapper {
           }
 
           @Override
-          public void consume(Exception exception) {
+          public void accept(Exception exception) {
             UIUtil.invokeLaterIfNeeded(() -> myDescriptionTextArea.setText(IdeBundle.message("no.information.available")));
             LOG.info("Error retrieving package details", exception);
           }

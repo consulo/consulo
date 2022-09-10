@@ -24,35 +24,34 @@ package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.dataContext.DataSink;
-import consulo.dataContext.TypeSafeDataProvider;
-import consulo.disposer.Disposable;
-import consulo.logging.Logger;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
-import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
+import consulo.application.util.function.AsynchConsumer;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.TypeSafeDataProvider;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ui.ex.action.*;
-import consulo.util.dataholder.Key;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.vcs.*;
+import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
 import consulo.ide.impl.idea.openapi.vcs.changes.BackgroundFromStartOption;
+import consulo.ide.impl.idea.util.BufferedListConsumer;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.util.WaitForProgressToShow;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.FilterComponent;
+import consulo.ui.ex.awt.Messages;
+import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.change.commited.*;
 import consulo.versionControlSystem.versionBrowser.ChangeBrowserSettings;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.awt.FilterComponent;
-import consulo.application.util.function.AsynchConsumer;
-import consulo.ide.impl.idea.util.BufferedListConsumer;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.project.util.WaitForProgressToShow;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -61,6 +60,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvider, Disposable {
   private static final Logger LOG = Logger.getInstance(CommittedChangesPanel.class);
@@ -77,8 +77,11 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
   private volatile boolean myInLoad;
   private Consumer<String> myIfNotCachedReloader;
 
-  public CommittedChangesPanel(Project project, final CommittedChangesProvider provider, final ChangeBrowserSettings settings,
-                               @Nullable final RepositoryLocation location, @javax.annotation.Nullable ActionGroup extraActions) {
+  public CommittedChangesPanel(Project project,
+                               final CommittedChangesProvider provider,
+                               final ChangeBrowserSettings settings,
+                               @Nullable final RepositoryLocation location,
+                               @javax.annotation.Nullable ActionGroup extraActions) {
     super(new BorderLayout());
     mySettings = settings;
     myProject = project;
@@ -94,10 +97,9 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
     JPanel toolbarPanel = new JPanel();
     toolbarPanel.setLayout(new BoxLayout(toolbarPanel, BoxLayout.X_AXIS));
 
-    ActionGroup group = (ActionGroup) ActionManager.getInstance().getAction("CommittedChangesToolbar");
+    ActionGroup group = (ActionGroup)ActionManager.getInstance().getAction("CommittedChangesToolbar");
 
-    ActionToolbar toolBar = myBrowser.createGroupFilterToolbar(project, group, extraActions,
-                                                               auxiliary != null ? auxiliary.getToolbarActions() : Collections.<AnAction>emptyList());
+    ActionToolbar toolBar = myBrowser.createGroupFilterToolbar(project, group, extraActions, auxiliary != null ? auxiliary.getToolbarActions() : Collections.<AnAction>emptyList());
     toolbarPanel.add(toolBar.getComponent());
     toolbarPanel.add(Box.createHorizontalGlue());
     toolbarPanel.add(myFilterComponent);
@@ -108,19 +110,15 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
     if (auxiliary != null) {
       myShouldBeCalledOnDispose.add(auxiliary.getCalledOnViewDispose());
       myBrowser.setTableContextMenu(group, (auxiliary.getPopupActions() == null) ? Collections.<AnAction>emptyList() : auxiliary.getPopupActions());
-    } else {
+    }
+    else {
       myBrowser.setTableContextMenu(group, Collections.<AnAction>emptyList());
     }
-    
+
     final AnAction anAction = ActionManager.getInstance().getAction("CommittedChanges.Refresh");
     anAction.registerCustomShortcutSet(CommonShortcuts.getRerun(), this);
     myBrowser.addFilter(myFilterComponent);
-    myIfNotCachedReloader = myLocation == null ? null : new Consumer<String>() {
-      @Override
-      public void consume(String s) {
-        refreshChanges(false);
-      }
-    };
+    myIfNotCachedReloader = myLocation == null ? null : (Consumer<String>)s -> refreshChanges(false);
   }
 
   public RepositoryLocation getRepositoryLocation() {
@@ -134,7 +132,7 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
   public void setProvider(final CommittedChangesProvider provider) {
     if (myProvider != provider) {
       myProvider = provider;
-      mySettings = provider.createDefaultSettings(); 
+      mySettings = provider.createDefaultSettings();
     }
   }
 
@@ -153,7 +151,7 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
     myInLoad = true;
     myBrowser.setLoading(true);
     ProgressManager.getInstance().run(new Task.Backgroundable(myProject, "Loading changes", true, BackgroundFromStartOption.getInstance()) {
-      
+
       @Override
       public void run(@Nonnull final ProgressIndicator indicator) {
         try {
@@ -172,13 +170,14 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
               }.callMe();
             }
           };
-          final BufferedListConsumer<CommittedChangeList> bufferedListConsumer = new BufferedListConsumer<CommittedChangeList>(30, appender,-1);
+          final BufferedListConsumer<CommittedChangeList> bufferedListConsumer = new BufferedListConsumer<CommittedChangeList>(30, appender, -1);
 
           myProvider.loadCommittedChanges(mySettings, myLocation, myMaxCount, new AsynchConsumer<CommittedChangeList>() {
             @Override
             public void finished() {
               bufferedListConsumer.flush();
             }
+
             @Override
             public void accept(CommittedChangeList committedChangeList) {
               if (myDisposed) {
@@ -197,7 +196,8 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
               Messages.showErrorDialog((Project)myProject, "Error refreshing view: " + StringUtil.join(e.getMessages(), "\n"), "Committed Changes");
             }
           }, null, (Project)myProject);
-        } finally {
+        }
+        finally {
           myInLoad = false;
           myBrowser.setLoading(false);
         }
@@ -222,30 +222,16 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
 
   private void refreshChangesFromCache(final boolean cacheOnly) {
     final CommittedChangesCache cache = CommittedChangesCache.getInstance(myProject);
-    cache.hasCachesForAnyRoot(new Consumer<Boolean>() {
-      @Override
-      public void consume(final Boolean notEmpty) {
-        if (! notEmpty) {
-          if (cacheOnly) {
-            myBrowser.getEmptyText().setText(VcsBundle.message("committed.changes.not.loaded.message"));
-            return;
-          }
-          if (!CacheSettingsDialog.showSettingsDialog(myProject)) return;
+    cache.hasCachesForAnyRoot(notEmpty -> {
+      if (!notEmpty) {
+        if (cacheOnly) {
+          myBrowser.getEmptyText().setText(VcsBundle.message("committed.changes.not.loaded.message"));
+          return;
         }
-        cache.getProjectChangesAsync(mySettings, myMaxCount, cacheOnly,
-                                     new Consumer<List<CommittedChangeList>>() {
-                                       @Override
-                                       public void consume(final List<CommittedChangeList> committedChangeLists) {
-                                         updateFilteredModel(committedChangeLists, false);
-                                         }
-                                       },
-                                     new Consumer<List<VcsException>>() {
-                                       @Override
-                                       public void consume(final List<VcsException> vcsExceptions) {
-                                         AbstractVcsHelper.getInstance(myProject).showErrors(vcsExceptions, "Error refreshing VCS history");
-                                       }
-                                     });
+        if (!CacheSettingsDialog.showSettingsDialog(myProject)) return;
       }
+      cache.getProjectChangesAsync(mySettings, myMaxCount, cacheOnly, committedChangeLists -> updateFilteredModel(committedChangeLists, false),
+                                   vcsExceptions -> AbstractVcsHelper.getInstance(myProject).showErrors(vcsExceptions, "Error refreshing VCS history"));
     });
   }
 
@@ -254,8 +240,8 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
 
     FilterHelper(final String filterString) {
       myParts = filterString.split(" ");
-      for(int i = 0; i < myParts.length; ++ i) {
-        myParts [i] = myParts [i].toLowerCase();
+      for (int i = 0; i < myParts.length; ++i) {
+        myParts[i] = myParts[i].toLowerCase();
       }
     }
 
@@ -264,7 +250,7 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
     }
 
     private static boolean changeListMatches(@Nonnull final CommittedChangeList changeList, final String[] filterWords) {
-      for(String word: filterWords) {
+      for (String word : filterWords) {
         final String comment = changeList.getComment();
         final String committer = changeList.getCommitterName();
         if ((comment != null && comment.toLowerCase().indexOf(word) >= 0) ||
@@ -284,7 +270,8 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
     final String emptyText;
     if (reset) {
       emptyText = VcsBundle.message("committed.changes.not.loaded.message");
-    } else {
+    }
+    else {
       emptyText = VcsBundle.message("committed.changes.empty.message");
     }
     myBrowser.getEmptyText().setText(emptyText);
@@ -304,11 +291,12 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
   public void calcData(Key<?> key, DataSink sink) {
     if (VcsDataKeys.REMOTE_HISTORY_CHANGED_LISTENER == key) {
       sink.put(VcsDataKeys.REMOTE_HISTORY_CHANGED_LISTENER, myIfNotCachedReloader);
-    } else if (VcsDataKeys.REMOTE_HISTORY_LOCATION.equals(key)) {
+    }
+    else if (VcsDataKeys.REMOTE_HISTORY_LOCATION.equals(key)) {
       sink.put(VcsDataKeys.REMOTE_HISTORY_LOCATION, myLocation);
     }
     //if (key.equals(VcsDataKeys.CHANGES) || key.equals(VcsDataKeys.CHANGE_LISTS)) {
-      myBrowser.calcData(key, sink);
+    myBrowser.calcData(key, sink);
     //}
   }
 
@@ -338,27 +326,34 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
         changeListener.stateChanged(new ChangeEvent(this));
       }
     }
+
     @Override
     public JComponent getFilterUI() {
       return null;
     }
+
     @Override
     public void setFilterBase(List<CommittedChangeList> changeLists) {
     }
+
     @Override
     public void addChangeListener(ChangeListener listener) {
       myList.add(listener);
     }
+
     @Override
     public void removeChangeListener(ChangeListener listener) {
       myList.remove(listener);
     }
+
     @Override
     public void resetFilterBase() {
     }
+
     @Override
     public void appendFilterBase(List<CommittedChangeList> changeLists) {
     }
+
     @Override
     @Nonnull
     public List<CommittedChangeList> filterChangeLists(List<CommittedChangeList> changeLists) {
@@ -373,21 +368,22 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
     }
   }
 
-  public void passCachedListsToListener(final VcsConfigurationChangeListener.DetailedNotification notification,
-                                        final Project project, final VirtualFile root) {
+  public void passCachedListsToListener(final VcsConfigurationChangeListener.DetailedNotification notification, final Project project, final VirtualFile root) {
     final LinkedList<CommittedChangeList> resultList = new LinkedList<CommittedChangeList>();
     myBrowser.reportLoadedLists(new CommittedChangeListsListener() {
       @Override
       public void onBeforeStartReport() {
       }
+
       @Override
       public boolean report(CommittedChangeList list) {
         resultList.add(list);
         return false;
       }
+
       @Override
       public void onAfterEndReport() {
-        if (! resultList.isEmpty()) {
+        if (!resultList.isEmpty()) {
           notification.execute(project, root, resultList);
         }
       }

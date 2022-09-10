@@ -25,7 +25,7 @@ import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.FileContentUtil;
-import consulo.ide.impl.idea.util.Function;
+import java.util.function.Function;
 import consulo.ide.impl.idea.util.NullableFunction;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.intelliLang.inject.InjectorUtils;
@@ -304,12 +304,9 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
     }
     main:
     for (BaseInjection other : importingInjections) {
-      final List<BaseInjection> matchingInjections = ContainerUtil.concat(other.getInjectionPlaces(), new Function<InjectionPlace, Collection<? extends BaseInjection>>() {
-        @Override
-        public Collection<? extends BaseInjection> fun(final InjectionPlace o) {
-          final Collection<BaseInjection> collection = placeMap.get(o);
-          return collection == null ? Collections.<BaseInjection>emptyList() : collection;
-        }
+      final List<BaseInjection> matchingInjections = ContainerUtil.concat(other.getInjectionPlaces(), o -> {
+        final Collection<BaseInjection> collection = placeMap.get(o);
+        return collection == null ? Collections.<BaseInjection>emptyList() : collection;
       });
       if (matchingInjections.isEmpty()) {
         newInjections.add(other);
@@ -441,12 +438,7 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
         actualProcessor.process(add, remove);
       }
     };
-    final List<PsiFile> psiFiles = ContainerUtil.mapNotNull(psiElementsToRemove, new NullableFunction<PsiElement, PsiFile>() {
-      @Override
-      public PsiFile fun(final PsiElement psiAnnotation) {
-        return psiAnnotation instanceof PsiCompiledElement ? null : psiAnnotation.getContainingFile();
-      }
-    });
+    final List<PsiFile> psiFiles = ContainerUtil.mapNotNull(psiElementsToRemove, psiAnnotation -> psiAnnotation instanceof PsiCompiledElement ? null : psiAnnotation.getContainingFile());
     new WriteCommandAction.Simple(project, "Language Injection Configuration Update", PsiUtilCore.toPsiFileArray(psiFiles)) {
       @Override
       public void run() {

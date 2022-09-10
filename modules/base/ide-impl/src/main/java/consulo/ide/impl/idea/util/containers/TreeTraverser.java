@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.util.containers;
 import consulo.util.collection.JBIterator;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.Functions;
 import consulo.util.collection.JBIterable;
 import consulo.util.collection.Maps;
@@ -28,6 +27,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayDeque;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * A pruned version of com.google.common.collect.TreeTraverser.
@@ -66,7 +66,7 @@ public class TreeTraverser<T> {
    */
   @Nonnull
   public Iterable<? extends T> children(@Nonnull T root) {
-    Iterable<? extends T> result = treeStructure.fun(root);
+    Iterable<? extends T> result = treeStructure.apply(root);
     return result != null ? result : JBIterable.<T>empty();
   }
 

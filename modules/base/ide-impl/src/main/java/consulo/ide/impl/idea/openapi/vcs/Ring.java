@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.openapi.vcs;
 
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.Function;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -135,12 +134,7 @@ public abstract class Ring<T extends Comparable<T>> {
   @Override
   public String toString() {
     return "Ring{" +
-           "myFreeNumbers=" + StringUtil.join(myFreeNumbers, new Function<T, String>() {
-      @Override
-      public String fun(T t) {
-        return t.toString();
-      }
-    }, ",") +
+           "myFreeNumbers=" + StringUtil.join(myFreeNumbers, t -> t.toString(), ",") +
            ", myFirst=" + myFirst +
            ", myNextAvailable=" + myNextAvailable +
            '}';

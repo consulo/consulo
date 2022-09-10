@@ -15,14 +15,14 @@
  */
 package consulo.ide.impl.idea.openapi.vfs.impl;
 
-import consulo.util.lang.function.Condition;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
+import consulo.util.lang.function.Condition;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * Map of relativePath => ArchiveHandler.EntryInfo optimised for memory:
@@ -72,16 +72,14 @@ class ZipEntryMap extends AbstractMap<String, ArchiveHandler.EntryInfo> {
     }
 
     ArchiveHandler.EntryInfo old = put(relativePath, value, entries);
-    if (old == null){
+    if (old == null) {
       size++;
     }
     return old;
   }
 
   @Nullable
-  private static ArchiveHandler.EntryInfo put(@Nonnull String relativePath,
-                                              @Nonnull ArchiveHandler.EntryInfo value,
-                                              @Nonnull ArchiveHandler.EntryInfo[] entries) {
+  private static ArchiveHandler.EntryInfo put(@Nonnull String relativePath, @Nonnull ArchiveHandler.EntryInfo value, @Nonnull ArchiveHandler.EntryInfo[] entries) {
     int index = index(relativePath, entries);
     ArchiveHandler.EntryInfo entry;
     int i = index;
@@ -109,7 +107,7 @@ class ZipEntryMap extends AbstractMap<String, ArchiveHandler.EntryInfo> {
       endIndex -= shortName.length();
       if (e.parent != null && e.parent.shortName.length() != 0 && endIndex != 0) {
         // match "/"
-        if (relativePath.charAt(endIndex-1) == '/') {
+        if (relativePath.charAt(endIndex - 1) == '/') {
           endIndex -= 1;
         }
         else {
@@ -118,12 +116,12 @@ class ZipEntryMap extends AbstractMap<String, ArchiveHandler.EntryInfo> {
       }
 
     }
-    return endIndex==0;
+    return endIndex == 0;
   }
 
   @Nonnull
   private ArchiveHandler.EntryInfo[] rehash() {
-    ArchiveHandler.EntryInfo[] newEntries = new ArchiveHandler.EntryInfo[entries.length < 1000 ? entries.length  * 2 : entries.length * 3/2];
+    ArchiveHandler.EntryInfo[] newEntries = new ArchiveHandler.EntryInfo[entries.length < 1000 ? entries.length * 2 : entries.length * 3 / 2];
     for (ArchiveHandler.EntryInfo entry : entries) {
       if (entry != null) {
         put(getRelativePath(entry), entry, newEntries);
@@ -146,7 +144,7 @@ class ZipEntryMap extends AbstractMap<String, ArchiveHandler.EntryInfo> {
   }
 
   private static void appendReversed(@Nonnull StringBuilder builder, @Nonnull CharSequence sequence) {
-    for (int i=sequence.length()-1; i>=0 ;i--) {
+    for (int i = sequence.length() - 1; i >= 0; i--) {
       builder.append(sequence.charAt(i));
     }
   }
@@ -168,6 +166,7 @@ class ZipEntryMap extends AbstractMap<String, ArchiveHandler.EntryInfo> {
   }
 
   private EntrySet entrySet;
+
   @Nonnull
   @Override
   public EntrySet entrySet() {
@@ -189,12 +188,8 @@ class ZipEntryMap extends AbstractMap<String, ArchiveHandler.EntryInfo> {
     @Override
     public final Iterator<Entry<String, ArchiveHandler.EntryInfo>> iterator() {
       return ContainerUtil.mapIterator(ContainerUtil.iterate(entries, Condition.NOT_NULL).iterator(),
-                                       new Function<ArchiveHandler.EntryInfo, Entry<String, ArchiveHandler.EntryInfo>>() {
-                                         @Override
-                                         public Entry<String, ArchiveHandler.EntryInfo> fun(ArchiveHandler.EntryInfo entry) {
-                                           return new SimpleEntry<String, ArchiveHandler.EntryInfo>(getRelativePath(entry), entry);
-                                         }
-                                       });
+                                       (Function<ArchiveHandler.EntryInfo, Entry<String, ArchiveHandler.EntryInfo>>)entry -> new SimpleEntry<String, ArchiveHandler.EntryInfo>(getRelativePath(entry),
+                                                                                                                                                                               entry));
     }
 
     @Override

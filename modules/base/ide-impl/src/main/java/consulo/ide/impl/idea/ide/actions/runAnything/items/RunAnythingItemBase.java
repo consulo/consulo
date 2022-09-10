@@ -54,7 +54,7 @@ public class RunAnythingItemBase extends RunAnythingItem {
 
     SimpleColoredComponent textComponent = new SimpleColoredComponent();
     SpeedSearchUtil
-            .appendColoredFragmentForMatcher(StringUtil.notNullize(getCommand()), textComponent, REGULAR_ATTRIBUTES, RunAnythingGroup.RUN_ANYTHING_MATCHER_BUILDER.fun(pattern).build(), background,
+            .appendColoredFragmentForMatcher(StringUtil.notNullize(getCommand()), textComponent, REGULAR_ATTRIBUTES, RunAnythingGroup.RUN_ANYTHING_MATCHER_BUILDER.apply(pattern).build(), background,
                                              isSelected);
     component.add(textComponent, BorderLayout.WEST);
     textComponent.appendTextPadding(20);

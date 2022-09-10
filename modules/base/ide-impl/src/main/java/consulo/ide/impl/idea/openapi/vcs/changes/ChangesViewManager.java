@@ -22,6 +22,7 @@ import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;
 import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.util.NotNullLazyValue;
 import consulo.application.util.SystemInfo;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
@@ -32,8 +33,6 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.diff.util.DiffUtil;
-import consulo.ide.impl.idea.openapi.util.Factory;
-import consulo.application.util.NotNullLazyValue;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.IgnoredSettingsAction;
 import consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelveChangesManager;
@@ -305,10 +304,10 @@ public class ChangesViewManager implements ChangesViewI, Disposable, PersistentS
   }
 
   @Nonnull
-  public static Factory<JComponent> createTextStatusFactory(final String text, final boolean isError) {
-    return new Factory<JComponent>() {
+  public static Supplier<JComponent> createTextStatusFactory(final String text, final boolean isError) {
+    return new Supplier<JComponent>() {
       @Override
-      public JComponent create() {
+      public JComponent get() {
         JLabel label = new JLabel(text);
         label.setForeground(isError ? JBColor.RED : UIUtil.getLabelForeground());
         return label;

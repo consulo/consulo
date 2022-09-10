@@ -37,7 +37,6 @@ import consulo.ui.ex.awt.JBUIScale;
 import consulo.ide.impl.idea.ui.speedSearch.ListWithFilter;
 import consulo.ide.impl.idea.ui.speedSearch.NameFilteringListModel;
 import consulo.ui.ex.awt.speedSearch.SpeedSearch;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
@@ -49,6 +48,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 import static consulo.ui.ex.awt.speedSearch.SpeedSearchSupply.ENTERED_PREFIX_PROPERTY_NAME;
 

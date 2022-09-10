@@ -16,7 +16,6 @@ import consulo.application.util.VolatileNotNullLazyValue;
 import consulo.util.io.CharsetToolkit;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.IconDeferrer;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
@@ -31,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 
 public abstract class ChooseFileEncodingAction extends ComboBoxAction {
   private final VirtualFile myVirtualFile;
@@ -58,7 +58,7 @@ public abstract class ChooseFileEncodingAction extends ComboBoxAction {
         @Override
         public void update(@Nonnull AnActionEvent e) {
           super.update(e);
-          String description = charsetFilter.fun(charset);
+          String description = charsetFilter.apply(charset);
           Image defer;
           if (virtualFile == null || virtualFile.isDirectory()) {
             defer = null;

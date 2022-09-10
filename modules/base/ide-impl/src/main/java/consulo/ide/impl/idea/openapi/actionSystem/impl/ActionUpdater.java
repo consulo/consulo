@@ -280,7 +280,7 @@ class ActionUpdater {
 
   private List<AnAction> getGroupChildren(ActionGroup group, UpdateStrategy strategy) {
     return myGroupChildren.computeIfAbsent(group, __ -> {
-      AnAction[] children = strategy.getChildren.fun(group);
+      AnAction[] children = strategy.getChildren.apply(group);
       int nullIndex = ArrayUtil.indexOf(children, null);
       if (nullIndex < 0) return Arrays.asList(children);
 
@@ -477,7 +477,7 @@ class ActionUpdater {
       return cached;
     }
 
-    Presentation presentation = strategy.update.fun(action);
+    Presentation presentation = strategy.update.apply(action);
     if (presentation != null) {
       myUpdatedPresentations.put(action, presentation);
     }

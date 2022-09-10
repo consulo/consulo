@@ -28,7 +28,7 @@ import consulo.application.util.mac.foundation.Foundation;
 import consulo.application.util.mac.foundation.ID;
 import consulo.ide.impl.idea.ui.mac.foundation.MacUtil;
 import consulo.ide.impl.idea.util.EventDispatcher;
-import consulo.ide.impl.idea.util.Function;
+import java.util.function.Function;
 import com.sun.jna.Callback;
 import com.sun.jna.Pointer;
 import consulo.eawt.wrapper.ApplicationWrapper;
@@ -172,14 +172,14 @@ public class MacMainFrameDecorator extends IdeFrameDecorator implements UISettin
 
   public static final Function<Object, Boolean> NAVBAR_GETTER = new Function<>() {
     @Override
-    public Boolean fun(Object o) {
+    public Boolean apply(Object o) {
       return UISettings.getInstance().SHOW_NAVIGATION_BAR;
     }
   };
 
   public static final Function<Object, Boolean> TOOLBAR_GETTER = new Function<>() {
     @Override
-    public Boolean fun(Object o) {
+    public Boolean apply(Object o) {
       return UISettings.getInstance().SHOW_MAIN_TOOLBAR;
     }
   };
@@ -196,7 +196,7 @@ public class MacMainFrameDecorator extends IdeFrameDecorator implements UISettin
     if (CURRENT_SETTER == null) {
       CURRENT_SETTER = navBar ? NAVBAR_SETTER : TOOLBAR_SETTER;
       CURRENT_GETTER = navBar ? NAVBAR_GETTER : TOOLBAR_GETTER;
-      SHOWN = CURRENT_GETTER.fun(null);
+      SHOWN = CURRENT_GETTER.apply(null);
     }
 
     UISettings.getInstance().addUISettingsListener(this, this);
@@ -332,7 +332,7 @@ public class MacMainFrameDecorator extends IdeFrameDecorator implements UISettin
   @Override
   public void uiSettingsChanged(final UISettings source) {
     if (CURRENT_GETTER != null) {
-      SHOWN = CURRENT_GETTER.fun(null);
+      SHOWN = CURRENT_GETTER.apply(null);
     }
   }
 

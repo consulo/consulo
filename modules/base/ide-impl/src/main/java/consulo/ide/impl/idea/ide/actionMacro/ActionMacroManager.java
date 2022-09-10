@@ -48,7 +48,6 @@ import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.NonOpaquePanel;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.ui.ex.awt.AnimatedIconComponent;
 import consulo.ide.impl.idea.util.ui.BaseButtonBehavior;
 import consulo.ui.ex.PositionTracker;
@@ -73,6 +72,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 
 /**
  * @author max
@@ -273,7 +273,7 @@ public class ActionMacroManager implements JDOMExternalizable, Disposable {
     }
 
     @Override
-    public void consume(MouseEvent mouseEvent) {
+    public void accept(MouseEvent mouseEvent) {
     }
 
     @Override

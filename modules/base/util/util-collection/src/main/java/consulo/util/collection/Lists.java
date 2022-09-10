@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Contract;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.ToIntFunction;
 
 import static consulo.util.collection.ContainerUtil.swapElements;
 
@@ -57,8 +58,11 @@ public final class Lists {
     return list == null ? List.of() : list;
   }
 
-  // Generalized Quick Sort. Does neither array.clone() nor list.toArray()
+  public static <T> void weightSort(List<T> list, final ToIntFunction<T> weighterFunc) {
+    quickSort(list, (o1, o2) -> weighterFunc.applyAsInt(o2) - weighterFunc.applyAsInt(o1));
+  }
 
+  // Generalized Quick Sort. Does neither array.clone() nor list.toArray()
   public static <T> void quickSort(@Nonnull List<T> list, @Nonnull Comparator<? super T> comparator) {
     quickSort(list, comparator, 0, list.size());
   }

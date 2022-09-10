@@ -46,7 +46,7 @@ import consulo.ui.ex.awt.LinkLabel;
 import consulo.ui.ex.awt.LinkListener;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
-import consulo.ide.impl.idea.util.Consumer;
+import java.util.function.Consumer;
 import consulo.util.lang.function.PairConsumer;
 import consulo.application.util.DateFormatUtil;
 import consulo.versionControlSystem.checkin.CheckinHandler;

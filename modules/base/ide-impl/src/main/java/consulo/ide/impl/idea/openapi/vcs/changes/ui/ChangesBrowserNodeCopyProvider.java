@@ -15,16 +15,15 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
-import consulo.ui.ex.CopyProvider;
 import consulo.dataContext.DataContext;
-import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ui.ex.CopyProvider;
+import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.ui.ex.awt.tree.TreeUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.tree.TreePath;
 import java.awt.datatransfer.StringSelection;
@@ -49,18 +48,14 @@ class ChangesBrowserNodeCopyProvider implements CopyProvider {
   }
 
   public void performCopy(@Nonnull DataContext dataContext) {
-    List<TreePath> paths = ContainerUtil.sorted(Arrays.asList(ObjectUtils.assertNotNull(myTree.getSelectionPaths())),
-                                                TreeUtil.getDisplayOrderComparator(myTree));
-    CopyPasteManager.getInstance().setContents(new StringSelection(StringUtil.join(paths, new Function<TreePath, String>() {
-      @Override
-      public String fun(TreePath path) {
-        Object node = path.getLastPathComponent();
-        if (node instanceof ChangesBrowserNode) {
-          return ((ChangesBrowserNode)node).getTextPresentation();
-        }
-        else {
-          return node.toString();
-        }
+    List<TreePath> paths = ContainerUtil.sorted(Arrays.asList(ObjectUtils.assertNotNull(myTree.getSelectionPaths())), TreeUtil.getDisplayOrderComparator(myTree));
+    CopyPasteManager.getInstance().setContents(new StringSelection(StringUtil.join(paths, path -> {
+      Object node = path.getLastPathComponent();
+      if (node instanceof ChangesBrowserNode) {
+        return ((ChangesBrowserNode)node).getTextPresentation();
+      }
+      else {
+        return node.toString();
       }
     }, "\n")));
   }

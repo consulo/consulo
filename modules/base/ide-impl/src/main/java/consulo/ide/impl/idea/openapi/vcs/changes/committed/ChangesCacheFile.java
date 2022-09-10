@@ -15,32 +15,32 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.vcs.FilePathImpl;
+import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl;
+import consulo.ide.impl.idea.openapi.vcs.diff.DiffProviderEx;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.util.lang.function.Condition;
 import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.vcs.*;
-import consulo.ide.impl.idea.openapi.vcs.changes.*;
+import consulo.util.lang.function.Condition;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.diff.DiffProvider;
-import consulo.ide.impl.idea.openapi.vcs.diff.DiffProviderEx;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.versionControlSystem.update.FileGroup;
 import consulo.versionControlSystem.update.UpdatedFiles;
 import consulo.versionControlSystem.versionBrowser.ChangeBrowserSettings;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.Function;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.virtualFileSystem.status.FileStatus;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.io.*;
 import java.util.*;
+import java.util.function.Function;
 
 import static consulo.ide.impl.idea.openapi.vcs.changes.committed.IncomingChangeState.State.*;
 
@@ -878,7 +878,7 @@ public class ChangesCacheFile {
             Pair<IncomingChangeListData, Change> key = Pair.create(data, change);
             Function<VcsRevisionNumber, ProcessingResult> revisionHandler = results.get(key).revisionDependentProcessing;
             if (revisionHandler != null) {
-              results.put(key, revisionHandler.fun(revisions.get(revisionDependentFiles.get(key))));
+              results.put(key, revisionHandler.apply(revisions.get(revisionDependentFiles.get(key))));
             }
           }
         }
@@ -973,7 +973,7 @@ public class ChangesCacheFile {
         else if (file != null) {
           return new ProcessingResult(file, new Function<VcsRevisionNumber, ProcessingResult>() {
             @Override
-            public ProcessingResult fun(VcsRevisionNumber revision) {
+            public ProcessingResult apply(VcsRevisionNumber revision) {
               if (revision != null) {
                 debug("Current revision is " + revision + ", changelist revision is " + afterRevision.getRevisionNumber());
                 //noinspection unchecked
@@ -1028,7 +1028,7 @@ public class ChangesCacheFile {
           final VirtualFile file = beforeRevision.getFile().getVirtualFile();
           return new ProcessingResult(file, new Function<VcsRevisionNumber, ProcessingResult>() {
             @Override
-            public ProcessingResult fun(VcsRevisionNumber currentRevision) {
+            public ProcessingResult apply(VcsRevisionNumber currentRevision) {
               if ((currentRevision != null) && (currentRevision.compareTo(beforeRevision.getRevisionNumber()) > 0)) {
                 // revived in newer revision - possibly was added file with same name
                 debug("File with same name was added after file deletion");

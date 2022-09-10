@@ -16,11 +16,11 @@
 package consulo.ide.impl.idea.openapi.vcs.update;
 
 import consulo.util.lang.Couple;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.versionControlSystem.update.FileGroup;
 import consulo.versionControlSystem.update.UpdatedFiles;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public class UpdateFilesHelper {
   private UpdateFilesHelper() {
@@ -69,7 +69,7 @@ public class UpdateFilesHelper {
 
   private static void iterateGroup(final FileGroup group, final Consumer<Couple<String>> callback) {
     for (FileGroup.UpdatedFile updatedFile : group.getUpdatedFiles()) {
-      callback.consume(Couple.of(updatedFile.getPath(), updatedFile.getVcsName()));
+      callback.accept(Couple.of(updatedFile.getPath(), updatedFile.getVcsName()));
     }
   }
 

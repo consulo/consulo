@@ -3,44 +3,43 @@
 package consulo.ide.impl.idea.openapi.vfs.encoding;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.impl.internal.ApplicationNamesInfo;
+import consulo.codeEditor.Editor;
+import consulo.configurable.ConfigurationException;
 import consulo.configurable.ProjectConfigurable;
 import consulo.configurable.StandardConfigurableIds;
-import consulo.ide.IdeBundle;
-import consulo.language.LangBundle;
-import consulo.virtualFileSystem.encoding.EncodingProjectManager;
-import consulo.virtualFileSystem.util.PerFileMappingsEx;
-import consulo.virtualFileSystem.encoding.EncodingManager;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.document.Document;
-import consulo.codeEditor.Editor;
 import consulo.document.FileDocumentManager;
-import consulo.configurable.ConfigurationException;
-import consulo.project.Project;
-import consulo.ui.ex.awt.ComboBox;
+import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.util.lang.Trinity;
-import consulo.util.io.CharsetToolkit;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.ColoredTextContainer;
-import consulo.ui.ex.awt.EnumComboBoxModel;
-import consulo.ui.ex.awt.HyperlinkLabel;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.ide.impl.idea.util.ui.tree.PerFileConfigurableBase;
+import consulo.language.LangBundle;
+import consulo.project.Project;
+import consulo.ui.ex.ColoredTextContainer;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.awt.ComboBox;
+import consulo.ui.ex.awt.EnumComboBoxModel;
+import consulo.ui.ex.awt.HyperlinkLabel;
 import consulo.util.dataholder.Key;
+import consulo.util.io.CharsetToolkit;
+import consulo.util.lang.Trinity;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.encoding.EncodingManager;
+import consulo.virtualFileSystem.encoding.EncodingProjectManager;
+import consulo.virtualFileSystem.util.PerFileMappingsEx;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @ExtensionImpl
@@ -152,7 +151,7 @@ class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> implemen
     return new ChangeFileEncodingAction(true) {
       @Override
       protected boolean chosen(Document document, Editor editor, VirtualFile virtualFile, byte[] bytes, @Nonnull Charset charset) {
-        onChosen.consume(charset);
+        onChosen.accept(charset);
         return true;
       }
     }.createActionGroup(file, null, document, bytes, getClearValueText(target));

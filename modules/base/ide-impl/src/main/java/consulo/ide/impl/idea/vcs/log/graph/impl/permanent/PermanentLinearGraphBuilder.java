@@ -164,7 +164,7 @@ public class PermanentLinearGraphBuilder<CommitId> {
       }
     });
     for (CommitId notLoadCommit : commitIds) {
-      int notLoadId = notLoadedCommitToId.fun(notLoadCommit);
+      int notLoadId = notLoadedCommitToId.apply(notLoadCommit);
       for (int upNodeIndex : upAdjacentNodes.get(notLoadCommit)) {
         fixUnderdoneEdgeForNotLoadCommit(upNodeIndex, notLoadId);
       }
@@ -188,7 +188,7 @@ public class PermanentLinearGraphBuilder<CommitId> {
     return build(new NotNullFunction<CommitId, Integer>() {
       @Nonnull
       @Override
-      public Integer fun(CommitId dom) {
+      public Integer apply(CommitId dom) {
         return Integer.MIN_VALUE;
       }
     });

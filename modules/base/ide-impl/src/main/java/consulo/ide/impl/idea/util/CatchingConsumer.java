@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.util;
 
+import java.util.function.Consumer;
+
 public interface CatchingConsumer<T, E extends Throwable> extends Consumer<T> {
-  void consume(E e);
+  void accept(E e);
 }

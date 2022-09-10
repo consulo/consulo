@@ -15,63 +15,46 @@
  */
 package consulo.ide.impl.idea.util;
 
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * @author gregsh
  */
 @SuppressWarnings("unchecked")
 public class Functions {
-  public static <A> Function.Mono<A> id() {
-    return (Function.Mono<A>)Function.ID;
+  public static <A> Function<A, A> id() {
+    return Function.identity();
   }
 
   public static <A, B> Function<A, B> constant(final B b) {
-    return new Function<A, B>() {
-      @Override
-      public B fun(A a) {
-        return b;
-      }
-    };
-  }
-
-  public static <A, B> Function<A, B> identity() {
-    return Function.ID;
+    return a -> b;
   }
 
   public static <A, B> Function<A, B> cast(Class<B> clazz) {
-    return Function.ID;
+    return a -> ObjectUtil.tryCast(a, clazz);
   }
 
   public static <A, B, C> Function<A, C> compose(final Function<A, B> f1, final Function<B, ? extends C> f2) {
-    return new Function<A, C>() {
-      @Override
-      public C fun(A a) {
-        return f2.fun(f1.fun(a));
-      }
-    };
+    return a -> f2.apply(f1.apply(a));
   }
 
   public static <A> Function<A, String> TO_STRING() {
-    return Function.TO_STRING;
+    return Object::toString;
   }
 
   public static <A, B> Function<A, B> fromMap(final Map<A, B> map) {
-    return new Function<A, B>() {
-      @Override
-      public B fun(A a) {
-        return map.get(a);
-      }
-    };
+    return map::get;
   }
 
   private static final Function<Object, Class> TO_CLASS = new Function<Object, Class>() {
     @Override
-    public Class fun(Object o) {
+    public Class apply(Object o) {
       return o.getClass();
     }
   };
@@ -82,14 +65,14 @@ public class Functions {
 
   private static final Function PAIR_FIRST = new Function<Pair<?, ?>, Object>() {
     @Override
-    public Object fun(Pair<?, ?> pair) {
+    public Object apply(Pair<?, ?> pair) {
       return Pair.getFirst(pair);
     }
   };
 
   private static final Function PAIR_SECOND = new Function<Pair<?, ?>, Object>() {
     @Override
-    public Object fun(Pair<?, ?> pair) {
+    public Object apply(Pair<?, ?> pair) {
       return Pair.getSecond(pair);
     }
   };
@@ -102,10 +85,10 @@ public class Functions {
     return (Function<Pair<?, B>, B>)PAIR_SECOND;
   }
 
-  public static Function.Mono<Integer> intIncrement() {
-    return new Function.Mono<Integer>() {
+  public static Function<Integer, Integer> intIncrement() {
+    return new Function<Integer, Integer>() {
       @Override
-      public Integer fun(Integer integer) {
+      public Integer apply(Integer integer) {
         return integer + 1;
       }
     };
@@ -113,7 +96,7 @@ public class Functions {
 
 
   private static final Function WRAP_ARRAY = new Function<Object[], Iterable<Object>>() {
-    public Iterable<Object> fun(Object[] t) {
+    public Iterable<Object> apply(Object[] t) {
       return t == null ? Collections.emptyList() : Arrays.asList(t);
     }
   };

@@ -15,34 +15,29 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot;
 
+import consulo.component.util.text.UniqueNameGenerator;
 import consulo.content.OrderRootType;
+import consulo.content.base.BinariesOrderRootType;
+import consulo.content.base.SourcesOrderRootType;
+import consulo.content.impl.internal.library.LibraryTableBase;
+import consulo.content.internal.LibraryEx;
+import consulo.content.library.*;
+import consulo.content.library.ui.LibraryEditor;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraryEditor.ExistingLibraryEditor;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraryEditor.NewLibraryEditor;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.ide.setting.module.LibrariesConfigurator;
+import consulo.ide.setting.module.LibraryTableModifiableModelProvider;
+import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.Project;
-import consulo.content.internal.LibraryEx;
-import consulo.content.impl.internal.library.LibraryTableBase;
-import consulo.content.library.Library;
-import consulo.content.library.LibraryTable;
-import consulo.content.library.LibraryTablesRegistrar;
-import consulo.content.library.LibraryType;
-import consulo.content.library.OrderRoot;
-import consulo.ide.setting.module.LibraryTableModifiableModelProvider;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraryEditor.ExistingLibraryEditor;
-import consulo.content.library.ui.LibraryEditor;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraryEditor.NewLibraryEditor;
 import consulo.util.lang.function.Condition;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.Function;
-import consulo.component.util.text.UniqueNameGenerator;
-import consulo.logging.Logger;
-import consulo.content.base.BinariesOrderRootType;
-import consulo.content.base.SourcesOrderRootType;
-import consulo.ide.setting.module.LibrariesConfigurator;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -171,12 +166,7 @@ public class LibrariesContainerFactory {
     @Override
     public String suggestUniqueLibraryName(@Nonnull String baseName) {
       if (myNameGenerator == null) {
-        myNameGenerator = new UniqueNameGenerator(Arrays.asList(getAllLibraries()), new Function<Library, String>() {
-          @Override
-          public String fun(Library o) {
-            return o.getName();
-          }
-        });
+        myNameGenerator = new UniqueNameGenerator(Arrays.asList(getAllLibraries()), o -> o.getName());
       }
       return myNameGenerator.generateUniqueName(baseName, "", "", " (", ")");
     }

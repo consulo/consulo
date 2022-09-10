@@ -29,7 +29,7 @@ import consulo.ide.impl.idea.ui.ListenerUtil;
 import consulo.ide.impl.idea.ui.PopupMenuListenerAdapter;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.PopupOwner;
-import consulo.ide.impl.idea.util.Consumer;
+import java.util.function.Consumer;
 import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.ide.navigationToolbar.NavBarModelExtension;
 import consulo.language.editor.CommonDataKeys;

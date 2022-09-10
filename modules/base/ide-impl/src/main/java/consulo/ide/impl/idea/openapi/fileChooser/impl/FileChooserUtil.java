@@ -15,20 +15,19 @@
  */
 package consulo.ide.impl.idea.openapi.fileChooser.impl;
 
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
+import consulo.application.util.SystemInfo;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileSaverDescriptor;
 import consulo.fileChooser.PathChooserDialog;
-import consulo.project.Project;
-import consulo.application.util.SystemInfo;
-import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.NullableFunction;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.project.Project;
+import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collection;
 import java.util.List;
 
@@ -91,11 +90,6 @@ public final class FileChooserUtil {
   @Nonnull
   public static List<VirtualFile> getChosenFiles(@Nonnull final FileChooserDescriptor descriptor,
                                                  @Nonnull final Collection<VirtualFile> selectedFiles) {
-    return ContainerUtil.mapNotNull(selectedFiles, new NullableFunction<VirtualFile, VirtualFile>() {
-      @Override
-      public VirtualFile fun(final VirtualFile file) {
-        return file != null && file.isValid() ? descriptor.getFileToSelect(file) : null;
-      }
-    });
+    return ContainerUtil.mapNotNull(selectedFiles, file -> file != null && file.isValid() ? descriptor.getFileToSelect(file) : null);
   }
 }

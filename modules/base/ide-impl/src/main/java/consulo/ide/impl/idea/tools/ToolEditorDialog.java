@@ -16,8 +16,6 @@
 
 package consulo.ide.impl.idea.tools;
 
-import consulo.ide.impl.idea.ide.macro.MacrosDialog;
-import consulo.ide.impl.idea.util.Consumer;
 import consulo.application.HelpManager;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.dataContext.DataContext;
@@ -27,6 +25,7 @@ import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.FileChooserFactory;
 import consulo.fileChooser.PathChooserDialog;
+import consulo.ide.impl.idea.ide.macro.MacrosDialog;
 import consulo.language.editor.CommonDataKeys;
 import consulo.pathMacro.MacroManager;
 import consulo.project.Project;
@@ -46,6 +45,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class ToolEditorDialog extends DialogWrapper {
   private final JTextField myNameField = new JTextField();
@@ -321,7 +321,7 @@ public class ToolEditorDialog extends DialogWrapper {
 
           chooser.choose(null, new Consumer<List<VirtualFile>>() {
             @Override
-            public void consume(List<VirtualFile> files) {
+            public void accept(List<VirtualFile> files) {
               VirtualFile file = files.size() > 0 ? files.get(0) : null;
               if (file != null) {
                 myTfCommandWorkingDirectory.setText(file.getPresentableUrl());
@@ -342,7 +342,7 @@ public class ToolEditorDialog extends DialogWrapper {
           PathChooserDialog chooser = FileChooserFactory.getInstance().createPathChooser(descriptor, myProject, pane);
           chooser.choose(null, new Consumer<List<VirtualFile>>() {
             @Override
-            public void consume(List<VirtualFile> files) {
+            public void accept(List<VirtualFile> files) {
               VirtualFile file = files.size() > 0 ? files.get(0) : null;
               if (file != null) {
                 myTfCommand.setText(file.getPresentableUrl());

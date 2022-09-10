@@ -18,15 +18,14 @@ package consulo.ide.impl.idea.usages.impl;
 import consulo.application.ApplicationManager;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.navigation.Navigatable;
+import consulo.usage.MergeableUsage;
 import consulo.usage.Usage;
 import consulo.usage.UsageGroup;
 import consulo.usage.UsageView;
-import consulo.usage.MergeableUsage;
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.util.collection.SmartList;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;
 import org.jetbrains.annotations.NonNls;
@@ -38,6 +37,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * @author max
@@ -99,7 +99,7 @@ public class GroupNode extends Node implements Navigatable, Comparable<GroupNode
       int insertionIndex = -i - 1;
       myChildren.add(insertionIndex, newNode);
     }
-    edtInsertedUnderQueue.consume(this);
+    edtInsertedUnderQueue.accept(this);
     return newNode;
   }
 
@@ -239,7 +239,7 @@ public class GroupNode extends Node implements Navigatable, Comparable<GroupNode
         myChildren.add(insertionIndex, newNode);
       }
     }
-    edtInsertedUnderQueue.consume(this);
+    edtInsertedUnderQueue.accept(this);
     return newNode;
   }
 

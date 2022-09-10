@@ -15,14 +15,13 @@
  */
 package consulo.ide.impl.idea.internal.psiView.formattingblocks;
 
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.codeStyle.Block;
 import consulo.language.codeStyle.template.DataLanguageBlockWrapper;
-import consulo.ui.ex.tree.PresentationData;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.tree.SimpleNode;
-import consulo.ide.impl.idea.util.Function;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ui.ex.tree.PresentationData;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -40,12 +39,7 @@ public class BlockTreeNode extends SimpleNode {
 
   @Override
   public BlockTreeNode[] getChildren() {
-    return ContainerUtil.map2Array(myBlock.getSubBlocks(), BlockTreeNode.class, new Function<Block, BlockTreeNode>() {
-      @Override
-      public BlockTreeNode fun(Block block) {
-        return new BlockTreeNode(block, BlockTreeNode.this);
-      }
-    });
+    return ContainerUtil.map2Array(myBlock.getSubBlocks(), BlockTreeNode.class, block -> new BlockTreeNode(block, BlockTreeNode.this));
   }
 
   @Override

@@ -15,39 +15,39 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
+import consulo.application.dumb.DumbAware;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorGutterComponentEx;
+import consulo.colorScheme.EditorColorsScheme;
+import consulo.component.extension.ExtensionPointName;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.openapi.localVcs.UpToDateLineNumberProvider;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.openapi.vcs.annotate.AnnotationGutterActionProvider;
+import consulo.ide.impl.idea.openapi.vcs.impl.UpToDateLineNumberProviderImpl;
+import consulo.ide.impl.idea.ui.EditorNotificationPanel;
+import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.editor.CommonDataKeys;
+import consulo.project.Project;
+import consulo.ui.color.ColorValue;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnSeparator;
-import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.ToggleAction;
-import consulo.codeEditor.Editor;
-import consulo.colorScheme.EditorColorsScheme;
-import consulo.codeEditor.EditorGutterComponentEx;
-import consulo.component.extension.ExtensionPointName;
-import consulo.ide.impl.idea.openapi.localVcs.UpToDateLineNumberProvider;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ui.ex.awt.LightColors;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.util.lang.Couple;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsBundle;
-import consulo.ide.impl.idea.openapi.vcs.annotate.AnnotationGutterActionProvider;
 import consulo.versionControlSystem.annotate.AnnotationSourceSwitcher;
 import consulo.versionControlSystem.annotate.FileAnnotation;
 import consulo.versionControlSystem.annotate.LineAnnotationAspect;
 import consulo.versionControlSystem.change.VcsAnnotationLocalChangesListener;
 import consulo.versionControlSystem.history.VcsFileRevision;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
-import consulo.ide.impl.idea.openapi.vcs.impl.UpToDateLineNumberProviderImpl;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.ui.EditorNotificationPanel;
-import consulo.ui.ex.awt.LightColors;
-import consulo.ide.impl.idea.util.ObjectUtils;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.ui.color.ColorValue;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -61,8 +61,7 @@ import java.util.Map;
  * @author: lesya
  */
 public class AnnotateToggleAction extends ToggleAction implements DumbAware {
-  public static final ExtensionPointName<Provider> EP_NAME =
-          ExtensionPointName.create("consulo.openapi.vcs.actions.AnnotateToggleAction.Provider");
+  public static final ExtensionPointName<Provider> EP_NAME = ExtensionPointName.create("consulo.openapi.vcs.actions.AnnotateToggleAction.Provider");
 
   @Override
   public void update(@Nonnull AnActionEvent e) {
@@ -175,18 +174,16 @@ public class AnnotateToggleAction extends ToggleAction implements DumbAware {
     if (switcher != null) {
       switcher.switchTo(switcher.getDefaultSource());
       final LineAnnotationAspect revisionAspect = switcher.getRevisionAspect();
-      final CurrentRevisionAnnotationFieldGutter currentRevisionGutter =
-              new CurrentRevisionAnnotationFieldGutter(fileAnnotation, revisionAspect, presentation, bgColorMap);
-      final MergeSourceAvailableMarkerGutter mergeSourceGutter =
-              new MergeSourceAvailableMarkerGutter(fileAnnotation, presentation, bgColorMap);
+      final CurrentRevisionAnnotationFieldGutter currentRevisionGutter = new CurrentRevisionAnnotationFieldGutter(fileAnnotation, revisionAspect, presentation, bgColorMap);
+      final MergeSourceAvailableMarkerGutter mergeSourceGutter = new MergeSourceAvailableMarkerGutter(fileAnnotation, presentation, bgColorMap);
 
       SwitchAnnotationSourceAction switchAction = new SwitchAnnotationSourceAction(switcher, editorGutter);
       presentation.addAction(switchAction);
       switchAction.addSourceSwitchListener(currentRevisionGutter);
       switchAction.addSourceSwitchListener(mergeSourceGutter);
 
-      currentRevisionGutter.consume(switcher.getDefaultSource());
-      mergeSourceGutter.consume(switcher.getDefaultSource());
+      currentRevisionGutter.accept(switcher.getDefaultSource());
+      mergeSourceGutter.accept(switcher.getDefaultSource());
 
       gutters.add(currentRevisionGutter);
       gutters.add(mergeSourceGutter);
@@ -290,8 +287,7 @@ public class AnnotateToggleAction extends ToggleAction implements DumbAware {
       }
     }
 
-    return Couple.of(commitOrderColors.size() > 1 ? commitOrderColors : null,
-                     commitAuthorColors.size() > 1 ? commitAuthorColors : null);
+    return Couple.of(commitOrderColors.size() > 1 ? commitOrderColors : null, commitAuthorColors.size() > 1 ? commitAuthorColors : null);
   }
 
   @javax.annotation.Nullable

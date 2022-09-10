@@ -129,7 +129,7 @@ public final class XValueNodePresentationConfigurator {
 
     @Override
     public void renderValue(@Nonnull XValueTextRenderer renderer) {
-      renderer.renderValue(valuePresenter.fun(myValue));
+      renderer.renderValue(valuePresenter.apply(myValue));
     }
   }
 }
