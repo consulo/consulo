@@ -111,6 +111,6 @@ public class CustomOrderEntryImpl<M extends CustomOrderEntryModel> extends Libra
     M cloneModel = (M)myModel.clone();
     cloneModel.bind(layer);
 
-    return new CustomOrderEntryImpl<M>(getType(), myModuleRootLayer, cloneModel, true);
+    return new CustomOrderEntryImpl<M>(getType(), layer, cloneModel, true);
   }
 }

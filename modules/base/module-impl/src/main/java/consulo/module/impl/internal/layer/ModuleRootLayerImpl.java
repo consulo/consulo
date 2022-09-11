@@ -190,6 +190,8 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
   @Nonnull
   private final ModuleLibraryTable myModuleLibraryTable;
 
+  private boolean myDisposed;
+
   @RequiredReadAction
   public ModuleRootLayerImpl(@Nullable ModuleRootLayerImpl originalLayer, @Nonnull RootModelImpl rootModel) {
     myRootModel = rootModel;
@@ -392,6 +394,8 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
 
   @Nonnull
   private ContentEntry addContentEntry(@Nonnull ContentEntryEx e) {
+    checkDisposed();
+    
     if (myContent.contains(e)) {
       for (ContentEntryEx contentEntry : getContentEntries()) {
         if (ContentComparator.INSTANCE.compare(contentEntry, e) == 0) return contentEntry;
@@ -688,6 +692,8 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
   @Nullable
   @SuppressWarnings("unchecked")
   public <T extends ModuleExtension> T getExtension(Class<T> clazz) {
+    checkDisposed();
+
     if (myExtensions.isEmpty()) {
       return null;
     }
@@ -704,6 +710,8 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
   @Nullable
   @SuppressWarnings("unchecked")
   public <T extends ModuleExtension> T getExtensionWithoutCheck(Class<T> clazz) {
+    checkDisposed();
+
     if (myExtensions.isEmpty()) {
       return null;
     }
@@ -720,6 +728,8 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
   @Nullable
   @SuppressWarnings("unchecked")
   public <T extends ModuleExtension> T getExtension(@Nonnull String key) {
+    checkDisposed();
+
     ModuleExtension extension = myExtensions.get(key);
     return extension != null && extension.isEnabled() ? (T)extension : null;
   }
@@ -728,6 +738,8 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
   @Nullable
   @SuppressWarnings("unchecked")
   public <T extends ModuleExtension> T getExtensionWithoutCheck(@Nonnull String key) {
+    checkDisposed();
+
     ModuleExtension extension = myExtensions.get(key);
     return (T)extension;
   }
@@ -758,6 +770,8 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
 
   @Override
   public void removeContentEntry(@Nonnull ContentEntry entry) {
+    checkDisposed();
+
     LOG.assertTrue(myContent.contains(entry));
     if (entry instanceof Disposable) {
       Disposer.dispose((Disposable)entry);
@@ -767,6 +781,8 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
 
   @Override
   public void addOrderEntry(@Nonnull OrderEntry entry) {
+    checkDisposed();
+
     LOG.assertTrue(!myOrderEntries.contains(entry));
     myOrderEntries.add(entry);
   }
@@ -783,6 +799,8 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
   @Nonnull
   @Override
   public ModuleExtensionWithSdkOrderEntry addModuleExtensionSdkEntry(@Nonnull ModuleExtensionWithSdk<?> moduleExtension) {
+    checkDisposed();
+
     final ModuleExtensionWithSdkOrderEntryImpl moduleSdkOrderEntry = new ModuleExtensionWithSdkOrderEntryImpl(moduleExtension.getId(), this);
     assert moduleSdkOrderEntry.isValid();
 
@@ -813,6 +831,8 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
   @Nonnull
   @Override
   public LibraryOrderEntry addInvalidLibrary(@Nonnull String name, @Nonnull String level) {
+    checkDisposed();
+
     final LibraryOrderEntry libraryOrderEntry = new LibraryOrderEntryImpl(name, level, this);
     myOrderEntries.add(libraryOrderEntry);
     return libraryOrderEntry;
@@ -821,6 +841,8 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
   @Nonnull
   @Override
   public ModuleOrderEntry addModuleOrderEntry(@Nonnull Module module) {
+    checkDisposed();
+
     LOG.assertTrue(!module.equals(getModule()));
     LOG.assertTrue(Comparing.equal(myRootModel.getModule().getProject(), module.getProject()));
     final ModuleOrderEntryImpl moduleOrderEntry = new ModuleOrderEntryImpl(module, this);
@@ -832,6 +854,8 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
   @Override
   @SuppressWarnings("unchecked")
   public <M extends CustomOrderEntryModel> CustomOrderEntry<M> addCustomOderEntry(@Nonnull CustomOrderEntryTypeProvider<M> type, @Nonnull M model) {
+    checkDisposed();
+
     OrderEntryType<?> entryType = OrderEntrySerializationUtil.findOrderEntryType(type.getId());
     CustomOrderEntryTypeProvider otherProvider = entryType instanceof CustomOrderEntryTypeWrapper ? ((CustomOrderEntryTypeWrapper)entryType).getCustomOrderEntryTypeProvider() : null;
     if (otherProvider != type) {
@@ -846,6 +870,8 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
   @Nonnull
   @Override
   public ModuleOrderEntry addInvalidModuleEntry(@Nonnull String name) {
+    checkDisposed();
+
     LOG.assertTrue(!name.equals(getModule().getName()));
     final ModuleOrderEntryImpl moduleOrderEntry = new ModuleOrderEntryImpl(name, this);
     myOrderEntries.add(moduleOrderEntry);
@@ -880,6 +906,8 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
   }
 
   private void removeOrderEntryInternal(OrderEntry entry) {
+    checkDisposed();
+
     LOG.assertTrue(myOrderEntries.contains(entry));
     Disposer.dispose((OrderEntryBaseImpl)entry);
     myOrderEntries.remove(entry);
@@ -887,6 +915,8 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
 
   @Override
   public void rearrangeOrderEntries(@Nonnull OrderEntry[] newEntries) {
+    checkDisposed();
+
     assertValidRearrangement(newEntries);
     myOrderEntries.clear();
     ContainerUtil.addAll(myOrderEntries, newEntries);
@@ -955,6 +985,13 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
     removeAllContentEntries();
     removeAllOrderEntries();
     removeAllExtensions();
+    myDisposed = true;
+  }
+
+  private void checkDisposed() {
+    if (myDisposed) {
+      throw new IllegalArgumentException("Already disposed");
+    }
   }
 
   @Nonnull
@@ -965,6 +1002,8 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
 
   @Override
   public <T extends OrderEntry> void replaceEntryOfType(Class<T> entryClass, T entry) {
+    checkDisposed();
+
     for (int i = 0; i < myOrderEntries.size(); i++) {
       OrderEntry orderEntry = myOrderEntries.get(i);
       if (entryClass.isInstance(orderEntry)) {
