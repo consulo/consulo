@@ -13,37 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInspection;
+package consulo.language.editor.intention;
 
-import consulo.language.editor.intention.IntentionAction;
-import consulo.language.editor.internal.intention.IntentionActionDelegate;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.language.editor.inspection.LocalQuickFix;
 import consulo.language.editor.inspection.ProblemDescriptor;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.editor.internal.intention.ActionClassHolder;
+import consulo.language.editor.internal.intention.IntentionActionDelegate;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
+import consulo.project.Project;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * Created by IntelliJ IDEA.
- * User: angus
+ * @author angus
  * Date: 4/20/11
  * Time: 9:27 PM
  */
 public class IntentionWrapper implements LocalQuickFix, IntentionAction, ActionClassHolder, IntentionActionDelegate {
   private final IntentionAction myAction;
-  private final PsiFile myFile;
+
+  @Deprecated
+  public IntentionWrapper(@Nonnull IntentionAction action) {
+    myAction = action;
+  }
 
   public IntentionWrapper(@Nonnull IntentionAction action, @Nonnull PsiFile file) {
     myAction = action;
-    myFile = file;
   }
 
   @Nonnull
@@ -90,12 +93,13 @@ public class IntentionWrapper implements LocalQuickFix, IntentionAction, ActionC
   }
 
   @Override
+  @RequiredReadAction
   public void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
-    VirtualFile virtualFile = myFile.getVirtualFile();
-
-    if (virtualFile != null) {
-      FileEditor editor = FileEditorManager.getInstance(project).getSelectedEditor(virtualFile);
-      myAction.invoke(project, editor instanceof TextEditor ? ((TextEditor) editor).getEditor() : null, myFile);
+    PsiElement element = descriptor.getPsiElement();
+    PsiFile file = element == null ? null : element.getContainingFile();
+    if (file != null) {
+      FileEditor editor = FileEditorManager.getInstance(project).getSelectedEditor(file.getVirtualFile());
+      myAction.invoke(project, editor instanceof TextEditor ? ((TextEditor)editor).getEditor() : null, file);
     }
   }
 

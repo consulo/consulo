@@ -17,7 +17,6 @@
 package consulo.ide.impl.idea.codeInspection.ex;
 
 import consulo.language.editor.DaemonCodeAnalyzer;
-import consulo.ide.impl.idea.codeInspection.*;
 import consulo.language.editor.inspection.reference.RefElement;
 import consulo.language.editor.inspection.reference.RefEntity;
 import consulo.language.editor.inspection.reference.RefManager;
@@ -27,6 +26,7 @@ import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.editor.inspection.QuickFix;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.language.editor.intention.BatchQuickFix;
+import consulo.language.editor.intention.IntentionWrapper;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
