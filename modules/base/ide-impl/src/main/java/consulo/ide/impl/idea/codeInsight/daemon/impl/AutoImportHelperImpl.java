@@ -16,8 +16,11 @@
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.ide.impl.idea.codeInsight.actions.OptimizeImportsProcessor;
 import consulo.language.editor.AutoImportHelper;
 import consulo.language.psi.PsiFile;
+import consulo.project.Project;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 
@@ -25,10 +28,22 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 26-Jul-22
  */
+@Singleton
 @ServiceImpl
 public class AutoImportHelperImpl implements AutoImportHelper {
   @Override
   public boolean canChangeFileSilently(@Nonnull PsiFile file) {
     return DaemonListeners.canChangeFileSilently(file);
+  }
+
+  @Override
+  public void runOptimizeImports(@Nonnull Project project, @Nonnull PsiFile file, boolean withProgress) {
+    OptimizeImportsProcessor processor = new OptimizeImportsProcessor(project, file);
+    if (withProgress) {
+      processor.run();
+    }
+    else {
+      processor.runWithoutProgress();
+    }
   }
 }

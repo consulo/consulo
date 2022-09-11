@@ -38,6 +38,8 @@ public interface AutoImportHelper {
 
   boolean canChangeFileSilently(@Nonnull PsiFile file);
 
+  void runOptimizeImports(@Nonnull Project project, @Nonnull PsiFile file, boolean withProgress);
+
   @Nonnull
   default String getImportMessage(final boolean multiple, @Nonnull String name) {
     final String messageKey = multiple ? "import.popup.multiple" : "import.popup.text";
