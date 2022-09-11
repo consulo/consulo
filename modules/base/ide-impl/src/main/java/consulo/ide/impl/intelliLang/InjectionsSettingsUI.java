@@ -33,7 +33,7 @@ import consulo.fileChooser.IdeaFileChooser;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.ui.TableViewSpeedSearch;
+import consulo.ui.ex.awt.speedSearch.TableViewSpeedSearch;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.FileContentUtil;
 import consulo.ide.impl.idea.util.IconUtil;
@@ -670,15 +670,12 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
       getColumnModel().getColumn(2).setMinWidth(preferred);
       getColumnModel().getColumn(2).setPreferredWidth(preferred);
       getColumnModel().getColumn(2).setMaxWidth(preferred);
-      new TableViewSpeedSearch<InjInfo>(this) {
-        @Override
-        protected String getItemText(@Nonnull InjInfo element) {
-          final BaseInjection injection = element.injection;
-          return injection.getSupportId() + " " + injection.getInjectedLanguageId() + " " + injection.getDisplayName();
-        }
-      };
-    }
 
+      TableViewSpeedSearch.register(this, element -> {
+        final BaseInjection injection = element.injection;
+        return injection.getSupportId() + " " + injection.getInjectedLanguageId() + " " + injection.getDisplayName();
+      });
+    }
   }
 
   private ColumnInfo[] createInjectionColumnInfos() {

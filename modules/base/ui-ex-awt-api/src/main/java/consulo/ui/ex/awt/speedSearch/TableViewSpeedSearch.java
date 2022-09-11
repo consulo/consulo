@@ -13,22 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ui;
+package consulo.ui.ex.awt.speedSearch;
 
-import consulo.ui.ex.awt.speedSearch.SpeedSearchBase;
-import consulo.ui.ex.awt.speedSearch.SpeedSearchComparator;
 import consulo.ui.ex.awt.table.TableView;
 import consulo.ui.ex.awt.util.TableUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * @author Gregory.Shrago
  */
 public abstract class TableViewSpeedSearch<Item> extends SpeedSearchBase<TableView<Item>> {
+  @Nonnull
+  public static <E> TableViewSpeedSearch<E> register(@Nonnull TableView<E> component, @Nonnull Function<E, String> getItemTextFunc) {
+    return new TableViewSpeedSearch<>(component) {
+      @Nullable
+      @Override
+      protected String getItemText(@Nonnull E element) {
+        return getItemTextFunc.apply(element);
+      }
+    };
+  }
+
   public TableViewSpeedSearch(TableView<Item> component) {
     super(component);
     setComparator(new SpeedSearchComparator(false));
@@ -44,6 +53,7 @@ public abstract class TableViewSpeedSearch<Item> extends SpeedSearchBase<TableVi
     return myComponent.convertRowIndexToModel(viewIndex);
   }
 
+  @Nonnull
   @Override
   protected Object[] getAllElements() {
     return getComponent().getItems().toArray();
@@ -51,6 +61,7 @@ public abstract class TableViewSpeedSearch<Item> extends SpeedSearchBase<TableVi
 
   @Nullable
   @Override
+  @SuppressWarnings("unchecked")
   protected String getElementText(Object element) {
     return getItemText((Item)element);
   }

@@ -25,7 +25,7 @@ import consulo.externalService.statistic.*;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.ide.impl.idea.ide.util.TipUIUtil;
-import consulo.ide.impl.idea.ui.TableViewSpeedSearch;
+import consulo.ui.ex.awt.speedSearch.TableViewSpeedSearch;
 import consulo.application.util.DateFormatUtil;
 import consulo.ide.impl.tipOfDay.DefaultTipOfDayProvider;
 import consulo.logging.Logger;
@@ -141,13 +141,9 @@ public class ShowFeatureUsageStatisticsDialog extends DialogWrapper {
     for (String id : registry.getFeatureIds()) {
       features.add(registry.getFeatureDescriptor(id));
     }
-    final TableView table = new TableView<FeatureDescriptor>(new ListTableModel<FeatureDescriptor>(COLUMNS, features, 0));
-    new TableViewSpeedSearch<FeatureDescriptor>(table) {
-      @Override
-      protected String getItemText(@Nonnull FeatureDescriptor element) {
-        return element.getDisplayName();
-      }
-    };
+    final TableView<FeatureDescriptor> table = new TableView<FeatureDescriptor>(new ListTableModel<FeatureDescriptor>(COLUMNS, features, 0));
+
+    TableViewSpeedSearch.register(table, FeatureDescriptor::getDisplayName);
 
     JPanel controlsPanel = new JPanel(new VerticalFlowLayout());
 
