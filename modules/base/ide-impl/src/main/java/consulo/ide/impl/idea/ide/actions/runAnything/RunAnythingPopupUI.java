@@ -17,7 +17,7 @@ import consulo.ide.impl.idea.ide.actions.runAnything.groups.RunAnythingRecentGro
 import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItem;
 import consulo.ide.impl.idea.ide.actions.runAnything.ui.RunAnythingScrollingUtil;
 import consulo.application.ui.UISettings;
-import consulo.ide.impl.idea.ide.util.ElementsChooser;
+import consulo.ui.ex.awt.ElementsChooser;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionToolbarImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;

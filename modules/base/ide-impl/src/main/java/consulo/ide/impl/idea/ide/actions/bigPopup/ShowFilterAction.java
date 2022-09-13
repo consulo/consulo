@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.ide.actions.bigPopup;
 
 import consulo.execution.ExecutionUtil;
 import consulo.application.AllIcons;
-import consulo.ide.impl.idea.ide.util.ElementsChooser;
+import consulo.ui.ex.awt.ElementsChooser;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.ToggleAction;

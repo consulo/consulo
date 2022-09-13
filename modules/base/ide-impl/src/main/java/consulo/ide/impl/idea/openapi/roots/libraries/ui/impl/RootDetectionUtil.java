@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.roots.libraries.ui.impl;
 
-import consulo.ide.impl.idea.ide.util.ChooseElementsDialog;
+import consulo.ui.ex.awt.ChooseElementsDialog;
 import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;

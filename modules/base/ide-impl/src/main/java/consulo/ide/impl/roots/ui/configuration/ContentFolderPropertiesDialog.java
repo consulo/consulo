@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.roots.ui.configuration;
 
-import consulo.ide.impl.idea.ide.util.ChooseElementsDialog;
+import consulo.ui.ex.awt.ChooseElementsDialog;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.module.content.layer.ContentFolder;

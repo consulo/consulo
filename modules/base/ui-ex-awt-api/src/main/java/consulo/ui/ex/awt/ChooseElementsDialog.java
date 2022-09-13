@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.util;
+package consulo.ui.ex.awt;
 
 import consulo.project.Project;
-import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.event.DoubleClickListener;
-import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.annotation.DeprecationInfo;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;

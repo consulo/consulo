@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
 import consulo.application.AllIcons;
-import consulo.ide.impl.idea.ide.util.ElementsChooser;
+import consulo.ui.ex.awt.ElementsChooser;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.ex.action.DefaultActionGroup;

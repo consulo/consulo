@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.packaging.impl.ui;
 
-import consulo.ide.impl.idea.ide.util.ChooseElementsDialog;
+import consulo.ui.ex.awt.ChooseElementsDialog;
 import consulo.project.Project;
 import consulo.compiler.artifact.Artifact;
 import consulo.ui.image.Image;

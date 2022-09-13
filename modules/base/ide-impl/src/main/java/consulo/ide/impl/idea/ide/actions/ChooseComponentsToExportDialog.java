@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.util.ElementsChooser;
+import consulo.ui.ex.awt.ElementsChooser;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;

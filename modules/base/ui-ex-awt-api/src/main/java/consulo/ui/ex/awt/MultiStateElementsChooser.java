@@ -13,25 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.util;
+package consulo.ui.ex.awt;
 
-import consulo.ui.ex.ExpandableItemsHandler;
-import consulo.ui.ex.awt.*;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.ComponentWithExpandableItems;
+import consulo.ui.ex.ExpandableItemsHandler;
 import consulo.ui.ex.TableCell;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchBase;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchComparator;
 import consulo.ui.ex.awt.table.JBTable;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.ui.*;
 import consulo.ui.ex.awt.util.TableUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
+import consulo.util.collection.Lists;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.*;
@@ -40,15 +37,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public class MultiStateElementsChooser<T, S> extends JPanel implements ComponentWithEmptyText, ComponentWithExpandableItems<TableCell> {
   private MarkStateDescriptor<T, S> myMarkStateDescriptor;
   private JBTable myTable = null;
   private MyTableModel myTableModel = null;
   private boolean myColorUnmarkedElements = true;
-  private final List<ElementsMarkStateListener<T, S>> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
+  private final List<ElementsMarkStateListener<T, S>> myListeners = Lists.newLockFreeCopyOnWriteList();
   private final Map<T, ElementProperties> myElementToPropertiesMap = new HashMap<T, ElementProperties>();
   private final Map<T, Boolean> myDisabledMap = new HashMap<T, Boolean>();
 
@@ -89,7 +86,7 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
     myMarkStateDescriptor = markStateDescriptor;
 
     myTableModel = new MyTableModel(elementsCanBeMarked);
-    myTable = new Table(myTableModel);
+    myTable = new JBTable(myTableModel);
     myTable.setShowGrid(false);
     myTable.setIntercellSpacing(JBUI.emptySize());
     myTable.setTableHeader(null);
@@ -661,9 +658,7 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
         UIManager.put(UIUtil.TABLE_FOCUS_CELL_BACKGROUND_PROPERTY, color);
       }
       final MyTableModel model = (MyTableModel)table.getModel();
-      component.setEnabled(isSelected ||
-                           (MultiStateElementsChooser.this.isEnabled() &&
-                            (!myColorUnmarkedElements || myMarkStateDescriptor.isMarked(model.getElementMarkState(row)))));
+      component.setEnabled(isSelected || (MultiStateElementsChooser.this.isEnabled() && (!myColorUnmarkedElements || myMarkStateDescriptor.isMarked(model.getElementMarkState(row)))));
       final ElementProperties properties = myElementToPropertiesMap.get(t);
       if (component instanceof JLabel) {
         final Image icon = properties != null ? properties.getIcon() : t != null ? getItemIcon(t) : null;
@@ -671,9 +666,7 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
         label.setIcon(TargetAWT.to(icon));
         label.setDisabledIcon(TargetAWT.to(icon));
       }
-      component.setForeground(properties != null && properties.getColor() != null
-                              ? properties.getColor()
-                              : isSelected ? table.getSelectionForeground() : table.getForeground());
+      component.setForeground(properties != null && properties.getColor() != null ? properties.getColor() : isSelected ? table.getSelectionForeground() : table.getForeground());
       return component;
     }
   }

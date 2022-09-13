@@ -23,7 +23,7 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration;
 
 import consulo.application.AllIcons;
-import consulo.ide.impl.idea.ide.util.ChooseElementsDialog;
+import consulo.ui.ex.awt.ChooseElementsDialog;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.ui.image.Image;

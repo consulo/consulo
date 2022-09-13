@@ -17,7 +17,7 @@ package consulo.ide.impl.roots.ui.configuration.classpath;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
-import consulo.ide.impl.idea.ide.util.ChooseElementsDialog;
+import consulo.ui.ex.awt.ChooseElementsDialog;
 import consulo.ide.setting.module.AddModuleDependencyActionProvider;
 import consulo.project.Project;
 import consulo.content.library.Library;

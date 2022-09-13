@@ -27,7 +27,7 @@ import consulo.ide.impl.idea.ide.SearchTopHitProvider;
 import consulo.ide.impl.idea.ide.actions.BigPopupUI;
 import consulo.ide.impl.idea.ide.actions.SearchEverywhereClassifier;
 import consulo.ide.impl.idea.ide.actions.bigPopup.ShowFilterAction;
-import consulo.ide.impl.idea.ide.util.ElementsChooser;
+import consulo.ui.ex.awt.ElementsChooser;
 import consulo.ide.impl.idea.ide.util.gotoByName.QuickSearchComponent;
 import consulo.ide.impl.idea.ide.util.gotoByName.SearchEverywhereConfiguration;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionMenu;
