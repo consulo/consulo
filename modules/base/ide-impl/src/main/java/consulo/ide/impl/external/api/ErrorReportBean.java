@@ -17,7 +17,7 @@ package consulo.ide.impl.external.api;
 
 import consulo.ide.impl.idea.util.ExceptionUtil;
 import consulo.container.plugin.PluginId;
-import consulo.ide.impl.updateSettings.UpdateChannel;
+import consulo.externalService.update.UpdateChannel;
 import consulo.logging.attachment.Attachment;
 
 import javax.annotation.Nonnull;

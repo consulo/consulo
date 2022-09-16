@@ -21,6 +21,8 @@ import consulo.configurable.Configurable;
 import consulo.configurable.SimpleConfigurableByProperties;
 import consulo.configurable.StandardConfigurableIds;
 import consulo.disposer.Disposable;
+import consulo.externalService.update.UpdateChannel;
+import consulo.externalService.update.UpdateSettings;
 import consulo.localize.LocalizeValue;
 import consulo.ui.CheckBox;
 import consulo.ui.ComboBox;

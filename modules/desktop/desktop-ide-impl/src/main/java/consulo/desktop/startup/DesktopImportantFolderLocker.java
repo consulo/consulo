@@ -15,24 +15,24 @@
  */
 package consulo.desktop.startup;
 
+import consulo.application.impl.internal.start.CommandLineArgs;
+import consulo.builtinWebServer.impl.http.BuiltInServer;
+import consulo.builtinWebServer.impl.http.ImportantFolderLockerViaBuiltInServer;
+import consulo.builtinWebServer.impl.http.MessageDecoder;
+import consulo.disposer.Disposer;
 import consulo.ide.IdeBundle;
+import consulo.ide.impl.idea.openapi.application.JetBrainsProtocolHandler;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.util.NotNullProducer;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.logging.Logger;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
-import consulo.ide.impl.idea.openapi.application.JetBrainsProtocolHandler;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.util.io.CharsetToolkit;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.NotNullProducer;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.MultiMap;
-import consulo.ide.impl.builtInServer.impl.net.http.BuiltInServer;
-import consulo.ide.impl.builtInServer.impl.net.http.ImportantFolderLockerViaBuiltInServer;
-import consulo.ide.impl.builtInServer.impl.net.http.MessageDecoder;
-import consulo.disposer.Disposer;
-import consulo.logging.Logger;
-import consulo.application.impl.internal.start.CommandLineArgs;
+import consulo.util.io.CharsetToolkit;
+import consulo.util.lang.StringUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufOutputStream;
 import io.netty.channel.ChannelHandler;

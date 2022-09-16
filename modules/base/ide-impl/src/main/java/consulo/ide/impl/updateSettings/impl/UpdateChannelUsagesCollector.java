@@ -2,11 +2,11 @@ package consulo.ide.impl.updateSettings.impl;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.externalService.statistic.CollectUsagesException;
-import consulo.externalService.statistic.UsagesCollector;
 import consulo.externalService.statistic.UsageDescriptor;
+import consulo.externalService.statistic.UsagesCollector;
+import consulo.externalService.update.UpdateChannel;
+import consulo.externalService.update.UpdateSettings;
 import consulo.project.Project;
-import consulo.ide.impl.updateSettings.UpdateChannel;
-import consulo.ide.impl.updateSettings.UpdateSettings;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;

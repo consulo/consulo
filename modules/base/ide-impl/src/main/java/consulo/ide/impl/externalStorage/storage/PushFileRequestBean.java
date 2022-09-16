@@ -16,7 +16,7 @@
 package consulo.ide.impl.externalStorage.storage;
 
 import consulo.ide.impl.external.api.InformationBean;
-import consulo.ide.impl.updateSettings.UpdateChannel;
+import consulo.externalService.update.UpdateChannel;
 
 import java.util.Base64;
 

@@ -2,34 +2,33 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.application.AllIcons;
-import consulo.dataContext.DataManager;
-import consulo.ide.IdeBundle;
-import consulo.application.ui.event.UISettingsListener;
-import consulo.ide.impl.idea.openapi.actionSystem.*;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.TooltipDescriptionProvider;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.dataContext.DataContext;
-import consulo.project.Project;
-import consulo.project.ProjectManager;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.project.ui.wm.*;
-import consulo.ui.ex.action.*;
-import consulo.ui.ex.popup.event.JBPopupListener;
-import consulo.ui.ex.popup.event.LightweightWindowEvent;
-import consulo.ui.ex.popup.ListPopup;
-import consulo.ui.ex.awt.util.PopupUtil;
-import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetsManager;
-import consulo.ui.ex.awt.AnActionButton;
-import java.util.function.Consumer;
+import consulo.application.ui.event.UISettingsListener;
 import consulo.application.util.concurrent.AppExecutorUtil;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.updateSettings.UpdateSettings;
+import consulo.externalService.update.UpdateSettings;
+import consulo.ide.IdeBundle;
+import consulo.ide.impl.idea.openapi.actionSystem.RightAlignedToolbarAction;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.TooltipDescriptionProvider;
+import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetsManager;
+import consulo.ide.impl.updateSettings.UpdateSettingsImpl;
 import consulo.ide.impl.updateSettings.impl.PlatformOrPluginUpdateResult;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.Project;
+import consulo.project.ProjectManager;
+import consulo.project.ui.wm.*;
 import consulo.ui.UIAccess;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.AnActionButton;
+import consulo.ui.ex.awt.util.PopupUtil;
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ui.ex.popup.ListPopup;
+import consulo.ui.ex.popup.event.JBPopupListener;
+import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.Nls;
 
@@ -39,6 +38,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 /**
  * @author Alexander Lobas
@@ -136,7 +136,7 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
   private static IconState ourIconState = IconState.Default;
 
   public static void updateState(UpdateSettings updateSettings) {
-    PlatformOrPluginUpdateResult.Type lastCheckResult = updateSettings.getLastCheckResult();
+    PlatformOrPluginUpdateResult.Type lastCheckResult = ((UpdateSettingsImpl)updateSettings).getLastCheckResult();
 
     switch (lastCheckResult) {
       case PLATFORM_UPDATE:

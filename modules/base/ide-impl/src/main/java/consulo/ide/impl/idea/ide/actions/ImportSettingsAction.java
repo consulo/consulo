@@ -26,12 +26,11 @@ import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.application.impl.internal.store.IApplicationStore;
 import consulo.container.boot.ContainerPathManager;
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.plugins.PluginManager;
 import consulo.ide.impl.idea.ide.startup.StartupActionScriptManager;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
 import consulo.ide.impl.idea.util.io.ZipUtil;
-import consulo.ide.impl.updateSettings.UpdateSettings;
+import consulo.ide.impl.updateSettings.UpdateSettingsImpl;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -121,7 +120,7 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
       StartupActionScriptManager.ActionCommand deleteTemp = new StartupActionScriptManager.DeleteCommand(tempFile);
       StartupActionScriptManager.addActionCommand(deleteTemp);
 
-      UpdateSettings.getInstance().setLastTimeCheck(0);
+      UpdateSettingsImpl.getInstance().setLastTimeCheck(0);
 
       String key = ApplicationManager.getApplication().isRestartCapable()
                    ? "message.settings.imported.successfully.restart"

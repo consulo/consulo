@@ -17,7 +17,7 @@ package consulo.ide.impl.external.api;
 
 import consulo.application.internal.ApplicationInfo;
 import consulo.util.lang.SystemProperties;
-import consulo.ide.impl.updateSettings.UpdateChannel;
+import consulo.externalService.update.UpdateChannel;
 
 import java.util.Locale;
 

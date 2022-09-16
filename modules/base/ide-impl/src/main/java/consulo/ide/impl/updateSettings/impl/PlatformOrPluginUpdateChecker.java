@@ -22,6 +22,7 @@ import consulo.ide.impl.idea.ide.plugins.PluginNode;
 import consulo.ide.impl.idea.ide.plugins.RepositoryHelper;
 import consulo.ide.impl.idea.notification.NotificationAction;
 import consulo.application.internal.ApplicationInfo;
+import consulo.ide.impl.updateSettings.UpdateSettingsImpl;
 import consulo.ui.ex.awt.Messages;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
@@ -39,8 +40,7 @@ import consulo.container.plugin.PluginManager;
 import consulo.ide.impl.plugins.InstalledPluginsState;
 import consulo.ide.impl.plugins.PluginIconHolder;
 import consulo.ide.impl.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
-import consulo.ide.impl.updateSettings.UpdateChannel;
-import consulo.ide.impl.updateSettings.UpdateSettings;
+import consulo.externalService.update.UpdateChannel;
 import consulo.logging.Logger;
 import consulo.platform.CpuArchitecture;
 import consulo.platform.Platform;
@@ -207,7 +207,7 @@ public class PlatformOrPluginUpdateChecker {
   }
 
   public static boolean checkNeeded() {
-    UpdateSettings updateSettings = UpdateSettings.getInstance();
+    UpdateSettingsImpl updateSettings = UpdateSettingsImpl.getInstance();
     if (!updateSettings.isEnable()) {
       return false;
     }
@@ -223,7 +223,7 @@ public class PlatformOrPluginUpdateChecker {
 
     UIAccess lastUIAccess = app.getLastUIAccess();
 
-    final UpdateSettings updateSettings = UpdateSettings.getInstance();
+    final UpdateSettingsImpl updateSettings = UpdateSettingsImpl.getInstance();
     if (updateSettings.isEnable()) {
       app.executeOnPooledThread(() -> checkAndNotifyForUpdates(null, false, null, lastUIAccess, result));
     }
@@ -280,7 +280,7 @@ public class PlatformOrPluginUpdateChecker {
     result.doWhenDone(type -> {
       UIAccess lastUIAccess = Application.get().getLastUIAccess();
 
-      UpdateSettings updateSettings = UpdateSettings.getInstance();
+      UpdateSettingsImpl updateSettings = UpdateSettingsImpl.getInstance();
       updateSettings.setLastCheckResult(type);
       lastUIAccess.give(() -> SettingsEntryPointAction.updateState(updateSettings));
     });
@@ -316,7 +316,7 @@ public class PlatformOrPluginUpdateChecker {
     String currentBuildNumber = appInfo.getBuild().asString();
 
     List<PluginDescriptor> remotePlugins = Collections.emptyList();
-    UpdateChannel channel = UpdateSettings.getInstance().getChannel();
+    UpdateChannel channel = UpdateSettingsImpl.getInstance().getChannel();
     try {
       remotePlugins = RepositoryHelper.loadPluginsFromRepository(indicator, channel);
       PluginsAdvertiserHolder.update(remotePlugins);

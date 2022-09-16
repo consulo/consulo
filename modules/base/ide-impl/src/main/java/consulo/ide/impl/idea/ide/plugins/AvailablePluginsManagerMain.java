@@ -53,7 +53,7 @@ public class AvailablePluginsManagerMain extends PluginManagerMain {
         @Override
         public void actionPerformed(ActionEvent e) {
           if (ShowSettingsUtil.getInstance().editConfigurable(myActionsPanel, new PluginHostsConfigurable())) {
-            final List<String> pluginHosts = UpdateSettings.getInstance().getStoredPluginHosts();
+            final List<String> pluginHosts = UpdateSettingsImpl.getInstance().getStoredPluginHosts();
             if (!pluginHosts.contains(((AvailablePluginsTableModel)pluginsModel).getRepository())) {
               ((AvailablePluginsTableModel)pluginsModel).setRepository(AvailablePluginsTableModel.ALL, myFilter.getFilter().toLowerCase());
             }

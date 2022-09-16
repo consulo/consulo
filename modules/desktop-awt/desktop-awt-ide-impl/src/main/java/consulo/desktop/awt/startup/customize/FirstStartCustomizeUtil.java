@@ -15,19 +15,19 @@
  */
 package consulo.desktop.awt.startup.customize;
 
-import consulo.ide.impl.idea.ide.plugins.RepositoryHelper;
-import consulo.ide.impl.idea.openapi.util.JDOMUtil;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.util.DownloadUtil;
-import consulo.ide.impl.idea.util.io.URLUtil;
-import consulo.ide.impl.idea.util.io.UnsyncByteArrayInputStream;
 import consulo.application.Application;
+import consulo.application.eap.EarlyAccessProgramManager;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.desktop.awt.ui.plaf.darcula.DarculaLaf;
 import consulo.desktop.awt.ui.plaf.intellij.IntelliJLaf;
-import consulo.application.eap.EarlyAccessProgramManager;
-import consulo.ide.impl.updateSettings.UpdateSettings;
+import consulo.externalService.update.UpdateSettings;
+import consulo.ide.impl.idea.ide.plugins.RepositoryHelper;
+import consulo.ide.impl.idea.openapi.util.JDOMUtil;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.util.io.URLUtil;
+import consulo.ide.impl.idea.util.io.UnsyncByteArrayInputStream;
+import consulo.ide.util.DownloadUtil;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;

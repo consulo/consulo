@@ -15,13 +15,13 @@
  */
 package consulo.desktop.container.impl;
 
-import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.ApplicationProperties;
+import consulo.application.util.SystemInfo;
 import consulo.container.boot.ContainerPathManager;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.util.collection.ArrayUtil;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;

@@ -30,7 +30,7 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.plugins.InstalledPluginsState;
 import consulo.ide.impl.plugins.PluginActionListener;
-import consulo.ide.impl.updateSettings.UpdateSettings;
+import consulo.ide.impl.updateSettings.UpdateSettingsImpl;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.IdeLocalize;
@@ -309,7 +309,7 @@ public class PlatformOrPluginDialog extends DialogWrapper {
 
       if (myType != PlatformOrPluginUpdateResult.Type.PLUGIN_INSTALL) {
         SwingUtilities.invokeLater(() -> {
-          UpdateSettings updateSettings = UpdateSettings.getInstance();
+          UpdateSettingsImpl updateSettings = UpdateSettingsImpl.getInstance();
           updateSettings.setLastCheckResult(PlatformOrPluginUpdateResult.Type.RESTART_REQUIRED);
 
           SettingsEntryPointAction.updateState(updateSettings);

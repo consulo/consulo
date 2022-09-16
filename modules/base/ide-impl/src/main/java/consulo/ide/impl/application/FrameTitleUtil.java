@@ -15,13 +15,13 @@
  */
 package consulo.ide.impl.application;
 
+import consulo.application.ApplicationProperties;
 import consulo.application.internal.ApplicationInfo;
 import consulo.component.util.BuildNumber;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.application.ApplicationProperties;
-import consulo.ide.impl.updateSettings.UpdateChannel;
-import consulo.ide.impl.updateSettings.UpdateSettings;
+import consulo.externalService.update.UpdateChannel;
+import consulo.externalService.update.UpdateSettings;
 import consulo.platform.Platform;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 

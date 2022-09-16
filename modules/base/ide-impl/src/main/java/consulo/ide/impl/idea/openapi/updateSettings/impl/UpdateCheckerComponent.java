@@ -18,11 +18,12 @@ package consulo.ide.impl.idea.openapi.updateSettings.impl;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.ide.actions.SettingsEntryPointAction;
-import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.DateFormatUtil;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.updateSettings.UpdateSettings;
+import consulo.externalService.update.UpdateSettings;
+import consulo.ide.impl.idea.ide.actions.SettingsEntryPointAction;
+import consulo.ide.impl.updateSettings.UpdateSettingsImpl;
 import consulo.ide.impl.updateSettings.impl.PlatformOrPluginUpdateChecker;
 import consulo.ide.impl.updateSettings.impl.PlatformOrPluginUpdateResult;
 import jakarta.inject.Inject;
@@ -42,14 +43,14 @@ import java.util.concurrent.TimeUnit;
 public class UpdateCheckerComponent implements Disposable {
   private static final long ourCheckInterval = DateFormatUtil.DAY;
 
-  private final UpdateSettings myUpdateSettings;
+  private final UpdateSettingsImpl myUpdateSettings;
   private final Runnable myCheckRunnable;
 
   private Future<?> myCheckFuture = CompletableFuture.completedFuture(null);
 
   @Inject
   public UpdateCheckerComponent(@Nonnull UpdateSettings updateSettings) {
-    myUpdateSettings = updateSettings;
+    myUpdateSettings = (UpdateSettingsImpl)updateSettings;
 
     myCheckRunnable = () -> PlatformOrPluginUpdateChecker.updateAndShowResult().doWhenDone(() -> {
       myUpdateSettings.setLastTimeCheck(System.currentTimeMillis());
@@ -60,9 +61,9 @@ public class UpdateCheckerComponent implements Disposable {
     queueNextUpdateCheck(PlatformOrPluginUpdateChecker.checkNeeded() ? ourCheckInterval : Math.max(interval, DateFormatUtil.MINUTE));
 
     // reset on restart
-    PlatformOrPluginUpdateResult.Type lastCheckResult = updateSettings.getLastCheckResult();
+    PlatformOrPluginUpdateResult.Type lastCheckResult = myUpdateSettings.getLastCheckResult();
     if(lastCheckResult == PlatformOrPluginUpdateResult.Type.RESTART_REQUIRED) {
-      updateSettings.setLastCheckResult(PlatformOrPluginUpdateResult.Type.NO_UPDATE);
+      myUpdateSettings.setLastCheckResult(PlatformOrPluginUpdateResult.Type.NO_UPDATE);
       SettingsEntryPointAction.updateState(updateSettings);
     }
   }

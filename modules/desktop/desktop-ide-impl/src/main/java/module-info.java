@@ -7,6 +7,7 @@ module consulo.desktop.ide.impl {
 
   requires com.sun.jna;
   requires com.sun.jna.platform;
+  requires consulo.builtin.web.server.impl;
 
   requires consulo.container.api;
 

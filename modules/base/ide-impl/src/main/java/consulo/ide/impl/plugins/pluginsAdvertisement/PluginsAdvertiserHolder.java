@@ -15,15 +15,15 @@
  */
 package consulo.ide.impl.plugins.pluginsAdvertisement;
 
+import consulo.application.Application;
+import consulo.application.eap.EarlyAccessProgramManager;
+import consulo.container.plugin.PluginDescriptor;
+import consulo.externalService.update.UpdateSettings;
 import consulo.ide.impl.idea.ide.plugins.PluginManager;
 import consulo.ide.impl.idea.ide.plugins.RepositoryHelper;
-import consulo.application.Application;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.container.plugin.PluginDescriptor;
-import consulo.application.eap.EarlyAccessProgramManager;
 import consulo.ide.impl.plugins.InstalledPluginsState;
-import consulo.ide.impl.updateSettings.UpdateSettings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -15,26 +15,26 @@
  */
 package consulo.ide.impl.externalStorage;
 
-import consulo.ide.impl.idea.ide.plugins.PluginInstallUtil;
-import consulo.ide.impl.idea.ide.plugins.RepositoryHelper;
 import consulo.application.Application;
+import consulo.application.eap.EarlyAccessProgramManager;
 import consulo.application.progress.ProgressIndicator;
-import consulo.ide.impl.idea.openapi.updateSettings.impl.PluginDownloader;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
 import consulo.externalService.ExternalService;
 import consulo.externalService.ExternalServiceConfiguration;
+import consulo.externalService.update.UpdateSettings;
 import consulo.ide.impl.externalService.impl.WebServiceApi;
 import consulo.ide.impl.externalService.impl.WebServiceApiSender;
 import consulo.ide.impl.externalStorage.plugin.StoragePlugin;
 import consulo.ide.impl.externalStorage.plugin.StoragePluginState;
-import consulo.application.eap.EarlyAccessProgramManager;
+import consulo.ide.impl.idea.ide.plugins.PluginInstallUtil;
+import consulo.ide.impl.idea.ide.plugins.RepositoryHelper;
+import consulo.ide.impl.idea.openapi.updateSettings.impl.PluginDownloader;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.plugins.InstalledPluginsState;
 import consulo.ide.impl.plugins.PluginActionListener;
-import consulo.ide.impl.updateSettings.UpdateSettings;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.util.lang.ThreeState;

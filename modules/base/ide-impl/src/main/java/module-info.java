@@ -84,6 +84,7 @@ open module consulo.ide.impl {
   requires consulo.execution.impl;
   requires consulo.execution.debug.impl;
   requires consulo.execution.test.impl;
+  requires consulo.builtin.web.server.impl;
 
   requires consulo.ui.impl;
   requires consulo.localize.impl;
@@ -106,13 +107,6 @@ open module consulo.ide.impl {
 
   // TODO [VISTALL] remove this dependency
   requires gnu.trove;
-  requires io.netty.buffer;
-  requires io.netty.codec;
-  requires io.netty.codec.http;
-  requires io.netty.common;
-  requires io.netty.handler;
-  requires io.netty.resolver;
-  requires io.netty.transport;
 
   requires org.apache.httpcomponents.httpcore;
   requires org.apache.httpcomponents.httpclient;
@@ -138,9 +132,7 @@ open module consulo.ide.impl {
   requires imgscalr.lib;
   requires args4j;
   requires winp;
-  requires xmlrpc.client;
-  requires xmlrpc.common;
-  requires xmlrpc.server;
+
   requires pty4j;
   requires forms.rt;
 
@@ -156,13 +148,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.actions.impl;
   exports consulo.ide.impl.application;
   exports consulo.ide.impl.base;
-  exports consulo.ide.impl.builtInServer.binary;
-  exports consulo.ide.impl.builtInServer.impl;
-  exports consulo.ide.impl.builtInServer.impl.ide;
-  exports consulo.ide.impl.builtInServer.impl.net.http;
-  exports consulo.ide.impl.builtInServer.impl.net.json;
-  exports consulo.ide.impl.builtInServer.impl.net.websocket;
-  exports consulo.ide.impl.builtInServer.impl.net.xml;
   exports consulo.ide.impl.bundle;
   exports consulo.ide.impl.codeEditor;
   exports consulo.ide.impl.codeInsight;

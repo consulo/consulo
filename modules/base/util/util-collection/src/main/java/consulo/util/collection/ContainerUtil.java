@@ -482,7 +482,7 @@ public class ContainerUtil {
   @Nonnull
   @Contract(pure = true)
   public static <T> Set<T> newConcurrentSet() {
-    return Collections.newSetFromMap(newConcurrentMap());
+    return ConcurrentHashMap.newKeySet();
   }
 
   @Nonnull

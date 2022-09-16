@@ -15,15 +15,15 @@
  */
 package consulo.ide.impl.externalStorage.storage;
 
-import consulo.component.persist.RoamingType;
 import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.application.util.concurrent.AppExecutorUtil;
+import consulo.component.persist.RoamingType;
 import consulo.container.boot.ContainerPathManager;
+import consulo.externalService.update.UpdateSettings;
 import consulo.ide.impl.externalService.NotFoundException;
 import consulo.ide.impl.externalService.impl.WebServiceApi;
 import consulo.ide.impl.externalService.impl.WebServiceApiSender;
-import consulo.ide.impl.updateSettings.UpdateSettings;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.logging.Logger;
 import consulo.util.jdom.JDOMUtil;
 import org.jdom.Element;

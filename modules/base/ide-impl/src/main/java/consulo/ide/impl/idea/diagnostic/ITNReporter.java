@@ -15,48 +15,49 @@
  */
 package consulo.ide.impl.idea.diagnostic;
 
-import consulo.ide.impl.idea.errorreport.ErrorReportSender;
-import consulo.component.util.PluginExceptionUtil;
-import consulo.ide.impl.externalService.AuthorizationFailedException;
-import consulo.ide.impl.externalService.UpdateAvailableException;
-import consulo.dataContext.DataManager;
-import consulo.ui.ex.action.ActionsBundle;
-import consulo.project.ui.notification.Notification;
-import consulo.ide.impl.idea.notification.NotificationAction;
-import consulo.project.ui.notification.event.NotificationListener;
-import consulo.project.ui.notification.NotificationType;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
-import consulo.application.internal.ApplicationInfo;
 import consulo.application.ApplicationManager;
-import consulo.externalService.impl.internal.PermanentInstallationID;
-import consulo.ide.impl.idea.openapi.diagnostic.ErrorReportSubmitter;
+import consulo.application.internal.ApplicationInfo;
 import consulo.application.util.logging.IdeaLoggingEvent;
-import consulo.ide.impl.idea.openapi.diagnostic.SubmittedReportInfo;
-import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.updateSettings.impl.CheckForUpdateAction;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import java.util.function.Consumer;
-import consulo.ide.impl.idea.xml.util.XmlStringUtil;
+import consulo.component.util.PluginExceptionUtil;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
+import consulo.externalService.impl.internal.PermanentInstallationID;
+import consulo.externalService.update.UpdateSettings;
+import consulo.ide.impl.actionSystem.impl.LastActionTracker;
 import consulo.ide.impl.external.api.ErrorReportBean;
-import consulo.ide.impl.updateSettings.UpdateSettings;
+import consulo.ide.impl.externalService.AuthorizationFailedException;
+import consulo.ide.impl.externalService.UpdateAvailableException;
 import consulo.ide.impl.externalService.impl.WebServiceApi;
 import consulo.ide.impl.externalService.impl.WebServiceException;
+import consulo.ide.impl.idea.errorreport.ErrorReportSender;
+import consulo.ide.impl.idea.notification.NotificationAction;
+import consulo.ide.impl.idea.openapi.diagnostic.ErrorReportSubmitter;
+import consulo.ide.impl.idea.openapi.diagnostic.SubmittedReportInfo;
+import consulo.ide.impl.idea.openapi.updateSettings.impl.CheckForUpdateAction;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.xml.util.XmlStringUtil;
+import consulo.ide.impl.updateSettings.UpdateSettingsImpl;
+import consulo.language.editor.CommonDataKeys;
 import consulo.logging.Logger;
-import consulo.ide.impl.actionSystem.impl.LastActionTracker;
+import consulo.project.Project;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.event.NotificationListener;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionsBundle;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.Set;
+import java.util.function.Consumer;
 
 /**
  * @author max

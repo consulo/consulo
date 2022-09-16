@@ -18,8 +18,9 @@ package consulo.ide.impl.idea.openapi.updateSettings.impl;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.dataContext.DataContext;
+import consulo.externalService.update.UpdateSettings;
 import consulo.ide.impl.idea.ide.actions.SettingsEntryPointActionProvider;
-import consulo.ide.impl.updateSettings.UpdateSettings;
+import consulo.ide.impl.updateSettings.UpdateSettingsImpl;
 import consulo.ide.impl.updateSettings.impl.PlatformOrPluginUpdateResult;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -71,7 +72,7 @@ public class UpdateSettingsEntryPointActionProvider implements SettingsEntryPoin
     public void actionPerformed(@Nonnull AnActionEvent e) {
       Application application = Application.get();
       application.restart();
-      myUpdateSettings.setLastCheckResult(PlatformOrPluginUpdateResult.Type.RESTART_REQUIRED);
+      ((UpdateSettingsImpl)myUpdateSettings).setLastCheckResult(PlatformOrPluginUpdateResult.Type.RESTART_REQUIRED);
     }
   }
 
@@ -89,7 +90,7 @@ public class UpdateSettingsEntryPointActionProvider implements SettingsEntryPoin
   public Collection<AnAction> getUpdateActions(@Nonnull DataContext context) {
     UpdateSettings updateSettings = myUpdateSettingsProvider.get();
 
-    PlatformOrPluginUpdateResult.Type type = updateSettings.getLastCheckResult();
+    PlatformOrPluginUpdateResult.Type type = ((UpdateSettingsImpl)updateSettings).getLastCheckResult();
     switch (type) {
       case NO_UPDATE:
         return List.of(myActionManagerProvider.get().getAction("CheckForUpdate"));
