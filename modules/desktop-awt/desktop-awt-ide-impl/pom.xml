@@ -96,6 +96,10 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-imaging</artifactId>
+    </dependency>
+    <dependency>
       <groupId>consulo.internal</groupId>
       <artifactId>svg-salamander</artifactId>
     </dependency>

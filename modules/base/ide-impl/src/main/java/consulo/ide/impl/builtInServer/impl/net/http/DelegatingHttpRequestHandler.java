@@ -1,13 +1,10 @@
 package consulo.ide.impl.builtInServer.impl.net.http;
 
-import consulo.application.Application;
 import consulo.builtinWebServer.http.HttpRequestHandler;
 import consulo.builtinWebServer.http.HttpResponse;
 import consulo.builtinWebServer.http.util.HttpRequestUtil;
 import consulo.ide.impl.builtInServer.impl.net.websocket.WebSocketHandler;
 import consulo.logging.Logger;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.function.ThrowableFunction;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -16,11 +13,7 @@ import io.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
 import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
-import org.apache.commons.imaging.ImageFormats;
-import org.apache.commons.imaging.Imaging;
 
-import javax.swing.*;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 @ChannelHandler.Sharable
@@ -74,14 +67,6 @@ final class DelegatingHttpRequestHandler extends DelegatingHttpRequestHandlerBas
       catch (Throwable e) {
         Logger.getInstance(BuiltInServer.class).error(e);
       }
-    }
-
-    if (urlDecoder.path().equals("/favicon.ico")) {
-      Icon icon = TargetAWT.to(Application.get().getIcon());
-      BufferedImage image = UIUtil.createImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
-      icon.paintIcon(null, image.getGraphics(), 0, 0);
-      byte[] icoBytes = Imaging.writeImageToBytes(image, ImageFormats.ICO, null);
-      return HttpResponse.ok("image/vnd.microsoft.icon", icoBytes);
     }
 
     return null;

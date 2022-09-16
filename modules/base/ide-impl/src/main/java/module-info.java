@@ -122,7 +122,6 @@ open module consulo.ide.impl {
   requires org.apache.thrift;
   requires org.apache.commons.codec;
   requires org.apache.commons.compress;
-  requires org.apache.commons.imaging;
   requires velocity.engine.core;
 
   requires com.google.common;
