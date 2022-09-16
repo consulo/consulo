@@ -1,15 +1,14 @@
 package consulo.ide.impl.builtInServer.impl.net.http;
 
 import consulo.application.Application;
-import consulo.ide.impl.idea.openapi.util.ThrowableNotNullFunction;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ide.impl.builtInServer.http.HttpRequestHandler;
-import consulo.ide.impl.builtInServer.http.Responses;
-import consulo.ide.impl.builtInServer.http.util.HttpRequestUtil;
+import consulo.builtinWebServer.http.HttpRequestHandler;
+import consulo.builtinWebServer.http.HttpResponse;
+import consulo.builtinWebServer.http.util.HttpRequestUtil;
 import consulo.ide.impl.builtInServer.impl.net.websocket.WebSocketHandler;
 import consulo.logging.Logger;
-import io.netty.buffer.Unpooled;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.util.lang.function.ThrowableFunction;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.*;
@@ -29,20 +28,26 @@ final class DelegatingHttpRequestHandler extends DelegatingHttpRequestHandlerBas
   private static final AttributeKey<HttpRequestHandler> PREV_HANDLER = AttributeKey.valueOf("DelegatingHttpRequestHandler.handler");
 
   @Override
-  protected boolean process(ChannelHandlerContext context, FullHttpRequest request, QueryStringDecoder urlDecoder) throws Exception {
-    ThrowableNotNullFunction<HttpRequestHandler, Boolean, IOException> checkAndProcess = httpRequestHandler -> {
-      return httpRequestHandler.isSupported(request) &&
-             !HttpRequestUtil.isWriteFromBrowserWithoutOrigin(request) &&
-             httpRequestHandler.isAccessible(request) &&
-             httpRequestHandler.process(urlDecoder, request, context);
+  protected HttpResponse process(ChannelHandlerContext context, FullHttpRequest request, QueryStringDecoder urlDecoder) throws Exception {
+    consulo.builtinWebServer.http.HttpRequest httpRequest = new HttpRequestImpl(request, urlDecoder, context);
+    ThrowableFunction<HttpRequestHandler, HttpResponse, IOException> checkAndProcess = httpRequestHandler -> {
+      if (httpRequestHandler.isSupported(httpRequest)) {
+        if (!HttpRequestUtil.isWriteFromBrowserWithoutOrigin(httpRequest)) {
+          if (httpRequestHandler.isAccessible(httpRequest)) {
+            return httpRequestHandler.process(httpRequest);
+          }
+        }
+      }
+      return null;
     };
 
 
     Attribute<HttpRequestHandler> prevHandlerAttribute = context.channel().attr(PREV_HANDLER);
     HttpRequestHandler connectedHandler = prevHandlerAttribute.get();
     if (connectedHandler != null) {
-      if (checkAndProcess.fun(connectedHandler)) {
-        return true;
+      HttpResponse temp = checkAndProcess.apply(connectedHandler);
+      if (temp != null) {
+        return temp;
       }
       // prev cached connectedHandler is not suitable for this request, so, let's find it again
       prevHandlerAttribute.set(null);
@@ -55,14 +60,15 @@ final class DelegatingHttpRequestHandler extends DelegatingHttpRequestHandlerBas
       context.pipeline().replace(this, "websocketHandler", new WebSocketHandler());
       // do the Handshake to upgrade connection from HTTP to WebSocket protocol
       handleHandshake(context, request);
-      return true;
+      return HttpResponse.ok();
     }
 
     for (HttpRequestHandler handler : HttpRequestHandler.EP_NAME.getExtensionList()) {
       try {
-        if (checkAndProcess.fun(handler)) {
+        HttpResponse temp = checkAndProcess.apply(handler);
+        if (temp != null) {
           prevHandlerAttribute.set(handler);
-          return true;
+          return temp;
         }
       }
       catch (Throwable e) {
@@ -75,14 +81,10 @@ final class DelegatingHttpRequestHandler extends DelegatingHttpRequestHandlerBas
       BufferedImage image = UIUtil.createImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
       icon.paintIcon(null, image.getGraphics(), 0, 0);
       byte[] icoBytes = Imaging.writeImageToBytes(image, ImageFormats.ICO, null);
-
-      HttpResponse response = Responses.response("image/vnd.microsoft.icon", Unpooled.wrappedBuffer(icoBytes));
-      response = Responses.addNoCache(response);
-      Responses.send(response, context.channel(), request);
-      return true;
+      return HttpResponse.ok("image/vnd.microsoft.icon", icoBytes);
     }
 
-    return false;
+    return null;
   }
 
   private void handleHandshake(ChannelHandlerContext ctx, HttpRequest req) {

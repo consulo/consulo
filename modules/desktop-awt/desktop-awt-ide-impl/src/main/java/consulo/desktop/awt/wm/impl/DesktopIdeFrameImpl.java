@@ -15,11 +15,20 @@
  */
 package consulo.desktop.awt.wm.impl;
 
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.util.SystemInfo;
+import consulo.dataContext.DataManager;
+import consulo.desktop.awt.ui.impl.window.JFrameAsUIWindow;
+import consulo.desktop.awt.uiOld.DesktopBalloonLayoutImpl;
+import consulo.disposer.Disposer;
+import consulo.ide.impl.actionSystem.ex.TopApplicationMenuUtil;
+import consulo.ide.impl.application.FrameTitleUtil;
 import consulo.ide.impl.idea.ide.AppLifecycleListener;
 import consulo.ide.impl.idea.ide.impl.ProjectUtil;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
 import consulo.ide.impl.idea.openapi.wm.ex.IdeFrameEx;
 import consulo.ide.impl.idea.openapi.wm.impl.IdeFrameDecorator;
 import consulo.ide.impl.idea.openapi.wm.impl.ProjectFrameBounds;
@@ -28,16 +37,6 @@ import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetsManag
 import consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import consulo.ide.impl.idea.ui.mac.MacMainFrameDecorator;
 import consulo.ide.impl.idea.util.ui.accessibility.AccessibleContextAccessor;
-import consulo.ide.impl.actionSystem.ex.TopApplicationMenuUtil;
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
-import consulo.ide.impl.application.FrameTitleUtil;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.util.SystemInfo;
-import consulo.dataContext.DataManager;
-import consulo.desktop.awt.ui.impl.window.JFrameAsUIWindow;
-import consulo.desktop.awt.uiOld.DesktopBalloonLayoutImpl;
-import consulo.disposer.Disposer;
 import consulo.language.editor.CommonDataKeys;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -48,12 +47,8 @@ import consulo.ui.UIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.PopupHandler;
-import consulo.ui.ex.awt.SideBorder;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.internal.AppIconUtil;
-import consulo.ui.ex.awt.MnemonicHelper;
 import consulo.ui.ex.awt.internal.MouseGestureManager;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.ScreenUtil;
@@ -61,6 +56,7 @@ import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.BitUtil;
 import consulo.util.lang.ref.Ref;
 
 import javax.accessibility.AccessibleContext;
@@ -564,6 +560,30 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
     }
 
     return ActionCallback.DONE;
+  }
+
+  @Override
+  public void activate() {
+    Window awtWindow = TargetAWT.to(getWindow());
+    if (awtWindow instanceof Frame frame) {
+      Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+          int extendedState = frame.getExtendedState();
+          if (BitUtil.isSet(extendedState, Frame.ICONIFIED)) {
+            extendedState = BitUtil.set(extendedState, Frame.ICONIFIED, false);
+            frame.setExtendedState(extendedState);
+          }
+
+          // fixme [vistall] dirty hack - show frame on top
+          frame.setAlwaysOnTop(true);
+          frame.setAlwaysOnTop(false);
+          frame.requestFocus();
+        }
+      };
+      //noinspection SSBasedInspection
+      SwingUtilities.invokeLater(runnable);
+    }
   }
 
   private boolean temporaryFixForIdea156004(final boolean state) {

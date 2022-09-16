@@ -13,17 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.builtInServer.json;
+package consulo.builtinWebServer.json;
 
-import com.google.gson.GsonBuilder;
-import consulo.ide.impl.builtInServer.http.HttpRequestHandler;
-import consulo.ide.impl.builtInServer.http.Responses;
-import io.netty.buffer.Unpooled;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.http.FullHttpRequest;
-import io.netty.handler.codec.http.FullHttpResponse;
-import io.netty.handler.codec.http.HttpMethod;
-import io.netty.handler.codec.http.HttpRequest;
+import consulo.annotation.DeprecationInfo;
+import consulo.application.json.JsonService;
+import consulo.builtinWebServer.http.HttpRequest;
+import consulo.builtinWebServer.http.HttpRequestHandler;
+import consulo.builtinWebServer.http.HttpResponse;
+import consulo.http.HTTPMethod;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,12 +32,14 @@ import java.nio.charset.StandardCharsets;
  * @since 27.10.2015
  */
 public abstract class JsonBaseRequestHandler extends HttpRequestHandler {
-  protected static final class JsonResponse {
+  public static final class JsonResponse {
     public boolean success;
     public String message;
     public Object data;
 
-    private JsonResponse() {
+    @Deprecated
+    @DeprecationInfo("don't use it, used for serialize")
+    public JsonResponse() {
     }
 
     public static JsonResponse asSuccess(@Nullable Object data) {
@@ -66,19 +65,15 @@ public abstract class JsonBaseRequestHandler extends HttpRequestHandler {
   }
 
   @Override
-  public boolean isSupported(FullHttpRequest request) {
+  public boolean isSupported(HttpRequest request) {
     return getMethod() == request.method() && myApiUrl.equals(request.uri());
   }
 
-  protected boolean writeResponse(@Nonnull Object responseObject, HttpRequest request, ChannelHandlerContext context) throws IOException {
-    FullHttpResponse response = Responses.response("application/json; charset=utf-8", null);
+  @Nonnull
+  protected HttpResponse writeResponse(@Nonnull Object responseObject, @Nonnull HttpRequest request) throws IOException {
+    String jsonResponse = JsonService.getInstance().toJson(responseObject);
 
-    String jsonResponse = new GsonBuilder().setPrettyPrinting().create().toJson(responseObject);
-
-    response.content().writeBytes(Unpooled.copiedBuffer(jsonResponse, StandardCharsets.UTF_8));
-
-    Responses.send(response, context.channel(), request);
-    return true;
+    return HttpResponse.ok("application/json; charset=utf-8", jsonResponse.getBytes(StandardCharsets.UTF_8));
   }
 
   @Nonnull
@@ -87,5 +82,5 @@ public abstract class JsonBaseRequestHandler extends HttpRequestHandler {
   }
 
   @Nonnull
-  protected abstract HttpMethod getMethod();
+  protected abstract HTTPMethod getMethod();
 }

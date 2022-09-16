@@ -13,24 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.builtInServer.http.util;
+package consulo.builtinWebServer.http.util;
 
-import com.google.common.net.InetAddresses;
-import consulo.ide.impl.idea.openapi.util.ThrowableNotNullFunction;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.builtinWebServer.BuiltInServerManager;
+import consulo.builtinWebServer.http.HttpRequest;
+import consulo.http.HTTPMethod;
 import consulo.util.io.Url;
 import consulo.util.io.Urls;
-import consulo.util.io.NetUtil;
-import io.netty.handler.codec.http.HttpHeaderNames;
-import io.netty.handler.codec.http.HttpMethod;
-import io.netty.handler.codec.http.HttpRequest;
-import io.netty.resolver.HostsFileEntriesResolver;
-import io.netty.resolver.ResolvedAddressTypes;
-
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
+import consulo.util.lang.StringUtil;
 
 /**
  * @author VISTALL
@@ -38,7 +28,7 @@ import java.net.SocketException;
  */
 public class HttpRequestUtil {
   public static String getHost(HttpRequest request) {
-    return request.headers().getAsString(HttpHeaderNames.HOST);
+    return request.getHeaderValue("Host");
   }
 
   public static boolean isLocalOrigin(HttpRequest httpRequest) {
@@ -55,22 +45,22 @@ public class HttpRequestUtil {
 
 
   public static String getOrigin(HttpRequest request) {
-    return request.headers().getAsString(HttpHeaderNames.ORIGIN);
+    return request.getHeaderValue("Origin");
   }
 
   public static String getReferrer(HttpRequest request) {
-    return request.headers().getAsString(HttpHeaderNames.REFERER);
+    return request.getHeaderValue("Referrer");
   }
 
   public static String getUserAgent(HttpRequest request) {
-    return request.headers().getAsString(HttpHeaderNames.USER_AGENT);
+    return request.getHeaderValue("User-Agent");
   }
 
   // forbid POST requests from browser without Origin
   public static boolean isWriteFromBrowserWithoutOrigin(HttpRequest request) {
-    HttpMethod method = request.method();
+    HTTPMethod method = request.method();
 
-    return StringUtil.isEmpty(getOrigin(request)) && isRegularBrowser(request) && (method == HttpMethod.POST || method == HttpMethod.PATCH || method == HttpMethod.PUT || method == HttpMethod.DELETE);
+    return StringUtil.isEmpty(getOrigin(request)) && isRegularBrowser(request) && (method == HTTPMethod.POST || method == HTTPMethod.PATCH || method == HTTPMethod.PUT || method == HTTPMethod.DELETE);
   }
 
   public static boolean isRegularBrowser(HttpRequest request) {
@@ -114,36 +104,7 @@ public class HttpRequestUtil {
 
 
   public static boolean isLocalHost(String host, boolean onlyAnyOrLoopback, boolean hostsOnly) {
-    if (NetUtil.isLocalhost(host)) {
-      return true;
-    }
-
-    // if IP address, it is safe to use getByName (not affected by DNS rebinding)
-    if (onlyAnyOrLoopback && !InetAddresses.isInetAddress(host)) {
-      return false;
-    }
-
-    ThrowableNotNullFunction<InetAddress, Boolean, SocketException> isLocal =
-            inetAddress -> inetAddress.isAnyLocalAddress() || inetAddress.isLoopbackAddress() || NetworkInterface.getByInetAddress(inetAddress) != null;
-
-    try {
-      InetAddress address = InetAddress.getByName(host);
-      if (!isLocal.fun(address)) {
-        return false;
-      }
-      // be aware - on windows hosts file doesn't contain localhost
-      // hosts can contain remote addresses, so, we check it
-      if (hostsOnly && !InetAddresses.isInetAddress(host)) {
-        InetAddress hostInetAddress = HostsFileEntriesResolver.DEFAULT.address(host, ResolvedAddressTypes.IPV4_PREFERRED);
-        return hostInetAddress != null && isLocal.fun(hostInetAddress);
-      }
-      else {
-        return true;
-      }
-    }
-    catch (IOException ignored) {
-      return false;
-    }
+    return BuiltInServerManager.getInstance().isLocalHost(host, onlyAnyOrLoopback, hostsOnly);
   }
 
   private static boolean isTrustedChromeExtension(Url url) {

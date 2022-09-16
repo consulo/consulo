@@ -13,23 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.builtInServer;
+package consulo.builtinWebServer;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
+import consulo.application.Application;
 import consulo.disposer.Disposable;
-import consulo.application.ApplicationManager;
 import consulo.util.io.Url;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.net.URLConnection;
 
 @ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
 public abstract class BuiltInServerManager {
   @Nonnull
   public static BuiltInServerManager getInstance() {
-    return ApplicationManager.getApplication().getComponent(BuiltInServerManager.class);
+    return Application.get().getInstance(BuiltInServerManager.class);
   }
 
   public abstract int getPort();
@@ -44,4 +44,6 @@ public abstract class BuiltInServerManager {
   public abstract void configureRequestToWebServer(@Nonnull URLConnection connection);
 
   public abstract Url addAuthToken(@Nonnull Url url);
+
+  public abstract boolean isLocalHost(String host, boolean onlyAnyOrLoopback, boolean hostsOnly);
 }

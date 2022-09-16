@@ -18,14 +18,9 @@ package consulo.ide.impl.builtInServer.impl.net.json;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ui.wm.FocusableFrame;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.ide.impl.builtInServer.json.JsonGetRequestHandler;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.util.lang.BitUtil;
+import consulo.builtinWebServer.json.JsonGetRequestHandler;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.swing.*;
-import java.awt.*;
 
 /**
  * @author VISTALL
@@ -33,39 +28,6 @@ import java.awt.*;
  */
 @ExtensionImpl
 public class RequestFocusHttpRequestHandler extends JsonGetRequestHandler {
-  public static boolean activateFrame(@Nullable final FocusableFrame ideFrame) {
-    if (ideFrame == null) {
-      return false;
-    }
-
-    Window awtWindow = TargetAWT.to(ideFrame.getWindow());
-    return awtWindow instanceof Frame && activateFrame((Frame)awtWindow);
-  }
-
-  public static boolean activateFrame(@Nullable final Frame frame) {
-    if (frame != null) {
-      Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-          int extendedState = frame.getExtendedState();
-          if (BitUtil.isSet(extendedState, Frame.ICONIFIED)) {
-            extendedState = BitUtil.set(extendedState, Frame.ICONIFIED, false);
-            frame.setExtendedState(extendedState);
-          }
-
-          // fixme [vistall] dirty hack - show frame on top
-          frame.setAlwaysOnTop(true);
-          frame.setAlwaysOnTop(false);
-          IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(frame);
-        }
-      };
-      //noinspection SSBasedInspection
-      SwingUtilities.invokeLater(runnable);
-      return true;
-    }
-    return false;
-  }
-
   public RequestFocusHttpRequestHandler() {
     super("requestFocus");
   }
@@ -74,6 +36,12 @@ public class RequestFocusHttpRequestHandler extends JsonGetRequestHandler {
   @Override
   public JsonResponse handle() {
     final FocusableFrame frame = IdeFocusManager.findInstance().getLastFocusedFrame();
-    return activateFrame(frame) ? JsonResponse.asSuccess(null) : JsonResponse.asError("No Frame");
+    if (frame != null) {
+      frame.activate();
+      return JsonResponse.asSuccess(null);
+    }
+    else {
+      return JsonResponse.asError("No Frame");
+    }
   }
 }

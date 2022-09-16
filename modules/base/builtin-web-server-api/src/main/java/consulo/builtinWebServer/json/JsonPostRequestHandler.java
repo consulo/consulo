@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.builtInServer.json;
+package consulo.builtinWebServer.json;
 
-import com.google.gson.Gson;
-import consulo.ide.impl.idea.util.ExceptionUtil;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.http.FullHttpRequest;
-import io.netty.handler.codec.http.HttpMethod;
-import io.netty.handler.codec.http.QueryStringDecoder;
+import consulo.builtinWebServer.http.HttpRequest;
+import consulo.application.json.JsonService;
+import consulo.builtinWebServer.http.HttpResponse;
+import consulo.http.HTTPMethod;
+import consulo.util.lang.ExceptionUtil;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -40,8 +39,8 @@ public abstract class JsonPostRequestHandler<Request> extends JsonBaseRequestHan
 
   @Nonnull
   @Override
-  protected HttpMethod getMethod() {
-    return HttpMethod.POST;
+  protected HTTPMethod getMethod() {
+    return HTTPMethod.POST;
   }
 
   @Nonnull
@@ -52,19 +51,20 @@ public abstract class JsonPostRequestHandler<Request> extends JsonBaseRequestHan
     return myRequestClass;
   }
 
+  @Nonnull
   @Override
-  public boolean process(@Nonnull QueryStringDecoder urlDecoder, @Nonnull FullHttpRequest request, @Nonnull ChannelHandlerContext context) throws IOException {
+  public HttpResponse process(@Nonnull HttpRequest request) throws IOException {
     Object handle = null;
     try {
-      String json = request.content().toString(StandardCharsets.UTF_8);
+      String json = request.getContentAsString(StandardCharsets.UTF_8);
 
-      final Request body = new Gson().fromJson(json, myRequestClass);
+      final Request body = JsonService.getInstance().fromJson(json, myRequestClass);
 
       handle = handle(body);
     }
     catch (Exception e) {
       handle = JsonResponse.asError(ExceptionUtil.getThrowableText(e));
     }
-    return writeResponse(handle, request, context);
+    return writeResponse(handle, request);
   }
 }

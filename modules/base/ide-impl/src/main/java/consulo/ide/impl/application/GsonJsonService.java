@@ -13,33 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.application.ui.wm;
+package consulo.ide.impl.application;
 
-import consulo.ui.Window;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import consulo.annotation.component.ServiceImpl;
+import consulo.application.json.JsonService;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-import javax.swing.*;
 
 /**
  * @author VISTALL
- * @since 24-Feb-22
+ * @since 14-Sep-22
  */
-public interface FocusableFrame {
+@Singleton
+@ServiceImpl
+public class GsonJsonService implements JsonService {
+  private final Gson myGson = new GsonBuilder().setPrettyPrinting().create();
+
   @Nonnull
-  Window getWindow();
-
-  default JComponent getComponent() {
-    throw new AbstractMethodError(getClass().getName() + " is not implemented");
+  @Override
+  public String toJson(@Nonnull Object value) {
+    return myGson.toJson(value);
   }
 
-  default boolean isActive() {
-    return Window.getActiveWindow() == getWindow();
-  }
-
-  /**
-   * Try focus frame for user(and move at top). Many oses not allow focus from another process
-   */
-  default void activate() {
-    // non-guaranteed action
+  @Nonnull
+  @Override
+  public <T> T fromJson(@Nonnull String json, @Nonnull Class<T> clazz) {
+    return myGson.fromJson(json, clazz);
   }
 }

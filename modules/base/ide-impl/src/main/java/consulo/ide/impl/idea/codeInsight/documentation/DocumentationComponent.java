@@ -40,7 +40,7 @@ import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.registry.Registry;
-import consulo.ide.impl.builtInServer.BuiltInServerManager;
+import consulo.builtinWebServer.BuiltInServerManager;
 import consulo.colorScheme.EditorColorKey;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.FontSize;

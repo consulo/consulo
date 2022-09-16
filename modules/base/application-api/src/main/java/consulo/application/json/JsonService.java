@@ -13,33 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.application.ui.wm;
+package consulo.application.json;
 
-import consulo.ui.Window;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.application.Application;
 
 import javax.annotation.Nonnull;
-import javax.swing.*;
 
 /**
  * @author VISTALL
- * @since 24-Feb-22
+ * @since 13-Sep-22
  */
-public interface FocusableFrame {
+@ServiceAPI(ComponentScope.APPLICATION)
+public interface JsonService {
+  public static JsonService getInstance() {
+    return Application.get().getInstance(JsonService.class);
+  }
+
   @Nonnull
-  Window getWindow();
+  String toJson(@Nonnull Object value);
 
-  default JComponent getComponent() {
-    throw new AbstractMethodError(getClass().getName() + " is not implemented");
-  }
-
-  default boolean isActive() {
-    return Window.getActiveWindow() == getWindow();
-  }
-
-  /**
-   * Try focus frame for user(and move at top). Many oses not allow focus from another process
-   */
-  default void activate() {
-    // non-guaranteed action
-  }
+  @Nonnull
+  <T> T fromJson(@Nonnull String json, @Nonnull Class<T> clazz);
 }

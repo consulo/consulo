@@ -48,6 +48,7 @@
     <module>modules/boot/util-nodep</module>
 
     <module>modules/base/annotation</module>
+    <module>modules/base/builtin-web-server-api</module>
     <module>modules/base/base-localize-library</module>
     <module>modules/base/base-icon-library</module>
     <module>modules/base/build-ui-api</module>

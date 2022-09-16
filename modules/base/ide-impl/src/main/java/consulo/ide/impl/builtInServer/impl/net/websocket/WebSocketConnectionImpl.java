@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.builtInServer.impl.net.websocket;
 
-import consulo.ide.impl.builtInServer.websocket.WebSocketConnection;
+import consulo.builtinWebServer.webSocket.WebSocketConnection;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;

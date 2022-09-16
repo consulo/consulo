@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.builtInServer.impl.net.websocket;
 
-import consulo.ide.impl.builtInServer.websocket.WebSocketAccepter;
-import consulo.ide.impl.builtInServer.websocket.WebSocketConnection;
+import consulo.builtinWebServer.webSocket.WebSocketAccepter;
+import consulo.builtinWebServer.webSocket.WebSocketConnection;
 import io.netty.buffer.ByteBufUtil;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;

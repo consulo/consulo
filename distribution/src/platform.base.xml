@@ -123,6 +123,7 @@
         <include>consulo:consulo-http-api</include>
         <include>consulo:consulo-http-impl</include>
         <include>consulo:consulo-external-system-api</include>
+        <include>consulo:consulo-builtin-web-server-api</include>
 
         <include>consulo:consulo-base-localize-library</include>
         <include>consulo:consulo-base-icon-library</include>

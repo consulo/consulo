@@ -19,22 +19,18 @@ import com.google.gson.Gson;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.application.progress.Task;
-import consulo.ide.impl.idea.openapi.util.io.StreamUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.http.HttpRequests;
-import consulo.ide.impl.builtInServer.http.HttpRequestHandler;
-import consulo.ide.impl.builtInServer.http.Responses;
-import consulo.ide.impl.external.api.UserAccount;
+import consulo.builtinWebServer.http.HttpRequest;
+import consulo.builtinWebServer.http.HttpRequestHandler;
+import consulo.builtinWebServer.http.HttpResponse;
 import consulo.externalService.ExternalServiceConfiguration;
+import consulo.http.HTTPMethod;
+import consulo.http.HttpRequests;
+import consulo.ide.impl.external.api.UserAccount;
+import consulo.ide.impl.idea.openapi.util.io.StreamUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.Alerts;
 import consulo.ui.UIAccess;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.http.FullHttpRequest;
-import io.netty.handler.codec.http.FullHttpResponse;
-import io.netty.handler.codec.http.HttpMethod;
-import io.netty.handler.codec.http.QueryStringDecoder;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -55,27 +51,23 @@ public class RedirectAuthHttpHandler extends HttpRequestHandler {
   }
 
   @Override
-  public boolean isSupported(FullHttpRequest request) {
-    return request.method() == HttpMethod.GET && checkPrefix(request.uri(), "redirectAuth");
+  public boolean isSupported(HttpRequest request) {
+    return request.method() == HTTPMethod.GET && checkPrefix(request.uri(), "redirectAuth");
   }
 
+  @Nonnull
   @Override
-  public boolean process(@Nonnull QueryStringDecoder urlDecoder, @Nonnull FullHttpRequest request, @Nonnull ChannelHandlerContext context) throws IOException {
-    String token = ContainerUtil.getFirstItem(urlDecoder.parameters().get("token"));
+  public HttpResponse process(@Nonnull HttpRequest request) throws IOException {
+    String token = request.getParameterValue("token");
     if (token != null) {
       doGetToken(token);
     }
-
-    FullHttpResponse response = Responses.response("text/html; charset=utf-8", null);
 
     InputStream stream = RedirectAuthHttpHandler.class.getResourceAsStream("/html/redirectAuth.html");
 
     String html = StreamUtil.readText(stream, StandardCharsets.UTF_8);
 
-    response.content().writeBytes(html.getBytes(StandardCharsets.UTF_8));
-
-    Responses.send(response, context.channel(), request);
-    return true;
+    return HttpResponse.ok("text/html; charset=utf-8", html.getBytes(StandardCharsets.UTF_8));
   }
 
   private static void doGetToken(String sharedToken) {
@@ -93,7 +85,7 @@ public class RedirectAuthHttpHandler extends HttpRequestHandler {
 
         externalServiceConfiguration.updateIcon();
 
-        uiAccess.give(() -> Alerts.okInfo(LocalizeValue.localizeTODO("Successfuly logged as " + requestResult.userAccount.username)).showAsync());
+        uiAccess.give(() -> Alerts.okInfo(LocalizeValue.localizeTODO("Successfully logged as " + requestResult.userAccount.username)).showAsync());
       }
       catch (IOException e) {
         LOG.warn(e);

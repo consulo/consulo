@@ -16,17 +16,16 @@
 package consulo.ide.impl.builtInServer.impl.net.xml;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.builtInServer.http.Responses;
-import consulo.ide.impl.builtInServer.xml.XmlRpcServer;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.builtinWebServer.http.HttpRequest;
+import consulo.builtinWebServer.http.HttpResponse;
+import consulo.builtinWebServer.xml.XmlRpcServer;
+import consulo.http.HTTPMethod;
+import consulo.ide.impl.builtInServer.impl.net.http.HttpRequestImpl;
 import consulo.logging.Logger;
+import consulo.util.lang.StringUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
-import io.netty.buffer.Unpooled;
-import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.FullHttpRequest;
-import io.netty.handler.codec.http.HttpMethod;
-import io.netty.handler.codec.http.HttpResponseStatus;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.apache.xmlrpc.XmlRpcException;
@@ -89,28 +88,29 @@ public class XmlRpcServerImpl implements XmlRpcServer {
     handlerMapping.remove(name);
   }
 
+  @Nonnull
   @Override
-  public boolean process(@Nonnull String path, @Nonnull FullHttpRequest request, @Nonnull ChannelHandlerContext context, @Nullable Map<String, Object> handlers) {
+  public HttpResponse process(@Nonnull String path, @Nonnull HttpRequest request, @Nullable Map<String, Object> handlers) {
     if (!(path.isEmpty() || (path.length() == 1 && path.charAt(0) == '/') || path.equalsIgnoreCase("/rpc2"))) {
-      return false;
+      return HttpResponse.notFound();
     }
 
-    if (request.method() != HttpMethod.POST) {
-      return false;
+    if (request.method() != HTTPMethod.POST) {
+      return HttpResponse.notFound();
     }
 
-    ByteBuf content = request.content();
+    FullHttpRequest fullHttpRequest = ((HttpRequestImpl)request).getFullHttpRequest();
+    ByteBuf content = fullHttpRequest.content();
     if (content.readableBytes() == 0) {
-      Responses.send(HttpResponseStatus.BAD_REQUEST, context.channel(), request);
-      return true;
+      return HttpResponse.badRequest();
     }
 
-    ByteBuf result;
+    byte[] result;
     try (ByteBufInputStream in = new ByteBufInputStream(content)) {
       XmlRpcRequest xmlRpcServerRequest = myApacheXmlRpc.getRequest(myXmlRpcConfig, in);
       if (StringUtil.isEmpty(xmlRpcServerRequest.getMethodName())) {
         LOG.warn("method name empty");
-        return false;
+        return HttpResponse.badRequest();
       }
 
       Object response = invokeHandler(getHandler(xmlRpcServerRequest.getMethodName(), handlers == null ? handlerMapping : handlers), xmlRpcServerRequest);
@@ -119,21 +119,19 @@ public class XmlRpcServerImpl implements XmlRpcServer {
 
       myApacheXmlRpc.writeResponse(myXmlRpcConfig, stream, response);
 
-      result = Unpooled.wrappedBuffer(stream.toByteArray());
+      result = stream.toByteArray();
     }
     catch (SAXParseException e) {
       LOG.warn(e);
-      Responses.send(HttpResponseStatus.BAD_REQUEST, context.channel(), request);
-      return true;
+      return HttpResponse.badRequest();
     }
     catch (Throwable e) {
-      context.channel().close();
+      request.terminate();
       LOG.error(e);
-      return true;
+      return HttpResponse.badRequest();
     }
 
-    Responses.send(Responses.response("text/xml", result), context.channel(), request);
-    return true;
+    return HttpResponse.ok("text/xml", result);
   }
 
   private static Object getHandler(@Nonnull String methodName, @Nonnull Map<String, Object> handlers) {

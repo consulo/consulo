@@ -15,10 +15,12 @@
  */
 package consulo.ide.impl.builtInServer.impl.net.http;
 
-import consulo.ide.impl.builtInServer.xml.XmlRpcServer;
+import consulo.builtinWebServer.custom.CustomPortServerManager;
+import consulo.builtinWebServer.http.HttpResponse;
+import consulo.builtinWebServer.xml.XmlRpcServer;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.util.net.NetUtils;
 import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.util.net.NetUtils;
 import consulo.logging.Logger;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
@@ -28,7 +30,6 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.QueryStringDecoder;
-import consulo.ide.impl.builtInServer.custom.CustomPortServerManager;
 
 import javax.annotation.Nonnull;
 import java.net.InetSocketAddress;
@@ -124,13 +125,18 @@ public final class SubServer implements CustomPortServerManager.CustomPortServic
     }
 
     @Override
-    protected boolean process(@Nonnull ChannelHandlerContext context, @Nonnull FullHttpRequest request, @Nonnull QueryStringDecoder urlDecoder) {
+    protected HttpResponse process(@Nonnull ChannelHandlerContext context, @Nonnull FullHttpRequest request, @Nonnull QueryStringDecoder urlDecoder) {
       if (handlers.isEmpty()) {
         // not yet initialized, for example, P2PTransport could add handlers after we bound.
-        return false;
+        return null;
       }
 
-      return request.method() == HttpMethod.POST && XmlRpcServer.getInstance().process(urlDecoder.path(), request, context, handlers);
+      if (request.method() == HttpMethod.POST) {
+        return XmlRpcServer.getInstance().process(urlDecoder.path(), new HttpRequestImpl(request, urlDecoder, context), handlers);
+      }
+      else {
+        return null;
+      }
     }
   }
 }

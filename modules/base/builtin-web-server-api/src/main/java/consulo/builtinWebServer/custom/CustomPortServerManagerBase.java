@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2020 consulo.io
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.builtInServer.websocket;
+package consulo.builtinWebServer.custom;
 
-/**
- * @author VISTALL
- * @since 2020-06-14
- */
-public interface WebSocketConnection {
-  void send(String text);
+import javax.annotation.Nullable;
 
-  void send(byte[] data);
+public abstract class CustomPortServerManagerBase extends CustomPortServerManager {
+  @Nullable
+  protected CustomPortService manager;
+
+  @Override
+  public void setManager(@Nullable CustomPortService manager) {
+    this.manager = manager;
+  }
+
+  public boolean isBound() {
+    return manager != null && manager.isBound();
+  }
+
+  public void portChanged() {
+    if (manager != null) {
+      manager.rebind();
+    }
+  }
 }

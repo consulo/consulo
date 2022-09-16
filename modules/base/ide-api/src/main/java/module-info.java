@@ -68,6 +68,7 @@ module consulo.ide.api {
   requires transitive consulo.http.api;
   requires transitive consulo.bookmark.api;
   requires transitive consulo.external.system.api;
+  requires transitive consulo.builtin.web.server.api;
 
   exports consulo.ide;
   exports consulo.ide.action;

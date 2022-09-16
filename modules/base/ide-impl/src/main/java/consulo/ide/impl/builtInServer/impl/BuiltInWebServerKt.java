@@ -17,7 +17,7 @@ package consulo.ide.impl.builtInServer.impl;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.collection.ContainerUtil;
 
 import java.util.concurrent.TimeUnit;
 
@@ -42,3 +42,4 @@ public class BuiltInWebServerKt {
     return token;
   }
 }
+                                                                                

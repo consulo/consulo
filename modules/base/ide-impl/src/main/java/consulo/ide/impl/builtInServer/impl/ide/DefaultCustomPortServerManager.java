@@ -16,8 +16,8 @@
 package consulo.ide.impl.builtInServer.impl.ide;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.impl.internal.ApplicationNamesInfo;
-import consulo.ide.impl.builtInServer.custom.CustomPortServerManagerBase;
+import consulo.application.Application;
+import consulo.builtinWebServer.custom.CustomPortServerManagerBase;
 import consulo.ide.impl.builtInServer.impl.BuiltInServerManagerImpl;
 import consulo.project.ui.notification.NotificationType;
 
@@ -25,11 +25,10 @@ import consulo.project.ui.notification.NotificationType;
 public final class DefaultCustomPortServerManager extends CustomPortServerManagerBase {
   @Override
   public void cannotBind(Exception e, int port) {
-    BuiltInServerManagerImpl.NOTIFICATION_GROUP.createNotification("Cannot start built-in HTTP server on custom port " +
-                                                                   port +
-                                                                   ". " +
-                                                                   "Please ensure that port is free (or check your firewall settings) and restart " +
-                                                                   ApplicationNamesInfo.getInstance().getFullProductName(), NotificationType.ERROR).notify(null);
+    BuiltInServerManagerImpl.NOTIFICATION_GROUP.createNotification(
+            "Cannot start built-in HTTP server on custom port " + port + ". " +
+            "Please ensure that port is free (or check your firewall settings) and restart " + Application.get().getName(),
+            NotificationType.ERROR).notify(null);
   }
 
   @Override

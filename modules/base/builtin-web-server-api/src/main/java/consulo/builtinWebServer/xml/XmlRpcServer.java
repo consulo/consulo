@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.builtInServer.xml;
+package consulo.builtinWebServer.xml;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.ide.ServiceManager;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.http.FullHttpRequest;
+import consulo.application.Application;
+import consulo.builtinWebServer.http.HttpRequest;
+import consulo.builtinWebServer.http.HttpResponse;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -28,7 +28,7 @@ import java.util.Map;
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface XmlRpcServer {
   static XmlRpcServer getInstance() {
-    return ServiceManager.getService(XmlRpcServer.class);
+    return Application.get().getInstance(XmlRpcServer.class);
   }
 
   void addHandler(String name, Object handler);
@@ -37,5 +37,6 @@ public interface XmlRpcServer {
 
   void removeHandler(String name);
 
-  boolean process(@Nonnull String path, @Nonnull FullHttpRequest request, @Nonnull ChannelHandlerContext context, @Nullable Map<String, Object> handlers);
+  @Nonnull
+  HttpResponse process(@Nonnull String path, @Nonnull HttpRequest request, @Nullable Map<String, Object> handlers);
 }

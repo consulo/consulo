@@ -13,17 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.builtInServer.http;
+package consulo.builtinWebServer.http;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
+import consulo.builtinWebServer.http.util.HttpRequestUtil;
 import consulo.component.extension.ExtensionPointName;
-import consulo.ide.impl.builtInServer.http.util.HttpRequestUtil;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.http.FullHttpRequest;
-import io.netty.handler.codec.http.HttpMethod;
-import io.netty.handler.codec.http.HttpRequest;
-import io.netty.handler.codec.http.QueryStringDecoder;
+import consulo.http.HTTPMethod;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -45,8 +41,8 @@ public abstract class HttpRequestHandler {
     return false;
   }
 
-  public boolean isSupported(FullHttpRequest request) {
-    return request.method() == HttpMethod.GET || request.method() == HttpMethod.HEAD;
+  public boolean isSupported(HttpRequest request) {
+    return request.method() == HTTPMethod.GET || request.method() == HTTPMethod.HEAD;
   }
 
   /**
@@ -60,6 +56,6 @@ public abstract class HttpRequestHandler {
     return host != null && HttpRequestUtil.isLocalOrigin(request) && HttpRequestUtil.parseAndCheckIsLocalHost("http://" + host);
   }
 
-  public abstract boolean process(@Nonnull QueryStringDecoder urlDecoder, @Nonnull FullHttpRequest request, @Nonnull ChannelHandlerContext context)
-          throws IOException;
+  @Nonnull
+  public abstract HttpResponse process(@Nonnull HttpRequest request) throws IOException;
 }

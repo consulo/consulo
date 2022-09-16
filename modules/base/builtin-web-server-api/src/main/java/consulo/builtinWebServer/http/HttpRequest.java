@@ -13,33 +13,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.application.ui.wm;
+package consulo.builtinWebServer.http;
 
-import consulo.ui.Window;
+import consulo.http.HTTPMethod;
 
 import javax.annotation.Nonnull;
-import javax.swing.*;
+import javax.annotation.Nullable;
+import java.io.IOException;
+import java.nio.charset.Charset;
 
 /**
  * @author VISTALL
- * @since 24-Feb-22
+ * @since 13-Sep-22
  */
-public interface FocusableFrame {
+public interface HttpRequest {
   @Nonnull
-  Window getWindow();
+  HTTPMethod method();
 
-  default JComponent getComponent() {
-    throw new AbstractMethodError(getClass().getName() + " is not implemented");
-  }
+  @Nonnull
+  String getContentAsString(@Nonnull Charset charset) throws IOException;
 
-  default boolean isActive() {
-    return Window.getActiveWindow() == getWindow();
-  }
+  byte[] getContent() throws IOException;
+
+  @Nonnull
+  String uri();
 
   /**
-   * Try focus frame for user(and move at top). Many oses not allow focus from another process
+   * Returns the decoded path string of the URI.
    */
-  default void activate() {
-    // non-guaranteed action
-  }
+  @Nonnull
+  String path();
+
+  @Nullable
+  String getHeaderValue(@Nonnull String headerName);
+
+  @Nullable
+  String getParameterValue(@Nonnull String parameter);
+
+  void terminate();
 }

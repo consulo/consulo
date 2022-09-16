@@ -16,8 +16,11 @@
 package consulo.ide.impl.builtInServer.impl.net.xml;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.builtInServer.http.HttpRequestHandler;
-import consulo.ide.impl.builtInServer.xml.XmlRpcServer;
+import consulo.builtinWebServer.http.HttpRequest;
+import consulo.builtinWebServer.http.HttpRequestHandler;
+import consulo.builtinWebServer.http.HttpResponse;
+import consulo.builtinWebServer.xml.XmlRpcServer;
+import consulo.http.HTTPMethod;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.HttpMethod;
@@ -29,12 +32,13 @@ import java.io.IOException;
 @ExtensionImpl
 public final class XmlRpcRequestHandler extends HttpRequestHandler {
   @Override
-  public boolean isSupported(@Nonnull FullHttpRequest request) {
-    return request.method() == HttpMethod.POST || request.method() == HttpMethod.OPTIONS;
+  public boolean isSupported(@Nonnull HttpRequest request) {
+    return request.method() == HTTPMethod.POST || request.method() == HTTPMethod.OPTIONS;
   }
 
+  @Nonnull
   @Override
-  public boolean process(@Nonnull QueryStringDecoder urlDecoder, @Nonnull FullHttpRequest request, @Nonnull ChannelHandlerContext context) throws IOException {
-    return XmlRpcServer.getInstance().process(urlDecoder.path(), request, context, null);
+  public HttpResponse process(@Nonnull HttpRequest request) throws IOException {
+    return XmlRpcServer.getInstance().process(request.path(), request, null);
   }
 }

@@ -1,14 +1,15 @@
 package consulo.ide.impl.builtInServer.impl;
 
+import com.google.common.net.InetAddresses;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.application.impl.internal.start.ImportantFolderLocker;
 import consulo.application.impl.internal.start.StartupUtil;
+import consulo.builtinWebServer.BuiltInServerManager;
+import consulo.builtinWebServer.custom.CustomPortServerManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.builtInServer.BuiltInServerManager;
-import consulo.ide.impl.builtInServer.custom.CustomPortServerManager;
 import consulo.ide.impl.builtInServer.impl.ide.BuiltInServerOptions;
 import consulo.ide.impl.builtInServer.impl.net.http.BuiltInServer;
 import consulo.ide.impl.builtInServer.impl.net.http.ImportantFolderLockerViaBuiltInServer;
@@ -21,7 +22,10 @@ import consulo.util.io.NetUtil;
 import consulo.util.io.Url;
 import consulo.util.io.Urls;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.function.ThrowableFunction;
 import io.netty.channel.oio.OioEventLoopGroup;
+import io.netty.resolver.HostsFileEntriesResolver;
+import io.netty.resolver.ResolvedAddressTypes;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
@@ -31,6 +35,7 @@ import javax.annotation.Nullable;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.URLConnection;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -143,6 +148,40 @@ public class BuiltInServerManagerImpl extends BuiltInServerManager {
   @Override
   public void configureRequestToWebServer(@Nonnull URLConnection connection) {
     connection.setRequestProperty(BuiltInWebServerKt.TOKEN_HEADER_NAME, BuiltInWebServerKt.acquireToken());
+  }
+
+  @Override
+  public boolean isLocalHost(String host, boolean onlyAnyOrLoopback, boolean hostsOnly) {
+    if (NetUtil.isLocalhost(host)) {
+      return true;
+    }
+
+    // if IP address, it is safe to use getByName (not affected by DNS rebinding)
+    if (onlyAnyOrLoopback && !InetAddresses.isInetAddress(host)) {
+      return false;
+    }
+
+    ThrowableFunction<InetAddress, Boolean, SocketException> isLocal =
+            inetAddress -> inetAddress.isAnyLocalAddress() || inetAddress.isLoopbackAddress() || NetworkInterface.getByInetAddress(inetAddress) != null;
+
+    try {
+      InetAddress address = InetAddress.getByName(host);
+      if (!isLocal.apply(address)) {
+        return false;
+      }
+      // be aware - on windows hosts file doesn't contain localhost
+      // hosts can contain remote addresses, so, we check it
+      if (hostsOnly && !InetAddresses.isInetAddress(host)) {
+        InetAddress hostInetAddress = HostsFileEntriesResolver.DEFAULT.address(host, ResolvedAddressTypes.IPV4_PREFERRED);
+        return hostInetAddress != null && isLocal.apply(hostInetAddress);
+      }
+      else {
+        return true;
+      }
+    }
+    catch (IOException ignored) {
+      return false;
+    }
   }
 
   private void bindCustomPorts(@Nonnull BuiltInServer server) {

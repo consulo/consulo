@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.builtInServer.http;
+package consulo.ide.impl.builtInServer.impl.net.http;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.ApplicationNamesInfo;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.ByteBufUtil;
@@ -29,6 +28,7 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.handler.codec.http.*;
 import io.netty.util.CharsetUtil;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.nio.CharBuffer;
 import java.util.Calendar;
@@ -47,7 +47,7 @@ public final class Responses {
     if (SERVER_HEADER_VALUE == null) {
       Application app = ApplicationManager.getApplication();
       if (app != null && !app.isDisposed()) {
-        SERVER_HEADER_VALUE = ApplicationNamesInfo.getInstance().getFullProductName();
+        SERVER_HEADER_VALUE = Application.get().getName().get();
       }
     }
     return SERVER_HEADER_VALUE;
@@ -63,7 +63,7 @@ public final class Responses {
     if (SERVER_HEADER_VALUE == null) {
       Application app = ApplicationManager.getApplication();
       if (app != null && !app.isDisposed()) {
-        SERVER_HEADER_VALUE = ApplicationNamesInfo.getInstance().getFullProductName();
+        SERVER_HEADER_VALUE = Application.get().getName().get();
       }
     }
     if (SERVER_HEADER_VALUE != null) {
@@ -83,11 +83,7 @@ public final class Responses {
     send(status, channel, request, null, null);
   }
 
-  public static void send(HttpResponseStatus status,
-                          Channel channel,
-                          @Nullable HttpRequest request,
-                          @Nullable String description,
-                          @Nullable HttpHeaders extraHeaders) {
+  public static void send(HttpResponseStatus status, Channel channel, @Nullable HttpRequest request, @Nullable String description, @Nullable HttpHeaders extraHeaders) {
     HttpResponse response = createStatusResponse(status, request, description);
     send(response, channel, request, extraHeaders);
   }
@@ -105,8 +101,8 @@ public final class Responses {
     }
     builder.append("<hr/><p style=\"text-align: center\">").append(StringUtil.notNullize(getServerHeaderValue())).append("</p>");
 
-    DefaultFullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, responseStatus, ByteBufUtil
-            .encodeString(ByteBufAllocator.DEFAULT, CharBuffer.wrap(builder), CharsetUtil.UTF_8));
+    DefaultFullHttpResponse response =
+            new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, responseStatus, ByteBufUtil.encodeString(ByteBufAllocator.DEFAULT, CharBuffer.wrap(builder), CharsetUtil.UTF_8));
     response.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/html");
     return response;
   }
@@ -153,19 +149,25 @@ public final class Responses {
     return false;
   }
 
-  public static FullHttpResponse response(String contentType, ByteBuf content) {
+  public static FullHttpResponse response(@Nonnull HttpResponseStatus status, String contentType, ByteBuf content) {
     FullHttpResponse response = null;
     if (content == null) {
-      response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
+      response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, status);
     }
     else {
 
-      response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK, content);
+      response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, status, content);
     }
     if (contentType != null) {
       response.headers().set(HttpHeaderNames.CONTENT_TYPE, contentType);
     }
+
+    addNoCache(response);
     return response;
+  }
+
+  public static FullHttpResponse response(String contentType, ByteBuf content) {
+    return response(OK, contentType, content);
   }
 
   public static HttpResponse addNoCache(HttpResponse response) {
