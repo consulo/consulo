@@ -21,7 +21,7 @@ import consulo.project.Project;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.WindowInfo;
 import consulo.ui.ex.toolWindow.InternalDecoratorListener;
-import consulo.ide.impl.idea.openapi.wm.impl.WindowInfoImpl;
+import consulo.project.ui.internal.WindowInfoImpl;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;

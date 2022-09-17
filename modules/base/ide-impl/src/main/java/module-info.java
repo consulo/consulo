@@ -438,7 +438,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.ide.highlighter.custom.impl;
   exports consulo.ide.impl.idea.ide.impl;
   exports consulo.ide.impl.idea.ide.impl.dataRules;
-  exports consulo.ide.impl.idea.ide.impl.util;
   exports consulo.ide.impl.idea.ide.macro;
   exports consulo.ide.impl.idea.ide.navigationToolbar;
   exports consulo.ide.impl.idea.ide.navigationToolbar.ui;
@@ -932,7 +931,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.language.psi;
   exports consulo.ide.impl.language.psi.search.scope;
   exports consulo.ide.impl.moduleImport;
-  exports consulo.ide.impl.moduleImport.ui;
   exports consulo.ide.impl.newProject.actions;
   exports consulo.ide.impl.newProject.ui;
   exports consulo.ide.impl.options;

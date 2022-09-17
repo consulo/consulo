@@ -10,7 +10,7 @@ import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.diagnostic.DiagnosticBundle;
 import consulo.ide.impl.idea.execution.util.ExecUtil;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.ide.impl.idea.notification.NotificationAction;
+import consulo.project.ui.notification.NotificationAction;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.impl.local.NativeFileWatcherImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

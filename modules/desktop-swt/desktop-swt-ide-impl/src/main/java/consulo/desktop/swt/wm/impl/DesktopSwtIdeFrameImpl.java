@@ -19,7 +19,7 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ui.wm.IdeRootPaneNorthExtension;
 import consulo.project.ui.wm.StatusBar;
-import consulo.ide.impl.idea.openapi.wm.ex.IdeFrameEx;
+import consulo.project.ui.internal.IdeFrameEx;
 import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetsManager;
 import consulo.project.ui.wm.BalloonLayout;
 import consulo.disposer.Disposable;

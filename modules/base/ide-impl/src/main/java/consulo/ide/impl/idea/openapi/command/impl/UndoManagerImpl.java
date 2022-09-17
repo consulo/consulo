@@ -33,7 +33,7 @@ import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.text.TextEditorProvider;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.psi.PsiDocumentManager;

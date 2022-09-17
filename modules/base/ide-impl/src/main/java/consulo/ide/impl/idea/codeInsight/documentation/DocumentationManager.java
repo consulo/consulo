@@ -34,7 +34,7 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
-import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.language.editor.FileColorManager;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;

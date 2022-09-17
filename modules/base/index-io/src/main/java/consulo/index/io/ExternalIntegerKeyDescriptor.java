@@ -17,9 +17,8 @@
 /*
  * @author max
  */
-package consulo.ide.impl.idea.util.io;
+package consulo.index.io;
 
-import consulo.index.io.KeyDescriptor;
 import consulo.index.io.data.DataInputOutputUtil;
 
 import java.io.DataInput;
@@ -28,17 +27,19 @@ import java.io.IOException;
 
 public class ExternalIntegerKeyDescriptor implements KeyDescriptor<Integer> {
   public int getHashCode(final Integer value) {
-    return value.intValue();
+    return value;
   }
 
   public boolean isEqual(final Integer val1, final Integer val2) {
     return val1.equals(val2);
   }
 
+  @Override
   public void save(final DataOutput out, final Integer value) throws IOException {
-    DataInputOutputUtil.writeINT(out, value.intValue());
+    DataInputOutputUtil.writeINT(out, value);
   }
 
+  @Override
   public Integer read(final DataInput in) throws IOException {
     return DataInputOutputUtil.readINT(in);
   }

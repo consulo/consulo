@@ -135,11 +135,13 @@ public class PluginsLoader {
 
       if (disabledPlugins.contains(descriptor.getPluginId())) {
         descriptor.setStatus(PluginDescriptorStatus.DISABLED_BY_USER);
-      } else if (PluginValidator.isIncompatible(descriptor)) {
+      }
+      else if (PluginValidator.isIncompatible(descriptor)) {
         descriptor.setStatus(PluginDescriptorStatus.WRONG_PLATFORM_VERSION);
 
         brokenPluginsList.add(descriptor.getName());
-      } else {
+      }
+      else {
         result.add(descriptor);
       }
     }
@@ -414,7 +416,7 @@ public class PluginsLoader {
         return true;
       });
     }
-    
+
     if (!disabledPluginIds.isEmpty()) {
       info.setPluginsForDisable(disabledPluginIds);
       info.setPluginsForEnable(faultyDescriptors);
@@ -538,7 +540,7 @@ public class PluginsLoader {
     final List<ClassLoader> classLoaders = new ArrayList<>();
     for (final PluginId id : pluginIds) {
       PluginDescriptor pluginDescriptor = idToDescriptorMap.get(id);
-      if (pluginDescriptor == null) {
+      if (pluginDescriptor == null || pluginDescriptor.getStatus() != PluginDescriptorStatus.OK) {
         continue; // Might be an optional dependency
       }
 

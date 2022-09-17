@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration;
 
 import consulo.ide.impl.compiler.ModuleCompilerUtil;
-import consulo.ide.impl.idea.ide.impl.util.NewOrImportModuleUtil;
+import consulo.ide.newModule.NewOrImportModuleUtil;
 import consulo.application.ApplicationManager;
 import consulo.application.WriteAction;
 import consulo.fileChooser.FileChooserDescriptor;
@@ -47,7 +47,7 @@ import consulo.ide.impl.newProject.ui.NewProjectPanel;
 import consulo.logging.Logger;
 import consulo.ide.moduleImport.ModuleImportContext;
 import consulo.ide.moduleImport.ModuleImportProvider;
-import consulo.ide.impl.moduleImport.ui.ModuleImportProcessor;
+import consulo.ide.moduleImport.ModuleImportProcessor;
 import consulo.language.content.LanguageContentFolderScopes;
 import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ide.setting.module.ModulesConfigurator;
@@ -372,7 +372,7 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
         dialogAsync.doWhenDone(() -> {
           NewProjectPanel panel = dialog.getProjectPanel();
 
-          Module newModule = NewOrImportModuleUtil.doCreate(panel, myModuleModel, moduleDir, false);
+          Module newModule = NewOrImportModuleUtil.doCreate(panel.getProcessor(), panel.getWizardContext(), myModuleModel, moduleDir, false);
 
           getOrCreateModuleEditor(newModule);
 

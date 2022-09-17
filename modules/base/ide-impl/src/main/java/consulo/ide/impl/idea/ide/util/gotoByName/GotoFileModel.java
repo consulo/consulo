@@ -11,7 +11,7 @@ import consulo.ide.impl.idea.ide.actions.GotoFileItemProvider;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ide.impl.idea.ui.IdeUICustomization;
 import consulo.ide.navigation.GotoFileContributor;
 import consulo.language.editor.ui.PsiElementListCellRenderer;

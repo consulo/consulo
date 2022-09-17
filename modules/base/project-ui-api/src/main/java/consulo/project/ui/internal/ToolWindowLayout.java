@@ -13,29 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.wm.impl;
+package consulo.project.ui.internal;
 
 import consulo.application.ui.UISettings;
+import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
-import consulo.project.ui.wm.ToolWindowManager;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import java.util.HashMap;
 import consulo.ui.ex.toolWindow.ToolWindowStripeButton;
+import consulo.util.collection.ArrayUtil;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 
 /**
  * @author Vladimir Kondratyev
  */
 public final class ToolWindowLayout {
-  @NonNls
   public static final String TAG = "layout";
-  @NonNls
   private static final String ID_ATTR = "id";
   /**
    * Map between <code>id</code>s and registered <code>WindowInfo</code>s.

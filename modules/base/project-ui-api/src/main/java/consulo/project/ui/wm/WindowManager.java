@@ -145,7 +145,13 @@ public abstract class WindowManager {
   }
 
   @Nullable
-  public abstract consulo.ui.Window findVisibleWindow();
+  public consulo.ui.Window findVisibleWindow() {
+    IdeFrame frame = findVisibleIdeFrame();
+    return frame == null ? null : frame.getWindow();
+  }
+
+  @Nullable
+  public abstract IdeFrame findVisibleIdeFrame();
 
   public abstract void addListener(WindowManagerListener listener);
 

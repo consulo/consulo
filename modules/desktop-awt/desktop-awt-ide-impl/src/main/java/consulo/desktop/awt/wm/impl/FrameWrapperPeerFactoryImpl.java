@@ -30,7 +30,7 @@ import consulo.application.util.SystemInfo;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.IdeRootPaneNorthExtension;
 import consulo.project.ui.wm.StatusBar;
-import consulo.ide.impl.idea.openapi.wm.ex.IdeFrameEx;
+import consulo.project.ui.internal.IdeFrameEx;
 import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
 import consulo.project.ui.wm.BalloonLayout;
 import consulo.ide.impl.idea.ui.FrameState;

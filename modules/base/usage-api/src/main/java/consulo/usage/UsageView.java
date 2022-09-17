@@ -128,4 +128,6 @@ public interface UsageView extends Disposable {
   boolean isDisposed();
 
   void expandAll();
+
+  void select();
 }

@@ -21,7 +21,7 @@ import consulo.project.Project;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
-import consulo.ide.impl.idea.openapi.wm.impl.ToolWindowLayout;
+import consulo.project.ui.internal.ToolWindowLayout;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;

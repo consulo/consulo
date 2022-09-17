@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.openapi.progress.util;
 import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.ide.impl.idea.openapi.ui.impl.GlassPaneDialogWrapperPeer;
-import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ide.impl.idea.ui.PopupBorder;
 import consulo.ide.impl.idea.ui.TitlePanel;
 import consulo.ide.impl.idea.ui.WindowMoveListener;

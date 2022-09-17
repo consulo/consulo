@@ -13,16 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.wm.impl;
+package consulo.project.ui.internal;
 
 import consulo.application.Application;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.wm.*;
-import consulo.ui.ex.toolWindow.*;
 import consulo.project.ui.wm.ToolWindowFactory;
 import consulo.ui.Rectangle2D;
+import consulo.ui.ex.toolWindow.ToolWindowAnchor;
+import consulo.ui.ex.toolWindow.ToolWindowContentUiType;
+import consulo.ui.ex.toolWindow.ToolWindowType;
+import consulo.ui.ex.toolWindow.WindowInfo;
+import consulo.util.lang.Comparing;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -40,7 +42,6 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
   /**
    * XML tag.
    */
-  @NonNls
   static final String TAG = "window_info";
   /**
    * Default window weight.
@@ -73,39 +74,22 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
    * The default value is <code>-1</code>.
    */
   private int myOrder = -1;
-  @NonNls
   private static final String ID_ATTR = "id";
-  @NonNls
   private static final String ACTIVE_ATTR = "active";
-  @NonNls
   private static final String ANCHOR_ATTR = "anchor";
-  @NonNls
   private static final String AUTOHIDE_ATTR = "auto_hide";
-  @NonNls
   private static final String INTERNAL_TYPE_ATTR = "internal_type";
-  @NonNls
   private static final String TYPE_ATTR = "type";
-  @NonNls
   private static final String VISIBLE_ATTR = "visible";
-  @NonNls
   private static final String WEIGHT_ATTR = "weight";
-  @NonNls
   private static final String SIDE_WEIGHT_ATTR = "sideWeight";
-  @NonNls
   private static final String ORDER_ATTR = "order";
-  @NonNls
   private static final String X_ATTR = "x";
-  @NonNls
   private static final String Y_ATTR = "y";
-  @NonNls
   private static final String WIDTH_ATTR = "width";
-  @NonNls
   private static final String HEIGHT_ATTR = "height";
-  @NonNls
   private static final String SIDE_TOOL_ATTR = "side_tool";
-  @NonNls
   private static final String CONTENT_UI_ATTR = "content_ui";
-  @NonNls
   private static final String SHOW_STRIPE_BUTTON = "show_stripe_button";
 
   private boolean myWasRead;

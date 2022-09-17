@@ -15,7 +15,7 @@ import consulo.codeEditor.EditorEx;
 import consulo.ide.impl.idea.openapi.project.ProjectUtil;
 import consulo.application.ui.WindowStateService;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
-import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
 import consulo.ide.impl.idea.ui.*;
 import consulo.ide.impl.idea.ui.mac.touchbar.TouchBarsManager;

@@ -18,7 +18,7 @@ package consulo.desktop.awt.welcomeScreen;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.project.ui.wm.IdeFrame;
-import consulo.ide.impl.start.WelcomeFrameManager;
+import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

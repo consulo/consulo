@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.util;
+package consulo.util.lang;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

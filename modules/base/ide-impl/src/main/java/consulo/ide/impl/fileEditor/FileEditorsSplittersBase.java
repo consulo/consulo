@@ -29,7 +29,7 @@ import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.wm.IdeFrame;
-import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.FrameTitleBuilder;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.util.Alarm;

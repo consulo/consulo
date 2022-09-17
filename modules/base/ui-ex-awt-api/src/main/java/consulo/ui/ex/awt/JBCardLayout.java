@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ui;
+package consulo.ui.ex.awt;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.ui.ex.awt.JBInsets;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -34,6 +33,8 @@ import java.util.Map;
 /**
  * User: Vassiliy.Kudryashov
  */
+@Deprecated
+@DeprecationInfo("Use consulo.ui.layout.SwipeLayout from Consulo UI")
 public class JBCardLayout extends CardLayout {
   public enum SwipeDirection {FORWARD, BACKWARD, AUTO}
 

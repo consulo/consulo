@@ -25,7 +25,7 @@ import consulo.ide.impl.idea.openapi.util.DimensionService;
 import consulo.util.lang.ref.Ref;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ide.impl.idea.ui.CaptionPanel;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.ScrollingUtil;

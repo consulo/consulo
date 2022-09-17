@@ -23,6 +23,7 @@ import consulo.ide.impl.idea.ide.ReopenProjectAction;
 import consulo.application.Application;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.ProjectManager;
+import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.ide.impl.application.FrameTitleUtil;
 import consulo.ui.*;

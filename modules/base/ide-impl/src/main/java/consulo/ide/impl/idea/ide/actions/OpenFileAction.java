@@ -101,7 +101,7 @@ public class OpenFileAction extends AnAction implements DumbAware {
 
   @Nonnull
   private static String getFileChooserDescription() {
-    ProjectOpenProcessor[] providers = ProjectOpenProcessors.getInstance().getProcessors();
+    List<ProjectOpenProcessor> providers = ProjectOpenProcessors.getInstance().getProcessors();
     List<String> fileSamples = new ArrayList<>();
     for (ProjectOpenProcessor processor : providers) {
       processor.collectFileSamples(fileSamples::add);

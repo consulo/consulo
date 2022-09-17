@@ -22,7 +22,7 @@ import consulo.versionControlSystem.CheckoutProvider;
 import consulo.ide.impl.idea.openapi.vcs.checkout.CheckoutAction;
 import consulo.ui.ex.UIBundle;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.start.WelcomeFrameManager;
+import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

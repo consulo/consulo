@@ -98,7 +98,7 @@ public interface PluginDescriptor {
   boolean isBundled();
 
   @Deprecated
-  // see getStatus()
+  // same as getStatus() == PluginDescriptorStatus.OK
   boolean isEnabled();
 
   PluginDescriptorStatus getStatus();

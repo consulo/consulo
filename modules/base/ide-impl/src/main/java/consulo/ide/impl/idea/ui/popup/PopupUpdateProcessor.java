@@ -28,7 +28,7 @@ import consulo.language.editor.completion.lookup.event.LookupEvent;
 import consulo.project.Project;
 import consulo.ui.ex.popup.PopupUpdateProcessorBase;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
-import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.language.psi.PsiElement;
 
 import javax.swing.*;

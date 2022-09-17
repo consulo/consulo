@@ -21,7 +21,7 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.start.WelcomeFrameManager;
+import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

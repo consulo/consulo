@@ -22,7 +22,7 @@ import consulo.ui.ex.keymap.event.KeymapManagerListener;
 import consulo.ide.impl.idea.openapi.keymap.ex.KeymapManagerEx;
 import consulo.application.util.registry.Registry;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
-import consulo.ide.impl.idea.openapi.wm.impl.WindowInfoImpl;
+import consulo.project.ui.internal.WindowInfoImpl;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.awt.util.ScreenUtil;

@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.diagnostic;
 
 import consulo.application.AllIcons;
 import consulo.project.ui.notification.Notification;
-import consulo.ide.impl.idea.notification.NotificationAction;
+import consulo.project.ui.notification.NotificationAction;
 import consulo.project.ui.notification.NotificationType;
 import consulo.ide.impl.idea.notification.impl.NotificationsManagerImpl;
 import consulo.ui.ex.awt.JBCurrentTheme;

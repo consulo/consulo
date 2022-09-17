@@ -17,15 +17,14 @@
 package consulo.ide.impl.idea.openapi.projectRoots.impl;
 
 import consulo.application.ApplicationManager;
-import consulo.application.util.function.Computable;
-import consulo.content.bundle.*;
-import consulo.content.impl.internal.bundle.SdkImpl;
+import consulo.content.bundle.Sdk;
+import consulo.content.bundle.SdkTable;
+import consulo.content.bundle.SdkType;
+import consulo.content.bundle.SdkUtil;
 import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.project.ProjectBundle;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.Messages;
-import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -68,6 +67,7 @@ public class SdkConfigurationUtil {
     return descriptor;
   }
 
+  @RequiredUIAccess
   public static void addSdk(@Nonnull final Sdk sdk) {
     ApplicationManager.getApplication().runWriteAction(new Runnable() {
       @Override
@@ -77,6 +77,7 @@ public class SdkConfigurationUtil {
     });
   }
 
+  @RequiredUIAccess
   public static void removeSdk(final Sdk sdk) {
     ApplicationManager.getApplication().runWriteAction(new Runnable() {
       @Override
@@ -84,75 +85,6 @@ public class SdkConfigurationUtil {
         SdkTable.getInstance().removeSdk(sdk);
       }
     });
-  }
-
-  @Nullable
-  public static Sdk setupSdk(final Sdk[] allSdks,
-                             final VirtualFile homeDir,
-                             final SdkType sdkType,
-                             final boolean silent,
-                             boolean predefined,
-                             @Nullable final SdkAdditionalData additionalData,
-                             @Nullable final String customSdkSuggestedName) {
-    final SdkImpl sdk;
-    try {
-      String sdkPath = sdkType.sdkPath(homeDir);
-
-      String sdkName = null;
-      if (predefined) {
-        sdkName = sdkType.getName() + PREDEFINED_PREFIX;
-      }
-      else {
-        sdkName = customSdkSuggestedName == null
-                  ? createUniqueSdkName(sdkType, sdkPath, allSdks)
-                  : createUniqueSdkName(customSdkSuggestedName, allSdks);
-      }
-
-      sdk = new SdkImpl(SdkTable.getInstance(), sdkName, sdkType);
-      sdk.setPredefined(predefined);
-
-      if (additionalData != null) {
-        // additional initialization.
-        // E.g. some ruby sdks must be initialized before
-        // setupSdkPaths() method invocation
-        sdk.setSdkAdditionalData(additionalData);
-      }
-
-      sdk.setHomePath(sdkPath);
-      sdkType.setupSdkPaths((Sdk)sdk);
-    }
-    catch (Exception e) {
-      if (!silent) {
-        Messages.showErrorDialog("Error configuring SDK: " +
-                                 e.getMessage() +
-                                 ".\nPlease make sure that " +
-                                 FileUtil.toSystemDependentName(homeDir.getPath()) +
-                                 " is a valid home path for this SDK type.", "Error Configuring SDK");
-      }
-      return null;
-    }
-    return sdk;
-  }
-
-  /**
-   * Tries to create an SDK identified by path; if successful, add the SDK to the global SDK table.
-   *
-   * @param path    identifies the SDK
-   * @param sdkType
-   * @param predefined
-   * @return newly created SDK, or null.
-   */
-  @Nullable
-  public static Sdk createAndAddSDK(final String path, SdkType sdkType, boolean predefined) {
-    VirtualFile sdkHome = ApplicationManager.getApplication().runWriteAction((Computable<VirtualFile>)() -> LocalFileSystem.getInstance().refreshAndFindFileByPath(path));
-    if (sdkHome != null) {
-      final Sdk newSdk = setupSdk(SdkTable.getInstance().getAllSdks(), sdkHome, sdkType, true, predefined, null, null);
-      if (newSdk != null) {
-        addSdk(newSdk);
-      }
-      return newSdk;
-    }
-    return null;
   }
 
   @Deprecated

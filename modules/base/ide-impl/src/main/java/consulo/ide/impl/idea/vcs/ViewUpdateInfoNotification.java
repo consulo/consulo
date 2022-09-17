@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.vcs;
 
 import consulo.project.ui.notification.Notification;
-import consulo.ide.impl.idea.notification.NotificationAction;
+import consulo.project.ui.notification.NotificationAction;
 import consulo.disposer.Disposable;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;

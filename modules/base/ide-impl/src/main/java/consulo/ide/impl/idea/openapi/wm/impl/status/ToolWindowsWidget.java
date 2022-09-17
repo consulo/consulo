@@ -17,7 +17,7 @@ import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.wm.ex.IdeFrameEx;
+import consulo.project.ui.internal.IdeFrameEx;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.RelativePoint;

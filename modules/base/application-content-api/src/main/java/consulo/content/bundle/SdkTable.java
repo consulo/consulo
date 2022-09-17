@@ -92,6 +92,9 @@ public abstract class SdkTable implements BundleHolder {
   @Nullable
   public abstract Sdk findPredefinedSdkByType(@Nonnull SdkTypeId sdkType);
 
+  /**
+   * Create sdk with target type, but not add to table. use {@link #addSdk(Sdk)} for adding
+   */
   @Nonnull
   public abstract Sdk createSdk(final String name, final SdkTypeId sdkType);
 }

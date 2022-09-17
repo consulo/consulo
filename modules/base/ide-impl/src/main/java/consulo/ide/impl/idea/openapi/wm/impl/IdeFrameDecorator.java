@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.openapi.wm.impl;
 
 import consulo.util.concurrent.ActionCallback;
 import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.openapi.wm.ex.IdeFrameEx;
-import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
+import consulo.project.ui.internal.IdeFrameEx;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ide.impl.idea.ui.mac.MacMainFrameDecorator;
 import consulo.annotation.ReviewAfterMigrationToJRE;

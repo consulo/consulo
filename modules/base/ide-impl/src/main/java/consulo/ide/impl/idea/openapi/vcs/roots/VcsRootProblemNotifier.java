@@ -6,7 +6,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.application.util.UserHomeFileUtil;
 import consulo.application.util.registry.Registry;
-import consulo.ide.impl.idea.notification.NotificationAction;
+import consulo.project.ui.notification.NotificationAction;
 import consulo.ide.impl.idea.openapi.diagnostic.Logger;
 import consulo.ide.impl.idea.openapi.progress.util.BackgroundTaskUtil;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;

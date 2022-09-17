@@ -46,7 +46,7 @@ import consulo.ide.impl.idea.openapi.keymap.impl.IdeMouseEventDispatcher;
 import consulo.ide.impl.idea.openapi.keymap.impl.KeyState;
 import consulo.ide.impl.idea.openapi.util.DisposerUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ide.impl.idea.openapi.wm.impl.FocusManagerImpl;
 import consulo.ide.impl.idea.util.ReflectionUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

@@ -28,7 +28,7 @@ import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNameModel;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNamePanel;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNamePopupComponent;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoFileCellRenderer;
-import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.ui.PsiElementListCellRenderer;

@@ -13,18 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.wm.ex;
+package consulo.project.ui.internal;
 
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
-import consulo.ide.impl.idea.openapi.wm.impl.ToolWindowLayout;
-import consulo.ui.ex.AppIcon;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.AppIcon;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentEvent;

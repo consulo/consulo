@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.ui;
 import consulo.application.util.SystemInfo;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
-import consulo.ide.impl.idea.openapi.wm.ex.IdeFrameEx;
+import consulo.project.ui.internal.IdeFrameEx;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.awt.hacking.AWTAccessorHacking;
 

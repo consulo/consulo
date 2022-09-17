@@ -55,7 +55,7 @@ import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ide.impl.idea.util.SingleAlarm;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.start.WelcomeFrameManager;
+import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.language.impl.internal.psi.SingleProjectHolder;
 import consulo.logging.Logger;
 import consulo.module.ModuleManager;
@@ -344,7 +344,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
     }
 
     for (Project p : getOpenProjects()) {
-      if (ProjectUtil.isSameProject(project.getProjectFilePath(), p)) {
+      if (consulo.project.util.ProjectUtil.isSameProject(project.getProjectFilePath(), p)) {
         GuiUtils.invokeLaterIfNeeded(() -> ProjectUtil.focusProjectWindow(p, false), IdeaModalityState.NON_MODAL);
         return false;
       }
@@ -815,7 +815,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
     final ProjectImpl project = createProject(null, toCanonicalName(path.getPath()), false, false, true);
 
     for (Project p : getOpenProjects()) {
-      if (ProjectUtil.isSameProject(path.getPath(), p)) {
+      if (consulo.project.util.ProjectUtil.isSameProject(path.getPath(), p)) {
         uiAccess.give(() -> ProjectUtil.focusProjectWindow(p, false));
         closeAndDisposeAsync(project, uiAccess).doWhenProcessed(() -> projectAsyncResult.reject("Already opened project"));
         return;

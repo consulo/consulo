@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen;
 
-import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ide.impl.idea.ui.popup.PopupFactoryImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;

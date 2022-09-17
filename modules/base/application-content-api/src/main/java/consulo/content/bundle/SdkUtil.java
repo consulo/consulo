@@ -16,15 +16,22 @@
 package consulo.content.bundle;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.application.ApplicationManager;
 import consulo.component.util.pointer.NamedPointer;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.Alerts;
+import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import consulo.util.io.FileUtil;
+import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -75,5 +82,69 @@ public class SdkUtil {
     else {
       return icon;
     }
+  }
+
+  /**
+   * Tries to create an SDK identified by path; if successful, add the SDK to the global SDK table.
+   *
+   * @param path       identifies the SDK
+   * @param sdkType
+   * @param predefined
+   * @return newly created SDK, or null.
+   */
+  @Nullable
+  public static Sdk createAndAddSDK(final String path, SdkType sdkType, @Nonnull UIAccess uiAccess) {
+    VirtualFile sdkHome = ApplicationManager.getApplication().runWriteAction((Supplier<VirtualFile>)() -> LocalFileSystem.getInstance().refreshAndFindFileByPath(path));
+    if (sdkHome != null) {
+      final Sdk newSdk = setupSdk(SdkTable.getInstance().getAllSdks(), sdkHome, sdkType, true, null, null, uiAccess);
+      if (newSdk != null) {
+        ApplicationManager.getApplication().runWriteAction(() -> SdkTable.getInstance().addSdk(newSdk));
+      }
+      return newSdk;
+    }
+    return null;
+  }
+
+  @Nullable
+  public static Sdk setupSdk(final Sdk[] allSdks,
+                             final VirtualFile homeDir,
+                             final SdkType sdkType,
+                             final boolean silent,
+                             @Nullable final SdkAdditionalData additionalData,
+                             @Nullable final String customSdkSuggestedName,
+                             @Nonnull UIAccess uiAccess) {
+    final Sdk sdk;
+    try {
+      String sdkPath = sdkType.sdkPath(homeDir);
+
+      String sdkName = customSdkSuggestedName == null ? createUniqueSdkName(sdkType, sdkPath, allSdks) : createUniqueSdkName(customSdkSuggestedName, allSdks);
+
+      sdk = SdkTable.getInstance().createSdk(sdkName, sdkType);
+
+      SdkModificator modificator = sdk.getSdkModificator();
+
+      if (additionalData != null) {
+        // additional initialization.
+        // E.g. some ruby sdks must be initialized before
+        // setupSdkPaths() method invocation
+        modificator.setSdkAdditionalData(additionalData);
+      }
+
+      modificator.setHomePath(sdkPath);
+      modificator.commitChanges();
+
+      sdkType.setupSdkPaths(sdk);
+    }
+    catch (Exception e) {
+      if (!silent) {
+        uiAccess.give(() -> {
+          Alerts.okError("Error configuring SDK: " + e.getMessage() + ".\nPlease make sure that " + FileUtil.toSystemDependentName(homeDir.getPath()) + " is a valid home path for this SDK type.")
+                  .title("Error Configuring SDK")
+                  .showAsync();
+        });
+      }
+      return null;
+    }
+    return sdk;
   }
 }

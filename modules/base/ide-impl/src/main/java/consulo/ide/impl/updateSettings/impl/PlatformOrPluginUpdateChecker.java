@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.ide.actions.SettingsEntryPointAction;
 import consulo.ide.impl.idea.ide.plugins.PluginManagerMain;
 import consulo.ide.impl.idea.ide.plugins.PluginNode;
 import consulo.ide.impl.idea.ide.plugins.RepositoryHelper;
-import consulo.ide.impl.idea.notification.NotificationAction;
+import consulo.project.ui.notification.NotificationAction;
 import consulo.application.internal.ApplicationInfo;
 import consulo.ide.impl.updateSettings.UpdateSettingsImpl;
 import consulo.ui.ex.awt.Messages;

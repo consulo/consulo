@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.ui.popup;
 import consulo.component.ComponentManager;
 import consulo.project.Project;
 import consulo.util.lang.function.Condition;
-import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNameBase;
 import consulo.language.editor.completion.lookup.LookupManager;
 

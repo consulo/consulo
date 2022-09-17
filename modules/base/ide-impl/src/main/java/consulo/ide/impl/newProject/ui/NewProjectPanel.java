@@ -25,7 +25,7 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.VerticalFlowLayout;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.ui.JBCardLayout;
+import consulo.ui.ex.awt.JBCardLayout;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.tree.AsyncTreeModel;

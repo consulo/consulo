@@ -31,7 +31,7 @@ import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.ex.toolWindow.WindowInfo;
 import consulo.ide.impl.idea.openapi.wm.impl.AnchoredButton;
 import consulo.ide.impl.idea.openapi.wm.impl.DesktopStripeButtonUI;
-import consulo.ide.impl.idea.openapi.wm.impl.WindowInfoImpl;
+import consulo.project.ui.internal.WindowInfoImpl;
 import consulo.ide.impl.idea.ui.MouseDragHelper;
 import consulo.ui.ex.awt.PopupHandler;
 import consulo.ide.impl.idea.util.ui.JBImageIcon;

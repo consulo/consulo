@@ -15,29 +15,28 @@
  */
 package consulo.ide.impl.idea.ide.impl;
 
-import consulo.ide.impl.idea.ide.GeneralSettings;
+import consulo.annotation.DeprecationInfo;
+import consulo.application.util.concurrent.PooledAsyncResult;
+import consulo.container.boot.ContainerPathManager;
 import consulo.ide.IdeBundle;
+import consulo.ide.impl.idea.ide.GeneralSettings;
 import consulo.ide.impl.idea.ide.RecentProjectsManager;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.projectImport.ProjectOpenProcessor;
-import consulo.project.ui.wm.IdeFrame;
-import consulo.ui.ex.AppIcon;
-import consulo.annotation.DeprecationInfo;
-import consulo.application.util.concurrent.PooledAsyncResult;
-import consulo.project.impl.internal.store.IProjectStore;
-import consulo.container.boot.ContainerPathManager;
+import consulo.ide.impl.project.ProjectOpenProcessors;
+import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import consulo.ide.impl.project.ProjectOpenProcessors;
 import consulo.project.internal.ProjectManagerEx;
-import consulo.project.ui.wm.WindowManager;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
-import consulo.ide.impl.start.WelcomeFrameManager;
+import consulo.project.ui.wm.IdeFrame;
+import consulo.project.ui.wm.WindowManager;
 import consulo.ui.Alert;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.AppIcon;
 import consulo.util.concurrent.AsyncResult;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
@@ -57,30 +56,6 @@ public class ProjectUtil {
   private static final Logger LOG = Logger.getInstance(ProjectUtil.class);
 
   private ProjectUtil() {
-  }
-
-  public static boolean isSameProject(@Nullable String projectFilePath, @Nonnull Project project) {
-    if (projectFilePath == null) return false;
-
-    IProjectStore projectStore = project.getInstance(IProjectStore.class);
-    String existingBaseDirPath = projectStore.getProjectBasePath();
-    if (existingBaseDirPath == null) {
-      // could be null if not yet initialized
-      return false;
-    }
-
-    File projectFile = new File(projectFilePath);
-    if (projectFile.isDirectory()) {
-      return FileUtil.pathsEqual(projectFilePath, existingBaseDirPath);
-    }
-
-
-    File parent = projectFile.getParentFile();
-    if (parent.getName().equals(Project.DIRECTORY_STORE_FOLDER)) {
-      parent = parent.getParentFile();
-      return parent != null && FileUtil.pathsEqual(parent.getPath(), existingBaseDirPath);
-    }
-    return false;
   }
 
   public static void updateLastProjectLocation(final String projectFilePath) {

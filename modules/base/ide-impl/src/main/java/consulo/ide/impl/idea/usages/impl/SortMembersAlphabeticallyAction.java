@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.usages.impl;
 
 import consulo.application.AllIcons;
+import consulo.usage.RuleAction;
 import consulo.usage.UsageViewBundle;
 import consulo.usage.UsageViewSettings;
 

@@ -13,15 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.usages.impl;
+package consulo.usage;
 
 import consulo.application.dumb.DumbAware;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.image.Image;
-import consulo.usage.UsageView;
 import consulo.usage.rule.UsageFilteringRuleListener;
 
 import javax.annotation.Nonnull;
@@ -31,12 +29,12 @@ import javax.annotation.Nonnull;
  *         Date: Jan 19, 2005
  */
 public abstract class RuleAction extends ToggleAction implements DumbAware {
-  private final UsageViewImpl myView;
+  private final UsageView myView;
   private boolean myState;
 
   public RuleAction(@Nonnull UsageView view, @Nonnull String text, @Nonnull Image icon) {
     super(text, null, icon);
-    myView = (UsageViewImpl)view;
+    myView = view;
     myState = getOptionValue();
   }
 
@@ -45,7 +43,7 @@ public abstract class RuleAction extends ToggleAction implements DumbAware {
   protected abstract void setOptionValue(boolean value);
 
   @Override
-  public boolean isSelected(AnActionEvent e) {
+  public boolean isSelected(@Nonnull AnActionEvent e) {
     return myState;
   }
 
@@ -54,7 +52,7 @@ public abstract class RuleAction extends ToggleAction implements DumbAware {
     setOptionValue(state);
     myState = state;
 
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project != null) {
       project.getMessageBus().syncPublisher(UsageFilteringRuleListener.class).rulesChanged();
     }

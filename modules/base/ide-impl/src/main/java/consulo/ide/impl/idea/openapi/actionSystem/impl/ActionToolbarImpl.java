@@ -7,7 +7,7 @@ import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.awt.action.CustomComponentAction;
 import consulo.application.impl.internal.LaterInvocator;
 import consulo.ide.impl.idea.openapi.keymap.ex.KeymapManagerEx;
-import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ui.ex.awt.RelativeRectangle;
 import consulo.ui.ex.action.QuickActionProvider;
 import consulo.ui.ex.awt.IJSwingUtilities;

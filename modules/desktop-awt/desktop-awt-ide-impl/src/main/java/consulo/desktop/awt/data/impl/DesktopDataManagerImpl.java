@@ -32,7 +32,7 @@ import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.ide.impl.idea.ide.ProhibitAWTEvents;
 import consulo.ide.impl.idea.ide.impl.TypeSafeDataProviderAdapter;
 import consulo.ide.impl.idea.openapi.keymap.impl.IdeKeyEventDispatcher;
-import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.logging.Logger;

@@ -21,7 +21,7 @@ import consulo.application.progress.PerformInBackgroundOption;
 import consulo.application.progress.Task;
 import consulo.application.progress.TaskInfo;
 import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
-import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.Project;
 import consulo.project.event.DumbModeListener;
 import consulo.project.ui.internal.StatusBarEx;

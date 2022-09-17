@@ -23,7 +23,7 @@ import consulo.application.impl.internal.start.StartupProgress;
 import consulo.application.internal.ApplicationEx;
 import consulo.container.util.StatCollector;
 import consulo.desktop.swt.application.impl.DesktopSwtApplicationImpl;
-import consulo.ide.impl.start.WelcomeFrameManager;
+import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.logging.Logger;
 import consulo.util.lang.ref.SimpleReference;
 

@@ -13,30 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.impl.util;
+package consulo.ide.newModule;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.WriteAction;
+import consulo.content.base.ExcludedContentFolderTypeProvider;
+import consulo.ide.moduleImport.ModuleImportContext;
+import consulo.ide.moduleImport.ModuleImportProvider;
+import consulo.logging.Logger;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
-import consulo.project.Project;
-import consulo.project.internal.ProjectManagerEx;
+import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ModifiableRootModel;
-import consulo.module.content.ModuleRootManager;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.annotation.access.RequiredReadAction;
-import consulo.ide.newModule.NewModuleBuilderProcessor;
-import consulo.ide.impl.newProject.ui.NewProjectPanel;
-import consulo.ide.newModule.NewModuleWizardContext;
-import consulo.logging.Logger;
-import consulo.ide.moduleImport.ModuleImportContext;
-import consulo.ide.moduleImport.ModuleImportProvider;
-import consulo.content.base.ExcludedContentFolderTypeProvider;
+import consulo.project.Project;
+import consulo.project.ProjectManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -46,18 +43,21 @@ public class NewOrImportModuleUtil {
 
   @Nonnull
   @RequiredReadAction
-  public static Module doCreate(@Nonnull NewProjectPanel panel, @Nonnull final Project project, @Nonnull final VirtualFile baseDir) {
-    return doCreate(panel, ModuleManager.getInstance(project).getModifiableModel(), baseDir, true);
+  public static Module doCreate(@Nonnull NewModuleBuilderProcessor<NewModuleWizardContext> processor,
+                                @Nonnull NewModuleWizardContext context,
+                                @Nonnull final Project project,
+                                @Nonnull final VirtualFile baseDir) {
+    return doCreate(processor, context, ModuleManager.getInstance(project).getModifiableModel(), baseDir, true);
   }
 
   @Nonnull
   @RequiredReadAction
   @SuppressWarnings("unchecked")
-  public static Module doCreate(@Nonnull NewProjectPanel panel, @Nonnull final ModifiableModuleModel modifiableModel, @Nonnull final VirtualFile baseDir, final boolean requireModelCommit) {
-    NewModuleBuilderProcessor<NewModuleWizardContext> processor = panel.getProcessor();
-    NewModuleWizardContext context = panel.getWizardContext();
-    assert context != null;
-
+  public static Module doCreate(@Nonnull NewModuleBuilderProcessor<NewModuleWizardContext> processor,
+                                @Nonnull NewModuleWizardContext context,
+                                @Nonnull final ModifiableModuleModel modifiableModel,
+                                @Nonnull final VirtualFile baseDir,
+                                final boolean requireModelCommit) {
     String name = StringUtil.notNullize(context.getName(), baseDir.getName());
 
     Module newModule = modifiableModel.newModule(name, baseDir.getPath());
@@ -85,7 +85,7 @@ public class NewOrImportModuleUtil {
   @Nonnull
   @RequiredUIAccess
   public static <T extends ModuleImportContext> AsyncResult<Project> importProject(@Nonnull T context, @Nonnull ModuleImportProvider<T> importProvider) {
-    final ProjectManagerEx projectManager = ProjectManagerEx.getInstanceEx();
+    final ProjectManager projectManager = ProjectManager.getInstance();
     final String projectFilePath = context.getPath();
     String projectName = context.getName();
 

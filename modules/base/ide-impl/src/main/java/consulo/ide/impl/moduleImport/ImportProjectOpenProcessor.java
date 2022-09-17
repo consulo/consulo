@@ -17,7 +17,8 @@ package consulo.ide.impl.moduleImport;
 
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.impl.ProjectUtil;
-import consulo.ide.impl.idea.ide.impl.util.NewOrImportModuleUtil;
+import consulo.ide.moduleImport.ModuleImportProviders;
+import consulo.ide.newModule.NewOrImportModuleUtil;
 import consulo.ide.moduleImport.ModuleImportContext;
 import consulo.ide.moduleImport.ModuleImportProvider;
 import consulo.project.Project;
@@ -29,7 +30,7 @@ import consulo.ide.impl.idea.platform.DefaultProjectOpenProcessor;
 import consulo.ide.impl.idea.projectImport.ProjectOpenProcessor;
 import consulo.util.lang.ThreeState;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.moduleImport.ui.ModuleImportProcessor;
+import consulo.ide.moduleImport.ModuleImportProcessor;
 import consulo.platform.base.localize.IdeLocalize;
 import consulo.ui.Alert;
 import consulo.ui.UIAccess;

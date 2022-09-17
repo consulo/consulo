@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.ui;
 
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.MovablePopup;
 import consulo.ide.impl.idea.util.ObjectUtil;

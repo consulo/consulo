@@ -21,7 +21,7 @@ import consulo.application.internal.ApplicationInfo;
 import consulo.application.ApplicationManager;
 import consulo.component.util.BuildNumber;
 import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.openapi.wm.ex.IdeFrameEx;
+import consulo.project.ui.internal.IdeFrameEx;
 import consulo.ide.impl.idea.openapi.wm.impl.IdeFrameDecorator;
 import consulo.ide.impl.idea.ui.CustomProtocolHandler;
 import consulo.application.util.mac.foundation.Foundation;

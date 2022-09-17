@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.moduleImport;
-
-import consulo.ide.moduleImport.ModuleImportProvider;
+package consulo.ide.moduleImport;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;

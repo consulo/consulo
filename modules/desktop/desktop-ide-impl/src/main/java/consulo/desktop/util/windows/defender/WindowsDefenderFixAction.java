@@ -18,7 +18,7 @@ package consulo.desktop.util.windows.defender;
 import consulo.ide.impl.idea.diagnostic.DiagnosticBundle;
 import consulo.ide.impl.idea.ide.BrowserUtil;
 import consulo.ide.impl.idea.ide.SystemHealthMonitor;
-import consulo.ide.impl.idea.notification.NotificationAction;
+import consulo.project.ui.notification.NotificationAction;
 import consulo.ui.ex.awt.Messages;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;

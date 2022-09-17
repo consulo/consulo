@@ -42,7 +42,7 @@ import consulo.virtualFileSystem.encoding.EncodingRegistry;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
-import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ide.impl.idea.ui.debugger.UiDebuggerExtension;

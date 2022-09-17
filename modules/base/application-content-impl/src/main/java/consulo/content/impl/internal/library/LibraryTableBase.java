@@ -16,6 +16,7 @@
 
 package consulo.content.impl.internal.library;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.ApplicationManager;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.content.base.BinariesOrderRootType;
@@ -192,8 +193,9 @@ public abstract class LibraryTableBase implements PersistentStateComponent<Eleme
     myModel.writeExternal(element);
   }
 
+  @Deprecated
+  @DeprecationInfo("Use ModifiableModel")
   public interface ModifiableModelEx extends ModifiableModel {
-    Library createLibrary(String name, @Nullable PersistentLibraryKind type);
   }
 
   public class LibraryModel implements ModifiableModelEx {
@@ -247,11 +249,6 @@ public abstract class LibraryTableBase implements PersistentStateComponent<Eleme
 
     private void assertWritable() {
       LOG.assertTrue(myWritable);
-    }
-
-    @Override
-    public Library createLibrary(String name) {
-      return createLibrary(name, null);
     }
 
     @Override

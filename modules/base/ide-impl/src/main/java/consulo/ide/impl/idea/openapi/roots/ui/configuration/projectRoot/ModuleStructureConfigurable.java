@@ -48,7 +48,7 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.ide.setting.ProjectStructureSettingsUtil;
-import consulo.ide.impl.moduleImport.ModuleImportProviders;
+import consulo.ide.moduleImport.ModuleImportProviders;
 import consulo.configurable.internal.ConfigurableWeight;
 import consulo.ide.impl.roots.ui.configuration.ProjectConfigurableWeights;
 import consulo.ui.annotation.RequiredUIAccess;

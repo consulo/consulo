@@ -33,10 +33,10 @@ import consulo.application.util.SystemInfo;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.event.WindowManagerListener;
-import consulo.ide.impl.idea.openapi.wm.ex.IdeFrameEx;
-import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
+import consulo.project.ui.internal.IdeFrameEx;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ide.impl.idea.openapi.wm.impl.ProjectFrameBounds;
-import consulo.ide.impl.idea.openapi.wm.impl.ToolWindowLayout;
+import consulo.project.ui.internal.ToolWindowLayout;
 import consulo.ide.impl.idea.openapi.wm.impl.X11UiUtil;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ide.impl.idea.util.EventDispatcher;
@@ -48,7 +48,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.awt.hacking.AWTAccessorHacking;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
-import consulo.ide.impl.start.WelcomeFrameManager;
+import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -197,17 +197,17 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
 
   @Nullable
   @Override
-  public consulo.ui.Window findVisibleWindow() {
+  public IdeFrame findVisibleIdeFrame() {
     IdeFrame[] frames = getAllProjectFrames();
     if (frames.length > 0) {
-      return frames[0].getWindow();
+      return frames[0];
     }
     IdeFrame frame = WelcomeFrameManager.getInstance().getCurrentFrame();
     if (frame == null) {
       // will return null at first app start, while customization window
       return null;
     }
-    return frame.getWindow();
+    return frame;
   }
 
   @Override

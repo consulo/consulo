@@ -24,9 +24,9 @@ import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.event.WindowManagerListener;
-import consulo.ide.impl.idea.openapi.wm.ex.IdeFrameEx;
-import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
-import consulo.ide.impl.idea.openapi.wm.impl.ToolWindowLayout;
+import consulo.project.ui.internal.IdeFrameEx;
+import consulo.project.ui.internal.WindowManagerEx;
+import consulo.project.ui.internal.ToolWindowLayout;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ide.impl.wm.impl.UnifiedWindowManagerImpl;
@@ -112,7 +112,7 @@ public class DesktopSwtWindowManagerImpl extends UnifiedWindowManagerImpl implem
 
   @Nullable
   @Override
-  public consulo.ui.Window findVisibleWindow() {
+  public IdeFrame findVisibleIdeFrame() {
     return null;
   }
 

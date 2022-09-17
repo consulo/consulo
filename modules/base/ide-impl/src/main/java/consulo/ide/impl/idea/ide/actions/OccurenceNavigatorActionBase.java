@@ -24,7 +24,7 @@ import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
-import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.navigation.Navigatable;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.content.Content;

@@ -13,33 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.moduleImport.ui;
+package consulo.ide.moduleImport;
 
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
+import consulo.application.ApplicationPropertiesComponent;
+import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
-import consulo.project.Project;
-import consulo.ui.ex.awt.DialogBuilder;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.ObjectUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ide.IdeBundle;
 import consulo.localize.LocalizeValue;
-import consulo.ide.moduleImport.ModuleImportContext;
-import consulo.ide.moduleImport.ModuleImportProvider;
-import consulo.ide.impl.moduleImport.ModuleImportProviders;
+import consulo.project.Project;
 import consulo.ui.Alerts;
 import consulo.ui.ComboBox;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.fileChooser.FileChooser;
+import consulo.ui.ex.awt.DialogBuilder;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.layout.LabeledLayout;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.AsyncResult;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -67,7 +64,7 @@ public class ModuleImportProcessor {
     FileChooserDescriptor descriptor = ObjectUtil.notNull(chooserDescriptor, createAllImportDescriptor(isModuleImport));
 
     VirtualFile toSelect = null;
-    String lastLocation = PropertiesComponent.getInstance().getValue(LAST_IMPORTED_LOCATION);
+    String lastLocation = ApplicationPropertiesComponent.getInstance().getValue(LAST_IMPORTED_LOCATION);
     if (lastLocation != null) {
       toSelect = LocalFileSystem.getInstance().refreshAndFindFileByPath(lastLocation);
     }
@@ -76,7 +73,7 @@ public class ModuleImportProcessor {
 
     AsyncResult<VirtualFile> fileChooseAsync = FileChooser.chooseFile(descriptor, project, toSelect);
     fileChooseAsync.doWhenDone((f) -> {
-      PropertiesComponent.getInstance().setValue(LAST_IMPORTED_LOCATION, f.getPath());
+      ApplicationPropertiesComponent.getInstance().setValue(LAST_IMPORTED_LOCATION, f.getPath());
 
       showImportChooser(project, f, AsyncResult.undefined());
     });
@@ -92,7 +89,7 @@ public class ModuleImportProcessor {
       @Override
       public Image getIcon(VirtualFile file) {
         for (ModuleImportProvider importProvider : ModuleImportProviders.getExtensions(isModuleImport)) {
-          if (importProvider.canImport(VfsUtilCore.virtualToIoFile(file))) {
+          if (importProvider.canImport(VirtualFileUtil.virtualToIoFile(file))) {
             return importProvider.getIcon();
           }
         }
@@ -112,7 +109,7 @@ public class ModuleImportProcessor {
 
     List<ModuleImportProvider> providers = ModuleImportProviders.getExtensions(isModuleImport);
 
-    File ioFile = VfsUtilCore.virtualToIoFile(file);
+    File ioFile = VirtualFileUtil.virtualToIoFile(file);
     List<ModuleImportProvider> avaliableProviders = ContainerUtil.filter(providers, provider -> provider.canImport(ioFile));
     if (avaliableProviders.isEmpty()) {
       Alerts.okError("Cannot import anything from '" + FileUtil.toSystemDependentName(file.getPath()) + "'").showAsync();

@@ -16,11 +16,9 @@
 package consulo.ide.impl.project;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.util.NotNullLazyValue;
 import consulo.ide.impl.idea.platform.DefaultProjectOpenProcessor;
 import consulo.ide.impl.idea.projectImport.ProjectOpenProcessor;
 import consulo.ide.impl.moduleImport.ImportProjectOpenProcessor;
-import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
@@ -34,22 +32,12 @@ import java.util.List;
 @Singleton
 @ServiceImpl
 public class ProjectOpenProcessorsImpl implements ProjectOpenProcessors {
-  private final NotNullLazyValue<ProjectOpenProcessor[]> myCacheValue;
-
-  @Inject
-  @SuppressWarnings("unchecked")
-  public ProjectOpenProcessorsImpl() {
-    myCacheValue = NotNullLazyValue.createValue(() -> {
-      List<ProjectOpenProcessor> processors = new ArrayList<>();
-      processors.add(DefaultProjectOpenProcessor.getInstance());
-      processors.add(new ImportProjectOpenProcessor());
-      return processors.toArray(new ProjectOpenProcessor[processors.size()]);
-    });
-  }
-
   @Nonnull
   @Override
-  public ProjectOpenProcessor[] getProcessors() {
-    return myCacheValue.getValue();
+  public List<ProjectOpenProcessor> getProcessors() {
+    List<ProjectOpenProcessor> processors = new ArrayList<>(2);
+    processors.add(DefaultProjectOpenProcessor.getInstance());
+    processors.add(new ImportProjectOpenProcessor());
+    return processors;
   }
 }

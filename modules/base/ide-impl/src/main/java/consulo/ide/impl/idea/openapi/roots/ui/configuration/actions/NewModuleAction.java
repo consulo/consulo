@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.actions;
 
-import consulo.ide.impl.idea.ide.impl.util.NewOrImportModuleUtil;
+import consulo.ide.newModule.NewOrImportModuleUtil;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
@@ -78,7 +78,7 @@ public class NewModuleAction extends AnAction implements DumbAware {
 
       dialog.showAsync().doWhenDone(() -> {
         NewProjectPanel panel = dialog.getProjectPanel();
-        NewOrImportModuleUtil.doCreate(panel, project, moduleDir);
+        NewOrImportModuleUtil.doCreate(panel.getProcessor(), panel.getWizardContext(), project, moduleDir);
       });
     });
   }

@@ -16,7 +16,7 @@
 package consulo.ide.impl.base;
 
 import consulo.ide.impl.idea.ide.impl.dataRules.*;
-import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.ide.impl.idea.util.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

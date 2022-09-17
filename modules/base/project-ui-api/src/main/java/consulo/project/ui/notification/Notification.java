@@ -58,7 +58,7 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public class Notification {
   private static final Logger LOG = Logger.getInstance(Notification.class);
-  private static final Key<Notification> KEY = Key.create("Notification");
+  private static final Key<Notification> KEY = Key.create(Notification.class);
 
   /**
    * Which actions to keep and which to show under the "Actions" dropdown link if actions do not fit horizontally

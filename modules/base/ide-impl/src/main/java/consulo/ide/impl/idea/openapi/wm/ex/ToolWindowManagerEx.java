@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.wm.ex;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.openapi.wm.impl.ToolWindowLayout;
+import consulo.project.ui.internal.ToolWindowLayout;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowFactory;
 import consulo.project.ui.wm.ToolWindowManager;

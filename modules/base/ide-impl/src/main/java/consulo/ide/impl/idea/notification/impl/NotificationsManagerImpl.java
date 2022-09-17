@@ -33,7 +33,7 @@ import consulo.ide.impl.idea.ui.*;
 import consulo.ide.impl.idea.ui.components.GradientViewport;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.IconUtil;
-import consulo.ide.impl.start.WelcomeFrameManager;
+import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.ide.impl.ui.impl.BalloonLayoutEx;
 import consulo.logging.Logger;
 import consulo.project.Project;

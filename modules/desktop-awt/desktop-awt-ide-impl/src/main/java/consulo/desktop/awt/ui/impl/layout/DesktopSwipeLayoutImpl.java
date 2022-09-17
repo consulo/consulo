@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl.layout;
 
-import consulo.ide.impl.idea.ui.JBCardLayout;
+import consulo.ui.ex.awt.JBCardLayout;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;

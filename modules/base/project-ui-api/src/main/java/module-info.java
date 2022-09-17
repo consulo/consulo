@@ -21,6 +21,7 @@ module consulo.project.ui.api {
 
   exports consulo.project.ui.internal to consulo.ide.impl,
           consulo.desktop.awt.ide.impl,
+          consulo.desktop.swt.ide.impl,
           consulo.ui.ex.awt.api,
           consulo.execution.test.sm.api,
           consulo.project.impl;

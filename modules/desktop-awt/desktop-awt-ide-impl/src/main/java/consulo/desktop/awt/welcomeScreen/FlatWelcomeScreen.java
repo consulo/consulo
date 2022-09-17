@@ -25,7 +25,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.Presentation;
 import consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.WelcomePopupAction;
-import consulo.ide.impl.idea.ui.JBCardLayout;
+import consulo.ui.ex.awt.JBCardLayout;
 import consulo.ide.impl.idea.ui.components.labels.ActionLink;
 import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ui.ex.awt.JBUI;

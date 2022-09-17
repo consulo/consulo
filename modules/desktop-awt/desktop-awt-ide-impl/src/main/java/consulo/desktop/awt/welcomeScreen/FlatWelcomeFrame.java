@@ -34,7 +34,7 @@ import consulo.ide.impl.application.FrameTitleUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.start.WelcomeFrameManager;
+import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.internal.SwingUIDecorator;
 import consulo.desktop.awt.ui.impl.window.JFrameAsUIWindow;

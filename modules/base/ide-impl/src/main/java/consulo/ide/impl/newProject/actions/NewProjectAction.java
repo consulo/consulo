@@ -19,7 +19,7 @@ import consulo.language.editor.CommonDataKeys;
 import consulo.application.CommonBundle;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.RecentProjectsManager;
-import consulo.ide.impl.idea.ide.impl.util.NewOrImportModuleUtil;
+import consulo.ide.newModule.NewOrImportModuleUtil;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.WriteAction;
 import consulo.application.dumb.DumbAware;
@@ -196,7 +196,7 @@ public class NewProjectAction extends WelcomeScreenSlideAction implements DumbAw
 
     UIAccess uiAccess = UIAccess.current();
     ProjectManager.getInstance().openProjectAsync(baseDir, uiAccess).doWhenDone((openedProject) -> {
-      uiAccess.give(() -> NewOrImportModuleUtil.doCreate(panel, openedProject, baseDir));
+      uiAccess.give(() -> NewOrImportModuleUtil.doCreate(panel.getProcessor(), panel.getWizardContext(), openedProject, baseDir));
     });
   }
 }

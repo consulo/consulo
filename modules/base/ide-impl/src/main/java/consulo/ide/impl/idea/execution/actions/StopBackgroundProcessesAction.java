@@ -7,7 +7,7 @@ import consulo.application.progress.TaskInfo;
 import consulo.dataContext.DataContext;
 import consulo.execution.ExecutionBundle;
 import consulo.ide.impl.idea.openapi.ui.popup.ListItemDescriptorAdapter;
-import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ide.impl.idea.ui.popup.list.GroupedItemsListRenderer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;

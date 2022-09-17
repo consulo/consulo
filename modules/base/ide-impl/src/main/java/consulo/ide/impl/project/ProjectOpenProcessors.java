@@ -23,6 +23,7 @@ import consulo.ide.impl.idea.projectImport.ProjectOpenProcessor;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -37,7 +38,7 @@ public interface ProjectOpenProcessors {
   }
 
   @Nonnull
-  public ProjectOpenProcessor[] getProcessors();
+  public List<ProjectOpenProcessor> getProcessors();
 
   @Nullable
   default ProjectOpenProcessor findProcessor(@Nonnull File file) {

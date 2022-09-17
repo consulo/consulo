@@ -23,7 +23,7 @@ import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ui.ex.toolWindow.WindowInfo;
 import consulo.ui.ex.toolWindow.InternalDecoratorListener;
-import consulo.ide.impl.idea.openapi.wm.impl.WindowInfoImpl;
+import consulo.project.ui.internal.WindowInfoImpl;
 import consulo.ui.ex.UIBundle;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.application.dumb.DumbAware;

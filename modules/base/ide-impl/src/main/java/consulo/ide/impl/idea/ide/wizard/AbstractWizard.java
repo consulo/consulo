@@ -10,7 +10,7 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
 import consulo.application.util.SystemInfo;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.ide.impl.idea.ui.JBCardLayout;
+import consulo.ui.ex.awt.JBCardLayout;
 import consulo.ui.ex.awt.OpaquePanel;
 import consulo.ide.impl.idea.ui.mac.TouchbarDataKeys;
 import consulo.ui.ex.awt.UIUtil;

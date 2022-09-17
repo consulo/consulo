@@ -20,6 +20,7 @@ import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.project.Project;
+import consulo.usage.RuleAction;
 import consulo.usage.UsageViewBundle;
 import consulo.usage.UsageView;
 import consulo.usage.rule.ImportFilteringRule;

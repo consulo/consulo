@@ -22,7 +22,7 @@ import consulo.application.Application;
 import consulo.project.Project;
 import consulo.ui.ex.awt.util.FocusWatcher;
 import consulo.project.ui.wm.IdeFrame;
-import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.logging.Logger;

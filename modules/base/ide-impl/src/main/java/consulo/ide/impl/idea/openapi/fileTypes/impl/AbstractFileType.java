@@ -20,6 +20,7 @@ import consulo.util.collection.SmartList;
 import consulo.ide.impl.idea.util.text.StringTokenizer;
 import consulo.language.internal.custom.CustomSyntaxTableFileType;
 import consulo.virtualFileSystem.fileType.FileNameMatcher;
+import consulo.virtualFileSystem.fileType.PlainTextLikeFileType;
 import consulo.virtualFileSystem.internal.matcher.ExactFileNameMatcher;
 import consulo.virtualFileSystem.internal.matcher.ExtensionFileNameMatcher;
 import consulo.virtualFileSystem.internal.matcher.WildcardFileNameMatcher;

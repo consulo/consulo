@@ -13,21 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.moduleImport.ui;
+package consulo.ide.moduleImport;
 
 import consulo.application.CommonBundle;
 import consulo.ide.IdeBundle;
 import consulo.project.Project;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.ui.JBCardLayout;
-import consulo.ide.moduleImport.ModuleImportContext;
-import consulo.ide.moduleImport.ModuleImportProvider;
-import consulo.ide.impl.start.WelcomeFrameManager;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.ui.Size;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.JBCardLayout;
 import consulo.ui.ex.wizard.WizardSession;
 import consulo.ui.ex.wizard.WizardStep;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

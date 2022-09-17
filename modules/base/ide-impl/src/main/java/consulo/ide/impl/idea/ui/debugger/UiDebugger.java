@@ -20,7 +20,7 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.component.extension.Extensions;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ui.ex.JBColor;
 import consulo.ide.impl.idea.ui.tabs.JBTabs;
 import consulo.ide.impl.idea.ui.tabs.TabInfo;

@@ -17,7 +17,6 @@ package consulo.content.library;
 
 import consulo.disposer.Disposable;
 import consulo.project.Project;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -34,7 +33,7 @@ public interface LibraryTable {
 
   Library createLibrary();
 
-  Library createLibrary(@NonNls String name);
+  Library createLibrary(String name);
 
   void removeLibrary(@Nonnull Library library);
 
@@ -59,7 +58,11 @@ public interface LibraryTable {
   void removeListener(Listener listener);
 
   interface ModifiableModel {
-    Library createLibrary(String name);
+    default Library createLibrary(String name) {
+      return createLibrary(name, null);
+    }
+
+    Library createLibrary(String name, @Nullable PersistentLibraryKind type);
 
     void removeLibrary(@Nonnull Library library);
 
