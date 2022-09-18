@@ -24,6 +24,7 @@ import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * @author dsl
@@ -58,6 +59,20 @@ public interface Library extends JDOMExternalizable, Disposable {
   boolean isJarDirectory(@Nonnull String url, @Nonnull OrderRootType rootType);
 
   boolean isValid(@Nonnull String url, @Nonnull OrderRootType rootType);
+
+  @Nullable
+  PersistentLibraryKind<?> getKind();
+
+  LibraryProperties getProperties();
+
+  @Nonnull
+  String[] getExcludedRootUrls();
+
+  @Nonnull
+  VirtualFile[] getExcludedRoots();
+
+  @Nonnull
+  List<String> getInvalidRootUrls(OrderRootType type);
 
   interface ModifiableModel extends Disposable {
     @Nonnull
@@ -97,5 +112,20 @@ public interface Library extends JDOMExternalizable, Disposable {
     boolean isJarDirectory(@Nonnull String url, @Nonnull OrderRootType rootType);
 
     boolean isValid(@Nonnull String url, @Nonnull OrderRootType rootType);
+
+    void setProperties(LibraryProperties properties);
+
+    LibraryProperties getProperties();
+
+    void setKind(PersistentLibraryKind<?> type);
+
+    PersistentLibraryKind<?> getKind();
+
+    void addExcludedRoot(@Nonnull String url);
+
+    boolean removeExcludedRoot(@Nonnull String url);
+
+    @Nonnull
+    String[] getExcludedRootUrls();
   }
 }

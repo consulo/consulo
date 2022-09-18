@@ -19,9 +19,6 @@ package consulo.content.internal;
 import consulo.component.ComponentManager;
 import consulo.content.OrderRootType;
 import consulo.content.library.Library;
-import consulo.content.library.LibraryProperties;
-import consulo.content.library.PersistentLibraryKind;
-import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,24 +28,11 @@ import java.util.List;
  *  @author dsl
  */
 public interface LibraryEx extends Library {
-  List<String> getInvalidRootUrls(OrderRootType type);
-
   boolean isDisposed();
 
   @Nonnull
   @Override
   ModifiableModelEx getModifiableModel();
-
-  @Nullable
-  PersistentLibraryKind<?> getKind();
-
-  LibraryProperties getProperties();
-
-  @Nonnull
-  String[] getExcludedRootUrls();
-
-  @Nonnull
-  VirtualFile[] getExcludedRoots();
 
   /**
    *
@@ -57,20 +41,7 @@ public interface LibraryEx extends Library {
   @Nullable
   ComponentManager getModule();
 
+  @Deprecated
   interface ModifiableModelEx extends ModifiableModel {
-    void setProperties(LibraryProperties properties);
-
-    LibraryProperties getProperties();
-
-    void setKind(PersistentLibraryKind<?> type);
-
-    PersistentLibraryKind<?> getKind();
-
-    void addExcludedRoot(@Nonnull String url);
-
-    boolean removeExcludedRoot(@Nonnull String url);
-
-    @Nonnull
-    String[] getExcludedRootUrls();
   }
 }
