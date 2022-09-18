@@ -20,10 +20,11 @@ import consulo.language.file.LanguageFileType;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.FileTypeLocalize;
 import consulo.ui.image.Image;
+import consulo.virtualFileSystem.fileType.PlainTextLikeFileType;
 
 import javax.annotation.Nonnull;
 
-public class PlainTextFileType extends LanguageFileType {
+public class PlainTextFileType extends LanguageFileType implements PlainTextLikeFileType {
   public static final PlainTextFileType INSTANCE = new PlainTextFileType();
 
   private PlainTextFileType() {
