@@ -25,7 +25,7 @@ import consulo.application.impl.internal.progress.AbstractProgressIndicatorBase;
 import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import consulo.util.lang.TimeoutUtil;
 import consulo.application.util.concurrent.SequentialTaskExecutor;
-import consulo.application.impl.internal.performance.HeavyProcessLatch;
+import consulo.application.HeavyProcessLatch;
 import consulo.application.Application;
 import consulo.container.util.StatCollector;
 import consulo.disposer.Disposable;

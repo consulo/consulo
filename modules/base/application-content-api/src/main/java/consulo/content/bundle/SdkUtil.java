@@ -18,9 +18,12 @@ package consulo.content.bundle;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.ApplicationManager;
 import consulo.component.util.pointer.NamedPointer;
+import consulo.fileChooser.FileChooser;
+import consulo.fileChooser.FileChooserDescriptor;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.Alerts;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.io.FileUtil;
@@ -29,8 +32,10 @@ import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -146,5 +151,39 @@ public class SdkUtil {
       return null;
     }
     return sdk;
+  }
+
+  @RequiredUIAccess
+  public static void selectSdkHome(final SdkType sdkType, @Nonnull @RequiredUIAccess final Consumer<String> consumer) {
+    final FileChooserDescriptor descriptor = sdkType.getHomeChooserDescriptor();
+
+    FileChooser.chooseFiles(descriptor, null, getSuggestedSdkPath(sdkType)).doWhenDone(virtualFiles -> {
+      final String path = virtualFiles[0].getPath();
+      if (sdkType.isValidSdkHome(path)) {
+        consumer.accept(path);
+        return;
+      }
+
+      final String adjustedPath = sdkType.adjustSelectedSdkHome(path);
+      if (sdkType.isValidSdkHome(adjustedPath)) {
+        consumer.accept(adjustedPath);
+      }
+    });
+  }
+
+  @Nullable
+  public static VirtualFile getSuggestedSdkPath(SdkType sdkType) {
+    Collection<String> paths = sdkType.suggestHomePaths();
+    if (paths.isEmpty()) {
+      return null;
+    }
+
+    for (String path : paths) {
+      VirtualFile maybeSdkHomePath = LocalFileSystem.getInstance().findFileByPath(path);
+      if (maybeSdkHomePath != null) {
+        return maybeSdkHomePath;
+      }
+    }
+    return null;
   }
 }

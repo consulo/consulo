@@ -24,7 +24,6 @@ import consulo.application.ApplicationProperties;
 import consulo.application.event.ApplicationListener;
 import consulo.application.event.ApplicationLoadListener;
 import consulo.application.impl.internal.performance.ActivityTracker;
-import consulo.application.impl.internal.performance.HeavyProcessLatch;
 import consulo.application.impl.internal.performance.PerformanceWatcher;
 import consulo.application.impl.internal.start.StartupProgress;
 import consulo.application.impl.internal.store.IApplicationStore;
@@ -267,16 +266,13 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
     fireBeforeApplicationLoaded();
 
-    AccessToken token = HeavyProcessLatch.INSTANCE.processStarted("Loading application components");
     try {
       store.load();
     }
     catch (StateStorageException e) {
       throw new IOException(e.getMessage());
     }
-    finally {
-      token.finish();
-    }
+
     myLoaded = true;
 
     createLocatorFile();

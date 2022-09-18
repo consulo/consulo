@@ -299,8 +299,8 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
       customCreateUI.showCustomCreateUI(this, parent, sdk -> setupSdk(sdk, callback));
     }
     else {
-      SdkConfigurationUtil.selectSdkHome(type, home -> {
-        String newSdkName = SdkConfigurationUtil.createUniqueSdkName(type, home, getSdks());
+      SdkUtil.selectSdkHome(type, home -> {
+        String newSdkName = SdkUtil.createUniqueSdkName(type, home, getSdks());
         final SdkImpl newSdk = new SdkImpl(mySdkTableProvider.get(), newSdkName, type);
         newSdk.setHomePath(home);
         setupSdk(newSdk, callback);

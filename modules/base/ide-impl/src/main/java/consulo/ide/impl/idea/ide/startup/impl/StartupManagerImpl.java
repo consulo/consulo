@@ -2,12 +2,10 @@
 package consulo.ide.impl.idea.ide.startup.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.ApplicationBundle;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.impl.internal.performance.HeavyProcessLatch;
 import consulo.application.impl.internal.performance.PerformanceWatcher;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
@@ -139,23 +137,17 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
   @SuppressWarnings("SynchronizeOnThis")
   public void runStartupActivities(UIAccess uiAccess) {
     myApplication.runReadAction(() -> {
-      AccessToken token = HeavyProcessLatch.INSTANCE.processStarted("Running Startup Activities");
-      try {
-        runActivities(uiAccess, myPreStartupActivities, Phases.PROJECT_PRE_STARTUP);
+      runActivities(uiAccess, myPreStartupActivities, Phases.PROJECT_PRE_STARTUP);
 
-        // to avoid atomicity issues if runWhenProjectIsInitialized() is run at the same time
-        synchronized (this) {
-          myPreStartupActivitiesPassed = true;
-        }
-
-        runActivities(uiAccess, myStartupActivities, Phases.PROJECT_STARTUP);
-
-        synchronized (this) {
-          myStartupActivitiesPassed = true;
-        }
+      // to avoid atomicity issues if runWhenProjectIsInitialized() is run at the same time
+      synchronized (this) {
+        myPreStartupActivitiesPassed = true;
       }
-      finally {
-        token.finish();
+
+      runActivities(uiAccess, myStartupActivities, Phases.PROJECT_STARTUP);
+
+      synchronized (this) {
+        myStartupActivitiesPassed = true;
       }
     });
   }

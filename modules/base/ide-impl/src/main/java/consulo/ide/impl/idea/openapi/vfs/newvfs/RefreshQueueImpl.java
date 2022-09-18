@@ -3,32 +3,30 @@ package consulo.ide.impl.idea.openapi.vfs.newvfs;
 
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.*;
+import consulo.application.event.ApplicationListener;
+import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
 import consulo.application.impl.internal.progress.SensitiveProgressWrapper;
 import consulo.application.internal.ApplicationEx;
-import consulo.ide.impl.idea.openapi.diagnostic.FrequentEventDetector;
-import consulo.application.event.ApplicationListener;
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.internal.TransactionGuardEx;
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
+import consulo.application.util.concurrent.AppExecutorUtil;
+import consulo.application.util.concurrent.PooledThreadExecutor;
 import consulo.application.util.registry.Registry;
+import consulo.disposer.Disposable;
+import consulo.ide.impl.idea.openapi.diagnostic.FrequentEventDetector;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.logging.Logger;
 import consulo.ui.ModalityState;
 import consulo.virtualFileSystem.RefreshQueue;
 import consulo.virtualFileSystem.RefreshSession;
-import consulo.virtualFileSystem.event.AsyncFileListener;
 import consulo.virtualFileSystem.VfsBundle;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.event.AsyncFileListener;
 import consulo.virtualFileSystem.event.VFileCreateEvent;
 import consulo.virtualFileSystem.event.VFileEvent;
-import consulo.application.util.concurrent.AppExecutorUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.application.impl.internal.performance.HeavyProcessLatch;
-import consulo.application.*;
-import consulo.application.internal.TransactionGuardEx;
-import consulo.disposer.Disposable;
-import consulo.logging.Logger;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import consulo.application.util.concurrent.PooledThreadExecutor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -96,8 +94,8 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
   private void queueSession(@Nonnull RefreshSessionImpl session, @Nullable TransactionId transaction) {
     myQueue.execute(() -> {
       startRefreshActivity();
-      try (AccessToken ignored = HeavyProcessLatch.INSTANCE.processStarted("Doing file refresh. " + session)) {
-        doScan(session);
+      try {
+        HeavyProcessLatch.INSTANCE.performOperation(HeavyProcessLatch.Type.Syncing, "Doing file refresh. " + session, () -> doScan(session));
       }
       finally {
         finishRefreshActivity();
@@ -116,8 +114,8 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
     try {
       myEventProcessingQueue.execute(() -> {
         startRefreshActivity();
-        try (AccessToken ignored = HeavyProcessLatch.INSTANCE.processStarted("Processing VFS events. " + session)) {
-          processAndFireEvents(session, transaction);
+        try  {
+          HeavyProcessLatch.INSTANCE.performOperation(HeavyProcessLatch.Type.Syncing, "Processing VFS events. " + session , () -> processAndFireEvents(session, transaction));
         }
         finally {
           finishRefreshActivity();

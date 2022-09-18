@@ -16,14 +16,14 @@
 package consulo.ide.impl.idea.vcs.log.impl;
 
 import consulo.application.impl.internal.JobScheduler;
-import consulo.application.impl.internal.performance.HeavyProcessLatch;
+import consulo.application.HeavyProcessLatch;
 import javax.annotation.Nonnull;
 
 import java.util.concurrent.TimeUnit;
 
 class HeavyAwareExecutor {
   static void executeOutOfHeavyProcessLater(@Nonnull Runnable command, int delayMs) {
-    HeavyProcessLatch.INSTANCE.executeOutOfHeavyProcess(() -> JobScheduler.getScheduler().schedule(() -> {
+    HeavyProcessLatch.INSTANCE.queueExecuteOutOfHeavyProcess(() -> JobScheduler.getScheduler().schedule(() -> {
       if (HeavyProcessLatch.INSTANCE.isRunning()) {
         executeOutOfHeavyProcessLater(command, delayMs);
       }

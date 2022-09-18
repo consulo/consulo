@@ -23,7 +23,6 @@ import consulo.configurable.MasterDetailsConfigurable;
 import consulo.content.bundle.*;
 import consulo.content.impl.internal.bundle.SdkImpl;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.openapi.projectRoots.impl.SdkConfigurationUtil;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.SdkProjectStructureElement;
 import consulo.ide.impl.idea.openapi.ui.NonEmptyInputValidator;
@@ -104,7 +103,7 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
       final Object o = getSelectedObject();
       if (o instanceof SdkImpl) {
         final SdkImpl selected = (SdkImpl)o;
-        String defaultNewName = SdkConfigurationUtil.createUniqueSdkName(selected.getName(), sdksModel.getSdks());
+        String defaultNewName = SdkUtil.createUniqueSdkName(selected.getName(), sdksModel.getSdks());
         final String newName = Messages.showInputDialog("Enter bundle name:", "Copy Bundle", null, defaultNewName, new NonEmptyInputValidator() {
           @Override
           public boolean checkInput(String inputString) {

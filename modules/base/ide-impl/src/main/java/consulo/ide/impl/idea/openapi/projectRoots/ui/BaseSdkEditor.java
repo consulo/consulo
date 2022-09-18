@@ -18,28 +18,26 @@ package consulo.ide.impl.idea.openapi.projectRoots.ui;
 import consulo.application.ApplicationManager;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.UnnamedConfigurable;
-import consulo.content.bundle.*;
-import consulo.ide.ui.PathEditor;
-import consulo.ide.ui.SdkPathEditor;
-import consulo.project.ProjectBundle;
-import consulo.ide.impl.idea.openapi.projectRoots.impl.SdkConfigurationUtil;
-import consulo.content.impl.internal.bundle.SdkImpl;
-import consulo.content.bundle.UnknownSdkType;
 import consulo.content.OrderRootType;
-import consulo.ide.ui.OrderRootTypeUIFactory;
-import consulo.ui.ex.awt.Messages;
+import consulo.content.bundle.*;
+import consulo.content.impl.internal.bundle.SdkImpl;
+import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.disposer.Disposable;
+import consulo.ide.ui.OrderRootTypeUIFactory;
+import consulo.ide.ui.PathEditor;
+import consulo.ide.ui.SdkPathEditor;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.ProjectBundle;
 import consulo.ui.TextBoxWithExtensions;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.style.StandardColors;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -267,8 +265,7 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
   @RequiredUIAccess
   private void doSelectHomePath() {
     final SdkType sdkType = (SdkType)mySdk.getSdkType();
-    SdkConfigurationUtil.selectSdkHome(sdkType, path -> doSetHomePath(path, sdkType));
-
+    SdkUtil.selectSdkHome(sdkType, path -> doSetHomePath(path, sdkType));
   }
 
   private void doSetHomePath(final String homePath, final SdkType sdkType) {

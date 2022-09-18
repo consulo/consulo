@@ -9,7 +9,7 @@ import consulo.application.ReadAction;
 import consulo.application.TransactionGuard;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.event.ApplicationListener;
-import consulo.application.impl.internal.performance.HeavyProcessLatch;
+import consulo.application.HeavyProcessLatch;
 import consulo.application.impl.internal.start.StartupUtil;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;

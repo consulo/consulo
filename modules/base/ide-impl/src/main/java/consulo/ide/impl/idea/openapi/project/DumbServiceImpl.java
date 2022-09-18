@@ -5,7 +5,6 @@ import com.google.common.annotations.VisibleForTesting;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.*;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.impl.internal.performance.HeavyProcessLatch;
 import consulo.application.impl.internal.progress.AbstractProgressIndicatorExBase;
 import consulo.application.impl.internal.progress.CoreProgressManager;
 import consulo.application.impl.internal.progress.ProgressIndicatorBase;
@@ -274,8 +273,9 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
 
     indicator.pushState();
     ((CoreProgressManager)ProgressManager.getInstance()).suppressPrioritizing();
-    try (AccessToken ignored = HeavyProcessLatch.INSTANCE.processStarted("Performing indexing task")) {
-      task.performInDumbMode(indicator);
+    try {
+      final ProgressIndicator finalIndicator = indicator;
+      HeavyProcessLatch.INSTANCE.performOperation(HeavyProcessLatch.Type.Indexing, "Performing indexing task", () -> task.performInDumbMode(finalIndicator));
     }
     finally {
       ((CoreProgressManager)ProgressManager.getInstance()).restorePrioritizing();
@@ -562,9 +562,9 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
               action.execute((ProgressIndicatorEx)visibleIndicator);
             }
           });
-          try (AccessToken ignored = HeavyProcessLatch.INSTANCE.processStarted("Performing indexing tasks")) {
-            runSingleTask(task, taskIndicator);
-          }
+
+          final DumbModeTask finalTask = task;
+          HeavyProcessLatch.INSTANCE.performOperation(HeavyProcessLatch.Type.Indexing, "Performing indexing tasks", () -> runSingleTask(finalTask, taskIndicator));
         }
       }
       catch (Throwable unexpected) {

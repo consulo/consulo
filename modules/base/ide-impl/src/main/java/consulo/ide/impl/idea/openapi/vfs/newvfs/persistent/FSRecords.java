@@ -10,7 +10,7 @@ import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.FileNameCache;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.VirtualDirectoryImpl;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;
 import consulo.ide.impl.idea.util.*;
-import consulo.application.impl.internal.performance.HeavyProcessLatch;
+import consulo.application.HeavyProcessLatch;
 import consulo.application.util.concurrent.SequentialTaskExecutor;
 import consulo.ide.impl.idea.util.io.*;
 import consulo.ide.impl.idea.util.io.storage.*;

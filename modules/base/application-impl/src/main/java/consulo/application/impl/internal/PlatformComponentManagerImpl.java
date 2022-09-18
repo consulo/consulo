@@ -16,14 +16,11 @@
 package consulo.application.impl.internal;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.ApplicationProperties;
-import consulo.application.impl.internal.performance.HeavyProcessLatch;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.component.ComponentManager;
-import consulo.component.bind.InjectingBinding;
 import consulo.component.impl.internal.BaseComponentManager;
 import consulo.component.store.impl.internal.IComponentStore;
 import consulo.component.store.impl.internal.StateComponentInfo;
@@ -33,7 +30,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Supplier;
 
 public abstract class PlatformComponentManagerImpl extends BaseComponentManager {
   private static final Logger LOG = Logger.getInstance(PlatformComponentManagerImpl.class);
@@ -145,13 +141,5 @@ public abstract class PlatformComponentManagerImpl extends BaseComponentManager 
   @Nullable
   protected IComponentStore getStateStoreImpl() {
     return null;
-  }
-
-  @Override
-  protected <T> T runServiceInitialize(@Nonnull InjectingBinding descriptor, @Nonnull Supplier<T> runnable) {
-    // prevent storages from flushing and blocking FS
-    try (AccessToken ignored = HeavyProcessLatch.INSTANCE.processStarted("Creating component '" + descriptor.getImplClass().getName() + "'")) {
-      return super.runServiceInitialize(descriptor, runnable);
-    }
   }
 }

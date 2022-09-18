@@ -2,13 +2,8 @@
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
-import consulo.application.PowerSaveMode;
+import consulo.application.*;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.impl.internal.performance.HeavyProcessLatch;
-import consulo.language.editor.impl.internal.daemon.DaemonCodeAnalyzerEx;
-import consulo.language.editor.impl.internal.daemon.DaemonProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.concurrent.ThreadDumper;
@@ -33,9 +28,6 @@ import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
 import consulo.fileEditor.highlight.HighlightingPass;
 import consulo.fileEditor.text.TextEditorProvider;
-import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
-import consulo.language.editor.impl.highlight.TextEditorHighlightingPass;
-import consulo.language.editor.impl.highlight.TextEditorHighlightingPassManager;
 import consulo.ide.impl.idea.codeInsight.daemon.DaemonCodeAnalyzerSettingsImpl;
 import consulo.ide.impl.idea.codeInsight.intention.impl.FileLevelIntentionComponent;
 import consulo.ide.impl.idea.codeInsight.intention.impl.IntentionHintComponent;
@@ -45,17 +37,22 @@ import consulo.ide.impl.idea.openapi.fileEditor.impl.text.AsyncEditorLoader;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.FileTypeManagerImpl;
 import consulo.ide.impl.idea.packageDependencies.DependencyValidationManager;
 import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
-import consulo.language.psi.resolve.RefResolveService;
 import consulo.language.editor.*;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.gutter.LineMarkerInfo;
 import consulo.language.editor.hint.HintManager;
+import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
+import consulo.language.editor.impl.highlight.TextEditorHighlightingPass;
+import consulo.language.editor.impl.highlight.TextEditorHighlightingPassManager;
+import consulo.language.editor.impl.internal.daemon.DaemonCodeAnalyzerEx;
+import consulo.language.editor.impl.internal.daemon.DaemonProgressIndicator;
 import consulo.language.editor.impl.internal.daemon.FileStatusMap;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
 import consulo.language.file.FileTypeManager;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.*;
+import consulo.language.psi.resolve.RefResolveService;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
@@ -300,15 +297,17 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
       throw new AssertionError("Must not start highlighting from within write action, or deadlock is imminent");
     }
     DaemonProgressIndicator.setDebug(!ApplicationInfoImpl.isInPerformanceTest());
+
     ((FileTypeManagerImpl)FileTypeManager.getInstance()).drainReDetectQueue();
-    // pump first so that queued event do not interfere
-    UIUtil.dispatchAllInvocationEvents();
 
     RefreshQueue refreshQueue = RefreshQueue.getInstance();
-    // refresh will fire write actions interfering with highlighting
-    while (refreshQueue.isRefreshInProgress() || HeavyProcessLatch.INSTANCE.isRunning()) {
+    do {
       UIUtil.dispatchAllInvocationEvents();
+      // refresh will fire write actions interfering with highlighting
+      // heavy ops are bad, but VFS refresh is ok
     }
+    while (refreshQueue.isRefreshInProgress() || heavyProcessIsRunning());
+    
     long dstart = System.currentTimeMillis();
     while (mustWaitForSmartMode && DumbService.getInstance(myProject).isDumb()) {
       if (System.currentTimeMillis() > dstart + 100000) {
@@ -790,7 +789,8 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
       }
 
       // wait for heavy processing to stop, re-schedule daemon but not too soon
-      if (HeavyProcessLatch.INSTANCE.isRunning()) {
+      boolean heavyProcessIsRunning = ReadAction.compute(() -> heavyProcessIsRunning());
+      if (heavyProcessIsRunning) {
         boolean hasPasses = false;
         for (Map.Entry<FileEditor, HighlightingPass[]> entry : passes.entrySet()) {
           HighlightingPass[] filtered = Arrays.stream(entry.getValue()).filter(DumbService::isDumbAware).toArray(HighlightingPass[]::new);
@@ -798,7 +798,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
           hasPasses |= filtered.length != 0;
         }
         if (!hasPasses) {
-          HeavyProcessLatch.INSTANCE.executeOutOfHeavyProcess(() -> dca.stopProcess(true, "re-scheduled to execute after heavy processing finished"));
+          HeavyProcessLatch.INSTANCE.queueExecuteOutOfHeavyProcess(() -> dca.stopProcess(true, "re-scheduled to execute after heavy processing finished"));
           return;
         }
       }
@@ -813,6 +813,12 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
     private void clearFieldsOnDispose() {
       myProject = null;
     }
+  }
+
+  // return true if a heavy op is running
+  private static boolean heavyProcessIsRunning() {
+    // VFS refresh is OK
+    return HeavyProcessLatch.INSTANCE.isRunningAnythingBut(HeavyProcessLatch.Type.Syncing);
   }
 
   @Nonnull
