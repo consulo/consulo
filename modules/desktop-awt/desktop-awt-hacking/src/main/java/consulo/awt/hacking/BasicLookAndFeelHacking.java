@@ -28,6 +28,16 @@ import java.lang.reflect.Method;
 public class BasicLookAndFeelHacking {
   private static final Logger LOG = Logger.getInstance(BasicLookAndFeelHacking.class);
 
+  public static BasicLookAndFeel newInstance(String className) {
+    try {
+      return (BasicLookAndFeel)Class.forName(className).newInstance();
+    }
+    catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+      LOG.warn(e);
+    }
+    return null;
+  }
+
   public static void initComponentDefaults(BasicLookAndFeel basicLookAndFeel, UIDefaults uiDefaults) {
     try {
       final Method superMethod = BasicLookAndFeel.class.getDeclaredMethod("initComponentDefaults", UIDefaults.class);

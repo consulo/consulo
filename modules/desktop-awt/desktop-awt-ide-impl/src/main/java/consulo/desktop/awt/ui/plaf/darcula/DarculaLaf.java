@@ -15,24 +15,24 @@
  */
 package consulo.desktop.awt.ui.plaf.darcula;
 
-import consulo.desktop.awt.ui.plaf.DarculaMetalTheme;
-import consulo.desktop.awt.ui.plaf.LafManagerImplUtil;
-import consulo.desktop.awt.ui.plaf.ideaOld.IntelliJMetalLookAndFeel;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.awt.util.ColorUtil;
-import consulo.ui.ex.awt.JBInsets;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.awt.hacking.AppContextHacking;
 import consulo.awt.hacking.BasicLookAndFeelHacking;
 import consulo.awt.hacking.HTMLEditorKitHacking;
 import consulo.desktop.awt.ui.plaf.BaseLookAndFeel;
-import consulo.platform.Platform;
+import consulo.desktop.awt.ui.plaf.DarculaMetalTheme;
+import consulo.desktop.awt.ui.plaf.LafManagerImplUtil;
 import consulo.desktop.awt.ui.plaf.extend.textBox.SupportTextBoxWithExpandActionExtender;
 import consulo.desktop.awt.ui.plaf.extend.textBox.SupportTextBoxWithExtensionsExtender;
+import consulo.desktop.awt.ui.plaf.ideaOld.IntelliJMetalLookAndFeel;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.platform.Platform;
+import consulo.ui.ex.awt.JBInsets;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.util.ColorUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageKey;
 
@@ -61,12 +61,13 @@ public class DarculaLaf extends BaseLookAndFeel {
 
   public DarculaLaf() {
     try {
-      if (SystemInfo.isWindows || SystemInfo.isLinux) {
-        base = new IntelliJMetalLookAndFeel();
-      }
-      else {
+      if (Platform.current().os().isMac()) {
         final String name = UIManager.getSystemLookAndFeelClassName();
-        base = (BasicLookAndFeel)Class.forName(name).newInstance();
+        base = BasicLookAndFeelHacking.newInstance(name);
+      }
+
+      if (base == null) {
+        base = new IntelliJMetalLookAndFeel();
       }
     }
     catch (Exception e) {
