@@ -18,6 +18,7 @@ package consulo.desktop.awt.boot.main;
 import consulo.container.impl.classloader.Java9ModuleProcessor;
 
 import java.util.List;
+import java.util.Locale;
 
 /**
  * @author VISTALL
@@ -41,6 +42,13 @@ public class DesktopAwtJava9Processor implements Java9ModuleProcessor {
     toOpenMap.add(new Opens("java.desktop", "javax.swing.text.html", "consulo.desktop.awt.hacking"));
     toOpenMap.add(new Opens("java.desktop", "java.awt.peer", "consulo.desktop.awt.hacking"));
     toOpenMap.add(new Opens("java.desktop", "java.awt.event", "consulo.desktop.awt.hacking"));
+
+    boolean isMac = System.getProperty("os.name").toLowerCase(Locale.ROOT).startsWith("mac");
+    if (isMac) {
+      toOpenMap.add(new Opens("java.desktop", "com.apple.laf", "consulo.desktop.awt.hacking"));
+      toOpenMap.add(new Opens("java.desktop", "com.apple.eawt", "consulo.desktop.awt.eawt.wrapper"));
+      toOpenMap.add(new Opens("java.desktop", "com.apple.eawt.event", "consulo.desktop.awt.eawt.wrapper"));
+    }
   }
 
   @Override

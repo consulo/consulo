@@ -11,3 +11,6 @@
 --add-opens=java.desktop/javax.swing.text.html=consulo.container.impl
 --add-opens=java.desktop/java.awt.peer=consulo.container.impl
 --add-opens=java.desktop/java.awt.event=consulo.container.impl
+--add-opens=java.desktop/com.apple.laf=consulo.container.impl
+--add-opens=java.desktop/com.apple.eawt=consulo.container.impl
+--add-opens=java.desktop/com.apple.eawt.event=consulo.container.impl
