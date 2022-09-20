@@ -13,13 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.daemon.impl;
+package consulo.language.editor.rawHighlight;
 
 import consulo.colorScheme.TextAttributesScheme;
 import consulo.language.editor.annotation.AnnotationSession;
-import consulo.language.editor.rawHighlight.HighlightInfo;
-import consulo.language.editor.rawHighlight.HighlightInfoHolder;
-import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.PsiTreeUtil;
@@ -65,7 +62,7 @@ public class CheckLevelHighlightInfoHolder extends HighlightInfoHolder {
   @Override
   public boolean add(@Nullable HighlightInfo info) {
     if (info == null) return false;
-    PsiElement psiElement = ((HighlightInfoImpl)info).getPsiElement();
+    PsiElement psiElement = info.getPsiElement();
     if (psiElement != null && !PsiTreeUtil.isAncestor(myLevel, psiElement, false)) {
       throw new RuntimeException("Info: '" + info + "' reported for the element '" + psiElement + "'; but it was at the level " + myLevel);
     }

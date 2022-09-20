@@ -26,7 +26,7 @@ import consulo.language.editor.annotation.ExternalLanguageAnnotators;
 import consulo.language.Language;
 import consulo.language.editor.Pass;
 import consulo.language.editor.annotation.ExternalAnnotator;
-import consulo.language.editor.impl.internal.daemon.FileStatusMap;
+import consulo.language.editor.impl.internal.daemon.FileStatusMapImpl;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
@@ -58,7 +58,7 @@ public class ExternalToolPassFactory implements TextEditorHighlightingPassFactor
   @Override
   @Nullable
   public TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull final Editor editor) {
-    TextRange textRange = FileStatusMap.getDirtyTextRange(editor, Pass.EXTERNAL_TOOLS) == null ? null : file.getTextRange();
+    TextRange textRange = FileStatusMapImpl.getDirtyTextRange(editor, Pass.EXTERNAL_TOOLS) == null ? null : file.getTextRange();
     if (textRange == null || !externalAnnotatorsDefined(file)) {
       return null;
     }

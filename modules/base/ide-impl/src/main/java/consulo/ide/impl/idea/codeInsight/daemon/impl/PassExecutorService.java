@@ -29,7 +29,7 @@ import consulo.ide.impl.idea.openapi.application.impl.ApplicationInfoImpl;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.Functions;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.editor.impl.internal.daemon.FileStatusMap;
+import consulo.language.editor.impl.internal.daemon.FileStatusMapImpl;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
@@ -496,7 +496,7 @@ final class PassExecutorService implements Disposable {
         if (Application.get().isUnifiedApplication() || fileEditor.getComponent().isDisplayable() || ApplicationManager.getApplication().isHeadlessEnvironment()) {
           pass.applyInformationToEditor();
           repaintErrorStripeAndIcon(fileEditor);
-          FileStatusMap fileStatusMap = DaemonCodeAnalyzerEx.getInstanceEx(myProject).getFileStatusMap();
+          FileStatusMapImpl fileStatusMap = DaemonCodeAnalyzerEx.getInstanceEx(myProject).getFileStatusMap();
           if (document != null) {
             fileStatusMap.markFileUpToDate(document, pass.getId());
           }

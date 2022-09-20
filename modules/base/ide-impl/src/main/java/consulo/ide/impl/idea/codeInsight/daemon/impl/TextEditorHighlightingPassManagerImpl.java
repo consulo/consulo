@@ -22,7 +22,7 @@ import consulo.codeEditor.Editor;
 import consulo.language.editor.Pass;
 import consulo.language.editor.impl.highlight.*;
 import consulo.language.editor.impl.internal.daemon.DaemonCodeAnalyzerEx;
-import consulo.language.editor.impl.internal.daemon.FileStatusMap;
+import consulo.language.editor.impl.internal.daemon.FileStatusMapImpl;
 import consulo.project.Project;
 import consulo.language.psi.PsiCompiledElement;
 import consulo.language.psi.PsiDocumentManager;
@@ -171,7 +171,7 @@ public class TextEditorHighlightingPassManagerImpl extends TextEditorHighlightin
     });
 
     DaemonCodeAnalyzerEx daemonCodeAnalyzer = DaemonCodeAnalyzerEx.getInstanceEx(myProject);
-    final FileStatusMap statusMap = daemonCodeAnalyzer.getFileStatusMap();
+    final FileStatusMapImpl statusMap = daemonCodeAnalyzer.getFileStatusMap();
     passesRefusedToCreate.forEach(passId -> statusMap.markFileUpToDate(document, passId));
 
     return (List)Arrays.asList(id2Pass.getValues());

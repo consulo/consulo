@@ -55,6 +55,7 @@ public abstract class DaemonCodeAnalyzer {
 
   public abstract boolean isAutohintsAvailable(@Nullable PsiFile file);
 
+  @Nonnull
   public abstract ProgressIndicator createDaemonProgressIndicator();
 
   /**
@@ -70,4 +71,7 @@ public abstract class DaemonCodeAnalyzer {
   public abstract void restart(@Nonnull PsiFile file);
 
   public abstract void autoImportReferenceAtCursor(@Nonnull Editor editor, @Nonnull PsiFile file);
+
+  @Nonnull
+  public abstract FileStatusMap getFileStatusMap();
 }

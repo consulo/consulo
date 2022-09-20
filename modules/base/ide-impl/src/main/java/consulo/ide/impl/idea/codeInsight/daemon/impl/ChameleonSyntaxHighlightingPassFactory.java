@@ -25,7 +25,7 @@ import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
 import consulo.language.editor.impl.highlight.TextEditorHighlightingPass;
 import consulo.language.editor.Pass;
 import consulo.language.editor.impl.highlight.VisibleHighlightingPassFactory;
-import consulo.language.editor.impl.internal.daemon.FileStatusMap;
+import consulo.language.editor.impl.internal.daemon.FileStatusMapImpl;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import jakarta.inject.Inject;
@@ -47,7 +47,7 @@ final class ChameleonSyntaxHighlightingPassFactory implements MainHighlightingPa
   @Override
   public TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull Editor editor) {
     Project project = file.getProject();
-    TextRange restrict = FileStatusMap.getDirtyTextRange(editor, Pass.UPDATE_ALL);
+    TextRange restrict = FileStatusMapImpl.getDirtyTextRange(editor, Pass.UPDATE_ALL);
     if (restrict == null) return new ProgressableTextEditorHighlightingPass.EmptyPass(project, editor.getDocument());
     ProperTextRange priority = VisibleHighlightingPassFactory.calculateVisibleRange(editor);
     return new ChameleonSyntaxHighlightingPass(project, file, editor.getDocument(), ProperTextRange.create(restrict), priority, editor, new DefaultHighlightInfoProcessor());

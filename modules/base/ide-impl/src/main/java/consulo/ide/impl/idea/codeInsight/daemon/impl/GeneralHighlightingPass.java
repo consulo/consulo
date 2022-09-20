@@ -10,7 +10,7 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.editor.HighlightRangeExtension;
 import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
 import consulo.language.editor.impl.internal.daemon.DaemonCodeAnalyzerEx;
-import consulo.language.editor.impl.internal.daemon.FileStatusMap;
+import consulo.language.editor.impl.internal.daemon.FileStatusMapImpl;
 import consulo.language.editor.wolfAnalyzer.Problem;
 import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
 import consulo.ide.impl.psi.impl.search.PsiTodoSearchHelperImpl;
@@ -93,7 +93,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
     boolean wholeFileHighlighting = isWholeFileHighlighting();
     myHasErrorElement = !wholeFileHighlighting && Boolean.TRUE.equals(getFile().getUserData(HAS_ERROR_ELEMENT));
     final DaemonCodeAnalyzerEx daemonCodeAnalyzer = DaemonCodeAnalyzerEx.getInstanceEx(myProject);
-    FileStatusMap fileStatusMap = daemonCodeAnalyzer.getFileStatusMap();
+    FileStatusMapImpl fileStatusMap = daemonCodeAnalyzer.getFileStatusMap();
     myErrorFound = !wholeFileHighlighting && fileStatusMap.wasErrorFound(getDocument());
 
     // initial guess to show correct progress in the traffic light icon

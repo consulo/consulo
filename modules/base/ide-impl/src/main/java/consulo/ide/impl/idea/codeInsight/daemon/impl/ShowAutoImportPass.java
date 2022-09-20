@@ -18,7 +18,7 @@ import consulo.language.editor.ReferenceImporter;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.impl.highlight.VisibleHighlightingPassFactory;
 import consulo.language.editor.impl.internal.daemon.DaemonCodeAnalyzerEx;
-import consulo.language.editor.impl.internal.daemon.FileStatusMap;
+import consulo.language.editor.impl.internal.daemon.FileStatusMapImpl;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.language.editor.intention.HintAction;
 import consulo.language.editor.intention.IntentionAction;
@@ -55,7 +55,7 @@ public class ShowAutoImportPass extends TextEditorHighlightingPass {
 
     myFile = file;
 
-    hasDirtyTextRange = FileStatusMap.getDirtyTextRange(editor, Pass.UPDATE_ALL) != null;
+    hasDirtyTextRange = FileStatusMapImpl.getDirtyTextRange(editor, Pass.UPDATE_ALL) != null;
   }
 
   @Override

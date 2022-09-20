@@ -22,7 +22,7 @@ import consulo.language.editor.Pass;
 import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
 import consulo.language.editor.impl.highlight.TextEditorHighlightingPass;
 import consulo.language.editor.impl.highlight.VisibleHighlightingPassFactory;
-import consulo.language.editor.impl.internal.daemon.FileStatusMap;
+import consulo.language.editor.impl.internal.daemon.FileStatusMapImpl;
 import consulo.language.editor.inspection.scheme.InspectionProfileWrapper;
 import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.logging.Logger;
@@ -72,7 +72,7 @@ public class LocalInspectionsPassFactory implements MainHighlightingPassFactory 
   }
 
   private static TextRange calculateRangeToProcess(Editor editor) {
-    return FileStatusMap.getDirtyTextRange(editor, Pass.LOCAL_INSPECTIONS);
+    return FileStatusMapImpl.getDirtyTextRange(editor, Pass.LOCAL_INSPECTIONS);
   }
 
   private static class MyLocalInspectionsPass extends LocalInspectionsPass {

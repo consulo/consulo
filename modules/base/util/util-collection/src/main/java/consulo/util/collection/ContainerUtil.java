@@ -1425,4 +1425,66 @@ public class ContainerUtil {
     }
     return a;
   }
+
+
+  /**
+   * Returns the only item from the collection or null if collection is empty or contains more than one item
+   *
+   * @param items collection to get the item from
+   * @param <T>   type of collection element
+   * @return the only collection element or null
+   */
+  @Contract(pure = true)
+  public static <T> T getOnlyItem(@Nullable final Collection<? extends T> items) {
+    return getOnlyItem(items, null);
+  }
+
+  @Contract(pure = true)
+  public static <T> T getOnlyItem(@Nullable final Collection<? extends T> items, @Nullable final T defaultResult) {
+    return items == null || items.size() != 1 ? defaultResult : items.iterator().next();
+  }
+
+  /**
+   * @return read-only collection consisting of elements from both collections
+   */
+  @Nonnull
+  @Contract(pure = true)
+  public static <T> Collection<T> intersection(@Nonnull Collection<? extends T> collection1, @Nonnull Collection<? extends T> collection2) {
+    List<T> result = new ArrayList<T>();
+    for (T t : collection1) {
+      if (collection2.contains(t)) {
+        result.add(t);
+      }
+    }
+    return result.isEmpty() ? List.of() : result;
+  }
+
+  public static <T> boolean all(@Nonnull T[] collection, @Nonnull java.util.function.Predicate<? super T> condition) {
+    for (T t : collection) {
+      if (!condition.test(t)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  public static <T> boolean all(@Nonnull Collection<? extends T> collection, @Nonnull java.util.function.Predicate<? super T> condition) {
+    for (T t : collection) {
+      if (!condition.test(t)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  public static <K, V> boolean any(Map<K, V> map, java.util.function.Predicate<Map.Entry<K, V>> predicate) {
+    if (map.isEmpty()) return false;
+
+    for (Map.Entry<K, V> element : map.entrySet()) {
+      if (predicate.test(element)) {
+        return true;
+      }
+    }
+    return false;
+  }
 }

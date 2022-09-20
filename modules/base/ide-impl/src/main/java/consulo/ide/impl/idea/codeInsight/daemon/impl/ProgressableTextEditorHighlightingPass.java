@@ -25,7 +25,7 @@ import consulo.language.editor.impl.internal.daemon.DaemonProgressIndicator;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.application.progress.ProgressIndicator;
-import consulo.language.editor.impl.internal.daemon.FileStatusMap;
+import consulo.language.editor.impl.internal.daemon.FileStatusMapImpl;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiFile;
@@ -178,7 +178,7 @@ public abstract class ProgressableTextEditorHighlightingPass extends TextEditorH
 
     @Override
     public void doApplyInformationToEditor() {
-      FileStatusMap statusMap = DaemonCodeAnalyzerEx.getInstanceEx(myProject).getFileStatusMap();
+      FileStatusMapImpl statusMap = DaemonCodeAnalyzerEx.getInstanceEx(myProject).getFileStatusMap();
       statusMap.markFileUpToDate(getDocument(), getId());
     }
   }

@@ -986,7 +986,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.psi.statistics.impl;
   exports consulo.ide.impl.psi.stubs;
   exports consulo.ide.impl.psi.stubs.provided;
-  exports consulo.ide.impl.psi.targets;
   exports consulo.ide.impl.psi.templateLanguages;
   exports consulo.ide.impl.psi.util;
   exports consulo.ide.impl.psi.util.proximity;

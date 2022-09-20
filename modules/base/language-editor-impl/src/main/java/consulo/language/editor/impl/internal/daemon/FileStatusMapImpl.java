@@ -6,6 +6,7 @@ import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
+import consulo.language.editor.FileStatusMap;
 import consulo.language.editor.Pass;
 import consulo.language.editor.ProblemHighlightFilter;
 import consulo.language.editor.impl.highlight.DirtyScopeTrackingHighlightingPassFactory;
@@ -30,22 +31,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 
-public final class FileStatusMap implements Disposable {
-  private static final Logger LOG = Logger.getInstance(FileStatusMap.class);
+public final class FileStatusMapImpl implements Disposable, FileStatusMap {
+  private static final Logger LOG = Logger.getInstance(FileStatusMapImpl.class);
   public static final String CHANGES_NOT_ALLOWED_DURING_HIGHLIGHTING = "PSI/document/model changes are not allowed during highlighting";
   private final Project myProject;
   private final Map<Document, FileStatus> myDocumentToStatusMap = ContainerUtil.createWeakMap(); // all dirty if absent
   private volatile boolean myAllowDirt = true;
 
   // Don't reduce visibility rules here because this class is used in Upsource as well.
-  public FileStatusMap(@Nonnull Project project) {
+  public FileStatusMapImpl(@Nonnull Project project) {
     myProject = project;
   }
 
   @Override
   public void dispose() {
     // clear dangling references to PsiFiles/Documents. SCR#10358
-    markAllFilesDirty("FileStatusMap dispose");
+    markAllFilesDirty("FileStatusMapImpl dispose");
   }
 
   /**
@@ -58,13 +59,14 @@ public final class FileStatusMap implements Disposable {
   public static TextRange getDirtyTextRange(@Nonnull Editor editor, int passId) {
     Document document = editor.getDocument();
 
-    FileStatusMap me = DaemonCodeAnalyzerEx.getInstanceEx(editor.getProject()).getFileStatusMap();
+    FileStatusMapImpl me = DaemonCodeAnalyzerEx.getInstanceEx(editor.getProject()).getFileStatusMap();
     TextRange dirtyScope = me.getFileDirtyScope(document, passId);
     if (dirtyScope == null) return null;
     TextRange documentRange = TextRange.from(0, document.getTextLength());
     return documentRange.intersection(dirtyScope);
   }
 
+  @Override
   public void setErrorFoundFlag(@Nonnull Project project, @Nonnull Document document, boolean errorFound) {
     //GHP has found error. Flag is used by ExternalToolPass to decide whether to run or not
     synchronized (myDocumentToStatusMap) {
@@ -192,6 +194,7 @@ public final class FileStatusMap implements Disposable {
   /**
    * @return null for processed file, whole file for untouched or entirely dirty file, range(usually code block) for dirty region (optimization)
    */
+  @Override
   @Nullable
   public TextRange getFileDirtyScope(@Nonnull Document document, int passId) {
     synchronized (myDocumentToStatusMap) {

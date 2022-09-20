@@ -26,7 +26,7 @@ import consulo.codeEditor.impl.MarkupModelImpl;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
 import consulo.language.editor.impl.highlight.VisibleHighlightingPassFactory;
-import consulo.language.editor.impl.internal.daemon.FileStatusMap;
+import consulo.language.editor.impl.internal.daemon.FileStatusMapImpl;
 import consulo.language.psi.PsiFile;
 
 import javax.annotation.Nonnull;
@@ -45,7 +45,7 @@ public class LineMarkersPassFactory implements TextEditorHighlightingPassFactory
   @Override
   @Nullable
   public TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull final Editor editor) {
-    TextRange restrictRange = FileStatusMap.getDirtyTextRange(editor, Pass.LINE_MARKERS);
+    TextRange restrictRange = FileStatusMapImpl.getDirtyTextRange(editor, Pass.LINE_MARKERS);
     Document document = editor.getDocument();
     if (restrictRange == null) return new ProgressableTextEditorHighlightingPass.EmptyPass(file.getProject(), document);
     ProperTextRange visibleRange = VisibleHighlightingPassFactory.calculateVisibleRange(editor);

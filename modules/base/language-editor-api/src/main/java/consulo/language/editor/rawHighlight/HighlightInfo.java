@@ -151,6 +151,9 @@ public interface HighlightInfo extends Segment {
   HighlightInfoType getType();
 
   @Nullable
+  PsiElement getPsiElement();
+
+  @Nullable
   TextAttributes getTextAttributes(@Nullable PsiElement element, @Nullable EditorColorsScheme editorColorsScheme);
 
   @Nullable

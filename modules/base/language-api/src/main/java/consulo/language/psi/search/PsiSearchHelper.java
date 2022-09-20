@@ -187,6 +187,10 @@ public interface PsiSearchHelper {
   AsyncFuture<Boolean> processElementsWithWordAsync(@Nonnull TextOccurenceProcessor processor, @Nonnull SearchScope searchScope, @Nonnull String text, short searchContext, boolean caseSensitive);
 
 
+  default boolean hasIdentifierInFile(@Nonnull PsiFile file, @Nonnull String name) {
+    throw new UnsupportedOperationException();
+  }
+
   @Nonnull
   SearchCostResult isCheapEnoughToSearch(@Nonnull String name,
                                          @Nonnull GlobalSearchScope scope,

@@ -8,7 +8,7 @@ import consulo.application.WriteAction;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.internal.TransactionGuardEx;
 import consulo.application.util.Semaphore;
-import consulo.language.editor.impl.internal.daemon.FileStatusMap;
+import consulo.language.editor.impl.internal.daemon.FileStatusMapImpl;
 import consulo.ide.impl.idea.openapi.vfs.ex.VirtualFileManagerEx;
 import consulo.ide.impl.idea.openapi.vfs.impl.local.LocalFileSystemImpl;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.RefreshWorker;
@@ -198,7 +198,7 @@ public class RefreshSessionImpl extends RefreshSession {
       AsyncEventSupport.processEvents(events, appliers);
     }
     catch (AssertionError e) {
-      if (FileStatusMap.CHANGES_NOT_ALLOWED_DURING_HIGHLIGHTING.equals(e.getMessage())) {
+      if (FileStatusMapImpl.CHANGES_NOT_ALLOWED_DURING_HIGHLIGHTING.equals(e.getMessage())) {
         throw new AssertionError("VFS changes are not allowed during highlighting", myStartTrace);
       }
       throw e;

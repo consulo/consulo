@@ -62,6 +62,12 @@ public final class Lists {
     quickSort(list, (o1, o2) -> weighterFunc.applyAsInt(o2) - weighterFunc.applyAsInt(o1));
   }
 
+  @Nonnull
+  @Contract(pure = true)
+  public static <T> List<T> append(@Nonnull List<? extends T> list, @Nonnull T... values) {
+    return ContainerUtil.concat(list, List.of(values));
+  }
+
   // Generalized Quick Sort. Does neither array.clone() nor list.toArray()
   public static <T> void quickSort(@Nonnull List<T> list, @Nonnull Comparator<? super T> comparator) {
     quickSort(list, comparator, 0, list.size());

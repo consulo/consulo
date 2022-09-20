@@ -46,7 +46,7 @@ import consulo.language.editor.impl.highlight.TextEditorHighlightingPass;
 import consulo.language.editor.impl.highlight.TextEditorHighlightingPassManager;
 import consulo.language.editor.impl.internal.daemon.DaemonCodeAnalyzerEx;
 import consulo.language.editor.impl.internal.daemon.DaemonProgressIndicator;
-import consulo.language.editor.impl.internal.daemon.FileStatusMap;
+import consulo.language.editor.impl.internal.daemon.FileStatusMapImpl;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
 import consulo.language.file.FileTypeManager;
@@ -103,7 +103,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
   private final Collection<VirtualFile> myDisabledHintsFiles = new HashSet<>();
   private final Collection<VirtualFile> myDisabledHighlightingFiles = new HashSet<>();
 
-  private final FileStatusMap myFileStatusMap;
+  private final FileStatusMapImpl myFileStatusMap;
   private DaemonCodeAnalyzerSettings myLastSettings;
 
   private volatile boolean myDisposed;     // the only possible transition: false -> true
@@ -127,7 +127,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
     myPsiDocumentManager = PsiDocumentManager.getInstance(myProject);
     myLastSettings = ((DaemonCodeAnalyzerSettingsImpl)mySettings).clone();
 
-    myFileStatusMap = new FileStatusMap(project);
+    myFileStatusMap = new FileStatusMapImpl(project);
     myPassExecutorService = new PassExecutorService(project);
     Disposer.register(this, myPassExecutorService);
     Disposer.register(this, myFileStatusMap);
@@ -318,7 +318,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
 
     UIUtil.dispatchAllInvocationEvents();
 
-    FileStatusMap fileStatusMap = getFileStatusMap();
+    FileStatusMapImpl fileStatusMap = getFileStatusMap();
 
     NonBlockingReadActionImpl.waitForAsyncTaskCompletion(); // wait for async editor loading
     Map<FileEditor, HighlightingPass[]> map = new HashMap<>();
@@ -527,6 +527,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
     return isHighlightingAvailable(file) && !(file instanceof PsiCompiledElement);
   }
 
+  @Nonnull
   @Override
   public ProgressIndicator createDaemonProgressIndicator() {
     return new DaemonProgressIndicator();
@@ -574,7 +575,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
 
   @Override
   @Nonnull
-  public FileStatusMap getFileStatusMap() {
+  public FileStatusMapImpl getFileStatusMap() {
     return myFileStatusMap;
   }
 

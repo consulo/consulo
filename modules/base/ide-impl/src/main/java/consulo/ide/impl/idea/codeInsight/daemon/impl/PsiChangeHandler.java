@@ -15,7 +15,7 @@ import consulo.ide.impl.idea.openapi.editor.ex.EditorMarkupModel;
 import consulo.component.extension.ExtensionPointName;
 import consulo.fileEditor.FileEditorManager;
 import consulo.language.editor.impl.internal.daemon.DaemonCodeAnalyzerEx;
-import consulo.language.editor.impl.internal.daemon.FileStatusMap;
+import consulo.language.editor.impl.internal.daemon.FileStatusMapImpl;
 import consulo.language.psi.*;
 import consulo.language.psi.event.PsiTreeChangeAdapter;
 import consulo.language.psi.event.PsiTreeChangeEvent;
@@ -46,7 +46,7 @@ final class PsiChangeHandler extends PsiTreeChangeAdapter implements Disposable 
 
   private final Project myProject;
   private final Map<Document, List<Pair<PsiElement, Boolean>>> changedElements = ContainerUtil.createWeakMap();
-  private final FileStatusMap myFileStatusMap;
+  private final FileStatusMapImpl myFileStatusMap;
 
   PsiChangeHandler(@Nonnull Project project, @Nonnull MessageBusConnection connection) {
     myProject = project;

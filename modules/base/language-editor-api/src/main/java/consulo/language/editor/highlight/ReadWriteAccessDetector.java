@@ -46,7 +46,15 @@ public abstract class ReadWriteAccessDetector {
   public enum Access {
     Read,
     Write,
-    ReadWrite
+    ReadWrite;
+
+    public boolean isReferencedForRead() {
+      return this == Read || this == ReadWrite;
+    }
+
+    public boolean isReferencedForWrite() {
+      return this == Write || this == ReadWrite;
+    }
   }
 
   public abstract boolean isReadWriteAccessible(PsiElement element);

@@ -177,6 +177,11 @@ public class PsiSearchHelperImpl implements PsiSearchHelper {
     return AsyncUtil.wrapBoolean(result);
   }
 
+  @Override
+  public boolean hasIdentifierInFile(@Nonnull PsiFile file, @Nonnull String name) {
+    return IdIndex.hasIdentifierInFile(file, name);
+  }
+
   public boolean processElementsWithWord(@Nonnull final TextOccurenceProcessor processor,
                                          @Nonnull SearchScope searchScope,
                                          @Nonnull final String text,
