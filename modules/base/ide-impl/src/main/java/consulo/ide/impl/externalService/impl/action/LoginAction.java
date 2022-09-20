@@ -22,7 +22,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ide.impl.idea.openapi.actionSystem.RightAlignedToolbarAction;
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.util.ObjectUtil;
 import consulo.builtinWebServer.BuiltInServerManager;
 import consulo.externalService.ExternalServiceConfiguration;
 import consulo.ide.impl.externalService.impl.ExternalServiceConfigurationImpl;
@@ -31,6 +30,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.Alerts;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
+import consulo.util.lang.ObjectUtil;
 import jakarta.inject.Provider;
 import org.apache.commons.lang3.RandomStringUtils;
 

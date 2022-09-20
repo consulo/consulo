@@ -11,6 +11,7 @@ import consulo.language.util.LanguageUtil;
 import consulo.language.editor.structureView.PsiStructureViewFactory;
 import consulo.codeEditor.Editor;
 import consulo.fileEditor.FileEditor;
+import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.Comparing;
@@ -20,7 +21,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.language.template.TemplateLanguageFileViewProvider;
-import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.util.lang.function.PairFunction;
 import consulo.util.collection.JBIterable;
 import consulo.disposer.Disposer;
@@ -78,11 +78,11 @@ public abstract class TemplateLanguageStructureViewBuilder extends TreeBasedStru
     PsiFile psiFile = file == null || !file.isValid() ? null : PsiManager.getInstance(project).findFile(file);
     List<Language> languages = getLanguages(psiFile).toList();
     for (Language language : languages) {
-      StructureViewBuilder builder = getBuilder(ObjectUtils.notNull(psiFile), language);
+      StructureViewBuilder builder = getBuilder(ObjectUtil.notNull(psiFile), language);
       if (builder == null) continue;
       StructureView structureView = builder.createStructureView(fileEditor, project);
       String title = language.getDisplayName();
-      Image icon = ObjectUtils.notNull(LanguageUtil.getLanguageFileType(language), UnknownFileType.INSTANCE).getIcon();
+      Image icon = ObjectUtil.notNull(LanguageUtil.getLanguageFileType(language), UnknownFileType.INSTANCE).getIcon();
       viewDescriptors.add(new StructureViewComposite.StructureViewDescriptor(title, structureView, icon));
     }
     StructureViewComposite.StructureViewDescriptor[] array = viewDescriptors.toArray(new StructureViewComposite.StructureViewDescriptor[0]);
@@ -109,13 +109,13 @@ public abstract class TemplateLanguageStructureViewBuilder extends TreeBasedStru
   @Nonnull
   public StructureViewModel createStructureViewModel(@Nullable Editor editor) {
     List<StructureViewComposite.StructureViewDescriptor> viewDescriptors = new ArrayList<>();
-    PsiFile psiFile = ObjectUtils.notNull(PsiManager.getInstance(myProject).findFile(myVirtualFile));
+    PsiFile psiFile = ObjectUtil.notNull(PsiManager.getInstance(myProject).findFile(myVirtualFile));
     for (Language language : getLanguages(psiFile)) {
       StructureViewBuilder builder = getBuilder(psiFile, language);
       if (!(builder instanceof TreeBasedStructureViewBuilder)) continue;
       StructureViewModel model = ((TreeBasedStructureViewBuilder)builder).createStructureViewModel(editor);
       String title = language.getDisplayName();
-      Image icon = ObjectUtils.notNull(LanguageUtil.getLanguageFileType(language), UnknownFileType.INSTANCE).getIcon();
+      Image icon = ObjectUtil.notNull(LanguageUtil.getLanguageFileType(language), UnknownFileType.INSTANCE).getIcon();
       viewDescriptors.add(new StructureViewComposite.StructureViewDescriptor(title, model, icon));
     }
     return new StructureViewCompositeModel(psiFile, editor, viewDescriptors);

@@ -46,7 +46,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import static consulo.ide.impl.idea.util.ObjectUtils.assertNotNull;
+import static consulo.util.lang.ObjectUtil.assertNotNull;
 import static consulo.ui.ex.awt.UIUtil.DEFAULT_HGAP;
 import static consulo.ui.ex.awt.UIUtil.DEFAULT_VGAP;
 

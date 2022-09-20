@@ -22,7 +22,7 @@ import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import consulo.application.util.registry.Registry;
 import consulo.document.util.DocumentUtil;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.Disposable;
@@ -195,7 +195,7 @@ public class FocusModeModel implements Disposable {
   }
 
   private void applyFocusMode(@Nonnull Segment focusRange) {
-    EditorColorsScheme scheme = ObjectUtils.notNull(myEditor.getColorsScheme(), EditorColorsManager.getInstance().getGlobalScheme());
+    EditorColorsScheme scheme = ObjectUtil.notNull(myEditor.getColorsScheme(), EditorColorsManager.getInstance().getGlobalScheme());
     ColorValue background = scheme.getDefaultBackground();
     //noinspection UseJBColor
     ColorValue foreground = TargetAWT.from(Registry.getColor(ColorValueUtil.isDark(background) ? "editor.focus.mode.color.dark" : "editor.focus.mode.color.light", Color.GRAY));

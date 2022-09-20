@@ -27,7 +27,7 @@ import consulo.ide.impl.idea.openapi.ui.StripeTable;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.ExceptionUtil;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.ReflectionUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.ui.ColorIcon;
@@ -792,7 +792,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
         return NULL_RENDERER;
       }
 
-      Renderer<Object> renderer = ObjectUtils.notNull(getRenderer(value.getClass()), DEFAULT_RENDERER);
+      Renderer<Object> renderer = ObjectUtil.notNull(getRenderer(value.getClass()), DEFAULT_RENDERER);
 
       JComponent result = renderer.setValue(value);
       result.setOpaque(isSelected);
@@ -1097,7 +1097,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
       }
       myProperties.add(new PropertyBean(prefix + "hierarchy", classHierarchy.toString()));
       for (String name : methodNames) {
-        String propertyName = ObjectUtils.notNull(StringUtil.getPropertyName(name), name);
+        String propertyName = ObjectUtil.notNull(StringUtil.getPropertyName(name), name);
         Object propertyValue;
         try {
           try {
@@ -1236,7 +1236,7 @@ public class UiInspectorAction extends ToggleAction implements DumbAware {
     public void setValueAt(Object value, int row, int col) {
       PropertyBean bean = myProperties.get(row);
       try {
-        myProperties.set(row, new PropertyBean(bean.propertyName, ObjectUtils.notNull(updater(bean)).apply(value)));
+        myProperties.set(row, new PropertyBean(bean.propertyName, ObjectUtil.notNull(updater(bean)).apply(value)));
       }
       catch (Exception ignored) {
       }

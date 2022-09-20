@@ -26,7 +26,7 @@ import consulo.ide.impl.idea.ide.util.treeView.AbstractTreeStructureBase;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.ui.tree.project.ProjectFileNode;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
@@ -396,7 +396,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
   @Deprecated
   public final DefaultMutableTreeNode getSelectedNode() {
     TreePath path = getSelectedPath();
-    return path == null ? null : ObjectUtils.tryCast(path.getLastPathComponent(), DefaultMutableTreeNode.class);
+    return path == null ? null : ObjectUtil.tryCast(path.getLastPathComponent(), DefaultMutableTreeNode.class);
   }
 
   public final Object getSelectedElement() {

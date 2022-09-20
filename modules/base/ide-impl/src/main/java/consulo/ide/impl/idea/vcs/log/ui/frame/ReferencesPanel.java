@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.vcs.log.ui.frame;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.Wrapper;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.MultiMap;
 import consulo.ui.ex.awt.JBUI;
@@ -100,7 +100,7 @@ public class ReferencesPanel extends JPanel {
     }
     if (getHiddenReferencesSize() > 0) {
       JBLabel label = createRestLabel(getHiddenReferencesSize());
-      addWrapped(label, ObjectUtils.assertNotNull(firstLabel));
+      addWrapped(label, ObjectUtil.assertNotNull(firstLabel));
     }
     setVisible(!myGroupedVisibleReferences.isEmpty());
     revalidate();

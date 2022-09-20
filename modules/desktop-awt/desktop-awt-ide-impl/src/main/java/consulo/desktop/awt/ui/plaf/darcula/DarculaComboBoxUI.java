@@ -11,8 +11,7 @@ import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.*;
-import consulo.ide.impl.idea.util.ObjectUtil;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import javax.annotation.Nonnull;
@@ -275,7 +274,7 @@ public class DarculaComboBoxUI extends BasicComboBoxUI implements Border, ErrorB
     else {
       Object value = comboBox.getSelectedItem();
       Color coloredItemColor = value instanceof ColoredItem ? ((ColoredItem)value).getColor() : null;
-      return ObjectUtils
+      return ObjectUtil
               .notNull(coloredItemColor, comboBox.isBackgroundSet() && !(bg instanceof UIResource) ? bg : comboBox.isEnabled() ? NON_EDITABLE_BACKGROUND : UIUtil.getComboBoxDisabledBackground());
     }
   }

@@ -19,7 +19,7 @@ import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.SmartPointerManager;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.collection.MultiMap;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
@@ -146,7 +146,7 @@ class UpdateFoldRegionsOperation implements Runnable {
 
       if (descriptor.canBeRemovedWhenCollapsed()) region.putUserData(CAN_BE_REMOVED_WHEN_COLLAPSED, Boolean.TRUE);
       region.putUserData(COLLAPSED_BY_DEFAULT, regionInfo.collapsedByDefault);
-      region.putUserData(SIGNATURE, ObjectUtils.chooseNotNull(regionInfo.signature, NO_SIGNATURE));
+      region.putUserData(SIGNATURE, ObjectUtil.chooseNotNull(regionInfo.signature, NO_SIGNATURE));
 
       info.addRegion(region, smartPointerManager.createSmartPsiElementPointer(psi));
       newRegions.add(region);

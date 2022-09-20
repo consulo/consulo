@@ -33,7 +33,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiWhiteSpace;
 import consulo.language.psi.util.PsiTreeUtil;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.application.util.function.Processor;
 import javax.annotation.Nonnull;
 
@@ -142,7 +142,7 @@ public class DoNotShowInspectionIntentionMenuContributor implements IntentionMen
       return true;
     };
     // indicator can be null when run from EDT
-    ProgressIndicator progress = ObjectUtils.notNull(ProgressIndicatorProvider.getGlobalProgressIndicator(), new DaemonProgressIndicator());
+    ProgressIndicator progress = ObjectUtil.notNull(ProgressIndicatorProvider.getGlobalProgressIndicator(), new DaemonProgressIndicator());
     JobLauncher.getInstance().invokeConcurrentlyUnderProgress(intentionTools, progress, processor);
   }
 }

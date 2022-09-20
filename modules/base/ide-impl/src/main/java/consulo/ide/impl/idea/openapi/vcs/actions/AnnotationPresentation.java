@@ -24,7 +24,7 @@ import consulo.versionControlSystem.annotate.AnnotationSource;
 import consulo.versionControlSystem.annotate.AnnotationSourceSwitcher;
 import consulo.versionControlSystem.annotate.FileAnnotation;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 
@@ -72,10 +72,10 @@ class AnnotationPresentation implements TextAnnotationPresentation {
   public List<AnAction> getActions(int line) {
     int correctedNumber = myUpToDateLineNumberProvider.getLineNumber(line);
     for (AnAction action : myActions) {
-      UpToDateLineNumberListener upToDateListener = ObjectUtils.tryCast(action, UpToDateLineNumberListener.class);
+      UpToDateLineNumberListener upToDateListener = ObjectUtil.tryCast(action, UpToDateLineNumberListener.class);
       if (upToDateListener != null) upToDateListener.accept(correctedNumber);
 
-      LineNumberListener listener = ObjectUtils.tryCast(action, LineNumberListener.class);
+      LineNumberListener listener = ObjectUtil.tryCast(action, LineNumberListener.class);
       if (listener != null) listener.accept(line);
     }
 

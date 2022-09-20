@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.openapi.editor.richcopy.settings.RichCopySettings;
 import consulo.ide.impl.idea.openapi.editor.richcopy.view.HtmlTransferableData;
 import consulo.ide.impl.idea.openapi.editor.richcopy.view.RawTextWithMarkup;
 import consulo.ide.impl.idea.openapi.editor.richcopy.view.RtfTransferableData;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.language.editor.highlight.HighlighterFactory;
 import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
@@ -114,7 +114,7 @@ public class TextWithMarkupProcessor extends CopyPastePostProcessor<RawTextWithM
       logSyntaxInfo(syntaxInfo);
 
       createResult(syntaxInfo, editor);
-      return ObjectUtils.notNull(myResult, Collections.emptyList());
+      return ObjectUtil.notNull(myResult, Collections.emptyList());
     }
     catch (Throwable t) {
       // catching the exception so that the rest of copy/paste functionality can still work fine

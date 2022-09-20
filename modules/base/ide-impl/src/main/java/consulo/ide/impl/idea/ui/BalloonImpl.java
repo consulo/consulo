@@ -33,7 +33,7 @@ import consulo.ui.ex.IdeGlassPane;
 import consulo.ide.impl.idea.openapi.wm.WeakFocusStackManager;
 import consulo.ui.ex.awt.util.Alarm;
 import java.util.function.Consumer;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.ui.*;
 import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
 import consulo.ui.ex.awt.accessibility.ScreenReader;
@@ -467,7 +467,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
     myTracker = tracker;
     myTracker.init(this);
 
-    JRootPane root = ObjectUtils.notNull(UIUtil.getRootPane(comp));
+    JRootPane root = ObjectUtil.notNull(UIUtil.getRootPane(comp));
 
     myVisible = true;
 

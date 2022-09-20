@@ -22,7 +22,6 @@ import consulo.ide.impl.idea.ui.mac.touchbar.TouchBarsManager;
 import consulo.ui.ex.awt.speedSearch.SpeedSearch;
 import consulo.ide.impl.idea.util.FunctionUtil;
 import consulo.ui.ex.awt.IJSwingUtilities;
-import consulo.ide.impl.idea.util.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.ui.ChildFocusWatcher;
 import consulo.ide.impl.idea.util.ui.ScrollUtil;
@@ -68,6 +67,7 @@ import consulo.project.ui.ProjectWindowStateService;
 import consulo.util.collection.WeakList;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;

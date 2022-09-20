@@ -26,7 +26,7 @@ import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.ui.PaintingParent;
 import consulo.ide.impl.idea.ui.RetrievableIcon;
 import consulo.ide.impl.idea.ui.tabs.impl.TabLabel;
-import consulo.ide.impl.idea.util.ObjectUtil;
+import consulo.util.lang.ObjectUtil;
 import consulo.application.ApplicationManager;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.ScalableIcon;

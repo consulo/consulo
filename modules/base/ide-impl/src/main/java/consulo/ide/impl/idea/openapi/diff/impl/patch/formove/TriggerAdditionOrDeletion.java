@@ -27,7 +27,7 @@ import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.FilePathByPathComparator;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.application.util.function.Processor;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.Convertor;
@@ -88,7 +88,7 @@ public class TriggerAdditionOrDeletion {
     if (myPreparedDeletion != null) {
       for (Map.Entry<VcsRoot, Collection<FilePath>> entry : myPreparedDeletion.entrySet()) {
         final VcsRoot vcsRoot = entry.getKey();
-        final AbstractVcs vcs = ObjectUtils.assertNotNull(vcsRoot.getVcs());
+        final AbstractVcs vcs = ObjectUtil.assertNotNull(vcsRoot.getVcs());
         final CheckinEnvironment localChangesProvider = vcs.getCheckinEnvironment();
         if (localChangesProvider == null) continue;
         final Collection<FilePath> filePaths = entry.getValue();
@@ -105,7 +105,7 @@ public class TriggerAdditionOrDeletion {
       final List<FilePath> incorrectFilePath = new ArrayList<>();
       for (Map.Entry<VcsRoot, Collection<FilePath>> entry : myPreparedAddition.entrySet()) {
         final VcsRoot vcsRoot = entry.getKey();
-        final AbstractVcs vcs = ObjectUtils.assertNotNull(vcsRoot.getVcs());
+        final AbstractVcs vcs = ObjectUtil.assertNotNull(vcsRoot.getVcs());
         final CheckinEnvironment localChangesProvider = vcs.getCheckinEnvironment();
         if (localChangesProvider == null) continue;
         final Collection<FilePath> filePaths = entry.getValue();

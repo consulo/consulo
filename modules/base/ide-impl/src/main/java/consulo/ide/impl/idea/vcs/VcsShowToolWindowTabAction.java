@@ -25,7 +25,7 @@ import consulo.project.ui.wm.ToolWindowManager;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static consulo.ide.impl.idea.util.ObjectUtils.assertNotNull;
+import static consulo.util.lang.ObjectUtil.assertNotNull;
 
 public abstract class VcsShowToolWindowTabAction extends DumbAwareAction {
 

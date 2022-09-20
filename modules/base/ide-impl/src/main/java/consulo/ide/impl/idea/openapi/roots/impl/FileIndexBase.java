@@ -24,9 +24,9 @@ import consulo.module.content.DirectoryIndex;
 import consulo.module.content.DirectoryInfo;
 import consulo.module.content.ModuleRootManager;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileFilter;
-import consulo.ide.impl.idea.util.ObjectUtil;
 import consulo.application.AccessRule;
 import jakarta.inject.Provider;
 

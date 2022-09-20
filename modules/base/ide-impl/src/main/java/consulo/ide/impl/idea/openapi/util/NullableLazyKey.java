@@ -16,9 +16,9 @@
 package consulo.ide.impl.idea.openapi.util;
 
 import consulo.ide.impl.idea.util.NullableFunction;
-import consulo.ide.impl.idea.util.ObjectUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
+import consulo.util.lang.ObjectUtil;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nullable;
 

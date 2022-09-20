@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.ide.util.gotoByName.*;
 import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.openapi.ui.playback.commands.ActionCommand;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ide.navigation.GotoClassOrTypeContributor;
 import consulo.language.Language;
 import consulo.language.editor.CommonDataKeys;
@@ -83,7 +83,7 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
   }
 
   static void invokeGoToFile(@Nonnull Project project, @Nonnull AnActionEvent e) {
-    String actionTitle = StringUtil.trimEnd(ObjectUtils.notNull(e.getPresentation().getText(), GotoClassPresentationUpdater.getActionTitle()), "...");
+    String actionTitle = StringUtil.trimEnd(ObjectUtil.notNull(e.getPresentation().getText(), GotoClassPresentationUpdater.getActionTitle()), "...");
     String message = IdeBundle.message("go.to.class.dumb.mode.message", actionTitle);
     DumbService.getInstance(project).showDumbModeNotification(message);
     AnAction action = ActionManager.getInstance().getAction(GotoFileAction.ID);

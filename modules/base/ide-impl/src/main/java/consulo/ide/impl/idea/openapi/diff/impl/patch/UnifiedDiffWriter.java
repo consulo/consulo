@@ -25,8 +25,8 @@ package consulo.ide.impl.idea.openapi.diff.impl.patch;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.ObjectUtil;
 import consulo.versionControlSystem.change.CommitContext;
-import consulo.ide.impl.idea.util.ObjectUtils;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -72,9 +72,9 @@ public class UnifiedDiffWriter {
     for(FilePatch filePatch: patches) {
       if (!(filePatch instanceof TextFilePatch)) continue;
       TextFilePatch patch = (TextFilePatch)filePatch;
-      String path = ObjectUtils.assertNotNull(patch.getBeforeName() == null ? patch.getAfterName() : patch.getBeforeName());
+      String path = ObjectUtil.assertNotNull(patch.getBeforeName() == null ? patch.getAfterName() : patch.getBeforeName());
       String pathRelatedToProjectDir =
-              project == null ? path : getPathRelatedToDir(ObjectUtils.assertNotNull(project.getBasePath()), basePath, path);
+              project == null ? path : getPathRelatedToDir(ObjectUtil.assertNotNull(project.getBasePath()), basePath, path);
       final Map<String, CharSequence> additionalMap = new HashMap<>();
       for (PatchEP extension : extensions) {
         final CharSequence charSequence = extension.provideContent(pathRelatedToProjectDir, commitContext);

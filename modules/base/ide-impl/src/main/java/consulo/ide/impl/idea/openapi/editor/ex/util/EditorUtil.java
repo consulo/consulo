@@ -19,8 +19,8 @@ import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.ide.impl.idea.openapi.editor.impl.DesktopEditorImpl;
 import consulo.ide.impl.idea.openapi.editor.impl.DesktopScrollingModelImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.text.TextEditorImpl;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.application.ApplicationManager;
 import consulo.application.WriteAction;
 import consulo.application.util.SystemInfo;
@@ -485,7 +485,7 @@ public final class EditorUtil {
   }
 
   public static void runBatchFoldingOperationOutsideOfBulkUpdate(@Nonnull Editor editor, @Nonnull Runnable operation) {
-    DocumentEx document = ObjectUtils.tryCast(editor.getDocument(), DocumentEx.class);
+    DocumentEx document = ObjectUtil.tryCast(editor.getDocument(), DocumentEx.class);
     if (document != null && document.isInBulkUpdate()) {
       MessageBusConnection connection = ApplicationManager.getApplication().getMessageBus().connect();
       disposeWithEditor(editor, connection::disconnect);

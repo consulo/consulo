@@ -24,7 +24,7 @@ import consulo.application.util.registry.Registry;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.PausesStat;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.util.ModuleUtilCore;
@@ -338,7 +338,7 @@ public class ActionUtil {
 
   @Nonnull
   public static List<AnAction> getActions(@Nonnull JComponent component) {
-    return ObjectUtils.notNull(UIUtil.getClientProperty(component, AnAction.ACTIONS_KEY), Collections.emptyList());
+    return ObjectUtil.notNull(UIUtil.getClientProperty(component, AnAction.ACTIONS_KEY), Collections.emptyList());
   }
 
   public static void clearActions(@Nonnull JComponent component) {

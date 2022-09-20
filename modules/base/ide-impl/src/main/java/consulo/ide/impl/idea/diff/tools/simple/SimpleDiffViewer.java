@@ -67,7 +67,7 @@ import java.util.BitSet;
 import java.util.Iterator;
 import java.util.List;
 
-import static consulo.ide.impl.idea.util.ObjectUtils.assertNotNull;
+import static consulo.util.lang.ObjectUtil.assertNotNull;
 
 public class SimpleDiffViewer extends TwosideTextDiffViewer {
   public static final Logger LOG = Logger.getInstance(SimpleDiffViewer.class);

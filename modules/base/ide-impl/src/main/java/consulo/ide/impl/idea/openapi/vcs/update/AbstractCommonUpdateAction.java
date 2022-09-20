@@ -60,7 +60,7 @@ import java.util.*;
 import static consulo.ide.impl.idea.openapi.util.text.StringUtil.notNullize;
 import static consulo.ide.impl.idea.openapi.util.text.StringUtil.pluralize;
 import static consulo.ide.impl.idea.openapi.vcs.VcsNotifier.STANDARD_NOTIFICATION;
-import static consulo.ide.impl.idea.util.ObjectUtils.notNull;
+import static consulo.util.lang.ObjectUtil.notNull;
 
 public abstract class AbstractCommonUpdateAction extends AbstractVcsAction implements UpdateInBackground {
   private final boolean myAlwaysVisible;

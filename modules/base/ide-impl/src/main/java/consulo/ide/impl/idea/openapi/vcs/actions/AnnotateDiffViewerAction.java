@@ -52,6 +52,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.ui.ex.popup.Balloon;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.vcs.*;
 import consulo.versionControlSystem.annotate.AnnotationProvider;
@@ -71,7 +72,6 @@ import consulo.versionControlSystem.change.ContentRevision;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.ui.ex.RelativePoint;
-import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.versionControlSystem.annotate.AnnotationProviderEx;
 import consulo.versionControlSystem.util.VcsUtil;
@@ -132,10 +132,10 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
 
   @Nullable
   private static DiffViewerBase getViewer(AnActionEvent e) {
-    DiffViewerBase diffViewer = ObjectUtils.tryCast(e.getData(DiffDataKeys.DIFF_VIEWER), DiffViewerBase.class);
+    DiffViewerBase diffViewer = ObjectUtil.tryCast(e.getData(DiffDataKeys.DIFF_VIEWER), DiffViewerBase.class);
     if (diffViewer != null) return diffViewer;
 
-    TextMergeViewer mergeViewer = ObjectUtils.tryCast(e.getData(DiffDataKeys.MERGE_VIEWER), TextMergeViewer.class);
+    TextMergeViewer mergeViewer = ObjectUtil.tryCast(e.getData(DiffDataKeys.MERGE_VIEWER), TextMergeViewer.class);
     if (mergeViewer != null) return mergeViewer.getViewer();
 
     return null;
@@ -192,7 +192,7 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
     final FileAnnotationLoader loader = annotator.createAnnotationsLoader();
     if (loader == null) return;
 
-    final DiffContextEx diffContext = ObjectUtils.tryCast(viewer.getContext(), DiffContextEx.class);
+    final DiffContextEx diffContext = ObjectUtil.tryCast(viewer.getContext(), DiffContextEx.class);
 
     annotator.getBackgroundableLock().lock();
     if (diffContext != null) diffContext.showProgressBar(true);
@@ -414,7 +414,7 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
 
     @Override
     public void showAnnotation(@Nonnull TwosideTextDiffViewer viewer, @Nonnull Side side, @Nonnull AnnotationData data) {
-      Project project = ObjectUtils.assertNotNull(viewer.getProject());
+      Project project = ObjectUtil.assertNotNull(viewer.getProject());
       AnnotateToggleAction.doAnnotate(viewer.getEditor(side), project, null, data.annotation, data.vcs);
     }
 
@@ -447,7 +447,7 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
     @Override
     public void showAnnotation(@Nonnull OnesideTextDiffViewer viewer, @Nonnull Side side, @Nonnull AnnotationData data) {
       if (side != viewer.getSide()) return;
-      Project project = ObjectUtils.assertNotNull(viewer.getProject());
+      Project project = ObjectUtil.assertNotNull(viewer.getProject());
       AnnotateToggleAction.doAnnotate(viewer.getEditor(), project, null, data.annotation, data.vcs);
     }
 
@@ -480,7 +480,7 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
     @Override
     public void showAnnotation(@Nonnull UnifiedDiffViewer viewer, @Nonnull Side side, @Nonnull AnnotationData data) {
       if (side != viewer.getMasterSide()) return;
-      Project project = ObjectUtils.assertNotNull(viewer.getProject());
+      Project project = ObjectUtil.assertNotNull(viewer.getProject());
       UnifiedUpToDateLineNumberProvider lineNumberProvider = new UnifiedUpToDateLineNumberProvider(viewer, side);
       AnnotateToggleAction.doAnnotate(viewer.getEditor(), project, null, data.annotation, data.vcs, lineNumberProvider);
     }
@@ -558,7 +558,7 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
 
     @Override
     public void showAnnotation(@Nonnull ThreesideTextDiffViewerEx viewer, @Nonnull ThreeSide side, @Nonnull AnnotationData data) {
-      Project project = ObjectUtils.assertNotNull(viewer.getProject());
+      Project project = ObjectUtil.assertNotNull(viewer.getProject());
       AnnotateToggleAction.doAnnotate(viewer.getEditor(side), project, null, data.annotation, data.vcs);
     }
 

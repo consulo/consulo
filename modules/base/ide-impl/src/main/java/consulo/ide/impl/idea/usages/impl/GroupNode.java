@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.usages.impl;
 import consulo.application.ApplicationManager;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.navigation.Navigatable;
 import consulo.usage.MergeableUsage;
@@ -84,7 +84,7 @@ public class GroupNode extends Node implements Navigatable, Comparable<GroupNode
   List<Node> getSwingChildren() {
     // on java 9 - children is Vector<TreeNode>
     List children = this.children;
-    return ObjectUtils.notNull(children, Collections.<Node>emptyList());
+    return ObjectUtil.notNull(children, Collections.<Node>emptyList());
   }
 
   @Nonnull

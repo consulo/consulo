@@ -19,11 +19,11 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.ObjectUtil;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsListener;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
-import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.language.file.event.FileTypeEvent;
 import consulo.language.file.event.FileTypeListener;
 import consulo.project.DumbService;
@@ -277,7 +277,7 @@ public class TodoView implements PersistentStateComponent<TodoView.State>, Dispo
     }).doWhenDone(() -> {
       Application.get().invokeLater(() -> {
         for (TodoPanel panel : myPanels) {
-          panel.rebuildCache(ObjectUtils.notNull(files.get(panel), new HashSet<>()));
+          panel.rebuildCache(ObjectUtil.notNull(files.get(panel), new HashSet<>()));
           panel.updateTree();
         }
       }, IdeaModalityState.NON_MODAL);

@@ -3,7 +3,7 @@
 package consulo.ide.impl.idea.ide.navigationToolbar;
 
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ide.navigationToolbar.NavBarModelExtension;
 import consulo.util.lang.function.PairProcessor;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -149,7 +149,7 @@ public class NavBarModel {
       processChildren(projectChild, processor);
       projectGrandChild = processor.reset();
     }
-    return ObjectUtils.chooseNotNull(projectGrandChild, ObjectUtils.chooseNotNull(projectChild, project));
+    return ObjectUtil.chooseNotNull(projectGrandChild, ObjectUtil.chooseNotNull(projectChild, project));
   }
 
   protected void updateModel(final PsiElement psiElement, @Nullable NavBarModelExtension ownerExtension) {

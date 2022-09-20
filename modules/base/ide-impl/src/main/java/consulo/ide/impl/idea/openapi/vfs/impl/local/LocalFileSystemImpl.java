@@ -28,7 +28,7 @@ import consulo.virtualFileSystem.NewVirtualFile;
 import consulo.virtualFileSystem.RefreshQueue;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.VfsImplUtil;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.PersistentFS;
-import consulo.ide.impl.idea.util.ObjectUtil;
+import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.io.URLUtil;
 import consulo.util.collection.Maps;
 import consulo.util.lang.Pair;

@@ -35,13 +35,14 @@ import consulo.fileEditor.TextEditor;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import consulo.disposer.Disposer;
+import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.ui.ex.PlaceHolder;
-import consulo.ide.impl.idea.util.ObjectUtils;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -121,7 +122,7 @@ public class ViewStructureAction extends DumbAwareAction {
     VirtualFile virtualFile = fileEditor.getFile();
     if (structureView instanceof StructureViewComposite && virtualFile != null) {
       StructureViewComposite.StructureViewDescriptor[] views = ((StructureViewComposite)structureView).getStructureViews();
-      PsiFile psiFile = ObjectUtils.notNull(PsiManager.getInstance(project).findFile(virtualFile));
+      PsiFile psiFile = ObjectUtil.notNull(PsiManager.getInstance(project).findFile(virtualFile));
       treeModel = new StructureViewCompositeModel(psiFile, EditorUtil.getEditorEx(fileEditor), Arrays.asList(views));
       Disposer.register(structureView, treeModel);
     }

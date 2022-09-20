@@ -33,7 +33,6 @@ import consulo.ide.impl.idea.ui.AncestorListenerAdapter;
 import consulo.ide.impl.idea.ui.components.labels.DropDownLink;
 import consulo.ide.impl.idea.ui.popup.util.PopupState;
 import consulo.ui.ex.awt.IJSwingUtilities;
-import consulo.ide.impl.idea.util.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.GridBag;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
@@ -70,6 +69,7 @@ import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.ObjectUtil;
 import kava.beans.PropertyChangeListener;
 
 import javax.annotation.Nonnull;

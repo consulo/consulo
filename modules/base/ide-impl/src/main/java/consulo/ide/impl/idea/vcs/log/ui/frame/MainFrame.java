@@ -48,7 +48,7 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-import static consulo.ide.impl.idea.util.ObjectUtils.assertNotNull;
+import static consulo.util.lang.ObjectUtil.assertNotNull;
 import static consulo.ide.impl.idea.util.containers.ContainerUtil.getFirstItem;
 
 public class MainFrame extends JPanel implements DataProvider, Disposable {

@@ -25,7 +25,6 @@ import consulo.container.plugin.PluginManager;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ui.ex.awt.speedSearch.ListSpeedSearch;
-import consulo.ide.impl.idea.util.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.settings.impl.EditorGeneralConfigurable;
 import consulo.language.editor.DaemonCodeAnalyzer;
@@ -41,6 +40,7 @@ import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import consulo.ui.ex.awt.util.DialogUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.collection.MultiMap;
+import consulo.util.lang.ObjectUtil;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.TestOnly;
 

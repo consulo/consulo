@@ -32,6 +32,7 @@ import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import consulo.ui.ex.action.*;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.ObjectUtil;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsBundle;
@@ -45,7 +46,6 @@ import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.versionControlSystem.change.ContentRevision;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.Contract;
@@ -222,7 +222,7 @@ public abstract class ChangesBrowserBase<T> extends JPanel implements TypeSafeDa
       sink.put(VcsDataKeys.CHANGE_LISTS, getSelectedChangeLists());
     }
     else if (key == VcsDataKeys.CHANGE_LEAD_SELECTION) {
-      final Change highestSelection = ObjectUtils.tryCast(myViewer.getHighestLeadSelection(), Change.class);
+      final Change highestSelection = ObjectUtil.tryCast(myViewer.getHighestLeadSelection(), Change.class);
       sink.put(VcsDataKeys.CHANGE_LEAD_SELECTION, (highestSelection == null) ? new Change[]{} : new Change[]{highestSelection});
     }
     else if (key == CommonDataKeys.VIRTUAL_FILE_ARRAY) {
@@ -263,14 +263,14 @@ public abstract class ChangesBrowserBase<T> extends JPanel implements TypeSafeDa
     }
 
     public boolean isSelected(AnActionEvent e) {
-      T change = ObjectUtils.tryCast(e.getData(VcsDataKeys.CURRENT_CHANGE), myClass);
+      T change = ObjectUtil.tryCast(e.getData(VcsDataKeys.CURRENT_CHANGE), myClass);
       if (change == null) return false;
 
       return myViewer.isIncluded(change);
     }
 
     public void setSelected(AnActionEvent e, boolean state) {
-      T change = ObjectUtils.tryCast(e.getData(VcsDataKeys.CURRENT_CHANGE), myClass);
+      T change = ObjectUtil.tryCast(e.getData(VcsDataKeys.CURRENT_CHANGE), myClass);
       if (change == null) return;
 
       if (state) {
@@ -314,7 +314,7 @@ public abstract class ChangesBrowserBase<T> extends JPanel implements TypeSafeDa
 
   @Nonnull
   protected ChangesSelection getChangesSelection() {
-    final Change leadSelection = ObjectUtils.tryCast(myViewer.getLeadSelection(), Change.class);
+    final Change leadSelection = ObjectUtil.tryCast(myViewer.getLeadSelection(), Change.class);
     List<Change> changes = getSelectedChanges();
 
     if (changes.size() < 2) {

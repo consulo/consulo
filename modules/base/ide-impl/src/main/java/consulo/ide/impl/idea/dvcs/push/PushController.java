@@ -26,7 +26,7 @@ import consulo.ide.impl.idea.dvcs.push.ui.*;
 import consulo.ide.impl.idea.dvcs.ui.DvcsBundle;
 import consulo.ide.impl.idea.ui.CheckedTreeNode;
 import consulo.ide.impl.idea.util.ConcurrencyUtil;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.project.Project;
@@ -560,7 +560,7 @@ public class PushController implements Disposable {
 
   @Nullable
   private static PushTarget getCommonTarget(@Nonnull Collection<MyRepoModel<?, ?, ?>> selectedNodes) {
-    final PushTarget commonTarget = ObjectUtils.assertNotNull(ContainerUtil.getFirstItem(selectedNodes)).getTarget();
+    final PushTarget commonTarget = ObjectUtil.assertNotNull(ContainerUtil.getFirstItem(selectedNodes)).getTarget();
     return commonTarget != null && !ContainerUtil.exists(selectedNodes, new Condition<MyRepoModel<?, ?, ?>>() {
       @Override
       public boolean value(MyRepoModel model) {

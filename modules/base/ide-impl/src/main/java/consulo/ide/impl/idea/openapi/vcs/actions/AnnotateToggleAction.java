@@ -27,7 +27,7 @@ import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.vcs.annotate.AnnotationGutterActionProvider;
 import consulo.ide.impl.idea.openapi.vcs.impl.UpToDateLineNumberProviderImpl;
 import consulo.ide.impl.idea.ui.EditorNotificationPanel;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
@@ -80,7 +80,7 @@ public class AnnotateToggleAction extends ToggleAction implements DumbAware {
   public void setSelected(AnActionEvent e, boolean selected) {
     Editor editor = e.getData(CommonDataKeys.EDITOR);
     if (editor != null) {
-      MyEditorNotificationPanel notificationPanel = ObjectUtils.tryCast(editor.getHeaderComponent(), MyEditorNotificationPanel.class);
+      MyEditorNotificationPanel notificationPanel = ObjectUtil.tryCast(editor.getHeaderComponent(), MyEditorNotificationPanel.class);
       if (notificationPanel != null) {
         notificationPanel.showAnnotations();
         return;

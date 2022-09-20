@@ -9,7 +9,7 @@ import consulo.codeEditor.Editor;
 import consulo.language.editor.parameterInfo.ParameterInfoHandler;
 import consulo.ide.impl.idea.openapi.editor.EditorActivityManager;
 import consulo.ide.impl.idea.ui.LightweightHint;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.language.Language;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.action.CodeInsightActionHandler;
@@ -103,7 +103,7 @@ public class ShowParameterInfoHandler implements CodeInsightActionHandler {
       context.setHighlightedElement(highlightedElement);
       context.setRequestFocus(requestFocus);
 
-      final ParameterInfoHandler<PsiElement, Object>[] handlers = ObjectUtils.notNull(getHandlers(project, language, file.getViewProvider().getBaseLanguage()), EMPTY_HANDLERS);
+      final ParameterInfoHandler<PsiElement, Object>[] handlers = ObjectUtil.notNull(getHandlers(project, language, file.getViewProvider().getBaseLanguage()), EMPTY_HANDLERS);
 
       if (lookup != null) {
         if (lookupElement != null) {

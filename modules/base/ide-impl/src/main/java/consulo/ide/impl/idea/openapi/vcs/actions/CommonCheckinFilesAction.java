@@ -27,7 +27,7 @@ import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.versionControlSystem.checkin.CheckinEnvironment;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
@@ -90,7 +90,7 @@ public class CommonCheckinFilesAction extends AbstractCommonCheckinAction {
       result = changes.stream().findFirst().map(manager::getChangeList).orElse(null);
     }
 
-    return ObjectUtils.chooseNotNull(result, defaultChangeList);
+    return ObjectUtil.chooseNotNull(result, defaultChangeList);
   }
 
   @Override

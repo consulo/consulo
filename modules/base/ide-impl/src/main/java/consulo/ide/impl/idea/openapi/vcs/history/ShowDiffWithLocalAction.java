@@ -19,6 +19,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
+import consulo.util.lang.ObjectUtil;
 import consulo.versionControlSystem.FilePath;
 import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
 import consulo.versionControlSystem.change.ChangeListManager;
@@ -27,7 +28,7 @@ import consulo.versionControlSystem.history.VcsFileRevision;
 import consulo.versionControlSystem.history.VcsHistorySession;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.ObjectUtil;
+
 import javax.annotation.Nonnull;
 
 public class ShowDiffWithLocalAction extends DumbAwareAction {

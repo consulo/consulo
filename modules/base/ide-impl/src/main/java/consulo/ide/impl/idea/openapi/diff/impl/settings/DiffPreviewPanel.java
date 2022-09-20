@@ -28,7 +28,7 @@ import consulo.ide.impl.idea.diff.util.DiffUtil;
 import consulo.ide.impl.idea.diff.util.TextDiffTypeFactory.TextDiffTypeImpl;
 import consulo.ide.impl.idea.openapi.diff.DiffBundle;
 import consulo.ide.impl.idea.util.EventDispatcher;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.project.Project;
 import consulo.ui.ex.awt.JBUI;
 import org.jetbrains.annotations.TestOnly;
@@ -190,7 +190,7 @@ class DiffPreviewPanel implements PreviewPanel {
   private void selectColorForLine(@Nonnull ThreeSide side, int line) {
     SimpleThreesideDiffChange change = getChange(side, line);
     if (change != null) {
-      TextDiffTypeImpl diffType = ObjectUtils.tryCast(change.getDiffType(), TextDiffTypeImpl.class);
+      TextDiffTypeImpl diffType = ObjectUtil.tryCast(change.getDiffType(), TextDiffTypeImpl.class);
       if (diffType != null) {
         myDispatcher.getMulticaster().selectionInPreviewChanged(diffType.getKey().getExternalName());
       }

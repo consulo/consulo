@@ -27,7 +27,7 @@ import consulo.ui.ex.awt.speedSearch.TableSpeedSearch;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.ide.impl.idea.util.CatchingConsumer;
 import consulo.ide.impl.idea.util.IconUtil;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.StatusText;
 import consulo.ui.ex.awt.UIUtil;
@@ -283,7 +283,7 @@ public class InstalledPackagesPanel extends JPanel {
 
   @Nullable
   private PackageManagementServiceEx getServiceEx() {
-    return ObjectUtils.tryCast(myPackageManagementService, PackageManagementServiceEx.class);
+    return ObjectUtil.tryCast(myPackageManagementService, PackageManagementServiceEx.class);
   }
 
   protected void updateUninstallUpgrade() {

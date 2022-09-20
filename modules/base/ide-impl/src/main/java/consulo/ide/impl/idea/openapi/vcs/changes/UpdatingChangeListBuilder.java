@@ -19,7 +19,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.util.function.Computable;
 import consulo.component.ProcessCanceledException;
 import consulo.ide.impl.idea.openapi.util.Getter;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.language.file.FileTypeManager;
 import consulo.logging.Logger;
@@ -186,7 +186,7 @@ class UpdatingChangeListBuilder implements ChangelistBuilder {
     checkIfDisposed();
     if (isIgnoredByVcs(file)) return;
     if (myScope.belongsTo(VcsUtil.getFilePath(file))) {
-      ObjectUtils.assertNotNull(myComposite.getIgnoredFileHolder().getActiveVcsHolder()).addFile(file);
+      ObjectUtil.assertNotNull(myComposite.getIgnoredFileHolder().getActiveVcsHolder()).addFile(file);
     }
   }
 

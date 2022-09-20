@@ -35,7 +35,7 @@ import javax.annotation.Nullable;
 
 import java.io.File;
 
-import static consulo.ide.impl.idea.util.ObjectUtils.assertNotNull;
+import static consulo.util.lang.ObjectUtil.assertNotNull;
 import static consulo.versionControlSystem.util.VcsUtil.getIfSingle;
 
 

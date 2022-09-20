@@ -33,6 +33,7 @@ import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ide.impl.idea.openapi.util.*;
 import consulo.application.util.registry.Registry;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.navigation.Navigatable;
@@ -42,7 +43,6 @@ import consulo.language.psi.PsiUtilCore;
 import consulo.ui.ex.awt.TitledSeparator;
 import consulo.ui.ex.awt.JBList;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
-import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.application.util.function.Processor;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.psi.search.FindSymbolParameters;
@@ -100,7 +100,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
         result.set((GlobalSearchScope)o.getScope());
         return false;
       });
-      myProjectScope = ObjectUtils.notNull(result.get(), myEverywhereScope);
+      myProjectScope = ObjectUtil.notNull(result.get(), myEverywhereScope);
     }
     myScopeDescriptor = getInitialSelectedScope();
   }
@@ -117,7 +117,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
   }
 
   private static void processScopes(@Nonnull DataContext dataContext, @Nonnull Processor<? super ScopeDescriptor> processor) {
-    Project project = ObjectUtils.notNull(dataContext.getData(CommonDataKeys.PROJECT));
+    Project project = ObjectUtil.notNull(dataContext.getData(CommonDataKeys.PROJECT));
     ScopeChooserCombo.processScopes(project, dataContext, ScopeChooserCombo.OPT_LIBRARIES | ScopeChooserCombo.OPT_EMPTY_SCOPES, processor);
   }
 
@@ -227,7 +227,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
       ChooseByNamePopup popup = ChooseByNamePopup.createPopup(myProject, model, context);
       try {
         ChooseByNameItemProvider provider = popup.getProvider();
-        GlobalSearchScope scope = Registry.is("search.everywhere.show.scopes") ? (GlobalSearchScope)ObjectUtils.notNull(myScopeDescriptor.getScope()) : null;
+        GlobalSearchScope scope = Registry.is("search.everywhere.show.scopes") ? (GlobalSearchScope)ObjectUtil.notNull(myScopeDescriptor.getScope()) : null;
 
         boolean everywhere = scope == null ? myEverywhere : scope.isSearchInLibraries();
         if (scope != null && provider instanceof ChooseByNameInScopeItemProvider) {

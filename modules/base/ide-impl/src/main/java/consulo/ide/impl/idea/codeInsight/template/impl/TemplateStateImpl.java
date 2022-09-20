@@ -44,7 +44,7 @@ import consulo.ide.impl.idea.codeInsight.lookup.impl.LookupImpl;
 import consulo.language.editor.template.RecalculatableResult;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.psi.impl.source.codeStyle.CodeStyleManagerImpl;
 import consulo.language.codeStyle.CodeStyleManager;
@@ -1398,7 +1398,7 @@ public class TemplateStateImpl implements Disposable, TemplateState {
     if (myFinished) return;
     myFinished = true;
     for (TemplateEditingListener listener : myListeners) {
-      listener.templateFinished(ObjectUtils.chooseNotNull(myTemplate, myPrevTemplate), brokenOff);
+      listener.templateFinished(ObjectUtil.chooseNotNull(myTemplate, myPrevTemplate), brokenOff);
     }
   }
 

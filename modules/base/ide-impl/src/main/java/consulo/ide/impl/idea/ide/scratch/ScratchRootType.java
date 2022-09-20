@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.ide.scratch;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.ide.impl.idea.util.ObjectUtil;
 import consulo.application.AllIcons;
 import consulo.application.Result;
 import consulo.application.RunResult;
@@ -31,6 +30,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.undoRedo.UndoConfirmationPolicy;
+import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 

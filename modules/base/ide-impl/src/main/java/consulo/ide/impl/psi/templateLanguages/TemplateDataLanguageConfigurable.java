@@ -19,7 +19,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.configurable.ProjectConfigurable;
 import consulo.configurable.StandardConfigurableIds;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.ui.tree.PerFileConfigurableBase;
 import consulo.language.LangBundle;
 import consulo.language.Language;
@@ -77,7 +77,7 @@ public class TemplateDataLanguageConfigurable extends PerFileConfigurableBase<La
   @Override
   protected void renderValue(@Nullable Object target, @Nonnull Language language, @Nonnull ColoredTextContainer renderer) {
     renderer.append(language.getDisplayName(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
-    renderer.setIcon(ObjectUtils.notNull(language.getAssociatedFileType(), UnknownFileType.INSTANCE).getIcon());
+    renderer.setIcon(ObjectUtil.notNull(language.getAssociatedFileType(), UnknownFileType.INSTANCE).getIcon());
   }
 
   @Override
@@ -85,6 +85,6 @@ public class TemplateDataLanguageConfigurable extends PerFileConfigurableBase<La
     Language language = TemplateDataLanguagePatterns.getInstance().getTemplateDataLanguageByFileName((VirtualFile)target);
     if (language == null) return;
     renderer.append(language.getDisplayName(), SimpleTextAttributes.GRAY_ITALIC_ATTRIBUTES);
-    renderer.setIcon(ObjectUtils.notNull(language.getAssociatedFileType(), UnknownFileType.INSTANCE).getIcon());
+    renderer.setIcon(ObjectUtil.notNull(language.getAssociatedFileType(), UnknownFileType.INSTANCE).getIcon());
   }
 }

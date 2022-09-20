@@ -38,7 +38,7 @@ import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.ui.RelativeFont;
 import consulo.ide.impl.idea.util.EditSourceOnEnterKeyHandler;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.concurrency.InvokerImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.CommonDataKeys;
@@ -90,7 +90,7 @@ import java.util.function.Supplier;
 import static consulo.ide.impl.idea.build.BuildConsoleUtils.getMessageTitle;
 import static consulo.ide.impl.idea.build.BuildView.CONSOLE_VIEW_NAME;
 import static consulo.ide.impl.idea.openapi.util.text.StringUtil.isEmpty;
-import static consulo.ide.impl.idea.util.ObjectUtils.chooseNotNull;
+import static consulo.util.lang.ObjectUtil.chooseNotNull;
 import static consulo.ide.impl.idea.util.containers.ContainerUtil.addIfNotNull;
 import static consulo.ui.ex.SimpleTextAttributes.GRAYED_ATTRIBUTES;
 import static consulo.ui.ex.awt.AnimatedIcon.ANIMATION_IN_RENDERER_ALLOWED;
@@ -785,7 +785,7 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
   }
 
   private static String getRelativePath(@Nonnull String basePath, @Nonnull String filePath) {
-    String path = ObjectUtils.notNull(FileUtil.getRelativePath(basePath, filePath, '/'), filePath);
+    String path = ObjectUtil.notNull(FileUtil.getRelativePath(basePath, filePath, '/'), filePath);
     File userHomeDir = new File(SystemProperties.getUserHome());
     if (path.startsWith("..") && FileUtil.isAncestor(userHomeDir, new File(filePath), true)) {
       return UserHomeFileUtil.getLocationRelativeToUserHome(filePath, false);
@@ -817,9 +817,9 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
   Object extractSelectedNodeNavigatable() {
     TreePath selectedPath = TreeUtil.getSelectedPathIfOne(myTree);
     if (selectedPath == null) return null;
-    DefaultMutableTreeNode node = ObjectUtils.tryCast(selectedPath.getLastPathComponent(), DefaultMutableTreeNode.class);
+    DefaultMutableTreeNode node = ObjectUtil.tryCast(selectedPath.getLastPathComponent(), DefaultMutableTreeNode.class);
     if (node == null) return null;
-    ExecutionNodeImpl executionNode = ObjectUtils.tryCast(node.getUserObject(), ExecutionNodeImpl.class);
+    ExecutionNodeImpl executionNode = ObjectUtil.tryCast(node.getUserObject(), ExecutionNodeImpl.class);
     if (executionNode == null) return null;
     List<Navigatable> navigatables = executionNode.getNavigatables();
     if (navigatables.size() != 1) return null;

@@ -14,7 +14,7 @@ import consulo.ide.impl.idea.openapi.editor.EditorMouseHoverPopupManager;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
-import consulo.ide.impl.idea.util.ObjectUtil;
+import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.SingleAlarm;
 import consulo.language.editor.documentation.DocumentationProvider;
 import consulo.language.editor.ui.awt.HintUtil;

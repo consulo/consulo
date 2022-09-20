@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.vcs.log.ui.render;
 import consulo.ui.ex.awt.GraphicsConfig;
 import consulo.util.lang.Pair;
 import consulo.ui.ex.awt.util.ColorUtil;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awt.JBUI;
@@ -65,7 +65,7 @@ public class RectangleReferencePainter implements ReferencePainter {
     List<VcsRef> sorted = ContainerUtil.sorted(references, manager.getLabelsOrderComparator());
 
     for (Map.Entry<VcsRefType, Collection<VcsRef>> entry : ContainerUtil.groupBy(sorted, VcsRef::getType).entrySet()) {
-      VcsRef ref = ObjectUtils.assertNotNull(ContainerUtil.getFirstItem(entry.getValue()));
+      VcsRef ref = ObjectUtil.assertNotNull(ContainerUtil.getFirstItem(entry.getValue()));
       String text = ref.getName() + (entry.getValue().size() > 1 ? " +" : "");
       myLabels.add(Pair.create(text, entry.getKey().getBackgroundColor()));
 

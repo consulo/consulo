@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.awt.CopyPasteManager;
@@ -48,7 +48,7 @@ class ChangesBrowserNodeCopyProvider implements CopyProvider {
   }
 
   public void performCopy(@Nonnull DataContext dataContext) {
-    List<TreePath> paths = ContainerUtil.sorted(Arrays.asList(ObjectUtils.assertNotNull(myTree.getSelectionPaths())), TreeUtil.getDisplayOrderComparator(myTree));
+    List<TreePath> paths = ContainerUtil.sorted(Arrays.asList(ObjectUtil.assertNotNull(myTree.getSelectionPaths())), TreeUtil.getDisplayOrderComparator(myTree));
     CopyPasteManager.getInstance().setContents(new StringSelection(StringUtil.join(paths, path -> {
       Object node = path.getLastPathComponent();
       if (node instanceof ChangesBrowserNode) {

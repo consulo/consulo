@@ -8,7 +8,7 @@ import consulo.fileEditor.VfsPresentationUtil;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoFileCellRenderer;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.language.editor.ui.PsiElementListCellRenderer;
 import consulo.language.psi.*;
 import consulo.language.psi.util.SymbolPresentationUtil;
@@ -81,12 +81,12 @@ public class SearchEverywherePsiRenderer extends PsiElementListCellRenderer<PsiE
         text = FileUtil.toSystemDependentName(text);
         String filePath = FileUtil.toSystemDependentName(file.getPath());
         if (basePath != null && FileUtil.isAncestor(basePath, filePath, true)) {
-          text = ObjectUtils.notNull(FileUtil.getRelativePath(basePath, text, File.separatorChar), text);
+          text = ObjectUtil.notNull(FileUtil.getRelativePath(basePath, text, File.separatorChar), text);
         }
         else {
           String rootPath = Optional.ofNullable(GotoFileCellRenderer.getAnyRoot(file, project)).map(root -> FileUtil.toSystemDependentName(root.getPath()))
                   .filter(root -> basePath != null && FileUtil.isAncestor(basePath, root, true)).orElse(null);
-          text = rootPath != null ? ObjectUtils.notNull(FileUtil.getRelativePath(rootPath, text, File.separatorChar), text) : UserHomeFileUtil.getLocationRelativeToUserHome(text);
+          text = rootPath != null ? ObjectUtil.notNull(FileUtil.getRelativePath(rootPath, text, File.separatorChar), text) : UserHomeFileUtil.getLocationRelativeToUserHome(text);
         }
       }
     }

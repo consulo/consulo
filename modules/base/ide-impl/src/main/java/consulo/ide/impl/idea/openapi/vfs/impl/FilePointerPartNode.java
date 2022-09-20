@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.openapi.vfs.impl;
 
 import consulo.ide.impl.idea.openapi.application.impl.ApplicationInfoImpl;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.application.util.SystemInfo;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
@@ -31,7 +32,6 @@ import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.FileNameCache;
 import consulo.virtualFileSystem.NullVirtualFile;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.ObjectUtil;
 import consulo.ide.impl.idea.util.PathUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;

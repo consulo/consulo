@@ -15,9 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
+import consulo.util.lang.ObjectUtil;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
-import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
@@ -104,7 +104,7 @@ public class IgnoredFilesCompositeHolder implements IgnoredFilesHolder {
     myCurrentVcs = vcs;
     if (myVcsIgnoredHolderMap.containsKey(vcs)) return;
 
-    IgnoredFilesHolder ignoredFilesHolder = ObjectUtils.chooseNotNull(getHolderFromEP(vcs, myProject), new RecursiveFileHolder<>(myProject, HolderType.IGNORED));
+    IgnoredFilesHolder ignoredFilesHolder = ObjectUtil.chooseNotNull(getHolderFromEP(vcs, myProject), new RecursiveFileHolder<>(myProject, HolderType.IGNORED));
     ignoredFilesHolder.notifyVcsStarted(vcs);
     myVcsIgnoredHolderMap.put(vcs, ignoredFilesHolder);
   }

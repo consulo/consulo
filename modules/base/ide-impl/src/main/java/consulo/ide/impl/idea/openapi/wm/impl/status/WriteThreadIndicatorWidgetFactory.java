@@ -10,7 +10,7 @@ import consulo.project.ui.wm.StatusBarWidget;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.UIBundle;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.ThreeState;
 import consulo.application.impl.internal.BaseApplication;
 import consulo.disposer.Disposer;
@@ -112,7 +112,7 @@ public class WriteThreadIndicatorWidgetFactory implements StatusBarWidgetFactory
 
     @Override
     public void install(@Nonnull StatusBar statusBar) {
-      BaseApplication application = ObjectUtils.tryCast(ApplicationManager.getApplication(), BaseApplication.class);
+      BaseApplication application = ObjectUtil.tryCast(ApplicationManager.getApplication(), BaseApplication.class);
       if (application == null) {
         return;
       }

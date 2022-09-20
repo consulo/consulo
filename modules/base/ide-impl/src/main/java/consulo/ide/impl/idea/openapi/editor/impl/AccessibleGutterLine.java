@@ -18,7 +18,7 @@ import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.CommonShortcuts;
 import consulo.ui.ex.awt.paint.LinePainter2D;
 import consulo.ui.ex.awt.JBUIScale;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ui.ex.util.SimpleAccessible;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.ex.action.KeyboardShortcut;
@@ -156,7 +156,7 @@ class AccessibleGutterLine extends JPanel {
         TextAnnotationGutterProvider gutterProvider = myGutter.myTextAnnotationGutters.get(i);
         if (tooltipText == null) tooltipText = gutterProvider.getToolTip(myLogicalLineNum, editor); // [tav] todo: take first non-null?
         int annotationSize = myGutter.myTextAnnotationGutterSizes.get(i);
-        buf.append(ObjectUtils.notNull(gutterProvider.getLineText(myLogicalLineNum, editor), ""));
+        buf.append(ObjectUtil.notNull(gutterProvider.getLineText(myLogicalLineNum, editor), ""));
         width += annotationSize;
       }
       if (buf.length() > 0) {

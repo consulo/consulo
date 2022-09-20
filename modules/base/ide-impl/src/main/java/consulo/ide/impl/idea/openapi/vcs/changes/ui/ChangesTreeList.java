@@ -35,6 +35,7 @@ import consulo.project.Project;
 import consulo.util.lang.EmptyRunnable;
 import consulo.ui.ex.action.*;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.ref.Ref;
 import consulo.application.util.SystemInfo;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
@@ -50,7 +51,6 @@ import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.tree.action.CollapseAllAction;
 import consulo.ui.ex.awt.tree.action.ExpandAllAction;
-import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.tree.TreeUtil;
@@ -686,7 +686,7 @@ public abstract class ChangesTreeList<T> extends Tree implements TypeSafeDataPro
       file = ((Change)object).getVirtualFile();
     }
     else {
-      file = ObjectUtils.tryCast(object, VirtualFile.class);
+      file = ObjectUtil.tryCast(object, VirtualFile.class);
     }
 
     if (file != null) {

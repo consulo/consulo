@@ -7,7 +7,7 @@ import consulo.language.editor.highlight.EditorHighlighterFactory;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
 import consulo.codeEditor.Editor;
@@ -92,7 +92,7 @@ public class ConsoleExecutionEditor implements Disposable {
 
   @Nonnull
   public EditorEx getCurrentEditor() {
-    return ObjectUtils.notNull(myCurrentEditor, myConsoleEditor);
+    return ObjectUtil.notNull(myCurrentEditor, myConsoleEditor);
   }
 
   public Document getDocument() {

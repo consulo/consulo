@@ -20,7 +20,7 @@ import consulo.util.lang.Pair;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.MovablePopup;
-import consulo.ide.impl.idea.util.ObjectUtil;
+import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.ui.MouseEventHandler;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;

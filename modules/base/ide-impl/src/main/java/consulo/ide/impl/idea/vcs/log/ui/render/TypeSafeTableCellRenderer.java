@@ -21,7 +21,7 @@ import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 
-import static consulo.ide.impl.idea.util.ObjectUtils.notNull;
+import static consulo.util.lang.ObjectUtil.notNull;
 
 public abstract class TypeSafeTableCellRenderer<T> implements TableCellRenderer {
 

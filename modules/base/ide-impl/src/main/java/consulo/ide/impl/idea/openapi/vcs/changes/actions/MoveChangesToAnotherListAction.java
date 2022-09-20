@@ -29,7 +29,7 @@ import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesListView;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentManager;
 import consulo.ide.impl.idea.openapi.vcs.ui.VcsBalloonProblemNotifier;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.application.AllIcons;
@@ -206,7 +206,7 @@ public class MoveChangesToAnotherListAction extends AnAction implements DumbAwar
 
     LocalChangeList emptyList = ContainerUtil.find(lists, list -> list.getChanges().isEmpty());
 
-    return ObjectUtils.chooseNotNull(emptyList, ContainerUtil.getFirstItem(lists));
+    return ObjectUtil.chooseNotNull(emptyList, ContainerUtil.getFirstItem(lists));
   }
 
   @Nonnull

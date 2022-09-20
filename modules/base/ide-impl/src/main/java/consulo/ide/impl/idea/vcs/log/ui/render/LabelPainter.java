@@ -31,6 +31,7 @@ package consulo.ide.impl.idea.vcs.log.ui.render;
  */
 
 import consulo.ui.ex.awt.GraphicsConfig;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.application.util.registry.Registry;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
@@ -38,7 +39,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.SimpleColoredComponent;
-import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awt.JBUI;
@@ -100,7 +100,7 @@ public class LabelPainter {
   @Nullable
   public static VcsLogRefManager getRefManager(@Nonnull VcsLogData logData, @Nonnull Collection<VcsRef> references) {
     if (!references.isEmpty()) {
-      VirtualFile root = ObjectUtils.assertNotNull(ContainerUtil.getFirstItem(references)).getRoot();
+      VirtualFile root = ObjectUtil.assertNotNull(ContainerUtil.getFirstItem(references)).getRoot();
       return logData.getLogProvider(root).getReferenceManager();
     }
     else {

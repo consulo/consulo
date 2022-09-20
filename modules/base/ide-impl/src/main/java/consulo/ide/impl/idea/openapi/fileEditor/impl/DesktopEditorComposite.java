@@ -34,7 +34,7 @@ import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.NullUtils;
 import consulo.ide.impl.idea.ui.tabs.UiDecorator;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
@@ -382,7 +382,7 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
 
   @Nonnull
   protected String getDisplayName(@Nonnull FileEditor editor) {
-    return ObjectUtils.notNull(myDisplayNames.get(editor), editor.getName());
+    return ObjectUtil.notNull(myDisplayNames.get(editor), editor.getName());
   }
 
   /**

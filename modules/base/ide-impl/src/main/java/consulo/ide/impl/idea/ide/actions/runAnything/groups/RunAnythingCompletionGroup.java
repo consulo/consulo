@@ -4,9 +4,10 @@ package consulo.ide.impl.idea.ide.actions.runAnything.groups;
 import consulo.ide.impl.idea.ide.actions.runAnything.activity.RunAnythingProvider;
 import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItem;
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.util.matcher.Matcher;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -32,7 +33,7 @@ public class RunAnythingCompletionGroup<V, P extends RunAnythingProvider<V>> ext
   @Nonnull
   @Override
   public String getTitle() {
-    return ObjectUtils.assertNotNull(getProvider().getCompletionGroupTitle());
+    return ObjectUtil.assertNotNull(getProvider().getCompletionGroupTitle());
   }
 
   @Nonnull

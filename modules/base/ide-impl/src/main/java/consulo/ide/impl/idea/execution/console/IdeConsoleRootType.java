@@ -25,7 +25,7 @@ import consulo.language.plain.PlainTextFileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import jakarta.inject.Inject;
@@ -54,7 +54,7 @@ public class IdeConsoleRootType extends ConsoleRootType {
   public Image substituteIcon(@Nonnull Project project, @Nonnull VirtualFile file) {
     if (file.isDirectory()) return null;
     FileType fileType = FileTypeManager.getInstance().getFileTypeByFileName(file.getNameSequence());
-    Image icon = fileType == UnknownFileType.INSTANCE || fileType == PlainTextFileType.INSTANCE ? AllIcons.Debugger.Console : ObjectUtils.notNull(fileType.getIcon(), AllIcons.Debugger.Console);
+    Image icon = fileType == UnknownFileType.INSTANCE || fileType == PlainTextFileType.INSTANCE ? AllIcons.Debugger.Console : ObjectUtil.notNull(fileType.getIcon(), AllIcons.Debugger.Console);
     return ImageEffects.layered(icon, AllIcons.Nodes.RunnableMark);
   }
 

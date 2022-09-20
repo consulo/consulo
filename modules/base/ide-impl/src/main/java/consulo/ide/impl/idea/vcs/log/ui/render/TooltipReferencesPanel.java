@@ -19,7 +19,7 @@ import consulo.ui.ex.awt.VerticalFlowLayout;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.JBLabel;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.JBUI;
 import consulo.versionControlSystem.log.VcsRef;
@@ -47,7 +47,7 @@ class TooltipReferencesPanel extends ReferencesPanel {
     super(new VerticalFlowLayout(JBUI.scale(H_GAP), JBUI.scale(V_GAP)), REFS_LIMIT);
     myReferencePainter = referencePainter;
 
-    VirtualFile root = ObjectUtils.assertNotNull(ContainerUtil.getFirstItem(refs)).getRoot();
+    VirtualFile root = ObjectUtil.assertNotNull(ContainerUtil.getFirstItem(refs)).getRoot();
     setReferences(ContainerUtil.sorted(refs, logData.getLogProvider(root).getReferenceManager().getLabelsOrderComparator()));
   }
 

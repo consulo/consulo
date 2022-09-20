@@ -5,7 +5,7 @@ import consulo.application.AllIcons;
 import consulo.ui.ex.awt.action.ComboBoxAction;
 import consulo.application.util.SystemInfo;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.MacUIUtil;
@@ -220,7 +220,7 @@ public class DarculaButtonUI extends BasicButtonUI {
 
   protected Dimension getDarculaButtonSize(JComponent c, Dimension prefSize) {
     Insets i = c.getInsets();
-    prefSize = ObjectUtils.notNull(prefSize, JBUI.emptySize());
+    prefSize = ObjectUtil.notNull(prefSize, JBUI.emptySize());
 
     if (UIUtil.isHelpButton(c) || isSquare(c)) {
       int helpDiam = HELP_BUTTON_DIAMETER.get();

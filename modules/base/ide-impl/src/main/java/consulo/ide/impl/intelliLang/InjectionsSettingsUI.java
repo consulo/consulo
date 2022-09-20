@@ -37,7 +37,7 @@ import consulo.ui.ex.awt.speedSearch.TableViewSpeedSearch;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.FileContentUtil;
 import consulo.ide.impl.idea.util.IconUtil;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.Convertor;
 import consulo.ide.impl.intelliLang.inject.InjectedLanguage;
@@ -922,7 +922,7 @@ public class InjectionsSettingsUI implements SearchableConfigurable.Parent, Conf
       //myInjections.addAll(newInjections);
 
       for (String supportId : InjectorUtils.getActiveInjectionSupportIds()) {
-        ArrayList<InjInfo> list = new ArrayList<InjInfo>(ObjectUtils.notNull(currentMap.get(supportId), Collections.<InjInfo>emptyList()));
+        ArrayList<InjInfo> list = new ArrayList<InjInfo>(ObjectUtil.notNull(currentMap.get(supportId), Collections.<InjInfo>emptyList()));
         final List<BaseInjection> currentInjections = getInjectionList(list);
         final List<BaseInjection> importingInjections = cfg.getInjections(supportId);
         if (currentInjections == null) {

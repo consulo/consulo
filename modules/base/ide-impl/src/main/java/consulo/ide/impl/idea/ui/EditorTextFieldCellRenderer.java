@@ -34,7 +34,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.*;
 import consulo.application.util.LineTokenizer;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.CharSequenceSubSequence;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.disposer.Disposer;
@@ -157,7 +157,7 @@ public abstract class EditorTextFieldCellRenderer implements TableCellRenderer, 
       field.setFontInheritedFromLAF(inheritFontFromLaF);
       field.addNotify(); // creates editor
 
-      EditorEx editor = (EditorEx)ObjectUtils.assertNotNull(field.getEditor());
+      EditorEx editor = (EditorEx)ObjectUtil.assertNotNull(field.getEditor());
       editor.setRendererMode(true);
 
       editor.setColorsScheme(editor.createBoundColorSchemeDelegate(null));

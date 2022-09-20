@@ -9,7 +9,7 @@ import consulo.dataContext.DataProvider;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.execution.ui.console.HyperlinkInfo;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -43,7 +43,7 @@ public final class BuildConsoleUtils {
   private static final Set<String> NEW_LINES = ContainerUtil.set("<br>", "</br>", "<br/>", "<p>", "</p>", "<p/>", "<pre>", "</pre>");
 
   public static void printDetails(@Nonnull ConsoleView consoleView, @Nullable Failure failure, @Nullable String details) {
-    String text = failure == null ? details : ObjectUtils.chooseNotNull(failure.getDescription(), failure.getMessage());
+    String text = failure == null ? details : ObjectUtil.chooseNotNull(failure.getDescription(), failure.getMessage());
     if (text == null && failure != null && failure.getError() != null) {
       text = failure.getError().getMessage();
     }

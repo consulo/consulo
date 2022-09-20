@@ -5,7 +5,7 @@ package consulo.ide.impl.idea.codeInsight.daemon.impl;
 import consulo.ide.impl.idea.diagnostic.PluginException;
 import consulo.ide.impl.idea.openapi.diagnostic.Logger;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.ReflectionUtil;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.document.util.TextRange;
@@ -249,13 +249,13 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
   @Nonnull
   @Override
   public AnnotationBuilder newAnnotation(@Nonnull HighlightSeverity severity, @Nonnull @Nls String message) {
-    return new B(this, severity, message, myCurrentElement, ObjectUtils.chooseNotNull(myCurrentAnnotator, myExternalAnnotator));
+    return new B(this, severity, message, myCurrentElement, ObjectUtil.chooseNotNull(myCurrentAnnotator, myExternalAnnotator));
   }
 
   @Nonnull
   @Override
   public AnnotationBuilder newSilentAnnotation(@Nonnull HighlightSeverity severity) {
-    return new B(this, severity, null, myCurrentElement, ObjectUtils.chooseNotNull(myCurrentAnnotator, myExternalAnnotator));
+    return new B(this, severity, null, myCurrentElement, ObjectUtil.chooseNotNull(myCurrentAnnotator, myExternalAnnotator));
   }
 
   PsiElement myCurrentElement;

@@ -31,7 +31,7 @@ import consulo.ide.impl.idea.openapi.vcs.diff.DiffMixin;
 import consulo.versionControlSystem.history.VcsRevisionDescription;
 import consulo.versionControlSystem.action.VcsContext;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.ObjectUtil;
+import consulo.util.lang.ObjectUtil;
 import consulo.application.util.DateFormatUtil;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;

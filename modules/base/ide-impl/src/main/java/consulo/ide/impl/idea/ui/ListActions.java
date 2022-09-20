@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NonNls;
 import javax.swing.JList;
 
 import static consulo.ui.ex.awt.speedSearch.SpeedSearchSupply.getSupply;
-import static consulo.ide.impl.idea.util.ObjectUtils.tryCast;
+import static consulo.util.lang.ObjectUtil.tryCast;
 
 /**
  * @author Sergey.Malenkov

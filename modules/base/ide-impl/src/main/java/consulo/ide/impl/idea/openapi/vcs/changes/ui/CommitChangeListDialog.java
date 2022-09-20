@@ -38,13 +38,13 @@ import consulo.ide.impl.idea.openapi.vcs.changes.actions.ScheduleForAdditionActi
 import consulo.ide.impl.idea.openapi.vcs.checkin.*;
 import consulo.ide.impl.idea.openapi.vcs.impl.CheckinHandlersManager;
 import consulo.ide.impl.idea.openapi.vcs.ui.CommitMessage;
+import consulo.util.lang.ObjectUtil;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.checkin.*;
 import consulo.versionControlSystem.ui.Refreshable;
 import consulo.versionControlSystem.ui.RefreshableOnComponent;
 import consulo.ide.impl.idea.ui.SplitterWithSecondHideable;
-import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.GridBag;
 import consulo.project.Project;
@@ -288,7 +288,7 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
     super(project, true);
     myCommitContext = new CommitContext();
     myProject = project;
-    myVcsConfiguration = ObjectUtils.assertNotNull(VcsConfiguration.getInstance(myProject));
+    myVcsConfiguration = ObjectUtil.assertNotNull(VcsConfiguration.getInstance(myProject));
     myExecutors = executors;
     myShowVcsCommit = showVcsCommit;
     myVcs = singleVcs;

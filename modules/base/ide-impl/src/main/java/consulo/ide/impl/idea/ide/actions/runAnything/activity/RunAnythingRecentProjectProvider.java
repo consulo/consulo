@@ -10,7 +10,7 @@ import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItem;
 import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItemBase;
 import consulo.ui.ex.action.AnAction;
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.image.Image;
 
@@ -65,7 +65,7 @@ public class RunAnythingRecentProjectProvider extends RunAnythingAnActionProvide
   @Nonnull
   @Override
   public String getCommand(@Nonnull AnAction value) {
-    return getHelpCommand() + " " + ObjectUtils.notNull(value.getTemplatePresentation().getText(), IdeBundle.message("run.anything.actions.undefined"));
+    return getHelpCommand() + " " + ObjectUtil.notNull(value.getTemplatePresentation().getText(), IdeBundle.message("run.anything.actions.undefined"));
   }
 
   static class RecentProjectElement extends RunAnythingItemBase {

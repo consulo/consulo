@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.ide;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.*;
 import consulo.ide.impl.idea.openapi.util.NotNullComputable;
-import consulo.ide.impl.idea.util.ObjectUtil;
+import consulo.util.lang.ObjectUtil;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.fileChooser.FileOperateDialogSettings;
 import consulo.ide.IdeBundle;

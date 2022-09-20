@@ -24,6 +24,7 @@ import consulo.application.impl.internal.IdeaModalityState;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import consulo.ui.ex.awt.ComboBox;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.function.Condition;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.versionControlSystem.AbstractVcs;
@@ -39,7 +40,6 @@ import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ide.impl.idea.util.EventDispatcher;
-import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 
 import javax.annotation.Nonnull;
@@ -87,7 +87,7 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
     super(project, changes, capableOfExcludingChanges, highlightProblems, inclusionListener, ChangesBrowser.MyUseCase.LOCAL_CHANGES, null,
           Object.class);
     myRebuildListListener = rebuildListListener;
-    myVcsConfiguration = ObjectUtils.assertNotNull(VcsConfiguration.getInstance(myProject));
+    myVcsConfiguration = ObjectUtil.assertNotNull(VcsConfiguration.getInstance(myProject));
     myUnversionedFilesEnabled = unversionedFilesEnabled;
 
     init();
@@ -141,7 +141,7 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
     }
 
     if (mySelectedChangeList == null) {
-      mySelectedChangeList = ObjectUtils.chooseNotNull(findDefaultList(changeLists), ContainerUtil.getFirstItem(changeLists));
+      mySelectedChangeList = ObjectUtil.chooseNotNull(findDefaultList(changeLists), ContainerUtil.getFirstItem(changeLists));
     }
   }
 

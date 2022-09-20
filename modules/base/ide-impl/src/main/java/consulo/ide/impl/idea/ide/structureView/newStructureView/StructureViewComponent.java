@@ -35,7 +35,7 @@ import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.ui.treeStructure.filtered.FilteringTreeStructure;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import java.util.function.Function;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.SingleAlarm;
 import consulo.ide.ui.popup.HintUpdateSupply;
 import consulo.language.editor.CommonDataKeys;
@@ -185,7 +185,7 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
   }
 
   public static void registerAutoExpandListener(@Nonnull JTree tree, @Nonnull StructureViewModel structureViewModel) {
-    tree.getModel().addTreeModelListener(new MyExpandListener(tree, ObjectUtils.tryCast(structureViewModel, StructureViewModel.ExpandInfoProvider.class)));
+    tree.getModel().addTreeModelListener(new MyExpandListener(tree, ObjectUtil.tryCast(structureViewModel, StructureViewModel.ExpandInfoProvider.class)));
   }
 
   protected boolean showScrollToFromSourceActions() {
@@ -708,7 +708,7 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
   //}
 
   private static int getMinimumExpandDepth(@Nonnull StructureViewModel structureViewModel) {
-    final StructureViewModel.ExpandInfoProvider provider = ObjectUtils.tryCast(structureViewModel, StructureViewModel.ExpandInfoProvider.class);
+    final StructureViewModel.ExpandInfoProvider provider = ObjectUtil.tryCast(structureViewModel, StructureViewModel.ExpandInfoProvider.class);
 
     return provider == null ? 2 : provider.getMinimumAutoExpandDepth();
   }
@@ -1003,7 +1003,7 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
           return provider.isAutoExpand((StructureViewTreeElement)value);
         }
         else if (value instanceof GroupWrapper) {
-          Group group = ObjectUtils.notNull(((GroupWrapper)value).getValue());
+          Group group = ObjectUtil.notNull(((GroupWrapper)value).getValue());
           for (TreeElement treeElement : group.getChildren()) {
             if (treeElement instanceof StructureViewTreeElement && !provider.isAutoExpand((StructureViewTreeElement)treeElement)) {
               return false;

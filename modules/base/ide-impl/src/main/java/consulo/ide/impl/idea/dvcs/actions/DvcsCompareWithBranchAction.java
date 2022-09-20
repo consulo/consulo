@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
 import consulo.ide.impl.idea.openapi.vcs.VcsNotifier;
 import consulo.ide.impl.idea.openapi.vcs.history.VcsDiffUtil;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.language.editor.CommonDataKeys;
 import consulo.logging.Logger;
@@ -57,12 +57,12 @@ public abstract class DvcsCompareWithBranchAction<T extends Repository> extends 
   public void actionPerformed(@Nonnull AnActionEvent event) {
     Project project = event.getRequiredData(CommonDataKeys.PROJECT);
     VirtualFile file = getAffectedFile(event);
-    T repository = ObjectUtils.assertNotNull(getRepositoryManager(project).getRepositoryForFile(file));
+    T repository = ObjectUtil.assertNotNull(getRepositoryManager(project).getRepositoryForFile(file));
     assert !repository.isFresh();
     String currentBranchName = repository.getCurrentBranchName();
     String presentableRevisionName = currentBranchName;
     if (currentBranchName == null) {
-      String currentRevision = ObjectUtils.assertNotNull(repository.getCurrentRevision());
+      String currentRevision = ObjectUtil.assertNotNull(repository.getCurrentRevision());
       presentableRevisionName = DvcsUtil.getShortHash(currentRevision);
     }
     List<String> branchNames = getBranchNamesExceptCurrent(repository);

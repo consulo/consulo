@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.vcs.log.impl;
 
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.MultiMap;
 import consulo.versionControlSystem.log.RefGroup;
@@ -66,7 +66,7 @@ public class SimpleRefGroup implements RefGroup {
     MultiMap<VcsRefType, VcsRef> referencesByType = ContainerUtil.groupBy(refs, VcsRef::getType);
     if (referencesByType.size() == 1) {
       Map.Entry<VcsRefType, Collection<VcsRef>> firstItem =
-              ObjectUtils.assertNotNull(ContainerUtil.getFirstItem(referencesByType.entrySet()));
+              ObjectUtil.assertNotNull(ContainerUtil.getFirstItem(referencesByType.entrySet()));
       boolean multiple = firstItem.getValue().size() > 1;
       Color color = firstItem.getKey().getBackgroundColor();
       return multiple ? Arrays.asList(color, color) : Collections.singletonList(color);
@@ -90,7 +90,7 @@ public class SimpleRefGroup implements RefGroup {
     if (groupedRefs.isEmpty()) return;
 
     if (compact) {
-      VcsRef firstRef = ObjectUtils.assertNotNull(ContainerUtil.getFirstItem(groupedRefs.values()));
+      VcsRef firstRef = ObjectUtil.assertNotNull(ContainerUtil.getFirstItem(groupedRefs.values()));
       RefGroup group = ContainerUtil.getFirstItem(result);
       if (group == null) {
         result.add(new SimpleRefGroup(firstRef.getType().isBranch() || showTagNames ? firstRef.getName() : "",
@@ -108,7 +108,7 @@ public class SimpleRefGroup implements RefGroup {
           }
         }
         else {
-          result.add(new SimpleRefGroup(showTagNames ? ObjectUtils.notNull(ContainerUtil.getFirstItem(entry.getValue())).getName() : "",
+          result.add(new SimpleRefGroup(showTagNames ? ObjectUtil.notNull(ContainerUtil.getFirstItem(entry.getValue())).getName() : "",
                                         ContainerUtil.newArrayList(entry.getValue())));
         }
       }

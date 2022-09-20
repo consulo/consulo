@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.util.indexing;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.index.io.CompressionUtil;
 import consulo.ide.impl.idea.util.ExceptionUtil;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.indexing.impl.DebugAssertions;
 import consulo.ide.impl.idea.util.indexing.impl.InputData;
 import consulo.ide.impl.idea.util.indexing.impl.forward.AbstractForwardIndexAccessor;
@@ -81,7 +81,7 @@ class SnapshotInputMappings<Key, Value, Input> implements UpdatableSnapshotInput
   @Nonnull
   @Override
   public Map<Key, Value> readData(int hashId) throws IOException {
-    return ObjectUtils.notNull(doReadData(hashId), Collections.emptyMap());
+    return ObjectUtil.notNull(doReadData(hashId), Collections.emptyMap());
   }
 
   @Nullable

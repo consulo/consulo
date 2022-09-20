@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.openapi.util.Setter;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.LangBundle;
 import consulo.language.file.inject.VirtualFileWindow;
@@ -243,7 +243,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
 
     int row = myTable.getSelectedRow();
     Object selectedTarget = row >= 0 ? myModel.data.get(myTable.convertRowIndexToModel(row)).first : null;
-    VirtualFile toSelect = myFileToSelect != null ? myFileToSelect : ObjectUtils.tryCast(selectedTarget, VirtualFile.class);
+    VirtualFile toSelect = myFileToSelect != null ? myFileToSelect : ObjectUtil.tryCast(selectedTarget, VirtualFile.class);
     FileChooserDescriptor descriptor = new FileChooserDescriptor(!param(ONLY_DIRECTORIES), true, true, true, true, true);
     IdeaFileChooser.chooseFiles(descriptor, myProject, myTable, toSelect, this::doAddFiles);
   }
@@ -284,7 +284,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
 
   private void doEditAction() {
     TableUtil.editCellAt(myTable, myTable.getSelectedRow(), 0);
-    TextFieldWithBrowseButton panel = ObjectUtils.tryCast(myTable.getEditorComponent(), TextFieldWithBrowseButton.class);
+    TextFieldWithBrowseButton panel = ObjectUtil.tryCast(myTable.getEditorComponent(), TextFieldWithBrowseButton.class);
     if (panel != null) {
       ApplicationManager.getApplication().invokeLater(() -> {
         if (myTable.getEditorComponent() == panel) {
@@ -536,7 +536,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
       public Object getCellEditorValue() {
         if (newPath == null || newPath.equals(startValue.getPath())) return startValue;
         VirtualFile newFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(this.newPath);
-        return ObjectUtils.notNull(newFile, startValue);
+        return ObjectUtil.notNull(newFile, startValue);
       }
     });
     myTable.getColumnModel().getColumn(1).setCellEditor(new AbstractTableCellEditor() {

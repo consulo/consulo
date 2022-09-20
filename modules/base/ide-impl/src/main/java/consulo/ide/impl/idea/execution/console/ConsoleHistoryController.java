@@ -37,13 +37,13 @@ import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.awt.Messages;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringHash;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.ide.impl.idea.util.ExceptionUtil;
-import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.ide.impl.idea.util.PathUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.FactoryMap;
@@ -303,7 +303,7 @@ public class ConsoleHistoryController {
         if (!myMultiline && command == null) return;
       }
       else {
-        command = ObjectUtils.chooseNotNull(getModel().getHistoryPrev(), myMultiline ? "" : StringUtil.notNullize(myHelper.getContent()));
+        command = ObjectUtil.chooseNotNull(getModel().getHistoryPrev(), myMultiline ? "" : StringUtil.notNullize(myHelper.getContent()));
       }
       setConsoleText(command, myNext && !getModel().hasHistory(false), true);
     }

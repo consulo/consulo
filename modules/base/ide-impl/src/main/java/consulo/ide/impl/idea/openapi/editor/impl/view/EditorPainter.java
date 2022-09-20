@@ -25,8 +25,7 @@ import consulo.ui.ex.awt.paint.LinePainter2D;
 import consulo.ui.ex.awt.paint.PaintUtil;
 import consulo.ui.ex.awt.JBUIScale;
 import consulo.document.util.DocumentUtil;
-import consulo.ide.impl.idea.util.ObjectUtil;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.application.util.function.Processor;
 import consulo.util.collection.PeekableIterator;
 import consulo.ide.impl.idea.util.containers.PeekableIteratorWrapper;
@@ -1299,7 +1298,7 @@ public class EditorPainter implements TextDrawingCallback {
       TextAttributes selectionAttributes = isSelected(foldRegion) ? myEditor.getSelectionModel().getTextAttributes() : null;
       TextAttributes defaultAttributes = getDefaultAttributes();
       if (myEditor.isInFocusMode(foldRegion)) {
-        return ObjectUtils.notNull(myEditor.getUserData(FocusModeModel.FOCUS_MODE_ATTRIBUTES), getDefaultAttributes());
+        return ObjectUtil.notNull(myEditor.getUserData(FocusModeModel.FOCUS_MODE_ATTRIBUTES), getDefaultAttributes());
       }
       TextAttributes foldAttributes = myEditor.getFoldingModel().getPlaceholderAttributes();
       return mergeAttributes(mergeAttributes(selectionAttributes, foldAttributes), defaultAttributes);

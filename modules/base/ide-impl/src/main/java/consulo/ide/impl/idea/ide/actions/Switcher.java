@@ -36,7 +36,7 @@ import consulo.ide.impl.idea.ui.ListActions;
 import consulo.ide.impl.idea.ui.WindowMoveListener;
 import consulo.ide.impl.idea.ui.speedSearch.NameFilteringListModel;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
@@ -423,7 +423,7 @@ public class Switcher extends AnAction implements DumbAware {
           // Note: Name=name rendered in cell, Description=path to file, as displayed in bottom panel
           myPanel.getAccessibleContext().setAccessibleName(c.getAccessibleContext().getAccessibleName());
           VirtualFile file = value.first;
-          String presentableUrl = ObjectUtils.notNull(file.getParent(), file).getPresentableUrl();
+          String presentableUrl = ObjectUtil.notNull(file.getParent(), file).getPresentableUrl();
           String location = UserHomeFileUtil.getLocationRelativeToUserHome(presentableUrl);
           myPanel.getAccessibleContext().setAccessibleDescription(location);
           if (!selected && list == mouseMoveSrc && index == mouseMoveListIndex) {
@@ -458,7 +458,7 @@ public class Switcher extends AnAction implements DumbAware {
           if (e.getValueIsAdjusting()) return;
           FileInfo selectedInfo = ContainerUtil.getOnlyItem(files.getSelectedValuesList());
           if (selectedInfo != null) {
-            String presentableUrl = ObjectUtils.notNull(selectedInfo.first.getParent(), selectedInfo.first).getPresentableUrl();
+            String presentableUrl = ObjectUtil.notNull(selectedInfo.first.getParent(), selectedInfo.first).getPresentableUrl();
             pathLabel.setText(getTitle2Text(UserHomeFileUtil.getLocationRelativeToUserHome(presentableUrl)));
           }
           else {

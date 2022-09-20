@@ -19,7 +19,7 @@ import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.ScrollingUtil;
 import consulo.ide.impl.idea.ui.SeparatorComponent;
 import consulo.ui.ex.awt.JBList;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import javax.annotation.Nonnull;
@@ -88,7 +88,7 @@ public class RunAnythingUtil {
 
   @Nonnull
   public static Project fetchProject(@Nonnull DataContext dataContext) {
-    return ObjectUtils.assertNotNull(dataContext.getData(CommonDataKeys.PROJECT));
+    return ObjectUtil.assertNotNull(dataContext.getData(CommonDataKeys.PROJECT));
   }
 
   public static void executeMatched(@Nonnull DataContext dataContext, @Nonnull String pattern) {

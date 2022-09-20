@@ -29,7 +29,7 @@ import consulo.language.impl.internal.psi.diff.DiffLog;
 import consulo.language.impl.ast.FileElement;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.impl.internal.psi.diff.BlockSupport;
-import consulo.ide.impl.idea.util.ObjectUtil;
+import consulo.util.lang.ObjectUtil;
 
 import javax.annotation.Nonnull;
 

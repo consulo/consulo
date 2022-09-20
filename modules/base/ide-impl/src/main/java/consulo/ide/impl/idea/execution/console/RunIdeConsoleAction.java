@@ -39,7 +39,7 @@ import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.language.impl.psi.LeafPsiElement;
 import consulo.ide.impl.idea.util.ExceptionUtil;
 import consulo.ide.impl.idea.util.NotNullFunction;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.PathUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.document.Document;
@@ -183,10 +183,10 @@ public class RunIdeConsoleAction extends DumbAwareAction {
         PsiElement e1 = file.findElementAt(selectedRange.getStartOffset());
         PsiElement e2 = file.findElementAt(selectedRange.getEndOffset());
         while (e1 != e2 && (e1 instanceof PsiWhiteSpace || e1 != null && StringUtil.isEmptyOrSpaces(e1.getText()))) {
-          e1 = ObjectUtils.chooseNotNull(e1.getNextSibling(), PsiTreeUtil.getDeepestFirst(e1.getParent()));
+          e1 = ObjectUtil.chooseNotNull(e1.getNextSibling(), PsiTreeUtil.getDeepestFirst(e1.getParent()));
         }
         while (e1 != e2 && (e2 instanceof PsiWhiteSpace || e2 != null && StringUtil.isEmptyOrSpaces(e2.getText()))) {
-          e2 = ObjectUtils.chooseNotNull(e2.getPrevSibling(), PsiTreeUtil.getDeepestLast(e2.getParent()));
+          e2 = ObjectUtil.chooseNotNull(e2.getPrevSibling(), PsiTreeUtil.getDeepestLast(e2.getParent()));
         }
         if (e1 instanceof LeafPsiElement) e1 = e1.getParent();
         if (e2 instanceof LeafPsiElement) e2 = e2.getParent();
@@ -201,13 +201,13 @@ public class RunIdeConsoleAction extends DumbAwareAction {
 
   private static void selectContent(RunContentDescriptor descriptor) {
     Executor executor = DefaultRunExecutor.getRunExecutorInstance();
-    ConsoleViewImpl consoleView = ObjectUtils.assertNotNull((ConsoleViewImpl)descriptor.getExecutionConsole());
+    ConsoleViewImpl consoleView = ObjectUtil.assertNotNull((ConsoleViewImpl)descriptor.getExecutionConsole());
     ExecutionManager.getInstance(consoleView.getProject()).getContentManager().toFrontRunContent(executor, descriptor);
   }
 
   @Nonnull
   private static RunContentDescriptor getConsoleView(@Nonnull Project project, @Nonnull VirtualFile file) {
-    PsiFile psiFile = ObjectUtils.assertNotNull(PsiManager.getInstance(project).findFile(file));
+    PsiFile psiFile = ObjectUtil.assertNotNull(PsiManager.getInstance(project).findFile(file));
     WeakReference<RunContentDescriptor> ref = psiFile.getCopyableUserData(DESCRIPTOR_KEY);
     RunContentDescriptor descriptor = ref == null ? null : ref.get();
     if (descriptor == null || descriptor.getExecutionConsole() == null) {
@@ -276,8 +276,8 @@ public class RunIdeConsoleAction extends DumbAwareAction {
   }
 
   private static void ensureOutputIsRedirected(@Nonnull IdeScriptEngine engine, @Nonnull RunContentDescriptor descriptor) {
-    ConsoleWriter stdOutWriter = ObjectUtils.tryCast(engine.getStdOut(), ConsoleWriter.class);
-    ConsoleWriter stdErrWriter = ObjectUtils.tryCast(engine.getStdErr(), ConsoleWriter.class);
+    ConsoleWriter stdOutWriter = ObjectUtil.tryCast(engine.getStdOut(), ConsoleWriter.class);
+    ConsoleWriter stdErrWriter = ObjectUtil.tryCast(engine.getStdErr(), ConsoleWriter.class);
     if (stdOutWriter != null && stdOutWriter.getDescriptor() == descriptor &&
         stdErrWriter != null && stdErrWriter.getDescriptor() == descriptor) {
       return;
@@ -305,7 +305,7 @@ public class RunIdeConsoleAction extends DumbAwareAction {
     @Override
     public void write(char[] cbuf, int off, int len) throws IOException {
       RunContentDescriptor descriptor = myDescriptor.get();
-      ConsoleViewImpl console = ObjectUtils.tryCast(descriptor != null ? descriptor.getExecutionConsole() : null, ConsoleViewImpl.class);
+      ConsoleViewImpl console = ObjectUtil.tryCast(descriptor != null ? descriptor.getExecutionConsole() : null, ConsoleViewImpl.class);
       if (console == null) {
         //TODO ignore ?
         throw new IOException("The console is not available.");

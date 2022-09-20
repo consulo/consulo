@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.openapi.ui.MessageType;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.ide.impl.idea.ui.popup.mock.MockConfirmation;
 import consulo.ide.impl.idea.ui.popup.tree.TreePopupImpl;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.language.editor.CommonDataKeys;
@@ -277,7 +277,7 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
     @Override
     public void handleSelect(boolean handleFinalChoices, InputEvent e) {
       final Object selectedValue = getList().getSelectedValue();
-      final ActionPopupStep actionPopupStep = ObjectUtils.tryCast(getListStep(), ActionPopupStep.class);
+      final ActionPopupStep actionPopupStep = ObjectUtil.tryCast(getListStep(), ActionPopupStep.class);
 
       if (actionPopupStep != null) {
         KeepingPopupOpenAction dontClosePopupAction = getActionByClass(selectedValue, actionPopupStep, KeepingPopupOpenAction.class);
@@ -298,7 +298,7 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
       final Object[] selectedValues = getList().getSelectedValues();
 
       ListPopupStep<Object> listStep = getListStep();
-      final ActionPopupStep actionPopupStep = ObjectUtils.tryCast(listStep, ActionPopupStep.class);
+      final ActionPopupStep actionPopupStep = ObjectUtil.tryCast(listStep, ActionPopupStep.class);
       if (actionPopupStep == null) return;
 
       List<ToggleAction> filtered = ContainerUtil.mapNotNull(selectedValues, o -> getActionByClass(o, actionPopupStep, ToggleAction.class));

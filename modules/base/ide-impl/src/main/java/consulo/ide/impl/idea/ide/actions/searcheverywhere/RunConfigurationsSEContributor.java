@@ -21,7 +21,7 @@ import consulo.application.util.matcher.NameUtil;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.JBUIScale;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.application.util.function.Processor;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
@@ -80,7 +80,7 @@ public class RunConfigurationsSEContributor implements SearchEverywhereContribut
 
   @Override
   public boolean processSelectedItem(@Nonnull ChooseRunConfigurationPopup.ItemWrapper selected, int modifiers, @Nonnull String searchText) {
-    RunnerAndConfigurationSettings settings = ObjectUtils.tryCast(selected.getValue(), RunnerAndConfigurationSettings.class);
+    RunnerAndConfigurationSettings settings = ObjectUtil.tryCast(selected.getValue(), RunnerAndConfigurationSettings.class);
     if (settings != null) {
       int mode = getMode(searchText, modifiers);
       Executor executor = findExecutor(settings, mode);
@@ -230,7 +230,7 @@ public class RunConfigurationsSEContributor implements SearchEverywhereContribut
     }
 
     private void fillWithMode(ChooseRunConfigurationPopup.ItemWrapper wrapper, @MagicConstant(intValues = {RUN_MODE, DEBUG_MODE}) int mode, SimpleTextAttributes attributes) {
-      Optional.ofNullable(ObjectUtils.tryCast(wrapper.getValue(), RunnerAndConfigurationSettings.class)).map(settings -> findExecutor(settings, mode)).ifPresent(executor -> {
+      Optional.ofNullable(ObjectUtil.tryCast(wrapper.getValue(), RunnerAndConfigurationSettings.class)).map(settings -> findExecutor(settings, mode)).ifPresent(executor -> {
         executorInfo.append(executor.getId(), attributes);
         executorInfo.setIcon(executor.getToolWindowIcon());
       });

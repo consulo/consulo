@@ -7,7 +7,7 @@ import consulo.ide.impl.idea.openapi.ui.popup.*;
 import consulo.ui.ex.action.*;
 import consulo.util.lang.function.Condition;
 import consulo.ui.ex.util.TextWithMnemonic;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ui.ex.awt.StatusText;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.dataContext.DataContext;
@@ -49,7 +49,7 @@ public class ActionPopupStep implements ListPopupStepEx<PopupFactoryImpl.ActionI
     myItems = items;
     myTitle = title;
     myContext = context;
-    myActionPlace = ObjectUtils.notNull(actionPlace, ActionPlaces.UNKNOWN);
+    myActionPlace = ObjectUtil.notNull(actionPlace, ActionPlaces.UNKNOWN);
     myEnableMnemonics = enableMnemonics;
     myPresentationFactory = presentationFactory;
     myDefaultOptionIndex = getDefaultOptionIndexFromSelectCondition(preselectActionCondition, items);

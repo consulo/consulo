@@ -20,12 +20,12 @@ import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.util.lang.ObjectUtil;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.CommitChangeListDialog;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.versionControlSystem.action.VcsContext;
@@ -43,7 +43,7 @@ public abstract class AbstractCommonCheckinAction extends AbstractVcsAction {
   @Override
   public void actionPerformed(@Nonnull VcsContext context) {
     LOG.debug("actionPerformed. ");
-    Project project = ObjectUtils.notNull(context.getProject());
+    Project project = ObjectUtil.notNull(context.getProject());
 
     if (ChangeListManager.getInstance(project).isFreezedWithNotification("Can not " + getMnemonicsFreeActionName(context) + " now")) {
       LOG.debug("ChangeListManager is freezed. returning.");

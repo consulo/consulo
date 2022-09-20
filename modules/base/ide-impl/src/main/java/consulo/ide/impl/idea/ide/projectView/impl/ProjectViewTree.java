@@ -11,6 +11,7 @@ import consulo.application.ReadAction;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.application.util.registry.Registry;
+import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.fileEditor.VfsPresentationUtil;
 import consulo.language.psi.PsiDirectory;
@@ -19,7 +20,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
 import consulo.ide.ui.popup.HintUpdateSupply;
 import consulo.ide.impl.idea.ui.tabs.FileColorManagerImpl;
-import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 
@@ -91,7 +91,7 @@ public class ProjectViewTree extends DnDAwareTree {
   @Deprecated
   public DefaultMutableTreeNode getSelectedNode() {
     TreePath path = TreeUtil.getSelectedPathIfOne(this);
-    return path == null ? null : ObjectUtils.tryCast(path.getLastPathComponent(), DefaultMutableTreeNode.class);
+    return path == null ? null : ObjectUtil.tryCast(path.getLastPathComponent(), DefaultMutableTreeNode.class);
   }
 
   @Override

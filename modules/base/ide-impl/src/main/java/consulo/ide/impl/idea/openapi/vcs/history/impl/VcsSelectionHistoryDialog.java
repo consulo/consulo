@@ -74,7 +74,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static consulo.ide.impl.idea.util.ObjectUtils.notNull;
+import static consulo.util.lang.ObjectUtil.notNull;
 
 public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvider {
   private static final Logger LOG = Logger.getInstance(VcsSelectionHistoryDialog.class);

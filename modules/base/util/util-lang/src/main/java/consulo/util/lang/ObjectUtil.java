@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.util.lang;
 
-import consulo.annotation.ReviewAfterMigrationToJRE;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
@@ -22,7 +21,7 @@ public class ObjectUtil {
   /**
    * @see NotNullizer
    */
-  public static final Object NULL = sentinel("ObjectUtils.NULL");
+  public static final Object NULL = sentinel("ObjectUtil.NULL");
 
   /**
    * Creates a new object which could be used as sentinel value (special value to distinguish from any other object). It does not equal

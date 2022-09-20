@@ -19,9 +19,9 @@ import consulo.application.CommonBundle;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.ref.Ref;
 import consulo.ui.ex.awt.internal.GuiUtils;
-import consulo.ide.impl.idea.util.ObjectUtil;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

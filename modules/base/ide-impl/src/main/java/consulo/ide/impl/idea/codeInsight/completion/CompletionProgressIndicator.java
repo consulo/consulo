@@ -49,8 +49,7 @@ import consulo.language.psi.ReferenceRange;
 import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.ide.impl.idea.ui.LightweightHint;
 import consulo.ui.ex.awt.util.Alarm;
-import consulo.ide.impl.idea.util.ObjectUtil;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.application.util.Semaphore;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.component.messagebus.MessageBusConnection;
@@ -682,7 +681,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
   @Override
   @Nonnull
   public Project getProject() {
-    return ObjectUtils.assertNotNull(myEditor.getProject());
+    return ObjectUtil.assertNotNull(myEditor.getProject());
   }
 
   @Override

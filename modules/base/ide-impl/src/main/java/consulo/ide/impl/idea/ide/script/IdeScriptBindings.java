@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.ide.script;
 
 import consulo.project.Project;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -49,7 +49,7 @@ public class IdeScriptBindings {
     }
 
     public T get(@Nonnull IdeScriptEngine engine) {
-      return ObjectUtils.tryCast(engine.getBinding(myName), myClass);
+      return ObjectUtil.tryCast(engine.getBinding(myName), myClass);
     }
 
     static <T> Binding<T> create(@Nonnull String name, @Nonnull Class<T> clazz) {

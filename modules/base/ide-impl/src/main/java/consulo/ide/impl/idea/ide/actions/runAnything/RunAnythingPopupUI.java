@@ -44,6 +44,7 @@ import consulo.ui.ex.action.*;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.dataholder.Key;
 import consulo.application.util.SystemInfo;
+import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
@@ -837,7 +838,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
     myCurrentWorker = ActionCallback.DONE;
     myVirtualFile = actionEvent.getData(CommonDataKeys.VIRTUAL_FILE);
 
-    myProject = ObjectUtils.notNull(myActionEvent.getData(CommonDataKeys.PROJECT));
+    myProject = ObjectUtil.notNull(myActionEvent.getData(CommonDataKeys.PROJECT));
     myModule = myActionEvent.getData(LangDataKeys.MODULE);
 
     init();

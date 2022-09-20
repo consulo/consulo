@@ -31,8 +31,7 @@ import consulo.ide.impl.idea.notification.impl.NotificationsManagerImpl;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.ui.BalloonLayoutData;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.ObjectUtil;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
@@ -499,7 +498,7 @@ public class EventLog {
     public void navigate(Project project) {
       NotificationListener listener = myNotification.getListener();
       if (listener != null) {
-        EventLogConsole console = ObjectUtils.assertNotNull(NotificationProjectTracker.getInstance(project).getConsole(myNotification));
+        EventLogConsole console = ObjectUtil.assertNotNull(NotificationProjectTracker.getInstance(project).getConsole(myNotification));
         JComponent component = console.getConsoleEditor().getContentComponent();
         listener.hyperlinkUpdate(myNotification, IJSwingUtilities.createHyperlinkEvent(myHref, component));
       }

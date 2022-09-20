@@ -12,7 +12,7 @@ import consulo.colorScheme.TextAttributesKey;
 import consulo.document.Document;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.language.Language;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.IFileElementType;
@@ -74,7 +74,7 @@ class ChameleonSyntaxHighlightingPass extends GeneralHighlightingPass {
   }
 
   private void collectHighlights(@Nonnull PsiElement element, @Nonnull List<? super HighlightInfo> inside, @Nonnull List<? super HighlightInfo> outside, @Nonnull ProperTextRange priorityRange) {
-    EditorColorsScheme scheme = ObjectUtils.notNull(getColorsScheme(), EditorColorsManager.getInstance().getGlobalScheme());
+    EditorColorsScheme scheme = ObjectUtil.notNull(getColorsScheme(), EditorColorsManager.getInstance().getGlobalScheme());
     TextAttributes defaultAttrs = scheme.getAttributes(HighlighterColors.TEXT);
 
     Language language = ILazyParseableElementType.LANGUAGE_KEY.get(element.getNode());

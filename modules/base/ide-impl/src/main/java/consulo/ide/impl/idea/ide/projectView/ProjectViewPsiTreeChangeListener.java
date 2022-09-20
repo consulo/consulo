@@ -28,7 +28,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import static consulo.ide.impl.idea.util.ObjectUtils.notNull;
+import static consulo.util.lang.ObjectUtil.notNull;
 
 public abstract class ProjectViewPsiTreeChangeListener extends PsiTreeChangeAdapter {
   private final PsiModificationTracker myModificationTracker;

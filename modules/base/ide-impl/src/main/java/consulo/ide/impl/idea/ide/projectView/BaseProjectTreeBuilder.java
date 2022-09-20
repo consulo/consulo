@@ -13,6 +13,7 @@ import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
 import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.awt.tree.AbstractTreeUpdater;
 import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
 import consulo.util.lang.ref.Ref;
@@ -23,7 +24,6 @@ import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
-import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.application.progress.ProgressIndicator;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncPromise;
@@ -64,7 +64,7 @@ public abstract class BaseProjectTreeBuilder extends AbstractTreeBuilder {
     final AsyncPromise<Object> result = new AsyncPromise<>();
     AbstractTreeNode node = (AbstractTreeNode)element;
     final Object value = node.getValue();
-    final VirtualFile virtualFile = PsiUtilCore.getVirtualFile(ObjectUtils.tryCast(value, PsiElement.class));
+    final VirtualFile virtualFile = PsiUtilCore.getVirtualFile(ObjectUtil.tryCast(value, PsiElement.class));
     batch(indicator -> {
       final Ref<Object> target = new Ref<>();
       Promise<Object> callback = _select(element, virtualFile, true, Conditions.alwaysTrue());

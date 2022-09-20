@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
 import java.util.Iterator;
 import java.util.List;
 
-import static consulo.ide.impl.idea.util.ObjectUtils.chooseNotNull;
+import static consulo.util.lang.ObjectUtil.chooseNotNull;
 
 /**
  * @author Vladislav.Soroka

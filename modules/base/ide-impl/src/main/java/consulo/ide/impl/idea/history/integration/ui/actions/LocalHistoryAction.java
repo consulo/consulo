@@ -30,7 +30,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static consulo.ide.impl.idea.util.ObjectUtils.notNull;
+import static consulo.util.lang.ObjectUtil.notNull;
 import static consulo.ide.impl.idea.util.containers.UtilKt.getIfSingle;
 
 public abstract class LocalHistoryAction extends AnAction implements DumbAware {

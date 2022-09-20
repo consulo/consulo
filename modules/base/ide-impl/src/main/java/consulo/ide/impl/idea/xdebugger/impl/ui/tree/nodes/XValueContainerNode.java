@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes;
 
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.execution.debug.frame.*;
 import consulo.util.collection.SmartList;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -284,9 +284,9 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
   @Nonnull
   public List<? extends XValueContainerNode<?>> getLoadedChildren() {
     List<? extends XValueContainerNode<?>> empty = Collections.<XValueGroupNodeImpl>emptyList();
-    return ContainerUtil.concat(ObjectUtils.notNull(myTopGroups, empty),
-                                ObjectUtils.notNull(myValueChildren, empty),
-                                ObjectUtils.notNull(myBottomGroups, empty));
+    return ContainerUtil.concat(ObjectUtil.notNull(myTopGroups, empty),
+                                ObjectUtil.notNull(myValueChildren, empty),
+                                ObjectUtil.notNull(myBottomGroups, empty));
   }
 
   public void setObsolete() {

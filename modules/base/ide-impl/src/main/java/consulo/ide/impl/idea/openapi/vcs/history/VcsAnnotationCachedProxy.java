@@ -30,7 +30,7 @@ import consulo.versionControlSystem.change.ContentRevision;
 import consulo.versionControlSystem.diff.DiffProvider;
 import consulo.versionControlSystem.history.*;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.logging.Logger;
 
@@ -96,7 +96,7 @@ public class VcsAnnotationCachedProxy implements AnnotationProvider {
     VcsAnnotation vcsAnnotation = null;
     if (revisionNumber != null) {
       Object cachedData = myCache.get(filePath, myVcs.getKeyInstanceMethod(), revisionNumber);
-      vcsAnnotation = ObjectUtils.tryCast(cachedData, VcsAnnotation.class);
+      vcsAnnotation = ObjectUtil.tryCast(cachedData, VcsAnnotation.class);
     }
 
     if (vcsAnnotation != null) {

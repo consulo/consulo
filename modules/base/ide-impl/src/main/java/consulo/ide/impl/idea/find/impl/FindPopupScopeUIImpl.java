@@ -11,6 +11,7 @@ import consulo.language.util.ModuleUtilCore;
 import consulo.project.Project;
 import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awt.ValidationInfo;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
@@ -21,7 +22,6 @@ import consulo.content.scope.SearchScope;
 import consulo.ui.ex.awt.SimpleListCellRenderer;
 import consulo.ui.ex.awt.JBUIScale;
 import consulo.ide.impl.idea.util.Functions;
-import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.disposer.Disposer;
 import consulo.platform.base.localize.FindLocalize;
@@ -83,7 +83,7 @@ class FindPopupScopeUIImpl implements FindPopupScopeUI {
     myDirectoryChooser = new FindPopupDirectoryChooser(myFindPopupPanel);
 
     myScopeCombo = new ScopeChooserCombo();
-    Object selection = ObjectUtils.coalesce(myHelper.getModel().getCustomScope(), myHelper.getModel().getCustomScopeName(), FindSettings.getInstance().getDefaultScopeName());
+    Object selection = ObjectUtil.coalesce(myHelper.getModel().getCustomScope(), myHelper.getModel().getCustomScopeName(), FindSettings.getInstance().getDefaultScopeName());
     myScopeCombo.init(myProject, true, true, selection, new Condition<ScopeDescriptor>() {
       //final String projectFilesScopeName = PsiBundle.message("psi.search.scope.project");
       final String moduleFilesScopeName;

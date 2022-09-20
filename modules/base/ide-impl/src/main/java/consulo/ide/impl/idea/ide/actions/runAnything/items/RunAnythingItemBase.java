@@ -6,10 +6,11 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -77,7 +78,7 @@ public class RunAnythingItemBase extends RunAnythingItem {
   }
 
   public void setupIcon(@Nonnull SimpleColoredComponent component, @Nullable Image icon) {
-    component.setIcon(ObjectUtils.notNull(icon, Image.empty(16)));
+    component.setIcon(ObjectUtil.notNull(icon, Image.empty(16)));
     component.setIpad(JBUI.insets(0, 10, 0, 0));
   }
 

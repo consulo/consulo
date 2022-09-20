@@ -26,6 +26,7 @@ import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.application.util.function.Computable;
 import consulo.ide.impl.idea.openapi.util.NotNullComputable;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.versionControlSystem.FilePath;
@@ -35,7 +36,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awt.SearchTextField;
 import consulo.ui.ex.awt.SearchTextFieldWithStoredHistory;
-import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.*;
 import consulo.ide.impl.idea.vcs.log.data.*;
@@ -298,7 +298,7 @@ public class VcsLogClassicFilterUi implements VcsLogFilterUi {
     @Nonnull
     @Override
     protected VcsLogTextFilter createFilter(@Nonnull List<String> values) {
-      return new VcsLogTextFilterImpl(ObjectUtils.assertNotNull(ContainerUtil.getFirstItem(values)),
+      return new VcsLogTextFilterImpl(ObjectUtil.assertNotNull(ContainerUtil.getFirstItem(values)),
                                       myUiProperties.get(MainVcsLogUiProperties.TEXT_FILTER_REGEX),
                                       myUiProperties.get(MainVcsLogUiProperties.TEXT_FILTER_MATCH_CASE));
     }

@@ -48,7 +48,7 @@ import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.util.dataholder.Key;
 import consulo.ui.ex.awt.JBPanelWithEmptyText;
 import consulo.ui.ex.awt.tree.Tree;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
@@ -164,11 +164,11 @@ public class RunDashboardContent extends JPanel implements TreeContent, Disposab
       }
 
       private Object getNodeValue(TreeExpansionEvent event) {
-        DefaultMutableTreeNode treeNode = ObjectUtils.tryCast(event.getPath().getLastPathComponent(), DefaultMutableTreeNode.class);
+        DefaultMutableTreeNode treeNode = ObjectUtil.tryCast(event.getPath().getLastPathComponent(), DefaultMutableTreeNode.class);
         if (treeNode == null) {
           return null;
         }
-        AbstractTreeNode nodeDescriptor = ObjectUtils.tryCast(treeNode.getUserObject(), AbstractTreeNode.class);
+        AbstractTreeNode nodeDescriptor = ObjectUtil.tryCast(treeNode.getUserObject(), AbstractTreeNode.class);
         if (nodeDescriptor == null) {
           return null;
         }

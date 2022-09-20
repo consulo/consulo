@@ -1,7 +1,7 @@
 package consulo.ide.impl.idea.xdebugger.impl.ui.tree;
 
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
-import consulo.ide.impl.idea.util.ObjectUtil;
+import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.Convertor;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.RestorableStateNode;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.XDebuggerTreeNode;

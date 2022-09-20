@@ -17,9 +17,9 @@ package consulo.ide.impl.idea.openapi.diff.impl.dir;
 
 import consulo.ide.impl.idea.ide.diff.DirDiffOperation;
 import consulo.ui.ex.awt.SimpleColoredComponent;
-import consulo.ide.impl.idea.util.ObjectUtil;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.util.lang.ObjectUtil;
 
 import javax.swing.*;
 import javax.swing.border.Border;

@@ -21,7 +21,7 @@ import consulo.codeEditor.EditorEx;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangeListRenderer;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.language.editor.ui.awt.StringComboboxEditor;
@@ -250,7 +250,7 @@ public class ChangeListChooserPanel extends JPanel {
 
     @Nonnull
     private EditorTextField getEditorTextField() {
-      return ObjectUtils.assertNotNull((EditorTextField)getEditor().getEditorComponent());
+      return ObjectUtil.assertNotNull((EditorTextField)getEditor().getEditorComponent());
     }
   }
 }

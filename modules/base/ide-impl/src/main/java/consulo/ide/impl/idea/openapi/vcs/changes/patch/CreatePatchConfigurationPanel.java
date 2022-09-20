@@ -29,7 +29,7 @@ import consulo.fileChooser.FileSaverDescriptor;
 import consulo.fileChooser.FileSaverDialog;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.project.Project;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.*;
@@ -86,7 +86,7 @@ public class CreatePatchConfigurationPanel {
     myBasePathField.setTextFieldPreferredWidth(TEXT_FIELD_WIDTH);
     myBasePathField.addBrowseFolderListener(new TextBrowseFolderListener(FileChooserDescriptorFactory.createSingleFolderDescriptor()));
     myWarningLabel.setForeground(JBColor.RED);
-    selectBasePath(ObjectUtils.assertNotNull(myProject.getBaseDir()));
+    selectBasePath(ObjectUtil.assertNotNull(myProject.getBaseDir()));
     initEncodingCombo();
   }
 

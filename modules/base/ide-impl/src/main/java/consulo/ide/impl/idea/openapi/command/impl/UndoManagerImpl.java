@@ -34,7 +34,7 @@ import consulo.fileEditor.text.TextEditorProvider;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.project.ui.internal.WindowManagerEx;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.internal.ExternalChangeAction;
@@ -629,6 +629,6 @@ public class UndoManagerImpl implements UndoManager, Disposable {
 
   @Override
   public String toString() {
-    return "UndoManager for " + ObjectUtils.notNull(myProject, "application");
+    return "UndoManager for " + ObjectUtil.notNull(myProject, "application");
   }
 }

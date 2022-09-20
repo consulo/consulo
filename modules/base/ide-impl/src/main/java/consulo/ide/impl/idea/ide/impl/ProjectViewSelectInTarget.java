@@ -15,11 +15,9 @@
  */
 package consulo.ide.impl.idea.ide.impl;
 
-import consulo.application.ApplicationManager;
 import consulo.ide.impl.idea.ide.CompositeSelectInTarget;
-import consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectViewPane;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPaneImpl;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.PsiUtilCore;
@@ -71,7 +69,7 @@ public abstract class ProjectViewSelectInTarget extends SelectInTargetPsiWrapper
     final ToolWindow projectViewToolWindow = windowManager.getToolWindow(ToolWindowId.PROJECT_VIEW);
     final Runnable runnable = () -> {
       Runnable r = () -> projectView.selectCB(toSelect, virtualFile, requestFocus).notify(result);
-      projectView.changeViewCB(ObjectUtils.chooseNotNull(viewId, ProjectViewPaneImpl.ID), subviewId).doWhenProcessed(r);
+      projectView.changeViewCB(ObjectUtil.chooseNotNull(viewId, ProjectViewPaneImpl.ID), subviewId).doWhenProcessed(r);
     };
 
     if (requestFocus) {

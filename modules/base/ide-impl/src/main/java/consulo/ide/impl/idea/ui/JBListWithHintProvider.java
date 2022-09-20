@@ -19,7 +19,7 @@ import consulo.ui.ex.popup.JBPopup;
 import consulo.language.psi.PsiElement;
 import consulo.ui.ex.awt.JBList;
 import consulo.ide.ui.popup.HintUpdateSupply;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import javax.annotation.Nullable;
 
 import javax.swing.*;
@@ -61,17 +61,17 @@ public abstract class JBListWithHintProvider<T> extends JBList<T> {
 
   @Deprecated
   public void registerHint(JBPopup hint) {
-    ObjectUtils.assertNotNull(HintUpdateSupply.getSupply(this)).registerHint(hint);
+    ObjectUtil.assertNotNull(HintUpdateSupply.getSupply(this)).registerHint(hint);
   }
 
   @Deprecated
   public void hideHint() {
-    ObjectUtils.assertNotNull(HintUpdateSupply.getSupply(this)).hideHint();
+    ObjectUtil.assertNotNull(HintUpdateSupply.getSupply(this)).hideHint();
   }
 
   @Deprecated
   public void updateHint(PsiElement element) {
-    ObjectUtils.assertNotNull(HintUpdateSupply.getSupply(this)).updateHint(element);
+    ObjectUtil.assertNotNull(HintUpdateSupply.getSupply(this)).updateHint(element);
   }
 
 }

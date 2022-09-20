@@ -30,7 +30,7 @@ import consulo.ide.impl.idea.ui.PopupMenuListenerAdapter;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.PopupOwner;
 import java.util.function.Consumer;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ide.navigationToolbar.NavBarModelExtension;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
@@ -314,7 +314,7 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
         VirtualFile child = children.length == 1 ? children[0] : null;
         //noinspection AssignmentToForLoopParameter
         next = child != null && child.isDirectory() && !child.is(VFileProperty.SYMLINK) ? child : null;
-        if (next == null) return ObjectUtils.notNull(directory.getManager().findDirectory(file), directory);
+        if (next == null) return ObjectUtil.notNull(directory.getManager().findDirectory(file), directory);
       }
     }
     return target;

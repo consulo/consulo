@@ -547,7 +547,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
   public FileType getFileTypeByFileName(@Nonnull CharSequence fileName) {
     synchronized (PENDING_INIT_LOCK) {
       FileType type = myPatternsTable.findAssociatedFileType(fileName);
-      return ObjectUtils.notNull(type, UnknownFileType.INSTANCE);
+      return ObjectUtil.notNull(type, UnknownFileType.INSTANCE);
     }
   }
 
@@ -600,7 +600,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
         }
       }
     }
-    return ObjectUtils.notNull(fileType, UnknownFileType.INSTANCE);
+    return ObjectUtil.notNull(fileType, UnknownFileType.INSTANCE);
   }
 
   private static boolean mightBeReplacedByDetectedFileType(FileType fileType) {
@@ -1083,7 +1083,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
   public FileType getFileTypeByExtension(@Nonnull String extension) {
     synchronized (PENDING_INIT_LOCK) {
       FileType type = myPatternsTable.findByExtension(extension);
-      return ObjectUtils.notNull(type, UnknownFileType.INSTANCE);
+      return ObjectUtil.notNull(type, UnknownFileType.INSTANCE);
     }
   }
 

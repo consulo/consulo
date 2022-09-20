@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.FileNameCache;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.PersistentFS;
 import consulo.ide.impl.idea.util.ConcurrencyUtil;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.io.URLUtil;
 import consulo.language.file.FileTypeManager;
@@ -348,7 +348,7 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
                                                           @Nonnull Disposable parentDisposable,
                                                           @Nullable VirtualFilePointerListener listener,
                                                           @Nonnull NewVirtualFileSystem fs) {
-    VirtualFilePointerListener nl = ObjectUtils.notNull(listener, NULL_LISTENER);
+    VirtualFilePointerListener nl = ObjectUtil.notNull(listener, NULL_LISTENER);
     Map<VirtualFilePointerListener, FilePointerPartNode> myPointers = myRoots.computeIfAbsent(fs, __ -> new HashMap<>());
     FilePointerPartNode root = myPointers.computeIfAbsent(nl, __ -> FilePointerPartNode.createFakeRoot());
 

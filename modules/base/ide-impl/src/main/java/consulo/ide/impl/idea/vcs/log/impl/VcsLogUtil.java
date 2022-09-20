@@ -36,7 +36,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Function;
 
-import static consulo.ide.impl.idea.util.ObjectUtils.notNull;
+import static consulo.util.lang.ObjectUtil.notNull;
 import static consulo.ide.impl.idea.util.containers.ContainerUtil.getFirstItem;
 import static java.util.Collections.singletonList;
 

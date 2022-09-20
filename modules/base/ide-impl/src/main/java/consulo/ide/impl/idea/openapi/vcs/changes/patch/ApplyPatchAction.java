@@ -37,7 +37,7 @@ import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.VcsNotifier;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.CommonDataKeys;
 import consulo.logging.Logger;
@@ -264,7 +264,7 @@ public class ApplyPatchAction extends DumbAwareAction {
                     @Override
                     public CharSequence get() {
                       final BaseRevisionTextPatchEP baseRevisionTextPatchEP = PatchEP.EP_NAME.findExtensionOrFail(project, BaseRevisionTextPatchEP.class);
-                      final String path = ObjectUtils.chooseNotNull(patchBase.getBeforeName(), patchBase.getAfterName());
+                      final String path = ObjectUtil.chooseNotNull(patchBase.getBeforeName(), patchBase.getAfterName());
                       return baseRevisionTextPatchEP.provideContent(path, commitContext);
                     }
                   }, commitContext);

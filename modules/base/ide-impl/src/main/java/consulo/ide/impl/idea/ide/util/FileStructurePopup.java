@@ -42,7 +42,7 @@ import consulo.ide.impl.idea.ui.speedSearch.ElementFilter;
 import consulo.ide.impl.idea.ui.treeStructure.filtered.FilteringTreeStructure;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.Functions;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.ui.TextTransferable;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
@@ -231,7 +231,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
           for (PsiElement p = psi.getParent(); p != null; p = p.getParent()) {
             if (psiSelection.contains(p)) return null;
           }
-          return ObjectUtils.chooseNotNull(psi.getText(), defaultPresentation);
+          return ObjectUtil.chooseNotNull(psi.getText(), defaultPresentation);
         }, "\n");
 
         String htmlText = "<body>\n" + text + "\n</body>";
@@ -990,7 +990,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
 
   @Nullable
   private static SpeedSearchObjectWithWeight find(@Nonnull PsiElement element, @Nonnull List<SpeedSearchObjectWithWeight> objects, @Nonnull BiPredicate<PsiElement, TreePath> predicate) {
-    return ContainerUtil.find(objects, object -> predicate.test(element, ObjectUtils.tryCast(object.node, TreePath.class)));
+    return ContainerUtil.find(objects, object -> predicate.test(element, ObjectUtil.tryCast(object.node, TreePath.class)));
   }
 
   private static boolean isElement(@Nonnull PsiElement element, @Nullable TreePath path) {

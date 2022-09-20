@@ -12,7 +12,7 @@ import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.ui.tree.PerFileConfigurableBase;
 import consulo.language.LangBundle;
 import consulo.project.Project;
@@ -231,7 +231,7 @@ class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> implemen
     encodingManager.setDefaultCharsetForPropertiesFiles(null, myPropsCharset);
     encodingManager.setNative2AsciiForPropertiesFiles(null, myTransparentNativeToAsciiCheckBox.isSelected());
     EncodingProjectManagerImpl.BOMForNewUTF8Files option =
-            ObjectUtils.notNull((EncodingProjectManagerImpl.BOMForNewUTF8Files)myBOMForUTF8Combo.getSelectedItem(), EncodingProjectManagerImpl.BOMForNewUTF8Files.NEVER);
+            ObjectUtil.notNull((EncodingProjectManagerImpl.BOMForNewUTF8Files)myBOMForUTF8Combo.getSelectedItem(), EncodingProjectManagerImpl.BOMForNewUTF8Files.NEVER);
     encodingManager.setBOMForNewUtf8Files(option);
   }
 

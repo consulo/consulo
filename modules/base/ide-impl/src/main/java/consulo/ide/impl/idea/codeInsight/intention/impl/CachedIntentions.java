@@ -22,7 +22,7 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.component.util.Iconable;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;
@@ -254,7 +254,7 @@ public class CachedIntentions {
     final List<IntentionAction> options = descriptor.getOptions(element, containingEditor);
     if (options == null) return cachedAction;
     for (IntentionAction option : options) {
-      Editor editor = ObjectUtils.chooseNotNull(myEditor, containingEditor);
+      Editor editor = ObjectUtil.chooseNotNull(myEditor, containingEditor);
       if (editor == null) continue;
       Pair<PsiFile, Editor>
               availableIn = ShowIntentionActionsHandler.chooseBetweenHostAndInjected(myFile, editor, containingFile, (f, e) -> ShowIntentionActionsHandler.availableFor(f, e, option));

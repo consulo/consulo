@@ -21,7 +21,7 @@ import consulo.application.util.function.Computable;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.util.lang.ClassLoaderUtil;
@@ -84,7 +84,7 @@ public class Jsr223IdeScriptEngineManagerImpl extends IdeScriptEngineManager {
   @Nullable
   @Override
   public IdeScriptEngine getEngineForLanguage(@Nonnull final String language, @Nullable ClassLoader loader) {
-    ClassLoader l = ObjectUtils.notNull(loader, AllPluginsLoader.INSTANCE);
+    ClassLoader l = ObjectUtil.notNull(loader, AllPluginsLoader.INSTANCE);
     return ClassLoaderUtil.runWithClassLoader(l, new Computable<IdeScriptEngine>() {
       @Override
       public IdeScriptEngine compute() {
@@ -96,7 +96,7 @@ public class Jsr223IdeScriptEngineManagerImpl extends IdeScriptEngineManager {
   @Nullable
   @Override
   public IdeScriptEngine getEngineForFileExtension(@Nonnull final String extension, @Nullable ClassLoader loader) {
-    ClassLoader l = ObjectUtils.notNull(loader, AllPluginsLoader.INSTANCE);
+    ClassLoader l = ObjectUtil.notNull(loader, AllPluginsLoader.INSTANCE);
     return ClassLoaderUtil.runWithClassLoader(l, new Computable<IdeScriptEngine>() {
       @Override
       public IdeScriptEngine compute() {
@@ -119,7 +119,7 @@ public class Jsr223IdeScriptEngineManagerImpl extends IdeScriptEngineManager {
     catch (Exception e) {
       LOG.error(e);
     }
-    return ObjectUtils.assertNotNull(manager);
+    return ObjectUtil.assertNotNull(manager);
   }
 
   @Nullable

@@ -11,7 +11,7 @@ import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.PersistentFSImpl;
 import consulo.ide.impl.idea.util.ArrayUtilRt;
 import consulo.util.lang.BitUtil;
 import consulo.ide.impl.idea.util.Functions;
-import consulo.ide.impl.idea.util.ObjectUtil;
+import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.concurrency.AtomicFieldUpdater;
 import consulo.ide.impl.idea.util.containers.ConcurrentBitSet;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -33,7 +33,7 @@ import java.util.concurrent.atomic.AtomicIntegerArray;
 import java.util.concurrent.atomic.AtomicReferenceArray;
 
 import static consulo.ide.impl.idea.openapi.vfs.newvfs.impl.VirtualFileSystemEntry.ALL_FLAGS_MASK;
-import static consulo.ide.impl.idea.util.ObjectUtils.assertNotNull;
+import static consulo.util.lang.ObjectUtil.assertNotNull;
 
 /**
  * The place where all the data is stored for VFS parts loaded into a memory: name-ids, flags, user data, children.

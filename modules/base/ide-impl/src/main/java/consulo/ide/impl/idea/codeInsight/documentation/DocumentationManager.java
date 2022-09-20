@@ -31,6 +31,7 @@ import consulo.ide.impl.idea.openapi.roots.libraries.LibraryUtil;
 import consulo.project.ui.view.internal.ProjectSettingsService;
 import consulo.ide.impl.idea.openapi.util.DimensionService;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.ObjectUtil;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
@@ -41,7 +42,6 @@ import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.PopupUpdateProcessor;
 import consulo.ide.impl.idea.ui.tabs.FileColorManagerImpl;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.util.DateFormatUtil;
 import consulo.language.Language;
@@ -673,7 +673,7 @@ public final class DocumentationManager extends DockablePopupManager<Documentati
         int offset = editor.getCaretModel().getOffset();
         if (offset > 0 && offset == editor.getDocument().getTextLength()) offset--;
         PsiReference ref = TargetElementUtil.findReference(editor, offset);
-        PsiElement contextElement = file == null ? null : ObjectUtils.coalesce(file.findElementAt(offset), file);
+        PsiElement contextElement = file == null ? null : ObjectUtil.coalesce(file.findElementAt(offset), file);
         PsiElement targetElement = ref != null ? ref.getElement() : contextElement;
         if (targetElement != null) {
           PsiUtilCore.ensureValid(targetElement);

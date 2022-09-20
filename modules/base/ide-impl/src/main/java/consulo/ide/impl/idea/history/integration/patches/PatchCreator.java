@@ -23,7 +23,7 @@ import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.CommitContext;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.PatchWriter;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import javax.annotation.Nonnull;
 
 import java.io.IOException;
@@ -33,7 +33,7 @@ import java.util.List;
 public class PatchCreator {
   public static void create(Project p, List<Change> changes, String filePath, boolean isReverse, CommitContext commitContext)
           throws IOException, VcsException {
-    create(p, ObjectUtils.assertNotNull(p.getBasePath()), changes, filePath, isReverse, commitContext, Charset.defaultCharset());
+    create(p, ObjectUtil.assertNotNull(p.getBasePath()), changes, filePath, isReverse, commitContext, Charset.defaultCharset());
   }
 
   public static void create(Project p,

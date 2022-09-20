@@ -25,7 +25,7 @@ import consulo.versionControlSystem.VcsBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static consulo.ide.impl.idea.util.ObjectUtils.notNull;
+import static consulo.util.lang.ObjectUtil.notNull;
 import static consulo.project.util.WaitForProgressToShow.runOrInvokeLaterAboveProgress;
 
 class FictiveBackgroundable extends Task.Backgroundable {
