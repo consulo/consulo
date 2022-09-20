@@ -24,7 +24,7 @@ import consulo.ide.impl.idea.openapi.progress.impl.ProgressSuspender;
 import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
 import consulo.ide.impl.idea.util.ExceptionUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.containers.Queue;
+import consulo.util.collection.Queue;
 import consulo.ide.impl.idea.util.exception.FrequentErrorLogger;
 import consulo.logging.Logger;
 import consulo.logging.attachment.Attachment;

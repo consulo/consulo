@@ -42,7 +42,7 @@ import consulo.ide.impl.idea.openapi.editor.colors.impl.EditorColorsSchemeImpl;
 import consulo.ide.impl.idea.openapi.editor.colors.impl.ReadOnlyColorsScheme;
 import consulo.ide.impl.idea.openapi.options.colors.ColorSettingsPages;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.packageDependencies.DependencyValidationManager;
+import consulo.language.editor.packageDependency.DependencyValidationManager;
 import consulo.ide.impl.idea.packageDependencies.DependencyValidationManagerImpl;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.setting.Settings;

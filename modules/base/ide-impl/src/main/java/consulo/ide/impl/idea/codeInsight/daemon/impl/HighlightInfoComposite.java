@@ -5,7 +5,7 @@ package consulo.ide.impl.idea.codeInsight.daemon.impl;
 import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
-import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
+import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
 import consulo.util.lang.Pair;

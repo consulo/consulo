@@ -23,6 +23,14 @@ module consulo.language.editor.impl {
   exports consulo.language.editor.impl.internal.completion to consulo.ide.impl, consulo.desktop.awt.ide.impl;
   exports consulo.language.editor.impl.internal.intention to consulo.ide.impl;
   exports consulo.language.editor.impl.internal.parser to consulo.ide.impl;
+  exports consulo.language.editor.impl.internal.inspection.scheme to consulo.ide.impl;
+  exports consulo.language.editor.impl.internal.inspection to consulo.ide.impl;
   exports consulo.language.editor.impl.internal.psi.path to consulo.ide.impl;
   exports consulo.language.editor.impl.internal.template to consulo.ide.impl;
+  exports consulo.language.editor.impl.internal.highlight to consulo.ide.impl;
+  exports consulo.language.editor.impl.internal.rawHighlight to consulo.ide.impl;
+  exports consulo.language.editor.impl.internal.markup to consulo.ide.impl;
+  exports consulo.language.editor.impl.internal.hint to consulo.ide.impl;
+
+  opens consulo.language.editor.impl.internal.inspection.scheme to consulo.util.xml.serializer, consulo.component.impl;
 }

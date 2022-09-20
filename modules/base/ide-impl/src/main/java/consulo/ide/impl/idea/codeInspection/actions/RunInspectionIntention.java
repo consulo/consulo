@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.analysis.AnalysisUIOptions;
 import consulo.ide.impl.idea.analysis.BaseAnalysisActionDialog;
 import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionContextImpl;
 import consulo.ide.impl.idea.codeInspection.ex.InspectionManagerEx;
-import consulo.ide.impl.idea.codeInspection.ex.InspectionProfileImpl;
+import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
 import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.inspection.scheme.InspectionProfileManager;

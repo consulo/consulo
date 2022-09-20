@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.util.SequentialTask;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
+import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;

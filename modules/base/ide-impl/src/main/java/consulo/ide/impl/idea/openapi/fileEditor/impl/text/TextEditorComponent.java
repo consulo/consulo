@@ -34,7 +34,7 @@ import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.text.TextEditorProvider;
 import consulo.ide.impl.fileEditor.text.TextEditorComponentContainer;
 import consulo.ide.impl.fileEditor.text.TextEditorComponentContainerFactory;
-import consulo.ide.impl.idea.openapi.editor.ex.EditorMarkupModel;
+import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.EditorHistoryManagerImpl;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.file.event.FileTypeEvent;

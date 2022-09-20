@@ -5,6 +5,8 @@ import consulo.ide.impl.idea.ide.BrowserUtil;
 import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
 import consulo.ide.impl.idea.ide.TooltipEvent;
 import consulo.language.editor.hint.HintManager;
+import consulo.language.editor.impl.internal.hint.TooltipGroup;
+import consulo.language.editor.impl.internal.hint.TooltipRenderer;
 import consulo.language.editor.inspection.TooltipLinkHandlers;
 import consulo.ui.ex.awt.HintHint;
 import consulo.ui.ex.awt.ScrollPaneFactory;

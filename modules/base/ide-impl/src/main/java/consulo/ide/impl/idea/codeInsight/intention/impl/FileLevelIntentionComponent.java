@@ -2,7 +2,7 @@
 
 package consulo.ide.impl.idea.codeInsight.intention.impl;
 
-import consulo.ide.impl.idea.codeInsight.daemon.impl.SeverityRegistrarImpl;
+import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.ShowIntentionsPass;
 import consulo.language.editor.internal.intention.EmptyIntentionAction;
 import consulo.ui.ex.popup.JBPopupFactory;
@@ -15,7 +15,7 @@ import consulo.codeEditor.markup.GutterMark;
 import consulo.document.util.TextRange;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.intention.IntentionAction;
-import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
+import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;

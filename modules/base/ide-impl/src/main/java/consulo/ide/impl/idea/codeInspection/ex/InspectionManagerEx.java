@@ -33,6 +33,7 @@ import consulo.ide.impl.idea.profile.codeInspection.ui.header.InspectionToolsCon
 import consulo.ide.impl.idea.ui.content.TabbedPaneContentUI;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.Language;
+import consulo.language.editor.impl.internal.inspection.scheme.InspectionToolRegistrar;
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.scheme.InspectionProfileEntry;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;

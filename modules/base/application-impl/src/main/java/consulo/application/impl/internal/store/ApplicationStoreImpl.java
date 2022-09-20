@@ -20,6 +20,7 @@ import consulo.application.Application;
 import consulo.application.impl.internal.macro.PathMacrosImpl;
 import consulo.application.macro.ApplicationPathMacroManager;
 import consulo.component.messagebus.MessageBus;
+import consulo.component.persist.StateSplitterEx;
 import consulo.component.persist.StoragePathMacros;
 import consulo.component.store.impl.internal.*;
 import consulo.component.store.impl.internal.storage.DirectoryStorageData;
@@ -56,6 +57,12 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
       @Override
       protected String getConfigurationMacro(boolean directorySpec) {
         return directorySpec ? StoragePathMacros.ROOT_CONFIG : StoragePathMacros.APP_CONFIG;
+      }
+
+      @Nonnull
+      @Override
+      public StateSplitterEx createSplitter(Class<? extends StateSplitterEx> splitter) {
+        return application.getUnbindedInstance(splitter);
       }
 
       @Override

@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.profile.codeInspection.ui;
 
-import consulo.ide.impl.idea.codeInspection.ex.InspectionProfileImpl;
+import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
 import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.impl.internal.ApplicationNamesInfo;

@@ -1406,28 +1406,6 @@ public class StringUtil extends StringUtilRt {
 
   @Nonnull
   @Contract(pure = true)
-  public static List<TextRange> getWordIndicesIn(@Nonnull String text) {
-    List<TextRange> result = new SmartList<TextRange>();
-    int start = -1;
-    for (int i = 0; i < text.length(); i++) {
-      char c = text.charAt(i);
-      boolean isIdentifierPart = Character.isJavaIdentifierPart(c);
-      if (isIdentifierPart && start == -1) {
-        start = i;
-      }
-      if (isIdentifierPart && i == text.length() - 1 && start != -1) {
-        result.add(new TextRange(start, i + 1));
-      }
-      else if (!isIdentifierPart && start != -1) {
-        result.add(new TextRange(start, i));
-        start = -1;
-      }
-    }
-    return result;
-  }
-
-  @Nonnull
-  @Contract(pure = true)
   public static String join(@Nonnull final String[] strings, @Nonnull final String separator) {
     return join(strings, 0, strings.length, separator);
   }

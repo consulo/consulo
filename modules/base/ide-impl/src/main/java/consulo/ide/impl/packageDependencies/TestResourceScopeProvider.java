@@ -16,30 +16,21 @@
 package consulo.ide.impl.packageDependencies;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.project.Project;
-import consulo.ide.impl.psi.search.scope.packageSet.CustomScopesProviderEx;
-import consulo.content.scope.NamedScope;
+import consulo.content.internal.scope.SingleCustomScopeProvider;
 import consulo.ide.impl.psi.search.scope.TestResourcesScope;
-
-import javax.annotation.Nonnull;
-import java.util.Collections;
-import java.util.List;
+import consulo.project.Project;
 
 /**
  * @author VISTALL
  * @since 23:43/19.09.13
  */
 @ExtensionImpl
-public class TestResourceScopeProvider extends CustomScopesProviderEx {
-  private TestResourcesScope myTestResourcesScope = new TestResourcesScope();
-
+public class TestResourceScopeProvider extends SingleCustomScopeProvider {
   public static TestResourceScopeProvider getInstance(Project project) {
     return CUSTOM_SCOPES_PROVIDER.findExtensionOrFail(project, TestResourceScopeProvider.class);
   }
 
-  @Override
-  @Nonnull
-  public List<NamedScope> getCustomScopes() {
-    return Collections.<NamedScope>singletonList(myTestResourcesScope);
+  public TestResourceScopeProvider() {
+    super(new TestResourcesScope());
   }
 }

@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.openapi.editor.impl;
 
 import consulo.ide.impl.idea.codeInsight.hint.DocumentFragmentTooltipRenderer;
 import consulo.ide.impl.idea.codeInsight.hint.TooltipController;
-import consulo.ide.impl.idea.codeInsight.hint.TooltipGroup;
+import consulo.language.editor.impl.internal.hint.TooltipGroup;
 import consulo.codeEditor.event.EditorMouseEvent;
 import consulo.codeEditor.event.EditorMouseEventArea;
 import consulo.codeEditor.event.EditorMouseListener;

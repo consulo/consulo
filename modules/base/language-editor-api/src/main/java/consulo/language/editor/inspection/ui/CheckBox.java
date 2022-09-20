@@ -16,6 +16,7 @@
 package consulo.language.editor.inspection.ui;
 
 import consulo.language.editor.inspection.scheme.InspectionProfileEntry;
+import consulo.util.lang.function.BooleanConsumer;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -23,14 +24,21 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.lang.reflect.Field;
+import java.util.function.BooleanSupplier;
 
 public class CheckBox extends JCheckBox {
-
+  @Deprecated
   public CheckBox(@Nonnull String label, @Nonnull InspectionProfileEntry owner, @NonNls String property) {
     super(label, getPropertyValue(owner, property));
     final ButtonModel model = getModel();
     final SingleCheckboxChangeListener listener = new SingleCheckboxChangeListener(owner, property, model);
     model.addChangeListener(listener);
+  }
+
+  public CheckBox(@Nonnull String label, @Nonnull BooleanSupplier getter, @Nonnull BooleanConsumer setter) {
+    super(label, getter.getAsBoolean());
+    final ButtonModel model = getModel();
+    model.addChangeListener(e -> setter.accept(model.isSelected()));
   }
 
   private static boolean getPropertyValue(InspectionProfileEntry owner, String property) {
@@ -69,10 +77,7 @@ public class CheckBox extends JCheckBox {
         final Field field = aClass.getField(property);
         field.setBoolean(owner, selected);
       }
-      catch (IllegalAccessException ignore) {
-        // do nothing
-      }
-      catch (NoSuchFieldException ignore) {
+      catch (IllegalAccessException | NoSuchFieldException ignore) {
         // do nothing
       }
     }

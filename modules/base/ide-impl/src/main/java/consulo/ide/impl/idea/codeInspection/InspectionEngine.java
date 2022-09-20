@@ -16,8 +16,8 @@
 package consulo.ide.impl.idea.codeInspection;
 
 import consulo.language.editor.scope.AnalysisScope;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.Divider;
-import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionToolWrapper;
+import consulo.language.editor.impl.internal.highlight.Divider;
+import consulo.language.editor.impl.internal.inspection.scheme.GlobalInspectionToolWrapper;
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;

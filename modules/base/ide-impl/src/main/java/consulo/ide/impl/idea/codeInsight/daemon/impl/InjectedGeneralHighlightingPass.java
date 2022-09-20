@@ -17,6 +17,8 @@
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
+import consulo.language.editor.impl.internal.highlight.Divider;
+import consulo.language.editor.impl.internal.highlight.GeneralHighlightingPass;
 import consulo.language.editor.util.CollectHighlightsUtil;
 import consulo.language.inject.impl.internal.InjectedLanguageManagerImpl;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
@@ -39,7 +41,7 @@ import consulo.document.Document;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
+import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.editor.rawHighlight.HighlightInfoHolder;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
@@ -73,7 +75,7 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass {
   }
 
   @Override
-  protected String getPresentableName() {
+  public String getPresentableName() {
     return PRESENTABLE_NAME;
   }
 

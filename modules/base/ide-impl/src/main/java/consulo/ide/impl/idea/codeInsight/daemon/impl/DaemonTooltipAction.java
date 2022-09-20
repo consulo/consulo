@@ -15,11 +15,11 @@
  */
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
+import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.ide.impl.idea.codeInsight.intention.impl.ShowIntentionActionsHandler;
 import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.openapi.editor.ex.TooltipAction;
+import consulo.language.editor.impl.internal.hint.TooltipAction;
 import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;

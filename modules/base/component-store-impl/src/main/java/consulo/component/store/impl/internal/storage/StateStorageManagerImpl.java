@@ -34,7 +34,6 @@ import consulo.util.io.FileUtil;
 import consulo.util.io.PathUtil;
 import consulo.util.lang.Couple;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.reflect.ReflectionUtil;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
@@ -114,7 +113,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
   @Nonnull
   private StateStorage createStateStorage(@Nonnull Storage storageSpec) {
     if (!storageSpec.stateSplitter().equals(StateSplitterEx.class)) {
-      StateSplitterEx splitter = ReflectionUtil.newInstance(storageSpec.stateSplitter());
+      StateSplitterEx splitter = createSplitter(storageSpec.stateSplitter());
       return myStateStorageFacade
               .createDirectoryBasedStorage(myPathMacroSubstitutor, expandMacros(buildFileSpec(storageSpec)), splitter, this, createStorageTopicListener(), myPathMacrosServiceSupplier.get());
     }
@@ -122,6 +121,9 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
       return createFileStateStorage(buildFileSpec(storageSpec), storageSpec.roamingType());
     }
   }
+
+  @Nonnull
+  public abstract StateSplitterEx createSplitter(Class<? extends StateSplitterEx> splitter);
 
   @Override
   public TrackingPathMacroSubstitutor getMacroSubstitutor() {

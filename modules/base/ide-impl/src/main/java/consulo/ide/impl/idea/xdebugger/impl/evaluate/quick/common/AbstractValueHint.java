@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.ide.TooltipEvent;
 import consulo.ide.impl.idea.openapi.editor.impl.EditorComponentImpl;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ui.ex.awt.HintHint;
-import consulo.ide.impl.idea.ui.HintListener;
+import consulo.language.editor.impl.internal.hint.HintListener;
 import consulo.ide.impl.idea.ui.LightweightHint;
 import consulo.ui.ex.SimpleColoredText;
 import consulo.ide.impl.idea.util.IconUtil;

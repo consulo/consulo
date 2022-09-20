@@ -42,7 +42,7 @@ import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.ide.impl.idea.openapi.diff.DiffBundle;
 import consulo.codeEditor.event.VisibleAreaListener;
 import consulo.codeEditor.EditorEx;
-import consulo.ide.impl.idea.openapi.editor.ex.EditorMarkupModel;
+import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
 import consulo.document.impl.DocumentImpl;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.dataContext.DataProvider;

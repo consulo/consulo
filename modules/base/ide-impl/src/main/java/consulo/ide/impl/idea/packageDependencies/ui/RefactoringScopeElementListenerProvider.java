@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.packageDependencies.ui;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.content.scope.*;
 import consulo.ide.impl.psi.search.scope.packageSet.IntersectionPackageSet;
-import consulo.ide.impl.psi.search.scope.packageSet.PatternBasedPackageSet;
+import consulo.content.internal.scope.PatternBasedPackageSet;
 import consulo.ide.impl.psi.search.scope.packageSet.UnionPackageSet;
 import consulo.language.editor.scope.NamedScopeManager;
 import consulo.logging.Logger;

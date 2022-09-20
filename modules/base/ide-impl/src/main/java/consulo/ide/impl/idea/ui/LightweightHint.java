@@ -5,6 +5,8 @@ import consulo.ide.impl.idea.codeInsight.hint.TooltipController;
 import consulo.ide.impl.idea.ide.IdeTooltip;
 import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
 import consulo.ide.impl.idea.ide.TooltipEvent;
+import consulo.language.editor.impl.internal.hint.Hint;
+import consulo.language.editor.impl.internal.hint.HintListener;
 import consulo.logging.Logger;
 import consulo.ui.ex.awt.HintHint;
 import consulo.ui.ex.popup.Balloon;

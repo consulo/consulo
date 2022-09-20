@@ -15,6 +15,8 @@
  */
 package consulo.project.impl.internal.store;
 
+import consulo.application.Application;
+import consulo.component.persist.StateSplitterEx;
 import consulo.component.persist.StoragePathMacros;
 import consulo.component.store.impl.internal.PathMacrosService;
 import consulo.component.store.impl.internal.TrackingPathMacroSubstitutor;
@@ -27,8 +29,17 @@ import javax.annotation.Nonnull;
 public class ProjectStateStorageManager extends StateStorageManagerImpl {
   protected static final String ROOT_TAG_NAME = "project";
 
+  private final Application myApplication;
+
   public ProjectStateStorageManager(Project project, TrackingPathMacroSubstitutor macroSubstitutor, PathMacrosService pathMacroManager) {
     super(macroSubstitutor, ROOT_TAG_NAME, project, project::getMessageBus, ()-> pathMacroManager,StateStorageFacade.CONSULO_VFS);
+    myApplication = project.getApplication();
+  }
+
+  @Nonnull
+  @Override
+  public StateSplitterEx createSplitter(Class<? extends StateSplitterEx> splitter) {
+    return myApplication.getUnbindedInstance(splitter);
   }
 
   @Nonnull

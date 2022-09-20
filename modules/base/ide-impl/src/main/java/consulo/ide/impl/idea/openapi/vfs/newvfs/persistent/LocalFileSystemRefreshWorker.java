@@ -15,7 +15,7 @@ import consulo.virtualFileSystem.NewVirtualFileSystem;
 import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.VirtualDirectoryImpl;
 import consulo.application.util.concurrent.AppExecutorUtil;
-import consulo.ide.impl.idea.util.containers.Queue;
+import consulo.util.collection.Queue;
 import consulo.ide.impl.idea.util.text.FilePathHashingStrategy;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Maps;

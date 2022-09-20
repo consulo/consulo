@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.codeInspection.actions;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.inspection.scheme.InspectionProfile;
-import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionContextBase;
+import consulo.language.editor.impl.internal.inspection.GlobalInspectionContextBase;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.project.Project;
 import consulo.language.editor.inspection.scheme.InspectionProfileManager;

@@ -3,6 +3,7 @@ package consulo.ide.impl.idea.codeInsight.hint;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.ide.IdeTooltip;
+import consulo.language.editor.impl.internal.hint.HintListener;
 import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.colorScheme.TextAttributes;
 import consulo.language.editor.PlatformDataKeys;

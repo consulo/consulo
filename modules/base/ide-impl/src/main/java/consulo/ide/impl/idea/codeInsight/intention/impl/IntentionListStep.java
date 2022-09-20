@@ -1,7 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.intention.impl;
 
-import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
+import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.ShowIntentionsPass;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.intention.AbstractEmptyIntentionAction;

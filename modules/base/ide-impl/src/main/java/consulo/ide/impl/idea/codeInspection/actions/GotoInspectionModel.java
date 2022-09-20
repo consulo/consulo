@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInspection.actions;
 
-import consulo.ide.impl.idea.codeInspection.ex.InspectionProfileImpl;
+import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.language.editor.inspection.scheme.ScopeToolState;

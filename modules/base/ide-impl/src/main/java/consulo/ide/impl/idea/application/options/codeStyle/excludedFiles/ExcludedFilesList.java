@@ -5,7 +5,7 @@ import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;
 import consulo.content.scope.PackageSet;
 import consulo.ide.impl.idea.ide.util.scopeChooser.EditScopesDialog;
-import consulo.ide.impl.idea.packageDependencies.DependencyValidationManager;
+import consulo.language.editor.packageDependency.DependencyValidationManager;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.codeStyle.CodeStyleScheme;
 import consulo.language.codeStyle.CodeStyleSettings;

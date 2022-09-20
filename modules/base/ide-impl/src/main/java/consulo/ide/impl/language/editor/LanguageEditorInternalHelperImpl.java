@@ -19,7 +19,9 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.codeEditor.Editor;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.profile.codeInspection.ui.ErrorsConfigurable;
 import consulo.ide.impl.psi.impl.source.codeStyle.CodeFormatterFacade;
+import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.Language;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.editor.gutter.LineMarkerInfo;
@@ -27,6 +29,7 @@ import consulo.language.editor.internal.LanguageEditorInternalHelper;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.JBLabel;
@@ -86,5 +89,11 @@ public class LanguageEditorInternalHelperImpl implements LanguageEditorInternalH
       label.setBorder(JBUI.Borders.empty(2));
       return label;
     });
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void showInspectionsSettings(@Nonnull Project project) {
+    ShowSettingsUtil.getInstance().showAndSelect(project, ErrorsConfigurable.class);
   }
 }

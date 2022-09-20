@@ -16,30 +16,32 @@
 package consulo.ide.impl.idea.packageDependencies;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.scratch.ScratchesNamedScope;
-import consulo.ide.impl.psi.search.scope.packageSet.CustomScopesProviderEx;
-import consulo.ide.impl.psi.search.scope.packageSet.FilePatternPackageSet;
+import consulo.content.internal.scope.CustomScopesProvider;
 import consulo.content.scope.AbstractPackageSet;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
+import consulo.ide.IdeBundle;
+import consulo.ide.impl.idea.ide.scratch.ScratchesNamedScope;
 import consulo.ide.impl.psi.search.scope.NonProjectFilesScope;
 import consulo.ide.impl.psi.search.scope.ProjectFilesScope;
+import consulo.ide.impl.psi.search.scope.packageSet.FilePatternPackageSet;
+import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
+import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.Consumer;
 
 /**
  * @author anna
  * @author Konstantin Bulenkov
  */
 @ExtensionImpl
-public class DefaultScopesProvider extends CustomScopesProviderEx {
+public class DefaultScopesProvider implements CustomScopesProvider {
   private final NamedScope myProblemsScope;
   private final Project myProject;
   private final List<NamedScope> myScopes;
@@ -60,17 +62,27 @@ public class DefaultScopesProvider extends CustomScopesProviderEx {
         return project == myProject && WolfTheProblemSolver.getInstance(project).isProblemFile(file);
       }
     });
-    myScopes = Arrays.asList(projectScope, getAllScope(), nonProjectScope, new ScratchesNamedScope());
+    myScopes = List.of(projectScope, getAllScope(), nonProjectScope, new ScratchesNamedScope());
+  }
+
+  @Nullable
+  @Override
+  public NamedScope getCustomScope(String name) {
+    for (NamedScope scope : myScopes) {
+      if (Objects.equals(scope.getName(), name)) {
+        return scope;
+      }
+    }
+    return null;
   }
 
   @Override
-  @Nonnull
-  public List<NamedScope> getCustomScopes() {
-    return myScopes;
+  public void acceptScopes(@Nonnull Consumer<NamedScope> consumer) {
+    myScopes.forEach(consumer);
   }
 
   public static NamedScope getAllScope() {
-    return CustomScopesProviderEx.getAllScope();
+    return AllScopeHolderImpl.ALL;
   }
 
   public NamedScope getProblemsScope() {

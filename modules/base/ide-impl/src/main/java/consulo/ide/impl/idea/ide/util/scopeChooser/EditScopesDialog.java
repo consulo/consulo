@@ -22,7 +22,7 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.InputValidator;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.packageDependencies.DependencyValidationManager;
+import consulo.language.editor.packageDependency.DependencyValidationManager;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.PackageSet;
 import consulo.annotation.DeprecationInfo;

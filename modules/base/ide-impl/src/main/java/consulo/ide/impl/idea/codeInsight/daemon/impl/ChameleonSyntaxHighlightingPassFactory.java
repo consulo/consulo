@@ -26,6 +26,8 @@ import consulo.language.editor.impl.highlight.TextEditorHighlightingPass;
 import consulo.language.editor.Pass;
 import consulo.language.editor.impl.highlight.VisibleHighlightingPassFactory;
 import consulo.language.editor.impl.internal.daemon.FileStatusMapImpl;
+import consulo.language.editor.impl.internal.highlight.DefaultHighlightInfoProcessor;
+import consulo.language.editor.impl.internal.highlight.ProgressableTextEditorHighlightingPass;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import jakarta.inject.Inject;

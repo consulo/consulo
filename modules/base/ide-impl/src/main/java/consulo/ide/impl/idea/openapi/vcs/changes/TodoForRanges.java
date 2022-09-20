@@ -27,7 +27,7 @@ import consulo.ide.impl.idea.openapi.vcs.checkin.StepIntersection;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileFactory;
 import consulo.language.psi.search.PsiTodoSearchHelper;
-import consulo.ide.impl.psi.search.TodoAttributesUtil;
+import consulo.language.editor.impl.internal.highlight.TodoAttributesUtil;
 import consulo.language.psi.search.TodoItem;
 import consulo.ide.impl.idea.util.containers.Convertor;
 

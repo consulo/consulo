@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.ide.util.scopeChooser;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.PackageSet;
 import consulo.ide.impl.idea.packageDependencies.DefaultScopesProvider;
-import consulo.ide.impl.idea.packageDependencies.DependencyValidationManager;
+import consulo.language.editor.packageDependency.DependencyValidationManager;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ex.awt.ComponentWithBrowseButton;

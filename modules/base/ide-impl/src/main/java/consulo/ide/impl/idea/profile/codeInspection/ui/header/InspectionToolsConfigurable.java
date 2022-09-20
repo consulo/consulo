@@ -23,12 +23,12 @@
 package consulo.ide.impl.idea.profile.codeInspection.ui.header;
 
 import consulo.language.editor.rawHighlight.HighlightInfoType;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.SeverityRegistrarImpl;
+import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.inspection.scheme.ModifiableModel;
 import consulo.ide.impl.idea.codeInspection.ex.InspectionManagerEx;
-import consulo.ide.impl.idea.codeInspection.ex.InspectionProfileImpl;
-import consulo.ide.impl.idea.codeInspection.ex.InspectionToolRegistrar;
+import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
+import consulo.language.editor.impl.internal.inspection.scheme.InspectionToolRegistrar;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.application.AllIcons;
 import consulo.language.Language;

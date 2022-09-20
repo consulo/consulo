@@ -21,7 +21,7 @@ import consulo.content.scope.NamedScopesHolder;
 import consulo.content.scope.PackageSet;
 import consulo.ide.impl.idea.ide.StandardTargetWeights;
 import consulo.ide.impl.idea.ide.impl.ProjectViewSelectInTarget;
-import consulo.ide.impl.idea.packageDependencies.DependencyValidationManager;
+import consulo.language.editor.packageDependency.DependencyValidationManager;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.language.editor.scope.NamedScopeManager;
 import consulo.language.psi.PsiFile;

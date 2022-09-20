@@ -21,12 +21,13 @@ import consulo.component.persist.MainConfigurationStateSplitter;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
+import consulo.content.internal.scope.CustomScopesProvider;
 import consulo.content.scope.*;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.psi.search.scope.packageSet.CustomScopesProvider;
-import consulo.ide.impl.psi.search.scope.packageSet.CustomScopesProviderEx;
+import consulo.language.editor.packageDependency.DependencyRule;
+import consulo.language.editor.packageDependency.DependencyValidationManager;
 import consulo.language.editor.scope.NamedScopeManager;
 import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
@@ -88,7 +89,7 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
     final List<NamedScope> predefinedScopes = new ArrayList<NamedScope>();
     final CustomScopesProvider[] scopesProviders = CustomScopesProvider.CUSTOM_SCOPES_PROVIDER.getExtensions(myProject);
     for (CustomScopesProvider scopesProvider : scopesProviders) {
-      predefinedScopes.addAll(scopesProvider.getCustomScopes());
+      scopesProvider.acceptScopes(predefinedScopes::add);
     }
     return predefinedScopes;
   }
@@ -97,9 +98,7 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
   public NamedScope getPredefinedScope(@Nonnull String name) {
     final CustomScopesProvider[] scopesProviders = CustomScopesProvider.CUSTOM_SCOPES_PROVIDER.getExtensions(myProject);
     for (CustomScopesProvider scopesProvider : scopesProviders) {
-      final NamedScope scope = scopesProvider instanceof CustomScopesProviderEx
-                               ? ((CustomScopesProviderEx)scopesProvider).getCustomScope(name)
-                               : CustomScopesProviderEx.findPredefinedScope(name, scopesProvider.getCustomScopes());
+      final NamedScope scope = scopesProvider.getCustomScope(name);
       if (scope != null) {
         return scope;
       }

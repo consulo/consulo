@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.codeInsight.daemon.impl;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.codeEditor.Editor;
-import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
+import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
 import consulo.ui.annotation.RequiredUIAccess;

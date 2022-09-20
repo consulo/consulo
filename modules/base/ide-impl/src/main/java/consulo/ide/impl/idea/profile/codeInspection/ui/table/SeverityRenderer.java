@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.profile.codeInspection.ui.table;
 
-import consulo.ide.impl.idea.codeInsight.daemon.impl.SeverityRegistrarImpl;
-import consulo.ide.impl.idea.codeInspection.ex.InspectionProfileImpl;
+import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl;
+import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
 import consulo.ide.impl.idea.openapi.ui.ComboBoxTableRenderer;
 import consulo.ide.impl.idea.profile.codeInspection.ui.LevelChooserAction;
 import consulo.ide.impl.idea.profile.codeInspection.ui.SingleInspectionProfilePanel;

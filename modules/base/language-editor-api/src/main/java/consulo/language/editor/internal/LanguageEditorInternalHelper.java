@@ -25,6 +25,7 @@ import consulo.language.Language;
 import consulo.language.editor.gutter.LineMarkerInfo;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;
@@ -71,5 +72,9 @@ public interface LanguageEditorInternalHelper {
 
   default ListCellRenderer<LineMarkerInfo> createMergeableLineMarkerRender(Function<LineMarkerInfo, Pair<String, Image>> function) {
     throw new UnsupportedOperationException();
+  }
+
+  @RequiredUIAccess
+  default void showInspectionsSettings(@Nonnull Project project) {
   }
 }

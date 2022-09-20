@@ -16,11 +16,11 @@
 package consulo.ide.impl.idea.execution.console;
 
 import consulo.ide.impl.idea.codeInsight.hint.TooltipController;
-import consulo.ide.impl.idea.codeInsight.hint.TooltipGroup;
+import consulo.language.editor.impl.internal.hint.TooltipGroup;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.VisualPosition;
 import consulo.colorScheme.EditorFontType;
-import consulo.ide.impl.idea.openapi.editor.ex.EditorMarkupModel;
+import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.editor.impl.DesktopEditorImpl;
 import consulo.ui.ex.awt.HintHint;

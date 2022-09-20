@@ -26,7 +26,7 @@ import consulo.ide.IdeBundle;
 import consulo.project.ui.view.ProjectView;
 import consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectViewPane;
 import consulo.ide.impl.idea.ide.projectView.impl.ShowModulesAction;
-import consulo.ide.impl.idea.packageDependencies.DependencyValidationManager;
+import consulo.language.editor.packageDependency.DependencyValidationManager;
 import consulo.ide.impl.idea.packageDependencies.ui.PackageDependenciesNode;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.scope.NamedScopeManager;

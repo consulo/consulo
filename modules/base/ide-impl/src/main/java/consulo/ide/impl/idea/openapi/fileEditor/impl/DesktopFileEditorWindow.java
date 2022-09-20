@@ -29,6 +29,7 @@ import consulo.disposer.Disposer;
 import consulo.fileEditor.*;
 import consulo.fileEditor.event.FileEditorManagerBeforeListener;
 import consulo.fileEditor.event.FileEditorManagerListener;
+import consulo.fileEditor.internal.EditorWindowHolder;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ide.impl.desktop.awt.migration.AWTComponentProviderUtil;
 import consulo.ide.impl.fileEditor.FileEditorWindowBase;

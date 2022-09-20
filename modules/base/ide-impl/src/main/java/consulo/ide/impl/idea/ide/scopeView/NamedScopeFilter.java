@@ -1,10 +1,11 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.scopeView;
 
-import consulo.ide.impl.idea.ide.scratch.ScratchesNamedScope;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;
 import consulo.content.scope.PackageSet;
+import consulo.ide.impl.idea.ide.scratch.ScratchesNamedScope;
+import consulo.ide.impl.idea.packageDependencies.DefaultScopesProvider;
 import consulo.ide.impl.psi.search.scope.NonProjectFilesScope;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -14,8 +15,6 @@ import consulo.virtualFileSystem.VirtualFileFilter;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
-
-import static consulo.ide.impl.psi.search.scope.packageSet.CustomScopesProviderEx.getAllScope;
 
 public final class NamedScopeFilter implements VirtualFileFilter {
   private static final Logger LOG = Logger.getInstance(NamedScopeFilter.class);
@@ -57,7 +56,7 @@ public final class NamedScopeFilter implements VirtualFileFilter {
   }
 
   static boolean isVisible(@Nonnull NamedScope scope) {
-    return !(scope instanceof NonProjectFilesScope || scope == getAllScope());
+    return !(scope instanceof NonProjectFilesScope || scope == DefaultScopesProvider.getAllScope());
   }
 
   @Nonnull

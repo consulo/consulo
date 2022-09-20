@@ -24,7 +24,7 @@ import consulo.ide.impl.idea.ide.todo.TodoConfiguration;
 import consulo.ide.impl.idea.ide.todo.TodoFilter;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.*;
-import consulo.ide.impl.psi.search.TodoAttributesUtil;
+import consulo.language.editor.impl.internal.highlight.TodoAttributesUtil;
 import consulo.language.psi.search.TodoPattern;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.table.JBTable;

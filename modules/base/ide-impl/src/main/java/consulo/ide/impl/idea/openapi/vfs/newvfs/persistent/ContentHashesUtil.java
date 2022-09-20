@@ -5,8 +5,9 @@ import consulo.index.io.DifferentSerializableBytesImplyNonEqualityPolicy;
 import consulo.index.io.KeyDescriptor;
 import consulo.index.io.PagedFileStorage;
 import consulo.index.io.PersistentBTreeEnumerator;
+import consulo.util.io.DigestUtil;
 import consulo.util.lang.ThreadLocalCachedValue;
-import consulo.ide.impl.idea.util.io.*;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

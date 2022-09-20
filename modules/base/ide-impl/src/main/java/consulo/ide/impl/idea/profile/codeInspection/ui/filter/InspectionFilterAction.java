@@ -16,8 +16,8 @@
 package consulo.ide.impl.idea.profile.codeInspection.ui.filter;
 
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.SeverityRegistrarImpl;
-import consulo.ide.impl.idea.codeInspection.ex.InspectionProfileImpl;
+import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl;
+import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
 import consulo.language.editor.inspection.scheme.ScopeToolState;
 import consulo.application.AllIcons;
 import consulo.language.Language;

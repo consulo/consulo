@@ -26,7 +26,7 @@ import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.language.psi.search.TodoAttributes;
-import consulo.ide.impl.psi.search.TodoAttributesUtil;
+import consulo.language.editor.impl.internal.highlight.TodoAttributesUtil;
 import consulo.language.psi.search.TodoPattern;
 import consulo.ui.image.Image;
 

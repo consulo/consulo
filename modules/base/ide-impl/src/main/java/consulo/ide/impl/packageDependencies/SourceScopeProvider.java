@@ -16,30 +16,21 @@
 package consulo.ide.impl.packageDependencies;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.project.Project;
-import consulo.ide.impl.psi.search.scope.packageSet.CustomScopesProviderEx;
-import consulo.content.scope.NamedScope;
+import consulo.content.internal.scope.SingleCustomScopeProvider;
 import consulo.ide.impl.psi.search.scope.SourcesScope;
-
-import javax.annotation.Nonnull;
-import java.util.Collections;
-import java.util.List;
+import consulo.project.Project;
 
 /**
  * @author VISTALL
  * @since 18:16/17.06.13
  */
 @ExtensionImpl
-public class SourceScopeProvider extends CustomScopesProviderEx {
-  private SourcesScope mySourcesScope = new SourcesScope();
-
+public class SourceScopeProvider extends SingleCustomScopeProvider {
   public static SourceScopeProvider getInstance(Project project) {
     return CUSTOM_SCOPES_PROVIDER.findExtensionOrFail(project, SourceScopeProvider.class);
   }
 
-  @Override
-  @Nonnull
-  public List<NamedScope> getCustomScopes() {
-    return Collections.<NamedScope>singletonList(mySourcesScope);
+  public SourceScopeProvider() {
+    super(new SourcesScope());
   }
 }

@@ -24,7 +24,7 @@ import consulo.util.lang.ThreadLocalCachedValue;
 import consulo.util.io.BufferExposingByteArrayOutputStream;
 import consulo.language.impl.DebugUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.io.DigestUtil;
+import consulo.util.io.DigestUtil;
 import consulo.ide.impl.idea.util.io.UnsyncByteArrayInputStream;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.TestOnly;

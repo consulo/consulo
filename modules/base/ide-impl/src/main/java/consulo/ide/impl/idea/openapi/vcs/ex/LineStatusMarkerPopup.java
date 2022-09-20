@@ -40,7 +40,7 @@ import consulo.ide.impl.idea.openapi.progress.util.BackgroundTaskUtil;
 import consulo.application.util.registry.Registry;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.HintHint;
-import consulo.ide.impl.idea.ui.HintListener;
+import consulo.language.editor.impl.internal.hint.HintListener;
 import consulo.ui.ex.JBColor;
 import consulo.ide.impl.idea.ui.LightweightHint;
 import consulo.ui.ex.awt.JBUI;

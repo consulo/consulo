@@ -18,6 +18,7 @@ package consulo.util.collection;
 import consulo.util.collection.impl.map.*;
 import consulo.util.lang.Pair;
 import consulo.util.lang.function.Condition;
+import consulo.util.lang.function.Conditions;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
@@ -1486,5 +1487,20 @@ public class ContainerUtil {
       }
     }
     return false;
+  }
+
+
+  @Contract(pure = true)
+  @Nonnull
+  public static <T> List<T> filterIsInstance(@Nonnull Collection<?> collection, final @Nonnull Class<? extends T> aClass) {
+    //noinspection unchecked
+    return filter((Collection<T>)collection, Conditions.instanceOf(aClass));
+  }
+
+  @Contract(pure = true)
+  @Nonnull
+  public static <T> List<T> filterIsInstance(@Nonnull final Object[] collection, final @Nonnull Class<? extends T> aClass) {
+    //noinspection unchecked
+    return (List<T>)filter(collection, Conditions.instanceOf(aClass));
   }
 }

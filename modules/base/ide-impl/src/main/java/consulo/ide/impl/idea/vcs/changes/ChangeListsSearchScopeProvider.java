@@ -16,11 +16,11 @@
 package consulo.ide.impl.idea.vcs.changes;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.project.Project;
-import consulo.ide.impl.psi.search.DefaultSearchScopeProviders;
+import consulo.content.internal.scope.CustomScopesProviders;
 import consulo.content.scope.SearchScope;
 import consulo.content.scope.SearchScopeProvider;
-import consulo.content.scope.NamedScope;
+import consulo.ide.impl.psi.search.DefaultSearchScopeProviders;
+import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -41,12 +41,9 @@ public class ChangeListsSearchScopeProvider implements SearchScopeProvider {
   @Override
   public List<SearchScope> getSearchScopes(@Nonnull Project project) {
     List<SearchScope> result = new ArrayList<>();
-    List<NamedScope> changeLists = ChangeListsScopesProvider.getInstance(project).getFilteredScopes();
-    if (!changeLists.isEmpty()) {
-      for (NamedScope changeListScope : changeLists) {
-        result.add(DefaultSearchScopeProviders.wrapNamedScope(project, changeListScope, false));
-      }
-    }
+    CustomScopesProviders.acceptFilteredScopes(ChangeListsScopesProvider.getInstance(project), changeListScope -> {
+      result.add(DefaultSearchScopeProviders.wrapNamedScope(project, changeListScope, false));
+    });
     return result;
   }
 }

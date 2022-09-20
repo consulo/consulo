@@ -23,7 +23,7 @@ import consulo.language.editor.intention.LowPriorityAction;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.inspection.scheme.InspectionProfile;
 import consulo.language.editor.inspection.InspectionsBundle;
-import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionContextBase;
+import consulo.language.editor.impl.internal.inspection.GlobalInspectionContextBase;
 import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;

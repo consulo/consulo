@@ -20,6 +20,8 @@ import consulo.codeEditor.FoldingModelEx;
 import consulo.document.Document;
 import consulo.document.DocumentFragment;
 import consulo.document.util.TextRange;
+import consulo.language.editor.impl.internal.hint.TooltipGroup;
+import consulo.language.editor.impl.internal.hint.TooltipRenderer;
 import consulo.ui.ex.awt.HintHint;
 import consulo.ide.impl.idea.ui.LightweightHint;
 import consulo.ui.ex.awt.util.ScreenUtil;

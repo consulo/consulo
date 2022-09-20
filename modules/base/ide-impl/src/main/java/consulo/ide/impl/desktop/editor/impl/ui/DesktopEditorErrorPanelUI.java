@@ -20,7 +20,7 @@ import consulo.document.MarkupIterator;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.codeEditor.markup.RangeHighlighterEx;
 import consulo.ide.impl.idea.openapi.editor.impl.DesktopEditorImpl;
-import consulo.ide.impl.idea.openapi.editor.markup.ErrorStripeRenderer;
+import consulo.language.editor.impl.internal.markup.ErrorStripeRenderer;
 import consulo.document.util.ProperTextRange;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.JBUI;

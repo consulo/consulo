@@ -19,7 +19,7 @@ import consulo.content.scope.NamedScope;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.codeInspection.ex.Descriptor;
-import consulo.ide.impl.idea.codeInspection.ex.InspectionProfileImpl;
+import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.profile.codeInspection.ui.ScopeOrderComparator;
 import consulo.ide.impl.idea.profile.codeInspection.ui.ScopesChooser;

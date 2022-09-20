@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.application.options.colors.ColorAndFontOptions;
 import consulo.ide.impl.idea.application.options.colors.InspectionColorSettingsPage;
 import consulo.ide.impl.idea.application.options.colors.TextAttributesDescription;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.SeverityRegistrarImpl;
+import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.SeverityUtil;
 import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.dataContext.DataManager;
@@ -61,7 +61,7 @@ import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.*;
 
-import static consulo.ide.impl.idea.codeInsight.daemon.impl.SeverityRegistrarImpl.SeverityBasedTextAttributes;
+import static consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl.SeverityBasedTextAttributes;
 
 /**
  * User: anna

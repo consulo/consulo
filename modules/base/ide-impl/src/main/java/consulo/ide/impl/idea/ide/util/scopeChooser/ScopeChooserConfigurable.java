@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.ide.util.scopeChooser;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.*;
-import consulo.ide.impl.psi.search.scope.packageSet.CustomScopesProvider;
+import consulo.content.internal.scope.CustomScopesProvider;
 import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.execution.ExecutionBundle;
 import consulo.application.AllIcons;
@@ -36,7 +36,7 @@ import consulo.ui.ex.awt.MasterDetailsState;
 import consulo.ui.ex.awt.MasterDetailsStateService;
 import consulo.ui.ex.awt.Messages;
 import consulo.util.lang.function.Condition;
-import consulo.ide.impl.idea.packageDependencies.DependencyValidationManager;
+import consulo.language.editor.packageDependency.DependencyValidationManager;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ide.impl.idea.util.IconUtil;
 import consulo.ide.impl.idea.util.containers.Convertor;
@@ -148,10 +148,8 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
   protected void checkApply(Set<MyNode> rootNodes, String prefix, String title) throws ConfigurationException {
     super.checkApply(rootNodes, prefix, title);
     final Set<String> predefinedScopes = new HashSet<String>();
-    for (CustomScopesProvider scopesProvider : myProject.getExtensions(CustomScopesProvider.CUSTOM_SCOPES_PROVIDER)) {
-      for (NamedScope namedScope : scopesProvider.getCustomScopes()) {
-        predefinedScopes.add(namedScope.getName());
-      }
+    for (CustomScopesProvider scopesProvider : myProject.getExtensionList(CustomScopesProvider.class)) {
+      scopesProvider.acceptScopes(namedScope -> predefinedScopes.add(namedScope.getName()));
     }
     for (MyNode rootNode : rootNodes) {
       for (int i = 0; i < rootNode.getChildCount(); i++) {

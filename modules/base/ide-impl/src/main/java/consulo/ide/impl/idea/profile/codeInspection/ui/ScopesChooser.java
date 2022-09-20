@@ -15,21 +15,21 @@
  */
 package consulo.ide.impl.idea.profile.codeInspection.ui;
 
-import consulo.ide.impl.idea.codeInspection.ex.Descriptor;
-import consulo.ide.impl.idea.codeInspection.ex.InspectionProfileImpl;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.awt.action.ComboBoxAction;
 import consulo.application.dumb.DumbAware;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.project.Project;
-import consulo.ide.impl.psi.search.scope.NonProjectFilesScope;
-import consulo.ide.impl.psi.search.scope.packageSet.CustomScopesProviderEx;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;
+import consulo.ide.impl.idea.codeInspection.ex.Descriptor;
+import consulo.ide.impl.idea.packageDependencies.DefaultScopesProvider;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.psi.search.scope.NonProjectFilesScope;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.awt.action.ComboBoxAction;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -72,7 +72,7 @@ public abstract class ScopesChooser extends ComboBoxAction implements DumbAware 
       Collections.addAll(customScopes, holder.getEditableScopes());
       predefinedScopes.addAll(holder.getPredefinedScopes());
     }
-    predefinedScopes.remove(CustomScopesProviderEx.getAllScope());
+    predefinedScopes.remove(DefaultScopesProvider.getAllScope());
     for (NamedScope predefinedScope : predefinedScopes) {
       if (predefinedScope instanceof NonProjectFilesScope) {
         predefinedScopes.remove(predefinedScope);

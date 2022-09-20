@@ -16,26 +16,11 @@
 
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.language.editor.highlight.HighlightingLevelManager;
-import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
-import consulo.language.editor.intention.QuickFixAction;
-import consulo.language.editor.internal.intention.EmptyIntentionAction;
-import consulo.ide.impl.idea.codeInspection.InspectionEngine;
-import consulo.ide.impl.idea.codeInspection.ex.*;
-import consulo.ide.impl.idea.codeInspection.ui.InspectionToolPresentation;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
-import consulo.ide.impl.idea.util.ConcurrencyUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.containers.TransferToEDTQueue;
-import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.application.ApplicationManager;
 import consulo.application.internal.ApplicationEx;
-import consulo.application.util.concurrent.JobLauncher;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
+import consulo.application.util.concurrent.JobLauncher;
 import consulo.application.util.function.CommonProcessors;
 import consulo.application.util.function.Processor;
 import consulo.colorScheme.EditorColorsScheme;
@@ -44,15 +29,38 @@ import consulo.component.ProcessCanceledException;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
+import consulo.ide.impl.idea.codeInspection.InspectionEngine;
+import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionContextImpl;
+import consulo.ide.impl.idea.codeInspection.ex.LocalDescriptorsUtil;
+import consulo.ide.impl.idea.codeInspection.ex.ProblemDescriptorImpl;
+import consulo.ide.impl.idea.codeInspection.ex.QuickFixWrapper;
+import consulo.ide.impl.idea.codeInspection.ui.InspectionToolPresentation;
+import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
+import consulo.ide.impl.idea.util.ConcurrencyUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.language.Language;
 import consulo.language.editor.DaemonBundle;
 import consulo.language.editor.Pass;
 import consulo.language.editor.annotation.HighlightSeverity;
+import consulo.language.editor.highlight.HighlightingLevelManager;
+import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
+import consulo.language.editor.impl.highlight.UpdateHighlightersUtil;
+import consulo.language.editor.impl.internal.highlight.Divider;
+import consulo.language.editor.impl.internal.highlight.ProgressableTextEditorHighlightingPass;
+import consulo.language.editor.impl.internal.highlight.TransferToEDTQueue;
+import consulo.language.editor.impl.internal.highlight.UpdateHighlightersUtilImpl;
+import consulo.language.editor.impl.internal.inspection.scheme.GlobalInspectionToolWrapper;
+import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
+import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl;
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.scheme.*;
 import consulo.language.editor.intention.HintAction;
 import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.intention.QuickFixAction;
+import consulo.language.editor.internal.intention.EmptyIntentionAction;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
@@ -67,6 +75,7 @@ import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
+import consulo.util.lang.Pair;
 import consulo.util.lang.Trinity;
 import consulo.util.lang.function.Condition;
 import org.jetbrains.annotations.NonNls;
@@ -387,7 +396,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
               createHighlightsForDescriptor(infos, emptyActionRegistered, ilManager, file, thisDocument, tool, severity, descriptor, psiElement);
               for (HighlightInfo info : infos) {
                 final EditorColorsScheme colorsScheme = getColorsScheme();
-                UpdateHighlightersUtil
+                UpdateHighlightersUtilImpl
                         .addHighlighterToEditorIncrementally(myProject, myDocument, getFile(), myRestrictRange.getStartOffset(), myRestrictRange.getEndOffset(), (HighlightInfoImpl)info, colorsScheme,
                                                              getId(), ranges2markersCache);
               }

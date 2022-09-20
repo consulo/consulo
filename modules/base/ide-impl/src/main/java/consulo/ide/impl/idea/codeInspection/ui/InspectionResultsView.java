@@ -20,6 +20,7 @@ import consulo.application.CommonBundle;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
+import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
 import consulo.language.editor.inspection.ProblemDescriptorBase;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.ide.impl.idea.analysis.AnalysisUIOptions;

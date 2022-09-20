@@ -2,9 +2,9 @@
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.application.AllIcons;
+import consulo.application.HeavyProcessLatch;
 import consulo.application.PowerSaveMode;
 import consulo.application.ReadAction;
-import consulo.application.HeavyProcessLatch;
 import consulo.codeEditor.DocumentMarkupModel;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorBundle;
@@ -18,24 +18,23 @@ import consulo.configurable.ConfigurationException;
 import consulo.diff.DiffUserDataKeys;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
-import consulo.language.editor.FileHighlightingSetting;
-import consulo.language.editor.highlight.HighlightLevelUtil;
-import consulo.language.editor.highlight.HighlightingLevelManager;
-import consulo.language.editor.internal.HighlightingSettingsPerFile;
 import consulo.ide.impl.idea.openapi.editor.impl.DesktopEditorMarkupModelImpl;
-import consulo.ide.impl.idea.openapi.editor.markup.*;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.GridBag;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
-import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
 import consulo.language.Language;
-import consulo.language.editor.DaemonBundle;
-import consulo.language.editor.DaemonCodeAnalyzer;
-import consulo.language.editor.HectorComponentPanel;
-import consulo.language.editor.HectorComponentPanelsProvider;
+import consulo.language.editor.*;
 import consulo.language.editor.annotation.HighlightSeverity;
+import consulo.language.editor.highlight.HighlightLevelUtil;
+import consulo.language.editor.highlight.HighlightingLevelManager;
+import consulo.language.editor.impl.internal.daemon.ConfigureInspectionsAction;
+import consulo.language.editor.impl.internal.daemon.DaemonEditorPopup;
+import consulo.language.editor.impl.internal.highlight.ProgressableTextEditorHighlightingPass;
+import consulo.language.editor.impl.internal.markup.*;
+import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
+import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl;
+import consulo.language.editor.internal.HighlightingSettingsPerFile;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.file.FileViewProvider;
 import consulo.language.inject.InjectedLanguageManager;
@@ -52,6 +51,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.ToggleAction;
+import consulo.ui.ex.awt.GridBag;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
@@ -138,7 +138,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
     return mySeverityRegistrar;
   }
 
-  protected void refresh(@Nullable DesktopEditorMarkupModelImpl editorMarkupModel) {
+  public void refresh(@Nullable DesktopEditorMarkupModelImpl editorMarkupModel) {
     int maxIndex = mySeverityRegistrar.getSeverityMaxIndex();
     if (errorCount != null && maxIndex + 1 == errorCount.length) return;
     errorCount = new int[maxIndex + 1];

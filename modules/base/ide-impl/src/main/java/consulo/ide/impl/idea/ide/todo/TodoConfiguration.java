@@ -25,7 +25,7 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.ide.ServiceManager;
-import consulo.ide.impl.psi.search.TodoAttributesUtil;
+import consulo.language.editor.impl.internal.highlight.TodoAttributesUtil;
 import consulo.language.psi.search.*;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

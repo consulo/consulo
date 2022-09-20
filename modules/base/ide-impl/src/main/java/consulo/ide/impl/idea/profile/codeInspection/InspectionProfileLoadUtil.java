@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.profile.codeInspection;
 
-import consulo.ide.impl.idea.codeInspection.ex.InspectionProfileImpl;
-import consulo.ide.impl.idea.codeInspection.ex.InspectionToolRegistrar;
+import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
+import consulo.language.editor.impl.internal.inspection.scheme.InspectionToolRegistrar;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;

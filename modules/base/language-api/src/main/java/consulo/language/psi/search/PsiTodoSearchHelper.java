@@ -83,4 +83,15 @@ public abstract class PsiTodoSearchHelper {
    * @return the count of to do items in the file.
    */
   public abstract int getTodoItemsCount(@Nonnull PsiFile file, @Nonnull TodoPattern pattern);
+
+
+  /**
+   * Returns if td items should be highlighted in editor
+   *
+   * @param file the file to return the to do count for.
+   * @return if td items should be highlighted in editor. True by default
+   */
+  public boolean shouldHighlightInEditor(@Nonnull PsiFile file) {
+    return true;
+  }
 }

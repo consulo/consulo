@@ -15,7 +15,7 @@ import consulo.document.Document;
 import consulo.ide.impl.idea.execution.lineMarker.LineMarkerActionWrapper;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
+import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.psi.PsiFile;
 import consulo.project.DumbService;
 import consulo.project.Project;

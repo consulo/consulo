@@ -12,6 +12,7 @@ import consulo.colorScheme.TextAttributesKey;
 import consulo.document.Document;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
+import consulo.language.editor.impl.internal.highlight.GeneralHighlightingPass;
 import consulo.util.lang.ObjectUtil;
 import consulo.language.Language;
 import consulo.language.ast.IElementType;
@@ -124,7 +125,7 @@ class ChameleonSyntaxHighlightingPass extends GeneralHighlightingPass {
 
   @Nullable
   @Override
-  protected String getPresentableName() {
+  public String getPresentableName() {
     return null; // do not show progress for
   }
 }

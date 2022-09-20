@@ -7,7 +7,7 @@ import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.editor.inspection.scheme.ModifiableModel;
 import consulo.ide.impl.idea.codeInspection.actions.RunInspectionIntention;
 import consulo.ide.impl.idea.codeInspection.ex.DisableInspectionToolAction;
-import consulo.ide.impl.idea.codeInspection.ex.InspectionProfileImpl;
+import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.language.editor.inspection.reference.RefElement;
 import consulo.language.editor.inspection.reference.RefEntity;

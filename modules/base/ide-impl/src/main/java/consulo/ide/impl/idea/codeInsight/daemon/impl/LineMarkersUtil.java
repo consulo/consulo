@@ -10,6 +10,7 @@ import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.language.editor.gutter.LineMarkerInfo;
+import consulo.language.editor.impl.internal.highlight.HighlightersRecycler;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiElement;
 import consulo.logging.Logger;

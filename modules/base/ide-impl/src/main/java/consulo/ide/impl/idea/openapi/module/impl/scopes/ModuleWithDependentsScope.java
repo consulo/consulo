@@ -30,7 +30,7 @@ import consulo.project.content.scope.ProjectScopes;
 import consulo.application.util.CachedValueProvider;
 import consulo.application.util.CachedValuesManager;
 import consulo.util.collection.MultiMap;
-import consulo.ide.impl.idea.util.containers.Queue;
+import consulo.util.collection.Queue;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

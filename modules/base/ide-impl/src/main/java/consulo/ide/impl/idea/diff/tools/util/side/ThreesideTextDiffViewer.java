@@ -28,7 +28,7 @@ import consulo.ide.impl.idea.diff.tools.util.base.TextDiffSettingsHolder;
 import consulo.ide.impl.idea.diff.tools.util.base.TextDiffViewerUtil;
 import consulo.ide.impl.idea.diff.util.DiffUserDataKeysEx;
 import consulo.ide.impl.idea.diff.util.DiffUtil;
-import consulo.ide.impl.idea.openapi.editor.ex.EditorMarkupModel;
+import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;

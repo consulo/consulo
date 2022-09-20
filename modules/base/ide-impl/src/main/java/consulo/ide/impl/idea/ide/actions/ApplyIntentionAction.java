@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
+import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.ShowIntentionsPass;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.ide.impl.idea.codeInsight.intention.impl.ShowIntentionActionsHandler;

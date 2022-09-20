@@ -15,19 +15,14 @@
  */
 package consulo.ide.impl.idea.profile.codeInspection.ui;
 
-import consulo.ide.impl.idea.codeInspection.ex.InspectionProfileImpl;
-import consulo.project.Project;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ide.impl.psi.search.scope.NonProjectFilesScope;
-import consulo.ide.impl.psi.search.scope.packageSet.CustomScopesProviderEx;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;
-import consulo.ui.ex.awt.AnActionButton;
-import consulo.ui.ex.awt.AnActionButtonRunnable;
+import consulo.ide.impl.idea.packageDependencies.DefaultScopesProvider;
+import consulo.ide.impl.psi.search.scope.NonProjectFilesScope;
+import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
+import consulo.project.Project;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.ListUtil;
-import consulo.ui.ex.awt.ToolbarDecorator;
-import consulo.ui.ex.awt.JBList;
-import consulo.ui.ex.awt.UIUtil;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -91,7 +86,7 @@ public class ScopesOrderDialog extends DialogWrapper {
         }
       }
     }
-    scopes.remove(CustomScopesProviderEx.getAllScope().getName());
+    scopes.remove(DefaultScopesProvider.getAllScope().getName());
     Collections.sort(scopes, new ScopeOrderComparator(myInspectionProfile));
     for (String scopeName : scopes) {
       model.addElement(scopeName);

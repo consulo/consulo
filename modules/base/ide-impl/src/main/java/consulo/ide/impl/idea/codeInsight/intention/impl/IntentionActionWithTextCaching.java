@@ -2,7 +2,7 @@
 
 package consulo.ide.impl.idea.codeInsight.intention.impl;
 
-import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
+import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.intention.CustomizableIntentionAction;
 import consulo.language.editor.internal.intention.CustomizableIntentionActionDelegate;
 import consulo.language.editor.internal.intention.IntentionActionDelegate;

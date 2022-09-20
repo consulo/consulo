@@ -17,7 +17,10 @@ package consulo.language.editor.inspection.scheme;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
+import consulo.language.editor.rawHighlight.HighlightDisplayKey;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.editor.rawHighlight.SeverityProvider;
+import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 
 import javax.annotation.Nonnull;
@@ -40,4 +43,13 @@ public interface InspectionProjectProfileManager extends SeverityProvider, Proje
 
   @Nonnull
   InspectionProfile getInspectionProfile();
+
+  public static boolean isInformationLevel(String shortName, @Nonnull PsiElement element) {
+    final HighlightDisplayKey key = HighlightDisplayKey.find(shortName);
+    if (key != null) {
+      final HighlightDisplayLevel errorLevel = getInstance(element.getProject()).getCurrentProfile().getErrorLevel(key, element);
+      return HighlightDisplayLevel.DO_NOT_SHOW.equals(errorLevel);
+    }
+    return false;
+  }
 }

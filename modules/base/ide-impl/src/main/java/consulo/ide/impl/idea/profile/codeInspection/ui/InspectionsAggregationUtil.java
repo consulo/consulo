@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.profile.codeInspection.ui;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.ide.impl.idea.profile.codeInspection.ui.inspectionsTree.InspectionConfigTreeNode;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.containers.Queue;
+import consulo.util.collection.Queue;
 
 import javax.swing.tree.TreePath;
 import java.util.ArrayList;

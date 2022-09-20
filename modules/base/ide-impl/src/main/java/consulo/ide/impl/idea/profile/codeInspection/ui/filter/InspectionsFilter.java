@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.profile.codeInspection.ui.filter;
 
-import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionToolWrapper;
+import consulo.language.editor.impl.internal.inspection.scheme.GlobalInspectionToolWrapper;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.language.editor.inspection.scheme.ScopeToolState;
 import consulo.language.editor.inspection.scheme.Tools;

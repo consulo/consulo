@@ -15,7 +15,8 @@
  */
 package consulo.ide.impl.idea.codeInspection.ui;
 
-import consulo.ide.impl.idea.codeInsight.daemon.impl.SeverityRegistrarImpl;
+import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl;
+import consulo.language.editor.impl.internal.inspection.scheme.GlobalInspectionToolWrapper;
 import consulo.language.editor.internal.intention.ActionClassHolder;
 import consulo.language.editor.inspection.ProblemDescriptorUtil;
 import consulo.ide.impl.idea.codeInspection.ex.*;

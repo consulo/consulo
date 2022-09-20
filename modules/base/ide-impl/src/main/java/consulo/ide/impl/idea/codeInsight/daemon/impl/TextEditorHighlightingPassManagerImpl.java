@@ -23,6 +23,7 @@ import consulo.language.editor.Pass;
 import consulo.language.editor.impl.highlight.*;
 import consulo.language.editor.impl.internal.daemon.DaemonCodeAnalyzerEx;
 import consulo.language.editor.impl.internal.daemon.FileStatusMapImpl;
+import consulo.language.editor.impl.internal.highlight.DefaultHighlightInfoProcessor;
 import consulo.project.Project;
 import consulo.language.psi.PsiCompiledElement;
 import consulo.language.psi.PsiDocumentManager;

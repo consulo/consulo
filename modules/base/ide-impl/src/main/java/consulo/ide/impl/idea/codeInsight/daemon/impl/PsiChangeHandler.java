@@ -1,41 +1,43 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.language.editor.ChangeLocalityDetector;
-import consulo.disposer.Disposable;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
+import consulo.component.extension.ExtensionPointName;
+import consulo.component.messagebus.MessageBusConnection;
+import consulo.disposer.Disposable;
+import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
-import consulo.ide.impl.idea.openapi.editor.ex.EditorMarkupModel;
-import consulo.component.extension.ExtensionPointName;
+import consulo.document.util.TextRange;
 import consulo.fileEditor.FileEditorManager;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.psi.impl.PsiDocumentManagerImpl;
+import consulo.language.editor.ChangeLocalityDetector;
 import consulo.language.editor.impl.internal.daemon.DaemonCodeAnalyzerEx;
 import consulo.language.editor.impl.internal.daemon.FileStatusMapImpl;
+import consulo.language.editor.impl.internal.highlight.UpdateHighlightersUtilImpl;
+import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
+import consulo.language.editor.impl.internal.markup.ErrorStripeUpdateManager;
+import consulo.language.impl.internal.psi.PsiDocumentManagerBase;
+import consulo.language.impl.internal.psi.PsiDocumentTransactionListener;
+import consulo.language.impl.internal.psi.PsiTreeChangeEventImpl;
 import consulo.language.psi.*;
 import consulo.language.psi.event.PsiTreeChangeAdapter;
 import consulo.language.psi.event.PsiTreeChangeEvent;
+import consulo.module.content.ProjectRootManager;
 import consulo.project.Project;
 import consulo.project.ProjectCoreUtil;
-import consulo.module.content.ProjectRootManager;
+import consulo.util.collection.SmartList;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
-import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.impl.internal.psi.PsiDocumentManagerBase;
-import consulo.ide.impl.psi.impl.PsiDocumentManagerImpl;
-import consulo.language.impl.internal.psi.PsiDocumentTransactionListener;
-import consulo.language.impl.internal.psi.PsiTreeChangeEventImpl;
-import consulo.util.collection.SmartList;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.component.messagebus.MessageBusConnection;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -94,7 +96,7 @@ final class PsiChangeHandler extends PsiTreeChangeAdapter implements Disposable 
     if (toUpdate == null) {
       // The document has been changed, but psi hasn't
       // We may still need to rehighlight the file if there were changes inside highlighted ranges.
-      if (UpdateHighlightersUtil.isWhitespaceOptimizationAllowed(document)) return;
+      if (UpdateHighlightersUtilImpl.isWhitespaceOptimizationAllowed(document)) return;
 
       // don't create PSI for files in other projects
       PsiElement file = PsiDocumentManager.getInstance(myProject).getCachedPsiFile(document);
@@ -233,7 +235,7 @@ final class PsiChangeHandler extends PsiTreeChangeAdapter implements Disposable 
       return;
     }
 
-    PsiElement element = whitespaceOptimizationAllowed && UpdateHighlightersUtil.isWhitespaceOptimizationAllowed(document) ? child : child.getParent();
+    PsiElement element = whitespaceOptimizationAllowed && UpdateHighlightersUtilImpl.isWhitespaceOptimizationAllowed(document) ? child : child.getParent();
     while (true) {
       if (element == null || element instanceof PsiFile || element instanceof PsiDirectory) {
         myFileStatusMap.markAllFilesDirty("Top element: " + element);

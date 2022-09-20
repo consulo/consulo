@@ -13,7 +13,7 @@ import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.FakeVirtualFile;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.VirtualDirectoryImpl;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.containers.Queue;
+import consulo.util.collection.Queue;
 import consulo.ide.impl.idea.util.text.FilePathHashingStrategy;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Sets;

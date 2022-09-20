@@ -27,6 +27,7 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.DaemonBundle;
 import consulo.language.editor.Pass;
 import consulo.language.editor.impl.highlight.VisibleHighlightingPassFactory;
+import consulo.language.editor.impl.internal.highlight.DefaultHighlightInfoProcessor;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.inspection.scheme.InspectionProfileWrapper;
 import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
@@ -101,7 +102,7 @@ public class WholeFileLocalInspectionsPassFactory implements TextEditorHighlight
       }
 
       @Override
-      protected String getPresentableName() {
+      public String getPresentableName() {
         return DaemonBundle.message("pass.whole.inspections");
       }
 

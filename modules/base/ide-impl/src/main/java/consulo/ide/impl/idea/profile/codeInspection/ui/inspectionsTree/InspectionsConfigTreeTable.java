@@ -16,9 +16,9 @@
 package consulo.ide.impl.idea.profile.codeInspection.ui.inspectionsTree;
 
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
-import consulo.ide.impl.idea.codeInspection.ex.InspectionProfileImpl;
+import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
 import consulo.language.editor.inspection.scheme.ScopeToolState;
-import consulo.ide.impl.idea.codeInspection.ex.ToolsImpl;
+import consulo.language.editor.impl.internal.inspection.scheme.ToolsImpl;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.project.Project;

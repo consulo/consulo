@@ -16,14 +16,12 @@
 package consulo.ide.impl.idea.profile.codeInspection;
 
 import consulo.component.persist.PersistentStateComponent;
-import consulo.ide.impl.idea.codeInspection.ex.InspectionProfileImpl;
-import consulo.ide.impl.idea.packageDependencies.DependencyValidationManager;
-import consulo.ide.impl.idea.profile.DefaultProjectProfileManager;
+import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
+import consulo.language.editor.packageDependency.DependencyValidationManager;
+import consulo.language.editor.impl.internal.inspection.scheme.DefaultProjectProfileManager;
 import consulo.language.editor.inspection.scheme.InspectionProfile;
 import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import consulo.language.editor.inspection.scheme.Profile;
-import consulo.language.editor.rawHighlight.HighlightDisplayKey;
-import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.editor.rawHighlight.SeverityProvider;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
@@ -76,14 +74,5 @@ public abstract class InspectionProjectProfileManager extends DefaultProjectProf
   @Override
   public Profile getProfile(@Nonnull final String name) {
     return getProfile(name, true);
-  }
-
-  public static boolean isInformationLevel(String shortName, @Nonnull PsiElement element) {
-    final HighlightDisplayKey key = HighlightDisplayKey.find(shortName);
-    if (key != null) {
-      final HighlightDisplayLevel errorLevel = getInstance(element.getProject()).getInspectionProfile().getErrorLevel(key, element);
-      return HighlightDisplayLevel.DO_NOT_SHOW.equals(errorLevel);
-    }
-    return false;
   }
 }

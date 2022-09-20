@@ -15,6 +15,8 @@
  */
 package consulo.document.util;
 
+import org.jetbrains.annotations.Contract;
+
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -127,5 +129,27 @@ public class TextRangeUtil {
     int s2 = r2.getStartOffset();
     int e2 = r2.getEndOffset();
     return Math.max(s1, s2) <= Math.min(e1, e2) ? 0 : Math.min(Math.abs(s1 - e2), Math.abs(s2 - e1));
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static List<TextRange> getWordIndicesIn(@Nonnull String text) {
+    List<TextRange> result = new ArrayList<>();
+    int start = -1;
+    for (int i = 0; i < text.length(); i++) {
+      char c = text.charAt(i);
+      boolean isIdentifierPart = Character.isJavaIdentifierPart(c);
+      if (isIdentifierPart && start == -1) {
+        start = i;
+      }
+      if (isIdentifierPart && i == text.length() - 1 && start != -1) {
+        result.add(new TextRange(start, i + 1));
+      }
+      else if (!isIdentifierPart && start != -1) {
+        result.add(new TextRange(start, i));
+        start = -1;
+      }
+    }
+    return result;
   }
 }

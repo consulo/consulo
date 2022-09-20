@@ -161,4 +161,6 @@ public abstract class InspectionManager {
 
   @Nonnull
   public abstract GlobalInspectionContext createNewGlobalContext(boolean reuse);
+
+  public abstract String getCurrentProfile();
 }

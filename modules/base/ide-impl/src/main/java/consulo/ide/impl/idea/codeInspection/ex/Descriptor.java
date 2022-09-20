@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.codeInspection.ex;
 
+import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.editor.inspection.scheme.InspectionProfileEntry;

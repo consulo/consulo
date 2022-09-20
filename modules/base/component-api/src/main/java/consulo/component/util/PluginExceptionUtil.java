@@ -35,6 +35,30 @@ import java.util.TreeSet;
 public class PluginExceptionUtil {
   private static final Logger LOG = Logger.getInstance(PluginExceptionUtil.class);
 
+  /**
+   * Creates an exception caused by a problem in a plugin's code.
+   *
+   * @param pluginClass a problematic class which caused the error
+   */
+  @Nonnull
+  public static PluginException createByClass(@Nonnull String errorMessage, @Nullable Throwable cause, @Nonnull Class<?> pluginClass) {
+    PluginId pluginId = PluginManager.getPluginId(pluginClass);
+    return new PluginException(errorMessage, cause, pluginId);
+  }
+
+  /**
+   * Creates an exception caused by a problem in a plugin's code, takes error message from the cause exception.
+   *
+   * @param pluginClass a problematic class which caused the error
+   */
+  @Nonnull
+  public static PluginException createByClass(@Nonnull Throwable cause, @Nonnull Class<?> pluginClass) {
+    String message = cause.getMessage();
+
+    PluginId pluginId = PluginManager.getPluginId(pluginClass);
+    return new PluginException(message != null ? message : "", cause, pluginId);
+  }
+
   @Nonnull
   public static Set<PluginId> findAllPluginIds(@Nonnull Throwable t) {
     if (t instanceof PluginException) {

@@ -25,6 +25,8 @@ import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.language.editor.impl.highlight.VisibleHighlightingPassFactory;
 import consulo.language.editor.impl.internal.daemon.FileStatusMapImpl;
+import consulo.language.editor.impl.internal.highlight.DefaultHighlightInfoProcessor;
+import consulo.language.editor.impl.internal.highlight.ProgressableTextEditorHighlightingPass;
 import consulo.project.Project;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;

@@ -16,6 +16,8 @@
 
 package consulo.ide.impl.idea.packageDependencies;
 
+import consulo.language.editor.packageDependency.DependencyRule;
+import consulo.language.editor.packageDependency.DependencyValidationManager;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;

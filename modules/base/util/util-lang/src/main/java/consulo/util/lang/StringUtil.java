@@ -2622,4 +2622,36 @@ public final class StringUtil {
       buf.append(ch);
     }
   }
+
+  /**
+   * Does the string have an uppercase character?
+   *
+   * @param s the string to test.
+   * @return true if the string has an uppercase character, false if not.
+   */
+  public static boolean hasUpperCaseChar(String s) {
+    char[] chars = s.toCharArray();
+    for (char c : chars) {
+      if (Character.isUpperCase(c)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Does the string have a lowercase character?
+   *
+   * @param s the string to test.
+   * @return true if the string has a lowercase character, false if not.
+   */
+  public static boolean hasLowerCaseChar(String s) {
+    char[] chars = s.toCharArray();
+    for (char c : chars) {
+      if (Character.isLowerCase(c)) {
+        return true;
+      }
+    }
+    return false;
+  }
 }

@@ -21,7 +21,7 @@ import consulo.configurable.ConfigurationException;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.ui.NamedConfigurable;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.packageDependencies.DependencyValidationManager;
+import consulo.language.editor.packageDependency.DependencyValidationManager;
 import consulo.content.scope.NamedScope;
 import consulo.language.editor.scope.NamedScopeManager;
 import consulo.content.scope.NamedScopesHolder;

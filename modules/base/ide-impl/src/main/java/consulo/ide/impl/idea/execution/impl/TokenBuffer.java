@@ -19,7 +19,7 @@ import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.containers.Queue;
+import consulo.util.collection.Queue;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

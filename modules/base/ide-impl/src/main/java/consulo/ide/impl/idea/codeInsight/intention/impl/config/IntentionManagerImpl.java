@@ -21,6 +21,7 @@ import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.CleanupOnScopeIntention;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.EditCleanupProfileIntentionAction;
+import consulo.language.editor.impl.internal.inspection.scheme.GlobalInspectionToolWrapper;
 import consulo.language.editor.inspection.GlobalSimpleInspectionTool;
 import consulo.ide.impl.idea.codeInspection.actions.CleanupAllIntention;
 import consulo.ide.impl.idea.codeInspection.actions.CleanupInspectionIntention;

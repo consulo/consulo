@@ -5,19 +5,20 @@
  */
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
+import consulo.application.util.registry.Registry;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.tooltips.TooltipActionProvider;
 import consulo.ide.impl.idea.codeInsight.hint.LineTooltipRenderer;
-import consulo.ide.impl.idea.codeInsight.hint.TooltipRenderer;
-import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.openapi.editor.ex.ErrorStripTooltipRendererProvider;
-import consulo.ide.impl.idea.openapi.editor.ex.TooltipAction;
-import consulo.ide.impl.idea.openapi.editor.impl.TrafficTooltipRenderer;
-import consulo.codeEditor.markup.RangeHighlighter;
-import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
-import consulo.project.Project;
-import consulo.application.util.registry.Registry;
-import consulo.util.collection.SmartList;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.editor.impl.internal.hint.TooltipAction;
+import consulo.language.editor.impl.internal.hint.TooltipRenderer;
+import consulo.language.editor.impl.internal.markup.ErrorStripTooltipRendererProvider;
+import consulo.language.editor.impl.internal.markup.TrafficTooltipRenderer;
+import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
+import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl;
+import consulo.project.Project;
+import consulo.util.collection.SmartList;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,7 +30,7 @@ public class DaemonTooltipRendererProvider implements ErrorStripTooltipRendererP
   private final Project myProject;
   private final Editor myEditor;
 
-  DaemonTooltipRendererProvider(final Project project, Editor editor) {
+  public DaemonTooltipRendererProvider(final Project project, Editor editor) {
     myProject = project;
     myEditor = editor;
   }
@@ -74,7 +75,7 @@ public class DaemonTooltipRendererProvider implements ErrorStripTooltipRendererP
         TooltipAction action = TooltipActionProvider.calcTooltipAction(composite, myEditor);
         myRenderer = new DaemonTooltipWithActionRenderer(toolTip, action, 0, action == null ? new Object[]{toolTip} : new Object[]{toolTip, action});
       }
-      else{
+      else {
         myRenderer = new DaemonTooltipRenderer(toolTip, new Object[]{highlighters});
       }
       if (bigRenderer != null) {

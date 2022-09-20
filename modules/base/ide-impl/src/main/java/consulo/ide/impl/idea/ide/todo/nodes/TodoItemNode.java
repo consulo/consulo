@@ -8,7 +8,7 @@ import consulo.ide.impl.idea.ide.todo.HighlightedRegionProvider;
 import consulo.ide.impl.idea.ide.todo.SmartTodoItemPointer;
 import consulo.ide.impl.idea.ide.todo.TodoTreeBuilder;
 import consulo.project.ui.view.tree.AbstractTreeNode;
-import consulo.ide.impl.psi.search.TodoAttributesUtil;
+import consulo.language.editor.impl.internal.highlight.TodoAttributesUtil;
 import consulo.logging.Logger;
 import consulo.document.Document;
 import consulo.document.RangeMarker;

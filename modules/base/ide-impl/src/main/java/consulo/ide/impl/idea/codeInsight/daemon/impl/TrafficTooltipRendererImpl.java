@@ -18,12 +18,13 @@ package consulo.ide.impl.idea.codeInsight.daemon.impl;
 import consulo.language.editor.hint.HintManager;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.codeInsight.hint.LineTooltipRenderer;
-import consulo.ide.impl.idea.codeInsight.hint.TooltipGroup;
+import consulo.language.editor.impl.internal.hint.TooltipGroup;
 import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.openapi.editor.ex.EditorMarkupModel;
-import consulo.ide.impl.idea.openapi.editor.impl.TrafficTooltipRenderer;
+import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
+import consulo.language.editor.impl.internal.markup.TrafficTooltipRenderer;
+import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl;
 import consulo.ui.ex.awt.HintHint;
-import consulo.ide.impl.idea.ui.HintListener;
+import consulo.language.editor.impl.internal.hint.HintListener;
 import consulo.ide.impl.idea.ui.LightweightHint;
 import consulo.component.util.ComparableObject;
 

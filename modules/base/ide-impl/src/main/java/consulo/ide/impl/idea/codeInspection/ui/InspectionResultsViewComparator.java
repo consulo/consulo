@@ -24,7 +24,7 @@
  */
 package consulo.ide.impl.idea.codeInspection.ui;
 
-import consulo.ide.impl.idea.codeInsight.daemon.impl.SeverityRegistrarImpl;
+import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl;
 import consulo.language.editor.inspection.CommonProblemDescriptor;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.ide.impl.idea.codeInspection.offline.OfflineProblemDescriptor;

@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.packageDependencies;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.content.scope.NamedScopesHolder;
 import consulo.content.scope.NamedScopesHolderProvider;
+import consulo.language.editor.packageDependency.DependencyValidationManager;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nullable;

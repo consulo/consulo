@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.notification.impl.ui.StickyButtonUI;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.psi.search.scope.packageSet.CustomScopesProviderEx;
+import consulo.content.internal.scope.CustomScopesProviderEx;
 import consulo.content.scope.NamedScope;
 import consulo.language.editor.scope.NamedScopeManager;
 import consulo.content.scope.NamedScopesHolder;

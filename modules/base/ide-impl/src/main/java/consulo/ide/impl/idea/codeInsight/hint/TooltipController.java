@@ -21,7 +21,9 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
 import consulo.ide.ServiceManager;
 import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.openapi.editor.ex.EditorMarkupModel;
+import consulo.language.editor.impl.internal.hint.TooltipGroup;
+import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
+import consulo.language.editor.impl.internal.hint.TooltipRenderer;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ui.ex.awt.HintHint;
@@ -144,7 +146,7 @@ public class TooltipController {
     p = new Point(p);
     hideCurrentTooltip();
 
-    LightweightHint hint = tooltipRenderer.show(editor, p, alignToRight, group, hintInfo);
+    LightweightHint hint = (LightweightHint)tooltipRenderer.show(editor, p, alignToRight, group, hintInfo);
 
     myCurrentTooltipGroup = group;
     myCurrentTooltip = hint;

@@ -7,6 +7,7 @@ import consulo.document.internal.EditReadOnlyListener;
 import consulo.codeEditor.event.EditorEventMulticaster;
 import javax.annotation.Nonnull;
 
+import consulo.language.editor.impl.internal.markup.ErrorStripeListener;
 import kava.beans.PropertyChangeListener;
 
 public interface EditorEventMulticasterEx extends EditorEventMulticaster {

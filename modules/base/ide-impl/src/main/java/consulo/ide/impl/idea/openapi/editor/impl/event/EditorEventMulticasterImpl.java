@@ -2,8 +2,8 @@
 package consulo.ide.impl.idea.openapi.editor.impl.event;
 
 import consulo.ide.impl.idea.openapi.editor.ex.EditorEventMulticasterEx;
-import consulo.ide.impl.idea.openapi.editor.ex.EditorMarkupModel;
-import consulo.ide.impl.idea.openapi.editor.ex.ErrorStripeListener;
+import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
+import consulo.language.editor.impl.internal.markup.ErrorStripeListener;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.event.*;

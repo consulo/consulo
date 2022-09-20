@@ -20,7 +20,6 @@ import consulo.application.util.registry.Registry;
 import consulo.application.util.registry.RegistryValue;
 import consulo.application.util.registry.RegistryValueListener;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.util.ShortcutUtil;
@@ -113,10 +112,9 @@ public class KeymapUtil {
    * @return first keyboard shortcut that activates given action in active keymap; null if not found
    */
   @Nullable
+  @Deprecated
   public static Shortcut getPrimaryShortcut(@Nullable String actionId) {
-    KeymapManager keymapManager = KeymapManager.getInstance();
-    if (keymapManager == null || actionId == null) return null;
-    return ArrayUtil.getFirstElement(keymapManager.getActiveKeymap().getShortcuts(actionId));
+    return consulo.ui.ex.keymap.util.KeymapUtil.getPrimaryShortcut(actionId);
   }
 
   @Nonnull

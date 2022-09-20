@@ -17,6 +17,8 @@
 package consulo.ide.impl.idea.packageDependencies.ui;
 
 import consulo.ide.impl.idea.analysis.PerformAnalysisInBackgroundOption;
+import consulo.language.editor.packageDependency.DependencyRule;
+import consulo.language.editor.packageDependency.DependencyValidationManager;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.ui.ex.action.CommonActionsManager;
 import consulo.ui.ex.action.ExporterToTextFile;
@@ -90,7 +92,6 @@ import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
-import java.util.function.Function;
 
 public class DependenciesPanel extends JPanel implements Disposable, DataProvider {
   private final Map<PsiFile, Set<PsiFile>> myDependencies;

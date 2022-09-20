@@ -7,7 +7,7 @@ import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.HectorComponent;
 import consulo.language.editor.highlight.FileHighlightingSettingListener;
 import consulo.language.editor.highlight.HighlightingLevelManager;
-import consulo.ide.impl.idea.codeInspection.ex.InspectionProfileImpl;
+import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
 import consulo.application.AllIcons;
 import consulo.application.PowerSaveMode;
 import consulo.application.ApplicationManager;

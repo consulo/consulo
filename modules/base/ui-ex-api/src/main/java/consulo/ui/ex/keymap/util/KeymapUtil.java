@@ -22,6 +22,7 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.util.MacKeymapUtil;
 import consulo.ui.ex.keymap.KeyMapBundle;
 import consulo.ui.ex.keymap.KeymapManager;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
 import org.intellij.lang.annotations.JdkConstants;
@@ -43,6 +44,17 @@ public class KeymapUtil {
   public static String createTooltipText(@Nonnull String tooltipText, @Nonnull String actionId) {
     String text = getFirstKeyboardShortcutText(actionId);
     return text.isEmpty() ? tooltipText : tooltipText + " (" + text + ")";
+  }
+
+  /**
+   * @param actionId action to find the shortcut for
+   * @return first keyboard shortcut that activates given action in active keymap; null if not found
+   */
+  @Nullable
+  public static Shortcut getPrimaryShortcut(@Nullable String actionId) {
+    KeymapManager keymapManager = KeymapManager.getInstance();
+    if (keymapManager == null || actionId == null) return null;
+    return ArrayUtil.getFirstElement(keymapManager.getActiveKeymap().getShortcuts(actionId));
   }
 
   @Nonnull

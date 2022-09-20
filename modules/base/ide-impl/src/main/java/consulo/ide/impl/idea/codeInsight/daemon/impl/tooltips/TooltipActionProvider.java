@@ -7,7 +7,7 @@ import consulo.application.ApplicationPropertiesComponent;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
 import consulo.component.extension.ExtensionPointName;
-import consulo.ide.impl.idea.openapi.editor.ex.TooltipAction;
+import consulo.language.editor.impl.internal.hint.TooltipAction;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;

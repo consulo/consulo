@@ -16,11 +16,11 @@
 package consulo.ui.web.internal.ex;
 
 import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.openapi.editor.ex.EditorMarkupModel;
-import consulo.ide.impl.idea.openapi.editor.ex.ErrorStripTooltipRendererProvider;
-import consulo.ide.impl.idea.openapi.editor.ex.ErrorStripeListener;
+import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
+import consulo.language.editor.impl.internal.markup.ErrorStripTooltipRendererProvider;
+import consulo.language.editor.impl.internal.markup.ErrorStripeListener;
 import consulo.codeEditor.impl.MarkupModelImpl;
-import consulo.ide.impl.idea.openapi.editor.markup.ErrorStripeRenderer;
+import consulo.language.editor.impl.internal.markup.ErrorStripeRenderer;
 import consulo.ui.ex.awt.PopupHandler;
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;

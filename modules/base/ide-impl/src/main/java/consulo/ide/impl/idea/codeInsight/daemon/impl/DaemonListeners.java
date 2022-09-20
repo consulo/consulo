@@ -41,7 +41,11 @@ import consulo.ide.impl.idea.openapi.editor.ex.EditorEventMulticasterEx;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.editor.impl.EditorMouseHoverPopupControl;
 import consulo.ide.impl.idea.openapi.project.ProjectUtil;
-import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
+import consulo.language.editor.impl.internal.highlight.UpdateHighlightersUtilImpl;
+import consulo.language.editor.impl.internal.markup.ErrorStripeUpdateManager;
+import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
+import consulo.language.editor.impl.highlight.UpdateHighlightersUtil;
+import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarChangeListener;
 import consulo.language.psi.resolve.RefResolveService;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.DaemonCodeAnalyzer;
@@ -151,7 +155,7 @@ public final class DaemonListeners implements Disposable {
         //no need to stop daemon if something happened in the console or in non-physical document
         if (worthBothering(document, project) && ApplicationManager.getApplication().isDispatchThread()) {
           stopDaemon(true, "Document change");
-          UpdateHighlightersUtil.updateHighlightersByTyping(myProject, e);
+          UpdateHighlightersUtilImpl.updateHighlightersByTyping(myProject, e);
         }
       }
     }, this);

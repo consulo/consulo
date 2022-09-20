@@ -18,16 +18,16 @@ package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.ide.impl.idea.codeInsight.daemon.impl.tooltips.TooltipActionProvider;
 import consulo.ide.impl.idea.codeInsight.hint.TooltipController;
-import consulo.ide.impl.idea.codeInsight.hint.TooltipGroup;
-import consulo.ide.impl.idea.codeInsight.hint.TooltipRenderer;
+import consulo.language.editor.impl.internal.hint.TooltipGroup;
+import consulo.language.editor.impl.internal.hint.TooltipRenderer;
 import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.openapi.editor.EditorMouseHoverPopupManager;
-import consulo.ide.impl.idea.openapi.editor.ex.EditorMarkupModel;
-import consulo.ide.impl.idea.openapi.editor.ex.ErrorStripTooltipRendererProvider;
-import consulo.ide.impl.idea.openapi.editor.ex.TooltipAction;
+import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
+import consulo.language.editor.impl.internal.markup.ErrorStripTooltipRendererProvider;
+import consulo.language.editor.impl.internal.hint.TooltipAction;
 import consulo.application.util.registry.Registry;
 import consulo.ui.ex.awt.HintHint;
-import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
+import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 
 import javax.annotation.Nonnull;
 

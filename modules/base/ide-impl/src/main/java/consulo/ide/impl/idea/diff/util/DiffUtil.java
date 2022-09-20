@@ -31,7 +31,7 @@ import consulo.ide.impl.idea.diff.tools.util.base.IgnorePolicy;
 import consulo.ide.impl.idea.diff.tools.util.base.TextDiffViewerUtil;
 import consulo.ide.impl.idea.openapi.diff.DiffBundle;
 import consulo.ide.impl.idea.openapi.diff.impl.GenericDataProvider;
-import consulo.ide.impl.idea.openapi.editor.ex.EditorMarkupModel;
+import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;

@@ -2,23 +2,21 @@
 package consulo.ide.impl.idea.vcs.changes;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.project.Project;
 import consulo.application.util.registry.Registry;
+import consulo.content.internal.scope.CustomScopesProviderEx;
+import consulo.content.scope.NamedScope;
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.versionControlSystem.change.LocalChangeList;
-import consulo.ide.impl.psi.search.scope.packageSet.CustomScopesProviderEx;
-import consulo.content.scope.NamedScope;
-import consulo.localize.LocalizeValue;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
-
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 @ExtensionImpl(order = "last")
 public final class ChangeListsScopesProvider extends CustomScopesProviderEx {
@@ -34,25 +32,22 @@ public final class ChangeListsScopesProvider extends CustomScopesProviderEx {
     myProject = project;
   }
 
-  @Nonnull
   @Override
-  public List<NamedScope> getCustomScopes() {
-    if (myProject.isDefault() || !ProjectLevelVcsManager.getInstance(myProject).hasActiveVcss()) return Collections.emptyList();
+  public void acceptScopes(@Nonnull Consumer<NamedScope> consumer) {
+    if (myProject.isDefault() || !ProjectLevelVcsManager.getInstance(myProject).hasActiveVcss()) return ;
     final ChangeListManager changeListManager = ChangeListManager.getInstance(myProject);
 
-    final List<NamedScope> result = new ArrayList<>();
-    result.add(new ChangeListScope(changeListManager));
+    consumer.accept(new ChangeListScope(changeListManager));
 
     if (ChangesUtil.hasMeaningfulChangelists(myProject)) {
       List<LocalChangeList> changeLists = changeListManager.getChangeLists();
       boolean skipSingleDefaultCL = Registry.is("vcs.skip.single.default.changelist") && changeLists.size() == 1 && changeLists.get(0).isBlank();
       if (!skipSingleDefaultCL) {
         for (ChangeList list : changeLists) {
-          result.add(new ChangeListScope(changeListManager, list.getName(), LocalizeValue.of(list.getName())));
+          consumer.accept(new ChangeListScope(changeListManager, list.getName(), LocalizeValue.of(list.getName())));
         }
       }
     }
-    return result;
   }
 
   @Override

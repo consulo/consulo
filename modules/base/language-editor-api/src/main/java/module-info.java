@@ -45,6 +45,7 @@ module consulo.language.editor.api {
   exports consulo.language.editor.inspection.scheme.event;
   exports consulo.language.editor.intention;
   exports consulo.language.editor.structureView;
+  exports consulo.language.editor.packageDependency;
   exports consulo.language.editor.scope;
   exports consulo.language.editor.template;
   exports consulo.language.editor.postfixTemplate;
