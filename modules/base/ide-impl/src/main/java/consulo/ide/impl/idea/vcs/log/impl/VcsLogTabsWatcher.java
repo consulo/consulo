@@ -24,7 +24,7 @@ import consulo.project.ui.wm.ToolWindowManagerListener;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.event.ContentManagerAdapter;
 import consulo.ui.ex.content.event.ContentManagerEvent;
-import consulo.ide.impl.idea.ui.content.TabbedContent;
+import consulo.ui.ex.content.TabbedContent;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogFilterer;
 import consulo.ide.impl.idea.vcs.log.impl.PostponableLogRefresher.VcsLogWindow;

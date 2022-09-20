@@ -25,7 +25,7 @@ import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ide.impl.idea.util.ContentUtilEx;
-import consulo.ide.impl.idea.util.ContentsUtil;
+import consulo.ui.ex.content.ContentsUtil;
 import consulo.ide.impl.idea.vcs.log.impl.VcsLogContentProvider;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

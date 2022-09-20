@@ -13,7 +13,7 @@ import consulo.ui.ex.awt.RelativeRectangle;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.content.event.ContentManagerEvent;
-import consulo.ide.impl.idea.ui.content.TabbedContent;
+import consulo.ui.ex.content.TabbedContent;
 import consulo.ui.ex.awt.paint.LinePainter2D;
 import consulo.ide.impl.idea.ui.tabs.impl.singleRow.MoreTabsIcon;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

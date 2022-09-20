@@ -23,7 +23,7 @@ import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
-import consulo.ide.impl.idea.ui.content.TabbedContent;
+import consulo.ui.ex.content.TabbedContent;
 import consulo.ide.impl.idea.util.ContentUtilEx;
 import consulo.util.collection.MultiMap;
 import consulo.disposer.Disposable;

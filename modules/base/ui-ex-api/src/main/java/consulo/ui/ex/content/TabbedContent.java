@@ -13,14 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ui.content;
+package consulo.ui.ex.content;
 
 import consulo.util.lang.Pair;
-import consulo.ui.ex.content.Content;
-import consulo.ui.ex.content.ContentManager;
 
 import javax.annotation.Nonnull;
-
 import javax.swing.*;
 import java.util.List;
 

@@ -18,7 +18,7 @@ package consulo.desktop.awt.wm.impl.content;
 import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ui.ex.content.Content;
-import consulo.ide.impl.idea.ui.content.TabbedContent;
+import consulo.ui.ex.content.TabbedContent;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nullable;

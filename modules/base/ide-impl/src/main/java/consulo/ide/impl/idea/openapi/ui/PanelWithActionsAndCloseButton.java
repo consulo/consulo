@@ -23,11 +23,11 @@ import consulo.disposer.Disposer;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
+import consulo.ui.ex.content.TabbedContent;
 import consulo.ui.ex.content.event.ContentManagerAdapter;
 import consulo.ui.ex.content.event.ContentManagerEvent;
 import consulo.util.dataholder.Key;
-import consulo.ide.impl.idea.ui.content.*;
-import consulo.ide.impl.idea.util.ContentsUtil;
+import consulo.ui.ex.content.ContentsUtil;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

@@ -5,7 +5,7 @@ import consulo.application.AllIcons;
 import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.reference.SoftReference;
-import consulo.ide.impl.idea.ui.content.TabbedContent;
+import consulo.ui.ex.content.TabbedContent;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;

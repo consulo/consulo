@@ -13,16 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util;
+package consulo.ui.ex.content;
 
-import consulo.ui.ex.content.Content;
-import consulo.ui.ex.content.ContentManager;
-import consulo.ide.impl.idea.ui.content.TabbedContent;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 
 import javax.annotation.Nonnull;
-
 import javax.swing.*;
 
 public class ContentsUtil {
