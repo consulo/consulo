@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.intention.impl;
+package consulo.language.editor.inspection;
 
 import consulo.language.editor.intention.HighPriorityAction;
 import consulo.language.editor.intention.LowPriorityAction;
-import consulo.language.editor.inspection.LocalQuickFixAndIntentionActionOnPsiElement;
 import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
