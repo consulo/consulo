@@ -13,13 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.application.options.colors;
+package consulo.language.editor.scope;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.colorScheme.TextAttributesKey;
+import consulo.content.scope.NamedScope;
+
 import javax.annotation.Nonnull;
 
 public class ScopeAttributesUtil {
   @Nonnull
+  public static TextAttributesKey getScopeTextAttributeKey(@Nonnull NamedScope scope) {
+    return TextAttributesKey.find("SCOPE_KEY_" + scope.getScopeId());
+  }
+
+  @Nonnull
+  @Deprecated
+  @DeprecationInfo("Use #getScopeTextAttributeKey(NamedScope)")
   public static TextAttributesKey getScopeTextAttributeKey(@Nonnull String scope) {
     return TextAttributesKey.find("SCOPE_KEY_" + scope);
   }

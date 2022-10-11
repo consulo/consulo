@@ -50,6 +50,7 @@ import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
+import consulo.language.editor.scope.ScopeAttributesUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.ApplicationLocalize;
@@ -593,7 +594,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     for (Pair<NamedScope, NamedScopesHolder> pair : list) {
       NamedScope namedScope = pair.getFirst();
       LocalizeValue name = namedScope.getPresentableName();
-      TextAttributesKey textAttributesKey = ScopeAttributesUtil.getScopeTextAttributeKey(namedScope.getScopeId());
+      TextAttributesKey textAttributesKey = ScopeAttributesUtil.getScopeTextAttributeKey(namedScope);
       if (scheme.getAttributes(textAttributesKey) == null) {
         scheme.setAttributes(textAttributesKey, new TextAttributes());
       }

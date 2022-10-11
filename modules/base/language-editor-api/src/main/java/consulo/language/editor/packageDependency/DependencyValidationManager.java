@@ -17,13 +17,16 @@ package consulo.language.editor.packageDependency;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
+import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;
 import consulo.content.scope.PackageSet;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -64,4 +67,7 @@ public abstract class DependencyValidationManager extends NamedScopesHolder {
   public abstract Map<String,PackageSet> getUnnamedScopes();
 
   public abstract void reloadRules();
+
+  @Nonnull
+  public abstract List<Pair<NamedScope, NamedScopesHolder>> getScopeBasedHighlightingCachedScopes();
 }

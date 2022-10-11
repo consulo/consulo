@@ -232,15 +232,7 @@ public class HighlightInfoImpl implements HighlightInfo {
       return colorsScheme.getAttributes(forcedTextAttributesKey);
     }
 
-    return getAttributesByType(element, type, colorsScheme);
-  }
-
-  public static TextAttributes getAttributesByType(@Nullable PsiElement element, @Nonnull HighlightInfoType type, @Nonnull TextAttributesScheme colorsScheme) {
-    SeverityRegistrar severityRegistrar = SeverityRegistrar.getSeverityRegistrar(element != null ? element.getProject() : null);
-    TextAttributes textAttributes = severityRegistrar.getTextAttributesBySeverity(type.getSeverity(element));
-    if (textAttributes != null) return textAttributes;
-    TextAttributesKey key = type.getAttributesKey();
-    return colorsScheme.getAttributes(key);
+    return SeverityRegistrarUtil.getAttributesByType(element, type, colorsScheme);
   }
 
   /**
@@ -283,7 +275,7 @@ public class HighlightInfoImpl implements HighlightInfo {
       return scheme.getAttributes(CodeInsightColors.GENERIC_SERVER_ERROR_OR_WARNING).getErrorStripeColor();
     }
 
-    TextAttributes attributes = getAttributesByType(element, type, scheme);
+    TextAttributes attributes = SeverityRegistrarUtil.getAttributesByType(element, type, scheme);
     return attributes == null ? null : attributes.getErrorStripeColor();
   }
 
