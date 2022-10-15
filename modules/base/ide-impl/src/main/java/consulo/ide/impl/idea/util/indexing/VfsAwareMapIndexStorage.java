@@ -16,7 +16,9 @@
 
 package consulo.ide.impl.idea.util.indexing;
 
+import consulo.application.Application;
 import consulo.application.progress.ProgressManager;
+import consulo.application.util.AsyncFileService;
 import consulo.container.boot.ContainerPathManager;
 import consulo.content.scope.SearchScope;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
@@ -179,7 +181,7 @@ public final class VfsAwareMapIndexStorage<Key, Value> extends MapIndexStorage<K
 
         if (hashMaskSet == null) {
           if (useCachedHashIds && myLastScannedId != 0) {
-            FileUtil.asyncDelete(fileWithCaches);
+            Application.get().getInstance(AsyncFileService.class).asyncDelete(fileWithCaches);
           }
 
           hashMaskSet = new TIntHashSet(1000);

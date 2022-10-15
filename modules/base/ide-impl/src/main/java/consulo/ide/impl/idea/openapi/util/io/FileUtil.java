@@ -21,7 +21,6 @@ import consulo.application.util.SystemInfo;
 import consulo.application.util.function.Processor;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.Convertor;
 import consulo.ide.impl.idea.util.io.URLUtil;
@@ -31,6 +30,7 @@ import consulo.logging.Logger;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.io.FileAttributes;
 import consulo.util.io.FileTooBigException;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.ThreeState;
 import consulo.util.lang.function.PairProcessor;
 import consulo.virtualFileSystem.impl.internal.mediator.FileSystemUtil;
@@ -41,15 +41,10 @@ import org.jetbrains.annotations.TestOnly;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
-import java.lang.reflect.Method;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
-import java.util.concurrent.FutureTask;
-import java.util.concurrent.RunnableFuture;
 import java.util.regex.Pattern;
 
 @Deprecated
@@ -58,8 +53,6 @@ public class FileUtil extends FileUtilRt {
   private static final int KILOBYTE = 1024;
 
   public static final int MEGABYTE = KILOBYTE * KILOBYTE;
-
-  public static final String ASYNC_DELETE_EXTENSION = ".__del__";
 
   public static final int REGEX_PATTERN_FLAGS = SystemInfo.isFileSystemCaseSensitive ? 0 : Pattern.CASE_INSENSITIVE;
 
@@ -340,91 +333,6 @@ public class FileUtil extends FileUtilRt {
     }
     System.arraycopy(bytes, 0, result, result.length - total, total);
     return result;
-  }
-
-  @Nonnull
-  public static Future<Void> asyncDelete(@Nonnull File file) {
-    return asyncDelete(Collections.singleton(file));
-  }
-
-  @Nonnull
-  public static Future<Void> asyncDelete(@Nonnull Collection<File> files) {
-    List<File> tempFiles = new ArrayList<>();
-    for (File file : files) {
-      final File tempFile = renameToTempFileOrDelete(file);
-      if (tempFile != null) {
-        tempFiles.add(tempFile);
-      }
-    }
-    if (!tempFiles.isEmpty()) {
-      return startDeletionThread(tempFiles.toArray(new File[tempFiles.size()]));
-    }
-    return CompletableFuture.completedFuture(null);
-  }
-
-  private static Future<Void> startDeletionThread(@Nonnull final File... tempFiles) {
-    final RunnableFuture<Void> deleteFilesTask = new FutureTask<>(new Runnable() {
-      @Override
-      public void run() {
-        final Thread currentThread = Thread.currentThread();
-        final int priority = currentThread.getPriority();
-        currentThread.setPriority(Thread.MIN_PRIORITY);
-        try {
-          for (File tempFile : tempFiles) {
-            delete(tempFile);
-          }
-        }
-        finally {
-          currentThread.setPriority(priority);
-        }
-      }
-    }, null);
-
-    try {
-      // attempt to execute on pooled thread
-      final Class<?> aClass = Class.forName("consulo.application.ApplicationManager");
-      final Method getApplicationMethod = aClass.getMethod("getApplication");
-      final Object application = getApplicationMethod.invoke(null);
-      final Method executeOnPooledThreadMethod = application.getClass().getMethod("executeOnPooledThread", Runnable.class);
-      executeOnPooledThreadMethod.invoke(application, deleteFilesTask);
-    }
-    catch (Exception ignored) {
-      new Thread(deleteFilesTask, "File deletion thread").start();
-    }
-    return deleteFilesTask;
-  }
-
-  @Nullable
-  private static File renameToTempFileOrDelete(@Nonnull File file) {
-    String tempDir = getTempDirectory();
-    boolean isSameDrive = true;
-    if (SystemInfo.isWindows) {
-      String tempDirDrive = tempDir.substring(0, 2);
-      String fileDrive = file.getAbsolutePath().substring(0, 2);
-      isSameDrive = tempDirDrive.equalsIgnoreCase(fileDrive);
-    }
-
-    if (isSameDrive) {
-      // the optimization is reasonable only if destination dir is located on the same drive
-      final String originalFileName = file.getName();
-      File tempFile = getTempFile(originalFileName, tempDir);
-      if (file.renameTo(tempFile)) {
-        return tempFile;
-      }
-    }
-
-    delete(file);
-
-    return null;
-  }
-
-  private static File getTempFile(@Nonnull String originalFileName, @Nonnull String parent) {
-    int randomSuffix = (int)(System.currentTimeMillis() % 1000);
-    for (int i = randomSuffix; ; i++) {
-      String name = "___" + originalFileName + i + ASYNC_DELETE_EXTENSION;
-      File tempFile = new File(parent, name);
-      if (!tempFile.exists()) return tempFile;
-    }
   }
 
   public static boolean createParentDirs(@Nonnull File file) {

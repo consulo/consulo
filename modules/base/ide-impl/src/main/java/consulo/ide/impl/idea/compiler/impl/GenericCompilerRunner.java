@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.compiler.impl;
 
+import consulo.compiler.util.CompilerUtil;
 import consulo.ide.impl.idea.compiler.impl.generic.GenericCompilerCache;
 import consulo.ide.impl.idea.compiler.impl.generic.GenericCompilerPersistentData;
 import consulo.application.ApplicationManager;

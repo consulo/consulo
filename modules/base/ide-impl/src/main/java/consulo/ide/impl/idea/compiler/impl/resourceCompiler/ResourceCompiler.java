@@ -18,7 +18,7 @@
 package consulo.ide.impl.idea.compiler.impl.resourceCompiler;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.compiler.impl.CompilerUtil;
+import consulo.compiler.util.CompilerUtil;
 import consulo.ide.impl.idea.compiler.make.MakeUtil;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;

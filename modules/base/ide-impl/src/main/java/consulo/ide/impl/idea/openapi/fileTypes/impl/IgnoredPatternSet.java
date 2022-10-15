@@ -15,13 +15,12 @@
  */
 package consulo.ide.impl.idea.openapi.fileTypes.impl;
 
+import consulo.application.impl.internal.util.AsyncFileServiceImpl;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.fileType.FileNameMatcherFactory;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.internal.FileTypeAssocTable;
 
 import javax.annotation.Nonnull;
-
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -72,7 +71,7 @@ public class IgnoredPatternSet {
 
     //Quite a hack, but still we need to have some name, which
     //won't be caught by VFS for sure.
-    return StringUtil.endsWith(fileName, FileUtil.ASYNC_DELETE_EXTENSION);
+    return StringUtil.endsWith(fileName, AsyncFileServiceImpl.ASYNC_DELETE_EXTENSION);
   }
 
   void clearPatterns() {

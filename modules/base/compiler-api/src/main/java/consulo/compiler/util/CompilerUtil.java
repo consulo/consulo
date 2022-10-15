@@ -18,27 +18,28 @@
  * created at Jan 3, 2002
  * @author Jeka
  */
-package consulo.ide.impl.idea.compiler.impl;
+package consulo.compiler.util;
 
-import consulo.application.CommonBundle;
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.application.CommonBundle;
+import consulo.application.util.AsyncFileService;
 import consulo.compiler.CompileContext;
 import consulo.compiler.CompilerBundle;
+import consulo.language.content.LanguageContentFolderScopes;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
-import consulo.project.Project;
 import consulo.module.content.ModuleRootManager;
+import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.io.CharsetToolkit;
-import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.RefreshQueue;
 import consulo.util.lang.function.ThrowableRunnable;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.content.LanguageContentFolderScopes;
+import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.RefreshQueue;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -187,7 +188,7 @@ public class CompilerUtil {
       }
     }
     if (filesToDelete.size() > 0) {
-      FileUtil.asyncDelete(filesToDelete);
+      Application.get().getInstance(AsyncFileService.class).asyncDelete(filesToDelete);
 
       // ensure output directories exist
       for (final File file : outputDirectories) {
@@ -212,7 +213,7 @@ public class CompilerUtil {
       final VirtualFile[] sourceRoots = rootManager.getContentFolderFiles(LanguageContentFolderScopes.productionAndTest());
       for (final VirtualFile outputPath : outputPaths) {
         for (VirtualFile sourceRoot : sourceRoots) {
-          if (VfsUtilCore.isAncestor(outputPath, sourceRoot, true) || VfsUtilCore.isAncestor(sourceRoot, outputPath, false)) {
+          if (VirtualFileUtil.isAncestor(outputPath, sourceRoot, true) || VirtualFileUtil.isAncestor(sourceRoot, outputPath, false)) {
             result.add(outputPath);
           }
         }

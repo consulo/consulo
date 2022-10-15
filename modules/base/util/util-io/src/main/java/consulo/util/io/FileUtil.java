@@ -44,6 +44,18 @@ public class FileUtil {
   private static final boolean USE_FILE_CHANNELS = "true".equalsIgnoreCase(System.getProperty("consulo.fs.useChannels"));
   public static final HashingStrategy<String> PATH_HASHING_STRATEGY = OSInfo.isFileSystemCaseSensitive ? HashingStrategy.caseInsensitive() : HashingStrategy.canonical();
 
+  public static final HashingStrategy<File> FILE_HASHING_STRATEGY = OSInfo.isFileSystemCaseSensitive ? ContainerUtil.<File>canonicalStrategy() : new HashingStrategy<File>() {
+    @Override
+    public int hashCode(File object) {
+      return fileHashCode(object);
+    }
+
+    @Override
+    public boolean equals(File o1, File o2) {
+      return filesEqual(o1, o2);
+    }
+  };
+
   public static final int THREAD_LOCAL_BUFFER_LENGTH = 1024 * 20;
   protected static final ThreadLocal<byte[]> BUFFER = new ThreadLocal<byte[]>() {
     @Override
@@ -580,6 +592,14 @@ public class FileUtil {
 
   public static boolean createDirectory(@Nonnull File path) {
     return path.isDirectory() || path.mkdirs();
+  }
+
+  public static int fileHashCode(@Nullable File file) {
+    return pathHashCode(file == null ? null : file.getPath());
+  }
+
+  public static int pathHashCode(@Nullable String path) {
+    return StringUtil.isEmpty(path) ? 0 : PATH_HASHING_STRATEGY.hashCode(toCanonicalPath(path));
   }
 
   public static boolean filesEqual(@Nullable File file1, @Nullable File file2) {
