@@ -18,10 +18,6 @@ import consulo.configurable.ConfigurationException;
 import consulo.diff.DiffUserDataKeys;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
-import consulo.ide.impl.idea.openapi.editor.impl.DesktopEditorMarkupModelImpl;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.language.Language;
 import consulo.language.editor.*;
@@ -36,6 +32,7 @@ import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl;
 import consulo.language.editor.internal.HighlightingSettingsPerFile;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
+import consulo.language.editor.rawHighlight.SeverityRegistrar;
 import consulo.language.file.FileViewProvider;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiCompiledElement;
@@ -55,9 +52,12 @@ import consulo.ui.ex.awt.GridBag;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.lang.DeprecatedMethodException;
 import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
@@ -106,11 +106,11 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
     myProject = project;
     myDaemonCodeAnalyzer = (DaemonCodeAnalyzerImpl)DaemonCodeAnalyzer.getInstance(project);
     myDocument = document;
-    mySeverityRegistrar = (SeverityRegistrarImpl)SeverityRegistrarImpl.getSeverityRegistrar(myProject);
+    mySeverityRegistrar = (SeverityRegistrarImpl)SeverityRegistrar.getSeverityRegistrar(myProject);
 
     refresh(null);
 
-    final MarkupModelEx model = (MarkupModelEx)DocumentMarkupModel.forDocument(document, project, true);
+    final MarkupModelEx model = DocumentMarkupModel.forDocument(document, project, true);
     model.addMarkupModelListener(this, new MarkupModelListener() {
       @Override
       public void afterAdded(@Nonnull RangeHighlighter highlighter) {
@@ -134,11 +134,11 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
   }
 
   @Nonnull
-  public SeverityRegistrarImpl getSeverityRegistrar() {
+  public SeverityRegistrar getSeverityRegistrar() {
     return mySeverityRegistrar;
   }
 
-  public void refresh(@Nullable DesktopEditorMarkupModelImpl editorMarkupModel) {
+  public void refresh(@Nullable EditorMarkupModel editorMarkupModel) {
     int maxIndex = mySeverityRegistrar.getSeverityMaxIndex();
     if (errorCount != null && maxIndex + 1 == errorCount.length) return;
     errorCount = new int[maxIndex + 1];
@@ -190,7 +190,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
   }
 
   @Nonnull
-  protected DaemonCodeAnalyzerStatus getDaemonCodeAnalyzerStatus(@Nonnull SeverityRegistrarImpl severityRegistrar) {
+  protected DaemonCodeAnalyzerStatus getDaemonCodeAnalyzerStatus(@Nonnull SeverityRegistrar severityRegistrar) {
     DaemonCodeAnalyzerStatus status = new DaemonCodeAnalyzerStatus();
     PsiFile psiFile = getPsiFile();
     if (psiFile == null) {
@@ -265,7 +265,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
     return status;
   }
 
-  protected void fillDaemonCodeAnalyzerErrorsStatus(@Nonnull DaemonCodeAnalyzerStatus status, @Nonnull SeverityRegistrarImpl severityRegistrar) {
+  protected void fillDaemonCodeAnalyzerErrorsStatus(@Nonnull DaemonCodeAnalyzerStatus status, @Nonnull SeverityRegistrar severityRegistrar) {
   }
 
   @Nonnull
