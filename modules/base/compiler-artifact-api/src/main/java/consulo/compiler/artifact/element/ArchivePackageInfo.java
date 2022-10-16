@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.compiler.impl.packagingCompiler;
+package consulo.compiler.artifact.element;
 
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.compiler.artifact.element.ArchivePackageWriter;
+
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
@@ -36,9 +36,9 @@ public class ArchivePackageInfo {
 
   public ArchivePackageInfo(ArchivePackageWriter<?> packageWriter) {
     myPackageWriter = packageWriter;
-    myDestinations = new ArrayList<DestinationInfo>();
-    myPackedFiles = new ArrayList<Pair<String, VirtualFile>>();
-    myPackedArchives = new LinkedHashSet<Pair<String, ArchivePackageInfo>>();
+    myDestinations = new ArrayList<>();
+    myPackedFiles = new ArrayList<>();
+    myPackedArchives = new LinkedHashSet<>();
   }
 
   public void addDestination(DestinationInfo info) {
@@ -67,7 +67,7 @@ public class ArchivePackageInfo {
   }
 
   public List<ArchiveDestinationInfo> getArchiveDestinations() {
-    final ArrayList<ArchiveDestinationInfo> list = new ArrayList<ArchiveDestinationInfo>();
+    final ArrayList<ArchiveDestinationInfo> list = new ArrayList<>();
     for (DestinationInfo destination : myDestinations) {
       if (destination instanceof ArchiveDestinationInfo) {
         list.add((ArchiveDestinationInfo)destination);

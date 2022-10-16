@@ -17,12 +17,19 @@ package consulo.ide.impl.idea.compiler.impl;
 
 import consulo.ide.impl.compiler.CompilerWorkspaceConfiguration;
 import consulo.ide.impl.compiler.HelpID;
+import consulo.ide.impl.idea.ide.errorTreeView.ErrorTreeElement;
+import consulo.ide.impl.idea.ide.errorTreeView.ErrorTreeNodeDescriptor;
+import consulo.ide.impl.idea.ide.errorTreeView.GroupingElement;
 import consulo.ide.impl.idea.ide.errorTreeView.NewErrorTreeViewPanelImpl;
 import consulo.project.Project;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.virtualFileSystem.VirtualFile;
+
+import javax.annotation.Nullable;
 
 public class ProblemsViewPanel extends NewErrorTreeViewPanelImpl {
   public ProblemsViewPanel(Project project) {
@@ -37,7 +44,21 @@ public class ProblemsViewPanel extends NewErrorTreeViewPanelImpl {
 
   @Override
   protected void addExtraPopupMenuActions(ActionGroup.Builder group) {
-    group.add(new ExcludeFromCompileAction(myProject, this));
+    group.add(new ExcludeFromCompileAction(myProject) {
+      @Nullable
+      @Override
+      protected VirtualFile getFile() {
+        final ErrorTreeNodeDescriptor descriptor = getSelectedNodeDescriptor();
+        ErrorTreeElement element = descriptor != null ? descriptor.getElement() : null;
+        if (element != null && !(element instanceof GroupingElement)) {
+          NodeDescriptor parent = descriptor.getParentDescriptor();
+          if (parent instanceof ErrorTreeNodeDescriptor) {
+            element = ((ErrorTreeNodeDescriptor)parent).getElement();
+          }
+        }
+        return element instanceof GroupingElement ? ((GroupingElement)element).getFile() : null;
+      }
+    });
 
     ActionGroup popupGroup = (ActionGroup)ActionManager.getInstance().getAction(IdeActions.GROUP_COMPILER_ERROR_VIEW_POPUP);
     if (popupGroup != null) {

@@ -21,44 +21,39 @@
  */
 package consulo.ide.impl.idea.compiler.impl;
 
-import consulo.ide.impl.compiler.CompilerMessageImpl;
-import consulo.compiler.ProblemsView;
-import consulo.ide.impl.idea.compiler.progress.CompilerTask;
 import consulo.application.ApplicationManager;
-import consulo.compiler.*;
-import consulo.compiler.CompileContextEx;
-import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.util.function.Computable;
 import consulo.compiler.Compiler;
+import consulo.compiler.*;
 import consulo.compiler.scope.CompileScope;
+import consulo.content.ContentFolderTypeProvider;
+import consulo.ide.impl.compiler.CompilerMessageImpl;
+import consulo.ide.impl.idea.compiler.progress.CompilerTask;
+import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.language.content.LanguageContentFolderScopes;
+import consulo.language.content.ProductionContentFolderTypeProvider;
+import consulo.language.content.TestContentFolderTypeProvider;
+import consulo.language.psi.stub.FileBasedIndex;
+import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
-import consulo.application.progress.ProgressIndicator;
-import consulo.project.Project;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
-import consulo.project.content.TestSourcesFilter;
-import consulo.application.util.function.Computable;
-import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.navigation.Navigatable;
-import consulo.util.collection.OrderedSet;
-import consulo.language.psi.stub.FileBasedIndex;
+import consulo.project.Project;
+import consulo.project.content.TestSourcesFilter;
 import consulo.ui.ex.MessageCategory;
-import consulo.compiler.AdditionalOutputDirectoriesProvider;
-import consulo.compiler.CompositeDependencyCache;
-import consulo.ide.impl.compiler.CompilerPathsImpl;
-import consulo.logging.Logger;
-import consulo.language.content.LanguageContentFolderScopes;
-import consulo.content.ContentFolderTypeProvider;
-import consulo.language.content.ProductionContentFolderTypeProvider;
-import consulo.language.content.TestContentFolderTypeProvider;
+import consulo.util.collection.OrderedSet;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
 import consulo.util.dataholder.UserDataHolderBase;
+import consulo.util.lang.Pair;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -474,12 +469,12 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
 
   @Override
   public VirtualFile getModuleOutputDirectory(Module module) {
-    return CompilerPathsImpl.getModuleOutputDirectory(module, false);
+    return CompilerPaths.getModuleOutputDirectory(module, false);
   }
 
   @Override
   public VirtualFile getModuleOutputDirectoryForTests(Module module) {
-    return CompilerPathsImpl.getModuleOutputDirectory(module, true);
+    return CompilerPaths.getModuleOutputDirectory(module, true);
   }
 
   @Override

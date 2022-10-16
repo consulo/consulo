@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.compiler.impl.packagingCompiler;
+package consulo.compiler.artifact.element;
 
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.LocalFileSystem;

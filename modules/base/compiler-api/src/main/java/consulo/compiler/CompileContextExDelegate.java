@@ -13,24 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.compiler.impl;
+package consulo.compiler;
 
-import consulo.compiler.Compiler;
-import consulo.compiler.CompositeDependencyCache;
-import consulo.compiler.scope.CompileScope;
-import consulo.compiler.CompilerMessage;
-import consulo.compiler.CompilerMessageCategory;
-import consulo.compiler.CompileContextEx;
-import consulo.module.Module;
 import consulo.application.progress.ProgressIndicator;
+import consulo.compiler.scope.CompileScope;
+import consulo.content.ContentFolderTypeProvider;
+import consulo.module.Module;
+import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.navigation.Navigatable;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.content.ContentFolderTypeProvider;
-
 import java.util.Collection;
 import java.util.Set;
 
@@ -38,10 +33,10 @@ import java.util.Set;
  * @author Eugene Zhuravlev
  *         Date: Dec 4, 2007
  */
-public class CompileContextExProxy implements CompileContextEx {
+public class CompileContextExDelegate implements CompileContextEx {
   private final CompileContextEx myDelegate;
 
-  public CompileContextExProxy(CompileContextEx delegate) {
+  public CompileContextExDelegate(CompileContextEx delegate) {
     myDelegate = delegate;
   }
 

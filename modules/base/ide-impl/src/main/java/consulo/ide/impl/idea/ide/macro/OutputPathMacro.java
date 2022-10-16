@@ -17,10 +17,10 @@ package consulo.ide.impl.idea.ide.macro;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
+import consulo.compiler.CompilerPaths;
 import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.dataContext.DataContext;
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.compiler.CompilerPathsImpl;
 import consulo.language.content.ProductionContentFolderTypeProvider;
 import consulo.language.content.TestContentFolderTypeProvider;
 import consulo.language.editor.CommonDataKeys;
@@ -74,7 +74,7 @@ public final class OutputPathMacro extends Macro {
     if (allModules.length == 0) {
       return null;
     }
-    String[] paths = CompilerPathsImpl.getOutputPaths(allModules);
+    String[] paths = CompilerPaths.getOutputPaths(allModules);
     final StringBuilder outputPath = new StringBuilder();
     for (int idx = 0; idx < paths.length; idx++) {
       String path = paths[idx];

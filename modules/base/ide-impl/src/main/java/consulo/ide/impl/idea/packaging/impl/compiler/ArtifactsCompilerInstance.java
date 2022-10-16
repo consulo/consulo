@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.packaging.impl.compiler;
 
+import consulo.compiler.artifact.*;
+import consulo.compiler.artifact.element.*;
 import consulo.compiler.util.CompilerUtil;
 import consulo.ide.impl.idea.compiler.impl.packagingCompiler.*;
 import consulo.application.ApplicationManager;
@@ -34,12 +36,6 @@ import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.compiler.artifact.Artifact;
-import consulo.compiler.artifact.ArtifactManager;
-import consulo.compiler.artifact.ArtifactProperties;
-import consulo.compiler.artifact.ArtifactPropertiesProvider;
-import consulo.compiler.artifact.element.CompositePackagingElement;
-import consulo.compiler.artifact.element.PackagingElementResolvingContext;
 import consulo.ide.impl.idea.packaging.impl.artifacts.ArtifactSortingUtil;
 import consulo.ide.impl.idea.util.ExceptionUtil;
 import consulo.util.lang.function.ThrowableRunnable;

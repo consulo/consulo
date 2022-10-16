@@ -312,6 +312,7 @@ public class ExecutionNodeImpl extends ExecutionNode<ExecutionNodeImpl> {
     myNavigatable = navigatable;
   }
 
+  @Override
   @Nonnull
   public List<Navigatable> getNavigatables() {
     if (myNavigatable != null) {

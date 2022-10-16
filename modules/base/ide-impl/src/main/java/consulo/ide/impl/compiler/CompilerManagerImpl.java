@@ -17,6 +17,7 @@ package consulo.ide.impl.compiler;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
+import consulo.compiler.util.ModuleCompilerUtil;
 import consulo.ide.impl.idea.compiler.impl.*;
 import consulo.application.ApplicationManager;
 import consulo.compiler.*;

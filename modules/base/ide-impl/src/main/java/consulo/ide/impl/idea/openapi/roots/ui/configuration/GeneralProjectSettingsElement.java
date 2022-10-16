@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration;
 
-import consulo.ide.impl.compiler.ModuleCompilerUtil;
+import consulo.compiler.util.ModuleCompilerUtil;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;

@@ -16,6 +16,8 @@
 
 package consulo.ide.impl.idea.compiler.impl.packagingCompiler;
 
+import consulo.compiler.artifact.element.ArchiveDestinationInfo;
+import consulo.compiler.artifact.element.ArchivePackageInfo;
 import consulo.util.lang.Pair;
 
 import java.util.LinkedHashSet;

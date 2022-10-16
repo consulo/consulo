@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.compiler.impl.packagingCompiler;
+package consulo.compiler.artifact.element;
 
+import consulo.compiler.artifact.element.DestinationInfo;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nullable;
 

@@ -17,6 +17,7 @@
 package consulo.ide.impl.idea.compiler.impl;
 
 import consulo.compiler.util.CompilerUtil;
+import consulo.compiler.util.ModuleCompilerUtil;
 import consulo.ide.impl.compiler.*;
 import consulo.build.ui.BuildContentManager;
 import consulo.ide.impl.idea.compiler.make.CacheUtils;
@@ -552,7 +553,7 @@ public class CompileDriver {
       // refresh on output roots is required in order for the order enumerator to see all roots via VFS
       final Set<File> outputs = new HashSet<>();
       final Module[] affectedModules = compileContext.getCompileScope().getAffectedModules();
-      for (final String path : CompilerPathsImpl.getOutputPaths(affectedModules)) {
+      for (final String path : CompilerPaths.getOutputPaths(affectedModules)) {
         outputs.add(new File(path));
       }
       final LocalFileSystem lfs = LocalFileSystem.getInstance();
@@ -1024,7 +1025,7 @@ public class CompileDriver {
               if (compiler instanceof IntermediateOutputCompiler) {
                 // wrap compile context so that output goes into intermediate directories
                 final IntermediateOutputCompiler _compiler = (IntermediateOutputCompiler)compiler;
-                _context = new CompileContextExProxy(context) {
+                _context = new CompileContextExDelegate(context) {
                   @Override
                   public VirtualFile getModuleOutputDirectory(final Module module) {
                     return getGenerationOutputDir(_compiler, module, false);
@@ -1232,7 +1233,7 @@ public class CompileDriver {
             CompileContextEx _context = context;
             if (compiler instanceof IntermediateOutputCompiler) {
               final IntermediateOutputCompiler _compiler = (IntermediateOutputCompiler)compiler;
-              _context = new CompileContextExProxy(context) {
+              _context = new CompileContextExDelegate(context) {
                 @Override
                 public VirtualFile getModuleOutputDirectory(final Module module) {
                   return getGenerationOutputDir(_compiler, module, false);
@@ -1387,7 +1388,7 @@ public class CompileDriver {
   private Set<File> getAllOutputDirectories(CompileContext context) {
     final Set<File> outputDirs = new OrderedSet<>();
     final Module[] modules = ModuleManager.getInstance(myProject).getModules();
-    for (final String path : CompilerPathsImpl.getOutputPaths(modules)) {
+    for (final String path : CompilerPaths.getOutputPaths(modules)) {
       outputDirs.add(new File(path));
     }
     for (Pair<IntermediateOutputCompiler, Module> pair : myGenerationCompilerModuleToOutputDirMap.keySet()) {
@@ -1743,7 +1744,7 @@ CompilerManagerImpl.addDeletedPath(outputPath.getPath());
 
     String path = map.get(module);
     if (path == null) {
-      path = CompilerPathsImpl.getModuleOutputPath(module, contentFolderType);
+      path = CompilerPaths.getModuleOutputPath(module, contentFolderType);
       map.put(module, path);
     }
 
@@ -2111,7 +2112,7 @@ CompilerManagerImpl.addDeletedPath(outputPath.getPath());
   private boolean validateOutputAndSourcePathsIntersection() {
     final Module[] allModules = ModuleManager.getInstance(myProject).getModules();
     List<VirtualFile> allOutputs = new ArrayList<>();
-    ContainerUtil.addAll(allOutputs, CompilerPathsImpl.getOutputDirectories(allModules));
+    ContainerUtil.addAll(allOutputs, CompilerPaths.getOutputDirectories(allModules));
     for (Artifact artifact : ArtifactManager.getInstance(myProject).getArtifacts()) {
       ContainerUtil.addIfNotNull(artifact.getOutputFile(), allOutputs);
     }

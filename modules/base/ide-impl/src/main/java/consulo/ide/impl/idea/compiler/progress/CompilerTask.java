@@ -99,8 +99,7 @@ public class CompilerTask extends Task.Backgroundable {
 
     indicator.setIndeterminate(false);
 
-    myBuildViewService.onStart(mySessionId, startCompilationStamp, () -> {
-    }, indicator);
+    myBuildViewService.onStart(mySessionId, startCompilationStamp, null, indicator);
 
     final Semaphore semaphore = ((CompilerManagerImpl)CompilerManager.getInstance((Project)myProject)).getCompilationSemaphore();
     boolean acquired = false;

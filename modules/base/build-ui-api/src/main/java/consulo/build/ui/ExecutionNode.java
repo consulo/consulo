@@ -15,10 +15,13 @@
  */
 package consulo.build.ui;
 
+import consulo.navigation.Navigatable;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.tree.PresentableNodeDescriptor;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -28,4 +31,7 @@ public abstract class ExecutionNode<T extends ExecutionNode<T>> extends Presenta
   public ExecutionNode(@Nullable NodeDescriptor parentDescriptor) {
     super(parentDescriptor);
   }
+
+  @Nonnull
+  public abstract List<Navigatable> getNavigatables();
 }

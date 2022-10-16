@@ -231,9 +231,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
       }
     }
 
-    for (WatchedRootsProvider extension : WatchedRootsProvider.EP.getExtensionList(myProject)) {
-      recursive.addAll(extension.getRootsToWatch());
-    }
+    myProject.getExtensionPoint(WatchedRootsProvider.class).forEachExtensionSafe(it -> recursive.addAll(it.getRootsToWatch()));
 
     addRootsFromModules(includeSourceRoots, recursive, flat);
 

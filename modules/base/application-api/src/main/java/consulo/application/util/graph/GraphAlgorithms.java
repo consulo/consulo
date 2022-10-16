@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util.graph;
+package consulo.application.util.graph;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.ide.ServiceManager;
-import consulo.component.util.graph.Graph;
+import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
+import consulo.component.util.graph.Graph;
 import consulo.util.collection.Chunk;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -34,15 +34,14 @@ import java.util.Set;
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class GraphAlgorithms {
   public static GraphAlgorithms getInstance() {
-    return ServiceManager.getService(GraphAlgorithms.class);
+    return Application.get().getInstance(GraphAlgorithms.class);
   }
 
   @Nullable
   public abstract <Node> List<Node> findShortestPath(@Nonnull Graph<Node> graph, @Nonnull Node start, @Nonnull Node finish);
 
   @Nonnull
-  public abstract <Node> List<List<Node>> findKShortestPaths(@Nonnull Graph<Node> graph, @Nonnull Node start, @Nonnull Node finish, int k,
-                                                             @Nonnull ProgressIndicator progressIndicator);
+  public abstract <Node> List<List<Node>> findKShortestPaths(@Nonnull Graph<Node> graph, @Nonnull Node start, @Nonnull Node finish, int k, @Nonnull ProgressIndicator progressIndicator);
 
   @Nonnull
   public abstract <Node> Set<List<Node>> findCycles(@Nonnull Graph<Node> graph, @Nonnull Node node);
@@ -64,7 +63,7 @@ public abstract class GraphAlgorithms {
    * Nodes which are already in set aren't processed.
    *
    * @param start node to start from
-   * @param set set to be populated
+   * @param set   set to be populated
    */
   public abstract <Node> void collectOutsRecursively(@Nonnull Graph<Node> graph, Node start, Set<Node> set);
 }

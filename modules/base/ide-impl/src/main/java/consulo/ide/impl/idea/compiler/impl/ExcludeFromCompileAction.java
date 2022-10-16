@@ -15,38 +15,35 @@
  */
 package consulo.ide.impl.idea.compiler.impl;
 
-import consulo.ide.impl.idea.ide.errorTreeView.ErrorTreeElement;
-import consulo.ide.impl.idea.ide.errorTreeView.ErrorTreeNodeDescriptor;
-import consulo.ide.impl.idea.ide.errorTreeView.GroupingElement;
-import consulo.ide.impl.idea.ide.errorTreeView.NewErrorTreeViewPanelImpl;
-import consulo.ui.ex.tree.NodeDescriptor;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
 import consulo.compiler.CompilerBundle;
 import consulo.compiler.CompilerManager;
 import consulo.compiler.setting.ExcludeEntryDescription;
 import consulo.project.Project;
-import consulo.virtualFileSystem.status.FileStatusManager;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.status.FileStatusManager;
+
+import javax.annotation.Nullable;
 
 /**
 * @author Eugene Zhuravlev
 *         Date: 9/12/12
 */
-class ExcludeFromCompileAction extends AnAction {
+public abstract class ExcludeFromCompileAction extends AnAction {
   private final Project myProject;
-  private final NewErrorTreeViewPanelImpl myErrorTreeView;
 
-  public ExcludeFromCompileAction(Project project, NewErrorTreeViewPanelImpl errorTreeView) {
+  public ExcludeFromCompileAction(Project project) {
     super(CompilerBundle.message("actions.exclude.from.compile.text"));
     myProject = project;
-    myErrorTreeView = errorTreeView;
   }
 
+  @RequiredUIAccess
   @Override
   public void actionPerformed(AnActionEvent e) {
-    VirtualFile file = getSelectedFile();
+    VirtualFile file = getFile();
 
     if (file != null && file.isValid()) {
       ExcludeEntryDescription description = new ExcludeEntryDescription(file, false, true, myProject);
@@ -55,22 +52,14 @@ class ExcludeFromCompileAction extends AnAction {
     }
   }
 
-  @javax.annotation.Nullable
-  private VirtualFile getSelectedFile() {
-    final ErrorTreeNodeDescriptor descriptor = myErrorTreeView.getSelectedNodeDescriptor();
-    ErrorTreeElement element = descriptor != null? descriptor.getElement() : null;
-    if (element != null && !(element instanceof GroupingElement)) {
-      NodeDescriptor parent = descriptor.getParentDescriptor();
-      if (parent instanceof ErrorTreeNodeDescriptor) {
-        element = ((ErrorTreeNodeDescriptor)parent).getElement();
-      }
-    }
-    return element instanceof GroupingElement? ((GroupingElement)element).getFile() : null;
-  }
+  @Nullable
+  protected abstract VirtualFile getFile();
 
+  @RequiredUIAccess
+  @Override
   public void update(AnActionEvent e) {
     final Presentation presentation = e.getPresentation();
-    final boolean isApplicable = getSelectedFile() != null;
+    final boolean isApplicable = getFile() != null;
     presentation.setEnabled(isApplicable);
     presentation.setVisible(isApplicable);
   }

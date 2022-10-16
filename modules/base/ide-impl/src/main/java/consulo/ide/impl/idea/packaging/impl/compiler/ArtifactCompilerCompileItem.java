@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.packaging.impl.compiler;
 
 import consulo.compiler.generic.VirtualFileCompileItem;
-import consulo.ide.impl.idea.compiler.impl.packagingCompiler.DestinationInfo;
+import consulo.compiler.artifact.element.DestinationInfo;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.util.collection.SmartList;

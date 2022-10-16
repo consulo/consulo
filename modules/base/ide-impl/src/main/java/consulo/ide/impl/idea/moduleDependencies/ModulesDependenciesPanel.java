@@ -27,7 +27,7 @@ import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.containers.Convertor;
-import consulo.ide.impl.idea.util.graph.GraphAlgorithms;
+import consulo.application.util.graph.GraphAlgorithms;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;

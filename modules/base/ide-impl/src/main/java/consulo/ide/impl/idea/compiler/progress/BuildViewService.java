@@ -5,13 +5,15 @@ import consulo.compiler.ExitStatus;
 import consulo.compiler.CompilerMessage;
 import consulo.application.progress.ProgressIndicator;
 
+import javax.annotation.Nullable;
+
 /**
  * {@link BuildViewService} implementations are expected to visualize somehow compiler progress/messages for {@link CompilerTask}.
  *
  * @see CompilerTask
  */
 public interface BuildViewService {
-  void onStart(Object sessionId, long startCompilationStamp, Runnable restartWork, ProgressIndicator indicator);
+  void onStart(Object sessionId, long startCompilationStamp, @Nullable Runnable restartWork, ProgressIndicator indicator);
 
   void onEnd(Object sessionId, ExitStatus exitStatus, long endCompilationStamp);
 

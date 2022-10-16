@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.util.graph.impl;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.progress.ProgressIndicator;
 import consulo.component.util.graph.*;
-import consulo.ide.impl.idea.util.graph.GraphAlgorithms;
+import consulo.application.util.graph.GraphAlgorithms;
 import consulo.util.collection.Chunk;
 import jakarta.inject.Singleton;
 

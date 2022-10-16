@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.packaging.impl.compiler;
 
-import consulo.ide.impl.idea.compiler.impl.packagingCompiler.ExplodedDestinationInfo;
-import consulo.ide.impl.idea.compiler.impl.packagingCompiler.ArchivePackageInfo;
+import consulo.compiler.artifact.element.ExplodedDestinationInfo;
+import consulo.compiler.artifact.element.ArchivePackageInfo;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.compiler.artifact.element.ArchivePackageWriter;
 import consulo.compiler.artifact.element.IncrementalCompilerInstructionCreator;

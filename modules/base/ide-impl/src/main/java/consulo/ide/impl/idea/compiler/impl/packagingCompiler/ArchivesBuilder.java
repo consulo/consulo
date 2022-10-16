@@ -19,6 +19,7 @@ package consulo.ide.impl.idea.compiler.impl.packagingCompiler;
 import consulo.compiler.CompileContext;
 import consulo.compiler.CompilerBundle;
 import consulo.compiler.CompilerMessageCategory;
+import consulo.compiler.artifact.element.*;
 import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
@@ -29,9 +30,7 @@ import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.component.util.graph.CachingSemiGraph;
 import consulo.component.util.graph.DFSTBuilder;
 import consulo.component.util.graph.GraphGenerator;
-import consulo.ide.impl.compiler.packagingCompiler.ArchivePackageWriterEx;
 import consulo.logging.Logger;
-import consulo.compiler.artifact.element.ArchivePackageWriter;
 import consulo.ide.impl.packaging.impl.util.DeploymentUtilImpl;
 
 import javax.annotation.Nonnull;

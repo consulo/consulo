@@ -14,31 +14,31 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.compiler.impl.packagingCompiler;
+package consulo.compiler.artifact.element;
 
 import consulo.logging.Logger;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.ArchiveFileSystem;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 
 /**
  * @author nik
  */
 public class ArchiveDestinationInfo extends DestinationInfo {
-  public static final Logger LOGGER = Logger.getInstance(ArchiveDestinationInfo.class);
+  private static final Logger LOG = Logger.getInstance(ArchiveDestinationInfo.class);
 
   private final String myPathInJar;
   private final ArchivePackageInfo myArchivePackageInfo;
 
   public ArchiveDestinationInfo(final String pathInJar, final ArchivePackageInfo archivePackageInfo, DestinationInfo jarDestination) {
     super(appendPathInJar(jarDestination.getOutputPath(), pathInJar), jarDestination.getOutputFile(), jarDestination.getOutputFilePath());
-    LOGGER.assertTrue(!pathInJar.startsWith(".."), pathInJar);
+    LOG.assertTrue(!pathInJar.startsWith(".."), pathInJar);
     myPathInJar = StringUtil.startsWithChar(pathInJar, '/') ? pathInJar : "/" + pathInJar;
     myArchivePackageInfo = archivePackageInfo;
   }
 
   private static String appendPathInJar(String outputPath, String pathInJar) {
-    LOGGER.assertTrue(outputPath.length() > 0 && outputPath.charAt(outputPath.length() - 1) != '/');
-    LOGGER.assertTrue(pathInJar.length() > 0 && pathInJar.charAt(0) != '/');
+    LOG.assertTrue(outputPath.length() > 0 && outputPath.charAt(outputPath.length() - 1) != '/');
+    LOG.assertTrue(pathInJar.length() > 0 && pathInJar.charAt(0) != '/');
     return outputPath + ArchiveFileSystem.ARCHIVE_SEPARATOR + pathInJar;
   }
 

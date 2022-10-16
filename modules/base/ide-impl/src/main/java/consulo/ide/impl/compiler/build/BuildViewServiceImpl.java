@@ -14,17 +14,25 @@ import consulo.compiler.CompilerMessageCategory;
 import consulo.compiler.ExitStatus;
 import consulo.execution.ui.console.RegexpFilter;
 import consulo.execution.ui.console.UrlFilter;
+import consulo.ide.impl.idea.build.FileNavigatable;
 import consulo.ide.impl.idea.compiler.impl.CompilerPropertiesAction;
+import consulo.ide.impl.idea.compiler.impl.ExcludeFromCompileAction;
 import consulo.ide.impl.idea.compiler.progress.BuildViewService;
 import consulo.ide.impl.idea.compiler.progress.ModuleLinkFilter;
 import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.localize.LocalizeValue;
 import consulo.navigation.Navigatable;
+import consulo.navigation.OpenFileDescriptor;
 import consulo.project.Project;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.IdeActions;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.Nls;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -96,31 +104,31 @@ public class BuildViewServiceImpl implements BuildViewService {
 
   @Override
   public void onStart(Object sessionId, long startCompilationStamp, Runnable restartWork, ProgressIndicator indicator) {
+    List<AnAction> contextActions = getContextActions();
+
     DefaultBuildDescriptor buildDescriptor = new DefaultBuildDescriptor(mySessionId, myContentName, StringUtil.notNullize(myProject.getBasePath()), startCompilationStamp)
             //.withRestartActions(restartActions.toArray(AnAction.EMPTY_ARRAY))
             .withAction(new CompilerPropertiesAction()).withExecutionFilter(new ModuleLinkFilter(myProject))
             .withExecutionFilter(new RegexpFilter(myProject, RegexpFilter.FILE_PATH_MACROS + ":" + RegexpFilter.LINE_MACROS + ":" + RegexpFilter.COLUMN_MACROS))
-            .withExecutionFilter(new UrlFilter(myProject));
-    //.withContextAction(node -> {
-    //  return new ExcludeFromCompileAction(myProject) {
-    //    @Override
-    //    protected
-    //    @Nullable
-    //    VirtualFile getFile() {
-    //      List<Navigatable> navigatables = node.getNavigatables();
-    //      if (navigatables.size() != 1) return null;
-    //      Navigatable navigatable = navigatables.get(0);
-    //      if (navigatable instanceof OpenFileDescriptor) {
-    //        return ((OpenFileDescriptor)navigatable).getFile();
-    //      }
-    //      else if (navigatable instanceof FileNavigatable) {
-    //        OpenFileDescriptor fileDescriptor = ((FileNavigatable)navigatable).getFileDescriptor();
-    //        return fileDescriptor != null ? fileDescriptor.getFile() : null;
-    //      }
-    //      return null;
-    //    }
-    //  };
-    //}).withContextActions(contextActions.toArray(AnAction.EMPTY_ARRAY));
+            .withExecutionFilter(new UrlFilter(myProject)).withContextAction(node -> {
+              return new ExcludeFromCompileAction(myProject) {
+                @Override
+                @Nullable
+                protected VirtualFile getFile() {
+                  List<Navigatable> navigatables = node.getNavigatables();
+                  if (navigatables.size() != 1) return null;
+                  Navigatable navigatable = navigatables.get(0);
+                  if (navigatable instanceof OpenFileDescriptor) {
+                    return ((OpenFileDescriptor)navigatable).getFile();
+                  }
+                  else if (navigatable instanceof FileNavigatable) {
+                    OpenFileDescriptor fileDescriptor = ((FileNavigatable)navigatable).getFileDescriptor();
+                    return fileDescriptor != null ? fileDescriptor.getFile() : null;
+                  }
+                  return null;
+                }
+              };
+            }).withContextActions(contextActions.toArray(AnAction.EMPTY_ARRAY));
 
     myBuildProgress.start(new BuildProgressDescriptor() {
       @Nonnull
@@ -289,6 +297,16 @@ public class BuildViewServiceImpl implements BuildViewService {
                                 @Nullable Navigatable navigatable) {
     // TODO [VISTALL] use ep? like in idea
     return null;
+  }
+
+  @NotNull
+  private static List<AnAction> getContextActions() {
+    List<AnAction> contextActions = new ArrayList<>();
+    ActionGroup compilerErrorsViewPopupGroup = (ActionGroup)ActionManager.getInstance().getAction(IdeActions.GROUP_COMPILER_ERROR_VIEW_POPUP);
+    if (compilerErrorsViewPopupGroup != null) {
+      Collections.addAll(contextActions, compilerErrorsViewPopupGroup.getChildren(null));
+    }
+    return contextActions;
   }
 
   @Nonnull

@@ -14,17 +14,13 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.compiler;
+package consulo.compiler.util;
 
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.graph.GraphAlgorithms;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.component.util.graph.CachingSemiGraph;
-import consulo.component.util.graph.DFSTBuilder;
-import consulo.component.util.graph.Graph;
-import consulo.component.util.graph.GraphGenerator;
+import consulo.application.util.graph.GraphAlgorithms;
+import consulo.component.util.graph.*;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
@@ -33,6 +29,7 @@ import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.ModuleRootModel;
 import consulo.project.Project;
 import consulo.util.collection.Chunk;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
 
 import javax.annotation.Nullable;
@@ -50,7 +47,7 @@ public final class ModuleCompilerUtil {
   }
 
   public static Graph<Module> createModuleGraph(final Module[] modules) {
-    return GraphGenerator.create(CachingSemiGraph.create(new GraphGenerator.SemiGraph<Module>() {
+    return GraphGenerator.generate(new InboundSemiGraph<Module>() {
       public Collection<Module> getNodes() {
         return Arrays.asList(modules);
       }
@@ -58,7 +55,7 @@ public final class ModuleCompilerUtil {
       public Iterator<Module> getIn(Module module) {
         return Arrays.asList(getDependencies(module)).iterator();
       }
-    }));
+    });
   }
 
   @RequiredReadAction

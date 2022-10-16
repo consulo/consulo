@@ -156,7 +156,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.command;
   exports consulo.ide.impl.compiler;
   exports consulo.ide.impl.compiler.build;
-  exports consulo.ide.impl.compiler.packagingCompiler;
   exports consulo.ide.impl.compiler.resourceCompiler;
   exports consulo.ide.impl.compiler.setting;
   exports consulo.ide.impl.configurationStore.vcs;
@@ -837,7 +836,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.util.continuation;
   exports consulo.ide.impl.idea.util.exception;
   exports consulo.ide.impl.idea.util.gist;
-  exports consulo.ide.impl.idea.util.graph;
   exports consulo.ide.impl.idea.util.graph.impl;
   exports consulo.ide.impl.idea.util.indexing;
   exports consulo.ide.impl.idea.util.indexing.containers;

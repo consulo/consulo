@@ -29,8 +29,6 @@ import java.util.Set;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface WatchedRootsProvider {
-  ExtensionList<WatchedRootsProvider, Project> EP = ExtensionList.of(WatchedRootsProvider.class);
-
   @Nonnull
   Set<String> getRootsToWatch();
 }

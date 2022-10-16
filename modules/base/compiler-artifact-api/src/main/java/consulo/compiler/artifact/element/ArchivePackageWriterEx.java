@@ -13,12 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.compiler.packagingCompiler;
+package consulo.compiler.artifact.element;
 
-import consulo.ide.impl.idea.compiler.impl.packagingCompiler.ArchivePackageInfo;
-import consulo.compiler.artifact.element.ArchivePackageWriter;
 import javax.annotation.Nonnull;
-
 import java.io.File;
 import java.io.IOException;
 
@@ -30,7 +27,7 @@ public abstract class ArchivePackageWriterEx<T> implements ArchivePackageWriter<
   @Nonnull
   @Override
   public T createArchiveObject(@Nonnull File tempFile) throws IOException {
-    throw new UnsupportedOperationException("Use createArchiveObject(@NotNull File tempFile, @NotNull ArchivePackageInfo archivePackageInfo)");
+    throw new UnsupportedOperationException("Use createArchiveObject(@Nonnull File tempFile, @Nonnull ArchivePackageInfo archivePackageInfo)");
   }
 
   @Nonnull
