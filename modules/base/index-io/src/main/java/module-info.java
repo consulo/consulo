@@ -17,7 +17,7 @@ module consulo.index.io {
   exports consulo.index.io;
   exports consulo.index.io.data;
 
-  exports consulo.index.io.internal to consulo.application.impl;
+  exports consulo.index.io.internal to consulo.application.impl, consulo.ide.impl;
 
   uses consulo.index.io.internal.LowMemoryWatcherInternal;
 }

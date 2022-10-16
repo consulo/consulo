@@ -26,7 +26,7 @@ import consulo.language.psi.stub.FileBasedIndex;
 import consulo.language.psi.stub.FileContent;
 import consulo.language.psi.stub.ScalarIndexExtension;
 import consulo.virtualFileSystem.fileType.FileType;
-import consulo.ide.impl.idea.openapi.util.ThreadLocalCachedIntArray;
+import consulo.util.lang.ThreadLocalCachedIntArray;
 import consulo.ide.impl.idea.openapi.util.text.TrigramBuilder;
 import consulo.ide.impl.psi.impl.cache.impl.id.IdIndex;
 import consulo.util.lang.SystemProperties;

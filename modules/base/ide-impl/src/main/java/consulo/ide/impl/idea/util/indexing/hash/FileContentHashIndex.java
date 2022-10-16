@@ -4,9 +4,11 @@ package consulo.ide.impl.idea.util.indexing.hash;
 import consulo.application.util.function.Computable;
 import consulo.ide.impl.idea.util.indexing.*;
 import consulo.ide.impl.idea.util.indexing.impl.AbstractUpdateData;
-import consulo.ide.impl.idea.util.indexing.impl.IndexStorage;
+import consulo.index.io.IndexStorage;
 import consulo.ide.impl.idea.util.indexing.impl.forward.MapForwardIndexAccessor;
 import consulo.ide.impl.idea.util.indexing.impl.forward.PersistentMapBasedForwardIndex;
+import consulo.index.io.StorageException;
+import consulo.index.io.ValueContainer;
 import consulo.language.psi.stub.FileContent;
 
 import javax.annotation.Nonnull;

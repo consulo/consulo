@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.util.indexing;
 
+import consulo.index.io.StorageException;
+import consulo.index.io.ValueContainer;
 import consulo.util.lang.function.Condition;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;

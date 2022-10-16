@@ -14,30 +14,34 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.util.indexing.impl;
+package consulo.index.io;
 
-import consulo.application.util.function.Computable;
-import consulo.ide.impl.idea.util.indexing.ValueContainer;
 import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.data.DataInputOutputUtil;
-import gnu.trove.TIntHashSet;
-import javax.annotation.Nonnull;
+import consulo.index.io.internal.CompactableUpdatableValueContainer;
+import consulo.index.io.internal.FileId2ValueMapping;
+import consulo.index.io.internal.ValueContainerImpl;
+import consulo.util.collection.primitive.ints.IntSet;
+import consulo.util.collection.primitive.ints.IntSets;
 
+import javax.annotation.Nonnull;
 import java.io.DataOutput;
 import java.io.IOException;
 
 /**
  * @author Eugene Zhuravlev
  */
-public class ChangeTrackingValueContainer<Value> extends UpdatableValueContainer<Value> {
+public class ChangeTrackingValueContainer<Value> extends CompactableUpdatableValueContainer<Value> {
   // there is no volatile as we modify under write lock and read under read lock
   private ValueContainerImpl<Value> myAdded;
-  private TIntHashSet myInvalidated;
+  private IntSet myInvalidated;
   private volatile ValueContainerImpl<Value> myMerged;
   private final Initializer<Value> myInitializer;
 
-  public interface Initializer<T> extends Computable<ValueContainer<T>> {
+  public interface Initializer<T> {
     Object getLock();
+
+    ValueContainer<T> compute();
   }
 
   public ChangeTrackingValueContainer(Initializer<Value> initializer) {
@@ -64,7 +68,7 @@ public class ChangeTrackingValueContainer<Value> extends UpdatableValueContainer
 
     if (myAdded != null) myAdded.removeAssociatedValue(inputId);
 
-    if (myInvalidated == null) myInvalidated = new TIntHashSet(1);
+    if (myInvalidated == null) myInvalidated = IntSets.newHashSet(1);
     myInvalidated.add(inputId);
   }
 
@@ -125,7 +129,6 @@ public class ChangeTrackingValueContainer<Value> extends UpdatableValueContainer
         myInvalidated.forEach(inputId -> {
           if (finalFileId2ValueMapping != null) finalFileId2ValueMapping.removeFileId(inputId);
           else newMerged.removeAssociatedValue(inputId);
-          return true;
         });
       }
 
@@ -145,7 +148,7 @@ public class ChangeTrackingValueContainer<Value> extends UpdatableValueContainer
           return true;
         });
       }
-      setNeedsCompacting(((UpdatableValueContainer<Value>)fromDisk).needsCompacting());
+      setNeedsCompacting(((CompactableUpdatableValueContainer<Value>)fromDisk).needsCompacting());
 
       myMerged = newMerged;
       return newMerged;
@@ -162,7 +165,7 @@ public class ChangeTrackingValueContainer<Value> extends UpdatableValueContainer
       getMergedData().saveTo(out, externalizer);
     }
     else {
-      final TIntHashSet set = myInvalidated;
+      final IntSet set = myInvalidated;
       if (set != null && set.size() > 0) {
         for (int inputId : set.toArray()) {
           DataInputOutputUtil.writeINT(out, -inputId); // mark inputId as invalid, to be processed on load in ValueContainerImpl.readFrom

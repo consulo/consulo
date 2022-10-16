@@ -14,12 +14,9 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.util.indexing.impl;
+package consulo.index.io;
 
-import consulo.ide.impl.idea.util.indexing.StorageException;
-import consulo.ide.impl.idea.util.indexing.ValueContainer;
 import javax.annotation.Nonnull;
-
 import java.io.Flushable;
 import java.io.IOException;
 

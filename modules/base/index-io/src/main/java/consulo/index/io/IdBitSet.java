@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util.indexing.containers;
+package consulo.index.io;
 
-import consulo.logging.Logger;
-import consulo.ide.impl.idea.util.indexing.ValueContainer;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by Maxim.Mossienko on 5/27/2014.
@@ -166,7 +165,7 @@ class IdBitSet implements Cloneable, RandomAccessIntContainer {
       clone.myBitMask = myBitMask.clone();
       return clone;
     } catch (CloneNotSupportedException ex) {
-      Logger.getInstance(getClass()).error(ex);
+      LoggerFactory.getLogger(getClass()).error(ex.getMessage(), ex);
       return null;
     }
   }

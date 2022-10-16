@@ -13,17 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util.indexing;
+package consulo.index.io;
 
-import consulo.content.scope.SearchScope;
-import consulo.index.io.IndexStorage;
-import consulo.index.io.StorageException;
-import consulo.language.psi.stub.IdFilter;
+/**
+ * Created by Maxim.Mossienko on 5/27/2014.
+ */
+interface RandomAccessIntContainer {
+  Object clone();
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.function.Predicate;
+  boolean add(int value);
 
-public interface VfsAwareIndexStorage<Key, Value> extends IndexStorage<Key, Value> {
-  boolean processKeys(@Nonnull Predicate<? super Key> processor, SearchScope scope, @Nullable IdFilter idFilter) throws StorageException;
+  boolean remove(int value);
+
+  IntIdsIterator intIterator();
+
+  ValueContainer.IntPredicate intPredicate();
+
+  void compact();
+
+  int size();
+
+  boolean contains(int value);
+
+  RandomAccessIntContainer ensureContainerCapacity(int diff);
 }

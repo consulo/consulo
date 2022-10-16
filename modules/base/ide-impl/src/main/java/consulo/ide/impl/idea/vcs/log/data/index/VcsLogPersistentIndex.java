@@ -33,7 +33,7 @@ import consulo.ide.impl.idea.util.EmptyConsumer;
 import consulo.application.util.function.Processor;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.indexing.StorageException;
+import consulo.index.io.StorageException;
 import consulo.ide.impl.idea.vcs.log.*;
 import consulo.ide.impl.idea.vcs.log.data.*;
 import consulo.ide.impl.idea.vcs.log.impl.FatalErrorHandler;

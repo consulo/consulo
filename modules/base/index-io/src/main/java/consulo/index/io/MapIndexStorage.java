@@ -13,20 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util.indexing.impl;
+package consulo.index.io;
 
-import consulo.index.io.KeyDescriptor;
-import consulo.index.io.PersistentHashMapValueStorage;
-import consulo.index.io.PersistentMap;
 import consulo.index.io.data.DataExternalizer;
-import consulo.language.util.IncorrectOperationException;
-import consulo.application.util.function.Processor;
-import consulo.util.collection.SLRUCache;
-import consulo.ide.impl.idea.util.indexing.StorageException;
-import consulo.ide.impl.idea.util.indexing.ValueContainer;
-import consulo.logging.Logger;
 import consulo.index.io.data.IOUtil;
+import consulo.index.io.internal.ValueContainerImpl;
+import consulo.util.collection.SLRUCache;
+import consulo.util.lang.LoggerAssert;
 import org.jetbrains.annotations.TestOnly;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -36,9 +32,10 @@ import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.IntUnaryOperator;
+import java.util.function.Predicate;
 
 public abstract class MapIndexStorage<Key, Value> implements IndexStorage<Key, Value> {
-  private static final Logger LOG = Logger.getInstance(MapIndexStorage.class);
+  private static final Logger LOG = LoggerFactory.getLogger(MapIndexStorage.class);
   protected PersistentMap<Key, UpdatableValueContainer<Value>> myMap;
   protected SLRUCache<Key, ChangeTrackingValueContainer<Value>> myCache;
   protected final File myBaseStorageFile;
@@ -75,7 +72,7 @@ public abstract class MapIndexStorage<Key, Value> implements IndexStorage<Key, V
     myKeyIsUniqueForIndexedFile = keyIsUniqueForIndexedFile;
     myReadOnly = readOnly;
     if (inputRemapping != null) {
-      LOG.assertTrue(myReadOnly, "input remapping allowed only for read-only storage");
+      LoggerAssert.assertTrue(LOG, myReadOnly, "input remapping allowed only for read-only storage");
     }
     else {
       inputRemapping = operand -> operand;
@@ -86,12 +83,7 @@ public abstract class MapIndexStorage<Key, Value> implements IndexStorage<Key, V
 
   protected void initMapAndCache() throws IOException {
     final ValueContainerMap<Key, Value> map;
-    PersistentHashMapValueStorage.CreationTimeOptions.EXCEPTIONAL_IO_CANCELLATION.set(new PersistentHashMapValueStorage.ExceptionalIOCancellationCallback() {
-      @Override
-      public void checkCancellation() {
-        checkCanceled();
-      }
-    });
+    PersistentHashMapValueStorage.CreationTimeOptions.EXCEPTIONAL_IO_CANCELLATION.set(() -> checkCanceled());
     PersistentHashMapValueStorage.CreationTimeOptions.COMPACT_CHUNKS_WITH_VALUE_DESERIALIZATION.set(Boolean.TRUE);
     if (myKeyIsUniqueForIndexedFile) {
       PersistentHashMapValueStorage.CreationTimeOptions.HAS_NO_CHUNKS.set(Boolean.TRUE);
@@ -197,7 +189,7 @@ public abstract class MapIndexStorage<Key, Value> implements IndexStorage<Key, V
       myMap.close();
     }
     catch (IOException | RuntimeException e) {
-      LOG.info(e);
+      LOG.info(e.getMessage(), e);
     }
     try {
       IOUtil.deleteAllFilesStartingWith(getStorageFile());
@@ -229,7 +221,7 @@ public abstract class MapIndexStorage<Key, Value> implements IndexStorage<Key, V
   @Override
   public void addValue(final Key key, final int inputId, final Value value) throws StorageException {
     if (myReadOnly) {
-      throw new IncorrectOperationException("Index storage is read-only");
+      throw new UnsupportedOperationException("Index storage is read-only");
     }
     try {
       myMap.markDirty();
@@ -298,7 +290,7 @@ public abstract class MapIndexStorage<Key, Value> implements IndexStorage<Key, V
   }
 
   @TestOnly
-  public boolean processKeys(@Nonnull Processor<? super Key> processor) throws StorageException {
+  public boolean processKeys(@Nonnull Predicate<? super Key> processor) throws StorageException {
     l.lock();
     try {
       myCache.clear(); // this will ensure that all new keys are made into the map

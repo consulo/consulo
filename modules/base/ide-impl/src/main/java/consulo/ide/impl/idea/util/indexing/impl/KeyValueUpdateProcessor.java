@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.util.indexing.impl;
 
-import consulo.ide.impl.idea.util.indexing.StorageException;
+import consulo.index.io.StorageException;
 
 public interface KeyValueUpdateProcessor<Key, Value> {
   void process(Key key, Value value, int inputId) throws StorageException;

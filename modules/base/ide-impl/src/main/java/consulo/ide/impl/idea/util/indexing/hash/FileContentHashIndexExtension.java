@@ -13,7 +13,7 @@ import consulo.disposer.Disposer;
 import consulo.util.lang.ShutDownTracker;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.ContentHashesUtil;
 import consulo.ide.impl.idea.util.indexing.*;
-import consulo.ide.impl.idea.util.indexing.impl.IndexStorage;
+import consulo.index.io.IndexStorage;
 import consulo.index.io.data.DataInputOutputUtil;
 
 import javax.annotation.Nonnull;

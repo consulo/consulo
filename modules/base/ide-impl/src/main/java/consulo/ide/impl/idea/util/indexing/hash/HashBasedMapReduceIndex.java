@@ -3,8 +3,8 @@ package consulo.ide.impl.idea.util.indexing.hash;
 
 import consulo.application.progress.ProgressManager;
 import consulo.ide.impl.idea.util.indexing.*;
-import consulo.ide.impl.idea.util.indexing.impl.IndexStorage;
-import consulo.ide.impl.idea.util.indexing.impl.MapIndexStorage;
+import consulo.index.io.IndexStorage;
+import consulo.index.io.MapIndexStorage;
 import consulo.ide.impl.idea.util.indexing.provided.ProvidedIndexExtension;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.language.psi.stub.FileBasedIndexExtension;

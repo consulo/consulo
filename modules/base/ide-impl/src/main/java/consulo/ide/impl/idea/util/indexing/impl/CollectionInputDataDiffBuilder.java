@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.util.indexing.impl;
 
-import consulo.ide.impl.idea.util.indexing.StorageException;
+import consulo.index.io.StorageException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

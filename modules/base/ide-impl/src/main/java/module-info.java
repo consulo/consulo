@@ -838,7 +838,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.util.gist;
   exports consulo.ide.impl.idea.util.graph.impl;
   exports consulo.ide.impl.idea.util.indexing;
-  exports consulo.ide.impl.idea.util.indexing.containers;
   exports consulo.ide.impl.idea.util.indexing.hash;
   exports consulo.ide.impl.idea.util.indexing.impl;
   exports consulo.ide.impl.idea.util.indexing.impl.forward;

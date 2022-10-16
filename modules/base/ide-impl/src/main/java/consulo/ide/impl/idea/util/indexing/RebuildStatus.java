@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.util.indexing;
 
 import consulo.application.progress.ProgressManager;
+import consulo.index.io.StorageException;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.index.io.ID;
 import consulo.util.lang.TimeoutUtil;

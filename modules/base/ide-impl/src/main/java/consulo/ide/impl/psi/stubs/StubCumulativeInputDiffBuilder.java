@@ -1,8 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.psi.stubs;
 
-import consulo.ide.impl.idea.util.indexing.StorageException;
-import consulo.ide.impl.idea.util.indexing.impl.DebugAssertions;
+import consulo.index.io.StorageException;
+import consulo.index.io.internal.DebugAssertions;
 import consulo.ide.impl.idea.util.indexing.impl.InputDataDiffBuilder;
 import consulo.ide.impl.idea.util.indexing.impl.KeyValueUpdateProcessor;
 import consulo.ide.impl.idea.util.indexing.impl.RemovedKeyProcessor;

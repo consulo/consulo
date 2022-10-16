@@ -19,6 +19,7 @@ package consulo.ide.impl.idea.util.indexing;
 import consulo.content.scope.SearchScope;
 import consulo.ide.impl.idea.util.indexing.impl.AbstractUpdateData;
 import consulo.index.io.IndexExtension;
+import consulo.index.io.StorageException;
 import consulo.language.psi.stub.IdFilter;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.TestOnly;

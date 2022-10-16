@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.util.indexing;
+package consulo.index.io;
 
 import javax.annotation.Nonnull;
 

@@ -31,7 +31,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.ide.impl.psi.stubs.provided.StubProvidedIndexExtension;
 import consulo.ide.impl.idea.util.ConcurrencyUtil;
-import consulo.application.util.function.Processor;
 import consulo.application.util.function.Processors;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.FactoryMap;

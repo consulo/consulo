@@ -18,7 +18,7 @@ package consulo.util.lang;
 import org.slf4j.Logger;
 
 /**
- * Slf4J logger util, which emulate for Loggger from Con
+ * Slf4J logger util, which emulate for Loggger from Consulo API
  * @author VISTALL
  * @since 06-Feb-22
  */

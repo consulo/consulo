@@ -3,7 +3,7 @@ package consulo.ide.impl.psi.stubs;
 
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.psi.stub.FileContent;
-import consulo.ide.impl.idea.util.indexing.StorageException;
+import consulo.index.io.StorageException;
 import consulo.ide.impl.idea.util.indexing.UpdatableIndex;
 import consulo.ide.impl.idea.util.indexing.impl.InputData;
 import consulo.ide.impl.idea.util.indexing.impl.InputDataDiffBuilder;

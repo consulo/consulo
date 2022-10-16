@@ -13,12 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util.indexing.impl;
+package consulo.index.io.internal;
 
-import consulo.ide.impl.idea.util.indexing.ValueContainer;
+import consulo.index.io.InvertedIndexValueIterator;
+import consulo.index.io.ValueContainer;
+import consulo.index.io.internal.DebugAssertions;
+import consulo.index.io.internal.ValueContainerImpl;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
-import gnu.trove.TIntObjectHashMap;
+import consulo.util.collection.primitive.ints.IntMaps;
+import consulo.util.collection.primitive.ints.IntObjectMap;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,22 +30,22 @@ import java.util.List;
 /**
  * Created by Maxim.Mossienko on 7/4/2014.
  */
-class FileId2ValueMapping<Value> {
-  private TIntObjectHashMap<Value> id2ValueMap;
+public class FileId2ValueMapping<Value> {
+  private IntObjectMap<Value> id2ValueMap;
   private ValueContainerImpl<Value> valueContainer;
   private boolean myOnePerFileValidationEnabled = true;
 
-  FileId2ValueMapping(ValueContainerImpl<Value> _valueContainer) {
-    id2ValueMap = new TIntObjectHashMap<Value>();
+  public FileId2ValueMapping(ValueContainerImpl<Value> _valueContainer) {
+    id2ValueMap = IntMaps.newIntObjectHashMap();
     valueContainer = _valueContainer;
 
     IntList removedFileIdList = null;
     List<Value> removedValueList = null;
 
-    for (final ValueContainer.ValueIterator<Value> valueIterator = _valueContainer.getValueIterator(); valueIterator.hasNext();) {
+    for (final ValueContainer.ValueIterator<Value> valueIterator = _valueContainer.getValueIterator(); valueIterator.hasNext(); ) {
       final Value value = valueIterator.next();
 
-      for (final ValueContainer.IntIterator intIterator = valueIterator.getInputIdsIterator(); intIterator.hasNext();) {
+      for (final ValueContainer.IntIterator intIterator = valueIterator.getInputIdsIterator(); intIterator.hasNext(); ) {
         int id = intIterator.next();
         Value previousValue = id2ValueMap.put(id, value);
         if (previousValue != null) {  // delay removal of duplicated id -> value mapping since it will affect valueIterator we are using
@@ -56,26 +60,26 @@ class FileId2ValueMapping<Value> {
     }
 
     if (removedFileIdList != null) {
-      for(int i = 0, size = removedFileIdList.size(); i < size; ++i) {
+      for (int i = 0, size = removedFileIdList.size(); i < size; ++i) {
         valueContainer.removeValue(removedFileIdList.get(i), removedValueList.get(i));
       }
     }
   }
 
-  void associateFileIdToValue(int fileId, Value value) {
+  public void associateFileIdToValue(int fileId, Value value) {
     Value previousValue = id2ValueMap.put(fileId, value);
     if (previousValue != null) {
       valueContainer.removeValue(fileId, previousValue);
     }
   }
 
-  boolean removeFileId(int inputId) {
+  public boolean removeFileId(int inputId) {
     Value mapped = id2ValueMap.remove(inputId);
     if (mapped != null) {
       valueContainer.removeValue(inputId, mapped);
     }
     if (DebugAssertions.EXTRA_SANITY_CHECKS && myOnePerFileValidationEnabled) {
-      for (final InvertedIndexValueIterator<Value> valueIterator = valueContainer.getValueIterator(); valueIterator.hasNext();) {
+      for (final InvertedIndexValueIterator<Value> valueIterator = valueContainer.getValueIterator(); valueIterator.hasNext(); ) {
         valueIterator.next();
         DebugAssertions.assertTrue(!valueIterator.getValueAssociationPredicate().contains(inputId));
       }

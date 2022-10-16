@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util.indexing.containers;
+package consulo.index.io;
 
-import consulo.ide.impl.idea.openapi.util.ThreadLocalCachedIntArray;
+import consulo.util.lang.ThreadLocalCachedIntArray;
 
 /**
  * Created by Maxim.Mossienko on 6/12/2014.

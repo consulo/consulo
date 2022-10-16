@@ -5,7 +5,7 @@ import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.index.io.CompressionUtil;
 import consulo.ide.impl.idea.util.ExceptionUtil;
 import consulo.util.lang.ObjectUtil;
-import consulo.ide.impl.idea.util.indexing.impl.DebugAssertions;
+import consulo.index.io.internal.DebugAssertions;
 import consulo.ide.impl.idea.util.indexing.impl.InputData;
 import consulo.ide.impl.idea.util.indexing.impl.forward.AbstractForwardIndexAccessor;
 import consulo.ide.impl.idea.util.indexing.impl.forward.PersistentMapBasedForwardIndex;

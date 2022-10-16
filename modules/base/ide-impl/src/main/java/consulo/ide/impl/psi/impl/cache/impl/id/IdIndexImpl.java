@@ -9,7 +9,7 @@ import consulo.language.psi.stub.IdTableBuilding;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.ThreadLocalCachedIntArray;
+import consulo.util.lang.ThreadLocalCachedIntArray;
 import consulo.ide.impl.idea.util.indexing.CustomInputsIndexFileBasedIndexExtension;
 import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.data.DataInputOutputUtil;

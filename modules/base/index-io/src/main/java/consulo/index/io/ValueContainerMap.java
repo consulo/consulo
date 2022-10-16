@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util.indexing.impl;
+package consulo.index.io;
 
 import consulo.index.io.data.DataExternalizer;
-import consulo.index.io.KeyDescriptor;
-import consulo.index.io.PersistentHashMap;
+import consulo.index.io.internal.ValueContainerImpl;
 
 import javax.annotation.Nonnull;
 import java.io.*;
@@ -55,12 +54,7 @@ class ValueContainerMap<Key, Value> extends PersistentHashMap<Key, UpdatableValu
       // note that keys unique for indexed file have their value calculated at once (e.g. key is file id, index calculates something for particular
       // file) and there is no benefit to accumulate values for particular key because only one value exists
       if (!valueContainer.needsCompacting() && !myKeyIsUniqueForIndexedFile) {
-        appendData(key, new PersistentHashMap.ValueDataAppender() {
-          @Override
-          public void append(@Nonnull final DataOutput out) throws IOException {
-            valueContainer.saveTo(out, myValueExternalizer);
-          }
-        });
+        appendData(key, out -> valueContainer.saveTo(out, myValueExternalizer));
       }
       else {
         // rewrite the value container for defragmentation

@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.util.indexing.impl;
+package consulo.index.io.internal;
 
-import consulo.util.collection.SmartList;
-import consulo.ide.impl.idea.util.indexing.ValueContainer;
-import consulo.ide.impl.idea.util.indexing.containers.ChangeBufferingList;
-import consulo.ide.impl.idea.util.indexing.containers.IntIdsIterator;
+import consulo.index.io.*;
 import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.data.DataInputOutputUtil;
-import consulo.logging.Logger;
+import consulo.util.collection.SmartList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,8 +34,8 @@ import java.util.function.IntUnaryOperator;
 /**
  * @author Eugene Zhuravlev
  */
-class ValueContainerImpl<Value> extends UpdatableValueContainer<Value> implements Cloneable {
-  private static final Logger LOG = Logger.getInstance(ValueContainerImpl.class);
+public class ValueContainerImpl<Value> extends CompactableUpdatableValueContainer<Value> implements Cloneable {
+  private static final Logger LOG = LoggerFactory.getLogger(ValueContainerImpl.class);
   private static final Object myNullValue = new Object();
 
   // there is no volatile as we modify under write lock and read under read lock
@@ -254,7 +253,7 @@ class ValueContainerImpl<Value> extends UpdatableValueContainer<Value> implement
 
     @Nonnull
     @Override
-    public ValueContainer.IntIterator getInputIdsIterator() {
+    public IntIterator getInputIdsIterator() {
       throw new IllegalStateException();
     }
 
@@ -298,7 +297,7 @@ class ValueContainerImpl<Value> extends UpdatableValueContainer<Value> implement
   }
 
   @Nonnull
-  private static ValueContainer.IntIterator getIntIteratorOutOfFileSetObject(@Nullable Object input) {
+  private static IntIterator getIntIteratorOutOfFileSetObject(@Nullable Object input) {
     if (input == null) return EMPTY_ITERATOR;
     if (input instanceof Integer) {
       return new SingleValueIterator(((Integer)input).intValue());
@@ -349,7 +348,7 @@ class ValueContainerImpl<Value> extends UpdatableValueContainer<Value> implement
     }
   }
 
-  private static final ValueContainer.IntIterator EMPTY_ITERATOR = new IntIdsIterator() {
+  private static final IntIterator EMPTY_ITERATOR = new IntIdsIterator() {
     @Override
     public boolean hasNext() {
       return false;
@@ -454,7 +453,7 @@ class ValueContainerImpl<Value> extends UpdatableValueContainer<Value> implement
     }
   }
 
-  static final int NUMBER_OF_VALUES_THRESHOLD = 20;
+  public static final int NUMBER_OF_VALUES_THRESHOLD = 20;
 
   public void readFrom(@Nonnull DataInputStream stream, @Nonnull DataExternalizer<? extends Value> externalizer, @Nonnull IntUnaryOperator inputRemapping) throws IOException {
     FileId2ValueMapping<Value> mapping = null;

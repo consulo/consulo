@@ -23,7 +23,7 @@ import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.change.Change;
 import consulo.ide.impl.idea.util.PathUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.indexing.StorageException;
+import consulo.index.io.StorageException;
 import consulo.versionControlSystem.log.VcsFullCommitDetails;
 import consulo.ide.impl.idea.vcs.log.impl.FatalErrorHandler;
 import consulo.ide.impl.idea.vcs.log.impl.VcsChangesLazilyParsedDetails;

@@ -15,9 +15,9 @@
  */
 package consulo.ide.impl.idea.util.indexing.impl;
 
-import consulo.index.io.DataIndexer;
-import consulo.index.io.IndexId;
-import consulo.index.io.IndexExtension;
+import consulo.index.io.*;
+import consulo.index.io.internal.DebugAssertions;
+import consulo.index.io.internal.ValueContainerImpl;
 import consulo.logging.Logger;
 import consulo.component.ProcessCanceledException;
 import consulo.ide.impl.idea.openapi.util.Comparing;

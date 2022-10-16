@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util.indexing.containers;
 
-import consulo.ide.impl.idea.util.indexing.ValueContainer;
+package consulo.index.io;
 
 /**
- * Created by Maxim.Mossienko on 5/27/2014.
+ * @author Eugene Zhuravlev
+ * Date: Dec 20, 2007
  */
-interface RandomAccessIntContainer {
-  Object clone();
-  boolean add(int value);
-  boolean remove(int value);
-  IntIdsIterator intIterator();
-  ValueContainer.IntPredicate intPredicate();
-  void compact();
-  int size();
+public class StorageException extends Exception {
+  public StorageException(final String message) {
+    super(message);
+  }
 
-  boolean contains(int value);
+  public StorageException(final String message, final Throwable cause) {
+    super(message, cause);
+  }
 
-  RandomAccessIntContainer ensureContainerCapacity(int diff);
+  public StorageException(final Throwable cause) {
+    super(cause);
+  }
 }

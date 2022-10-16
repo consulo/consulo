@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,12 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util.indexing.containers;
+package consulo.util.lang;
 
-import consulo.ide.impl.idea.util.indexing.ValueContainer;
+import java.lang.ref.SoftReference;
 
-public interface IntIdsIterator extends ValueContainer.IntIterator {
-  boolean hasAscendingOrder();
+public final class ThreadLocalCachedIntArray {
+  private final ThreadLocal<SoftReference<int[]>> myThreadLocal = new ThreadLocal<SoftReference<int[]>>();
 
-  IntIdsIterator createCopyInInitialState();
+  public int[] getBuffer(int size) {
+    int[] value = consulo.util.lang.ref.SoftReference.dereference(myThreadLocal.get());
+    if (value == null || value.length <= size) {
+      value = new int[size];
+      myThreadLocal.set(new SoftReference<int[]>(value));
+    }
+
+    return value;
+  }
 }

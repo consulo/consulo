@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.vcs.log.data.index;
 
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.index.io.DataIndexer;
-import consulo.ide.impl.idea.util.indexing.StorageException;
+import consulo.index.io.StorageException;
 import consulo.index.io.VoidDataExternalizer;
 import consulo.versionControlSystem.log.VcsFullCommitDetails;
 import consulo.versionControlSystem.log.VcsUser;

@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.util.indexing.impl;
 
-import consulo.ide.impl.idea.util.indexing.StorageException;
+import consulo.index.io.StorageException;
 
 public interface RemovedKeyProcessor<Key> {
   void process(Key key, int inputId) throws StorageException;

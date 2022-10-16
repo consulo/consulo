@@ -5,7 +5,8 @@
  */
 package consulo.ide.impl.idea.util.indexing;
 
-import consulo.ide.impl.idea.util.indexing.impl.IndexStorage;
+import consulo.index.io.IndexStorage;
+import consulo.index.io.StorageException;
 import consulo.language.psi.stub.FileBasedIndexExtension;
 import consulo.language.psi.stub.FileContent;
 

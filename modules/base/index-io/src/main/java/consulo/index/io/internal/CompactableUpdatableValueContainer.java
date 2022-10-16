@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,33 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.index.io.internal;
 
-package consulo.ide.impl.idea.util.indexing.impl;
-
-import consulo.ide.impl.idea.util.indexing.ValueContainer;
-import consulo.index.io.data.DataExternalizer;
-
-import java.io.DataOutput;
-import java.io.IOException;
+import consulo.index.io.UpdatableValueContainer;
 
 /**
- * @author Eugene Zhuravlev
+ * @author VISTALL
+ * @since 16/10/2022
  */
-public abstract class UpdatableValueContainer<T> extends ValueContainer<T> {
-
-  public abstract void addValue(int inputId, T value);
-
-  public abstract void removeAssociatedValue(int inputId);
-
+public abstract class CompactableUpdatableValueContainer<T> extends UpdatableValueContainer<T> {
   private volatile boolean myNeedsCompacting;
 
-  boolean needsCompacting() {
+  public boolean needsCompacting() {
     return myNeedsCompacting;
   }
 
-  void setNeedsCompacting(boolean value) {
+  public void setNeedsCompacting(boolean value) {
     myNeedsCompacting = value;
   }
-
-  public abstract void saveTo(DataOutput out, DataExternalizer<? super T> externalizer) throws IOException;
 }

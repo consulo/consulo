@@ -11,6 +11,7 @@ import consulo.ide.impl.idea.util.indexing.impl.KeyValueUpdateProcessor;
 import consulo.ide.impl.idea.util.indexing.impl.RemovedKeyProcessor;
 import consulo.application.progress.ProgressManager;
 import consulo.index.io.ID;
+import consulo.index.io.StorageException;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.index.io.IndexExtension;
 import consulo.language.psi.stub.SingleEntryFileBasedIndexExtension;

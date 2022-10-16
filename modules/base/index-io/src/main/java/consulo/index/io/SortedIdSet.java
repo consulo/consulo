@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util.indexing.containers;
-
-import consulo.ide.impl.idea.util.indexing.ValueContainer;
+package consulo.index.io;
 
 import java.util.function.IntPredicate;
 
@@ -41,10 +39,12 @@ public class SortedIdSet implements Cloneable, RandomAccessIntContainer {
     return mySize == 0;
   }
 
+  @Override
   public int size() {
     return mySize;
   }
 
+  @Override
   public boolean add(int value) {
     assert value > 0;
     int pos;
@@ -78,6 +78,7 @@ public class SortedIdSet implements Cloneable, RandomAccessIntContainer {
     return true;
   }
 
+  @Override
   public boolean remove(int value) {
     assert value > 0;
     int pos = binarySearch(mySet, 0, mySetLength, value);
@@ -165,6 +166,7 @@ public class SortedIdSet implements Cloneable, RandomAccessIntContainer {
     }
   }
 
+  @Override
   public boolean contains(int value) {
     if(value <= 0) return false;
     int pos = binarySearch(mySet, 0, mySetLength, value);
@@ -183,6 +185,7 @@ public class SortedIdSet implements Cloneable, RandomAccessIntContainer {
     }
   }
 
+  @Override
   public void compact() {
     if(2 * mySize < mySetLength && mySetLength > 5) {
       int positivePosition = -1;
@@ -205,6 +208,7 @@ public class SortedIdSet implements Cloneable, RandomAccessIntContainer {
     }
   }
 
+  @Override
   public RandomAccessIntContainer ensureContainerCapacity(int count) {
     int newSize = mySetLength + count;
     if (newSize < mySet.length) return this;

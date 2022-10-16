@@ -13,18 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util.indexing.impl;
 
-import consulo.ide.impl.idea.util.indexing.ValueContainer;
-import javax.annotation.Nonnull;
+package consulo.index.io;
+
+import consulo.index.io.data.DataExternalizer;
+
+import java.io.DataOutput;
+import java.io.IOException;
 
 /**
- * Created by Maxim.Mossienko on 11/22/2016.
+ * @author Eugene Zhuravlev
  */
-public interface InvertedIndexValueIterator<Value> extends ValueContainer.ValueIterator<Value> {
-  @Override
-  @Nonnull
-  ValueContainer.IntPredicate getValueAssociationPredicate();
+public abstract class UpdatableValueContainer<T> extends ValueContainer<T> {
 
-  Object getFileSetObject();
+  public abstract void addValue(int inputId, T value);
+
+  public abstract void removeAssociatedValue(int inputId);
+
+  public abstract void saveTo(DataOutput out, DataExternalizer<? super T> externalizer) throws IOException;
 }

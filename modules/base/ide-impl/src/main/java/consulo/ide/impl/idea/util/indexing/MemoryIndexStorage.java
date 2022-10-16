@@ -18,11 +18,13 @@ package consulo.ide.impl.idea.util.indexing;
 
 import consulo.content.scope.SearchScope;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.indexing.impl.ChangeTrackingValueContainer;
-import consulo.ide.impl.idea.util.indexing.impl.DebugAssertions;
-import consulo.ide.impl.idea.util.indexing.impl.IndexStorage;
-import consulo.ide.impl.idea.util.indexing.impl.UpdatableValueContainer;
+import consulo.index.io.ChangeTrackingValueContainer;
+import consulo.index.io.internal.DebugAssertions;
+import consulo.index.io.IndexStorage;
+import consulo.index.io.UpdatableValueContainer;
 import consulo.index.io.ID;
+import consulo.index.io.StorageException;
+import consulo.index.io.ValueContainer;
 import consulo.language.psi.stub.IdFilter;
 
 import javax.annotation.Nonnull;

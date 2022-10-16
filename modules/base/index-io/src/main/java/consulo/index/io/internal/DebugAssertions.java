@@ -13,14 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util.indexing.impl;
+package consulo.index.io.internal;
 
-import consulo.logging.Logger;
-import consulo.util.lang.SystemProperties;
 import consulo.index.io.IndexId;
+import consulo.util.lang.LoggerAssert;
+import consulo.util.lang.SystemProperties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DebugAssertions {
-  private static final Logger LOG = Logger.getInstance(DebugAssertions.class);
+  private static final Logger LOG = LoggerFactory.getLogger(DebugAssertions.class);
 
   public static final ThreadLocal<IndexId<?, ?>> DEBUG_INDEX_ID = new ThreadLocal<>();
 
@@ -31,7 +33,7 @@ public class DebugAssertions {
 
   public static void assertTrue(boolean value) {
     if (!value) {
-      LOG.assertTrue(false);
+      LoggerAssert.assertTrue(LOG, false);
     }
   }
 

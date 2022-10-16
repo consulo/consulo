@@ -16,8 +16,9 @@
 package consulo.ide.impl.idea.util.indexing.impl;
 
 import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.index.io.internal.DebugAssertions;
 import consulo.util.lang.SystemProperties;
-import consulo.ide.impl.idea.util.indexing.StorageException;
+import consulo.index.io.StorageException;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

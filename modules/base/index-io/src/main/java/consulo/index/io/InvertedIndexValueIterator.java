@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.index.io;
 
-package consulo.ide.impl.idea.util.indexing;
+import javax.annotation.Nonnull;
 
 /**
- * @author Eugene Zhuravlev
- *         Date: Dec 20, 2007
+ * Created by Maxim.Mossienko on 11/22/2016.
  */
-public class StorageException extends Exception{
-  public StorageException(final String message) {
-    super(message);
-  }
+public interface InvertedIndexValueIterator<Value> extends ValueContainer.ValueIterator<Value> {
+  @Override
+  @Nonnull
+  ValueContainer.IntPredicate getValueAssociationPredicate();
 
-  public StorageException(final String message, final Throwable cause) {
-    super(message, cause);
-  }
-
-  public StorageException(final Throwable cause) {
-    super(cause);
-  }
+  Object getFileSetObject();
 }
