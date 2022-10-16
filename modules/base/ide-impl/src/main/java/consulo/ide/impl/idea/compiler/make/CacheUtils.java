@@ -40,13 +40,6 @@ import java.util.function.Function;
 public class CacheUtils {
   private static final Logger LOG = Logger.getInstance(CacheUtils.class);
 
-  public static String getMethodSignature(String name, String descriptor) {
-    final StringBuilder builder = new StringBuilder();
-    builder.append(name);
-    builder.append(descriptor.substring(0, descriptor.indexOf(')') + 1));
-    return builder.toString();
-  }
-
   public static boolean areArraysContentsEqual(int[] exceptions1, int[] exceptions2) {
     if (exceptions1.length != exceptions2.length) {
       return false;
