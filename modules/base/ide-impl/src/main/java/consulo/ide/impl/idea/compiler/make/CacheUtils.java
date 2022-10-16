@@ -40,21 +40,6 @@ import java.util.function.Function;
 public class CacheUtils {
   private static final Logger LOG = Logger.getInstance(CacheUtils.class);
 
-  public static boolean areArraysContentsEqual(int[] exceptions1, int[] exceptions2) {
-    if (exceptions1.length != exceptions2.length) {
-      return false;
-    }
-    if (exceptions1.length != 0) { // optimization
-      IntSet exceptionsSet = IntSets.newHashSet(exceptions1);
-      for (int exception : exceptions2) {
-        if (!exceptionsSet.contains(exception)) {
-          return false;
-        }
-      }
-    }
-    return true;
-  }
-
   public static Collection<VirtualFile> findDependentFiles(final CompileContextEx context,
                                                            final Set<VirtualFile> compiledWithErrors,
                                                            final @Nullable Function<Pair<int[], Set<VirtualFile>>, Pair<int[], Set<VirtualFile>>> filter)

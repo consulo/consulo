@@ -15,17 +15,16 @@
  */
 package consulo.ide.impl.idea.compiler.actions;
 
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.DaemonCodeAnalyzer;
-import consulo.compiler.CompilerManager;
-import consulo.codeEditor.Editor;
-import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
+import consulo.codeEditor.Editor;
+import consulo.compiler.CompilerManager;
+import consulo.dataContext.DataContext;
+import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
+import consulo.language.psi.PsiFile;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.language.psi.PsiFile;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -38,7 +37,7 @@ public abstract class CompileActionBase extends AnAction implements DumbAware, U
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     if (project == null) {
       return;
     }
@@ -57,7 +56,7 @@ public abstract class CompileActionBase extends AnAction implements DumbAware, U
   @Override
   public void update(@Nonnull final AnActionEvent e) {
     super.update(e);
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     if (project == null || !project.isInitialized()) {
       e.getPresentation().setEnabled(false);
     }

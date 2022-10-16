@@ -18,14 +18,14 @@
  * created at Jan 17, 2002
  * @author Jeka
  */
-package consulo.ide.impl.idea.compiler.make;
+package consulo.compiler.util;
 
 import consulo.compiler.CompileContext;
 import consulo.module.Module;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 public class MakeUtil {
   public static VirtualFile getSourceRoot(CompileContext context, Module module, VirtualFile file) {
@@ -40,7 +40,7 @@ public class MakeUtil {
       if (fileIndex.isInSourceContent(sourceRoot)) {
         continue; // skip content source roots, need only roots for generated files
       }
-      if (VfsUtil.isAncestor(sourceRoot, file, false)) {
+      if (VirtualFileUtil.isAncestor(sourceRoot, file, false)) {
         return sourceRoot;
       }
     }

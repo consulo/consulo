@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.compiler.impl;
 
+import consulo.compiler.scope.FileSetCompileScope;
 import consulo.compiler.util.CompilerUtil;
 import consulo.compiler.util.ModuleCompilerUtil;
 import consulo.ide.impl.compiler.*;
