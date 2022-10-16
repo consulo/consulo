@@ -15,18 +15,20 @@
  */
 package consulo.ide.impl.idea.compiler.actions;
 
-import consulo.localHistory.LocalHistory;
 import consulo.compiler.CompileContext;
 import consulo.compiler.CompileStatusNotification;
 import consulo.compiler.CompilerBundle;
 import consulo.compiler.CompilerManager;
+import consulo.compiler.action.CompileActionBase;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.CommonDataKeys;
+import consulo.localHistory.LocalHistory;
 import consulo.project.Project;
-import javax.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+
+import javax.annotation.Nonnull;
 
 public class CompileProjectAction extends CompileActionBase {
   @RequiredUIAccess

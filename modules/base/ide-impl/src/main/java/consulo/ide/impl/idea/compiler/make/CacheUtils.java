@@ -16,10 +16,7 @@
 package consulo.ide.impl.idea.compiler.make;
 
 import consulo.compiler.*;
-import consulo.compiler.CompileContextEx;
 import consulo.logging.Logger;
-import consulo.util.collection.primitive.ints.IntSet;
-import consulo.util.collection.primitive.ints.IntSets;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;

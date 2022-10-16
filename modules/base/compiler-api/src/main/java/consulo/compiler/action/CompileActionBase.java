@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.compiler.actions;
+package consulo.compiler.action;
 
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;

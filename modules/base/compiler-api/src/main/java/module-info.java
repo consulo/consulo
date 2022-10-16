@@ -11,6 +11,7 @@ module consulo.compiler.api {
   requires transitive consulo.execution.api;
 
   exports consulo.compiler;
+  exports consulo.compiler.action;
   exports consulo.compiler.event;
   exports consulo.compiler.generic;
   exports consulo.compiler.setting;

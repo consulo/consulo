@@ -18,6 +18,7 @@
 package consulo.ide.impl.idea.compiler.impl.resourceCompiler;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.compiler.resourceCompiler.ResourceCompiler;
 import consulo.compiler.util.CompilerUtil;
 import consulo.compiler.util.MakeUtil;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
@@ -48,14 +49,14 @@ import java.util.*;
  * Time: 3:48:26 PM
  */
 @ExtensionImpl(id = "resourceCompiler")
-public class ResourceCompiler implements TranslatingCompiler {
-  private static final Logger LOG = Logger.getInstance(ResourceCompiler.class);
+public class ResourceCompilerImpl implements ResourceCompiler {
+  private static final Logger LOG = Logger.getInstance(ResourceCompilerImpl.class);
 
   private final ResourceCompilerConfiguration myResourceCompilerConfiguration;
   private final ProjectFileIndex myProjectFileIndex;
 
   @Inject
-  public ResourceCompiler(Project project) {
+  public ResourceCompilerImpl(Project project) {
     myResourceCompilerConfiguration = ResourceCompilerConfiguration.getInstance(project);
     myProjectFileIndex = ProjectFileIndex.getInstance(project);
   }

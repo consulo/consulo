@@ -17,17 +17,18 @@ package consulo.ide.impl.idea.compiler.actions;
 
 import consulo.compiler.CompilerBundle;
 import consulo.compiler.CompilerManager;
+import consulo.compiler.action.CompileActionBase;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.LangDataKeys;
+import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.project.Project;
-import javax.annotation.Nonnull;
-
-import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+
+import javax.annotation.Nonnull;
 
 public class MakeModuleAction extends CompileActionBase {
   private static final Logger LOG = Logger.getInstance(MakeModuleAction.class);

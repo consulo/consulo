@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.compiler.actions;
 
 import consulo.compiler.CompilerManager;
+import consulo.compiler.action.CompileActionBase;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.compiler.actions;
 
+import consulo.compiler.action.CompileActionBase;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.ui.ex.action.ActionsBundle;
