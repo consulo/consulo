@@ -15,12 +15,6 @@
  */
 package consulo.ide.impl.idea.ide.util;
 
-import consulo.ui.ex.action.ExporterToTextFile;
-import consulo.ide.IdeBundle;
-import consulo.project.impl.internal.ProjectPathMacroManager;
-import consulo.ide.impl.idea.openapi.editor.impl.EditorFactoryImpl;
-import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.application.CommonBundle;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
@@ -28,14 +22,16 @@ import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.EditorSettings;
 import consulo.document.Document;
 import consulo.document.impl.DocumentImpl;
+import consulo.ide.IdeBundle;
+import consulo.ide.impl.idea.openapi.editor.impl.EditorFactoryImpl;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.plain.PlainTextFileType;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.project.macro.ProjectPathMacroManager;
 import consulo.project.ui.wm.WindowManager;
-import consulo.ui.ex.awt.CopyPasteManager;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.FixedSizeButton;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.action.ExporterToTextFile;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.SystemProperties;
 

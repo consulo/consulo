@@ -28,7 +28,7 @@ import consulo.component.store.impl.internal.storage.XmlElementStorage;
 import consulo.project.Project;
 import consulo.project.impl.internal.DefaultProjectImpl;
 import consulo.project.impl.internal.ProjectImpl;
-import consulo.project.impl.internal.ProjectPathMacroManager;
+import consulo.project.macro.ProjectPathMacroManager;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Couple;
 import jakarta.inject.Inject;

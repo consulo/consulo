@@ -15,20 +15,20 @@
  */
 package consulo.ide.impl.idea.execution.util;
 
-import consulo.execution.RuntimeConfigurationWarning;
-import consulo.process.cmd.SimpleProgramParameters;
-import consulo.module.impl.internal.ModulePathMacroManager;
-import consulo.project.impl.internal.ProjectPathMacroManager;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.component.macro.PathMacroUtil;
 import consulo.execution.CommonProgramRunConfigurationParameters;
+import consulo.execution.RuntimeConfigurationWarning;
 import consulo.execution.WorkingDirectoryProvider;
 import consulo.execution.configuration.ModuleBasedConfiguration;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
+import consulo.module.macro.ModulePathMacroManager;
+import consulo.process.cmd.SimpleProgramParameters;
 import consulo.process.local.EnvironmentUtil;
 import consulo.project.Project;
+import consulo.project.macro.ProjectPathMacroManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import org.jetbrains.annotations.SystemIndependent;

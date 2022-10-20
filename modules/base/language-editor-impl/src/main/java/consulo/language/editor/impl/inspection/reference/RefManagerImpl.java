@@ -27,7 +27,7 @@ import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.content.util.ProjectUtilCore;
 import consulo.project.Project;
-import consulo.project.impl.internal.ProjectPathMacroManager;
+import consulo.project.macro.ProjectPathMacroManager;
 import consulo.util.collection.Lists;
 import consulo.util.collection.Maps;
 import consulo.util.dataholder.Key;

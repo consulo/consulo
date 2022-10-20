@@ -15,13 +15,13 @@
  */
 package consulo.ide.impl.idea.execution.ui;
 
-import consulo.language.editor.LangDataKeys;
-import consulo.module.impl.internal.ModulePathMacroManager;
-import consulo.project.impl.internal.ProjectPathMacroManager;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserFactory;
+import consulo.language.editor.LangDataKeys;
 import consulo.module.Module;
+import consulo.module.macro.ModulePathMacroManager;
 import consulo.project.Project;
+import consulo.project.macro.ProjectPathMacroManager;
 import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awt.ComponentWithBrowseButton;
 import consulo.ui.ex.awt.TextAccessor;

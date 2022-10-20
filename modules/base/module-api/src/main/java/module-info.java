@@ -11,6 +11,7 @@ module consulo.module.api {
   requires transitive org.jdom;
 
   exports consulo.module;
+  exports consulo.module.macro;
   exports consulo.module.event;
   exports consulo.module.extension;
   exports consulo.module.extension.swing;

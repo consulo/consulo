@@ -54,7 +54,7 @@ import consulo.ide.impl.idea.util.text.CharArrayCharSequence;
 import consulo.ide.impl.idea.vcsUtil.FilesProgress;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.project.impl.internal.ProjectPathMacroManager;
+import consulo.project.macro.ProjectPathMacroManager;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.SmartList;
 import consulo.util.io.CharsetToolkit;

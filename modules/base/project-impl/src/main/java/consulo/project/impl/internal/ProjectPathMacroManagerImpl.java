@@ -13,60 +13,50 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.project.impl.internal;
 
-package consulo.module.impl.internal;
-
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.impl.internal.macro.PathMacrosImpl;
 import consulo.application.macro.PathMacros;
 import consulo.component.impl.internal.macro.BasePathMacroManager;
 import consulo.component.macro.ExpandMacroToPathMap;
-import consulo.component.macro.PathMacroUtil;
 import consulo.component.macro.ReplacePathToMacroMap;
-import consulo.module.Module;
+import consulo.project.Project;
+import consulo.project.macro.ProjectPathMacroManager;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-@Singleton
-@ServiceAPI(ComponentScope.MODULE)
-@ServiceImpl
-public class ModulePathMacroManager extends BasePathMacroManager {
-  public static ModulePathMacroManager getInstance(Module module) {
-    return module.getInstance(ModulePathMacroManager.class);
-  }
+import javax.annotation.Nullable;
 
-  private final Module myModule;
+@Singleton
+@ServiceImpl
+public class ProjectPathMacroManagerImpl extends BasePathMacroManager implements ProjectPathMacroManager {
+  private final Project myProject;
 
   @Inject
-  public ModulePathMacroManager(PathMacros pathMacros, Module module) {
+  public ProjectPathMacroManagerImpl(PathMacros pathMacros, Project project) {
     super(pathMacros);
-    myModule = module;
+    myProject = project;
   }
 
   @Override
   public ExpandMacroToPathMap getExpandMacroMap() {
-    final ExpandMacroToPathMap result = new ExpandMacroToPathMap();
-
-    if (!myModule.isDisposed()) {
-      addFileHierarchyReplacements(result, PathMacrosImpl.MODULE_DIR_MACRO_NAME, myModule.getModuleDirPath());
-    }
-
-    result.putAll(super.getExpandMacroMap());
-
+    final ExpandMacroToPathMap result = super.getExpandMacroMap();
+    addFileHierarchyReplacements(result, PathMacrosImpl.PROJECT_DIR_MACRO_NAME, getProjectDir(myProject));
     return result;
   }
 
   @Override
   public ReplacePathToMacroMap getReplacePathMap() {
     final ReplacePathToMacroMap result = super.getReplacePathMap();
-
-    if (!myModule.isDisposed()) {
-
-      addFileHierarchyReplacements(result, PathMacrosImpl.MODULE_DIR_MACRO_NAME, myModule.getModuleDirPath(), PathMacroUtil.getUserHomePath());
-    }
-
+    addFileHierarchyReplacements(result, PathMacrosImpl.PROJECT_DIR_MACRO_NAME, getProjectDir(myProject), null);
     return result;
+  }
+
+  @Nullable
+  private static String getProjectDir(Project project) {
+    final VirtualFile baseDir = project.getBaseDir();
+    return baseDir != null ? baseDir.getPath() : null;
   }
 }

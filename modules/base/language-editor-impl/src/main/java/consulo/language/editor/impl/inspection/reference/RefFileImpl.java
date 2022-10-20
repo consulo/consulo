@@ -23,7 +23,7 @@ import consulo.language.editor.inspection.reference.RefVisitor;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import consulo.project.impl.internal.ProjectPathMacroManager;
+import consulo.project.macro.ProjectPathMacroManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 

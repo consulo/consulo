@@ -1,18 +1,18 @@
 package consulo.ide.impl.idea.dupLocator.treeHash;
 
+import consulo.component.macro.PathMacroManager;
+import consulo.document.Document;
 import consulo.ide.impl.idea.dupLocator.*;
 import consulo.ide.impl.idea.dupLocator.util.DuplocatorUtil;
 import consulo.ide.impl.idea.dupLocator.util.PsiFragment;
-import consulo.project.impl.internal.ProjectPathMacroManager;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.usage.UsageInfo;
-import consulo.component.macro.PathMacroManager;
-import consulo.document.Document;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.project.macro.ProjectPathMacroManager;
+import consulo.usage.UsageInfo;
 import consulo.virtualFileSystem.VirtualFile;
 import gnu.trove.TIntObjectHashMap;
 import gnu.trove.TIntObjectProcedure;

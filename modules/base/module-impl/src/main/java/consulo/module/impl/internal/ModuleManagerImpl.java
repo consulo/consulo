@@ -41,6 +41,7 @@ import consulo.module.content.internal.ProjectRootManagerEx;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.event.ModuleListener;
 import consulo.module.impl.internal.layer.ModifiableModelCommitter;
+import consulo.module.macro.ModulePathMacroManager;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.ui.annotation.RequiredUIAccess;
