@@ -22,6 +22,7 @@ import consulo.codeEditor.LineExtensionInfo;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributes;
 import consulo.document.FileDocumentManager;
+import consulo.execution.debug.frame.presentation.XValueCompactPresentation;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;

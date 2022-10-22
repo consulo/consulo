@@ -15,24 +15,24 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui;
 
-import consulo.project.Project;
-import consulo.disposer.Disposer;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.ui.ex.awt.JBCheckBox;
-import consulo.ui.ex.awt.JBLabel;
-import consulo.ide.impl.idea.ui.popup.util.DetailView;
-import consulo.ui.ex.awt.JBUI;
-import consulo.execution.debug.XDebuggerBundle;
-import consulo.execution.debug.breakpoint.XExpression;
+import consulo.disposer.Disposer;
 import consulo.execution.debug.XBreakpointManager;
+import consulo.execution.debug.XDebuggerBundle;
+import consulo.execution.debug.XDebuggerUtil;
 import consulo.execution.debug.breakpoint.XBreakpointType;
+import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.breakpoint.ui.XBreakpointCustomPropertiesPanel;
 import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
-import consulo.ide.impl.idea.xdebugger.impl.XDebuggerUtilImpl;
+import consulo.ide.impl.idea.ui.popup.util.DetailView;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XBreakpointBase;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XBreakpointUtil;
 import consulo.ide.impl.idea.xdebugger.impl.ui.DebuggerUIUtil;
 import consulo.ide.impl.idea.xdebugger.impl.ui.XDebuggerExpressionComboBox;
+import consulo.project.Project;
+import consulo.ui.ex.awt.JBCheckBox;
+import consulo.ui.ex.awt.JBLabel;
+import consulo.ui.ex.awt.JBUI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -236,7 +236,7 @@ public class XLightBreakpointPropertiesPanel implements XSuspendPolicyPanel.Dele
 
     if (myConditionComboBox != null) {
       XExpression expression = myConditionComboBox.getExpression();
-      XExpression condition = !XDebuggerUtilImpl.isEmptyExpression(expression) ? expression : null;
+      XExpression condition = !XDebuggerUtil.getInstance().isEmptyExpression(expression) ? expression : null;
       myBreakpoint.setConditionEnabled(condition == null || myConditionEnabledCheckbox.isSelected());
       myBreakpoint.setConditionExpression(condition);
       myConditionComboBox.saveTextInHistory();

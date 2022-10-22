@@ -15,17 +15,17 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui;
 
-import consulo.project.Project;
-import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.XBreakpointManager;
+import consulo.execution.debug.XDebuggerUtil;
+import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.breakpoint.XLineBreakpoint;
 import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
-import consulo.ide.impl.idea.xdebugger.impl.XDebuggerUtilImpl;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XBreakpointBase;
 import consulo.ide.impl.idea.xdebugger.impl.ui.DebuggerUIUtil;
 import consulo.ide.impl.idea.xdebugger.impl.ui.XDebuggerExpressionComboBox;
-import javax.annotation.Nonnull;
+import consulo.project.Project;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -116,7 +116,7 @@ public class XBreakpointActionsPanel extends XBreakpointPropertiesSubPanel {
 
     if (myLogExpressionComboBox != null) {
       XExpression expression = myLogExpressionComboBox.getExpression();
-      XExpression logExpression = !XDebuggerUtilImpl.isEmptyExpression(expression) ? expression : null;
+      XExpression logExpression = !XDebuggerUtil.getInstance().isEmptyExpression(expression) ? expression : null;
       myBreakpoint.setLogExpressionEnabled(logExpression == null || myLogExpressionCheckBox.isSelected());
       myBreakpoint.setLogExpressionObject(logExpression);
       myLogExpressionComboBox.saveTextInHistory();

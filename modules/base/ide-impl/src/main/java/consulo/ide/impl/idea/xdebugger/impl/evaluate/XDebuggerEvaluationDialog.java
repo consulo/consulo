@@ -15,39 +15,39 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.evaluate;
 
-import consulo.language.editor.completion.lookup.LookupManager;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.xdebugger.impl.XDebugSessionImpl;
-import consulo.ide.impl.idea.xdebugger.impl.XDebuggerUtilImpl;
-import consulo.ide.impl.idea.xdebugger.impl.actions.XDebuggerActions;
-import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XExpressionImpl;
-import consulo.ide.impl.idea.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
-import consulo.ide.impl.idea.xdebugger.impl.ui.XDebugSessionTab;
-import consulo.ide.impl.idea.xdebugger.impl.ui.XDebuggerEditorBase;
-import consulo.ide.impl.idea.xdebugger.impl.ui.tree.XDebuggerTree;
-import consulo.ide.impl.idea.xdebugger.impl.ui.tree.XDebuggerTreePanel;
-import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.EvaluatingExpressionRootNode;
 import consulo.application.ApplicationManager;
 import consulo.application.util.SystemInfo;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataProvider;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XDebuggerBundle;
+import consulo.execution.debug.XDebuggerUtil;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.evaluation.EvaluationMode;
 import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
 import consulo.execution.debug.evaluation.XDebuggerEvaluator;
 import consulo.execution.debug.event.XDebugSessionListener;
+import consulo.execution.debug.internal.breakpoint.XExpressionImpl;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.xdebugger.impl.XDebugSessionImpl;
+import consulo.ide.impl.idea.xdebugger.impl.actions.XDebuggerActions;
+import consulo.ide.impl.idea.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
+import consulo.ide.impl.idea.xdebugger.impl.ui.XDebugSessionTab;
+import consulo.ide.impl.idea.xdebugger.impl.ui.XDebuggerEditorBase;
+import consulo.ide.impl.idea.xdebugger.impl.ui.tree.XDebuggerTree;
+import consulo.ide.impl.idea.xdebugger.impl.ui.tree.XDebuggerTreePanel;
+import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.EvaluatingExpressionRootNode;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.project.Project;
-import consulo.project.ui.wm.WindowManager;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
+import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.ex.awt.BorderLayoutPanel;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.dataholder.Key;
@@ -196,7 +196,7 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
   private void addToWatches() {
     if (myMode == EvaluationMode.EXPRESSION) {
       XExpression expression = getInputEditor().getExpression();
-      if (!XDebuggerUtilImpl.isEmptyExpression(expression)) {
+      if (!XDebuggerUtil.getInstance().isEmptyExpression(expression)) {
         XDebugSessionTab tab = ((XDebugSessionImpl)mySession).getSessionTab();
         if (tab != null) {
           tab.getWatchesView().addWatchExpression(expression, -1, true);
@@ -267,7 +267,7 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
 
   private EvaluationInputComponent createInputComponent(EvaluationMode mode, XExpression text) {
     final Project project = mySession.getProject();
-    text = XExpressionImpl.changeMode(text, mode);
+    text = XExpression.changeMode(text, mode);
     if (mode == EvaluationMode.EXPRESSION) {
       return new ExpressionInputComponent(project, myEditorsProvider, mySourcePosition, text, myDisposable);
     }

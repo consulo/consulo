@@ -34,7 +34,7 @@ import consulo.execution.debug.XDebuggerBundle;
 import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
-import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XExpressionImpl;
+import consulo.execution.debug.internal.breakpoint.XExpressionImpl;
 import consulo.ide.impl.idea.xdebugger.impl.ui.XDebuggerEditorBase;
 import consulo.ide.impl.idea.xdebugger.impl.ui.XDebuggerExpressionEditor;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -62,7 +62,7 @@ public class ExpressionInputComponent extends EvaluationInputComponent {
     myMainPanel = new JPanel(new BorderLayout());
     //myMainPanel.add(new JLabel(XDebuggerBundle.message("xdebugger.evaluate.label.expression")), BorderLayout.WEST);
     myExpressionEditor = new XDebuggerExpressionEditor(project, editorsProvider, "evaluateExpression", sourcePosition,
-                                                       expression != null ? expression : XExpressionImpl.EMPTY_EXPRESSION, false, true, false);
+                                                       expression != null ? expression : XExpression.EMPTY_EXPRESSION, false, true, false);
     myMainPanel.add(myExpressionEditor.getComponent(), BorderLayout.CENTER);
     JButton historyButton = new FixedSizeButton(myExpressionEditor.getComponent());
     historyButton.setIcon(TargetAWT.to(PlatformIconGroup.vcsHistory()));

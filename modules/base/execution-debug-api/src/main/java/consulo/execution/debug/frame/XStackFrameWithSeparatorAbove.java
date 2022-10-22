@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.xdebugger.impl.evaluate;
-
-import consulo.execution.debug.frame.presentation.XValuePresentation;
-import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+package consulo.execution.debug.frame;
 
 /**
- * @author Konstantin Bulenkov
+ * @author VISTALL
+ * @since 22/10/2022
  */
-public interface XValueCompactPresentation {
-  void renderValue(@Nonnull XValuePresentation.XValueTextRenderer renderer, @Nullable XValueNodeImpl node);
+public interface XStackFrameWithSeparatorAbove {
+  boolean hasSeparatorAbove();
 }

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.ui.tree;
 
+import consulo.execution.debug.ui.ValueMarkup;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.FixedSizeButton;
 import consulo.ide.impl.idea.ui.*;

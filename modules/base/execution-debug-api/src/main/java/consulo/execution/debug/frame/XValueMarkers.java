@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.xdebugger.impl.frame;
+package consulo.execution.debug.frame;
 
-import consulo.ide.impl.idea.xdebugger.impl.ui.tree.ValueMarkup;
-import consulo.execution.debug.frame.XValue;
-import consulo.execution.debug.frame.XValueMarkerProvider;
+import consulo.execution.debug.ui.ValueMarkup;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

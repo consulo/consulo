@@ -50,7 +50,7 @@ import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XBreakpointUtil;
-import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XExpressionImpl;
+import consulo.execution.debug.internal.breakpoint.XExpressionImpl;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.grouping.XBreakpointFileGroupingRule;
 import consulo.ide.impl.idea.xdebugger.impl.evaluate.quick.common.ValueLookupManager;
 import consulo.ide.impl.idea.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
@@ -431,23 +431,15 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
 
   @Override
   public <B extends XBreakpoint<?>> Comparator<B> getDefaultBreakpointComparator(final XBreakpointType<B, ?> type) {
-    return new Comparator<B>() {
-      @Override
-      public int compare(final B o1, final B o2) {
-        return type.getDisplayText(o1).compareTo(type.getDisplayText(o2));
-      }
-    };
+    return (o1, o2) -> type.getDisplayText(o1).compareTo(type.getDisplayText(o2));
   }
 
   @Override
   public <P extends XBreakpointProperties> Comparator<XLineBreakpoint<P>> getDefaultLineBreakpointComparator() {
-    return new Comparator<XLineBreakpoint<P>>() {
-      @Override
-      public int compare(final XLineBreakpoint<P> o1, final XLineBreakpoint<P> o2) {
-        int fileCompare = o1.getFileUrl().compareTo(o2.getFileUrl());
-        if (fileCompare != 0) return fileCompare;
-        return o1.getLine() - o2.getLine();
-      }
+    return (o1, o2) -> {
+      int fileCompare = o1.getFileUrl().compareTo(o2.getFileUrl());
+      if (fileCompare != 0) return fileCompare;
+      return o1.getLine() - o2.getLine();
     };
   }
 
@@ -562,23 +554,10 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
     return descriptor.canNavigate() ? FileEditorManager.getInstance(descriptor.getProject()).openTextEditor(descriptor, false) : null;
   }
 
-  public static void rebuildAllSessionsViews(@Nullable Project project) {
-    if (project == null) return;
-    for (XDebugSession session : XDebuggerManager.getInstance(project).getDebugSessions()) {
-      if (session.isSuspended()) {
-        session.rebuildViews();
-      }
-    }
-  }
-
   @Nonnull
   @Override
   public XExpression createExpression(@Nonnull String text, Language language, String custom, EvaluationMode mode) {
     return new XExpressionImpl(text, language, custom, mode);
-  }
-
-  public static boolean isEmptyExpression(@Nullable XExpression expression) {
-    return expression == null || StringUtil.isEmptyOrSpaces(expression.getExpression());
   }
 
   public static Image getVerifiedIcon(@Nonnull XBreakpoint breakpoint) {

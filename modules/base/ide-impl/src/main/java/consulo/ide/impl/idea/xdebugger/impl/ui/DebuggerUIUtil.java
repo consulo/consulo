@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.ui;
 
+import consulo.execution.debug.*;
+import consulo.execution.debug.ui.XValueTextProvider;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.dataContext.DataManager;
 import consulo.execution.debug.ui.XDebuggerUIConstants;
@@ -36,14 +38,10 @@ import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.RelativePoint;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
-import consulo.execution.debug.Obsolescent;
-import consulo.execution.debug.XDebuggerBundle;
-import consulo.execution.debug.XDebuggerManager;
 import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.breakpoint.XBreakpoint;
 import consulo.execution.debug.event.XBreakpointAdapter;
 import consulo.execution.debug.event.XBreakpointListener;
-import consulo.execution.debug.XBreakpointManager;
 import consulo.execution.debug.frame.XFullValueEvaluator;
 import consulo.execution.debug.frame.XValue;
 import consulo.execution.debug.frame.XValueModifier;
@@ -423,7 +421,7 @@ public class DebuggerUIUtil {
         if (isDetachedTree(tree)) {
           AppUIUtil.invokeOnEdt(() -> tree.rebuildAndRestore(treeState));
         }
-        XDebuggerUtilImpl.rebuildAllSessionsViews(project);
+        XDebuggerUtil.getInstance().rebuildAllSessionsViews(project);
       }
 
       @Override
@@ -432,7 +430,7 @@ public class DebuggerUIUtil {
           tree.rebuildAndRestore(treeState);
           errorConsumer.accept(errorMessage);
         });
-        XDebuggerUtilImpl.rebuildAllSessionsViews(project);
+        XDebuggerUtil.getInstance().rebuildAllSessionsViews(project);
       }
 
       boolean isDetachedTree(XDebuggerTree tree) {

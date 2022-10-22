@@ -24,7 +24,7 @@ import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
 import consulo.execution.debug.frame.XValue;
 import consulo.ide.impl.idea.xdebugger.impl.evaluate.quick.XDebuggerTreeCreator;
 import consulo.ide.impl.idea.xdebugger.impl.evaluate.quick.common.DebuggerTreeWithHistoryPanel;
-import consulo.ide.impl.idea.xdebugger.impl.frame.XValueMarkers;
+import consulo.execution.debug.frame.XValueMarkers;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

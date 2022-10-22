@@ -15,17 +15,14 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.breakpoints;
 
+import consulo.execution.debug.XDebuggerUtil;
+import consulo.execution.debug.breakpoint.*;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.util.xml.serializer.annotation.Property;
 import consulo.util.xml.serializer.annotation.Tag;
 import consulo.util.xml.serializer.annotation.Transient;
-import consulo.execution.debug.breakpoint.XExpression;
-import consulo.execution.debug.breakpoint.SuspendPolicy;
-import consulo.execution.debug.breakpoint.XBreakpoint;
-import consulo.execution.debug.breakpoint.XBreakpointProperties;
-import consulo.execution.debug.breakpoint.XBreakpointType;
-import consulo.ide.impl.idea.xdebugger.impl.XDebuggerUtilImpl;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -200,7 +197,7 @@ public class BreakpointState<B extends XBreakpoint<P>, P extends XBreakpointProp
 
     @Nullable
     public static Condition create(boolean disabled, XExpression expression) {
-      if (XDebuggerUtilImpl.isEmptyExpression(expression)) {
+      if (XDebuggerUtil.getInstance().isEmptyExpression(expression)) {
         return null;
       }
       return new Condition(disabled, expression);
@@ -218,7 +215,7 @@ public class BreakpointState<B extends XBreakpoint<P>, P extends XBreakpointProp
 
     @Nullable
     public static LogExpression create(boolean disabled, XExpression expression) {
-      if (XDebuggerUtilImpl.isEmptyExpression(expression)) {
+      if (XDebuggerUtil.getInstance().isEmptyExpression(expression)) {
         return null;
       }
       return new LogExpression(disabled, expression);

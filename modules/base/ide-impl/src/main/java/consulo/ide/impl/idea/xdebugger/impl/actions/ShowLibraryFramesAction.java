@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.xdebugger.impl.actions;
 
 import consulo.application.AllIcons;
 import consulo.execution.debug.XDebugSession;
+import consulo.execution.debug.XDebuggerUtil;
 import consulo.execution.debug.setting.XDebuggerSettingsManager;
-import consulo.ide.impl.idea.xdebugger.impl.XDebuggerUtilImpl;
 import consulo.ide.impl.idea.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.AnActionEvent;
@@ -90,6 +90,6 @@ final class ShowLibraryFramesAction extends ToggleAction {
   public void setSelected(AnActionEvent e, boolean enabled) {
     boolean newValue = !enabled;
     XDebuggerSettingManagerImpl.getInstanceImpl().getDataViewSettings().setShowLibraryStackFrames(newValue);
-    XDebuggerUtilImpl.rebuildAllSessionsViews(e.getData(CommonDataKeys.PROJECT));
+    XDebuggerUtil.getInstance().rebuildAllSessionsViews(e.getData(CommonDataKeys.PROJECT));
   }
 }

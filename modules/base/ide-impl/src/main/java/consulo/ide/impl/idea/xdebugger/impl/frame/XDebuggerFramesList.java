@@ -19,6 +19,7 @@ import consulo.dataContext.DataProvider;
 import consulo.execution.debug.XDebuggerBundle;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.frame.XStackFrame;
+import consulo.execution.debug.frame.XStackFrameWithSeparatorAbove;
 import consulo.ide.impl.idea.openapi.ui.popup.ListItemDescriptorAdapter;
 import consulo.language.editor.FileColorManager;
 import consulo.ide.impl.idea.ui.popup.list.GroupedItemsListRenderer;
@@ -166,8 +167,8 @@ public class XDebuggerFramesList extends DebuggerFramesList {
 
         @Override
         public boolean hasSeparatorAboveOf(Object value) {
-          if (value instanceof ItemWithSeparatorAbove) {
-            return ((ItemWithSeparatorAbove)value).hasSeparatorAbove();
+          if (value instanceof XStackFrameWithSeparatorAbove) {
+            return ((XStackFrameWithSeparatorAbove)value).hasSeparatorAbove();
           }
           return false;
         }
@@ -248,9 +249,5 @@ public class XDebuggerFramesList extends DebuggerFramesList {
       }
       return null;
     }
-  }
-
-  public interface ItemWithSeparatorAbove {
-    boolean hasSeparatorAbove();
   }
 }

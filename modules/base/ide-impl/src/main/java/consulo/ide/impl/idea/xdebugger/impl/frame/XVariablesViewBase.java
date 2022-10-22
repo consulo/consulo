@@ -29,6 +29,7 @@ import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
 import consulo.execution.debug.evaluation.XDebuggerEvaluator;
 import consulo.execution.debug.frame.XStackFrame;
 import consulo.execution.debug.frame.XValueContainer;
+import consulo.execution.debug.frame.XValueMarkers;
 import consulo.execution.debug.setting.XDebuggerSettingsManager;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;

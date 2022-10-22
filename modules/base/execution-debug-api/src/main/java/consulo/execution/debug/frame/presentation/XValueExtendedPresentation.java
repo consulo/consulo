@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,11 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.xdebugger.impl.ui;
+package consulo.execution.debug.frame.presentation;
 
 /**
  * @author egor
  */
-public interface XValueTextProvider {
-  String getValueText();
+public abstract class XValueExtendedPresentation extends XValuePresentation {
+  public boolean isModified() {
+    return false;
+  }
 }

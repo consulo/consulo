@@ -16,39 +16,35 @@
 package consulo.ide.impl.idea.xdebugger.impl.breakpoints;
 
 import consulo.application.AllIcons;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.AnAction;
-import consulo.component.persist.ComponentSerializationUtil;
+import consulo.application.dumb.DumbAware;
+import consulo.application.util.registry.Registry;
 import consulo.codeEditor.markup.GutterDraggableObject;
 import consulo.codeEditor.markup.GutterIconRenderer;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.util.dataholder.UserDataHolderBase;
-import consulo.application.util.registry.Registry;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.navigation.Navigatable;
-import consulo.ui.ex.awt.util.ColorUtil;
-import consulo.ui.ex.JBColor;
-import consulo.util.xml.serializer.SkipDefaultValuesSerializationFilters;
-import consulo.util.xml.serializer.XmlSerializer;
+import consulo.component.persist.ComponentSerializationUtil;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XDebuggerBundle;
-import consulo.execution.debug.breakpoint.XExpression;
+import consulo.execution.debug.XDebuggerUtil;
 import consulo.execution.debug.XSourcePosition;
-import consulo.execution.debug.breakpoint.SuspendPolicy;
-import consulo.execution.debug.breakpoint.XBreakpoint;
-import consulo.execution.debug.breakpoint.XBreakpointProperties;
-import consulo.execution.debug.breakpoint.XBreakpointType;
+import consulo.execution.debug.breakpoint.*;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.xdebugger.impl.DebuggerSupport;
 import consulo.ide.impl.idea.xdebugger.impl.XDebugSessionImpl;
 import consulo.ide.impl.idea.xdebugger.impl.XDebuggerSupport;
-import consulo.ide.impl.idea.xdebugger.impl.XDebuggerUtilImpl;
 import consulo.ide.impl.idea.xdebugger.impl.actions.EditBreakpointAction;
 import consulo.ide.impl.idea.xml.CommonXmlStrings;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
+import consulo.navigation.Navigatable;
+import consulo.project.Project;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import consulo.util.dataholder.UserDataHolderBase;
+import consulo.util.xml.serializer.SkipDefaultValuesSerializationFilters;
+import consulo.util.xml.serializer.XmlSerializer;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
@@ -205,7 +201,7 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
   @Override
   public void setLogExpression(@Nullable final String expression) {
     if (!Comparing.equal(getLogExpression(), expression)) {
-      myLogExpression = XExpressionImpl.fromText(expression);
+      myLogExpression = XExpression.fromText(expression);
       fireBreakpointChanged();
     }
   }
@@ -237,7 +233,7 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
   @Override
   public void setCondition(@Nullable final String condition) {
     if (!Comparing.equal(condition, getCondition())) {
-      myCondition = XExpressionImpl.fromText(condition);
+      myCondition = XExpression.fromText(condition);
       fireBreakpointChanged();
     }
   }
@@ -409,7 +405,7 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
   }
 
   protected void setIcon(@Nonnull Image icon) {
-    if (!XDebuggerUtilImpl.isEmptyExpression(getConditionExpression())) {
+    if (!XDebuggerUtil.getInstance().isEmptyExpression(getConditionExpression())) {
       myIcon = ImageEffects.canvas(icon.getWidth(), icon.getHeight(), ctx -> {
         ctx.drawImage(icon, 0, 0);
         ctx.drawImage(AllIcons.Debugger.Question_badge, 7, 6, 3, 7);

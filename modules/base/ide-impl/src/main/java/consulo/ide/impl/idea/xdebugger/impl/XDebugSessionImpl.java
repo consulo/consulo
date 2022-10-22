@@ -23,7 +23,7 @@ import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.*;
 import consulo.ide.impl.idea.xdebugger.impl.evaluate.XDebuggerEditorLinePainter;
 import consulo.ide.impl.idea.xdebugger.impl.evaluate.quick.common.ValueLookupManager;
-import consulo.ide.impl.idea.xdebugger.impl.frame.XValueMarkers;
+import consulo.execution.debug.frame.XValueMarkers;
 import consulo.ide.impl.idea.xdebugger.impl.frame.XWatchesViewImpl;
 import consulo.ide.impl.idea.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
 import consulo.ide.impl.idea.xdebugger.impl.ui.XDebugSessionData;
@@ -378,6 +378,7 @@ public class XDebugSessionImpl implements XDebugSession {
             .showRunContent(DefaultDebugExecutor.getDebugExecutorInstance(), descriptor);
   }
 
+  @Override
   @Nullable
   public XValueMarkers<?, ?> getValueMarkers() {
     if (myValueMarkers == null) {

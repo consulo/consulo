@@ -15,13 +15,14 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.frame;
 
-import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.execution.debug.XDebuggerUtil;
 import consulo.execution.debug.breakpoint.XExpression;
-import consulo.ide.impl.idea.xdebugger.impl.XDebuggerUtilImpl;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.XDebuggerTreeInplaceEditor;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.WatchNode;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.WatchesRootNode;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.XDebuggerTreeNode;
+import consulo.ui.ex.awt.tree.TreeUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -60,7 +61,7 @@ public class WatchInplaceEditor extends XDebuggerTreeInplaceEditor {
     XExpression expression = getExpression();
     super.doOKAction();
     int index = myRootNode.removeChildNode(myNode);
-    if (!XDebuggerUtilImpl.isEmptyExpression(expression) && index != -1) {
+    if (!XDebuggerUtil.getInstance().isEmptyExpression(expression) && index != -1) {
       myWatchesView.addWatchExpression(expression, index, false);
     }
     TreeUtil.selectNode(myTree, myNode);

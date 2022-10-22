@@ -32,6 +32,7 @@ import consulo.execution.debug.setting.XDebuggerSettings;
 import consulo.language.Language;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
@@ -137,4 +138,17 @@ public abstract class XDebuggerUtil {
 
   @Nonnull
   public abstract XExpression createExpression(@Nonnull String text, Language language, String custom, EvaluationMode mode);
+
+  public boolean isEmptyExpression(@Nullable XExpression expression) {
+    return expression == null || StringUtil.isEmptyOrSpaces(expression.getExpression());
+  }
+
+  public void rebuildAllSessionsViews(@Nullable Project project) {
+    if (project == null) return;
+    for (XDebugSession session : XDebuggerManager.getInstance(project).getDebugSessions()) {
+      if (session.isSuspended()) {
+        session.rebuildViews();
+      }
+    }
+  }
 }

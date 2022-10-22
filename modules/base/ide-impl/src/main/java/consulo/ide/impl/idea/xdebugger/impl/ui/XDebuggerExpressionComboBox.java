@@ -15,23 +15,22 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.ui;
 
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
+import consulo.document.Document;
+import consulo.execution.debug.XSourcePosition;
+import consulo.execution.debug.breakpoint.XExpression;
+import consulo.execution.debug.evaluation.EvaluationMode;
+import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.project.Project;
-import consulo.ui.ex.awt.ComboBox;
+import consulo.ide.impl.idea.xdebugger.impl.XDebuggerHistoryManager;
 import consulo.language.editor.ui.awt.EditorComboBoxEditor;
 import consulo.language.editor.ui.awt.EditorComboBoxRenderer;
 import consulo.language.editor.ui.awt.EditorTextField;
+import consulo.project.Project;
+import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.execution.debug.breakpoint.XExpression;
-import consulo.execution.debug.XSourcePosition;
-import consulo.execution.debug.evaluation.EvaluationMode;
-import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
-import consulo.ide.impl.idea.xdebugger.impl.XDebuggerHistoryManager;
-import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XExpressionImpl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -56,7 +55,7 @@ public class XDebuggerExpressionComboBox extends XDebuggerEditorBase {
     super(project, debuggerEditorsProvider, EvaluationMode.EXPRESSION, historyId, sourcePosition);
     myComboBox = new ComboBox<>(100);
     myComboBox.setEditable(true);
-    myExpression = XExpressionImpl.EMPTY_EXPRESSION;
+    myExpression = XExpression.EMPTY_EXPRESSION;
     Dimension minimumSize = new Dimension(myComboBox.getMinimumSize());
     minimumSize.width = 100;
     myComboBox.setMinimumSize(minimumSize);
@@ -194,7 +193,7 @@ public class XDebuggerExpressionComboBox extends XDebuggerEditorBase {
     @Override
     public void setItem(Object anObject) {
       if (anObject == null) {
-        anObject = XExpressionImpl.EMPTY_EXPRESSION;
+        anObject = XExpression.EMPTY_EXPRESSION;
       }
       XExpression expression = (XExpression)anObject;
       myDelegate.getEditorComponent().setNewDocumentAndFileType(getFileType(expression), createDocument(expression));

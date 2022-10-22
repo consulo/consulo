@@ -39,7 +39,7 @@ import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.frame.XStackFrame;
 import consulo.ide.impl.idea.xdebugger.impl.XDebugSessionImpl;
 import consulo.ide.impl.idea.xdebugger.impl.actions.XDebuggerActions;
-import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XExpressionImpl;
+import consulo.execution.debug.internal.breakpoint.XExpressionImpl;
 import consulo.ide.impl.idea.xdebugger.impl.ui.DebuggerSessionTabBase;
 import consulo.ide.impl.idea.xdebugger.impl.ui.DebuggerUIUtil;
 import consulo.ide.impl.idea.xdebugger.impl.ui.XDebugSessionData;
@@ -386,7 +386,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
       String text = ((EventInfo)object).getTextForFlavor(DataFlavor.stringFlavor);
       if (text != null) {
         //noinspection ConstantConditions
-        addWatchExpression(XExpressionImpl.fromText(text), -1, false);
+        addWatchExpression(XExpression.fromText(text), -1, false);
       }
     }
   }

@@ -15,16 +15,16 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.ui.tree.actions;
 
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.action.ToggleAction;
 import consulo.application.dumb.DumbAware;
 import consulo.execution.debug.XDebugSession;
-import consulo.ide.impl.idea.xdebugger.impl.XDebuggerUtilImpl;
+import consulo.execution.debug.XDebuggerUtil;
 import consulo.ide.impl.idea.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
-import javax.annotation.Nonnull;
-
+import consulo.language.editor.CommonDataKeys;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.ToggleAction;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -47,6 +47,6 @@ public class SortValuesToggleAction extends ToggleAction implements DumbAware {
   @Override
   public void setSelected(AnActionEvent e, boolean state) {
     XDebuggerSettingManagerImpl.getInstanceImpl().getDataViewSettings().setSortValues(state);
-    XDebuggerUtilImpl.rebuildAllSessionsViews(e.getData(CommonDataKeys.PROJECT));
+    XDebuggerUtil.getInstance().rebuildAllSessionsViews(e.getData(CommonDataKeys.PROJECT));
   }
 }

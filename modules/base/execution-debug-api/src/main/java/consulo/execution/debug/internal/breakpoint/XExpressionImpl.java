@@ -13,21 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.xdebugger.impl.breakpoints;
+package consulo.execution.debug.internal.breakpoint;
 
-import consulo.language.Language;
 import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.evaluation.EvaluationMode;
+import consulo.language.Language;
+
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * @author egor
  */
 public class XExpressionImpl implements XExpression {
-  public static final XExpression EMPTY_EXPRESSION = fromText("", EvaluationMode.EXPRESSION);
-  public static final XExpression EMPTY_CODE_FRAGMENT = fromText("", EvaluationMode.CODE_FRAGMENT);
-
   @Nonnull
   private final String myExpression;
   private final Language myLanguage;
@@ -64,20 +61,6 @@ public class XExpressionImpl implements XExpression {
   @Override
   public EvaluationMode getMode() {
     return myMode;
-  }
-
-  @Nullable
-  public static XExpressionImpl fromText(@Nullable String text) {
-    return text != null ? new XExpressionImpl(text, null, null, EvaluationMode.EXPRESSION) : null;
-  }
-
-  @Nullable
-  public static XExpressionImpl fromText(@Nullable String text, EvaluationMode mode) {
-    return text != null ? new XExpressionImpl(text, null, null, mode) : null;
-  }
-
-  public static XExpressionImpl changeMode(XExpression expression, EvaluationMode mode) {
-    return new XExpressionImpl(expression.getExpression(), expression.getLanguage(), expression.getCustomInfo(), mode);
   }
 
   @Override

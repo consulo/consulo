@@ -17,16 +17,17 @@
 package consulo.execution.debug;
 
 import consulo.application.AllIcons;
+import consulo.disposer.Disposable;
+import consulo.execution.configuration.RunProfile;
 import consulo.execution.debug.breakpoint.XBreakpoint;
 import consulo.execution.debug.breakpoint.XLineBreakpoint;
 import consulo.execution.debug.event.XDebugSessionListener;
 import consulo.execution.debug.frame.XExecutionStack;
 import consulo.execution.debug.frame.XStackFrame;
 import consulo.execution.debug.frame.XSuspendContext;
+import consulo.execution.debug.frame.XValueMarkers;
 import consulo.execution.debug.step.XSmartStepIntoHandler;
 import consulo.execution.debug.step.XSmartStepIntoVariant;
-import consulo.disposer.Disposable;
-import consulo.execution.configuration.RunProfile;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.layout.RunnerLayoutUi;
@@ -65,6 +66,7 @@ public interface XDebugSession extends AbstractDebuggerSession {
 
   /**
    * Position from the current frame
+   *
    * @return
    */
   @Nullable
@@ -72,6 +74,7 @@ public interface XDebugSession extends AbstractDebuggerSession {
 
   /**
    * Position from the top frame
+   *
    * @return
    */
   @Nullable
@@ -128,9 +131,7 @@ public interface XDebugSession extends AbstractDebuggerSession {
    * @param suspendContext         context
    * @return <code>true</code> if the debug process should be suspended
    */
-  boolean breakpointReached(@Nonnull XBreakpoint<?> breakpoint,
-                            @Nullable String evaluatedLogExpression,
-                            @Nonnull XSuspendContext suspendContext);
+  boolean breakpointReached(@Nonnull XBreakpoint<?> breakpoint, @Nullable String evaluatedLogExpression, @Nonnull XSuspendContext suspendContext);
 
   /**
    * @deprecated use {@link #breakpointReached(consulo.ide.impl.idea.xdebugger.breakpoints.XBreakpoint, String, consulo.ide.impl.idea.xdebugger.frame.XSuspendContext)} instead
@@ -150,7 +151,7 @@ public interface XDebugSession extends AbstractDebuggerSession {
    * Call this method when position is reached (e.g. after "Run to cursor" or "Step over" command)
    *
    * @param suspendContext context
-   * @param attract attract to debugger panel, and active breakpoint panel if setting enable
+   * @param attract        attract to debugger panel, and active breakpoint panel if setting enable
    */
   void positionReached(@Nonnull XSuspendContext suspendContext, boolean attract);
 
@@ -204,4 +205,7 @@ public interface XDebugSession extends AbstractDebuggerSession {
   ConsoleView getConsoleView();
 
   RunnerLayoutUi getUI();
+
+  @Nullable
+  XValueMarkers<?, ?> getValueMarkers();
 }

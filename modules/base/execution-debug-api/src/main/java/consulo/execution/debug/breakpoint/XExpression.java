@@ -16,6 +16,7 @@
 package consulo.execution.debug.breakpoint;
 
 import consulo.execution.debug.evaluation.EvaluationMode;
+import consulo.execution.debug.internal.breakpoint.XExpressionImpl;
 import consulo.language.Language;
 
 import javax.annotation.Nonnull;
@@ -25,6 +26,24 @@ import javax.annotation.Nullable;
  * @author egor
  */
 public interface XExpression {
+  XExpression EMPTY_EXPRESSION = fromText("", EvaluationMode.EXPRESSION);
+  XExpression EMPTY_CODE_FRAGMENT = fromText("", EvaluationMode.CODE_FRAGMENT);
+
+  @Nullable
+  public static XExpression fromText(@Nullable String text) {
+    return text != null ? new XExpressionImpl(text, null, null, EvaluationMode.EXPRESSION) : null;
+  }
+
+  @Nullable
+  public static XExpression fromText(@Nullable String text, EvaluationMode mode) {
+    return text != null ? new XExpressionImpl(text, null, null, mode) : null;
+  }
+
+  @Nonnull
+  public static XExpression changeMode(XExpression expression, EvaluationMode mode) {
+    return new XExpressionImpl(expression.getExpression(), expression.getLanguage(), expression.getCustomInfo(), mode);
+  }
+
   @Nonnull
   String getExpression();
 

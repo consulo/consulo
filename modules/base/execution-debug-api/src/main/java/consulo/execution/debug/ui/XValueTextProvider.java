@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.xdebugger.impl.frame;
+package consulo.execution.debug.ui;
 
-import javax.annotation.Nullable;
-
-public interface XValueWithInlinePresentation {
-  /**
-   * Value to be shown near variable in execution line (experimental feature). Should be calculated fast.
-   */
-  @Nullable
-  String computeInlinePresentation();
+/**
+ * @author egor
+ */
+public interface XValueTextProvider {
+  String getValueText();
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.xdebugger.impl.ui.tree;
+package consulo.execution.debug.frame.presentation;
 
-import consulo.execution.debug.frame.presentation.XValuePresentation;
+import consulo.execution.debug.frame.XValueNode;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
- * @author egor
+ * @author Konstantin Bulenkov
  */
-public abstract class XValueExtendedPresentation extends XValuePresentation {
-  public boolean isModified() {
-    return false;
-  }
+public interface XValueCompactPresentation {
+  void renderValue(@Nonnull XValuePresentation.XValueTextRenderer renderer, @Nullable XValueNode node);
 }

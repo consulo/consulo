@@ -15,14 +15,15 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.actions.handlers;
 
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.dataContext.DataContext;
 import consulo.execution.debug.XDebugSession;
+import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.evaluation.XDebuggerEvaluator;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.xdebugger.impl.XDebugSessionImpl;
-import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XExpressionImpl;
+import consulo.language.editor.CommonDataKeys;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -58,6 +59,6 @@ public class XAddToWatchesFromEditorActionHandler extends XDebuggerActionHandler
     final String text = getTextToEvaluate(dataContext, session);
     if (text == null) return;
 
-    ((XDebugSessionImpl)session).getSessionTab().getWatchesView().addWatchExpression(XExpressionImpl.fromText(text), -1, true);
+    ((XDebugSessionImpl)session).getSessionTab().getWatchesView().addWatchExpression(XExpression.fromText(text), -1, true);
   }
 }

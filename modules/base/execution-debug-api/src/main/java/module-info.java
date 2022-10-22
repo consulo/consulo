@@ -22,4 +22,5 @@ module consulo.execution.debug.api {
   exports consulo.execution.debug.setting;
   exports consulo.execution.debug.ui;
   exports consulo.execution.debug.frame.presentation;
+  exports consulo.execution.debug.internal.breakpoint to consulo.ide.impl;
 }

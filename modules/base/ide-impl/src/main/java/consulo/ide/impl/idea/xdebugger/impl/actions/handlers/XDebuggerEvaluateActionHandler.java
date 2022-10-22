@@ -34,7 +34,7 @@ import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
 import consulo.execution.debug.evaluation.XDebuggerEvaluator;
 import consulo.execution.debug.frame.XStackFrame;
 import consulo.execution.debug.frame.XValue;
-import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XExpressionImpl;
+import consulo.execution.debug.internal.breakpoint.XExpressionImpl;
 import consulo.ide.impl.idea.xdebugger.impl.evaluate.XDebuggerEvaluationDialog;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.actions.XDebuggerTreeActionBase;
 import javax.annotation.Nonnull;
@@ -90,7 +90,7 @@ public class XDebuggerEvaluateActionHandler extends XDebuggerActionHandler {
       }
     }
 
-    XExpression expression = XExpressionImpl.fromText(StringUtil.notNullize(text), mode);
+    XExpression expression = XExpression.fromText(StringUtil.notNullize(text), mode);
     showDialog(session, file, editorsProvider, stackFrame, evaluator, expression);
   }
 

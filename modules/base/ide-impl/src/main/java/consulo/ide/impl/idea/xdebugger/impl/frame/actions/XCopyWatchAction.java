@@ -15,15 +15,15 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.frame.actions;
 
-import consulo.ui.ex.action.AnActionEvent;
 import consulo.execution.debug.breakpoint.XExpression;
-import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XExpressionImpl;
 import consulo.ide.impl.idea.xdebugger.impl.frame.XWatchesView;
 import consulo.ide.impl.idea.xdebugger.impl.ui.DebuggerUIUtil;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.XDebuggerTree;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.WatchNode;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.XDebuggerTreeNode;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
+import consulo.ui.ex.action.AnActionEvent;
+
 import javax.annotation.Nonnull;
 import java.util.function.Consumer;
 
@@ -44,7 +44,7 @@ public class XCopyWatchAction extends XWatchesTreeActionBase {
       node.getValueContainer().calculateEvaluationExpression().doWhenDone(new Consumer<XExpression>() {
         @Override
         public void accept(XExpression expr) {
-          final XExpression watchExpression = expr != null ? expr : XExpressionImpl.fromText(node.getName());
+          final XExpression watchExpression = expr != null ? expr : XExpression.fromText(node.getName());
           if (watchExpression != null) {
             DebuggerUIUtil.invokeLater(new Runnable() {
               @Override

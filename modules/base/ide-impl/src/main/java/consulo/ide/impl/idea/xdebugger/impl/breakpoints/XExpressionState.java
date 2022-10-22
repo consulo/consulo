@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.breakpoints;
 
+import consulo.execution.debug.internal.breakpoint.XExpressionImpl;
 import consulo.language.Language;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.util.xml.serializer.annotation.Text;

@@ -15,21 +15,20 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes;
 
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.evaluation.XDebuggerEvaluator;
 import consulo.execution.debug.frame.XCompositeNode;
 import consulo.execution.debug.frame.XStackFrame;
 import consulo.execution.debug.frame.XValueChildrenList;
 import consulo.execution.debug.frame.XValueContainer;
-import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XExpressionImpl;
+import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.xdebugger.impl.frame.WatchInplaceEditor;
 import consulo.ide.impl.idea.xdebugger.impl.frame.XWatchesView;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.XDebuggerTree;
-import javax.annotation.Nonnull;
+import consulo.ui.ex.awt.tree.TreeUtil;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.tree.TreeNode;
 import java.util.Collection;
@@ -186,7 +185,7 @@ public class WatchesRootNode extends XValueContainerNode<XValueContainer> {
     if (index == -1) {
       int selectedIndex = myChildren.indexOf(ArrayUtil.getFirstElement(myTree.getSelectedNodes(WatchNodeImpl.class, null)));
       int targetIndex = selectedIndex == - 1 ? myChildren.size() : selectedIndex + 1;
-      messageNode = new WatchNodeImpl(myTree, this, XExpressionImpl.EMPTY_EXPRESSION, null);
+      messageNode = new WatchNodeImpl(myTree, this, XExpression.EMPTY_EXPRESSION, null);
       myChildren.add(targetIndex, messageNode);
       fireNodeInserted(targetIndex);
       getTree().setSelectionRows(ArrayUtil.EMPTY_INT_ARRAY);

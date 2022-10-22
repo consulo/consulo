@@ -41,7 +41,7 @@ import consulo.ide.impl.idea.xdebugger.impl.XDebugSessionImpl;
 import consulo.ide.impl.idea.xdebugger.impl.actions.handlers.XDebuggerEvaluateActionHandler;
 import consulo.ide.impl.idea.xdebugger.impl.evaluate.quick.common.AbstractValueHint;
 import consulo.ide.impl.idea.xdebugger.impl.evaluate.quick.common.ValueHintType;
-import consulo.ide.impl.idea.xdebugger.impl.frame.XValueMarkers;
+import consulo.execution.debug.frame.XValueMarkers;
 import consulo.ide.impl.idea.xdebugger.impl.ui.DebuggerUIUtil;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.XEvaluationCallbackBase;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;

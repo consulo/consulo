@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.xdebugger.impl.ui.tree;
 
 import consulo.ide.impl.idea.ide.dnd.aware.DnDAwareTree;
-import consulo.ide.impl.idea.xdebugger.impl.frame.XValueMarkers;
+import consulo.execution.debug.frame.XValueMarkers;
 import consulo.ide.impl.idea.xdebugger.impl.ui.DebuggerUIUtil;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
 import consulo.execution.debug.XDebuggerBundle;

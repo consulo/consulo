@@ -15,22 +15,22 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.ui.tree;
 
-import consulo.language.editor.hint.HintManager;
 import consulo.codeEditor.Editor;
-import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.ui.AppUIUtil;
-import consulo.ui.ex.awt.SimpleColoredComponent;
-import consulo.ui.ex.awt.JBUI;
+import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.frame.XValueModifier;
 import consulo.execution.debug.frame.presentation.XValuePresentation;
-import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XExpressionImpl;
-import consulo.ide.impl.idea.xdebugger.impl.ui.DebuggerUIUtil;
 import consulo.execution.debug.ui.XDebuggerUIConstants;
-import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
 import consulo.execution.debug.ui.XValuePresentationUtil;
+import consulo.ide.impl.idea.ui.AppUIUtil;
+import consulo.ide.impl.idea.xdebugger.impl.ui.DebuggerUIUtil;
+import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
+import consulo.language.editor.hint.HintManager;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.SimpleColoredComponent;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -89,7 +89,7 @@ public class SetValueInplaceEditor extends XDebuggerTreeInplaceEditor {
   }
 
   private void show(String initialValue) {
-    myExpressionEditor.setExpression(XExpressionImpl.fromText(initialValue));
+    myExpressionEditor.setExpression(XExpression.fromText(initialValue));
     myExpressionEditor.selectAll();
 
     show();

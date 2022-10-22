@@ -15,21 +15,19 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.evaluate;
 
-import consulo.project.Project;
-import consulo.ui.ex.awt.JBSplitter;
+import consulo.disposer.Disposable;
 import consulo.execution.debug.XDebuggerBundle;
-import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.XSourcePosition;
+import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
-import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XExpressionImpl;
 import consulo.ide.impl.idea.xdebugger.impl.ui.XDebuggerEditorBase;
 import consulo.ide.impl.idea.xdebugger.impl.ui.XDebuggerExpressionEditor;
-import consulo.disposer.Disposable;
+import consulo.project.Project;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.JBSplitter;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -49,7 +47,7 @@ public class CodeFragmentInputComponent extends EvaluationInputComponent {
                                     Disposable parentDisposable) {
     super(XDebuggerBundle.message("dialog.title.evaluate.code.fragment"));
     myMultilineEditor = new XDebuggerExpressionEditor(project, editorsProvider, "evaluateCodeFragment", sourcePosition,
-                                                      statements != null ? statements : XExpressionImpl.EMPTY_CODE_FRAGMENT, true, true, false);
+                                                      statements != null ? statements : XExpression.EMPTY_CODE_FRAGMENT, true, true, false);
     myMainPanel = new JPanel(new BorderLayout());
     JPanel editorPanel = new JPanel(new BorderLayout());
     editorPanel.add(myMultilineEditor.getComponent(), BorderLayout.CENTER);

@@ -15,26 +15,25 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.ui;
 
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorEx;
+import consulo.execution.debug.XSourcePosition;
+import consulo.execution.debug.breakpoint.XExpression;
+import consulo.execution.debug.evaluation.EvaluationMode;
+import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
+import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.language.Language;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorEx;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.project.Project;
-import consulo.util.dataholder.Key;
-import consulo.language.psi.PsiDocumentManager;
 import consulo.language.editor.ui.awt.EditorTextField;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.project.Project;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.execution.debug.breakpoint.XExpression;
-import consulo.execution.debug.XSourcePosition;
-import consulo.execution.debug.evaluation.EvaluationMode;
-import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
-import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XExpressionImpl;
+import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 
 /**
@@ -54,7 +53,7 @@ public class XDebuggerExpressionEditor extends XDebuggerEditorBase {
                                    boolean editorFont,
                                    boolean showEditor) {
     super(project, debuggerEditorsProvider, multiline ? EvaluationMode.CODE_FRAGMENT : EvaluationMode.EXPRESSION, historyId, sourcePosition);
-    myExpression = XExpressionImpl.changeMode(text, getMode());
+    myExpression = XExpression.changeMode(text, getMode());
     myEditorTextField =
             new EditorTextField(createDocument(myExpression), project, debuggerEditorsProvider.getFileType(), false, !multiline) {
               @Override

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.xdebugger.impl.ui.tree;
+package consulo.execution.debug.ui;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

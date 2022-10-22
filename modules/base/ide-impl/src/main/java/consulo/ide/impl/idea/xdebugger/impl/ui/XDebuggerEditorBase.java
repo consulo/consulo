@@ -24,7 +24,7 @@ import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.ide.impl.idea.xdebugger.impl.XDebuggerHistoryManager;
-import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XExpressionImpl;
+import consulo.execution.debug.internal.breakpoint.XExpressionImpl;
 import consulo.application.AllIcons;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorColors;
@@ -268,7 +268,7 @@ public abstract class XDebuggerEditorBase {
 
   public void setExpression(@Nullable XExpression text) {
     if (text == null) {
-      text = getMode() == EvaluationMode.EXPRESSION ? XExpressionImpl.EMPTY_EXPRESSION : XExpressionImpl.EMPTY_CODE_FRAGMENT;
+      text = getMode() == EvaluationMode.EXPRESSION ? XExpression.EMPTY_EXPRESSION : XExpression.EMPTY_CODE_FRAGMENT;
     }
     Language language = text.getLanguage();
     if (language == null) {

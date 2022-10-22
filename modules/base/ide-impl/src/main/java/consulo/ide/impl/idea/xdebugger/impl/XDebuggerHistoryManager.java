@@ -20,7 +20,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.execution.debug.breakpoint.XExpression;
 import consulo.ide.ServiceManager;
-import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XExpressionImpl;
+import consulo.execution.debug.internal.breakpoint.XExpressionImpl;
 import consulo.project.Project;
 import consulo.util.lang.StringUtil;
 import jakarta.inject.Singleton;
