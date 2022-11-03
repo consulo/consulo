@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.ui;
 
 import consulo.dataContext.DataManager;
-import consulo.ide.impl.idea.ide.dnd.aware.DnDAwareTree;
+import consulo.ui.ex.awt.dnd.DnDAwareTree;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.psi.PsiElement;
 import consulo.ide.ui.popup.HintUpdateSupply;

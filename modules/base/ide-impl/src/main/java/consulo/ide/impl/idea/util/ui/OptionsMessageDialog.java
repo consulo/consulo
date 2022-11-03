@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.util.ui;
 
 import consulo.project.Project;
+import consulo.ui.ex.awt.OptionsDialog;
 import consulo.ui.ex.awt.internal.laf.MultiLineLabelUI;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.image.Image;
@@ -24,7 +25,7 @@ import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 
-public abstract class OptionsMessageDialog extends OptionsDialog{
+public abstract class OptionsMessageDialog extends OptionsDialog {
   private final String myMessage;
   private final Image myIcon;
 

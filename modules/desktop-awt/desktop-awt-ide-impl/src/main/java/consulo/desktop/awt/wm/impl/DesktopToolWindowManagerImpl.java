@@ -35,7 +35,7 @@ import consulo.fileEditor.FileEditorWithProviderComposite;
 import consulo.fileEditor.FileEditorsSplitters;
 import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.ide.impl.desktop.awt.migration.AWTComponentProviderUtil;
-import consulo.ide.impl.idea.ide.FrameStateManager;
+import consulo.application.ui.FrameStateManager;
 import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.ide.impl.idea.ide.ui.LafManager;
 import consulo.ide.impl.idea.ide.ui.LafManagerListener;

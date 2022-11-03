@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.ide.favoritesTreeView;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.dnd.FileCopyPasteUtil;
 import consulo.ide.impl.idea.ide.dnd.TransferableWrapper;
-import consulo.ide.impl.idea.ide.dnd.aware.DnDAwareTree;
+import consulo.ui.ex.awt.dnd.DnDAwareTree;
 import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.SmartPsiElementPointer;

@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.ui.AppUIUtil;
 import consulo.ide.impl.idea.ui.content.tabs.PinToolwindowTabAction;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.xdebugger.impl.XDebugSessionImpl;
-import consulo.ide.impl.idea.xdebugger.impl.actions.XDebuggerActions;
+import consulo.execution.debug.XDebuggerActions;
 import consulo.ide.impl.idea.xdebugger.impl.frame.*;
 import consulo.ide.impl.idea.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
 import consulo.application.AllIcons;

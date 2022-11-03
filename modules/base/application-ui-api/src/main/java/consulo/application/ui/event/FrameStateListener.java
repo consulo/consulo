@@ -1,16 +1,20 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.ide;
+package consulo.application.ui.event;
+
+import consulo.application.ui.FrameStateManager;
+
+import java.util.EventListener;
 
 /**
- * Listener for receiving notifications when the IDEA window is activated or deactivated.
+ * Listener for receiving notifications when the IDE window is activated or deactivated.
  *
  * @since 5.0.2
  * @see FrameStateManager#addListener(FrameStateListener)
  * @see FrameStateManager#removeListener(FrameStateListener)
  */
-public interface FrameStateListener {
+public interface FrameStateListener extends EventListener {
   /**
-   * Called when the IDEA window is deactivated.
+   * Called when the IDE window is deactivated.
    */
   default void onFrameDeactivated() {
   }

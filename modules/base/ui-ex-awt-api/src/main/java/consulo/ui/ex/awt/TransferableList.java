@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.dnd;
+package consulo.ui.ex.awt;
 
 import javax.annotation.Nonnull;
 import java.awt.datatransfer.DataFlavor;
@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * @author Sergey.Malenkov
  */
-abstract public class TransferableList<T> implements Transferable {
+public abstract class TransferableList<T> implements Transferable {
   private static final DataFlavor LIST_DATA_FLAVOR = new DataFlavor(List.class, "Transferable List");
   private static final DataFlavor ALL_HTML_DATA_FLAVOR = DataFlavor.allHtmlFlavor;
   private static final DataFlavor PART_HTML_DATA_FLAVOR = DataFlavor.fragmentHtmlFlavor;

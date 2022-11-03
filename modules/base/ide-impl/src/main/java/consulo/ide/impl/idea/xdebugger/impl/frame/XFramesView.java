@@ -38,7 +38,7 @@ import consulo.execution.debug.frame.XExecutionStack;
 import consulo.execution.debug.frame.XStackFrame;
 import consulo.execution.debug.frame.XSuspendContext;
 import consulo.ide.impl.idea.xdebugger.impl.XDebugSessionImpl;
-import consulo.ide.impl.idea.xdebugger.impl.actions.XDebuggerActions;
+import consulo.execution.debug.XDebuggerActions;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
 import gnu.trove.TObjectIntHashMap;

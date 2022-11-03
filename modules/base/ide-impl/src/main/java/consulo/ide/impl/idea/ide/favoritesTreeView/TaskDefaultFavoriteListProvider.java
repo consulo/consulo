@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.ide.favoritesTreeView;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.ide.impl.idea.ide.dnd.aware.DnDAwareTree;
+import consulo.ui.ex.awt.dnd.DnDAwareTree;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;

@@ -20,7 +20,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.application.util.SystemInfo;
 import consulo.versionControlSystem.VcsShowConfirmationOption;
 import consulo.ui.ex.awt.JBLabel;
-import consulo.ide.impl.idea.util.ui.OptionsDialog;
+import consulo.ui.ex.awt.OptionsDialog;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

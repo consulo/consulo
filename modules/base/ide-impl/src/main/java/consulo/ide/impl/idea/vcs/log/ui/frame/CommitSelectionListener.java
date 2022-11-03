@@ -58,7 +58,7 @@ public abstract class CommitSelectionListener implements ListSelectionListener {
     if (myLastRequest != null) myLastRequest.cancel();
     myLastRequest = null;
 
-    ApplicationManager.getApplication().invokeLater(this::processEvent, o -> myLastEvent != event);
+    ApplicationManager.getApplication().invokeLater(this::processEvent, () -> myLastEvent != event);
   }
 
   public void processEvent() {

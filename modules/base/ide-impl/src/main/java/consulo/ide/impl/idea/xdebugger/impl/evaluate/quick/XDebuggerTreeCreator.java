@@ -22,7 +22,7 @@ import consulo.ui.ex.awt.tree.Tree;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
 import consulo.execution.debug.frame.XValue;
-import consulo.ide.impl.idea.xdebugger.impl.actions.XDebuggerActions;
+import consulo.execution.debug.XDebuggerActions;
 import consulo.ide.impl.idea.xdebugger.impl.evaluate.quick.common.DebuggerTreeCreator;
 import consulo.execution.debug.frame.XValueMarkers;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.XDebuggerTree;

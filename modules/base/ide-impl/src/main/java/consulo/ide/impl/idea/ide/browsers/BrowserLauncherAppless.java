@@ -44,7 +44,7 @@ import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.io.URLUtil;
 import consulo.ide.impl.idea.util.io.ZipUtil;
-import consulo.ide.impl.idea.util.ui.OptionsDialog;
+import consulo.ui.ex.awt.OptionsDialog;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;

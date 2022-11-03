@@ -20,7 +20,7 @@ import consulo.application.ApplicationManager;
 import consulo.component.persist.scheme.SchemeManager;
 import consulo.configurable.ConfigurationException;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.ide.dnd.aware.DnDAwareTree;
+import consulo.ui.ex.awt.dnd.DnDAwareTree;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.ui.CheckboxTree;

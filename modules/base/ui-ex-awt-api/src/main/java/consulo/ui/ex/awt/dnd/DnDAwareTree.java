@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.dnd.aware;
+package consulo.ui.ex.awt.dnd;
 
-import consulo.ide.impl.idea.ide.dnd.TransferableList;
 import consulo.application.util.SystemInfo;
+import consulo.ui.ex.awt.TransferableList;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.dnd.DnDAware;
 import consulo.ui.ex.awt.internal.laf.WideSelectionTreeUI;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.tree.TreeUtil;

@@ -47,7 +47,7 @@ import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.content.scope.NamedScope;
 import consulo.project.util.WaitForProgressToShow;
 import consulo.util.collection.MultiMap;
-import consulo.ide.impl.idea.util.ui.OptionsDialog;
+import consulo.ui.ex.awt.OptionsDialog;
 import consulo.ide.impl.idea.vcs.ViewUpdateInfoNotification;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.logging.Logger;

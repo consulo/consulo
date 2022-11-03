@@ -20,7 +20,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.ui.ex.awt.JBTabbedPane;
-import consulo.ide.impl.idea.util.ui.OptionsDialog;
+import consulo.ui.ex.awt.OptionsDialog;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.project.Project;

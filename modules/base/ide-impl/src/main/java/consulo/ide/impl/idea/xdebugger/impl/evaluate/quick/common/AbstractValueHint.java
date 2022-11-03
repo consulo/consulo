@@ -26,7 +26,7 @@ import consulo.language.editor.impl.internal.hint.HintListener;
 import consulo.ide.impl.idea.ui.LightweightHint;
 import consulo.ui.ex.SimpleColoredText;
 import consulo.ide.impl.idea.util.IconUtil;
-import consulo.ide.impl.idea.xdebugger.impl.actions.XDebuggerActions;
+import consulo.execution.debug.XDebuggerActions;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorColors;
 import consulo.codeEditor.event.EditorMouseEvent;

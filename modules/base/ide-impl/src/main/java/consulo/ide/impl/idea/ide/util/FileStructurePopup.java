@@ -23,7 +23,7 @@ import consulo.fileEditor.structureView.tree.*;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.DefaultTreeExpander;
 import consulo.ide.impl.idea.ide.actions.ViewStructureAction;
-import consulo.ide.impl.idea.ide.dnd.aware.DnDAwareTree;
+import consulo.ui.ex.awt.dnd.DnDAwareTree;
 import consulo.ide.impl.idea.ide.structureView.newStructureView.StructureViewComponent;
 import consulo.ide.impl.idea.ide.structureView.newStructureView.TreeActionWrapper;
 import consulo.ide.impl.idea.ide.structureView.newStructureView.TreeActionsOwner;

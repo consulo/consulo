@@ -18,6 +18,8 @@ package consulo.ide.impl.idea.ide;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
+import consulo.application.ui.FrameStateManager;
+import consulo.application.ui.event.FrameStateListener;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.fileEditor.*;
 import consulo.logging.Logger;

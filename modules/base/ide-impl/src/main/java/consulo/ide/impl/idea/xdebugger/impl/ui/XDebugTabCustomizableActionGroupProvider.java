@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.xdebugger.impl.ui;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.ide.ui.customization.CustomizableActionGroupProvider;
-import consulo.ide.impl.idea.xdebugger.impl.actions.XDebuggerActions;
+import consulo.execution.debug.XDebuggerActions;
 
 /**
  * @author nik

@@ -20,7 +20,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.internal.laf.MultiLineLabelUI;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsConfiguration;
-import consulo.ide.impl.idea.util.ui.OptionsDialog;
+import consulo.ui.ex.awt.OptionsDialog;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.annotation.Nonnull;

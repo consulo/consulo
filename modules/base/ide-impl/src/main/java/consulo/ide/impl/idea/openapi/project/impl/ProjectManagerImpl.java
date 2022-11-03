@@ -53,7 +53,7 @@ import consulo.ide.impl.idea.openapi.vfs.ex.VirtualFileManagerAdapter;
 import consulo.ide.impl.idea.openapi.vfs.impl.ZipHandler;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.EventDispatcher;
-import consulo.ide.impl.idea.util.SingleAlarm;
+import consulo.ui.ex.awt.util.SingleAlarm;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.language.impl.internal.psi.SingleProjectHolder;

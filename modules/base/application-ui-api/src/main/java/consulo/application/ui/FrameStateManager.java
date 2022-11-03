@@ -13,22 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide;
+package consulo.application.ui;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
+import consulo.application.Application;
+import consulo.application.ui.event.FrameStateListener;
 import consulo.disposer.Disposable;
-import consulo.application.ApplicationManager;
 import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
- * Manager of listeners for notifications about activation and deactivation of the
- * IDEA window.
- *
- * @since 5.0.2
+ * Manager of listeners for notifications about activation and deactivation of the IDE window.
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class FrameStateManager {
@@ -38,7 +35,7 @@ public abstract class FrameStateManager {
    * @return the component instance.
    */
   public static FrameStateManager getInstance() {
-    return ApplicationManager.getApplication().getComponent(FrameStateManager.class);
+    return Application.get().getInstance(FrameStateManager.class);
   }
 
   /**
@@ -47,7 +44,8 @@ public abstract class FrameStateManager {
    * @param listener the listener instance.
    */
   public abstract void addListener(@Nonnull FrameStateListener listener);
-  public abstract void addListener(@Nonnull FrameStateListener listener, @Nullable Disposable disposable);
+
+  public abstract void addListener(@Nonnull FrameStateListener listener, @Nonnull Disposable disposable);
 
   /**
    * Removes a listener which is called when the IDEA window is activated or deactivated.

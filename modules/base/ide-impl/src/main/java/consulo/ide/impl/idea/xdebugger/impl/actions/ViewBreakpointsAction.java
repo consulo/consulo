@@ -20,6 +20,7 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.actions;
 
+import consulo.execution.debug.XDebuggerActions;
 import consulo.ui.ex.action.ActionsBundle;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;

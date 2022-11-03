@@ -25,7 +25,7 @@ import consulo.application.internal.ApplicationEx;
 import consulo.application.util.SystemInfo;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.ide.FrameStateManager;
+import consulo.application.ui.FrameStateManager;
 import consulo.ide.impl.idea.notification.EventLog;
 import consulo.ide.impl.idea.notification.impl.ui.NotificationsUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;

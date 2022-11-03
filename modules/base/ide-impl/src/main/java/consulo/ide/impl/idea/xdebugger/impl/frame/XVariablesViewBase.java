@@ -37,7 +37,7 @@ import consulo.fileEditor.TextEditor;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.containers.ObjectLongHashMap;
 import consulo.ide.impl.idea.xdebugger.impl.XDebuggerInlayUtil;
-import consulo.ide.impl.idea.xdebugger.impl.actions.XDebuggerActions;
+import consulo.execution.debug.XDebuggerActions;
 import consulo.ide.impl.idea.xdebugger.impl.evaluate.quick.XValueHint;
 import consulo.ide.impl.idea.xdebugger.impl.evaluate.quick.common.ValueHintType;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.XDebuggerTree;

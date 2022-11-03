@@ -17,25 +17,24 @@ package consulo.ide.impl.idea.ide;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
+import consulo.application.ui.FrameStateManager;
+import consulo.application.ui.event.FrameStateListener;
 import consulo.component.util.BusyObject;
 import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.event.ApplicationActivationListener;
+import consulo.proxy.EventDispatcher;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.util.concurrent.AsyncResult;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.List;
 
 @Singleton
 @ServiceImpl
 public class FrameStateManagerImpl extends FrameStateManager {
-  private final List<FrameStateListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
+  private final EventDispatcher<FrameStateListener> myDispatcher = EventDispatcher.create(FrameStateListener.class);
 
   private boolean myShouldSynchronize;
   private final Alarm mySyncAlarm;
@@ -89,32 +88,25 @@ public class FrameStateManagerImpl extends FrameStateManager {
   }
 
   private void fireDeactivationEvent() {
-    for (FrameStateListener listener : myListeners) {
-      listener.onFrameDeactivated();
-    }
+    myDispatcher.getMulticaster().onFrameDeactivated();
   }
 
   private void fireActivationEvent() {
-    for (FrameStateListener listener : myListeners) {
-      listener.onFrameActivated();
-    }
+    myDispatcher.getMulticaster().onFrameActivated();
   }
 
   @Override
   public void addListener(@Nonnull FrameStateListener listener) {
-    addListener(listener, null);
+    myDispatcher.addListener(listener);
   }
 
   @Override
-  public void addListener(@Nonnull final FrameStateListener listener, @Nullable Disposable disposable) {
-    myListeners.add(listener);
-    if (disposable != null) {
-      Disposer.register(disposable, () -> removeListener(listener));
-    }
+  public void addListener(@Nonnull final FrameStateListener listener, @Nonnull Disposable disposable) {
+    myDispatcher.addListener(listener, disposable);
   }
 
   @Override
   public void removeListener(@Nonnull FrameStateListener listener) {
-    myListeners.remove(listener);
+    myDispatcher.addListener(listener);
   }
 }

@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.ide.favoritesTreeView.actions;
 
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.dnd.aware.DnDAwareTree;
+import consulo.ui.ex.awt.dnd.DnDAwareTree;
 import consulo.ide.impl.idea.ide.favoritesTreeView.*;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.ex.action.AnAction;

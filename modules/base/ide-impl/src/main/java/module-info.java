@@ -420,7 +420,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.ide.commander;
   exports consulo.ide.impl.idea.ide.diff;
   exports consulo.ide.impl.idea.ide.dnd;
-  exports consulo.ide.impl.idea.ide.dnd.aware;
   exports consulo.ide.impl.idea.ide.errorTreeView;
   exports consulo.ide.impl.idea.ide.errorTreeView.actions;
   exports consulo.ide.impl.idea.ide.errorTreeView.impl;

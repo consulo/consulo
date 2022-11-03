@@ -292,7 +292,7 @@ public class DirDiffTableModel extends AbstractTableModel implements DirDiffMode
       balloon.show(point, Balloon.Position.below);
       Disposer.register(myProject != null ? myProject : ApplicationManager.getApplication(), balloon);
     };
-    ApplicationManager.getApplication().invokeLater(balloonShower, o -> !(myProject == null || myProject.isDefault()) && ((!myProject.isOpen()) || myProject.isDisposed())
+    ApplicationManager.getApplication().invokeLater(balloonShower, () -> !(myProject == null || myProject.isDefault()) && ((!myProject.isOpen()) || myProject.isDisposed())
     );
   }
 

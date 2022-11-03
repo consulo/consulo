@@ -22,7 +22,7 @@ import consulo.dataContext.DataContext;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.content.ContentManager;
-import consulo.ide.impl.idea.util.SingleAlarm;
+import consulo.ui.ex.awt.util.SingleAlarm;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XSourcePosition;
 import javax.annotation.Nonnull;

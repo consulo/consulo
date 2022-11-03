@@ -1,9 +1,9 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.util;
+package consulo.ui.ex.awt.util;
 
+import consulo.application.Application;
 import consulo.disposer.Disposable;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.ui.ex.awt.util.Alarm;
+import consulo.ui.ModalityState;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -11,25 +11,25 @@ import javax.annotation.Nullable;
 public final class SingleAlarm extends Alarm {
   private final Runnable task;
   private final int delay;
-  private final IdeaModalityState myModalityState;
+  private final ModalityState myModalityState;
 
   public SingleAlarm(@Nonnull Runnable task, int delay) {
-    this(task, delay, ThreadToUse.SWING_THREAD, IdeaModalityState.NON_MODAL, null);
+    this(task, delay, ThreadToUse.SWING_THREAD, Application.get().getNoneModalityState(), null);
   }
 
   public SingleAlarm(@Nonnull Runnable task, int delay, @Nonnull Disposable parentDisposable) {
     this(task, delay, Alarm.ThreadToUse.SWING_THREAD, parentDisposable);
   }
 
-  public SingleAlarm(@Nonnull Runnable task, int delay, @Nonnull IdeaModalityState modalityState, @Nonnull Disposable parentDisposable) {
+  public SingleAlarm(@Nonnull Runnable task, int delay, @Nonnull ModalityState modalityState, @Nonnull Disposable parentDisposable) {
     this(task, delay, Alarm.ThreadToUse.SWING_THREAD, modalityState, parentDisposable);
   }
 
   public SingleAlarm(@Nonnull Runnable task, int delay, @Nonnull ThreadToUse threadToUse, @Nonnull Disposable parentDisposable) {
-    this(task, delay, threadToUse, threadToUse == ThreadToUse.SWING_THREAD ? IdeaModalityState.NON_MODAL : null, parentDisposable);
+    this(task, delay, threadToUse, threadToUse == ThreadToUse.SWING_THREAD ? Application.get().getNoneModalityState() : null, parentDisposable);
   }
 
-  private SingleAlarm(@Nonnull Runnable task, int delay, @Nonnull ThreadToUse threadToUse, IdeaModalityState modalityState, @Nullable Disposable parentDisposable) {
+  private SingleAlarm(@Nonnull Runnable task, int delay, @Nonnull ThreadToUse threadToUse, ModalityState modalityState, @Nullable Disposable parentDisposable) {
     super(threadToUse, parentDisposable);
 
     this.task = task;
