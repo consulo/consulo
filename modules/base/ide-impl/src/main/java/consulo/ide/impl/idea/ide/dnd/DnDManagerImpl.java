@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.ide.dnd;
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.ide.impl.idea.ui.MouseDragHelper;
-import consulo.ide.impl.idea.util.ui.GeometryUtil;
+import consulo.ui.ex.awt.util.GeometryUtil;
 import consulo.application.Application;
 import consulo.application.ui.UISettings;
 import consulo.disposer.Disposable;
