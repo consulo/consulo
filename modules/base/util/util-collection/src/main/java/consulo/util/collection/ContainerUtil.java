@@ -1503,4 +1503,17 @@ public class ContainerUtil {
     //noinspection unchecked
     return (List<T>)filter(collection, Conditions.instanceOf(aClass));
   }
+
+  public static <T> void removeDuplicates(@Nonnull Collection<T> collection) {
+    Set<T> collected = new HashSet<T>();
+    for (Iterator<T> iterator = collection.iterator(); iterator.hasNext(); ) {
+      T t = iterator.next();
+      if (!collected.contains(t)) {
+        collected.add(t);
+      }
+      else {
+        iterator.remove();
+      }
+    }
+  }
 }

@@ -2654,4 +2654,30 @@ public final class StringUtil {
     }
     return false;
   }
+
+  @Contract(pure = true)
+  public static boolean containsWhitespaces(@Nullable CharSequence s) {
+    if (s == null) return false;
+
+    for (int i = 0; i < s.length(); i++) {
+      if (Character.isWhitespace(s.charAt(i))) return true;
+    }
+    return false;
+  }
+
+  @Contract(pure = true)
+  @Nullable
+  public static String substringBefore(@Nonnull String text, @Nonnull String subString) {
+    int i = text.indexOf(subString);
+    if (i == -1) return null;
+    return text.substring(0, i);
+  }
+
+  @Contract(pure = true)
+  @Nonnull
+  public static String substringBeforeLast(@Nonnull String text, @Nonnull String subString) {
+    int i = text.lastIndexOf(subString);
+    if (i == -1) return text;
+    return text.substring(0, i);
+  }
 }

@@ -15,23 +15,22 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.ui.tree.actions;
 
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.ui.AppUIUtil;
-import consulo.util.collection.SmartList;
-import consulo.ide.impl.idea.util.containers.IntIntHashMap;
+import consulo.execution.debug.frame.HeadlessValueEvaluationCallback;
 import consulo.execution.debug.frame.XFullValueEvaluator;
+import consulo.ide.impl.idea.ui.AppUIUtil;
+import consulo.ide.impl.idea.util.containers.IntIntHashMap;
 import consulo.ide.impl.idea.xdebugger.impl.ui.DebuggerUIUtil;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.XDebuggerTree;
-import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.HeadlessValueEvaluationCallback;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.WatchNodeImpl;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.util.collection.SmartList;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
-
 import java.util.List;
 
 public abstract class XFetchValueActionBase extends AnAction {
@@ -156,7 +155,7 @@ public abstract class XFetchValueActionBase extends AnAction {
     private final ValueCollector myValueCollector;
 
     public CopyValueEvaluationCallback(@Nonnull XValueNodeImpl node, @Nonnull ValueCollector valueCollector) {
-      super(node);
+      super(node, node.getTree().getProject());
 
       myValueCollector = valueCollector;
       myValueIndex = valueCollector.acquire();

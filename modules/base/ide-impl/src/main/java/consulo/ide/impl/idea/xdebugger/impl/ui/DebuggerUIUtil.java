@@ -15,45 +15,44 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.ui;
 
-import consulo.execution.debug.*;
-import consulo.execution.debug.ui.XValueTextProvider;
-import consulo.language.editor.ui.awt.HintUtil;
-import consulo.dataContext.DataManager;
-import consulo.execution.debug.ui.XDebuggerUIConstants;
-import consulo.disposer.Disposable;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.AnAction;
 import consulo.application.ApplicationManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
 import consulo.colorScheme.EditorColorsScheme;
-import consulo.ui.ex.awt.EditorColorsUtil;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.*;
-import consulo.application.ui.wm.IdeFocusManager;
-import consulo.project.ui.wm.WindowManager;
-import consulo.ide.impl.idea.ui.AppUIUtil;
-import consulo.language.editor.ui.awt.EditorTextField;
-import consulo.ui.ex.awt.util.ScreenUtil;
-import consulo.ui.ex.RelativePoint;
-import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
-import consulo.execution.debug.breakpoint.XExpression;
+import consulo.dataContext.DataManager;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.execution.debug.*;
 import consulo.execution.debug.breakpoint.XBreakpoint;
+import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.event.XBreakpointAdapter;
 import consulo.execution.debug.event.XBreakpointListener;
 import consulo.execution.debug.frame.XFullValueEvaluator;
 import consulo.execution.debug.frame.XValue;
 import consulo.execution.debug.frame.XValueModifier;
-import consulo.ide.impl.idea.xdebugger.impl.XDebuggerUtilImpl;
+import consulo.execution.debug.ui.XDebuggerUIConstants;
+import consulo.execution.debug.ui.XValueTextProvider;
+import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.ide.impl.idea.openapi.util.DimensionService;
+import consulo.ide.impl.idea.ui.AppUIUtil;
+import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XBreakpointBase;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.XLightBreakpointPropertiesPanel;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.XDebuggerTree;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.XDebuggerTreeState;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
+import consulo.language.editor.hint.HintColorUtil;
+import consulo.language.editor.ui.awt.EditorTextField;
+import consulo.project.Project;
+import consulo.project.ui.wm.WindowManager;
+import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.awt.EditorColorsUtil;
+import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.disposer.Disposer;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
@@ -63,9 +62,9 @@ import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.ref.Ref;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -137,7 +136,7 @@ public class DebuggerUIUtil {
 
   public static void showValuePopup(@Nonnull XFullValueEvaluator evaluator, @Nonnull MouseEvent event, @Nonnull Project project, @Nullable Editor editor) {
     EditorTextField textArea = new TextViewer("Evaluating...", project);
-    textArea.setBackground(HintUtil.INFORMATION_COLOR);
+    textArea.setBackground(TargetAWT.to(HintColorUtil.getInformationColor()));
 
     final FullValueEvaluationCallbackImpl callback = new FullValueEvaluationCallbackImpl(textArea);
     evaluator.startEvaluation(callback);

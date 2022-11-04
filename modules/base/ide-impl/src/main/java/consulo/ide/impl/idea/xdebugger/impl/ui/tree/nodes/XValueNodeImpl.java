@@ -251,7 +251,7 @@ public class XValueNodeImpl extends XValueContainerNode<XValue>
             DebuggerUIUtil.showValuePopup(myFullValueEvaluator, event, myTree.getProject(), null);
           }
           else {
-            new HeadlessValueEvaluationCallback(XValueNodeImpl.this).startFetchingValue(myFullValueEvaluator);
+            new HeadlessValueEvaluationCallback(XValueNodeImpl.this, myTree.getProject()).startFetchingValue(myFullValueEvaluator);
           }
           event.consume();
         }

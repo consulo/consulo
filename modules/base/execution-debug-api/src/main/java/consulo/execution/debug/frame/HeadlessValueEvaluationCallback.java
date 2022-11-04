@@ -13,31 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes;
+package consulo.execution.debug.frame;
 
-import consulo.project.ui.notification.NotificationType;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
-import consulo.project.Project;
-import consulo.ui.ex.awt.util.Alarm;
 import consulo.application.util.Semaphore;
 import consulo.execution.debug.XDebuggerBundle;
-import consulo.execution.debug.frame.XFullValueEvaluator;
-import consulo.ide.impl.idea.xdebugger.impl.XDebugSessionImpl;
+import consulo.execution.debug.ui.XDebuggerUIConstants;
+import consulo.project.Project;
+import consulo.project.ui.notification.NotificationType;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.util.Alarm;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
 
 public class HeadlessValueEvaluationCallback implements XFullValueEvaluator.XFullValueEvaluationCallback {
-  private final XValueNodeImpl myNode;
+  private final XValueNode myNode;
+  private final Project myProject;
 
   private volatile boolean myEvaluated;
   private volatile boolean myCanceled;
   private final Semaphore mySemaphore;
 
-  public HeadlessValueEvaluationCallback(@Nonnull XValueNodeImpl node) {
+  public HeadlessValueEvaluationCallback(@Nonnull XValueNode node, @Nonnull Project project) {
     myNode = node;
+    myProject = project;
     mySemaphore = new Semaphore();
     mySemaphore.down();
   }
@@ -62,7 +64,7 @@ public class HeadlessValueEvaluationCallback implements XFullValueEvaluator.XFul
   public void errorOccurred(@Nonnull String errorMessage) {
     try {
       String message = XDebuggerBundle.message("load.value.task.error", errorMessage);
-      XDebugSessionImpl.NOTIFICATION_GROUP.createNotification(message, NotificationType.ERROR).notify(myNode.getTree().getProject());
+      XDebuggerUIConstants.NOTIFICATION_GROUP.createNotification(message, NotificationType.ERROR).notify(myProject);
     }
     finally {
       evaluationComplete(errorMessage);
@@ -75,11 +77,11 @@ public class HeadlessValueEvaluationCallback implements XFullValueEvaluator.XFul
       mySemaphore.up();
     }
     finally {
-      evaluationComplete(value, myNode.getTree().getProject());
+      evaluationComplete(value, myProject);
     }
   }
 
-  public XValueNodeImpl getNode() {
+  public XValueNode getNode() {
     return myNode;
   }
 
@@ -97,7 +99,7 @@ public class HeadlessValueEvaluationCallback implements XFullValueEvaluator.XFul
       return;
     }
 
-    new Task.Backgroundable(myNode.getTree().getProject(), XDebuggerBundle.message("load.value.task.text")) {
+    new Task.Backgroundable(myProject, XDebuggerBundle.message("load.value.task.text")) {
       @Override
       public void run(@Nonnull ProgressIndicator indicator) {
         indicator.setIndeterminate(true);
@@ -114,6 +116,7 @@ public class HeadlessValueEvaluationCallback implements XFullValueEvaluator.XFul
         return false;
       }
 
+      @RequiredUIAccess
       @Override
       public void onCancel() {
         myCanceled = true;
