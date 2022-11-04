@@ -1,7 +1,7 @@
 package consulo.ide.impl.idea.openapi.externalSystem.model.settings;
 
 import consulo.externalSystem.model.ProjectSystemId;
-import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemBundle;
+import consulo.externalSystem.ExternalSystemBundle;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.PropertyKey;
 

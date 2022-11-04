@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.externalSystem.util;
+package consulo.externalSystem.ui.awt;
+
+import consulo.annotation.DeprecationInfo;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -24,6 +26,8 @@ import java.util.function.Consumer;
  * @author Denis Zhdanov
  * @since 4/30/13 10:17 PM
  */
+@Deprecated
+@DeprecationInfo("This is desktop only implement")
 public class PaintAwarePanel extends JPanel {
 
   @Nullable private Consumer<Graphics> myPaintCallback;

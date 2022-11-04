@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.externalSystem.service;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.externalSystem.ExternalSystemManager;
-import consulo.ide.impl.idea.openapi.externalSystem.model.ExternalSystemDataKeys;
+import consulo.externalSystem.model.ExternalSystemDataKeys;
 import consulo.ide.impl.idea.openapi.externalSystem.service.project.ProjectRenameAware;
 import consulo.ide.impl.idea.openapi.externalSystem.service.project.autoimport.ExternalSystemAutoImporter;
 import consulo.ide.impl.idea.openapi.externalSystem.service.ui.ExternalToolWindowManager;

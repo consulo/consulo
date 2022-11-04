@@ -13,40 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.externalSystem.service.ui;
+package consulo.externalSystem.ui.awt;
 
 import consulo.application.AllIcons;
+import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.FoldingModel;
+import consulo.component.PropertiesComponent;
+import consulo.externalSystem.ExternalSystemBundle;
 import consulo.externalSystem.ExternalSystemManager;
-import consulo.externalSystem.ExternalSystemUiAware;
+import consulo.externalSystem.internal.ExternalSystemInternalHelper;
+import consulo.externalSystem.internal.ui.ExternalSystemTasksTree;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.project.ExternalProjectPojo;
 import consulo.externalSystem.setting.AbstractExternalSystemLocalSettings;
+import consulo.externalSystem.ui.ExternalProjectPathLookupElement;
+import consulo.externalSystem.ui.ExternalSystemUiAware;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.ide.impl.idea.openapi.externalSystem.service.task.ui.ExternalSystemNode;
-import consulo.ide.impl.idea.openapi.externalSystem.service.task.ui.ExternalSystemTasksTree;
-import consulo.ide.impl.idea.openapi.externalSystem.service.task.ui.ExternalSystemTasksTreeModel;
-import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemBundle;
-import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemUiUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
-import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.language.editor.completion.CompletionResultSet;
 import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.language.editor.ui.awt.TextFieldCompletionProvider;
 import consulo.language.editor.ui.awt.TextFieldCompletionProviderDumbAware;
 import consulo.project.Project;
+import consulo.project.ProjectPropertiesComponent;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopup;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
@@ -57,9 +56,8 @@ import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Denis Zhdanov
@@ -130,10 +128,12 @@ public class ExternalProjectPathField extends ComponentWithBrowseButton<External
             popupRef.get().closeOk(null); 
           }
         };
-        JBPopup popup = new PopupChooserBuilder(tree)
+
+        ExternalSystemInternalHelper helper = Application.get().getInstance(ExternalSystemInternalHelper.class);
+        JBPopup popup = helper.createPopupBuilder(tree)
+          .setItemChoosenCallback(treeSelectionCallback)
           .setTitle(ExternalSystemBundle.message("run.configuration.title.choose.registered.project", externalSystemId.getReadableName()))
           .setResizable(true)
-          .setItemChoosenCallback(treeSelectionCallback)
           .setAutoselectOnMouseMove(true)
           .setCloseOnEnter(false)
           .createPopup();
@@ -147,13 +147,13 @@ public class ExternalProjectPathField extends ComponentWithBrowseButton<External
   @Nonnull
   private static Tree buildRegisteredProjectsTree(@Nonnull Project project, @Nonnull ProjectSystemId externalSystemId) {
     ExternalSystemTasksTreeModel model = new ExternalSystemTasksTreeModel(externalSystemId);
-    ExternalSystemTasksTree result = new ExternalSystemTasksTree(model, ContainerUtilRt.<String, Boolean>newHashMap(), project, externalSystemId);
+    ExternalSystemTasksTree result = new ExternalSystemTasksTree(model, new HashMap<>(), project, externalSystemId);
     
     ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(externalSystemId);
     assert manager != null;
     AbstractExternalSystemLocalSettings settings = manager.getLocalSettingsProvider().apply(project);
     Map<ExternalProjectPojo, Collection<ExternalProjectPojo>> projects = settings.getAvailableProjects();
-    List<ExternalProjectPojo> rootProjects = ContainerUtilRt.newArrayList(projects.keySet());
+    List<ExternalProjectPojo> rootProjects = new ArrayList<>(projects.keySet());
     ContainerUtil.sort(rootProjects);
     for (ExternalProjectPojo rootProject : rootProjects) {
       model.ensureSubProjectsStructure(rootProject, projects.get(rootProject));
@@ -282,7 +282,7 @@ public class ExternalProjectPathField extends ComponentWithBrowseButton<External
         assert false;
         return;
       }
-      PropertiesComponent component = PropertiesComponent.getInstance(myProject);
+      PropertiesComponent component = ProjectPropertiesComponent.getInstance(myProject);
       String pathToStart = myPathField.getText();
       if (StringUtil.isEmpty(pathToStart)) {
         pathToStart = component.getValue(PROJECT_FILE_TO_START_WITH_KEY);

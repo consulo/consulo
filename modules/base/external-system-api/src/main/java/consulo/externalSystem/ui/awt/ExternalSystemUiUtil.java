@@ -13,31 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.externalSystem.util;
+package consulo.externalSystem.ui.awt;
 
-import consulo.externalSystem.ExternalSystemManager;
-import consulo.externalSystem.ExternalSystemUiAware;
-import consulo.externalSystem.model.ProjectSystemId;
-import consulo.externalSystem.util.ExternalSystemApiUtil;
-import consulo.externalSystem.model.execution.ExternalTaskPojo;
-import consulo.externalSystem.model.project.ExternalProjectPojo;
-import consulo.ide.impl.idea.openapi.externalSystem.service.task.ui.ExternalSystemTasksTreeModel;
-import consulo.ide.impl.idea.openapi.externalSystem.service.ui.DefaultExternalSystemUiAware;
-import consulo.externalSystem.setting.AbstractExternalSystemLocalSettings;
-import consulo.ui.ex.awt.GridBag;
 import consulo.application.ApplicationManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.externalSystem.ExternalSystemManager;
+import consulo.externalSystem.model.ProjectSystemId;
+import consulo.externalSystem.model.execution.ExternalTaskPojo;
+import consulo.externalSystem.model.project.ExternalProjectPojo;
+import consulo.externalSystem.setting.AbstractExternalSystemLocalSettings;
+import consulo.externalSystem.internal.DefaultExternalSystemUiAware;
+import consulo.externalSystem.ui.ExternalSystemUiAware;
+import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.ui.NotificationType;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.awt.GridBag;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.BalloonBuilder;
+import consulo.ui.ex.popup.JBPopupFactory;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

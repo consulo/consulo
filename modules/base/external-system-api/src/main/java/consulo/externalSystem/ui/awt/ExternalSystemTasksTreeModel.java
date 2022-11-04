@@ -13,19 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.externalSystem.service.task.ui;
+package consulo.externalSystem.ui.awt;
 
 import consulo.execution.executor.DefaultRunExecutor;
-import consulo.externalSystem.ExternalSystemUiAware;
+import consulo.externalSystem.ui.ExternalSystemUiAware;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.execution.ExternalSystemTaskExecutionSettings;
 import consulo.externalSystem.model.execution.ExternalTaskExecutionInfo;
 import consulo.externalSystem.model.execution.ExternalTaskPojo;
 import consulo.externalSystem.model.project.ExternalProjectPojo;
-import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemUiUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
+import consulo.externalSystem.ui.ExternalSystemNodeDescriptor;
 import consulo.ui.image.Image;
-import gnu.trove.TObjectIntHashMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -137,13 +135,13 @@ public class ExternalSystemTasksTreeModel extends DefaultTreeModel {
 
   public void ensureSubProjectsStructure(@Nonnull ExternalProjectPojo topLevelProject, @Nonnull Collection<ExternalProjectPojo> subProjects) {
     ExternalSystemNode<ExternalProjectPojo> topLevelProjectNode = ensureProjectNodeExists(topLevelProject);
-    Map<String/*config path*/, ExternalProjectPojo> toAdd = ContainerUtilRt.newHashMap();
+    Map<String/*config path*/, ExternalProjectPojo> toAdd = new HashMap<>();
     for (ExternalProjectPojo subProject : subProjects) {
       toAdd.put(subProject.getPath(), subProject);
     }
     toAdd.remove(topLevelProject.getPath());
 
-    final TObjectIntHashMap<Object> taskWeights = new TObjectIntHashMap<>();
+    final Map<Object, Integer> taskWeights = new HashMap<>();
     for (int i = 0; i < topLevelProjectNode.getChildCount(); i++) {
       ExternalSystemNode<?> child = topLevelProjectNode.getChildAt(i);
       Object childElement = child.getDescriptor().getElement();
@@ -177,7 +175,7 @@ public class ExternalSystemTasksTreeModel extends DefaultTreeModel {
 //      ));
       return;
     }
-    Set<ExternalTaskExecutionInfo> toAdd = ContainerUtilRt.newHashSet();
+    Set<ExternalTaskExecutionInfo> toAdd = new HashSet<>();
     for (ExternalTaskPojo task : tasks) {
       toAdd.add(buildTaskInfo(task));
     }

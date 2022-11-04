@@ -1,44 +1,46 @@
-package consulo.ide.impl.idea.openapi.externalSystem.service.execution;
+package consulo.externalSystem.service.execution;
 
-import consulo.execution.configuration.log.ui.LogConfigurationPanel;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.application.util.DateFormatUtil;
+import consulo.document.FileDocumentManager;
 import consulo.execution.DefaultExecutionResult;
 import consulo.execution.ExecutionBundle;
+import consulo.execution.ExecutionResult;
 import consulo.execution.configuration.ConfigurationFactory;
 import consulo.execution.configuration.LocatableConfigurationBase;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.configuration.RunProfileState;
+import consulo.execution.configuration.log.ui.LogConfigurationPanel;
+import consulo.execution.configuration.ui.SettingsEditor;
+import consulo.execution.configuration.ui.SettingsEditorGroup;
 import consulo.execution.debug.DefaultDebugExecutor;
-import consulo.ide.impl.idea.execution.filters.TextConsoleBuilderImpl;
-import consulo.execution.ExecutionResult;
 import consulo.execution.executor.Executor;
-import consulo.process.ExecutionException;
-import consulo.process.ProcessHandler;
-import consulo.process.ProcessOutputTypes;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.ProgramRunner;
 import consulo.execution.ui.console.ConsoleView;
-import consulo.application.ApplicationManager;
-import consulo.logging.Logger;
+import consulo.execution.ui.console.TextConsoleBuilderFactory;
+import consulo.externalSystem.ExternalSystemBundle;
+import consulo.externalSystem.internal.ExternalSystemInternalHelper;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.execution.ExternalSystemTaskExecutionSettings;
 import consulo.externalSystem.model.execution.ExternalTaskExecutionInfo;
 import consulo.externalSystem.model.execution.ExternalTaskPojo;
+import consulo.externalSystem.model.task.ExternalSystemTask;
 import consulo.externalSystem.model.task.ExternalSystemTaskId;
-import consulo.ide.impl.idea.openapi.externalSystem.model.task.ExternalSystemTaskNotificationListenerAdapter;
-import consulo.ide.impl.idea.openapi.externalSystem.service.internal.ExternalSystemExecuteTaskTask;
-import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemBundle;
-import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemUtil;
-import consulo.document.FileDocumentManager;
-import consulo.execution.configuration.ui.SettingsEditor;
-import consulo.execution.configuration.ui.SettingsEditorGroup;
+import consulo.externalSystem.model.task.ExternalSystemTaskNotificationListenerAdapter;
+import consulo.externalSystem.util.ExternalSystemApiUtil;
+import consulo.logging.Logger;
+import consulo.process.ExecutionException;
+import consulo.process.ProcessHandler;
+import consulo.process.ProcessOutputTypes;
 import consulo.project.Project;
+import consulo.util.io.NetUtil;
+import consulo.util.lang.ExceptionUtil;
+import consulo.util.lang.StringUtil;
+import consulo.util.nodep.collection.ContainerUtilRt;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.ExceptionUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
-import consulo.ide.impl.idea.util.net.NetUtils;
-import consulo.application.util.DateFormatUtil;
 import consulo.util.xml.serializer.XmlSerializer;
 import org.jdom.Element;
 
@@ -125,7 +127,7 @@ public class ExternalSystemRunConfiguration extends LocatableConfigurationBase {
       int port;
       if (debug) {
         try {
-          port = NetUtils.findAvailableSocketPort();
+          port = NetUtil.findAvailableSocketPort();
         }
         catch (IOException e) {
           LOG.warn("Unexpected I/O exception occurred on attempt to find a free port to use for external system task debugging", e);
@@ -147,8 +149,8 @@ public class ExternalSystemRunConfiguration extends LocatableConfigurationBase {
     public ExecutionResult execute(Executor executor, @Nonnull ProgramRunner runner) throws ExecutionException {
       if (myProject.isDisposed()) return null;
 
-      ExternalSystemUtil.updateRecentTasks(new ExternalTaskExecutionInfo(mySettings.clone(), executor.getId()), myProject);
-      ConsoleView console = new TextConsoleBuilderImpl(myProject).getConsole();
+      ExternalSystemApiUtil.updateRecentTasks(new ExternalTaskExecutionInfo(mySettings.clone(), executor.getId()), myProject);
+      ConsoleView console = TextConsoleBuilderFactory.getInstance().createBuilder(myProject).getConsole();
       final List<ExternalTaskPojo> tasks = ContainerUtilRt.newArrayList();
       for (String taskName : mySettings.getTaskNames()) {
         tasks.add(new ExternalTaskPojo(taskName, mySettings.getExternalProjectPath(), null));
@@ -164,8 +166,8 @@ public class ExternalSystemRunConfiguration extends LocatableConfigurationBase {
       ApplicationManager.getApplication().assertIsDispatchThread();
       FileDocumentManager.getInstance().saveAllDocuments();
 
-      final ExternalSystemExecuteTaskTask task =
-              new ExternalSystemExecuteTaskTask(mySettings.getExternalSystemId(), myProject, tasks, mySettings.getVmOptions(), mySettings.getScriptParameters(), debuggerSetup);
+      ExternalSystemInternalHelper helper = Application.get().getInstance(ExternalSystemInternalHelper.class);
+      final ExternalSystemTask task = helper.createExecuteSystemTask(mySettings.getExternalSystemId(), myProject, tasks, mySettings.getVmOptions(), mySettings.getScriptParameters(), debuggerSetup);
 
       final MyProcessHandler processHandler = new MyProcessHandler(task);
       console.attachToProcess(processHandler);
@@ -224,9 +226,9 @@ public class ExternalSystemRunConfiguration extends LocatableConfigurationBase {
   }
 
   private static class MyProcessHandler extends ProcessHandler {
-    private final ExternalSystemExecuteTaskTask myTask;
+    private final ExternalSystemTask myTask;
 
-    public MyProcessHandler(ExternalSystemExecuteTaskTask task) {
+    public MyProcessHandler(ExternalSystemTask task) {
       myTask = task;
     }
 

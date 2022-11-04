@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.externalSystem.service.settings;
 
 import consulo.externalSystem.ExternalSystemManager;
-import consulo.ide.impl.idea.openapi.externalSystem.model.ExternalSystemDataKeys;
+import consulo.externalSystem.model.ExternalSystemDataKeys;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.setting.AbstractExternalSystemSettings;
 import consulo.externalSystem.util.ExternalSystemApiUtil;

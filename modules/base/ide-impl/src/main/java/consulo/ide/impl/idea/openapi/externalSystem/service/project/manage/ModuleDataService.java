@@ -30,7 +30,7 @@ import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.compiler.ModuleCompilerPathsManager;
-import consulo.ide.impl.externalSystem.module.extension.ExternalSystemMutableModuleExtension;
+import consulo.externalSystem.service.module.extension.ExternalSystemMutableModuleExtension;
 import consulo.language.content.ProductionContentFolderTypeProvider;
 import consulo.language.content.TestContentFolderTypeProvider;
 

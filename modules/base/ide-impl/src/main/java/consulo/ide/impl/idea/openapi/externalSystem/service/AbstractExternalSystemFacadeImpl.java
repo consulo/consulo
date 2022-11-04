@@ -1,12 +1,8 @@
 package consulo.ide.impl.idea.openapi.externalSystem.service;
 
-import consulo.externalSystem.model.task.ExternalSystemTaskId;
-import consulo.externalSystem.model.task.ExternalSystemTaskNotificationEvent;
-import consulo.externalSystem.model.task.ExternalSystemTaskNotificationListener;
-import consulo.externalSystem.model.task.ExternalSystemTaskType;
+import consulo.externalSystem.model.task.*;
 import consulo.util.rmi.RemoteServer;
 import consulo.externalSystem.model.setting.ExternalSystemExecutionSettings;
-import consulo.ide.impl.idea.openapi.externalSystem.model.task.*;
 import consulo.externalSystem.service.project.ExternalSystemProjectResolver;
 import consulo.ide.impl.idea.openapi.externalSystem.service.remote.*;
 import consulo.externalSystem.task.ExternalSystemTaskManager;

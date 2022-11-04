@@ -15,42 +15,48 @@
  */
 package consulo.ide.impl.idea.openapi.externalSystem.service.task.ui;
 
+import consulo.dataContext.DataProvider;
 import consulo.execution.action.Location;
 import consulo.execution.executor.DefaultRunExecutor;
+import consulo.externalSystem.ExternalSystemBundle;
+import consulo.externalSystem.ExternalSystemManager;
+import consulo.externalSystem.internal.ui.ExternalSystemRecentTaskListModel;
+import consulo.externalSystem.internal.ui.ExternalSystemRecentTasksList;
+import consulo.externalSystem.internal.ui.ExternalSystemTasksTree;
+import consulo.externalSystem.model.ExternalSystemDataKeys;
+import consulo.externalSystem.model.ProjectSystemId;
+import consulo.externalSystem.model.execution.ExternalTaskExecutionInfo;
+import consulo.externalSystem.model.project.ExternalProjectPojo;
+import consulo.externalSystem.setting.AbstractExternalSystemLocalSettings;
+import consulo.externalSystem.ui.awt.ExternalSystemNode;
+import consulo.externalSystem.ui.awt.ExternalSystemTasksTreeModel;
+import consulo.externalSystem.ui.awt.ExternalSystemUiUtil;
+import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.ide.impl.idea.ide.ui.customization.CustomizationUtil;
+import consulo.ide.impl.idea.openapi.externalSystem.service.execution.ExternalSystemTaskLocation;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.language.plain.PlainTextFileType;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiFileFactory;
+import consulo.project.Project;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionToolbar;
-import consulo.dataContext.DataProvider;
-import consulo.externalSystem.ExternalSystemManager;
-import consulo.ide.impl.idea.openapi.externalSystem.model.ExternalSystemDataKeys;
-import consulo.externalSystem.model.ProjectSystemId;
-import consulo.externalSystem.model.execution.ExternalTaskExecutionInfo;
-import consulo.externalSystem.model.project.ExternalProjectPojo;
-import consulo.ide.impl.idea.openapi.externalSystem.service.execution.ExternalSystemTaskLocation;
-import consulo.externalSystem.setting.AbstractExternalSystemLocalSettings;
-import consulo.externalSystem.util.ExternalSystemApiUtil;
-import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemBundle;
-import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemUiUtil;
-import consulo.language.plain.PlainTextFileType;
-import consulo.project.Project;
-import consulo.ui.ex.awt.SimpleToolWindowPanel;
-import consulo.util.dataholder.Key;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.language.psi.PsiFile;
-import consulo.language.psi.PsiFileFactory;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.JBScrollPane;
-import consulo.ide.impl.idea.util.Producer;
+import consulo.ui.ex.awt.SimpleToolWindowPanel;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.function.Supplier;
 
 import static consulo.externalSystem.util.ExternalSystemConstants.*;
 
@@ -63,9 +69,9 @@ public class ExternalSystemTasksPanel extends SimpleToolWindowPanel implements D
   @Nonnull
   private final ExternalSystemRecentTasksList myRecentTasksList;
   @Nonnull
-  private final ExternalSystemTasksTreeModel  myAllTasksModel;
+  private final ExternalSystemTasksTreeModel myAllTasksModel;
   @Nonnull
-  private final ExternalSystemTasksTree       myAllTasksTree;
+  private final ExternalSystemTasksTree myAllTasksTree;
   @Nonnull
   private final ProjectSystemId               myExternalSystemId;
   @Nonnull
@@ -73,8 +79,8 @@ public class ExternalSystemTasksPanel extends SimpleToolWindowPanel implements D
   @Nonnull
   private final Project                       myProject;
 
-  @javax.annotation.Nullable
-  private Producer<ExternalTaskExecutionInfo> mySelectedTaskProvider;
+  @Nullable
+  private Supplier<ExternalTaskExecutionInfo> mySelectedTaskProvider;
 
   public ExternalSystemTasksPanel(@Nonnull Project project,
                                   @Nonnull ProjectSystemId externalSystemId,
@@ -151,7 +157,7 @@ public class ExternalSystemTasksPanel extends SimpleToolWindowPanel implements D
     return result;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public Object getData(@Nonnull @NonNls Key<?> dataId) {
     if (ExternalSystemDataKeys.RECENT_TASKS_LIST == dataId) {
@@ -167,7 +173,7 @@ public class ExternalSystemTasksPanel extends SimpleToolWindowPanel implements D
       return myNotificationGroup;
     }
     else if (ExternalSystemDataKeys.SELECTED_TASK == dataId) {
-      return mySelectedTaskProvider == null ? null : mySelectedTaskProvider.produce();
+      return mySelectedTaskProvider == null ? null : mySelectedTaskProvider.get();
     }
     else if (ExternalSystemDataKeys.SELECTED_PROJECT == dataId) {
       if (mySelectedTaskProvider != myAllTasksTree) {
@@ -188,12 +194,12 @@ public class ExternalSystemTasksPanel extends SimpleToolWindowPanel implements D
     return null;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   private Location buildLocation() {
     if (mySelectedTaskProvider == null) {
       return null;
     }
-    ExternalTaskExecutionInfo task = mySelectedTaskProvider.produce();
+    ExternalTaskExecutionInfo task = mySelectedTaskProvider.get();
     if (task == null) {
       return null;
     }

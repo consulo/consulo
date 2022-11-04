@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.externalSystem.importing;
 
 import consulo.externalSystem.model.ProjectSystemId;
-import consulo.ide.impl.idea.openapi.externalSystem.service.execution.ProgressExecutionMode;
+import consulo.externalSystem.model.task.ProgressExecutionMode;
 import consulo.project.Project;
 import javax.annotation.Nonnull;
 

@@ -1,28 +1,28 @@
-package consulo.ide.impl.idea.openapi.externalSystem.service.execution;
+package consulo.externalSystem.service.execution;
 
+import consulo.application.util.NotNullLazyValue;
 import consulo.execution.configuration.ConfigurationFactory;
 import consulo.execution.configuration.ConfigurationType;
 import consulo.execution.configuration.RunConfiguration;
+import consulo.externalSystem.ExternalSystemBundle;
 import consulo.externalSystem.ExternalSystemManager;
-import consulo.externalSystem.ExternalSystemUiAware;
+import consulo.externalSystem.ui.ExternalSystemUiAware;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.execution.ExternalSystemTaskExecutionSettings;
 import consulo.externalSystem.model.execution.ExternalTaskPojo;
-import consulo.ide.impl.idea.openapi.externalSystem.service.ui.DefaultExternalSystemUiAware;
 import consulo.externalSystem.setting.AbstractExternalSystemSettings;
 import consulo.externalSystem.setting.ExternalProjectSettings;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
-import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemBundle;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
-import consulo.application.util.NotNullLazyValue;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
 import consulo.ui.image.Image;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -49,7 +49,7 @@ public abstract class AbstractExternalSystemTaskConfigurationType implements Con
       if (manager instanceof ExternalSystemUiAware) {
         result = ((ExternalSystemUiAware)manager).getProjectIcon();
       }
-      return result == null ? DefaultExternalSystemUiAware.INSTANCE.getTaskIcon() : result;
+      return result == null ? PlatformIconGroup.nodesTask() : result;
     }
   };
 
@@ -128,7 +128,7 @@ public abstract class AbstractExternalSystemTaskConfigurationType implements Con
     ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(externalSystemId);
     assert manager != null;
     AbstractExternalSystemSettings<?, ?,?> s = manager.getSettingsProvider().apply(project);
-    Map<String/* project dir path */, String/* project file path */> rootProjectPaths = ContainerUtilRt.newHashMap();
+    Map<String/* project dir path */, String/* project file path */> rootProjectPaths = new HashMap<>();
     for (ExternalProjectSettings projectSettings : s.getLinkedProjectsSettings()) {
       String path = projectSettings.getExternalProjectPath();
       if(path == null) continue;

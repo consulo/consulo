@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.externalSystem.module.extension;
+package consulo.externalSystem.service.module.extension;
 
-import consulo.externalSystem.service.module.extension.ExternalSystemModuleExtension;
 import consulo.module.extension.MutableModuleExtension;
 
 import javax.annotation.Nonnull;

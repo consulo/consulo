@@ -1,8 +1,4 @@
-package consulo.ide.impl.idea.openapi.externalSystem.model.task;
-
-import consulo.externalSystem.model.task.ExternalSystemTaskId;
-import consulo.externalSystem.model.task.ExternalSystemTaskNotificationEvent;
-import consulo.externalSystem.model.task.ExternalSystemTaskNotificationListener;
+package consulo.externalSystem.model.task;
 
 import javax.annotation.Nonnull;
 

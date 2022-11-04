@@ -13,31 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.externalSystem.service.execution;
+package consulo.externalSystem.service.execution;
 
+import consulo.configurable.ConfigurationException;
+import consulo.disposer.Disposable;
+import consulo.execution.ui.awt.RawCommandLineEditor;
+import consulo.externalSystem.ExternalSystemBundle;
 import consulo.externalSystem.ExternalSystemManager;
-import consulo.externalSystem.ExternalSystemUiAware;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.execution.ExternalSystemTaskExecutionSettings;
+import consulo.externalSystem.ui.ExternalSystemUiAware;
+import consulo.externalSystem.ui.awt.ExternalProjectPathField;
+import consulo.externalSystem.ui.awt.ExternalSystemUiUtil;
+import consulo.externalSystem.ui.awt.PaintAwarePanel;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.externalSystem.util.ExternalSystemConstants;
-import consulo.ide.impl.idea.openapi.externalSystem.service.ui.ExternalProjectPathField;
-import consulo.ide.impl.idea.openapi.externalSystem.util.*;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
-import consulo.configurable.ConfigurationException;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.execution.ui.awt.RawCommandLineEditor;
+import consulo.ui.ex.awt.GridBag;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.JBTextField;
-import consulo.ui.ex.awt.GridBag;
-import consulo.disposer.Disposable;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
 
 import static consulo.externalSystem.util.ExternalSystemApiUtil.normalizePath;

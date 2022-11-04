@@ -193,8 +193,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.externalStorage;
   exports consulo.ide.impl.externalStorage.plugin;
   exports consulo.ide.impl.externalStorage.storage;
-  exports consulo.ide.impl.externalSystem;
-  exports consulo.ide.impl.externalSystem.module.extension;
   exports consulo.ide.impl.externalSystem.module.extension.impl;
   exports consulo.ide.impl.externalSystem.service.module.wizard;
   exports consulo.ide.impl.fileChooser;
@@ -558,7 +556,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.openapi.externalSystem.importing;
   exports consulo.ide.impl.idea.openapi.externalSystem.model;
   exports consulo.ide.impl.idea.openapi.externalSystem.model.settings;
-  exports consulo.ide.impl.idea.openapi.externalSystem.model.task;
   exports consulo.ide.impl.idea.openapi.externalSystem.psi.search;
   exports consulo.ide.impl.idea.openapi.externalSystem.service;
   exports consulo.ide.impl.idea.openapi.externalSystem.service.execution;

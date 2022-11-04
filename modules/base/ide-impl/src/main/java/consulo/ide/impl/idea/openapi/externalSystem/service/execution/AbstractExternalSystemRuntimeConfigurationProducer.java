@@ -21,6 +21,8 @@ import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.action.ConfigurationContext;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.action.RuntimeConfigurationProducer;
+import consulo.externalSystem.service.execution.AbstractExternalSystemTaskConfigurationType;
+import consulo.externalSystem.service.execution.ExternalSystemRunConfiguration;
 import consulo.externalSystem.model.execution.ExternalSystemTaskExecutionSettings;
 import consulo.externalSystem.model.execution.ExternalTaskExecutionInfo;
 import consulo.language.psi.PsiElement;

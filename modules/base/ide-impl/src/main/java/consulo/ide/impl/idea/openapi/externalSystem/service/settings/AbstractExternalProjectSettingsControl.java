@@ -16,10 +16,10 @@
 package consulo.ide.impl.idea.openapi.externalSystem.service.settings;
 
 import consulo.externalSystem.setting.ExternalProjectSettings;
-import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemBundle;
-import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemSettingsControl;
-import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemUiUtil;
-import consulo.ide.impl.idea.openapi.externalSystem.util.PaintAwarePanel;
+import consulo.externalSystem.ExternalSystemBundle;
+import consulo.externalSystem.service.execution.ExternalSystemSettingsControl;
+import consulo.externalSystem.ui.awt.ExternalSystemUiUtil;
+import consulo.externalSystem.ui.awt.PaintAwarePanel;
 import consulo.ui.ex.awt.JBCheckBox;
 import consulo.disposer.Disposable;
 

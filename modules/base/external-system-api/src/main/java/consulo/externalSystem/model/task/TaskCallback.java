@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2000-2014 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.externalSystem.model.task;
+package consulo.externalSystem.model.task;
 
 /**
- * @author Denis Zhdanov
- * @since 1/24/12 7:08 AM
+ * @author Vladislav.Soroka
+ * @since 6/19/2014
  */
-public enum ExternalSystemTaskState {
-  
-  NOT_STARTED, IN_PROGRESS, FINISHED, FAILED, CANCELING, CANCELED, CANCELLATION_FAILED;
+public interface TaskCallback {
+  void onSuccess();
 
-  public boolean isStopped() {
-    return this == FINISHED || this == FAILED || this == CANCELED;
-  }
+  void onFailure();
 }

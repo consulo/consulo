@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.externalSystem.util;
+package consulo.externalSystem;
 
 import consulo.component.util.localize.AbstractBundle;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.PropertyKey;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -29,7 +30,7 @@ public class ExternalSystemBundle extends AbstractBundle {
     return BUNDLE.getMessage(key, params);
   }
 
-  public static final String PATH_TO_BUNDLE = "i18n.ExternalSystemBundle";
+  public static final String PATH_TO_BUNDLE = "consulo.externalSystem.ExternalSystemBundle";
   private static final ExternalSystemBundle BUNDLE = new ExternalSystemBundle();
 
   public ExternalSystemBundle() {

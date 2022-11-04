@@ -16,10 +16,10 @@
 package consulo.ide.impl.idea.openapi.externalSystem.service.task;
 
 import consulo.externalSystem.model.DataNode;
-import consulo.ide.impl.idea.openapi.externalSystem.model.ExternalSystemDataKeys;
+import consulo.externalSystem.model.ExternalSystemDataKeys;
 import consulo.externalSystem.service.project.ExternalEntityData;
 import consulo.externalSystem.service.project.manage.ProjectDataService;
-import consulo.ide.impl.idea.openapi.externalSystem.service.task.ui.ExternalSystemTasksTreeModel;
+import consulo.externalSystem.ui.awt.ExternalSystemTasksTreeModel;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemUtil;
 import consulo.project.Project;

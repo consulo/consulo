@@ -46,9 +46,9 @@ public class ExternalSystemExecuteTaskTask extends AbstractExternalSystemTask {
 
   @Nonnull
   private final List<ExternalTaskPojo> myTasksToExecute;
-  @javax.annotation.Nullable
+  @Nullable
   private final String myVmOptions;
-  @javax.annotation.Nullable
+  @Nullable
   private String myScriptParameters;
   @Nullable private final String myDebuggerSetup;
 
@@ -56,8 +56,8 @@ public class ExternalSystemExecuteTaskTask extends AbstractExternalSystemTask {
                                        @Nonnull Project project,
                                        @Nonnull List<ExternalTaskPojo> tasksToExecute,
                                        @Nullable String vmOptions,
-                                       @javax.annotation.Nullable String scriptParameters,
-                                       @javax.annotation.Nullable String debuggerSetup) throws IllegalArgumentException {
+                                       @Nullable String scriptParameters,
+                                       @Nullable String debuggerSetup) throws IllegalArgumentException {
     super(externalSystemId, ExternalSystemTaskType.EXECUTE_TASK, project, getLinkedExternalProjectPath(tasksToExecute));
     myTasksToExecute = tasksToExecute;
     myVmOptions = vmOptions;

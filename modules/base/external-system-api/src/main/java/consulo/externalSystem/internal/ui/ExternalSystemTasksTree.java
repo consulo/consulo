@@ -13,20 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.externalSystem.service.task.ui;
+package consulo.externalSystem.internal.ui;
 
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.execution.ExternalSystemTaskExecutionSettings;
 import consulo.externalSystem.model.execution.ExternalTaskExecutionInfo;
-import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemUtil;
+import consulo.externalSystem.ui.awt.ExternalSystemNode;
+import consulo.externalSystem.ui.awt.ExternalSystemTasksTreeModel;
+import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.project.Project;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.Tree;
-import consulo.ui.ex.awt.util.Alarm;
-import consulo.ide.impl.idea.util.Producer;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
 import consulo.ui.ex.awt.tree.TreeModelAdapter;
+import consulo.ui.ex.awt.util.Alarm;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -39,12 +38,13 @@ import javax.swing.tree.TreePath;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.*;
+import java.util.function.Supplier;
 
 /**
  * @author Denis Zhdanov
  * @since 5/13/13 4:18 PM
  */
-public class ExternalSystemTasksTree extends Tree implements Producer<ExternalTaskExecutionInfo> {
+public class ExternalSystemTasksTree extends Tree implements Supplier<ExternalTaskExecutionInfo> {
 
   private static final int COLLAPSE_STATE_PROCESSING_DELAY_MILLIS = 200;
 
@@ -59,9 +59,11 @@ public class ExternalSystemTasksTree extends Tree implements Producer<ExternalTa
   @Nonnull
   private final Alarm myCollapseStateAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD);
 
-  /** Holds list of paths which 'expand/collapse' state should be restored. */
+  /**
+   * Holds list of paths which 'expand/collapse' state should be restored.
+   */
   @Nonnull
-  private final Set<TreePath> myPathsToProcessCollapseState = ContainerUtilRt.newHashSet();
+  private final Set<TreePath> myPathsToProcessCollapseState = new HashSet<>();
 
   @Nonnull
   private final Map<String/*tree path*/, Boolean/*expanded*/> myExpandedStateHolder;
@@ -110,11 +112,11 @@ public class ExternalSystemTasksTree extends Tree implements Producer<ExternalTa
     getActionMap().put("Enter", new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        ExternalTaskExecutionInfo task = produce();
+        ExternalTaskExecutionInfo task = get();
         if (task == null) {
           return;
         }
-        ExternalSystemUtil.runTask(task.getSettings(), task.getExecutorId(), project, externalSystemId);
+        ExternalSystemApiUtil.runTask(task.getSettings(), task.getExecutorId(), project, externalSystemId);
       }
     });
   }
@@ -136,7 +138,7 @@ public class ExternalSystemTasksTree extends Tree implements Producer<ExternalTa
         // a chance.
         // Another thing is that we sort the paths in order to process the longest first. That is related to the JTree specifics
         // that it automatically expands parent paths on child path expansion.
-        List<TreePath> paths = ContainerUtilRt.newArrayList(myPathsToProcessCollapseState);
+        List<TreePath> paths = new ArrayList<>(myPathsToProcessCollapseState);
         myPathsToProcessCollapseState.clear();
         Collections.sort(paths, PATH_COMPARATOR);
         for (TreePath treePath : paths) {
@@ -188,13 +190,13 @@ public class ExternalSystemTasksTree extends Tree implements Producer<ExternalTa
 
   @Nullable
   @Override
-  public ExternalTaskExecutionInfo produce() {
+  public ExternalTaskExecutionInfo get() {
     TreePath[] selectionPaths = getSelectionPaths();
     if (selectionPaths == null || selectionPaths.length == 0) {
       return null;
     }
 
-    Map<String, ExternalTaskExecutionInfo> map = ContainerUtil.newHashMap();
+    Map<String, ExternalTaskExecutionInfo> map = new HashMap<>();
     for (TreePath selectionPath : selectionPaths) {
       Object component = selectionPath.getLastPathComponent();
       if (!(component instanceof ExternalSystemNode)) {

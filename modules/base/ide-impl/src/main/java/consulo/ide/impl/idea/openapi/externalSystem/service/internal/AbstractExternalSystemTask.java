@@ -1,16 +1,12 @@
 package consulo.ide.impl.idea.openapi.externalSystem.service.internal;
 
-import consulo.externalSystem.model.task.ExternalSystemTaskId;
-import consulo.externalSystem.model.task.ExternalSystemTaskNotificationEvent;
-import consulo.externalSystem.model.task.ExternalSystemTaskNotificationListener;
-import consulo.externalSystem.model.task.ExternalSystemTaskType;
+import consulo.externalSystem.model.task.*;
 import consulo.ide.ServiceManager;
 import consulo.externalSystem.model.ProjectSystemId;
-import consulo.ide.impl.idea.openapi.externalSystem.model.task.*;
 import consulo.ide.impl.idea.openapi.externalSystem.service.ExternalSystemFacadeManager;
 import consulo.ide.impl.idea.openapi.externalSystem.service.RemoteExternalSystemFacade;
 import consulo.ide.impl.idea.openapi.externalSystem.service.notification.ExternalSystemProgressNotificationManager;
-import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemBundle;
+import consulo.externalSystem.ExternalSystemBundle;
 import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
 import consulo.ide.impl.idea.util.ArrayUtil;

@@ -13,29 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.externalSystem;
-
-import consulo.fileChooser.FileChooserDescriptor;
-import consulo.ui.image.Image;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+package consulo.externalSystem.model.task;
 
 /**
  * @author Denis Zhdanov
- * @since 5/15/13 12:37 PM
+ * @since 1/24/12 7:08 AM
  */
-public interface ExternalSystemUiAware {
+public enum ExternalSystemTaskState {
+  
+  NOT_STARTED, IN_PROGRESS, FINISHED, FAILED, CANCELING, CANCELED, CANCELLATION_FAILED;
 
-  @Nonnull
-  String getProjectRepresentationName(@Nonnull String targetProjectPath, @Nullable String rootProjectPath);
-
-  @Nullable
-  FileChooserDescriptor getExternalProjectConfigDescriptor();
-
-  @Nullable
-  Image getProjectIcon();
-
-  @Nullable
-  Image getTaskIcon();
+  public boolean isStopped() {
+    return this == FINISHED || this == FAILED || this == CANCELED;
+  }
 }

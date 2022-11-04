@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.externalSystem.util;
+package consulo.externalSystem.service.execution;
 
-import consulo.configurable.ConfigurationException;
 import consulo.annotation.DeprecationInfo;
+import consulo.configurable.ConfigurationException;
 import consulo.disposer.Disposable;
+import consulo.externalSystem.ui.awt.PaintAwarePanel;
 
 import javax.annotation.Nonnull;
-
 import java.awt.*;
 
 /**

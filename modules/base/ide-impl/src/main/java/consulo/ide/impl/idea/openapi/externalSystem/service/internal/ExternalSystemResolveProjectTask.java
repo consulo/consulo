@@ -9,7 +9,7 @@ import consulo.externalSystem.model.task.ExternalSystemTaskType;
 import consulo.ide.impl.idea.openapi.externalSystem.service.ExternalSystemFacadeManager;
 import consulo.ide.impl.idea.openapi.externalSystem.service.remote.RemoteExternalSystemProjectResolver;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
-import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemBundle;
+import consulo.externalSystem.ExternalSystemBundle;
 import consulo.project.Project;
 import javax.annotation.Nonnull;
 

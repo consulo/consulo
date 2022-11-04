@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.openapi.externalSystem.service.execution;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.externalSystem.service.execution.ExternalSystemRunConfiguration;
 import consulo.process.ExecutionException;
 import consulo.execution.ExecutionResult;
 import consulo.execution.configuration.RunProfile;

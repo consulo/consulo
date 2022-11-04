@@ -1,10 +1,9 @@
-package consulo.ide.impl.idea.openapi.externalSystem.model.task;
+package consulo.externalSystem.model.task;
 
 import consulo.application.progress.ProgressIndicator;
-import consulo.externalSystem.model.task.ExternalSystemTaskId;
-import consulo.externalSystem.model.task.ExternalSystemTaskNotificationListener;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Denis Zhdanov
@@ -21,7 +20,7 @@ public interface ExternalSystemTask {
   /**
    * @return    error occurred during the task execution (if any)
    */
-  @javax.annotation.Nullable
+  @Nullable
   Throwable getError();
 
   /**

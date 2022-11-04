@@ -13,11 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.externalSystem;
+package consulo.externalSystem.ui;
 
-import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.fileChooser.FileChooserDescriptor;
 import consulo.ui.image.Image;
 
-public class ExternalSystemIcons {
-  public static final Image Task = PlatformIconGroup.nodesTask(); // 16x16
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+/**
+ * @author Denis Zhdanov
+ * @since 5/15/13 12:37 PM
+ */
+public interface ExternalSystemUiAware {
+
+  @Nonnull
+  String getProjectRepresentationName(@Nonnull String targetProjectPath, @Nullable String rootProjectPath);
+
+  @Nullable
+  FileChooserDescriptor getExternalProjectConfigDescriptor();
+
+  @Nullable
+  Image getProjectIcon();
+
+  @Nullable
+  Image getTaskIcon();
 }

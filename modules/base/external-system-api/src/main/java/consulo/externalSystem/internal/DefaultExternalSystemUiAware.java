@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.externalSystem.service.ui;
+package consulo.externalSystem.internal;
 
 import consulo.application.Application;
-import consulo.externalSystem.ExternalSystemUiAware;
+import consulo.externalSystem.ui.ExternalSystemUiAware;
 import consulo.fileChooser.FileChooserDescriptor;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
-import consulo.ide.impl.externalSystem.ExternalSystemIcons;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -57,6 +57,6 @@ public class DefaultExternalSystemUiAware implements ExternalSystemUiAware {
   @Nonnull
   @Override
   public Image getTaskIcon() {
-    return ExternalSystemIcons.Task;
+    return PlatformIconGroup.nodesTask();
   }
 }

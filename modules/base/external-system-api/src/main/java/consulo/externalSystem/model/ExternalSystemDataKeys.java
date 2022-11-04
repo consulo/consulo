@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.externalSystem.model;
+package consulo.externalSystem.model;
 
-import consulo.externalSystem.model.ProjectSystemId;
-import consulo.project.ui.notification.NotificationGroup;
+import consulo.externalSystem.internal.ui.ExternalSystemRecentTasksList;
 import consulo.externalSystem.model.execution.ExternalTaskPojo;
 import consulo.externalSystem.model.project.ExternalProjectPojo;
-import consulo.ide.impl.idea.openapi.externalSystem.service.task.ui.ExternalSystemRecentTasksList;
-import consulo.ide.impl.idea.openapi.externalSystem.service.task.ui.ExternalSystemTasksTreeModel;
+import consulo.externalSystem.ui.awt.ExternalSystemTasksTreeModel;
+import consulo.project.ui.notification.NotificationGroup;
 import consulo.util.dataholder.Key;
 
 /**

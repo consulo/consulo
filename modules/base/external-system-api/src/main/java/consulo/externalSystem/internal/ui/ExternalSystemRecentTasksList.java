@@ -13,29 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.externalSystem.service.task.ui;
+package consulo.externalSystem.internal.ui;
 
-import consulo.execution.executor.Executor;
-import consulo.execution.executor.ExecutorRegistry;
 import consulo.execution.RunManager;
 import consulo.execution.configuration.ConfigurationType;
 import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.executor.Executor;
+import consulo.execution.executor.ExecutorRegistry;
 import consulo.externalSystem.ExternalSystemManager;
-import consulo.externalSystem.ExternalSystemUiAware;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.execution.ExternalTaskExecutionInfo;
-import consulo.ide.impl.idea.openapi.externalSystem.service.execution.AbstractExternalSystemTaskConfigurationType;
-import consulo.ide.impl.idea.openapi.externalSystem.service.execution.ExternalSystemRunConfiguration;
-import consulo.ide.impl.idea.openapi.externalSystem.service.ui.DefaultExternalSystemUiAware;
+import consulo.externalSystem.service.execution.AbstractExternalSystemTaskConfigurationType;
+import consulo.externalSystem.service.execution.ExternalSystemRunConfiguration;
+import consulo.externalSystem.internal.DefaultExternalSystemUiAware;
+import consulo.externalSystem.ui.ExternalSystemUiAware;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.externalSystem.util.ExternalSystemConstants;
-import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemUtil;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.JBList;
-import consulo.ide.impl.idea.util.Producer;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -43,12 +41,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * @author Denis Zhdanov
  * @since 6/7/13 2:40 PM
  */
-public class ExternalSystemRecentTasksList extends JBList implements Producer<ExternalTaskExecutionInfo> {
+public class ExternalSystemRecentTasksList extends JBList implements Supplier<ExternalTaskExecutionInfo> {
 
   @Nonnull
   private static final JLabel EMPTY_RENDERER = new JLabel(" ");
@@ -67,17 +66,17 @@ public class ExternalSystemRecentTasksList extends JBList implements Producer<Ex
     if (icon == null) {
       icon = DefaultExternalSystemUiAware.INSTANCE.getTaskIcon();
     }
-    setCellRenderer(new MyRenderer(project, icon, ExternalSystemUtil.findConfigurationType(externalSystemId)));
+    setCellRenderer(new MyRenderer(project, icon, ExternalSystemApiUtil.findConfigurationType(externalSystemId)));
     setVisibleRowCount(ExternalSystemConstants.RECENT_TASKS_NUMBER);
 
     registerKeyboardAction(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        ExternalTaskExecutionInfo task = produce();
+        ExternalTaskExecutionInfo task = get();
         if (task == null) {
           return;
         }
-        ExternalSystemUtil.runTask(task.getSettings(), task.getExecutorId(), project, externalSystemId);
+        ExternalSystemApiUtil.runTask(task.getSettings(), task.getExecutorId(), project, externalSystemId);
       }
     }, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
@@ -88,12 +87,12 @@ public class ExternalSystemRecentTasksList extends JBList implements Producer<Ex
           return;
         }
 
-        ExternalTaskExecutionInfo task = produce();
+        ExternalTaskExecutionInfo task = get();
         if (task == null) {
           return;
         }
 
-        ExternalSystemUtil.runTask(task.getSettings(), task.getExecutorId(), project, externalSystemId);
+        ExternalSystemApiUtil.runTask(task.getSettings(), task.getExecutorId(), project, externalSystemId);
       }
     });
   }
@@ -104,7 +103,7 @@ public class ExternalSystemRecentTasksList extends JBList implements Producer<Ex
   }
 
   public void setFirst(@Nonnull ExternalTaskExecutionInfo task) {
-    ExternalTaskExecutionInfo selected = produce();
+    ExternalTaskExecutionInfo selected = get();
     ExternalSystemRecentTaskListModel model = getModel();
     model.setFirst(task);
     clearSelection();
@@ -122,7 +121,7 @@ public class ExternalSystemRecentTasksList extends JBList implements Producer<Ex
 
   @Nullable
   @Override
-  public ExternalTaskExecutionInfo produce() {
+  public ExternalTaskExecutionInfo get() {
     int[] indices = getSelectedIndices();
     if (indices == null || indices.length != 1) {
       return null;

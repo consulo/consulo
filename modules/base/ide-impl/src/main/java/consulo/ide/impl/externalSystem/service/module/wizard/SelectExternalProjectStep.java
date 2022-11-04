@@ -15,12 +15,15 @@
  */
 package consulo.ide.impl.externalSystem.service.module.wizard;
 
+import consulo.externalSystem.ExternalSystemBundle;
 import consulo.externalSystem.ExternalSystemManager;
 import consulo.externalSystem.model.ProjectSystemId;
+import consulo.externalSystem.service.execution.ExternalSystemSettingsControl;
+import consulo.externalSystem.ui.awt.ExternalSystemUiUtil;
+import consulo.externalSystem.ui.awt.PaintAwarePanel;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.ide.impl.idea.openapi.externalSystem.service.settings.AbstractImportFromExternalSystemControl;
 import consulo.externalSystem.setting.AbstractExternalSystemSettings;
-import consulo.ide.impl.idea.openapi.externalSystem.util.*;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.configurable.ConfigurationException;
 import consulo.project.Project;

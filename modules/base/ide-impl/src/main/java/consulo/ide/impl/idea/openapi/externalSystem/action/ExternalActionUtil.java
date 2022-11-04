@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.externalSystem.action;
 
 import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.openapi.externalSystem.model.ExternalSystemDataKeys;
+import consulo.externalSystem.model.ExternalSystemDataKeys;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.project.ExternalProjectPojo;
 import consulo.externalSystem.setting.AbstractExternalSystemLocalSettings;

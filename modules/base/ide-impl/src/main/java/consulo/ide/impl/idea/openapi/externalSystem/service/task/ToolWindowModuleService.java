@@ -27,7 +27,7 @@ import consulo.externalSystem.setting.AbstractExternalSystemLocalSettings;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.externalSystem.util.ExternalSystemConstants;
 import consulo.externalSystem.util.Order;
-import consulo.ide.impl.idea.openapi.externalSystem.service.task.ui.ExternalSystemTasksTreeModel;
+import consulo.externalSystem.ui.awt.ExternalSystemTasksTreeModel;
 import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
 import consulo.project.Project;
 

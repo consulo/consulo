@@ -19,26 +19,57 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ApplicationPropertiesComponent;
 import consulo.application.TransactionGuard;
+import consulo.application.progress.PerformInBackgroundOption;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.Task;
+import consulo.application.util.Semaphore;
 import consulo.application.util.function.Computable;
 import consulo.application.util.registry.Registry;
 import consulo.content.OrderRootType;
 import consulo.content.library.Library;
+import consulo.dataContext.DataProvider;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.execution.RunManager;
+import consulo.execution.RunnerAndConfigurationSettings;
+import consulo.execution.RunnerRegistry;
+import consulo.execution.configuration.ConfigurationType;
+import consulo.execution.debug.DefaultDebugExecutor;
+import consulo.execution.event.ExecutionListener;
+import consulo.execution.executor.DefaultRunExecutor;
+import consulo.execution.executor.Executor;
+import consulo.execution.executor.ExecutorRegistry;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.execution.runner.ProgramRunner;
 import consulo.externalSystem.ExternalSystemAutoImportAware;
 import consulo.externalSystem.ExternalSystemManager;
-import consulo.externalSystem.model.DataNode;
-import consulo.externalSystem.model.ExternalSystemException;
-import consulo.externalSystem.model.Key;
-import consulo.externalSystem.model.ProjectSystemId;
+import consulo.externalSystem.internal.ui.ExternalSystemRecentTasksList;
+import consulo.externalSystem.model.*;
+import consulo.externalSystem.model.execution.ExternalSystemTaskExecutionSettings;
+import consulo.externalSystem.model.execution.ExternalTaskExecutionInfo;
 import consulo.externalSystem.model.project.LibraryData;
 import consulo.externalSystem.model.setting.ExternalSystemExecutionSettings;
+import consulo.externalSystem.model.task.ProgressExecutionMode;
+import consulo.externalSystem.model.task.TaskCallback;
 import consulo.externalSystem.service.ParametersEnhancer;
+import consulo.externalSystem.service.execution.AbstractExternalSystemTaskConfigurationType;
+import consulo.externalSystem.service.execution.ExternalSystemRunConfiguration;
 import consulo.externalSystem.service.module.extension.ExternalSystemModuleExtension;
 import consulo.externalSystem.setting.AbstractExternalSystemLocalSettings;
 import consulo.externalSystem.setting.AbstractExternalSystemSettings;
 import consulo.logging.Logger;
 import consulo.module.Module;
+import consulo.process.ExecutionException;
+import consulo.process.ProcessHandler;
+import consulo.process.event.ProcessAdapter;
+import consulo.process.event.ProcessEvent;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
+import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.content.Content;
+import consulo.ui.ex.content.ContentManager;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.io.ClassPathUtil;
 import consulo.util.io.FileUtil;
 import consulo.util.io.PathUtil;
@@ -54,6 +85,7 @@ import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.swing.*;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -74,6 +106,18 @@ public class ExternalSystemApiUtil {
 
   private static final Logger LOG = Logger.getInstance(ExternalSystemApiUtil.class);
   private static final String LAST_USED_PROJECT_PATH_PREFIX = "LAST_EXTERNAL_PROJECT_PATH_";
+
+  @Nonnull
+  private static final Map<String, String> RUNNER_IDS = new HashMap<>();
+
+  static {
+    RUNNER_IDS.put(DefaultRunExecutor.EXECUTOR_ID, ExternalSystemConstants.RUNNER_ID);
+    RUNNER_IDS.put(DefaultDebugExecutor.EXECUTOR_ID, ExternalSystemConstants.DEBUG_RUNNER_ID);
+  }
+
+  public interface TaskUnderProgress {
+    void execute(@Nonnull ProgressIndicator indicator);
+  }
 
   @Nonnull
   public static final String PATH_SEPARATOR = "/";
@@ -129,6 +173,241 @@ public class ExternalSystemApiUtil {
   };
 
   private ExternalSystemApiUtil() {
+  }
+
+  @Nullable
+  public static String getRunnerId(@Nonnull String executorId) {
+    return RUNNER_IDS.get(executorId);
+  }
+
+  public static void runTask(@Nonnull ExternalSystemTaskExecutionSettings taskSettings, @Nonnull String executorId, @Nonnull Project project, @Nonnull ProjectSystemId externalSystemId) {
+    runTask(taskSettings, executorId, project, externalSystemId, null, ProgressExecutionMode.IN_BACKGROUND_ASYNC);
+  }
+
+  public static void runTask(@Nonnull final ExternalSystemTaskExecutionSettings taskSettings,
+                             @Nonnull final String executorId,
+                             @Nonnull final Project project,
+                             @Nonnull final ProjectSystemId externalSystemId,
+                             @Nullable final TaskCallback callback,
+                             @Nonnull final ProgressExecutionMode progressExecutionMode) {
+    final Pair<ProgramRunner, ExecutionEnvironment> pair = createRunner(taskSettings, executorId, project, externalSystemId);
+    if (pair == null) return;
+
+    final ProgramRunner runner = pair.first;
+    final ExecutionEnvironment environment = pair.second;
+
+    final TaskUnderProgress task = new TaskUnderProgress() {
+      @Override
+      public void execute(@Nonnull ProgressIndicator indicator) {
+        final Semaphore targetDone = new Semaphore();
+        final Ref<Boolean> result = new Ref<Boolean>(false);
+        final Disposable disposable = Disposable.newDisposable();
+
+        project.getMessageBus().connect(disposable).subscribe(ExecutionListener.class, new ExecutionListener() {
+          @Override
+          public void processStartScheduled(final String executorIdLocal, final ExecutionEnvironment environmentLocal) {
+            if (executorId.equals(executorIdLocal) && environment.equals(environmentLocal)) {
+              targetDone.down();
+            }
+          }
+
+          @Override
+          public void processNotStarted(final String executorIdLocal, @Nonnull final ExecutionEnvironment environmentLocal) {
+            if (executorId.equals(executorIdLocal) && environment.equals(environmentLocal)) {
+              targetDone.up();
+            }
+          }
+
+          @Override
+          public void processStarted(final String executorIdLocal, @Nonnull final ExecutionEnvironment environmentLocal, @Nonnull final ProcessHandler handler) {
+            if (executorId.equals(executorIdLocal) && environment.equals(environmentLocal)) {
+              handler.addProcessListener(new ProcessAdapter() {
+                @Override
+                public void processTerminated(ProcessEvent event) {
+                  result.set(event.getExitCode() == 0);
+                  targetDone.up();
+                }
+              });
+            }
+          }
+        });
+
+        try {
+          ApplicationManager.getApplication().invokeAndWait(new Runnable() {
+            @Override
+            public void run() {
+              try {
+                runner.execute(environment);
+              }
+              catch (ExecutionException e) {
+                targetDone.up();
+                LOG.error(e);
+              }
+            }
+          }, Application.get().getNoneModalityState());
+        }
+        catch (Exception e) {
+          LOG.error(e);
+          Disposer.dispose(disposable);
+          return;
+        }
+
+        targetDone.waitFor();
+        Disposer.dispose(disposable);
+
+        if (callback != null) {
+          if (result.get()) {
+            callback.onSuccess();
+          }
+          else {
+            callback.onFailure();
+          }
+        }
+      }
+    };
+
+    UIUtil.invokeAndWaitIfNeeded(new Runnable() {
+      @Override
+      public void run() {
+        final String title = AbstractExternalSystemTaskConfigurationType.generateName(project, taskSettings);
+        switch (progressExecutionMode) {
+          case MODAL_SYNC:
+            new Task.Modal(project, title, true) {
+              @Override
+              public void run(@Nonnull ProgressIndicator indicator) {
+                task.execute(indicator);
+              }
+            }.queue();
+            break;
+          case IN_BACKGROUND_ASYNC:
+            new Task.Backgroundable(project, title) {
+              @Override
+              public void run(@Nonnull ProgressIndicator indicator) {
+                task.execute(indicator);
+              }
+            }.queue();
+            break;
+          case START_IN_FOREGROUND_ASYNC:
+            new Task.Backgroundable(project, title, true, PerformInBackgroundOption.DEAF) {
+              @Override
+              public void run(@Nonnull ProgressIndicator indicator) {
+                task.execute(indicator);
+              }
+            }.queue();
+        }
+      }
+    });
+  }
+
+
+  @Nullable
+  public static AbstractExternalSystemTaskConfigurationType findConfigurationType(@Nonnull ProjectSystemId externalSystemId) {
+    for (ConfigurationType type : ConfigurationType.EP_NAME.getExtensionList()) {
+      if (type instanceof AbstractExternalSystemTaskConfigurationType) {
+        AbstractExternalSystemTaskConfigurationType candidate = (AbstractExternalSystemTaskConfigurationType)type;
+        if (externalSystemId.equals(candidate.getExternalSystemId())) {
+          return candidate;
+        }
+      }
+    }
+    return null;
+  }
+
+  @Nullable
+  public static Pair<ProgramRunner, ExecutionEnvironment> createRunner(@Nonnull ExternalSystemTaskExecutionSettings taskSettings,
+                                                                       @Nonnull String executorId,
+                                                                       @Nonnull Project project,
+                                                                       @Nonnull ProjectSystemId externalSystemId) {
+    Executor executor = ExecutorRegistry.getInstance().getExecutorById(executorId);
+    if (executor == null) return null;
+
+    String runnerId = getRunnerId(executorId);
+    if (runnerId == null) return null;
+
+    ProgramRunner runner = RunnerRegistry.getInstance().findRunnerById(runnerId);
+    if (runner == null) return null;
+
+    AbstractExternalSystemTaskConfigurationType configurationType = findConfigurationType(externalSystemId);
+    if (configurationType == null) return null;
+
+    String name = AbstractExternalSystemTaskConfigurationType.generateName(project, taskSettings);
+    RunnerAndConfigurationSettings settings = RunManager.getInstance(project).createRunConfiguration(name, configurationType.getFactory());
+    ExternalSystemRunConfiguration runConfiguration = (ExternalSystemRunConfiguration)settings.getConfiguration();
+    runConfiguration.getSettings().setExternalProjectPath(taskSettings.getExternalProjectPath());
+    runConfiguration.getSettings().setTaskNames(new ArrayList<>(taskSettings.getTaskNames()));
+    runConfiguration.getSettings().setTaskDescriptions(new ArrayList<>(taskSettings.getTaskDescriptions()));
+    runConfiguration.getSettings().setVmOptions(taskSettings.getVmOptions());
+    runConfiguration.getSettings().setScriptParameters(taskSettings.getScriptParameters());
+    runConfiguration.getSettings().setExecutionName(taskSettings.getExecutionName());
+
+    return Pair.create(runner, new ExecutionEnvironment(executor, runner, settings, project));
+  }
+
+  /**
+   * Is expected to be called when given task info is about to be executed.
+   * <p>
+   * Basically, this method updates recent tasks list at the corresponding external system tool window and
+   * persists new recent tasks state.
+   *
+   * @param taskInfo task which is about to be executed
+   * @param project  target project
+   */
+  public static void updateRecentTasks(@Nonnull ExternalTaskExecutionInfo taskInfo, @Nonnull Project project) {
+    ProjectSystemId externalSystemId = taskInfo.getSettings().getExternalSystemId();
+    ExternalSystemRecentTasksList recentTasksList = getToolWindowElement(ExternalSystemRecentTasksList.class, project, ExternalSystemDataKeys.RECENT_TASKS_LIST, externalSystemId);
+    if (recentTasksList == null) {
+      return;
+    }
+    recentTasksList.setFirst(taskInfo);
+
+    ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(externalSystemId);
+    assert manager != null;
+    AbstractExternalSystemLocalSettings settings = manager.getLocalSettingsProvider().apply(project);
+    settings.setRecentTasks(recentTasksList.getModel().getTasks());
+  }
+
+
+  @SuppressWarnings("unchecked")
+  @Nullable
+  public static <T> T getToolWindowElement(@Nonnull Class<T> clazz, @Nonnull Project project, @Nonnull consulo.util.dataholder.Key<T> key, @Nonnull ProjectSystemId externalSystemId) {
+    if (project.isDisposed() || !project.isOpen()) {
+      return null;
+    }
+    final ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
+    if (toolWindowManager == null) {
+      return null;
+    }
+    final ToolWindow toolWindow = ensureToolWindowContentInitialized(project, externalSystemId);
+    if (toolWindow == null) {
+      return null;
+    }
+
+    final ContentManager contentManager = toolWindow.getContentManager();
+
+    for (Content content : contentManager.getContents()) {
+      final JComponent component = content.getComponent();
+      if (component instanceof DataProvider) {
+        final Object data = ((DataProvider)component).getData(key);
+        if (data != null && clazz.isInstance(data)) {
+          return (T)data;
+        }
+      }
+    }
+    return null;
+  }
+
+
+  @Nullable
+  public static ToolWindow ensureToolWindowContentInitialized(@Nonnull Project project, @Nonnull ProjectSystemId externalSystemId) {
+    final ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
+    if (toolWindowManager == null) return null;
+
+    final ToolWindow toolWindow = toolWindowManager.getToolWindow(externalSystemId.getReadableName());
+    if (toolWindow == null) return null;
+
+    // call content manager - initialize it
+    toolWindow.getContentManager();
+    return toolWindow;
   }
 
   @Nonnull

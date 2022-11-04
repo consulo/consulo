@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.externalSystem.service.task.ui;
+package consulo.externalSystem.internal.ui;
 
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.execution.ExternalTaskExecutionInfo;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.externalSystem.util.ExternalSystemConstants;
 import consulo.project.Project;
-import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,7 +46,7 @@ public class ExternalSystemRecentTaskListModel extends DefaultListModel {
   @SuppressWarnings("unchecked")
   public void setTasks(@Nonnull List<ExternalTaskExecutionInfo> tasks) {
     clear();
-    List<ExternalTaskExecutionInfo> tasksToUse = ContainerUtilRt.newArrayList(tasks);
+    List<ExternalTaskExecutionInfo> tasksToUse = new ArrayList<>(tasks);
     for (ExternalTaskExecutionInfo task : tasksToUse) {
       addElement(task);
     }
@@ -66,7 +66,7 @@ public class ExternalSystemRecentTaskListModel extends DefaultListModel {
 
   @Nonnull
   public List<ExternalTaskExecutionInfo> getTasks() {
-    List<ExternalTaskExecutionInfo> result = ContainerUtilRt.newArrayList();
+    List<ExternalTaskExecutionInfo> result = new ArrayList<>();
     for (int i = 0; i < size(); i++) {
       Object e = getElementAt(i);
       if (e instanceof ExternalTaskExecutionInfo) {

@@ -15,52 +15,45 @@
  */
 package consulo.ide.impl.idea.openapi.externalSystem.util;
 
-import consulo.execution.*;
-import consulo.execution.configuration.ConfigurationType;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.application.ReadAction;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.internal.ApplicationEx;
+import consulo.application.progress.PerformInBackgroundOption;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.Task;
+import consulo.content.library.Library;
+import consulo.content.library.LibraryTable;
 import consulo.execution.debug.DefaultDebugExecutor;
 import consulo.execution.executor.DefaultRunExecutor;
-import consulo.execution.event.ExecutionListener;
-import consulo.execution.executor.Executor;
-import consulo.execution.executor.ExecutorRegistry;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.execution.runner.ProgramRunner;
+import consulo.externalSystem.ExternalSystemBundle;
+import consulo.externalSystem.ExternalSystemManager;
 import consulo.externalSystem.model.DataNode;
 import consulo.externalSystem.model.ExternalSystemException;
 import consulo.externalSystem.model.ProjectKeys;
 import consulo.externalSystem.model.ProjectSystemId;
-import consulo.externalSystem.util.DisposeAwareProjectChange;
-import consulo.externalSystem.util.ExternalSystemApiUtil;
-import consulo.externalSystem.util.ExternalSystemConstants;
-import consulo.process.ExecutionException;
-import consulo.process.event.ProcessAdapter;
-import consulo.process.event.ProcessEvent;
-import consulo.process.ProcessHandler;
-import consulo.disposer.Disposable;
-import consulo.logging.Logger;
-import consulo.project.ui.wm.ToolWindowFactory;
-import consulo.util.dataholder.Key;
-import consulo.util.rmi.RemoteUtil;
-import consulo.execution.runner.ExecutionEnvironment;
-import consulo.execution.runner.ProgramRunner;
-import consulo.dataContext.DataProvider;
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.ReadAction;
-import consulo.application.internal.ApplicationEx;
-import consulo.ide.ServiceManager;
-import consulo.externalSystem.ExternalSystemManager;
-import consulo.ide.impl.idea.openapi.externalSystem.importing.ImportSpec;
-import consulo.ide.impl.idea.openapi.externalSystem.importing.ImportSpecBuilder;
-import consulo.ide.impl.idea.openapi.externalSystem.model.*;
 import consulo.externalSystem.model.execution.ExternalSystemTaskExecutionSettings;
 import consulo.externalSystem.model.execution.ExternalTaskExecutionInfo;
 import consulo.externalSystem.model.project.ModuleData;
-import consulo.externalSystem.service.project.ProjectData;
 import consulo.externalSystem.model.task.ExternalSystemTaskNotificationListener;
 import consulo.externalSystem.model.task.ExternalSystemTaskType;
+import consulo.externalSystem.model.task.ProgressExecutionMode;
+import consulo.externalSystem.model.task.TaskCallback;
+import consulo.externalSystem.service.execution.AbstractExternalSystemTaskConfigurationType;
+import consulo.externalSystem.service.project.ProjectData;
+import consulo.externalSystem.setting.AbstractExternalSystemSettings;
+import consulo.externalSystem.setting.ExternalProjectSettings;
+import consulo.externalSystem.ui.awt.ExternalSystemUiUtil;
+import consulo.externalSystem.util.DisposeAwareProjectChange;
+import consulo.externalSystem.util.ExternalSystemApiUtil;
+import consulo.externalSystem.util.ExternalSystemConstants;
+import consulo.ide.ServiceManager;
+import consulo.ide.impl.idea.openapi.externalSystem.importing.ImportSpec;
+import consulo.ide.impl.idea.openapi.externalSystem.importing.ImportSpecBuilder;
 import consulo.ide.impl.idea.openapi.externalSystem.service.ImportCanceledException;
-import consulo.ide.impl.idea.openapi.externalSystem.service.execution.AbstractExternalSystemTaskConfigurationType;
-import consulo.ide.impl.idea.openapi.externalSystem.service.execution.ExternalSystemRunConfiguration;
-import consulo.ide.impl.idea.openapi.externalSystem.service.execution.ProgressExecutionMode;
 import consulo.ide.impl.idea.openapi.externalSystem.service.internal.ExternalSystemProcessingManager;
 import consulo.ide.impl.idea.openapi.externalSystem.service.internal.ExternalSystemResolveProjectTask;
 import consulo.ide.impl.idea.openapi.externalSystem.service.notification.ExternalSystemNotificationManager;
@@ -70,45 +63,27 @@ import consulo.ide.impl.idea.openapi.externalSystem.service.project.ProjectStruc
 import consulo.ide.impl.idea.openapi.externalSystem.service.project.manage.ModuleDataService;
 import consulo.ide.impl.idea.openapi.externalSystem.service.project.manage.ProjectDataManager;
 import consulo.ide.impl.idea.openapi.externalSystem.service.settings.ExternalSystemConfigLocator;
-import consulo.ide.impl.idea.openapi.externalSystem.service.task.ui.ExternalSystemRecentTasksList;
-import consulo.externalSystem.setting.AbstractExternalSystemLocalSettings;
-import consulo.externalSystem.setting.AbstractExternalSystemSettings;
-import consulo.externalSystem.setting.ExternalProjectSettings;
-import consulo.ide.impl.idea.openapi.externalSystem.task.TaskCallback;
+import consulo.ide.impl.idea.openapi.roots.impl.libraries.ProjectLibraryTable;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
+import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
-import consulo.application.progress.PerformInBackgroundOption;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.Task;
-import consulo.project.Project;
 import consulo.module.content.internal.ProjectRootManagerEx;
-import consulo.ide.impl.idea.openapi.roots.impl.libraries.ProjectLibraryTable;
-import consulo.content.library.Library;
-import consulo.content.library.LibraryTable;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.disposer.Disposer;
+import consulo.project.Project;
+import consulo.project.ui.wm.ToolWindowFactory;
+import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
-import consulo.util.lang.ref.Ref;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.rmi.RemoteUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.StandardFileSystems;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.project.ui.wm.ToolWindowManager;
-import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
-import consulo.ui.ex.awt.CheckBoxList;
-import consulo.ui.ex.awt.IdeBorderFactory;
-import consulo.ui.ex.awt.JBScrollPane;
-import consulo.ui.ex.content.Content;
-import consulo.ui.ex.content.ContentManager;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import consulo.application.util.Semaphore;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ide.impl.wm.impl.ToolWindowBase;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -117,6 +92,7 @@ import java.awt.*;
 import java.io.File;
 import java.util.List;
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * @author Denis Zhdanov
@@ -125,14 +101,6 @@ import java.util.*;
 public class ExternalSystemUtil {
 
   private static final Logger LOG = Logger.getInstance(ExternalSystemUtil.class);
-
-  @Nonnull
-  private static final Map<String, String> RUNNER_IDS = ContainerUtilRt.newHashMap();
-
-  static {
-    RUNNER_IDS.put(DefaultRunExecutor.EXECUTOR_ID, ExternalSystemConstants.RUNNER_ID);
-    RUNNER_IDS.put(DefaultDebugExecutor.EXECUTOR_ID, ExternalSystemConstants.DEBUG_RUNNER_ID);
-  }
 
   private ExternalSystemUtil() {
   }
@@ -175,7 +143,7 @@ public class ExternalSystemUtil {
     if (window != null) {
       return;
     }
-    
+
     for (ToolWindowFactory toolWindowFactory : project.getApplication().getExtensionPoint(ToolWindowFactory.class).getExtensionList()) {
       if (id.equals(toolWindowFactory.getId())) {
         managerEx.initToolWindow(toolWindowFactory);
@@ -185,51 +153,13 @@ public class ExternalSystemUtil {
 
   @SuppressWarnings("unchecked")
   @Nullable
-  public static <T> T getToolWindowElement(@Nonnull Class<T> clazz,
-                                           @Nonnull Project project,
-                                           @Nonnull Key<T> key,
-                                           @Nonnull ProjectSystemId externalSystemId) {
-    if (project.isDisposed() || !project.isOpen()) {
-      return null;
-    }
-    final ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-    if (toolWindowManager == null) {
-      return null;
-    }
-    final ToolWindow toolWindow = ensureToolWindowContentInitialized(project, externalSystemId);
-    if (toolWindow == null) {
-      return null;
-    }
-
-    final ContentManager contentManager = toolWindow.getContentManager();
-    if (contentManager == null) {
-      return null;
-    }
-
-    for (Content content : contentManager.getContents()) {
-      final JComponent component = content.getComponent();
-      if (component instanceof DataProvider) {
-        final Object data = ((DataProvider)component).getData(key);
-        if (data != null && clazz.isInstance(data)) {
-          return (T)data;
-        }
-      }
-    }
-    return null;
+  public static <T> T getToolWindowElement(@Nonnull Class<T> clazz, @Nonnull Project project, @Nonnull Key<T> key, @Nonnull ProjectSystemId externalSystemId) {
+    return ExternalSystemApiUtil.getToolWindowElement(clazz, project, key, externalSystemId);
   }
 
   @Nullable
   public static ToolWindow ensureToolWindowContentInitialized(@Nonnull Project project, @Nonnull ProjectSystemId externalSystemId) {
-    final ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-    if (toolWindowManager == null) return null;
-
-    final ToolWindow toolWindow = toolWindowManager.getToolWindow(externalSystemId.getReadableName());
-    if (toolWindow == null) return null;
-
-    if (toolWindow instanceof ToolWindowBase) {
-      ((ToolWindowBase)toolWindow).ensureContentInitialized();
-    }
-    return toolWindow;
+    return ExternalSystemApiUtil.ensureToolWindowContentInitialized(project, externalSystemId);
   }
 
   /**
@@ -258,10 +188,7 @@ public class ExternalSystemUtil {
    * @deprecated use {@link  ExternalSystemUtil#refreshProjects(consulo.ide.impl.idea.openapi.externalSystem.importing.ImportSpecBuilder)}
    */
   @Deprecated
-  public static void refreshProjects(@Nonnull final Project project,
-                                     @Nonnull final ProjectSystemId externalSystemId,
-                                     boolean force,
-                                     @Nonnull final ProgressExecutionMode progressExecutionMode) {
+  public static void refreshProjects(@Nonnull final Project project, @Nonnull final ProjectSystemId externalSystemId, boolean force, @Nonnull final ProgressExecutionMode progressExecutionMode) {
     refreshProjects(new ImportSpecBuilder(project, externalSystemId).forceWhenUptodate(force).use(progressExecutionMode));
   }
 
@@ -286,8 +213,7 @@ public class ExternalSystemUtil {
     final ProjectDataManager projectDataManager = ServiceManager.getService(ProjectDataManager.class);
     final int[] counter = new int[1];
 
-    ExternalProjectRefreshCallback callback =
-            new MyMultiExternalProjectRefreshCallback(spec.getProject(), projectDataManager, counter, spec.getExternalSystemId());
+    ExternalProjectRefreshCallback callback = new MyMultiExternalProjectRefreshCallback(spec.getProject(), projectDataManager, counter, spec.getExternalSystemId());
 
     Map<String, Long> modificationStamps = manager.getLocalSettingsProvider().apply(spec.getProject()).getExternalConfigModificationStamps();
     Set<String> toRefresh = ContainerUtilRt.newHashSet();
@@ -346,16 +272,13 @@ public class ExternalSystemUtil {
    * @param project          current ide project
    * @param externalSystemId id of the external system which project has been un-linked from ide project
    */
-  public static void ruleOrphanModules(@Nonnull final List<Module> orphanModules,
-                                       @Nonnull final Project project,
-                                       @Nonnull final ProjectSystemId externalSystemId) {
+  public static void ruleOrphanModules(@Nonnull final List<Module> orphanModules, @Nonnull final Project project, @Nonnull final ProjectSystemId externalSystemId) {
     UIUtil.invokeLaterIfNeeded(new Runnable() {
       @Override
       public void run() {
 
         final JPanel content = new JPanel(new GridBagLayout());
-        content.add(new JLabel(ExternalSystemBundle.message("orphan.modules.text", externalSystemId.getReadableName())),
-                    ExternalSystemUiUtil.getFillLineConstraints(0));
+        content.add(new JLabel(ExternalSystemBundle.message("orphan.modules.text", externalSystemId.getReadableName())), ExternalSystemUiUtil.getFillLineConstraints(0));
 
         final CheckBoxList<Module> orphanModulesList = new CheckBoxList<Module>();
         orphanModulesList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
@@ -460,7 +383,7 @@ public class ExternalSystemUtil {
     else {
       projectName = projectFile.getName();
     }
-    final TaskUnderProgress refreshProjectStructureTask = new TaskUnderProgress() {
+    final ExternalSystemApiUtil.TaskUnderProgress refreshProjectStructureTask = new ExternalSystemApiUtil.TaskUnderProgress() {
       @SuppressWarnings({"ThrowableResultOfMethodCallIgnored", "IOResourceOpenedButNotSafelyClosed"})
       @Override
       public void execute(@Nonnull ProgressIndicator indicator) {
@@ -570,10 +493,7 @@ public class ExternalSystemUtil {
     });
   }
 
-  public static void runTask(@Nonnull ExternalSystemTaskExecutionSettings taskSettings,
-                             @Nonnull String executorId,
-                             @Nonnull Project project,
-                             @Nonnull ProjectSystemId externalSystemId) {
+  public static void runTask(@Nonnull ExternalSystemTaskExecutionSettings taskSettings, @Nonnull String executorId, @Nonnull Project project, @Nonnull ProjectSystemId externalSystemId) {
     runTask(taskSettings, executorId, project, externalSystemId, null, ProgressExecutionMode.IN_BACKGROUND_ASYNC);
   }
 
@@ -583,154 +503,21 @@ public class ExternalSystemUtil {
                              @Nonnull final ProjectSystemId externalSystemId,
                              @Nullable final TaskCallback callback,
                              @Nonnull final ProgressExecutionMode progressExecutionMode) {
-    final Pair<ProgramRunner, ExecutionEnvironment> pair = createRunner(taskSettings, executorId, project, externalSystemId);
-    if (pair == null) return;
-
-    final ProgramRunner runner = pair.first;
-    final ExecutionEnvironment environment = pair.second;
-
-    final TaskUnderProgress task = new TaskUnderProgress() {
-      @Override
-      public void execute(@Nonnull ProgressIndicator indicator) {
-        final Semaphore targetDone = new Semaphore();
-        final Ref<Boolean> result = new Ref<Boolean>(false);
-        final Disposable disposable = Disposable.newDisposable();
-
-        project.getMessageBus().connect(disposable).subscribe(ExecutionListener.class, new ExecutionListener() {
-          public void processStartScheduled(final String executorIdLocal, final ExecutionEnvironment environmentLocal) {
-            if (executorId.equals(executorIdLocal) && environment.equals(environmentLocal)) {
-              targetDone.down();
-            }
-          }
-
-          public void processNotStarted(final String executorIdLocal, @Nonnull final ExecutionEnvironment environmentLocal) {
-            if (executorId.equals(executorIdLocal) && environment.equals(environmentLocal)) {
-              targetDone.up();
-            }
-          }
-
-          public void processStarted(final String executorIdLocal,
-                                     @Nonnull final ExecutionEnvironment environmentLocal,
-                                     @Nonnull final ProcessHandler handler) {
-            if (executorId.equals(executorIdLocal) && environment.equals(environmentLocal)) {
-              handler.addProcessListener(new ProcessAdapter() {
-                public void processTerminated(ProcessEvent event) {
-                  result.set(event.getExitCode() == 0);
-                  targetDone.up();
-                }
-              });
-            }
-          }
-        });
-
-        try {
-          ApplicationManager.getApplication().invokeAndWait(new Runnable() {
-            @Override
-            public void run() {
-              try {
-                runner.execute(environment);
-              }
-              catch (ExecutionException e) {
-                targetDone.up();
-                LOG.error(e);
-              }
-            }
-          }, IdeaModalityState.NON_MODAL);
-        }
-        catch (Exception e) {
-          LOG.error(e);
-          Disposer.dispose(disposable);
-          return;
-        }
-
-        targetDone.waitFor();
-        Disposer.dispose(disposable);
-
-        if (callback != null) {
-          if (result.get()) {
-            callback.onSuccess();
-          }
-          else {
-            callback.onFailure();
-          }
-        }
-      }
-    };
-
-    UIUtil.invokeAndWaitIfNeeded(new Runnable() {
-      @Override
-      public void run() {
-        final String title = AbstractExternalSystemTaskConfigurationType.generateName(project, taskSettings);
-        switch (progressExecutionMode) {
-          case MODAL_SYNC:
-            new Task.Modal(project, title, true) {
-              @Override
-              public void run(@Nonnull ProgressIndicator indicator) {
-                task.execute(indicator);
-              }
-            }.queue();
-            break;
-          case IN_BACKGROUND_ASYNC:
-            new Task.Backgroundable(project, title) {
-              @Override
-              public void run(@Nonnull ProgressIndicator indicator) {
-                task.execute(indicator);
-              }
-            }.queue();
-            break;
-          case START_IN_FOREGROUND_ASYNC:
-            new Task.Backgroundable(project, title, true, PerformInBackgroundOption.DEAF) {
-              @Override
-              public void run(@Nonnull ProgressIndicator indicator) {
-                task.execute(indicator);
-              }
-            }.queue();
-        }
-      }
-    });
+    ExternalSystemApiUtil.runTask(taskSettings, executorId, project, externalSystemId, callback, progressExecutionMode);
   }
 
   @Nullable
   public static Pair<ProgramRunner, ExecutionEnvironment> createRunner(@Nonnull ExternalSystemTaskExecutionSettings taskSettings,
-                                                                                         @Nonnull String executorId,
-                                                                                         @Nonnull Project project,
-                                                                                         @Nonnull ProjectSystemId externalSystemId) {
-    Executor executor = ExecutorRegistry.getInstance().getExecutorById(executorId);
-    if (executor == null) return null;
+                                                                       @Nonnull String executorId,
+                                                                       @Nonnull Project project,
+                                                                       @Nonnull ProjectSystemId externalSystemId) {
 
-    String runnerId = getRunnerId(executorId);
-    if (runnerId == null) return null;
-
-    ProgramRunner runner = RunnerRegistry.getInstance().findRunnerById(runnerId);
-    if (runner == null) return null;
-
-    AbstractExternalSystemTaskConfigurationType configurationType = findConfigurationType(externalSystemId);
-    if (configurationType == null) return null;
-
-    String name = AbstractExternalSystemTaskConfigurationType.generateName(project, taskSettings);
-    RunnerAndConfigurationSettings settings = RunManager.getInstance(project).createRunConfiguration(name, configurationType.getFactory());
-    ExternalSystemRunConfiguration runConfiguration = (ExternalSystemRunConfiguration)settings.getConfiguration();
-    runConfiguration.getSettings().setExternalProjectPath(taskSettings.getExternalProjectPath());
-    runConfiguration.getSettings().setTaskNames(ContainerUtil.newArrayList(taskSettings.getTaskNames()));
-    runConfiguration.getSettings().setTaskDescriptions(ContainerUtil.newArrayList(taskSettings.getTaskDescriptions()));
-    runConfiguration.getSettings().setVmOptions(taskSettings.getVmOptions());
-    runConfiguration.getSettings().setScriptParameters(taskSettings.getScriptParameters());
-    runConfiguration.getSettings().setExecutionName(taskSettings.getExecutionName());
-
-    return Pair.create(runner, new ExecutionEnvironment(executor, runner, settings, project));
+    return ExternalSystemApiUtil.createRunner(taskSettings, executorId, project, externalSystemId);
   }
 
   @Nullable
   public static AbstractExternalSystemTaskConfigurationType findConfigurationType(@Nonnull ProjectSystemId externalSystemId) {
-    for (ConfigurationType type : ConfigurationType.EP_NAME.getExtensionList()) {
-      if (type instanceof AbstractExternalSystemTaskConfigurationType) {
-        AbstractExternalSystemTaskConfigurationType candidate = (AbstractExternalSystemTaskConfigurationType)type;
-        if (externalSystemId.equals(candidate.getExternalSystemId())) {
-          return candidate;
-        }
-      }
-    }
-    return null;
+    return ExternalSystemApiUtil.findConfigurationType(externalSystemId);
   }
 
   /**
@@ -743,23 +530,12 @@ public class ExternalSystemUtil {
    * @param project  target project
    */
   public static void updateRecentTasks(@Nonnull ExternalTaskExecutionInfo taskInfo, @Nonnull Project project) {
-    ProjectSystemId externalSystemId = taskInfo.getSettings().getExternalSystemId();
-    ExternalSystemRecentTasksList recentTasksList =
-            getToolWindowElement(ExternalSystemRecentTasksList.class, project, ExternalSystemDataKeys.RECENT_TASKS_LIST, externalSystemId);
-    if (recentTasksList == null) {
-      return;
-    }
-    recentTasksList.setFirst(taskInfo);
-
-    ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(externalSystemId);
-    assert manager != null;
-    AbstractExternalSystemLocalSettings settings = manager.getLocalSettingsProvider().apply(project);
-    settings.setRecentTasks(recentTasksList.getModel().getTasks());
+    ExternalSystemApiUtil.updateRecentTasks(taskInfo, project);
   }
 
   @Nullable
   public static String getRunnerId(@Nonnull String executorId) {
-    return RUNNER_IDS.get(executorId);
+    return ExternalSystemApiUtil.getRunnerId(executorId);
   }
 
   /**
@@ -903,10 +679,6 @@ public class ExternalSystemUtil {
       app.invokeAndWait(action, IdeaModalityState.defaultModalityState());
     }
     return file[0];
-  }
-
-  private interface TaskUnderProgress {
-    void execute(@Nonnull ProgressIndicator indicator);
   }
 
   private static class MyMultiExternalProjectRefreshCallback implements ExternalProjectRefreshCallback {
