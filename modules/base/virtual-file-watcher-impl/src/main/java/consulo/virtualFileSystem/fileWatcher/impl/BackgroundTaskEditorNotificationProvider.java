@@ -71,13 +71,13 @@ public class BackgroundTaskEditorNotificationProvider implements EditorNotificat
     if (!tasks.isEmpty()) {
       builder.withText(LocalizeValue.localizeTODO("Task(s): " + StringUtil.join(tasks, it -> it.getName() + (!it.isEnabled() ? " (disabled)" : ""), ", ")));
 
-      builder.withAction(LocalizeValue.localizeTODO("Force Run"), () -> BackgroundTaskByVfsChangeManager.getInstance(myProject).runTasks(file));
+      builder.withAction(LocalizeValue.localizeTODO("Force Run"), (i) -> BackgroundTaskByVfsChangeManager.getInstance(myProject).runTasks(file));
     }
     else {
       builder.withText(LocalizeValue.localizeTODO("Background task(s) on file change is available"));
     }
 
-    builder.withAction(LocalizeValue.localizeTODO("Manage"), () -> BackgroundTaskByVfsChangeManager.getInstance(myProject).openManageDialog(file));
+    builder.withAction(LocalizeValue.localizeTODO("Manage"), (i) -> BackgroundTaskByVfsChangeManager.getInstance(myProject).openManageDialog(file));
     return builder;
   }
 }

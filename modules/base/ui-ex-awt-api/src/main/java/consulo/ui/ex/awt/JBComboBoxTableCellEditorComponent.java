@@ -18,7 +18,7 @@ package consulo.ui.ex.awt;
 import consulo.application.AllIcons;
 import consulo.application.util.function.Computable;
 import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.awt.internal.AWTPopupFactory;
+import consulo.ui.ex.awt.popup.AWTPopupFactory;
 import consulo.ui.ex.awt.util.TableUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopupFactory;

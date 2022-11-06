@@ -17,11 +17,14 @@ package consulo.fileEditor;
 
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
+import consulo.ui.event.UIEvent;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -38,26 +41,26 @@ public interface EditorNotificationBuilder {
   EditorNotificationBuilder withBackgroundColor(@Nonnull ColorValue color);
 
   @Nonnull
-  default EditorNotificationBuilder withAction(@Nonnull LocalizeValue actionText, @Nonnull @RequiredUIAccess Runnable actionHandler) {
+  default EditorNotificationBuilder withAction(@Nonnull LocalizeValue actionText, @Nonnull @RequiredUIAccess Consumer<UIEvent<Component>> actionHandler) {
     return withAction(actionText, LocalizeValue.of(), actionHandler);
   }
 
   @Nonnull
-  EditorNotificationBuilder withAction(@Nonnull LocalizeValue actionText, @Nonnull LocalizeValue actionTooltipText, @Nonnull @RequiredUIAccess Runnable actionHandler);
+  EditorNotificationBuilder withAction(@Nonnull LocalizeValue actionText, @Nonnull LocalizeValue actionTooltipText, @Nonnull @RequiredUIAccess Consumer<UIEvent<Component>> actionHandler);
 
   @Nonnull
   EditorNotificationBuilder withAction(@Nonnull LocalizeValue actionText, @Nonnull String actionRefId);
 
   @Nonnull
-  default EditorNotificationBuilder withGearAction(@Nonnull @RequiredUIAccess Runnable action) {
+  default EditorNotificationBuilder withGearAction(@Nonnull @RequiredUIAccess Consumer<UIEvent<Component>> action) {
     return withGearAction(LocalizeValue.of(), PlatformIconGroup.generalGearplain(), action);
   }
 
   @Nonnull
-  default EditorNotificationBuilder withGearAction(@Nonnull LocalizeValue tooltipText, @Nonnull @RequiredUIAccess Runnable action) {
+  default EditorNotificationBuilder withGearAction(@Nonnull LocalizeValue tooltipText, @Nonnull @RequiredUIAccess Consumer<UIEvent<Component>> action) {
     return withGearAction(tooltipText, PlatformIconGroup.generalGearplain(), action);
   }
 
   @Nonnull
-  EditorNotificationBuilder withGearAction(@Nonnull LocalizeValue tooltipText, @Nonnull Image image, @Nonnull @RequiredUIAccess Runnable action);
+  EditorNotificationBuilder withGearAction(@Nonnull LocalizeValue tooltipText, @Nonnull Image image, @Nonnull @RequiredUIAccess Consumer<UIEvent<Component>> action);
 }

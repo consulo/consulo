@@ -13,15 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.ex.awt.internal;
+package consulo.ui.ex.awt.popup;
+
+import consulo.annotation.DeprecationInfo;
+import consulo.ui.ex.awt.internal.AWTPopupChooserBuilder;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
 
 /**
+ * Inteface for JBPopupFactory impl
+ *
  * @author VISTALL
  * @since 21-Jul-22
  */
+@Deprecated
+@DeprecationInfo("Do not depend to Swing classes")
 public interface AWTPopupFactory {
+  @Deprecated
   <T> AWTPopupChooserBuilder<T> createListPopupBuilder(@Nonnull JList<T> list);
 }

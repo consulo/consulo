@@ -1,60 +1,64 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ui.popup;
 
-import consulo.language.editor.ui.awt.HintUtil;
-import consulo.ide.impl.idea.ide.HelpTooltip;
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.IdeEventQueue;
-import consulo.ide.impl.idea.ide.actions.WindowAction;
-import consulo.ide.impl.idea.ide.ui.PopupLocationTracker;
-import consulo.ide.impl.idea.ide.ui.ScreenAreaConsumer;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.codeEditor.EditorEx;
-import consulo.ide.impl.idea.openapi.project.ProjectUtil;
-import consulo.application.ui.WindowStateService;
-import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
-import consulo.project.ui.internal.WindowManagerEx;
-import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
-import consulo.ide.impl.idea.ui.*;
-import consulo.ide.impl.idea.ui.mac.touchbar.TouchBarsManager;
-import consulo.ui.ex.awt.speedSearch.SpeedSearch;
-import consulo.ide.impl.idea.util.FunctionUtil;
-import consulo.ui.ex.awt.IJSwingUtilities;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.ui.ChildFocusWatcher;
-import consulo.ide.impl.idea.util.ui.ScrollUtil;
-import consulo.codeEditor.EditorPopupHelper;
-import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.internal.TransactionGuardEx;
+import consulo.application.ui.ApplicationWindowStateService;
+import consulo.application.ui.WindowStateService;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.function.Computable;
 import consulo.application.util.function.Processor;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.EditorPopupHelper;
 import consulo.component.ComponentManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ide.IdeBundle;
+import consulo.ide.impl.idea.ide.HelpTooltip;
+import consulo.ide.impl.idea.ide.IdeEventQueue;
+import consulo.ide.impl.idea.ide.actions.WindowAction;
+import consulo.ide.impl.idea.ide.ui.PopupLocationTracker;
+import consulo.ide.impl.idea.ide.ui.ScreenAreaConsumer;
+import consulo.ide.impl.idea.openapi.project.ProjectUtil;
+import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
+import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
+import consulo.ide.impl.idea.ui.*;
+import consulo.ide.impl.idea.ui.mac.touchbar.TouchBarsManager;
+import consulo.ide.impl.idea.util.FunctionUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.ui.ChildFocusWatcher;
+import consulo.ide.impl.idea.util.ui.ScrollUtil;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.PlatformDataKeys;
+import consulo.language.editor.ui.awt.HintUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.project.ui.ProjectWindowStateService;
+import consulo.project.ui.internal.ProjectIdeFocusManager;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.WindowManager;
-import consulo.project.ui.internal.ProjectIdeFocusManager;
+import consulo.ui.Position2D;
+import consulo.ui.event.UIEvent;
+import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.ActiveComponent;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.UiActivity;
 import consulo.ui.ex.UiActivityMonitor;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
+import consulo.ui.ex.awt.speedSearch.SpeedSearch;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -62,8 +66,6 @@ import consulo.ui.ex.popup.*;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
-import consulo.application.ui.ApplicationWindowStateService;
-import consulo.project.ui.ProjectWindowStateService;
 import consulo.util.collection.WeakList;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.dataholder.Key;
@@ -799,6 +801,18 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
   @Override
   public void show(@Nonnull final Component owner) {
     show(owner, -1, -1, true);
+  }
+
+  @Override
+  public void showBy(@Nonnull UIEvent<? extends consulo.ui.Component> uiEvent) {
+    consulo.ui.Component component = uiEvent.getComponent();
+    InputDetails inputDetails = uiEvent.getInputDetails();
+    if (inputDetails != null) {
+      Position2D positionOnScreen = inputDetails.getPositionOnScreen();
+      show(TargetAWT.to(component), positionOnScreen.getX(), positionOnScreen.getY(), true);
+    } else {
+      show(TargetAWT.to(component), -1, -1, true);
+    }
   }
 
   public void show(@Nonnull Component owner, int aScreenX, int aScreenY, final boolean considerForcedXY) {

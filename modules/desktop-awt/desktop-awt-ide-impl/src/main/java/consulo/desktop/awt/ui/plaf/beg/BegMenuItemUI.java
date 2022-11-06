@@ -361,12 +361,12 @@ public class BegMenuItemUI extends BasicMenuItemUI {
     iconRect.x += menuItemGap;
     Rectangle labelRect = iconRect.union(textRect);
 
-    // Position the Accelerator text rect
+    // Position2D the Accelerator text rect
 
     acceleratorRect.x += viewRect.width - arrowIconRect.width - menuItemGap - acceleratorRect.width;
     acceleratorRect.y = (viewRect.y + viewRect.height / 2) - acceleratorRect.height / 2;
 
-    // Position the Check and Arrow Icons
+    // Position2D the Check and Arrow Icons
 
     if (useCheckAndArrow()) {
       arrowIconRect.x += viewRect.width - arrowIconRect.width;

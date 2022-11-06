@@ -50,11 +50,11 @@ public class ChangelistConflictNotificationPanel {
     final ChangeListManager manager = tracker.getChangeListManager();
     builder.withText(LocalizeValue.localizeTODO("File from non-active changelist is modified"));
 
-    builder.withAction(LocalizeValue.localizeTODO("Move changes"), LocalizeValue.localizeTODO("Move changes to active changelist (" + manager.getDefaultChangeList().getName() + ")"), () -> {
+    builder.withAction(LocalizeValue.localizeTODO("Move changes"), LocalizeValue.localizeTODO("Move changes to active changelist (" + manager.getDefaultChangeList().getName() + ")"), (i) -> {
       ChangelistConflictResolution.MOVE.resolveConflict(tracker.getProject(), changeList.getChanges(), file);
     });
 
-    builder.withAction(LocalizeValue.localizeTODO("Switch changelist"), LocalizeValue.localizeTODO("Set active changelist to '" + changeList.getName() + "'"), () -> {
+    builder.withAction(LocalizeValue.localizeTODO("Switch changelist"), LocalizeValue.localizeTODO("Set active changelist to '" + changeList.getName() + "'"), (i) -> {
       Change change = tracker.getChangeListManager().getChange(file);
       if (change == null) {
         Messages.showInfoMessage("No changes for this file", "Message");
@@ -64,11 +64,11 @@ public class ChangelistConflictNotificationPanel {
       }
     });
 
-    builder.withAction(LocalizeValue.localizeTODO("Ignore"), LocalizeValue.localizeTODO("Hide this notification"), () -> {
+    builder.withAction(LocalizeValue.localizeTODO("Ignore"), LocalizeValue.localizeTODO("Hide this notification"), (i) -> {
       tracker.ignoreConflict(file, true);
     });
 
-    builder.withGearAction(LocalizeValue.localizeTODO("Show options dialog"), PlatformIconGroup.generalSettings(), () -> {
+    builder.withGearAction(LocalizeValue.localizeTODO("Show options dialog"), PlatformIconGroup.generalSettings(), (i) -> {
       ShowSettingsUtil.getInstance().showAndSelect(tracker.getProject(), ChangelistConflictConfigurable.class);
     });
   }

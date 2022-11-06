@@ -24,10 +24,13 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.sandboxPlugin.lang.SandFileType;
 import consulo.ui.Alerts;
+import consulo.ui.ex.popup.IPopupChooserBuilder;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.function.Supplier;
 
 /**
@@ -53,7 +56,11 @@ public class SandEditorNotificationProvider implements EditorNotificationProvide
     EditorNotificationBuilder builder = builderFactory.get();
     builder.withText(LocalizeValue.localizeTODO("Sand text"));
     builder.withIcon(PlatformIconGroup.nodesStatic());
-    builder.withAction(LocalizeValue.localizeTODO("Hello World"), () -> Alerts.okInfo(LocalizeValue.localizeTODO("Hello World")).showAsync());
+    builder.withAction(LocalizeValue.localizeTODO("Hello World"), (e) ->{
+      IPopupChooserBuilder<Object> chooserBuilder = JBPopupFactory.getInstance().createPopupChooserBuilder(List.of("Value 1", "Value 2"));
+      chooserBuilder.createPopup().showBy(e);
+    });
+    builder.withGearAction((e) -> Alerts.okInfo(LocalizeValue.localizeTODO("Hello World")).showAsync());
     return builder;
   }
 }

@@ -362,7 +362,7 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
           //JBPopupFactory.getInstance().createBalloonBuilder(new JLabel("Press ESC button to close pipette"))
           //  .setAnimationCycle(2000)
           //  .setSmallVariant(true)
-          //  .createBalloon().show(new RelativePoint(pipette, new Point(pipette.getWidth() / 2, 0)), Balloon.Position.above);
+          //  .createBalloon().show(new RelativePoint(pipette, new Point(pipette.getWidth() / 2, 0)), Balloon.Position2D.above);
         }
       });
       previewPanel.add(pipette, BorderLayout.WEST);

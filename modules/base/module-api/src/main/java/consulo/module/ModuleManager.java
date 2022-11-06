@@ -21,6 +21,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.component.util.graph.Graph;
 import consulo.project.Project;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -181,4 +182,7 @@ public abstract class ModuleManager {
   public Collection<UnloadedModuleDescription> getUnloadedModuleDescriptions() {
     return Collections.emptyList();
   }
+
+  @Nonnull
+  public abstract Image getModuleIcon(@Nullable Module module);
 }

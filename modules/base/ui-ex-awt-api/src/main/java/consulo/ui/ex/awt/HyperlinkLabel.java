@@ -184,7 +184,7 @@ public class HyperlinkLabel extends HighlightableComponent {
   }
 
   protected void fireHyperlinkEvent(@Nullable InputEvent inputEvent) {
-    HyperlinkEvent e = new HyperlinkEvent(this, HyperlinkEvent.EventType.ACTIVATED, null, null);
+    HyperlinkEvent e = new HyperlinkEvent(this, HyperlinkEvent.EventType.ACTIVATED, null, null, null, inputEvent);
     for (HyperlinkListener listener : myListeners) {
       listener.hyperlinkUpdate(e);
     }

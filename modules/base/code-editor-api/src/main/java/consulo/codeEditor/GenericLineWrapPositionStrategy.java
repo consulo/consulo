@@ -249,7 +249,7 @@ public class GenericLineWrapPositionStrategy implements LineWrapPositionStrategy
      * <p/>
      * <b>Example</b>
      * Suppose we have two positions that define lines of length 30 and 10 symbols. Suppose that the weights are <code>'1'</code>
-     * and <code>'4'</code> correspondingly.Position with greater weight is preferred because it's product is higher
+     * and <code>'4'</code> correspondingly.Position2D with greater weight is preferred because it's product is higher
      * ({@code 10 * 4 > 30 * 1})
      */
     public final double weight;

@@ -35,7 +35,7 @@ import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.internal.AWTPopupChooserBuilder;
-import consulo.ui.ex.awt.internal.AWTPopupFactory;
+import consulo.ui.ex.awt.popup.AWTPopupFactory;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.popup.*;
 import consulo.ui.ex.util.TextWithMnemonic;

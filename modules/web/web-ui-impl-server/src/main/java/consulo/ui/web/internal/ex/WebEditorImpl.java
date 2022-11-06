@@ -34,6 +34,7 @@ import consulo.internal.arquill.editor.server.event.MouseDownEvent;
 import consulo.project.Project;
 import consulo.ui.Component;
 import consulo.ui.FocusableComponent;
+import consulo.ui.Position2D;
 import consulo.ui.color.ColorValue;
 import consulo.ui.event.details.MouseInputDetails;
 import consulo.ui.web.internal.base.ComponentHolder;
@@ -219,8 +220,9 @@ public class WebEditorImpl extends CodeEditorBase {
     boolean forceProcessing = false;
     //myMousePressedEvent = e;
     MouseInputDetails.MouseButton mouseButton = MouseInputDetails.MouseButton.values()[e.getButton()];
+    Position2D position = new Position2D(e.getX(), e.getY());
     EditorMouseEvent event =
-            new EditorMouseEvent(this, new MouseInputDetails(e.getX(), e.getY(), EnumSet.noneOf(MouseInputDetails.Modifier.class), mouseButton), mouseButton == MouseInputDetails.MouseButton.RIGHT,
+            new EditorMouseEvent(this, new MouseInputDetails(position, Position2D.OUT_OF_RANGE, EnumSet.noneOf(MouseInputDetails.Modifier.class), mouseButton), mouseButton == MouseInputDetails.MouseButton.RIGHT,
                                  EditorMouseEventArea.EDITING_AREA);
 
     myExpectedCaretOffset = e.getTextOffset();

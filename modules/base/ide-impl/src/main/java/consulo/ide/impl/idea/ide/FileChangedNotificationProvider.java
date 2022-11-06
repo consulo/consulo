@@ -107,7 +107,7 @@ public class FileChangedNotificationProvider implements EditorNotificationProvid
 
   private EditorNotificationBuilder build(@Nonnull final VirtualFile file, EditorNotificationBuilder builder) {
     builder.withText(IdeLocalize.fileChangedExternallyMessage());
-    builder.withAction(IdeLocalize.fileChangedExternallyReload(), () -> {
+    builder.withAction(IdeLocalize.fileChangedExternallyReload(), (i) -> {
       if (!myProject.isDisposed()) {
         file.refresh(false, false);
         EditorNotifications.getInstance(myProject).updateNotifications(file);

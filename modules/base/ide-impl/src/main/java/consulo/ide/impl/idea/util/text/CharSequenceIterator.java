@@ -69,7 +69,7 @@ public class CharSequenceIterator implements CharacterIterator {
   @Override
   public char setIndex(int position) {
     if (position < myStart || position > myEnd) {
-      throw new IllegalArgumentException("Position: " + position + ", start: " + myStart + ", end: " + myEnd);
+      throw new IllegalArgumentException("Position2D: " + position + ", start: " + myStart + ", end: " + myEnd);
     }
     myIndex = position;
     return current();

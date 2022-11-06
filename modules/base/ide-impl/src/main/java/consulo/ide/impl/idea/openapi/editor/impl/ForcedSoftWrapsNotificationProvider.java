@@ -49,11 +49,11 @@ public final class ForcedSoftWrapsNotificationProvider implements EditorNotifica
 
     EditorNotificationBuilder builder = builderFactory.get();
     builder.withText(LocalizeValue.localizeTODO(EditorBundle.message("forced.soft.wrap.message")));
-    builder.withAction(LocalizeValue.localizeTODO(EditorBundle.message("forced.soft.wrap.hide.message")), () -> {
+    builder.withAction(LocalizeValue.localizeTODO(EditorBundle.message("forced.soft.wrap.hide.message")), (i) -> {
       editor.putUserData(RealEditor.FORCED_SOFT_WRAPS, null);
       EditorNotifications.getInstance(myProject).updateNotifications(file);
     });
-    builder.withAction(LocalizeValue.localizeTODO(EditorBundle.message("forced.soft.wrap.dont.show.again.message")), () -> {
+    builder.withAction(LocalizeValue.localizeTODO(EditorBundle.message("forced.soft.wrap.dont.show.again.message")), (i) -> {
       ApplicationPropertiesComponent.getInstance().setValue(DISABLED_NOTIFICATION_KEY, "true");
       EditorNotifications.getInstance(myProject).updateAllNotifications();
     });

@@ -6,6 +6,7 @@ import consulo.component.ComponentManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
+import consulo.ui.event.UIEvent;
 import consulo.ui.ex.LightweightWindow;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.popup.event.JBPopupListener;
@@ -86,6 +87,11 @@ public interface JBPopup extends Disposable, LightweightWindow {
    * Shows in best position with a given owner
    */
   void show(@Nonnull Component owner);
+
+  /**
+   * Shows popup inside position by event
+   */
+  void showBy(@Nonnull UIEvent<? extends consulo.ui.Component> uiEvent);
 
   /**
    * Shows the popup in the center of the active window in the IDE frame for the specified project.

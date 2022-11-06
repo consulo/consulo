@@ -42,9 +42,11 @@ import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.event.ModuleListener;
 import consulo.module.impl.internal.layer.ModifiableModelCommitter;
 import consulo.module.macro.ModulePathMacroManager;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Maps;
@@ -981,6 +983,15 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Persist
   @Override
   public String[] getModuleGroupPath(@Nonnull Module module) {
     return myModuleModel.getModuleGroupPath(module);
+  }
+
+  @Nonnull
+  @Override
+  public Image getModuleIcon(@Nullable Module module) {
+    if (module == null) {
+      return PlatformIconGroup.actionsHelp();
+    }
+    return PlatformIconGroup.nodesModule();
   }
 
   public void setModuleGroupPath(Module module, String[] groupPath) {

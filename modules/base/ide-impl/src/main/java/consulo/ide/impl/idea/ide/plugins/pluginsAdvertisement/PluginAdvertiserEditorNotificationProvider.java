@@ -100,7 +100,7 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
     builder.withText(LocalizeValue.localizeTODO(IdeBundle.message("plugin.advestiser.notification.text", plugins.size())));
     final PluginDescriptor disabledPlugin = getDisabledPlugin(plugins.stream().map(PluginDescriptor::getPluginId).collect(Collectors.toSet()));
     if (disabledPlugin != null) {
-      builder.withAction(LocalizeValue.localizeTODO("Enable " + disabledPlugin.getName() + " plugin"), () -> {
+      builder.withAction(LocalizeValue.localizeTODO("Enable " + disabledPlugin.getName() + " plugin"), (i) -> {
         myEnabledExtensions.add(extension);
         consulo.container.plugin.PluginManager.enablePlugin(disabledPlugin.getPluginId());
         myNotifications.updateAllNotifications();
@@ -108,7 +108,7 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
       });
     }
     else {
-      builder.withAction(LocalizeValue.localizeTODO(IdeBundle.message("plugin.advestiser.notification.install.link", plugins.size())), () -> {
+      builder.withAction(LocalizeValue.localizeTODO(IdeBundle.message("plugin.advestiser.notification.install.link", plugins.size())), (i) -> {
         final PluginsAdvertiserDialog advertiserDialog = new PluginsAdvertiserDialog(null, allPlugins, new ArrayList<>(plugins));
         advertiserDialog.show();
         if (advertiserDialog.isUserInstalledPlugins()) {
@@ -118,12 +118,12 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
       });
     }
 
-    builder.withAction(LocalizeValue.localizeTODO("Ignore by file name"), () -> {
+    builder.withAction(LocalizeValue.localizeTODO("Ignore by file name"), (i) -> {
       myUnknownFeaturesCollector.ignoreFeature(new UnknownExtension(FileTypeFactory.FILE_TYPE_FACTORY_EP, virtualFile.getName()));
       myNotifications.updateAllNotifications();
     });
 
-    builder.withAction(LocalizeValue.localizeTODO("Ignore by extension"), () -> {
+    builder.withAction(LocalizeValue.localizeTODO("Ignore by extension"), (i) -> {
       myUnknownFeaturesCollector.ignoreFeature(new UnknownExtension(FileTypeFactory.FILE_TYPE_FACTORY_EP, "*." + virtualFile.getExtension()));
       myNotifications.updateAllNotifications();
     });

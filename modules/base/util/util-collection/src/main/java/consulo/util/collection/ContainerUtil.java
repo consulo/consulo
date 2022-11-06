@@ -1489,6 +1489,16 @@ public class ContainerUtil {
     return false;
   }
 
+  /**
+   * prepend values in front of the list
+   *
+   * @return read-only list consisting of values and the elements from specified list
+   */
+  @Nonnull
+  @Contract(pure = true)
+  public static <T> List<T> prepend(@Nonnull List<? extends T> list, @Nonnull T... values) {
+    return concat(list(values), list);
+  }
 
   @Contract(pure = true)
   @Nonnull

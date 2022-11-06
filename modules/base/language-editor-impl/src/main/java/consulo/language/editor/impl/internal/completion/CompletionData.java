@@ -268,7 +268,7 @@ public class CompletionData {
       final Object[] completions = reference.getVariants();
       for (Object completion : completions) {
         if (completion == null) {
-          LOG.error("Position=" + position + "\n;Reference=" + reference + "\n;variants=" + Arrays.toString(completions));
+          LOG.error("Position2D=" + position + "\n;Reference=" + reference + "\n;variants=" + Arrays.toString(completions));
           continue;
         }
         if (completion instanceof PsiElement) {

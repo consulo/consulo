@@ -79,7 +79,7 @@ public interface StatusBar extends StatusBarInfo, Disposable {
     public static final String ENCODING_PANEL = "Encoding";
     public static final String COLUMN_SELECTION_MODE_PANEL = "InsertOverwrite"; // Keep the old ID for backwards compatibility
     public static final String READONLY_ATTRIBUTE_PANEL = "ReadOnlyAttribute";
-    public static final String POSITION_PANEL = "Position";
+    public static final String POSITION_PANEL = "Position2D";
     public static final String LINE_SEPARATOR_PANEL = "LineSeparator";
   }
 

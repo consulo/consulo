@@ -65,7 +65,7 @@ public interface XDebugSession extends AbstractDebuggerSession {
   XSuspendContext getSuspendContext();
 
   /**
-   * Position from the current frame
+   * Position2D from the current frame
    *
    * @return
    */
@@ -73,7 +73,7 @@ public interface XDebugSession extends AbstractDebuggerSession {
   XSourcePosition getCurrentPosition();
 
   /**
-   * Position from the top frame
+   * Position2D from the top frame
    *
    * @return
    */
