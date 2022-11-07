@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.execution.configuration;
+package consulo.execution.ui.awt;
 
 import consulo.project.Project;
 import consulo.ui.ex.awt.ComponentWithBrowseButton;

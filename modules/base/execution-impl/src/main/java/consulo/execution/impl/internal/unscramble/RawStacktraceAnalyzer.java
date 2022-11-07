@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.exection.impl.internal.unscramble;
+package consulo.execution.impl.internal.unscramble;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.execution.unscramble.StacktraceAnalyzer;

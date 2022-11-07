@@ -13,17 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.execution.configurations;
+package consulo.language.editor.refactoring.event;
 
 import consulo.language.psi.PsiElement;
-import consulo.language.editor.refactoring.event.RefactoringElementListener;
+
+import javax.annotation.Nullable;
 
 /**
  * @author spleaner
  */
 public interface RefactoringListenerProvider {
 
-  @javax.annotation.Nullable
+  @Nullable
   RefactoringElementListener getRefactoringElementListener(final PsiElement element);
 
 }

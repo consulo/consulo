@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.execution.util;
+package consulo.execution.util;
 
 import consulo.execution.CommonProgramRunConfigurationParameters;
 import consulo.execution.RuntimeConfigurationWarning;
-import consulo.process.cmd.SimpleProgramParameters;
 import consulo.module.Module;
+import consulo.process.cmd.SimpleProgramParameters;
 import consulo.project.Project;
 
 import javax.annotation.Nullable;

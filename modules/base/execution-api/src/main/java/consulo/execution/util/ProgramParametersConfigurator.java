@@ -13,15 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.execution.util;
+package consulo.execution.util;
 
 import consulo.component.macro.PathMacroUtil;
 import consulo.execution.CommonProgramRunConfigurationParameters;
 import consulo.execution.RuntimeConfigurationWarning;
 import consulo.execution.WorkingDirectoryProvider;
 import consulo.execution.configuration.ModuleBasedConfiguration;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.macro.ModulePathMacroManager;
@@ -29,6 +27,8 @@ import consulo.process.cmd.SimpleProgramParameters;
 import consulo.process.local.EnvironmentUtil;
 import consulo.project.Project;
 import consulo.project.macro.ProjectPathMacroManager;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import org.jetbrains.annotations.SystemIndependent;

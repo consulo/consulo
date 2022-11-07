@@ -16,7 +16,7 @@
 package consulo.application.impl.internal.progress;
 
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.impl.internal.progress.ProgressWrapper;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -24,6 +24,6 @@ import javax.annotation.Nonnull;
  */
 public class SensitiveProgressWrapper extends ProgressWrapper {
   public SensitiveProgressWrapper(@Nonnull ProgressIndicator indicator) {
-    super(indicator, true);     }
-
+    super(indicator, true);
+  }
 }
