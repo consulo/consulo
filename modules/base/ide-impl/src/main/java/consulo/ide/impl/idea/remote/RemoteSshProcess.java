@@ -1,6 +1,7 @@
 package consulo.ide.impl.idea.remote;
 
 import consulo.process.SelfKiller;
+import consulo.process.remote.RemoteProcess;
 
 /**
  * @author traff

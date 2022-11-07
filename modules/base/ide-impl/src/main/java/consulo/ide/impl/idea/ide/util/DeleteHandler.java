@@ -35,7 +35,7 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.ui.ex.MessagesEx;
+import consulo.ui.ex.awt.MessagesEx;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;

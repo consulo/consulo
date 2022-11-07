@@ -13,20 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.ui.ex;
+package consulo.ui.ex.awt;
 
-import consulo.application.CommonBundle;
+import consulo.annotation.DeprecationInfo;
 import consulo.application.ApplicationManager;
+import consulo.application.CommonBundle;
 import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.UIBundle;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ui.image.Image;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.swing.*;
 
+@Deprecated
+@DeprecationInfo("Use Alert/Alerts class from ui-api")
 public class MessagesEx extends Messages {
 
   public static MessageInfo fileIsReadOnly(Project project, String filePath) {

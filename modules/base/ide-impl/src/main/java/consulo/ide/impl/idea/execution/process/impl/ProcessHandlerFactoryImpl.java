@@ -13,10 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.execution.process;
+package consulo.ide.impl.idea.execution.process.impl;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.execution.configurations.PtyCommandLine;
+import consulo.ide.impl.idea.execution.process.ColoredProcessHandler;
+import consulo.ide.impl.idea.execution.process.KillableColoredProcessHandler;
+import consulo.ide.impl.idea.execution.process.KillableProcessHandler;
+import consulo.ide.impl.idea.execution.process.RunnerMediator;
 import consulo.platform.Platform;
 import consulo.process.ExecutionException;
 import consulo.process.ProcessConsoleType;

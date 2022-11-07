@@ -23,7 +23,7 @@ import consulo.ide.impl.idea.openapi.application.PathManagerEx;
 import consulo.ide.impl.idea.openapi.module.ModuleUtil;
 import consulo.ide.impl.idea.openapi.roots.libraries.LibraryUtil;
 import consulo.ide.impl.idea.util.PathUtil;
-import consulo.ide.impl.idea.util.io.PathKt;
+import consulo.util.io.PathKt;
 import consulo.module.Module;
 import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;

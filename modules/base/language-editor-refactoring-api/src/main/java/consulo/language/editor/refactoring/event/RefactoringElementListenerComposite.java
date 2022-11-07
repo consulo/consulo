@@ -14,18 +14,16 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.refactoring.listeners;
+package consulo.language.editor.refactoring.event;
 
-import consulo.language.editor.refactoring.event.RefactoringElementListener;
-import consulo.language.editor.refactoring.event.UndoRefactoringElementListener;
 import consulo.language.psi.PsiElement;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
+import consulo.util.collection.Lists;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class RefactoringElementListenerComposite implements RefactoringElementListener, UndoRefactoringElementListener {
-  private final List<RefactoringElementListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
+  private final List<RefactoringElementListener> myListeners = Lists.newLockFreeCopyOnWriteList();
 
   public void addListener(final RefactoringElementListener listener){
     myListeners.add(listener);

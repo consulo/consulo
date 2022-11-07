@@ -45,12 +45,16 @@ public abstract class ProcessHandlerFactory {
    * At first "stop" button send SIGINT signal to process, if it still hangs user can terminate it recursively with SIGKILL signal.
    * <p>
    * Soft kill works on Unix, and also on Windows if a mediator process was used.
+   *
+   * Instance of KillableProcess
    */
   @Nonnull
   public abstract ProcessHandler createKillableProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException;
 
   /**
    * Returns a new instance of the {@link #createKillableProcessHandler(GeneralCommandLine)} which is aware of ANSI coloring output.
+   *
+   * Instance of KillableProcess
    */
   @Nonnull
   public abstract ProcessHandler createKillableColoredProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException;

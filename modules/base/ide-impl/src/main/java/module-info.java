@@ -354,7 +354,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.execution.impl.statistics;
   exports consulo.ide.impl.idea.execution.lineMarker;
   exports consulo.ide.impl.idea.execution.process;
-  exports consulo.ide.impl.idea.execution.process.impl;
   exports consulo.ide.impl.idea.execution.rmi;
   exports consulo.ide.impl.idea.execution.runners;
   exports consulo.ide.impl.idea.execution.testframework.actions;
@@ -733,7 +732,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.refactoring.inline;
   exports consulo.ide.impl.idea.refactoring.introduce.inplace;
   exports consulo.ide.impl.idea.refactoring.lang;
-  exports consulo.ide.impl.idea.refactoring.listeners;
   exports consulo.ide.impl.idea.refactoring.listeners.impl;
   exports consulo.ide.impl.idea.refactoring.listeners.impl.impl;
   exports consulo.ide.impl.idea.refactoring.memberPullUp;

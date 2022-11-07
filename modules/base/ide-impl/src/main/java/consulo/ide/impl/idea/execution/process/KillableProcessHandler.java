@@ -98,7 +98,7 @@ public class KillableProcessHandler extends OSProcessHandler implements Killable
   /**
    * This method shouldn't be overridden, see shouldKillProcessSoftly
    */
-  private boolean canKillProcessSoftly() {
+  private boolean  canKillProcessSoftly() {
     if (processCanBeKilledByOS(myProcess)) {
       if (SystemInfo.isWindows) {
         // runnerw.exe can send Ctrl+C events to a wrapped process

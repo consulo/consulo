@@ -18,7 +18,7 @@ import consulo.document.FileDocumentManager;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
 import consulo.ide.impl.idea.openapi.project.ProjectUtil;
-import consulo.ide.impl.idea.openapi.ui.ex.MessagesEx;
+import consulo.ui.ex.awt.MessagesEx;
 import consulo.ide.impl.idea.util.ExceptionUtil;
 import consulo.ide.impl.idea.util.SequentialTask;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

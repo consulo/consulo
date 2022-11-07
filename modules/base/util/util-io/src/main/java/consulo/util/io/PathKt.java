@@ -13,13 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util.io;
+package consulo.util.io;
 
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -29,6 +26,8 @@ import java.util.Set;
 import java.util.function.Function;
 
 /**
+ * FIXME need reorganizate it
+ *
  * from kotlin
  */
 public class PathKt {
@@ -143,7 +142,7 @@ public class PathKt {
     return sanitizeFileName(name, "_", isTruncate);
   }
 
-  private static Set<Character> illegalChars = ContainerUtil.newHashSet('/', '\\', '?', '<', '>', ':', '*', '|', '"', ':');
+  private static Set<Character> illegalChars = Set.of('/', '\\', '?', '<', '>', ':', '*', '|', '"', ':');
 
   // https://github.com/parshap/node-sanitize-filename/blob/master/index.js
   public static String sanitizeFileName(String name, String replacement, boolean isTruncate) {

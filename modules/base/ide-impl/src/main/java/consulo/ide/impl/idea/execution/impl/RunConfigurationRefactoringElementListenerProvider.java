@@ -22,7 +22,7 @@ import consulo.execution.configuration.RunConfiguration;
 import consulo.logging.Logger;
 import consulo.language.psi.PsiElement;
 import consulo.language.editor.refactoring.event.RefactoringElementListener;
-import consulo.ide.impl.idea.refactoring.listeners.RefactoringElementListenerComposite;
+import consulo.language.editor.refactoring.event.RefactoringElementListenerComposite;
 import consulo.language.editor.refactoring.event.RefactoringElementListenerProvider;
 
 /**

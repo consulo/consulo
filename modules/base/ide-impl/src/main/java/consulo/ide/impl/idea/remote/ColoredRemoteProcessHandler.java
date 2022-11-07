@@ -16,6 +16,8 @@
 package consulo.ide.impl.idea.remote;
 
 import consulo.execution.process.AnsiEscapeDecoder;
+import consulo.process.remote.BaseRemoteProcessHandler;
+import consulo.process.remote.RemoteProcess;
 import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

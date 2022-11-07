@@ -13,22 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.remote;
+package consulo.process.remote;
 
+import consulo.application.util.concurrent.AppExecutorUtil;
+import consulo.logging.Logger;
 import consulo.process.CommandLineUtil;
+import consulo.process.ProcessOutputTypes;
 import consulo.process.TaskExecutor;
 import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
-import consulo.process.ProcessOutputTypes;
-import consulo.process.local.ProcessWaitFor;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.process.io.BaseOutputReader;
-import consulo.logging.Logger;
+import consulo.process.local.ProcessWaitFor;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;

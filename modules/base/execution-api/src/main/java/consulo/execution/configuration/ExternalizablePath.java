@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.execution;
+package consulo.execution.configuration;
 
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
@@ -21,7 +21,6 @@ import consulo.util.xml.serializer.WriteExternalException;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFileManager;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
 import java.io.File;
 
@@ -29,7 +28,7 @@ import java.io.File;
  * @author dyoma
  */
 public class ExternalizablePath implements JDOMExternalizable {
-  @NonNls private static final String VALUE_ATTRIBUTE = "value";
+  private static final String VALUE_ATTRIBUTE = "value";
 
   private String myUrl;
 

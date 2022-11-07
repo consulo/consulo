@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.refactoring.listeners;
+package consulo.language.editor.refactoring.event;
 
-import consulo.language.editor.refactoring.event.RefactoringElementListener;
-import consulo.language.editor.refactoring.event.UndoRefactoringElementListener;
 import consulo.language.psi.PsiElement;
+
 import javax.annotation.Nonnull;
 
 /**

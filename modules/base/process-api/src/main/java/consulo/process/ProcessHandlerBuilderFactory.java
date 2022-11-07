@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,18 +15,18 @@
  */
 package consulo.process;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.process.cmd.GeneralCommandLine;
+
+import javax.annotation.Nonnull;
+
 /**
- * @author nik
+ * @author VISTALL
+ * @since 07/11/2022
  */
-public interface KillableProcess {
-  boolean canKillProcess();
-
-  void killProcess();
-
-  /**
-   * Sets whether the process will be terminated gracefully.
-   *
-   * @param shouldKillProcessSoftly true, if graceful process termination should be attempted first (i.e. soft kill)
-   */
-  void setShouldKillProcessSoftly(boolean shouldKillProcessSoftly);
+@ServiceAPI(ComponentScope.APPLICATION)
+public interface ProcessHandlerBuilderFactory {
+  @Nonnull
+  ProcessHandlerBuilder newBuilder(@Nonnull GeneralCommandLine cmd);
 }
