@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.remote;
 
+import consulo.process.remote.RemoteSdkException;
 import consulo.project.Project;
 import consulo.content.bundle.Sdk;
 import javax.annotation.Nonnull;
@@ -28,7 +29,7 @@ import java.util.Collection;
  */
 public interface RemoteSdkFactory<T extends RemoteSdkAdditionalData> {
   Sdk createRemoteSdk(@Nullable Project project, @Nonnull T data, @Nullable String sdkName, Collection<Sdk> existingSdks)
-    throws RemoteSdkException;
+          throws RemoteSdkException;
 
   String generateSdkHomePath(@Nonnull T data);
 

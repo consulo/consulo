@@ -142,7 +142,7 @@ public class PathKt {
     return sanitizeFileName(name, "_", isTruncate);
   }
 
-  private static Set<Character> illegalChars = Set.of('/', '\\', '?', '<', '>', ':', '*', '|', '"', ':');
+  private static Set<Character> illegalChars = Set.of('/', '\\', '?', '<', '>', ':', '*', '|', '"');
 
   // https://github.com/parshap/node-sanitize-filename/blob/master/index.js
   public static String sanitizeFileName(String name, String replacement, boolean isTruncate) {

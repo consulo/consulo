@@ -15,8 +15,9 @@
  */
 package consulo.process.remote;
 
-import com.google.common.net.HostAndPort;
 import consulo.process.SelfKiller;
+import consulo.util.io.HostAndPort;
+
 import javax.annotation.Nullable;
 
 /**

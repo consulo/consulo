@@ -3,6 +3,7 @@ package consulo.ide.impl.idea.remote;
 import com.google.common.net.HostAndPort;
 import consulo.ide.impl.idea.util.PathMapper;
 import consulo.ide.impl.idea.util.PathMappingSettings;
+import consulo.process.remote.RemoteSdkException;
 import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;

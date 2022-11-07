@@ -1,5 +1,7 @@
 package consulo.ide.impl.idea.remote;
 
+import consulo.process.remote.RemoteSdkException;
+
 /**
  * @author traff
  */
