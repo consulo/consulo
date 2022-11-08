@@ -1,4 +1,4 @@
-package consulo.ide.impl.idea.coverage;
+package consulo.execution.coverage.view;
 
 import consulo.project.ui.view.tree.ProjectViewNodeDecorator;
 import consulo.execution.coverage.CoverageDataManager;

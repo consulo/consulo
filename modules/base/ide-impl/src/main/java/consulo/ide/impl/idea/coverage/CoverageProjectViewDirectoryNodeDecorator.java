@@ -4,6 +4,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.execution.coverage.CoverageAnnotator;
 import consulo.execution.coverage.CoverageDataManager;
 import consulo.execution.coverage.CoverageSuitesBundle;
+import consulo.execution.coverage.view.AbstractCoverageProjectViewNodeDecorator;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
