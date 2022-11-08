@@ -19,19 +19,14 @@ import consulo.annotation.DeprecationInfo;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.UserHomeFileUtil;
 import consulo.fileEditor.UniqueVFilePathBuilder;
-import consulo.ide.impl.idea.openapi.application.PathManagerEx;
 import consulo.ide.impl.idea.openapi.module.ModuleUtil;
 import consulo.ide.impl.idea.openapi.roots.libraries.LibraryUtil;
-import consulo.ide.impl.idea.util.PathUtil;
-import consulo.util.io.PathKt;
 import consulo.module.Module;
 import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
 import consulo.project.ui.util.ProjectUIUtil;
-import consulo.util.lang.ObjectUtil;
-import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFilePathWrapper;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
@@ -40,42 +35,30 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.nio.file.Path;
-import java.util.Locale;
 
 /**
  * @author max
  */
+@Deprecated
+@DeprecationInfo("Use consulo.project.util.ProjectUtil")
 public class ProjectUtil {
   private ProjectUtil() {
   }
 
   public static Path getProjectCachePath(Project project, String cacheName) {
-    return getProjectCachePath(project, cacheName, false);
+    return consulo.project.util.ProjectUtil.getProjectCachePath(project, cacheName, false);
   }
 
   public static Path getProjectCachePath(Project project, String cacheName, boolean forceNameUse) {
-    return getProjectCachePath(project, PathManagerEx.getAppSystemDir().resolve(cacheName), forceNameUse);
+    return consulo.project.util.ProjectUtil.getProjectCachePath(project, cacheName, forceNameUse);
   }
 
   public static Path getProjectCachePath(Project project, Path baseDir, boolean forceNameUse) {
-    return getProjectCachePath(project, baseDir, forceNameUse, ".");
+    return consulo.project.util.ProjectUtil.getProjectCachePath(project, baseDir, forceNameUse, ".");
   }
 
   public static Path getProjectCachePath(Project project, Path baseDir, boolean forceNameUse, String hashSeparator) {
-    return baseDir.resolve(getProjectCacheFileName(project, forceNameUse, hashSeparator));
-  }
-
-  private static String getProjectCacheFileName(Project project, boolean forceNameUse, String hashSeparator) {
-    String presentableUrl = project.getPresentableUrl();
-    String name = forceNameUse || presentableUrl == null ? project.getName() : PathUtil.getFileName(presentableUrl).toLowerCase(Locale.US);
-
-    name = PathKt.sanitizeFileName(name, false);
-
-    String locationHash = Integer.toHexString(ObjectUtil.notNull(presentableUrl, name).hashCode());
-
-    name = StringUtil.trimMiddle(name, Math.min(name.length(), 255 - hashSeparator.length() - locationHash.length()), false);
-
-    return name + hashSeparator + locationHash;
+    return consulo.project.util.ProjectUtil.getProjectCachePath(project, baseDir, forceNameUse, hashSeparator);
   }
 
   @Nullable

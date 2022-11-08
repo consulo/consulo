@@ -20,12 +20,15 @@ import consulo.application.ApplicationProperties;
 import consulo.application.util.SystemInfo;
 import consulo.container.boot.ContainerPathManager;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
 import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 import static consulo.util.lang.SystemProperties.getUserHome;
@@ -292,6 +295,18 @@ public class DesktopContainerPathManager extends ContainerPathManager {
 
     checkAndCreate(ourSystemPath, true);
     return ourSystemPath;
+  }
+
+  @Override
+  public Path getSystemDir() {
+    Path path = Paths.get(ContainerPathManager.get().getSystemPath());
+    try {
+      return path.toRealPath();
+    }
+    catch (IOException e) {
+      Logger.getInstance(DesktopContainerPathManager.class).error(e);
+    }
+    return path;
   }
 
   @Nonnull

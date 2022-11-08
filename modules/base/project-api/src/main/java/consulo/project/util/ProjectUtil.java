@@ -15,12 +15,20 @@
  */
 package consulo.project.util;
 
+import consulo.application.util.UserHomeFileUtil;
+import consulo.container.boot.ContainerPathManager;
 import consulo.project.Project;
 import consulo.util.io.FileUtil;
+import consulo.util.io.PathKt;
+import consulo.util.io.PathUtil;
+import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
+import java.nio.file.Path;
+import java.util.Locale;
 
 /**
  * @author VISTALL
@@ -43,5 +51,39 @@ public class ProjectUtil {
       return parent != null && FileUtil.pathsEqual(parent.getPath(), existingBaseDirPath);
     }
     return false;
+  }
+
+  public static Path getProjectCachePath(Project project, String cacheName) {
+    return getProjectCachePath(project, cacheName, false);
+  }
+
+  public static Path getProjectCachePath(Project project, String cacheName, boolean forceNameUse) {
+    return getProjectCachePath(project, ContainerPathManager.get().getSystemDir().resolve(cacheName), forceNameUse);
+  }
+
+  public static Path getProjectCachePath(Project project, Path baseDir, boolean forceNameUse) {
+    return getProjectCachePath(project, baseDir, forceNameUse, ".");
+  }
+
+  public static Path getProjectCachePath(Project project, Path baseDir, boolean forceNameUse, String hashSeparator) {
+    return baseDir.resolve(getProjectCacheFileName(project, forceNameUse, hashSeparator));
+  }
+
+  private static String getProjectCacheFileName(Project project, boolean forceNameUse, String hashSeparator) {
+    String presentableUrl = project.getPresentableUrl();
+    String name = forceNameUse || presentableUrl == null ? project.getName() : PathUtil.getFileName(presentableUrl).toLowerCase(Locale.US);
+
+    name = PathKt.sanitizeFileName(name, false);
+
+    String locationHash = Integer.toHexString(ObjectUtil.notNull(presentableUrl, name).hashCode());
+
+    name = StringUtil.trimMiddle(name, Math.min(name.length(), 255 - hashSeparator.length() - locationHash.length()), false);
+
+    return name + hashSeparator + locationHash;
+  }
+
+  @Nullable
+  public static String getProjectLocationString(@Nonnull final Project project) {
+    return UserHomeFileUtil.getLocationRelativeToUserHome(project.getBasePath());
   }
 }

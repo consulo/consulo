@@ -18,6 +18,8 @@ package consulo.container.boot;
 import consulo.container.internal.PathManagerHolder;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 
 /**
@@ -61,6 +63,10 @@ public abstract class ContainerPathManager {
   public abstract String getConfigPath();
 
   public abstract String getSystemPath();
+
+  public Path getSystemDir() {
+    return Paths.get(getSystemPath());
+  }
 
   public abstract File getDocumentsDir();
 
