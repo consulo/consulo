@@ -99,6 +99,12 @@ public class KeymapUtil {
     return shortcut == null ? "" : getShortcutText(shortcut);
   }
 
+  @Nonnull
+  public static String getPreferredShortcutText(@Nonnull Shortcut[] shortcuts) {
+    KeyboardShortcut shortcut = ContainerUtil.findInstance(shortcuts, KeyboardShortcut.class);
+    return shortcut != null ? getShortcutText(shortcut) : shortcuts.length > 0 ? getShortcutText(shortcuts[0]) : "";
+  }
+
   public static String getShortcutText(@Nonnull Shortcut shortcut) {
     String s = "";
 

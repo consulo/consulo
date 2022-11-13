@@ -431,7 +431,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
     return result;
   }
 
-  public boolean isApplicable(TemplateImpl template, @Nonnull TemplateActionContext templateActionContext) {
+  public boolean isApplicable(Template template, @Nonnull TemplateActionContext templateActionContext) {
     return isApplicable(template, getApplicableContextTypes(templateActionContext));
   }
 
@@ -439,7 +439,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
    * @deprecated use {@link #isApplicable(TemplateImpl, TemplateActionContext)}
    */
   @Deprecated(forRemoval = true)
-  public boolean isApplicable(PsiFile file, int offset, TemplateImpl template) {
+  public boolean isApplicable(PsiFile file, int offset, Template template) {
     return isApplicable(template, TemplateActionContext.expanding(file, offset));
   }
 

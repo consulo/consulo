@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.codeInsight.highlighting;
 
-import consulo.ide.impl.idea.codeInsight.daemon.impl.IdentifierUtil;
+import consulo.language.editor.IdentifierUtil;
 import consulo.language.editor.highlight.HighlightManager;
 import consulo.language.editor.highlight.HighlightUsagesDescriptionLocation;
 import consulo.language.editor.hint.HintManager;

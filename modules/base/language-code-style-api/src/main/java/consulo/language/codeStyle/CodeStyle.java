@@ -309,7 +309,6 @@ public class CodeStyle {
   //  codeStyleSettingsManager.setMainProjectCodeStyle(settings);
   //  codeStyleSettingsManager.USE_PER_PROJECT_SETTINGS = true;
   //}
-
   @Nonnull
   public static CodeStyleBean getBean(@Nonnull Project project, @Nonnull Language language) {
     LanguageCodeStyleSettingsProvider provider = LanguageCodeStyleSettingsProvider.forLanguage(language);

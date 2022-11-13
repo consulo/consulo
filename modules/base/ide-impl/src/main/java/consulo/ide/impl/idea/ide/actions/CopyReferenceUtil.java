@@ -6,7 +6,7 @@ import consulo.codeEditor.EditorColors;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributes;
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.IdentifierUtil;
+import consulo.language.editor.IdentifierUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.CommonDataKeys;

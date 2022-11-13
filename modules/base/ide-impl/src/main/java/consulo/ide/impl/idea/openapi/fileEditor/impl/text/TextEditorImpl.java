@@ -26,6 +26,7 @@ import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.fileEditor.*;
 import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
+import consulo.fileEditor.internal.RealTextEditor;
 import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.fileEditor.structureView.StructureViewBuilderProvider;
 import consulo.fileEditor.text.TextEditorState;
@@ -49,7 +50,7 @@ import javax.swing.*;
 /**
  * @author Vladimir Kondratyev
  */
-public class TextEditorImpl extends UserDataHolderBase implements TextEditor {
+public class TextEditorImpl extends UserDataHolderBase implements RealTextEditor {
   public final Project myProject;
 
   private final PropertyChangeSupport myChangeSupport;

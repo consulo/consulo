@@ -133,8 +133,7 @@ public class KeymapUtil {
 
   @Nonnull
   public static String getPreferredShortcutText(@Nonnull Shortcut[] shortcuts) {
-    KeyboardShortcut shortcut = ContainerUtil.findInstance(shortcuts, KeyboardShortcut.class);
-    return shortcut != null ? getShortcutText(shortcut) : shortcuts.length > 0 ? getShortcutText(shortcuts[0]) : "";
+    return consulo.ui.ex.keymap.util.KeymapUtil.getPreferredShortcutText(shortcuts);
   }
 
   @Nonnull

@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.editorActions;
+package consulo.language.editor.action;
 
 import consulo.document.Document;
-import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.CodeDocumentationAwareCommenter;
 import consulo.language.Commenter;
 import consulo.language.codeStyle.CodeStyleManager;
@@ -25,6 +24,7 @@ import consulo.language.codeStyle.DocCommentSettings;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
 import consulo.project.Project;
+import consulo.util.lang.CharArrayUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -116,7 +116,7 @@ public class CodeDocumentationUtil {
     return tryParseCommentContext(langCommenter, chars, lineStartOffset);
   }
 
-  static CommentContext tryParseCommentContext(@Nullable Commenter langCommenter, @Nonnull CharSequence chars, int lineStartOffset) {
+  public static CommentContext tryParseCommentContext(@Nullable Commenter langCommenter, @Nonnull CharSequence chars, int lineStartOffset) {
     final boolean isInsideCommentLikeCode = langCommenter instanceof CodeDocumentationAwareCommenter;
     if (!isInsideCommentLikeCode) {
       return new CommentContext();

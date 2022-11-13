@@ -34,6 +34,8 @@ public interface PostprocessReformattingAspect extends PomModelAspect {
     return project.getInstance(PostprocessReformattingAspect.class);
   }
 
+  void doPostponedFormatting();
+
   void disablePostprocessFormattingInside(@Nonnull final Runnable runnable);
 
   <T> T disablePostprocessFormattingInside(@Nonnull Supplier<T> computable);

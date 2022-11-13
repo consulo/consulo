@@ -22,7 +22,7 @@ import consulo.localHistory.LocalHistoryAction;
 import consulo.application.AllIcons;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.CopyProvider;
-import consulo.ide.impl.idea.ide.actions.RefreshAction;
+import consulo.ui.ex.action.RefreshAction;
 import consulo.application.ApplicationManager;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;

@@ -29,7 +29,6 @@ import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributes;
-import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.DocumentReference;
@@ -41,10 +40,8 @@ import consulo.document.internal.DocumentEx;
 import consulo.document.util.DocumentUtil;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.codeInsight.lookup.impl.LookupImpl;
-import consulo.language.editor.template.RecalculatableResult;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.psi.impl.source.codeStyle.CodeStyleManagerImpl;
 import consulo.language.codeStyle.CodeStyleManager;
@@ -79,6 +76,7 @@ import consulo.undoRedo.event.CommandEvent;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.ObjectUtil;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 import org.jetbrains.annotations.NonNls;
@@ -88,7 +86,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.BiPredicate;
 
-public class TemplateStateImpl implements Disposable, TemplateState {
+public class TemplateStateImpl implements TemplateState {
   private static final Logger LOG = Logger.getInstance(TemplateStateImpl.class);
   private Project myProject;
   private Editor myEditor;

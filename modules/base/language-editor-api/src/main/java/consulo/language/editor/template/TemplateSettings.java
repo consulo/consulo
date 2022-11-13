@@ -40,6 +40,9 @@ public interface TemplateSettings {
   @Nonnull
   Collection<? extends Template> getTemplates(@Nonnull String templateKey);
 
+  @Nullable
+  Template getTemplate(String key, String group);
+
   char getDefaultShortcutChar();
 
   char getShortcutChar(Template template);

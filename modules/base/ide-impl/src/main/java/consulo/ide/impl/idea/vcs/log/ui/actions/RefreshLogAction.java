@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.vcs.log.ui.actions;
 
 import consulo.application.AllIcons;
-import consulo.ide.impl.idea.ide.actions.RefreshAction;
+import consulo.ui.ex.action.RefreshAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ide.impl.idea.vcs.log.VcsLogDataKeys;
 import consulo.ide.impl.idea.vcs.log.VcsLogUi;

@@ -93,4 +93,16 @@ public abstract class TemplateManager {
 
   @Nullable
   public abstract Runnable startNonCustomTemplates(final Map<Template, String> template2argument, final Editor editor, @Nullable final PairProcessor<String, String> processor);
+
+  public boolean isApplicable(Template template, @Nonnull TemplateActionContext templateActionContext) {
+    return isApplicable(template, getApplicableContextTypes(templateActionContext));
+  }
+
+  /**
+   * @deprecated use {@link #isApplicable(Template, TemplateActionContext)}
+   */
+  @Deprecated(forRemoval = true)
+  public boolean isApplicable(PsiFile file, int offset, Template template) {
+    return isApplicable(template, TemplateActionContext.expanding(file, offset));
+  }
 }

@@ -27,13 +27,14 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-class RefactoringMessageDialog extends DialogWrapper {
+@Deprecated
+public class RefactoringMessageDialog extends DialogWrapper {
   private final String myMessage;
   private final String myHelpTopic;
   private final Icon myIcon;
   private final boolean myIsCancelButtonVisible;
 
-  RefactoringMessageDialog(String title, String message, String helpTopic, @NonNls String iconId, boolean showCancelButton, Project project) {
+  public RefactoringMessageDialog(String title, String message, String helpTopic, @NonNls String iconId, boolean showCancelButton, Project project) {
     super(project, false);
     setTitle(title);
     myMessage = message;

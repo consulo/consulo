@@ -13,18 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.fileEditor.impl;
+package consulo.fileEditor;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
-import consulo.fileEditor.FileEditor;
-import consulo.fileEditor.TextEditor;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.text.TextEditorImpl;
+import consulo.fileEditor.internal.RealTextEditor;
 import consulo.project.Project;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.fileEditor.FileEditorWithProviderComposite;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -41,7 +38,7 @@ public abstract class EditorFileSwapper {
     TextEditor res = null;
 
     for (FileEditor fileEditor : fileEditors) {
-      if (fileEditor instanceof TextEditorImpl) {
+      if (fileEditor instanceof RealTextEditor) {
         if (res == null) {
           res = (TextEditor)fileEditor;
         }

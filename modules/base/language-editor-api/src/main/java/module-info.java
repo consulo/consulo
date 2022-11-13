@@ -21,6 +21,7 @@ module consulo.language.editor.api {
   exports consulo.language.editor.annotation;
   exports consulo.language.editor.bidi;
   exports consulo.language.editor.action;
+  exports consulo.language.editor.codeStyle;
   exports consulo.language.editor.colorScheme.setting;
   exports consulo.language.editor.completion;
   exports consulo.language.editor.completion.lookup;

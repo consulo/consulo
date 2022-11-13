@@ -16,7 +16,9 @@
 package consulo.language.editor.template;
 
 import consulo.codeEditor.Editor;
+import consulo.disposer.Disposable;
 import consulo.document.util.TextRange;
+import consulo.language.editor.template.event.TemplateEditingListener;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -25,7 +27,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 20-Mar-22
  */
-public interface TemplateState {
+public interface TemplateState extends Disposable {
   @Nullable
   TextRange getCurrentVariableRange();
 
@@ -56,4 +58,6 @@ public interface TemplateState {
   Editor getEditor();
 
   boolean isFinished();
+
+  void addTemplateStateListener(TemplateEditingListener listener);
 }

@@ -651,7 +651,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
     }
   }
 
-  private class RefreshAction extends consulo.ide.impl.idea.ide.actions.RefreshAction {
+  private class RefreshAction extends consulo.ui.ex.action.RefreshAction {
     public RefreshAction() {
       super(IdeBundle.message("action.refresh"), IdeBundle.message("action.refresh"), AllIcons.Actions.Refresh);
     }

@@ -88,4 +88,13 @@ public class PsiEditorUtil {
     }
     return null;
   }
+
+  @Nonnull
+  public static PsiFile getPsiFile(Editor editor) {
+    Project project = editor.getProject();
+    assert project != null;
+    PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
+    assert psiFile != null;
+    return psiFile;
+  }
 }

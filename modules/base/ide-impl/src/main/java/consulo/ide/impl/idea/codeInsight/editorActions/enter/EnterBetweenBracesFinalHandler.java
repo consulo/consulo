@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.codeInsight.editorActions.enter;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.CodeInsightSettings;
-import consulo.ide.impl.idea.codeInsight.editorActions.CodeDocumentationUtil;
+import consulo.language.editor.action.CodeDocumentationUtil;
 import consulo.ide.impl.idea.codeInsight.editorActions.EnterHandler;
 import consulo.language.Language;
 import consulo.dataContext.DataContext;

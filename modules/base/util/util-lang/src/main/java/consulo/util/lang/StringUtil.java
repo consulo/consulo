@@ -26,6 +26,7 @@ import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.*;
 import java.util.function.Function;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -2679,5 +2680,36 @@ public final class StringUtil {
     int i = text.lastIndexOf(subString);
     if (i == -1) return text;
     return text.substring(0, i);
+  }
+
+  @Contract(pure = true)
+  @Nonnull
+  public static String stripHtml(@Nonnull String html, boolean convertBreaks) {
+    if (convertBreaks) {
+      html = html.replaceAll("<br/?>", "\n\n");
+    }
+
+    return html.replaceAll("<(.|\n)*?>", "");
+  }
+
+  private static final Pattern UNICODE_CHAR = Pattern.compile("\\\\u[0-9a-eA-E]{4}");
+
+  public static String replaceUnicodeEscapeSequences(String text) {
+    if (text == null) return null;
+
+    final Matcher matcher = UNICODE_CHAR.matcher(text);
+    if (!matcher.find()) return text; // fast path
+
+    matcher.reset();
+    int lastEnd = 0;
+    final StringBuilder sb = new StringBuilder(text.length());
+    while (matcher.find()) {
+      sb.append(text.substring(lastEnd, matcher.start()));
+      final char c = (char)Integer.parseInt(matcher.group().substring(2), 16);
+      sb.append(c);
+      lastEnd = matcher.end();
+    }
+    sb.append(text.substring(lastEnd, text.length()));
+    return sb.toString();
   }
 }
