@@ -108,4 +108,9 @@ public interface RefElement extends RefEntity {
   default boolean isSuppressed(@Nonnull String... toolId) {
     return false;
   }
+
+  @Nullable
+  default String getURL() {
+    return null;
+  }
 }

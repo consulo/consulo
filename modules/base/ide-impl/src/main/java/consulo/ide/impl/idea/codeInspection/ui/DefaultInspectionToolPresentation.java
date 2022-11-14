@@ -429,7 +429,7 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
 
   @Nonnull
   @Override
-  public HTMLComposerImpl getComposer() {
+  public HTMLComposerBase getComposer() {
     if (myComposer == null) {
       myComposer = new DescriptorComposer(this);
     }

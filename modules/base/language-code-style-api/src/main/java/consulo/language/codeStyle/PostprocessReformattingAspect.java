@@ -36,6 +36,8 @@ public interface PostprocessReformattingAspect extends PomModelAspect {
 
   void doPostponedFormatting();
 
+  void doPostponedFormatting(@Nonnull FileViewProvider viewProvider);
+
   void disablePostprocessFormattingInside(@Nonnull final Runnable runnable);
 
   <T> T disablePostprocessFormattingInside(@Nonnull Supplier<T> computable);

@@ -301,7 +301,7 @@ class Browser extends JPanel {
 
   private String generateHTML(final RefEntity refEntity, @Nonnull final InspectionToolWrapper toolWrapper) {
     final StringBuffer buf = new StringBuffer();
-    final HTMLComposerImpl htmlComposer = getPresentation(toolWrapper).getComposer();
+    final HTMLComposerBase htmlComposer = getPresentation(toolWrapper).getComposer();
     if (refEntity instanceof RefElement) {
       ApplicationManager.getApplication().runReadAction(new Runnable() {
         @Override
@@ -386,7 +386,7 @@ class Browser extends JPanel {
             int idx = 0;
             @NonNls final String br = "<br>";
             buf.append(br);
-            HTMLComposerImpl.appendHeading(buf, InspectionsBundle.message("inspection.export.results.suppress"));
+            HTMLComposerBase.appendHeading(buf, InspectionsBundle.message("inspection.export.results.suppress"));
             for (AnAction suppressAction : activeSuppressActions) {
               buf.append(br);
               if (idx == activeSuppressActions.size() - 1) {

@@ -20,7 +20,7 @@ import consulo.language.editor.inspection.CommonProblemDescriptor;
 import consulo.language.editor.inspection.ProblemDescriptionsProcessor;
 import consulo.language.editor.inspection.QuickFix;
 import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionContextImpl;
-import consulo.ide.impl.idea.codeInspection.ex.HTMLComposerImpl;
+import consulo.language.editor.inspection.HTMLComposerBase;
 import consulo.ide.impl.idea.codeInspection.ex.InspectionRVContentProvider;
 import consulo.ide.impl.idea.codeInspection.ex.QuickFixAction;
 import consulo.language.editor.inspection.reference.RefEntity;
@@ -61,7 +61,7 @@ public interface InspectionToolPresentation extends ProblemDescriptionsProcessor
   @Nullable
   IntentionAction findQuickFixes(@Nonnull CommonProblemDescriptor descriptor, final String hint);
   @Nonnull
-  HTMLComposerImpl getComposer();
+  HTMLComposerBase getComposer();
   void exportResults(@Nonnull final Element parentNode, @Nonnull RefEntity refEntity);
   Set<RefModule> getModuleProblems();
   @Nullable

@@ -236,6 +236,7 @@ public abstract class RefElementImpl extends RefEntityImpl implements RefElement
     }
   }
 
+  @Override
   @Nullable
   public String getURL() {
     final PsiElement element = getPsiElement();

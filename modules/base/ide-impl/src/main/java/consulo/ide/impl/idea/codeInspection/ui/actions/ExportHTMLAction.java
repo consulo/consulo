@@ -29,7 +29,7 @@ import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionContextImpl;
 import consulo.ide.impl.idea.codeInspection.export.ExportToHTMLDialog;
 import consulo.ide.impl.idea.codeInspection.export.HTMLExportFrameMaker;
 import consulo.ide.impl.idea.codeInspection.export.HTMLExportUtil;
-import consulo.ide.impl.idea.codeInspection.export.HTMLExporter;
+import consulo.language.editor.inspection.HTMLExporter;
 import consulo.ide.impl.idea.codeInspection.ui.InspectionNode;
 import consulo.ide.impl.idea.codeInspection.ui.InspectionResultsView;
 import consulo.ide.impl.idea.codeInspection.ui.InspectionToolPresentation;

@@ -22,21 +22,19 @@
  * To change template for new class use
  * Code Style | Class Templates options (Tools | IDE Options).
  */
-package consulo.ide.impl.idea.codeInspection.export;
+package consulo.language.editor.inspection;
 
-import consulo.language.editor.inspection.InspectionsBundle;
-import consulo.ide.impl.idea.codeInspection.ex.HTMLComposerImpl;
-import consulo.language.editor.inspection.reference.RefElement;
-import consulo.language.editor.inspection.reference.RefEntity;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import java.util.HashMap;
+import consulo.language.editor.inspection.reference.RefElement;
+import consulo.language.editor.inspection.reference.RefEntity;
 import org.jetbrains.annotations.NonNls;
-import consulo.annotation.access.RequiredReadAction;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -45,11 +43,11 @@ public class HTMLExporter {
   private final String myRootFolder;
   private int myFileCounter;
   private final Map<RefEntity,String> myElementToFilenameMap;
-  private final HTMLComposerImpl myComposer;
+  private final HTMLComposerBase myComposer;
   private final Set<RefEntity> myGeneratedReferences;
   private final Set<RefEntity> myGeneratedPages;
 
-  public HTMLExporter(String rootFolder, HTMLComposerImpl composer) {
+  public HTMLExporter(String rootFolder, HTMLComposerBase composer) {
     myRootFolder = rootFolder;
     myElementToFilenameMap = new HashMap<RefEntity, String>();
     myFileCounter = 0;

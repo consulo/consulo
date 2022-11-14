@@ -2712,4 +2712,19 @@ public final class StringUtil {
     sb.append(text.substring(lastEnd, text.length()));
     return sb.toString();
   }
+
+  @Contract(pure = true)
+  public static int indexOfSubstringEnd(@Nonnull String text, @Nonnull String subString) {
+    int i = text.indexOf(subString);
+    if (i == -1) return -1;
+    return i + subString.length();
+  }
+
+  @Contract(pure = true)
+  public static boolean containsAlphaCharacters(@Nonnull String value) {
+    for (int i = 0; i < value.length(); i++) {
+      if (Character.isLetter(value.charAt(i))) return true;
+    }
+    return false;
+  }
 }

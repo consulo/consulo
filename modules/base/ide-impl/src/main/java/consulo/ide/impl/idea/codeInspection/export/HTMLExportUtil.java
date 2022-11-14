@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInspection.export;
 
+import consulo.language.editor.inspection.HTMLExporter;
 import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;

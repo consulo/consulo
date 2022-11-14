@@ -22,13 +22,10 @@
  * To change template for new interface use
  * Code Style | Class Templates options (Tools | IDE Options).
  */
-package consulo.ide.impl.idea.codeInspection.ex;
+package consulo.language.editor.inspection;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.ide.impl.idea.codeInspection.export.HTMLExporter;
-import consulo.language.editor.impl.inspection.reference.RefElementImpl;
 import consulo.language.Language;
-import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.reference.*;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -46,24 +43,24 @@ import java.util.Map;
 /**
  * @author max
  */
-public abstract class HTMLComposerImpl extends HTMLComposer {
+public abstract class HTMLComposerBase extends HTMLComposer {
+  public static final String BR = "<br>";
+  public static final String NBSP = "&nbsp;";
+  public static final String CODE_CLOSING = "</code>";
+  public static final String CODE_OPENING = "<code>";
+  public static final String B_OPENING = "<b>";
+  public static final String B_CLOSING = "</b>";
+  public static final String CLOSE_TAG = "\">";
+  public static final String A_HREF_OPENING = "<a HREF=\"";
+  public static final String A_CLOSING = "</a>";
+
   public HTMLExporter myExporter;
   private final int[] myListStack;
   private int myListStackTop;
   private final Map<Key, HTMLComposerExtension> myExtensions = new HashMap<Key, HTMLComposerExtension>();
   private final Map<Language, HTMLComposerExtension> myLanguageExtensions = new HashMap<Language, HTMLComposerExtension>();
-  @NonNls protected static final String BR = "<br>";
-  @NonNls protected static final String NBSP = "&nbsp;";
-  @NonNls protected static final String CODE_CLOSING = "</code>";
-  @NonNls protected static final String CODE_OPENING = "<code>";
-  @NonNls protected static final String B_OPENING = "<b>";
-  @NonNls protected static final String B_CLOSING = "</b>";
 
-  @NonNls protected static final String CLOSE_TAG = "\">";
-  @NonNls protected static final String A_HREF_OPENING = "<a HREF=\"";
-  @NonNls protected static final String A_CLOSING = "</a>";
-
-  protected HTMLComposerImpl() {
+  protected HTMLComposerBase() {
     myListStack = new int[5];
     myListStackTop = -1;
     for (InspectionExtensionsFactory factory : InspectionExtensionsFactory.EP_NAME.getExtensionList()) {
@@ -172,7 +169,7 @@ public abstract class HTMLComposerImpl extends HTMLComposer {
 
   @Override
   public void appendElementReference(final StringBuffer buf, RefElement refElement, String linkText, @NonNls String frameName) {
-    final String url = ((RefElementImpl)refElement).getURL();
+    final String url = refElement.getURL();
     if (url != null) {
       appendElementReference(buf, url, linkText, frameName);
     }
@@ -212,7 +209,7 @@ public abstract class HTMLComposerImpl extends HTMLComposer {
     else if (refElement instanceof RefFile) {
       buf.append(A_HREF_OPENING);
 
-      buf.append(((RefElementImpl)refElement).getURL());
+      buf.append(refElement.getURL());
 
       buf.append("\">");
       String refElementName = refElement.getName();

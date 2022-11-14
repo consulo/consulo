@@ -408,7 +408,7 @@ public class RefManagerImpl extends RefManager {
     myUnprocessedFiles.set(virtualFile.getId());
   }
 
-  void removeReference(@Nonnull RefElement refElem) {
+  public void removeReference(@Nonnull RefElement refElem) {
     final PsiElement element = refElem.getPsiElement();
     final RefManagerExtension extension = element != null ? getExtension(element.getLanguage()) : null;
     if (extension != null) {

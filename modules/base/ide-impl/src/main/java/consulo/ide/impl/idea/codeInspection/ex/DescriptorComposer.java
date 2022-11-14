@@ -16,20 +16,20 @@
 
 package consulo.ide.impl.idea.codeInspection.ex;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
+import consulo.ide.impl.idea.codeInspection.ui.InspectionToolPresentation;
+import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.reference.RefElement;
 import consulo.language.editor.inspection.reference.RefEntity;
-import consulo.ide.impl.idea.codeInspection.ui.InspectionToolPresentation;
 import consulo.language.file.inject.VirtualFileWindow;
-import consulo.logging.Logger;
-import consulo.document.Document;
-import consulo.document.FileDocumentManager;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
-import consulo.ide.impl.idea.util.text.CharArrayUtil;
-import javax.annotation.Nonnull;
-import consulo.annotation.access.RequiredReadAction;
+import consulo.logging.Logger;
+import consulo.virtualFileSystem.VirtualFile;
 
+import javax.annotation.Nonnull;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ import java.util.List;
 /**
  * @author max
  */
-public class DescriptorComposer extends HTMLComposerImpl {
+public class DescriptorComposer extends HTMLComposerBase {
   private static final Logger LOG = Logger.getInstance(DescriptorComposer.class);
   private final InspectionToolPresentation myTool;
 
