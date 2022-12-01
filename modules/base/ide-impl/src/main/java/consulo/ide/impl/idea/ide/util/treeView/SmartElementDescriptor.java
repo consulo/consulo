@@ -52,6 +52,11 @@ public class SmartElementDescriptor extends NodeDescriptor {
     return mySmartPointer.getElement();
   }
 
+  @Nonnull
+  public Project getProject() {
+    return myProject;
+  }
+
   @Override
   public Object getElement() {
     return getPsiElement();

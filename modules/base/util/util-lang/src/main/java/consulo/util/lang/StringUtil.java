@@ -2727,4 +2727,39 @@ public final class StringUtil {
     }
     return false;
   }
+
+  @Contract(pure = true)
+  public static int getOccurrenceCount(@Nonnull String text, final char c) {
+    int res = 0;
+    int i = 0;
+    while (i < text.length()) {
+      i = text.indexOf(c, i);
+      if (i >= 0) {
+        res++;
+        i++;
+      }
+      else {
+        break;
+      }
+    }
+    return res;
+  }
+
+  @Contract(pure = true)
+  public static int getOccurrenceCount(@Nonnull String text, @Nonnull String s) {
+    int res = 0;
+    int i = 0;
+    while (i < text.length()) {
+      i = text.indexOf(s, i);
+      if (i >= 0) {
+        res++;
+        i++;
+      }
+      else {
+        break;
+      }
+    }
+    return res;
+  }
+
 }

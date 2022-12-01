@@ -368,7 +368,7 @@ public abstract class AbstractTreeClassChooserDialog<T extends PsiNamedElement> 
   }
 
 
-  private void selectElementInTree(@Nonnull final PsiElement element) {
+  protected void selectElementInTree(@Nonnull final PsiElement element) {
     ApplicationManager.getApplication().invokeLater(new Runnable() {
       @Override
       public void run() {

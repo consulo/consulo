@@ -237,7 +237,7 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
   }
 
   public static PsiElementListCellRenderer createRenderer(@Nonnull GotoData gotoData, @Nonnull PsiElement eachTarget) {
-    return GotoTargetRendererProvider.EP_NAME.computeSafeIfAny(Application.get(), it -> it.getRenderer(eachTarget));
+    return GotoTargetRendererProvider.EP_NAME.computeSafeIfAny(Application.get(), it -> it.getRenderer(eachTarget, gotoData));
   }
 
   protected boolean navigateToElement(PsiElement target) {
@@ -291,7 +291,7 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
     void execute();
   }
 
-  public static class GotoData {
+  public static class GotoData implements GotoTargetRendererProvider.Options {
     @Nonnull
     public final PsiElement source;
     public PsiElement[] targets;
@@ -318,6 +318,7 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
       hasDifferentNames = myNames.size() > 1;
     }
 
+    @Override
     public boolean hasDifferentNames() {
       return hasDifferentNames;
     }
@@ -327,12 +328,7 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
       targets = ArrayUtil.append(targets, element);
       renderers.put(element, createRenderer(this, element));
       if (!hasDifferentNames && element instanceof PsiNamedElement) {
-        final String name = ApplicationManager.getApplication().runReadAction(new Computable<String>() {
-          @Override
-          public String compute() {
-            return ((PsiNamedElement)element).getName();
-          }
-        });
+        final String name = ApplicationManager.getApplication().runReadAction((Computable<String>)() -> ((PsiNamedElement)element).getName());
         myNames.add(name);
         hasDifferentNames = myNames.size() > 1;
       }

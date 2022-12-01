@@ -17,6 +17,7 @@
 package consulo.ide.impl.idea.refactoring.openapi.impl;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.language.editor.refactoring.safeDelete.SafeDeleteRefactoringImpl;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import consulo.language.editor.refactoring.RefactoringFactory;

@@ -22,6 +22,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.language.editor.ui.PsiElementListCellRenderer;
 import consulo.language.psi.PsiElement;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -31,6 +32,17 @@ import javax.annotation.Nullable;
 public interface GotoTargetRendererProvider {
   ExtensionPointName<GotoTargetRendererProvider> EP_NAME = ExtensionPointName.create(GotoTargetRendererProvider.class);
 
+  interface Options {
+    boolean hasDifferentNames();
+  }
+
   @Nullable
-  PsiElementListCellRenderer getRenderer(PsiElement element);
+  default PsiElementListCellRenderer getRenderer(PsiElement element, @Nonnull Options options) {
+    return getRenderer(element);
+  }
+
+  @Nullable
+  default PsiElementListCellRenderer getRenderer(PsiElement element) {
+    throw new AbstractMethodError();
+  }
 }

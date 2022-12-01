@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.refactoring.openapi.impl;
+package consulo.language.editor.refactoring.safeDelete;
 
-import consulo.project.Project;
-import consulo.util.lang.EmptyRunnable;
-import consulo.language.psi.PsiElement;
 import consulo.language.editor.refactoring.RefactoringImpl;
 import consulo.language.editor.refactoring.SafeDeleteRefactoring;
-import consulo.language.editor.refactoring.safeDelete.SafeDeleteProcessor;
+import consulo.language.psi.PsiElement;
+import consulo.project.Project;
+import consulo.util.lang.EmptyRunnable;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -30,7 +29,7 @@ import java.util.List;
  * @author dsl
  */
 public class SafeDeleteRefactoringImpl extends RefactoringImpl<SafeDeleteProcessor> implements SafeDeleteRefactoring {
-  SafeDeleteRefactoringImpl(Project project, PsiElement[] elements) {
+  public SafeDeleteRefactoringImpl(Project project, PsiElement[] elements) {
     super(SafeDeleteProcessor.createInstance(project, EmptyRunnable.INSTANCE, elements, true, true));
   }
 
