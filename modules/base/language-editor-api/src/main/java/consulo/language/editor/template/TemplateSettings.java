@@ -38,6 +38,9 @@ public interface TemplateSettings {
   Template getTemplateById(@Nonnull String id);
 
   @Nonnull
+  Collection<? extends Template> getTemplates();
+
+  @Nonnull
   Collection<? extends Template> getTemplates(@Nonnull String templateKey);
 
   @Nullable

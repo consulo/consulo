@@ -100,6 +100,8 @@ public abstract class Template {
 
   public abstract boolean isDeactivated();
 
+  public abstract boolean isSelectionTemplate();
+
   public abstract void setDeactivated(boolean isDeactivated);
 
   public abstract boolean isToReformat();

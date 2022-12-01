@@ -420,6 +420,7 @@ public class TemplateImpl extends TemplateEx implements SchemeElement {
     myGroupName = groupName;
   }
 
+  @Override
   public boolean isSelectionTemplate() {
     for (Variable v : myVariables) {
       if (v.getName().equals(SELECTION)) return true;

@@ -521,11 +521,11 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
   }
 
   @Override
-  public List<TemplateImpl> listApplicableTemplates(@Nonnull TemplateActionContext templateActionContext) {
+  public List<Template> listApplicableTemplates(@Nonnull TemplateActionContext templateActionContext) {
     Set<TemplateContextType> contextTypes = getApplicableContextTypes(templateActionContext);
 
-    final ArrayList<TemplateImpl> result = new ArrayList<>();
-    for (final TemplateImpl template : TemplateSettingsImpl.getInstanceImpl().getTemplates()) {
+    final ArrayList<Template> result = new ArrayList<>();
+    for (final Template template : TemplateSettingsImpl.getInstanceImpl().getTemplates()) {
       if (!template.isDeactivated() && (!templateActionContext.isSurrounding() || template.isSelectionTemplate()) && isApplicable(template, contextTypes)) {
         result.add(template);
       }
@@ -534,14 +534,14 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
   }
 
   @Override
-  public List<TemplateImpl> listApplicableTemplateWithInsertingDummyIdentifier(@Nonnull TemplateActionContext templateActionContext) {
+  public List<Template> listApplicableTemplateWithInsertingDummyIdentifier(@Nonnull TemplateActionContext templateActionContext) {
     OffsetsInFile offsets = insertDummyIdentifierWithCache(templateActionContext);
     return listApplicableTemplates(TemplateActionContext.create(offsets.getFile(), null, getStartOffset(offsets), getEndOffset(offsets), templateActionContext.isSurrounding()));
   }
 
   public static List<CustomLiveTemplate> listApplicableCustomTemplates(@Nonnull TemplateActionContext templateActionContext) {
     List<CustomLiveTemplate> result = new ArrayList<>();
-    for (CustomLiveTemplate template : CustomLiveTemplate.EP_NAME.getExtensions()) {
+    for (CustomLiveTemplate template : CustomLiveTemplate.EP_NAME.getExtensionList()) {
       if ((!templateActionContext.isSurrounding() || template.supportsWrapping()) && isApplicable(template, templateActionContext)) {
         result.add(template);
       }

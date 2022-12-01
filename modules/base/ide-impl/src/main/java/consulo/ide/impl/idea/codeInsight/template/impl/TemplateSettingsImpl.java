@@ -325,14 +325,10 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
     myLastSelectedTemplate = group == null ? null : new TemplateKey(group, key);
   }
 
-  @SuppressWarnings("unused")
-  public Collection<? extends TemplateImpl> getTemplatesAsList() {
-    return myTemplates.values();
-  }
-
-  public TemplateImpl[] getTemplates() {
-    final Collection<? extends TemplateImpl> all = myTemplates.values();
-    return all.toArray(new TemplateImpl[all.size()]);
+  @Nonnull
+  @Override
+  public Collection<? extends Template> getTemplates() {
+    return Collections.unmodifiableCollection(myTemplates.values());
   }
 
   @Override
