@@ -1,13 +1,19 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.undoRedo.util;
 
+import consulo.application.ApplicationManager;
 import consulo.document.Document;
+import consulo.undoRedo.CommandProcessor;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 
 public final class UndoUtil {
   private UndoUtil() {
+  }
+
+  public static void writeInRunUndoTransparentAction(@Nonnull final Runnable runnable) {
+    CommandProcessor.getInstance().runUndoTransparentAction(() -> ApplicationManager.getApplication().runWriteAction(runnable));
   }
 
   public static void disableUndoFor(@Nonnull Document document) {

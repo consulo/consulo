@@ -90,6 +90,8 @@ public final class StringUtil {
 
   private static final Logger LOG = LoggerFactory.getLogger(StringUtil.class);
 
+  private static final String[] ourEmptyStringArray = new String[0];
+
   private static final String[] MN_QUOTED = {"&&", "__"};
   private static final String[] MN_CHARS = {"&", "_"};
 
@@ -2762,4 +2764,14 @@ public final class StringUtil {
     return res;
   }
 
+  @Nonnull
+  @Contract(pure = true)
+  public static String[] surround(@Nonnull String[] strings1, String prefix, String suffix) {
+    String[] result = strings1.length == 0 ? ourEmptyStringArray : new String[strings1.length];
+    for (int i = 0; i < result.length; i++) {
+      result[i] = prefix + strings1[i] + suffix;
+    }
+
+    return result;
+  }
 }

@@ -22,6 +22,7 @@ import consulo.language.editor.inspection.reference.RefManager;
 import consulo.language.editor.inspection.scheme.InspectionProfileEntry;
 import consulo.language.editor.inspection.scheme.JobDescriptor;
 import consulo.language.editor.inspection.scheme.StdJobDescriptors;
+import consulo.language.editor.inspection.scheme.Tools;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
@@ -29,6 +30,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * The context for a global inspection run. Provides access to the reference graph
@@ -97,4 +99,7 @@ public interface GlobalInspectionContext extends UserDataHolder {
   }
 
   boolean isToCheckFile(PsiFile file, @Nonnull InspectionProfileEntry tool);
+
+  @Nullable
+  Tools getTools(@Nonnull String shortName);
 }

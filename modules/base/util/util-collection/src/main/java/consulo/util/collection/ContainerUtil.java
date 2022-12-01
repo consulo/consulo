@@ -1526,4 +1526,34 @@ public class ContainerUtil {
       }
     }
   }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static <T, E> Iterable<Pair<T, E>> zip(@Nonnull final Iterable<T> iterable1, @Nonnull final Iterable<E> iterable2) {
+    return new Iterable<Pair<T, E>>() {
+      @Override
+      public Iterator<Pair<T, E>> iterator() {
+        return new Iterator<Pair<T, E>>() {
+          private final Iterator<T> i1 = iterable1.iterator();
+          private final Iterator<E> i2 = iterable2.iterator();
+
+          @Override
+          public boolean hasNext() {
+            return i1.hasNext() && i2.hasNext();
+          }
+
+          @Override
+          public Pair<T, E> next() {
+            return Pair.create(i1.next(), i2.next());
+          }
+
+          @Override
+          public void remove() {
+            i1.remove();
+            i2.remove();
+          }
+        };
+      }
+    };
+  }
 }

@@ -15,8 +15,7 @@
  */
 package consulo.document.impl;
 
-import consulo.application.ApplicationManager;
-import consulo.undoRedo.CommandProcessor;
+import consulo.undoRedo.util.UndoUtil;
 
 import javax.annotation.Nonnull;
 
@@ -25,7 +24,8 @@ import javax.annotation.Nonnull;
  * @since 19-Mar-22
  */
 public class DocumentImpUtil {
+  @Deprecated
   public static void writeInRunUndoTransparentAction(@Nonnull final Runnable runnable) {
-    CommandProcessor.getInstance().runUndoTransparentAction(() -> ApplicationManager.getApplication().runWriteAction(runnable));
+    UndoUtil.writeInRunUndoTransparentAction(runnable);
   }
 }

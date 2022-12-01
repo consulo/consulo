@@ -33,7 +33,7 @@ import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.impl.internal.template.TemplateEditorUtil;
 import consulo.language.editor.impl.internal.template.TemplateImpl;
-import consulo.language.editor.internal.TemplateContext;
+import consulo.language.editor.template.context.TemplateContext;
 import consulo.language.editor.template.Template;
 import consulo.language.editor.template.TemplateOptionalProcessor;
 import consulo.language.editor.template.Variable;

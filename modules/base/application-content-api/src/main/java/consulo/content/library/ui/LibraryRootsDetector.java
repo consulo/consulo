@@ -18,24 +18,29 @@ package consulo.content.library.ui;
 import consulo.application.progress.ProgressIndicator;
 import consulo.content.library.LibraryRootType;
 import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @author nik
  */
 public abstract class LibraryRootsDetector {
+  @Nonnull
+  public static LibraryRootsDetector of(List<? extends RootDetector> detectors) {
+    return new LibraryRootsDetectorImpl(detectors);
+  }
+
   /**
    * Find suitable roots in {@code rootCandidate} or its descendants.
    *
-   * @param rootCandidate file selected in the file chooser by user
+   * @param rootCandidate     file selected in the file chooser by user
    * @param progressIndicator can be used to show information about the progress and to abort searching if process is cancelled
    * @return suitable roots
    */
-  public abstract Collection<DetectedLibraryRoot> detectRoots(@Nonnull VirtualFile rootCandidate,
-                                                              @Nonnull ProgressIndicator progressIndicator);
+  public abstract Collection<DetectedLibraryRoot> detectRoots(@Nonnull VirtualFile rootCandidate, @Nonnull ProgressIndicator progressIndicator);
 
   /**
    * @return presentable name for the root type or {@code null} if the root type isn't supported by this detector

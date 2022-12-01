@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.internal;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.language.editor.template.Template;
 
 /**
@@ -23,6 +24,7 @@ import consulo.language.editor.template.Template;
  * @author VISTALL
  * @since 17-Jul-22
  */
+@Deprecated
+@DeprecationInfo("All method moved to Template")
 public abstract class TemplateEx extends Template {
-  public abstract TemplateContext getTemplateContext();
 }

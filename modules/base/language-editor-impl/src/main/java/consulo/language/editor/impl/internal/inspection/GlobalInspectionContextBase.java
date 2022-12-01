@@ -215,6 +215,12 @@ public class GlobalInspectionContextBase extends UserDataHolderBase implements G
     return myRefManager;
   }
 
+  @Nullable
+  @Override
+  public Tools getTools(@Nonnull String shortName) {
+    return myTools.get(shortName);
+  }
+
   @Override
   public boolean isToCheckFile(PsiFile file, @Nonnull InspectionProfileEntry tool) {
     final Tools tools = myTools.get(tool.getShortName());

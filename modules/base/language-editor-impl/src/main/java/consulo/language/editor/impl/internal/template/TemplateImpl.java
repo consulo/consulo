@@ -19,7 +19,7 @@ package consulo.language.editor.impl.internal.template;
 import consulo.component.persist.scheme.SchemeElement;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.internal.TemplateConstants;
-import consulo.language.editor.internal.TemplateContext;
+import consulo.language.editor.template.context.TemplateContext;
 import consulo.language.editor.internal.TemplateEx;
 import consulo.language.editor.template.Expression;
 import consulo.language.editor.template.Template;

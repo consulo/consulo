@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-package consulo.language.editor.internal;
+package consulo.language.editor.template.context;
 
-import consulo.language.editor.template.context.EverywhereContextType;
-import consulo.language.editor.template.context.TemplateContextType;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;

@@ -16,6 +16,8 @@
 
 package consulo.language.editor.template;
 
+import consulo.language.editor.template.context.TemplateContext;
+
 import javax.annotation.Nonnull;
 import java.util.EnumMap;
 import java.util.Map;
@@ -128,6 +130,9 @@ public abstract class Template {
 
   @Nonnull
   public abstract Template copy();
+
+  @Nonnull
+  public abstract TemplateContext getTemplateContext();
 
   public boolean getValue(@Nonnull Property key) {
     Boolean result = myProperties.get(key);
