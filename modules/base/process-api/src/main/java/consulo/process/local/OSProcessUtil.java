@@ -17,6 +17,8 @@ package consulo.process.local;
 
 import consulo.logging.Logger;
 import consulo.process.ProcessInfo;
+import consulo.process.cmd.GeneralCommandLine;
+import consulo.process.internal.OSProcessHandler;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;
 
@@ -32,6 +34,14 @@ import java.util.Optional;
  */
 public class OSProcessUtil {
   private static final Logger LOG = Logger.getInstance(OSProcessUtil.class);
+
+  /**
+   * Registers a file to delete after the given command line finishes.
+   * In order to have an effect, the command line has to be executed with {@link #consulo.process.internal.OSProcessHandler(GeneralCommandLine)}.
+   */
+  public static void deleteFileOnTermination(@Nonnull GeneralCommandLine commandLine, @Nonnull File fileToDelete) {
+    OSProcessHandler.deleteFileOnTermination(commandLine, fileToDelete);
+  }
 
   @Deprecated
   public static int getCurrentProcessId() {
