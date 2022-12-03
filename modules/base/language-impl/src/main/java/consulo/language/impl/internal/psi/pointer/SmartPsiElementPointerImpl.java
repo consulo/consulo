@@ -28,7 +28,6 @@ import consulo.language.impl.psi.PsiAnchor;
 import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.impl.internal.psi.PsiDocumentManagerBase;
 import consulo.language.impl.internal.psi.PsiManagerEx;
-import consulo.language.impl.psi.pointer.Identikit;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.*;
 import consulo.language.psi.stub.IStubFileElementType;
@@ -205,7 +204,7 @@ class SmartPsiElementPointerImpl<E extends PsiElement> implements SmartPointerEx
     if (elementRange == null) {
       return new HardElementInfo(element);
     }
-    Identikit.ByType identikit = Identikit.fromPsi(element, LanguageUtil.getRootLanguage(element));
+    IdentikitImpl.ByTypeImpl identikit = IdentikitImpl.fromPsi(element, LanguageUtil.getRootLanguage(element));
     if (elementRange.isEmpty() && identikit.findPsiElement(containingFile, elementRange.getStartOffset(), elementRange.getEndOffset()) != element) {
       // PSI has empty range, no text, but complicated structure (e.g. PSI built on C-style macro expansions). It can't be reliably
       // restored by just one offset in a file, so hold it on a hard reference
@@ -228,7 +227,7 @@ class SmartPsiElementPointerImpl<E extends PsiElement> implements SmartPointerEx
       }
     }
 
-    Pair<Identikit.ByAnchor, PsiElement> pair = Identikit.withAnchor(element, LanguageUtil.getRootLanguage(containingFile));
+    Pair<IdentikitImpl.ByAnchor, PsiElement> pair = IdentikitImpl.withAnchor(element, LanguageUtil.getRootLanguage(containingFile));
     if (pair != null) {
       return new AnchorElementInfo(pair.second, containingFile, pair.first);
     }

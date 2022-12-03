@@ -21,7 +21,6 @@ import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import consulo.language.ast.IElementType;
 import consulo.language.impl.psi.PsiAnchor;
-import consulo.language.impl.psi.pointer.Identikit;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.stub.PsiFileWithStubSupport;
@@ -35,14 +34,14 @@ import javax.annotation.Nullable;
 class AnchorElementInfo extends SelfElementInfo {
   private volatile long myStubElementTypeAndId; // stubId in the lower 32 bits; stubElementTypeIndex in the high 32 bits packed together for atomicity
 
-  AnchorElementInfo(@Nonnull PsiElement anchor, @Nonnull PsiFile containingFile, @Nonnull Identikit.ByAnchor identikit) {
+  AnchorElementInfo(@Nonnull PsiElement anchor, @Nonnull PsiFile containingFile, @Nonnull IdentikitImpl.ByAnchor identikit) {
     super(ProperTextRange.create(anchor.getTextRange()), identikit, containingFile, false);
     myStubElementTypeAndId = pack(-1, null);
   }
 
   // will restore by stub index until file tree get loaded
   AnchorElementInfo(@Nonnull PsiElement anchor, @Nonnull PsiFileWithStubSupport containingFile, int stubId, @Nonnull IStubElementType stubElementType) {
-    super(null, Identikit.fromTypes(anchor.getClass(), stubElementType, LanguageUtil.getRootLanguage(containingFile)), containingFile, false);
+    super(null, IdentikitImpl.fromTypes(anchor.getClass(), stubElementType, LanguageUtil.getRootLanguage(containingFile)), containingFile, false);
     myStubElementTypeAndId = pack(stubId, stubElementType);
     assert !(anchor instanceof PsiFile) : "FileElementInfo must be used for file: " + anchor;
   }

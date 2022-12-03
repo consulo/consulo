@@ -12,7 +12,7 @@ import consulo.language.file.FileViewProvider;
 import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.impl.file.FreeThreadedFileViewProvider;
 import consulo.language.impl.internal.psi.WrappedElementAnchor;
-import consulo.language.impl.psi.pointer.Identikit;
+import consulo.language.impl.internal.psi.pointer.IdentikitImpl;
 import consulo.language.impl.internal.psi.pointer.SelfElementInfo;
 import consulo.language.psi.*;
 import consulo.language.psi.stub.PsiFileWithStubSupport;
@@ -104,7 +104,7 @@ public abstract class PsiAnchor {
       return wrapperOrHardReference(element);
     }
 
-    return new TreeRangeReference(file, textRange.getStartOffset(), textRange.getEndOffset(), Identikit.fromPsi(element, lang), virtualFile);
+    return new TreeRangeReference(file, textRange.getStartOffset(), textRange.getEndOffset(), IdentikitImpl.fromPsi(element, lang), virtualFile);
   }
 
   @Nonnull
@@ -161,11 +161,11 @@ public abstract class PsiAnchor {
   private static class TreeRangeReference extends PsiAnchor {
     private final VirtualFile myVirtualFile;
     private final Project myProject;
-    private final Identikit myInfo;
+    private final IdentikitImpl myInfo;
     private final int myStartOffset;
     private final int myEndOffset;
 
-    private TreeRangeReference(@Nonnull PsiFile file, int startOffset, int endOffset, @Nonnull Identikit info, @Nonnull VirtualFile virtualFile) {
+    private TreeRangeReference(@Nonnull PsiFile file, int startOffset, int endOffset, @Nonnull IdentikitImpl info, @Nonnull VirtualFile virtualFile) {
       myVirtualFile = virtualFile;
       myProject = file.getProject();
       myStartOffset = startOffset;

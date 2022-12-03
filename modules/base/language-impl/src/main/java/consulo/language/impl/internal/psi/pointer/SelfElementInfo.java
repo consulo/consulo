@@ -12,7 +12,6 @@ import consulo.document.util.TextRange;
 import consulo.document.util.UnfairTextRange;
 import consulo.language.Language;
 import consulo.language.impl.internal.psi.PsiDocumentManagerBase;
-import consulo.language.impl.psi.pointer.Identikit;
 import consulo.language.psi.*;
 import consulo.project.Project;
 import consulo.util.lang.Pair;
@@ -24,13 +23,13 @@ import java.util.List;
 
 public class SelfElementInfo extends SmartPointerElementInfo {
   private static final FileDocumentManager ourFileDocManager = FileDocumentManager.getInstance();
-  private volatile Identikit myIdentikit;
+  private volatile IdentikitImpl myIdentikit;
   private final VirtualFile myFile;
   private final boolean myForInjected;
   private int myStartOffset;
   private int myEndOffset;
 
-  SelfElementInfo(@Nullable ProperTextRange range, @Nonnull Identikit identikit, @Nonnull PsiFile containingFile, boolean forInjected) {
+  SelfElementInfo(@Nullable ProperTextRange range, @Nonnull IdentikitImpl identikit, @Nonnull PsiFile containingFile, boolean forInjected) {
     myForInjected = forInjected;
     myIdentikit = identikit;
 
@@ -43,13 +42,13 @@ public class SelfElementInfo extends SmartPointerElementInfo {
   }
 
   @Nullable
-  private Pair<Identikit.ByAnchor, PsiElement> findAnchor(@Nonnull PsiElement element) {
+  private Pair<IdentikitImpl.ByAnchor, PsiElement> findAnchor(@Nonnull PsiElement element) {
     Language language = myIdentikit.getFileLanguage();
     if (language == null) return null;
-    return Identikit.withAnchor(element, language);
+    return IdentikitImpl.withAnchor(element, language);
   }
 
-  private void switchTo(@Nonnull PsiElement element, @Nullable Pair<Identikit.ByAnchor, PsiElement> pair) {
+  private void switchTo(@Nonnull PsiElement element, @Nullable Pair<IdentikitImpl.ByAnchor, PsiElement> pair) {
     if (pair != null) {
       assert pair.first.hashCode() == myIdentikit.hashCode();
       myIdentikit = pair.first;
@@ -61,7 +60,7 @@ public class SelfElementInfo extends SmartPointerElementInfo {
   }
 
   boolean updateRangeToPsi(@Nonnull Segment pointerRange, PsiElement cachedElement) {
-    Pair<Identikit.ByAnchor, PsiElement> pair = findAnchor(cachedElement);
+    Pair<IdentikitImpl.ByAnchor, PsiElement> pair = findAnchor(cachedElement);
     TextRange range = (pair != null ? pair.second : cachedElement).getTextRange();
     if (range != null && range.intersects(pointerRange)) {
       switchTo(cachedElement, pair);

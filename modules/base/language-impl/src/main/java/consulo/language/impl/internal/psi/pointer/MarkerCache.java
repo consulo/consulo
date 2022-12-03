@@ -25,7 +25,6 @@ import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import consulo.document.util.UnfairTextRange;
 import consulo.language.Language;
-import consulo.language.impl.psi.pointer.Identikit;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.util.collection.ContainerUtil;
@@ -166,7 +165,7 @@ class MarkerCache {
 
   @Nullable
   static Segment getUpdatedRange(@Nonnull PsiFile containingFile, @Nonnull Segment segment, boolean isSegmentGreedy, @Nonnull FrozenDocument frozen, @Nonnull List<? extends DocumentEvent> events) {
-    SelfElementInfo info = new SelfElementInfo(ProperTextRange.create(segment), new Identikit() {
+    SelfElementInfo info = new SelfElementInfo(ProperTextRange.create(segment), new IdentikitImpl() {
       @Nullable
       @Override
       public PsiElement findPsiElement(@Nonnull PsiFile file, int startOffset, int endOffset) {

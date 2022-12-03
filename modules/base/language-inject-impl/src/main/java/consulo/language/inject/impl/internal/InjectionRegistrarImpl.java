@@ -36,7 +36,7 @@ import consulo.language.impl.internal.psi.PsiDocumentManagerBase;
 import consulo.language.impl.internal.psi.PsiManagerEx;
 import consulo.language.impl.internal.psi.diff.BlockSupportImpl;
 import consulo.language.impl.internal.psi.diff.DiffLog;
-import consulo.language.impl.psi.pointer.Identikit;
+import consulo.language.impl.internal.psi.pointer.IdentikitImpl;
 import consulo.language.impl.internal.psi.pointer.SelfElementInfo;
 import consulo.language.impl.internal.psi.pointer.SmartPointerManagerImpl;
 import consulo.language.impl.psi.PsiFileImpl;
@@ -775,7 +775,7 @@ class InjectionRegistrarImpl implements MultiHostRegistrar {
       endToLook = newInjectionHostRange.getEndOffset() - oldRootRange.getStartOffset();
     }
     try {
-      Identikit.ByType kit = Identikit.fromPsi(oldInjectionHost, hostPsiFile.getLanguage());
+      IdentikitImpl.ByTypeImpl kit = IdentikitImpl.fromPsi(oldInjectionHost, hostPsiFile.getLanguage());
       return (PsiLanguageInjectionHost)kit.findInside(toLookIn, startToLook, endToLook);
     }
     // JavaParserDefinition.create() throws this.

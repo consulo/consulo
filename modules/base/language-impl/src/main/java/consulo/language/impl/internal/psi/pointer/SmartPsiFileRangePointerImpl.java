@@ -16,7 +16,6 @@
 package consulo.language.impl.internal.psi.pointer;
 
 import consulo.language.Language;
-import consulo.language.impl.psi.pointer.Identikit;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.*;
 import consulo.project.Project;
@@ -40,7 +39,7 @@ class SmartPsiFileRangePointerImpl extends SmartPsiElementPointerImpl<PsiFile> i
       }
     }
     if (!forInjected && range.equals(containingFile.getTextRange())) return new FileElementInfo(containingFile);
-    return new SelfElementInfo(range, Identikit.fromTypes(PsiElement.class, null, Language.ANY), containingFile, forInjected);
+    return new SelfElementInfo(range, IdentikitImpl.fromTypes(PsiElement.class, null, Language.ANY), containingFile, forInjected);
   }
 
   @Override
