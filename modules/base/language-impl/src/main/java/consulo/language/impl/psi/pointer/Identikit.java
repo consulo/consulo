@@ -53,7 +53,7 @@ public abstract class Identikit {
   }
 
   @Nonnull
-  static ByType fromTypes(@Nonnull Class<? extends PsiElement> elementClass, @Nullable IElementType elementType, @Nonnull Language fileLanguage) {
+  public static ByType fromTypes(@Nonnull Class<? extends PsiElement> elementClass, @Nullable IElementType elementType, @Nonnull Language fileLanguage) {
     return ourPlainInterner.intern(new ByType(elementClass, elementType, fileLanguage));
   }
 
