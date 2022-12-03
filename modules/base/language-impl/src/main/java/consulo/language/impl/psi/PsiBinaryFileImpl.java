@@ -36,9 +36,9 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
   private final AbstractFileViewProvider myViewProvider;
   private volatile boolean myPossiblyInvalidated;
 
-  public PsiBinaryFileImpl(@Nonnull PsiManagerImpl manager, @Nonnull FileViewProvider viewProvider) {
+  public PsiBinaryFileImpl(@Nonnull PsiManager manager, @Nonnull FileViewProvider viewProvider) {
     myViewProvider = (AbstractFileViewProvider)viewProvider;
-    myManager = manager;
+    myManager = (PsiManagerImpl)manager;
   }
 
   @Override
