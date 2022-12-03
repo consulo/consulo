@@ -20,7 +20,6 @@ import consulo.application.progress.ProgressManager;
 import consulo.language.ast.*;
 import consulo.language.file.LanguageFileType;
 import consulo.language.psi.PsiFile;
-import consulo.language.psi.internal.PsiFileWithStubSupport;
 import consulo.logging.Logger;
 import consulo.util.collection.BooleanStack;
 import consulo.util.collection.Stack;

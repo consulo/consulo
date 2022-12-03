@@ -25,6 +25,7 @@ import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import consulo.document.util.UnfairTextRange;
 import consulo.language.Language;
+import consulo.language.impl.psi.pointer.Identikit;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.util.collection.ContainerUtil;

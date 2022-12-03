@@ -16,6 +16,7 @@
 package consulo.language.impl.internal.psi.pointer;
 
 import consulo.language.Language;
+import consulo.language.impl.psi.pointer.Identikit;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.*;
 import consulo.project.Project;

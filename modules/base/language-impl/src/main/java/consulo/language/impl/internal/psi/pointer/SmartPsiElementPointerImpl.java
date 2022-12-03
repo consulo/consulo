@@ -28,6 +28,7 @@ import consulo.language.impl.psi.PsiAnchor;
 import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.impl.internal.psi.PsiDocumentManagerBase;
 import consulo.language.impl.internal.psi.PsiManagerEx;
+import consulo.language.impl.psi.pointer.Identikit;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.*;
 import consulo.language.psi.stub.IStubFileElementType;

@@ -20,7 +20,6 @@
 package consulo.language.psi.stub;
 
 import consulo.language.psi.stub.internal.StubSpine;
-import consulo.language.psi.stub.internal.StubbedSpine;
 import consulo.util.collection.ContainerUtil;
 
 import javax.annotation.Nonnull;

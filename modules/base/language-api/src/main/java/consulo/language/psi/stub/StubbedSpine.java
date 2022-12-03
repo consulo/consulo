@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.psi.stub.internal;
+package consulo.language.psi.stub;
 
 import consulo.language.psi.PsiElement;
 import consulo.language.ast.IElementType;

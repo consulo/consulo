@@ -22,7 +22,6 @@ import consulo.language.ast.IElementType;
 import consulo.language.ast.IStrongWhitespaceHolderElementType;
 import consulo.language.ast.TokenSet;
 import consulo.language.impl.DebugUtil;
-import consulo.language.impl.internal.psi.RecursiveTreeElementWalkingVisitor;
 import consulo.language.lexer.Lexer;
 import consulo.language.psi.OuterLanguageElement;
 import consulo.language.psi.PsiComment;

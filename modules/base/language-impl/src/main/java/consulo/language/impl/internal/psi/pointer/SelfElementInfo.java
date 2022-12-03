@@ -12,6 +12,7 @@ import consulo.document.util.TextRange;
 import consulo.document.util.UnfairTextRange;
 import consulo.language.Language;
 import consulo.language.impl.internal.psi.PsiDocumentManagerBase;
+import consulo.language.impl.psi.pointer.Identikit;
 import consulo.language.psi.*;
 import consulo.project.Project;
 import consulo.util.lang.Pair;

@@ -23,6 +23,7 @@ import consulo.language.file.inject.DocumentWindow;
 import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.impl.file.FreeThreadedFileViewProvider;
 import consulo.language.impl.internal.psi.PsiDocumentManagerBase;
+import consulo.language.impl.psi.pointer.Identikit;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.*;
 import consulo.language.util.LanguageUtil;

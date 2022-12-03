@@ -20,7 +20,6 @@ import consulo.application.util.RecursionManager;
 import consulo.language.ast.*;
 import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.impl.internal.psi.AstSpine;
-import consulo.language.impl.internal.psi.RecursiveTreeElementWalkingVisitor;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiInvalidElementAccessException;
 import consulo.language.psi.PsiManager;

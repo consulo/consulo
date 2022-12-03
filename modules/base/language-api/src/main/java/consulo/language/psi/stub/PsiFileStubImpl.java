@@ -22,7 +22,6 @@ package consulo.language.psi.stub;
 import consulo.language.Language;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiFile;
-import consulo.language.psi.internal.PsiFileWithStubSupport;
 import consulo.logging.Logger;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.Pair;

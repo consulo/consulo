@@ -20,7 +20,6 @@ import consulo.language.ast.IElementType;
 import consulo.language.ast.TreeBackedLighterAST;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiFile;
-import consulo.language.psi.internal.PsiFileWithStubSupport;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
 import consulo.util.dataholder.Key;

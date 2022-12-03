@@ -29,7 +29,7 @@ import consulo.language.editor.refactoring.unwrap.UnwrapDescriptor;
 import consulo.language.editor.refactoring.unwrap.Unwrapper;
 import consulo.language.editor.util.LanguageEditorUtil;
 import consulo.language.impl.ast.TreeElement;
-import consulo.language.impl.internal.psi.RecursiveTreeElementWalkingVisitor;
+import consulo.language.impl.ast.RecursiveTreeElementWalkingVisitor;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;

@@ -15,6 +15,7 @@ module consulo.language.impl {
   exports consulo.language.impl.parser;
   exports consulo.language.impl.file;
   exports consulo.language.impl.psi;
+  exports consulo.language.impl.psi.pointer;
   exports consulo.language.impl.psi.stub;
   exports consulo.language.impl.psi.path;
   exports consulo.language.impl.psi.template;

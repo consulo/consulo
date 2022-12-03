@@ -17,13 +17,10 @@
 /*
  * @author max
  */
-package consulo.language.psi.internal;
+package consulo.language.psi.stub;
 
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.psi.stub.IStubFileElementType;
-import consulo.language.psi.stub.StubTree;
-import consulo.language.psi.stub.internal.StubbedSpine;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -32,7 +29,7 @@ import javax.annotation.Nullable;
  * A base interface for PSI files that may contain not only text-based syntactic trees as their content,
  * but also a more lightweight representation called stubs.
  *
- * @see consulo.ide.impl.idea.extapi.psi.StubBasedPsiElementBase
+ * @see consulo.language.impl.psi.stub.StubBasedPsiElementBase
  */
 public interface PsiFileWithStubSupport extends PsiFile {
   /**

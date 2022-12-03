@@ -22,7 +22,6 @@ import consulo.application.util.PerApplicationInstance;
 import consulo.language.Language;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiFile;
-import consulo.language.psi.internal.PsiFileWithStubSupport;
 import consulo.project.Project;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;

@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package consulo.language.impl.internal.psi;
+package consulo.language.impl.ast;
 
 import consulo.language.ast.ASTNode;
-import consulo.language.impl.ast.*;
 import consulo.language.psi.PsiRecursiveVisitor;
 import consulo.util.collection.util.WalkingState;
 

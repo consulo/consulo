@@ -19,6 +19,7 @@ import consulo.language.ast.IElementType;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.stub.StubElement;
 import consulo.language.psi.stub.StubTree;
+import consulo.language.psi.stub.StubbedSpine;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

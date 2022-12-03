@@ -39,7 +39,7 @@ import consulo.language.impl.psi.CheckUtil;
 import consulo.language.impl.psi.SourceTreeToPsiMap;
 import consulo.ide.impl.psi.impl.source.codeStyle.lineIndent.FormatterBasedIndentAdjuster;
 import consulo.language.impl.ast.FileElement;
-import consulo.language.impl.internal.psi.RecursiveTreeElementWalkingVisitor;
+import consulo.language.impl.ast.RecursiveTreeElementWalkingVisitor;
 import consulo.language.impl.ast.TreeElement;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.util.CharTable;

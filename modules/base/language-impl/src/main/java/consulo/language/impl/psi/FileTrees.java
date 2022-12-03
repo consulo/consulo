@@ -29,7 +29,7 @@ import consulo.language.psi.stub.PsiFileStubImpl;
 import consulo.language.psi.stub.StubBase;
 import consulo.language.psi.stub.StubElement;
 import consulo.language.psi.stub.StubTree;
-import consulo.language.psi.stub.internal.StubbedSpine;
+import consulo.language.psi.stub.StubbedSpine;
 import consulo.logging.Logger;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ref.SoftReference;

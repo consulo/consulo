@@ -16,6 +16,7 @@
 
 package consulo.language.impl.internal.psi;
 
+import consulo.language.impl.ast.RecursiveTreeElementWalkingVisitor;
 import consulo.language.impl.ast.TreeElement;
 import consulo.language.impl.psi.CodeEditUtil;
 

@@ -32,7 +32,7 @@ import consulo.language.impl.internal.psi.PsiManagerEx;
 import consulo.language.impl.internal.psi.stub.FileContentImpl;
 import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.psi.*;
-import consulo.language.psi.internal.PsiFileWithStubSupport;
+import consulo.language.psi.stub.PsiFileWithStubSupport;
 import consulo.language.psi.stub.*;
 import consulo.logging.Logger;
 import consulo.logging.attachment.Attachment;
