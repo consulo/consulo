@@ -15,24 +15,16 @@
  */
 package consulo.language.editor.impl.internal.daemon;
 
-import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.util.function.CommonProcessors;
-import consulo.application.util.function.Processor;
-import consulo.codeEditor.DocumentMarkupModel;
-import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.document.Document;
 import consulo.language.editor.DaemonCodeAnalyzer;
-import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.rawHighlight.HighlightInfo;
-import consulo.language.editor.rawHighlight.SeverityRegistrar;
 import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
 public abstract class DaemonCodeAnalyzerEx extends DaemonCodeAnalyzer {
@@ -40,64 +32,6 @@ public abstract class DaemonCodeAnalyzerEx extends DaemonCodeAnalyzer {
 
   public static DaemonCodeAnalyzerEx getInstanceEx(Project project) {
     return (DaemonCodeAnalyzerEx)DaemonCodeAnalyzer.getInstance(project);
-  }
-
-  /**
-   * @param document
-   * @param project
-   * @param minSeverity null means all
-   * @param startOffset
-   * @param endOffset
-   * @param processor
-   * @return
-   */
-  public static boolean processHighlights(@Nonnull Document document,
-                                          @Nonnull Project project,
-                                          @Nullable final HighlightSeverity minSeverity,
-                                          final int startOffset,
-                                          final int endOffset,
-                                          @Nonnull final Processor<HighlightInfo> processor) {
-    LOG.assertTrue(ApplicationManager.getApplication().isReadAccessAllowed());
-
-    final SeverityRegistrar severityRegistrar = SeverityRegistrar.getSeverityRegistrar(project);
-    MarkupModelEx model = DocumentMarkupModel.forDocument(document, project, true);
-    return model.processRangeHighlightersOverlappingWith(startOffset, endOffset, marker -> {
-      Object tt = marker.getErrorStripeTooltip();
-      if (!(tt instanceof HighlightInfo)) return true;
-      HighlightInfo info = (HighlightInfo)tt;
-      return minSeverity != null && severityRegistrar.compare(info.getSeverity(), minSeverity) < 0 || info.getHighlighter() == null || processor.process(info);
-    });
-  }
-
-  /**
-   * @param document
-   * @param project
-   * @param minSeverity null means all
-   * @param startOffset
-   * @param endOffset
-   * @param processor
-   * @return
-   */
-  public static boolean processHighlightsOverlappingOutside(@Nonnull Document document,
-                                                            @Nonnull Project project,
-                                                            @Nullable final HighlightSeverity minSeverity,
-                                                            final int startOffset,
-                                                            final int endOffset,
-                                                            @Nonnull final Processor<HighlightInfo> processor) {
-    LOG.assertTrue(ApplicationManager.getApplication().isReadAccessAllowed());
-
-    final SeverityRegistrar severityRegistrar = SeverityRegistrar.getSeverityRegistrar(project);
-    MarkupModelEx model = DocumentMarkupModel.forDocument(document, project, true);
-    return model.processRangeHighlightersOutside(startOffset, endOffset, marker -> {
-      Object tt = marker.getErrorStripeTooltip();
-      if (!(tt instanceof HighlightInfo)) return true;
-      HighlightInfo info = (HighlightInfo)tt;
-      return minSeverity != null && severityRegistrar.compare(info.getSeverity(), minSeverity) < 0 || info.getHighlighter() == null || processor.process(info);
-    });
-  }
-
-  public static boolean hasErrors(@Nonnull Project project, @Nonnull Document document) {
-    return !processHighlights(document, project, HighlightSeverity.ERROR, 0, document.getTextLength(), CommonProcessors.<HighlightInfo>alwaysFalse());
   }
 
   @Nonnull

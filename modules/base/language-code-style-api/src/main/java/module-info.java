@@ -22,10 +22,11 @@ module consulo.language.code.style.api {
   exports consulo.language.codeStyle.arrangement.model;
   exports consulo.language.codeStyle.arrangement.match;
   exports consulo.language.codeStyle.fileSet;
-  exports consulo.language.codeStyle.internal;
   exports consulo.language.codeStyle.setting;
   exports consulo.language.codeStyle.template;
   exports consulo.language.codeStyle.inject;
+
+  exports consulo.language.codeStyle.internal to consulo.ide.impl;
 
   opens consulo.language.codeStyle to consulo.util.xml.serializer;
 }

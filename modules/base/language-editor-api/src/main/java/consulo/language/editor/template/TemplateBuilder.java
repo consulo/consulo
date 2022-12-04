@@ -96,6 +96,18 @@ public interface TemplateBuilder {
    */
   void run(@Nonnull Editor editor, boolean inline);
 
+  /**
+   * Adds end variable after the specified element
+   */
+  void setEndVariableAfter(PsiElement element);
+
+  void setEndVariableBefore(PsiElement element);
+
+  void replaceElement(PsiElement element, String varName, Expression expression, boolean alwaysStopAt, boolean skipOnStart);
+
   @Nonnull
   Template buildInlineTemplate();
+
+  @Nonnull
+  Template buildTemplate();
 }

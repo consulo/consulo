@@ -2,9 +2,9 @@
 
 package consulo.language.editor.impl.internal.completion;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.document.Document;
-import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.language.Language;
 import consulo.language.editor.completion.CompletionInitializationContext;
 import consulo.language.editor.completion.CompletionParameters;
@@ -14,9 +14,7 @@ import consulo.language.editor.completion.lookup.InsertionContext;
 import consulo.language.editor.completion.lookup.Lookup;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.TailType;
-import consulo.language.pattern.CharPattern;
 import consulo.language.pattern.ElementPattern;
-import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.filter.TrueFilter;
@@ -38,12 +36,8 @@ public class CompletionUtil {
       registerVariant(variant);
     }
   };
-  public static final
-  @NonNls
-  String DUMMY_IDENTIFIER = CompletionInitializationContext.DUMMY_IDENTIFIER;
-  public static final
-  @NonNls
-  String DUMMY_IDENTIFIER_TRIMMED = DUMMY_IDENTIFIER.trim();
+  public static final String DUMMY_IDENTIFIER = CompletionInitializationContext.DUMMY_IDENTIFIER;
+  public static final String DUMMY_IDENTIFIER_TRIMMED = DUMMY_IDENTIFIER.trim();
 
   @Nullable
   public static CompletionData getCompletionDataByElement(@Nullable final PsiElement position, @Nonnull PsiFile originalFile) {
@@ -70,71 +64,47 @@ public class CompletionUtil {
   }
 
   public static boolean shouldShowFeature(CompletionParameters parameters, @NonNls final String id) {
-    return shouldShowFeature(parameters.getPosition().getProject(), id);
+    return CompletionUtilCore.shouldShowFeature(parameters, id);
   }
 
   public static boolean shouldShowFeature(Project project, @NonNls String id) {
-    if (FeatureUsageTracker.getInstance().isToBeAdvertisedInLookup(id, project)) {
-      FeatureUsageTracker.getInstance().triggerFeatureShown(id);
-      return true;
-    }
-    return false;
+    return CompletionUtilCore.shouldShowFeature(project, id);
   }
 
   public static String findJavaIdentifierPrefix(CompletionParameters parameters) {
-    return findJavaIdentifierPrefix(parameters.getPosition(), parameters.getOffset());
+    return CompletionUtilCore.findJavaIdentifierPrefix(parameters);
   }
 
   public static String findJavaIdentifierPrefix(final PsiElement insertedElement, final int offset) {
-    return findIdentifierPrefix(insertedElement, offset, CharPattern.javaIdentifierPartCharacter(), CharPattern.javaIdentifierStartCharacter());
+    return CompletionUtilCore.findJavaIdentifierPrefix(insertedElement, offset);
   }
 
   public static String findReferenceOrAlphanumericPrefix(CompletionParameters parameters) {
-    String prefix = findReferencePrefix(parameters);
-    return prefix == null ? findAlphanumericPrefix(parameters) : prefix;
+    return CompletionUtilCore.findReferenceOrAlphanumericPrefix(parameters);
   }
 
   public static String findAlphanumericPrefix(CompletionParameters parameters) {
-    return findIdentifierPrefix(parameters.getPosition().getContainingFile(), parameters.getOffset(), CharPattern.letterOrDigitCharacter(), CharPattern.letterOrDigitCharacter());
+    return CompletionUtilCore.findAlphanumericPrefix(parameters);
   }
 
   public static String findIdentifierPrefix(PsiElement insertedElement, int offset, ElementPattern<Character> idPart, ElementPattern<Character> idStart) {
-    if (insertedElement == null) return "";
-    int startOffset = insertedElement.getTextRange().getStartOffset();
-    return findInText(offset, startOffset, idPart, idStart, insertedElement.getNode().getChars());
+    return CompletionUtilCore.findIdentifierPrefix(insertedElement, offset, idPart, idStart);
   }
 
   @SuppressWarnings("unused") // used in Rider
   public static String findIdentifierPrefix(@Nonnull Document document, int offset, ElementPattern<Character> idPart, ElementPattern<Character> idStart) {
-    final String text = document.getText();
-    return findInText(offset, 0, idPart, idStart, text);
-  }
-
-  @Nonnull
-  private static String findInText(int offset, int startOffset, ElementPattern<Character> idPart, ElementPattern<Character> idStart, CharSequence text) {
-    final int offsetInElement = offset - startOffset;
-    int start = offsetInElement - 1;
-    while (start >= 0) {
-      if (!idPart.accepts(text.charAt(start))) break;
-      --start;
-    }
-    while (start + 1 < offsetInElement && !idStart.accepts(text.charAt(start + 1))) {
-      start++;
-    }
-
-    return text.subSequence(start + 1, offsetInElement).toString().trim();
+    return CompletionUtilCore.findIdentifierPrefix(document, offset, idPart, idStart);
   }
 
   @Nullable
+  @RequiredReadAction
   public static String findReferencePrefix(CompletionParameters parameters) {
-    return CompletionData.getReferencePrefix(parameters.getPosition(), parameters.getOffset());
+    return CompletionUtilCore.findReferencePrefix(parameters);
   }
 
 
   public static InsertionContext emulateInsertion(InsertionContext oldContext, int newStart, final LookupElement item) {
-    final InsertionContext newContext = newContext(oldContext, item);
-    emulateInsertion(item, newStart, newContext);
-    return newContext;
+    return CompletionUtilCore.emulateInsertion(oldContext, newStart, item);
   }
 
   private static InsertionContext newContext(InsertionContext oldContext, LookupElement forElement) {
@@ -144,31 +114,11 @@ public class CompletionUtil {
   }
 
   public static InsertionContext newContext(InsertionContext oldContext, LookupElement forElement, int startOffset, int tailOffset) {
-    final InsertionContext context = newContext(oldContext, forElement);
-    setOffsets(context, startOffset, tailOffset);
-    return context;
+    return CompletionUtilCore.newContext(oldContext, forElement, startOffset, tailOffset);
   }
 
   public static void emulateInsertion(LookupElement item, int offset, InsertionContext context) {
-    setOffsets(context, offset, offset);
-
-    final Editor editor = context.getEditor();
-    final Document document = editor.getDocument();
-    final String lookupString = item.getLookupString();
-
-    document.insertString(offset, lookupString);
-    editor.getCaretModel().moveToOffset(context.getTailOffset());
-    PsiDocumentManager.getInstance(context.getProject()).commitDocument(document);
-    item.handleInsert(context);
-    PsiDocumentManager.getInstance(context.getProject()).doPostponedOperationsAndUnblockDocument(document);
-  }
-
-  private static void setOffsets(InsertionContext context, int offset, final int tailOffset) {
-    final OffsetMap offsetMap = context.getOffsetMap();
-    offsetMap.addOffset(CompletionInitializationContext.START_OFFSET, offset);
-    offsetMap.addOffset(CompletionInitializationContext.IDENTIFIER_END_OFFSET, tailOffset);
-    offsetMap.addOffset(CompletionInitializationContext.SELECTION_END_OFFSET, tailOffset);
-    context.setTailOffset(tailOffset);
+    CompletionUtilCore.emulateInsertion(item, offset, context);
   }
 
   @Nullable
@@ -183,8 +133,7 @@ public class CompletionUtil {
 
   @Nonnull
   public static <T extends PsiElement> T getOriginalOrSelf(@Nonnull T psi) {
-    final T element = getOriginalElement(psi);
-    return element == null ? psi : element;
+    return CompletionUtilCore.getOriginalOrSelf(psi);
   }
 
   public static Iterable<String> iterateLookupStrings(@Nonnull final LookupElement element) {
