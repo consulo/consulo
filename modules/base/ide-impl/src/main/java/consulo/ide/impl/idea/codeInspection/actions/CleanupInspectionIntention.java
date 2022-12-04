@@ -20,7 +20,7 @@ import consulo.language.editor.FileModificationService;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.intention.BatchQuickFix;
 import consulo.language.editor.intention.SyntheticIntentionAction;
-import consulo.language.editor.internal.intention.EmptyIntentionAction;
+import consulo.language.editor.intention.EmptyIntentionAction;
 import consulo.language.editor.intention.HighPriorityAction;
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.scheme.InspectionManager;

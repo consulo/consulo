@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.codeInsight.intention.impl;
 
 import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.ShowIntentionsPass;
-import consulo.language.editor.internal.intention.EmptyIntentionAction;
+import consulo.language.editor.intention.EmptyIntentionAction;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.awt.ClickListener;
 import consulo.ide.impl.idea.ui.EditorNotificationPanel;

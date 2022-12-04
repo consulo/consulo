@@ -60,7 +60,7 @@ import consulo.language.editor.inspection.scheme.*;
 import consulo.language.editor.intention.HintAction;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.intention.QuickFixAction;
-import consulo.language.editor.internal.intention.EmptyIntentionAction;
+import consulo.language.editor.intention.EmptyIntentionAction;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.editor.rawHighlight.HighlightInfoType;

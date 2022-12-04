@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-package consulo.language.editor.internal.intention;
+package consulo.language.editor.intention;
 
 import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.application.AllIcons;
 import consulo.codeEditor.Editor;
-import consulo.language.editor.intention.AbstractEmptyIntentionAction;
-import consulo.language.editor.intention.LowPriorityAction;
 import consulo.project.Project;
 import consulo.component.util.Iconable;
 import consulo.language.psi.PsiFile;
