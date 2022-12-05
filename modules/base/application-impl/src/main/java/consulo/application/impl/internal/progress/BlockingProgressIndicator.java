@@ -15,7 +15,7 @@
  */
 package consulo.application.impl.internal.progress;
 
-import consulo.application.progress.ProgressIndicatorEx;
+import consulo.application.internal.ProgressIndicatorEx;
 import consulo.application.progress.ProgressManager;
 
 import javax.annotation.Nonnull;

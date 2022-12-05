@@ -36,7 +36,7 @@ import consulo.project.Project;
 import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.AppIconScheme;
-import consulo.application.progress.ProgressIndicatorEx;
+import consulo.application.internal.ProgressIndicatorEx;
 import consulo.navigation.Navigatable;
 import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
 import consulo.ui.ex.AppIcon;

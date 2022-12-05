@@ -16,7 +16,8 @@
 package consulo.application.impl.internal.progress;
 
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.ProgressIndicatorEx;
+import consulo.application.internal.ProgressIndicatorEx;
+import consulo.application.progress.ProgressIndicatorListener;
 import consulo.application.progress.TaskInfo;
 import consulo.localize.LocalizeValue;
 import consulo.util.collection.ArrayUtil;
@@ -152,6 +153,35 @@ public class AbstractProgressIndicatorExBase extends AbstractProgressIndicatorBa
     super.setIndeterminate(indeterminate);
 
     delegateProgressChange(each -> each.setIndeterminate(indeterminate));
+  }
+
+  @Override
+  public void addListener(@Nonnull ProgressIndicatorListener listener) {
+    addStateDelegate(new AbstractProgressIndicatorExBase() {
+      @Override
+      public void cancel() {
+        super.cancel();
+        listener.canceled();
+      }
+
+      @Override
+      public void finish(@Nonnull TaskInfo task) {
+        super.finish(task);
+        listener.finished();
+      }
+
+      @Override
+      public void stop() {
+        super.stop();
+        listener.stopped();
+      }
+
+      @Override
+      public void setFraction(double fraction) {
+        super.setFraction(fraction);
+        listener.onFractionChange(fraction);
+      }
+    });
   }
 
   @Override

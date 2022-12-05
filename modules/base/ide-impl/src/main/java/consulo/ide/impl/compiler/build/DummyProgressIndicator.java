@@ -19,7 +19,7 @@ import consulo.application.impl.internal.IdeaModalityState;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.TaskInfo;
-import consulo.application.progress.ProgressIndicatorEx;
+import consulo.application.internal.ProgressIndicatorEx;
 import consulo.localize.LocalizeValue;
 
 import javax.annotation.Nonnull;

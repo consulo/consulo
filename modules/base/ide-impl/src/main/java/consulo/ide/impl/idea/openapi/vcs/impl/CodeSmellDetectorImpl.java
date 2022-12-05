@@ -20,7 +20,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.progress.AbstractProgressIndicatorExBase;
 import consulo.language.editor.impl.internal.daemon.DaemonProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.ProgressIndicatorEx;
+import consulo.application.internal.ProgressIndicatorEx;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.component.ProcessCanceledException;

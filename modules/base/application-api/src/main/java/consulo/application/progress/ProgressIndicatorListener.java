@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.progress.util;
+package consulo.application.progress;
+
+import java.util.EventListener;
 
 /**
- * @author lex
+ * @author VISTALL
+ * @since 05/12/2022
  */
-public class ProgressIndicatorListenerAdapter implements ProgressIndicatorListener {
-  /**
-   * should return whether to stop processing
-   */
-  public void cancelled() {
+public interface ProgressIndicatorListener extends EventListener {
+  default void onFractionChange(final double fraction) {
   }
 
-  /**
-   * should return whether to stop processing
-   */
-  public void stopped() {
+  default void finished() {
+  }
+
+  default void stopped() {
+  }
+
+  default void canceled() {
   }
 }

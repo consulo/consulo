@@ -16,10 +16,9 @@
 package consulo.project.ui.internal;
 
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.ProgressIndicatorEx;
 import consulo.application.progress.TaskInfo;
-import consulo.project.ui.wm.StatusBar;
 import consulo.disposer.Disposable;
+import consulo.project.ui.wm.StatusBar;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 
@@ -38,7 +37,7 @@ public interface StatusBarEx extends StatusBar, Disposable {
 
   void stopRefreshIndication();
 
-  void addProgress(@Nonnull ProgressIndicatorEx indicator, @Nonnull TaskInfo info);
+  void addProgress(@Nonnull ProgressIndicator indicator, @Nonnull TaskInfo info);
 
   List<Pair<TaskInfo, ProgressIndicator>> getBackgroundProcesses();
 

@@ -13,11 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.application.progress;
+package consulo.application.internal;
+
+import consulo.annotation.DeprecationInfo;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.TaskInfo;
 
 import javax.annotation.Nonnull;
 
 public interface ProgressIndicatorEx extends ProgressIndicator {
+  @Deprecated
+  @DeprecationInfo("Prefer #addListener(ProgressIndicatorListener)")
   void addStateDelegate(@Nonnull ProgressIndicatorEx delegate);
 
   void finish(@Nonnull TaskInfo task);

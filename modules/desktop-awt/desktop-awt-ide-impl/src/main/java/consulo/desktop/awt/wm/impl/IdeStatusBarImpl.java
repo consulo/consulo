@@ -34,7 +34,7 @@ import consulo.util.lang.Couple;
 import consulo.util.lang.Pair;
 import consulo.application.util.SystemInfo;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.application.progress.ProgressIndicatorEx;
+import consulo.application.internal.ProgressIndicatorEx;
 import consulo.project.ui.internal.StatusBarEx;
 import consulo.ide.impl.idea.openapi.wm.impl.status.InfoAndProgressPanel;
 import consulo.ide.impl.idea.openapi.wm.impl.status.MemoryUsagePanel;
@@ -398,7 +398,7 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx, IdeEven
   }
 
   @Override
-  public void addProgress(@Nonnull ProgressIndicatorEx indicator, @Nonnull TaskInfo info) {
+  public void addProgress(@Nonnull ProgressIndicator indicator, @Nonnull TaskInfo info) {
     myInfoAndProgressPanel.addProgress(indicator, info);
   }
 

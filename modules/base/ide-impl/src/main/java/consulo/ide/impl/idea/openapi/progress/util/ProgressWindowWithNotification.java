@@ -39,21 +39,4 @@ public class ProgressWindowWithNotification extends ProgressWindow {
   public ProgressWindowWithNotification(boolean shouldShowCancel, boolean shouldShowBackground, Project project, JComponent parentComponent, String cancelText) {
     super(shouldShowCancel, shouldShowBackground, project, parentComponent, cancelText);
   }
-
-  public void addListener(final ProgressIndicatorListener listener) {
-    addStateDelegate(new AbstractProgressIndicatorExBase(){
-      @Override
-      public void cancel() {
-        super.cancel();
-        listener.cancelled();
-      }
-
-      @Override
-      public void stop() {
-        super.stop();
-        listener.stopped();
-      }
-    });
-  }
-
 }

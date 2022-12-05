@@ -9,6 +9,7 @@ import consulo.application.impl.internal.progress.AbstractProgressIndicatorExBas
 import consulo.application.impl.internal.progress.CoreProgressManager;
 import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import consulo.application.internal.ApplicationEx;
+import consulo.application.internal.ProgressIndicatorEx;
 import consulo.application.progress.*;
 import consulo.application.util.concurrent.ThreadDumper;
 import consulo.application.util.registry.Registry;

@@ -21,12 +21,12 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.progress.CoreProgressManager;
 import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicatorListener;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.progress.ProgressManager;
-import consulo.ide.impl.idea.openapi.progress.util.ProgressIndicatorListenerAdapter;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
-import consulo.application.progress.ProgressIndicatorEx;
+import consulo.application.internal.ProgressIndicatorEx;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.component.messagebus.Topic;
 import javax.annotation.Nonnull;
@@ -61,12 +61,12 @@ public class ProgressSuspender implements AutoCloseable {
 
     attachToProgress(progress);
 
-    new ProgressIndicatorListenerAdapter() {
+    progress.addListener(new ProgressIndicatorListener() {
       @Override
-      public void cancelled() {
+      public void canceled() {
         resumeProcess();
       }
-    }.installToProgress(progress);
+    });
 
     myPublisher.suspendableProgressAppeared(this);
   }

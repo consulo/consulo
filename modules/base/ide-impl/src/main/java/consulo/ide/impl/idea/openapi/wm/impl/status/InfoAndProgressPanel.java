@@ -7,7 +7,7 @@ import consulo.application.PowerSaveMode;
 import consulo.application.PowerSaveModeListener;
 import consulo.application.impl.internal.progress.AbstractProgressIndicatorExBase;
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.ProgressIndicatorEx;
+import consulo.application.internal.ProgressIndicatorEx;
 import consulo.application.progress.TaskInfo;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
@@ -242,15 +242,15 @@ public class InfoAndProgressPanel extends JPanel implements CustomStatusBarWidge
     }
   }
 
-  public void addProgress(@Nonnull ProgressIndicatorEx original, @Nonnull TaskInfo info) {
+  public void addProgress(@Nonnull ProgressIndicator original, @Nonnull TaskInfo info) {
     synchronized (myOriginals) {
       final boolean veryFirst = !hasProgressIndicators();
 
-      myOriginals.add(original);
+      myOriginals.add((ProgressIndicatorEx)original);
       myInfos.add(info);
 
-      MyInlineProgressIndicator expanded = createInlineDelegate(info, original, false);
-      MyInlineProgressIndicator compact = createInlineDelegate(info, original, true);
+      MyInlineProgressIndicator expanded = createInlineDelegate(info, (ProgressIndicatorEx)original, false);
+      MyInlineProgressIndicator compact = createInlineDelegate(info, (ProgressIndicatorEx)original, true);
 
       myPopup.addIndicator(expanded);
       updateProgressIcon();

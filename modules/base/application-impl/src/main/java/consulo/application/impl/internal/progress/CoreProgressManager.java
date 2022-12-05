@@ -6,6 +6,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.impl.internal.JobScheduler;
 import consulo.application.internal.ApplicationEx;
+import consulo.application.internal.ProgressIndicatorEx;
 import consulo.application.progress.*;
 import consulo.application.util.ApplicationUtil;
 import consulo.application.util.ClientId;

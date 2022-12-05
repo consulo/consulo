@@ -24,7 +24,7 @@ import consulo.application.impl.internal.progress.AbstractProgressIndicatorBase;
 import consulo.application.impl.internal.progress.BlockingProgressIndicator;
 import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import consulo.application.internal.ApplicationWithIntentWriteLock;
-import consulo.application.progress.ProgressIndicatorEx;
+import consulo.application.internal.ProgressIndicatorEx;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.TaskInfo;
 import consulo.application.ui.wm.IdeFocusManager;

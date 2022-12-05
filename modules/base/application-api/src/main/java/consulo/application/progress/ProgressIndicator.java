@@ -233,4 +233,7 @@ public interface ProgressIndicator {
   boolean isPopupWasShown();
 
   boolean isShowing();
+
+  default void addListener(@Nonnull ProgressIndicatorListener listener) {
+  }
 }

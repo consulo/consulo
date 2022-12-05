@@ -3,7 +3,7 @@
 package consulo.ide.impl.compiler.build;
 
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.ProgressIndicatorEx;
+import consulo.application.internal.ProgressIndicatorEx;
 import consulo.build.ui.*;
 import consulo.build.ui.event.MessageEvent;
 import consulo.build.ui.issue.BuildIssue;

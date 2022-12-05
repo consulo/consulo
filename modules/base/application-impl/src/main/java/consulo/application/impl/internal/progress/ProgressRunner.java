@@ -6,6 +6,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityStateEx;
 import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.internal.ApplicationWithIntentWriteLock;
+import consulo.application.internal.ProgressIndicatorEx;
 import consulo.application.progress.*;
 import consulo.application.util.ClientId;
 import consulo.application.util.Semaphore;

@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.find.impl;
 import consulo.find.FindModel;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.application.progress.ProgressIndicatorEx;
+import consulo.application.internal.ProgressIndicatorEx;
 import consulo.usage.FindUsagesProcessPresentation;
 import consulo.usage.UsageInfo2UsageAdapter;
 import consulo.usage.UsageInfoAdapter;

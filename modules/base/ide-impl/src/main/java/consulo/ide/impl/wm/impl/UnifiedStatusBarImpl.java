@@ -17,7 +17,7 @@ package consulo.ide.impl.wm.impl;
 
 import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.ProgressIndicatorEx;
+import consulo.application.internal.ProgressIndicatorEx;
 import consulo.application.progress.TaskInfo;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -353,7 +353,7 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
   }
 
   @Override
-  public void addProgress(@Nonnull ProgressIndicatorEx indicator, @Nonnull TaskInfo info) {
+  public void addProgress(@Nonnull ProgressIndicator indicator, @Nonnull TaskInfo info) {
 
   }
 
