@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.ex.awt.internal;
+package consulo.ui.ex.awt.popup;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.ui.ex.popup.IPopupChooserBuilder;
 
 import javax.annotation.Nonnull;
@@ -23,6 +24,8 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 21-Jul-22
  */
+@Deprecated
+@DeprecationInfo("Do not depend to Swing classes")
 public interface AWTPopupChooserBuilder<T> extends IPopupChooserBuilder<T> {
   AWTPopupChooserBuilder<T> setItemChoosenCallback(@Nonnull Runnable runnable);
 }

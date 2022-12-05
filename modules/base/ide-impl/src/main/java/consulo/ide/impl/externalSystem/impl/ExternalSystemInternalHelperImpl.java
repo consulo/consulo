@@ -23,7 +23,7 @@ import consulo.externalSystem.model.task.ExternalSystemTask;
 import consulo.ide.impl.idea.openapi.externalSystem.service.internal.ExternalSystemExecuteTaskTask;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.project.Project;
-import consulo.ui.ex.awt.internal.AWTPopupChooserBuilder;
+import consulo.ui.ex.awt.popup.AWTPopupChooserBuilder;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;

@@ -21,7 +21,7 @@ import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.execution.ExternalTaskPojo;
 import consulo.externalSystem.model.task.ExternalSystemTask;
 import consulo.project.Project;
-import consulo.ui.ex.awt.internal.AWTPopupChooserBuilder;
+import consulo.ui.ex.awt.popup.AWTPopupChooserBuilder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

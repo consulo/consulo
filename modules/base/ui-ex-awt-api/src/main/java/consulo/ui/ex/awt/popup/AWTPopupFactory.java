@@ -16,7 +16,6 @@
 package consulo.ui.ex.awt.popup;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.ui.ex.awt.internal.AWTPopupChooserBuilder;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

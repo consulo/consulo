@@ -12,7 +12,7 @@ import consulo.ide.ui.popup.HintUpdateSupply;
 import consulo.ui.ex.ActiveComponent;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
-import consulo.ui.ex.awt.internal.AWTPopupChooserBuilder;
+import consulo.ui.ex.awt.popup.AWTPopupChooserBuilder;
 import consulo.ui.ex.popup.*;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.util.collection.Lists;
