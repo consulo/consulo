@@ -21,11 +21,15 @@ import java.util.concurrent.Callable;
  * @author VISTALL
  * @since 2020-05-24
  */
-class RunnableAsCallable implements Callable<Void> {
+public class RunnableAsCallable implements Callable<Void> {
   private final Runnable myRunnable;
 
   RunnableAsCallable(Runnable runnable) {
     myRunnable = runnable;
+  }
+
+  public Runnable getRunnable() {
+    return myRunnable;
   }
 
   @Override

@@ -207,7 +207,7 @@ public class AsyncPromise<T> implements CancellablePromise<T>, InternalPromiseUt
       return false;
     }
 
-    if (!hasErrorHandler.get()) {
+    if (shouldLogErrors()) {
       Promises.errorIfNotMessage(LOG, error);
     }
     return true;
@@ -215,5 +215,9 @@ public class AsyncPromise<T> implements CancellablePromise<T>, InternalPromiseUt
 
   public void setError(@Nonnull String error) {
     setError(Promises.createError(error));
+  }
+
+  protected boolean shouldLogErrors() {
+    return !hasErrorHandler.get();
   }
 }

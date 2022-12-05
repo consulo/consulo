@@ -1,10 +1,10 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.application;
 
-import consulo.component.ComponentManager;
-import consulo.disposer.Disposable;
-import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
+import consulo.component.ComponentManager;
+import consulo.component.ProcessCanceledException;
+import consulo.disposer.Disposable;
 import consulo.ui.ModalityState;
 import consulo.util.concurrent.CancellablePromise;
 import consulo.util.dataholder.Key;
@@ -51,16 +51,19 @@ public interface NonBlockingReadAction<T> {
   NonBlockingReadAction<T> expireWhen(@Nonnull BooleanSupplier expireCondition);
 
   /**
-   * @return a copy of this builder that cancels submitted read actions once the specified progress indicator is cancelled.
-   */
-  @Contract(pure = true)
-  NonBlockingReadAction<T> cancelWith(@Nonnull ProgressIndicator progressIndicator);
-
-  /**
    * @return a copy of this builder that cancels submitted read actions once the specified disposable is disposed.
    */
   @Contract(pure = true)
   NonBlockingReadAction<T> expireWith(@Nonnull Disposable parentDisposable);
+
+  /**
+   * @return a copy of this builder that synchronizes the specified progress indicator with the inner one created by {@link NonBlockingReadAction}.
+   * This means that submitted read actions are cancelled once the outer indicator is cancelled,
+   * and the visual changes (e.g. {@link ProgressIndicator#setText}) are propagated from the inner to the outer indicator.
+   */
+  @Contract(pure = true)
+  @Nonnull
+  NonBlockingReadAction<T> wrapProgress(@Nonnull ProgressIndicator progressIndicator);
 
   /**
    * @return a copy of this builder that completes submitted read actions on UI thread with the given modality state.
@@ -68,7 +71,7 @@ public interface NonBlockingReadAction<T> {
    * are invoked on UI thread, and no write action is allowed to interfere before that and possibly invalidate the result.
    */
   @Contract(pure = true)
-  NonBlockingReadAction<T> finishOnUiThread(@Nonnull ModalityState modality, @Nonnull Consumer<T> uiThreadAction);
+  NonBlockingReadAction<T> finishOnUiThread(@Nonnull ModalityState modality, @Nonnull Consumer<? super T> uiThreadAction);
 
   /**
    * Merges together similar computations by cancelling the previous ones when a new one is submitted.
@@ -93,4 +96,26 @@ public interface NonBlockingReadAction<T> {
    *                                 {@link consulo.ide.impl.idea.util.concurrency.BoundedTaskExecutor} on top of that.
    */
   CancellablePromise<T> submit(@Nonnull Executor backgroundThreadExecutor);
+
+  /**
+   * Run this computation on the current thread in a non-blocking read action, when possible.
+   * Note: this method can throw various exceptions (see "Throws" section)
+   * and can block the current thread for an indefinite amount of time with just waiting,
+   * which can lead to thread starvation or unnecessary thread pool expansion.
+   * Besides that, after a read action is finished, a write action in another thread can occur at any time and make the
+   * just computed value obsolete.
+   * Therefore, it's advised to use asynchronous {@link #submit} API where possible,
+   * preferably coupled with {@link #finishOnUiThread} to ensure result validity.<p></p>
+   * <p>
+   * If the current thread already has read access, the computation is executed as is, without any write-action-cancellability.
+   * It's the responsibility of the caller to take care about it.<p></p>
+   * <p>
+   * {@link #finishOnUiThread} and {@link #coalesceBy} are not supported with synchronous non-blocking read actions.
+   *
+   * @return the result of the computation
+   * @throws ProcessCanceledException if the computation got expired due to {@link #expireWhen} or {@link #expireWith} or {@link #wrapProgress}.
+   * @throws IllegalStateException    if current thread already has read access and the constraints (e.g. {@link #inSmartMode} are not satisfied)
+   * @throws RuntimeException         when the computation throws an exception. If it's a checked one, it's wrapped into a {@link RuntimeException}.
+   */
+  T executeSynchronously() throws ProcessCanceledException;
 }

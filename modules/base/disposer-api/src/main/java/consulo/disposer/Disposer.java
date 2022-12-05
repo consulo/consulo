@@ -68,6 +68,10 @@ public class Disposer {
     return ourInternal.findRegisteredObject(parentDisposable, object);
   }
 
+  public static boolean tryRegister(@Nonnull Disposable parent, @Nonnull Disposable child) {
+    return ourInternal.tryRegister(parent, child);
+  }
+
   public static boolean isDebugMode() {
     return ourInternal.isDebugMode();
   }

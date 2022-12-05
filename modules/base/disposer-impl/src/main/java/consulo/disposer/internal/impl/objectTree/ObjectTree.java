@@ -8,6 +8,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Maps;
 import consulo.util.lang.ControlFlowException;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -253,4 +254,19 @@ public final class ObjectTree {
     }
   }
 
+  public boolean tryRegister(@Nonnull Disposable parent, @Nonnull Disposable child) {
+    synchronized (treeLock) {
+      if (isDisposed(parent)) {
+        return false;
+      }
+      register(parent, child);
+      return true;
+    }
+  }
+
+  public boolean isDisposed(@Nonnull Disposable object) {
+    synchronized (treeLock) {
+      return myDisposedObjects.get(object) != null;
+    }
+  }
 }

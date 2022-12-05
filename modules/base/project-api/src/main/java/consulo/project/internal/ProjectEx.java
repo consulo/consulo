@@ -15,6 +15,7 @@
  */
 package consulo.project.internal;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.project.Project;
 
 import javax.annotation.Nonnull;
@@ -25,4 +26,10 @@ public interface ProjectEx extends Project {
   void setOptimiseTestLoadSpeed(boolean optimiseTestLoadSpeed);
 
   void setProjectName(@Nonnull String name);
+
+  @Deprecated
+  @DeprecationInfo("Migration code from IDEA, always false")
+  default boolean isLight() {
+    return false;
+  }
 }

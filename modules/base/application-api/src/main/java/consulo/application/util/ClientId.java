@@ -39,6 +39,10 @@ public class ClientId {
     return func;
   }
 
+  public static Runnable decorateRunnable(Runnable action) {
+    return action;
+  }
+
   public static <T> T decorateBiConsumer(T b) {
     return b;
   }

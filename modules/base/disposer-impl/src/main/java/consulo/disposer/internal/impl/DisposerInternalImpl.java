@@ -83,7 +83,7 @@ public class DisposerInternalImpl extends DisposerInternal {
 
   @Override
   public boolean isDisposed(@Nonnull Disposable disposable) {
-    return myTree.getDisposalInfo(disposable) != null;
+    return myTree.isDisposed(disposable);
   }
 
   @Override
@@ -162,5 +162,10 @@ public class DisposerInternalImpl extends DisposerInternal {
   @Override
   public <T> DisposableList<T> createList() {
     return new DisposableWrapperList<>();
+  }
+
+  @Override
+  public boolean tryRegister(@Nonnull Disposable parent, @Nonnull Disposable child) {
+    return myTree.tryRegister(parent, child);
   }
 }

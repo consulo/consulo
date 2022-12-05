@@ -180,7 +180,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   }
 
   @Override
-  public boolean isModulesReady() {
+  public boolean  isModulesReady() {
     ModuleManagerImpl moduleManager = ModuleManagerImpl.getInstanceImpl(this);
     return moduleManager.isReady();
   }

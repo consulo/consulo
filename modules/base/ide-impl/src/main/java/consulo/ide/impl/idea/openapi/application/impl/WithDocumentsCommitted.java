@@ -15,19 +15,19 @@
  */
 package consulo.ide.impl.idea.openapi.application.impl;
 
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.constraint.ConstrainedExecution;
-import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;
+import consulo.project.Project;
+import consulo.ui.ModalityState;
 
 /**
  * from kotlin
  */
 public class WithDocumentsCommitted implements ConstrainedExecution.ContextConstraint {
   private final Project myProject;
-  private final IdeaModalityState myModalityState;
+  private final ModalityState myModalityState;
 
-  public WithDocumentsCommitted(Project project, IdeaModalityState modalityState) {
+  public WithDocumentsCommitted(Project project, ModalityState modalityState) {
     myProject = project;
     myModalityState = modalityState;
   }

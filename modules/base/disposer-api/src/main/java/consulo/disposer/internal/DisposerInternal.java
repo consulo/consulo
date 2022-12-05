@@ -15,14 +15,12 @@
  */
 package consulo.disposer.internal;
 
-import consulo.annotation.ReviewAfterMigrationToJRE;
 import consulo.disposer.Disposable;
 import consulo.disposer.TraceableDisposable;
 import consulo.disposer.util.DisposableList;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Iterator;
 import java.util.ServiceLoader;
 
 /**
@@ -57,6 +55,8 @@ public abstract class DisposerInternal {
 
   @Nonnull
   public abstract <T> DisposableList<T> createList();
+
+  public abstract boolean tryRegister(@Nonnull Disposable parent, @Nonnull Disposable child);
 
   @Nonnull
   private static <T> T loadSingleOrError(@Nonnull Class<T> clazz) {

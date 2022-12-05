@@ -7,9 +7,10 @@ import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.BooleanSupplier;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -120,31 +121,39 @@ public abstract class BaseConstrainedExecution<E extends ConstrainedExecution<E>
 
   @Override
   public void scheduleWithinConstraints(Runnable runnable, @Nullable BooleanSupplier condition) {
-    doScheduleWithinConstraints(reschedulingAttempt -> runnable.run(), condition, ReschedulingAttempt.NULL);
+    scheduleWithinConstraints(runnable, condition, constraints);
   }
 
-  protected void doScheduleWithinConstraints(Consumer<ReschedulingAttempt> task, ReschedulingAttempt previousAttempt) {
-    doScheduleWithinConstraints(task, null, previousAttempt);
-  }
+  public static void scheduleWithinConstraints(@Nonnull Runnable runnable, @Nullable BooleanSupplier condition, ContextConstraint[] constraints) {
+    List<ContextConstraint> attemptChain = new ArrayList<>();
 
-  protected void doScheduleWithinConstraints(Consumer<ReschedulingAttempt> task, BooleanSupplier condition, ReschedulingAttempt previousAttempt) {
-    if (condition != null && !condition.getAsBoolean()) {
-      return;
-    }
+    Runnable inner = new Runnable() {
+      @Override
+      public void run() {
+        if (attemptChain.size() > 3000) {
+          List<ContextConstraint> lastCauses = attemptChain.subList(attemptChain.size() - 15, attemptChain.size());
+          LOG.error("Too many reschedule requests, probably constraints can't be satisfied all together" + lastCauses.toString());
+        }
 
-    for (ContextConstraint constraint : constraints) {
-      if (!constraint.isCorrectContext()) {
-        constraint.schedule(new RunnableReschedulingAttempt(constraint, previousAttempt) {
-          @Override
-          public void run() {
-            LOG.assertTrue(constraint.isCorrectContext());
-            doScheduleWithinConstraints(task, condition, this);
+        if (condition != null && !condition.getAsBoolean()) {
+          return;
+        }
+        for (ContextConstraint constraint : constraints) {
+          if (!constraint.isCorrectContext()) {
+            constraint.schedule(() -> {
+              if (!constraint.isCorrectContext()) {
+                LOG.error("ContextConstraint scheduled into incorrect context:" + Arrays.toString(constraints));
+              }
+              attemptChain.add(constraint);
+              run();
+            });
+            return;
           }
-        });
-        return;
+        }
+        runnable.run();
       }
-    }
+    };
 
-    task.accept(previousAttempt);
+    inner.run();
   }
 }
