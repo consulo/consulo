@@ -6,6 +6,7 @@ package consulo.process.local;
 import consulo.logging.Logger;
 import consulo.process.CommandLineUtil;
 import consulo.process.ProcessHandler;
+import consulo.process.ProcessHandlerFeature;
 import consulo.process.TaskExecutor;
 import consulo.util.lang.StringUtil;
 

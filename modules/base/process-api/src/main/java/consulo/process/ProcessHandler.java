@@ -33,7 +33,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class ProcessHandler extends UserDataHolderBase {
@@ -61,6 +63,8 @@ public abstract class ProcessHandler extends UserDataHolderBase {
 
   @Nullable
   private volatile Integer myExitCode = null;
+
+  private Map<Class, ProcessHandlerFeature> myFeatures;
 
   protected ProcessHandler() {
     myEventMulticaster = createEventMulticaster();
@@ -227,6 +231,25 @@ public abstract class ProcessHandler extends UserDataHolderBase {
 
   public boolean isSilentlyDestroyOnClose() {
     return false;
+  }
+
+  protected <F extends ProcessHandlerFeature> void registerFeature(@Nonnull Class<F> featureClass, F feature) {
+    Map<Class, ProcessHandlerFeature> features = myFeatures;
+    if (features == null) {
+      features = myFeatures = new HashMap<>();
+    }
+
+    features.put(featureClass, feature);
+  }
+
+  @Nullable
+  @SuppressWarnings("unchecked")
+  public <F extends ProcessHandlerFeature> F getFeature(@Nonnull Class<F> featureClass) {
+    Map<Class, ProcessHandlerFeature> features = myFeatures;
+    if (features == null) {
+      return null;
+    }
+    return (F)features.get(featureClass);
   }
 
   private ProcessListener createEventMulticaster() {

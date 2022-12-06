@@ -2,6 +2,8 @@
 package consulo.process.internal;
 
 import consulo.logging.Logger;
+import consulo.platform.Platform;
+import consulo.process.ProcessHandlerFeature;
 import consulo.process.ProcessOutputTypes;
 import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
@@ -23,6 +25,19 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class BaseOSProcessHandler extends BaseProcessHandler<Process> {
+  private static class POSIXImpl implements ProcessHandlerFeature.POSIX {
+    private final Process process;
+
+    private POSIXImpl(Process process) {
+      this.process = process;
+    }
+
+    @Override
+    public void sendSignal(int signal) {
+      UnixProcessManager.sendSignal((int)process.pid(), signal);
+    }
+  }
+
   private static final Logger LOG = Logger.getInstance(BaseOSProcessHandler.class);
   private final AtomicLong mySleepStart = new AtomicLong(System.currentTimeMillis());
   private final Throwable myProcessStart;
@@ -33,6 +48,10 @@ public class BaseOSProcessHandler extends BaseProcessHandler<Process> {
   public BaseOSProcessHandler(@Nonnull Process process, /*@NotNull*/ String commandLine, @Nullable Charset charset) {
     super(process, commandLine, charset);
     myProcessStart = new Throwable("Process creation:");
+
+    if (Platform.current().os().isUnix()) {
+      registerFeature(ProcessHandlerFeature.POSIX.class, new POSIXImpl(process));
+    }
   }
 
   /**
