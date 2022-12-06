@@ -32,7 +32,7 @@ import consulo.document.util.TextRange;
 import consulo.execution.ConsoleFolding;
 import consulo.execution.ExecutionBundle;
 import consulo.execution.ExecutionDataKeys;
-import consulo.execution.internal.ConsoleBuffer;
+import consulo.execution.util.ConsoleBuffer;
 import consulo.execution.ui.console.*;
 import consulo.execution.ui.console.Filter.ResultItem;
 import consulo.ide.impl.idea.codeInsight.navigation.IncrementalSearchHandler;

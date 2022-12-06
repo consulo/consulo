@@ -37,6 +37,7 @@ public class UnixProcessManager {
   private static final Logger LOG = Logger.getInstance(UnixProcessManager.class);
 
   public static final int SIGINT = 2;
+  public static final int SIGQUIT = 3;
   public static final int SIGKILL = 9;
   public static final int SIGTERM = 15;
 

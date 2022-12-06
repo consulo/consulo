@@ -79,6 +79,14 @@ public abstract class ProcessHandler extends UserDataHolderBase {
     }
   }
 
+  /**
+   * @return process handler id
+   */
+  public long getId() {
+    // -1 mean not implemented, and not required
+    return -1;
+  }
+
   protected abstract void destroyProcessImpl();
 
   protected abstract void detachProcessImpl();

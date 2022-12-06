@@ -3,7 +3,7 @@ package consulo.execution.test.sm.runner;
 
 import consulo.component.util.BuildNumber;
 import consulo.disposer.Disposer;
-import consulo.execution.internal.ConsoleBuffer;
+import consulo.execution.util.ConsoleBuffer;
 import consulo.execution.test.TestConsoleProperties;
 import consulo.execution.test.sm.runner.event.*;
 import consulo.logging.Logger;

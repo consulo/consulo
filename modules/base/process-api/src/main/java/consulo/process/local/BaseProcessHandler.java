@@ -38,6 +38,11 @@ public abstract class BaseProcessHandler<T extends Process> extends ProcessHandl
     myWaitFor = new ProcessWaitFor(process, this, myPresentableName);
   }
 
+  @Override
+  public long getId() {
+    return myProcess.pid();
+  }
+
   @Nonnull
   public final T getProcess() {
     return myProcess;

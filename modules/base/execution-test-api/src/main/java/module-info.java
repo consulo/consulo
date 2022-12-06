@@ -16,6 +16,7 @@ module consulo.execution.test.api {
   requires transitive consulo.local.history.api;
 
   exports consulo.execution.test;
+  exports consulo.execution.test.autotest;
   exports consulo.execution.test.action;
   exports consulo.execution.test.stacktrace;
   exports consulo.execution.test.export;

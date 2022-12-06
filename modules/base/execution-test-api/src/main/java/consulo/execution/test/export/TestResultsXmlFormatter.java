@@ -21,7 +21,7 @@ import consulo.execution.DefaultExecutionTarget;
 import consulo.execution.ExecutionBundle;
 import consulo.execution.ExecutionTarget;
 import consulo.execution.configuration.RunConfiguration;
-import consulo.execution.internal.ConsoleBuffer;
+import consulo.execution.util.ConsoleBuffer;
 import consulo.execution.test.*;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.execution.ui.console.HyperlinkInfo;
