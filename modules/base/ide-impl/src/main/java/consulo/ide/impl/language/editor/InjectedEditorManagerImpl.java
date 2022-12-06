@@ -16,6 +16,7 @@
 package consulo.ide.impl.language.editor;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.language.editor.inject.InjectedEditorManager;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
@@ -45,5 +46,20 @@ public class InjectedEditorManagerImpl implements InjectedEditorManager {
   @Override
   public Editor openEditorFor(@Nonnull PsiFile file) {
     return InjectedLanguageUtil.openEditorFor(file, myProject);
+  }
+
+  @Override
+  public Editor getEditorForInjectedLanguageNoCommit(@Nullable Editor editor, @Nullable PsiFile file, int offset) {
+    return InjectedLanguageUtil.getEditorForInjectedLanguageNoCommit(editor, file, offset);
+  }
+
+  @Override
+  public Editor getEditorForInjectedLanguageNoCommit(@Nullable Editor editor, @Nullable Caret caret, @Nullable PsiFile file) {
+    return InjectedLanguageUtil.getEditorForInjectedLanguageNoCommit(editor, caret, file);
+  }
+
+  @Override
+  public Editor getEditorForInjectedLanguageNoCommit(@Nullable Editor editor, @Nullable PsiFile file) {
+    return InjectedLanguageUtil.getEditorForInjectedLanguageNoCommit(editor, file);
   }
 }

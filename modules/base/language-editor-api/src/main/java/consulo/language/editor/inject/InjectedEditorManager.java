@@ -17,9 +17,11 @@ package consulo.language.editor.inject;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
+import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -36,4 +38,21 @@ public interface InjectedEditorManager {
 
   @Nullable
   Editor openEditorFor(@Nonnull PsiFile file);
+
+  /**
+   * Invocation of this method on uncommitted {@code file} can lead to unexpected results, including throwing an exception!
+   */
+  @Contract("null,_,_->null;!null,_,_->!null")
+  Editor getEditorForInjectedLanguageNoCommit(@Nullable Editor editor, @Nullable PsiFile file, final int offset);
+
+  /**
+   * Invocation of this method on uncommitted {@code file} can lead to unexpected results, including throwing an exception!
+   */
+  Editor getEditorForInjectedLanguageNoCommit(@Nullable Editor editor, @Nullable Caret caret, @Nullable PsiFile file);
+
+  /**
+   * Invocation of this method on uncommitted {@code file} can lead to unexpected results, including throwing an exception!
+   */
+  @Contract("null,_->null;!null,_->!null")
+  Editor getEditorForInjectedLanguageNoCommit(@Nullable Editor editor, @Nullable PsiFile file);
 }
