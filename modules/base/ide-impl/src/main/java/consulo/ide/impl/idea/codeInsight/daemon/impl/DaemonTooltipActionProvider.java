@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.codeInsight.daemon.impl;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.tooltips.TooltipActionProvider;
 import consulo.language.editor.intention.AbstractEmptyIntentionAction;
-import consulo.language.editor.internal.intention.IntentionActionDelegate;
+import consulo.language.editor.intention.IntentionActionDelegate;
 import consulo.ide.impl.idea.codeInsight.intention.impl.CachedIntentions;
 import consulo.ide.impl.idea.codeInsight.intention.impl.IntentionActionWithTextCaching;
 import consulo.language.editor.impl.internal.hint.TooltipAction;

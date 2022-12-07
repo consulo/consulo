@@ -21,7 +21,7 @@ import consulo.language.editor.highlight.SyntaxHighlighterProvider;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.AbstractFileType;
-import consulo.language.internal.custom.CustomSyntaxTableFileType;
+import consulo.language.custom.CustomSyntaxTableFileType;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.ide.highlighter.custom.CustomFileHighlighter;

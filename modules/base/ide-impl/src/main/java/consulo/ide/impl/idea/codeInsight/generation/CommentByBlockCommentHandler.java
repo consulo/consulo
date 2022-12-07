@@ -29,7 +29,7 @@ import consulo.language.internal.custom.CustomFileTypeLexer;
 import consulo.language.editor.CustomUncommenter;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.AbstractFileType;
-import consulo.language.internal.custom.CustomSyntaxTableFileType;
+import consulo.language.custom.CustomSyntaxTableFileType;
 import consulo.ide.impl.idea.ui.LightweightHint;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.internal.custom.CustomHighlighterTokenType;

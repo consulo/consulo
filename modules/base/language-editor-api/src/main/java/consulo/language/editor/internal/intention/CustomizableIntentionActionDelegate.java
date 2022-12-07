@@ -3,6 +3,7 @@ package consulo.language.editor.internal.intention;
 
 import consulo.language.editor.intention.CustomizableIntentionAction;
 import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.intention.IntentionActionDelegate;
 
 /**
  * Intention action delegate that proxies CustomizableIntentionAction interface

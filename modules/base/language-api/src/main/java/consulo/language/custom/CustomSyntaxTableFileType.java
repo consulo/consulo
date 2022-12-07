@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2017 JetBrains s.r.o.
+ * Copyright 2000-2012 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.editor.internal.intention;
+package consulo.language.custom;
 
-import consulo.language.editor.intention.IntentionAction;
+import consulo.language.internal.custom.SyntaxTable;
+import consulo.virtualFileSystem.fileType.FileType;
 
-import javax.annotation.Nonnull;
-
-public interface IntentionActionDelegate {
-  @Nonnull
-  IntentionAction getDelegate();
-
-  @Nonnull
-  static IntentionAction unwrap(@Nonnull IntentionAction action) {
-    return action instanceof IntentionActionDelegate ? unwrap(((IntentionActionDelegate)action).getDelegate()) : action;
-  }
+/**
+ * Author: dmitrylomov
+ */
+public interface CustomSyntaxTableFileType extends FileType {
+  SyntaxTable getSyntaxTable();
 }

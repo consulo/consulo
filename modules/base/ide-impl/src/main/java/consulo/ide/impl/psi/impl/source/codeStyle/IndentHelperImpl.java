@@ -20,7 +20,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.language.codeStyle.CodeStyle;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.ast.ASTNode;
-import consulo.language.impl.internal.psi.IndentHelper;
+import consulo.language.impl.psi.IndentHelper;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -53,8 +53,9 @@ public final class IndentHelperImpl extends IndentHelper {
   /**
    * @deprecated Use {@link #fillIndent(CommonCodeStyleSettings.IndentOptions, int)} instead.
    */
+  @Override
   @Deprecated
-  public static String fillIndent(Project project, FileType fileType, int indent) {
+  public String fillIndent(Project project, FileType fileType, int indent) {
     return fillIndent(CodeStyle.getProjectOrDefaultSettings(project).getIndentOptions(fileType), indent);
   }
 

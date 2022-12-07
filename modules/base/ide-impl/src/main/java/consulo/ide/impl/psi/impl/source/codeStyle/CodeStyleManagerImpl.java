@@ -15,7 +15,7 @@ import consulo.language.codeStyle.*;
 import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
 import consulo.language.file.inject.DocumentWindow;
 import consulo.language.impl.file.MultiplePsiFilesPerDocumentFileViewProvider;
-import consulo.language.impl.internal.psi.IndentHelper;
+import consulo.language.impl.psi.IndentHelper;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
@@ -612,7 +612,7 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
         }
       }
     }
-    return IndentHelperImpl.fillIndent(myProject, fileType, indentLevel * IndentHelperImpl.INDENT_FACTOR + spaceCount);
+    return IndentHelper.getInstance().fillIndent(myProject, fileType, indentLevel * IndentHelperImpl.INDENT_FACTOR + spaceCount);
   }
 
   public IndentOld zeroIndent() {

@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.impl.internal.psi;
+package consulo.language.impl.psi;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
@@ -28,6 +29,8 @@ import javax.annotation.Nonnull;
 /**
  * @author yole
  */
+@Deprecated
+@DeprecationInfo("Prefer CodeStyle api")
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class IndentHelper {
   public static IndentHelper getInstance() {
@@ -57,4 +60,7 @@ public abstract class IndentHelper {
   public abstract int getIndent(@Nonnull PsiFile file, @Nonnull ASTNode element);
 
   public abstract int getIndent(@Nonnull PsiFile file, @Nonnull ASTNode element, boolean includeNonSpace);
+
+  @Deprecated
+  public abstract String fillIndent(Project project, FileType fileType, int indent);
 }

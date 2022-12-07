@@ -21,6 +21,7 @@ import consulo.document.util.TextRange;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.codeStyle.Block;
 import consulo.language.codeStyle.FormattingDocumentModel;
+import consulo.language.codeStyle.IndentInfo;
 
 import javax.annotation.Nullable;
 

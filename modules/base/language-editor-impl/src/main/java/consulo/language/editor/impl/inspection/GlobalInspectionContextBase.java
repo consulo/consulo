@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.language.editor.impl.internal.inspection;
+package consulo.language.editor.impl.inspection;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
@@ -27,7 +27,7 @@ import consulo.content.scope.NamedScope;
 import consulo.language.editor.impl.inspection.reference.RefElementImpl;
 import consulo.language.editor.impl.inspection.reference.RefManagerImpl;
 import consulo.language.editor.impl.internal.daemon.DaemonProgressIndicator;
-import consulo.language.editor.impl.internal.inspection.scheme.GlobalInspectionToolWrapper;
+import consulo.language.editor.impl.inspection.scheme.GlobalInspectionToolWrapper;
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
 import consulo.language.editor.impl.internal.inspection.scheme.ToolsImpl;
 import consulo.language.editor.inspection.*;

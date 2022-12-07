@@ -24,7 +24,6 @@ import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 import consulo.language.impl.DebugUtil;
-import consulo.language.impl.internal.ast.AstBufferUtil;
 import consulo.language.impl.file.FreeThreadedFileViewProvider;
 import consulo.language.impl.internal.pom.TreeChangeEventImpl;
 import consulo.language.impl.psi.*;

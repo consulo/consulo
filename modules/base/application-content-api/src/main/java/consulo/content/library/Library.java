@@ -74,6 +74,10 @@ public interface Library extends JDOMExternalizable, Disposable {
   @Nonnull
   List<String> getInvalidRootUrls(OrderRootType type);
 
+  default boolean isDisposed() {
+    return false;
+  }
+
   interface ModifiableModel extends Disposable {
     @Nonnull
     String[] getUrls(@Nonnull OrderRootType rootType);

@@ -16,6 +16,7 @@
 
 package consulo.language.codeStyle.internal;
 
+import consulo.language.codeStyle.IndentInfo;
 import consulo.util.xml.serializer.InvalidDataException;
 
 import javax.annotation.Nonnegative;

@@ -19,6 +19,7 @@ package consulo.language.codeStyle.internal;
 import consulo.document.util.TextRange;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.codeStyle.FormattingDocumentModel;
+import consulo.language.codeStyle.IndentInfo;
 import consulo.language.codeStyle.IndentInside;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

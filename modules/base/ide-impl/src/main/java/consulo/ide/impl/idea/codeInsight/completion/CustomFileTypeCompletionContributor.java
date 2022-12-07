@@ -20,7 +20,7 @@ import consulo.language.Language;
 import consulo.language.editor.completion.lookup.LookupElementBuilder;
 import consulo.language.internal.custom.SyntaxTable;
 import consulo.codeEditor.EditorEx;
-import consulo.language.internal.custom.CustomSyntaxTableFileType;
+import consulo.language.custom.CustomSyntaxTableFileType;
 import consulo.language.internal.custom.CustomHighlighterTokenType;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.dumb.DumbAware;

@@ -13,16 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.impl.internal.ast;
+package consulo.language.impl.ast;
 
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.language.ast.ASTNode;
-import consulo.language.impl.ast.CompositeElement;
-import consulo.language.impl.ast.LazyParseableElement;
-import consulo.language.impl.ast.LeafElement;
-import consulo.language.impl.ast.TreeElement;
 import consulo.language.impl.psi.ForeignLeafPsiElement;
-import consulo.language.impl.ast.RecursiveTreeElementWalkingVisitor;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiWhiteSpace;
@@ -34,7 +29,7 @@ import javax.annotation.Nullable;
 /**
  * @author max
  */
-public class AstBufferUtil {
+public final class AstBufferUtil {
   private AstBufferUtil() { }
 
   public static int toBuffer(@Nonnull ASTNode element, @Nullable char[] buffer, int offset) {

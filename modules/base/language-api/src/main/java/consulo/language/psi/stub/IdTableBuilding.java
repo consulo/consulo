@@ -24,7 +24,7 @@ import consulo.language.file.LanguageFileType;
 import consulo.language.findUsage.FindUsagesProvider;
 import consulo.language.internal.custom.CustomFileTypeLexer;
 import consulo.language.internal.custom.CustomHighlighterTokenType;
-import consulo.language.internal.custom.CustomSyntaxTableFileType;
+import consulo.language.custom.CustomSyntaxTableFileType;
 import consulo.language.psi.search.UsageSearchContext;
 import consulo.util.lang.CharArrayUtil;
 import consulo.virtualFileSystem.fileType.FileType;

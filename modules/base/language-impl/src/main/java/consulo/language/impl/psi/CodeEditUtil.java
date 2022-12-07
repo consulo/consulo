@@ -22,7 +22,6 @@ import consulo.language.ast.TokenSeparatorGenerator;
 import consulo.language.ast.TokenType;
 import consulo.language.impl.ast.*;
 import consulo.language.impl.internal.psi.GeneratedMarkerVisitor;
-import consulo.language.impl.internal.psi.IndentHelper;
 import consulo.language.psi.*;
 import consulo.language.util.CommentUtilCore;
 import consulo.util.dataholder.Key;

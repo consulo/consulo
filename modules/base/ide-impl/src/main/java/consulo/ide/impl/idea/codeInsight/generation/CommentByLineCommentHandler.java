@@ -33,7 +33,7 @@ import consulo.language.internal.custom.SyntaxTable;
 import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.AbstractFileType;
-import consulo.language.internal.custom.CustomSyntaxTableFileType;
+import consulo.language.custom.CustomSyntaxTableFileType;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;

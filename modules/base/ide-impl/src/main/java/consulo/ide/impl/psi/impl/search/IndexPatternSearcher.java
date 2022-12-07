@@ -5,7 +5,7 @@ package consulo.ide.impl.psi.impl.search;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.function.Processor;
 import consulo.document.util.TextRange;
-import consulo.language.internal.custom.CustomSyntaxTableFileType;
+import consulo.language.custom.CustomSyntaxTableFileType;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.internal.custom.CustomHighlighterTokenType;

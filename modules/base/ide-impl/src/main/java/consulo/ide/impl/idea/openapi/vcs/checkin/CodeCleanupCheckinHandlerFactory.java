@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.checkin;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.scope.AnalysisScope;
-import consulo.language.editor.impl.internal.inspection.GlobalInspectionContextBase;
+import consulo.language.editor.impl.inspection.GlobalInspectionContextBase;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.versionControlSystem.checkin.CheckinHandlerFactory;

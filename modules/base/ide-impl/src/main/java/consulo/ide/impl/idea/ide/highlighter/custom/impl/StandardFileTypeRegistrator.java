@@ -23,7 +23,7 @@ import consulo.ide.impl.idea.openapi.fileTypes.impl.AbstractFileType;
 import consulo.language.Commenter;
 import consulo.language.Language;
 import consulo.language.editor.internal.BraceMatcherInternal;
-import consulo.language.internal.custom.CustomSyntaxTableFileType;
+import consulo.language.custom.CustomSyntaxTableFileType;
 import consulo.language.internal.custom.SyntaxTable;
 import consulo.language.plain.PlainTextLanguage;
 import consulo.virtualFileSystem.fileType.FileType;

@@ -12,6 +12,7 @@ module consulo.language.api {
 
   exports consulo.language;
   exports consulo.language.ast;
+  exports consulo.language.custom;
   exports consulo.language.content;
   exports consulo.language.cacheBuilder;
   exports consulo.language.findUsage;

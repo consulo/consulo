@@ -11,7 +11,7 @@ import consulo.ide.impl.idea.codeInsight.daemon.impl.ShowIntentionsPass;
 import consulo.language.editor.hint.HintManager;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.language.editor.intention.IntentionAction;
-import consulo.language.editor.internal.intention.IntentionActionDelegate;
+import consulo.language.editor.intention.IntentionActionDelegate;
 import consulo.language.editor.intention.PsiElementBaseIntentionAction;
 import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupManager;

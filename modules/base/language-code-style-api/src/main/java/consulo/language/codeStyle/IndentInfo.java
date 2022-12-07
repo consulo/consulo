@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package consulo.language.codeStyle.internal;
+package consulo.language.codeStyle;
 
-import consulo.language.codeStyle.CommonCodeStyleSettings;
+import consulo.language.codeStyle.internal.WhiteSpace;
 import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 
-public class IndentInfo {
+public final class IndentInfo {
 
   private final int mySpaces;
   private final int myIndentSpaces;

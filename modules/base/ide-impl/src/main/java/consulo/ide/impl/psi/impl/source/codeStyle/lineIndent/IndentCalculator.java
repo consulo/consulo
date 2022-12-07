@@ -18,7 +18,7 @@ package consulo.ide.impl.psi.impl.source.codeStyle.lineIndent;
 import consulo.language.codeStyle.CodeStyle;
 import consulo.language.codeStyle.Indent;
 import consulo.language.codeStyle.internal.IndentImpl;
-import consulo.language.codeStyle.internal.IndentInfo;
+import consulo.language.codeStyle.IndentInfo;
 import consulo.language.Language;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;

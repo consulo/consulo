@@ -20,7 +20,7 @@ import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.annotation.ProblemGroup;
 import consulo.language.editor.annotation.SuppressableProblemGroup;
 import consulo.language.editor.impl.internal.inspection.AnnotatorBasedInspection;
-import consulo.language.editor.impl.internal.inspection.scheme.GlobalInspectionToolWrapper;
+import consulo.language.editor.impl.inspection.scheme.GlobalInspectionToolWrapper;
 import consulo.language.editor.inspection.CustomSuppressableInspectionTool;
 import consulo.language.editor.inspection.ProblemHighlightType;
 import consulo.language.editor.inspection.SuppressIntentionActionFromFix;

@@ -17,7 +17,7 @@ package consulo.ide.impl.psi.impl.cache.impl.id;
 
 import consulo.codeEditor.EditorHighlighter;
 import consulo.codeEditor.HighlighterIterator;
-import consulo.language.internal.custom.CustomSyntaxTableFileType;
+import consulo.language.custom.CustomSyntaxTableFileType;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.internal.custom.CustomHighlighterTokenType;
 import consulo.language.psi.stub.BaseFilterLexer;

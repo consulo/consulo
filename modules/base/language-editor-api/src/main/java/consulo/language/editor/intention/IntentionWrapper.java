@@ -23,7 +23,6 @@ import consulo.fileEditor.TextEditor;
 import consulo.language.editor.inspection.LocalQuickFix;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.editor.internal.intention.ActionClassHolder;
-import consulo.language.editor.internal.intention.IntentionActionDelegate;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
