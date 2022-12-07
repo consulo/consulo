@@ -20,7 +20,7 @@
  */
 package consulo.ide.impl.psi.search.scope.packageSet;
 
-import consulo.content.internal.scope.PatternBasedPackageSet;
+import consulo.content.scope.PatternBasedPackageSet;
 import consulo.content.scope.NamedScopesHolder;
 import consulo.content.scope.PackageSet;
 import consulo.module.Module;

@@ -15,14 +15,17 @@
  */
 package consulo.ide.impl.idea.codeInspection;
 
+import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.codeInspection.ex.ModuleProblemDescriptorImpl;
+import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.scheme.InspectionManager;
-import consulo.project.Project;
-import consulo.document.util.TextRange;
 import consulo.language.editor.inspection.scheme.InspectionProfileManager;
-import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
 import consulo.language.psi.PsiElement;
+import consulo.module.Module;
+import consulo.project.Project;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 
 public abstract class InspectionManagerBase extends InspectionManager {
@@ -43,6 +46,11 @@ public abstract class InspectionManagerBase extends InspectionManager {
   @Nonnull
   public CommonProblemDescriptor createProblemDescriptor(@Nonnull String descriptionTemplate, QuickFix... fixes) {
     return new CommonProblemDescriptorBase(fixes, descriptionTemplate);
+  }
+
+  @Override
+  public ModuleProblemDescriptor createProblemDescriptor(@Nonnull String descriptionTemplate, @Nonnull Module module, QuickFix<?>... fixes) {
+    return new ModuleProblemDescriptorImpl(module, descriptionTemplate, fixes);
   }
 
   @Override

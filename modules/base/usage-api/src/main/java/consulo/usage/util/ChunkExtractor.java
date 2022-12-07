@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.usage.internal;
+package consulo.usage.util;
 
 import consulo.application.util.function.Processor;
 import consulo.codeEditor.HighlighterColors;
@@ -53,7 +53,7 @@ import java.util.Map;
 /**
  * @author peter
  */
-public class ChunkExtractor {
+public final class ChunkExtractor {
   private static final Logger LOG = Logger.getInstance(ChunkExtractor.class);
   public static final int MAX_LINE_LENGTH_TO_SHOW = 200;
   public static final int OFFSET_BEFORE_TO_SHOW_WHEN_LONG_LINE = 1;

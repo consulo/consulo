@@ -38,6 +38,8 @@ public interface AutoImportHelper {
 
   boolean canChangeFileSilently(@Nonnull PsiFile file);
 
+  boolean mayAutoImportNow(@Nonnull PsiFile psiFile, boolean isInContent);
+
   void runOptimizeImports(@Nonnull Project project, @Nonnull PsiFile file, boolean withProgress);
 
   @Nonnull

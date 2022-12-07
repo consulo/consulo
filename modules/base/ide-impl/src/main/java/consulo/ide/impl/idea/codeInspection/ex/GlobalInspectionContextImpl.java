@@ -603,21 +603,21 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
               throw e;
             }
           }
-          ApplicationManager.getApplication().runReadAction(new Runnable() {
-            @Override
-            public void run() {
-              tool.runInspection(scope, inspectionManager, GlobalInspectionContextImpl.this, toolPresentation);
-              //skip phase when we are sure that scope already contains everything
-              if (canBeExternalUsages && tool.queryExternalUsagesRequests(inspectionManager, GlobalInspectionContextImpl.this, toolPresentation)) {
-                needRepeatSearchRequest.add(toolWrapper);
-              }
+          Runnable action = () -> {
+            tool.runInspection(scope, inspectionManager, GlobalInspectionContextImpl.this, toolPresentation);
+            //skip phase when we are sure that scope already contains everything
+            if (canBeExternalUsages && tool.queryExternalUsagesRequests(inspectionManager, GlobalInspectionContextImpl.this, toolPresentation)) {
+              needRepeatSearchRequest.add(toolWrapper);
             }
-          });
+          };
+
+          if (tool.isReadActionNeeded()) {
+            ApplicationManager.getApplication().runReadAction(action);
+          } else {
+            action.run();
+          }
         }
-        catch (ProcessCanceledException e) {
-          throw e;
-        }
-        catch (IndexNotReadyException e) {
+        catch (ProcessCanceledException | IndexNotReadyException e) {
           throw e;
         }
         catch (Throwable e) {
@@ -629,10 +629,7 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
       try {
         extension.performPostRunActivities(needRepeatSearchRequest, this);
       }
-      catch (ProcessCanceledException e) {
-        throw e;
-      }
-      catch (IndexNotReadyException e) {
+      catch (ProcessCanceledException | IndexNotReadyException e) {
         throw e;
       }
       catch (Throwable e) {

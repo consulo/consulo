@@ -141,6 +141,21 @@ public abstract class GlobalInspectionTool extends InspectionProfileEntry {
   }
 
   /**
+   * True by default to ensure third party plugins are not broken
+   *
+   * @return true if inspection should be started ({@link #runInspection(AnalysisScope, InspectionManager, GlobalInspectionContext, ProblemDescriptionsProcessor)}) in ReadAction,
+   * false if ReadAction is taken by inspection itself
+   */
+  public boolean isReadActionNeeded() {
+    return true;
+  }
+
+  @Override
+  public boolean isEnabledByDefault() {
+    return true;
+  }
+
+  /**
    * Allows the inspection to process usages of analyzed classes outside the analysis scope.
    * This method is called after the reference graph has been built and after
    * the {@link #runInspection(AnalysisScope, InspectionManager, GlobalInspectionContext, ProblemDescriptionsProcessor)}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.content.internal.scope;
+package consulo.language.editor.inspection;
 
-import consulo.content.scope.PackageSetBase;
+import consulo.module.Module;
 
-/**
- * User: anna
- * Date: Jul 26, 2010
- */
-public abstract class PatternBasedPackageSet extends PackageSetBase {
-  public abstract String getPattern();
+import javax.annotation.Nonnull;
 
-  public abstract String getModulePattern();
-
-  public abstract boolean isOn(String oldQName);
+public interface ModuleProblemDescriptor extends CommonProblemDescriptor {
+  @Nonnull
+  Module getModule();
 }

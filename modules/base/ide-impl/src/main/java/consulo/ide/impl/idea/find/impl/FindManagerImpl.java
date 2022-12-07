@@ -73,7 +73,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.IdeActions;
 import consulo.usage.SyntaxHighlighterOverEditorHighlighter;
 import consulo.usage.UsageViewManager;
-import consulo.usage.internal.ChunkExtractor;
+import consulo.usage.util.ChunkExtractor;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ImmutableCharSequence;
 import consulo.virtualFileSystem.VirtualFile;

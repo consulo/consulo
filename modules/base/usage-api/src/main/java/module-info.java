@@ -14,5 +14,6 @@ module consulo.usage.api {
 
   exports consulo.usage;
   exports consulo.usage.rule;
+  exports consulo.usage.util;
   exports consulo.usage.internal to consulo.ide.impl, consulo.language.editor.refactoring.api;
 }

@@ -43,12 +43,14 @@ public interface InspectionProfile extends Profile {
   @Nullable
   InspectionToolWrapper getInspectionTool(@Nonnull String shortName, Project project);
 
+  @Nullable
+  InspectionToolWrapper getToolById(@Nonnull String id, @Nonnull PsiElement element);
+
   /** Returns (unwrapped) inspection */
   InspectionProfileEntry getUnwrappedTool(@Nonnull String shortName, @Nonnull PsiElement element);
 
   /** Returns (unwrapped) inspection */
-  <T extends InspectionProfileEntry>
-  T getUnwrappedTool(@Nonnull Key<T> shortNameKey, @Nonnull PsiElement element);
+  <T extends InspectionProfileEntry> T getUnwrappedTool(@Nonnull Key<T> shortNameKey, @Nonnull PsiElement element);
 
   void modifyProfile(@Nonnull Consumer<ModifiableModel> modelConsumer);
 

@@ -45,7 +45,7 @@ import consulo.project.Project;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.util.TextAttributesUtil;
 import consulo.ui.image.Image;
-import consulo.usage.internal.ChunkExtractor;
+import consulo.usage.util.ChunkExtractor;
 import consulo.usage.rule.PsiElementUsage;
 import consulo.usage.rule.UsageInFile;
 import consulo.usage.rule.UsageInLibrary;

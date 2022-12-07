@@ -416,6 +416,7 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
     return tools != null ? tools.getTool() : null;
   }
 
+  @Override
   public InspectionToolWrapper getToolById(@Nonnull String id, @Nonnull PsiElement element) {
     initInspectionTools(element.getProject());
     for (Tools toolList : myTools.values()) {

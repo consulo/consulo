@@ -20,7 +20,9 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.document.util.TextRange;
 import consulo.language.editor.inspection.*;
 import consulo.language.psi.PsiElement;
+import consulo.module.Module;
 import consulo.project.Project;
+import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -36,6 +38,9 @@ public abstract class InspectionManager {
 
   @Nonnull
   public abstract Project getProject();
+
+  @Contract(pure = true)
+  public abstract ModuleProblemDescriptor createProblemDescriptor(@Nonnull String descriptionTemplate, @Nonnull Module module, QuickFix<?> ... fixes);
 
   @Nonnull
   public abstract CommonProblemDescriptor createProblemDescriptor(@Nonnull String descriptionTemplate, QuickFix... fixes);

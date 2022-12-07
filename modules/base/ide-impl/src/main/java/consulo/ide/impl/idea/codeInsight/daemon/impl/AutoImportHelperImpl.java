@@ -16,10 +16,12 @@
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.impl.internal.LaterInvocator;
 import consulo.ide.impl.idea.codeInsight.actions.OptimizeImportsProcessor;
 import consulo.language.editor.AutoImportHelper;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.ui.ex.awt.internal.ModalityPerProjectEAPDescriptor;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
@@ -34,6 +36,13 @@ public class AutoImportHelperImpl implements AutoImportHelper {
   @Override
   public boolean canChangeFileSilently(@Nonnull PsiFile file) {
     return DaemonListeners.canChangeFileSilently(file);
+  }
+
+  @Override
+  public boolean mayAutoImportNow(@Nonnull PsiFile psiFile, boolean isInContent) {
+    Project project = psiFile.getProject();
+    boolean isInModlessContext = ModalityPerProjectEAPDescriptor.is() ? !LaterInvocator.isInModalContextForProject(project) : !LaterInvocator.isInModalContext();
+    return isInModlessContext && canChangeFileSilently(psiFile);
   }
 
   @Override
