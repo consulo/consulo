@@ -16,16 +16,18 @@
 
 package consulo.ide.impl.idea.codeInsight.folding.impl;
 
-import consulo.language.editor.action.CodeInsightActionHandler;
-import consulo.logging.Logger;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.FoldingModelEx;
-import consulo.project.Project;
+import consulo.document.Document;
+import consulo.language.editor.action.CodeInsightActionHandler;
+import consulo.language.editor.internal.EditorFoldingInfoImpl;
 import consulo.language.psi.PsiFile;
-import javax.annotation.Nonnull;
+import consulo.logging.Logger;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author ven
@@ -41,7 +43,7 @@ public class CollapseSelectionHandler implements CodeInsightActionHandler {
             new Runnable() {
               @Override
               public void run() {
-                final EditorFoldingInfo info = EditorFoldingInfo.get(editor);
+                final EditorFoldingInfoImpl info = EditorFoldingInfoImpl.get(editor);
                 FoldingModelEx foldingModel = (FoldingModelEx) editor.getFoldingModel();
                 if (editor.getSelectionModel().hasSelection()) {
                   int start = editor.getSelectionModel().getSelectionStart();

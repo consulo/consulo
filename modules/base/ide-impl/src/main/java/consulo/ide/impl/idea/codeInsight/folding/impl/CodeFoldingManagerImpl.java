@@ -11,6 +11,7 @@ import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.FoldingModelEx;
 import consulo.fileEditor.text.CodeFoldingState;
+import consulo.language.editor.internal.EditorFoldingInfoImpl;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.disposer.Disposable;
@@ -62,7 +63,7 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Dispos
     PsiFile file = PsiDocumentManager.getInstance(myProject).getPsiFile(document);
     if (file == null || !file.getViewProvider().isPhysical() || !file.isValid()) return;
 
-    EditorFoldingInfo.get(editor).dispose();
+    EditorFoldingInfoImpl.get(editor).dispose();
   }
 
   @Override

@@ -23,6 +23,7 @@ import consulo.language.editor.folding.CodeFoldingManager;
 import consulo.language.CodeDocumentationAwareCommenter;
 import consulo.language.Commenter;
 import consulo.language.editor.action.CodeInsightActionHandler;
+import consulo.language.editor.internal.EditorFoldingInfoImpl;
 import consulo.language.psi.PsiDocCommentBase;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -53,7 +54,7 @@ public class CollapseExpandDocCommentsHandler implements CodeInsightActionHandle
     final FoldRegion[] allFoldRegions = editor.getFoldingModel().getAllFoldRegions();
     Runnable processor = () -> {
       for (FoldRegion region : allFoldRegions) {
-        PsiElement element = EditorFoldingInfo.get(editor).getPsiElement(region);
+        PsiElement element = EditorFoldingInfoImpl.get(editor).getPsiElement(region);
         if (element instanceof PsiDocCommentBase || Boolean.TRUE.equals(region.getUserData(DOC_COMMENT_MARK)) || hasAllowedTokenType(editor, region, element)) {
           region.setExpanded(myExpand);
         }

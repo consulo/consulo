@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.folding.impl;
+package consulo.language.editor.internal;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.language.editor.folding.EditorFolding;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.FoldRegion;
@@ -35,22 +37,24 @@ import java.util.Map;
  * <p/>
  * Not thread-safe.
  */
-public class EditorFoldingInfo {
-  private static final Key<EditorFoldingInfo> KEY = Key.create("EditorFoldingInfo.KEY");
+public class EditorFoldingInfoImpl implements EditorFolding {
+  private static final Key<EditorFoldingInfoImpl> KEY = Key.create("EditorFoldingInfoImpl.KEY");
 
   private final Map<FoldRegion, SmartPsiElementPointer<?>> myFoldRegionToSmartPointerMap = new HashMap<>();
 
   @Nonnull
-  public static EditorFoldingInfo get(@Nonnull Editor editor) {
-    EditorFoldingInfo info = editor.getUserData(KEY);
+  public static EditorFoldingInfoImpl get(@Nonnull Editor editor) {
+    EditorFoldingInfoImpl info = editor.getUserData(KEY);
     if (info == null){
-      info = new EditorFoldingInfo();
+      info = new EditorFoldingInfoImpl();
       editor.putUserData(KEY, info);
     }
     return info;
   }
 
+  @Override
   @Nullable
+  @RequiredReadAction
   public PsiElement getPsiElement(@Nonnull FoldRegion region) {
     final SmartPsiElementPointer<?> pointer = myFoldRegionToSmartPointerMap.get(region);
     if (pointer == null) {
@@ -60,8 +64,10 @@ public class EditorFoldingInfo {
     return element != null && element.isValid() ? element : null;
   }
 
+  @Override
   @Nullable
-  TextRange getPsiElementRange(@Nonnull FoldRegion region) {
+  @RequiredReadAction
+  public TextRange getPsiElementRange(@Nonnull FoldRegion region) {
     PsiElement element = getPsiElement(region);
     if (element == null) return null;
     PsiFile containingFile = element.getContainingFile();
@@ -74,7 +80,7 @@ public class EditorFoldingInfo {
     return range;
   }
 
-  void addRegion(@Nonnull FoldRegion region, @Nonnull SmartPsiElementPointer<?> pointer){
+  public void addRegion(@Nonnull FoldRegion region, @Nonnull SmartPsiElementPointer<?> pointer){
     myFoldRegionToSmartPointerMap.put(region, pointer);
   }
 

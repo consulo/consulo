@@ -3,6 +3,7 @@
 package consulo.ide.impl.idea.codeInsight.folding.impl;
 
 import consulo.language.editor.folding.FoldingDescriptor;
+import consulo.language.editor.internal.EditorFoldingInfoImpl;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.FoldRegion;
@@ -82,7 +83,7 @@ class UpdateFoldRegionsOperation implements Runnable {
 
   @Override
   public void run() {
-    EditorFoldingInfo info = EditorFoldingInfo.get(myEditor);
+    EditorFoldingInfoImpl info = EditorFoldingInfoImpl.get(myEditor);
     FoldingModelEx foldingModel = (FoldingModelEx)myEditor.getFoldingModel();
     Map<TextRange, Boolean> rangeToExpandStatusMap = new HashMap<>();
 
@@ -108,7 +109,7 @@ class UpdateFoldRegionsOperation implements Runnable {
     }
   }
 
-  private List<FoldRegion> addNewRegions(@Nonnull EditorFoldingInfo info,
+  private List<FoldRegion> addNewRegions(@Nonnull EditorFoldingInfoImpl info,
                                          @Nonnull FoldingModelEx foldingModel,
                                          @Nonnull Map<TextRange, Boolean> rangeToExpandStatusMap,
                                          @Nonnull Map<FoldRegion, Boolean> shouldExpand,
@@ -180,7 +181,7 @@ class UpdateFoldRegionsOperation implements Runnable {
     return oldStatus == null || oldStatus.booleanValue() || FoldingUtil.caretInsideRange(myEditor, range);
   }
 
-  private void removeInvalidRegions(@Nonnull EditorFoldingInfo info, @Nonnull FoldingModelEx foldingModel, @Nonnull Map<TextRange, Boolean> rangeToExpandStatusMap) {
+  private void removeInvalidRegions(@Nonnull EditorFoldingInfoImpl info, @Nonnull FoldingModelEx foldingModel, @Nonnull Map<TextRange, Boolean> rangeToExpandStatusMap) {
     List<FoldRegion> toRemove = new ArrayList<>();
     Ref<FoldingUpdate.RegionInfo> infoRef = Ref.create();
     Set<FoldingGroup> processedGroups = new HashSet<>();
@@ -245,7 +246,7 @@ class UpdateFoldRegionsOperation implements Runnable {
     }
   }
 
-  private boolean shouldRemoveRegion(FoldRegion region, EditorFoldingInfo info, Map<TextRange, Boolean> rangeToExpandStatusMap, Ref<? super FoldingUpdate.RegionInfo> matchingInfo) {
+  private boolean shouldRemoveRegion(FoldRegion region, EditorFoldingInfoImpl info, Map<TextRange, Boolean> rangeToExpandStatusMap, Ref<? super FoldingUpdate.RegionInfo> matchingInfo) {
     matchingInfo.set(null);
     PsiElement element = info.getPsiElement(region);
     if (element != null) {
