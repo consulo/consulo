@@ -16,6 +16,8 @@
 
 package consulo.language.editor.inspection.scheme;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.content.scope.NamedScope;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.psi.PsiElement;
@@ -46,10 +48,14 @@ public interface InspectionProfile extends Profile {
   @Nullable
   InspectionToolWrapper getToolById(@Nonnull String id, @Nonnull PsiElement element);
 
-  /** Returns (unwrapped) inspection */
+  /**
+   * Returns (unwrapped) inspection
+   */
   InspectionProfileEntry getUnwrappedTool(@Nonnull String shortName, @Nonnull PsiElement element);
 
-  /** Returns (unwrapped) inspection */
+  /**
+   * Returns (unwrapped) inspection
+   */
   <T extends InspectionProfileEntry> T getUnwrappedTool(@Nonnull Key<T> shortNameKey, @Nonnull PsiElement element);
 
   void modifyProfile(@Nonnull Consumer<ModifiableModel> modelConsumer);
@@ -59,12 +65,11 @@ public interface InspectionProfile extends Profile {
    * the settings dialog.
    *
    * @param shortNameKey the ID of the tool to change.
-   * @param psiElement the element for which the settings should be changed.
+   * @param psiElement   the element for which the settings should be changed.
    * @param toolConsumer the callback that receives the tool.
    * @since 12.1
    */
-  <T extends InspectionProfileEntry>
-  void modifyToolSettings(@Nonnull Key<T> shortNameKey, @Nonnull PsiElement psiElement, @Nonnull Consumer<T> toolConsumer);
+  <T extends InspectionProfileEntry> void modifyToolSettings(@Nonnull Key<T> shortNameKey, @Nonnull PsiElement psiElement, @Nonnull Consumer<T> toolConsumer);
 
   /**
    * @param element context element
@@ -96,4 +101,16 @@ public interface InspectionProfile extends Profile {
 
   @Nonnull
   List<Tools> getAllEnabledInspectionTools(Project project);
+
+  @Deprecated
+  @DeprecationInfo("internal impl")
+  HighlightDisplayLevel getErrorLevel(@Nonnull HighlightDisplayKey ky, NamedScope scope, Project project);
+
+  @Deprecated
+  @DeprecationInfo("internal impl")
+  ScopeToolState addScope(@Nonnull InspectionToolWrapper toolWrapper, NamedScope scope, @Nonnull HighlightDisplayLevel level, boolean enabled, Project project);
+
+  @Deprecated
+  @DeprecationInfo("internal impl")
+  void removeScope(@Nonnull String toolId, @Nonnull String scopeName, Project project);
 }

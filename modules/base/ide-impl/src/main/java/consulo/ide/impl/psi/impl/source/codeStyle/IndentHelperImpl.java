@@ -101,10 +101,11 @@ public final class IndentHelperImpl extends IndentHelper {
   }
 
   /**
-   * @Depreacted Do not use the implementation, see {@link IndentHelper}
+   * @deprecated  Do not use the implementation, see {@link IndentHelper}
    */
+  @Override
   @Deprecated
-  public static int getIndent(Project project, FileType fileType, String text, boolean includeNonSpace) {
+  public int getIndent(Project project, FileType fileType, String text, boolean includeNonSpace) {
     return getIndent(CodeStyle.getSettings(project).getIndentOptions(fileType), text, includeNonSpace);
   }
 

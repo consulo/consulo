@@ -63,4 +63,7 @@ public abstract class IndentHelper {
 
   @Deprecated
   public abstract String fillIndent(Project project, FileType fileType, int indent);
+
+  @Deprecated
+  public abstract int getIndent(Project project, FileType fileType, String text, boolean includeNonSpace);
 }

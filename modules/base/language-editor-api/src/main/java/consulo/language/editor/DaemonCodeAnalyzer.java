@@ -84,6 +84,8 @@ public abstract class DaemonCodeAnalyzer {
   @Nonnull
   public abstract FileStatusMap getFileStatusMap();
 
+  public abstract boolean isErrorAnalyzingFinished(@Nonnull PsiFile file);
+
   /**
    * @param document
    * @param project
