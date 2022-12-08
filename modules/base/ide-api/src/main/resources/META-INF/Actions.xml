@@ -249,7 +249,7 @@
     <action id="ExpandTreeNode" class="consulo.ide.impl.idea.ide.actions.tree.ExpandTreeNodeAction"/>
     <action id="CollapseTreeNode" class="consulo.ide.impl.idea.ide.actions.tree.CollapseTreeNodeAction"/>
     <action id="FullyExpandTreeNode" class="consulo.ide.impl.idea.ide.actions.tree.FullyExpandTreeNodeAction"/>
-    <action id="Refresh" class="consulo.ide.impl.idea.ide.actions.RefreshAction"/>
+    <action id="Refresh" class="consulo.ui.ex.action.RefreshAction"/>
     <action id="ScrollTreeToCenter" class="consulo.ide.impl.idea.ide.actions.ScrollTreeToCenterAction" use-shortcut-of="EditorScrollToCenter"/>
     <action id="PinToolwindowTab" class="consulo.ide.impl.idea.ui.content.tabs.PinToolwindowTabAction"/>
     <action id="CloseEditor" class="consulo.ide.impl.idea.ide.actions.CloseEditorAction"/>

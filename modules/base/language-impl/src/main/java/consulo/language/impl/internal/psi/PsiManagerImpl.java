@@ -442,6 +442,15 @@ public class PsiManagerImpl extends PsiManagerEx {
   }
 
   @Override
+  public void notifyAnyPsiChangeListener(boolean beforeOrAfter, boolean isPhysical) {
+    if (beforeOrAfter) {
+      beforeChange(isPhysical);
+    } else {
+      afterChange(isPhysical);
+    }
+  }
+
+  @Override
   public void beforeChange(boolean isPhysical) {
     myProject.getMessageBus().syncPublisher(AnyPsiChangeListener.class).beforePsiChanged(isPhysical);
   }

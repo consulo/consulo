@@ -30,6 +30,7 @@ import jakarta.inject.Singleton;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * @author cdr
@@ -325,6 +326,13 @@ public class InjectedLanguageManagerImpl extends InjectedLanguageManager impleme
   @Override
   public PsiLanguageInjectionHost.Place getShreds(@Nonnull DocumentWindow documentWindow) {
     return ((DocumentWindowImpl)documentWindow).getShreds();
+  }
+
+  @Override
+  protected void injectLanguagesFromConcatenationAdapter(@Nonnull MultiHostRegistrar registrar,
+                                                         @Nonnull PsiElement context,
+                                                         @Nonnull Function<PsiElement, Pair<PsiElement, PsiElement[]>> computeAnchorAndOperandsFunc) {
+    ConcatenationInjectorManager.getInstance(myProject).injectLanguagesFromConcatenationAdapter(registrar, context, computeAnchorAndOperandsFunc);
   }
 
   private static int appendRange(@Nonnull List<TextRange> result, int start, int length) {

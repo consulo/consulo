@@ -173,4 +173,9 @@ public abstract class PsiManager extends UserDataHolderBase {
   @Nullable
   @RequiredReadAction
   public abstract PsiFile findCachedFile(@Nonnull VirtualFile file);
+
+  /**
+   * Call {@link AnyPsiChangeListener} listeners
+   */
+  public abstract void notifyAnyPsiChangeListener(boolean beforeOrAfter, boolean isPhysical);
 }

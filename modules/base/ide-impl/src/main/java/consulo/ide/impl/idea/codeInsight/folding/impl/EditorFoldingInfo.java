@@ -74,10 +74,6 @@ public class EditorFoldingInfo {
     return range;
   }
 
-  boolean isLightRegion(@Nonnull FoldRegion region) {
-    return myFoldRegionToSmartPointerMap.get(region) == null;
-  }
-
   void addRegion(@Nonnull FoldRegion region, @Nonnull SmartPsiElementPointer<?> pointer){
     myFoldRegionToSmartPointerMap.put(region, pointer);
   }

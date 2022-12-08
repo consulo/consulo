@@ -118,4 +118,8 @@ public abstract class InjectedLanguageManager {
 
   @Nonnull
   public abstract PsiLanguageInjectionHost.Place getShreds(@Nonnull DocumentWindow documentWindow);
+
+  protected abstract void injectLanguagesFromConcatenationAdapter(@Nonnull MultiHostRegistrar registrar,
+                                                                  @Nonnull PsiElement context,
+                                                                  @Nonnull Function<PsiElement, Pair<PsiElement, PsiElement[]>> computeAnchorAndOperandsFunc);
 }
