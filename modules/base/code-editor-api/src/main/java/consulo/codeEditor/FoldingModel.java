@@ -19,6 +19,7 @@ import consulo.codeEditor.event.FoldingListener;
 import consulo.colorScheme.TextAttributes;
 import consulo.disposer.Disposable;
 import consulo.document.RangeMarker;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.DeprecatedMethodException;
 
 import javax.annotation.Nonnull;
@@ -110,7 +111,7 @@ public interface FoldingModel {
    *
    * @param operation the operation to execute.
    */
-  void runBatchFoldingOperation(@Nonnull Runnable operation);
+  void runBatchFoldingOperation(@RequiredUIAccess @Nonnull Runnable operation);
 
   /**
    * Runs an operation which is allowed to modify fold regions in the editor by calling

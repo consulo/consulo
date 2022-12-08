@@ -30,9 +30,9 @@ import javax.annotation.Nullable;
  * <p/>
  * Not thread-safe.
  */
-public interface EditorFolding {
+public interface EditorFoldingInfo {
   @Nonnull
-  static EditorFolding get(@Nonnull Editor editor) {
+  static EditorFoldingInfo get(@Nonnull Editor editor) {
     return EditorFoldingInfoImpl.get(editor);
   }
 

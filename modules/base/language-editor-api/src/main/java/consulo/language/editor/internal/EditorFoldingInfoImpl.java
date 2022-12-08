@@ -17,7 +17,7 @@
 package consulo.language.editor.internal;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.language.editor.folding.EditorFolding;
+import consulo.language.editor.folding.EditorFoldingInfo;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.FoldRegion;
@@ -37,7 +37,7 @@ import java.util.Map;
  * <p/>
  * Not thread-safe.
  */
-public class EditorFoldingInfoImpl implements EditorFolding {
+public class EditorFoldingInfoImpl implements EditorFoldingInfo {
   private static final Key<EditorFoldingInfoImpl> KEY = Key.create("EditorFoldingInfoImpl.KEY");
 
   private final Map<FoldRegion, SmartPsiElementPointer<?>> myFoldRegionToSmartPointerMap = new HashMap<>();
