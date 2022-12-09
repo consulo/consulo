@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
 /**
  * @author peter
 */
-@ExtensionImpl(id = "openedInEditor", order = "first")
+@ExtensionImpl(id = "openedInEditor")
 public class OpenedInEditorWeigher extends ProximityWeigher {
   private static final NotNullLazyKey<VirtualFile[], ProximityLocation> OPENED_EDITORS = NotNullLazyKey.create("openedEditors", new NotNullFunction<ProximityLocation, VirtualFile[]>() {
     @Nonnull
