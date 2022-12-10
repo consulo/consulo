@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.intention.impl;
+package consulo.language.editor.intention;
 
-import consulo.language.editor.intention.HighPriorityAction;
-import consulo.language.editor.intention.IntentionAction;
-import consulo.language.editor.intention.LowPriorityAction;
+import consulo.annotation.UsedInPlugin;
 import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
@@ -27,7 +25,8 @@ import javax.annotation.Nonnull;
 /**
  * @author Danila Ponomarenko
  */
-public abstract class PriorityIntentionActionWrapper implements IntentionAction {
+@UsedInPlugin
+public abstract class PriorityIntentionActionWrapper implements IntentionAction, IntentionActionDelegate {
   private final IntentionAction action;
 
   private PriorityIntentionActionWrapper(@Nonnull IntentionAction action) {
@@ -54,6 +53,12 @@ public abstract class PriorityIntentionActionWrapper implements IntentionAction 
   @Override
   public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     action.invoke(project, editor, file);
+  }
+
+  @Nonnull
+  @Override
+  public IntentionAction getDelegate() {
+    return action;
   }
 
   @Override
