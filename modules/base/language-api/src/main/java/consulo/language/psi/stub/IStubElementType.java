@@ -24,13 +24,14 @@ public abstract class IStubElementType<StubT extends StubElement, PsiT extends P
   public IStubElementType(@Nonnull final String debugName, @Nullable final Language language) {
     super(debugName, language);
     if (!isLazilyRegistered()) {
-      checkNotInstantiatedTooLate();
+      checkNotInstantiatedTooLate(this);
     }
   }
 
-  public static void checkNotInstantiatedTooLate() {
+  public static void checkNotInstantiatedTooLate(IElementType thisElementType) {
     if (ourInitializedStubs) {
       LOG.error("All stub element types should be created before index initialization is complete.\n" +
+                "This element type: " + thisElementType + ".\n" +
                 "Please add the class containing stub element type constants to '" +
                 StubElementTypeHolder.class +
                 "' extension.\n" +

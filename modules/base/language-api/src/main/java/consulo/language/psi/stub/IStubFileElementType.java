@@ -39,7 +39,7 @@ public class IStubFileElementType<T extends PsiFileStub> extends StubFileElement
   public IStubFileElementType(final String debugName, final Language language) {
     super(debugName, language);
     if (hasNonTrivialExternalId() && !isOutOfOurControl()) {
-      IStubElementType.checkNotInstantiatedTooLate();
+      IStubElementType.checkNotInstantiatedTooLate(this);
     }
   }
 
