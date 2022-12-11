@@ -60,15 +60,14 @@ public abstract class IStubElementType<StubT extends StubElement, PsiT extends P
 
     Application.get().getExtensionPoint(StubElementTypeHolder.class).forEachExtensionSafe(holder -> {
       String externalPrefixId = holder.getExternalIdPrefix();
-      if (externalPrefixId != null) {
-        lazyIds.add(externalPrefixId);
-      }
-
       // just invoke for registering not lazy element types
       List<ObjectStubSerializerProvider> serializers = holder.loadSerializers();
       // add only lazy stubs, others will be registered by class initialize, and registering to IElementType registry
       if (externalPrefixId != null) {
         result.addAll(serializers);
+        for (ObjectStubSerializerProvider serializer : serializers) {
+          lazyIds.add(serializer.getExternalId());
+        }
       }
     });
 
