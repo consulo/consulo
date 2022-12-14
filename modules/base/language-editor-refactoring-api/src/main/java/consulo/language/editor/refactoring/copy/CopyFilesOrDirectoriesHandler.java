@@ -53,7 +53,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-@ExtensionImpl
+@ExtensionImpl(id = "copyFilesOrDirectories")
 public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
   private static Logger LOG = Logger.getInstance(CopyFilesOrDirectoriesHandler.class);
 
