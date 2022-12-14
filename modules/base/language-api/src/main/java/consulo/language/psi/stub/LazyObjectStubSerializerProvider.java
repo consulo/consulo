@@ -38,7 +38,7 @@ class LazyObjectStubSerializerProvider implements ObjectStubSerializerProvider {
       return serializer.getExternalId();
     }
     else {
-      return myExternalIdPrefix + "." + myField.getName();
+      return myExternalIdPrefix + myField.getName();
     }
   }
 
