@@ -16,20 +16,21 @@
 
 package consulo.ide.impl.idea.codeEditor.printing;
 
-import consulo.component.extension.Extensions;
-import consulo.fileChooser.FileChooserDescriptorFactory;
-import consulo.fileChooser.FileChooserFactory;
-import consulo.fileChooser.FileTextField;
+import consulo.application.Application;
 import consulo.application.HelpManager;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.UnnamedConfigurable;
+import consulo.fileChooser.FileChooserDescriptorFactory;
+import consulo.fileChooser.FileChooserFactory;
+import consulo.fileChooser.FileTextField;
+import consulo.language.editor.action.PrintOption;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.LabeledComponent;
-import consulo.ui.ex.awt.TextFieldWithBrowseButton;
 import consulo.ui.ex.awt.OptionGroup;
-import javax.annotation.Nonnull;
+import consulo.ui.ex.awt.TextFieldWithBrowseButton;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -60,7 +61,7 @@ public class ExportToHTMLDialog extends DialogWrapper {
     this.myIsSelectedTextEnabled = isSelectedTextEnabled;
     setTitle(CodeEditorBundle.message("export.to.html.title"));
     myExtensions = new ArrayList<UnnamedConfigurable>();
-    for (PrintOption extension : Extensions.getExtensions(PrintOption.EP_NAME)) {
+    for (PrintOption extension : Application.get().getExtensionList(PrintOption.class)) {
       myExtensions.add(extension.createConfigurable());
     }
     init();

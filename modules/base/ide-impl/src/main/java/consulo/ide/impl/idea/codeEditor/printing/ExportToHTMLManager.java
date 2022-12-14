@@ -16,31 +16,30 @@
 
 package consulo.ide.impl.idea.codeEditor.printing;
 
-import consulo.application.CommonBundle;
-import consulo.ide.impl.idea.ide.BrowserUtil;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
-import consulo.language.editor.LangDataKeys;
-import consulo.language.editor.PlatformDataKeys;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.language.psi.*;
-import consulo.logging.Logger;
-import consulo.codeEditor.Editor;
-import consulo.component.extension.Extensions;
-import consulo.configurable.ConfigurationException;
+import consulo.application.CommonBundle;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
 import consulo.application.util.function.ThrowableComputable;
+import consulo.codeEditor.Editor;
+import consulo.configurable.ConfigurationException;
+import consulo.dataContext.DataContext;
+import consulo.ide.impl.idea.ide.BrowserUtil;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.LangDataKeys;
+import consulo.language.editor.PlatformDataKeys;
+import consulo.language.editor.action.PrintOption;
+import consulo.language.psi.*;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.Messages;
 import consulo.util.io.CharsetToolkit;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiPackageHelper;
 
 import javax.annotation.Nonnull;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.annotation.access.RequiredReadAction;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -150,7 +149,7 @@ class ExportToHTMLManager {
           }
 
           TreeMap<Integer, PsiReference> refMap = null;
-          for (PrintOption printOption : Extensions.getExtensions(PrintOption.EP_NAME)) {
+          for (PrintOption printOption : Application.get().getExtensionList(PrintOption.class)) {
             final TreeMap<Integer, PsiReference> map = printOption.collectReferences(psiFile, filesMap);
             if (map != null) {
               refMap = new TreeMap<Integer, PsiReference>();

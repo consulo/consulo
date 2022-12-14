@@ -18,21 +18,22 @@
  * User: anna
  * Date: 25-Jan-2008
  */
-package consulo.ide.impl.idea.codeEditor.printing;
+package consulo.language.editor.action;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Map;
 import java.util.TreeMap;
 
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class PrintOption {
-  public static final ExtensionPointName<PrintOption> EP_NAME = ExtensionPointName.create("consulo.printOption");
-  
   @Nullable
   public abstract TreeMap<Integer, PsiReference> collectReferences(PsiFile psiFile, Map<PsiFile, PsiFile> filesMap);
 

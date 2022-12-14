@@ -18,16 +18,10 @@ package consulo.ide.impl.idea.codeInspection.ui;
 import consulo.codeEditor.Editor;
 import consulo.component.macro.PathMacroManager;
 import consulo.ide.impl.idea.codeInspection.ex.*;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.JDOMUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
-import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManagerImpl;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.annotation.HighlightSeverity;
+import consulo.language.editor.impl.inspection.GlobalInspectionContextBase;
 import consulo.language.editor.impl.inspection.scheme.GlobalInspectionToolWrapper;
-import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl;
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.reference.*;
 import consulo.language.editor.inspection.scheme.*;
@@ -36,6 +30,7 @@ import consulo.language.editor.internal.intention.ActionClassHolder;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
+import consulo.language.editor.rawHighlight.SeverityRegistrar;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
@@ -43,6 +38,11 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.macro.ProjectPathMacroManager;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.jdom.JDOMUtil;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.status.FileStatus;
 import org.jdom.Element;
 import org.jdom.IllegalDataException;
@@ -116,7 +116,7 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
   protected HighlightSeverity getSeverity(@Nonnull RefElement element) {
     final PsiElement psiElement = element.getPointer().getContainingFile();
     if (psiElement != null) {
-      final GlobalInspectionContextImpl context = getContext();
+      final GlobalInspectionContextImpl context = (GlobalInspectionContextImpl)getContext();
       final String shortName = getSeverityDelegateName();
       final Tools tools = context.getTools().get(shortName);
       if (tools != null) {
@@ -151,7 +151,7 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
     if (highlightType == ProblemHighlightType.LIKE_UNUSED_SYMBOL) {
       return HighlightInfoType.UNUSED_SYMBOL.getAttributesKey().getExternalName();
     }
-    SeverityRegistrarImpl registrar = InspectionProjectProfileManagerImpl.getInstanceImpl(project).getSeverityRegistrar();
+    SeverityRegistrar registrar = SeverityRegistrar.getSeverityRegistrar(project);
     return registrar.getHighlightInfoTypeBySeverity(severity).getAttributesKey().getExternalName();
   }
 
@@ -167,7 +167,7 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
 
   @Nonnull
   @Override
-  public GlobalInspectionContextImpl getContext() {
+  public GlobalInspectionContextBase getContext() {
     return myContext;
   }
 
@@ -183,10 +183,9 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
 
   @Override
   public boolean isOldProblemsIncluded() {
-    final GlobalInspectionContextImpl context = getContext();
+    final GlobalInspectionContextImpl context = (GlobalInspectionContextImpl)getContext();
     return context.getUIOptions().SHOW_DIFF_WITH_PREVIOUS_RUN && getOldContent() != null;
   }
-
 
   @Override
   public void addProblemElement(RefEntity refElement, @Nonnull CommonProblemDescriptor... descriptions){
@@ -220,7 +219,7 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
       }
     }
 
-    final GlobalInspectionContextImpl context = getContext();
+    final GlobalInspectionContextImpl context = (GlobalInspectionContextImpl)getContext();
     if (myToolWrapper instanceof LocalInspectionToolWrapper) {
       final InspectionResultsView view = context.getView();
       if (view == null || !(refElement instanceof RefElement)) {
@@ -234,13 +233,13 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
       else if (toolNode.isTooBigForOnlineRefresh()) {
         return;
       }
-      final Map<RefEntity, CommonProblemDescriptor[]> problems = new HashMap<RefEntity, CommonProblemDescriptor[]>();
+      final Map<RefEntity, CommonProblemDescriptor[]> problems = new HashMap<>();
       problems.put(refElement, descriptors);
-      final Map<String, Set<RefEntity>> contents = new HashMap<String, Set<RefEntity>>();
+      final Map<String, Set<RefEntity>> contents = new HashMap<>();
       final String groupName = refElement.getRefManager().getGroupName((RefElement)refElement);
       Set<RefEntity> content = contents.get(groupName);
       if (content == null) {
-        content = new HashSet<RefEntity>();
+        content = new HashSet<>();
         contents.put(groupName, content);
       }
       content.add(refElement);
@@ -310,7 +309,7 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
     if (fixes != null && fixes.length != 0) {
       Set<QuickFix> localQuickFixes = getQuickFixActions().get(refEntity);
       if (localQuickFixes == null) {
-        localQuickFixes = new HashSet<QuickFix>();
+        localQuickFixes = new HashSet<>();
         getQuickFixActions().put(refEntity, localQuickFixes);
       }
       ContainerUtil.addAll(localQuickFixes, fixes);
@@ -345,7 +344,7 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
       synchronized (lock) {
         CommonProblemDescriptor[] descriptors = problemElements.get(refEntity);
         if (descriptors != null) {
-          ArrayList<CommonProblemDescriptor> newDescriptors = new ArrayList<CommonProblemDescriptor>(Arrays.asList(descriptors));
+          ArrayList<CommonProblemDescriptor> newDescriptors = new ArrayList<>(Arrays.asList(descriptors));
           newDescriptors.remove(problem);
           getQuickFixActions().put(refEntity, null);
           if (!newDescriptors.isEmpty()) {
@@ -506,7 +505,7 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
 
   @Override
   public boolean hasReportedProblems() {
-    final GlobalInspectionContextImpl context = getContext();
+    final GlobalInspectionContextImpl context = (GlobalInspectionContextImpl)getContext();
     if (!isDisposed() && context.getUIOptions().SHOW_ONLY_DIFF) {
       for (CommonProblemDescriptor descriptor : getProblemToElements().keySet()) {
         if (getProblemStatus(descriptor) != FileStatus.NOT_CHANGED) {
@@ -528,11 +527,12 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
 
   @Override
   public void updateContent() {
-    myContents = new HashMap<String, Set<RefEntity>>();
-    myModulesProblems = new HashSet<RefModule>();
+    myContents = new HashMap<>();
+    myModulesProblems = new HashSet<>();
     final Set<RefEntity> elements = getProblemElements().keySet();
+    GlobalInspectionContextImpl context = (GlobalInspectionContextImpl)getContext();
     for (RefEntity element : elements) {
-      if (getContext().getUIOptions().FILTER_RESOLVED_ITEMS && getIgnoredElements().containsKey(element)) continue;
+      if (context.getUIOptions().FILTER_RESOLVED_ITEMS && getIgnoredElements().containsKey(element)) continue;
       if (element instanceof RefModule) {
         myModulesProblems.add((RefModule)element);
       }
@@ -540,7 +540,7 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
         String groupName = element instanceof RefElement ? element.getRefManager().getGroupName((RefElement)element) : null;
         Set<RefEntity> content = myContents.get(groupName);
         if (content == null) {
-          content = new HashSet<RefEntity>();
+          content = new HashSet<>();
           myContents.put(groupName, content);
         }
         content.add(element);
@@ -557,18 +557,18 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
   public Map<String, Set<RefEntity>> getOldContent() {
     if (myOldProblemElements == null) return null;
     final HashMap<String, Set<RefEntity>>
-            oldContents = new HashMap<String, Set<RefEntity>>();
+            oldContents = new HashMap<>();
     final Set<RefEntity> elements = myOldProblemElements.keySet();
     for (RefEntity element : elements) {
       String groupName = element instanceof RefElement ? element.getRefManager().getGroupName((RefElement)element) : element.getName();
       final Set<RefEntity> collection = myContents.get(groupName);
       if (collection != null) {
-        final Set<RefEntity> currentElements = new HashSet<RefEntity>(collection);
+        final Set<RefEntity> currentElements = new HashSet<>(collection);
         if (RefUtil.contains(element, currentElements)) continue;
       }
       Set<RefEntity> oldContent = oldContents.get(groupName);
       if (oldContent == null) {
-        oldContent = new HashSet<RefEntity>();
+        oldContent = new HashSet<>();
         oldContents.put(groupName, oldContent);
       }
       oldContent.add(element);
@@ -590,7 +590,7 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
   @Override
   @Nullable
   public QuickFixAction[] extractActiveFixes(@Nonnull RefEntity[] refElements, @Nonnull Map<RefEntity, Set<QuickFix>> actions) {
-    Map<Class, QuickFixAction> result = new HashMap<Class, QuickFixAction>();
+    Map<Class, QuickFixAction> result = new HashMap<>();
     for (RefEntity refElement : refElements) {
       final Set<QuickFix> localQuickFixes = actions.get(refElement);
       if (localQuickFixes == null) continue;
@@ -663,10 +663,10 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
   @Override
   @Nonnull
   public FileStatus getProblemStatus(@Nonnull final CommonProblemDescriptor descriptor) {
-    final GlobalInspectionContextImpl context = getContext();
+    final GlobalInspectionContextImpl context = (GlobalInspectionContextImpl)getContext();
     if (!isDisposed() && context.getUIOptions().SHOW_DIFF_WITH_PREVIOUS_RUN){
       if (myOldProblemElements != null){
-        final Set<CommonProblemDescriptor> allAvailable = new HashSet<CommonProblemDescriptor>();
+        final Set<CommonProblemDescriptor> allAvailable = new HashSet<>();
         for (CommonProblemDescriptor[] descriptors : myOldProblemElements.values()) {
           if (descriptors != null) {
             ContainerUtil.addAll(allAvailable, descriptors);
@@ -702,7 +702,7 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
   @Nonnull
   @Override
   public FileStatus getElementStatus(final RefEntity element) {
-    final GlobalInspectionContextImpl context = getContext();
+    final GlobalInspectionContextImpl context = (GlobalInspectionContextImpl)getContext();
     if (!isDisposed() && context.getUIOptions().SHOW_DIFF_WITH_PREVIOUS_RUN){
       if (myOldProblemElements != null){
         final boolean old = RefUtil.contains(element, myOldProblemElements.keySet());
