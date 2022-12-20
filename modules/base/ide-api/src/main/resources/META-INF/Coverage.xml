@@ -23,6 +23,11 @@
       <action id="HideCoverage" class="consulo.execution.coverage.action.HideCoverageInfoAction"/>
       <separator/>
     </group>
+
+    <group id="AnalyzeCoverageMenu" popup="false">
+      <reference ref="CoverageMenu"/>
+      <add-to-group group-id="AnalyzeMenu" anchor="before" relative-to-action="AnalyzeActions"/>
+    </group>
   </actions>
 
 </consulo-plugin>

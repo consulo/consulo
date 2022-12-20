@@ -92,11 +92,13 @@ public class CoverageSuiteChooserDialog extends DialogWrapper {
 
   @Override
   protected JComponent createNorthPanel() {
-    final DefaultActionGroup group = new DefaultActionGroup();
+    final ActionGroup.Builder group = ActionGroup.newImmutableBuilder();
     group.add(new AddExternalSuiteAction());
     group.add(new DeleteSuiteAction());
     group.add(new SwitchEngineAction());
-    return ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true).getComponent();
+    ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group.build(), true);
+    toolbar.setTargetComponent(mySuitesTree);
+    return toolbar.getComponent();
   }
 
   @Override
