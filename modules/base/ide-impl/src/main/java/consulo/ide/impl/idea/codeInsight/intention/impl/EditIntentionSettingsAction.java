@@ -28,7 +28,7 @@ public class EditIntentionSettingsAction extends AbstractEditIntentionSettingsAc
   @RequiredUIAccess
   public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     ShowSettingsUtil.getInstance().showAndSelect(project, IntentionSettingsConfigurable.class, configurable -> {
-      configurable.selectIntention(myFamilyName);
+      configurable.selectIntention(myText);
     });
   }
 }

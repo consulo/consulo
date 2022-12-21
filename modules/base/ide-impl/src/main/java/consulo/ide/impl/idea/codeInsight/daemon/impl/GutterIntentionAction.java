@@ -7,7 +7,6 @@ import consulo.codeEditor.EditorPopupHelper;
 import consulo.component.util.Iconable;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.inspection.PriorityAction;
-import consulo.language.editor.intention.AbstractIntentionAction;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.intention.SyntheticIntentionAction;
 import consulo.language.psi.PsiFile;
@@ -24,7 +23,7 @@ import javax.annotation.Nullable;
 /**
  * @author Dmitry Avdeev
  */
-class GutterIntentionAction extends AbstractIntentionAction implements Comparable<IntentionAction>, Iconable, ShortcutProvider, PriorityAction, SyntheticIntentionAction {
+class GutterIntentionAction implements Comparable<IntentionAction>, Iconable, ShortcutProvider, PriorityAction, SyntheticIntentionAction {
   private final AnAction myAction;
   private final int myOrder;
   private final Image myIcon;

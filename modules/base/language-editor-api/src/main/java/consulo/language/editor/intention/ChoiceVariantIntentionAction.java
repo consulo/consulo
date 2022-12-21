@@ -49,7 +49,7 @@ public abstract class ChoiceVariantIntentionAction extends IntentionAndQuickFixA
 
   @Override
   public int compareTo(@Nonnull IntentionAction other) {
-    if (!getFamilyName().equals(other.getFamilyName())) return this.getFamilyName().compareTo(other.getFamilyName());
+    if (!getText().equals(other.getText())) return this.getText().compareTo(other.getText());
 
     if (other instanceof ChoiceTitleIntentionAction) {
       return 1;

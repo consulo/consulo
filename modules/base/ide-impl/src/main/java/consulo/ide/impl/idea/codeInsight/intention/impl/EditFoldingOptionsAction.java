@@ -43,12 +43,6 @@ public class EditFoldingOptionsAction implements IntentionAction {
   }
 
   @Override
-  @Nonnull
-  public String getFamilyName() {
-    return getText();
-  }
-
-  @Override
   public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
     return editor.getFoldingModel().isOffsetCollapsed(editor.getCaretModel().getOffset());
   }

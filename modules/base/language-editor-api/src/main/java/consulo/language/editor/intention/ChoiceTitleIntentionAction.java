@@ -6,6 +6,7 @@ import consulo.language.editor.inspection.LocalQuickFix;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;
 
@@ -15,19 +16,18 @@ import javax.annotation.Nonnull;
  * Note, that this action should be non-selectable in any UI, since it does
  * not have any implementation for invoke.
  */
-public class ChoiceTitleIntentionAction extends AbstractEmptyIntentionAction implements CustomizableIntentionAction, LocalQuickFix, Comparable<IntentionAction> {
-  private final String myFamily;
+public class ChoiceTitleIntentionAction extends AbstractEmptyIntentionAction implements CustomizableIntentionAction, SyntheticIntentionAction, LocalQuickFix, Comparable<IntentionAction> {
   private final String myTitle;
 
-  public ChoiceTitleIntentionAction(@Nonnull String family, @Nonnull String title) {
-    myFamily = family;
+  public ChoiceTitleIntentionAction(@Nonnull String title) {
     myTitle = title;
   }
 
-  @Override
+  @Nls
   @Nonnull
+  @Override
   public String getFamilyName() {
-    return myFamily;
+    return myTitle;
   }
 
   @Override
@@ -62,9 +62,9 @@ public class ChoiceTitleIntentionAction extends AbstractEmptyIntentionAction imp
 
   @Override
   public int compareTo(@Nonnull IntentionAction other) {
-    if (!getFamilyName().equals(other.getFamilyName())) return getFamilyName().compareTo(other.getFamilyName());
+    if (!getText().equals(other.getText())) return getText().compareTo(other.getText());
 
-    if (other instanceof ChoiceVariantIntentionAction){
+    if (other instanceof ChoiceVariantIntentionAction) {
       return -1;
     }
 

@@ -86,13 +86,6 @@ public class InjectLanguageAction implements IntentionAction {
     return "Inject Language/Reference";
   }
 
-  @Nls
-  @Nonnull
-  @Override
-  public String getFamilyName() {
-    return "platform.inject.language";
-  }
-
   @Override
   public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
     final PsiLanguageInjectionHost host = findInjectionHost(editor, file);

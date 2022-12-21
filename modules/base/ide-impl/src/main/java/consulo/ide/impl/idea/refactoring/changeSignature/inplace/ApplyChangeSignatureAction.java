@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.refactoring.changeSignature.inplace;
 
 import consulo.codeEditor.Editor;
+import consulo.language.editor.intention.SyntheticIntentionAction;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -26,8 +27,7 @@ import consulo.language.util.IncorrectOperationException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class ApplyChangeSignatureAction extends BaseRefactoringIntentionAction {
-  public static final String CHANGE_SIGNATURE = "Apply signature change";
+public class ApplyChangeSignatureAction extends BaseRefactoringIntentionAction implements SyntheticIntentionAction {
   private final String myMethodName;
 
   public ApplyChangeSignatureAction(String methodName) {
@@ -38,12 +38,6 @@ public class ApplyChangeSignatureAction extends BaseRefactoringIntentionAction {
   @Override
   public String getText() {
     return RefactoringBundle.message("changing.signature.of.0", myMethodName);
-  }
-
-  @Nonnull
-  @Override
-  public String getFamilyName() {
-    return CHANGE_SIGNATURE;
   }
 
   @Override

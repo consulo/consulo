@@ -6,7 +6,6 @@ import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.editor.inspection.scheme.ModifiableModel;
 import consulo.ide.impl.idea.codeInspection.actions.RunInspectionIntention;
-import consulo.ide.impl.idea.codeInspection.ex.DisableInspectionToolAction;
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.language.editor.inspection.reference.RefElement;
@@ -135,7 +134,7 @@ public class InspectionsOptionsToolbarAction extends AnAction {
     private final HighlightDisplayKey myKey;
 
     public DisableInspectionAction(final HighlightDisplayKey key) {
-      super(DisableInspectionToolAction.NAME);
+      super(InspectionsBundle.message("disable.inspection.action.name"));
       myKey = key;
     }
 

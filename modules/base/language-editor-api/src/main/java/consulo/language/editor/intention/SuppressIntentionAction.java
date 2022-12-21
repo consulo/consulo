@@ -33,7 +33,7 @@ import consulo.ui.image.Image;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public abstract class SuppressIntentionAction implements Iconable, IntentionAction {
+public abstract class SuppressIntentionAction implements Iconable, SyntheticIntentionAction {
   private String myText = "";
   public static SuppressIntentionAction[] EMPTY_ARRAY = new SuppressIntentionAction[0];
 

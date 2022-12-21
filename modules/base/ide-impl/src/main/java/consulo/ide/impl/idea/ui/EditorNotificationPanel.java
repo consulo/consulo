@@ -182,13 +182,6 @@ public class EditorNotificationPanel extends JPanel implements IntentionActionPr
       return StringUtil.isEmpty(text) ? EditorBundle.message("editor.notification.default.action.name") : StringUtil.shortenTextWithEllipsis(text, 50, 0);
     }
 
-    @Nls
-    @Nonnull
-    @Override
-    public String getFamilyName() {
-      return "Editor notification";
-    }
-
     @Override
     public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
       return true;
@@ -212,13 +205,6 @@ public class EditorNotificationPanel extends JPanel implements IntentionActionPr
     @Override
     public String getText() {
       return myLabel.getText();
-    }
-
-    @Nls
-    @Nonnull
-    @Override
-    public String getFamilyName() {
-      return "Editor notification option";
     }
 
     @Override
@@ -249,13 +235,6 @@ public class EditorNotificationPanel extends JPanel implements IntentionActionPr
     @Override
     public String getText() {
       return EditorBundle.message("editor.notification.settings.option.name");
-    }
-
-    @Nls
-    @Nonnull
-    @Override
-    public String getFamilyName() {
-      return "Editor notification settings";
     }
 
     @Override

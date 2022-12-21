@@ -64,12 +64,6 @@ public class QuickFixWrapper implements IntentionAction, SyntheticIntentionActio
   }
 
   @Override
-  @Nonnull
-  public String getFamilyName() {
-    return myDescriptor.getFixes()[myFixNumber].getName();
-  }
-
-  @Override
   public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
     PsiElement psiElement = myDescriptor.getPsiElement();
     if (psiElement == null || !psiElement.isValid()) return false;

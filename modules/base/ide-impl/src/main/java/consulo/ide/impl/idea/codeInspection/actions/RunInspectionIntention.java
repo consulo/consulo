@@ -69,12 +69,6 @@ public class RunInspectionIntention implements IntentionAction, HighPriorityActi
   }
 
   @Override
-  @Nonnull
-  public String getFamilyName() {
-    return getText();
-  }
-
-  @Override
   public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
     return LocalInspectionToolWrapper.findTool2RunInBatch(project, file, myShortName) != null;
   }

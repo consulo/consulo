@@ -72,12 +72,6 @@ public class CleanupInspectionIntention implements IntentionAction, HighPriority
   }
 
   @Override
-  @Nonnull
-  public String getFamilyName() {
-    return getText();
-  }
-
-  @Override
   public void invoke(@Nonnull final Project project, final Editor editor, final PsiFile file) throws IncorrectOperationException {
 
     final List<ProblemDescriptor> descriptions =

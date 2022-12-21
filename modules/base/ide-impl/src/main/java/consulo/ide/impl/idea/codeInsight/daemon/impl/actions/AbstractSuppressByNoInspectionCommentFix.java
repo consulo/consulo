@@ -127,10 +127,8 @@ public abstract class AbstractSuppressByNoInspectionCommentFix extends SuppressI
     return Collections.singletonList(prev);
   }
 
-
-  @Override
   @Nonnull
-  public String getFamilyName() {
+  public String getText() {
     return InspectionsBundle.message("suppress.inspection.family");
   }
 }

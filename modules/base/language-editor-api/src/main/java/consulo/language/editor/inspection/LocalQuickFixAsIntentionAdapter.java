@@ -39,12 +39,6 @@ public class LocalQuickFixAsIntentionAdapter implements SyntheticIntentionAction
     return myFix.getName();
   }
 
-  @Nonnull
-  @Override
-  public String getFamilyName() {
-    return myFix.getFamilyName();
-  }
-
   @Override
   public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
     return myProblemDescriptor.getStartElement() != null;

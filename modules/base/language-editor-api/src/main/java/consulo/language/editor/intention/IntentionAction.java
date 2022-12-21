@@ -15,18 +15,18 @@
  */
 package consulo.language.editor.intention;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
-import consulo.codeEditor.Editor;
 import consulo.application.dumb.DumbAware;
-import consulo.language.editor.inspection.FileModifier;
-import consulo.project.Project;
+import consulo.codeEditor.Editor;
 import consulo.component.util.Iconable;
+import consulo.language.editor.inspection.FileModifier;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
+import consulo.project.Project;
 import org.jetbrains.annotations.Nls;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -45,43 +45,30 @@ import javax.annotation.Nonnull;
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface IntentionAction extends FileModifier {
   IntentionAction[] EMPTY_ARRAY = new IntentionAction[0];
+
   /**
    * Returns text to be shown in the list of available actions, if this action
    * is available.
    *
-   * @see #isAvailable(Project,Editor,PsiFile)
    * @return the text to show in the intention popup.
+   * @see #isAvailable(Project, Editor, PsiFile)
    */
   @Nls(capitalization = Nls.Capitalization.Sentence)
   @Nonnull
   String getText();
 
   /**
-   * Returns the name of the family of intentions. It is used to externalize
-   * "auto-show" state of intentions. When user clicks on a lightbulb in intention list,
-   * all intentions with the same family name get enabled/disabled.
-   * The name is also shown in settings tree.
-   *
-   * @return the intention family name.
-   */
-  @Nonnull
-  @Deprecated
-  @DeprecationInfo("Use IntentionMetaData#ignoreId()")
-  @Nls(capitalization = Nls.Capitalization.Sentence)
-  default String getFamilyName() {
-    return "(deprecated)";
-  }
-
-  /**
    * Checks whether this intention is available at a caret offset in file.
    * If this method returns true, a light bulb for this intention is shown.
    *
    * @param project the project in which the availability is checked.
-   * @param editor the editor in which the intention will be invoked.
-   * @param file the file open in the editor.
+   * @param editor  the editor in which the intention will be invoked.
+   * @param file    the file open in the editor.
    * @return true if the intention is available, false otherwise.
    */
-  boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file);
+  default boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
+    return true;
+  }
 
   /**
    * Called when user invokes intention. This method is called inside command.
@@ -89,8 +76,8 @@ public interface IntentionAction extends FileModifier {
    * inside write action.
    *
    * @param project the project in which the intention is invoked.
-   * @param editor the editor in which the intention is invoked.
-   * @param file the file open in the editor.
+   * @param editor  the editor in which the intention is invoked.
+   * @param file    the file open in the editor.
    */
   void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException;
 

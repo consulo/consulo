@@ -46,6 +46,7 @@ import consulo.util.collection.Lists;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
+import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -122,10 +123,11 @@ public class IntentionManagerImpl extends IntentionManager implements Disposable
         return action.getText();
       }
 
-      @Override
+      @Nls
       @Nonnull
+      @Override
       public String getFamilyName() {
-        return action.getFamilyName();
+        return action.getText();
       }
 
       @Override

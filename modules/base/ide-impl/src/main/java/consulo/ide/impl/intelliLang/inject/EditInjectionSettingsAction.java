@@ -49,12 +49,6 @@ public class EditInjectionSettingsAction implements IntentionAction, LowPriority
     return "Edit Injection Settings";
   }
 
-  @Override
-  @Nonnull
-  public String getFamilyName() {
-    return "Edit Injection Settings";
-  }
-
   public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
     final int offset = editor.getCaretModel().getOffset();
     final PsiFile psiFile = InjectedLanguageUtil.findInjectedPsiNoCommit(file, offset);

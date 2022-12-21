@@ -42,12 +42,6 @@ public abstract class CleanupIntention implements IntentionAction, LowPriorityAc
   }
 
   @Override
-  @Nonnull
-  public String getFamilyName() {
-    return InspectionsBundle.message("cleanup.in.scope");
-  }
-
-  @Override
   public void invoke(@Nonnull final Project project, final Editor editor, final PsiFile file) throws IncorrectOperationException {
     if (!FileModificationService.getInstance().preparePsiElementForWrite(file)) return;
     final InspectionManager managerEx = InspectionManager.getInstance(project);

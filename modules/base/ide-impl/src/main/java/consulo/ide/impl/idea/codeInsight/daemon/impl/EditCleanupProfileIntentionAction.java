@@ -41,12 +41,6 @@ public class EditCleanupProfileIntentionAction implements IntentionAction {
   @Override
   @Nonnull
   public String getText() {
-    return getFamilyName();
-  }
-
-  @Override
-  @Nonnull
-  public String getFamilyName() {
     return "Edit cleanup profile settings";
   }
 

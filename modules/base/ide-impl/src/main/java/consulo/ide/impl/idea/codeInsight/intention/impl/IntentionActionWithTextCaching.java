@@ -2,29 +2,28 @@
 
 package consulo.ide.impl.idea.codeInsight.intention.impl;
 
-import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
-import consulo.language.editor.intention.CustomizableIntentionAction;
-import consulo.language.editor.internal.intention.CustomizableIntentionActionDelegate;
-import consulo.language.editor.intention.IntentionActionDelegate;
-import consulo.ui.ex.action.ShortcutProvider;
-import consulo.language.editor.inspection.FileModifier;
-import consulo.language.editor.intention.IntentionAction;
-import consulo.ui.ex.action.ShortcutSet;
-import consulo.ide.impl.idea.openapi.diagnostic.Logger;
-import consulo.codeEditor.Editor;
-import consulo.project.DumbService;
 import consulo.application.dumb.PossiblyDumbAware;
-import consulo.project.Project;
+import consulo.codeEditor.Editor;
+import consulo.ide.impl.idea.openapi.diagnostic.Logger;
 import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
+import consulo.language.editor.inspection.FileModifier;
+import consulo.language.editor.intention.CustomizableIntentionAction;
+import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.intention.IntentionActionDelegate;
+import consulo.language.editor.internal.intention.CustomizableIntentionActionDelegate;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.project.DumbService;
+import consulo.project.Project;
+import consulo.ui.ex.action.ShortcutProvider;
+import consulo.ui.ex.action.ShortcutSet;
 import consulo.ui.image.Image;
-import org.jetbrains.annotations.Nls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -196,13 +195,6 @@ public class IntentionActionWithTextCaching implements Comparable<IntentionActio
     @Override
     public String toString() {
       return getDelegate().getClass() + ": " + getDelegate();
-    }
-
-    @Nls
-    @Nonnull
-    @Override
-    public String getFamilyName() {
-      return myAction.getFamilyName();
     }
 
     @Override

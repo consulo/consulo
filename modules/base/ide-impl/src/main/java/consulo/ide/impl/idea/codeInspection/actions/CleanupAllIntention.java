@@ -31,7 +31,7 @@ public class CleanupAllIntention extends CleanupIntention {
 
   @Nonnull
   @Override
-  public String getFamilyName() {
+  public String getText() {
     return InspectionsBundle.message("cleanup.in.file");
   }
 

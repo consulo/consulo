@@ -77,10 +77,4 @@ public class SuppressIntentionActionFromFix extends SuppressIntentionAction {
   public String getText() {
     return myFix.getName();
   }
-
-  @Nonnull
-  @Override
-  public String getFamilyName() {
-    return myFix.getFamilyName();
-  }
 }

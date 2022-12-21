@@ -66,17 +66,6 @@ public class TemplateLanguageErrorQuickFixProvider implements ErrorQuickFixProvi
         return LangBundle.message("quickfix.change.template.data.language.text", language.getDisplayName());
       }
 
-      @Override
-      @Nonnull
-      public String getFamilyName() {
-        return getText();
-      }
-
-      @Override
-      public boolean isAvailable(@Nonnull final Project project, final Editor editor, final PsiFile file) {
-        return true;
-      }
-
       @RequiredUIAccess
       @Override
       public void invoke(@Nonnull final Project project, final Editor editor, final PsiFile file) throws IncorrectOperationException {
@@ -89,11 +78,6 @@ public class TemplateLanguageErrorQuickFixProvider implements ErrorQuickFixProvi
             }
           }
         });
-      }
-
-      @Override
-      public boolean startInWriteAction() {
-        return false;
       }
     };
   }

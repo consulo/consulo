@@ -155,13 +155,10 @@ public class QuickEditAction implements IntentionAction, LowPriorityAction {
   @Override
   @Nonnull
   public String getText() {
+    if (myLastLanguageName == null) {
+      return "Edit Injected Fragment";
+    }
     return "Edit " + StringUtil.notNullize(myLastLanguageName, "Injected") + " Fragment";
-  }
-
-  @Override
-  @Nonnull
-  public String getFamilyName() {
-    return "Edit Injected Fragment";
   }
 
   public static Balloon.Position getBalloonPosition(Editor editor) {

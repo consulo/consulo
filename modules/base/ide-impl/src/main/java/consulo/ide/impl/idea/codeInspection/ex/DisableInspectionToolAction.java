@@ -40,7 +40,6 @@ import java.io.IOException;
 
 public class DisableInspectionToolAction implements IntentionAction, SyntheticIntentionAction, Iconable {
   private final String myToolId;
-  public static final String NAME = InspectionsBundle.message("disable.inspection.action.name");
 
   public DisableInspectionToolAction(LocalInspectionTool tool) {
     myToolId = tool.getShortName();
@@ -53,18 +52,7 @@ public class DisableInspectionToolAction implements IntentionAction, SyntheticIn
   @Override
   @Nonnull
   public String getText() {
-    return NAME;
-  }
-
-  @Override
-  @Nonnull
-  public String getFamilyName() {
-    return NAME;
-  }
-
-  @Override
-  public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
-    return true;
+    return InspectionsBundle.message("disable.inspection.action.name");
   }
 
   @Override

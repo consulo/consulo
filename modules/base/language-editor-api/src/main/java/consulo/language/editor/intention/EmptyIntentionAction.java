@@ -16,12 +16,12 @@
 
 package consulo.language.editor.intention;
 
-import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.application.AllIcons;
 import consulo.codeEditor.Editor;
-import consulo.project.Project;
 import consulo.component.util.Iconable;
+import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.psi.PsiFile;
+import consulo.project.Project;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
  * User: anna
  * Date: May 11, 2005
  */
-public final class EmptyIntentionAction extends AbstractEmptyIntentionAction implements LowPriorityAction, Iconable {
+public final class EmptyIntentionAction extends AbstractEmptyIntentionAction implements SyntheticIntentionAction, LowPriorityAction, Iconable {
   private final String myName;
 
   public EmptyIntentionAction(@Nonnull String name) {
@@ -41,12 +41,6 @@ public final class EmptyIntentionAction extends AbstractEmptyIntentionAction imp
   @Nonnull
   public String getText() {
     return InspectionsBundle.message("inspection.options.action.text", myName);
-  }
-
-  @Override
-  @Nonnull
-  public String getFamilyName() {
-    return myName;
   }
 
   @Override

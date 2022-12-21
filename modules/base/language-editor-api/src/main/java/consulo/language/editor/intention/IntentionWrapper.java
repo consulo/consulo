@@ -63,7 +63,7 @@ public class IntentionWrapper implements LocalQuickFix, IntentionAction, ActionC
   @Nonnull
   @Override
   public String getFamilyName() {
-    return myAction.getFamilyName();
+    return getText();
   }
 
   @Override

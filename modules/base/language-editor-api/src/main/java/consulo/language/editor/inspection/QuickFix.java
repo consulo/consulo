@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.inspection;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.project.Project;
 import org.jetbrains.annotations.Nls;
 
@@ -48,6 +49,8 @@ public interface QuickFix<D extends CommonProblemDescriptor> extends WriteAction
    */
   @Nls(capitalization = Nls.Capitalization.Sentence)
   @Nonnull
+  @Deprecated
+  @DeprecationInfo("Will be removed in future")
   String getFamilyName();
 
   /**

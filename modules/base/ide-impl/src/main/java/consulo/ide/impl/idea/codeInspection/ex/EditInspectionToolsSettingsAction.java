@@ -63,12 +63,6 @@ public class EditInspectionToolsSettingsAction implements IntentionAction, Icona
   }
 
   @Override
-  @Nonnull
-  public String getFamilyName() {
-    return InspectionsBundle.message("edit.options.of.reporter.inspection.family");
-  }
-
-  @Override
   public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
     return true;
   }

@@ -801,17 +801,6 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
       }
 
       @Override
-      @Nonnull
-      public String getFamilyName() {
-        return fix.getFamilyName();
-      }
-
-      @Override
-      public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
-        return true;
-      }
-
-      @Override
       public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
         fix.applyFix(project, problemDescriptor); //todo check type consistency
       }

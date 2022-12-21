@@ -16,6 +16,7 @@
 
 package consulo.language.editor.intention;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
@@ -25,13 +26,9 @@ import javax.annotation.Nonnull;
 /**
  * @author Dmitry Avdeev
  */
+@Deprecated
+@DeprecationInfo("Use consulo.language.editor.intention.IntentionAction instead")
 public abstract class AbstractIntentionAction implements IntentionAction {
-
-  @Override
-  @Nonnull
-  public String getFamilyName() {
-    return getText();
-  }
 
   @Override
   public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {

@@ -14,21 +14,15 @@ abstract class AbstractEditIntentionSettingsAction implements SyntheticIntention
   private static final Logger LOG = Logger.getInstance(AbstractEditIntentionSettingsAction.class);
 
   @Nonnull
-  final String myFamilyName;
+  final String myText;
   private final boolean myEnabled;
 
   protected AbstractEditIntentionSettingsAction(@Nonnull IntentionAction action) {
-    myFamilyName = action.getFamilyName();
+    myText = action.getText();
     // needed for checking errors in user written actions
     //noinspection ConstantConditions
-    LOG.assertTrue(myFamilyName != null, "action " + action.getClass() + " family returned null");
+    LOG.assertTrue(myText != null, "action " + action.getClass() + " text returned null");
     myEnabled = true;
-  }
-
-  @Nonnull
-  @Override
-  public String getFamilyName() {
-    return getText();
   }
 
   @Override

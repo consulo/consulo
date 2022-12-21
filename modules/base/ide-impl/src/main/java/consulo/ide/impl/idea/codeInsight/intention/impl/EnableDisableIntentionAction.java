@@ -22,7 +22,7 @@ public class EnableDisableIntentionAction extends AbstractEditIntentionSettingsA
   @Nonnull
   public String getText() {
     final IntentionManagerSettings mySettings = IntentionManagerSettings.getInstance();
-    return CodeInsightBundle.message(mySettings.isEnabled(myAction) ? "disable.intention.action" : "enable.intention.action", myFamilyName);
+    return CodeInsightBundle.message(mySettings.isEnabled(myAction) ? "disable.intention.action" : "enable.intention.action", myText);
   }
 
   @Override

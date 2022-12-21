@@ -39,12 +39,6 @@ public abstract class PriorityIntentionActionWrapper implements IntentionAction,
     return action.getText();
   }
 
-  @Nonnull
-  @Override
-  public String getFamilyName() {
-    return action.getFamilyName();
-  }
-
   @Override
   public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
     return action.isAvailable(project, editor, file);

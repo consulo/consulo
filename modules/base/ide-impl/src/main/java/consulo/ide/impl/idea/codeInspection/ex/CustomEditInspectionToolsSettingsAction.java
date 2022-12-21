@@ -27,12 +27,6 @@ public class CustomEditInspectionToolsSettingsAction implements IntentionAction,
     return myText.compute();
   }
 
-  @Nonnull
-  @Override
-  public String getFamilyName() {
-    return myEditInspectionToolsSettingsAction.getFamilyName();
-  }
-
   @Override
   public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
     return myEditInspectionToolsSettingsAction.isAvailable(project, editor, file);
