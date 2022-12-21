@@ -20,6 +20,7 @@ import consulo.application.Application;
 import consulo.ide.impl.idea.ide.ui.search.SearchableOptionContributor;
 import consulo.ide.impl.idea.ide.ui.search.SearchableOptionProcessor;
 import consulo.language.editor.CodeInsightBundle;
+import consulo.language.editor.impl.internal.intention.IntentionManagerSettings;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.editor.internal.intention.IntentionActionMetaData;
@@ -52,7 +53,7 @@ public class IntentionSearchableOptionContributor extends SearchableOptionContri
 
       String[] categories = intentionMetaData.categories();
 
-      String descriptionDirectoryName = IntentionManagerImpl.getDescriptionDirectoryName(action);
+      String descriptionDirectoryName = IntentionManagerSettings.getDescriptionDirectoryName(action);
 
       IntentionActionMetaData data = new IntentionActionMetaData(action, categories, descriptionDirectoryName);
 

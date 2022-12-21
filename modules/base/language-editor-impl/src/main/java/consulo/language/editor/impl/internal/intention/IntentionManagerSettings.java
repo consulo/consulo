@@ -22,18 +22,18 @@
  * To change template for new class use
  * Code Style | Class Templates options (Tools | IDE Options).
  */
-package consulo.ide.impl.idea.codeInsight.intention.impl.config;
+package consulo.language.editor.impl.internal.intention;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
+import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import consulo.ide.ServiceManager;
-import consulo.language.editor.intention.IntentionActionDelegate;
 import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.intention.IntentionActionDelegate;
 import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.editor.intention.SyntheticIntentionAction;
 import consulo.language.editor.internal.intention.IntentionActionMetaData;
@@ -43,7 +43,10 @@ import jakarta.inject.Singleton;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.regex.Pattern;
 
@@ -52,35 +55,51 @@ import java.util.regex.Pattern;
 @ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class IntentionManagerSettings implements PersistentStateComponent<Element> {
+  private static final ExtensionPointCacheKey<IntentionAction, List<IntentionActionMetaData>> CACHE_KEY = ExtensionPointCacheKey.create("IntentionActionMetaData", intentionActions -> {
+    List<IntentionActionMetaData> actionMetaDatas = new ArrayList<>(intentionActions.size());
+
+    for (IntentionAction action : intentionActions) {
+      register(action, actionMetaDatas);
+    }
+
+    return Collections.unmodifiableList(actionMetaDatas);
+  });
+
   private static final Logger LOG = Logger.getInstance(IntentionManagerSettings.class);
   private final Set<String> myIgnoredActions = new ConcurrentSkipListSet<>();
-
-  private final Map<Class<?>, IntentionActionMetaData> myMetaData = new LinkedHashMap<>();
+  private final Application myApplication;
 
   private static final String IGNORE_ACTION_TAG = "ignoreAction";
   private static final String NAME_ATT = "name";
   public static final Pattern HTML_PATTERN = Pattern.compile("<[^<>]*>");
 
   public static IntentionManagerSettings getInstance() {
-    return ServiceManager.getService(IntentionManagerSettings.class);
+    return Application.get().getInstance(IntentionManagerSettings.class);
   }
 
-  public void registerIntentionMetaData(@Nonnull IntentionAction intentionAction, @Nonnull String[] category, @Nonnull String descriptionDirectoryName) {
-    registerMetaData(new IntentionActionMetaData(intentionAction, category, descriptionDirectoryName));
+  private static void register(@Nonnull IntentionAction intentionAction, List<IntentionActionMetaData> actionMetaDatas) {
+    IntentionMetaData intentionMetaData = intentionAction.getClass().getAnnotation(IntentionMetaData.class);
+    if (intentionMetaData == null) {
+      LOG.error("@IntentionMetaData missed on intention " + intentionAction.getClass().getName());
+      return;
+    }
+
+    String descriptionDirectoryName = getDescriptionDirectoryName(intentionAction);
+    actionMetaDatas.add(new IntentionActionMetaData(intentionAction, intentionMetaData.categories(), descriptionDirectoryName));
+  }
+
+  @Nonnull
+  public static String getDescriptionDirectoryName(final IntentionAction action) {
+    return getDescriptionDirectoryName(action.getClass().getName());
+  }
+
+  private static String getDescriptionDirectoryName(final String fqn) {
+    return fqn.substring(fqn.lastIndexOf('.') + 1).replaceAll("\\$", "");
   }
 
   @Inject
   public IntentionManagerSettings(Application application) {
-    for (IntentionAction intentionAction : application.getExtensionList(IntentionAction.class)) {
-      IntentionMetaData intentionMetaData = intentionAction.getClass().getAnnotation(IntentionMetaData.class);
-      if (intentionMetaData == null) {
-        LOG.error("@IntentionMetaData missed on intention " + intentionAction.getClass().getName());
-        continue;
-      }
-
-      String descriptionDirectoryName = IntentionManagerImpl.getDescriptionDirectoryName(intentionAction);
-      registerIntentionMetaData(intentionAction, intentionMetaData.categories(), descriptionDirectoryName);
-    }
+    myApplication = application;
   }
 
   public boolean isShowLightBulb(@Nonnull IntentionAction action) {
@@ -110,8 +129,8 @@ public class IntentionManagerSettings implements PersistentStateComponent<Elemen
   }
 
   @Nonnull
-  public synchronized List<IntentionActionMetaData> getMetaData() {
-    return new ArrayList<>(myMetaData.values());
+  public List<IntentionActionMetaData> getMetaData() {
+    return myApplication.getExtensionPoint(IntentionAction.class).getOrBuildCache(CACHE_KEY);
   }
 
   public boolean isEnabled(@Nonnull IntentionActionMetaData metaData) {
@@ -170,13 +189,5 @@ public class IntentionManagerSettings implements PersistentStateComponent<Elemen
     else {
       myIgnoredActions.add(getIgnoreId(action));
     }
-  }
-
-  public synchronized void registerMetaData(@Nonnull IntentionActionMetaData metaData) {
-    myMetaData.put(metaData.getAction().getClass(), metaData);
-  }
-
-  public synchronized void unregisterMetaData(@Nonnull IntentionAction intentionAction) {
-    myMetaData.remove(intentionAction.getClass());
   }
 }

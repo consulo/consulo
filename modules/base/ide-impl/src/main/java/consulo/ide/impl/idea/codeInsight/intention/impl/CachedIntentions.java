@@ -7,7 +7,7 @@ import consulo.language.editor.intention.EmptyIntentionAction;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.intention.IntentionActionDelegate;
 import consulo.language.editor.inspection.PriorityAction;
-import consulo.ide.impl.idea.codeInsight.intention.impl.config.IntentionManagerSettings;
+import consulo.language.editor.impl.internal.intention.IntentionManagerSettings;
 import consulo.language.editor.inspection.SuppressIntentionActionFromFix;
 import consulo.ide.impl.idea.codeInspection.ex.QuickFixWrapper;
 import consulo.ide.impl.idea.concurrency.ConcurrentCollectionFactory;

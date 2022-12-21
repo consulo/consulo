@@ -28,6 +28,7 @@ import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.io.URLUtil;
 import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;
@@ -232,7 +233,11 @@ public final class IntentionActionMetaData {
 
   @Nonnull
   public String getActionText() {
-    return myAction.getText();
+    String text = myAction.getText();
+    if (StringUtil.isEmptyOrSpaces(text)) {
+      return myAction.getClass().getName();
+    }
+    return text;
   }
 
   @Nonnull

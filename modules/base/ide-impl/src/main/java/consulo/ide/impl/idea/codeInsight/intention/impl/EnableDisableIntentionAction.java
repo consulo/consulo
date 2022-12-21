@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.codeInsight.intention.impl;
 
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.intention.IntentionAction;
-import consulo.ide.impl.idea.codeInsight.intention.impl.config.IntentionManagerSettings;
+import consulo.language.editor.impl.internal.intention.IntentionManagerSettings;
 import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;

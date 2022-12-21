@@ -68,7 +68,9 @@ public interface IntentionAction extends FileModifier {
   @Deprecated
   @DeprecationInfo("Use IntentionMetaData#ignoreId()")
   @Nls(capitalization = Nls.Capitalization.Sentence)
-  String getFamilyName();
+  default String getFamilyName() {
+    return "(deprecated)";
+  }
 
   /**
    * Checks whether this intention is available at a caret offset in file.

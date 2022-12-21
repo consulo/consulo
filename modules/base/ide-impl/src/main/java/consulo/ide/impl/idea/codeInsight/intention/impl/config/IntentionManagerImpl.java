@@ -22,6 +22,7 @@ import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.CleanupOnScopeIntention;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.EditCleanupProfileIntentionAction;
 import consulo.language.editor.impl.inspection.scheme.GlobalInspectionToolWrapper;
+import consulo.language.editor.impl.internal.intention.IntentionManagerSettings;
 import consulo.language.editor.inspection.GlobalSimpleInspectionTool;
 import consulo.ide.impl.idea.codeInspection.actions.CleanupAllIntention;
 import consulo.ide.impl.idea.codeInspection.actions.CleanupInspectionIntention;
@@ -70,15 +71,6 @@ public class IntentionManagerImpl extends IntentionManager implements Disposable
     addAction(new EditInspectionToolsSettingsInSuppressedPlaceIntention());
 
     application.getExtensionPoint(IntentionAction.class).forEachExtensionSafe(this::addAction);
-  }
-
-  @Nonnull
-  public static String getDescriptionDirectoryName(final IntentionAction action) {
-    return getDescriptionDirectoryName(action.getClass().getName());
-  }
-
-  private static String getDescriptionDirectoryName(final String fqn) {
-    return fqn.substring(fqn.lastIndexOf('.') + 1).replaceAll("\\$", "");
   }
 
   @Override

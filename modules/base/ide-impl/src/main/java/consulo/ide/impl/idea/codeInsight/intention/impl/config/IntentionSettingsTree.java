@@ -25,6 +25,7 @@ import consulo.ide.impl.idea.packageDependencies.ui.TreeExpansionMonitor;
 import consulo.ide.impl.idea.ui.CheckboxTree;
 import consulo.ide.impl.idea.ui.CheckedTreeNode;
 import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.language.editor.impl.internal.intention.IntentionManagerSettings;
 import consulo.language.editor.internal.intention.IntentionActionMetaData;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.FilterComponent;

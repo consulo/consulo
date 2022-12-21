@@ -23,7 +23,7 @@ package consulo.ide.impl.idea.internal;
 import consulo.application.dumb.DumbAware;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.IdeaFileChooser;
-import consulo.ide.impl.idea.codeInsight.intention.impl.config.IntentionManagerSettings;
+import consulo.language.editor.impl.internal.intention.IntentionManagerSettings;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.language.editor.CommonDataKeys;
