@@ -726,8 +726,8 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
 
         if (myDimensionServiceKey != null) {
           final Project projectGuess = DataManager.getInstance().getDataContext((Component)this).getData(CommonDataKeys.PROJECT);
-          location = getWindowStateService(projectGuess).getLocation(myDimensionServiceKey);
-          Dimension size = getWindowStateService(projectGuess).getSize(myDimensionServiceKey);
+          location = TargetAWT.to(getWindowStateService(projectGuess).getLocation(myDimensionServiceKey));
+          Dimension size = TargetAWT.to(getWindowStateService(projectGuess).getSize(myDimensionServiceKey));
           if (size != null) {
             myInitialSize = new Dimension(size);
             _setSizeForLocation(myInitialSize.width, myInitialSize.height, location);
@@ -885,11 +885,11 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
 
           // Save location
           Point location = getLocation();
-          getWindowStateService(projectGuess).putLocation(myDimensionServiceKey, location);
+          getWindowStateService(projectGuess).putLocation(myDimensionServiceKey, TargetAWT.from(location));
           // Save size
           Dimension size = getSize();
           if (!myInitialSize.equals(size)) {
-            getWindowStateService(projectGuess).putSize(myDimensionServiceKey, size);
+            getWindowStateService(projectGuess).putSize(myDimensionServiceKey, TargetAWT.from(size));
           }
           myOpened = false;
         }

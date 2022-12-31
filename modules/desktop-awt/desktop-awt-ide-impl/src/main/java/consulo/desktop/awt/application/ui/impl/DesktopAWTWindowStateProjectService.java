@@ -13,13 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.util;
+package consulo.desktop.awt.application.ui.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import consulo.application.ui.ApplicationWindowStateService;
+import consulo.component.persist.StoragePathMacros;
+import consulo.project.Project;
+import consulo.project.ui.ProjectWindowStateService;
+
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 /**
@@ -27,9 +30,10 @@ import jakarta.inject.Singleton;
  */
 @Singleton
 @ServiceImpl
-@State(name = "WindowStateApplicationService", storages = @Storage(value = "window.state.xml", roamingType = RoamingType.DISABLED))
-public class WindowStateApplicationService extends WindowStateServiceImpl implements ApplicationWindowStateService {
-  public WindowStateApplicationService() {
-    super(null);
+@State(name = "WindowStateProjectService", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
+final class DesktopAWTWindowStateProjectService extends DesktopAWTWindowStateServiceImpl implements ProjectWindowStateService {
+  @Inject
+  DesktopAWTWindowStateProjectService(Project project) {
+    super(project);
   }
 }

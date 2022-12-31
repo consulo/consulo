@@ -585,6 +585,18 @@ public final class StringUtil {
   }
 
   @Contract(pure = true)
+  public static long parseLong(@Nullable String string, long defaultValue) {
+    if (string != null) {
+      try {
+        return Long.parseLong(string);
+      }
+      catch (NumberFormatException ignored) {
+      }
+    }
+    return defaultValue;
+  }
+
+  @Contract(pure = true)
   public static double parseDouble(final String string, final double defaultValue) {
     try {
       return Double.parseDouble(string);

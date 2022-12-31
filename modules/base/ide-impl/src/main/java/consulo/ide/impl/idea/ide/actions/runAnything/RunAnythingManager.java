@@ -13,18 +13,21 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.project.ui.ProjectWindowStateService;
+import consulo.ui.Coordinate2D;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.JBInsets;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
+@Singleton
 @ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class RunAnythingManager {
@@ -87,7 +90,7 @@ public class RunAnythingManager {
     });
 
     if (myRunAnythingUI.getViewType() == RunAnythingPopupUI.ViewType.SHORT) {
-      myBalloonFullSize = ProjectWindowStateService.getInstance(myProject).getSize(LOCATION_SETTINGS_KEY);
+      myBalloonFullSize = TargetAWT.to(ProjectWindowStateService.getInstance(myProject).getSize(LOCATION_SETTINGS_KEY));
       Dimension prefSize = myRunAnythingUI.getPreferredSize();
       myBalloon.setSize(prefSize);
     }
@@ -114,7 +117,7 @@ public class RunAnythingManager {
   }
 
   private void calcPositionAndShow(Project project, JBPopup balloon) {
-    Point savedLocation = ProjectWindowStateService.getInstance(myProject).getLocation(LOCATION_SETTINGS_KEY);
+    Coordinate2D savedLocation = ProjectWindowStateService.getInstance(myProject).getLocation(LOCATION_SETTINGS_KEY);
 
     if (project != null) {
       balloon.showCenteredInCurrentWindow(project);
@@ -179,7 +182,7 @@ public class RunAnythingManager {
 
   private void saveSize() {
     if (myRunAnythingUI.getViewType() == RunAnythingPopupUI.ViewType.SHORT) {
-      ProjectWindowStateService.getInstance(myProject).putSize(LOCATION_SETTINGS_KEY, myBalloonFullSize);
+      ProjectWindowStateService.getInstance(myProject).putSize(LOCATION_SETTINGS_KEY, TargetAWT.from(myBalloonFullSize));
     }
   }
 }

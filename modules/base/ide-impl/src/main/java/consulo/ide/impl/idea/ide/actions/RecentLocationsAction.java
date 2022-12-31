@@ -1,46 +1,40 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.application.ui.DimensionService;
+import consulo.application.ui.wm.IdeFocusManager;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.EditorFactory;
+import consulo.colorScheme.EditorColorsManager;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.IdeEventQueue;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.action.CustomShortcutSet;
-import consulo.ui.ex.action.ShortcutSet;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorFactory;
-import consulo.colorScheme.EditorColorsManager;
-import consulo.codeEditor.EditorEx;
 import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.IdeDocumentHistoryImpl;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.ui.CaptionPanel;
+import consulo.ide.impl.idea.ui.WindowMoveListener;
+import consulo.ide.impl.idea.ui.speedSearch.ListWithFilter;
+import consulo.ide.impl.idea.ui.speedSearch.NameFilteringListModel;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
+import consulo.project.ui.internal.WindowManagerEx;
+import consulo.ui.Coordinate2D;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.CustomShortcutSet;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.ShortcutSet;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.speedSearch.SpeedSearch;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
-import consulo.ide.impl.idea.openapi.util.DimensionService;
 import consulo.util.lang.ref.Ref;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.application.ui.wm.IdeFocusManager;
-import consulo.project.ui.internal.WindowManagerEx;
-import consulo.ide.impl.idea.ui.CaptionPanel;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.awt.ScrollingUtil;
-import consulo.ide.impl.idea.ui.WindowMoveListener;
-import consulo.ui.ex.awt.JBCheckBox;
-import consulo.ui.ex.awt.JBLabel;
-import consulo.ui.ex.awt.JBList;
-import consulo.ui.ex.awt.JBUIScale;
-import consulo.ide.impl.idea.ui.speedSearch.ListWithFilter;
-import consulo.ide.impl.idea.ui.speedSearch.NameFilteringListModel;
-import consulo.ui.ex.awt.speedSearch.SpeedSearch;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -218,10 +212,10 @@ public class RecentLocationsAction extends DumbAwareAction {
   }
 
   private static void showPopup(@Nonnull Project project, @Nonnull JBPopup popup) {
-    Point savedLocation = DimensionService.getInstance().getLocation(LOCATION_SETTINGS_KEY, project);
+    Coordinate2D savedLocation = DimensionService.getInstance().getLocation(LOCATION_SETTINGS_KEY, project);
     Window recentFocusedWindow = TargetAWT.to(WindowManagerEx.getInstanceEx().getMostRecentFocusedWindow());
     if (savedLocation != null && recentFocusedWindow != null) {
-      popup.showInScreenCoordinates(recentFocusedWindow, savedLocation);
+      popup.showInScreenCoordinates(recentFocusedWindow, new Point(savedLocation.getX(), savedLocation.getY()));
     }
     else {
       popup.showCenteredInCurrentWindow(project);

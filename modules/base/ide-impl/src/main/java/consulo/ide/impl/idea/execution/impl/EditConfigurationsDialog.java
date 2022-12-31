@@ -20,14 +20,14 @@ import consulo.execution.ExecutionBundle;
 import consulo.execution.executor.Executor;
 import consulo.ide.impl.idea.openapi.options.ex.WholeWestSingleConfigurableEditor;
 import consulo.project.Project;
+import consulo.ui.Size;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Splitter;
 import consulo.util.lang.Couple;
-import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
-import java.awt.*;
 
 public class EditConfigurationsDialog extends WholeWestSingleConfigurableEditor implements RunConfigurable.RunDialogBase {
   protected Executor myExecutor;
@@ -65,8 +65,8 @@ public class EditConfigurationsDialog extends WholeWestSingleConfigurableEditor 
   }
 
   @Override
-  public Dimension getDefaultSize() {
-    return new Dimension(750, 500);
+  public Size getDefaultSize() {
+    return new Size(750, 500);
   }
 
   @Nullable

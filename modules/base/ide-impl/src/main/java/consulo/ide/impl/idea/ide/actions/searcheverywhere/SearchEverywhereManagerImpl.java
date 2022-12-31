@@ -10,6 +10,7 @@ import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.project.ui.ProjectWindowStateService;
 import consulo.project.ui.wm.WindowManager;
+import consulo.ui.Coordinate2D;
 import consulo.ui.TextBox;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.AnActionEvent;
@@ -121,7 +122,7 @@ public class SearchEverywhereManagerImpl implements SearchEverywhereManager {
     });
 
     if (mySearchEverywhereUI.getViewType() == SearchEverywhereUI.ViewType.SHORT) {
-      myBalloonFullSize = ProjectWindowStateService.getInstance(myProject).getSize(LOCATION_SETTINGS_KEY);
+      myBalloonFullSize = TargetAWT.to(ProjectWindowStateService.getInstance(myProject).getSize(LOCATION_SETTINGS_KEY));
       Dimension prefSize = mySearchEverywhereUI.getPreferredSize();
       myBalloon.setSize(prefSize);
     }
@@ -129,7 +130,7 @@ public class SearchEverywhereManagerImpl implements SearchEverywhereManager {
   }
 
   private void calcPositionAndShow(Project project, JBPopup balloon) {
-    Point savedLocation = ProjectWindowStateService.getInstance(myProject).getLocation(LOCATION_SETTINGS_KEY);
+    Coordinate2D savedLocation = ProjectWindowStateService.getInstance(myProject).getLocation(LOCATION_SETTINGS_KEY);
 
     //for first show and short mode popup should be shifted to the top screen half
     if (savedLocation == null && mySearchEverywhereUI.getViewType() == SearchEverywhereUI.ViewType.SHORT) {
@@ -271,7 +272,7 @@ public class SearchEverywhereManagerImpl implements SearchEverywhereManager {
 
   private void saveSize() {
     if (mySearchEverywhereUI.getViewType() == SearchEverywhereUI.ViewType.SHORT) {
-      ProjectWindowStateService.getInstance(myProject).putSize(LOCATION_SETTINGS_KEY, myBalloonFullSize);
+      ProjectWindowStateService.getInstance(myProject).putSize(LOCATION_SETTINGS_KEY, TargetAWT.from(myBalloonFullSize));
     }
   }
 

@@ -17,6 +17,7 @@ package consulo.desktop.awt.welcomeScreen;
 
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
+import consulo.ui.Coordinate2D;
 import consulo.ui.ex.awt.internal.AppIconUtil;
 import consulo.ui.ex.awt.MnemonicHelper;
 import consulo.application.Application;
@@ -73,7 +74,7 @@ public class FlatWelcomeFrame extends JFrameAsUIWindow implements Disposable, Ac
     SwingUIDecorator.apply(SwingUIDecorator::decorateWindowTitle, rootPane);
     setSize(TargetAWT.to(WelcomeFrameManager.getDefaultWindowSize()));
     setResizable(false);
-    Point location = ApplicationWindowStateService.getInstance().getLocation(WelcomeFrameManager.DIMENSION_KEY);
+    Point location = TargetAWT.to(ApplicationWindowStateService.getInstance().getLocation(WelcomeFrameManager.DIMENSION_KEY));
     Rectangle screenBounds = ScreenUtil.getScreenRectangle(location != null ? location : new Point(0, 0));
     setLocation(new Point(screenBounds.x + (screenBounds.width - getWidth()) / 2, screenBounds.y + (screenBounds.height - getHeight()) / 3));
 
@@ -101,7 +102,7 @@ public class FlatWelcomeFrame extends JFrameAsUIWindow implements Disposable, Ac
   }
 
   public static void saveLocation(Rectangle location) {
-    Point middle = new Point(location.x + location.width / 2, location.y = location.height / 2);
+    Coordinate2D middle = new Coordinate2D(location.x + location.width / 2, location.y = location.height / 2);
     ApplicationWindowStateService.getInstance().putLocation(WelcomeFrameManager.DIMENSION_KEY, middle);
   }
 

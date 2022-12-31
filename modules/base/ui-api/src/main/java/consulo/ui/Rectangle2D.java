@@ -45,6 +45,14 @@ public final class Rectangle2D implements Serializable, Cloneable {
     mySize = size;
   }
 
+  public Rectangle2D(@Nonnull Rectangle2D rectangle2D) {
+    this(rectangle2D.getX(), rectangle2D.getY(), rectangle2D.getWidth(), rectangle2D.getHeight());
+  }
+
+  public boolean isEmpty() {
+    return (getWidth() <= 0) || (getHeight() <= 0);
+  }
+
   public int getHeight() {
     return mySize.getHeight();
   }

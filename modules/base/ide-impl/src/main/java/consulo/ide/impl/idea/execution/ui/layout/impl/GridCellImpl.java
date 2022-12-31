@@ -16,20 +16,15 @@
 
 package consulo.ide.impl.idea.execution.ui.layout.impl;
 
-import consulo.ide.impl.idea.execution.ui.layout.*;
+import consulo.application.ui.DimensionService;
+import consulo.dataContext.DataProvider;
+import consulo.execution.ui.layout.PlaceInGrid;
+import consulo.ide.impl.idea.execution.ui.layout.GridCell;
+import consulo.ide.impl.idea.execution.ui.layout.Tab;
+import consulo.ide.impl.idea.execution.ui.layout.View;
+import consulo.ide.impl.idea.execution.ui.layout.ViewContext;
 import consulo.ide.impl.idea.execution.ui.layout.actions.CloseViewAction;
 import consulo.ide.impl.idea.execution.ui.layout.actions.MinimizeViewAction;
-import consulo.execution.ui.layout.PlaceInGrid;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.dataContext.DataProvider;
-import consulo.ui.ex.popup.JBPopup;
-import consulo.util.concurrent.ActionCallback;
-import consulo.ide.impl.idea.openapi.util.DimensionService;
-import consulo.util.collection.MutualMap;
-import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.awt.NonOpaquePanel;
-import consulo.ui.ex.content.Content;
-import consulo.ui.ex.content.ContentManager;
 import consulo.ide.impl.idea.ui.tabs.JBTabs;
 import consulo.ide.impl.idea.ui.tabs.TabInfo;
 import consulo.ide.impl.idea.ui.tabs.TabsListener;
@@ -37,7 +32,18 @@ import consulo.ide.impl.idea.ui.tabs.impl.JBEditorTabs;
 import consulo.ide.impl.idea.ui.tabs.impl.TabLabel;
 import consulo.ide.impl.idea.ui.tabs.impl.singleRow.ScrollableSingleRowLayout;
 import consulo.ide.impl.idea.ui.tabs.impl.singleRow.SingleRowLayout;
+import consulo.ui.Coordinate2D;
+import consulo.ui.Size;
+import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.content.Content;
+import consulo.ui.ex.content.ContentManager;
+import consulo.ui.ex.popup.JBPopup;
+import consulo.util.collection.MutualMap;
+import consulo.util.concurrent.ActionCallback;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
@@ -360,11 +366,11 @@ public class GridCellImpl implements GridCell {
 
     final DimensionService service = DimensionService.getInstance();
     final Dimension size = myContext.getContentManager().getComponent().getSize();
-    service.setSize(getDimensionKey(), size, myContext.getProject());
+    service.setSize(getDimensionKey(), TargetAWT.from(size), myContext.getProject());
     if (myContext.getWindow() != 0) {
       final Window frame = SwingUtilities.getWindowAncestor(myPlaceholder);
       if (frame != null) {
-        service.setLocation(getDimensionKey(), frame.getLocationOnScreen());
+        service.setLocation(getDimensionKey(), TargetAWT.from(frame.getLocationOnScreen()));
       }
     }
   }
@@ -418,12 +424,12 @@ public class GridCellImpl implements GridCell {
   }
 
   @Nullable
-  public Point getLocation() {
+  public Coordinate2D getLocation() {
     return DimensionService.getInstance().getLocation(getDimensionKey(), myContext.getProject());
   }
 
   @Nullable
-  public Dimension getSize() {
+  public Size getSize() {
     return DimensionService.getInstance().getSize(getDimensionKey(), myContext.getProject());
   }
 

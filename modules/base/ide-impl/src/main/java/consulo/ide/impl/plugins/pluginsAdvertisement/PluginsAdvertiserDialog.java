@@ -15,27 +15,23 @@
  */
 package consulo.ide.impl.plugins.pluginsAdvertisement;
 
+import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginId;
 import consulo.ide.impl.idea.ide.plugins.InstallPluginAction;
 import consulo.ide.impl.idea.ide.plugins.PluginManagerMain;
 import consulo.ide.impl.idea.ide.plugins.PluginTable;
-import consulo.project.Project;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.awt.util.TableUtil;
-import consulo.ui.ex.awt.CustomLineBorder;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.BorderLayoutPanel;
-import consulo.ui.ex.awt.WholeWestDialogWrapper;
-import consulo.container.plugin.PluginDescriptor;
-import consulo.container.plugin.PluginId;
 import consulo.ide.impl.plugins.PluginDescriptionPanel;
+import consulo.project.Project;
+import consulo.ui.Size;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.util.TableUtil;
 import consulo.util.lang.Couple;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
-import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -99,8 +95,8 @@ public class PluginsAdvertiserDialog extends WholeWestDialogWrapper {
   }
 
   @Override
-  public Dimension getDefaultSize() {
-    return new Dimension(500, 800);
+  public Size getDefaultSize() {
+    return new Size(500, 800);
   }
 
   @Override

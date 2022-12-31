@@ -15,7 +15,10 @@
  */
 package consulo.application.ui;
 
-import consulo.component.ComponentManager;
+import consulo.project.Project;
+import consulo.ui.Coordinate2D;
+import consulo.ui.Rectangle2D;
+import consulo.ui.Size;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -47,7 +50,9 @@ public interface WindowStateService {
    * @param window  a window state which should be watched for
    * @return a corresponding window state
    */
-  public abstract WindowState getStateFor(@Nullable ComponentManager project, @Nonnull String key, @Nonnull Window window);
+  default WindowState getStateFor(@Nullable Project project, @Nonnull String key, @Nonnull Window window) {
+    throw new AbstractMethodError("desktop only");
+  }
 
   /**
    * Returns a location that corresponds to the specified key or {@code null}
@@ -56,7 +61,7 @@ public interface WindowStateService {
    * @param key an unique string key
    * @return a corresponding location
    */
-  default Point getLocation(@Nonnull String key) {
+  default Coordinate2D getLocation(@Nonnull String key) {
     return getLocationFor(getProject(), key);
   }
 
@@ -69,7 +74,7 @@ public interface WindowStateService {
    * @param key    an unique string key
    * @return a corresponding location
    */
-  public abstract Point getLocationFor(Object object, @Nonnull String key);
+  public abstract Coordinate2D getLocationFor(Object object, @Nonnull String key);
 
   /**
    * Stores the specified location that corresponds to the specified key.
@@ -77,7 +82,7 @@ public interface WindowStateService {
    *
    * @param key an unique string key
    */
-  default void putLocation(@Nonnull String key, Point location) {
+  default void putLocation(@Nonnull String key, Coordinate2D location) {
     putLocationFor(getProject(), key, location);
   }
 
@@ -90,7 +95,7 @@ public interface WindowStateService {
    * @param object an object that specifies a screen to which a location belongs
    * @param key    an unique string key
    */
-  public abstract void putLocationFor(Object object, @Nonnull String key, Point location);
+  public abstract void putLocationFor(Object object, @Nonnull String key, Coordinate2D location);
 
   /**
    * Returns a size that corresponds to the specified key or {@code null}
@@ -99,7 +104,7 @@ public interface WindowStateService {
    * @param key an unique string key
    * @return a corresponding size
    */
-  default Dimension getSize(@Nonnull String key) {
+  default Size getSize(@Nonnull String key) {
     return getSizeFor(getProject(), key);
   }
 
@@ -112,7 +117,7 @@ public interface WindowStateService {
    * @param key    an unique string key
    * @return a corresponding size
    */
-  public abstract Dimension getSizeFor(Object object, @Nonnull String key);
+  public abstract Size getSizeFor(Object object, @Nonnull String key);
 
   /**
    * Stores the specified size that corresponds to the specified key.
@@ -120,7 +125,7 @@ public interface WindowStateService {
    *
    * @param key an unique string key
    */
-  default void putSize(@Nonnull String key, Dimension size) {
+  default void putSize(@Nonnull String key, Size size) {
     putSizeFor(getProject(), key, size);
   }
 
@@ -133,7 +138,7 @@ public interface WindowStateService {
    * @param object an object that specifies a screen to which a size belongs
    * @param key    an unique string key
    */
-  public abstract void putSizeFor(Object object, @Nonnull String key, Dimension size);
+  public abstract void putSizeFor(Object object, @Nonnull String key, Size size);
 
   /**
    * Returns a bounds that corresponds to the specified key or {@code null}
@@ -142,7 +147,7 @@ public interface WindowStateService {
    * @param key an unique string key
    * @return a corresponding bounds
    */
-  default Rectangle getBounds(@Nonnull String key) {
+  default Rectangle2D getBounds(@Nonnull String key) {
     return getBoundsFor(getProject(), key);
   }
 
@@ -155,7 +160,7 @@ public interface WindowStateService {
    * @param key    an unique string key
    * @return a corresponding bounds
    */
-  public abstract Rectangle getBoundsFor(Object object, @Nonnull String key);
+  public abstract Rectangle2D getBoundsFor(Object object, @Nonnull String key);
 
   /**
    * Stores the specified bounds that corresponds to the specified key.
@@ -163,7 +168,7 @@ public interface WindowStateService {
    *
    * @param key an unique string key
    */
-  default void putBounds(@Nonnull String key, Rectangle bounds) {
+  default void putBounds(@Nonnull String key, Rectangle2D bounds) {
     putBoundsFor(getProject(), key, bounds);
   }
 
@@ -176,10 +181,10 @@ public interface WindowStateService {
    * @param object an object that specifies a screen to which a bounds belongs
    * @param key    an unique string key
    */
-  public abstract void putBoundsFor(Object object, @Nonnull String key, Rectangle bounds);
+  public abstract void putBoundsFor(Object object, @Nonnull String key, Rectangle2D bounds);
 
   @Nullable
-  default ComponentManager getProject() {
+  default Project getProject() {
     return null;
   }
 }

@@ -16,9 +16,8 @@
 package consulo.ui.ex.awtUnsafe;
 
 import consulo.container.plugin.util.PlatformServiceLoader;
+import consulo.ui.*;
 import consulo.ui.Component;
-import consulo.ui.Rectangle2D;
-import consulo.ui.Size;
 import consulo.ui.Window;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
@@ -32,6 +31,7 @@ import org.jetbrains.annotations.Contract;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
+import java.awt.*;
 import java.util.ServiceLoader;
 
 /**
@@ -45,9 +45,14 @@ import java.util.ServiceLoader;
 public final class TargetAWT {
   private static final TargetAWTFacade ourFacade = PlatformServiceLoader.findImplementation(TargetAWTFacade.class, ServiceLoader::load);
 
-  @Nonnull
-  public static java.awt.Dimension to(@Nonnull Size size) {
-    return ourFacade.to(size);
+  @Contract("null -> null")
+  public static java.awt.Dimension to(@Nullable Size size) {
+    return size == null ? null : new Dimension(size.getWidth(), size.getHeight());
+  }
+
+  @Contract("null -> null")
+  public static java.awt.Point to(@Nullable Coordinate2D coordinate2D) {
+    return coordinate2D == null ? null : new Point(coordinate2D.getX(), coordinate2D.getY());
   }
 
   @Nonnull
@@ -96,6 +101,16 @@ public final class TargetAWT {
   @Contract("null -> null")
   public static Rectangle2D from(@Nullable java.awt.Rectangle rectangle) {
     return ourFacade.from(rectangle);
+  }
+
+  @Contract("null -> null")
+  public static Size from(@Nullable Dimension dimension) {
+    return dimension == null ? null : new Size(dimension.width, dimension.height);
+  }
+
+  @Contract("null -> null")
+  public static Coordinate2D from(@Nullable Point point) {
+    return point == null ? null : new Coordinate2D(point.x, point.y);
   }
 
   @Contract("null -> null")

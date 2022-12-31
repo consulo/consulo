@@ -522,7 +522,6 @@ public class JDOMUtil {
     return element.setAttribute(x, Integer.toString(location.x)).setAttribute(y, Integer.toString(location.y));
   }
 
-
   @Nullable
   public static Dimension getSize(@Nullable Element element) {
     return element == null ? null : getSize(element, WIDTH, HEIGHT);

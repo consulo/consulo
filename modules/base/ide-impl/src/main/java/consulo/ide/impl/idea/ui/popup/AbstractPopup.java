@@ -49,7 +49,9 @@ import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.WindowManager;
+import consulo.ui.Coordinate2D;
 import consulo.ui.Position2D;
+import consulo.ui.Size;
 import consulo.ui.event.UIEvent;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.ActiveComponent;
@@ -1538,13 +1540,13 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     if (myDimensionServiceKey != null) {
       Dimension size = myContent.getSize();
       JBInsets.removeFrom(size, myContent.getInsets());
-      getWindowStateService(myProject).putSize(myDimensionServiceKey, size);
+      getWindowStateService(myProject).putSize(myDimensionServiceKey, new Size(size.width, size.height));
     }
   }
 
   private void storeLocation(final Point xy) {
     if (myDimensionServiceKey != null) {
-      getWindowStateService(myProject).putLocation(myDimensionServiceKey, xy);
+      getWindowStateService(myProject).putLocation(myDimensionServiceKey, new Coordinate2D(xy.x, xy.y));
     }
   }
 
@@ -2079,13 +2081,15 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
   @Nullable
   private Point getStoredLocation() {
     if (myDimensionServiceKey == null) return null;
-    return getWindowStateService(myProject).getLocation(myDimensionServiceKey);
+    Coordinate2D location = getWindowStateService(myProject).getLocation(myDimensionServiceKey);
+    return TargetAWT.to(location);
   }
 
   @Nullable
   private Dimension getStoredSize() {
     if (myDimensionServiceKey == null) return null;
-    return getWindowStateService(myProject).getSize(myDimensionServiceKey);
+    Size size = getWindowStateService(myProject).getSize(myDimensionServiceKey);
+    return TargetAWT.to(size);
   }
 
   @Nonnull

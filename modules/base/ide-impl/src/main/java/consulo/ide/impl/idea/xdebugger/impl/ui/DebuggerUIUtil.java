@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.xdebugger.impl.ui;
 
 import consulo.application.ApplicationManager;
+import consulo.application.ui.DimensionService;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
@@ -34,7 +35,6 @@ import consulo.execution.debug.frame.XValueModifier;
 import consulo.execution.debug.ui.XDebuggerUIConstants;
 import consulo.execution.debug.ui.XValueTextProvider;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.util.DimensionService;
 import consulo.ide.impl.idea.ui.AppUIUtil;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XBreakpointBase;
@@ -47,6 +47,7 @@ import consulo.language.editor.hint.HintColorUtil;
 import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
+import consulo.ui.Size;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
@@ -141,21 +142,21 @@ public class DebuggerUIUtil {
     final FullValueEvaluationCallbackImpl callback = new FullValueEvaluationCallbackImpl(textArea);
     evaluator.startEvaluation(callback);
 
-    Dimension size = DimensionService.getInstance().getSize(FULL_VALUE_POPUP_DIMENSION_KEY, project);
+    Size size = DimensionService.getInstance().getSize(FULL_VALUE_POPUP_DIMENSION_KEY, project);
     if (size == null) {
       Dimension frameSize = TargetAWT.to(WindowManager.getInstance().getWindow(project)).getSize();
-      size = new Dimension(frameSize.width / 2, frameSize.height / 2);
+      size = new Size(frameSize.width / 2, frameSize.height / 2);
     }
 
-    textArea.setPreferredSize(size);
+    textArea.setPreferredSize(new Dimension(size.getWidth(), size.getHeight()));
 
     JBPopup popup = createValuePopup(project, textArea, callback);
     if (editor == null) {
-      Rectangle bounds = new Rectangle(event.getLocationOnScreen(), size);
+      Rectangle bounds = new Rectangle(event.getLocationOnScreen(), new Dimension(size.getWidth(), size.getHeight()));
       ScreenUtil.fitToScreenVertical(bounds, 5, 5, true);
-      if (size.width != bounds.width || size.height != bounds.height) {
-        size = bounds.getSize();
-        textArea.setPreferredSize(size);
+      if (size.getWidth() != bounds.width || size.getHeight() != bounds.height) {
+        size = new Size(bounds.getSize().width, bounds.getSize().height);
+        textArea.setPreferredSize(new Dimension(size.getWidth(), size.getHeight()));
       }
       popup.showInScreenCoordinates(event.getComponent(), bounds.getLocation());
     }

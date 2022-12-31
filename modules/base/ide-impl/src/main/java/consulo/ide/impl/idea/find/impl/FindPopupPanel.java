@@ -11,6 +11,7 @@ import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
 import consulo.application.impl.internal.progress.ReadTask;
 import consulo.application.progress.ProgressIndicator;
+import consulo.application.ui.DimensionService;
 import consulo.application.ui.UISettings;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.UserHomeFileUtil;
@@ -31,7 +32,6 @@ import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.project.DumbAwareToggleAction;
 import consulo.ide.impl.idea.openapi.ui.ComponentValidator;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.DimensionService;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
@@ -59,6 +59,8 @@ import consulo.project.event.ProjectManagerListener;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
+import consulo.ui.Coordinate2D;
+import consulo.ui.Size;
 import consulo.ui.ex.*;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
@@ -260,7 +262,8 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
       final Window window = TargetAWT.to(WindowManager.getInstance().suggestParentWindow(myProject));
       Component parent = UIUtil.findUltimateParent(window);
       RelativePoint showPoint = null;
-      Point screenPoint = DimensionService.getInstance().getLocation(SERVICE_KEY);
+      Coordinate2D location = DimensionService.getInstance().getLocation(SERVICE_KEY);
+      Point screenPoint = location == null ? null : new Point(location.getX(), location.getY());
       if (screenPoint != null) {
         if (parent != null) {
           SwingUtilities.convertPointFromScreen(screenPoint, parent);
@@ -292,7 +295,8 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
       addMouseListener(windowListener);
       addMouseMotionListener(windowListener);
       Dimension panelSize = getPreferredSize();
-      Dimension prev = DimensionService.getInstance().getSize(SERVICE_KEY);
+      Size size = DimensionService.getInstance().getSize(SERVICE_KEY);
+      Dimension prev = size == null ? null : new Dimension(size.getWidth(), size.getHeight());
       panelSize.width += JBUIScale.scale(24);//hidden 'loading' icon
       panelSize.height *= 2;
       if (prev != null && prev.height < panelSize.height) prev.height = panelSize.height;
@@ -400,8 +404,8 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
 
   @Override
   public void saveSettings() {
-    DimensionService.getInstance().setSize(SERVICE_KEY, myDialog.getSize(), myHelper.getProject());
-    DimensionService.getInstance().setLocation(SERVICE_KEY, myDialog.getWindow().getLocationOnScreen(), myHelper.getProject());
+    DimensionService.getInstance().setSize(SERVICE_KEY, TargetAWT.from(myDialog.getSize()), myHelper.getProject());
+    DimensionService.getInstance().setLocation(SERVICE_KEY, TargetAWT.from(myDialog.getWindow().getLocationOnScreen()), myHelper.getProject());
     FindSettings findSettings = FindSettings.getInstance();
     myScopeUI.applyTo(findSettings, mySelectedScope);
     myHelper.updateFindSettings();

@@ -18,25 +18,18 @@ package consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui;
 import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
-import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.ToolbarDecorator;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.util.lang.Couple;
-import consulo.ide.impl.idea.ui.*;
+import consulo.disposer.Disposer;
+import consulo.execution.debug.XDebuggerManager;
+import consulo.execution.debug.breakpoint.XBreakpoint;
+import consulo.execution.debug.breakpoint.XBreakpointType;
+import consulo.execution.debug.breakpoint.ui.XBreakpointGroupingRule;
+import consulo.ide.impl.idea.ui.CheckedTreeNode;
+import consulo.ide.impl.idea.ui.ToggleActionButton;
 import consulo.ide.impl.idea.ui.popup.util.DetailController;
 import consulo.ide.impl.idea.ui.popup.util.DetailViewImpl;
 import consulo.ide.impl.idea.ui.popup.util.ItemWrapper;
 import consulo.ide.impl.idea.ui.popup.util.MasterController;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import java.util.HashSet;
-
-import consulo.ui.ex.awt.IdeBorderFactory;
-import consulo.ui.ex.awt.JBUI;
-import consulo.execution.debug.XDebuggerManager;
-import consulo.execution.debug.breakpoint.XBreakpoint;
-import consulo.execution.debug.breakpoint.XBreakpointType;
-import consulo.execution.debug.breakpoint.ui.XBreakpointGroupingRule;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XBreakpointBase;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XBreakpointManagerImpl;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XBreakpointUtil;
@@ -44,21 +37,20 @@ import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XBreakpointsDialogState;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.tree.BreakpointItemNode;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.tree.BreakpointItemsTreeController;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.tree.BreakpointsCheckboxTree;
-import consulo.disposer.Disposer;
+import consulo.project.Project;
+import consulo.ui.Size;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.internal.SwingUIDecorator;
-import consulo.ui.ex.awt.WholeWestDialogWrapper;
-import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.PopupHandler;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.internal.SwingUIDecorator;
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.util.lang.Couple;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.*;
-import java.util.List;
 
 public class BreakpointsDialog extends WholeWestDialogWrapper {
   @Nonnull
@@ -158,8 +150,8 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
   }
 
   @Override
-  public Dimension getDefaultSize() {
-    return new Dimension(910, 400);
+  public Size getDefaultSize() {
+    return new Size(910, 400);
   }
 
   @Nonnull

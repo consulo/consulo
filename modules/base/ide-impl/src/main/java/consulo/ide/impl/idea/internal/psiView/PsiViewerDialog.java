@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.internal.psiView;
 
 import consulo.application.AccessToken;
 import consulo.application.ApplicationManager;
+import consulo.application.ui.DimensionService;
 import consulo.application.util.SystemInfo;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.CaretEvent;
@@ -40,14 +41,9 @@ import consulo.ide.impl.idea.internal.psiView.formattingblocks.BlockTreeBuilder;
 import consulo.ide.impl.idea.internal.psiView.formattingblocks.BlockTreeNode;
 import consulo.ide.impl.idea.internal.psiView.formattingblocks.BlockTreeStructure;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.AbstractFileType;
-import consulo.ide.impl.idea.openapi.util.DimensionService;
 import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
-import consulo.ui.ex.awt.ComboboxSpeedSearch;
-import consulo.ui.ex.awt.ListCellRendererWrapper;
-import consulo.ui.ex.awt.SortedComboBoxModel;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.psi.search.FilenameIndex;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.codeStyle.*;
@@ -57,20 +53,18 @@ import consulo.language.file.FileTypeManager;
 import consulo.language.file.LanguageFileType;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.language.impl.DebugUtil;
-import consulo.language.psi.FileContextUtil;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.plain.PlainTextFileType;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
-import consulo.language.psi.PsiFileFactory;
-import consulo.language.psi.PsiReference;
+import consulo.language.psi.*;
 import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.search.FilenameIndex;
 import consulo.language.util.IncorrectOperationException;
 import consulo.language.version.LanguageVersion;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
+import consulo.ui.Size;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.ui.ex.JBColor;
@@ -436,9 +430,9 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
 
     registerCustomKeyboardActions();
 
-    final Dimension size = DimensionService.getInstance().getSize(getDimensionServiceKey(), myProject);
+    final Size size = DimensionService.getInstance().getSize(getDimensionServiceKey(), myProject);
     if (size == null) {
-      DimensionService.getInstance().setSize(getDimensionServiceKey(), new Dimension(800, 600));
+      DimensionService.getInstance().setSize(getDimensionServiceKey(), new Size(800, 600));
     }
     myTextSplit.setDividerLocation(settings.textDividerLocation);
     myTreeSplit.setDividerLocation(settings.treeDividerLocation);

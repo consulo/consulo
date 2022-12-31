@@ -15,16 +15,13 @@
  */
 package consulo.application.ui.impl.internal;
 
-import consulo.annotation.component.ComponentProfiles;
-import consulo.annotation.component.ServiceImpl;
-import consulo.application.ui.UISettings;
-import jakarta.inject.Singleton;
-
 /**
  * @author VISTALL
- * @since 12-Jul-22
+ * @since 30/12/2022
  */
-@ServiceImpl(profiles = ComponentProfiles.UNIFIED)
-@Singleton
-public class UnifiedUISettings extends UISettings {
+public class UnifiedWindowStateBean extends BaseWindowStateBean {
+  @Override
+  public void setMaximized(boolean maximized) {
+    setExtendedState(maximized ? 1 : 0);
+  }
 }

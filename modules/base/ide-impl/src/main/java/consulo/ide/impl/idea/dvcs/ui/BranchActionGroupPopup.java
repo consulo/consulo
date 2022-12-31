@@ -3,6 +3,7 @@ package consulo.ide.impl.idea.dvcs.ui;
 
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.language.editor.CommonDataKeys;
+import consulo.ui.Size;
 import consulo.ui.ex.action.EmptyAction;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
@@ -78,10 +79,10 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
     DataManager.registerDataProvider(getList(), dataId -> POPUP_MODEL == dataId ? getListModel() : null);
     myKey = dimensionKey;
     if (myKey != null) {
-      Dimension storedSize = ProjectWindowStateService.getInstance(myProject).getSizeFor(myProject, myKey);
+      Size storedSize = ProjectWindowStateService.getInstance(myProject).getSizeFor(myProject, myKey);
       if (storedSize != null) {
         //set forced size before component is shown
-        setSize(storedSize);
+        setSize(new Dimension(storedSize.getWidth(), storedSize.getHeight()));
         myUserSizeChanged = true;
       }
       createTitlePanelToolbar(myKey);
@@ -165,7 +166,7 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
       public void onClosed(@Nonnull LightweightWindowEvent event) {
         popupWindow.removeComponentListener(windowListener);
         if (dimensionKey != null && myUserSizeChanged) {
-          ProjectWindowStateService.getInstance(myProject).putSizeFor(myProject, dimensionKey, myPrevSize);
+          ProjectWindowStateService.getInstance(myProject).putSizeFor(myProject, dimensionKey, new Size(myPrevSize.width, myPrevSize.height));
         }
       }
     });

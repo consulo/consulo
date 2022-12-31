@@ -16,19 +16,6 @@
 
 package consulo.ide.impl.idea.execution.ui.layout.impl;
 
-import consulo.ide.impl.idea.execution.ui.layout.*;
-import consulo.ide.impl.idea.execution.ui.layout.actions.CloseViewAction;
-import consulo.ide.impl.idea.execution.ui.layout.actions.MinimizeViewAction;
-import consulo.ide.impl.idea.execution.ui.layout.actions.RestoreViewAction;
-import consulo.ide.impl.idea.ide.actions.CloseAction;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.action.QuickActionProvider;
-import consulo.ide.impl.idea.ui.tabs.JBTabs;
-import consulo.ide.impl.idea.ui.tabs.TabInfo;
-import consulo.ide.impl.idea.ui.tabs.TabsListener;
-import consulo.ide.impl.idea.ui.tabs.impl.JBTabsImpl;
-import consulo.ide.impl.idea.util.NotNullFunction;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.component.util.ActiveRunnable;
 import consulo.dataContext.DataManager;
@@ -39,14 +26,26 @@ import consulo.execution.ui.layout.LayoutAttractionPolicy;
 import consulo.execution.ui.layout.LayoutViewOptions;
 import consulo.execution.ui.layout.PlaceInGrid;
 import consulo.execution.ui.layout.RunnerLayoutUi;
+import consulo.ide.impl.idea.execution.ui.layout.*;
+import consulo.ide.impl.idea.execution.ui.layout.actions.CloseViewAction;
+import consulo.ide.impl.idea.execution.ui.layout.actions.MinimizeViewAction;
+import consulo.ide.impl.idea.execution.ui.layout.actions.RestoreViewAction;
+import consulo.ide.impl.idea.ide.actions.CloseAction;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.ui.tabs.JBTabs;
+import consulo.ide.impl.idea.ui.tabs.TabInfo;
+import consulo.ide.impl.idea.ui.tabs.TabsListener;
+import consulo.ide.impl.idea.ui.tabs.impl.JBTabsImpl;
+import consulo.ide.impl.idea.util.NotNullFunction;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.ui.docking.BaseDockManager;
 import consulo.project.Project;
+import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.dock.DockContainer;
 import consulo.project.ui.wm.dock.DockManager;
 import consulo.project.ui.wm.dock.DockableContent;
 import consulo.project.ui.wm.dock.DragSession;
-import consulo.project.ui.internal.ProjectIdeFocusManager;
-import consulo.ide.impl.ui.docking.BaseDockManager;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.UIBundle;
@@ -420,7 +419,7 @@ public class RunnerContentUi implements ContentUI, Disposable, CellTransform.Fac
     for (Content content : contents) {
       content.putUserData(RunnerLayout.DROP_INDEX, getStateFor(content).getTab().getIndex());
     }
-    Dimension size = gridCell.getSize();
+    Dimension size = TargetAWT.to(gridCell.getSize());
     if (size == null) {
       size = JBUI.size(200, 200);
     }
@@ -429,7 +428,7 @@ public class RunnerContentUi implements ContentUI, Disposable, CellTransform.Fac
       target.add(content, null);
     }
     else {
-      Point location = gridCell.getLocation();
+      Point location = TargetAWT.to(gridCell.getLocation());
       if (location == null) {
         location = getComponent().getLocationOnScreen();
       }

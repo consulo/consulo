@@ -15,30 +15,31 @@
  */
 package consulo.desktop.awt.settings;
 
-import consulo.application.CommonBundle;
-import consulo.ide.impl.idea.ide.ui.search.SearchUtil;
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.dataContext.DataProvider;
 import consulo.application.ApplicationManager;
-import consulo.application.TransactionGuard;
+import consulo.application.CommonBundle;
 import consulo.application.HelpManager;
+import consulo.application.TransactionGuard;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
+import consulo.dataContext.DataProvider;
+import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.ide.ui.search.SearchUtil;
+import consulo.ide.impl.idea.ide.util.PropertiesComponent;
+import consulo.ide.impl.options.ProjectStructureSelectorOverSettings;
+import consulo.ide.setting.ProjectStructureSelector;
 import consulo.ide.setting.Settings;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
-import consulo.util.lang.Couple;
+import consulo.ui.Size;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.BorderLayoutPanel;
 import consulo.ui.ex.awt.CustomLineBorder;
 import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.BorderLayoutPanel;
 import consulo.ui.ex.awt.WholeWestDialogWrapper;
-import consulo.disposer.Disposer;
-import consulo.ide.setting.ProjectStructureSelector;
-import consulo.ide.impl.options.ProjectStructureSelectorOverSettings;
-import consulo.platform.base.localize.CommonLocalize;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Couple;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -107,8 +108,8 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
   }
 
   @Override
-  public Dimension getDefaultSize() {
-    return new Dimension(1028, 500);
+  public Size getDefaultSize() {
+    return new Size(1028, 500);
   }
 
   @Nullable

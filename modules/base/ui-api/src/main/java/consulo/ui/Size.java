@@ -15,13 +15,14 @@
  */
 package consulo.ui;
 
+import javax.annotation.Nonnull;
 import java.io.Serializable;
 
 /**
  * @author VISTALL
  * @since 16-Jun-16
  */
-public final class Size implements Serializable {
+public final class Size implements Serializable, Cloneable {
   public static final Size UNDEFINED = new Size(-1, -1);
   public static final Size ZERO = new Size(0, 0);
 
@@ -31,6 +32,10 @@ public final class Size implements Serializable {
   private int myHeight;
 
   private Size() {
+  }
+
+  public Size(@Nonnull Size size) {
+    this(size.getWidth(), size.getHeight());
   }
 
   public Size(int widthAndHeight) {
@@ -48,6 +53,11 @@ public final class Size implements Serializable {
 
   public int getHeight() {
     return myHeight;
+  }
+
+  @Override
+  public Size clone() {
+    return new Size(myWidth, myHeight);
   }
 
   @Override

@@ -1,21 +1,22 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ui.popup;
 
-import consulo.language.editor.completion.lookup.event.LookupEvent;
-import consulo.language.editor.completion.lookup.LookupEx;
-import consulo.language.editor.completion.lookup.event.LookupListener;
-import consulo.language.editor.completion.lookup.LookupManager;
-import consulo.dataContext.DataManager;
-import consulo.dataContext.DataContext;
-import consulo.language.editor.LangDataKeys;
+import consulo.application.ui.DimensionService;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
-import consulo.ui.ex.popup.JBPopup;
-import consulo.ui.ex.awt.util.PopupUtil;
-import consulo.ide.impl.idea.openapi.util.DimensionService;
-import consulo.util.dataholder.Key;
-import consulo.ui.ex.awt.util.ScreenUtil;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
+import consulo.language.editor.LangDataKeys;
+import consulo.language.editor.completion.lookup.LookupEx;
+import consulo.language.editor.completion.lookup.LookupManager;
+import consulo.language.editor.completion.lookup.event.LookupEvent;
+import consulo.language.editor.completion.lookup.event.LookupListener;
+import consulo.ui.Size;
 import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.awt.util.PopupUtil;
+import consulo.ui.ex.awt.util.ScreenUtil;
+import consulo.ui.ex.popup.JBPopup;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -184,7 +185,9 @@ public class PopupPositionManager {
     public void adjust(final JBPopup popup, Position... traversalPolicy) {
       if (traversalPolicy.length == 0) traversalPolicy = DEFAULT_POSITION_ORDER;
 
-      final Dimension d = getPopupSize(popup);
+      Size popupSize = getPopupSize(popup);
+      assert popupSize != null;
+      final Dimension d = new Dimension(popupSize.getWidth(), popupSize.getHeight());
 
       Rectangle popupRect = null;
       Rectangle r = null;
@@ -265,8 +268,9 @@ public class PopupPositionManager {
       return result;
     }
 
-    public static Dimension getPopupSize(final JBPopup popup) {
-      Dimension size = null;
+    @Nullable
+    public static Size getPopupSize(final JBPopup popup) {
+      Size size = null;
       if (popup instanceof AbstractPopup) {
         final String dimensionKey = ((AbstractPopup)popup).getDimensionServiceKey();
         if (dimensionKey != null) {
@@ -275,7 +279,8 @@ public class PopupPositionManager {
       }
 
       if (size == null) {
-        size = popup.getContent().getPreferredSize();
+        Dimension preferredSize = popup.getContent().getPreferredSize();
+        size = preferredSize == null ? null : new Size(preferredSize.width, preferredSize.height);
       }
 
       return size;

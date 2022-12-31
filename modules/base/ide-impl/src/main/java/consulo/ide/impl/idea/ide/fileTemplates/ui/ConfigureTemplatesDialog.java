@@ -16,12 +16,11 @@
 
 package consulo.ide.impl.idea.ide.fileTemplates.ui;
 
+import consulo.application.ui.DimensionService;
 import consulo.ide.impl.idea.ide.fileTemplates.impl.AllFileTemplatesConfigurable;
 import consulo.ide.impl.idea.openapi.options.ex.SingleConfigurableEditor;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.DimensionService;
-
-import java.awt.*;
+import consulo.ui.Size;
 
 /*
  * @author: MYakovlev
@@ -47,9 +46,9 @@ public class ConfigureTemplatesDialog extends SingleConfigurableEditor{
   }
 
   private void initSize(){
-    Dimension size = DimensionService.getInstance().getSize(DIMENSION_KEY, getProject());
+    Size size = DimensionService.getInstance().getSize(DIMENSION_KEY, getProject());
     if (size == null){
-      DimensionService.getInstance().setSize(DIMENSION_KEY, new Dimension(700, 500), getProject());
+      DimensionService.getInstance().setSize(DIMENSION_KEY, new Size(700, 500), getProject());
     }
   }
 }

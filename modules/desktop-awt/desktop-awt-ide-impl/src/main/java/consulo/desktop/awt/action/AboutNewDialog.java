@@ -17,26 +17,22 @@ package consulo.desktop.awt.action;
 
 import consulo.application.Application;
 import consulo.application.CommonBundle;
-import consulo.application.internal.ApplicationInfo;
 import consulo.application.impl.internal.JobScheduler;
+import consulo.application.internal.ApplicationInfo;
+import consulo.application.util.DateFormatUtil;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
-import consulo.ui.ex.awt.WholeWestDialogWrapper;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.application.util.DateFormatUtil;
 import consulo.ide.impl.idea.util.ui.TextTransferable;
 import consulo.platform.Platform;
+import consulo.ui.Size;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.CopyPasteManager;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.VerticalFlowLayout;
+import consulo.ui.ex.awt.*;
 import consulo.util.lang.Couple;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
-import java.awt.*;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
@@ -76,8 +72,8 @@ public class AboutNewDialog extends WholeWestDialogWrapper {
   }
 
   @Override
-  public Dimension getDefaultSize() {
-    return new Dimension(500, 600);
+  public Size getDefaultSize() {
+    return new Size(500, 600);
   }
 
   @Override

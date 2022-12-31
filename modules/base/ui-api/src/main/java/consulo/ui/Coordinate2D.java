@@ -15,13 +15,14 @@
  */
 package consulo.ui;
 
+import javax.annotation.Nonnull;
 import java.io.Serializable;
 
 /**
  * @author VISTALL
  * @since 25-Sep-17
  */
-public final class Coordinate2D implements Serializable {
+public final class Coordinate2D implements Serializable, Cloneable {
   private static final long serialVersionUID = -8454212049522017852L;
 
   private int myX;
@@ -35,12 +36,21 @@ public final class Coordinate2D implements Serializable {
     myY = y;
   }
 
+  public Coordinate2D(@Nonnull Coordinate2D coordinate2D) {
+    this(coordinate2D.getX(), coordinate2D.getY());
+  }
+
   public int getX() {
     return myX;
   }
 
   public int getY() {
     return myY;
+  }
+
+  @Override
+  public Coordinate2D clone() {
+    return new Coordinate2D(myX, myY);
   }
 
   @Override
