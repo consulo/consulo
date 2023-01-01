@@ -1,0 +1,77 @@
+<!--
+  - Copyright 2013-2016 consulo.io
+  -
+  - Licensed under the Apache License, Version 2.0 (the "License");
+  - you may not use this file except in compliance with the License.
+  - You may obtain a copy of the License at
+  -
+  - http://www.apache.org/licenses/LICENSE-2.0
+  -
+  - Unless required by applicable law or agreed to in writing, software
+  - distributed under the License is distributed on an "AS IS" BASIS,
+  - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  - See the License for the specific language governing permissions and
+  - limitations under the License.
+  -->
+<consulo-plugin>
+  <actions>
+    <action id="ExternalSystem.RefreshAllProjects"
+            class="consulo.ide.impl.idea.openapi.externalSystem.action.RefreshAllExternalProjectsAction"
+            icon="consulo.platform.base.PlatformIconGroup@actions.refresh"/>
+    <action id="ExternalSystem.RefreshProject"
+            class="consulo.ide.impl.idea.openapi.externalSystem.action.RefreshExternalProjectAction"
+            icon="consulo.platform.base.PlatformIconGroup@actions.refresh"/>
+    <action id="ExternalSystem.AttachProject"
+            class="consulo.ide.impl.idea.openapi.externalSystem.action.AttachExternalProjectAction"/>
+    <action id="ExternalSystem.DetachProject"
+            class="consulo.ide.impl.idea.openapi.externalSystem.action.DetachExternalProjectAction"
+            use-shortcut-of="$Delete"/>
+    <action id="ExternalSystem.OpenConfig"
+            class="consulo.ide.impl.idea.openapi.externalSystem.action.OpenExternalConfigAction"
+            use-shortcut-of="EditSource"/>
+
+    <!--Tool window actions-->
+    <group id="ExternalSystem.ToolWindow.Toolbar">
+      <reference id="ExternalSystem.RefreshAllProjects"/>
+      <reference id="ExternalSystem.AttachProject"/>
+      <reference ref="ExternalSystem.DetachProject"/>
+    </group>
+
+    <!--Context menu action-->
+    <group id="ExternalSystem.Tree.Context" popup="true">
+      <reference ref="ExternalSystem.OpenConfig"/>
+      <reference id="ExternalSystem.RefreshProject"/>
+      <reference ref="ExternalSystem.DetachProject"/>
+      <separator/>
+      <reference ref="RunContextGroup"/>
+    </group>
+  </actions>
+
+  <extensionPoints>
+    <extensionPoint name="externalSystemManager" interface="consulo.ide.impl.idea.openapi.externalSystem.ExternalSystemManager"/>
+    <extensionPoint name="externalProjectDataService"
+                    interface="consulo.ide.impl.idea.openapi.externalSystem.service.project.manage.ProjectDataService"/>
+    <extensionPoint name="externalSystemNotificationExtension"
+                    interface="consulo.ide.impl.idea.openapi.externalSystem.service.notification.ExternalSystemNotificationExtension"/>
+    <extensionPoint name="externalSystemConfigLocator"
+                    interface="consulo.ide.impl.idea.openapi.externalSystem.service.settings.ExternalSystemConfigLocator"/>
+    <extensionPoint name="externalSystemTaskNotificationListener"
+                    interface="consulo.ide.impl.idea.openapi.externalSystem.model.task.ExternalSystemTaskNotificationListener"/>
+  </extensionPoints>
+
+  <extensions defaultExtensionNs="consulo">
+
+    <!--Project structure management services-->
+    <externalProjectDataService implementation="consulo.ide.impl.idea.openapi.externalSystem.service.project.manage.ProjectDataServiceImpl"/>
+    <externalProjectDataService implementation="consulo.ide.impl.idea.openapi.externalSystem.service.project.manage.LibraryDataService"/>
+    <externalProjectDataService implementation="consulo.ide.impl.idea.openapi.externalSystem.service.project.manage.ModuleDataService"/>
+    <externalProjectDataService implementation="consulo.ide.impl.idea.openapi.externalSystem.service.project.manage.ContentRootDataService"/>
+    <externalProjectDataService implementation="consulo.ide.impl.idea.openapi.externalSystem.service.project.manage.LibraryDependencyDataService"/>
+    <externalProjectDataService implementation="consulo.ide.impl.idea.openapi.externalSystem.service.project.manage.ModuleDependencyDataService"/>
+
+    <!--Tool window services-->
+    <externalProjectDataService implementation="consulo.ide.impl.idea.openapi.externalSystem.service.task.ToolWindowModuleService"/>
+    <externalProjectDataService implementation="consulo.ide.impl.idea.openapi.externalSystem.service.task.ToolWindowTaskService"/>
+
+  </extensions>
+</consulo-plugin>

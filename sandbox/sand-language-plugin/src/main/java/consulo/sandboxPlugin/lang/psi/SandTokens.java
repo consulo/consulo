@@ -15,8 +15,8 @@
  */
 package consulo.sandboxPlugin.lang.psi;
 
-import com.intellij.psi.TokenType;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.TokenType;
+import consulo.language.ast.IElementType;
 import consulo.sandboxPlugin.lang.SandLanguage;
 
 /**
@@ -27,4 +27,7 @@ public interface SandTokens extends TokenType {
   IElementType IDENTIFIER = new IElementType("IDENTIFIER", SandLanguage.INSTANCE);
   IElementType CLASS_KEYWORD = new IElementType("CLASS_KEYWORD", SandLanguage.INSTANCE);
   IElementType LINE_COMMENT = new IElementType("LINE_COMMENT", SandLanguage.INSTANCE);
+  IElementType LBRACE = new IElementType("LBRACE", SandLanguage.INSTANCE);
+  IElementType RBRACE = new IElementType("RBRACE", SandLanguage.INSTANCE);
+  IElementType STRING_LITERAL = new IElementType("STRING_LITERAL", SandLanguage.INSTANCE);
 }

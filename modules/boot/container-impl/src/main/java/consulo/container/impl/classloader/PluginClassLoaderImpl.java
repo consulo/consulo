@@ -2,17 +2,15 @@
 package consulo.container.impl.classloader;
 
 import consulo.container.PluginException;
+import consulo.container.classloader.PluginClassLoader;
 import consulo.container.impl.classloader.proxy.ProxyDescription;
 import consulo.container.impl.classloader.proxy.ProxyFactory;
 import consulo.container.impl.classloader.proxy.ProxyHolderClassLoader;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
-import consulo.container.classloader.PluginClassLoader;
 import consulo.util.nodep.classloader.UrlClassLoader;
 import consulo.util.nodep.collection.ContainerUtilRt;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,31 +30,31 @@ class PluginClassLoaderImpl extends UrlClassLoader implements PluginClassLoader,
 
   private final ClassLoader[] myParents;
   private final PluginDescriptor myPluginDescriptor;
-  private final List<String> myLibDirectories;
+  private final List<File> myLibDirectories;
 
   private ConcurrentMap<ProxyDescription, ProxyFactory> myProxyFactories = new ConcurrentHashMap<ProxyDescription, ProxyFactory>();
 
   /**
    * Constructor for main platform plugins, it will set parent for ClassLoader - it's need for correct parent resolving for ServiceLoader
    */
-  public PluginClassLoaderImpl(@Nonnull List<URL> urls, @Nonnull ClassLoader parent, @Nonnull PluginDescriptor pluginDescriptor) {
+  public PluginClassLoaderImpl(List<URL> urls, ClassLoader parent, PluginDescriptor pluginDescriptor) {
     super(pluginDescriptor.getPluginId().getIdString(), build().urls(urls).parent(parent).urlsWithProtectionDomain(new HashSet<URL>(urls)).allowLock().useCache());
-    myParents = new ClassLoader[] {parent};
+    myParents = new ClassLoader[]{parent};
     myPluginDescriptor = pluginDescriptor;
     File libDir = new File(pluginDescriptor.getPath(), "lib");
-    myLibDirectories = libDir.exists() ? Collections.singletonList(libDir.getAbsolutePath()) : Collections.<String>emptyList();
+    myLibDirectories = libDir.exists() ? Collections.singletonList(libDir) : Collections.emptyList();
   }
 
-  public PluginClassLoaderImpl(@Nonnull List<URL> urls, @Nonnull ClassLoader[] parents, @Nonnull PluginDescriptor pluginDescriptor) {
+  public PluginClassLoaderImpl(List<URL> urls, ClassLoader[] parents, PluginDescriptor pluginDescriptor) {
     super(pluginDescriptor.getPluginId().getIdString(), build().urls(urls).urlsWithProtectionDomain(new HashSet<URL>(urls)).allowLock().useCache().noPreload());
     myParents = parents;
     myPluginDescriptor = pluginDescriptor;
     File libDir = new File(myPluginDescriptor.getPath(), "lib");
-    myLibDirectories = libDir.exists() ? Collections.singletonList(libDir.getAbsolutePath()) : Collections.<String>emptyList();
+    myLibDirectories = libDir.exists() ? Collections.singletonList(libDir) : Collections.emptyList();
   }
 
   @Override
-  public Class loadClass(@Nonnull String name, boolean resolve) throws ClassNotFoundException {
+  public Class loadClass(String name, boolean resolve) throws ClassNotFoundException {
     Class c = tryLoadingClass(name, resolve, null);
     if (c == null) {
       throw new ClassNotFoundException(name + " " + this);
@@ -83,7 +81,6 @@ class PluginClassLoaderImpl extends UrlClassLoader implements PluginClassLoader,
     protected abstract Result doExecute(String name, PluginClassLoaderImpl classloader, ParameterType parameter);
   }
 
-  @Nullable
   private <Result, ParameterType> Result processResourcesInParents(String name,
                                                                    ActionWithPluginClassLoader<Result, ParameterType> actionWithPluginClassLoader,
                                                                    ActionWithClassloader<Result, ParameterType> actionWithClassloader,
@@ -142,8 +139,7 @@ class PluginClassLoaderImpl extends UrlClassLoader implements PluginClassLoader,
 
   // Changed sequence in which classes are searched, this is essential if plugin uses library,
   // a different version of which is used in IDEA.
-  @Nullable
-  private Class tryLoadingClass(@Nonnull String name, boolean resolve, @Nullable Set<ClassLoader> visited) {
+  private Class tryLoadingClass(String name, boolean resolve, Set<ClassLoader> visited) {
     Class c = null;
     if (!mustBeLoadedByPlatform(name)) {
       c = loadClassInsideSelf(name);
@@ -169,8 +165,7 @@ class PluginClassLoaderImpl extends UrlClassLoader implements PluginClassLoader,
     return false;
   }
 
-  @Nullable
-  private Class loadClassInsideSelf(@Nonnull String name) {
+  private Class loadClassInsideSelf(String name) {
     synchronized (getClassLoadingLock(name)) {
       Class c = findLoadedClass(name);
       if (c != null) {
@@ -216,7 +211,7 @@ class PluginClassLoaderImpl extends UrlClassLoader implements PluginClassLoader,
     return processResourcesInParents(name, findResourceInPluginCL, findResourceInCl, null, null);
   }
 
-  @Nullable
+
   private URL findOwnResource(String name) {
     URL resource = super.findResource(name);
     if (resource != null) return resource;
@@ -245,7 +240,6 @@ class PluginClassLoaderImpl extends UrlClassLoader implements PluginClassLoader,
     return processResourcesInParents(name, getResourceAsStreamInPluginCL, getResourceAsStreamInCl, null, null);
   }
 
-  @Nullable
   private InputStream getOwnResourceAsStream(String name) {
     InputStream stream = super.getResourceAsStream(name);
     if (stream != null) return stream;
@@ -276,7 +270,7 @@ class PluginClassLoaderImpl extends UrlClassLoader implements PluginClassLoader,
     }
   };
 
-  @Nonnull
+
   @Override
   public Enumeration<URL> findResources(String name) throws IOException {
     @SuppressWarnings("unchecked") List<Enumeration<URL>> resources = new ArrayList<Enumeration<URL>>();
@@ -286,7 +280,6 @@ class PluginClassLoaderImpl extends UrlClassLoader implements PluginClassLoader,
   }
 
   @Override
-  @Nonnull
   public Enumeration<URL> findOwnResources(String name) throws IOException {
     return super.findResources(name);
   }
@@ -295,9 +288,8 @@ class PluginClassLoaderImpl extends UrlClassLoader implements PluginClassLoader,
   protected String findLibrary(String libName) {
     if (!myLibDirectories.isEmpty()) {
       String libFileName = System.mapLibraryName(libName);
-      ListIterator<String> i = myLibDirectories.listIterator(myLibDirectories.size());
-      while (i.hasPrevious()) {
-        File libFile = new File(i.previous(), libFileName);
+      for (File libDirectory : myLibDirectories) {
+        File libFile = new File(libDirectory, libFileName);
         if (libFile.exists()) {
           return libFile.getAbsolutePath();
         }
@@ -307,13 +299,11 @@ class PluginClassLoaderImpl extends UrlClassLoader implements PluginClassLoader,
     return null;
   }
 
-  @Nonnull
   @Override
   public PluginId getPluginId() {
     return myPluginDescriptor.getPluginId();
   }
 
-  @Nonnull
   @Override
   public PluginDescriptor getPluginDescriptor() {
     return myPluginDescriptor;
@@ -324,9 +314,8 @@ class PluginClassLoaderImpl extends UrlClassLoader implements PluginClassLoader,
     return "PluginClassLoader[" + myPluginDescriptor.getPluginId() + ", " + myPluginDescriptor.getVersion() + "] " + super.toString();
   }
 
-  @Nonnull
   @Override
-  public ProxyFactory registerOrGetProxy(@Nonnull final ProxyDescription description, @Nonnull final Function<ProxyDescription, ProxyFactory> proxyFactoryFunction) {
+  public ProxyFactory registerOrGetProxy(final ProxyDescription description, final Function<ProxyDescription, ProxyFactory> proxyFactoryFunction) {
     return myProxyFactories.computeIfAbsent(description, proxyFactoryFunction);
   }
 

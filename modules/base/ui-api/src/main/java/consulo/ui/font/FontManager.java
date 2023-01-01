@@ -31,7 +31,7 @@ public interface FontManager {
   }
 
   @Nonnull
-  Set<String> getAvaliableFontNames();
+  Set<String> getAvailableFontNames();
 
   @Nonnull
   default Font createFont(@Nonnull String fontName, int fontSize) {

@@ -15,11 +15,16 @@
  */
 package consulo.sandboxPlugin.ide.action;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.project.DefaultProjectFactory;
-import com.intellij.openapi.project.DumbAwareAction;
-import consulo.preferences.UnifiedShowSettingsUtil;
+import consulo.annotation.component.ActionRef;
+import consulo.annotation.component.ActionImpl;
+import consulo.annotation.component.ActionParentRef;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.language.editor.CommonDataKeys;
+import consulo.project.internal.DefaultProjectFactory;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ide.impl.options.impl.UnifiedShowSettingsUtil;
 import consulo.ui.annotation.RequiredUIAccess;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 
@@ -27,9 +32,11 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 15/07/2021
  */
+@ActionImpl(id = "ShowUnifiedSettingsDialogAction", parents = @ActionParentRef(@ActionRef(id = "ToolsMenu")))
 public class ShowUnifiedSettingsDialogAction extends DumbAwareAction {
   private final DefaultProjectFactory myDefaultProjectFactory;
 
+  @Inject
   public ShowUnifiedSettingsDialogAction(DefaultProjectFactory defaultProjectFactory) {
     myDefaultProjectFactory = defaultProjectFactory;
   }
@@ -39,6 +46,6 @@ public class ShowUnifiedSettingsDialogAction extends DumbAwareAction {
   public void actionPerformed(@Nonnull AnActionEvent e) {
     UnifiedShowSettingsUtil unifiedShowSettingsUtil = new UnifiedShowSettingsUtil(myDefaultProjectFactory);
 
-    unifiedShowSettingsUtil.showSettingsDialog(e.getProject());
+    unifiedShowSettingsUtil.showSettingsDialog(e.getData(CommonDataKeys.PROJECT));
   }
 }

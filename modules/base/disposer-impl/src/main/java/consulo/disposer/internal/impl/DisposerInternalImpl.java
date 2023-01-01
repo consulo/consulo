@@ -15,13 +15,14 @@
  */
 package consulo.disposer.internal.impl;
 
-import consulo.disposer.internal.impl.objectTree.ObjectTree;
-import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.TraceableDisposable;
 import consulo.disposer.internal.DisposerInternal;
+import consulo.disposer.internal.impl.objectTree.ObjectTree;
+import consulo.disposer.internal.impl.util.DisposableWrapperList;
+import consulo.disposer.util.DisposableList;
+import consulo.util.collection.Maps;
 import consulo.util.lang.ObjectUtil;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -34,7 +35,7 @@ public class DisposerInternalImpl extends DisposerInternal {
     myTree = new ObjectTree();
   }
 
-  private final Map<String, Disposable> myKeyDisposables = ContainerUtil.createConcurrentWeakMap();
+  private final Map<String, Disposable> myKeyDisposables = Maps.newConcurrentWeakHashMap();
 
   private final static String debugDisposer = System.getProperty("idea.disposer.debug");
 
@@ -68,7 +69,7 @@ public class DisposerInternalImpl extends DisposerInternal {
   }
 
   @Override
-  public void register(@Nonnull Disposable parent, @Nonnull Disposable child, @NonNls @Nullable final String key) {
+  public void register(@Nonnull Disposable parent, @Nonnull Disposable child, @Nullable final String key) {
     myTree.register(parent, child);
 
     if (key != null) {
@@ -82,7 +83,7 @@ public class DisposerInternalImpl extends DisposerInternal {
 
   @Override
   public boolean isDisposed(@Nonnull Disposable disposable) {
-    return myTree.getDisposalInfo(disposable) != null;
+    return myTree.isDisposed(disposable);
   }
 
   @Override
@@ -155,5 +156,16 @@ public class DisposerInternalImpl extends DisposerInternal {
   @Nullable
   public <T extends Disposable> T findRegisteredObject(@Nonnull Disposable parentDisposable, @Nonnull T object) {
     return myTree.findRegisteredObject(parentDisposable, object);
+  }
+
+  @Nonnull
+  @Override
+  public <T> DisposableList<T> createList() {
+    return new DisposableWrapperList<>();
+  }
+
+  @Override
+  public boolean tryRegister(@Nonnull Disposable parent, @Nonnull Disposable child) {
+    return myTree.tryRegister(parent, child);
   }
 }

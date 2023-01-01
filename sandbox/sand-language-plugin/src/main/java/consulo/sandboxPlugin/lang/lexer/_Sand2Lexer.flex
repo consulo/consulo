@@ -1,8 +1,8 @@
 package consulo.sandboxPlugin.lang.lexer;
 
 import java.util.*;
-import com.intellij.lexer.LexerBase;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.lexer.LexerBase;
+import consulo.language.ast.IElementType;
 import consulo.sandboxPlugin.lang.psi.Sand2Tokens;
 
 %%

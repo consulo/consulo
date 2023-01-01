@@ -15,14 +15,15 @@
  */
 package consulo.sandboxPlugin.ide.debugger.attach;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.process.ProcessInfo;
-import com.intellij.openapi.project.Project;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.execution.debug.attach.*;
+import consulo.process.ExecutionException;
+import consulo.process.ProcessInfo;
+import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolder;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.xdebugger.attach.*;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 
@@ -30,6 +31,7 @@ import java.util.List;
  * @author VISTALL
  * @since 2019-10-26
  */
+@ExtensionImpl
 public class SandAttachToProcessProvider implements XAttachDebuggerProvider {
   @Override
   public boolean isAttachHostApplicable(@Nonnull XAttachHost attachHost) {

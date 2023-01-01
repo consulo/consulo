@@ -15,11 +15,13 @@
  */
 package consulo.sandboxPlugin.ui;
 
-import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.ConfigurationException;
+import consulo.configurable.Configurable;
+import consulo.configurable.ConfigurationException;
+import consulo.configurable.ProjectConfigurable;
+import consulo.configurable.StandardConfigurableIds;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
-import consulo.security.impl.PrivilegedAction;
+import consulo.application.impl.internal.PrivilegedAction;
 import consulo.ui.Alerts;
 import consulo.ui.Button;
 import consulo.ui.Component;
@@ -35,7 +37,7 @@ import java.net.URL;
  * @author VISTALL
  * @since 30/10/2021
  */
-public class SandConfigurable implements Configurable {
+public class SandConfigurable implements Configurable, ProjectConfigurable {
   @RequiredUIAccess
   @Nullable
   @Override
@@ -71,5 +73,23 @@ public class SandConfigurable implements Configurable {
   @Override
   public void apply() throws ConfigurationException {
 
+  }
+
+  @Nonnull
+  @Override
+  public String getId() {
+    return "sand.editor";
+  }
+
+  @Nullable
+  @Override
+  public String getParentId() {
+    return StandardConfigurableIds.EDITOR_GROUP;
+  }
+
+  @Nonnull
+  @Override
+  public String getDisplayName() {
+    return "Sand Editor";
   }
 }

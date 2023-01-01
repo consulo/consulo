@@ -20,8 +20,6 @@ import consulo.util.nodep.xml.node.SimpleXmlElement;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -49,8 +47,7 @@ public class SimpleXmlReader {
     }
   };
 
-  @Nonnull
-  public static SimpleXmlElement parse(@Nonnull URL url) throws SimpleXmlParsingException {
+  public static SimpleXmlElement parse(URL url) throws SimpleXmlParsingException {
     try {
       DocumentBuilder builder = ourDocumentBuilder.get();
       builder.reset();
@@ -58,33 +55,26 @@ public class SimpleXmlReader {
       Document doc = builder.parse(url.toExternalForm());
       return mapDocument(doc);
     }
-    catch (SAXException e) {
-      throw new SimpleXmlParsingException(e);
-    }
-    catch (IOException e) {
+    catch (SAXException | IOException e) {
       throw new SimpleXmlParsingException(e);
     }
   }
 
-  @Nonnull
-  public static SimpleXmlElement parse(@Nonnull InputStream stream) throws SimpleXmlParsingException {
+  public static SimpleXmlElement parse(InputStream stream) throws SimpleXmlParsingException {
     try {
       DocumentBuilder builder = ourDocumentBuilder.get();
       builder.reset();
-      
+
       Document doc = builder.parse(stream);
       return mapDocument(doc);
     }
-    catch (SAXException e) {
-      throw new SimpleXmlParsingException(e);
-    }
-    catch (IOException e) {
+    catch (SAXException | IOException e) {
       throw new SimpleXmlParsingException(e);
     }
   }
 
-  @Nonnull
-  public static SimpleXmlElement parse(@Nonnull File file) throws SimpleXmlParsingException {
+
+  public static SimpleXmlElement parse(File file) throws SimpleXmlParsingException {
     try {
       DocumentBuilder builder = ourDocumentBuilder.get();
       builder.reset();
@@ -92,10 +82,7 @@ public class SimpleXmlReader {
       Document doc = builder.parse(file);
       return mapDocument(doc);
     }
-    catch (SAXException e) {
-      throw new SimpleXmlParsingException(e);
-    }
-    catch (IOException e) {
+    catch (SAXException | IOException e) {
       throw new SimpleXmlParsingException(e);
     }
   }
@@ -111,7 +98,7 @@ public class SimpleXmlReader {
     return new SimpleXmlElement(documentElement.getTagName(), mapText(documentElement), children, mapAttributes(documentElement));
   }
 
-  private static void fillElements(@Nonnull Element targetElement, @Nonnull List<SimpleXmlElement> children) {
+  private static void fillElements(Element targetElement, List<SimpleXmlElement> children) {
     for (Node node = targetElement.getFirstChild(); node != null; node = node.getNextSibling()) {
       if (node instanceof Element) {
         String tagName = ((Element)node).getTagName();
@@ -126,7 +113,6 @@ public class SimpleXmlReader {
     }
   }
 
-  @Nullable
   private static String mapText(Element element) {
     Node firstChild = element.getFirstChild();
     Node lastChild = element.getLastChild();
@@ -137,7 +123,6 @@ public class SimpleXmlReader {
     return null;
   }
 
-  @Nonnull
   private static Map<String, String> mapAttributes(Element element) {
     NamedNodeMap attributes = element.getAttributes();
 

@@ -5,20 +5,20 @@
   <parent>
     <groupId>consulo</groupId>
     <artifactId>arch.managment</artifactId>
-    <version>2-SNAPSHOT</version>
+    <version>3-SNAPSHOT</version>
     <relativePath>../../../arch/managment/pom.xml</relativePath>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>consulo-util-nodep</artifactId>
-  <version>2-SNAPSHOT</version>
+  <version>3-SNAPSHOT</version>
 
   <packaging>jar</packaging>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <java.level>1.6</java.level>
+    <java.level>9</java.level>
   </properties>
 
   <build>
@@ -27,43 +27,20 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <compilerId>eclipse</compilerId>
-          <source>${java.level}</source>
+          <compilerId>javi</compilerId>
+          <source>17</source>
           <target>${java.level}</target>
           <showDeprecation>true</showDeprecation>
           <showWarnings>true</showWarnings>
         </configuration>
         <dependencies>
           <dependency>
-            <groupId>org.codehaus.plexus</groupId>
-            <artifactId>plexus-compiler-eclipse</artifactId>
-            <version>2.8.8</version>
+            <groupId>consulo.internal</groupId>
+            <artifactId>plexus-compiler-javi</artifactId>
+            <version>16.0.7-SNAPSHOT</version>
           </dependency>
         </dependencies>
       </plugin>
-      <plugin>
-        <groupId>consulo.maven</groupId>
-        <artifactId>java9-maven-plugin</artifactId>
-        <version>1.0-SNAPSHOT</version>
-        <extensions>true</extensions>
-        <executions>
-          <execution>
-            <id>gen</id>
-            <phase>process-classes</phase>
-            <goals>
-              <goal>generate-binary-module-info-nocheck</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
   </build>
-
-  <dependencies>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-annotation</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-  </dependencies>
 </project>

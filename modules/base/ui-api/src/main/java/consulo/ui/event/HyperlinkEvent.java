@@ -16,8 +16,10 @@
 package consulo.ui.event;
 
 import consulo.ui.Component;
+import consulo.ui.event.details.InputDetails;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -27,8 +29,14 @@ public class HyperlinkEvent extends UIEvent<Component> {
   @Nonnull
   private final String myDescription;
 
+  @Deprecated
   public HyperlinkEvent(@Nonnull Component component, @Nonnull String description) {
     super(component);
+    myDescription = description;
+  }
+
+  public HyperlinkEvent(@Nonnull Component component, @Nonnull String description, @Nullable InputDetails details) {
+    super(component, details);
     myDescription = description;
   }
 

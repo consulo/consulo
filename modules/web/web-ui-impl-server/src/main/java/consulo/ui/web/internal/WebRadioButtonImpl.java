@@ -15,7 +15,7 @@
  */
 package consulo.ui.web.internal;
 
-import com.intellij.openapi.util.Comparing;
+import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.localize.LocalizeValue;
 import consulo.ui.RadioButton;
 import consulo.ui.UIAccess;

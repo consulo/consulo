@@ -1,0 +1,1224 @@
+<!--
+  - Copyright 2013-2022 consulo.io
+  -
+  - Licensed under the Apache License, Version 2.0 (the "License");
+  - you may not use this file except in compliance with the License.
+  - You may obtain a copy of the License at
+  -
+  - http://www.apache.org/licenses/LICENSE-2.0
+  -
+  - Unless required by applicable law or agreed to in writing, software
+  - distributed under the License is distributed on an "AS IS" BASIS,
+  - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  - See the License for the specific language governing permissions and
+  - limitations under the License.
+  -->
+<consulo-plugin>
+  <id>consulo</id>
+  <name>Consulo</name>
+  <localize>consulo.platform.base.ActionLocalize</localize>
+
+  <import path="/META-INF/Actions.xml"/>
+  <import path="/META-INF/Diff.xml"/>
+  <import path="/META-INF/ProjectComponents.xml"/>
+  <import path="/META-INF/ApplicationComponents.xml"/>
+  <import path="/META-INF/ExternalSystems.xml"/>
+  <import path="/META-INF/RemoteServers.xml"/>
+  <import path="/META-INF/Bundled.xml"/>
+  <import path="/META-INF/BackgroundTaskByVfsChange.xml"/>
+  <import path="/META-INF/Compiler.xml"/>
+  <import path="/META-INF/EarlyAccessProgram.xml"/>
+  <import path="/META-INF/Graph.xml"/>
+  <import path="/META-INF/Copyright.xml"/>
+  <import path="/META-INF/VcsLog.xml"/>
+  <import path="/META-INF/DVcs.xml"/>
+  <import path="/META-INF/PostfixTemplates.xml"/>
+  <import path="/META-INF/Coverage.xml"/>
+  <import path="/META-INF/XDebugger.xml"/>
+  <import path="/META-INF/Configurables.xml"/>
+  <import path="/META-INF/Scratch.xml"/>
+  <import path="/META-INF/ExternalStorage.xml"/>
+  <import path="/META-INF/BuildInServer.xml"/>
+  <import path="/META-INF/TipsOfTheDay.xml"/>
+  <import path="/META-INF/Injecting.xml"/>
+  <import path="/META-INF/Task.xml"/>
+
+  <extensionPoints>
+    <extensionPoint name="search.topHitProvider" interface="consulo.ide.impl.idea.ide.SearchTopHitProvider"/>
+    <extensionPoint name="search.optionContributor" interface="consulo.ide.impl.idea.ide.ui.search.SearchableOptionContributor"/>
+    <extensionPoint name="referenceInjector" interface="consulo.language.inject.ReferenceInjector"/>
+    <extensionPoint name="customPropertyScopeProvider" interface="consulo.ide.impl.psi.impl.search.CustomPropertyScopeProvider"/>
+    <extensionPoint name="contentFolderTypeProvider" interface="consulo.content.ContentFolderTypeProvider"/>
+    <extensionPoint name="contentFolderPropertyProvider" interface="consulo.module.content.layer.ContentFolderPropertyProvider"/>
+    <extensionPoint name="contentFolderSupportPatcher" interface="consulo.module.content.layer.ContentFolderSupportPatcher"/>
+
+    <extensionPoint name="dateTimeFormatter" beanClass="consulo.ide.impl.idea.util.text.DateTimeFormatterBean"/>
+
+    <extensionPoint name="editorFactoryDocumentListener" interface="consulo.document.event.DocumentListener"/>
+    <extensionPoint name="editorFactoryMouseListener" interface="consulo.codeEditor.event.EditorMouseListener"/>
+    <extensionPoint name="editorFactoryMouseMotionListener" interface="consulo.codeEditor.event.EditorMouseMotionListener"/>
+    <extensionPoint name="editorFactoryListener" interface="consulo.codeEditor.event.EditorFactoryListener"/>
+
+    <extensionPoint name="vfs.asyncListener" interface="consulo.virtualFileSystem.event.AsyncFileListener"/>
+
+    <extensionPoint name="generatedSourcesFilter" interface="consulo.project.content.GeneratedSourcesFilter"/>
+    <extensionPoint name="testSourcesFilter" interface="consulo.project.content.TestSourcesFilter"/>
+    <extensionPoint name="defaultLibraryRootDetector" interface="consulo.content.library.ui.RootDetector"/>
+
+    <extensionPoint name="postStartupActivity" interface="consulo.project.startup.StartupActivity"/>
+    <extensionPoint name="backgroundPostStartupActivity" interface="consulo.project.startup.StartupActivity$Background"/>
+    <extensionPoint name="psiReferenceLocalFixProvider" interface="consulo.language.editor.inspection.PsiReferenceLocalQuickFixProvider" area="PROJECT"/>
+
+
+    <extensionPoint name="module.workingDirectoryProvider" interface="consulo.execution.WorkingDirectoryProvider"/>
+
+    <extensionPoint name="selectInTarget"
+                    interface="consulo.ide.impl.idea.ide.SelectInTarget"
+                    area="PROJECT"/>
+
+    <extensionPoint name="fileEditorProvider"
+                    interface="consulo.fileEditor.FileEditorProvider"/>
+
+    <extensionPoint name="fileTypeFactory"
+                    interface="consulo.virtualFileSystem.fileType.FileTypeFactory"/>
+
+    <extensionPoint name="fileTypeOverrider" interface="consulo.ide.impl.idea.openapi.fileTypes.impl.FileTypeOverrider"/>
+
+
+    <extensionPoint name="virtualFileSystem" interface="consulo.virtualFileSystem.VirtualFileSystem"/>
+
+    <extensionPoint name="keymapExtension"
+                    interface="consulo.ide.impl.idea.openapi.keymap.KeymapExtension"/>
+
+    <extensionPoint name="getDataRule" interface="consulo.dataContext.GetDataRule"/>
+
+    <extensionPoint name="dataValidator" interface="consulo.ide.impl.idea.ide.impl.DataValidator"/>
+
+    <extensionPoint name="cutElementMarker"
+                    interface="consulo.ide.impl.idea.openapi.ide.CutElementMarker"/>
+
+    <extensionPoint name="schemeOwner" beanClass="consulo.ide.impl.idea.openapi.components.ServiceBean"/>
+
+    <extensionPoint name="ideRootPaneNorth" interface="consulo.project.ui.wm.IdeRootPaneNorthExtension" area="PROJECT"/>
+
+    <extensionPoint name="handleTypeFactory" interface="consulo.ide.impl.idea.openapi.vcs.readOnlyHandler.HandleTypeFactory" area="PROJECT"/>
+    <extensionPoint name="fileTypeRegistrator" interface="consulo.ide.impl.idea.ide.highlighter.FileTypeRegistrator"/>
+
+    <extensionPoint name="undoProvider" interface="consulo.ide.impl.idea.openapi.command.impl.UndoProvider"/>
+    <extensionPoint name="projectUndoProvider" interface="consulo.ide.impl.idea.openapi.command.impl.UndoProvider" area="PROJECT"/>
+
+
+
+    <extensionPoint name="breadcrumbsInfoProvider" interface="consulo.ide.impl.idea.ui.breadcrumbs.BreadcrumbsProvider"/>
+    <extensionPoint name="breadcrumbsPresentationProvider" interface="consulo.ide.impl.idea.ui.breadcrumbs.BreadcrumbsPresentationProvider"/>
+    <extensionPoint name="fileBreadcrumbsCollector" interface="consulo.ide.impl.idea.codeInsight.breadcrumbs.FileBreadcrumbsCollector" area="PROJECT"/>
+
+    <extensionPoint name="codeInsight.linkHandler"
+                    beanClass="consulo.ide.impl.idea.codeInsight.hint.TooltipLinkHandlerEP">
+      <with attribute="handlerClass" implements="consulo.ide.impl.idea.codeInsight.highlighting.TooltipLinkHandler"/>
+    </extensionPoint>
+
+
+
+    <extensionPoint name="applicationLoadListener" interface="consulo.application.event.ApplicationLoadListener"/>
+
+    <extensionPoint name="editorTabTitleProvider" interface="consulo.fileEditor.EditorTabTitleProvider"/>
+    <extensionPoint name="editorTabColorProvider" interface="consulo.fileEditor.EditorTabColorProvider"/>
+    <extensionPoint name="editorFileSwapper" interface="consulo.ide.impl.idea.openapi.fileEditor.impl.EditorFileSwapper"/>
+
+    <extensionPoint name="http.localFileFinder" interface="consulo.ide.impl.idea.openapi.fileEditor.impl.http.LocalFileFinder"/>
+    <extensionPoint name="http.fileEditorActionProvider"
+                    interface="consulo.ide.impl.idea.openapi.fileEditor.impl.http.RemoteFileEditorActionProvider"/>
+
+
+    <extensionPoint name="checkinHandlerFactory" interface="consulo.ide.impl.idea.openapi.vcs.checkin.CheckinHandlerFactory"/>
+
+    <extensionPoint name="writingAccessProvider" area="PROJECT" interface="consulo.virtualFileSystem.WritingAccessProvider"/>
+    <extensionPoint name="nonProjectFileWritingAccessExtension" area="PROJECT"
+                    interface="consulo.ide.impl.idea.openapi.fileEditor.impl.NonProjectFileWritingAccessExtension"/>
+    <extensionPoint name="editorNotificationProvider" area="PROJECT" interface="consulo.ide.impl.codeEditor.EditorNotificationProvider"/>
+
+    <extensionPoint name="editorNavigation" interface="consulo.ide.impl.idea.openapi.editor.EditorNavigationDelegate"/>
+
+    <extensionPoint name="statistics.usagesCollector" interface="consulo.ide.impl.idea.internal.statistic.UsagesCollector"/>
+
+
+    <extensionPoint name="actionPromoter" interface="consulo.ide.impl.idea.openapi.actionSystem.ActionPromoter"/>
+
+    <extensionPoint name="fileDocumentManagerListener" interface="consulo.document.event.FileDocumentManagerListener"/>
+    <extensionPoint name="fileDocumentSynchronizationVetoer" interface="consulo.document.FileDocumentSynchronizationVetoer"/>
+
+
+
+    <extensionPoint name="intentionMenuContributor" interface="consulo.ide.impl.idea.codeInsight.daemon.impl.IntentionMenuContributor"/>
+
+    <extensionPoint name="pathMacroFilter" interface="consulo.component.macro.PathMacroFilter"/>
+    <extensionPoint name="pathMacroExpendableProtocol" beanClass="consulo.component.macro.PathMacroExpendableProtocolBean"/>
+
+    <extensionPoint name="httpRequestHandler" interface="consulo.ide.impl.builtInServer.http.HttpRequestHandler"/>
+
+    <extensionPoint name="colorPickerListenerFactory" interface="consulo.ide.impl.idea.ui.ColorPickerListenerFactory"/>
+
+    <!--VCS-->
+    <extensionPoint name="checkoutProvider"
+                    interface="consulo.ide.impl.idea.openapi.vcs.CheckoutProvider"/>
+    <extensionPoint name="checkoutListener"
+                    interface="consulo.ide.impl.idea.openapi.vcs.checkout.CheckoutListener"/>
+    <extensionPoint name="vcsAwareCheckoutListener"
+                    interface="consulo.ide.impl.idea.openapi.vcs.checkout.VcsAwareCheckoutListener"/>
+    <extensionPoint name="checkoutCompletedListener"
+                    interface="consulo.ide.impl.idea.openapi.vcs.checkout.CheckoutListener"/>
+    <extensionPoint name="changeListDecorator"
+					interface="consulo.ide.impl.idea.openapi.vcs.changes.ChangeListDecorator" area="PROJECT"/>
+
+
+    <extensionPoint name="vcsCheckinHandlerFactory"
+                    interface="consulo.ide.impl.idea.openapi.vcs.checkin.VcsCheckinHandlerFactory"/>
+
+
+
+    <extensionPoint name="editChangelistSupport"
+                    interface="consulo.ide.impl.idea.openapi.vcs.changes.ui.EditChangelistSupport"
+                    area="PROJECT"/>
+
+    <extensionPoint name="vcsSelectionProvider"
+                    interface="consulo.ide.impl.idea.vcsUtil.VcsSelectionProvider"/>
+
+    <extensionPoint name="vcsConfigurableProvider"
+                    interface="consulo.ide.impl.idea.openapi.vcs.VcsConfigurableProvider"/>
+
+    <extensionPoint name="vcsRootChecker" interface="consulo.ide.impl.idea.openapi.vcs.VcsRootChecker"/>
+
+    <extensionPoint name="vcs.fileStatusProvider"
+                    interface="consulo.virtualFileSystem.status.FileStatusProvider"
+                    area="PROJECT"/>
+
+    <extensionPoint name="vcs.baseContentProvider"
+                    interface="consulo.ide.impl.idea.openapi.vcs.impl.VcsBaseContentProvider"
+                    area="PROJECT"/>
+
+    <extensionPoint name="vcsPopupProvider"
+                    interface="consulo.ide.impl.idea.openapi.vcs.actions.VcsQuickListContentProvider"/>
+    <extensionPoint name="vcs.ignoredFilesHolder" interface="consulo.ide.impl.idea.openapi.vcs.changes.VcsIgnoredFilesHolder" area="PROJECT"/>
+    <extensionPoint name="vcs.ignoredFileProvider"
+                    interface="consulo.ide.impl.idea.openapi.vcs.changes.IgnoredFileProvider"/>
+
+    <extensionPoint name="patch.extension" interface="consulo.ide.impl.idea.openapi.diff.impl.patch.PatchEP" area="PROJECT"/>
+    <extensionPoint name="vcsChangesViewRefresher" interface="consulo.ide.impl.idea.openapi.vcs.changes.ChangesViewRefresher"/>
+    <extensionPoint name="vcsAnnotationGutterActionProvider" interface="consulo.ide.impl.idea.openapi.vcs.annotate.AnnotationGutterActionProvider"/>
+    <extensionPoint name="vcs.taskHandler" interface="consulo.ide.impl.idea.openapi.vcs.VcsTaskHandler" area="PROJECT"/>
+
+    <extensionPoint name="compiler.additionalCompileScopeProvider"
+                    interface="consulo.ide.impl.idea.compiler.impl.AdditionalCompileScopeProvider"/>
+
+    <extensionPoint name="namedScopesHolderProvider" area="PROJECT" interface="consulo.content.scope.NamedScopesHolderProvider"/>
+
+    <extensionPoint name="compiler.translatingHelper"
+                    interface="consulo.compiler.TranslatingCompilerFilesMonitorHelper"/>
+
+    <extensionPoint name="compiler.resourceCompilerExtension"
+                    interface="consulo.ide.impl.idea.compiler.impl.resourceCompiler.ResourceCompilerExtension"/>
+
+    <extensionPoint name="compiler.additionalOutputDirectoriesProvider"
+                    interface="consulo.compiler.AdditionalOutputDirectoriesProvider"/>
+
+
+    <extensionPoint name="packaging.elementType" interface="consulo.compiler.artifact.element.PackagingElementType"/>
+    <extensionPoint name="packaging.artifactPropertiesProvider" interface="consulo.compiler.artifact.ArtifactPropertiesProvider"/>
+    <extensionPoint name="packaging.sourceItemProvider" interface="consulo.ide.impl.idea.packaging.ui.PackagingSourceItemsProvider"/>
+    <extensionPoint name="packaging.artifactType" interface="consulo.compiler.artifact.ArtifactType"/>
+
+    <extensionPoint name="moduleImportProvider" interface="consulo.ide.impl.moduleImport.ModuleImportProvider"/>
+
+    <extensionPoint name="codeInsight.wordCompletionFilter" beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.ide.impl.idea.lang.WordCompletionElementFilter"/>
+    </extensionPoint>
+
+
+    <extensionPoint name="compiler" area="PROJECT" interface="consulo.compiler.Compiler"/>
+
+    <extensionPoint name="projectStructureValidator"
+                    interface="consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureValidator"/>
+
+    <!--Lang-->
+    <extensionPoint name="errorPropertiesProvider" interface="consulo.ide.impl.codeInspection.ui.ErrorPropertiesProvider"/>
+
+    <extensionPoint name="indexPatternProvider"
+                    interface="consulo.language.psi.search.IndexPatternProvider"/>
+
+
+    <extensionPoint name="fileBasedIndex.providedLocator"
+                    interface="consulo.ide.impl.idea.util.indexing.provided.ProvidedIndexExtensionLocator"/>
+
+
+    <extensionPoint name="globalIndexFilter"
+                    interface="consulo.ide.impl.idea.util.indexing.GlobalIndexFilter"/>
+
+    <extensionPoint name="refGraphAnnotator"
+                    interface="consulo.language.editor.inspection.reference.RefGraphAnnotator"/>
+
+    <!-- Code Insight -->
+    <extensionPoint name="highlightVisitor"
+                    interface="consulo.language.editor.rawHighlight.HighlightVisitor"
+                    area="PROJECT"/>
+    <extensionPoint name="highlightErrorFilter"
+                    interface="consulo.language.editor.HighlightErrorFilter"
+                    area="PROJECT"/>
+
+    <extensionPoint name="daemon.tooltipActionProvider"
+                    interface="consulo.ide.impl.idea.codeInsight.daemon.impl.tooltips.TooltipActionProvider"/>
+
+    <extensionPoint name="errorQuickFixProvider"
+                    interface="consulo.ide.impl.idea.codeInsight.daemon.impl.analysis.ErrorQuickFixProvider"/>
+
+    <extensionPoint name="pathReferenceProvider"
+                    interface="consulo.language.psi.path.PathReferenceProvider"/>
+    <extensionPoint name="anchorReferenceProvider"
+                    interface="consulo.language.psi.path.PathReferenceProvider"/>
+    <extensionPoint name="dynamicContextProvider"
+                    interface="consulo.language.psi.path.DynamicContextProvider"/>
+
+
+
+    <extensionPoint name="codeInsight.unresolvedReferenceQuickFixProvider"
+                    interface="consulo.language.editor.intention.UnresolvedReferenceQuickFixProvider"/>
+
+
+    <extensionPoint name="bidiRegionsSeparator"
+                    beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.ide.impl.idea.openapi.editor.bidi.BidiRegionsSeparator"/>
+    </extensionPoint>
+
+    <extensionPoint name="wordBoundaryFilter" beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.language.editor.action.WordBoundaryFilter"/>
+    </extensionPoint>
+
+    <extensionPoint name="quoteHandler"
+                    beanClass="consulo.ide.impl.idea.codeInsight.editorActions.QuoteHandlerEP"/>
+    <extensionPoint name="extendWordSelectionHandler"
+                    interface="consulo.language.editor.action.ExtendWordSelectionHandler"/>
+    <extensionPoint name="basicWordSelectionFilter"
+                    interface="consulo.util.lang.function.Condition"/>
+    <extensionPoint name="typedHandler"
+                    interface="consulo.language.editor.action.TypedHandlerDelegate"/>
+
+
+    <extensionPoint name="joinLinesHandler"
+                    interface="consulo.language.editor.action.JoinLinesHandlerDelegate"/>
+    <extensionPoint name="enterHandlerDelegate" interface="consulo.ide.impl.idea.codeInsight.editorActions.enter.EnterHandlerDelegate"/>
+    <extensionPoint name="backspaceHandlerDelegate" interface="consulo.language.editor.action.BackspaceHandlerDelegate"/>
+    <extensionPoint name="editor.backspaceModeOverride" beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.codeEditor.action.BackspaceModeOverride"/>
+    </extensionPoint>
+
+    <extensionPoint name="codeStyleSettingsProvider"
+                    interface="consulo.language.codeStyle.setting.CodeStyleSettingsProvider"/>
+
+    <extensionPoint name="codeStyleIndentHelperExtension"
+                    interface="consulo.ide.impl.psi.impl.source.codeStyle.IndentHelperExtension"/>
+
+    <extensionPoint name="daemon.highlightInfoFilter"
+                    interface="consulo.language.editor.rawHighlight.HighlightInfoFilter"/>
+
+    <extensionPoint name="daemon.intentionActionFilter"
+                    interface="consulo.ide.impl.idea.codeInsight.daemon.impl.IntentionActionFilter"/>
+
+    <extensionPoint name="daemon.externalAnnotatorsFilter"
+                    interface="consulo.ide.impl.idea.lang.ExternalAnnotatorsFilter"/>
+
+    <extensionPoint name="severitiesProvider"
+                    interface="consulo.language.editor.rawHighlight.SeveritiesProvider"/>
+
+    <extensionPoint name="implicitUsageProvider"
+                    interface="consulo.ide.impl.idea.codeInsight.daemon.ImplicitUsageProvider"/>
+
+    <extensionPoint name="templateParameterTraversalPolicy"
+                    interface="consulo.ide.impl.idea.codeInsight.completion.TemplateParameterTraversalPolicy"/>
+
+    <extensionPoint name="daemon.changeLocalityDetector"
+                    interface="consulo.ide.impl.idea.codeInsight.daemon.ChangeLocalityDetector"/>
+
+    <extensionPoint name="languageInjector" interface="consulo.language.inject.LanguageInjector"/>
+    <extensionPoint name="concatenationAwareInjector" interface="consulo.language.inject.ConcatenationAwareInjector" area="PROJECT"/>
+
+    <extensionPoint name="annotator"
+                    beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.language.editor.annotation.Annotator"/>
+    </extensionPoint>
+
+    <extensionPoint name="externalAnnotator"
+                    beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.language.editor.annotation.ExternalAnnotator"/>
+    </extensionPoint>
+
+    <extensionPoint name="lang.refactoringSupport"
+                    beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.language.editor.refactoring.RefactoringSupportProvider"/>
+    </extensionPoint>
+
+    <extensionPoint name="lang.refactoringSupport.classMembersRefactoringSupport"
+                    beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.ide.impl.idea.refactoring.classMembers.ClassMembersRefactoringSupport"/>
+    </extensionPoint>
+
+    <extensionPoint name="lang.documentationProvider"
+                    beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.language.editor.documentation.DocumentationProvider"/>
+    </extensionPoint>
+
+    <extensionPoint name="lang.namesValidator"
+                    beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.language.editor.refactoring.NamesValidator"/>
+    </extensionPoint>
+
+    <extensionPoint name="lang.findUsagesProvider"
+                    beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.language.findUsage.FindUsagesProvider"/>
+    </extensionPoint>
+
+    <extensionPoint name="lang.commenter"
+                    beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.language.Commenter"/>
+    </extensionPoint>
+
+    <extensionPoint name="lang.inspectionSuppressor"
+                    beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.language.editor.inspection.InspectionSuppressor"/>
+    </extensionPoint>
+
+    <extensionPoint name="lang.braceMatcher"
+                    beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.language.PairedBraceMatcher"/>
+    </extensionPoint>
+
+    <extensionPoint name="lang.quoteHandler"
+                    beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.language.editor.action.QuoteHandler"/>
+    </extensionPoint>
+
+    <extensionPoint name="lang.foldingBuilder"
+                    beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.language.editor.folding.FoldingBuilder"/>
+    </extensionPoint>
+
+    <extensionPoint name="customFoldingProvider"
+                    interface="consulo.language.editor.folding.CustomFoldingProvider"/>
+    <extensionPoint name="lang.psiStructureViewFactory"
+                    beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.language.editor.structureView.PsiStructureViewFactory"/>
+    </extensionPoint>
+
+    <extensionPoint name="lang.structureViewExtension"
+                    interface="consulo.language.editor.structureView.StructureViewExtension"/>
+
+    <extensionPoint name="lang.psi.elementFactory" interface="consulo.language.psi.PsiElementFactory"/>
+
+    <extensionPoint name="lang.ast.lazyFactory" interface="consulo.language.impl.ast.ASTLazyFactory"/>
+
+    <extensionPoint name="lang.ast.leafFactory" interface="consulo.language.impl.ast.ASTLeafFactory"/>
+
+    <extensionPoint name="lang.ast.compositeFactory" interface="consulo.language.impl.ast.ASTCompositeFactory"/>
+
+    <extensionPoint name="lang.formatter" beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.language.codeStyle.FormattingModelBuilder"/>
+    </extensionPoint>
+
+    <extensionPoint name="externalFormatProcessor" interface="consulo.ide.impl.psi.codeStyle.ExternalFormatProcessor"/>
+
+    <extensionPoint name="lang.formatter.restriction" interface="consulo.language.codeStyle.LanguageFormattingRestriction"/>
+    <extensionPoint name="lang.importOptimizer" beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.language.editor.refactoring.ImportOptimizer"/>
+    </extensionPoint>
+
+    <extensionPoint name="lang.rearranger" beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.language.codeStyle.arrangement.Rearranger"/>
+    </extensionPoint>
+    <extensionPoint name="rearranger.ui" interface="consulo.language.codeStyle.arrangement.std.ArrangementUiComponent$Factory"/>
+
+    <extensionPoint name="lang.surroundDescriptor" beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.language.editor.surroundWith.SurroundDescriptor"/>
+    </extensionPoint>
+
+    <extensionPoint name="lang.unwrapDescriptor" beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.language.editor.refactoring.unwrap.UnwrapDescriptor"/>
+    </extensionPoint>
+
+    <extensionPoint name="lang.parserDefinition" beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.language.parser.ParserDefinition"/>
+    </extensionPoint>
+
+    <extensionPoint name="metaLanguage" interface="consulo.language.MetaLanguage"/>
+
+    <extensionPoint name="lang.versionResolver" beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.language.version.LanguageVersionResolver"/>
+    </extensionPoint>
+
+    <extensionPoint name="lang.defineVersion" beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.language.version.LanguageVersion"/>
+    </extensionPoint>
+
+    <extensionPoint name="lang.treePatcher" beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.language.impl.psi.template.TreePatcher"/>
+    </extensionPoint>
+
+    <extensionPoint name="outerLanguageRangePatcher" beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.language.impl.psi.template.OuterLanguageRangePatcher"/>
+    </extensionPoint>
+
+    <extensionPoint name="lang.tokenSeparatorGenerator" beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.language.ast.TokenSeparatorGenerator"/>
+    </extensionPoint>
+
+
+
+
+
+    <extensionPoint name="referencesSearch" interface="consulo.application.util.query.QueryExecutor"/>
+    <extensionPoint name="definitionsScopedSearch" interface="consulo.application.util.query.QueryExecutor"/>
+
+    <extensionPoint name="useScopeEnlarger" interface="consulo.ide.impl.psi.search.UseScopeEnlarger"/>
+    <extensionPoint name="resolveScopeEnlarger" interface="consulo.language.psi.ResolveScopeEnlarger"/>
+    <extensionPoint name="resolveScopeProvider" interface="consulo.language.psi.ResolveScopeProvider"/>
+    <extensionPoint name="codeUsageScopeOptimizer" interface="consulo.language.psi.search.ScopeOptimizer"/>
+
+    <extensionPoint name="webFileFilter" interface="consulo.webBrowser.WebFileFilter"/>
+
+    <extensionPoint name="gotoClassContributor"
+                    interface="consulo.ide.navigation.ChooseByNameContributor"/>
+    <extensionPoint name="gotoSymbolContributor"
+                    interface="consulo.ide.navigation.ChooseByNameContributor"/>
+    <extensionPoint name="gotoFileContributor"
+                    interface="consulo.ide.navigation.ChooseByNameContributor"/>
+    <extensionPoint name="anonymousElementProvider"
+                    interface="consulo.language.navigation.AnonymousElementProvider"/>
+
+    <extensionPoint name="gotoRelatedProvider" interface="consulo.language.navigation.GotoRelatedProvider"/>
+
+    <extensionPoint name="orderRootType" interface="consulo.content.OrderRootType"/>
+    <extensionPoint name="orderEntryType" interface="consulo.module.content.layer.orderEntry.OrderEntryType" internal="true"/>
+
+    <extensionPoint name="orderEnumerationHandlerFactory" interface="consulo.module.impl.internal.layer.OrderEnumerationHandler$Factory"/>
+    <extensionPoint name="directoryIndexExcludePolicy" interface="consulo.module.content.layer.DirectoryIndexExcludePolicy"
+                    area="PROJECT"/>
+
+    <extensionPoint name="smartPointerAnchorProvider" interface="consulo.language.psi.SmartPointerAnchorProvider"/>
+    <extensionPoint name="elementSignatureProvider" interface="consulo.ide.impl.idea.codeInsight.folding.impl.ElementSignatureProvider"/>
+    <extensionPoint name="preFormatProcessor" interface="consulo.ide.impl.psi.impl.source.codeStyle.PreFormatProcessor"/>
+
+    <extensionPoint name="highlightUsagesHandlerFactory" interface="consulo.language.editor.highlight.usage.HighlightUsagesHandlerFactory"/>
+
+    <extensionPoint name="usageTargetProvider"
+                    interface="consulo.usage.UsageTargetProvider"/>
+    <extensionPoint name="usageToPsiElementProvider" interface="consulo.usage.UsageToPsiElementProvider"/>
+
+    <extensionPoint name="customScopesProvider"
+                    interface="consulo.ide.impl.psi.search.scope.packageSet.CustomScopesProvider"
+                    area="PROJECT"/>
+
+    <extensionPoint name="customScopesFilter" interface="consulo.ide.impl.psi.search.scope.packageSet.CustomScopesFilter"/>
+
+    <extensionPoint name="scopeDescriptorProvider" interface="consulo.content.scope.ScopeDescriptorProvider"/>
+    <extensionPoint name="patternDialectProvider" interface="consulo.ide.impl.idea.packageDependencies.ui.PatternDialectProvider"/>
+
+    <extensionPoint name="localInspection"
+                    beanClass="consulo.language.editor.inspection.scheme.LocalInspectionEP">
+      <with attribute="implementationClass" implements="consulo.language.editor.inspection.LocalInspectionTool"/>
+    </extensionPoint>
+
+    <extensionPoint name="globalInspection"
+                    beanClass="consulo.language.editor.inspection.scheme.InspectionEP">
+      <with attribute="implementationClass" implements="consulo.language.editor.inspection.GlobalInspectionTool"/>
+    </extensionPoint>
+    <!-- please use localInspection or globalInspection instead-->
+    <extensionPoint name="specialTool"
+                    beanClass="consulo.language.editor.inspection.scheme.InspectionEP"/>
+
+
+    <extensionPoint name="inspectionElementsMerger" interface="consulo.ide.impl.idea.codeInspection.ex.InspectionElementsMerger"/>
+    <extensionPoint name="codeInspection.InspectionExtension" interface="consulo.language.editor.inspection.InspectionExtensionsFactory"/>
+
+    <extensionPoint name="customPasteProvider" interface="consulo.ui.ex.PasteProvider"/>
+
+    <extensionPoint name="copyPastePreProcessor" interface="consulo.language.editor.action.CopyPastePreProcessor"/>
+    <extensionPoint name="copyPastePostProcessor" interface="consulo.ide.impl.idea.codeInsight.editorActions.CopyPastePostProcessor"/>
+
+    <extensionPoint name="commentCompleteHandler" interface="consulo.language.editor.action.CommentCompleteHandler"/>
+
+    <extensionPoint name="liveTemplateContext" interface="consulo.language.editor.template.context.TemplateContextType"/>
+    <extensionPoint name="liveTemplateMacro" interface="consulo.language.editor.template.macro.Macro"/>
+    <extensionPoint name="liveTemplateOptionalProcessor" interface="consulo.ide.impl.idea.codeInsight.template.impl.TemplateOptionalProcessor"/>
+    <extensionPoint name="liveTemplatePreprocessor" interface="consulo.ide.impl.idea.codeInsight.template.impl.TemplatePreprocessor"/>
+    <extensionPoint name="customLiveTemplate" interface="consulo.ide.impl.idea.codeInsight.template.CustomLiveTemplate"/>
+
+    <extensionPoint name="fileTemplateGroup"
+                    interface="consulo.fileTemplate.FileTemplateGroupDescriptorFactory"/>
+    <extensionPoint name="colorProvider"
+                    interface="consulo.language.psi.ElementColorProvider"
+                    area="PROJECT"/>
+    <extensionPoint name="createFromTemplateHandler"
+                    interface="consulo.fileTemplate.CreateFromTemplateHandler"/>
+    <extensionPoint name="defaultTemplatePropertiesProvider"
+                    interface="consulo.fileTemplate.DefaultTemplatePropertiesProvider"/>
+    <extensionPoint name="internalFileTemplate"
+                    beanClass="consulo.fileTemplate.impl.internal.InternalTemplateBean"/>
+    <extensionPoint name="saveFileAsTemplateHandler"
+                    interface="consulo.ide.impl.idea.ide.actions.SaveFileAsTemplateHandler"/>
+
+    <extensionPoint name="favoriteNodeProvider"
+                    interface="consulo.ide.impl.idea.ide.favoritesTreeView.FavoriteNodeProvider"
+                    area="PROJECT"/>
+    <extensionPoint name="favoritesListProvider"
+                    interface="consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesListProvider"
+                    area="PROJECT"/>
+
+    <extensionPoint name="lang.emacs" beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.ide.impl.idea.codeInsight.editorActions.emacs.EmacsProcessingHandler"/>
+    </extensionPoint>
+
+    <!-- File-Based Index-->
+    <extensionPoint name="fileBasedIndex" interface="consulo.language.psi.stub.FileBasedIndexExtension"/>
+    <extensionPoint name="stubIndex" interface="consulo.language.psi.stub.StubIndexExtension"/>
+    <extensionPoint name="indexedRootsContributor" interface="consulo.language.psi.stub.IndexableSetContributor"/>
+    <extensionPoint name="include.provider" interface="consulo.language.psi.include.FileIncludeProvider"/>
+
+    <extensionPoint name="refactoring.moveDirectoryWithClassesHelper"
+                    interface="consulo.ide.impl.idea.refactoring.move.moveClassesOrPackages.MoveDirectoryWithClassesHelper"/>
+
+
+    <extensionPoint name="refactoring.helper" interface="consulo.language.editor.refactoring.RefactoringHelper"/>
+    <extensionPoint name="refactoring.inlineHandler" beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.ide.impl.idea.lang.refactoring.InlineHandler"/>
+    </extensionPoint>
+
+    <extensionPoint name="refactoring.safeDeleteProcessor" interface="consulo.ide.impl.idea.refactoring.safeDelete.SafeDeleteProcessorDelegate"/>
+
+    <extensionPoint name="refactoring.extractIncludeHandler"
+                    beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.language.editor.refactoring.action.RefactoringActionHandler"/>
+    </extensionPoint>
+
+    <extensionPoint name="refactoring.changeSignatureUsageProcessor"
+                    interface="consulo.ide.impl.idea.refactoring.changeSignature.ChangeSignatureUsageProcessor"/>
+
+    <extensionPoint name="elementDescriptionProvider" interface="consulo.language.psi.ElementDescriptionProvider"/>
+
+    <extensionPoint name="macro" interface="consulo.pathMacro.Macro"/>
+    <extensionPoint name="printOption" interface="consulo.ide.impl.idea.codeEditor.printing.PrintOption"/>
+
+    <extensionPoint name="indexPatternBuilder" interface="consulo.ide.impl.psi.impl.search.IndexPatternBuilder"/>
+
+    <extensionPoint name="configurationType"
+                    interface="consulo.execution.configuration.ConfigurationType"/>
+
+    <extensionPoint name="runConfigurationsSettings"
+                    interface="consulo.execution.configuration.RunConfigurationsSettings"/>
+
+    <extensionPoint name="programRunner"
+                    interface="consulo.execution.runner.ProgramRunner"/>
+
+    <extensionPoint name="executor"
+                    interface="consulo.execution.executor.Executor"/>
+
+    <extensionPoint name="executionTargetProvider"
+                    interface="consulo.execution.ExecutionTargetProvider"/>
+
+
+    <extensionPoint name="stepsBeforeRunProvider"
+                    interface="consulo.execution.BeforeRunTaskProvider"
+                    area="PROJECT"/>
+
+    <extensionPoint name="utf8BomOptionProvider" interface="consulo.ide.impl.idea.openapi.vfs.encoding.Utf8BomOptionProvider"/>
+
+    <extensionPoint name="consoleFilterProvider" interface="consulo.execution.ui.console.ConsoleFilterProvider"/>
+    <extensionPoint name="consoleInputFilterProvider" interface="consulo.execution.ui.console.ConsoleInputFilterProvider"/>
+    <extensionPoint name="consoleActionsPostProcessor" interface="consulo.execution.ui.console.ConsoleActionsPostProcessor"/>
+
+    <extensionPoint name="console.folding" interface="consulo.execution.ConsoleFolding"/>
+
+    <extensionPoint name="configurationProducer"
+                    interface="consulo.execution.action.RuntimeConfigurationProducer"/>
+
+    <extensionPoint name="runConfigurationProducer" interface="consulo.execution.action.RunConfigurationProducer"/>
+
+    <extensionPoint name="runLineMarkerContributor" beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.ide.impl.idea.execution.lineMarker.RunLineMarkerContributor"/>
+    </extensionPoint>
+
+    <extensionPoint name="hectorComponentProvider" interface="consulo.language.editor.HectorComponentPanelsProvider"
+                    area="PROJECT"/>
+
+    <extensionPoint name="runDashboardContributor"
+                    interface="consulo.ide.impl.idea.execution.dashboard.RunDashboardContributor"/>
+    <extensionPoint name="runDashboardGroupingRule"
+                    interface="consulo.ide.impl.idea.execution.dashboard.DashboardGroupingRule"/>
+
+
+    <extensionPoint name="psi.fileReferenceHelper"
+                    interface="consulo.language.psi.path.FileReferenceHelper"/>
+
+    <extensionPoint name="psi.packageSupportProvider" interface="consulo.language.psi.PsiPackageSupportProvider"/>
+    <extensionPoint name="psi.directoryMethodProxy" interface="consulo.language.psi.PsiDirectoryMethodProxy"/>
+    <extensionPoint name="patterns.patternClass" beanClass="consulo.ide.impl.idea.patterns.compiler.PatternClassBean"/>
+
+    <extensionPoint name="pom.declarationSearcher" interface="consulo.language.pom.PomDeclarationSearcher"/>
+
+    <extensionPoint name="highlightRangeExtension" interface="consulo.ide.impl.idea.codeInsight.daemon.impl.HighlightRangeExtension"/>
+
+    <extensionPoint name="elementsToHighlightFilter" interface="consulo.util.lang.function.Condition"/>
+
+    <extensionPoint name="sdkType" interface="consulo.content.bundle.SdkType"/>
+    <extensionPoint name="predefinedBundlesProvider" interface="consulo.content.bundle.PredefinedBundlesProvider"/>
+
+    <extensionPoint name="library.presentationProvider" interface="consulo.content.library.LibraryPresentationProvider"/>
+    <extensionPoint name="library.type" interface="consulo.content.library.LibraryType"/>
+
+    <extensionPoint name="lang.implementationTextSelectioner"
+                    beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.language.editor.ImplementationTextSelectioner"/>
+    </extensionPoint>
+
+    <extensionPoint name="lang.lineWrapStrategy"
+                    beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.codeEditor.LineWrapPositionStrategy"/>
+    </extensionPoint>
+
+    <extensionPoint name="lang.whiteSpaceFormattingStrategy"
+                    beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.language.codeStyle.WhiteSpaceFormattingStrategy"/>
+    </extensionPoint>
+
+    <extensionPoint name="lang.indentStrategy"
+                    beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.ide.impl.idea.openapi.editor.IndentStrategy"/>
+    </extensionPoint>
+
+    <extensionPoint name="disabledIndentRangesProvider" interface="consulo.language.codeStyle.DisabledIndentRangesProvider"/>
+    <extensionPoint name="lineIndentProvider" interface="consulo.ide.impl.psi.codeStyle.lineIndent.LineIndentProvider"/>
+
+    <extensionPoint name="gotoDeclarationHandler"
+                    interface="consulo.ide.impl.idea.codeInsight.navigation.actions.GotoDeclarationHandler"/>
+    <extensionPoint name="typeDeclarationProvider"
+                    interface="consulo.ide.impl.idea.codeInsight.navigation.actions.TypeDeclarationProvider"/>
+    <extensionPoint name="gotoTargetRendererProvider"
+                    interface="consulo.ide.navigation.GotoTargetRendererProvider"/>
+
+    <extensionPoint name="navbar" interface="consulo.ide.impl.idea.ide.navigationToolbar.NavBarModelExtension"/>
+
+    <extensionPoint name="renameHandler" interface="consulo.language.editor.refactoring.rename.RenameHandler"/>
+    <extensionPoint name="renamePsiElementProcessor" interface="consulo.language.editor.refactoring.rename.RenamePsiElementProcessor"/>
+    <extensionPoint name="updateAddedFileProcessor" interface="consulo.language.psi.UpdateAddedFileProcessor"/>
+    <extensionPoint name="moveFileHandler" interface="consulo.ide.impl.idea.refactoring.move.moveFilesOrDirectories.MoveFileHandler"/>
+    <extensionPoint name="automaticRenamerFactory" interface="consulo.language.editor.refactoring.rename.AutomaticRenamerFactory"/>
+    <extensionPoint name="nameSuggestionProvider" interface="consulo.language.editor.refactoring.rename.NameSuggestionProvider"/>
+    <extensionPoint name="vetoRenameCondition" interface="consulo.language.editor.refactoring.rename.VetoRenameCondition"/>
+
+    <extensionPoint name="rename.inplace.resolveSnapshotProvider"
+                    beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.language.editor.refactoring.ResolveSnapshotProvider"/>
+    </extensionPoint>
+
+    <extensionPoint name="renameInputValidator" interface="consulo.language.editor.refactoring.rename.RenameInputValidator"/>
+
+    <extensionPoint name="findUsagesHandlerFactory" interface="consulo.find.FindUsagesHandlerFactory"
+                    area="PROJECT"/>
+    <extensionPoint name="customUsageSearcher" interface="consulo.ide.impl.idea.find.findUsages.CustomUsageSearcher"/>
+
+    <extensionPoint name="readWriteAccessDetector" interface="consulo.language.editor.highlight.ReadWriteAccessDetector"/>
+
+    <extensionPoint name="scopeParserExtension" interface="consulo.ide.impl.psi.search.scope.packageSet.PackageSetParserExtension"/>
+
+    <extensionPoint name="colorSettingsPage" interface="consulo.language.editor.colorScheme.setting.ColorSettingsPage"/>
+    <extensionPoint name="colorAndFontPanelFactory" interface="consulo.ide.impl.idea.application.options.colors.ColorAndFontPanelFactory"/>
+    <extensionPoint name="colorAndFontDescriptorProvider" interface="consulo.colorScheme.setting.ColorAndFontDescriptorsProvider"/>
+
+    <extensionPoint name="codeInsight.parameterInfo" beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.ide.impl.idea.lang.parameterInfo.ParameterInfoHandler"/>
+    </extensionPoint>
+
+    <extensionPoint name="codeInsight.typeInfo" beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.ide.impl.idea.lang.ExpressionTypeProvider"/>
+    </extensionPoint>
+
+    <extensionPoint name="preloadingActivity" interface="consulo.ide.impl.idea.openapi.application.PreloadingActivity"/>
+
+    <extensionPoint name="codeInsight.containerProvider" interface="consulo.language.psi.search.ContainerProvider"/>
+
+    <extensionPoint name="codeInsight.fillParagraph" beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.ide.impl.idea.codeInsight.editorActions.fillParagraph.ParagraphFillHandler"/>
+    </extensionPoint>
+
+    <extensionPoint name="fileTypeIndentOptionsProvider" interface="consulo.language.codeStyle.setting.FileTypeIndentOptionsProvider"/>
+    <extensionPoint name="fileIndentOptionsProvider" interface="consulo.language.codeStyle.FileIndentOptionsProvider"/>
+    <extensionPoint name="referenceImporter" interface="consulo.ide.impl.idea.codeInsight.daemon.ReferenceImporter"/>
+    <extensionPoint name="elementLookupRenderer" interface="consulo.language.editor.completion.lookup.ElementLookupRenderer"/>
+
+    <extensionPoint name="qualifiedNameProvider" interface="consulo.language.editor.QualifiedNameProvider"/>
+
+    <extensionPoint name="virtualFileQualifiedNameProvider" interface="consulo.language.editor.VirtualFileQualifiedNameProvider"/>
+
+
+
+
+    <extensionPoint name="importFilteringRule"
+                    interface="consulo.usage.rule.ImportFilteringRule"/>
+    <extensionPoint name="usageGroupingRuleProvider"
+                    interface="consulo.usage.rule.UsageGroupingRuleProvider"/>
+    <extensionPoint name="usageTypeProvider"
+                    interface="consulo.usage.UsageTypeProvider"/>
+    <extensionPoint name="fileStructureGroupRuleProvider"
+                    interface="consulo.ide.impl.idea.usages.impl.FileStructureGroupRuleProvider"/>
+    <extensionPoint name="usageContextPanelProvider"
+                    interface="consulo.usage.UsageContextPanelProvider"
+                    area="PROJECT"/>
+    <extensionPoint name="usageViewElementsListener" interface="consulo.ide.impl.idea.usages.impl.UsageViewElementsListener"/>
+
+    <extensionPoint name="treeStructureProvider"
+                    interface="consulo.project.ui.view.tree.TreeStructureProvider"
+                    area="PROJECT"/>
+
+    <extensionPoint name="defaultLiveTemplatesProvider"
+                    interface="consulo.ide.impl.idea.codeInsight.template.impl.DefaultLiveTemplatesProvider"/>
+
+    <extensionPoint name="codeInsight.implementMethod" beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.language.editor.action.LanguageCodeInsightActionHandler"/>
+    </extensionPoint>
+
+    <extensionPoint name="codeInsight.overrideMethod" beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.language.editor.action.LanguageCodeInsightActionHandler"/>
+    </extensionPoint>
+
+    <extensionPoint name="codeInsight.delegateMethods" beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.language.editor.action.LanguageCodeInsightActionHandler"/>
+    </extensionPoint>
+
+    <extensionPoint name="codeInsight.gotoSuper" beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.language.editor.action.LanguageCodeInsightActionHandler"/>
+    </extensionPoint>
+
+    <extensionPoint name="codeInsight.lineMarkerProvider" beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.language.editor.gutter.LineMarkerProvider"/>
+    </extensionPoint>
+
+    <extensionPoint name="codeInsight.surroundWithRangeAdjuster"
+                    interface="consulo.ide.impl.idea.codeInsight.generation.surroundWith.SurroundWithRangeAdjuster"/>
+
+    <extensionPoint name="lang.substitutor" beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.language.psi.LanguageSubstitutor"/>
+    </extensionPoint>
+
+
+
+
+    <extensionPoint name="filePasteProvider"
+                    interface="consulo.ui.ex.PasteProvider"/>
+
+    <extensionPoint name="testFinder"
+                    interface="consulo.ide.impl.idea.testIntegration.TestFinder"/>
+    <extensionPoint name="testSrcLocator"
+                    interface="consulo.ide.impl.idea.testIntegration.TestLocationProvider"/>
+    <extensionPoint name="testStatusListener"
+                    interface="consulo.execution.test.TestStatusListener"/>
+
+    <extensionPoint name="testCreator"
+                    beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.ide.impl.idea.testIntegration.TestCreator"/>
+    </extensionPoint>
+
+    <extensionPoint name="lang.smartEnterProcessor"
+                    beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.ide.impl.idea.codeInsight.editorActions.smartEnter.SmartEnterProcessor"/>
+    </extensionPoint>
+
+    <extensionPoint name="callHierarchyProvider" beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.ide.impl.idea.ide.hierarchy.HierarchyProvider"/>
+    </extensionPoint>
+    <extensionPoint name="methodHierarchyProvider" beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.ide.impl.idea.ide.hierarchy.HierarchyProvider"/>
+    </extensionPoint>
+
+    <extensionPoint name="typeHierarchyProvider" beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.ide.impl.idea.ide.hierarchy.HierarchyProvider"/>
+    </extensionPoint>
+
+    <extensionPoint name="metaDataContributor" interface="consulo.language.psi.meta.MetaDataContributor"/>
+
+    <extensionPoint name="documentationProvider"
+                    interface="consulo.language.editor.documentation.DocumentationProvider"/>
+
+    <extensionPoint name="lang.documentationFixer" beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.ide.impl.idea.codeInsight.documentation.DocCommentFixer"/>
+    </extensionPoint>
+
+    <extensionPoint name="templateCompletionProcessor"
+                    interface="consulo.language.editor.template.TemplateCompletionProcessor"/>
+
+    <extensionPoint name="targetElementUtilEx" interface="consulo.language.editor.TargetElementUtilExtender"/>
+
+    <extensionPoint name="statementUpDownMover" interface="consulo.ide.impl.idea.codeInsight.editorActions.moveUpDown.StatementUpDownMover"/>
+
+    <extensionPoint name="moveLeftRightHandler" beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass"
+            implements="consulo.ide.impl.idea.codeInsight.editorActions.moveLeftRight.MoveElementLeftRightHandler"/>
+    </extensionPoint>
+
+    <extensionPoint name="fileLookupInfoProvider" interface="consulo.ide.impl.psi.file.FileLookupInfoProvider"/>
+
+
+    <extensionPoint name="refactoring.elementListenerProvider"
+                    interface="consulo.language.editor.refactoring.event.RefactoringElementListenerProvider"
+                    area="PROJECT"/>
+
+    <extensionPoint name="problemFileHighlightFilter" interface="consulo.util.lang.function.Condition" area="PROJECT"/>
+
+    <extensionPoint name="problemHighlightFilter" interface="consulo.language.editor.ProblemHighlightFilter"/>
+
+    <extensionPoint name="uiDebuggerExtension" interface="consulo.ide.impl.idea.ui.debugger.UiDebuggerExtension"/>
+
+    <extensionPoint name="projectViewPane" interface="consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectViewPane" area="PROJECT"/>
+    <extensionPoint name="projectViewPaneSelectionHelperiewPane" interface="consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPaneSelectionHelper"/>
+    <extensionPoint name="projectViewOptionProvider" interface="consulo.ide.impl.projectView.impl.ProjectViewPaneOptionProvider"/>
+
+    <extensionPoint name="inlineActionHandler" interface="consulo.ide.impl.idea.lang.refactoring.InlineActionHandler"/>
+
+    <extensionPoint name="projectViewNodeDecorator" interface="consulo.ide.impl.idea.ide.projectView.ProjectViewNodeDecorator"
+                    area="PROJECT"/>
+
+    <extensionPoint name="previewHintProvider" interface="consulo.ide.impl.idea.codeInsight.preview.PreviewHintProvider"/>
+    <extensionPoint name="elementPreviewProvider" interface="consulo.ide.impl.idea.codeInsight.preview.ElementPreviewProvider"/>
+    <extensionPoint name="testActionProvider" interface="consulo.execution.test.action.ToggleModelActionProvider"/>
+
+    <extensionPoint name="psiViewerExtension" interface="consulo.ide.impl.idea.internal.psiView.PsiViewerExtension"/>
+
+    <extensionPoint name="filePropertyPusher" interface="consulo.ide.impl.idea.openapi.roots.impl.FilePropertyPusher"/>
+
+    <extensionPoint name="langCodeStyleSettingsProvider" interface="consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider"/>
+
+    <extensionPoint name="codeStyleSettingsModifier" interface="consulo.ide.impl.psi.codeStyle.modifier.CodeStyleSettingsModifier"/>
+
+    <extensionPoint name="predefinedCodeStyle" interface="consulo.language.codeStyle.PredefinedCodeStyle"/>
+
+
+
+    <extensionPoint name="analyzeStacktraceFilter" interface="consulo.execution.ui.console.Filter" area="PROJECT"/>
+
+    <extensionPoint name="changeSignatureDetector"
+                    beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.ide.impl.idea.refactoring.changeSignature.inplace.LanguageChangeSignatureDetector"/>
+    </extensionPoint>
+
+    <extensionPoint name="preserveIndentOnPaste" beanClass="consulo.ide.impl.idea.codeInsight.editorActions.PreserveIndentOnPasteBean"/>
+
+    <extensionPoint name="aliasingPsiTargetMapper" interface="consulo.ide.impl.psi.targets.AliasingPsiTargetMapper"/>
+
+
+    <extensionPoint name="patternProvider"
+                    interface="consulo.ide.impl.idea.codeInsight.generation.PatternProvider"/>
+
+    <extensionPoint name="treeCopyHandler"
+                    interface="consulo.language.ast.TreeCopyHandler"/>
+    <extensionPoint name="treeGenerator"
+                    interface="consulo.language.ast.TreeGenerator"/>
+
+    <extensionPoint name="psi.treeChangePreprocessor"
+                    interface="consulo.language.psi.event.PsiTreeChangePreprocessor"
+                    area="PROJECT"/>
+
+    <extensionPoint name="codeBlockProvider"
+                    beanClass="consulo.language.LanguageExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.language.editor.action.CodeBlockProvider"/>
+    </extensionPoint>
+
+    <extensionPoint name="toolsProvider" interface="consulo.ide.impl.idea.tools.ToolsProvider"/>
+
+    <extensionPoint name="defaultHighlightingSettingProvider"
+                    interface="consulo.ide.impl.idea.codeInsight.daemon.impl.analysis.DefaultHighlightingSettingProvider"/>
+
+
+    <extensionPoint name="library.dependencyScopeSuggester" interface="consulo.module.content.layer.orderEntry.LibraryDependencyScopeSuggester"/>
+
+    <extensionPoint name="eventLogCategory" interface="consulo.ide.impl.idea.notification.EventLogCategory"/>
+
+    <extensionPoint name="urlOpener" interface="consulo.webBrowser.UrlOpener"/>
+
+    <extensionPoint name="editor.linePainter" interface="consulo.codeEditor.EditorLinePainter"/>
+
+    <extensionPoint name="cachesInvalidator" interface="consulo.ide.impl.idea.ide.caches.CachesInvalidator"/>
+
+    <extensionPoint name="addModuleDependencyActionProvider"
+                    interface="consulo.ide.setting.module.AddModuleDependencyActionProvider"/>
+
+    <extensionPoint name="actionFromOptionDescriptorProvider" interface="consulo.ide.impl.idea.ide.ui.search.ActionFromOptionDescriptorProvider"/>
+
+    <extensionPoint name="stripTrailingSpacesFilterFactory" interface="consulo.document.StripTrailingSpacesFilterFactory"/>
+
+    <extensionPoint name="openapi.vcs.actions.AnnotateToggleAction.Provider"
+                    interface="consulo.ide.impl.idea.openapi.vcs.actions.AnnotateToggleAction$Provider"/>
+
+    <extensionPoint name="remote.credentialsType" interface="consulo.ide.impl.idea.remote.ext.CredentialsTypeEx"/>
+    <extensionPoint name="remote.credentialsLanguageContribution"
+                    interface="consulo.ide.impl.idea.remote.ext.CredentialsLanguageContribution"/>
+
+    <extensionPoint name="fileChooseDialogProvider" interface="consulo.fileChooser.provider.FileChooseDialogProvider"/>
+    <extensionPoint name="fileSaveDialogProvider" interface="consulo.fileChooser.provider.FileSaveDialogProvider"/>
+
+    <extensionPoint name="textEditorHighlightingPassFactory" area="PROJECT" interface="consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPassFactory"/>
+
+    <extensionPoint name="searchScopesProvider" interface="consulo.content.scope.SearchScopeProvider"/>
+    <extensionPoint name="findInProjectExtension" interface="consulo.ide.impl.idea.find.impl.FindInProjectExtension"/>
+
+    <extensionPoint name="uiDecorator" interface="consulo.ui.ex.UIDecorator"/>
+
+    <extensionPoint name="statusBarWidgetProvider" interface="consulo.project.ui.wm.StatusBarWidgetProvider"/>
+    <extensionPoint name="statusBarWidgetFactory" interface="consulo.project.ui.wm.StatusBarWidgetFactory"/>
+
+    <extensionPoint name="settingsEntryPointActionProvider" interface="consulo.ide.impl.idea.ide.actions.SettingsEntryPointActionProvider"/>
+  </extensionPoints>
+
+  <extensions defaultExtensionNs="consulo">
+
+
+
+
+
+<!--
+    <editorActionHandler action="EditorEscape" implementationClass="consulo.ide.impl.idea.codeInsight.hint.EscapeHandler" id="hide-hints"/>
+-->
+
+    <!--<editorActionHandler action="EditorDelete" implementationClass="consulo.ide.impl.idea.openapi.editor.actions.DeleteSelectionHandler"-->
+                         <!--id="delete.for.selection"/>-->
+    <!--<editorActionHandler action="EditorBackSpace" implementationClass="consulo.ide.impl.idea.openapi.editor.actions.DeleteSelectionHandler"-->
+                         <!--id="backspace.for.selection" order="after backspace.lookup"/>-->
+
+    <!--<editorActionHandler action="EditorDelete" implementationClass="consulo.ide.impl.idea.openapi.editor.actions.DeleteInColumnModeHandler"-->
+                         <!--id="delete.in.column.mode"/>-->
+
+
+    <patch.extension implementation="consulo.ide.impl.idea.openapi.diff.impl.patch.BaseRevisionTextPatchEP"/>
+    <patch.extension implementation="consulo.ide.impl.idea.openapi.diff.impl.patch.CharsetEP"/>
+
+
+
+    <checkoutListener implementation="consulo.ide.impl.idea.openapi.vcs.checkout.ProjectImporterCheckoutListener"/>
+
+
+
+
+
+
+    <projectService serviceInterface="consulo.ide.impl.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettings"
+                    serviceImplementation="consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettingsImpl"/>
+
+    <applicationService serviceInterface="consulo.ide.impl.roots.ui.configuration.projectRoot.daemon.ApplicationStructureProblemsSettings"
+                        serviceImplementation="consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.GlobalProjectStructureProblemsSettings"/>
+
+
+
+    <applicationService serviceInterface="consulo.ide.impl.idea.codeInsight.template.impl.ExportableTemplateSettings"
+                        serviceImplementation="consulo.ide.impl.idea.codeInsight.template.impl.ExportableTemplateSettings"/>
+
+
+
+
+    <search.optionContributor implementation="consulo.ide.impl.idea.codeInsight.intention.impl.config.IntentionManagerSettings$IntentionSearchableOptionContributor"/>
+
+    <schemeOwner serviceInterface="consulo.language.codeStyle.CodeStyleSchemes"/>
+
+
+    <rearranger.ui implementation="consulo.ide.impl.idea.application.options.codeStyle.arrangement.component.DefaultArrangementUiComponentFactory"/>
+
+
+
+    <patternDialectProvider implementation="consulo.ide.impl.idea.packageDependencies.ui.ProjectPatternProvider" id="file"/>
+
+
+
+    <!--<weigher key="completion" implementationClass="consulo.ide.impl.idea.codeInsight.completion.PriorityWeigher" id="priority" order="first"/>-->
+    <!--<weigher key="completion" implementationClass="consulo.ide.impl.idea.codeInsight.completion.StatisticsWeigher" id="stats"-->
+			 <!--order="after priority"/>-->
+    <!--<weigher key="completion" implementationClass="consulo.ide.impl.idea.codeInsight.completion.PrefixMatchingWeigher" id="prefix"-->
+			 <!--order="after stats"/>-->
+    <!--<weigher key="completion" implementationClass="consulo.ide.impl.idea.codeInsight.completion.ExplicitProximityWeigher" id="explicitProximity"-->
+			 <!--order="after prefix"/>-->
+    <!--<weigher key="completion" implementationClass="consulo.ide.impl.idea.codeInsight.completion.LookupElementProximityWeigher" id="proximity"-->
+			 <!--order="after explicitProximity"/>-->
+    <!--<weigher key="completion" implementationClass="consulo.ide.impl.idea.codeInsight.completion.GroupingWeigher" id="grouping"-->
+			 <!--order="last"/>-->
+
+    <!--<completion.contributor language="any" implementationClass="consulo.ide.impl.idea.codeInsight.completion.DefaultCompletionContributor"-->
+                            <!--id="default"-->
+                            <!--order="last"/>-->
+    <!--<completion.contributor language="any" implementationClass="consulo.ide.impl.idea.codeInsight.completion.ComboEditorCompletionContributor"-->
+                            <!--id="comboEditor" order="first"/>-->
+    <!--<completion.contributor language="any" implementationClass="consulo.ide.impl.idea.codeInsight.completion.WordCompletionContributor"-->
+                            <!--id="wordCompletion" order="last"/>-->
+    <!--<completion.contributor language="any" implementationClass="consulo.ide.impl.idea.codeInsight.completion.LegacyCompletionContributor" id="legacy"-->
+							<!--order="last"/>-->
+    <!--<completion.contributor language="any" implementationClass="consulo.ide.impl.idea.codeInsight.completion.FilePathCompletionContributor"-->
+                            <!--id="filePath" order="before javaClassName"/>-->
+    <!--<completion.contributor language="any" implementationClass="consulo.ide.impl.idea.codeInsight.template.impl.LiveTemplateCompletionContributor"-->
+                            <!--id="liveTemplates" order="first"/>-->
+
+    <!--<completion.contributor language="TEXT" implementationClass="consulo.ide.impl.idea.openapi.vcs.CommitCompletionContributor" id="commitCompletion"-->
+							<!--order="first, before liveTemplates"/>-->
+
+
+
+
+
+
+    <!--<enterHandlerDelegate implementation="consulo.ide.impl.idea.codeInsight.editorActions.enter.EnterInStringLiteralHandler"/>-->
+    <!--<enterHandlerDelegate implementation="consulo.ide.impl.idea.codeInsight.editorActions.enter.EnterInLineCommentHandler"/>-->
+    <!--<enterHandlerDelegate implementation="consulo.ide.impl.idea.codeInsight.editorActions.enter.EnterAfterUnmatchedBraceHandler" id="afterUnmatchedBrace"/>-->
+    <!--<enterHandlerDelegate implementation="consulo.ide.impl.idea.codeInsight.editorActions.enter.EnterBetweenBracesFinalHandler"-->
+                          <!--id="EnterBetweenBracesHandler"/>-->
+    <!--<enterHandlerDelegate implementation="consulo.ide.impl.idea.codeInsight.editorActions.enter.EnterAfterJavadocTagHandler"/>-->
+
+    <!--<codeInsight.lineMarkerProvider language="" implementationClass="consulo.ide.impl.idea.execution.lineMarker.RunLineMarkerProvider"/>-->
+    <!--<codeInsight.lineMarkerProvider language="" implementationClass="consulo.ide.impl.idea.ui.ColorLineMarkerProvider"/>-->
+
+    <!--<applicationConfigurable id="editor.preferences.folding.general"-->
+                             <!--parentId="editor.preferences.folding"-->
+                             <!--displayName="General"-->
+                             <!--instance="consulo.ide.impl.idea.application.options.editor.GeneralCodeFoldingConfigurable"/>-->
+
+<!--
+    <postStartupActivity implementation="consulo.ide.impl.idea.openapi.vfs.encoding.EncodingProjectManagerImpl$EncodingProjectManagerStartUpActivity"/>
+-->
+
+    <!-- CodeInsightSettings -->
+    <!--<editorActionHandler action="EditorEnter" implementationClass="consulo.ide.impl.idea.codeInsight.editorActions.EnterHandler" id="editorEnter"/>-->
+    <!--<editorActionHandler action="EditorLineEnd" implementationClass="consulo.ide.impl.idea.codeInsight.editorActions.EndHandler"/>-->
+    <!--<editorActionHandler action="EditorSelectWord" implementationClass="consulo.ide.impl.idea.codeInsight.editorActions.SelectWordHandler"/>-->
+    <!--<editorActionHandler action="EditorUnSelectWord" implementationClass="consulo.ide.impl.idea.codeInsight.editorActions.UnSelectWordHandler"/>-->
+    <!--<editorActionHandler action="EditorPaste" implementationClass="consulo.ide.impl.idea.codeInsight.editorActions.PasteHandler"/>-->
+    <!--<editorActionHandler action="EditorCopy" implementationClass="consulo.ide.impl.idea.codeInsight.editorActions.CopyHandler"/>-->
+    <!--<editorActionHandler action="EditorCut" implementationClass="consulo.ide.impl.idea.codeInsight.editorActions.CutHandler"/>-->
+    <!--<editorActionHandler action="EditorJoinLines" implementationClass="consulo.ide.impl.idea.codeInsight.editorActions.JoinLinesHandler"/>-->
+    <!--<editorActionHandler action="EditorBackSpace" implementationClass="consulo.ide.impl.idea.codeInsight.editorActions.BackspaceHandler"/>-->
+    <!--<editorActionHandler action="EditorDeleteToWordStart"-->
+                         <!--implementationClass="consulo.ide.impl.idea.codeInsight.editorActions.BackspaceToWordStartHandler"/>-->
+
+    <!--<editorActionHandler action="EditorDuplicate" implementationClass="consulo.ide.impl.idea.openapi.editor.actions.NamedElementDuplicateHandler"/>-->
+
+    <!-- LookupManagerActions -->
+    <!--<editorActionHandler action="EditorUp" implementationClass="consulo.ide.impl.idea.codeInsight.lookup.impl.LookupActionUpHandler"/>-->
+    <!--<editorActionHandler action="EditorDown" implementationClass="consulo.ide.impl.idea.codeInsight.lookup.impl.LookupActionDownHandler"/>-->
+    <!--<editorActionHandler action="EditorPageUp"-->
+                         <!--implementationClass="consulo.ide.impl.idea.codeInsight.lookup.impl.LookupActionHandler$PageUpHandler"/>-->
+    <!--<editorActionHandler action="EditorPageDown"-->
+                         <!--implementationClass="consulo.ide.impl.idea.codeInsight.lookup.impl.LookupActionHandler$PageDownHandler"/>-->
+    <!--<editorActionHandler action="EditorLeft" implementationClass="consulo.ide.impl.idea.codeInsight.lookup.impl.LookupActionHandler$LeftHandler"/>-->
+    <!--<editorActionHandler action="EditorRight" implementationClass="consulo.ide.impl.idea.codeInsight.lookup.impl.LookupActionHandler$RightHandler"/>-->
+    <!--<editorActionHandler action="EditorLineStart" implementationClass="consulo.ide.impl.idea.codeInsight.lookup.impl.HomeHandler"/>-->
+    <!--<editorActionHandler action="EditorLineEnd" implementationClass="consulo.ide.impl.idea.codeInsight.lookup.impl.EndHandler"/>-->
+    <!--<editorActionHandler action="EditorBackSpace" implementationClass="consulo.ide.impl.idea.codeInsight.lookup.impl.BackspaceHandler"/>-->
+
+    <!-- TemplateManagerActions -->
+    <!--<editorActionHandler action="EditorEscape" implementationClass="consulo.ide.impl.idea.codeInsight.template.impl.editorActions.EscapeHandler"-->
+                         <!--id="templateEscape" order="before hide-hints"/>-->
+    <!--<editorActionHandler action="EditorEnter" implementationClass="consulo.ide.impl.idea.codeInsight.template.impl.editorActions.EnterHandler"-->
+                         <!--id="templateEnter" order="before editorEnter"/>-->
+    <!--<editorActionHandler action="EditorLineStart" implementationClass="consulo.ide.impl.idea.codeInsight.template.impl.editorActions.TemplateLineStartHandler"/>-->
+    <!--<editorActionHandler action="EditorLineStartWithSelection"-->
+                         <!--implementationClass="consulo.ide.impl.idea.codeInsight.template.impl.editorActions.TemplateLineStartWithSelectionHandler"/>-->
+<!--
+    <editorActionHandler action="EditorLineEnd" implementationClass="consulo.ide.impl.idea.codeInsight.template.impl.editorActions.TemplateLineEndHandler"/>
+-->
+    <!--<editorActionHandler action="EditorLineEndWithSelection"-->
+                         <!--implementationClass="consulo.ide.impl.idea.codeInsight.template.impl.editorActions.TemplateLineEndWithSelectionHandler"/>-->
+    <!--<editorActionHandler action="$SelectAll" implementationClass="consulo.ide.impl.idea.codeInsight.template.impl.editorActions.SelectAllHandler"/>-->
+
+
+    <!-- HighlightManagerActions -->
+    <!--<editorActionHandler action="EditorEscape" implementationClass="consulo.ide.impl.idea.codeInsight.highlighting.EscapeHandler"-->
+                         <!--order="after hide-hints"/>-->
+    <!--<editorActionHandler action="EditorEscape" implementationClass="consulo.ide.impl.idea.refactoring.rename.inplace.EscapeHandler"-->
+                         <!--order="before hide-hints"/>-->
+
+    <!--<editorTypedHandler implementationClass="consulo.ide.impl.idea.codeInsight.lookup.impl.LookupTypedHandler" id="lookup"/>-->
+
+
+
+    <toolWindow id="Project"
+                anchor="left"
+                icon="consulo.platform.base.PlatformIconGroup@toolwindows.toolwindowproject"
+                displayName="consulo.platform.base.IdeLocalize@title.project"
+                factoryClass="consulo.ide.impl.idea.ide.projectView.impl.ProjectViewToolWindowFactory"/>
+    <toolWindow id="TODO" anchor="bottom" icon="consulo.platform.base.PlatformIconGroup@toolwindows.toolwindowtodo"
+				factoryClass="consulo.ide.impl.idea.ide.todo.TodoToolWindowFactory" canCloseContents="true"/>
+    <toolWindow id="Structure" anchor="left" icon="consulo.platform.base.PlatformIconGroup@toolwindows.toolwindowstructure" secondary="true"
+                factoryClass="consulo.ide.impl.idea.ide.structureView.impl.StructureViewToolWindowFactory"/>
+    <toolWindow id="Favorites" anchor="left" icon="consulo.platform.base.PlatformIconGroup@toolwindows.toolwindowfavorites" secondary="true"
+                factoryClass="consulo.ide.impl.idea.ide.projectView.impl.FavoritesViewToolWindowFactory"/>
+    <toolWindow id="Run Dashboard" anchor="bottom" icon="consulo.platform.base.PlatformIconGroup@toolwindows.toolwindowrun"
+                factoryClass="consulo.ide.impl.idea.execution.dashboard.RunDashboardToolWindowFactory"
+                conditionClass="consulo.ide.impl.idea.execution.dashboard.RunDashboardToolWindowFactory"/>
+
+
+    <!--<globalInspection shortName="Annotator" displayName="Annotator" groupKey="inspection.general.tools.group.name" groupBundle="consulo.language.editor.inspection.InspectionsBundle"-->
+                      <!--enabledByDefault="true" level="ERROR"-->
+                      <!--implementationClass="consulo.ide.impl.idea.codeInsight.daemon.impl.DefaultHighlightVisitorBasedInspection$AnnotatorBasedInspection"/>-->
+    <!--&lt;!&ndash;<globalInspection shortName="SyntaxError" displayName="Syntax error" groupKey="inspection.general.tools.group.name" groupBundle="consulo.language.editor.inspection.InspectionsBundle"&ndash;&gt;-->
+                      <!--enabledByDefault="true" level="ERROR"-->
+                      <!--implementationClass="consulo.ide.impl.idea.codeInsight.daemon.impl.DefaultHighlightVisitorBasedInspection$SyntaxErrorInspection"/>-->
+
+
+
+    <!--<completion.contributor language="any"-->
+                            <!--implementationClass="consulo.ide.impl.idea.refactoring.rename.inplace.CompletionContributorForInplaceRename"-->
+                            <!--order="first"/>-->
+
+
+
+
+
+
+
+    <!--<statistics.usagesCollector implementation="consulo.ide.impl.idea.execution.impl.statistics.RunConfigurationTypeUsagesCollector"/>-->
+<!--
+    <statistics.usagesCollector implementation="consulo.ide.impl.idea.execution.impl.statistics.TemporaryRunConfigurationTypeUsagesCollector"/>
+-->
+    <!--<statistics.usagesCollector implementation="consulo.ide.impl.idea.openapi.fileTypes.FileTypeUsagesCollector"/>-->
+
+
+    <!--<refactoring.moveDirectoryWithClassesHelper-->
+			<!--implementation="consulo.ide.impl.idea.refactoring.move.moveClassesOrPackages.MoveDirectoryWithClassesHelper$Default" order="last"/>-->
+
+
+
+    <!--<completion.contributor language="TEXT" implementationClass="consulo.ide.impl.idea.ui.TextFieldWithAutoCompletionContributor"-->
+                            <!--order="first, before commitCompletion"/>-->
+
+    <!--<completion.contributor language="TEXT" implementationClass="consulo.ide.impl.idea.util.CompletionContributorForTextField"-->
+                            <!--order="first, before commitCompletion"/>-->
+
+    <!--<completion.contributor language="any" implementationClass="consulo.ide.impl.idea.codeInsight.completion.CustomFileTypeCompletionContributor"/>-->
+
+
+
+
+
+
+    <!--<weigher key="proximity" implementationClass="consulo.ide.impl.psi.util.proximity.SameDirectoryWeigher" id="sameDirectory"-->
+             <!--order="after openedInEditor"/>-->
+
+
+    <schemeOwner serviceInterface="consulo.language.editor.inspection.scheme.InspectionProfileManager"/>
+
+
+
+    <!--<editorActionHandler action="EditorEscape" implementationClass="consulo.ide.impl.idea.refactoring.changeSignature.inplace.EscapeHandler" id="changeSignatureEscape"-->
+						 <!--order="before hide-search"/>-->
+
+
+
+
+
+    <projectService serviceImplementation="consulo.ide.impl.idea.openapi.vcs.changes.committed.OutdatedVersionNotifier" lazy="false"/>
+    <projectService serviceImplementation="consulo.ide.impl.idea.openapi.vcs.changes.committed.IncomingChangesIndicator" lazy="false"/>
+
+
+
+  </extensions>
+
+</consulo-plugin>

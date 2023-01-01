@@ -5,8 +5,6 @@ import consulo.util.nodep.ArrayUtilRt;
 import consulo.util.nodep.io.FileUtilRt;
 import consulo.util.nodep.io.UnsyncByteArrayInputStream;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -19,7 +17,7 @@ public class MemoryResource extends Resource {
   private final byte[] myContent;
   private final Map<Resource.Attribute, String> myAttributes;
 
-   public MemoryResource(URL url, byte[] content, Map<Resource.Attribute, String> attributes) {
+  public MemoryResource(URL url, byte[] content, Map<Resource.Attribute, String> attributes) {
     myUrl = url;
     myContent = content;
     myAttributes = attributes;
@@ -45,8 +43,7 @@ public class MemoryResource extends Resource {
     return myAttributes != null ? myAttributes.get(key) : null;
   }
 
-  @Nonnull
-  static MemoryResource load(URL baseUrl, @Nonnull ZipFile zipFile, @Nonnull ZipEntry entry, @Nullable Map<Attribute, String> attributes) throws IOException {
+  static MemoryResource load(URL baseUrl, ZipFile zipFile, ZipEntry entry, Map<Attribute, String> attributes) throws IOException {
     String name = entry.getName();
     URL url = new URL(baseUrl, name);
 

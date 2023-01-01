@@ -1,0 +1,38 @@
+<!--
+  - Copyright 2013-2016 consulo.io
+  -
+  - Licensed under the Apache License, Version 2.0 (the "License");
+  - you may not use this file except in compliance with the License.
+  - You may obtain a copy of the License at
+  -
+  - http://www.apache.org/licenses/LICENSE-2.0
+  -
+  - Unless required by applicable law or agreed to in writing, software
+  - distributed under the License is distributed on an "AS IS" BASIS,
+  - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  - See the License for the specific language governing permissions and
+  - limitations under the License.
+  -->
+<consulo-plugin>
+  <extensionPoints>
+    <extensionPoint name="diff.DiffTool" interface="consulo.ide.impl.idea.diff.DiffTool"/>
+    <extensionPoint name="diff.merge.MergeTool" interface="consulo.ide.impl.idea.diff.merge.MergeTool"/>
+    <extensionPoint name="openapi.vcs.changes.actions.diff.ChangeDiffRequestProvider"
+                    interface="consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ChangeDiffRequestProvider"/>
+    <extensionPoint name="openapi.vcs.changes.actions.diff.ChangeDiffViewerWrapperProvider"
+                    interface="consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ChangeDiffViewerWrapperProvider"/>
+    <extensionPoint name="diff.DiffExtension" interface="consulo.ide.impl.idea.diff.DiffExtension"/>
+  </extensionPoints>
+
+  <extensions defaultExtensionNs="consulo">
+
+
+
+    <openapi.vcs.actions.AnnotateToggleAction.Provider implementation="consulo.ide.impl.idea.openapi.vcs.actions.AnnotateLocalFileAction$Provider"/>
+    <openapi.vcs.actions.AnnotateToggleAction.Provider implementation="consulo.ide.impl.idea.openapi.vcs.actions.AnnotateVcsVirtualFileAction$Provider"/>
+    <openapi.vcs.actions.AnnotateToggleAction.Provider implementation="consulo.ide.impl.idea.openapi.vcs.actions.AnnotateDiffViewerAction$Provider" order="first"/>
+
+
+    <diff.DiffExtension implementation="consulo.ide.impl.idea.openapi.vcs.actions.AnnotateDiffViewerAction$MyDiffExtension"/>
+  </extensions>
+</consulo-plugin>

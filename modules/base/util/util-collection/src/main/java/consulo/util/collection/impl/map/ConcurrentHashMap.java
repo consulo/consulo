@@ -9,7 +9,6 @@ package consulo.util.collection.impl.map;
 
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.impl.ThreadLocalRandom;
-import consulo.util.lang.IncorrectOperationException;
 import consulo.util.lang.reflect.unsafe.UnsafeDelegate;
 
 import javax.annotation.Nonnull;
@@ -878,12 +877,12 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
   private static final HashingStrategy THIS = new HashingStrategy() {
     @Override
     public int hashCode(Object object) {
-      throw new IncorrectOperationException();
+      throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean equals(Object o1, Object o2) {
-      throw new IncorrectOperationException();
+      throw new UnsupportedOperationException();
     }
   };
 

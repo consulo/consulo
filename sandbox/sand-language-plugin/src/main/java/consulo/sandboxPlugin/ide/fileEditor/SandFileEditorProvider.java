@@ -15,21 +15,24 @@
  */
 package consulo.sandboxPlugin.ide.fileEditor;
 
-import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.fileEditor.FileEditorPolicy;
-import com.intellij.openapi.fileEditor.FileEditorProvider;
-import com.intellij.openapi.fileEditor.FileEditorState;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import consulo.ui.annotation.RequiredUIAccess;
-import org.jdom.Element;
-import javax.annotation.Nonnull;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorPolicy;
+import consulo.fileEditor.FileEditorProvider;
+import consulo.fileEditor.FileEditorState;
+import consulo.project.Project;
 import consulo.sandboxPlugin.lang.SandFileType;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.virtualFileSystem.VirtualFile;
+import org.jdom.Element;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 30.05.14
  */
+@ExtensionImpl
 public class SandFileEditorProvider implements FileEditorProvider {
   @Override
   public boolean accept(@Nonnull Project project, @Nonnull VirtualFile file) {

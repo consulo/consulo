@@ -15,7 +15,8 @@
  */
 package consulo.externalService;
 
-import com.intellij.util.messages.Topic;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.TopicAPI;
 
 import javax.annotation.Nonnull;
 
@@ -23,8 +24,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 11/09/2021
  */
+@TopicAPI(ComponentScope.APPLICATION)
 public interface ExternalServiceConfigurationListener {
-  Topic<ExternalServiceConfigurationListener> TOPIC = Topic.create("ExternalServiceConfigurationListener", ExternalServiceConfigurationListener.class);
-
   void configurationChanged(@Nonnull ExternalServiceConfiguration configuration);
 }

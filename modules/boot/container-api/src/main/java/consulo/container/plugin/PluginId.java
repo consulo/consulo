@@ -15,8 +15,6 @@
  */
 package consulo.container.plugin;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,17 +28,16 @@ public class PluginId implements Comparable<PluginId> {
 
   private final String myIdString;
 
-  private PluginId(@Nonnull String idString) {
+  private PluginId(String idString) {
     myIdString = idString;
   }
 
   @Override
-  public int compareTo(@Nonnull PluginId o) {
+  public int compareTo(PluginId o) {
     return myIdString.compareTo(o.myIdString);
   }
 
-  @Nonnull
-  public static synchronized PluginId getId(@Nonnull String idString) {
+  public static synchronized PluginId getId(String idString) {
     PluginId pluginId = ourRegisteredIds.get(idString);
     if (pluginId == null) {
       pluginId = new PluginId(idString);
@@ -49,8 +46,7 @@ public class PluginId implements Comparable<PluginId> {
     return pluginId;
   }
 
-  @Nullable
-  public static synchronized PluginId findId(@Nonnull String... idStrings) {
+  public static synchronized PluginId findId(String... idStrings) {
     for (String idString : idStrings) {
       PluginId pluginId = ourRegisteredIds.get(idString);
       if (pluginId != null) {
@@ -60,7 +56,6 @@ public class PluginId implements Comparable<PluginId> {
     return null;
   }
 
-  @Nonnull
   public String getIdString() {
     return myIdString;
   }
@@ -70,7 +65,6 @@ public class PluginId implements Comparable<PluginId> {
     return getIdString();
   }
 
-  @Nonnull
   public static synchronized Map<String, PluginId> getRegisteredIds() {
     return new HashMap<String, PluginId>(ourRegisteredIds);
   }

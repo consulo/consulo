@@ -15,19 +15,18 @@
  */
 package consulo.test.light.impl;
 
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.components.impl.ComponentManagerImpl;
-import com.intellij.openapi.extensions.impl.ExtensionAreaId;
-import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.containers.MultiMap;
 import consulo.annotation.access.RequiredWriteAction;
-import consulo.container.plugin.PluginListenerDescriptor;
-import consulo.injecting.InjectingContainer;
-import consulo.injecting.InjectingContainerBuilder;
+import consulo.annotation.component.ComponentScope;
+import consulo.application.Application;
+import consulo.component.bind.InjectingBinding;
+import consulo.component.impl.internal.BaseComponentManager;
+import consulo.component.internal.inject.InjectingContainer;
+import consulo.component.internal.inject.InjectingContainerBuilder;
+import consulo.project.Project;
 import consulo.ui.UIAccess;
+import consulo.util.collection.MultiMap;
 import consulo.util.concurrent.AsyncResult;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -36,7 +35,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 2018-08-25
  */
-public class LightProject extends ComponentManagerImpl implements Project {
+public class LightProject extends BaseComponentManager implements Project {
   @Nonnull
   private final Application myApplication;
   @Nonnull
@@ -45,7 +44,7 @@ public class LightProject extends ComponentManagerImpl implements Project {
   private final LightExtensionRegistrator myRegistrator;
 
   public LightProject(@Nonnull Application application, @Nonnull String name, @Nonnull LightExtensionRegistrator registrator) {
-    super(application, name, ExtensionAreaId.PROJECT, false);
+    super(application, name, ComponentScope.PROJECT, false);
     myApplication = application;
     myName = name;
     myRegistrator = registrator;
@@ -60,18 +59,13 @@ public class LightProject extends ComponentManagerImpl implements Project {
   }
 
   @Override
-  protected void fillListenerDescriptors(MultiMap<String, PluginListenerDescriptor> mapByTopic) {
+  protected void fillListenerDescriptors(MultiMap<String, InjectingBinding> mapByTopic) {
   }
 
   @Nonnull
   @Override
   protected InjectingContainer findRootContainer() {
     return InjectingContainer.root(getClass().getClassLoader());
-  }
-
-  @Override
-  protected void registerExtensionPointsAndExtensions(ExtensionsAreaImpl area) {
-    myRegistrator.registerExtensionPointsAndExtensions(area);
   }
 
   @Override

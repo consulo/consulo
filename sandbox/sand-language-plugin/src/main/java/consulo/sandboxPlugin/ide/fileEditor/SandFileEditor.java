@@ -15,10 +15,10 @@
  */
 package consulo.sandboxPlugin.ide.fileEditor;
 
-import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.fileEditor.FileEditorLocation;
-import com.intellij.openapi.fileEditor.FileEditorState;
-import com.intellij.openapi.fileEditor.FileEditorStateLevel;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorLocation;
+import consulo.fileEditor.FileEditorState;
+import consulo.fileEditor.FileEditorStateLevel;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.ui.Component;
 import consulo.ui.Label;

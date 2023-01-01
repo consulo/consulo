@@ -18,15 +18,13 @@ package consulo.container.impl;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginDescriptorVersionValidator;
-import consulo.container.plugin.PluginIds;
-import consulo.container.plugin.PluginManager;
+import consulo.container.plugin.PluginId;
+import consulo.util.nodep.function.Condition;
+import consulo.util.nodep.function.Function;
 import consulo.util.nodep.io.FileUtilRt;
 
-import javax.annotation.Nonnull;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author VISTALL
@@ -36,19 +34,18 @@ public class PluginValidator {
 
   public static PluginDescriptorVersionValidator VALIDATOR = new PluginDescriptorVersionValidator() {
     @Override
-    public boolean validateVersion(@Nonnull PluginDescriptor pluginDescriptor) {
+    public boolean validateVersion(PluginDescriptor pluginDescriptor) {
       return true;
     }
   };
 
   public static final String DISABLED_PLUGINS_FILENAME = "disabled_plugins.txt";
 
-  static List<String> ourDisabledPlugins = null;
+  static Set<PluginId> ourDisabledPlugins = null;
 
-  @Nonnull
-  static List<String> getDisabledPlugins() {
+  public static Set<PluginId> getDisabledPlugins() {
     if (ourDisabledPlugins == null) {
-      ourDisabledPlugins = new ArrayList<String>();
+      ourDisabledPlugins = new LinkedHashSet<>();
       if (System.getProperty("consulo.ignore.disabled.plugins") == null) {
         loadDisabledPlugins(ContainerPathManager.get().getConfigPath(), ourDisabledPlugins);
       }
@@ -56,9 +53,9 @@ public class PluginValidator {
     return ourDisabledPlugins;
   }
 
-  public static boolean disablePlugin(String id) {
-    if (getDisabledPlugins().contains(id)) return false;
-    getDisabledPlugins().add(id);
+  public static boolean disablePlugin(PluginId pluginId) {
+    if (getDisabledPlugins().contains(pluginId)) return false;
+    getDisabledPlugins().add(pluginId);
     try {
       saveDisabledPlugins(getDisabledPlugins(), false);
     }
@@ -68,9 +65,9 @@ public class PluginValidator {
     return true;
   }
 
-  public static boolean enablePlugin(String id) {
-    if (!getDisabledPlugins().contains(id)) return false;
-    getDisabledPlugins().remove(id);
+  public static boolean enablePlugin(PluginId pluginId) {
+    if (!getDisabledPlugins().contains(pluginId)) return false;
+    getDisabledPlugins().remove(pluginId);
     try {
       saveDisabledPlugins(getDisabledPlugins(), false);
     }
@@ -80,13 +77,13 @@ public class PluginValidator {
     return true;
   }
 
-  public static void saveDisabledPlugins(Collection<String> ids, boolean append) throws IOException {
+  public static void saveDisabledPlugins(Set<PluginId> ids, boolean append) throws IOException {
     File plugins = new File(ContainerPathManager.get().getConfigPath(), DISABLED_PLUGINS_FILENAME);
     savePluginsList(ids, append, plugins);
     ourDisabledPlugins = null;
   }
 
-  public static void replaceDisabledPlugins(List<String> ids) {
+  public static void replaceDisabledPlugins(Set<PluginId> ids) {
     try {
       saveDisabledPlugins(ids, false);
     }
@@ -95,7 +92,7 @@ public class PluginValidator {
     }
   }
 
-  public static void savePluginsList(Collection<String> ids, boolean append, File plugins) throws IOException {
+  public static void savePluginsList(Collection<PluginId> ids, boolean append, File plugins) throws IOException {
     if (!plugins.isFile()) {
       FileUtilRt.ensureCanCreateFile(plugins);
     }
@@ -103,8 +100,8 @@ public class PluginValidator {
     try {
       printWriter = new PrintWriter(new BufferedWriter(new FileWriter(plugins, append)));
 
-      for (String id : ids) {
-        printWriter.println(id);
+      for (PluginId id : ids) {
+        printWriter.println(id.getIdString());
       }
       printWriter.flush();
     }
@@ -115,28 +112,11 @@ public class PluginValidator {
     }
   }
 
-  @Nonnull
-  static PluginManager.PluginSkipReason calcPluginSkipReason(final PluginDescriptor descriptor) {
-    final String idString = descriptor.getPluginId().getIdString();
-    if (PluginIds.isPlatformPlugin(descriptor.getPluginId())) {
-      return PluginManager.PluginSkipReason.NO;
-    }
-
-    if (!descriptor.isEnabled()) return PluginManager.PluginSkipReason.DISABLED;
-
-    boolean shouldLoad = !getDisabledPlugins().contains(idString);
-    if (shouldLoad && descriptor instanceof PluginDescriptorImpl) {
-      if (isIncompatible(descriptor)) return PluginManager.PluginSkipReason.INCOMPATIBLE;
-    }
-
-    return !shouldLoad ? PluginManager.PluginSkipReason.DEPENDENCY_IS_NOT_RESOLVED : PluginManager.PluginSkipReason.NO;
-  }
-
   public static boolean isIncompatible(final PluginDescriptor descriptor) {
     return !VALIDATOR.validateVersion(descriptor);
   }
 
-  public static void loadDisabledPlugins(final String configPath, final Collection<String> disabledPlugins) {
+  public static void loadDisabledPlugins(final String configPath, final Set<PluginId> disabledPlugins) {
     final File file = new File(configPath, DISABLED_PLUGINS_FILENAME);
     if (file.isFile()) {
       BufferedReader reader = null;
@@ -145,7 +125,7 @@ public class PluginValidator {
 
         String id;
         while ((id = reader.readLine()) != null) {
-          disabledPlugins.add(id.trim());
+          disabledPlugins.add(PluginId.getId(id.trim()));
         }
       }
       catch (IOException ignored) {
@@ -162,21 +142,29 @@ public class PluginValidator {
     }
   }
 
-  static boolean shouldSkipPlugin(@Nonnull PluginDescriptor descriptor) {
-    if (descriptor instanceof PluginDescriptorImpl) {
-      PluginDescriptorImpl descriptorImpl = (PluginDescriptorImpl)descriptor;
-      Boolean skipped = descriptorImpl.getSkipped();
-      if (skipped != null) {
-        return skipped;
-      }
-      boolean result = shouldSkipPlugin0(descriptor);
-      descriptorImpl.setSkipped(result);
-      return result;
-    }
-    return shouldSkipPlugin0(descriptor);
+  public static void checkDependants(final PluginDescriptor pluginDescriptor, final Function<PluginId, PluginDescriptor> pluginId2Descriptor, final Condition<PluginId> check) {
+    checkDependants(pluginDescriptor, pluginId2Descriptor, check, new HashSet<PluginId>());
   }
 
-  static boolean shouldSkipPlugin0(final PluginDescriptor descriptor) {
-    return calcPluginSkipReason(descriptor) != PluginManager.PluginSkipReason.NO;
+  private static boolean checkDependants(final PluginDescriptor pluginDescriptor,
+                                         final Function<PluginId, PluginDescriptor> pluginId2Descriptor,
+                                         final Condition<PluginId> check,
+                                         final Set<PluginId> processed) {
+    processed.add(pluginDescriptor.getPluginId());
+    final PluginId[] dependentPluginIds = pluginDescriptor.getDependentPluginIds();
+    final Set<PluginId> optionalDependencies = new HashSet<PluginId>(Arrays.asList(pluginDescriptor.getOptionalDependentPluginIds()));
+    for (final PluginId dependentPluginId : dependentPluginIds) {
+      if (processed.contains(dependentPluginId)) continue;
+      if (!optionalDependencies.contains(dependentPluginId)) {
+        if (!check.value(dependentPluginId)) {
+          return false;
+        }
+        final PluginDescriptor dependantPluginDescriptor = pluginId2Descriptor.fun(dependentPluginId);
+        if (dependantPluginDescriptor != null && !checkDependants(dependantPluginDescriptor, pluginId2Descriptor, check, processed)) {
+          return false;
+        }
+      }
+    }
+    return true;
   }
 }

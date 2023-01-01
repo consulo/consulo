@@ -1,15 +1,14 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.disposer.internal.impl.objectTree;
 
-import com.intellij.openapi.progress.ProcessCanceledException;
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.IncorrectOperationException;
-import com.intellij.util.SmartList;
-import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
-import org.jetbrains.annotations.TestOnly;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.Maps;
+import consulo.util.lang.ControlFlowException;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -24,7 +23,7 @@ public final class ObjectTree {
 
   // identity used here to prevent problems with hashCode/equals overridden by not very bright minds
   private final Set<Disposable> myRootObjects = ContainerUtil.newIdentityTroveSet(); // guarded by treeLock
-  private final Map<Disposable, ObjectNode> myObject2NodeMap = ContainerUtil.newIdentityTroveMap(); // guarded by treeLock
+  private final Map<Disposable, ObjectNode> myObject2NodeMap = Maps.newHashMap(ContainerUtil.identityStrategy()); // guarded by treeLock
   // Disposable to trace or boolean marker (if trace unavailable)
   private final Map<Disposable, Object> myDisposedObjects = ContainerUtil.createWeakMap(100, 0.5f, ContainerUtil.identityStrategy()); // guarded by treeLock
 
@@ -60,12 +59,12 @@ public final class ObjectTree {
     synchronized (treeLock) {
       Object wasDisposed = getDisposalInfo(parent);
       if (wasDisposed != null) {
-        throw new IncorrectOperationException("Sorry but parent: " + parent + " has already been disposed " + "(see the cause for stacktrace) so the child: " + child + " will never be disposed",
+        throw new IllegalArgumentException("Sorry but parent: " + parent + " has already been disposed " + "(see the cause for stacktrace) so the child: " + child + " will never be disposed",
                                               wasDisposed instanceof Throwable ? (Throwable)wasDisposed : null);
       }
 
       if (isDisposing(parent)) {
-        throw new IncorrectOperationException("Sorry but parent: " + parent + " is being disposed so the child: " + child + " will never be disposed");
+        throw new IllegalArgumentException("Sorry but parent: " + parent + " is being disposed so the child: " + child + " will never be disposed");
       }
 
       myDisposedObjects.remove(child); // if we dispose thing and then register it back it means it's not disposed anymore
@@ -99,7 +98,7 @@ public final class ObjectTree {
   private static void checkWasNotAddedAlready(@Nonnull ObjectNode childNode, @Nonnull ObjectNode parentNode) {
     for (ObjectNode node = childNode; node != null; node = node.getParent()) {
       if (node == parentNode) {
-        throw new IncorrectOperationException("'" + childNode.getObject() + "' was already added as a child of '" + parentNode.getObject() + "'");
+        throw new IllegalArgumentException("'" + childNode.getObject() + "' was already added as a child of '" + parentNode.getObject() + "'");
       }
     }
   }
@@ -132,7 +131,7 @@ public final class ObjectTree {
       }
       else {
         ObjectNode parent = node.getParent();
-        List<Throwable> exceptions = new SmartList<>();
+        List<Throwable> exceptions = new ArrayList<>();
         node.execute(exceptions);
         if (parent != null) {
           synchronized (treeLock) {
@@ -152,14 +151,14 @@ public final class ObjectTree {
   private static void handleExceptions(@Nonnull List<? extends Throwable> exceptions) {
     if (!exceptions.isEmpty()) {
       for (Throwable exception : exceptions) {
-        if (!(exception instanceof ProcessCanceledException)) {
+        if (!(exception instanceof ControlFlowException)) {
           getLogger().error(exception);
         }
       }
 
-      ProcessCanceledException pce = ContainerUtil.findInstance(exceptions, ProcessCanceledException.class);
+      Throwable pce = ContainerUtil.find(exceptions, it -> it instanceof ControlFlowException);
       if (pce != null) {
-        throw pce;
+        throw (RuntimeException)pce;
       }
     }
   }
@@ -199,7 +198,6 @@ public final class ObjectTree {
     executeActionWithRecursiveGuard(disposable, myExecutedUnregisteredObjects, Disposable::dispose);
   }
 
-  @TestOnly
   public void assertNoReferenceKeptInTree(@Nonnull Disposable disposable) {
     synchronized (treeLock) {
       for (Map.Entry<Disposable, ObjectNode> entry : myObject2NodeMap.entrySet()) {
@@ -256,4 +254,19 @@ public final class ObjectTree {
     }
   }
 
+  public boolean tryRegister(@Nonnull Disposable parent, @Nonnull Disposable child) {
+    synchronized (treeLock) {
+      if (isDisposed(parent)) {
+        return false;
+      }
+      register(parent, child);
+      return true;
+    }
+  }
+
+  public boolean isDisposed(@Nonnull Disposable object) {
+    synchronized (treeLock) {
+      return myDisposedObjects.get(object) != null;
+    }
+  }
 }

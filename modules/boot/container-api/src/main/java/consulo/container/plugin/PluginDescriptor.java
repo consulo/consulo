@@ -15,13 +15,9 @@
  */
 package consulo.container.plugin;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.File;
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -38,62 +34,41 @@ public interface PluginDescriptor {
 
   String EXPERIMENTAL_TAG = "experimental";
 
-  @Nonnull
   PluginId getPluginId();
 
-  @Nonnull
   ClassLoader getPluginClassLoader();
 
-  @Nullable
   File getPath();
 
-  @Nullable
   String getDescription();
 
   String getChangeNotes();
 
   String getName();
 
-  @Nonnull
   PluginId[] getDependentPluginIds();
 
-  @Nonnull
   PluginId[] getOptionalDependentPluginIds();
 
-  @Nonnull
   PluginId[] getIncompatibleWithPlugindIds();
 
-  @Nullable
   String getVendor();
 
-  @Nullable
   String getVersion();
 
-  @Nullable
   String getPlatformVersion();
 
-  @Nullable
   String getResourceBundleBaseName();
 
-  @Nullable
   String getLocalize();
 
-  @Nonnull
   @Deprecated
-  @DeprecationInfo("Use #getTags()")
+  //@DeprecationInfo("Use #getTags()")
   String getCategory();
 
-  @Nonnull
   Set<String> getTags();
 
-  @Nonnull
   List<SimpleXmlElement> getActionsDescriptionElements();
-
-  @Nonnull
-  List<ComponentConfig> getAppComponents();
-
-  @Nonnull
-  List<ComponentConfig> getProjectComponents();
 
   String getVendorEmail();
 
@@ -101,46 +76,32 @@ public interface PluginDescriptor {
 
   String getUrl();
 
-  @Nonnull
-  Collection<HelpSetPath> getHelpSets();
-
   String getDownloads();
 
-  @Nonnull
   List<SimpleExtension> getSimpleExtensions();
 
-  @Nonnull
-  List<PluginListenerDescriptor> getApplicationListeners();
-
-  @Nonnull
-  List<PluginListenerDescriptor> getProjectListeners();
-
-  @Nonnull
-  List<PluginListenerDescriptor> getModuleListeners();
-
-  @Nullable
-  PluginPermissionDescriptor getPermissionDescriptor(@Nonnull PluginPermissionType permissionType);
+  PluginPermissionDescriptor getPermissionDescriptor(PluginPermissionType permissionType);
 
   /**
-   * If return not null, plugin loaded in module mode. Object instance of {@link ModuleLayer}
+   * If return not null, plugin loaded in module mode.
    */
-  @Nullable
-  Object getModuleLayer();
+  ModuleLayer getModuleLayer();
 
-  @Nonnull
   @Deprecated
-  @DeprecationInfo("use #getIconBytes(darkOrLight)")
+  //@DeprecationInfo("use #getIconBytes(darkOrLight)")
   byte[] getIconBytes();
 
   byte[] getIconBytes(boolean isDarkTheme);
 
   @Deprecated
-  @DeprecationInfo("This method is obsolete now. Bundled plugin is always platform modules - it can't load plugins")
+  //@DeprecationInfo("This method is obsolete now. Bundled plugin is always platform modules - it can't load plugins")
   boolean isBundled();
 
+  @Deprecated
+  // same as getStatus() == PluginDescriptorStatus.OK
   boolean isEnabled();
 
-  void setEnabled(boolean enabled);
+  PluginDescriptorStatus getStatus();
 
   boolean isLoaded();
 
@@ -148,15 +109,12 @@ public interface PluginDescriptor {
 
   boolean isExperimental();
 
-  @Nullable
   String getChecksumSHA3_256();
 
-  @Nullable
   <K, V> V getUserData(K key);
 
   /**
    * Put user data data
    */
-  @Nonnull
   <K, V> V computeUserData(K key, UserDataCalculator<K, V> function);
 }

@@ -15,11 +15,12 @@
  */
 package consulo.sandboxPlugin.lang.version;
 
-import com.intellij.lexer.Lexer;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.util.Pair;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.lexer.Lexer;
+import consulo.util.lang.Pair;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
 import consulo.sandboxPlugin.lang.Sand2FileType;
 import consulo.sandboxPlugin.lang.lexer.Sand2Lexer;
 import consulo.sandboxPlugin.lang.psi.Sand2Tokens;
@@ -34,6 +35,7 @@ import java.util.List;
  * @author VISTALL
  * @since 19.03.14
  */
+@ExtensionImpl
 public class Sand2LanguageVersion extends BaseSandLanguageVersion {
   public Sand2LanguageVersion() {
     super("SAND2");

@@ -15,8 +15,6 @@
  */
 package consulo.container.plugin;
 
-import javax.annotation.Nonnull;
-
 /**
  * @author VISTALL
  * @since 2020-05-23
@@ -25,5 +23,5 @@ public interface PluginDescriptorVersionValidator {
   /**
    * @return false - and plugin will not be loaded
    */
-  boolean validateVersion(@Nonnull PluginDescriptor pluginDescriptor);
+  boolean validateVersion(PluginDescriptor pluginDescriptor);
 }

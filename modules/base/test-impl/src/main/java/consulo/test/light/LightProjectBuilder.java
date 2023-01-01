@@ -15,19 +15,16 @@
  */
 package consulo.test.light;
 
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.progress.impl.CoreProgressManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.FileIndexFacade;
-import com.intellij.psi.PsiFileFactory;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.impl.PsiFileFactoryImpl;
-import com.intellij.psi.impl.PsiManagerImpl;
-import com.intellij.psi.impl.PsiModificationTrackerImpl;
-import com.intellij.psi.util.PsiModificationTracker;
-import consulo.injecting.InjectingContainerBuilder;
+import consulo.application.Application;
+import consulo.component.internal.inject.InjectingContainerBuilder;
+import consulo.language.content.FileIndexFacade;
+import consulo.language.impl.internal.psi.PsiFileFactoryImpl;
+import consulo.language.impl.internal.psi.PsiManagerImpl;
+import consulo.language.impl.internal.psi.PsiModificationTrackerImpl;
+import consulo.language.psi.PsiFileFactory;
+import consulo.language.psi.PsiManager;
+import consulo.language.psi.PsiModificationTracker;
+import consulo.project.Project;
 import consulo.test.light.impl.LightExtensionRegistrator;
 import consulo.test.light.impl.LightFileIndexFacade;
 import consulo.test.light.impl.LightProject;
@@ -40,10 +37,10 @@ import javax.annotation.Nonnull;
  */
 public class LightProjectBuilder {
   public static class DefaultRegistrator extends LightExtensionRegistrator {
-    @Override
-    public void registerExtensionPointsAndExtensions(@Nonnull ExtensionsAreaImpl area) {
-
-    }
+    //@Override
+    //public void registerExtensionPointsAndExtensions(@Nonnull ExtensionsAreaImpl area) {
+    //
+    //}
 
     @Override
     public void registerServices(@Nonnull InjectingContainerBuilder builder) {

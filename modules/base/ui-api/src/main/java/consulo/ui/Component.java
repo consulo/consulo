@@ -15,7 +15,6 @@
  */
 package consulo.ui;
 
-import consulo.annotation.ApiType;
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
@@ -42,7 +41,6 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 09-Jun-16
  */
-@ApiType
 public interface Component extends Disposable, UserDataHolder {
 
   @RequiredUIAccess
@@ -71,6 +69,18 @@ public interface Component extends Disposable, UserDataHolder {
   default void addDefaultBorders() {
     for (BorderPosition position : BorderPosition.values()) {
       addBorder(position);
+    }
+  }
+
+  @RequiredUIAccess
+  default void addMirrorBorders(@Nonnull BorderStyle borderStyle, @Nullable ColorValue colorValue, int topBottom, int leftRight) {
+    if (topBottom > 0) {
+      addBorder(BorderPosition.TOP, borderStyle, colorValue, topBottom);
+      addBorder(BorderPosition.BOTTOM, borderStyle, colorValue, topBottom);
+    }
+    if (leftRight > 0) {
+      addBorder(BorderPosition.LEFT, borderStyle, colorValue, leftRight);
+      addBorder(BorderPosition.RIGHT, borderStyle, colorValue, leftRight);
     }
   }
 
@@ -108,6 +118,11 @@ public interface Component extends Disposable, UserDataHolder {
 
   @RequiredUIAccess
   void setEnabled(boolean value);
+
+  @RequiredUIAccess
+  default void setEnabledRecursive(boolean value) {
+    setEnabled(value);
+  }
 
   @RequiredUIAccess
   default Component withEnabled(boolean enabled) {
@@ -177,7 +192,7 @@ public interface Component extends Disposable, UserDataHolder {
     setCursor(cursor);
     return this;
   }
-  
+
   /**
    * @return runner for unregister listener
    */

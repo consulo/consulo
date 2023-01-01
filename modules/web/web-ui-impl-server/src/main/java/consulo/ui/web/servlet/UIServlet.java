@@ -15,8 +15,7 @@
  */
 package consulo.ui.web.servlet;
 
-import com.intellij.util.ReflectionUtil;
-import com.vaadin.annotations.StyleSheet;
+import consulo.ide.impl.idea.util.ReflectionUtil;
 import com.vaadin.server.*;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.ui.Transport;

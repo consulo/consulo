@@ -15,41 +15,25 @@
  */
 package consulo.test.light;
 
-import com.intellij.concurrency.JobLauncher;
-import com.intellij.ide.UiActivityMonitor;
-import com.intellij.ide.ui.UISettings;
-import com.intellij.ide.util.treeView.TreeAnchorizer;
-import com.intellij.lang.LanguageExtensionPoint;
-import com.intellij.lang.LanguageParserDefinitions;
-import com.intellij.lang.PsiBuilderFactory;
-import com.intellij.lang.impl.PsiBuilderFactoryImpl;
+import consulo.application.Application;
+import consulo.application.impl.internal.progress.CoreProgressManager;
+import consulo.application.util.concurrent.JobLauncher;
+import consulo.application.macro.PathMacros;
+import consulo.application.progress.ProgressManager;
+import consulo.application.ui.UISettings;
+import consulo.component.store.impl.internal.PathMacrosService;
 import consulo.disposer.Disposable;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.PathMacroFilter;
-import com.intellij.openapi.application.PathMacros;
-import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.fileTypes.FileTypeRegistry;
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.progress.impl.CoreProgressManager;
-import com.intellij.openapi.vfs.encoding.EncodingManager;
-import com.intellij.psi.LanguageFileViewProviders;
-import com.intellij.psi.LanguageSubstitutors;
-import com.intellij.ui.ExpandableItemsHandlerFactory;
-import com.intellij.ui.TreeUIHelper;
-import com.intellij.util.KeyedLazyInstanceEP;
-import consulo.application.options.PathMacrosService;
-import consulo.extensions.ExtensionExtender;
-import consulo.injecting.InjectingContainerBuilder;
-import consulo.lang.LanguageVersionDefines;
-import consulo.lang.LanguageVersionResolvers;
-import consulo.psi.tree.ASTCompositeFactory;
-import consulo.psi.tree.ASTLazyFactory;
-import consulo.psi.tree.ASTLeafFactory;
-import consulo.psi.tree.impl.DefaultASTCompositeFactory;
-import consulo.psi.tree.impl.DefaultASTLazyFactory;
-import consulo.psi.tree.impl.DefaultASTLeafFactory;
+import consulo.document.FileDocumentManager;
+import consulo.component.internal.inject.InjectingContainerBuilder;
+import consulo.language.impl.internal.parser.PsiBuilderFactoryImpl;
+import consulo.language.parser.PsiBuilderFactory;
 import consulo.test.light.impl.*;
+import consulo.ui.ex.UiActivityMonitor;
+import consulo.ui.ex.awt.ExpandableItemsHandlerFactory;
+import consulo.ui.ex.awt.tree.TreeUIHelper;
+import consulo.ui.ex.tree.TreeAnchorizer;
+import consulo.virtualFileSystem.encoding.EncodingManager;
+import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 
 import javax.annotation.Nonnull;
 
@@ -59,26 +43,19 @@ import javax.annotation.Nonnull;
  */
 public class LightApplicationBuilder {
   public static class DefaultRegistrator extends LightExtensionRegistrator {
-    @Override
-    public void registerExtensionPointsAndExtensions(@Nonnull ExtensionsAreaImpl area) {
-      registerExtensionPoint(area, ASTLazyFactory.EP.getExtensionPointName(), ASTLazyFactory.class);
-      registerExtension(area, ASTLazyFactory.EP.getExtensionPointName(), new DefaultASTLazyFactory());
-
-      registerExtensionPoint(area, ASTLeafFactory.EP.getExtensionPointName(), ASTLeafFactory.class);
-      registerExtension(area, ASTLeafFactory.EP.getExtensionPointName(), new DefaultASTLeafFactory());
-
-      registerExtensionPoint(area, ASTCompositeFactory.EP.getExtensionPointName(), ASTCompositeFactory.class);
-      registerExtension(area, ASTCompositeFactory.EP.getExtensionPointName(), new DefaultASTCompositeFactory());
-
-      registerExtensionPoint(area, LanguageParserDefinitions.INSTANCE.getExtensionPointName(), LanguageExtensionPoint.class);
-      registerExtensionPoint(area, LanguageSubstitutors.INSTANCE.getExtensionPointName(), LanguageExtensionPoint.class);
-      registerExtensionPoint(area, LanguageVersionResolvers.INSTANCE.getExtensionPointName(), LanguageExtensionPoint.class);
-      registerExtensionPoint(area, LanguageVersionDefines.INSTANCE.getExtensionPointName(), LanguageExtensionPoint.class);
-      registerExtensionPoint(area, LanguageFileViewProviders.INSTANCE.getExtensionPointName(), LanguageExtensionPoint.class);
-
-      registerExtensionPoint(area, PathMacroFilter.EP_NAME, PathMacroFilter.class);
-      registerExtensionPoint(area, ExtensionExtender.EP_NAME, KeyedLazyInstanceEP.class);
-    }
+    //@Override
+    //public void registerExtensionPointsAndExtensions(@Nonnull ExtensionsAreaImpl area) {
+    //  registerExtensionPoint(area, ASTLazyFactory.EP.getExtensionPointName(), ASTLazyFactory.class);
+    //  registerExtension(area, ASTLazyFactory.EP.getExtensionPointName(), new DefaultASTLazyFactory());
+    //
+    //  registerExtensionPoint(area, ASTLeafFactory.EP.getExtensionPointName(), ASTLeafFactory.class);
+    //  registerExtension(area, ASTLeafFactory.EP.getExtensionPointName(), new DefaultASTLeafFactory());
+    //
+    //  registerExtensionPoint(area, ASTCompositeFactory.EP.getExtensionPointName(), ASTCompositeFactory.class);
+    //  registerExtension(area, ASTCompositeFactory.EP.getExtensionPointName(), new DefaultASTCompositeFactory());
+    //
+    //
+    //}
 
     @Override
     public void registerServices(@Nonnull InjectingContainerBuilder builder) {
@@ -104,7 +81,7 @@ public class LightApplicationBuilder {
   }
 
   @Nonnull
-  public static LightApplicationBuilder create(@Nonnull Disposable rootDisposable, @Nonnull DefaultRegistrator registrator ) {
+  public static LightApplicationBuilder create(@Nonnull Disposable rootDisposable, @Nonnull DefaultRegistrator registrator) {
     return new LightApplicationBuilder(rootDisposable, registrator);
   }
 

@@ -15,23 +15,39 @@
  */
 package consulo.sandboxPlugin.lang;
 
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.tree.IFileElementType;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.lang.LanguageVersionableParserDefinition;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.Language;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.IFileElementType;
+import consulo.language.file.FileViewProvider;
+import consulo.language.impl.psi.ASTWrapperPsiElement;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.stub.IStubFileElementType;
+import consulo.language.version.LanguageVersionableParserDefinition;
 import consulo.sandboxPlugin.lang.psi.SandFile;
+
 import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 19.03.14
  */
+@ExtensionImpl
 public class SandParsingDefinition extends LanguageVersionableParserDefinition {
-  private static IFileElementType FILE = new IFileElementType(SandLanguage.INSTANCE);
+  private static IFileElementType FILE = new IStubFileElementType<>(SandLanguage.INSTANCE) {
+    @Override
+    public int getStubVersion() {
+      return 2;
+    }
+  };
+
+  @Nonnull
+  @Override
+  public Language getLanguage() {
+    return SandLanguage.INSTANCE;
+  }
 
   @Nonnull
   @Override

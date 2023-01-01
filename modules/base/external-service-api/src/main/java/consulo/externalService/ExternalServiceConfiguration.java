@@ -15,6 +15,8 @@
  */
 package consulo.externalService;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
 import consulo.ui.image.Image;
 import consulo.util.lang.ThreeState;
 
@@ -25,6 +27,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 05/09/2021
  */
+@ServiceAPI(ComponentScope.APPLICATION)
 public interface ExternalServiceConfiguration {
   @Nullable
   String getEmail();

@@ -15,7 +15,7 @@
  */
 package consulo.ui.web.internal.layout;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.Tab;

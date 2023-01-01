@@ -22,7 +22,7 @@
 
   <groupId>consulo</groupId>
   <artifactId>arch.managment</artifactId>
-  <version>2-SNAPSHOT</version>
+  <version>3-SNAPSHOT</version>
 
   <packaging>pom</packaging>
 
@@ -31,29 +31,33 @@
 
     <jna.version>5.8.0</jna.version>
     <jdom.version>3.0-SNAPSHOT</jdom.version>
-    <log4j2.version>2.14.1</log4j2.version>
+    <log4j2.version>2.17.1</log4j2.version>
     <guava.version>30.1.1-jre</guava.version>
     <!--please exclude common logging library from dependency-->
     <httpclient.version>4.5.13</httpclient.version>
     <netty.version>4.1.66.Final</netty.version>
     <gson.version>2.8.7</gson.version>
-    <slf4j.version>2.0.0-alpha1</slf4j.version>
-    <junit.version>4.12</junit.version>
+    <slf4j.version>2.0.0-alpha6</slf4j.version>
+    <junit.version>4.13.2</junit.version>
     <gwt.version>2.9.0</gwt.version>
     <servlet.version>3.1.0</servlet.version>
     <websocket.version>1.1</websocket.version>
     <vaadin.version>8.12-SNAPSHOT</vaadin.version>
     <jaxb.version>3.0.1</jaxb.version>
     <jetty.version>9.4.31.v20200723</jetty.version>
+    <swt.version>3.120.0</swt.version>
 
     <build.number>SNAPSHOT</build.number>
     <dev.mode>true</dev.mode>
 
     <maven.assembly.plugin>3.2.0</maven.assembly.plugin>
-    <maven.jar.plugin>3.2.0</maven.jar.plugin>
-    <maven.compile.plugin>3.8.1</maven.compile.plugin>
-    <maven.surefire.plugin>2.22.2</maven.surefire.plugin>
+    <maven.jar.plugin>3.2.2</maven.jar.plugin>
+    <maven.compile.plugin>3.10.1</maven.compile.plugin>
+    <maven.surefire.plugin>3.0.0-M6</maven.surefire.plugin>
     <maven.source.plugin>3.2.0</maven.source.plugin>
+
+
+    <java.level>17</java.level>
   </properties>
 
   <dependencyManagement>
@@ -107,11 +111,17 @@
         <version>0.4.4</version>
       </dependency>
       <dependency>
+        <!--TODO remove this dependency. For now it's fix microba dep-->
+        <groupId>jgraph</groupId>
+        <artifactId>jgraph</artifactId>
+        <version>5.8.3.1</version>
+      </dependency>
+      <dependency>
         <groupId>consulo.internal</groupId>
         <artifactId>build.serviceMessages</artifactId>
         <version>1.0</version>
         <exclusions>
-          <!--FIXME [VISTALL] tempolary solution until we make depend to our library-->
+          <!--FIXME [VISTALL] temp solution until we make depend to our library-->
           <exclusion>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations-java5</artifactId>
@@ -158,8 +168,8 @@
         <artifactId>log4j-core</artifactId>
         <version>${log4j2.version}</version>
       </dependency>
-      <!--obsolete dependency-->
       <dependency>
+        <!--obsolete dependency-->
         <groupId>consulo.internal</groupId>
         <artifactId>trove4j</artifactId>
         <version>2.2</version>
@@ -276,14 +286,14 @@
         <optional>true</optional>
       </dependency>
       <dependency>
-        <groupId>dk.brics.automaton</groupId>
-        <artifactId>automaton</artifactId>
-        <version>1.11-8</version>
-      </dependency>
-      <dependency>
         <groupId>consulo.internal</groupId>
         <artifactId>svg-salamander</artifactId>
         <version>2.2-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>com.ibm.icu</groupId>
+        <artifactId>icu4j</artifactId>
+        <version>70.1</version>
       </dependency>
       <dependency>
         <groupId>ar.com.hjg</groupId>
@@ -298,7 +308,7 @@
       <dependency>
         <groupId>org.jvnet.winp</groupId>
         <artifactId>winp</artifactId>
-        <version>1.28</version>
+        <version>1.29-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.velocity</groupId>
@@ -509,11 +519,6 @@
         <version>${jaxb.version}</version>
       </dependency>
       <dependency>
-        <groupId>be.cyberelf.nanoxml</groupId>
-        <artifactId>nanoxml</artifactId>
-        <version>2.2.3</version>
-      </dependency>
-      <dependency>
         <groupId>org.glassfish.jaxb</groupId>
         <artifactId>jaxb-runtime</artifactId>
         <version>${jaxb.version}</version>
@@ -557,7 +562,7 @@
         </property>
       </activation>
       <properties>
-        <java.level>11</java.level>
+        <java.level>17</java.level>
       </properties>
     </profile>
   </profiles>
@@ -590,31 +595,23 @@
         <plugin>
           <groupId>consulo.maven</groupId>
           <artifactId>maven-consulo-plugin</artifactId>
-          <version>2-SNAPSHOT</version>
+          <version>3-SNAPSHOT</version>
           <extensions>true</extensions>
         </plugin>
       </plugins>
     </pluginManagement>
-    
+
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${maven.compile.plugin}</version>
         <configuration>
-          <source>16</source>
+          <source>${java.level}</source>
           <target>${java.level}</target>
           <showDeprecation>true</showDeprecation>
           <showWarnings>true</showWarnings>
-          <compilerId>javi</compilerId>
         </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>consulo.internal</groupId>
-            <artifactId>plexus-compiler-javi</artifactId>
-            <version>16.0.7-SNAPSHOT</version>
-          </dependency>
-        </dependencies>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>

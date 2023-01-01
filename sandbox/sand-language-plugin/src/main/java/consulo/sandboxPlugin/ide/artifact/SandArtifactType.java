@@ -15,14 +15,15 @@
  */
 package consulo.sandboxPlugin.ide.artifact;
 
-import com.intellij.icons.AllIcons;
-import com.intellij.openapi.module.ModuleUtil;
-import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
-import com.intellij.packaging.artifacts.ArtifactType;
-import com.intellij.packaging.elements.CompositePackagingElement;
-import com.intellij.packaging.elements.PackagingElementFactory;
-import com.intellij.packaging.elements.PackagingElementOutputKind;
-import com.intellij.packaging.impl.elements.ArtifactRootElementImpl;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.ide.impl.idea.openapi.module.ModuleUtil;
+import consulo.compiler.artifact.element.ArtifactRootElementImpl;
+import consulo.application.AllIcons;
+import consulo.compiler.artifact.ArtifactType;
+import consulo.compiler.artifact.element.CompositePackagingElement;
+import consulo.compiler.artifact.element.PackagingElementFactory;
+import consulo.compiler.artifact.element.PackagingElementOutputKind;
+import consulo.module.content.layer.ModulesProvider;
 import consulo.sandboxPlugin.ide.module.extension.SandModuleExtension;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
@@ -33,6 +34,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 19.03.14
  */
+@ExtensionImpl
 public class SandArtifactType extends ArtifactType {
   @NonNls
   public static final String ID = "sand";

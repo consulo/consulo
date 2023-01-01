@@ -15,19 +15,25 @@
  */
 package consulo.sandboxPlugin.ide.module;
 
-import com.intellij.openapi.roots.ModifiableRootModel;
-import consulo.roots.impl.*;
-import javax.annotation.Nonnull;
-import consulo.roots.ContentFolderSupportPatcher;
-import consulo.roots.ContentFolderTypeProvider;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.content.ContentFolderTypeProvider;
+import consulo.ide.impl.roots.impl.WebResourcesFolderTypeProvider;
+import consulo.language.content.ProductionContentFolderTypeProvider;
+import consulo.language.content.ProductionResourceContentFolderTypeProvider;
+import consulo.language.content.TestContentFolderTypeProvider;
+import consulo.language.content.TestResourceContentFolderTypeProvider;
+import consulo.module.content.layer.ContentFolderSupportPatcher;
+import consulo.module.content.layer.ModifiableRootModel;
 import consulo.sandboxPlugin.ide.module.extension.SandModuleExtension;
 
+import javax.annotation.Nonnull;
 import java.util.Set;
 
 /**
  * @author VISTALL
  * @since 31.03.14
  */
+@ExtensionImpl
 public class SandContentFolderSupportPatcher implements ContentFolderSupportPatcher {
   @Override
   public void patch(@Nonnull ModifiableRootModel model, @Nonnull Set<ContentFolderTypeProvider> set) {

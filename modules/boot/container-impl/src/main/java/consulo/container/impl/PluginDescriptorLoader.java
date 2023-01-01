@@ -21,8 +21,6 @@ import consulo.util.nodep.Comparing;
 import consulo.util.nodep.io.FileUtilRt;
 import consulo.util.nodep.text.StringUtilRt;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
@@ -39,12 +37,10 @@ import java.util.zip.ZipFile;
 public class PluginDescriptorLoader {
   public static final String PLUGIN_XML = "plugin.xml";
 
-  @Nullable
   public static PluginDescriptorImpl loadDescriptor(final File pluginPath, boolean isHeadlessMode, boolean isPreInstalledPath, ContainerLogger containerLogger) {
     return loadDescriptor(pluginPath, PLUGIN_XML, isHeadlessMode, isPreInstalledPath, containerLogger);
   }
 
-  @Nullable
   public static PluginDescriptorImpl loadDescriptor(final File pluginPath, final String fileName, boolean isHeadlessMode, boolean isPreInstalledPath, ContainerLogger containerLogger) {
     PluginDescriptorImpl descriptor = null;
 
@@ -143,14 +139,12 @@ public class PluginDescriptorLoader {
     return Collections.emptyList();
   }
 
-
-  @Nullable
-  public static PluginDescriptorImpl loadDescriptorFromJar(@Nonnull File jarFile,
-                                                           @Nonnull File pluginPath,
-                                                           @Nonnull String fileName,
+  public static PluginDescriptorImpl loadDescriptorFromJar( File jarFile,
+                                                            File pluginPath,
+                                                            String fileName,
                                                            boolean isHeadlessMode,
                                                            boolean isPreInstalledPath,
-                                                           @Nonnull ContainerLogger logger) {
+                                                            ContainerLogger logger) {
     try {
       ZipFile zipFile = new ZipFile(jarFile.getPath());
       try {

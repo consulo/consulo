@@ -15,16 +15,17 @@
  */
 package consulo.sandboxPlugin.lang.moduleImport;
 
-import com.intellij.icons.AllIcons;
-import com.intellij.openapi.module.ModifiableModuleModel;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.AllIcons;
+import consulo.module.ModifiableModuleModel;
+import consulo.module.Module;
+import consulo.project.Project;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.disposer.Disposable;
-import consulo.ide.newProject.ui.UnifiedProjectOrModuleNameStep;
+import consulo.ide.newModule.ui.UnifiedProjectOrModuleNameStep;
 import consulo.localize.LocalizeValue;
-import consulo.moduleImport.ModuleImportContext;
-import consulo.moduleImport.ModuleImportProvider;
+import consulo.ide.moduleImport.ModuleImportContext;
+import consulo.ide.moduleImport.ModuleImportProvider;
 import consulo.ui.ColorBox;
 import consulo.ui.Component;
 import consulo.ui.ListBox;
@@ -34,7 +35,7 @@ import consulo.ui.image.Image;
 import consulo.ui.layout.LabeledLayout;
 import consulo.ui.style.StandardColors;
 import consulo.ui.util.FormBuilder;
-import consulo.ui.wizard.WizardStep;
+import consulo.ui.ex.wizard.WizardStep;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -44,6 +45,7 @@ import java.util.function.Consumer;
  * @author VISTALL
  * @since 2019-08-26
  */
+@ExtensionImpl
 public class Sand2ModuleImportProvider implements ModuleImportProvider<ModuleImportContext> {
   @Nonnull
   @Override

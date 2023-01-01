@@ -15,18 +15,19 @@
  */
 package consulo.sandboxPlugin.ide.library;
 
-import com.intellij.icons.AllIcons;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ModuleRootModel;
-import com.intellij.openapi.roots.libraries.DummyLibraryProperties;
-import com.intellij.openapi.roots.libraries.LibraryType;
-import com.intellij.openapi.roots.libraries.NewLibraryConfiguration;
-import com.intellij.openapi.roots.libraries.PersistentLibraryKind;
-import com.intellij.openapi.roots.libraries.ui.LibraryEditorComponent;
-import com.intellij.openapi.roots.libraries.ui.LibraryPropertiesEditor;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.content.library.DummyLibraryProperties;
+import consulo.application.AllIcons;
+import consulo.content.library.NewLibraryConfiguration;
+import consulo.content.library.PersistentLibraryKind;
+import consulo.content.library.ui.LibraryEditorComponent;
+import consulo.content.library.ui.LibraryPropertiesEditor;
+import consulo.module.content.layer.ModuleRootLayer;
+import consulo.module.content.library.ModuleAwareLibraryType;
+import consulo.project.Project;
 import consulo.sandboxPlugin.ide.module.extension.SandModuleExtension;
 import consulo.ui.image.Image;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
@@ -37,10 +38,11 @@ import javax.swing.*;
  * @author VISTALL
  * @since 20.03.14
  */
-public class SandLibraryType extends LibraryType<DummyLibraryProperties> {
+@ExtensionImpl
+public class SandLibraryType extends ModuleAwareLibraryType<DummyLibraryProperties> {
   @Inject
   protected SandLibraryType() {
-    super(new PersistentLibraryKind<DummyLibraryProperties>("sand") {
+    super(new PersistentLibraryKind<>("sand") {
       @Nonnull
       @Override
       public DummyLibraryProperties createDefaultProperties() {
@@ -49,21 +51,10 @@ public class SandLibraryType extends LibraryType<DummyLibraryProperties> {
     });
   }
 
-  @Override
-  public boolean isAvailable(@Nonnull ModuleRootModel moduleRootModel) {
-    return moduleRootModel.getExtension(SandModuleExtension.class) != null;
-  }
-
   @Nullable
   @Override
   public String getCreateActionName() {
     return "test";
-  }
-
-  @Nullable
-  @Override
-  public NewLibraryConfiguration createNewLibrary(@Nonnull JComponent parentComponent, @Nullable VirtualFile contextDirectory, @Nonnull Project project) {
-    return null;
   }
 
   @Nullable
@@ -76,5 +67,10 @@ public class SandLibraryType extends LibraryType<DummyLibraryProperties> {
   @Override
   public Image getIcon() {
     return AllIcons.Nodes.Static;
+  }
+
+  @Override
+  public boolean isAvailable(@Nonnull ModuleRootLayer model) {
+    return model.getExtension(SandModuleExtension.class) != null;
   }
 }

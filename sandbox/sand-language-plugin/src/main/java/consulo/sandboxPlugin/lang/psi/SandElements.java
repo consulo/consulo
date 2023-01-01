@@ -15,8 +15,8 @@
  */
 package consulo.sandboxPlugin.lang.psi;
 
-import consulo.psi.tree.ElementTypeAsPsiFactory;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.ElementTypeAsPsiFactory;
+import consulo.language.ast.IElementType;
 import consulo.sandboxPlugin.lang.SandLanguage;
 
 /**
@@ -24,6 +24,7 @@ import consulo.sandboxPlugin.lang.SandLanguage;
  * @since 19.03.14
  */
 public interface SandElements {
-  IElementType CLASS = new ElementTypeAsPsiFactory("CLASS", SandLanguage.INSTANCE, SandClass.class);
-  IElementType DEF = new ElementTypeAsPsiFactory("DEF", SandLanguage.INSTANCE, SandDef.class);
+  IElementType CLASS = SandStubTokenType.CLASS;
+  IElementType DEF = new ElementTypeAsPsiFactory("DEF", SandLanguage.INSTANCE, SandDef::new);
+  IElementType STRING_EXPRESSION = new ElementTypeAsPsiFactory("STRING_EXPRESSION", SandLanguage.INSTANCE, SandStringExpression::new);
 }

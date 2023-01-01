@@ -15,7 +15,7 @@
  */
 package consulo.ui.impl.style;
 
-import com.intellij.util.EventDispatcher;
+import consulo.proxy.EventDispatcher;
 import consulo.ui.style.Style;
 import consulo.ui.style.StyleChangeListener;
 import consulo.ui.style.StyleManager;

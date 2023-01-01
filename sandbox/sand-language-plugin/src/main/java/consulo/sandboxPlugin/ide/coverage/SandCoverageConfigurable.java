@@ -15,10 +15,10 @@
  */
 package consulo.sandboxPlugin.ide.coverage;
 
-import com.intellij.openapi.options.Configurable;
+import consulo.configurable.Configurable;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
-import consulo.options.SimpleConfigurableByProperties;
+import consulo.configurable.SimpleConfigurableByProperties;
 import consulo.ui.CheckBox;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;

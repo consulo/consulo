@@ -15,23 +15,18 @@
  */
 package consulo.util.nodep.text;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 /**
- * Stripped-down version of {@code com.intellij.openapi.util.text.StringUtil}.
+ * Stripped-down version of {@code consulo.ide.impl.idea.openapi.util.text.StringUtil}.
  * Intended to use by external (out-of-IDE-process) runners and helpers so it should not contain any library dependencies.
  *
  * @since 12.0
  */
 @SuppressWarnings({"UtilityClassWithoutPrivateConstructor"})
 public class StringUtilRt {
-  public static boolean equal(@Nullable CharSequence s1, @Nullable CharSequence s2, boolean caseSensitive) {
+  public static boolean equal(CharSequence s1, CharSequence s2, boolean caseSensitive) {
     if (s1 == s2) return true;
     if (s1 == null || s2 == null) return false;
-
     if (s1.length() != s2.length()) return false;
-
     if (caseSensitive) {
       for (int i = 0; i < s1.length(); i++) {
         if (s1.charAt(i) != s2.charAt(i)) {
@@ -46,11 +41,10 @@ public class StringUtilRt {
         }
       }
     }
-
     return true;
   }
 
-  public static long parseLong(@Nullable String string, long defaultValue) {
+  public static long parseLong(String string, long defaultValue) {
     if (string != null) {
       try {
         return Long.parseLong(string);
@@ -65,41 +59,35 @@ public class StringUtilRt {
     return a == b || toUpperCase(a) == toUpperCase(b) || toLowerCase(a) == toLowerCase(b);
   }
 
-  @Nonnull
-  public static String replace(@Nonnull String text, @Nonnull String oldS, @Nonnull String newS) {
+  public static String replace(String text, String oldS, String newS) {
     return replace(text, oldS, newS, false);
   }
 
-  public static boolean isEmpty(@Nullable String s) {
+  public static boolean isEmpty(String s) {
     return s == null || s.isEmpty();
   }
 
-  public static boolean isEmpty(@Nullable CharSequence cs) {
+  public static boolean isEmpty(CharSequence cs) {
     return cs == null || cs.length() == 0;
   }
 
-  @Nonnull
-  public static String notNullize(@Nullable final String s) {
+  public static String notNullize(final String s) {
     return notNullize(s, "");
   }
 
-  @Nonnull
-  public static String notNullize(@Nullable final String s, @Nonnull String defaultValue) {
+  public static String notNullize(final String s, String defaultValue) {
     return s == null ? defaultValue : s;
   }
 
-  @Nonnull
-  public static String notNullizeIfEmpty(@Nullable final String s, @Nonnull String defaultValue) {
+  public static String notNullizeIfEmpty(final String s, String defaultValue) {
     return isEmpty(s) ? defaultValue : s;
   }
 
-  @Nullable
-  public static String nullize(@Nullable final String s) {
+  public static String nullize(final String s) {
     return nullize(s, false);
   }
 
-  @Nullable
-  public static String nullize(@Nullable final String s, boolean nullizeSpaces) {
+  public static String nullize(final String s, boolean nullizeSpaces) {
     if (nullizeSpaces) {
       if (isEmptyOrSpaces(s)) return null;
     }
@@ -110,11 +98,11 @@ public class StringUtilRt {
   }
 
   // we need to keep this method to preserve backward compatibility
-  public static boolean isEmptyOrSpaces(@Nullable String s) {
+  public static boolean isEmptyOrSpaces(String s) {
     return isEmptyOrSpaces(((CharSequence)s));
   }
 
-  public static boolean isEmptyOrSpaces(@Nullable CharSequence s) {
+  public static boolean isEmptyOrSpaces(CharSequence s) {
     if (isEmpty(s)) {
       return true;
     }
@@ -126,19 +114,16 @@ public class StringUtilRt {
     return true;
   }
 
-  public static String replace(@Nonnull final String text, @Nonnull final String oldS, @Nonnull final String newS, final boolean ignoreCase) {
+  public static String replace(final String text, final String oldS, final String newS, final boolean ignoreCase) {
     if (text.length() < oldS.length()) return text;
-
     StringBuilder newText = null;
     int i = 0;
-
     while (i < text.length()) {
       final int index = ignoreCase ? indexOfIgnoreCase(text, oldS, i) : text.indexOf(oldS, i);
       if (index < 0) {
         if (i == 0) {
           return text;
         }
-
         newText.append(text, i, text.length());
         break;
       }
@@ -149,7 +134,6 @@ public class StringUtilRt {
           }
           newText = new StringBuilder(text.length() - i);
         }
-
         newText.append(text, i, index);
         newText.append(newS);
         i = index + oldS.length();
@@ -161,51 +145,41 @@ public class StringUtilRt {
   /**
    * Implementation copied from {@link String#indexOf(String, int)} except character comparisons made case insensitive
    */
-  public static int indexOfIgnoreCase(@Nonnull String where, @Nonnull String what, int fromIndex) {
+  public static int indexOfIgnoreCase(String where, String what, int fromIndex) {
     int targetCount = what.length();
     int sourceCount = where.length();
-
     if (fromIndex >= sourceCount) {
       return targetCount == 0 ? sourceCount : -1;
     }
-
     if (fromIndex < 0) {
       fromIndex = 0;
     }
-
     if (targetCount == 0) {
       return fromIndex;
     }
-
     char first = what.charAt(0);
     int max = sourceCount - targetCount;
-
     for (int i = fromIndex; i <= max; i++) {
       /* Look for first character. */
       if (!charsEqualIgnoreCase(where.charAt(i), first)) {
         while (++i <= max && !charsEqualIgnoreCase(where.charAt(i), first)) ;
       }
-
       /* Found first character, now look at the rest of v2 */
       if (i <= max) {
         int j = i + 1;
         int end = j + targetCount - 1;
         for (int k = 1; j < end && charsEqualIgnoreCase(where.charAt(j), what.charAt(k)); j++, k++) ;
-
         if (j == end) {
           /* Found whole string. */
           return i;
         }
       }
     }
-
     return -1;
   }
 
-  @Nonnull
-  public static CharSequence toUpperCase(@Nonnull CharSequence s) {
+  public static CharSequence toUpperCase(CharSequence s) {
     StringBuilder answer = null;
-
     for (int i = 0; i < s.length(); i++) {
       char c = s.charAt(i);
       char upcased = toUpperCase(c);
@@ -213,12 +187,10 @@ public class StringUtilRt {
         answer = new StringBuilder(s.length());
         answer.append(s.subSequence(0, i));
       }
-
       if (answer != null) {
         answer.append(upcased);
       }
     }
-
     return answer == null ? s : answer;
   }
 
@@ -236,54 +208,44 @@ public class StringUtilRt {
     if (a < 'A' || a >= 'a' && a <= 'z') {
       return a;
     }
-
     if (a <= 'Z') {
       return (char)(a + ('a' - 'A'));
     }
-
     return Character.toLowerCase(a);
   }
 
   /**
    * Converts line separators to <code>"\n"</code>
    */
-  @Nonnull
-  public static String convertLineSeparators(@Nonnull String text) {
+  public static String convertLineSeparators(String text) {
     return convertLineSeparators(text, false);
   }
 
-  @Nonnull
-  public static String convertLineSeparators(@Nonnull String text, boolean keepCarriageReturn) {
+  public static String convertLineSeparators(String text, boolean keepCarriageReturn) {
     return convertLineSeparators(text, "\n", null, keepCarriageReturn);
   }
 
-  @Nonnull
-  public static String convertLineSeparators(@Nonnull String text, @Nonnull String newSeparator) {
+  public static String convertLineSeparators(String text, String newSeparator) {
     return convertLineSeparators(text, newSeparator, null);
   }
 
-  @Nonnull
-  public static CharSequence convertLineSeparators(@Nonnull CharSequence text, @Nonnull String newSeparator) {
+  public static CharSequence convertLineSeparators(CharSequence text, String newSeparator) {
     return unifyLineSeparators(text, newSeparator, null, false);
   }
 
-  @Nonnull
-  public static String convertLineSeparators(@Nonnull String text, @Nonnull String newSeparator, @Nullable int[] offsetsToKeep) {
+  public static String convertLineSeparators(String text, String newSeparator, int[] offsetsToKeep) {
     return convertLineSeparators(text, newSeparator, offsetsToKeep, false);
   }
 
-  @Nonnull
-  public static String convertLineSeparators(@Nonnull String text, @Nonnull String newSeparator, @Nullable int[] offsetsToKeep, boolean keepCarriageReturn) {
+  public static String convertLineSeparators(String text, String newSeparator, int[] offsetsToKeep, boolean keepCarriageReturn) {
     return unifyLineSeparators(text, newSeparator, offsetsToKeep, keepCarriageReturn).toString();
   }
 
-  @Nonnull
-  public static CharSequence unifyLineSeparators(@Nonnull CharSequence text) {
+  public static CharSequence unifyLineSeparators(CharSequence text) {
     return unifyLineSeparators(text, "\n", null, false);
   }
 
-  @Nonnull
-  public static CharSequence unifyLineSeparators(@Nonnull CharSequence text, @Nonnull String newSeparator, @Nullable int[] offsetsToKeep, boolean keepCarriageReturn) {
+  public static CharSequence unifyLineSeparators(CharSequence text, String newSeparator, int[] offsetsToKeep, boolean keepCarriageReturn) {
     StringBuilder buffer = null;
     int intactLength = 0;
     final boolean newSeparatorIsSlashN = "\n".equals(newSeparator);
@@ -354,11 +316,10 @@ public class StringUtilRt {
     }
   }
 
-  public static int parseInt(@Nullable String string, final int defaultValue) {
+  public static int parseInt(String string, final int defaultValue) {
     if (string == null) {
       return defaultValue;
     }
-
     try {
       return Integer.parseInt(string);
     }
@@ -394,18 +355,15 @@ public class StringUtilRt {
     }
   }
 
-  @Nonnull
-  public static String getShortName(@Nonnull Class aClass) {
+  public static String getShortName(Class aClass) {
     return getShortName(aClass.getName());
   }
 
-  @Nonnull
-  public static String getShortName(@Nonnull String fqName) {
+  public static String getShortName(String fqName) {
     return getShortName(fqName, '.');
   }
 
-  @Nonnull
-  public static String getShortName(@Nonnull String fqName, char separator) {
+  public static String getShortName(String fqName, char separator) {
     int lastPointIdx = fqName.lastIndexOf(separator);
     if (lastPointIdx >= 0) {
       return fqName.substring(lastPointIdx + 1);
@@ -413,43 +371,39 @@ public class StringUtilRt {
     return fqName;
   }
 
-  public static boolean startsWithChar(@Nullable CharSequence s, char prefix) {
+  public static boolean startsWithChar(CharSequence s, char prefix) {
     return s != null && s.length() != 0 && s.charAt(0) == prefix;
   }
 
-  public static boolean endsWithChar(@Nullable CharSequence s, char suffix) {
+  public static boolean endsWithChar(CharSequence s, char suffix) {
     return s != null && s.length() != 0 && s.charAt(s.length() - 1) == suffix;
   }
 
-  public static boolean endsWith(@Nonnull CharSequence text, @Nonnull CharSequence suffix) {
+  public static boolean endsWith(CharSequence text, CharSequence suffix) {
     int l1 = text.length();
     int l2 = suffix.length();
     if (l1 < l2) return false;
-
     for (int i = l1 - 1; i >= l1 - l2; i--) {
       if (text.charAt(i) != suffix.charAt(i + l2 - l1)) return false;
     }
-
     return true;
   }
 
-  public static boolean startsWithIgnoreCase(@Nonnull String str, @Nonnull String prefix) {
+  public static boolean startsWithIgnoreCase(String str, String prefix) {
     final int stringLength = str.length();
     final int prefixLength = prefix.length();
     return stringLength >= prefixLength && str.regionMatches(true, 0, prefix, 0, prefixLength);
   }
 
-  public static boolean endsWithIgnoreCase(@Nonnull CharSequence text,  @Nonnull CharSequence suffix) {
+  public static boolean endsWithIgnoreCase(CharSequence text, CharSequence suffix) {
     int l1 = text.length();
     int l2 = suffix.length();
     if (l1 < l2) return false;
-
     for (int i = l1 - 1; i >= l1 - l2; i--) {
       if (!charsEqualIgnoreCase(text.charAt(i), suffix.charAt(i + l2 - l1))) {
         return false;
       }
     }
-
     return true;
   }
 
@@ -463,15 +417,14 @@ public class StringUtilRt {
    * @return index of the last occurrence of the given symbol at the target sub-sequence of the given text if any;
    * <code>-1</code> otherwise
    */
-  public static int lastIndexOf(@Nonnull CharSequence s, char c, int start, int end) {
+  public static int lastIndexOf(CharSequence s, char c, int start, int end) {
     for (int i = end - 1; i >= start; i--) {
       if (s.charAt(i) == c) return i;
     }
     return -1;
   }
 
-  @Nonnull
-  public static String trimStart(@Nonnull String s,  @Nonnull String prefix) {
+  public static String trimStart(String s, String prefix) {
     if (s.startsWith(prefix)) {
       return s.substring(prefix.length());
     }

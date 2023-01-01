@@ -19,30 +19,18 @@ import consulo.container.impl.classloader.Java9ModuleProcessor;
 
 import java.util.List;
 
-import static consulo.container.impl.classloader.Java9ModuleInitializer.*;
-
 /**
  * @author VISTALL
  * @since 18/12/2021
  */
 public class DesktopSwtJava9ModuleProcessor implements Java9ModuleProcessor {
   @Override
-  public void process(Object bootModuleLayer, Object controller) {
-    aberto(bootModuleLayer, controller);
-  }
-
-  public static void aberto(Object bootModuleLayer, Object controller) {
-    Object javaBaseModule = findModuleUnwrap(bootModuleLayer, "java.base");
-
-    Object plaformModuleLayer = instanceInvoke(java_lang_ModuleLayer$Controller_layout, controller);
-
-    Object hackingJavaBaseModule = findModuleUnwrap(plaformModuleLayer, "consulo.hacking.java.base");
-
-    instanceInvoke(java_lang_Module_addOpens, javaBaseModule, "java.lang", hackingJavaBaseModule);
+  public void process(List<Opens> toOpenMap) {
+    toOpenMap.add(new Opens("java.base", "java.lang", "consulo.hacking.java.base"));
   }
 
   @Override
-  public void addBaseResolveModules(List<String> toResolve) {
-
+  public boolean isEnabledModules() {
+    return System.getProperty("jdk.module.path") != null;
   }
 }

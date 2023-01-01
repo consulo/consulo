@@ -16,19 +16,19 @@
 
 package com.intellij.rt.coverage.util;
 
-import gnu.trove.TIntObjectHashMap;
-
 import com.intellij.rt.coverage.data.LineData;
+
+import java.util.Map;
 
 /*
  * @author anna
  * @since 26-Feb-2010
  */
 public class LinesUtil {
-  public static LineData[] calcLineArray(final int maxLineNumber, final TIntObjectHashMap lines) {
+  public static LineData[] calcLineArray(final int maxLineNumber, final Map<Integer, LineData> lines) {
     final LineData[] linesArray = new LineData[maxLineNumber + 1];
-    for(int line = 1; line <= maxLineNumber; line++) {
-      final LineData lineData = (LineData) lines.get(line);
+    for (int line = 1; line <= maxLineNumber; line++) {
+      final LineData lineData = lines.get(line);
       if (lineData != null) {
         lineData.fillArrays();
       }

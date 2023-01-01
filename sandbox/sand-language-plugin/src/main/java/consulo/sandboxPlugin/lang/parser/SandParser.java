@@ -15,13 +15,17 @@
  */
 package consulo.sandboxPlugin.lang.parser;
 
-import com.intellij.lang.*;
-import com.intellij.openapi.util.Pair;
-import com.intellij.psi.tree.IElementType;
-import consulo.lang.LanguageVersion;
-import javax.annotation.Nonnull;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.IElementType;
+import consulo.language.parser.PsiBuilder;
+import consulo.language.parser.PsiBuilderUtil;
+import consulo.language.parser.PsiParser;
+import consulo.language.version.LanguageVersion;
+import consulo.sandboxPlugin.lang.psi.SandElements;
 import consulo.sandboxPlugin.lang.psi.SandTokens;
+import consulo.util.lang.Pair;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -49,12 +53,23 @@ public class SandParser implements PsiParser {
           if (!PsiBuilderUtil.expect(builder, SandTokens.IDENTIFIER)) {
             builder.error("Identifier expected");
           }
+
+          PsiBuilderUtil.expect(builder, SandTokens.LBRACE);
+
+          while (builder.getTokenType() == SandTokens.STRING_LITERAL) {
+            PsiBuilder.Marker stringExp = builder.mark();
+            builder.advanceLexer();
+            stringExp.done(SandElements.STRING_EXPRESSION);
+          }
+          
+          PsiBuilderUtil.expect(builder, SandTokens.RBRACE);
+
           defMark.done(pair.getSecond());
           find = true;
         }
       }
 
-      if(!find) {
+      if (!find) {
         builder.error("Expected start token");
         builder.advanceLexer();
       }

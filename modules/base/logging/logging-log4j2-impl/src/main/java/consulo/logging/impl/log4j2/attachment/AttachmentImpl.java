@@ -15,8 +15,8 @@
  */
 package consulo.logging.impl.log4j2.attachment;
 
-import com.intellij.util.ExceptionUtil;
-import com.intellij.util.PathUtilRt;
+import consulo.ide.impl.idea.util.ExceptionUtil;
+import consulo.ide.impl.idea.util.PathUtil;
 import consulo.logging.attachment.Attachment;
 
 import javax.annotation.Nonnull;
@@ -61,7 +61,7 @@ public class AttachmentImpl implements Attachment {
 
   @Override
   public String getName() {
-    return PathUtilRt.getFileName(myPath);
+    return PathUtil.getFileName(myPath);
   }
 
   @Override

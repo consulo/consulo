@@ -3,10 +3,9 @@ package consulo.util.nodep;
 
 import consulo.util.nodep.text.StringUtilRt;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * A class representing a version of some Java platform - e.g. the runtime the class is loaded into, or some installed JRE.
@@ -57,7 +56,7 @@ public final class JavaVersion implements Comparable<JavaVersion> {
   }
 
   @Override
-  public int compareTo(@Nonnull JavaVersion o) {
+  public int compareTo(JavaVersion o) {
     int diff = feature - o.feature;
     if (diff != 0) return diff;
     diff = minor - o.minor;
@@ -116,9 +115,7 @@ public final class JavaVersion implements Comparable<JavaVersion> {
    *
    * @throws IllegalArgumentException when any of numbers is negative
    */
-  public static
-  @Nonnull
-  JavaVersion compose(int feature, int minor, int update, int build, boolean ea) throws IllegalArgumentException {
+  public static JavaVersion compose(int feature, int minor, int update, int build, boolean ea) throws IllegalArgumentException {
     if (feature < 0) throw new IllegalArgumentException();
     if (minor < 0) throw new IllegalArgumentException();
     if (update < 0) throw new IllegalArgumentException();
@@ -126,9 +123,7 @@ public final class JavaVersion implements Comparable<JavaVersion> {
     return new JavaVersion(feature, minor, update, build, ea);
   }
 
-  public static
-  @Nonnull
-  JavaVersion compose(int feature) {
+  public static JavaVersion compose(int feature) {
     return compose(feature, 0, 0, 0, false);
   }
 
@@ -139,7 +134,7 @@ public final class JavaVersion implements Comparable<JavaVersion> {
    * The method attempts to parse {@code "java.runtime.version"} system property first (usually, it is more complete),
    * and falls back to {@code "java.version"} if the former is invalid or differs in {@link #feature} or {@link #minor} numbers.
    */
-  @Nonnull
+
   public static JavaVersion current() {
     if (current == null) {
       JavaVersion fallback = parse(System.getProperty("java.version"));
@@ -156,22 +151,16 @@ public final class JavaVersion implements Comparable<JavaVersion> {
     return current;
   }
 
-  /**
-   * Attempts to use Runtime.version() method available since Java 9.
-   */
-  @SuppressWarnings("JavaReflectionMemberAccess")
-  private static
-  @Nullable
-  JavaVersion rtVersion() {
+  private static JavaVersion rtVersion() {
     try {
-      Object version = Runtime.class.getMethod("version").invoke(null);
-      int major = (Integer)version.getClass().getMethod("major").invoke(version);
-      int minor = (Integer)version.getClass().getMethod("minor").invoke(version);
-      int security = (Integer)version.getClass().getMethod("security").invoke(version);
-      Object buildOpt = version.getClass().getMethod("build").invoke(version);
-      int build = (Integer)buildOpt.getClass().getMethod("orElse", Object.class).invoke(buildOpt, Integer.valueOf(0));
-      Object preOpt = version.getClass().getMethod("pre").invoke(version);
-      boolean ea = (Boolean)preOpt.getClass().getMethod("isPresent").invoke(preOpt);
+      Runtime.Version version = Runtime.version();
+      int major = version.major();
+      int minor = version.minor();
+      int security = version.security();
+      Optional<Integer> buildOpt = version.build();
+      int build = buildOpt.orElse(0);
+      Optional<String> preOpt = version.pre();
+      boolean ea = preOpt.isPresent();
       return new JavaVersion(major, minor, security, build, ea);
     }
     catch (Throwable ignored) {
@@ -191,13 +180,11 @@ public final class JavaVersion implements Comparable<JavaVersion> {
    * - a second line of the above command (something like to "Java(TM) SE Runtime Environment (build $VERSION)")<br>
    * - output of "{@code java --full-version}" ("java $VERSION")</p>
    * <p/>
-   * <p>See com.intellij.util.lang.JavaVersionTest for examples.</p>
+   * <p>See consulo.ide.impl.idea.util.lang.JavaVersionTest for examples.</p>
    *
    * @throws IllegalArgumentException if failed to recognize the number.
    */
-  public static
-  @Nonnull
-  JavaVersion parse(@Nonnull String versionString) throws IllegalArgumentException {
+  public static JavaVersion parse(String versionString) throws IllegalArgumentException {
     // trimming
     String str = versionString.trim();
     if (str.contains("Runtime Environment")) {
@@ -286,7 +273,6 @@ public final class JavaVersion implements Comparable<JavaVersion> {
   /**
    * A safe version of {@link #parse(String)} - returns {@code null} if can't parse a version string.
    */
-  @Nullable
   public static JavaVersion tryParse(String versionString) {
     if (versionString != null) {
       try {

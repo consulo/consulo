@@ -15,18 +15,22 @@
  */
 package consulo.sandboxPlugin.ide.run;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.Executor;
-import com.intellij.execution.configurations.*;
-import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.options.SettingsEditor;
-import com.intellij.openapi.project.Project;
+import consulo.execution.RuntimeConfigurationException;
+import consulo.execution.configuration.ConfigurationFactory;
+import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.configuration.RunConfigurationBase;
+import consulo.execution.configuration.RunProfileState;
+import consulo.process.ExecutionException;
+import consulo.execution.executor.Executor;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.application.Application;
+import consulo.configurable.ConfigurationException;
+import consulo.execution.configuration.ui.SettingsEditor;
+import consulo.project.Project;
 import consulo.execution.ui.CommonProgramParametersLayout;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.dialog.DialogService;
+import consulo.ui.ex.dialog.DialogService;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

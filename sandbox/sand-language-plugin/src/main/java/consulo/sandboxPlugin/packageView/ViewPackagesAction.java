@@ -15,10 +15,14 @@
  */
 package consulo.sandboxPlugin.packageView;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.project.DumbAwareAction;
-import com.intellij.openapi.project.Project;
-import com.intellij.webcore.packaging.ManagePackagesDialog;
+import consulo.annotation.component.ActionRef;
+import consulo.annotation.component.ActionImpl;
+import consulo.annotation.component.ActionParentRef;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.language.editor.CommonDataKeys;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.project.Project;
+import consulo.ide.impl.idea.webcore.packaging.ManagePackagesDialog;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
@@ -27,11 +31,12 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 30/05/2021
  */
+@ActionImpl(id = "ViewPackagesAction", parents = @ActionParentRef(@ActionRef(id = "ToolsMenu")))
 public class ViewPackagesAction extends DumbAwareAction {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getProject();
+    Project project = e.getData(CommonDataKeys.PROJECT);
     if(project == null) {
       return;
     }

@@ -19,12 +19,13 @@ import consulo.container.ExitCodes;
 import consulo.container.boot.ContainerStartup;
 import consulo.container.impl.SystemContainerLogger;
 import consulo.container.impl.classloader.BootstrapClassLoaderUtil;
+import consulo.container.internal.ShowError;
 import consulo.container.util.StatCollector;
-import consulo.util.nodep.SystemInfoRt;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Shell;
 
 import java.io.File;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,12 +34,20 @@ import java.util.Map;
  * @since 27/04/2021
  */
 public class Main {
-  private Main() {
-  }
-
   public static void main(final String[] args) {
-    if (!SystemInfoRt.isJavaVersionAtLeast(11)) {
-      showMessage("Unsupported Java Version", "Cannot start under Java " + SystemInfoRt.JAVA_RUNTIME_VERSION + ": Java 11 or later is required.", true);
+    ShowError.INSTANCE = new ShowError() {
+      @Override
+      public void showErrorDialogImpl(String title, String message, Throwable t) {
+        MessageBox box = new MessageBox(new Shell(), SWT.OK);
+        box.setText(title);
+        box.setMessage(message);
+        box.open();
+      }
+    };
+
+    String javaRuntimeError = ExitCodes.validateJavaRuntime();
+    if (javaRuntimeError != null) {
+      ShowError.showErrorDialog("Unsupported Java Version", javaRuntimeError, null);
       System.exit(ExitCodes.UNSUPPORTED_JAVA_VERSION);
     }
 
@@ -46,7 +55,7 @@ public class Main {
       initAndCallStartup(args);
     }
     catch (Throwable t) {
-      showMessage("Start Failed", t);
+      ShowError.showErrorDialog("Start Failed", t.getMessage(), t);
       System.exit(ExitCodes.STARTUP_EXCEPTION);
     }
   }
@@ -63,18 +72,6 @@ public class Main {
     ContainerStartup containerStartup = BootstrapClassLoaderUtil.buildContainerStartup(map, modulesDirectory, SystemContainerLogger.INSTANCE, new DesktopSwtJava9ModuleProcessor());
 
     containerStartup.run(map);
-  }
-
-  public static void showMessage(String title, Throwable t) {
-    StringWriter out = new StringWriter();
-    PrintWriter printWriter = new PrintWriter(out);
-    t.printStackTrace(printWriter);
-    showMessage(title, out.toString(), true);
-  }
-
-  public static void showMessage(String title, String message, boolean error) {
-    System.out.println(title);
-    System.out.println(message);
   }
 }
 

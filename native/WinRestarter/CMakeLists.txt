@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.1)
 project(WinRestarter)
+include(CheckSymbolExists)
 
 if(NOT WIN32)
   message(FATAL_ERROR "Windows only.")
@@ -13,8 +14,20 @@ endif()
 
 string(TIMESTAMP YEAR "%Y")
 
+check_symbol_exists("_M_AMD64" "" TARGET_X64)
+check_symbol_exists("_M_ARM64" "" TARGET_ARM64)
+
+if(TARGET_X64)
+  set(FILE_NAME "restarter64")
+elseif(TARGET_ARM64)
+  set(FILE_NAME "restarter-aarch64")
+else()
+  set(FILE_NAME "restarter")
+endif()
+
+
 set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /MT")
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/restarter.rc ${CMAKE_CURRENT_BINARY_DIR}/restarter.rc @ONLY)
 
-add_executable(restarter restarter.c ${CMAKE_CURRENT_BINARY_DIR}/restarter.rc)
+add_executable(${FILE_NAME} restarter.c ${CMAKE_CURRENT_BINARY_DIR}/restarter.rc)

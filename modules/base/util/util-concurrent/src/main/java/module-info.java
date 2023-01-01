@@ -6,6 +6,7 @@ module consulo.util.concurrent {
   requires org.slf4j;
   requires consulo.annotation;
   requires consulo.util.lang;
+  requires consulo.util.collection;
 
   exports consulo.util.concurrent;
 }

@@ -21,13 +21,13 @@
   <parent>
     <groupId>consulo</groupId>
     <artifactId>arch.ide</artifactId>
-    <version>2-SNAPSHOT</version>
+    <version>3-SNAPSHOT</version>
     <relativePath>../../arch/ide/pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>consulo-sandbox-web</artifactId>
-  <version>2-SNAPSHOT</version>
+  <version>3-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <properties>
@@ -76,18 +76,7 @@
 
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-injecting-pico-impl</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-logging-slf4j-binding-impl</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-platform-base-plugin</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -97,27 +86,12 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-platform-web-plugin</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-web-ui-impl-server</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-web-platform-impl</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-web-lang-impl</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-trash-can</artifactId>
+      <artifactId>consulo-web-ide</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -132,7 +106,7 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-compiler-impl</artifactId>
+      <artifactId>consulo-util-interner</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -143,16 +117,6 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>consulo-util-dataholder</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-external-tools-api</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-external-tools-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -187,10 +151,24 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-external-service-impl</artifactId>
+      <artifactId>consulo-util-socket-connection</artifactId>
       <version>${project.version}</version>
     </dependency>
-
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-application-ui-impl</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-version-control-system-impl</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-virtual-file-watcher-impl</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
     <!--TODO [VISTALL] temp dependency-->
     <dependency>
@@ -278,10 +256,6 @@
       <artifactId>imgscalr-lib</artifactId>
     </dependency>
     <dependency>
-      <groupId>dk.brics.automaton</groupId>
-      <artifactId>automaton</artifactId>
-    </dependency>
-    <dependency>
       <groupId>consulo.internal</groupId>
       <artifactId>svg-salamander</artifactId>
     </dependency>
@@ -365,6 +339,11 @@
     <dependency>
       <groupId>org.jdom</groupId>
       <artifactId>jdom-xpath-jaxen</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>consulo.internal</groupId>
+      <artifactId>jakarta.inject-api</artifactId>
+      <scope>compile</scope>
     </dependency>
   </dependencies>
 </project>

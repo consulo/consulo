@@ -15,13 +15,9 @@
  */
 package consulo.container.impl.parser;
 
-import consulo.container.plugin.ComponentConfig;
-import consulo.container.plugin.PluginListenerDescriptor;
 import consulo.util.nodep.text.StringUtilRt;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -29,10 +25,9 @@ import java.util.*;
  * @since 2019-03-24
  */
 public class PluginBeanParser {
-  private static Set<String> ourAllowedRootTags = new HashSet<String>(Arrays.asList("consulo-plugin", "idea-plugin"));
+  private static Set<String> ourAllowedRootTags = new HashSet<String>(Arrays.asList("consulo-plugin"));
 
-  @Nullable
-  public static PluginBean parseBean(@Nonnull SimpleXmlElement rootTag, @Nullable String pluginId) {
+  public static PluginBean parseBean(SimpleXmlElement rootTag, String pluginId) {
     String rootTagName = rootTag.getName();
     if (!ourAllowedRootTags.contains(rootTagName)) {
       return null;
@@ -73,26 +68,6 @@ public class PluginBeanParser {
 
     pluginBean.imports = imports;
 
-    pluginBean.extensionPoints = expandChildren(rootTag, "extensionPoints");
-
-    List<SimpleXmlElement> extensionsTag = rootTag.getChildren("extensions");
-
-    List<ExtensionInfo> extensionInfos = new ArrayList<ExtensionInfo>();
-
-    for (SimpleXmlElement extensionElement : extensionsTag) {
-      // FIXME [VISTALL] rename later to pluginId?
-      String defaultExtensionNs = extensionElement.getAttributeValue("defaultExtensionNs");
-      if (defaultExtensionNs == null) {
-        defaultExtensionNs = pluginBean.id;
-      }
-
-      for (SimpleXmlElement childExtension : extensionElement.getChildren()) {
-        extensionInfos.add(new ExtensionInfo(defaultExtensionNs, childExtension));
-      }
-    }
-
-    pluginBean.extensions = extensionInfos;
-
     pluginBean.actions = expandChildren(rootTag, "actions");
 
     SimpleXmlElement vendorElement = rootTag.getChild("vendor");
@@ -103,19 +78,6 @@ public class PluginBeanParser {
       vendor.email = vendorElement.getAttributeValue("email");
 
       pluginBean.vendor = vendor;
-    }
-
-    List<PluginHelpSet> pluginHelpSets = new ArrayList<PluginHelpSet>();
-    for (SimpleXmlElement helpsetTag : rootTag.getChildren("helpset")) {
-      PluginHelpSet pluginHelpSet = new PluginHelpSet();
-      pluginHelpSet.file = helpsetTag.getAttributeValue("file");
-      pluginHelpSet.path = helpsetTag.getAttributeValue("path");
-
-      pluginHelpSets.add(pluginHelpSet);
-    }
-
-    if (!pluginHelpSets.isEmpty()) {
-      pluginBean.helpSets = pluginHelpSets;
     }
 
     List<PluginDependency> pluginDependencies = new ArrayList<PluginDependency>();
@@ -131,10 +93,6 @@ public class PluginBeanParser {
     if (!pluginDependencies.isEmpty()) {
       pluginBean.dependencies = pluginDependencies;
     }
-
-    pluginBean.applicationListeners = readListeners(rootTag, "applicationListeners");
-    pluginBean.projectListeners = readListeners(rootTag, "projectListeners");
-    pluginBean.moduleListeners = readListeners(rootTag, "moduleListeners");
 
     Map<String, Set<String>> permissions = new HashMap<String, Set<String>>();
     for (SimpleXmlElement permissionsElement : rootTag.getChildren("permissions")) {
@@ -162,7 +120,7 @@ public class PluginBeanParser {
       }
     }
 
-    if(!tags.isEmpty()) {
+    if (!tags.isEmpty()) {
       pluginBean.tags = tags;
     }
 
@@ -171,65 +129,13 @@ public class PluginBeanParser {
       incompatibleWith.add(incompatibleWithElement.getText());
     }
 
-    if(!incompatibleWith.isEmpty()) {
+    if (!incompatibleWith.isEmpty()) {
       pluginBean.incompatibleWith = incompatibleWith;
     }
 
-    // region deprecated stuff
-    List<ComponentConfig> appComponents = new ArrayList<ComponentConfig>();
-    for (SimpleXmlElement appComponentElements : rootTag.getChildren("application-components")) {
-      parseComponent(appComponentElements, appComponents);
-    }
-
-    if (!appComponents.isEmpty()) {
-      pluginBean.applicationComponents = appComponents;
-    }
-
-    List<ComponentConfig> projectComponents = new ArrayList<ComponentConfig>();
-    for (SimpleXmlElement appComponentElements : rootTag.getChildren("project-components")) {
-      parseComponent(appComponentElements, projectComponents);
-    }
-
-    if (!projectComponents.isEmpty()) {
-      pluginBean.projectComponents = projectComponents;
-    }
-
-    // endregion
-
-    return pluginBean;
+   return pluginBean;
   }
 
-  private static List<PluginListenerDescriptor> readListeners(SimpleXmlElement parent, String tagName) {
-    List<SimpleXmlElement> children = parent.getChildren(tagName);
-    if (children.isEmpty()) {
-      return Collections.emptyList();
-    }
-
-    List<PluginListenerDescriptor> list = new ArrayList<PluginListenerDescriptor>();
-
-    for (SimpleXmlElement listenersElement : children) {
-      for (SimpleXmlElement listenerElement : listenersElement.getChildren()) {
-        String implClass = listenerElement.getAttributeValue("class");
-        String topicClass = listenerElement.getAttributeValue("topic");
-        boolean activeInTestMode = Boolean.valueOf(listenerElement.getAttributeValue("activeInTestMode", "true"));
-        boolean activeInHeadlessMode = Boolean.valueOf(listenerElement.getAttributeValue("activeInHeadlessMode", "true"));
-
-        if (implClass == null) {
-          throw new IllegalArgumentException("'class' empty: " + listenerElement);
-        }
-
-        if (topicClass == null) {
-          throw new IllegalArgumentException("'topic' empty: " + listenerElement);
-        }
-
-        list.add(new PluginListenerDescriptor(implClass, topicClass, activeInTestMode, activeInHeadlessMode));
-      }
-    }
-
-    return list;
-  }
-
-  @Nonnull
   private static List<SimpleXmlElement> expandChildren(SimpleXmlElement element, String childTag) {
     List<SimpleXmlElement> list = Collections.emptyList();
 
@@ -245,23 +151,5 @@ public class PluginBeanParser {
     }
 
     return list;
-  }
-
-  private static void parseComponent(SimpleXmlElement componentsParent, List<ComponentConfig> configConsumer) {
-    for (SimpleXmlElement componentElement : componentsParent.getChildren("component")) {
-      ComponentConfig componentConfig = new ComponentConfig();
-      componentConfig.setHeadlessImplementationClass(componentElement.getChildText("headless-implementation-class"));
-      componentConfig.setImplementationClass(componentElement.getChildText("implementation-class"));
-      componentConfig.setInterfaceClass(componentElement.getChildText("interface-class"));
-
-      for (SimpleXmlElement optionElement : componentElement.getChildren("option")) {
-        String name = optionElement.getAttributeValue("name");
-        String value = optionElement.getAttributeValue("value");
-
-        componentConfig.options.put(name, value);
-      }
-
-      configConsumer.add(componentConfig);
-    }
   }
 }

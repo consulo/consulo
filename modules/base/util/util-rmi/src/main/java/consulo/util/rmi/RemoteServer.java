@@ -91,7 +91,7 @@ public class RemoteServer {
 
   private static void banJNDI() {
     if (System.getProperty(Context.INITIAL_CONTEXT_FACTORY) == null) {
-      System.setProperty(Context.INITIAL_CONTEXT_FACTORY, "com.intellij.execution.rmi.RemoteServer$Jndi");
+      System.setProperty(Context.INITIAL_CONTEXT_FACTORY, "consulo.util.rmi.RemoteServer$Jndi");
     }
   }
 

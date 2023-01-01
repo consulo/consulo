@@ -15,14 +15,15 @@
  */
 package consulo.sandboxPlugin.ide.compiler;
 
-import com.intellij.openapi.compiler.CompileContext;
-import com.intellij.openapi.compiler.CompileScope;
-import com.intellij.openapi.compiler.CompilerMessageCategory;
-import com.intellij.openapi.compiler.TranslatingCompiler;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.Chunk;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.compiler.CompileContext;
+import consulo.compiler.scope.CompileScope;
+import consulo.compiler.CompilerMessageCategory;
+import consulo.compiler.TranslatingCompiler;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.module.Module;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.util.collection.Chunk;
 import consulo.sandboxPlugin.lang.SandFileType;
 
 import javax.annotation.Nonnull;
@@ -31,6 +32,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 17.05.14
  */
+@ExtensionImpl
 public class SandCompiler implements TranslatingCompiler {
   private boolean myAddError = false;
 

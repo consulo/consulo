@@ -18,7 +18,7 @@ package consulo.sandboxPlugin.ide.module.extension;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.module.extension.MutableModuleExtension;
-import consulo.roots.ModuleRootLayer;
+import consulo.module.content.layer.ModuleRootLayer;
 import consulo.ui.CheckBox;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;

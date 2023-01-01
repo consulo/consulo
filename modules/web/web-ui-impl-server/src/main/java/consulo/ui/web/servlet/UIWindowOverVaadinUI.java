@@ -179,6 +179,11 @@ class UIWindowOverVaadinUI implements Window {
     Disposer.dispose(this);
   }
 
+  @Override
+  public boolean isActive() {
+    return true;
+  }
+
   @Nullable
   @Override
   public <T> T getUserData(@Nonnull Key<T> key) {

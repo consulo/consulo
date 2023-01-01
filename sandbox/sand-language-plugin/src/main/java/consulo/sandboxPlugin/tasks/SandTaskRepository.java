@@ -15,10 +15,10 @@
  */
 package consulo.sandboxPlugin.tasks;
 
-import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.tasks.Task;
-import com.intellij.tasks.impl.BaseRepository;
-import com.intellij.tasks.impl.LocalTaskImpl;
+import consulo.application.progress.ProgressIndicator;
+import consulo.task.Task;
+import consulo.task.BaseRepository;
+import consulo.ide.impl.idea.tasks.impl.LocalTaskImpl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

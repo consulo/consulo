@@ -6,13 +6,13 @@
   <parent>
     <groupId>consulo</groupId>
     <artifactId>arch.ide</artifactId>
-    <version>2-SNAPSHOT</version>
+    <version>3-SNAPSHOT</version>
     <relativePath>../arch/ide/pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>consulo-bundle</artifactId>
-  <version>2-SNAPSHOT</version>
+  <version>3-SNAPSHOT</version>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -30,8 +30,8 @@
               <descriptors>
                 <descriptor>${project.basedir}/src/assembly/desktop-awt-win.xml</descriptor>
                 <descriptor>${project.basedir}/src/assembly/desktop-awt-linux.xml</descriptor>
-                <descriptor>${project.basedir}/src/assembly/desktop-awt-mac.xml</descriptor>
-                
+                <descriptor>${project.basedir}/src/assembly/desktop-awt-mac-x86-64.xml</descriptor>
+
                 <descriptor>${project.basedir}/src/assembly/web.xml</descriptor>
               </descriptors>
             </configuration>
@@ -60,26 +60,14 @@
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-core</artifactId>
     </dependency>
-
     <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-injecting-pico-impl</artifactId>
-      <version>${project.version}</version>
+      <groupId>consulo.internal</groupId>
+      <artifactId>jakarta.inject-api</artifactId>
+      <scope>compile</scope>
     </dependency>
-
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>consulo-logging-slf4j-binding-impl</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-platform-base-plugin</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-platform-desktop-plugin</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -89,37 +77,22 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-desktop-platform-impl</artifactId>
+      <artifactId>consulo-desktop-ide-impl</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-desktop-awt-ide-impl</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-virtual-file-watcher-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>consulo-desktop-awt-hacking</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-desktop-lang-impl</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-desktop-ui-impl</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-desktop-graph-impl</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-desktop-ui-laf-impl</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-trash-can</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -144,22 +117,17 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-compiler-impl</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-compiler-build-ui-impl</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-duplicates-analysis</artifactId>
+      <artifactId>consulo-proxy</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>consulo-bootstrap</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-index-io</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -174,12 +142,17 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-util-socket-connection</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-util-concurrent</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-util-advanced-proxy</artifactId>
+      <artifactId>consulo-util-interner</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -209,37 +182,7 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-web-lang-impl</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-web-platform-api</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-web-platform-impl</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-platform-web-plugin</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-external-tools-api</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-external-tools-impl</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-desktop-base-laf-icon-library</artifactId>
+      <artifactId>consulo-web-ide</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -249,70 +192,59 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-build-ui-api</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-build-ui-impl</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-util-collection-via-trove</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-external-service-impl</artifactId>
+      <artifactId>consulo-platform-api</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-task-api</artifactId>
+      <artifactId>consulo-platform-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-task-impl</artifactId>
+      <artifactId>consulo-application-ui-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-runtime-api</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-runtime-impl</artifactId>
+      <artifactId>consulo-version-control-system-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
 
     <dependency>
       <groupId>consulo.internal.sound</groupId>
       <artifactId>jogg</artifactId>
-      <version>${project.version}</version>
+      <version>2-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>consulo.internal.sound</groupId>
       <artifactId>jvorbis</artifactId>
-      <version>${project.version}</version>
+      <version>2-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>consulo.internal.sound</groupId>
       <artifactId>javazoom.jlayer</artifactId>
-      <version>${project.version}</version>
+      <version>2-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>consulo.internal.sound</groupId>
       <artifactId>javazoom.mp3</artifactId>
-      <version>${project.version}</version>
+      <version>2-SNAPSHOT</version>
     </dependency>
-    
+
     <!--optional dependency-->
     <dependency>
       <groupId>net.java.dev.jna</groupId>
       <artifactId>jna-jpms</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>jgraph</groupId>
+      <artifactId>jgraph</artifactId>
     </dependency>
     <dependency>
       <groupId>net.java.dev.jna</groupId>
@@ -385,10 +317,6 @@
     <dependency>
       <groupId>org.imgscalr</groupId>
       <artifactId>imgscalr-lib</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>dk.brics.automaton</groupId>
-      <artifactId>automaton</artifactId>
     </dependency>
     <dependency>
       <groupId>consulo.internal</groupId>
@@ -470,6 +398,10 @@
     <dependency>
       <groupId>org.jvnet.winp</groupId>
       <artifactId>winp</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.ibm.icu</groupId>
+      <artifactId>icu4j</artifactId>
     </dependency>
     <dependency>
       <groupId>org.jdom</groupId>

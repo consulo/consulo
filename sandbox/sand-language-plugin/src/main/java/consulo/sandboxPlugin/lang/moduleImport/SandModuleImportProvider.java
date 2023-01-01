@@ -15,17 +15,18 @@
  */
 package consulo.sandboxPlugin.lang.moduleImport;
 
-import com.intellij.icons.AllIcons;
-import com.intellij.openapi.application.WriteAction;
-import com.intellij.openapi.module.ModifiableModuleModel;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ModifiableRootModel;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.vfs.VfsUtil;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.AllIcons;
+import consulo.application.WriteAction;
+import consulo.module.ModifiableModuleModel;
+import consulo.module.Module;
+import consulo.project.Project;
+import consulo.module.content.layer.ModifiableRootModel;
+import consulo.module.content.ModuleRootManager;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.moduleImport.ModuleImportContext;
-import consulo.moduleImport.ModuleImportProvider;
+import consulo.ide.moduleImport.ModuleImportContext;
+import consulo.ide.moduleImport.ModuleImportProvider;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -36,6 +37,7 @@ import java.util.function.Consumer;
  * @author VISTALL
  * @since 2019-08-26
  */
+@ExtensionImpl
 public class SandModuleImportProvider implements ModuleImportProvider<ModuleImportContext> {
   @Nonnull
   @Override

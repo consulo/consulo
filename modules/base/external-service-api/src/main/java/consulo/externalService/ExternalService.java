@@ -15,7 +15,7 @@
  */
 package consulo.externalService;
 
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.ApplicationManager;
 import consulo.application.ApplicationProperties;
 import consulo.localize.LocalizeValue;
 import consulo.util.lang.ThreeState;

@@ -15,22 +15,23 @@
  */
 package consulo.sandboxPlugin.ide.remoteServer;
 
-import com.intellij.icons.AllIcons;
-import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.ModulePointerManager;
-import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.options.SettingsEditor;
-import com.intellij.openapi.options.UnnamedConfigurable;
-import com.intellij.openapi.project.Project;
-import com.intellij.remoteServer.ServerType;
-import com.intellij.remoteServer.configuration.deployment.DeploymentConfiguration;
-import com.intellij.remoteServer.configuration.deployment.DeploymentConfigurator;
-import com.intellij.remoteServer.configuration.deployment.DeploymentSource;
-import com.intellij.remoteServer.impl.configuration.deploySource.impl.ModuleDeploymentSourceImpl;
-import com.intellij.remoteServer.runtime.ServerConnector;
-import com.intellij.remoteServer.runtime.ServerTaskExecutor;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.AllIcons;
+import consulo.component.persist.PersistentStateComponent;
+import consulo.module.Module;
+import consulo.module.ModuleManager;
+import consulo.module.ModulePointerManager;
+import consulo.configurable.ConfigurationException;
+import consulo.execution.configuration.ui.SettingsEditor;
+import consulo.configurable.UnnamedConfigurable;
+import consulo.project.Project;
+import consulo.ide.impl.idea.remoteServer.ServerType;
+import consulo.ide.impl.idea.remoteServer.configuration.deployment.DeploymentConfiguration;
+import consulo.ide.impl.idea.remoteServer.configuration.deployment.DeploymentConfigurator;
+import consulo.ide.impl.idea.remoteServer.configuration.deployment.DeploymentSource;
+import consulo.ide.impl.idea.remoteServer.impl.configuration.deploySource.impl.ModuleDeploymentSourceImpl;
+import consulo.ide.impl.idea.remoteServer.runtime.ServerConnector;
+import consulo.ide.impl.idea.remoteServer.runtime.ServerTaskExecutor;
 import consulo.ui.Component;
 import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -47,6 +48,7 @@ import java.util.stream.Collectors;
  * @author VISTALL
  * @since 2019-02-25
  */
+@ExtensionImpl
 public class SandServerType extends ServerType<SandServerConfiguration> {
   public SandServerType() {
     super("sand");

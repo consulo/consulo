@@ -163,7 +163,7 @@ public abstract class ConcurrentRefHashMap<K, V> extends AbstractMap<K, V> imple
     @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
     @Override
     public boolean equals(Object o) {
-      return o.equals(this); // see com.intellij.util.containers.ConcurrentSoftHashMap.SoftKey or com.intellij.util.containers.ConcurrentWeakHashMap.WeakKey
+      return o.equals(this); // see consulo.ide.impl.idea.util.containers.ConcurrentSoftHashMap.SoftKey or consulo.ide.impl.idea.util.containers.ConcurrentWeakHashMap.WeakKey
     }
 
     @Override
@@ -388,7 +388,7 @@ public abstract class ConcurrentRefHashMap<K, V> extends AbstractMap<K, V> imple
     return myMap.replace(createKeyReference(key), value);
   }
 
-  // MAKE SURE IT CONSISTENT WITH com.intellij.util.containers.ConcurrentHashMap
+  // MAKE SURE IT CONSISTENT WITH consulo.ide.impl.idea.util.containers.ConcurrentHashMap
   @Override
   public int hashCode(final K object) {
     int h = object.hashCode();

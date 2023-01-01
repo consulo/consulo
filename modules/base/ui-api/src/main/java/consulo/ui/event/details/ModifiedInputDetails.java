@@ -15,6 +15,8 @@
  */
 package consulo.ui.event.details;
 
+import consulo.ui.Position2D;
+
 import javax.annotation.Nonnull;
 import java.util.EnumSet;
 import java.util.Set;
@@ -36,8 +38,8 @@ public abstract class ModifiedInputDetails extends InputDetails {
 
   private final EnumSet<Modifier> myModifiers;
 
-  public ModifiedInputDetails(int x, int y, @Nonnull EnumSet<Modifier> modifiers) {
-    super(x, y);
+  public ModifiedInputDetails(@Nonnull Position2D position, @Nonnull Position2D positionOnScreen, @Nonnull EnumSet<Modifier> modifiers) {
+    super(position, positionOnScreen);
     myModifiers = modifiers;
   }
 

@@ -1,9 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.util.nodep.classloader;
 
-import javax.annotation.Nonnull;
-
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.net.URL;
 
@@ -27,10 +24,8 @@ abstract class Loader {
     return myURL;
   }
 
-  @Nullable
   abstract Resource getResource(String name);
 
-  @Nonnull
   abstract ClasspathCache.LoaderData buildData() throws IOException;
 
   int getIndex() {

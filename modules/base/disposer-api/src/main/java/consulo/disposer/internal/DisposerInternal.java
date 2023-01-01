@@ -15,13 +15,12 @@
  */
 package consulo.disposer.internal;
 
-import consulo.annotation.ReviewAfterMigrationToJRE;
 import consulo.disposer.Disposable;
 import consulo.disposer.TraceableDisposable;
+import consulo.disposer.util.DisposableList;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Iterator;
 import java.util.ServiceLoader;
 
 /**
@@ -55,14 +54,13 @@ public abstract class DisposerInternal {
   public abstract <T extends Disposable> T findRegisteredObject(@Nonnull Disposable parentDisposable, @Nonnull T object);
 
   @Nonnull
-  @ReviewAfterMigrationToJRE(value = 9, description = "Use consulo.util.ServiceLoaderUtil")
+  public abstract <T> DisposableList<T> createList();
+
+  public abstract boolean tryRegister(@Nonnull Disposable parent, @Nonnull Disposable child);
+
+  @Nonnull
   private static <T> T loadSingleOrError(@Nonnull Class<T> clazz) {
-    ServiceLoader<T> serviceLoader = ServiceLoader.load(clazz, clazz.getClassLoader());
-    Iterator<T> iterator = serviceLoader.iterator();
-    if (iterator.hasNext()) {
-      return iterator.next();
-    }
-    throw new Error("Unable to find '" + clazz.getName() + "' implementation");
+    return ServiceLoader.load(clazz, clazz.getClassLoader()).findFirst().get();
   }
 }
 

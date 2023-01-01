@@ -15,11 +15,12 @@
  */
 package consulo.sandboxPlugin.ide.run;
 
-import com.intellij.execution.configurations.ConfigurationFactory;
-import com.intellij.execution.configurations.ConfigurationType;
-import com.intellij.execution.configurations.RunConfiguration;
-import com.intellij.icons.AllIcons;
-import com.intellij.openapi.project.Project;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.execution.configuration.ConfigurationFactory;
+import consulo.execution.configuration.ConfigurationType;
+import consulo.execution.configuration.RunConfiguration;
+import consulo.application.AllIcons;
+import consulo.project.Project;
 import consulo.module.extension.ModuleExtensionHelper;
 import consulo.sandboxPlugin.ide.module.extension.SandModuleExtension;
 import consulo.ui.image.Image;
@@ -30,6 +31,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 04.06.14
  */
+@ExtensionImpl
 public class SandConfigurationType implements ConfigurationType {
   private final ConfigurationFactory myConfigurationFactory;
 

@@ -15,7 +15,6 @@
  */
 package consulo.ui.impl;
 
-import com.intellij.util.containers.ContainerUtil;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.Alert;
@@ -123,7 +122,7 @@ public abstract class BaseAlert<V> implements Alert<V> {
     if (myButtons.isEmpty()) {
       throw new IllegalArgumentException();
     }
-    ContainerUtil.getLastItem(myButtons).myDefault = true;
+    myButtons.get(myButtons.size() - 1).myDefault = true;
     return this;
   }
 
@@ -133,7 +132,7 @@ public abstract class BaseAlert<V> implements Alert<V> {
     if (myButtons.isEmpty()) {
       throw new IllegalArgumentException();
     }
-    myExitValue = ContainerUtil.getLastItem(myButtons).myValue;
+    myExitValue = myButtons.get(myButtons.size() - 1).myValue;
     return this;
   }
 

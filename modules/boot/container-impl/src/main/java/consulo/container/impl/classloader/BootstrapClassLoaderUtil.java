@@ -17,17 +17,15 @@ package consulo.container.impl.classloader;
 
 import consulo.container.StartupError;
 import consulo.container.boot.ContainerStartup;
-import consulo.container.boot.internal.PathManagerHolder;
+import consulo.container.internal.PathManagerHolder;
 import consulo.container.impl.ContainerLogger;
 import consulo.container.impl.PluginDescriptorImpl;
 import consulo.container.impl.PluginDescriptorLoader;
 import consulo.container.impl.PluginHolderModificator;
-import consulo.container.impl.securityManager.impl.ConsuloSecurityManager;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginIds;
 import consulo.container.util.StatCollector;
-import consulo.util.nodep.SystemInfoRt;
 
-import javax.annotation.Nonnull;
 import java.io.File;
 import java.net.URL;
 import java.util.*;
@@ -36,25 +34,24 @@ import java.util.*;
  * @author max
  */
 public class BootstrapClassLoaderUtil {
-  private static final String CONSULO_PLATFORM_BASE = "consulo.platform.base";
+  private static final String CONSULO_BASE = PluginIds.CONSULO_BASE.toString();
 
-  @Nonnull
   public static ContainerStartup buildContainerStartup(Map<String, Object> args, File modulesDirectory, ContainerLogger containerLogger, Java9ModuleProcessor processor) throws Exception {
     StatCollector stat = (StatCollector)args.get(ContainerStartup.STAT_COLLECTOR);
 
     Runnable bootInitialize = stat.mark("boot.classloader.initialize");
 
-    Runnable mark = stat.mark(CONSULO_PLATFORM_BASE + ".initialize");
+    Runnable mark = stat.mark(CONSULO_BASE + ".initialize");
     PluginDescriptorImpl base = initializePlatformBase(modulesDirectory, containerLogger, processor);
     mark.run();
 
-    List<PluginDescriptorImpl> descriptors = new ArrayList<PluginDescriptorImpl>();
+    List<PluginDescriptorImpl> descriptors = new ArrayList<>();
     descriptors.add(base);
 
     File[] files = modulesDirectory.listFiles();
     assert files != null;
     for (File moduleDirectory : files) {
-      if (CONSULO_PLATFORM_BASE.equals(moduleDirectory.getName())) {
+      if (CONSULO_BASE.equals(moduleDirectory.getName())) {
         continue;
       }
 
@@ -68,10 +65,10 @@ public class BootstrapClassLoaderUtil {
 
       ClassLoader basePluginClassLoader = base.getPluginClassLoader();
 
-      ClassLoader loader = PluginClassLoaderFactory.create(filesToUrls(descriptor.getClassPath()), basePluginClassLoader, descriptor);
+      ClassLoader loader = PluginClassLoaderFactory.create(Collections.emptySet(), basePluginClassLoader, descriptor);
 
-      if (SystemInfoRt.IS_AT_LEAST_JAVA9) {
-        descriptor.setModuleLayer(Java9ModuleInitializer.initializeEtcModules(Collections.singletonList(base.getModuleLayer()), descriptor.getClassPath(), loader));
+      if (processor.isEnabledModules()) {
+        descriptor.setModuleLayer(Java9ModuleInitializer.initializeEtcModules(Collections.singletonList(base.getModuleLayer()), descriptor.getClassPath(Collections.emptySet()), loader));
       }
 
       descriptors.add(descriptor);
@@ -85,14 +82,20 @@ public class BootstrapClassLoaderUtil {
     PluginLoadStatistics.initialize(false);
 
     for (PluginDescriptor pluginDescriptor : PluginHolderModificator.getPlugins()) {
-      ServiceLoader<ContainerStartup> loader = ServiceLoader.load(ContainerStartup.class, pluginDescriptor.getPluginClassLoader());
+      ServiceLoader<ContainerStartup> loader;
+      ModuleLayer moduleLayer = pluginDescriptor.getModuleLayer();
+      if (moduleLayer != null) {
+        loader = ServiceLoader.load(moduleLayer, ContainerStartup.class);
+      }
+      else {
+        loader= ServiceLoader.load(ContainerStartup.class, pluginDescriptor.getPluginClassLoader());
+      }
 
-      Iterator<ContainerStartup> iterator = loader.iterator();
+      Optional<ContainerStartup> first = loader.findFirst();
+      if (first.isPresent()) {
+        ContainerStartup startup = first.get();
 
-      if (iterator.hasNext()) {
         bootInitialize.run();
-
-        ContainerStartup startup = iterator.next();
 
         PathManagerHolder.setInstance(startup.createPathManager(args));
 
@@ -103,22 +106,21 @@ public class BootstrapClassLoaderUtil {
     throw new StartupError("Instance of ContainerStartup not found");
   }
 
-  @Nonnull
   private static PluginDescriptorImpl initializePlatformBase(File modulesDirectory, ContainerLogger containerLogger, Java9ModuleProcessor processor) throws Exception {
-    File platformBaseDirectory = new File(modulesDirectory, CONSULO_PLATFORM_BASE);
+    File platformBaseDirectory = new File(modulesDirectory, CONSULO_BASE);
 
     PluginDescriptorImpl platformBasePlugin = PluginDescriptorLoader.loadDescriptor(platformBaseDirectory, false, true, containerLogger);
 
     if (platformBasePlugin == null) {
-      throw new StartupError("No base module. Broken installation");
+      throw new StartupError("No base module. Broken installation. Path: " + platformBaseDirectory);
     }
 
     ClassLoader parent = BootstrapClassLoaderUtil.class.getClassLoader();
 
-    ClassLoader loader = PluginClassLoaderFactory.create(filesToUrls(platformBasePlugin.getClassPath()), parent, platformBasePlugin);
+    ClassLoader loader = PluginClassLoaderFactory.create(Collections.emptySet(), parent, platformBasePlugin);
 
-    if (SystemInfoRt.IS_AT_LEAST_JAVA9) {
-      platformBasePlugin.setModuleLayer(Java9ModuleInitializer.initializeBaseModules(platformBasePlugin.getClassPath(), loader, containerLogger, processor));
+    if (processor.isEnabledModules()) {
+      platformBasePlugin.setModuleLayer(Java9ModuleInitializer.initializeBaseModules(platformBasePlugin.getClassPath(Collections.emptySet()), loader, containerLogger, processor));
     }
 
     platformBasePlugin.setLoader(loader);
@@ -128,16 +130,6 @@ public class BootstrapClassLoaderUtil {
     return platformBasePlugin;
   }
 
-  private static List<URL> filesToUrls(List<File> files) throws Exception {
-    List<URL> urls = new ArrayList<URL>(files.size());
-
-    for (int i = 0; i < files.size(); i++) {
-      urls.add(files.get(i).toURI().toURL());
-    }
-    return urls;
-  }
-
-  @Nonnull
   public static File getModulesDirectory() throws Exception {
     Class<BootstrapClassLoaderUtil> aClass = BootstrapClassLoaderUtil.class;
 

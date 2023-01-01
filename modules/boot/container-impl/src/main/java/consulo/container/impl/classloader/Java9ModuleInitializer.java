@@ -1,243 +1,153 @@
-/*
- * Copyright 2013-2019 consulo.io
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package consulo.container.impl.classloader;
 
 import consulo.container.impl.ContainerLogger;
 
 import java.io.File;
-import java.lang.reflect.Array;
-import java.lang.reflect.InvocationHandler;
+import java.lang.module.Configuration;
+import java.lang.module.ModuleDescriptor;
+import java.lang.module.ModuleFinder;
+import java.lang.module.ModuleReference;
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
+import java.nio.file.Path;
 import java.util.*;
 
 /**
  * @author VISTALL
+ * @implNote Since each plugin loaded in own plugin classloader, and own module layer, different modules can't export to top module on hierarchy
+ * (or from different module layer).
+ * That why we hack impl method for exports, and trying add exports to module from different classloader. Dirty, but for now it's only way for it.
+ * We can't create one module layer for all plugins in runtime.
+ * Also we can't call some addExports from target module (due call stack check)
  * @since 2019-11-19
  */
 public class Java9ModuleInitializer {
-  private static final Method java_io_File_toPath = findMethod(File.class, "toPath");
+  private static Method ourAddExportsImpl;
 
-  public static final Class java_nio_file_Path = findClass("java.nio.file.Path");
-  public static final Class java_lang_Module = findClass("java.lang.Module");
-  public static final Class java_lang_module_ModuleFinder = findClass("java.lang.module.ModuleFinder");
-  public static final Class java_lang_module_ModuleReference = findClass("java.lang.module.ModuleReference");
-  public static final Class java_lang_module_Configuration = findClass("java.lang.module.Configuration");
-  public static final Class java_lang_module_ModuleDescriptor = findClass("java.lang.module.ModuleDescriptor");
-  public static final Class java_lang_ModuleLayer = findClass("java.lang.ModuleLayer");
-  public static final Class java_lang_ModuleLayer$Controller = findClass("java.lang.ModuleLayer$Controller");
-  public static final Class java_util_function_Function = findClass("java.util.function.Function");
-  public static final Class java_util_Optional = findClass("java.util.Optional");
+  static {
+    try {
+      ourAddExportsImpl = Module.class.getDeclaredMethod("implAddExports", String.class, Module.class);
+      ourAddExportsImpl.setAccessible(true);
+    }
+    catch (Exception ignored) {
+    }
+  }
 
-  public static final Method java_lang_ModuleLayer_boot = findMethod(java_lang_ModuleLayer, "boot");
-  public static final Method java_lang_ModuleLayer_findModule = findMethod(java_lang_ModuleLayer, "findModule", String.class);
-  public static final Method java_lang_ModuleLayer_configuration = findMethod(java_lang_ModuleLayer, "configuration");
-  public static final Method java_lang_ModuleLayer_defineModules = findMethod(java_lang_ModuleLayer, "defineModules", java_lang_module_Configuration, List.class, java_util_function_Function);
-  public static final Method java_lang_ModuleLayer$Controller_layout = findMethod(java_lang_ModuleLayer$Controller, "layer");
-
-  public static final Method java_lang_Module_addOpens = findMethod(java_lang_Module, "addOpens", String.class, java_lang_Module);
-
-  public static final Method java_util_Optional_get = findMethod(java_util_Optional, "get");
-  public static final Method java_lang_module_ModuleFinder_of = findMethod(java_lang_module_ModuleFinder, "of", Array.newInstance(java_nio_file_Path, 0).getClass());
-  public static final Method java_lang_module_ModuleFinder_findAll = findMethod(java_lang_module_ModuleFinder, "findAll");
-  public static final Method java_lang_module_ModuleReference_descriptor = findMethod(java_lang_module_ModuleReference, "descriptor");
-  public static final Method java_lang_module_ModuleDescriptor_name = findMethod(java_lang_module_ModuleDescriptor, "name");
-  public static final Method java_lang_module_Configuration_resolve =
-          findMethod(java_lang_module_Configuration, "resolve", java_lang_module_ModuleFinder, List.class, java_lang_module_ModuleFinder, Collection.class);
-
-  private static final Object empyArray_java_nio_file_Path = Array.newInstance(java_nio_file_Path, 0);
-
-  private static final boolean ourConsuloModulePathBoot = Boolean.getBoolean("consulo.module.path.boot");
-
-  private static Object moduleFinderOf(List<File> files) {
-    Object paths = Array.newInstance(java_nio_file_Path, files.size());
+  private static ModuleFinder moduleFinderOf(List<File> files) {
+    Path[] paths = new Path[files.size()];
     for (int i = 0; i < files.size(); i++) {
       File file = files.get(i);
 
-      Array.set(paths, i, instanceInvoke(java_io_File_toPath, file));
+      paths[i] = file.toPath();
     }
 
-    return staticInvoke(java_lang_module_ModuleFinder_of, paths);
+    return ModuleFinder.of(paths);
   }
 
-  private static Object directFunction(final Object returnValue) {
-    return Proxy.newProxyInstance(Java9ModuleInitializer.class.getClassLoader(), new Class[]{java_util_function_Function}, new InvocationHandler() {
-      @Override
-      public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        if ("apply".equals(method.getName())) {
-          return returnValue;
+  public static ModuleLayer initializeBaseModules(List<File> files, final ClassLoader targetClassLoader, ContainerLogger containerLogger, Java9ModuleProcessor processor) {
+    ModuleFinder moduleFinder = moduleFinderOf(files);
+
+    Set<String> toResolve = new LinkedHashSet<>();
+
+    Set<ModuleReference> findAll = moduleFinder.findAll();
+
+    for (ModuleReference moduleReference : findAll) {
+      ModuleDescriptor moduleDescriptor = moduleReference.descriptor();
+
+      String moduleName = moduleDescriptor.name();
+
+      toResolve.add(moduleName);
+    }
+
+    ModuleLayer bootModuleLayer = ModuleLayer.boot();
+
+    Configuration confBootModuleLayer = bootModuleLayer.configuration();
+
+    Configuration configuration = Configuration.resolve(moduleFinder, List.of(confBootModuleLayer), ModuleFinder.of(), new ArrayList<>(toResolve));
+
+    ModuleLayer.Controller controller = ModuleLayer.defineModules(configuration, List.of(bootModuleLayer), s -> targetClassLoader);
+
+    ArrayList<Java9ModuleProcessor.Opens> toOpenMap = new ArrayList<>();
+    processor.process(toOpenMap);
+
+    for (Java9ModuleProcessor.Opens opens : toOpenMap) {
+      Module fromModule = bootModuleLayer.findModule(opens.fromModuleName).get();
+
+      Module toModule = controller.layer().findModule(opens.toModuleName).get();
+
+      fromModule.addOpens(opens.packageName, toModule);
+    }
+
+    Module containerImpl = bootModuleLayer.findModule("consulo.container.impl").get();
+    Module ideImpl = controller.layer().findModule("consulo.ide.impl").get();
+    Module applicationImpl = controller.layer().findModule("consulo.application.impl").get();
+    Module componentImpl = controller.layer().findModule("consulo.component.impl").get();
+
+    containerImpl.addExports("consulo.container.impl.securityManager.impl", applicationImpl);
+
+    containerImpl.addExports("consulo.container.impl", applicationImpl);
+    containerImpl.addExports("consulo.container.impl", componentImpl);
+    containerImpl.addExports("consulo.container.impl", ideImpl);
+
+    containerImpl.addExports("consulo.container.impl.classloader", ideImpl);
+    containerImpl.addExports("consulo.container.impl.classloader", applicationImpl);
+
+    containerImpl.addExports("consulo.container.impl.parser", componentImpl);
+    containerImpl.addExports("consulo.container.impl.parser", applicationImpl);
+
+    return controller.layer();
+  }
+
+  public static ModuleLayer initializeEtcModules(List<ModuleLayer> moduleLayers, List<File> files, final ClassLoader targetClassLoader) {
+    ModuleFinder moduleFinder = moduleFinderOf(files);
+
+    Set<String> toResolve = new LinkedHashSet<>();
+
+    Set<ModuleReference> findAll = moduleFinder.findAll();
+
+    for (ModuleReference moduleReference : findAll) {
+      ModuleDescriptor moduleDescriptor = moduleReference.descriptor();
+
+      String moduleName = moduleDescriptor.name();
+
+      toResolve.add(moduleName);
+    }
+
+    List<Configuration> layerConfiguration = new ArrayList<>(moduleLayers.size());
+    for (ModuleLayer moduleLayer : moduleLayers) {
+      layerConfiguration.add(moduleLayer.configuration());
+    }
+
+    Configuration configuration = Configuration.resolve(moduleFinder, layerConfiguration, ModuleFinder.of(), new ArrayList<>(toResolve));
+
+    ModuleLayer.Controller controller = ModuleLayer.defineModules(configuration, moduleLayers, s -> targetClassLoader);
+
+    Map<String, Module> insideModules = new HashMap<>();
+    for (Module module : controller.layer().modules()) {
+      insideModules.put(module.getName(), module);
+    }
+
+    for (ModuleLayer moduleLayer : moduleLayers) {
+      Set<Module> modules = moduleLayer.modules();
+      for (Module module : modules) {
+        ModuleDescriptor descriptor = module.getDescriptor();
+
+        Set<ModuleDescriptor.Exports> exports = descriptor.exports();
+        for (ModuleDescriptor.Exports export : exports) {
+          for (String targetModule : export.targets()) {
+            Module insideModule = insideModules.get(targetModule);
+            if (insideModule != null) {
+              try {
+                if (ourAddExportsImpl != null) {
+                  ourAddExportsImpl.invoke(module, export.source(), insideModule);
+                }
+              }
+              catch (Exception ignored) {
+              }
+            }
+          }
         }
-        throw new UnsupportedOperationException(method.getName());
-      }
-    });
-  }
-
-  /**
-   * @return ModuleLayer
-   */
-  public static Object initializeBaseModules(List<File> files, final ClassLoader targetClassLoader, ContainerLogger containerLogger, Java9ModuleProcessor processor) {
-    Object moduleFinder = moduleFinderOf(files);
-
-    List<String> toResolve = new ArrayList<String>();
-
-    containerLogger.info("Java 9 modules: " + (ourConsuloModulePathBoot ? "enabled" : "disabled"));
-    if (ourConsuloModulePathBoot) {
-      toResolve.add("jakarta.inject");
-      toResolve.add("jsr305");
-      toResolve.add("org.slf4j");
-
-      // jna provide dependency to desktop, need version without desktop dep?
-      toResolve.add("com.sun.jna");
-      toResolve.add("com.sun.jna.platform");
-
-      //toResolve.add("org.apache.commons.compress");
-      toResolve.add("org.apache.logging.log4j");
-      // consulo internal
-      toResolve.add("org.jdom");
-      toResolve.add("gnu.trove");
-      toResolve.add("kava.beans");
-      // google
-      //toResolve.add("com.google.common");
-      toResolve.add("com.google.gson");
-
-      toResolve.add("consulo.annotation");
-      toResolve.add("consulo.logging.api");
-      //toResolve.add("consulo.injecting.api");
-      toResolve.add("consulo.disposer.api");
-      toResolve.add("consulo.localize.api");
-
-      toResolve.add("consulo.injecting.pico.impl");
-
-      toResolve.add("consulo.hacking.java.base");
-
-      toResolve.add("consulo.util.lang");
-      toResolve.add("consulo.util.collection");
-      toResolve.add("consulo.util.collection.primitive");
-      toResolve.add("consulo.util.concurrent");
-      toResolve.add("consulo.util.io");
-      toResolve.add("consulo.util.serializer");
-      toResolve.add("consulo.util.rmi");
-      toResolve.add("consulo.util.jdom");
-      toResolve.add("consulo.util.dataholder");
-
-      //toResolve.add("jakarta.activation");
-      // requires java.desktop???
-      //toResolve.add("java.xml.bind");
-
-      toResolve.add("consulo.ui.api");
-      //toResolve.add("svg.salamander");
-
-      processor.addBaseResolveModules(toResolve);
-
-      Set findAll = instanceInvoke(java_lang_module_ModuleFinder_findAll, moduleFinder);
-
-      for (Object moduleReference : findAll) {
-        Object moduleDescriptor = instanceInvoke(java_lang_module_ModuleReference_descriptor, moduleReference);
-
-        String moduleName = instanceInvoke(java_lang_module_ModuleDescriptor_name, moduleDescriptor);
-
-        if (!toResolve.contains(moduleName)) {
-          containerLogger.warn("Module '" + moduleName + "' is not resolved");
-        }
       }
     }
-
-    Object bootModuleLayer = staticInvoke(java_lang_ModuleLayer_boot);
-
-    Object confBootModuleLayer = instanceInvoke(java_lang_ModuleLayer_configuration, bootModuleLayer);
-
-    Object configuration = staticInvoke(java_lang_module_Configuration_resolve, moduleFinder, Collections.singletonList(confBootModuleLayer),
-                                        staticInvoke(java_lang_module_ModuleFinder_of, empyArray_java_nio_file_Path), toResolve);
-
-    Object functionLambda = directFunction(targetClassLoader);
-
-    Object controller = staticInvoke(java_lang_ModuleLayer_defineModules, configuration, Collections.singletonList(bootModuleLayer), functionLambda);
-
-    if (ourConsuloModulePathBoot) {
-      processor.process(bootModuleLayer, controller);
-    }
-
-    return instanceInvoke(java_lang_ModuleLayer$Controller_layout, controller);
-  }
-
-  public static Object initializeEtcModules(List<Object> moduleLayers, List<File> files, final ClassLoader targetClassLoader) {
-    Object moduleFinder = moduleFinderOf(files);
-
-    List<String> toResolve = new ArrayList<String>();
-
-    //TODO [VISTALL] we need resolve all modules, but for now - nothing
-
-    List<Object> layerConfiguration = new ArrayList<Object>(moduleLayers.size());
-    for (Object moduleLayer : moduleLayers) {
-      layerConfiguration.add(instanceInvoke(java_lang_ModuleLayer_configuration, moduleLayer));
-    }
-
-    Object configuration =
-            staticInvoke(java_lang_module_Configuration_resolve, moduleFinder, layerConfiguration, staticInvoke(java_lang_module_ModuleFinder_of, empyArray_java_nio_file_Path), toResolve);
-
-    Object functionLambda = directFunction(targetClassLoader);
-
-    Object controller = staticInvoke(java_lang_ModuleLayer_defineModules, configuration, moduleLayers, functionLambda);
-
-    return instanceInvoke(java_lang_ModuleLayer$Controller_layout, controller);
-  }
-
-  public static <T> T findModuleUnwrap(Object moduleLayer, String moduleName) {
-    Object optionalValue = instanceInvoke(java_lang_ModuleLayer_findModule, moduleLayer, moduleName);
-
-    return instanceInvoke(java_util_Optional_get, optionalValue);
-  }
-
-  @SuppressWarnings("unchecked")
-  public static <T> T instanceInvoke(Method method, Object instance, Object... args) {
-    try {
-      return (T)method.invoke(instance, args);
-    }
-    catch (Throwable e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  @SuppressWarnings("unchecked")
-  public static <T> T staticInvoke(Method method, Object... args) {
-    try {
-      return (T)method.invoke(null, args);
-    }
-    catch (Throwable e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  private static Method findMethod(Class<?> cls, String methodName, Class... args) {
-    try {
-      Method declaredMethod = cls.getDeclaredMethod(methodName, args);
-      declaredMethod.setAccessible(true);
-      return declaredMethod;
-    }
-    catch (Throwable e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  private static Class findClass(String cls) {
-    try {
-      return Class.forName(cls);
-    }
-    catch (ClassNotFoundException e) {
-      throw new RuntimeException(e);
-    }
+    return controller.layer();
   }
 }

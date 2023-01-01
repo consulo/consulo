@@ -15,20 +15,20 @@
  */
 package consulo.logging.impl.log4j2;
 
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationInfo;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.diagnostic.IdeaLoggingEvent;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.application.internal.ApplicationInfo;
+import consulo.application.util.logging.IdeaLoggingEvent;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
+import consulo.ide.impl.actionSystem.impl.LastActionTracker;
 import consulo.logging.Logger;
 import consulo.logging.LoggerLevel;
 import consulo.platform.Platform;
-import consulo.platform.impl.action.LastActionTracker;
+import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.ControlFlowException;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.ThreeState;
 import consulo.util.lang.reflect.ReflectionUtil;
 import org.apache.logging.log4j.Level;
@@ -106,12 +106,7 @@ public class Log4J2Logger implements Logger {
     org.apache.logging.log4j.Logger logger = logger();
     
     if (t instanceof ControlFlowException) {
-      logger.error(new Throwable("Do not log ProcessCanceledException").initCause(t));
-      throw (RuntimeException)t;
-    }
-
-    if (t != null && t.getClass().getName().contains("ReparsedSuccessfullyException")) {
-      logger.error(new Throwable("Do not log ReparsedSuccessfullyException").initCause(t));
+      logger.error(new Throwable("Do not log " + t).initCause(t));
       throw (RuntimeException)t;
     }
 
@@ -147,8 +142,8 @@ public class Log4J2Logger implements Logger {
         logger.error("Last Action: " + lastPreformedActionId);
       }
 
-      CommandProcessor commandProcessor = CommandProcessor.getInstance();
-      final String currentCommandName = commandProcessor.getCurrentCommandName();
+      CommandProcessor commandProcessor = application.getInstanceIfCreated(CommandProcessor.class);
+      final String currentCommandName = commandProcessor == null ? null : commandProcessor.getCurrentCommandName();
       if (currentCommandName != null) {
         logger.error("Current Command: " + currentCommandName);
       }

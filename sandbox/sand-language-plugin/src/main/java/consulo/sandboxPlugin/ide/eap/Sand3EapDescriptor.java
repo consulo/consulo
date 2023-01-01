@@ -15,13 +15,16 @@
  */
 package consulo.sandboxPlugin.ide.eap;
 
-import consulo.ide.eap.EarlyAccessProgramDescriptor;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.eap.EarlyAccessProgramDescriptor;
+
 import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 30.08.14
  */
+@ExtensionImpl
 public class Sand3EapDescriptor extends EarlyAccessProgramDescriptor {
   @Nonnull
   @Override

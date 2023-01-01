@@ -15,39 +15,42 @@
  */
 package consulo.test.light.impl;
 
-import com.intellij.openapi.application.*;
-import com.intellij.openapi.components.impl.ComponentManagerImpl;
-import com.intellij.openapi.extensions.impl.ExtensionAreaId;
-import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl;
-import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.ThrowableComputable;
-import com.intellij.util.containers.MultiMap;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
-import consulo.container.plugin.PluginListenerDescriptor;
+import consulo.annotation.component.ComponentScope;
+import consulo.application.AccessToken;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.application.event.ApplicationListener;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.component.bind.InjectingBinding;
+import consulo.component.impl.internal.BaseComponentManager;
 import consulo.disposer.Disposable;
-import consulo.injecting.InjectingContainer;
-import consulo.injecting.InjectingContainerBuilder;
+import consulo.component.internal.inject.InjectingContainer;
+import consulo.component.internal.inject.InjectingContainerBuilder;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
+import consulo.util.collection.MultiMap;
+import consulo.util.lang.function.ThrowableSupplier;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
+import java.util.function.BooleanSupplier;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
  * @since 2018-08-25
  */
-public class LightApplication extends ComponentManagerImpl implements Application {
+public class LightApplication extends BaseComponentManager implements Application {
   private final Disposable myLastDisposable;
   private final LightExtensionRegistrator myRegistrator;
 
   public LightApplication(Disposable lastDisposable, LightExtensionRegistrator registrator) {
-    super(null, "LightApplication", ExtensionAreaId.APPLICATION, false);
+    super(null, "LightApplication", ComponentScope.APPLICATION, false);
     myLastDisposable = lastDisposable;
     myRegistrator = registrator;
 
@@ -57,7 +60,7 @@ public class LightApplication extends ComponentManagerImpl implements Applicatio
   }
 
   @Override
-  protected void fillListenerDescriptors(MultiMap<String, PluginListenerDescriptor> mapByTopic) {
+  protected void fillListenerDescriptors(MultiMap<String, InjectingBinding> mapByTopic) {
   }
 
   @Nonnull
@@ -74,11 +77,6 @@ public class LightApplication extends ComponentManagerImpl implements Applicatio
   }
 
   @Override
-  protected void registerExtensionPointsAndExtensions(ExtensionsAreaImpl area) {
-    myRegistrator.registerExtensionPointsAndExtensions(area);
-  }
-
-  @Override
   protected void registerServices(InjectingContainerBuilder builder) {
     myRegistrator.registerServices(builder);
   }
@@ -89,8 +87,14 @@ public class LightApplication extends ComponentManagerImpl implements Applicatio
   }
 
   @Override
-  public <T> T runReadAction(@Nonnull Computable<T> computation) {
-    return computation.compute();
+  public <T> T runReadAction(@Nonnull Supplier<T> computation) {
+    return computation.get();
+  }
+
+  @Override
+  public boolean tryRunReadAction(@Nonnull Runnable action) {
+    action.run();
+    return true;
   }
 
   @RequiredUIAccess
@@ -101,7 +105,7 @@ public class LightApplication extends ComponentManagerImpl implements Applicatio
 
   @RequiredUIAccess
   @Override
-  public <T> T runWriteAction(@Nonnull Computable<T> computation) {
+  public <T> T runWriteAction(@Nonnull Supplier<T> computation) {
     throw new UnsupportedOperationException();
   }
 
@@ -175,52 +179,52 @@ public class LightApplication extends ComponentManagerImpl implements Applicatio
   }
 
   @Override
-  public void invokeLater(@Nonnull Runnable runnable, @Nonnull Condition expired) {
+  public void invokeLater(@Nonnull Runnable runnable, @Nonnull BooleanSupplier expired) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState state) {
+  public void invokeLater(@Nonnull Runnable runnable, @Nonnull consulo.ui.ModalityState state) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState state, @Nonnull Condition expired) {
+  public void invokeLater(@Nonnull Runnable runnable, @Nonnull consulo.ui.ModalityState state, @Nonnull BooleanSupplier expired) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void invokeAndWait(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Nonnull
-  @Override
-  public ModalityState getCurrentModalityState() {
+  public void invokeAndWait(@Nonnull Runnable runnable, @Nonnull consulo.ui.ModalityState modalityState) {
     throw new UnsupportedOperationException();
   }
 
   @Nonnull
   @Override
-  public ModalityState getModalityStateForComponent(@Nonnull Component c) {
+  public IdeaModalityState getCurrentModalityState() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Nonnull
+  @Override
+  public IdeaModalityState getModalityStateForComponent(@Nonnull Component c) {
     return getNoneModalityState();
   }
 
   @Nonnull
   @Override
-  public ModalityState getDefaultModalityState() {
+  public IdeaModalityState getDefaultModalityState() {
     return getNoneModalityState();
   }
 
   @Nonnull
   @Override
-  public ModalityState getNoneModalityState() {
-    return ModalityState.NON_MODAL;
+  public IdeaModalityState getNoneModalityState() {
+    return IdeaModalityState.NON_MODAL;
   }
 
   @Nonnull
   @Override
-  public ModalityState getAnyModalityState() {
+  public IdeaModalityState getAnyModalityState() {
     throw new UnsupportedOperationException();
   }
 
@@ -294,7 +298,7 @@ public class LightApplication extends ComponentManagerImpl implements Applicatio
 
   @RequiredUIAccess
   @Override
-  public <T, E extends Throwable> T runWriteAction(@Nonnull ThrowableComputable<T, E> computation) throws E {
+  public <T, E extends Throwable> T runWriteAction(@Nonnull ThrowableSupplier<T, E> computation) throws E {
     throw new UnsupportedOperationException();
   }
 
@@ -304,7 +308,7 @@ public class LightApplication extends ComponentManagerImpl implements Applicatio
   }
 
   @Override
-  public <T, E extends Throwable> T runReadAction(@Nonnull ThrowableComputable<T, E> computation) throws E {
-    return computation.compute();
+  public <T, E extends Throwable> T runReadAction(@Nonnull ThrowableSupplier<T, E> computation) throws E {
+    return computation.get();
   }
 }

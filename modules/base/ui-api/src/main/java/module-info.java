@@ -1,5 +1,3 @@
-import consulo.ui.internal.UIInternal;
-
 /**
  * @author VISTALL
  * @since 2020-10-24
@@ -20,6 +18,7 @@ module consulo.ui.api {
   exports consulo.ui.cursor;
   exports consulo.ui.border;
   exports consulo.ui.event;
+  exports consulo.ui.event.details;
   exports consulo.ui.font;
   exports consulo.ui.image;
   exports consulo.ui.image.canvas;
@@ -28,8 +27,9 @@ module consulo.ui.api {
   exports consulo.ui.style;
   exports consulo.ui.util;
 
-  // TODO [VISTALL] exports only to impl module
-  exports consulo.ui.internal;
+  exports consulo.ui.image.internal;
+  exports consulo.ui.internal to consulo.desktop.awt.ide.impl, consulo.desktop.swt.ide.impl;
 
-  uses UIInternal;
+  uses consulo.ui.image.IconLibraryDescriptor;
+  uses consulo.ui.internal.UIInternal;
 }

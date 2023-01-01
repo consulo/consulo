@@ -17,7 +17,6 @@ package consulo.container.impl.classloader.proxy;
 
 import consulo.container.classloader.PluginClassLoader;
 
-import javax.annotation.Nonnull;
 import java.util.function.Function;
 
 /**
@@ -25,6 +24,5 @@ import java.util.function.Function;
  * @since 11/03/2021
  */
 public interface ProxyHolderClassLoader extends PluginClassLoader {
-  @Nonnull
-  ProxyFactory registerOrGetProxy(@Nonnull ProxyDescription description, @Nonnull Function<ProxyDescription, ProxyFactory> proxyFactoryFunction);
+  ProxyFactory registerOrGetProxy(ProxyDescription description, Function<ProxyDescription, ProxyFactory> proxyFactoryFunction);
 }

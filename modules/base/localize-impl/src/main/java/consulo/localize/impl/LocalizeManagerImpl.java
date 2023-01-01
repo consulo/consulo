@@ -15,26 +15,22 @@
  */
 package consulo.localize.impl;
 
-import com.intellij.CommonBundle;
-import com.intellij.openapi.util.io.FileUtilRt;
-import com.intellij.openapi.util.io.StreamUtil;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.EventDispatcher;
-import com.intellij.util.io.URLUtil;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeKey;
 import consulo.localize.LocalizeManager;
 import consulo.localize.LocalizeManagerListener;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.proxy.EventDispatcher;
+import consulo.util.io.URLUtil;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
+import java.text.MessageFormat;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
@@ -48,11 +44,11 @@ import java.util.zip.ZipFile;
 public class LocalizeManagerImpl extends LocalizeManager {
   private static final Logger LOG = Logger.getInstance(LocalizeManagerImpl.class);
 
-  private static final Locale ourDefaultLocale = Locale.ENGLISH;
+  private static final Locale ourDefaultLocale = Locale.US;
 
   private final AtomicBoolean myInitialized = new AtomicBoolean();
 
-  public static final String LOCALIZE_LIBRARY_MARKER = "localize/id.txt";
+  public static final String LOCALIZE_DIRECTORY = "LOCALIZE-LIB/";
 
   private final Map<Locale, Map<String, LocalizeFileState>> myLocalizes = new HashMap<>();
 
@@ -81,10 +77,10 @@ public class LocalizeManagerImpl extends LocalizeManager {
   }
 
   private void analyzeLibraryJar(String filePath) throws IOException {
-    String localeString = null;
     File jarFile = new File(filePath);
 
-    Map<String, LocalizeFileState> localizeFiles = new HashMap<>();
+    // locale <localize id, state>
+    Map<String, Map<String, LocalizeFileState>> localizeFiles = new HashMap<>();
 
     try (ZipFile zipFile = new ZipFile(jarFile)) {
       Enumeration<? extends ZipEntry> entries = zipFile.entries();
@@ -94,38 +90,33 @@ public class LocalizeManagerImpl extends LocalizeManager {
 
         final String name = zipEntry.getName();
 
-        if (LOCALIZE_LIBRARY_MARKER.equals(name)) {
-          try (InputStream inputStream = zipFile.getInputStream(zipEntry)) {
-            byte[] bytes = StreamUtil.loadFromStream(inputStream);
+        if (name.startsWith(LOCALIZE_DIRECTORY) && name.endsWith(".yaml")) {
+          String fullFilePath = name.substring(LOCALIZE_DIRECTORY.length(), name.length());
 
-            localeString = new String(bytes, StandardCharsets.UTF_8);
-          }
-        }
-        else if (name.startsWith("localize/") && name.endsWith(".yaml")) {
-          String pluginId = name.substring(name.indexOf('/') + 1, name.length());
-          pluginId = pluginId.substring(0, pluginId.lastIndexOf('/'));
-          pluginId = pluginId.replace('/', '.');
+          String locale = fullFilePath.substring(0, fullFilePath.indexOf('/'));
+
+          // -5 - its '.yaml' prefix
+          String localizeId = fullFilePath.substring(locale.length() + 1, fullFilePath.length() - 5);
+
+          Map<String, LocalizeFileState> map = localizeFiles.computeIfAbsent(locale, l -> new HashMap<>());
 
           URL localizeFileUrl = URLUtil.getJarEntryURL(jarFile, name);
 
-          String fileName = StringUtil.getShortName(name, '/');
-          String id = FileUtilRt.getNameWithoutExtension(fileName);
-
-          String localizeId = pluginId + "." + id;
-          localizeFiles.put(localizeId, new LocalizeFileState(localizeId, localizeFileUrl));
+          map.put(localizeId, new LocalizeFileState(localizeId, localizeFileUrl));
         }
       }
     }
 
-    if (StringUtil.isEmptyOrSpaces(localeString)) {
-      LOG.warn("There no locale file inside: " + filePath);
-      return;
+    for (Map.Entry<String, Map<String, LocalizeFileState>> entry : localizeFiles.entrySet()) {
+      String localeString = entry.getKey();
+      Map<String, LocalizeFileState> states = entry.getValue();
+
+      Locale locale = buildLocale(localeString);
+
+      Map<String, LocalizeFileState> mapByLocalizeId = myLocalizes.computeIfAbsent(locale, l -> new HashMap<>());
+
+      mapByLocalizeId.putAll(states);
     }
-
-    Locale locale = buildLocale(localeString);
-    Map<String, LocalizeFileState> mapByLocalizeId = myLocalizes.computeIfAbsent(locale, l -> new HashMap<>());
-
-    mapByLocalizeId.putAll(localizeFiles);
   }
 
   @Nonnull
@@ -205,6 +196,10 @@ public class LocalizeManagerImpl extends LocalizeManager {
   @Nonnull
   @Override
   public String getUnformattedText(@Nonnull LocalizeKey key) {
+    if (!myInitialized.get()) {
+      throw new IllegalArgumentException("not initialized");
+    }
+
     if (StringUtil.isEmptyOrSpaces(key.getKey())) {
       return "";
     }
@@ -226,7 +221,16 @@ public class LocalizeManagerImpl extends LocalizeManager {
   @Nonnull
   @Override
   public String formatText(String unformattedText, Object... arg) {
-    return CommonBundle.format(unformattedText, arg);
+    return format(unformattedText, arg);
+  }
+
+  @Nonnull
+  private static String format(@Nonnull String value, @Nonnull Object... params) {
+    if (params.length > 0 && value.indexOf('{') >= 0) {
+      return MessageFormat.format(value, params);
+    }
+
+    return value;
   }
 
   @Nullable

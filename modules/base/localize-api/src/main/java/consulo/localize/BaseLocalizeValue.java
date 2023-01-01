@@ -89,4 +89,14 @@ abstract class BaseLocalizeValue implements LocalizeValue {
     myModificationCount = manager.getModificationCount();
     return newText;
   }
+
+  @Override
+  public int compareIgnoreCase(@Nonnull LocalizeValue other) {
+    return getValue().compareToIgnoreCase(other.getValue());
+  }
+
+  @Override
+  public int compareTo(@Nonnull LocalizeValue o) {
+    return getValue().compareTo(o.getValue());
+  }
 }

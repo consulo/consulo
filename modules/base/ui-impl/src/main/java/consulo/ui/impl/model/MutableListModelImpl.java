@@ -16,7 +16,7 @@
 package consulo.ui.impl.model;
 
 import consulo.disposer.Disposable;
-import com.intellij.util.EventDispatcher;
+import consulo.proxy.EventDispatcher;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.model.MutableListModel;
 import consulo.ui.model.MutableListModelListener;

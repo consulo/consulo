@@ -23,7 +23,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
-class ActionCallback {
+public class ActionCallback {
   public static final ActionCallback DONE = new Done();
   public static final ActionCallback REJECTED = new Rejected();
 

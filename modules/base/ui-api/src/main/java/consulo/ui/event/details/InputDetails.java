@@ -15,24 +15,50 @@
  */
 package consulo.ui.event.details;
 
+import consulo.ui.Position2D;
+
+import javax.annotation.Nonnull;
+
 /**
  * @author VISTALL
  * @since 17/08/2021
  */
 public class InputDetails {
-  private final int myX;
-  private final int myY;
+  /**
+   * Position inside component - relative
+   */
+  private final Position2D myPosition;
+  /**
+   * Position XY on screen - absolute
+   */
+  private final Position2D myPositionOnScreen;
 
-  public InputDetails(int x, int y) {
-    myX = x;
-    myY = y;
+  public InputDetails(@Nonnull Position2D position, @Nonnull Position2D positionOnScreen) {
+    myPosition = position;
+    myPositionOnScreen = positionOnScreen;
   }
 
   public int getX() {
-    return myX;
+    return myPosition.getX();
   }
 
   public int getY() {
-    return myY;
+    return myPosition.getY();
+  }
+
+  public int getXOnScreen() {
+    return myPositionOnScreen.getX();
+  }
+
+  public int getYOnScreen() {
+    return myPositionOnScreen.getY();
+  }
+
+  public Position2D getPosition() {
+    return myPosition;
+  }
+
+  public Position2D getPositionOnScreen() {
+    return myPositionOnScreen;
   }
 }

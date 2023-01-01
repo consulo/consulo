@@ -15,13 +15,12 @@
  */
 package consulo.ui.web.internal.ex;
 
-import com.intellij.openapi.editor.LogicalPosition;
-import com.intellij.openapi.editor.VisualPosition;
-import com.intellij.openapi.editor.ex.util.EditorUtil;
-import com.intellij.openapi.editor.impl.view.LogicalPositionCache;
+import consulo.codeEditor.LogicalPosition;
+import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
+import consulo.ide.impl.idea.openapi.editor.impl.view.LogicalPositionCache;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.editor.impl.CodeEditorBase;
+import consulo.codeEditor.impl.CodeEditorBase;
 
 import javax.annotation.Nonnull;
 

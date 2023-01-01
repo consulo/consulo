@@ -15,9 +15,9 @@
  */
 package consulo.test.light.impl;
 
-import com.intellij.openapi.application.PathMacroFilter;
-import com.intellij.openapi.application.PathMacros;
-import consulo.application.options.PathMacrosService;
+import consulo.component.macro.PathMacroFilter;
+import consulo.application.macro.PathMacros;
+import consulo.component.store.impl.internal.PathMacrosService;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;

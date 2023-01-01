@@ -15,10 +15,12 @@
  */
 package consulo.compiler;
 
-import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.pointer.VirtualFilePointer;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -26,10 +28,11 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 12:57/10.06.13
  */
+@ServiceAPI(ComponentScope.PROJECT)
 public abstract class CompilerConfiguration {
   @Nonnull
   public static CompilerConfiguration getInstance(@Nonnull Project project) {
-    return ServiceManager.getService(project, CompilerConfiguration.class);
+    return project.getInstance(CompilerConfiguration.class);
   }
 
   @Nullable

@@ -15,10 +15,6 @@
  */
 package consulo.ui.impl.image;
 
-import com.intellij.openapi.util.Couple;
-import com.intellij.openapi.util.io.StreamUtil;
-import com.intellij.util.io.URLUtil;
-import consulo.annotation.ReviewAfterMigrationToJRE;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.logging.Logger;
@@ -26,8 +22,11 @@ import consulo.ui.image.IconLibrary;
 import consulo.ui.image.IconLibraryDescriptor;
 import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.Image;
+import consulo.ui.image.internal.IconLibraryDescriptorLoader;
 import consulo.ui.style.Style;
 import consulo.ui.style.StyleManager;
+import consulo.util.io.StreamUtil;
+import consulo.util.lang.Couple;
 import consulo.util.lang.ThreeState;
 
 import javax.annotation.Nonnull;
@@ -55,8 +54,8 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
 
   private static final Logger LOG = Logger.getInstance(BaseIconLibraryManager.class);
 
-  public static final String ICON_DIRECTORY = "icon/";
-  public static final String ICON_DIRECTORY_LIB_START = ICON_DIRECTORY + "_";
+  public static final String ICON_DIRECTORY = "ICON-LIB/";
+  public static final String ICON_DIRECTORY_LIB_START = ICON_DIRECTORY;
   public static final String ICON_LIBRARY_MARKER = ICON_DIRECTORY + "marker.txt";
 
   private final AtomicLong myModificationCount = new AtomicLong();
@@ -66,6 +65,8 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
 
   private String myActiveLibraryId;
   private BaseIconLibraryImpl myActiveLibrary;
+
+  private ErrorBaseIconLibraryImpl myErrorLibrary = new ErrorBaseIconLibraryImpl(this);
 
   @Nonnull
   @Override
@@ -139,7 +140,8 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
     }
 
     if (myActiveLibrary == null) {
-      throw new Error("There no default active library. Distribution broken");
+      LOG.error("There no default active library. Distribution broken");
+      return myErrorLibrary;
     }
     return myActiveLibrary;
   }
@@ -182,18 +184,15 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
   }
 
   @Nonnull
-  @ReviewAfterMigrationToJRE(value = 9, description = "Use consulo.container.plugin.util.PlatformServiceLocator#findImplementation after migration")
   private static Map<String, IconLibraryDescriptor> getAllDescriptors() {
     Map<String, IconLibraryDescriptor> list = new HashMap<>();
 
-    for (IconLibraryDescriptor value : ServiceLoader.load(IconLibraryDescriptor.class, BaseIconLibraryManager.class.getClassLoader())) {
+    for (IconLibraryDescriptor value : IconLibraryDescriptorLoader.getAll(BaseIconLibraryManager.class.getClassLoader())) {
       list.putIfAbsent(value.getLibraryId(), value);
     }
 
     for (PluginDescriptor descriptor : PluginManager.getEnabledPlugins()) {
-      ServiceLoader<IconLibraryDescriptor> loader = ServiceLoader.load(IconLibraryDescriptor.class, descriptor.getPluginClassLoader());
-
-      for (IconLibraryDescriptor libraryDescriptor : loader) {
+      for (IconLibraryDescriptor libraryDescriptor : IconLibraryDescriptorLoader.getAll(descriptor.getPluginClassLoader())) {
         list.putIfAbsent(libraryDescriptor.getLibraryId(), libraryDescriptor);
       }
     }
@@ -274,7 +273,7 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
     String imagePathNoExtension = imagePath.substring(0, dotIndex);
 
     if (imagePathNoExtension.endsWith("_dark")) {
-      LOG.warn("Skipping dark old icon " + URLUtil.getJarEntryURL(jarFile, imagePath));
+      LOG.warn("Skipping dark old icon " + jarFile + "/" + imagePath);
       return;
     }
 

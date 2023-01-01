@@ -15,18 +15,21 @@
  */
 package consulo.compiler;
 
-import com.intellij.openapi.compiler.Compiler;
-import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.module.Module;
-import com.intellij.util.Chunk;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.component.extension.ExtensionPointName;
+import consulo.module.Module;
+import consulo.util.collection.Chunk;
+
 import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 08.05.14
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface CompilerSorter {
-  public static final ExtensionPointName<CompilerSorter> EP_NAME = ExtensionPointName.create("com.intellij.compiler.sorter");
+  ExtensionPointName<CompilerSorter> EP_NAME = ExtensionPointName.create(CompilerSorter.class);
 
   void sort(Chunk<Module> moduleChunk, @Nonnull Compiler[] compilers, Class<? extends Compiler> clazz);
 }

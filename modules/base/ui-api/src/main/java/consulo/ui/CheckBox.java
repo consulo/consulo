@@ -15,7 +15,6 @@
  */
 package consulo.ui;
 
-import consulo.annotation.ApiType;
 import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -27,7 +26,6 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 09-Jun-16
  */
-@ApiType
 public interface CheckBox extends ValueComponent<Boolean>, Mnemonicable {
   @Nonnull
   @RequiredUIAccess

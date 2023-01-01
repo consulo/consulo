@@ -15,15 +15,15 @@
  */
 package consulo.test.light.impl;
 
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.impl.DocumentImpl;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
-import com.intellij.openapi.fileTypes.BinaryFileTypeDecompilers;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.project.Project;
+import consulo.component.ComponentManager;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
+import consulo.document.impl.DocumentImpl;
+import consulo.language.impl.internal.psi.LoadTextUtil;
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.BinaryFileDecompiler;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -33,7 +33,7 @@ import java.util.function.Function;
  * @author VISTALL
  * @since 2018-08-25
  */
-public class LightFileDocumentManager extends FileDocumentManager {
+public class LightFileDocumentManager implements FileDocumentManager {
   private static final Key<VirtualFile> MOCK_VIRTUAL_FILE_KEY = Key.create("MockVirtualFile");
   private final Function<? super CharSequence, ? extends Document> myFactory;
   @Nullable
@@ -48,7 +48,7 @@ public class LightFileDocumentManager extends FileDocumentManager {
 
   private static boolean isBinaryWithoutDecompiler(VirtualFile file) {
     final FileType ft = file.getFileType();
-    return ft.isBinary() && BinaryFileTypeDecompilers.INSTANCE.forFileType(ft) == null;
+    return ft.isBinary() && BinaryFileDecompiler.forFileType(ft) == null;
   }
 
   @Override
@@ -121,12 +121,12 @@ public class LightFileDocumentManager extends FileDocumentManager {
 
   @Override
   @Nonnull
-  public String getLineSeparator(VirtualFile file, Project project) {
+  public String getLineSeparator(VirtualFile file, ComponentManager project) {
     return LoadTextUtil.getDetectedLineSeparator(file);
   }
 
   @Override
-  public boolean requestWriting(@Nonnull Document document, @Nullable Project project) {
+  public boolean requestWriting(@Nonnull Document document, @Nullable ComponentManager project) {
     return true;
   }
 }

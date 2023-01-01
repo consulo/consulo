@@ -18,7 +18,6 @@ package consulo.container.classloader;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 
-import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
@@ -28,14 +27,11 @@ import java.util.Enumeration;
  * @since 2019-11-23
  */
 public interface PluginClassLoader {
-  @Nonnull
   PluginId getPluginId();
 
-  @Nonnull
   PluginDescriptor getPluginDescriptor();
 
-  boolean hasLoadedClass(@Nonnull String className);
+  boolean hasLoadedClass(String className);
 
-  @Nonnull
   Enumeration<URL> findOwnResources(String name) throws IOException;
 }

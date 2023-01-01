@@ -15,23 +15,26 @@
  */
 package consulo.sandboxPlugin.ide.module;
 
-import com.intellij.lang.Language;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.impl.file.PsiPackageBase;
-import com.intellij.util.ArrayFactory;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.impl.psi.PsiPackageBase;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.language.Language;
+import consulo.language.psi.PsiManager;
+import consulo.language.psi.PsiPackage;
+import consulo.language.psi.PsiPackageManager;
+import consulo.language.psi.PsiPackageSupportProvider;
 import consulo.module.extension.ModuleExtension;
-import consulo.psi.PsiPackage;
-import consulo.psi.PsiPackageManager;
-import consulo.psi.PsiPackageSupportProvider;
 import consulo.sandboxPlugin.ide.module.extension.Sand2ModuleExtension;
 import consulo.sandboxPlugin.lang.SandLanguage;
+
 import javax.annotation.Nonnull;
+import java.util.function.IntFunction;
 
 /**
  * @author VISTALL
  * @since 30.08.14
  */
+@ExtensionImpl
 public class Sand2PackageProvider implements PsiPackageSupportProvider {
   @Override
   public boolean isSupported(@Nonnull ModuleExtension<?> moduleExtension) {
@@ -46,7 +49,7 @@ public class Sand2PackageProvider implements PsiPackageSupportProvider {
                                   @Nonnull String packageName) {
     return new PsiPackageBase(psiManager, packageManager, extensionClass, packageName) {
       @Override
-      protected ArrayFactory<? extends PsiPackage> getPackageArrayFactory() {
+      protected IntFunction<? extends PsiPackage[]> getPackageArrayFactory() {
         return PsiPackage.ARRAY_FACTORY;
       }
 

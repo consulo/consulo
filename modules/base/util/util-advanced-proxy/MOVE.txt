@@ -1,1 +1,0 @@
-It's not util module. Due it depends to container-impl module

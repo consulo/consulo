@@ -15,9 +15,9 @@
  */
 package consulo.ui.web.internal.ex;
 
-import consulo.editor.impl.CodeEditorBase;
-import consulo.editor.impl.CodeEditorCaretBase;
-import consulo.editor.impl.CodeEditorCaretModelBase;
+import consulo.codeEditor.impl.CodeEditorBase;
+import consulo.codeEditor.impl.CodeEditorCaretBase;
+import consulo.codeEditor.impl.CodeEditorCaretModelBase;
 
 import javax.annotation.Nonnull;
 

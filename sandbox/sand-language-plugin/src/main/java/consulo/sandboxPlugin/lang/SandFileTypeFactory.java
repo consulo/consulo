@@ -15,16 +15,19 @@
  */
 package consulo.sandboxPlugin.lang;
 
-import consulo.lang.LanguageVersion;
-import com.intellij.openapi.fileTypes.FileTypeConsumer;
-import com.intellij.openapi.fileTypes.FileTypeFactory;
-import javax.annotation.Nonnull;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.version.LanguageVersion;
 import consulo.sandboxPlugin.lang.version.BaseSandLanguageVersion;
+import consulo.virtualFileSystem.fileType.FileTypeConsumer;
+import consulo.virtualFileSystem.fileType.FileTypeFactory;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 19.03.14
  */
+@ExtensionImpl
 public class SandFileTypeFactory extends FileTypeFactory {
   @Override
   public void createFileTypes(@Nonnull FileTypeConsumer consumer) {

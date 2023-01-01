@@ -15,9 +15,9 @@
  */
 package consulo.test.light.impl;
 
-import com.intellij.ui.ExpandableItemsHandler;
-import com.intellij.ui.ExpandableItemsHandlerFactory;
-import com.intellij.ui.TableCell;
+import consulo.ui.ex.ExpandableItemsHandler;
+import consulo.ui.ex.awt.ExpandableItemsHandlerFactory;
+import consulo.ui.ex.TableCell;
 
 import javax.swing.*;
 

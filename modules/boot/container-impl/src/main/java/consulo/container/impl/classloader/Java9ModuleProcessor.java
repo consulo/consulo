@@ -24,17 +24,28 @@ import java.util.List;
 public interface Java9ModuleProcessor {
   Java9ModuleProcessor EMPTY = new Java9ModuleProcessor() {
     @Override
-    public void process(Object bootModuleLayer, Object controller) {
-
+    public void process(List<Opens> toOpenMap) {
     }
 
     @Override
-    public void addBaseResolveModules(List<String> toResolve) {
-
+    public boolean isEnabledModules() {
+      return false;
     }
   };
 
-  void process(Object bootModuleLayer, Object controller);
+  class Opens {
+    public final String fromModuleName;
+    public final String packageName;
+    public final String toModuleName;
 
-  void addBaseResolveModules(List<String> toResolve);
+    public Opens(String fromModuleName, String packageName, String toModuleName) {
+      this.fromModuleName = fromModuleName;
+      this.packageName = packageName;
+      this.toModuleName = toModuleName;
+    }
+  }
+
+  void process(List<Opens> toOpenMap);
+
+  boolean isEnabledModules();
 }

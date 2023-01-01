@@ -15,11 +15,12 @@
  */
 package consulo.compiler;
 
-import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.pointers.VirtualFilePointer;
-import consulo.roots.ContentFolderTypeProvider;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.content.ContentFolderTypeProvider;
+import consulo.module.Module;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,10 +30,11 @@ import java.util.Locale;
  * @author VISTALL
  * @since 18:27/20.10.13
  */
+@ServiceAPI(ComponentScope.MODULE)
 public abstract class ModuleCompilerPathsManager {
   @Nonnull
   public static ModuleCompilerPathsManager getInstance(@Nonnull Module module) {
-    return ServiceManager.getService(module, ModuleCompilerPathsManager.class);
+    return module.getInstance(ModuleCompilerPathsManager.class);
   }
 
   public abstract boolean isInheritedCompilerOutput();

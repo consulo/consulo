@@ -15,11 +15,12 @@
  */
 package consulo.logging.sfl4j.spi;
 
-import com.intellij.BundleBase;
 import consulo.logging.Logger;
 import org.slf4j.helpers.MarkerIgnoringBase;
 
+import javax.annotation.Nonnull;
 import java.io.Serializable;
+import java.text.MessageFormat;
 import java.util.Arrays;
 
 /**
@@ -155,11 +156,20 @@ public class ConsuloBuildInLoggerAdapter extends MarkerIgnoringBase implements o
 
   private String buildMessage(String format, Object... args) {
     try {
-      return BundleBase.format(format, args);
+      return format(format, args);
     }
     catch (Exception e) {
       return "Fail to build '" + format + "' args: " + Arrays.asList(args);
     }
+  }
+
+  @Nonnull
+  private static String format(@Nonnull String value, @Nonnull Object... params) {
+    if (params.length > 0 && value.indexOf('{') >= 0) {
+      return MessageFormat.format(value, params);
+    }
+
+    return value;
   }
 
   @Override

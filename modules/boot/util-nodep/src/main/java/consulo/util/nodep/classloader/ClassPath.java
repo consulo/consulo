@@ -17,7 +17,6 @@ package consulo.util.nodep.classloader;
 
 import consulo.util.nodep.LoggerRt;
 
-import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -49,9 +48,7 @@ public class ClassPath {
   final boolean myPreloadJarContents;
   final boolean myCanHavePersistentIndex;
   final boolean myLazyClassloadingCaches;
-  @Nullable
   private final CachePoolImpl myCachePool;
-  @Nullable
   private final UrlClassLoader.CachingCondition myCachingCondition;
   final boolean myLogErrorOnMissingJar;
 
@@ -61,8 +58,8 @@ public class ClassPath {
                    boolean acceptUnescapedUrls,
                    boolean preloadJarContents,
                    boolean canHavePersistentIndex,
-                   @Nullable CachePoolImpl cachePool,
-                   @Nullable UrlClassLoader.CachingCondition cachingCondition,
+                   CachePoolImpl cachePool,
+                   UrlClassLoader.CachingCondition cachingCondition,
                    boolean logErrorOnMissingJar,
                    boolean lazyClassloadingCaches,
                    Set<URL> urlsWithProtectionDomain) {
@@ -98,7 +95,6 @@ public class ClassPath {
     }
   }
 
-  @Nullable
   public Resource getResource(String s) {
     final long started = startTiming();
     try {
@@ -138,7 +134,6 @@ public class ClassPath {
     return new MyEnumeration(name);
   }
 
-  @Nullable
   private Loader getLoader(int i) {
     if (i < myLastLoaderProcessed.get()) { // volatile read
       return myLoaders.get(i);
@@ -147,7 +142,6 @@ public class ClassPath {
     return getLoaderSlowPath(i);
   }
 
-  @Nullable
   private synchronized Loader getLoaderSlowPath(int i) {
     while (myLoaders.size() < i + 1) {
       URL url;

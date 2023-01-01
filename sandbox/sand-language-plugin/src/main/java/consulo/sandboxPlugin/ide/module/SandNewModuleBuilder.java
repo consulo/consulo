@@ -15,21 +15,22 @@
  */
 package consulo.sandboxPlugin.ide.module;
 
-import com.intellij.icons.AllIcons;
-import com.intellij.openapi.roots.ContentEntry;
-import com.intellij.openapi.roots.ModifiableRootModel;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.AllIcons;
+import consulo.module.content.layer.ContentEntry;
+import consulo.module.content.layer.ModifiableRootModel;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.UnzipNewModuleBuilderProcessor;
-import consulo.ide.newProject.NewModuleBuilder;
-import consulo.ide.newProject.NewModuleBuilderProcessor;
-import consulo.ide.newProject.NewModuleContext;
-import consulo.ide.newProject.node.NewModuleContextGroup;
-import consulo.ide.newProject.ui.UnifiedProjectOrModuleNameStep;
-import consulo.ide.wizard.newModule.NewModuleWizardContext;
-import consulo.ide.wizard.newModule.NewModuleWizardContextBase;
+import consulo.ide.newModule.UnzipNewModuleBuilderProcessor;
+import consulo.ide.newModule.NewModuleBuilder;
+import consulo.ide.newModule.NewModuleBuilderProcessor;
+import consulo.ide.newModule.NewModuleContext;
+import consulo.ide.newModule.NewModuleContextGroup;
+import consulo.ide.newModule.ui.UnifiedProjectOrModuleNameStep;
+import consulo.ide.newModule.NewModuleWizardContext;
+import consulo.ide.newModule.NewModuleWizardContextBase;
 import consulo.localize.LocalizeValue;
-import consulo.roots.impl.ProductionContentFolderTypeProvider;
+import consulo.language.content.ProductionContentFolderTypeProvider;
 import consulo.sandboxPlugin.ide.module.extension.SandMutableModuleExtension;
 import consulo.ui.ColorBox;
 import consulo.ui.Component;
@@ -39,7 +40,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.style.StandardColors;
 import consulo.ui.util.FormBuilder;
-import consulo.ui.wizard.WizardStep;
+import consulo.ui.ex.wizard.WizardStep;
 
 import javax.annotation.Nonnull;
 import java.util.function.Consumer;
@@ -48,6 +49,7 @@ import java.util.function.Consumer;
  * @author VISTALL
  * @since 05.06.14
  */
+@ExtensionImpl
 public class SandNewModuleBuilder implements NewModuleBuilder {
   @Override
   public void setupContext(@Nonnull NewModuleContext context) {

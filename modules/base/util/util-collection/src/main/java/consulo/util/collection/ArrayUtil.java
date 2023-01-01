@@ -15,6 +15,7 @@
  */
 package consulo.util.collection;
 
+import consulo.util.lang.CharArrayCharSequence;
 import consulo.util.lang.Comparing;
 import org.jetbrains.annotations.Contract;
 
@@ -26,6 +27,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.IntFunction;
 
 /**
  * Author: msk
@@ -44,7 +46,7 @@ public class ArrayUtil {
   public static final Collection[] EMPTY_COLLECTION_ARRAY = new Collection[0];
   public static final File[] EMPTY_FILE_ARRAY = new File[0];
   public static final Runnable[] EMPTY_RUNNABLE_ARRAY = new Runnable[0];
-  //public static final CharSequence EMPTY_CHAR_SEQUENCE = new CharArrayCharSequence(EMPTY_CHAR_ARRAY);
+  public static final CharSequence EMPTY_CHAR_SEQUENCE = new CharArrayCharSequence(EMPTY_CHAR_ARRAY);
 
   public static final ArrayFactory<String> STRING_ARRAY_FACTORY = ArrayUtil::newStringArray;
   public static final ArrayFactory<Object> OBJECT_ARRAY_FACTORY = ArrayUtil::newObjectArray;
@@ -486,12 +488,12 @@ public class ArrayUtil {
 
   @Nonnull
   @Contract(pure = true)
-  public static <T> T[] remove(@Nonnull final T[] src, int idx, @Nonnull ArrayFactory<T> factory) {
+  public static <T> T[] remove(@Nonnull final T[] src, int idx, @Nonnull IntFunction<T[]> factory) {
     int length = src.length;
     if (idx < 0 || idx >= length) {
       throw new IllegalArgumentException("invalid index: " + idx);
     }
-    T[] result = factory.create(length - 1);
+    T[] result = factory.apply(length - 1);
     System.arraycopy(src, 0, result, 0, idx);
     System.arraycopy(src, idx + 1, result, idx, length - idx - 1);
     return result;
@@ -508,7 +510,7 @@ public class ArrayUtil {
 
   @Nonnull
   @Contract(pure = true)
-  public static <T> T[] remove(@Nonnull final T[] src, T element, @Nonnull ArrayFactory<T> factory) {
+  public static <T> T[] remove(@Nonnull final T[] src, T element, @Nonnull IntFunction<T[]> factory) {
     final int idx = find(src, element);
     if (idx == -1) return src;
 

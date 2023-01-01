@@ -15,8 +15,6 @@
  */
 package consulo.util.nodep;
 
-import javax.annotation.Nonnull;
-
 /**
  * @author Konstantin Bulenkov
  */
@@ -27,7 +25,6 @@ public class Couple<T> extends Pair<T, T> {
     super(first, second);
   }
 
-  @Nonnull
   public static <T> Couple<T> of(T first, T second) {
     return new Couple<T>(first, second);
   }

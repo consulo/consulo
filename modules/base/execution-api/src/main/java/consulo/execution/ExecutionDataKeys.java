@@ -15,17 +15,22 @@
  */
 package consulo.execution;
 
-import com.intellij.execution.configurations.RunProfile;
-import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.execution.ui.RunContentDescriptor;
+import consulo.annotation.DeprecationInfo;
+import consulo.execution.configuration.RunProfile;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.execution.ui.RunContentDescriptor;
+import consulo.execution.ui.console.ConsoleView;
 import consulo.util.dataholder.Key;
 
 /**
  * @author VISTALL
  * @since 09/12/2020
  */
+@Deprecated
+@DeprecationInfo("Use keys from classes")
 public interface ExecutionDataKeys {
-  Key<RunProfile> RUN_PROFILE = Key.create("runProfile");
-  Key<ExecutionEnvironment> EXECUTION_ENVIRONMENT = Key.create("executionEnvironment");
-  Key<RunContentDescriptor> RUN_CONTENT_DESCRIPTOR = Key.create("RUN_CONTENT_DESCRIPTOR");
+  Key<RunProfile> RUN_PROFILE = RunProfile.KEY;
+  Key<ExecutionEnvironment> EXECUTION_ENVIRONMENT = ExecutionEnvironment.KEY;
+  Key<RunContentDescriptor> RUN_CONTENT_DESCRIPTOR = RunContentDescriptor.KEY;
+  Key<ConsoleView> CONSOLE_VIEW = ConsoleView.KEY;
 }

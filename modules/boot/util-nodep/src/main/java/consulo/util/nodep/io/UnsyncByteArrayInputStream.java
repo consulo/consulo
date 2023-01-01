@@ -15,8 +15,6 @@
  */
 package consulo.util.nodep.io;
 
-import javax.annotation.Nonnull;
-
 import java.io.InputStream;
 
 public class UnsyncByteArrayInputStream extends InputStream {
@@ -25,7 +23,7 @@ public class UnsyncByteArrayInputStream extends InputStream {
   private int myCount;
   private int myMarkedPosition;
 
-  public UnsyncByteArrayInputStream(@Nonnull byte[] buf) {
+  public UnsyncByteArrayInputStream(byte[] buf) {
     this(buf, 0, buf.length);
   }
 
@@ -45,7 +43,7 @@ public class UnsyncByteArrayInputStream extends InputStream {
   }
 
   @Override
-  public int read(@Nonnull byte[] b, int off, int len) {
+  public int read(byte[] b, int off, int len) {
     if (off < 0 || len < 0 || len > b.length - off) {
       throw new IndexOutOfBoundsException();
     }

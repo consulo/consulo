@@ -15,38 +15,24 @@
  */
 package consulo.util.nodep;
 
-import consulo.util.nodep.function.Function;
-import javax.annotation.Nonnull;
-
 public class Pair<A, B> {
   public final A first;
   public final B second;
 
-  @Nonnull
+
   public static <A, B> Pair<A, B> create(A first, B second) {
     //noinspection DontUsePairConstructor
     return new Pair<A, B>(first, second);
   }
-  @Nonnull
-  public static <A, B> NonNull<A, B> createNonNull(@Nonnull A first, @Nonnull B second) {
+
+  public static <A, B> NonNull<A, B> createNonNull(A first, B second) {
     return new NonNull<A, B>(first, second);
   }
 
-  @Nonnull
   @SuppressWarnings("MethodNamesDifferingOnlyByCase")
   public static <A, B> Pair<A, B> pair(A first, B second) {
     //noinspection DontUsePairConstructor
     return new Pair<A, B>(first, second);
-  }
-
-  @Nonnull
-  public static <A, B> Function<A, Pair<A, B>> createFunction(final B value) {
-    return new Function<A, Pair<A, B>>() {
-      @Override
-      public Pair<A, B> fun(A a) {
-        return create(a, value);
-      }
-    };
   }
 
   public static <T> T getFirst(Pair<T, ?> pair) {
@@ -95,8 +81,8 @@ public class Pair<A, B> {
     return "<" + first + "," + second + ">";
   }
 
-  public static class NonNull<A, B> extends Pair<A,B> {
-    public NonNull(@Nonnull A first, @Nonnull B second) {
+  public static class NonNull<A, B> extends Pair<A, B> {
+    public NonNull(A first, B second) {
       super(first, second);
     }
   }

@@ -21,13 +21,13 @@
   <parent>
     <groupId>consulo</groupId>
     <artifactId>arch.ide</artifactId>
-    <version>2-SNAPSHOT</version>
+    <version>3-SNAPSHOT</version>
     <relativePath>../../arch/ide/pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>consulo-sandbox-desktop-swt</artifactId>
-  <version>2-SNAPSHOT</version>
+  <version>3-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <properties>
@@ -58,7 +58,6 @@
       <plugin>
         <groupId>consulo.maven</groupId>
         <artifactId>maven-consulo-plugin</artifactId>
-        <version>2-SNAPSHOT</version>
         <configuration>
           <execution>
             <buildDirectory>${project.build.directory}/consulo-sandbox-desktop-swt-${project.version}-main</buildDirectory>
@@ -83,26 +82,20 @@
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-core</artifactId>
     </dependency>
+    <dependency>
+      <groupId>jgraph</groupId>
+      <artifactId>jgraph</artifactId>
+    </dependency>
 
     <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-injecting-pico-impl</artifactId>
-      <version>${project.version}</version>
+      <groupId>consulo.internal</groupId>
+      <artifactId>jakarta.inject-api</artifactId>
+      <scope>compile</scope>
     </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>consulo-logging-slf4j-binding-impl</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-platform-base-plugin</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-platform-desktop-swt-plugin</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -117,7 +110,27 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-trash-can</artifactId>
+      <artifactId>consulo-desktop-swt-ide-impl</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-application-ui-impl</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-version-control-system-impl</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-virtual-file-watcher-impl</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-desktop-awt-eawt-wrapper</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -142,12 +155,7 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-compiler-impl</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-duplicates-analysis</artifactId>
+      <artifactId>consulo-util-interner</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -167,12 +175,17 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-util-socket-connection</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-util-collection</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-util-advanced-proxy</artifactId>
+      <artifactId>consulo-proxy</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -187,37 +200,7 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-external-tools-impl</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-external-tools-api</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-hacking-java-base</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-build-ui-api</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-build-ui-impl</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-desktop-swt-platform-impl</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-desktop-swt-ui-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -225,36 +208,26 @@
       <artifactId>consulo-util-collection-via-trove</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-external-service-impl</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-task-impl</artifactId>
-      <version>${project.version}</version>
-    </dependency>
 
     <dependency>
       <groupId>consulo.internal.sound</groupId>
       <artifactId>jogg</artifactId>
-      <version>${project.version}</version>
+      <version>2-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>consulo.internal.sound</groupId>
       <artifactId>jvorbis</artifactId>
-      <version>${project.version}</version>
+      <version>2-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>consulo.internal.sound</groupId>
       <artifactId>javazoom.jlayer</artifactId>
-      <version>${project.version}</version>
+      <version>2-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>consulo.internal.sound</groupId>
       <artifactId>javazoom.mp3</artifactId>
-      <version>${project.version}</version>
+      <version>2-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
@@ -262,12 +235,12 @@
       <version>${project.version}</version>
       <optional>true</optional>
     </dependency>
-    
+
     <!--optional dependency-->
     <dependency>
       <groupId>org.eclipse.platform</groupId>
       <artifactId>org.eclipse.swt.win32.win32.x86_64</artifactId>
-      <version>3.116.0</version>
+      <version>${swt.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.xmlrpc</groupId>
@@ -338,10 +311,6 @@
       <artifactId>imgscalr-lib</artifactId>
     </dependency>
     <dependency>
-      <groupId>dk.brics.automaton</groupId>
-      <artifactId>automaton</artifactId>
-    </dependency>
-    <dependency>
       <groupId>consulo.internal</groupId>
       <artifactId>svg-salamander</artifactId>
     </dependency>
@@ -376,6 +345,10 @@
     <dependency>
       <groupId>org.jvnet.winp</groupId>
       <artifactId>winp</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.ibm.icu</groupId>
+      <artifactId>icu4j</artifactId>
     </dependency>
   </dependencies>
 </project>

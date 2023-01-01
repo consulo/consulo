@@ -15,13 +15,13 @@
  */
 package consulo.ui.web.internal.ex;
 
-import com.intellij.codeInsight.daemon.GutterMark;
-import com.intellij.openapi.actionSystem.ActionGroup;
-import com.intellij.openapi.editor.EditorGutterAction;
-import com.intellij.openapi.editor.FoldRegion;
-import com.intellij.openapi.editor.TextAnnotationGutterProvider;
-import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
-import com.intellij.openapi.editor.markup.GutterIconRenderer;
+import consulo.codeEditor.markup.GutterMark;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.codeEditor.EditorGutterAction;
+import consulo.codeEditor.FoldRegion;
+import consulo.codeEditor.TextAnnotationGutterProvider;
+import consulo.codeEditor.EditorGutterComponentEx;
+import consulo.codeEditor.markup.GutterIconRenderer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -34,7 +34,7 @@ import java.util.function.IntUnaryOperator;
  * @author VISTALL
  * @since 07/08/2021
  */
-public class WebEditorGutterComponentImpl extends EditorGutterComponentEx {
+public class WebEditorGutterComponentImpl implements EditorGutterComponentEx {
   @Nullable
   @Override
   public FoldRegion findFoldingAnchorAt(int x, int y) {
@@ -44,7 +44,7 @@ public class WebEditorGutterComponentImpl extends EditorGutterComponentEx {
   @Nonnull
   @Override
   public List<GutterMark> getGutterRenderers(int line) {
-    return null;
+    return List.of();
   }
 
   @Override

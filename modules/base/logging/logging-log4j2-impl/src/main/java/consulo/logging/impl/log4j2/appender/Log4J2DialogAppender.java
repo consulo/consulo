@@ -15,14 +15,14 @@
  */
 package consulo.logging.impl.log4j2.appender;
 
-import com.intellij.diagnostic.DefaultIdeaErrorLogger;
-import com.intellij.diagnostic.LogEventException;
-import com.intellij.diagnostic.LogMessageEx;
-import com.intellij.idea.ApplicationStarter;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.IdeaLoggingEvent;
-import com.intellij.util.ExceptionUtil;
+import consulo.ide.impl.idea.diagnostic.DefaultIdeaErrorLogger;
+import consulo.ide.impl.idea.diagnostic.LogEventException;
+import consulo.ide.impl.idea.diagnostic.LogMessageEx;
+import consulo.application.impl.internal.start.ApplicationStarter;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.application.util.logging.IdeaLoggingEvent;
+import consulo.ide.impl.idea.util.ExceptionUtil;
 import consulo.logging.attachment.ExceptionWithAttachments;
 import org.apache.logging.log4j.core.Filter;
 import org.apache.logging.log4j.core.Layout;
@@ -38,7 +38,6 @@ import org.apache.logging.log4j.message.Message;
 import org.apache.logging.log4j.message.ObjectMessage;
 
 import javax.annotation.Nonnull;
-import javax.swing.*;
 import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -104,7 +103,7 @@ public class Log4J2DialogAppender extends AbstractAppender {
 
       // Note, we MUST avoid SYNCHRONOUS invokeAndWait to prevent deadlocks
       final IdeaLoggingEvent finalIdeaEvent = ideaEvent;
-      SwingUtilities.invokeLater(() -> {
+      Application.get().invokeLater(() -> {
         try {
           appendToLoggers(finalIdeaEvent);
         }

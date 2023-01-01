@@ -15,15 +15,13 @@
  */
 package consulo.container.plugin;
 
-import consulo.annotation.DeprecationInfo;
-
 /**
  * @author VISTALL
  * @since 24/10/2021
  */
 public enum PluginPermissionType {
   @Deprecated(forRemoval = true)
-  @DeprecationInfo("Use PROCESS_CREATE")
+  //@DeprecationInfo("Use PROCESS_CREATE")
   PROCESS,
   /**
    * running any process in OS (and destroy if need)
@@ -38,7 +36,7 @@ public enum PluginPermissionType {
    */
   NATIVE_LIBRARY,
   @Deprecated(forRemoval = true)
-  @DeprecationInfo("Splitting to SOCKET_BIND and SOCKET_CONNECT")
+  //@DeprecationInfo("Splitting to SOCKET_BIND and SOCKET_CONNECT")
   SOCKET,
   /**
    * binding any TCP/UDP socket

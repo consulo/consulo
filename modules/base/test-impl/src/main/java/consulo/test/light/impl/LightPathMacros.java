@@ -15,7 +15,9 @@
  */
 package consulo.test.light.impl;
 
-import com.intellij.openapi.application.PathMacros;
+import consulo.application.macro.PathMacros;
+import consulo.component.macro.ExpandMacroToPathMap;
+import consulo.component.macro.ReplacePathToMacroMap;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
@@ -25,7 +27,7 @@ import java.util.Set;
  * @author VISTALL
  * @since 2018-08-25
  */
-public class LightPathMacros extends PathMacros {
+public class LightPathMacros implements PathMacros {
   @Override
   public Set<String> getAllMacroNames() {
     return null;
@@ -89,5 +91,15 @@ public class LightPathMacros extends PathMacros {
   @Override
   public Collection<String> getLegacyMacroNames() {
     return null;
+  }
+
+  @Override
+  public void addMacroReplacements(ReplacePathToMacroMap result) {
+
+  }
+
+  @Override
+  public void addMacroExpands(ExpandMacroToPathMap result) {
+
   }
 }

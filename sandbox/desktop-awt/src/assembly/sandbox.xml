@@ -24,7 +24,7 @@
 
   <componentDescriptors>
     <componentDescriptor>${project.basedir}/../../distribution/src/platform.base.xml</componentDescriptor>
-    <componentDescriptor>${project.basedir}/../../distribution/src/platform.desktop.xml</componentDescriptor>
+    <componentDescriptor>${project.basedir}/../../distribution/src/platform.desktop.awt.xml</componentDescriptor>
   </componentDescriptors>
 
   <fileSets>
@@ -75,10 +75,6 @@
       <scope>runtime</scope>
       <includes>
         <include>consulo:consulo-sand-language-plugin</include>
-        <include>com.formdev:flatlaf</include>
-        <include>org.pushing-pixels:radiance-substance</include>
-        <include>org.pushing-pixels:radiance-trident</include>
-        <include>org.pushing-pixels:radiance-neon</include>
       </includes>
     </dependencySet>
   </dependencySets>

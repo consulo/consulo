@@ -15,7 +15,6 @@
  */
 package consulo.container.plugin;
 
-import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,28 +24,31 @@ import java.util.Set;
  * @since 2019-07-16
  */
 public final class PluginIds {
-  // TODO [VISTALL] rename later. consulo.platform.base
-  public static final PluginId CONSULO_PLATFORM_BASE = PluginId.getId("com.intellij");
+  public static final PluginId CONSULO_BASE = PluginId.getId("consulo");
 
-  public static final PluginId CONSULO_PLATFORM_DESKTOP = PluginId.getId("consulo.platform.desktop");
+  public static final PluginId CONSULO_DESKTOP_AWT = PluginId.getId("consulo.desktop.awt");
 
-  public static final PluginId CONSULO_PLATFORM_DESKTOP_SWT = PluginId.getId("consulo.platform.desktop.swt");
+  public static final PluginId CONSULO_DESKTOP_SWT = PluginId.getId("consulo.desktop.swt");
 
-  public static final PluginId CONSULO_PLATFORM_WEB = PluginId.getId("consulo.platform.web");
+  public static final PluginId CONSULO_WEB = PluginId.getId("consulo.web");
+
+  /**
+   * ID of repo analyzer, since it's running without AWT/SWT/Web dependencies
+   */
+  private static final PluginId CONSULO_REPO_ANALYZER = PluginId.getId("consulo.repo.analyzer");
 
   private static final Set<PluginId> ourMergedObsoletePlugins = new HashSet<PluginId>(Arrays.asList(PluginId.getId("org.intellij.intelliLang")));
 
-  private static final Set<PluginId> ourPlatformIds = new HashSet<PluginId>(Arrays.asList(CONSULO_PLATFORM_DESKTOP, CONSULO_PLATFORM_DESKTOP_SWT, CONSULO_PLATFORM_WEB));
+  private static final Set<PluginId> ourPlatformIds = new HashSet<PluginId>(Arrays.asList(CONSULO_DESKTOP_AWT, CONSULO_DESKTOP_SWT, CONSULO_WEB, CONSULO_REPO_ANALYZER));
 
-  public static boolean isPlatformImplementationPlugin(@Nonnull PluginId pluginId) {
+  public static boolean isPlatformImplementationPlugin(PluginId pluginId) {
     return ourPlatformIds.contains(pluginId);
   }
 
-  public static boolean isPlatformPlugin(@Nonnull PluginId pluginId) {
-    return CONSULO_PLATFORM_BASE.equals(pluginId) || isPlatformImplementationPlugin(pluginId);
+  public static boolean isPlatformPlugin(PluginId pluginId) {
+    return CONSULO_BASE.equals(pluginId) || isPlatformImplementationPlugin(pluginId);
   }
 
-  @Nonnull
   public static Set<PluginId> getObsoletePlugins() {
     return ourMergedObsoletePlugins;
   }

@@ -1,19 +1,15 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.util.lang;
 
-import consulo.annotation.ReviewAfterMigrationToJRE;
 import org.jetbrains.annotations.Contract;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.lang.ref.Reference;
 import java.lang.reflect.Proxy;
 import java.util.Comparator;
 import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
+import java.util.function.*;
 
 /**
  * @author peter
@@ -25,7 +21,7 @@ public class ObjectUtil {
   /**
    * @see NotNullizer
    */
-  public static final Object NULL = sentinel("ObjectUtils.NULL");
+  public static final Object NULL = sentinel("ObjectUtil.NULL");
 
   /**
    * Creates a new object which could be used as sentinel value (special value to distinguish from any other object). It does not equal
@@ -45,7 +41,6 @@ public class ObjectUtil {
    * They promise in http://mail.openjdk.java.net/pipermail/core-libs-dev/2018-February/051312.html that
    * the object reference won't be removed by JIT and GC-ed until this call.
    */
-  @ReviewAfterMigrationToJRE(9)
   public static void reachabilityFence(Object o) {
     Reference.reachabilityFence(o);
   }
@@ -112,6 +107,29 @@ public class ObjectUtil {
   @Contract(value = "!null, _, _ -> !null; _, !null, _ -> !null; _, _, !null -> !null; null,null,null -> null", pure = true)
   public static <T> T coalesce(@Nullable T t1, @Nullable T t2, @Nullable T t3) {
     return t1 != null ? t1 : t2 != null ? t2 : t3;
+  }
+
+
+  /**
+   * Performs binary search on the range [fromIndex, toIndex)
+   *
+   * @param indexComparator a comparator which receives a middle index and returns the result of comparision of the value at this index and the goal value
+   *                        (e.g 0 if found, -1 if the value[middleIndex] < goal, or 1 if value[middleIndex] > goal)
+   * @return index for which {@code indexComparator} returned 0 or {@code -insertionIndex-1} if wasn't found
+   * @see java.util.Arrays#binarySearch(Object[], Object, Comparator)
+   * @see java.util.Collections#binarySearch(List, Object, Comparator)
+   */
+  public static int binarySearch(int fromIndex, int toIndex, @Nonnull IntUnaryOperator indexComparator) {
+    int low = fromIndex;
+    int high = toIndex - 1;
+    while (low <= high) {
+      int mid = (low + high) >>> 1;
+      int cmp = indexComparator.applyAsInt(mid);
+      if (cmp < 0) low = mid + 1;
+      else if (cmp > 0) high = mid - 1;
+      else return mid;
+    }
+    return -(low + 1);
   }
 
   @Nullable
@@ -216,4 +234,8 @@ public class ObjectUtil {
   //  }
   //  return -(low + 1);
   //}
+  @Nonnull
+  public static  String objectInfo(@Nullable Object o) {
+    return o != null ? o + " (" + o.getClass().getName() + ")" : "null";
+  }
 }

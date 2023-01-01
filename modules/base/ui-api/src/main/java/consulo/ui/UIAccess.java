@@ -73,6 +73,15 @@ public interface UIAccess {
     return -1;
   }
 
+  /**
+   * Calling Runnable#run() will restore event count from initial method call
+   */
+  @RequiredUIAccess
+  default Runnable markEventCount() {
+    assertIsUIThread();
+    return () -> {};
+  }
+
   boolean isValid();
 
   @Nonnull

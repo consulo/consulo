@@ -15,14 +15,14 @@
  */
 package consulo.test.light.impl;
 
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.vfs.CharsetToolkit;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.encoding.EncodingProjectManager;
-import javax.annotation.Nonnull;
+import consulo.util.io.CharsetToolkit;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.encoding.EncodingProjectManager;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -59,7 +59,7 @@ public class LightEncodingProjectManager extends EncodingProjectManager {
   @Nonnull
   @Override
   public Collection<Charset> getFavorites() {
-    return Collections.singletonList(CharsetToolkit.UTF8_CHARSET);
+    return Collections.singletonList(StandardCharsets.UTF_8);
   }
 
   @Override
@@ -88,12 +88,6 @@ public class LightEncodingProjectManager extends EncodingProjectManager {
   @Override
   public Charset getDefaultConsoleEncoding() {
     return Charset.defaultCharset();
-  }
-
-  @Nullable
-  @Override
-  public Charset getCachedCharsetFromContent(@Nonnull Document document) {
-    return null;
   }
 
   @Override

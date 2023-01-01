@@ -16,7 +16,7 @@
 package consulo.ui.web.internal;
 
 import com.vaadin.ui.UI;
-import consulo.components.impl.stores.ComponentStoreImpl;
+import consulo.component.store.impl.internal.ComponentStoreImpl;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 import consulo.util.concurrent.AsyncResult;

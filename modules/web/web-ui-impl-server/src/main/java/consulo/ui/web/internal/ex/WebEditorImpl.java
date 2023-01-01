@@ -15,35 +15,33 @@
  */
 package consulo.ui.web.internal.ex;
 
-import com.intellij.ide.DataManager;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.command.UndoConfirmationPolicy;
-import com.intellij.openapi.editor.*;
-import com.intellij.openapi.editor.actionSystem.DocCommandGroupId;
-import com.intellij.openapi.editor.event.*;
-import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
-import com.intellij.openapi.editor.ex.RangeHighlighterEx;
-import com.intellij.openapi.editor.highlighter.HighlighterIterator;
-import com.intellij.openapi.editor.impl.MarkupModelImpl;
-import com.intellij.openapi.editor.impl.TextDrawingCallback;
-import com.intellij.openapi.editor.markup.TextAttributes;
-import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
-import com.intellij.openapi.project.Project;
+import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
+import consulo.codeEditor.*;
+import consulo.codeEditor.event.*;
+import consulo.codeEditor.impl.*;
+import consulo.codeEditor.markup.RangeHighlighter;
+import consulo.colorScheme.TextAttributes;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.editor.impl.*;
+import consulo.document.DocCommandGroupId;
+import consulo.document.Document;
 import consulo.internal.arquill.editor.server.ArquillEditor;
 import consulo.internal.arquill.editor.server.event.MouseDownEvent;
+import consulo.project.Project;
 import consulo.ui.Component;
 import consulo.ui.FocusableComponent;
+import consulo.ui.Position2D;
 import consulo.ui.color.ColorValue;
 import consulo.ui.event.details.MouseInputDetails;
 import consulo.ui.web.internal.base.ComponentHolder;
 import consulo.ui.web.internal.base.FromVaadinComponentWrapper;
 import consulo.ui.web.internal.base.VaadinComponentDelegate;
 import consulo.ui.web.internal.util.Mappers;
+import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.BitUtil;
 import consulo.web.gwt.shared.ui.state.RGBColorShared;
@@ -183,7 +181,7 @@ public class WebEditorImpl extends CodeEditorBase {
   }
 
   @Override
-  protected void onHighlighterChanged(@Nonnull RangeHighlighterEx highlighter, boolean canImpactGutterSize, boolean fontStyleOrColorChanged, boolean remove) {
+  protected void onHighlighterChanged(@Nonnull RangeHighlighter highlighter, boolean canImpactGutterSize, boolean fontStyleOrColorChanged, boolean remove) {
     if (myDocument.isInBulkUpdate()) return; // bulkUpdateFinished() will repaint anything
 
     Vaadin vaadin = myEditorComponent.toVaadinComponent();
@@ -222,8 +220,9 @@ public class WebEditorImpl extends CodeEditorBase {
     boolean forceProcessing = false;
     //myMousePressedEvent = e;
     MouseInputDetails.MouseButton mouseButton = MouseInputDetails.MouseButton.values()[e.getButton()];
+    Position2D position = new Position2D(e.getX(), e.getY());
     EditorMouseEvent event =
-            new EditorMouseEvent(this, new MouseInputDetails(e.getX(), e.getY(), EnumSet.noneOf(MouseInputDetails.Modifier.class), mouseButton), mouseButton == MouseInputDetails.MouseButton.RIGHT,
+            new EditorMouseEvent(this, new MouseInputDetails(position, Position2D.OUT_OF_RANGE, EnumSet.noneOf(MouseInputDetails.Modifier.class), mouseButton), mouseButton == MouseInputDetails.MouseButton.RIGHT,
                                  EditorMouseEventArea.EDITING_AREA);
 
     myExpectedCaretOffset = e.getTextOffset();
@@ -232,7 +231,7 @@ public class WebEditorImpl extends CodeEditorBase {
         boolean wasConsumed = event.isConsumed();
         mouseListener.mousePressed(event);
         //noinspection deprecation
-        if (!wasConsumed && event.isConsumed() && mouseListener instanceof com.intellij.util.EditorPopupHandler) {
+        if (!wasConsumed && event.isConsumed() && mouseListener instanceof consulo.ide.impl.idea.util.EditorPopupHandler) {
           // compatibility with legacy code, this logic should be removed along with EditorPopupHandler
           forceProcessing = true;
         }

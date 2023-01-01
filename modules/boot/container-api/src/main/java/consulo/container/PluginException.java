@@ -18,11 +18,12 @@ package consulo.container;
 import consulo.container.plugin.PluginId;
 
 /**
- * Created by IntelliJ IDEA.
- * User: stathik
- * Date: Jan 8, 2004
- * Time: 3:06:43 PM
- * To change this template use Options | File Templates.
+ * <p>Represents an internal error caused by a plugin. It may happen if the plugin's code fails with an exception, or if the plugin violates
+ * some contract of IntelliJ Platform. If such exceptions are thrown or logged via {@link Logger#error(Throwable)}
+ * method and reported to JetBrains by user, they may be automatically attributed to corresponding plugins.</p>
+ *
+ * <p>If the problem is caused by a class, use {@link PluginExceptionUtil#createByClass} to create
+ * an instance</p>
  */
 public class PluginException extends RuntimeException {
   private final PluginId myPluginId;

@@ -15,10 +15,10 @@
  */
 package consulo.sandboxPlugin.ide.codeInsight.template.postfix.templates;
 
-import com.intellij.codeInsight.template.postfix.templates.PostfixTemplate;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.PsiElement;
+import consulo.language.editor.postfixTemplate.PostfixTemplate;
+import consulo.document.Document;
+import consulo.codeEditor.Editor;
+import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;
 
 /**

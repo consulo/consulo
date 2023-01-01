@@ -20,23 +20,22 @@
   <parent>
     <groupId>consulo</groupId>
     <artifactId>arch.global</artifactId>
-    <version>2-SNAPSHOT</version>
+    <version>3-SNAPSHOT</version>
     <relativePath>../../../arch/global/pom.xml</relativePath>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>consulo-base-localize-library</artifactId>
-  <version>2-SNAPSHOT</version>
+  <version>3-SNAPSHOT</version>
 
   <packaging>jar</packaging>
-  
+
   <build>
     <plugins>
       <plugin>
         <groupId>consulo.maven</groupId>
         <artifactId>maven-consulo-plugin</artifactId>
-        <version>2-SNAPSHOT</version>
         <extensions>true</extensions>
         <executions>
           <execution>

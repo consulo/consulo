@@ -21,12 +21,12 @@
   <parent>
     <groupId>consulo</groupId>
     <artifactId>arch.managment</artifactId>
-    <version>2-SNAPSHOT</version>
+    <version>3-SNAPSHOT</version>
     <relativePath>../../../arch/managment/pom.xml</relativePath>
   </parent>
 
   <artifactId>consulo-web-ui-impl-client</artifactId>
-  <version>2-SNAPSHOT</version>
+  <version>3-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <properties>
@@ -38,26 +38,16 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>${maven.compile.plugin}</version>
         <configuration>
           <source>${java.level}</source>
           <target>${java.level}</target>
           <skip>true</skip>
           <skipMain>true</skipMain>
         </configuration>
-        <!--workaround for java 9-->
-        <dependencies>
-          <dependency>
-            <groupId>org.codehaus.plexus</groupId>
-            <artifactId>plexus-archiver</artifactId>
-            <version>2.4.4</version>
-          </dependency>
-        </dependencies>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
-        <version>3.0.1</version>
         <executions>
           <execution>
             <id>attach-sources</id>
@@ -69,14 +59,6 @@
         <configuration>
           <skipSource>true</skipSource>
         </configuration>
-        <!--workaround for java 9-->
-        <dependencies>
-          <dependency>
-            <groupId>org.codehaus.plexus</groupId>
-            <artifactId>plexus-archiver</artifactId>
-            <version>2.4.4</version>
-          </dependency>
-        </dependencies>
       </plugin>
       <plugin>
         <groupId>consulo.internal.vaadin</groupId>

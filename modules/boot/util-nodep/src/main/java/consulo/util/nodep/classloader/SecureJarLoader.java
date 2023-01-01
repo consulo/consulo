@@ -4,8 +4,6 @@ package consulo.util.nodep.classloader;
 import consulo.util.nodep.ArrayUtilRt;
 import consulo.util.nodep.io.FileUtilRt;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -20,7 +18,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 class SecureJarLoader extends JarLoader {
-  @Nullable
   private ProtectionDomain myProtectionDomain;
   private final Object myProtectionDomainMonitor = new Object();
 
@@ -29,7 +26,7 @@ class SecureJarLoader extends JarLoader {
   }
 
   @Override
-  protected MemoryResource createMemoryResource(URL baseUrl, @Nonnull ZipFile zipFile, @Nonnull ZipEntry entry, @Nullable Map<Resource.Attribute, String> attributes) throws IOException {
+  protected MemoryResource createMemoryResource(URL baseUrl, ZipFile zipFile, ZipEntry entry, Map<Resource.Attribute, String> attributes) throws IOException {
     String name = entry.getName();
     URL url = new URL(baseUrl, name);
 
@@ -55,7 +52,7 @@ class SecureJarLoader extends JarLoader {
     return new MySecureResource(url, (JarEntry)entry);
   }
 
-  @Nonnull
+
   @Override
   protected ZipFile createZipFile(String path) throws IOException {
     return new JarFile(path);
@@ -69,7 +66,7 @@ class SecureJarLoader extends JarLoader {
       myCodeSigners = codeSigners;
     }
 
-    @Nullable
+
     @Override
     public ProtectionDomain getProtectionDomain() {
       synchronized (myProtectionDomainMonitor) {
@@ -111,7 +108,7 @@ class SecureJarLoader extends JarLoader {
       return result;
     }
 
-    @Nullable
+
     @Override
     public ProtectionDomain getProtectionDomain() {
       synchronized (myProtectionDomainMonitor) {

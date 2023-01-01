@@ -15,17 +15,16 @@
  */
 package consulo.container.impl;
 
-import consulo.container.impl.parser.*;
+import consulo.container.impl.parser.PluginBean;
+import consulo.container.impl.parser.PluginBeanParser;
+import consulo.container.impl.parser.PluginDependency;
 import consulo.container.plugin.*;
 import consulo.util.nodep.io.FileUtilRt;
-import consulo.util.nodep.map.SimpleMultiMap;
 import consulo.util.nodep.text.StringUtilRt;
 import consulo.util.nodep.xml.SimpleXmlParsingException;
 import consulo.util.nodep.xml.SimpleXmlReader;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -60,35 +59,24 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
   private PluginId[] myIncompatibleWithPluginds = PluginId.EMPTY_ARRAY;
   private Map<PluginId, String> myOptionalConfigs;
   private Map<PluginId, PluginDescriptorImpl> myOptionalDescriptors;
-  @Nonnull
-  private List<SimpleXmlElement> myActionsElements = Collections.emptyList();
-  private List<ComponentConfig> myAppComponents = Collections.emptyList();
-  private List<ComponentConfig> myProjectComponents = Collections.emptyList();
 
-  private List<PluginListenerDescriptor> myApplicationListeners = Collections.emptyList();
-  private List<PluginListenerDescriptor> myProjectListeners = Collections.emptyList();
-  private List<PluginListenerDescriptor> myModuleListeners = Collections.emptyList();
+  private List<SimpleXmlElement> myActionsElements = Collections.emptyList();
 
   private Map<PluginPermissionType, PluginPermissionDescriptor> myPermissionDescriptors = Collections.emptyMap();
 
   private boolean myDeleted = false;
   private ClassLoader myLoader;
-  private Object myModuleLayer;
-
-  private Collection<HelpSetPath> myHelpSets = Collections.emptyList();
-  @Nonnull
-  private SimpleMultiMap<String, ExtensionInfo> myExtensions = SimpleMultiMap.emptyMap();
-  @Nonnull
-  private SimpleMultiMap<String, SimpleXmlElement> myExtensionsPoints = SimpleMultiMap.emptyMap();
+  private ModuleLayer myModuleLayer;
 
   private Set<String> myTags = Collections.emptySet();
 
   private String myDescriptionChildText;
-  private boolean myEnabled = true;
-  private Boolean mySkipped;
+  private PluginDescriptorStatus myStatus = PluginDescriptorStatus.OK;
   private boolean myExperimental;
 
-  public PluginDescriptorImpl(@Nonnull File pluginPath, @Nonnull byte[] iconBytes, @Nonnull byte[] darkIconBytes, boolean isPreInstalled) {
+  private List<ClassPathItem> myClassPathItems;
+
+  public PluginDescriptorImpl(File pluginPath, byte[] iconBytes, byte[] darkIconBytes, boolean isPreInstalled) {
     myPath = pluginPath;
     myIconBytes = iconBytes;
     myDarkIconBytes = darkIconBytes;
@@ -100,12 +88,12 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
     return myPath;
   }
 
-  public void readExternal(@Nonnull InputStream stream, @Nullable ZipFile zipFile, @Nonnull ContainerLogger log) throws SimpleXmlParsingException {
+  public void readExternal(InputStream stream, ZipFile zipFile, ContainerLogger log) throws SimpleXmlParsingException {
     SimpleXmlElement element = SimpleXmlReader.parse(stream);
     readExternal(element, zipFile, log);
   }
 
-  private void readExternal(@Nonnull SimpleXmlElement element, @Nullable ZipFile zipFile, @Nonnull ContainerLogger log) throws SimpleXmlParsingException {
+  private void readExternal(SimpleXmlElement element, ZipFile zipFile, ContainerLogger log) throws SimpleXmlParsingException {
     final PluginBean pluginBean = PluginBeanParser.parseBean(element, null);
     assert pluginBean != null;
     url = pluginBean.url;
@@ -134,8 +122,8 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
     // preserve items order as specified in xml (filterBadPlugins will not fail if module comes first)
     Set<PluginId> dependentPlugins = new LinkedHashSet<PluginId>();
     // we always depend to core plugin, but prevent recursion
-    if (!PluginIds.CONSULO_PLATFORM_BASE.equals(myId)) {
-      dependentPlugins.add(PluginIds.CONSULO_PLATFORM_BASE);
+    if (!PluginIds.CONSULO_BASE.equals(myId)) {
+      dependentPlugins.add(PluginIds.CONSULO_BASE);
     }
     Set<PluginId> optionalDependentPlugins = new LinkedHashSet<PluginId>();
     if (pluginBean.dependencies != null) {
@@ -166,19 +154,11 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
     myDependencies = dependentPlugins.isEmpty() ? PluginId.EMPTY_ARRAY : dependentPlugins.toArray(new PluginId[dependentPlugins.size()]);
     myOptionalDependencies = optionalDependentPlugins.isEmpty() ? PluginId.EMPTY_ARRAY : optionalDependentPlugins.toArray(new PluginId[optionalDependentPlugins.size()]);
 
-    if (!pluginBean.helpSets.isEmpty()) {
-      myHelpSets = new ArrayList<HelpSetPath>(pluginBean.helpSets.size());
-      List<PluginHelpSet> sets = pluginBean.helpSets;
-      for (PluginHelpSet pluginHelpSet : sets) {
-        myHelpSets.add(new HelpSetPath(pluginHelpSet.file, pluginHelpSet.path));
-      }
-    }
-
     if (!pluginBean.tags.isEmpty()) {
       myTags = Collections.unmodifiableSet(pluginBean.tags);
     }
 
-    if(pluginBean.experimental) {
+    if (pluginBean.experimental) {
       Set<String> oldTags = new TreeSet<String>(myTags);
       oldTags.add(EXPERIMENTAL_TAG);
 
@@ -227,57 +207,14 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
         }
       }
     }
-
-    for (PluginListenerDescriptor descriptor : myApplicationListeners) {
-      descriptor.pluginDescriptor = this;
-    }
-
-    for (PluginListenerDescriptor descriptor : myProjectListeners) {
-      descriptor.pluginDescriptor = this;
-    }
-
-    for (PluginListenerDescriptor descriptor : myModuleListeners) {
-      descriptor.pluginDescriptor = this;
-    }
   }
 
   private void extendPlugin(PluginBean pluginBean) {
-    myAppComponents = mergeElements(myAppComponents, pluginBean.applicationComponents);
-    myProjectComponents = mergeElements(myProjectComponents, pluginBean.projectComponents);
     myActionsElements = mergeElements(myActionsElements, pluginBean.actions);
-
-    myApplicationListeners = mergeElements(myApplicationListeners, pluginBean.applicationListeners);
-    myProjectListeners = mergeElements(myProjectListeners, pluginBean.projectListeners);
-    myModuleListeners = mergeElements(myModuleListeners, pluginBean.moduleListeners);
-
-    List<ExtensionInfo> extensions = pluginBean.extensions;
-    if (extensions != null && !extensions.isEmpty()) {
-      initializeExtensions();
-
-      for (ExtensionInfo extension : extensions) {
-        String extId = extension.getPluginId() + "." + extension.getElement().getName();
-        myExtensions.putValue(extId, extension);
-      }
-    }
-
-    List<SimpleXmlElement> extensionPoints = pluginBean.extensionPoints;
-    if (extensionPoints != null && !extensionPoints.isEmpty()) {
-      initializeExtensionPoints();
-
-      for (SimpleXmlElement extensionPoint : extensionPoints) {
-        String areaId = extensionPoint.getAttributeValue("area", "");
-
-        if (areaId.isEmpty()) {
-          areaId = "APPLICATION";
-        }
-
-        myExtensionsPoints.putValue(areaId, extensionPoint);
-      }
-    }
   }
 
-  @Nonnull
-  private static <T> List<T> mergeElements(@Nonnull List<T> original, @Nonnull List<T> additional) {
+
+  private static <T> List<T> mergeElements(List<T> original, List<T> additional) {
     if (additional.isEmpty()) {
       return original;
     }
@@ -294,32 +231,9 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
   }
 
   public void mergeOptionalConfig(final PluginDescriptorImpl descriptor) {
-    initializeExtensions();
-
-    myExtensions.putAll(descriptor.myExtensions);
-
-    initializeExtensionPoints();
-
-    myExtensionsPoints.putAll(descriptor.myExtensionsPoints);
-
     myActionsElements = mergeElements(myActionsElements, descriptor.myActionsElements);
-    myAppComponents = mergeElements(myAppComponents, descriptor.myAppComponents);
-    myProjectComponents = mergeElements(myProjectComponents, descriptor.myProjectComponents);
   }
 
-  private void initializeExtensions() {
-    if (myExtensions.isEmpty()) {
-      myExtensions = SimpleMultiMap.newHashMap();
-    }
-  }
-
-  private void initializeExtensionPoints() {
-    if (myExtensionsPoints.isEmpty()) {
-      myExtensionsPoints = SimpleMultiMap.newHashMap();
-    }
-  }
-
-  @Nonnull
   @Override
   public Set<String> getTags() {
     return myTags;
@@ -335,10 +249,9 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
     return myChangeNotes;
   }
 
-  @Nonnull
   @Override
   public byte[] getIconBytes(boolean isDarkTheme) {
-    if(isDarkTheme && myDarkIconBytes.length > 0) {
+    if (isDarkTheme && myDarkIconBytes.length > 0) {
       return myDarkIconBytes;
     }
     return myIconBytes;
@@ -350,18 +263,15 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
   }
 
   @Override
-  @Nonnull
   public PluginId[] getDependentPluginIds() {
     return myDependencies;
   }
 
   @Override
-  @Nonnull
   public PluginId[] getOptionalDependentPluginIds() {
     return myOptionalDependencies;
   }
 
-  @Nonnull
   @Override
   public PluginId[] getIncompatibleWithPlugindIds() {
     return myIncompatibleWithPluginds;
@@ -387,7 +297,6 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
     return myResourceBundleBaseName;
   }
 
-  @Nullable
   @Override
   public String getLocalize() {
     return myLocalize;
@@ -409,60 +318,70 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
     myCategory = category;
   }
 
-  @Nonnull
-  public SimpleMultiMap<String, SimpleXmlElement> getExtensionsPoints() {
-    return myExtensionsPoints;
-  }
-
-  @Nonnull
-  public SimpleMultiMap<String, ExtensionInfo> getExtensions() {
-    return myExtensions;
-  }
-
-  @Nonnull
-  public List<File> getClassPath() {
-    if (myPath.isDirectory()) {
-      final List<File> result = new ArrayList<File>();
-      fillLibs(new File(myPath, "lib"), result);
-      return result;
+  public List<File> getClassPath(Set<PluginId> enabledPluginIds) {
+    if (myClassPathItems == null) {
+      myClassPathItems = analyzeClassPath();
     }
-    else {
-      return Collections.singletonList(myPath);
+
+    List<File> files = new ArrayList<>(myClassPathItems.size());
+    for (ClassPathItem classPathItem : myClassPathItems) {
+      if (classPathItem.accept(enabledPluginIds)) {
+        files.add(classPathItem.getPath());
+      }
     }
+    return files;
   }
 
-  private static void fillLibs(File libDirectory, List<File> result) {
+  private List<ClassPathItem> analyzeClassPath() {
+    if (!myPath.isDirectory()) {
+      return Collections.emptyList();
+    }
+
+    final List<ClassPathItem> result = new ArrayList<ClassPathItem>();
+    File libDir = new File(myPath, "lib");
+    fillLibs(libDir, result);
+    return result;
+  }
+
+  private static void fillLibs(File libDirectory, List<ClassPathItem> result) {
     final File[] files = libDirectory.listFiles();
     if (files != null && files.length > 0) {
       for (final File f : files) {
-        if (f.isFile()) {
-          if (FileUtilRt.isJarOrZip(f)) {
-            result.add(f);
+        if (FileUtilRt.isJarOrZip(f)) {
+          File requiresFile = new File(f.getParentFile(), f.getName() + ".requires");
+          if (requiresFile.exists()) {
+            List<ClassPathPluginSet> pluginSets = readRequires(requiresFile);
+            result.add(new ClassPathItem(f, pluginSets));
+
+          } else {
+            result.add(new ClassPathItem(f, Collections.emptyList()));
           }
-        }
-        else {
-          result.add(f);
         }
       }
     }
   }
 
+  private static List<ClassPathPluginSet> readRequires(File xmlRequires) {
+    try {
+      List<ClassPathPluginSet> sets = new ArrayList<>();
+      SimpleXmlElement rootElement = SimpleXmlReader.parse(xmlRequires);
+      for (SimpleXmlElement plugins : rootElement.getChildren("plugins")) {
+        ClassPathPluginSet set = new ClassPathPluginSet();
+        sets.add(set);
+        for (SimpleXmlElement plugin : plugins.getChildren("plugin")) {
+          set.add(PluginId.getId(plugin.getText()));
+        }
+      }
+      return sets;
+    }
+    catch (SimpleXmlParsingException ignored) {
+    }
+    return Collections.emptyList();
+  }
+
   @Override
-  @Nonnull
   public List<SimpleXmlElement> getActionsDescriptionElements() {
     return myActionsElements;
-  }
-
-  @Override
-  @Nonnull
-  public List<ComponentConfig> getAppComponents() {
-    return myAppComponents;
-  }
-
-  @Override
-  @Nonnull
-  public List<ComponentConfig> getProjectComponents() {
-    return myProjectComponents;
   }
 
   @Override
@@ -480,27 +399,8 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
     return url;
   }
 
-  @Nonnull
   @Override
-  public List<PluginListenerDescriptor> getApplicationListeners() {
-    return myApplicationListeners;
-  }
-
-  @Nonnull
-  @Override
-  public List<PluginListenerDescriptor> getProjectListeners() {
-    return myProjectListeners;
-  }
-
-  @Nonnull
-  @Override
-  public List<PluginListenerDescriptor> getModuleListeners() {
-    return myModuleListeners;
-  }
-
-  @Nullable
-  @Override
-  public PluginPermissionDescriptor getPermissionDescriptor(@Nonnull PluginPermissionType permissionType) {
+  public PluginPermissionDescriptor getPermissionDescriptor(PluginPermissionType permissionType) {
     return myPermissionDescriptors.get(permissionType);
   }
 
@@ -522,11 +422,12 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
     myLoader = loader;
   }
 
-  public void setModuleLayer(Object moduleLayer) {
+  public void setModuleLayer(ModuleLayer moduleLayer) {
     myModuleLayer = moduleLayer;
   }
 
-  public Object getModuleLayer() {
+  @Override
+  public ModuleLayer getModuleLayer() {
     return myModuleLayer;
   }
 
@@ -546,56 +447,38 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
   }
 
   @Override
-  @Nonnull
-  public Collection<HelpSetPath> getHelpSets() {
-    return myHelpSets;
-  }
-
-  @Nonnull
-  @Override
   public PluginId getPluginId() {
     return myId;
   }
 
-  @Nonnull
   @Override
   public ClassLoader getPluginClassLoader() {
     if (myLoader == null) {
-      throw new IllegalArgumentException("Do not call #getPluginClassLoader() is plugin is not loaded");
+      throw new IllegalArgumentException("Do not call #getPluginClassLoader() when plugin is not loaded");
     }
     return myLoader;
   }
 
   @Override
-  public boolean isEnabled() {
-    return myEnabled;
+  public PluginDescriptorStatus getStatus() {
+    return myStatus;
   }
 
-  @Override
-  public void setEnabled(final boolean enabled) {
-    myEnabled = enabled;
+  public void setStatus(PluginDescriptorStatus status) {
+    myStatus = status;
   }
 
-  @Nullable
   public Map<PluginId, String> getOptionalConfigs() {
     return myOptionalConfigs;
   }
 
-  @Nullable
+
   public Map<PluginId, PluginDescriptorImpl> getOptionalDescriptors() {
     return myOptionalDescriptors;
   }
 
   public void setOptionalDescriptors(final Map<PluginId, PluginDescriptorImpl> optionalDescriptors) {
     myOptionalDescriptors = optionalDescriptors;
-  }
-
-  public Boolean getSkipped() {
-    return mySkipped;
-  }
-
-  public void setSkipped(final Boolean skipped) {
-    mySkipped = skipped;
   }
 
   @Override

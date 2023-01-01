@@ -15,9 +15,7 @@
 typedef jint (JNICALL* fun_ptr_t_CreateJavaVM)(JavaVM** pvm, void** env, void* args);
 
 NSBundle* vm;
-NSString* minRequiredJavaVersion = @"1.8";
-
-NSString* ourBootclasspath = @"$CONSULO_HOME/boot/consulo-bootstrap.jar:$CONSULO_HOME/boot/consulo-container-api.jar:$CONSULO_HOME/boot/consulo-container-impl.jar:$CONSULO_HOME/boot/consulo-desktop-bootstrap.jar:$CONSULO_HOME/boot/consulo-util-nodep.jar";
+NSString* minRequiredJavaVersion = @"17";
 
 @interface NSString (CustomReplacements)
 - (NSString*)replaceAll:(NSString*)pattern to:(NSString*)replacement;
@@ -256,15 +254,13 @@ NSArray* parseVMOptions(NSString* vmOptionsFile) {
 - (JavaVMInitArgs)buildArgsFor:(NSBundle*)jvm {
     NSMutableArray* args_array = [NSMutableArray array];
 
-    //[args_array addObject:[NSString stringWithFormat:@"-Djava.class.path=%@", ourBootclasspath]];
     [args_array addObject:[NSString stringWithFormat:@"--module-path=%@/boot:%@/boot/spi", myWorkingDirectory, myWorkingDirectory]];
-    [args_array addObject:@"-Djdk.module.main=consulo.desktop.bootstrap"];
-    [args_array addObject:@"-Dconsulo.module.path.boot=true"];
+    [args_array addObject:@"-Djdk.module.main=consulo.desktop.awt.bootstrap"];
 
     [args_array addObjectsFromArray:parseAppVMOptions([NSString stringWithFormat:@"%@/bin/app.vmoptions", myWorkingDirectory])];
 
     [args_array addObjectsFromArray:parseVMOptions(myVmOptionsFile)];
-    [args_array addObjectsFromArray:[@"-Dfile.encoding=UTF-8 -ea -Dsun.io.useCanonCaches=false -Djava.net.preferIPv4Stack=true -XX:+HeapDumpOnOutOfMemoryError -XX:-OmitStackTraceInFastThrow -Xverify:none" componentsSeparatedByString:@" "]];
+    [args_array addObjectsFromArray:[@"-Dfile.encoding=UTF-8 -ea -Dsun.io.useCanonCaches=false -Djava.net.preferIPv4Stack=true -XX:+HeapDumpOnOutOfMemoryError -XX:-OmitStackTraceInFastThrow" componentsSeparatedByString:@" "]];
     [args_array addObject:[NSString stringWithFormat:@"-Dconsulo.properties.file=%@", myPropertiesFile]];
     [args_array addObject:[NSString stringWithFormat:@"-Dconsulo.home.path=%@", myWorkingDirectory]];
     [args_array addObject:[NSString stringWithFormat:@"-Dconsulo.app.home.path=%@/Contents", myAppHome]];
@@ -383,7 +379,7 @@ BOOL validationJavaVersion(NSString* workingDirectory) {
         exit(-1);
     }
 
-    const char* mainClassName = "consulo/desktop/boot/main/Main";
+    const char* mainClassName = "consulo/desktop/awt/boot/main/Main";
     jclass mainClass = (*env)->FindClass(env, mainClassName);
     if (mainClass == NULL || (*env)->ExceptionOccurred(env)) {
         NSLog(@"Main class %s not found", mainClassName);

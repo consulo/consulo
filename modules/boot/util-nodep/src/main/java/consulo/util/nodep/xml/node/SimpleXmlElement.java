@@ -15,11 +15,6 @@
  */
 package consulo.util.nodep.xml.node;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.lang.Override;
-import java.lang.String;
-import java.lang.StringBuilder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -35,26 +30,24 @@ public final class SimpleXmlElement {
   private static final String EMPTY_TEXT = "";
 
   private final String myName;
-  @Nonnull
+
   private final String myText;
   private final Map<String, String> myAttributes;
   private final List<SimpleXmlElement> myChildren;
 
-  public SimpleXmlElement(@Nonnull String name, @Nullable String text, @Nonnull List<SimpleXmlElement> children, @Nonnull Map<String, String> attributes) {
+  public SimpleXmlElement(String name, String text, List<SimpleXmlElement> children, Map<String, String> attributes) {
     myName = name;
     myText = text == null ? EMPTY_TEXT : text;
     myAttributes = attributes;
     myChildren = Collections.unmodifiableList(children);
   }
 
-  @Nonnull
-  public String getChildText(@Nonnull String tagName) {
+  public String getChildText(String tagName) {
     SimpleXmlElement child = getChild(tagName);
     return child == null ? EMPTY_TEXT : child.getText();
   }
 
-  @Nullable
-  public SimpleXmlElement getChild(@Nonnull String tagName) {
+  public SimpleXmlElement getChild(String tagName) {
     if (myChildren.isEmpty()) {
       return null;
     }
@@ -70,8 +63,7 @@ public final class SimpleXmlElement {
     return null;
   }
 
-  @Nonnull
-  public List<SimpleXmlElement> getChildren(@Nonnull String tagName) {
+  public List<SimpleXmlElement> getChildren(String tagName) {
     if (myChildren.isEmpty()) {
       return Collections.emptyList();
     }
@@ -88,23 +80,19 @@ public final class SimpleXmlElement {
     return list;
   }
 
-  @Nonnull
   public String getText() {
     return myText;
   }
 
-  @Nonnull
   public List<SimpleXmlElement> getChildren() {
     return myChildren;
   }
 
-  @Nullable
-  public String getAttributeValue(@Nonnull String value) {
+  public String getAttributeValue(String value) {
     return myAttributes.get(value);
   }
 
-  @Nonnull
-  public String getAttributeValue(@Nonnull String value, @Nonnull String defaultvalue) {
+  public String getAttributeValue(String value, String defaultvalue) {
     String attrValue = myAttributes.get(value);
     return attrValue == null ? defaultvalue : attrValue;
   }
@@ -113,7 +101,6 @@ public final class SimpleXmlElement {
     return Collections.unmodifiableMap(myAttributes);
   }
 
-  @Nonnull
   public String getName() {
     return myName;
   }

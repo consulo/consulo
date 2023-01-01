@@ -15,11 +15,11 @@
  */
 package consulo.logging.impl.log4j2;
 
-import com.intellij.idea.StartupUtil;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
 import consulo.application.ApplicationProperties;
 import consulo.container.boot.ContainerPathManager;
+import consulo.container.internal.ShowError;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.logging.Logger;
 import consulo.logging.internal.LoggerFactory;
 import org.apache.logging.log4j.core.LoggerContext;
@@ -91,7 +91,7 @@ public class Log4J2LoggerFactory implements LoggerFactory {
     }
     catch (Exception e) {
       e.printStackTrace();
-      StartupUtil.showMessage("Consulo", e);
+      ShowError.showErrorDialog("Consulo", e.getMessage(), e);
       return null;
     }
   }

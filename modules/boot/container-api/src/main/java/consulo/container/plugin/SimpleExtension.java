@@ -15,8 +15,6 @@
  */
 package consulo.container.plugin;
 
-import javax.annotation.Nonnull;
-
 /**
  * @author VISTALL
  * @since 21-Sep-16
@@ -30,12 +28,10 @@ public final class SimpleExtension {
     myValues = values;
   }
 
-  @Nonnull
   public String getKey() {
     return myKey;
   }
 
-  @Nonnull
   public String[] getValues() {
     return myValues;
   }

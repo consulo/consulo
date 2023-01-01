@@ -15,11 +15,11 @@
  */
 package consulo.test.light.impl;
 
-import com.intellij.ide.UiActivity;
-import com.intellij.ide.UiActivityMonitor;
-import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.BusyObject;
+import consulo.component.ComponentManager;
+import consulo.component.util.BusyObject;
+import consulo.ui.ModalityState;
+import consulo.ui.ex.UiActivity;
+import consulo.ui.ex.UiActivityMonitor;
 
 import javax.annotation.Nonnull;
 
@@ -29,7 +29,7 @@ import javax.annotation.Nonnull;
  */
 public class LightUiActivityMonitor extends UiActivityMonitor {
   @Override
-  public BusyObject getBusy(@Nonnull Project project, UiActivity... toWatch) {
+  public BusyObject getBusy(@Nonnull ComponentManager project, UiActivity... toWatch) {
     return null;
   }
 
@@ -39,12 +39,12 @@ public class LightUiActivityMonitor extends UiActivityMonitor {
   }
 
   @Override
-  public void addActivity(@Nonnull Project project, @Nonnull UiActivity activity) {
+  public void addActivity(@Nonnull ComponentManager project, @Nonnull UiActivity activity) {
 
   }
 
   @Override
-  public void addActivity(@Nonnull Project project, @Nonnull UiActivity activity, @Nonnull ModalityState effectiveModalityState) {
+  public void addActivity(@Nonnull ComponentManager project, @Nonnull UiActivity activity, @Nonnull ModalityState effectiveModalityState) {
 
   }
 
@@ -59,7 +59,7 @@ public class LightUiActivityMonitor extends UiActivityMonitor {
   }
 
   @Override
-  public void removeActivity(@Nonnull Project project, @Nonnull UiActivity activity) {
+  public void removeActivity(@Nonnull ComponentManager project, @Nonnull UiActivity activity) {
 
   }
 

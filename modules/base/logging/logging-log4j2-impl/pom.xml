@@ -20,14 +20,14 @@
   <parent>
     <groupId>consulo</groupId>
     <artifactId>arch.global</artifactId>
-    <version>2-SNAPSHOT</version>
+    <version>3-SNAPSHOT</version>
     <relativePath>../../../../arch/global/pom.xml</relativePath>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>consulo-logging-log4j2-impl</artifactId>
-  <version>2-SNAPSHOT</version>
+  <version>3-SNAPSHOT</version>
 
   <packaging>jar</packaging>
 
@@ -57,10 +57,18 @@
               <annotationProcessors>
                 <annotationProcessor>org.apache.logging.log4j.core.config.plugins.processor.PluginProcessor</annotationProcessor>
               </annotationProcessors>
+              <annotationProcessorPaths>
+                <path>
+                  <groupId>org.apache.logging.log4j</groupId>
+                  <artifactId>log4j-core</artifactId>
+                  <version>${log4j2.version}</version>
+                </path>
+              </annotationProcessorPaths>
             </configuration>
           </execution>
         </executions>
-      </plugin></plugins>
+      </plugin>
+    </plugins>
   </build>
 
   <dependencies>
@@ -72,13 +80,13 @@
 
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-runtime-api</artifactId>
+      <artifactId>consulo-platform-api</artifactId>
       <version>${project.version}</version>
     </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-platform-impl</artifactId>
+      <artifactId>consulo-ide-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
 

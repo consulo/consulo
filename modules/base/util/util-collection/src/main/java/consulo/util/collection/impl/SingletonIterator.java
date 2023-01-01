@@ -15,9 +15,6 @@
  */
 package consulo.util.collection.impl;
 
-import consulo.util.collection.impl.SingletonIteratorBase;
-import consulo.util.lang.IncorrectOperationException;
-
 public class SingletonIterator<T> extends SingletonIteratorBase<T> {
   private final T myElement;
 
@@ -36,6 +33,6 @@ public class SingletonIterator<T> extends SingletonIteratorBase<T> {
 
   @Override
   public void remove() {
-    throw new IncorrectOperationException();
+    throw new UnsupportedOperationException();
   }
 }

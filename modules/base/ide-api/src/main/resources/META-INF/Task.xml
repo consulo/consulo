@@ -1,0 +1,93 @@
+<!--
+  - Copyright 2013-2021 consulo.io
+  -
+  - Licensed under the Apache License, Version 2.0 (the "License");
+  - you may not use this file except in compliance with the License.
+  - You may obtain a copy of the License at
+  -
+  - http://www.apache.org/licenses/LICENSE-2.0
+  -
+  - Unless required by applicable law or agreed to in writing, software
+  - distributed under the License is distributed on an "AS IS" BASIS,
+  - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  - See the License for the specific language governing permissions and
+  - limitations under the License.
+  -->
+<consulo-plugin>
+  <actions>
+
+    <group id="task.actions">
+      <action id="tasks.switch" class="consulo.ide.impl.idea.tasks.actions.SwitchTaskAction" text="_Switch Task...">
+        <keyboard-shortcut keymap="$default" first-keystroke="alt shift T"/>
+      </action>
+      <action id="tasks.goto" class="consulo.ide.impl.idea.tasks.actions.GotoTaskAction">
+        <keyboard-shortcut keymap="$default" first-keystroke="alt shift N"/>
+      </action>
+      <action id="tasks.close" class="consulo.ide.impl.idea.tasks.actions.CloseTaskAction" text="_Close Active Task...">
+        <keyboard-shortcut keymap="$default" first-keystroke="alt shift W"/>
+      </action>
+      <separator/>
+      <action id="tasks.create.changelist" class="consulo.ide.impl.idea.tasks.actions.CreateChangelistAction" text="Create Change_list..."/>
+      <action id="tasks.show.task.description" class="consulo.ide.impl.idea.tasks.actions.ShowTaskDescription" text="Show Description"/>
+      <action id="tasks.open.in.browser" class="consulo.ide.impl.idea.tasks.actions.OpenTaskInBrowserAction" text="Open in _Browser">
+        <keyboard-shortcut keymap="$default" first-keystroke="alt shift B"/>
+      </action>
+      <action id="tasks.analyze.stacktrace" class="consulo.ide.impl.idea.tasks.actions.AnalyzeTaskStacktraceAction" text="Analyze _Stacktrace From Task..."/>
+      <separator/>
+      <action id="tasks.configure.servers" class="consulo.ide.impl.idea.tasks.actions.ConfigureServersAction" text="Configure Servers..."/>
+    </group>
+
+    <group id="working.context">
+      <action id="context.save" class="consulo.ide.impl.idea.tasks.actions.context.SaveContextAction" text="_Save Context...">
+        <keyboard-shortcut keymap="$default" first-keystroke="alt shift S"/>
+      </action>
+      <action id="context.load" class="consulo.ide.impl.idea.tasks.actions.context.LoadContextAction" text="_Load Context...">
+        <keyboard-shortcut keymap="$default" first-keystroke="alt shift L"/>
+        <keyboard-shortcut keymap="Mac OS X" first-keystroke="alt shift L" remove="true"/>
+      </action>
+      <action id="context.clear" class="consulo.ide.impl.idea.tasks.actions.context.ClearContextAction" text="_Clear Context">
+        <keyboard-shortcut keymap="$default" first-keystroke="alt shift X"/>
+      </action>
+    </group>
+
+    <group id="tasks.and.contexts" text="_Tasks &amp; Contexts" popup="true">
+      <reference ref="task.actions"/>
+      <separator/>
+      <reference ref="working.context"/>
+    </group>
+
+    <group id="tasks.group">
+      <reference ref="tasks.and.contexts"/>
+      <separator/>
+      <add-to-group group-id="ToolsMenu" anchor="first"/>
+    </group>
+
+    <group id="tasks.toolbar.group" text="Tasks toolbar">
+      <separator/>
+      <action id="tasks.switch.toolbar" class="consulo.ide.impl.idea.tasks.actions.SwitchTaskCombo" text="Switch Task">
+        <keyboard-shortcut keymap="$default" first-keystroke="alt shift T"/>
+      </action>
+      <add-to-group group-id="MainToolBar" anchor="last"/>
+      <add-to-group group-id="NavBarToolBarOthers" anchor="last"/>
+    </group>
+
+
+    <action id="tasks.trackContext" class="consulo.ide.impl.idea.tasks.actions.AssociateWithTaskAction"
+        text="Associate with _Task"
+        description="Reload context (e.g. open editors) when changelist is set active">
+
+      <add-to-group group-id="ChangesViewPopupMenu" relative-to-action="ChangesView.SetDefault" anchor="after"/>
+    </action>
+  </actions>
+
+  <extensionPoints>
+    <extensionPoint name="tasks.repositoryType" interface="consulo.ide.impl.idea.tasks.TaskRepositoryType"/>
+    <extensionPoint name="tasks.contextProvider" area="PROJECT" interface="consulo.ide.impl.idea.tasks.context.WorkingContextProvider"/>
+    <extensionPoint name="tasks.dialogPanelProvider" interface="consulo.ide.impl.idea.tasks.ui.TaskDialogPanelProvider"/>
+  </extensionPoints>
+
+  <extensions defaultExtensionNs="consulo">
+
+
+  </extensions>
+</consulo-plugin>

@@ -15,15 +15,14 @@
  */
 package consulo.sandboxPlugin.ide.highlight;
 
-import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
-import consulo.sandboxPlugin.lang.SandLanguage;
+import consulo.codeEditor.DefaultLanguageHighlighterColors;
+import consulo.colorScheme.TextAttributesKey;
 
 /**
  * @author VISTALL
  * @since 19.03.14
  */
 public interface SandHighlighterKeys {
-  TextAttributesKey KEYWORD = TextAttributesKey.createTextAttributesKey(SandLanguage.INSTANCE, DefaultLanguageHighlighterColors.KEYWORD);
-  TextAttributesKey LINE_COMMENT = TextAttributesKey.createTextAttributesKey(SandLanguage.INSTANCE, DefaultLanguageHighlighterColors.LINE_COMMENT);
+  TextAttributesKey KEYWORD = TextAttributesKey.createTextAttributesKey("SAND_KEYWORD", DefaultLanguageHighlighterColors.KEYWORD);
+  TextAttributesKey LINE_COMMENT = TextAttributesKey.createTextAttributesKey("SAND_LINE_COMMENT", DefaultLanguageHighlighterColors.LINE_COMMENT);
 }

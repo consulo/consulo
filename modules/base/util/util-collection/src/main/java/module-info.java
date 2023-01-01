@@ -2,12 +2,21 @@ module consulo.util.collection {
   requires transitive consulo.annotation;
   requires transitive consulo.util.lang;
 
-  exports consulo.util.collection;
+  requires org.slf4j;
 
-  // TODO exports only to impl modules
-  exports consulo.util.collection.impl.map;
-  exports consulo.util.collection.impl.set;
-  exports consulo.util.collection.impl;
+  exports consulo.util.collection;
+  exports consulo.util.collection.util;
+
+  exports consulo.util.collection.impl.map to
+          consulo.util.collection.via.trove,
+          consulo.util.collection.primitive,
+          consulo.desktop.awt.ide.impl,
+          consulo.language.impl,
+          consulo.index.io,
+          consulo.ide.impl;
+
+  exports consulo.util.collection.impl.set to consulo.util.collection.primitive;
+  exports consulo.util.collection.impl to consulo.util.collection.primitive, consulo.util.collection.via.trove;
 
   uses consulo.util.collection.impl.CollectionFactory;
 }

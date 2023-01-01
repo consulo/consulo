@@ -1,8 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.util.nodep.classloader;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collections;
@@ -24,18 +22,15 @@ public class JarMemoryLoader {
     myResources = resources;
   }
 
-  @Nullable
   public Resource getResource(String entryName) {
     return myResources.get(entryName);
   }
 
-  @Nonnull
   public Map<String, Resource> getResources() {
     return myResources;
   }
 
-  @Nonnull
-  static JarMemoryLoader load(ZipFile zipFile, URL baseUrl, @Nonnull JarLoader attributesProvider) throws IOException {
+  static JarMemoryLoader load(ZipFile zipFile, URL baseUrl, JarLoader attributesProvider) throws IOException {
     Enumeration<? extends ZipEntry> entries = zipFile.entries();
     if (!entries.hasMoreElements()) return EMPTY;
 

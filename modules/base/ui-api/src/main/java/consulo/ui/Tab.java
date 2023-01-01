@@ -15,8 +15,6 @@
  */
 package consulo.ui;
 
-import consulo.annotation.ApiType;
-
 import javax.annotation.Nullable;
 import java.util.function.BiConsumer;
 
@@ -24,7 +22,6 @@ import java.util.function.BiConsumer;
  * @author VISTALL
  * @since 14-Jun-16
  */
-@ApiType
 public interface Tab extends TextItemPresentation {
   void setCloseHandler(@Nullable BiConsumer<Tab, Component> closeHandler);
 
