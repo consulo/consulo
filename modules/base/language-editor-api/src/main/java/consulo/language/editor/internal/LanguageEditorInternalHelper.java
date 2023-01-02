@@ -22,7 +22,10 @@ import consulo.codeEditor.Editor;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
+import consulo.language.editor.annotation.Annotation;
+import consulo.language.editor.annotation.Annotator;
 import consulo.language.editor.gutter.LineMarkerInfo;
+import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -76,5 +79,10 @@ public interface LanguageEditorInternalHelper {
 
   @RequiredUIAccess
   default void showInspectionsSettings(@Nonnull Project project) {
+  }
+
+  @Nonnull
+  default List<Annotation> runAnnotator(Annotator annotator, PsiFile file, PsiElement context, boolean batchMode) {
+    return List.of();
   }
 }
