@@ -195,8 +195,13 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
 
     application.getExtensionPoint(InjectionConfigProvider.class).forEachExtensionSafe(provider -> {
       try {
-        URL url = provider.getClass().getResource(provider.getConfigFilePath());
-        cfgList.add(load(url.openStream()));
+        String configFilePath = provider.getConfigFilePath();
+        InputStream inputStream = provider.getClass().getResourceAsStream(configFilePath);
+        if (inputStream == null) {
+          LOG.error(configFilePath + " not found in classloader of " + provider.getClass());
+          return;
+        }
+        cfgList.add(load(inputStream));
       }
       catch (Exception e) {
         LOG.warn(e);

@@ -30,7 +30,6 @@ import java.util.concurrent.ConcurrentSkipListSet;
 /**
  * Use {@link AnnotationHolder} instead. The members of this class can suddenly change or disappear.
  */
-//@ApiStatus.Internal
 public class AnnotationHolderImpl extends SmartList<Annotation> implements AnnotationHolder {
   private static final Logger LOG = Logger.getInstance(AnnotationHolderImpl.class);
   private final AnnotationSession myAnnotationSession;
@@ -42,18 +41,12 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
   /**
    * @deprecated Do not instantiate the AnnotationHolderImpl directly, please use the one provided to {@link Annotator#annotate(PsiElement, AnnotationHolder)} instead
    */
-  //@ApiStatus.Internal
   @Deprecated
   public AnnotationHolderImpl(@Nonnull AnnotationSession session) {
     this(session, false);
     PluginExceptionUtil.reportDeprecatedUsage("AnnotationHolderImpl(AnnotationSession)", "Please use the AnnotationHolder passed to Annotator.annotate() instead");
   }
 
-  /**
-   * @deprecated Do not instantiate the AnnotationHolderImpl directly, please use the one provided to {@link Annotator#annotate(PsiElement, AnnotationHolder)} instead
-   */
-  //@ApiStatus.Internal
-  @Deprecated
   public AnnotationHolderImpl(@Nonnull AnnotationSession session, boolean batchMode) {
     myAnnotationSession = session;
     myBatchMode = batchMode;

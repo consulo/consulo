@@ -24,9 +24,14 @@ import consulo.ide.impl.psi.impl.source.codeStyle.CodeFormatterFacade;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.Language;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
+import consulo.language.editor.annotation.Annotation;
+import consulo.language.editor.annotation.AnnotationSession;
+import consulo.language.editor.annotation.Annotator;
 import consulo.language.editor.gutter.LineMarkerInfo;
+import consulo.language.editor.impl.internal.highlight.AnnotationHolderImpl;
 import consulo.language.editor.internal.LanguageEditorInternalHelper;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
+import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -95,5 +100,13 @@ public class LanguageEditorInternalHelperImpl implements LanguageEditorInternalH
   @Override
   public void showInspectionsSettings(@Nonnull Project project) {
     ShowSettingsUtil.getInstance().showAndSelect(project, ErrorsConfigurable.class);
+  }
+
+  @Override
+  @Nonnull
+  public List<Annotation> runAnnotator(Annotator annotator, PsiFile file, PsiElement context, boolean batchMode) {
+    AnnotationHolderImpl holder = new AnnotationHolderImpl(new AnnotationSession(file), batchMode);
+    holder.runAnnotatorWithContext(context, annotator);
+    return holder;
   }
 }
