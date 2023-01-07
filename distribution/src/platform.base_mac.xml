@@ -125,6 +125,7 @@
         <include>consulo:consulo-external-system-api</include>
         <include>consulo:consulo-builtin-web-server-api</include>
         <include>consulo:consulo-builtin-web-server-impl</include>
+        <include>consulo:consulo-repository-ui-api</include>
 
         <include>consulo:consulo-base-localize-library</include>
         <include>consulo:consulo-base-icon-library</include>

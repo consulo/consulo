@@ -15,12 +15,17 @@
  */
 package consulo.sandboxPlugin.packageView;
 
-import consulo.ide.impl.idea.util.CatchingConsumer;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
+import consulo.repository.ui.InstalledPackage;
+import consulo.repository.ui.PackageManagementServiceEx;
+import consulo.repository.ui.RepoPackage;
+import consulo.repository.ui.SearchablePackageManagementService;
 import consulo.util.collection.MultiMap;
-import consulo.ide.impl.idea.webcore.packaging.InstalledPackage;
-import consulo.ide.impl.idea.webcore.packaging.PackageManagementServiceEx;
-import consulo.ide.impl.idea.webcore.packaging.RepoPackage;
-import consulo.ide.impl.packagesView.SearchablePackageManagementService;
+import consulo.util.concurrent.AsyncResult;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -32,9 +37,13 @@ import java.util.List;
  * @author VISTALL
  * @since 30/05/2021
  */
+@Singleton
+@ServiceAPI(ComponentScope.APPLICATION)
+@ServiceImpl
 public class SandPackageManagementService extends PackageManagementServiceEx implements SearchablePackageManagementService {
   private MultiMap<String, RepoPackage> myMap = new MultiMap<>();
 
+  @Inject
   public SandPackageManagementService() {
     for (int i = 0; i < 100; i++) {
       myMap.putValue("test", new RepoPackage("Test " + i, null, i + "." + i));
@@ -47,11 +56,6 @@ public class SandPackageManagementService extends PackageManagementServiceEx imp
 
   @Override
   public void updatePackage(@Nonnull InstalledPackage installedPackage, @Nullable String version, @Nonnull Listener listener) {
-
-  }
-
-  @Override
-  public void fetchLatestVersion(@Nonnull InstalledPackage pkg, @Nonnull CatchingConsumer<String, Exception> consumer) {
 
   }
 
@@ -71,20 +75,22 @@ public class SandPackageManagementService extends PackageManagementServiceEx imp
 
   }
 
+  @Nonnull
   @Override
-  public void fetchPackageVersions(String packageName, CatchingConsumer<List<String>, Exception> consumer) {
-
+  public AsyncResult<List<String>> fetchPackageVersions(String packageName) {
+    return AsyncResult.undefined();
   }
 
+  @Nonnull
   @Override
-  public void fetchPackageDetails(String packageName, CatchingConsumer<String, Exception> consumer) {
-    consumer.accept("Some Description");
+  public AsyncResult<String> fetchPackageDetails(String packageName) {
+    return AsyncResult.resolved("Some Description");
   }
 
   @Nonnull
   @Override
   public List<RepoPackage> getPackages(@Nonnull String searchQuery, int from, int to) {
-    if(searchQuery.isEmpty()) {
+    if (searchQuery.isEmpty()) {
       return new ArrayList<>(myMap.values());
     }
     return new ArrayList<>(myMap.get(searchQuery));

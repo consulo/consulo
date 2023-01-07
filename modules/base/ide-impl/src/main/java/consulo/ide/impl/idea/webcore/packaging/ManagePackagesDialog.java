@@ -1,34 +1,33 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.webcore.packaging;
 
-import consulo.process.ExecutionException;
 import consulo.application.AllIcons;
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.plugins.PluginManagerMain;
-import consulo.language.LangBundle;
-import consulo.ui.ex.JBColor;
-import consulo.ui.ex.awt.*;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.project.Project;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.ide.impl.idea.util.CatchingConsumer;
+import consulo.ide.IdeBundle;
+import consulo.ide.impl.idea.ide.plugins.PluginManagerMain;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.ui.SwingHelper;
+import consulo.language.LangBundle;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.repository.ui.InstalledPackage;
+import consulo.repository.ui.PackageManagementService;
+import consulo.repository.ui.RepoPackage;
+import consulo.repository.ui.SearchablePackageManagementService;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.ui.ex.awt.speedSearch.ListSpeedSearch;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
-import consulo.logging.Logger;
-import consulo.ide.impl.packagesView.SearchablePackageManagementService;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.ObjectUtil;
-import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -266,7 +265,7 @@ public class ManagePackagesDialog extends DialogWrapper {
           myInstalledPackages.addAll(installedPackages);
         });
       }
-      catch (ExecutionException e) {
+      catch (IOException e) {
         LOG.info("Error updating list of installed packages", e);
       }
     });
@@ -463,45 +462,37 @@ public class ManagePackagesDialog extends DialogWrapper {
         mySelectedPackageName = packageName;
         myVersionComboBox.removeAllItems();
         if (myVersionCheckBox.isEnabled()) {
-          myController.fetchPackageVersions(packageName, new CatchingConsumer<>() {
-            @Override
-            public void accept(final List<String> releases) {
-              ApplicationManager.getApplication().invokeLater(() -> {
-                if (myPackages.getSelectedValue() == pyPackage) {
-                  myVersionComboBox.removeAllItems();
-                  for (String release : releases) {
-                    myVersionComboBox.addItem(release);
-                  }
+          AsyncResult<List<String>> versionResult = myController.fetchPackageVersions(packageName);
+          versionResult.doWhenDone(releases -> {
+            ApplicationManager.getApplication().invokeLater(() -> {
+              if (myPackages.getSelectedValue() == pyPackage) {
+                myVersionComboBox.removeAllItems();
+                for (String release : releases) {
+                  myVersionComboBox.addItem(release);
                 }
-              }, IdeaModalityState.any());
-            }
-
-            @Override
-            public void accept(Exception e) {
-              LOG.info("Error retrieving releases", e);
-            }
+              }
+            }, IdeaModalityState.any());
+          });
+          versionResult.doWhenRejectedWithThrowable(e -> {
+            LOG.info("Error retrieving releases", e);
           });
         }
         myInstallButton.setEnabled(!myCurrentlyInstalling.contains(packageName));
 
-        myController.fetchPackageDetails(packageName, new CatchingConsumer<String, Exception>() {
-          @Override
-          public void accept(final @Nls String details) {
-            UIUtil.invokeLaterIfNeeded(() -> {
-              if (myPackages.getSelectedValue() == pyPackage) {
-                myDescriptionTextArea.setText(details);
-                myDescriptionTextArea.setCaretPosition(0);
-              }/* else {
+        AsyncResult<String> detailsResult = myController.fetchPackageDetails(packageName);
+        detailsResult.doWhenDone(details -> {
+          UIUtil.invokeLaterIfNeeded(() -> {
+            if (myPackages.getSelectedValue() == pyPackage) {
+              myDescriptionTextArea.setText(details);
+              myDescriptionTextArea.setCaretPosition(0);
+            }/* else {
                  do nothing, because other package gets selected
               }*/
-            });
-          }
-
-          @Override
-          public void accept(Exception exception) {
-            UIUtil.invokeLaterIfNeeded(() -> myDescriptionTextArea.setText(IdeBundle.message("no.information.available")));
-            LOG.info("Error retrieving package details", exception);
-          }
+          });
+        });
+        detailsResult.doWhenRejectedWithThrowable(exception -> {
+          UIUtil.invokeLaterIfNeeded(() -> myDescriptionTextArea.setText(IdeBundle.message("no.information.available")));
+          LOG.info("Error retrieving package details", exception);
         });
       }
       else {

@@ -925,7 +925,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.options;
   exports consulo.ide.impl.options.impl;
   exports consulo.ide.impl.packageDependencies;
-  exports consulo.ide.impl.packagesView;
   exports consulo.ide.impl.packaging.impl.artifacts;
   exports consulo.ide.impl.packaging.impl.run;
   exports consulo.ide.impl.packaging.impl.util;

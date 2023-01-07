@@ -1,12 +1,12 @@
 /*
  * Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
  */
-package consulo.ide.impl.idea.webcore.packaging;
+package consulo.repository.ui;
 
-import consulo.ide.impl.idea.util.CatchingConsumer;
+import consulo.util.concurrent.AsyncResult;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 
 public abstract class PackageManagementServiceEx extends PackageManagementService {
@@ -17,7 +17,9 @@ public abstract class PackageManagementServiceEx extends PackageManagementServic
     return true;
   }
 
-  public abstract void fetchLatestVersion(@Nonnull InstalledPackage pkg, @Nonnull final CatchingConsumer<String, Exception> consumer);
+  public AsyncResult<String> fetchLatestVersion(@Nonnull InstalledPackage pkg) {
+    return AsyncResult.resolved();
+  }
 
   public void installPackage(final RepoPackage repoPackage, @Nullable final String version, @Nullable String extraOptions, final Listener listener, @Nonnull final File workingDir) {
   }
