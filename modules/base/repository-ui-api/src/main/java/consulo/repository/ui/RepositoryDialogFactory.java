@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2013-2023 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.vcsUtil;
+package consulo.repository.ui;
 
-import consulo.ide.impl.idea.util.ExceptionUtil;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.ui.annotation.RequiredUIAccess;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
- * @author irengrig
- *
- * @deprecated use {@link ExceptionUtil} instead
+ * @author VISTALL
+ * @since 07/01/2023
  */
-public class Rethrow {
-  private Rethrow() {
-  }
-
-  /**
-   * @deprecated use {@link ExceptionUtil#rethrowAllAsUnchecked(Throwable)} instead
-   */
-  public static void reThrowRuntime(final Throwable t) {
-    ExceptionUtil.rethrowAllAsUnchecked(t);
-  }
+@ServiceAPI(ComponentScope.PROJECT)
+public interface RepositoryDialogFactory {
+  @RequiredUIAccess
+  void showManagePackagesDialogAsync(@Nonnull PackageManagementService service, @Nullable PackageManagementService.Listener listener);
 }

@@ -1,43 +1,40 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.webcore.packaging;
 
-import consulo.application.CommonBundle;
-import consulo.process.ExecutionException;
-import consulo.application.impl.internal.performance.ActivityTracker;
-import consulo.ide.IdeBundle;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.CommonShortcuts;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.application.CommonBundle;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.ide.impl.idea.openapi.diagnostic.Logger;
+import consulo.application.impl.internal.performance.ActivityTracker;
 import consulo.application.progress.PerformInBackgroundOption;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
-import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
+import consulo.ide.IdeBundle;
+import consulo.ide.impl.idea.openapi.diagnostic.Logger;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.ui.*;
-import consulo.ui.ex.awt.AnActionButton;
-import consulo.ui.ex.awt.ToolbarDecorator;
+import consulo.ide.impl.idea.ui.DumbAwareActionButton;
+import consulo.ide.impl.idea.util.CatchingConsumer;
+import consulo.ide.impl.idea.util.IconUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.localize.LocalizeValue;
+import consulo.process.ExecutionException;
+import consulo.project.Project;
+import consulo.repository.ui.*;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.CommonShortcuts;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.speedSearch.TableSpeedSearch;
 import consulo.ui.ex.awt.table.JBTable;
-import consulo.ide.impl.idea.util.CatchingConsumer;
-import consulo.ide.impl.idea.util.IconUtil;
-import consulo.util.lang.ObjectUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.StatusText;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.localize.LocalizeValue;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.concurrent.AsyncResult;
+import consulo.util.lang.ObjectUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -223,61 +220,58 @@ public class InstalledPackagesPanel extends JPanel {
 
   private void upgradePackage(@Nonnull final InstalledPackage pkg, @Nullable final String toVersion) {
     final PackageManagementService selPackageManagementService = myPackageManagementService;
-    myPackageManagementService.fetchPackageVersions(pkg.getName(), new CatchingConsumer<>() {
-      @Override
-      public void accept(List<String> releases) {
-        if (!releases.isEmpty() && !isUpdateAvailable(pkg.getVersion(), releases.get(0))) {
-          return;
+
+    AsyncResult<List<String>> result = myPackageManagementService.fetchPackageVersions(pkg.getName());
+    result.doWhenDone(releases -> {
+      if (!releases.isEmpty() && !isUpdateAvailable(pkg.getVersion(), releases.get(0))) {
+        return;
+      }
+
+      ApplicationManager.getApplication().invokeLater(() -> {
+        IdeaModalityState modalityState = IdeaModalityState.current();
+        final PackageManagementService.Listener listener = new PackageManagementService.Listener() {
+          @Override
+          public void operationStarted(final String packageName) {
+            ApplicationManager.getApplication().invokeLater(() -> {
+              myPackagesTable.setPaintBusy(true);
+              myCurrentlyInstalling.add(packageName);
+            }, modalityState);
+          }
+
+          @Override
+          public void operationFinished(final String packageName, @Nullable final PackageManagementService.ErrorDescription errorDescription) {
+            ApplicationManager.getApplication().invokeLater(() -> {
+              myPackagesTable.clearSelection();
+              updatePackages(selPackageManagementService);
+              myCurrentlyInstalling.remove(packageName);
+              myPackagesTable.setPaintBusy(!myCurrentlyInstalling.isEmpty());
+              if (errorDescription == null) {
+                myNotificationArea.showSuccess(IdeBundle.message("package.successfully.upgraded", packageName));
+              }
+              else {
+                myNotificationArea.showError(IdeBundle.message("upgrade.packages.failed"), IdeBundle.message("upgrade.packages.failed.dialog.title"), errorDescription);
+              }
+
+              if (myCurrentlyInstalling.isEmpty() && !myWaitingToUpgrade.isEmpty()) {
+                upgradePostponedPackages();
+              }
+            }, modalityState);
+          }
+        };
+        PackageManagementServiceEx serviceEx = getServiceEx();
+        if (serviceEx != null) {
+          serviceEx.updatePackage(pkg, toVersion, listener);
         }
-
-        ApplicationManager.getApplication().invokeLater(() -> {
-          IdeaModalityState modalityState = IdeaModalityState.current();
-          final PackageManagementService.Listener listener = new PackageManagementService.Listener() {
-            @Override
-            public void operationStarted(final String packageName) {
-              ApplicationManager.getApplication().invokeLater(() -> {
-                myPackagesTable.setPaintBusy(true);
-                myCurrentlyInstalling.add(packageName);
-              }, modalityState);
-            }
-
-            @Override
-            public void operationFinished(final String packageName, @Nullable final PackageManagementService.ErrorDescription errorDescription) {
-              ApplicationManager.getApplication().invokeLater(() -> {
-                myPackagesTable.clearSelection();
-                updatePackages(selPackageManagementService);
-                myCurrentlyInstalling.remove(packageName);
-                myPackagesTable.setPaintBusy(!myCurrentlyInstalling.isEmpty());
-                if (errorDescription == null) {
-                  myNotificationArea.showSuccess(IdeBundle.message("package.successfully.upgraded", packageName));
-                }
-                else {
-                  myNotificationArea.showError(IdeBundle.message("upgrade.packages.failed"), IdeBundle.message("upgrade.packages.failed.dialog.title"), errorDescription);
-                }
-
-                if (myCurrentlyInstalling.isEmpty() && !myWaitingToUpgrade.isEmpty()) {
-                  upgradePostponedPackages();
-                }
-              }, modalityState);
-            }
-          };
-          PackageManagementServiceEx serviceEx = getServiceEx();
-          if (serviceEx != null) {
-            serviceEx.updatePackage(pkg, toVersion, listener);
-          }
-          else {
-            myPackageManagementService.installPackage(new RepoPackage(pkg.getName(), null /* TODO? */), null, true, null, listener, false);
-          }
-          myUpgradeButton.setEnabled(false);
-        }, IdeaModalityState.any());
-      }
-
-      @Override
-      public void accept(Exception e) {
-        ApplicationManager.getApplication()
-                .invokeLater(() -> Messages.showErrorDialog(IdeBundle.message("error.occurred.please.check.your.internet.connection"), IdeBundle.message("upgrade.package.failed.title")),
-                             IdeaModalityState.any());
-      }
+        else {
+          myPackageManagementService.installPackage(new RepoPackage(pkg.getName(), null /* TODO? */), null, true, null, listener, false);
+        }
+        myUpgradeButton.setEnabled(false);
+      }, IdeaModalityState.any());
+    });
+    result.doWhenRejectedWithThrowable(e -> {
+      ApplicationManager.getApplication()
+              .invokeLater(() -> Messages.showErrorDialog(IdeBundle.message("error.occurred.please.check.your.internet.connection"), IdeBundle.message("upgrade.package.failed.title")),
+                           IdeaModalityState.any());
     });
   }
 
@@ -417,7 +411,7 @@ public class InstalledPackagesPanel extends JPanel {
         try {
           packages = packageManagementService.getInstalledPackagesList();
         }
-        catch (ExecutionException e) {
+        catch (IOException e) {
           LOG.warn(e.getMessage()); // do nothing, we already have an empty list
         }
         finally {
@@ -467,32 +461,30 @@ public class InstalledPackagesPanel extends JPanel {
     for (int i = 0; i < packageCount; ++i) {
       final int finalIndex = i;
       final InstalledPackage pkg = getInstalledPackageAt(finalIndex);
-      serviceEx.fetchLatestVersion(pkg, new CatchingConsumer<>() {
-
-        private void decrement() {
-          if (inProgressPackageCount.decrementAndGet() == 0) {
-            onUpdateFinished();
-          }
+      AsyncResult<String> result = serviceEx.fetchLatestVersion(pkg);
+      Runnable decrement = () -> {
+        if (inProgressPackageCount.decrementAndGet() == 0) {
+          onUpdateFinished();
+        }
+      };
+      result.doWhenDone(latestVersion -> {
+        if (latestVersion == null) {
+          return;
         }
 
-        @Override
-        public void accept(Exception e) {
-          UIUtil.invokeLaterIfNeeded(() -> decrement());
-          LOG.warn("Cannot fetch the latest version of the installed package " + pkg, e);
-        }
-
-        @Override
-        public void accept(@Nullable final String latestVersion) {
-          UIUtil.invokeLaterIfNeeded(() -> {
-            if (finalIndex < myPackagesTableModel.getRowCount()) {
-              InstalledPackage p = getInstalledPackageAt(finalIndex);
-              if (pkg == p) {
-                myPackagesTableModel.setValueAt(latestVersion, finalIndex, 2);
-              }
+        UIUtil.invokeLaterIfNeeded(() -> {
+          if (finalIndex < myPackagesTableModel.getRowCount()) {
+            InstalledPackage p = getInstalledPackageAt(finalIndex);
+            if (pkg == p) {
+              myPackagesTableModel.setValueAt(latestVersion, finalIndex, 2);
             }
-            decrement();
-          });
-        }
+          }
+          decrement.run();
+        });
+      });
+      result.doWhenRejectedWithThrowable(e -> {
+        UIUtil.invokeLaterIfNeeded(() -> decrement.run());
+        LOG.warn("Cannot fetch the latest version of the installed package " + pkg, e);
       });
     }
   }

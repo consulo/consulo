@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.webcore.packaging;
+package consulo.repository.ui;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

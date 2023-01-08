@@ -13,10 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.packagesView;
-
-import consulo.ide.impl.idea.webcore.packaging.PackageManagementService;
-import consulo.ide.impl.idea.webcore.packaging.RepoPackage;
+package consulo.repository.ui;
 
 import javax.annotation.Nonnull;
 import java.util.List;

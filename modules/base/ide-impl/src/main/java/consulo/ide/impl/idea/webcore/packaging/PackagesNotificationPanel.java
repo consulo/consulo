@@ -3,18 +3,18 @@ package consulo.ide.impl.idea.webcore.packaging;
 
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
-import consulo.ui.ex.awt.HyperlinkAdapter;
 import consulo.ide.impl.idea.util.ui.SwingHelper;
+import consulo.repository.ui.PackageManagementService;
+import consulo.ui.ex.awt.HyperlinkAdapter;
 import consulo.ui.ex.awt.UIUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
-
 
 public class PackagesNotificationPanel {
   private final JEditorPane myHtmlViewer;

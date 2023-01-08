@@ -143,6 +143,7 @@
     <module>modules/base/task-api</module>
     <module>modules/base/http-api</module>
     <module>modules/base/http-impl</module>
+    <module>modules/base/repository-ui-api</module>
 
     <module>modules/base/version-control-system-api</module>
     <module>modules/base/version-control-system-impl</module>

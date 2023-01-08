@@ -1,8 +1,7 @@
 // Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.webcore.packaging;
+package consulo.repository.ui;
 
-import consulo.process.ExecutionException;
-import consulo.ide.impl.idea.util.CatchingConsumer;
+import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -10,7 +9,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 
 public abstract class PackageManagementService {
   /**
@@ -26,8 +24,8 @@ public abstract class PackageManagementService {
   /**
    * An async version of {@link #getAllRepositories()}.
    */
-  public void fetchAllRepositories(@Nonnull CatchingConsumer<? super List<String>, ? super Exception> consumer) {
-    consumer.accept(getAllRepositories());
+  public AsyncResult<List<String>> fetchAllRepositories() {
+    return AsyncResult.resolved(getAllRepositories());
   }
 
   /**
@@ -129,13 +127,8 @@ public abstract class PackageManagementService {
    * @return the collection of currently installed packages.
    */
   @Nonnull
-  public List<? extends InstalledPackage> getInstalledPackagesList() throws ExecutionException {
-    try {
-      return new ArrayList<>(getInstalledPackages());
-    }
-    catch (IOException e) {
-      throw new ExecutionException(e);
-    }
+  public List<? extends InstalledPackage> getInstalledPackagesList() throws IOException {
+    return new ArrayList<>(getInstalledPackages());
   }
 
   /**
@@ -161,9 +154,11 @@ public abstract class PackageManagementService {
 
   public abstract void uninstallPackages(List<InstalledPackage> installedPackages, Listener listener);
 
-  public abstract void fetchPackageVersions(String packageName, CatchingConsumer<List<String>, Exception> consumer);
+  @Nonnull
+  public abstract AsyncResult<List<String>> fetchPackageVersions(String packageName);
 
-  public abstract void fetchPackageDetails(String packageName, CatchingConsumer<String, Exception> consumer);
+  @Nonnull
+  public abstract AsyncResult<String> fetchPackageDetails(String packageName);
 
   /**
    * @return identifier of this service for reported usage data (sent for JetBrains implementations only).

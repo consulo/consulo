@@ -15,11 +15,12 @@
  */
 package consulo.ide.impl.idea.webcore.packaging;
 
+import consulo.repository.ui.PackageManagementService;
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.JBLabel;
-import javax.annotation.Nonnull;
+import consulo.ui.ex.awt.Messages;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 

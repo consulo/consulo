@@ -15,19 +15,16 @@
  */
 package consulo.ide.impl.idea.webcore.packaging;
 
-import consulo.ide.IdeBundle;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
+import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.openapi.diagnostic.Logger;
-import consulo.project.Project;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.InputValidator;
-import consulo.ui.ex.awt.Messages;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.awt.ToolbarDecorator;
-import consulo.ui.ex.awt.JBList;
-import consulo.ide.impl.idea.util.CatchingConsumer;
-import consulo.ui.ex.awt.JBUI;
+import consulo.project.Project;
+import consulo.repository.ui.PackageManagementService;
+import consulo.ui.ex.InputValidator;
+import consulo.ui.ex.awt.*;
+import consulo.util.concurrent.AsyncResult;
 
 import javax.swing.*;
 import java.util.List;
@@ -45,26 +42,22 @@ public class ManageRepoDialog extends DialogWrapper {
     myList = new JBList<>();
     myList.setPaintBusy(true);
     final DefaultListModel<String> repoModel = new DefaultListModel<>();
-    controller.fetchAllRepositories(new CatchingConsumer<>() {
-      @Override
-      public void accept(List<String> repoUrls) {
-        ApplicationManager.getApplication().invokeLater(() -> {
-          if (isDisposed()) return;
-          myList.setPaintBusy(false);
-          for (String repoUrl : repoUrls) {
-            repoModel.addElement(repoUrl);
-          }
-        }, IdeaModalityState.any());
-      }
-
-      @Override
-      public void accept(Exception e) {
-        ApplicationManager.getApplication().invokeLater(() -> {
-          if (isDisposed()) return;
-          myList.setPaintBusy(false);
-          LOG.warn(e);
-        });
-      }
+    AsyncResult<List<String>> result = controller.fetchAllRepositories();
+    result.doWhenDone(repoUrls -> {
+      ApplicationManager.getApplication().invokeLater(() -> {
+        if (isDisposed()) return;
+        myList.setPaintBusy(false);
+        for (String repoUrl : repoUrls) {
+          repoModel.addElement(repoUrl);
+        }
+      }, IdeaModalityState.any());
+    });
+    result.doWhenRejectedWithThrowable(e -> {
+      ApplicationManager.getApplication().invokeLater(() -> {
+        if (isDisposed()) return;
+        myList.setPaintBusy(false);
+        LOG.warn(e);
+      });
     });
     myList.setModel(repoModel);
     myList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
