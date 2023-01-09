@@ -7,4 +7,5 @@ module consulo.project.content.api {
 
   exports consulo.project.content;
   exports consulo.project.content.scope;
+  exports consulo.project.content.library;
 }

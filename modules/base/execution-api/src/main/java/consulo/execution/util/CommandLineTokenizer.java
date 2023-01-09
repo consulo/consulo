@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.execution.configurations;
+package consulo.execution.util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +27,7 @@ import java.util.StringTokenizer;
 public class CommandLineTokenizer extends StringTokenizer {
 
   private static final String DEFAULT_DELIMITERS = " \t\n\r\f";
-  // keep source level 1.4
-  private List myTokens = new ArrayList();
+  private List<String> myTokens = new ArrayList<>();
   private int myCurrentToken = 0;
   private boolean myHandleEscapedWhitespaces = false;
 
@@ -58,18 +57,17 @@ public class CommandLineTokenizer extends StringTokenizer {
 
   @Override
   public String nextToken() {
-    return (String) myTokens.get(myCurrentToken++);
+    return myTokens.get(myCurrentToken++);
   }
 
   public String peekNextToken() {
-    return (String) myTokens.get(myCurrentToken);
+    return myTokens.get(myCurrentToken);
   }
 
   @Override
   public int countTokens() {
     return myTokens.size() - myCurrentToken;
   }
-
 
   @Override
   public String nextToken(String delim) {

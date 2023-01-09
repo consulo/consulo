@@ -40,7 +40,7 @@ import consulo.application.progress.Task;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.module.content.internal.ProjectRootManagerEx;
-import consulo.ide.impl.idea.openapi.roots.impl.libraries.ProjectLibraryTable;
+import consulo.ide.impl.idea.openapi.roots.impl.libraries.ProjectLibraryTableImpl;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
 import consulo.project.startup.StartupManager;
@@ -334,7 +334,7 @@ public abstract class AbstractExternalModuleImportProvider<C extends AbstractImp
           public void run() {
             if (ExternalSystemApiUtil.isNewProjectConstruction()) {
               // Clean existing libraries (if any).
-              LibraryTable projectLibraryTable = ProjectLibraryTable.getInstance(project);
+              LibraryTable projectLibraryTable = ProjectLibraryTableImpl.getInstance(project);
               if (projectLibraryTable == null) {
                 LOG.warn("Can't resolve external dependencies of the target gradle project (" + project + "). Reason: project " + "library table is undefined");
                 return;

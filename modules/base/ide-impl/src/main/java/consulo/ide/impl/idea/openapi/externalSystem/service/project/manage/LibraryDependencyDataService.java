@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.openapi.externalSystem.service.project.manage;
 import consulo.content.OrderRootType;
 import consulo.externalSystem.model.project.*;
 import consulo.externalSystem.service.project.ProjectData;
+import consulo.ide.impl.idea.openapi.roots.impl.libraries.ProjectLibraryTableImpl;
 import consulo.logging.Logger;
 import consulo.externalSystem.model.DataNode;
 import consulo.externalSystem.model.Key;
@@ -34,7 +35,6 @@ import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.Project;
 import consulo.module.impl.internal.layer.orderEntry.ModuleLibraryOrderEntryImpl;
-import consulo.ide.impl.idea.openapi.roots.impl.libraries.ProjectLibraryTable;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
 import consulo.virtualFileSystem.VirtualFile;
@@ -126,7 +126,7 @@ public class LibraryDependencyDataService extends AbstractDependencyDataService<
         ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
         final ModifiableRootModel moduleRootModel = moduleRootManager.getModifiableModel();
         LibraryTable moduleLibraryTable = moduleRootModel.getModuleLibraryTable();
-        LibraryTable libraryTable = ProjectLibraryTable.getInstance(module.getProject());
+        LibraryTable libraryTable = ProjectLibraryTableImpl.getInstance(module.getProject());
         try {
           filterUpToDateAndRemoveObsolete(moduleLibrariesToImport, projectLibrariesToImport, toImport, moduleRootModel, hasUnresolved);
 
@@ -231,7 +231,7 @@ public class LibraryDependencyDataService extends AbstractDependencyDataService<
   }
 
   private void importMissingProjectLibraries(@Nonnull Module module, @Nonnull Collection<DataNode<LibraryDependencyData>> nodesToImport, boolean synchronous) {
-    LibraryTable libraryTable = ProjectLibraryTable.getInstance(module.getProject());
+    LibraryTable libraryTable = ProjectLibraryTableImpl.getInstance(module.getProject());
     List<DataNode<LibraryData>> librariesToImport = ContainerUtilRt.newArrayList();
     for (DataNode<LibraryDependencyData> dataNode : nodesToImport) {
       final LibraryDependencyData dependencyData = dataNode.getData();

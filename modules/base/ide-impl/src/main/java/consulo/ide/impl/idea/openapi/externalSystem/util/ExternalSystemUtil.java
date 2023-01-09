@@ -25,8 +25,6 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
-import consulo.execution.debug.DefaultDebugExecutor;
-import consulo.execution.executor.DefaultRunExecutor;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.ProgramRunner;
 import consulo.externalSystem.ExternalSystemBundle;
@@ -63,7 +61,7 @@ import consulo.ide.impl.idea.openapi.externalSystem.service.project.ProjectStruc
 import consulo.ide.impl.idea.openapi.externalSystem.service.project.manage.ModuleDataService;
 import consulo.ide.impl.idea.openapi.externalSystem.service.project.manage.ProjectDataManager;
 import consulo.ide.impl.idea.openapi.externalSystem.service.settings.ExternalSystemConfigLocator;
-import consulo.ide.impl.idea.openapi.roots.impl.libraries.ProjectLibraryTable;
+import consulo.ide.impl.idea.openapi.roots.impl.libraries.ProjectLibraryTableImpl;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -761,7 +759,7 @@ public class ExternalSystemUtil {
     private void processOrphanProjectLibraries() {
       List<Library> orphanIdeLibraries = ContainerUtilRt.newArrayList();
 
-      LibraryTable projectLibraryTable = ProjectLibraryTable.getInstance(myProject);
+      LibraryTable projectLibraryTable = ProjectLibraryTableImpl.getInstance(myProject);
       for (Library library : projectLibraryTable.getLibraries()) {
         if (!ExternalSystemApiUtil.isExternalSystemLibrary(library, myExternalSystemId)) continue;
         if (ProjectStructureHelper.isOrphanProjectLibrary(library, ModuleManager.getInstance(myProject).getModules())) {

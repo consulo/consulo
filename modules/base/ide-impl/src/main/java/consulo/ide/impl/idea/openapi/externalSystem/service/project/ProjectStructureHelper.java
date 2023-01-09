@@ -13,7 +13,7 @@ import consulo.module.content.layer.orderEntry.ModuleOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.layer.orderEntry.RootPolicy;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.roots.impl.libraries.ProjectLibraryTable;
+import consulo.ide.impl.idea.openapi.roots.impl.libraries.ProjectLibraryTableImpl;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
 import javax.annotation.Nonnull;
@@ -38,7 +38,7 @@ public class ProjectStructureHelper {
 
   @Nullable
   public static Library findIdeLibrary(@Nonnull final LibraryData libraryData, @Nonnull Project ideProject) {
-    final LibraryTable libraryTable = ProjectLibraryTable.getInstance(ideProject);
+    final LibraryTable libraryTable = ProjectLibraryTableImpl.getInstance(ideProject);
     for (Library ideLibrary : libraryTable.getLibraries()) {
       if (ExternalSystemApiUtil.isRelated(ideLibrary, libraryData)) return ideLibrary;
     }

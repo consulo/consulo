@@ -15,7 +15,7 @@ import consulo.externalSystem.util.ExternalSystemConstants;
 import consulo.externalSystem.util.Order;
 import consulo.project.Project;
 import consulo.content.OrderRootType;
-import consulo.ide.impl.idea.openapi.roots.impl.libraries.ProjectLibraryTable;
+import consulo.ide.impl.idea.openapi.roots.impl.libraries.ProjectLibraryTableImpl;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
 import consulo.virtualFileSystem.LocalFileSystem;
@@ -98,7 +98,7 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
       @Override
       public void execute() {
         // Is assumed to be called from the EDT.
-        final LibraryTable libraryTable = ProjectLibraryTable.getInstance(project);
+        final LibraryTable libraryTable = ProjectLibraryTableImpl.getInstance(project);
         final LibraryTable.ModifiableModel projectLibraryModel = libraryTable.getModifiableModel();
         final Library intellijLibrary;
         try {
@@ -155,7 +155,7 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
       @RequiredUIAccess
       @Override
       public void execute() {
-        final LibraryTable libraryTable = ProjectLibraryTable.getInstance(project);
+        final LibraryTable libraryTable = ProjectLibraryTableImpl.getInstance(project);
         final LibraryTable.ModifiableModel model = libraryTable.getModifiableModel();
         try {
           for (Library library : libraries) {

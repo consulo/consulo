@@ -36,7 +36,7 @@ public class LibraryTablesRegistrarImpl extends LibraryTablesRegistrar implement
   @Override
   @Nonnull
   public LibraryTable getLibraryTable(@Nonnull Project project) {
-    return ProjectLibraryTable.getInstance(project);
+    return ProjectLibraryTableImpl.getInstance(project);
   }
 
   @Override

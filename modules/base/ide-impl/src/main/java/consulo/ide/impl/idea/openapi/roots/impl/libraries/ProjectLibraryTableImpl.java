@@ -16,21 +16,19 @@
 
 package consulo.ide.impl.idea.openapi.roots.impl.libraries;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.State;
 import consulo.component.persist.StateSplitterEx;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
-import consulo.content.impl.internal.library.LibraryTableBase;
-import consulo.ide.ServiceManager;
 import consulo.content.impl.internal.library.LibraryImpl;
-import consulo.project.Project;
-import consulo.project.ProjectBundle;
+import consulo.content.impl.internal.library.LibraryTableBase;
 import consulo.content.library.LibraryTable;
 import consulo.content.library.LibraryTablePresentation;
 import consulo.content.library.LibraryTablesRegistrar;
+import consulo.project.Project;
+import consulo.project.ProjectBundle;
+import consulo.project.content.library.ProjectLibraryTable;
 import consulo.util.lang.Pair;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -43,10 +41,9 @@ import java.util.List;
  * @author dsl
  */
 @Singleton
-@ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
-@State(name = "libraryTable", storages = @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/libraries/", stateSplitter = ProjectLibraryTable.LibraryStateSplitter.class))
-public class ProjectLibraryTable extends LibraryTableBase {
+@State(name = "libraryTable", storages = @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/libraries/", stateSplitter = ProjectLibraryTableImpl.LibraryStateSplitter.class))
+public class ProjectLibraryTableImpl extends LibraryTableBase implements ProjectLibraryTable {
   private static final LibraryTablePresentation PROJECT_LIBRARY_TABLE_PRESENTATION = new LibraryTablePresentation() {
     @Override
     public String getDisplayName(boolean plural) {
@@ -65,16 +62,17 @@ public class ProjectLibraryTable extends LibraryTableBase {
   };
 
   public static LibraryTable getInstance(Project project) {
-    return ServiceManager.getService(project, ProjectLibraryTable.class);
+    return ProjectLibraryTable.getInstance(project);
   }
 
   private final Project myProject;
 
   @Inject
-  public ProjectLibraryTable(Project project) {
+  public ProjectLibraryTableImpl(Project project) {
     myProject = project;
   }
 
+  @Override
   @Nonnull
   public Project getProject() {
     return myProject;

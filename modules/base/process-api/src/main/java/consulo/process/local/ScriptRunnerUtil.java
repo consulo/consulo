@@ -13,31 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.execution.process;
+package consulo.process.local;
 
-import consulo.execution.ExecutionBundle;
-import consulo.process.ExecutionException;
-import consulo.process.KillableProcess;
-import consulo.process.cmd.GeneralCommandLine;
 import consulo.logging.Logger;
-import consulo.process.ProcessOutputTypes;
+import consulo.process.*;
+import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
-import consulo.process.ProcessHandler;
-import consulo.process.internal.OSProcessHandler;
+import consulo.util.dataholder.Key;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
-import consulo.util.dataholder.Key;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.encoding.EncodingManager;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
+import java.util.function.Predicate;
 
 /**
+ * FIXME [VISTALL] duplicate code {@link CapturingProcessHandler}
+
  * @author Elena Shaverdova
  * @author Nikolay Matveev
  */
@@ -45,19 +42,9 @@ public final class ScriptRunnerUtil {
 
   private static final Logger LOG = Logger.getInstance(ScriptRunnerUtil.class);
 
-  public static final Condition<Key> STDOUT_OUTPUT_KEY_FILTER = new Condition<Key>() {
-    @Override
-    public boolean value(Key key) {
-      return ProcessOutputTypes.STDOUT.equals(key);
-    }
-  };
+  public static final Condition<Key> STDOUT_OUTPUT_KEY_FILTER = ProcessOutputTypes.STDOUT::equals;
 
-  public static final Condition<Key> STDERR_OUTPUT_KEY_FILTER = new Condition<Key>() {
-    @Override
-    public boolean value(Key key) {
-      return ProcessOutputTypes.STDERR.equals(key);
-    }
-  };
+  public static final Condition<Key> STDERR_OUTPUT_KEY_FILTER = ProcessOutputTypes.STDERR::equals;
 
   public static final Condition<Key> STDOUT_OR_STDERR_OUTPUT_KEY_FILTER = Conditions.or(STDOUT_OUTPUT_KEY_FILTER, STDERR_OUTPUT_KEY_FILTER);
 
@@ -66,27 +53,21 @@ public final class ScriptRunnerUtil {
   private ScriptRunnerUtil() {
   }
 
-  public static String getProcessOutput(@Nonnull GeneralCommandLine commandLine)
-    throws ExecutionException {
+  public static String getProcessOutput(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
     return getProcessOutput(commandLine, STDOUT_OUTPUT_KEY_FILTER, DEFAULT_TIMEOUT);
   }
 
-  public static String getProcessOutput(@Nonnull GeneralCommandLine commandLine, @Nonnull Condition<Key> outputTypeFilter, long timeout)
-    throws ExecutionException {
-    return getProcessOutput(new OSProcessHandler(commandLine.createProcess(), commandLine.getCommandLineString()), outputTypeFilter,
-                            timeout);
+  public static String getProcessOutput(@Nonnull GeneralCommandLine commandLine, @Nonnull Predicate<Key> outputTypeFilter, long timeout) throws ExecutionException {
+    return getProcessOutput(ProcessHandlerFactory.getInstance().createProcessHandler(commandLine), outputTypeFilter, timeout);
   }
 
-  public static String getProcessOutput(@Nonnull final ProcessHandler processHandler,
-                                        @Nonnull final Condition<Key> outputTypeFilter,
-                                        final long timeout)
-    throws ExecutionException {
+  public static String getProcessOutput(@Nonnull final ProcessHandler processHandler, @Nonnull final Predicate<Key> outputTypeFilter, final long timeout) throws ExecutionException {
     LOG.assertTrue(!processHandler.isStartNotified());
     final StringBuilder outputBuilder = new StringBuilder();
     processHandler.addProcessListener(new ProcessAdapter() {
       @Override
       public void onTextAvailable(ProcessEvent event, Key outputType) {
-        if (outputTypeFilter.value(outputType)) {
+        if (outputTypeFilter.test(outputType)) {
           final String text = event.getText();
           outputBuilder.append(text);
           if (LOG.isDebugEnabled()) {
@@ -97,7 +78,7 @@ public final class ScriptRunnerUtil {
     });
     processHandler.startNotify();
     if (!processHandler.waitFor(timeout)) {
-      throw new ExecutionException(ExecutionBundle.message("script.execution.timeout", String.valueOf(timeout / 1000)));
+      throw new ExecutionException(ProcessBundle.message("script.execution.timeout", String.valueOf(timeout / 1000)));
     }
     return outputBuilder.toString();
   }
@@ -115,10 +96,7 @@ public final class ScriptRunnerUtil {
   }
 
   @Nonnull
-  public static OSProcessHandler execute(@Nonnull String exePath,
-                                         @Nullable String workingDirectory,
-                                         @Nullable VirtualFile scriptFile,
-                                         String[] parameters) throws ExecutionException {
+  public static ProcessHandler execute(@Nonnull String exePath, @Nullable String workingDirectory, @Nullable VirtualFile scriptFile, String[] parameters) throws ExecutionException {
     GeneralCommandLine commandLine = new GeneralCommandLine();
     commandLine.setExePath(exePath);
     commandLine.setPassParentEnvironment(true);
@@ -134,8 +112,7 @@ public final class ScriptRunnerUtil {
     LOG.debug("Command line: " + commandLine.getCommandLineString());
     LOG.debug("Command line env: " + commandLine.getEnvironment());
 
-    final OSProcessHandler processHandler = new ColoredProcessHandler(commandLine.createProcess(), commandLine.getCommandLineString(),
-                                                                      EncodingManager.getInstance().getDefaultCharset());
+    final ProcessHandler processHandler = ProcessHandlerFactory.getInstance().createColoredProcessHandler(commandLine);
     if (LOG.isDebugEnabled()) {
       processHandler.addProcessListener(new ProcessAdapter() {
         @Override
@@ -154,9 +131,8 @@ public final class ScriptRunnerUtil {
                                                                   @Nullable String workingDirectory,
                                                                   long timeout,
                                                                   Condition<Key> scriptOutputType,
-                                                                  @NonNls String... parameters)
-    throws ExecutionException {
-    final OSProcessHandler processHandler = execute(exePathString, workingDirectory, scriptFile, parameters);
+                                                                  @NonNls String... parameters) throws ExecutionException {
+    final ProcessHandler processHandler = execute(exePathString, workingDirectory, scriptFile, parameters);
 
     ScriptOutput output = new ScriptOutput(scriptOutputType);
     processHandler.addProcessListener(output);
@@ -164,18 +140,18 @@ public final class ScriptRunnerUtil {
 
     if (!processHandler.waitFor(timeout)) {
       LOG.warn("Process did not complete in " + timeout / 1000 + "s");
-      throw new ExecutionException(ExecutionBundle.message("script.execution.timeout", String.valueOf(timeout / 1000)));
+      throw new ExecutionException(ProcessBundle.message("script.execution.timeout", String.valueOf(timeout / 1000)));
     }
     LOG.debug("script output: " + output.myFilteredOutput);
     return output;
   }
 
   public static class ScriptOutput extends ProcessAdapter {
-    private final Condition<Key> myScriptOutputType;
+    private final Predicate<Key> myScriptOutputType;
     public final StringBuilder myFilteredOutput;
     public final StringBuilder myMergedOutput;
 
-    private ScriptOutput(Condition<Key> scriptOutputType) {
+    private ScriptOutput(Predicate<Key> scriptOutputType) {
       myScriptOutputType = scriptOutputType;
       myFilteredOutput = new StringBuilder();
       myMergedOutput = new StringBuilder();
@@ -201,7 +177,7 @@ public final class ScriptRunnerUtil {
     @Override
     public void onTextAvailable(ProcessEvent event, Key outputType) {
       final String text = event.getText();
-      if (myScriptOutputType.value(outputType)) {
+      if (myScriptOutputType.test(outputType)) {
         myFilteredOutput.append(text);
       }
       myMergedOutput.append(text);
@@ -215,19 +191,17 @@ public final class ScriptRunnerUtil {
    * signal sending).
    *
    * @param processHandler {@link ProcessHandler} instance
-   * @param millisTimeout timeout in milliseconds between 'soft kill' and 'force quite'
-   * @param commandLine command line
+   * @param millisTimeout  timeout in milliseconds between 'soft kill' and 'force quite'
+   * @param commandLine    command line
    */
-  public static void terminateProcessHandler(@Nonnull ProcessHandler processHandler,
-                                             long millisTimeout,
-                                             @Nullable String commandLine) {
+  public static void terminateProcessHandler(@Nonnull ProcessHandler processHandler, long millisTimeout, @Nullable String commandLine) {
     if (processHandler.isProcessTerminated()) {
       LOG.warn("Process '" + commandLine + "' is already terminated!");
       return;
     }
     processHandler.destroyProcess();
     if (processHandler instanceof KillableProcess) {
-      KillableProcess killableProcess = (KillableProcess) processHandler;
+      KillableProcess killableProcess = (KillableProcess)processHandler;
       if (killableProcess.canKillProcess()) {
         if (!processHandler.waitFor(millisTimeout)) {
           // doing 'force quite'
