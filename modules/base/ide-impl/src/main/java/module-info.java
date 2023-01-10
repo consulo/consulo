@@ -469,7 +469,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.ide.util;
   exports consulo.ide.impl.idea.ide.util.gotoByName;
   exports consulo.ide.impl.idea.ide.util.scopeChooser;
-  exports consulo.ide.impl.idea.ide.util.treeView;
   exports consulo.ide.impl.idea.ide.util.treeView.smartTree;
   exports consulo.ide.impl.idea.ide.wizard;
   exports consulo.ide.impl.idea.idea;
