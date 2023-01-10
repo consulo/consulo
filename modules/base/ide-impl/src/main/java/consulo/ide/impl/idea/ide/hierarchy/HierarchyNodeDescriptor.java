@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.ide.hierarchy;
 
 import consulo.ui.ex.tree.NodeDescriptor;
-import consulo.ide.impl.idea.ide.util.treeView.SmartElementDescriptor;
+import consulo.project.ui.view.tree.SmartElementDescriptor;
 import consulo.colorScheme.TextAttributes;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.roots.ui.util.CompositeAppearance;

@@ -1,44 +1,34 @@
 package consulo.ide.impl.idea.remoteServer.impl.runtime.ui;
 
 import consulo.dataContext.DataManager;
-import consulo.ui.ex.action.ContextHelpAction;
-import consulo.project.ui.view.tree.AbstractTreeNode;
-import consulo.ui.ex.tree.NodeDescriptor;
-import consulo.ui.ex.awt.tree.NodeRenderer;
-import consulo.ide.impl.idea.ide.util.treeView.TreeVisitor;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.ActionToolbar;
-import consulo.ui.ex.action.AnSeparator;
-import consulo.ui.ex.awt.tree.TreeNode;
-import consulo.util.dataholder.Key;
-import consulo.ide.impl.idea.remoteServer.impl.runtime.ui.tree.ServersTreeStructure;
-import consulo.project.Project;
-import consulo.ui.ex.awt.Splitter;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.disposer.Disposer;
-import consulo.util.lang.EmptyRunnable;
+import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.remoteServer.configuration.RemoteServer;
 import consulo.ide.impl.idea.remoteServer.impl.runtime.log.LoggingHandlerImpl;
 import consulo.ide.impl.idea.remoteServer.impl.runtime.ui.tree.DeploymentNode;
 import consulo.ide.impl.idea.remoteServer.impl.runtime.ui.tree.ServerNode;
+import consulo.ide.impl.idea.remoteServer.impl.runtime.ui.tree.ServersTreeStructure;
 import consulo.ide.impl.idea.remoteServer.impl.runtime.ui.tree.TreeBuilderBase;
 import consulo.ide.impl.idea.remoteServer.runtime.ConnectionStatus;
 import consulo.ide.impl.idea.remoteServer.runtime.ServerConnection;
 import consulo.ide.impl.idea.remoteServer.runtime.ServerConnectionListener;
 import consulo.ide.impl.idea.remoteServer.runtime.ServerConnectionManager;
+import consulo.project.Project;
+import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DoubleClickListener;
-import consulo.ui.ex.awt.OnePixelSplitter;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.awt.SideBorder;
-import consulo.ui.ex.awt.Wrapper;
+import consulo.ui.ex.awt.tree.NodeRenderer;
 import consulo.ui.ex.awt.tree.Tree;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.tree.TreeNode;
+import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.util.dataholder.Key;
+import consulo.util.lang.EmptyRunnable;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -49,6 +39,7 @@ import java.awt.event.MouseEvent;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 
 /**
  * Created by IntelliJ IDEA.
@@ -274,9 +265,9 @@ public class ServersToolWindowContent extends JPanel implements Disposable {
   }
 
   public void select(@Nonnull final ServerConnection<?> connection) {
-    myBuilder.select(ServersTreeStructure.RemoteServerNode.class, new TreeVisitor<ServersTreeStructure.RemoteServerNode>() {
+    myBuilder.select(ServersTreeStructure.RemoteServerNode.class, new Predicate<ServersTreeStructure.RemoteServerNode>() {
       @Override
-      public boolean visit(@Nonnull ServersTreeStructure.RemoteServerNode node) {
+      public boolean test(@Nonnull ServersTreeStructure.RemoteServerNode node) {
         return node.getValue().equals(connection.getServer());
       }
     }, null, false);
@@ -286,9 +277,9 @@ public class ServersToolWindowContent extends JPanel implements Disposable {
     myBuilder.getUi().queueUpdate(connection).doWhenDone(new Runnable() {
       @Override
       public void run() {
-        myBuilder.select(ServersTreeStructure.DeploymentNodeImpl.class, new TreeVisitor<ServersTreeStructure.DeploymentNodeImpl>() {
+        myBuilder.select(ServersTreeStructure.DeploymentNodeImpl.class, new Predicate<ServersTreeStructure.DeploymentNodeImpl>() {
           @Override
-          public boolean visit(@Nonnull ServersTreeStructure.DeploymentNodeImpl node) {
+          public boolean test(@Nonnull ServersTreeStructure.DeploymentNodeImpl node) {
             TreeNode parent = node.getParent();
             return parent instanceof ServersTreeStructure.RemoteServerNode &&
                    ((ServersTreeStructure.RemoteServerNode)parent).getValue().equals(connection.getServer())

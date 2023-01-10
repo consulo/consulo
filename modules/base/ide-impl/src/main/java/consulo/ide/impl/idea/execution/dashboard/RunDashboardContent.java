@@ -15,43 +15,39 @@
  */
 package consulo.ide.impl.idea.execution.dashboard;
 
-import consulo.execution.ExecutionBundle;
-import consulo.ide.impl.idea.execution.dashboard.tree.DashboardGrouper;
-import consulo.ide.impl.idea.execution.dashboard.tree.RunDashboardTreeStructure;
-import consulo.ui.ex.action.CommonActionsManager;
-import consulo.project.ui.view.tree.AbstractTreeNode;
-import consulo.ui.ex.awt.*;
-import consulo.dataContext.DataManager;
-import consulo.ide.impl.idea.ide.DefaultTreeExpander;
-import consulo.ui.ex.TreeExpander;
-import consulo.ide.impl.idea.ide.util.treeView.*;
-import consulo.fileEditor.structureView.tree.ActionPresentation;
 import consulo.application.ApplicationManager;
-import consulo.dataContext.DataProvider;
 import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.dataContext.DataManager;
+import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.execution.ExecutionBundle;
+import consulo.fileEditor.structureView.tree.ActionPresentation;
+import consulo.ide.impl.idea.execution.dashboard.tree.DashboardGrouper;
+import consulo.ide.impl.idea.execution.dashboard.tree.RunDashboardTreeStructure;
+import consulo.ide.impl.idea.ide.DefaultTreeExpander;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.project.Project;
+import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.ui.ex.TreeExpander;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
+import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
 import consulo.ui.ex.awt.tree.NodeRenderer;
+import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.content.event.ContentManagerAdapter;
 import consulo.ui.ex.content.event.ContentManagerEvent;
 import consulo.ui.ex.content.event.ContentManagerListener;
-import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
 import consulo.ui.ex.tree.IndexComparator;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.util.dataholder.Key;
-import consulo.ui.ex.awt.JBPanelWithEmptyText;
-import consulo.ui.ex.awt.tree.Tree;
 import consulo.util.lang.ObjectUtil;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
@@ -61,6 +57,7 @@ import java.awt.*;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 
 /**
  * @author konstantin.aleev
@@ -128,9 +125,9 @@ public class RunDashboardContent extends JPanel implements TreeContent, Disposab
         if (ContentManagerEvent.ContentOperation.add != event.getOperation()) {
           return;
         }
-        myBuilder.queueUpdate().doWhenDone(() -> myBuilder.accept(DashboardNode.class, new TreeVisitor<DashboardNode>() {
+        myBuilder.queueUpdate().doWhenDone(() -> myBuilder.accept(DashboardNode.class, new Predicate<DashboardNode>() {
           @Override
-          public boolean visit(@Nonnull DashboardNode node) {
+          public boolean test(@Nonnull DashboardNode node) {
             if (node.getContent() == event.getContent()) {
               myBuilder.select(node);
             }
@@ -298,9 +295,9 @@ public class RunDashboardContent extends JPanel implements TreeContent, Disposab
       // Remove nodes not presented in the tree from collapsed node values set.
       // Children retrieving is quick since grouping and run configuration nodes are already constructed.
       Set<Object> nodes = new HashSet<>();
-      myBuilder.accept(AbstractTreeNode.class, new TreeVisitor<AbstractTreeNode>() {
+      myBuilder.accept(AbstractTreeNode.class, new Predicate<AbstractTreeNode>() {
         @Override
-        public boolean visit(@Nonnull AbstractTreeNode node) {
+        public boolean test(@Nonnull AbstractTreeNode node) {
           nodes.add(node.getValue());
           return false;
         }

@@ -1,22 +1,18 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
-package consulo.ide.impl.idea.ide.util.treeView;
+package consulo.project.ui.view.tree;
 
-import consulo.project.ui.view.tree.ProjectViewNode;
-import consulo.project.ui.view.tree.TreeStructureProvider;
-import consulo.project.ui.view.tree.ViewSettings;
-import consulo.logging.Logger;
-import consulo.component.ProcessCanceledException;
-import consulo.project.DumbService;
 import consulo.application.dumb.IndexNotReadyException;
+import consulo.component.ProcessCanceledException;
+import consulo.logging.Logger;
+import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.Key;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;

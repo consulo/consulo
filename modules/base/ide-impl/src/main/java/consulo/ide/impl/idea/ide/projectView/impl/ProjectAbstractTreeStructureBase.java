@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.ide.projectView.impl;
 
-import consulo.ide.impl.idea.ide.util.treeView.AbstractTreeStructureBase;
+import consulo.project.ui.view.tree.AbstractTreeStructureBase;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.TreeStructureProvider;
 

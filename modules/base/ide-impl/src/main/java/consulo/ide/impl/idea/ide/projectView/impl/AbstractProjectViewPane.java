@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.ide.projectView.BaseProjectTreeBuilder;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.AbstractModuleNode;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.AbstractProjectNode;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.ModuleGroupNode;
-import consulo.ide.impl.idea.ide.util.treeView.AbstractTreeStructureBase;
+import consulo.project.ui.view.tree.AbstractTreeStructureBase;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.ui.tree.project.ProjectFileNode;
 import consulo.ide.impl.idea.util.ArrayUtil;

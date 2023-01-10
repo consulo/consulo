@@ -1,7 +1,7 @@
 package consulo.ide.impl.idea.remoteServer.impl.runtime.ui.tree;
 
 import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
-import consulo.ide.impl.idea.ide.util.treeView.AbstractTreeStructureBase;
+import consulo.project.ui.view.tree.AbstractTreeStructureBase;
 import consulo.ui.ex.tree.IndexComparator;
 
 import javax.swing.*;

@@ -14,25 +14,24 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.ide.util.treeView;
+package consulo.project.ui.view.tree;
 
-import consulo.project.ui.view.tree.PsiDirectoryNode;
-import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.application.dumb.IndexNotReadyException;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.component.util.Iconable;
-import consulo.virtualFileSystem.status.FileStatusManager;
-import consulo.ui.ex.tree.NodeDescriptor;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiUtilCore;
 import consulo.language.psi.SmartPointerManager;
 import consulo.language.psi.SmartPsiElementPointer;
-import consulo.language.psi.PsiUtilCore;
-import consulo.language.icon.IconDescriptorUpdaters;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
+import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.image.Image;
+import consulo.util.lang.Comparing;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.status.FileStatusManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.ide.todo;
 
 import consulo.project.ui.view.tree.TreeStructureProvider;
 import consulo.project.ui.view.tree.AbstractTreeNode;
-import consulo.ide.impl.idea.ide.util.treeView.AbstractTreeStructureBase;
+import consulo.project.ui.view.tree.AbstractTreeStructureBase;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.project.Project;
 import consulo.util.concurrent.ActionCallback;
