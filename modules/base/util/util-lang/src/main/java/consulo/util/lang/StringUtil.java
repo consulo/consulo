@@ -2334,6 +2334,53 @@ public final class StringUtil {
     return buffer.toString();
   }
 
+  @Contract(pure = true)
+  public static boolean endsWithLineBreak(@Nonnull CharSequence text) {
+    int len = text.length();
+    return len > 0 && isLineBreak(text.charAt(len - 1));
+  }
+
+  @Contract(pure = true)
+  public static int lineColToOffset(@Nonnull CharSequence text, int line, int col) {
+    int curLine = 0;
+    int offset = 0;
+    while (line != curLine) {
+      if (offset == text.length()) return -1;
+      char c = text.charAt(offset);
+      if (c == '\n') {
+        curLine++;
+      }
+      else if (c == '\r') {
+        curLine++;
+        if (offset < text.length() - 1 && text.charAt(offset + 1) == '\n') {
+          offset++;
+        }
+      }
+      offset++;
+    }
+    return offset + col;
+  }
+
+  @Contract(pure = true)
+  public static int offsetToLineNumber(@Nonnull CharSequence text, int offset) {
+    int curLine = 0;
+    int curOffset = 0;
+    while (curOffset < offset) {
+      if (curOffset == text.length()) return -1;
+      char c = text.charAt(curOffset);
+      if (c == '\n') {
+        curLine++;
+      }
+      else if (c == '\r') {
+        curLine++;
+        if (curOffset < text.length() - 1 && text.charAt(curOffset + 1) == '\n') {
+          curOffset++;
+        }
+      }
+      curOffset++;
+    }
+    return curLine;
+  }
 
   /**
    * Formats the specified file size as a string.
