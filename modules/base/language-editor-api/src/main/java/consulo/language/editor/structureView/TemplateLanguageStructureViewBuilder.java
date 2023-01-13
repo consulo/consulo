@@ -1,35 +1,32 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.ide.structureView.impl;
+package consulo.language.editor.structureView;
 
+import consulo.codeEditor.Editor;
+import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.structureView.StructureView;
 import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.fileEditor.structureView.StructureViewModel;
 import consulo.fileEditor.structureView.TreeBasedStructureViewBuilder;
-import consulo.ide.impl.idea.ide.util.StructureViewCompositeModel;
 import consulo.language.Language;
-import consulo.language.util.LanguageUtil;
-import consulo.language.editor.structureView.PsiStructureViewFactory;
-import consulo.codeEditor.Editor;
-import consulo.fileEditor.FileEditor;
-import consulo.util.lang.ObjectUtil;
-import consulo.virtualFileSystem.fileType.UnknownFileType;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.language.template.TemplateLanguageFileViewProvider;
-import consulo.util.lang.function.PairFunction;
-import consulo.util.collection.JBIterable;
-import consulo.disposer.Disposer;
+import consulo.language.util.LanguageUtil;
+import consulo.project.Project;
 import consulo.ui.image.Image;
+import consulo.util.collection.JBIterable;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.ObjectUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.UnknownFileType;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiFunction;
 
 /**
  * @author peter
@@ -37,7 +34,7 @@ import java.util.List;
 public abstract class TemplateLanguageStructureViewBuilder extends TreeBasedStructureViewBuilder {
 
   @Nonnull
-  public static TemplateLanguageStructureViewBuilder create(@Nonnull PsiFile psiFile, @Nullable PairFunction<? super PsiFile, ? super Editor, ? extends StructureViewModel> modelFactory) {
+  public static TemplateLanguageStructureViewBuilder create(@Nonnull PsiFile psiFile, @Nullable BiFunction<? super PsiFile, ? super Editor, ? extends StructureViewModel> modelFactory) {
     return new TemplateLanguageStructureViewBuilder(psiFile) {
       @Override
       protected TreeBasedStructureViewBuilder createMainBuilder(@Nonnull PsiFile psi) {
@@ -50,7 +47,7 @@ public abstract class TemplateLanguageStructureViewBuilder extends TreeBasedStru
           @Nonnull
           @Override
           public StructureViewModel createStructureViewModel(@Nullable Editor editor) {
-            return modelFactory.fun(psi, editor);
+            return modelFactory.apply(psi, editor);
           }
         };
       }
@@ -147,31 +144,5 @@ public abstract class TemplateLanguageStructureViewBuilder extends TreeBasedStru
   }
 
   @Nullable
-  protected TreeBasedStructureViewBuilder createMainBuilder(@Nonnull PsiFile psi) {
-    //noinspection deprecation
-    StructureViewComposite.StructureViewDescriptor descriptor = createMainView(null, psi);
-    if (descriptor == null) return null;
-    return new TreeBasedStructureViewBuilder() {
-      @Nonnull
-      @Override
-      public StructureViewModel createStructureViewModel(@Nullable Editor editor) {
-        Disposer.register(descriptor.structureModel, descriptor.structureView);
-        return descriptor.structureModel;
-      }
-
-      @Nonnull
-      @Override
-      public StructureView createStructureView(FileEditor fileEditor, @Nonnull Project project) {
-        return descriptor.structureView;
-      }
-    };
-  }
-
-  /**
-   * @deprecated override {@link #createMainBuilder(PsiFile)} instead
-   */
-  @Deprecated
-  protected StructureViewComposite.StructureViewDescriptor createMainView(FileEditor fileEditor, PsiFile mainFile) {
-    throw new AssertionError();
-  }
+  protected abstract TreeBasedStructureViewBuilder createMainBuilder(@Nonnull PsiFile psi);
 }

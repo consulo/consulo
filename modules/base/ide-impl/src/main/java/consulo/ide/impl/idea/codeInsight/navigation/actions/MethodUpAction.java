@@ -21,7 +21,7 @@ import consulo.language.editor.impl.action.BaseCodeInsightAction;
 import consulo.ide.impl.idea.codeInsight.navigation.MethodUpHandler;
 import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.fileEditor.structureView.TreeBasedStructureViewBuilder;
-import consulo.ide.impl.idea.ide.structureView.impl.TemplateLanguageStructureViewBuilder;
+import consulo.language.editor.structureView.TemplateLanguageStructureViewBuilder;
 import consulo.codeEditor.Editor;
 import consulo.language.editor.structureView.PsiStructureViewFactory;
 import consulo.project.Project;

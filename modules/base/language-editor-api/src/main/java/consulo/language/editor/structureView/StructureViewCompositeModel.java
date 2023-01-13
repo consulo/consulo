@@ -13,24 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.util;
+package consulo.language.editor.structureView;
 
+import consulo.codeEditor.Editor;
+import consulo.disposer.Disposable;
 import consulo.fileEditor.structureView.StructureViewModel;
-import consulo.language.editor.structureView.StructureViewModelBase;
 import consulo.fileEditor.structureView.StructureViewTreeElement;
-import consulo.ide.impl.idea.ide.structureView.impl.StructureViewComposite;
 import consulo.fileEditor.structureView.tree.Filter;
 import consulo.fileEditor.structureView.tree.NodeProvider;
 import consulo.fileEditor.structureView.tree.ProvidingTreeModel;
 import consulo.fileEditor.structureView.tree.TreeElement;
-import consulo.navigation.ItemPresentation;
-import consulo.disposer.Disposable;
-import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiFile;
-import consulo.util.collection.JBIterable;
+import consulo.navigation.ItemPresentation;
 import consulo.ui.image.Image;
-import javax.annotation.Nonnull;
+import consulo.util.collection.JBIterable;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
