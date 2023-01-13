@@ -143,7 +143,10 @@ public class FavoritesManager implements PersistentStateComponent<Element> {
     ArrayList<FavoritesListProvider> providers = new ArrayList<>(getProviders().values());
     Collections.sort(providers);
     for (FavoritesListProvider provider : providers) {
-      result.add(provider.createFavoriteListNode(myProject));
+      FavoritesListNode node = provider.createFavoriteListNode(myProject);
+      if (node != null) {
+        result.add(node);
+      }
     }
     return result;
   }
