@@ -15,6 +15,7 @@
  */
 package consulo.project.startup;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 
@@ -29,6 +30,8 @@ import javax.annotation.Nonnull;
  * @author Dmitry Avdeev
  */
 public interface StartupActivity {
+  @Deprecated
+  @DeprecationInfo("Use consulo.application.dumb.DumbAware")
   interface DumbAware extends StartupActivity, consulo.application.dumb.DumbAware {
   }
 
