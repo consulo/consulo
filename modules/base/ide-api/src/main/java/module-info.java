@@ -70,6 +70,7 @@ module consulo.ide.api {
   requires transitive consulo.external.system.api;
   requires transitive consulo.builtin.web.server.api;
   requires transitive consulo.repository.ui.api;
+  requires transitive consulo.language.spellchecker.api;
 
   exports consulo.ide;
   exports consulo.ide.action;
