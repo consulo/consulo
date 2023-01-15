@@ -15,12 +15,12 @@
  */
 package consulo.ide.impl.idea.codeInsight.documentation.actions;
 
-import consulo.ide.impl.idea.codeInsight.documentation.DocumentationManager;
+import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
+import consulo.language.editor.internal.DocumentationManagerHelper;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.CopyPasteManager;
-import consulo.application.dumb.DumbAware;
 
 import java.awt.datatransfer.StringSelection;
 
@@ -36,7 +36,7 @@ public class CopyQuickDocAction extends AnAction implements DumbAware, HintManag
 
   @Override
   public void actionPerformed(AnActionEvent e) {
-    String selected = e.getData(DocumentationManager.SELECTED_QUICK_DOC_TEXT);
+    String selected = e.getData(DocumentationManagerHelper.SELECTED_QUICK_DOC_TEXT);
     if (selected == null || selected.isEmpty()) {
       return;
     }
@@ -46,7 +46,7 @@ public class CopyQuickDocAction extends AnAction implements DumbAware, HintManag
 
   @Override
   public void update(AnActionEvent e) {
-    String selected = e.getData(DocumentationManager.SELECTED_QUICK_DOC_TEXT);
+    String selected = e.getData(DocumentationManagerHelper.SELECTED_QUICK_DOC_TEXT);
     e.getPresentation().setEnabled(selected != null && !selected.isEmpty());
   }
 }

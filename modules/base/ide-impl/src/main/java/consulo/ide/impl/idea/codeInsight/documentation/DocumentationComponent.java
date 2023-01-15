@@ -41,10 +41,8 @@ import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupManager;
-import consulo.language.editor.documentation.CompositeDocumentationProvider;
-import consulo.language.editor.documentation.DocumentationManagerProtocol;
-import consulo.language.editor.documentation.DocumentationProvider;
-import consulo.language.editor.documentation.ExternalDocumentationHandler;
+import consulo.language.editor.documentation.*;
+import consulo.language.editor.internal.DocumentationManagerHelper;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
 import consulo.module.Module;
@@ -128,7 +126,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
   private static final JBDimension MIN_DEFAULT = new JBDimension(300, Registry.is("editor.new.mouse.hover.popups") ? 36 : 20);
   private final ExternalDocAction myExternalDocAction;
 
-  private DocumentationManager myManager;
+  private DocumentationManagerImpl myManager;
   private SmartPsiElementPointer<PsiElement> myElement;
   private long myModificationCount;
 
@@ -173,18 +171,18 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
 
   @Nonnull
   public static DocumentationComponent createAndFetch(@Nonnull Project project, @Nonnull PsiElement element, @Nonnull Disposable disposable) {
-    DocumentationManager manager = DocumentationManager.getInstance(project);
+    DocumentationManagerImpl manager = (DocumentationManagerImpl)DocumentationManager.getInstance(project);
     DocumentationComponent component = new DocumentationComponent(manager);
     Disposer.register(disposable, component);
     manager.fetchDocInfo(element, component);
     return component;
   }
 
-  public DocumentationComponent(DocumentationManager manager) {
+  public DocumentationComponent(DocumentationManagerImpl manager) {
     this(manager, true);
   }
 
-  public DocumentationComponent(DocumentationManager manager, boolean storeSize) {
+  public DocumentationComponent(DocumentationManagerImpl manager, boolean storeSize) {
     myManager = manager;
     myIsEmpty = true;
     myStoreSize = storeSize;
@@ -576,7 +574,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
 
   @Override
   public Object getData(@Nonnull @NonNls Key dataId) {
-    if (DocumentationManager.SELECTED_QUICK_DOC_TEXT == dataId) {
+    if (DocumentationManagerHelper.SELECTED_QUICK_DOC_TEXT == dataId) {
       // Javadocs often contain &nbsp; symbols (non-breakable white space). We don't want to copy them as is and replace
       // with raw white spaces. See IDEA-86633 for more details.
       String selectedText = myEditorPane.getSelectedText();
@@ -814,7 +812,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
         JBInsets.removeFrom(hintSize, myHint.getContent().getInsets());
       }
       else {
-        Size size = DimensionService.getInstance().getSize(DocumentationManager.NEW_JAVADOC_LOCATION_AND_SIZE, myManager.myProject);
+        Size size = DimensionService.getInstance().getSize(DocumentationManagerHelper.NEW_JAVADOC_LOCATION_AND_SIZE, myManager.myProject);
         hintSize = size == null ? null : new Dimension(size.getWidth(), size.getHeight());
       }
       if (hintSize == null) {
@@ -893,7 +891,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
   private void onManualResizing() {
     myManuallyResized = true;
     if (myStoreSize && myHint != null) {
-      myHint.setDimensionServiceKey(DocumentationManager.NEW_JAVADOC_LOCATION_AND_SIZE);
+      myHint.setDimensionServiceKey(DocumentationManagerHelper.NEW_JAVADOC_LOCATION_AND_SIZE);
       myHint.storeDimensionSize();
     }
   }
@@ -955,10 +953,10 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
   }
 
   @Nullable
-  private static String getExternalText(@Nonnull DocumentationManager manager, @Nullable PsiElement element, @Nullable String externalUrl, @Nullable DocumentationProvider provider) {
+  private static String getExternalText(@Nonnull DocumentationManagerImpl manager, @Nullable PsiElement element, @Nullable String externalUrl, @Nullable DocumentationProvider provider) {
     if (element == null || provider == null) return null;
 
-    PsiElement originalElement = DocumentationManager.getOriginalElement(element);
+    PsiElement originalElement = DocumentationManagerHelper.getOriginalElement(element);
     if (!shouldShowExternalDocumentationLink(provider, element, originalElement)) {
       return null;
     }
@@ -1335,7 +1333,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
       }
 
       PsiElement element = myElement.getElement();
-      PsiElement originalElement = DocumentationManager.getOriginalElement(element);
+      PsiElement originalElement = DocumentationManagerHelper.getOriginalElement(element);
 
       ExternalJavaDocAction.showExternalJavadoc(element, originalElement, myExternalUrl, e.getDataContext());
     }
@@ -1351,7 +1349,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     boolean enabled = false;
     if (myElement != null && myProvider != null) {
       PsiElement element = myElement.getElement();
-      PsiElement originalElement = DocumentationManager.getOriginalElement(element);
+      PsiElement originalElement = DocumentationManagerHelper.getOriginalElement(element);
       enabled = element != null && CompositeDocumentationProvider.hasUrlsFor(myProvider, element, originalElement);
     }
     return enabled;
@@ -1781,7 +1779,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     public void actionPerformed(@Nonnull AnActionEvent e) {
       myManuallyResized = false;
       if (myStoreSize) {
-        DimensionService.getInstance().setSize(DocumentationManager.NEW_JAVADOC_LOCATION_AND_SIZE, null, myManager.myProject);
+        DimensionService.getInstance().setSize(DocumentationManagerHelper.NEW_JAVADOC_LOCATION_AND_SIZE, null, myManager.myProject);
         myHint.setDimensionServiceKey(null);
       }
       showHint();

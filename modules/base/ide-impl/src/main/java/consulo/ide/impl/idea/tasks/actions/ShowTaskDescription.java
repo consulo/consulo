@@ -15,15 +15,16 @@
  */
 package consulo.ide.impl.idea.tasks.actions;
 
-import consulo.ide.impl.idea.codeInsight.documentation.DocumentationManager;
 import consulo.externalService.statistic.FeatureUsageTracker;
+import consulo.ide.impl.idea.tasks.doc.TaskPsiElement;
+import consulo.language.editor.documentation.DocumentationManager;
+import consulo.language.psi.PsiManager;
+import consulo.project.Project;
+import consulo.task.LocalTask;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.undoRedo.CommandProcessor;
-import consulo.project.Project;
-import consulo.language.psi.PsiManager;
-import consulo.task.LocalTask;
-import consulo.ide.impl.idea.tasks.doc.TaskPsiElement;
 
 /**
  * @author Dennis.Ushakov
@@ -44,17 +45,14 @@ public class ShowTaskDescription extends BaseTaskAction {
     }
   }
 
+  @RequiredUIAccess
   @Override
   public void actionPerformed(AnActionEvent e) {
     final Project project = getProject(e);
     assert project != null;
     final LocalTask task = getActiveTask(e);
     FeatureUsageTracker.getInstance().triggerFeatureUsed("codeassists.quickjavadoc.ctrln");
-    CommandProcessor.getInstance().executeCommand(project, new Runnable() {
-      public void run() {
-        DocumentationManager.getInstance(project).showJavaDocInfo(new TaskPsiElement(PsiManager.getInstance(project), task), null);
-      }
-    }, getCommandName(), null);
+    CommandProcessor.getInstance().executeCommand(project, () -> DocumentationManager.getInstance(project).showJavaDocInfo(new TaskPsiElement(PsiManager.getInstance(project), task), null), getCommandName(), null);
   }
 
   protected String getCommandName() {

@@ -16,14 +16,6 @@
 
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ide.impl.idea.codeInsight.documentation.DocumentationManager;
-import consulo.ide.impl.idea.ide.BrowserUtil;
-import consulo.language.editor.documentation.ExternalDocumentationHandler;
-import consulo.language.editor.documentation.ExternalDocumentationProvider;
-import consulo.ui.ex.popup.BaseListPopupStep;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.AccessRule;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
@@ -32,9 +24,16 @@ import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ide.IdeBundle;
+import consulo.ide.impl.idea.ide.BrowserUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.TargetElementUtil;
 import consulo.language.editor.documentation.DocumentationProvider;
+import consulo.language.editor.documentation.ExternalDocumentationHandler;
+import consulo.language.editor.documentation.ExternalDocumentationProvider;
+import consulo.language.editor.internal.DocumentationManagerHelper;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;
@@ -45,6 +44,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIExAWTDataKey;
+import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.PopupStep;
 
@@ -83,13 +83,13 @@ public class ExternalJavaDocAction extends AnAction {
     PsiFile context = dataContext.getData(CommonDataKeys.PSI_FILE);
 
     PsiElement originalElement = getOriginalElement(context, editor);
-    DocumentationManager.storeOriginalElement(project, originalElement, element);
+    DocumentationManagerHelper.storeOriginalElement(project, originalElement, element);
 
     showExternalJavadoc(element, originalElement, null, dataContext);
   }
 
   public static void showExternalJavadoc(PsiElement element, PsiElement originalElement, String docUrl, DataContext dataContext) {
-    DocumentationProvider provider = DocumentationManager.getProviderFromElement(element);
+    DocumentationProvider provider = DocumentationManagerHelper.getProviderFromElement(element);
     if (provider instanceof ExternalDocumentationHandler &&
         ((ExternalDocumentationHandler)provider).handleExternal(element, originalElement)) {
       return;
@@ -155,8 +155,8 @@ public class ExternalJavaDocAction extends AnAction {
     Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
     PsiElement element = getElement(dataContext, editor);
     final PsiElement originalElement = getOriginalElement(dataContext.getData(CommonDataKeys.PSI_FILE), editor);
-    DocumentationManager.storeOriginalElement(dataContext.getData(CommonDataKeys.PROJECT), originalElement, element);
-    final DocumentationProvider provider = DocumentationManager.getProviderFromElement(element);
+    DocumentationManagerHelper.storeOriginalElement(dataContext.getData(CommonDataKeys.PROJECT), originalElement, element);
+    final DocumentationProvider provider = DocumentationManagerHelper.getProviderFromElement(element);
     boolean enabled;
     if (provider instanceof ExternalDocumentationProvider) {
       final ExternalDocumentationProvider edProvider = (ExternalDocumentationProvider)provider;

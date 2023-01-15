@@ -15,13 +15,14 @@
  */
 package consulo.ide.impl.idea.codeInsight.navigation;
 
-import consulo.ide.impl.idea.codeInsight.documentation.DocumentationManager;
 import consulo.application.AllIcons;
-import consulo.ui.ex.action.ActionsBundle;
-import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
-import consulo.project.Project;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.documentation.DocumentationManager;
 import consulo.language.psi.PsiElement;
+import consulo.project.Project;
+import consulo.ui.ex.action.ActionsBundle;
+
 import javax.annotation.Nonnull;
 
 /**

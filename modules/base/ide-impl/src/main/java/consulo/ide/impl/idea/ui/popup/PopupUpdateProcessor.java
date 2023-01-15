@@ -16,8 +16,6 @@
 
 package consulo.ide.impl.idea.ui.popup;
 
-import consulo.language.editor.impl.internal.completion.CompletionUtil;
-import consulo.ide.impl.idea.codeInsight.documentation.DocumentationManager;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNameBase;
 import consulo.ide.ui.popup.HintUpdateSupply;
 import consulo.language.editor.completion.lookup.Lookup;
@@ -25,11 +23,13 @@ import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.completion.lookup.event.LookupAdapter;
 import consulo.language.editor.completion.lookup.event.LookupEvent;
+import consulo.language.editor.documentation.DocumentationManager;
+import consulo.language.editor.impl.internal.completion.CompletionUtil;
+import consulo.language.psi.PsiElement;
 import consulo.project.Project;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ui.ex.popup.PopupUpdateProcessorBase;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
-import consulo.project.ui.internal.WindowManagerEx;
-import consulo.language.psi.PsiElement;
 
 import javax.swing.*;
 import java.awt.*;

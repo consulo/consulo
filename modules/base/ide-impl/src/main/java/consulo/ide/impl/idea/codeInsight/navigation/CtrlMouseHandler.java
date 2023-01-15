@@ -1,20 +1,10 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.navigation;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.codeInsight.documentation.DocumentationManager;
-import consulo.language.editor.documentation.DocumentationManagerProtocol;
-import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
-import consulo.ide.impl.idea.codeInsight.navigation.actions.GotoDeclarationAction;
-import consulo.ide.impl.idea.codeInsight.navigation.actions.GotoTypeDeclarationAction;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.ui.LightweightHint;
-import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.application.dumb.DumbAwareRunnable;
@@ -35,11 +25,22 @@ import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.fileEditor.event.FileEditorManagerListener;
+import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
+import consulo.ide.impl.idea.codeInsight.navigation.actions.GotoDeclarationAction;
+import consulo.ide.impl.idea.codeInsight.navigation.actions.GotoTypeDeclarationAction;
+import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
+import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.ui.LightweightHint;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.TargetElementUtil;
+import consulo.language.editor.documentation.DocumentationManager;
+import consulo.language.editor.documentation.DocumentationManagerProtocol;
 import consulo.language.editor.documentation.DocumentationProvider;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.inject.EditorWindow;
+import consulo.language.editor.internal.DocumentationManagerHelper;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.*;
@@ -199,7 +200,7 @@ public final class CtrlMouseHandler {
   public CtrlMouseHandler(@Nonnull Project project) {
     myProject = project;
 
-    if(project.isDefault()) {
+    if (project.isDefault()) {
       // fixme [vistall] hack for javac bug with return inside constructor and lambda parameter
       // [203,6] error: variable __ might not have been initialized
       //return;
@@ -283,7 +284,7 @@ public final class CtrlMouseHandler {
 
   @Nonnull
   private static DocInfo generateInfo(PsiElement element, PsiElement atPointer, boolean fallbackToBasicInfo) {
-    final DocumentationProvider documentationProvider = DocumentationManager.getProviderFromElement(element, atPointer);
+    final DocumentationProvider documentationProvider = DocumentationManagerHelper.getProviderFromElement(element, atPointer);
     String result = documentationProvider.getQuickNavigateInfo(element, atPointer);
     if (result == null && fallbackToBasicInfo) {
       result = doGenerateInfo(element);
@@ -544,7 +545,7 @@ public final class CtrlMouseHandler {
       if (identifier != null && identifier.isValid()) {
         DocInfo baseDocInfo = generateInfo(element, element, false);
 
-        if(baseDocInfo != DocInfo.EMPTY && !StringUtil.isEmptyOrSpaces(baseDocInfo.text)) {
+        if (baseDocInfo != DocInfo.EMPTY && !StringUtil.isEmptyOrSpaces(baseDocInfo.text)) {
           return new Info(identifier) {
             @Nonnull
             @Override
@@ -884,7 +885,8 @@ public final class CtrlMouseHandler {
                                   : new TextAttributes(null, HintUtil.getInformationColor(), null, null, Font.PLAIN);
       for (TextRange range : info.getRanges()) {
         TextAttributes attr = NavigationImplUtil.patchAttributesColor(attributes, range, editor);
-        final RangeHighlighter highlighter = editor.getMarkupModel().addRangeHighlighter(range.getStartOffset(), range.getEndOffset(), HighlighterLayer.HYPERLINK, attr, HighlighterTargetArea.EXACT_RANGE);
+        final RangeHighlighter highlighter =
+                editor.getMarkupModel().addRangeHighlighter(range.getStartOffset(), range.getEndOffset(), HighlighterLayer.HYPERLINK, attr, HighlighterTargetArea.EXACT_RANGE);
         highlighters.add(highlighter);
       }
     }

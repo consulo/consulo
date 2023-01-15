@@ -20,7 +20,6 @@ import consulo.application.util.function.Computable;
 import consulo.component.PropertyName;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
-import consulo.ide.impl.idea.codeInsight.documentation.DocumentationManager;
 import consulo.ide.impl.idea.codeInsight.hint.ImplementationViewComponent;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.module.ModuleUtil;
@@ -30,6 +29,7 @@ import consulo.ide.impl.idea.ui.popup.NotLookupOrSearchCondition;
 import consulo.ide.impl.idea.util.NotNullFunction;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.language.editor.PlatformDataKeys;
+import consulo.language.editor.internal.DocumentationManagerHelper;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
@@ -233,7 +233,7 @@ public class ImageDuplicateResultsDialog extends DialogWrapper {
               JBPopupFactory.getInstance().createComponentPopupBuilder(viewComponent, viewComponent.getPreferredFocusableComponent())
                 .setRequestFocusCondition(myProject, NotLookupOrSearchCondition.INSTANCE)
                 .setProject(myProject)
-                .setDimensionServiceKey(myProject, DocumentationManager.JAVADOC_LOCATION_AND_SIZE, false)
+                .setDimensionServiceKey(myProject, DocumentationManagerHelper.JAVADOC_LOCATION_AND_SIZE, false)
                 .setResizable(true)
                 .setMovable(true)
                 .setRequestFocus(false)

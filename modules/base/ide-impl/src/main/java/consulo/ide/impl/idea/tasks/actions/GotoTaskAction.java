@@ -1,31 +1,31 @@
 package consulo.ide.impl.idea.tasks.actions;
 
-import consulo.ide.impl.idea.codeInsight.documentation.DocumentationManager;
+import consulo.application.ApplicationManager;
+import consulo.application.dumb.DumbAware;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.util.function.Processor;
 import consulo.ide.impl.idea.ide.actions.GotoActionBase;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNameBase;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNameItemProvider;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNamePopup;
 import consulo.ide.impl.idea.ide.util.gotoByName.SimpleChooseByNameModel;
-import consulo.application.ApplicationManager;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.dumb.DumbAware;
+import consulo.ide.impl.idea.tasks.doc.TaskPsiElement;
+import consulo.ide.impl.idea.tasks.impl.TaskManagerImpl;
+import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.ide.impl.idea.util.IconUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.CommonDataKeys;
-import consulo.project.Project;
-import consulo.ui.ex.action.*;
-import consulo.ui.ex.popup.JBPopup;
-import consulo.util.lang.ref.Ref;
+import consulo.language.editor.documentation.DocumentationManager;
 import consulo.language.psi.PsiManager;
+import consulo.project.Project;
 import consulo.task.LocalTask;
 import consulo.task.Task;
 import consulo.task.TaskManager;
-import consulo.ide.impl.idea.tasks.doc.TaskPsiElement;
-import consulo.ide.impl.idea.tasks.impl.TaskManagerImpl;
 import consulo.task.util.TaskUtil;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.IconUtil;
-import consulo.application.util.function.Processor;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.popup.JBPopup;
+import consulo.util.lang.ref.Ref;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -188,14 +188,7 @@ public class GotoTaskAction extends GotoActionBase implements DumbAware
 		{
 			hint.cancel();
 		}
-		ApplicationManager.getApplication().invokeLater(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				new OpenTaskDialog(project, task).show();
-			}
-		});
+		ApplicationManager.getApplication().invokeLater(() -> new OpenTaskDialog(project, task).show());
 	}
 
 	private static class GotoTaskPopupModel extends SimpleChooseByNameModel

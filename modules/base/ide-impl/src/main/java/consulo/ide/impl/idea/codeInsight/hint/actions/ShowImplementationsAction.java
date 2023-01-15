@@ -15,56 +15,56 @@
  */
 package consulo.ide.impl.idea.codeInsight.hint.actions;
 
-import consulo.language.editor.CodeInsightBundle;
-import consulo.ide.impl.idea.codeInsight.documentation.DocumentationManager;
-import consulo.ide.impl.idea.codeInsight.hint.ImplementationViewComponent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.completion.lookup.LookupManager;
-import consulo.language.editor.ui.navigation.BackgroundUpdaterTaskBase;
-import consulo.ide.impl.idea.codeInsight.navigation.ImplementationSearcher;
-import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.dataContext.DataManager;
-import consulo.ide.impl.idea.openapi.actionSystem.*;
+import consulo.application.AccessRule;
 import consulo.application.ApplicationManager;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
+import consulo.application.util.function.Computable;
+import consulo.application.util.function.ThrowableComputable;
 import consulo.codeEditor.Editor;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
+import consulo.document.util.TextRange;
+import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
-import consulo.dataContext.DataContext;
-import consulo.language.psi.*;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.ProgressManager;
+import consulo.ide.impl.idea.codeInsight.hint.ImplementationViewComponent;
+import consulo.ide.impl.idea.codeInsight.navigation.ImplementationSearcher;
+import consulo.ide.impl.idea.openapi.actionSystem.PopupAction;
 import consulo.ide.impl.idea.openapi.progress.impl.BackgroundableProcessIndicator;
-import consulo.project.Project;
-import consulo.ui.ex.popup.GenericListComponentUpdater;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.popup.JBPopup;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.application.util.function.Computable;
-import consulo.util.lang.ref.Ref;
-import consulo.document.util.TextRange;
-import consulo.application.util.function.ThrowableComputable;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.pom.PomTargetPsiElement;
-import consulo.language.psi.util.SymbolPresentationUtil;
-import consulo.language.psi.util.PsiTreeUtil;
-import consulo.language.psi.PsiUtilCore;
 import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.PopupPositionManager;
 import consulo.ide.impl.idea.ui.popup.PopupUpdateProcessor;
-import consulo.usage.UsageInfo;
+import consulo.language.editor.CodeInsightBundle;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.TargetElementUtil;
+import consulo.language.editor.completion.lookup.LookupManager;
+import consulo.language.editor.documentation.DocumentationManager;
+import consulo.language.editor.internal.DocumentationManagerHelper;
+import consulo.language.editor.ui.navigation.BackgroundUpdaterTaskBase;
+import consulo.language.pom.PomTargetPsiElement;
+import consulo.language.psi.*;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.psi.util.SymbolPresentationUtil;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.popup.GenericListComponentUpdater;
+import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.usage.Usage;
+import consulo.usage.UsageInfo;
 import consulo.usage.UsageInfo2UsageAdapter;
 import consulo.usage.UsageView;
-import consulo.application.AccessRule;
-import consulo.language.editor.TargetElementUtil;
-import consulo.logging.Logger;
+import consulo.util.lang.ref.Ref;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
@@ -308,7 +308,7 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
       };
 
       popup = JBPopupFactory.getInstance().createComponentPopupBuilder(component, component.getPreferredFocusableComponent()).setProject(project).addListener(updateProcessor)
-              .addUserData(updateProcessor).setDimensionServiceKey(project, DocumentationManager.JAVADOC_LOCATION_AND_SIZE, false).setResizable(true).setMovable(true)
+              .addUserData(updateProcessor).setDimensionServiceKey(project, DocumentationManagerHelper.JAVADOC_LOCATION_AND_SIZE, false).setResizable(true).setMovable(true)
               .setRequestFocus(invokedFromEditor && LookupManager.getActiveLookup(editor) == null).setTitle(title).setCouldPin(popup1 -> {
                 usageView.set(component.showInUsageView());
                 popup1.cancel();

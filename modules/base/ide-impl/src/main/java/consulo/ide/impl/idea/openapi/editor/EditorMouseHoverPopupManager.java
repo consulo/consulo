@@ -20,16 +20,11 @@ import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.tooltips.TooltipActionProvider;
 import consulo.ide.impl.idea.codeInsight.documentation.DocumentationComponent;
-import consulo.ide.impl.idea.codeInsight.documentation.DocumentationManager;
+import consulo.ide.impl.idea.codeInsight.documentation.DocumentationManagerImpl;
 import consulo.ide.impl.idea.codeInsight.documentation.QuickDocUtil;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.codeInsight.hint.LineTooltipRenderer;
-import consulo.language.editor.impl.internal.hint.TooltipGroup;
-import consulo.language.editor.impl.internal.hint.TooltipRenderer;
 import consulo.ide.impl.idea.ide.IdeEventQueue;
-import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
-import consulo.language.editor.impl.internal.markup.ErrorStripTooltipRendererProvider;
-import consulo.language.editor.impl.internal.hint.TooltipAction;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.editor.impl.EditorMouseHoverPopupControl;
 import consulo.ide.impl.idea.reference.SoftReference;
@@ -38,11 +33,21 @@ import consulo.ide.impl.idea.ui.MouseMovementTracker;
 import consulo.ide.impl.idea.ui.WidthBasedLayout;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.PopupPositionManager;
-import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.completion.lookup.LookupManager;
+import consulo.language.editor.documentation.DocumentationManager;
+import consulo.language.editor.impl.internal.hint.TooltipAction;
+import consulo.language.editor.impl.internal.hint.TooltipGroup;
+import consulo.language.editor.impl.internal.hint.TooltipRenderer;
+import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
+import consulo.language.editor.impl.internal.markup.ErrorStripTooltipRendererProvider;
+import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
+import consulo.language.editor.internal.DocumentationManagerHelper;
 import consulo.language.plain.psi.PsiPlainText;
-import consulo.language.psi.*;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiWhiteSpace;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowId;
@@ -456,9 +461,7 @@ public final class EditorMouseHoverPopupManager implements Disposable {
             quickDocMessage = documentationManager.generateDocumentation(targetElementRef.get(), element, true);
           }
         }
-        catch (IndexNotReadyException ignored) {
-        }
-        catch (ProcessCanceledException ignored) {
+        catch (IndexNotReadyException | ProcessCanceledException ignored) {
         }
         catch (Exception e) {
           LOG.warn(e);
@@ -580,14 +583,14 @@ public final class EditorMouseHoverPopupManager implements Disposable {
       ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.DOCUMENTATION);
       if (toolWindow != null) {
         if (element != null) {
-          documentationManager.showJavaDocInfo(editor, element, extractOriginalElement(element), null, quickDocMessage, true, false);
+          documentationManager.showJavaDocInfo(editor, element, DocumentationManagerHelper.getOriginalElement(element), null, quickDocMessage, true, false);
           documentationManager.setAllowContentUpdateFromContext(false);
         }
         return null;
       }
       class MyDocComponent extends DocumentationComponent {
         private MyDocComponent() {
-          super(documentationManager, false);
+          super((DocumentationManagerImpl)documentationManager, false);
           if (deEmphasize) {
             setBackground(UIUtil.getToolTipActionBackground());
           }
@@ -608,7 +611,7 @@ public final class EditorMouseHoverPopupManager implements Disposable {
       component.setData(element, quickDocMessage, null, null, null);
       component.setToolwindowCallback(() -> {
         PsiElement docElement = component.getElement();
-        documentationManager.createToolWindow(docElement, extractOriginalElement(docElement));
+        documentationManager.createToolWindow(docElement, DocumentationManagerHelper.getOriginalElement(docElement));
         ToolWindow createdToolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.DOCUMENTATION);
         if (createdToolWindow != null) {
           createdToolWindow.setAutoHide(false);
@@ -622,14 +625,6 @@ public final class EditorMouseHoverPopupManager implements Disposable {
       EditorUtil.disposeWithEditor(editor, component);
       return component;
     }
-  }
-
-  private static PsiElement extractOriginalElement(PsiElement element) {
-    if (element == null) {
-      return null;
-    }
-    SmartPsiElementPointer<?> originalElementPointer = element.getUserData(DocumentationManager.ORIGINAL_ELEMENT_KEY);
-    return originalElementPointer == null ? null : originalElementPointer.getElement();
   }
 
   @Nonnull

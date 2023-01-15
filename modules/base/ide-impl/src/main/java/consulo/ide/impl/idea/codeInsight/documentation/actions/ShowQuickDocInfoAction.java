@@ -15,27 +15,27 @@
  */
 package consulo.ide.impl.idea.codeInsight.documentation.actions;
 
-import consulo.language.editor.action.CodeInsightActionHandler;
-import consulo.language.editor.impl.action.BaseCodeInsightAction;
-import consulo.ide.impl.idea.codeInsight.documentation.DocumentationManager;
-import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.completion.lookup.LookupManager;
-import consulo.ide.impl.idea.codeInsight.lookup.impl.LookupImpl;
-import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.ide.impl.idea.openapi.actionSystem.*;
-import consulo.undoRedo.CommandProcessor;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorGutter;
-import consulo.language.psi.*;
 import consulo.application.dumb.DumbAware;
 import consulo.application.dumb.IndexNotReadyException;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorGutter;
+import consulo.externalService.statistic.FeatureUsageTracker;
+import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
+import consulo.ide.impl.idea.codeInsight.lookup.impl.LookupImpl;
+import consulo.ide.impl.idea.openapi.actionSystem.PopupAction;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.action.CodeInsightActionHandler;
+import consulo.language.editor.completion.lookup.LookupManager;
+import consulo.language.editor.documentation.DocumentationManager;
+import consulo.language.editor.impl.action.BaseCodeInsightAction;
+import consulo.language.psi.*;
 import consulo.project.Project;
-
-import javax.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import consulo.undoRedo.CommandProcessor;
+
+import javax.annotation.Nonnull;
 
 public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements HintManagerImpl.ActionToIgnore, DumbAware, PopupAction {
   @SuppressWarnings("SpellCheckingInspection") public static final String CODEASSISTS_QUICKJAVADOC_FEATURE = "codeassists.quickjavadoc";

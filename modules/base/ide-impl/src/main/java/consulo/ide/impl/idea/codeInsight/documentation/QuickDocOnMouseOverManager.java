@@ -20,6 +20,7 @@ import consulo.ide.impl.idea.openapi.editor.impl.EditorMouseHoverPopupControl;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.editor.documentation.DocumentationManager;
 import consulo.language.plain.psi.PsiPlainText;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
@@ -82,13 +83,10 @@ public final class QuickDocOnMouseOverManager {
   private MyShowQuickDocRequest myCurrentRequest; // accessed only in EDT
 
   @Inject
-  public QuickDocOnMouseOverManager(Application app) {
+  public QuickDocOnMouseOverManager(Application app, EditorFactory factory) {
     myAlarm = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, app);
 
-    EditorFactory factory = EditorFactory.getInstance();
-    if (factory != null) {
-      factory.addEditorFactoryListener(new MyEditorFactoryListener(), app);
-    }
+    factory.addEditorFactoryListener(new MyEditorFactoryListener(), app);
 
     app.getMessageBus().connect().subscribe(ApplicationActivationListener.class, new ApplicationActivationListener() {
       @Override
