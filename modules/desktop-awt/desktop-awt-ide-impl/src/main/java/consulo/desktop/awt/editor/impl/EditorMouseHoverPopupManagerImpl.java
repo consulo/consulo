@@ -1,9 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.openapi.editor;
+package consulo.desktop.awt.editor.impl;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.impl.internal.progress.ProgressIndicatorBase;
@@ -15,12 +14,11 @@ import consulo.codeEditor.event.*;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.component.ProcessCanceledException;
 import consulo.dataContext.DataContext;
+import consulo.desktop.awt.language.editor.documentation.DocumentationComponent;
+import consulo.desktop.awt.language.editor.documentation.DocumentationManagerImpl;
 import consulo.disposer.Disposable;
-import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.tooltips.TooltipActionProvider;
-import consulo.ide.impl.idea.codeInsight.documentation.DocumentationComponent;
-import consulo.ide.impl.idea.codeInsight.documentation.DocumentationManagerImpl;
 import consulo.ide.impl.idea.codeInsight.documentation.QuickDocUtil;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.codeInsight.hint.LineTooltipRenderer;
@@ -36,13 +34,14 @@ import consulo.ide.impl.idea.ui.popup.PopupPositionManager;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.documentation.DocumentationManager;
+import consulo.language.editor.impl.internal.hint.EditorMouseHoverPopupManager;
 import consulo.language.editor.impl.internal.hint.TooltipAction;
 import consulo.language.editor.impl.internal.hint.TooltipGroup;
 import consulo.language.editor.impl.internal.hint.TooltipRenderer;
 import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
 import consulo.language.editor.impl.internal.markup.ErrorStripTooltipRendererProvider;
-import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.internal.DocumentationManagerHelper;
+import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.plain.psi.PsiPlainText;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
@@ -64,6 +63,7 @@ import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.Ref;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
@@ -78,12 +78,11 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
-@ServiceAPI(ComponentScope.APPLICATION)
 @Singleton
 @ServiceImpl
-public final class EditorMouseHoverPopupManager implements Disposable {
-  private static final Logger LOG = Logger.getInstance(EditorMouseHoverPopupManager.class);
-  private static final Key<Boolean> DISABLE_BINDING = Key.create("EditorMouseHoverPopupManager.disable.binding");
+public final class EditorMouseHoverPopupManagerImpl implements EditorMouseHoverPopupManager, Disposable {
+  private static final Logger LOG = Logger.getInstance(EditorMouseHoverPopupManagerImpl.class);
+  private static final Key<Boolean> DISABLE_BINDING = Key.create("EditorMouseHoverPopupManagerImpl.disable.binding");
   private static final TooltipGroup EDITOR_INFO_GROUP = new TooltipGroup("EDITOR_INFO_GROUP", 0);
   private static final int MAX_POPUP_WIDTH = 650;
 
@@ -96,14 +95,13 @@ public final class EditorMouseHoverPopupManager implements Disposable {
   private ProgressIndicator myCurrentProgress;
   private boolean mySkipNextMovement;
 
-  public EditorMouseHoverPopupManager() {
+  @Inject
+  public EditorMouseHoverPopupManagerImpl(Application application, EditorFactory editorFactory, EditorMouseHoverPopupControl editorMouseHoverPopupControl) {
     myAlarm = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, this);
-    EditorEventMulticaster multicaster = EditorFactory.getInstance().getEventMulticaster();
+    EditorEventMulticaster multicaster = editorFactory.getEventMulticaster();
     multicaster.addCaretListener(new CaretListener() {
       @Override
       public void caretPositionChanged(@Nonnull CaretEvent event) {
-        if (!Registry.is("editor.new.mouse.hover.popups")) return;
-
         Editor editor = event.getEditor();
         if (editor == SoftReference.dereference(myCurrentEditor)) {
           DocumentationManager.getInstance(editor.getProject()).setAllowContentUpdateFromContext(true);
@@ -111,18 +109,10 @@ public final class EditorMouseHoverPopupManager implements Disposable {
       }
     }, this);
     multicaster.addVisibleAreaListener(e -> {
-      if (!Registry.is("editor.new.mouse.hover.popups")) {
-        return;
-      }
-
       cancelProcessingAndCloseHint();
     }, this);
 
-    EditorMouseHoverPopupControl.getInstance().addListener(() -> {
-      if (!Registry.is("editor.new.mouse.hover.popups")) {
-        return;
-      }
-
+    editorMouseHoverPopupControl.addListener(() -> {
       Editor editor = SoftReference.dereference(myCurrentEditor);
       if (editor != null && EditorMouseHoverPopupControl.arePopupsDisabled(editor)) {
         closeHint();
@@ -130,42 +120,11 @@ public final class EditorMouseHoverPopupManager implements Disposable {
     });
 
     IdeEventQueue.getInstance().addActivityListener(this::onActivity, this);
-    ApplicationManager.getApplication().getMessageBus().connect(this).subscribe(AnActionListener.class, new MyActionListener());
+    application.getMessageBus().connect(this).subscribe(AnActionListener.class, new MyActionListener());
   }
 
   @Override
   public void dispose() {
-  }
-
-  protected void handleMouseMoved(@Nonnull EditorMouseEvent e) {
-    cancelCurrentProcessing();
-
-    if (ignoreEvent(e)) return;
-
-    Editor editor = e.getEditor();
-    if (isPopupDisabled(editor)) {
-      closeHint();
-      return;
-    }
-
-    int targetOffset = getTargetOffset(e);
-    if (targetOffset < 0) {
-      closeHint();
-      return;
-    }
-    Context context = createContext(editor, targetOffset);
-    if (context == null) {
-      closeHint();
-      return;
-    }
-    Context.Relation relation = isHintShown() ? context.compareTo(myContext) : Context.Relation.DIFFERENT;
-    if (relation == Context.Relation.SAME) {
-      return;
-    }
-    else if (relation == Context.Relation.DIFFERENT) {
-      closeHint();
-    }
-    scheduleProcessing(editor, context, relation == Context.Relation.SIMILAR, false, false);
   }
 
   void cancelCurrentProcessing() {
@@ -219,8 +178,6 @@ public final class EditorMouseHoverPopupManager implements Disposable {
   }
 
   private void onActivity() {
-    if (!Registry.is("editor.new.mouse.hover.popups")) return;
-
     cancelCurrentProcessing();
   }
 
@@ -316,7 +273,7 @@ public final class EditorMouseHoverPopupManager implements Disposable {
   private static Context createContext(Editor editor, int offset) {
     Project project = Objects.requireNonNull(editor.getProject());
 
-    HighlightInfoImpl info = null;
+    HighlightInfo info = null;
     if (!Registry.is("ide.disable.editor.tooltips")) {
       info = ((DaemonCodeAnalyzerImpl)DaemonCodeAnalyzer.getInstance(project)).findHighlightByOffset(editor.getDocument(), offset, false);
     }
@@ -335,7 +292,8 @@ public final class EditorMouseHoverPopupManager implements Disposable {
     return info == null && elementForQuickDoc == null ? null : new Context(offset, info, elementForQuickDoc);
   }
 
-  private void cancelProcessingAndCloseHint() {
+  @Override
+  public void cancelProcessingAndCloseHint() {
     cancelCurrentProcessing();
     closeHint();
   }
@@ -371,7 +329,8 @@ public final class EditorMouseHoverPopupManager implements Disposable {
     return hint;
   }
 
-  public void showInfoTooltip(@Nonnull Editor editor, @Nonnull HighlightInfoImpl info, int offset, boolean requestFocus, boolean showImmediately) {
+  @Override
+  public void showInfoTooltip(@Nonnull Editor editor, @Nonnull HighlightInfo info, int offset, boolean requestFocus, boolean showImmediately) {
     cancelProcessingAndCloseHint();
     Context context = new Context(offset, info, null) {
       @Override
@@ -384,10 +343,10 @@ public final class EditorMouseHoverPopupManager implements Disposable {
 
   private static class Context {
     private final int targetOffset;
-    private final WeakReference<HighlightInfoImpl> highlightInfo;
+    private final WeakReference<HighlightInfo> highlightInfo;
     private final WeakReference<PsiElement> elementForQuickDoc;
 
-    private Context(int targetOffset, HighlightInfoImpl highlightInfo, PsiElement elementForQuickDoc) {
+    private Context(int targetOffset, HighlightInfo highlightInfo, PsiElement elementForQuickDoc) {
       this.targetOffset = targetOffset;
       this.highlightInfo = highlightInfo == null ? null : new WeakReference<>(highlightInfo);
       this.elementForQuickDoc = elementForQuickDoc == null ? null : new WeakReference<>(elementForQuickDoc);
@@ -397,13 +356,13 @@ public final class EditorMouseHoverPopupManager implements Disposable {
       return SoftReference.dereference(elementForQuickDoc);
     }
 
-    private HighlightInfoImpl getHighlightInfo() {
+    private HighlightInfo getHighlightInfo() {
       return SoftReference.dereference(highlightInfo);
     }
 
     private Relation compareTo(Context other) {
       if (other == null) return Relation.DIFFERENT;
-      HighlightInfoImpl highlightInfo = getHighlightInfo();
+      HighlightInfo highlightInfo = getHighlightInfo();
       if (!Objects.equals(highlightInfo, other.getHighlightInfo())) return Relation.DIFFERENT;
       return Objects.equals(getElementForQuickDoc(), other.getElementForQuickDoc()) ? Relation.SAME : highlightInfo == null ? Relation.DIFFERENT : Relation.SIMILAR;
     }
@@ -414,7 +373,7 @@ public final class EditorMouseHoverPopupManager implements Disposable {
 
     @Nonnull
     private VisualPosition getPopupPosition(Editor editor) {
-      HighlightInfoImpl highlightInfo = getHighlightInfo();
+      HighlightInfo highlightInfo = getHighlightInfo();
       if (highlightInfo == null) {
         int offset = targetOffset;
         PsiElement elementForQuickDoc = getElementForQuickDoc();
@@ -436,7 +395,7 @@ public final class EditorMouseHoverPopupManager implements Disposable {
 
     @Nullable
     private Info calcInfo(@Nonnull Editor editor) {
-      HighlightInfoImpl info = getHighlightInfo();
+      HighlightInfo info = getHighlightInfo();
       if (info != null && (info.getDescription() == null || info.getToolTip() == null)) {
         info = null;
       }
@@ -478,13 +437,13 @@ public final class EditorMouseHoverPopupManager implements Disposable {
   }
 
   private static class Info {
-    private final HighlightInfoImpl highlightInfo;
+    private final HighlightInfo highlightInfo;
 
     private final String quickDocMessage;
     private final WeakReference<PsiElement> quickDocElement;
 
 
-    private Info(HighlightInfoImpl highlightInfo, String quickDocMessage, PsiElement quickDocElement) {
+    private Info(HighlightInfo highlightInfo, String quickDocMessage, PsiElement quickDocElement) {
       assert highlightInfo != null || quickDocMessage != null;
       this.highlightInfo = highlightInfo;
       this.quickDocMessage = quickDocMessage;
@@ -627,11 +586,6 @@ public final class EditorMouseHoverPopupManager implements Disposable {
     }
   }
 
-  @Nonnull
-  public static EditorMouseHoverPopupManager getInstance() {
-    return ServiceManager.getService(EditorMouseHoverPopupManager.class);
-  }
-
   @Nullable
   public DocumentationComponent getDocumentationComponent() {
     AbstractPopup hint = getCurrentHint();
@@ -759,7 +713,7 @@ public final class EditorMouseHoverPopupManager implements Disposable {
         return;
       }
       if (action instanceof HintManagerImpl.ActionToIgnore) return;
-      getInstance().cancelProcessingAndCloseHint();
+      EditorMouseHoverPopupManager.getInstance().cancelProcessingAndCloseHint();
     }
 
     @Override
@@ -767,7 +721,7 @@ public final class EditorMouseHoverPopupManager implements Disposable {
       if (!Registry.is("editor.new.mouse.hover.popups")) {
         return;
       }
-      getInstance().cancelProcessingAndCloseHint();
+      EditorMouseHoverPopupManager.getInstance().cancelProcessingAndCloseHint();
     }
   }
 }

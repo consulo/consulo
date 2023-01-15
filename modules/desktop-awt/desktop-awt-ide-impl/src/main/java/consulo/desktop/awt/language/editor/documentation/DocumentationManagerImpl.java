@@ -1,5 +1,5 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.codeInsight.documentation;
+package consulo.desktop.awt.language.editor.documentation;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
@@ -16,6 +16,8 @@ import consulo.content.scope.PackageSet;
 import consulo.content.scope.PackageSetBase;
 import consulo.dataContext.DataContext;
 import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.codeInsight.documentation.DockablePopupManager;
+import consulo.ide.impl.idea.codeInsight.documentation.QuickDocUtil;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.codeInsight.hint.ParameterInfoController;
 import consulo.ide.impl.idea.ide.BrowserUtil;
@@ -36,6 +38,7 @@ import consulo.ide.impl.idea.ui.popup.PopupUpdateProcessor;
 import consulo.ide.impl.idea.ui.tabs.FileColorManagerImpl;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.setting.module.OrderEntryTypeEditor;
 import consulo.language.Language;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.FileColorManager;
@@ -53,10 +56,10 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.psi.util.SymbolPresentationUtil;
 import consulo.logging.Logger;
 import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.module.content.layer.orderEntry.OrderEntryType;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.internal.WindowManagerEx;
-import consulo.project.ui.view.internal.ProjectSettingsService;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.Rectangle2D;
@@ -829,8 +832,11 @@ public final class DocumentationManagerImpl extends DockablePopupManager<Documen
           }
         }
       }
+
       if (libraryEntry != null) {
-        ProjectSettingsService.getInstance(myProject).openLibraryOrSdkSettings(libraryEntry);
+        OrderEntryType type = libraryEntry.getType();
+        OrderEntryTypeEditor editor = OrderEntryTypeEditor.getEditor(type.getId());
+        editor.navigate(libraryEntry);
       }
     }
     else if (url.startsWith(DocumentationManagerProtocol.PSI_ELEMENT_PROTOCOL)) {

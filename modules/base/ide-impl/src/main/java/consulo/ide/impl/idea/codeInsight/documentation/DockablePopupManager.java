@@ -2,42 +2,39 @@
 package consulo.ide.impl.idea.codeInsight.documentation;
 
 import consulo.application.AllIcons;
+import consulo.codeEditor.Editor;
+import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.codeEditor.Editor;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.dataContext.DataContext;
-import consulo.project.Project;
-import consulo.project.ui.wm.*;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.util.PsiUtilBase;
+import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
-import consulo.language.editor.util.PsiUtilBase;
+import consulo.project.Project;
+import consulo.project.ui.wm.WindowManager;
+import consulo.ui.Rectangle2D;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.action.ToggleAction;
-import consulo.ui.ex.update.Activatable;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.content.event.ContentManagerAdapter;
 import consulo.ui.ex.content.event.ContentManagerEvent;
-import consulo.ui.Rectangle2D;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.ex.toolWindow.ToolWindowType;
+import consulo.ui.ex.update.Activatable;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 public abstract class DockablePopupManager<T extends JComponent & Disposable> {
@@ -177,7 +174,7 @@ public abstract class DockablePopupManager<T extends JComponent & Disposable> {
     };
   }
 
-  void restartAutoUpdate(final boolean state) {
+  public void restartAutoUpdate(final boolean state) {
     if (state && myToolWindow != null) {
       if (myAutoUpdateRequest == null) {
         myAutoUpdateRequest = this::updateComponent;
@@ -250,5 +247,15 @@ public abstract class DockablePopupManager<T extends JComponent & Disposable> {
 
   public boolean hasActiveDockedDocWindow() {
     return myToolWindow != null && myToolWindow.isVisible();
+  }
+
+  @Nullable
+  public ToolWindow getToolWindow() {
+    return myToolWindow;
+  }
+
+  @Nonnull
+  public Project getProject() {
+    return myProject;
   }
 }

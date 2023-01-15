@@ -28,7 +28,6 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.UISettings;
 import consulo.application.util.function.Processor;
-import consulo.application.util.registry.Registry;
 import consulo.codeEditor.*;
 import consulo.codeEditor.impl.MarkupModelImpl;
 import consulo.codeEditor.markup.MarkupModelEx;
@@ -140,7 +139,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
   }
 
   public boolean showToolTipByMouseMove(final MouseEvent e) {
-    boolean newLook = Registry.is("editor.new.mouse.hover.popups");
+    final boolean newLook = true;
 
     if (myEditor.getVisibleLineCount() == 0) return false;
     MouseEvent me = new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), 0, e.getY() + 1, e.getClickCount(), e.isPopupTrigger());
@@ -317,7 +316,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
   }
 
   public void updateErrorStripePanel() {
-    if(!isErrorStripeVisible()) {
+    if (!isErrorStripeVisible()) {
       return;
     }
 

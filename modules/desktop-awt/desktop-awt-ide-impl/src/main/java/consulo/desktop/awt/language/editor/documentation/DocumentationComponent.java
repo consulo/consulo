@@ -1,6 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
-package consulo.ide.impl.idea.codeInsight.documentation;
+package consulo.desktop.awt.language.editor.documentation;
 
 import consulo.application.AllIcons;
 import consulo.application.ApplicationBundle;
@@ -402,7 +402,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
       @Override
       public Dimension getPreferredSize() {
         Dimension size = myScrollPane.getPreferredSize();
-        if (myHint == null && myManager != null && myManager.myToolWindow == null) {
+        if (myHint == null && myManager != null && myManager.getToolWindow() == null) {
           int em = myEditorPane.getFont().getSize();
           int prefHeightMax = PREFERRED_HEIGHT_MAX_EM * em;
           return new Dimension(size.width, Math.min(prefHeightMax, size.height + (needsToolbar() ? myControlPanel.getPreferredSize().height : 0)));
@@ -460,8 +460,8 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     if (myHint != null) {
       Disposer.register(myHint, this);
     }
-    else if (myManager.myToolWindow != null) {
-      Disposer.register(myManager.myToolWindow.getContentManager(), this);
+    else if (myManager.getToolWindow() != null) {
+      Disposer.register(myManager.getToolWindow().getContentManager(), this);
     }
 
     registerActions();
@@ -791,7 +791,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
   private DataContext getDataContext() {
     Component referenceComponent;
     if (myReferenceComponent == null) {
-      referenceComponent = ProjectIdeFocusManager.getInstance(myManager.myProject).getFocusOwner();
+      referenceComponent = ProjectIdeFocusManager.getInstance(myManager.getProject()).getFocusOwner();
       myReferenceComponent = new WeakReference<>(referenceComponent);
     }
     else {
@@ -812,7 +812,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
         JBInsets.removeFrom(hintSize, myHint.getContent().getInsets());
       }
       else {
-        Size size = DimensionService.getInstance().getSize(DocumentationManagerHelper.NEW_JAVADOC_LOCATION_AND_SIZE, myManager.myProject);
+        Size size = DimensionService.getInstance().getSize(DocumentationManagerHelper.NEW_JAVADOC_LOCATION_AND_SIZE, myManager.getProject());
         hintSize = size == null ? null : new Dimension(size.getWidth(), size.getHeight());
       }
       if (hintSize == null) {
@@ -1230,13 +1230,13 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     else {
       myControlPanelVisible = false;
       remove(myControlPanel);
-      if (myManager.myToolWindow != null) return;
+      if (myManager.getToolWindow() != null) return;
       myCorner.setVisible(true);
     }
   }
 
   public boolean needsToolbar() {
-    return myManager.myToolWindow == null && Registry.is("documentation.show.toolbar");
+    return myManager.getToolWindow() == null && Registry.is("documentation.show.toolbar");
   }
 
   private static class MyGearActionGroup extends DefaultActionGroup implements HintManagerImpl.ActionToIgnore {
@@ -1564,7 +1564,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
-      if (myManager == null || myOnToolbar && myManager.myToolWindow != null) {
+      if (myManager == null || myOnToolbar && myManager.getToolWindow() != null) {
         e.getPresentation().setEnabledAndVisible(false);
       }
     }
@@ -1667,7 +1667,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     @Override
     public void update(@Nonnull AnActionEvent e) {
       super.update(e);
-      if (myManager == null || myManager.myToolWindow != null) {
+      if (myManager == null || myManager.getToolWindow() != null) {
         e.getPresentation().setEnabledAndVisible(false);
       }
     }
@@ -1754,7 +1754,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
         presentation.setEnabledAndVisible(false);
       }
       else {
-        presentation.setIcon(ToolWindowManagerEx.getInstanceEx(myManager.myProject).getLocationIcon(ToolWindowId.DOCUMENTATION, consulo.ui.image.Image.empty(16)));
+        presentation.setIcon(ToolWindowManagerEx.getInstanceEx(myManager.getProject()).getLocationIcon(ToolWindowId.DOCUMENTATION, consulo.ui.image.Image.empty(16)));
         presentation.setEnabledAndVisible(myToolwindowCallback != null);
       }
     }
@@ -1779,7 +1779,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     public void actionPerformed(@Nonnull AnActionEvent e) {
       myManuallyResized = false;
       if (myStoreSize) {
-        DimensionService.getInstance().setSize(DocumentationManagerHelper.NEW_JAVADOC_LOCATION_AND_SIZE, null, myManager.myProject);
+        DimensionService.getInstance().setSize(DocumentationManagerHelper.NEW_JAVADOC_LOCATION_AND_SIZE, null, myManager.getProject());
         myHint.setDimensionServiceKey(null);
       }
       showHint();

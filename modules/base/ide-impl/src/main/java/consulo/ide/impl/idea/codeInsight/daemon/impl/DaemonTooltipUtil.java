@@ -16,23 +16,13 @@
 
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.ide.impl.idea.codeInsight.daemon.impl.tooltips.TooltipActionProvider;
-import consulo.ide.impl.idea.codeInsight.hint.TooltipController;
-import consulo.language.editor.impl.internal.hint.TooltipGroup;
-import consulo.language.editor.impl.internal.hint.TooltipRenderer;
 import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.openapi.editor.EditorMouseHoverPopupManager;
-import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
-import consulo.language.editor.impl.internal.markup.ErrorStripTooltipRendererProvider;
-import consulo.language.editor.impl.internal.hint.TooltipAction;
-import consulo.application.util.registry.Registry;
-import consulo.ui.ex.awt.HintHint;
+import consulo.ide.impl.idea.codeInsight.hint.TooltipController;
+import consulo.language.editor.impl.internal.hint.EditorMouseHoverPopupManager;
+import consulo.language.editor.impl.internal.hint.TooltipGroup;
 import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 
 import javax.annotation.Nonnull;
-
-import javax.swing.*;
-import java.awt.*;
 
 /**
  * @author max
@@ -52,40 +42,12 @@ public class DaemonTooltipUtil {
     showInfoTooltip(info, editor, defaultOffset, currentWidth, false, false);
   }
 
-
-  static void showInfoTooltip(@Nonnull final HighlightInfoImpl info, @Nonnull Editor editor, final int defaultOffset, final int currentWidth, final boolean requestFocus, final boolean showImmediately) {
-    if (Registry.is("editor.new.mouse.hover.popups")) {
-      EditorMouseHoverPopupManager.getInstance().showInfoTooltip(editor, info, defaultOffset, requestFocus, showImmediately);
-      return;
-    }
-    String text = info.getToolTip();
-    if (text == null) return;
-    Rectangle visibleArea = editor.getScrollingModel().getVisibleArea();
-
-    Point point = editor.logicalPositionToXY(editor.offsetToLogicalPosition(defaultOffset));
-    Point highlightEndPoint = editor.logicalPositionToXY(editor.offsetToLogicalPosition(info.endOffset));
-    if (highlightEndPoint.y > point.y) {
-      if (highlightEndPoint.x > point.x) {
-        point = new Point(point.x, highlightEndPoint.y);
-      }
-      else if (highlightEndPoint.y > point.y + editor.getLineHeight()) {
-        point = new Point(point.x, highlightEndPoint.y - editor.getLineHeight());
-      }
-    }
-
-    Point bestPoint = new Point(point);
-    bestPoint.y += editor.getLineHeight() / 2;
-    if (!visibleArea.contains(bestPoint)) bestPoint = point;
-
-    Point p = SwingUtilities.convertPoint(editor.getContentComponent(), bestPoint, editor.getComponent().getRootPane().getLayeredPane());
-
-    HintHint hintHint = new HintHint(editor.getContentComponent(), bestPoint).setAwtTooltip(true).setHighlighterType(true).setRequestFocus(requestFocus).setCalloutShift(editor.getLineHeight() / 2 - 1)
-            .setShowImmediately(showImmediately);
-
-    TooltipAction action = TooltipActionProvider.calcTooltipAction(info, editor);
-    ErrorStripTooltipRendererProvider provider = ((EditorMarkupModel)editor.getMarkupModel()).getErrorStripTooltipRendererProvider();
-    TooltipRenderer tooltipRenderer = provider.calcTooltipRenderer(text, action, currentWidth);
-
-    TooltipController.getInstance().showTooltip(editor, p, tooltipRenderer, false, DAEMON_INFO_GROUP, hintHint);
+  static void showInfoTooltip(@Nonnull final HighlightInfoImpl info,
+                              @Nonnull Editor editor,
+                              final int defaultOffset,
+                              final int currentWidth,
+                              final boolean requestFocus,
+                              final boolean showImmediately) {
+    EditorMouseHoverPopupManager.getInstance().showInfoTooltip(editor, info, defaultOffset, requestFocus, showImmediately);
   }
 }
