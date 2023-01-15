@@ -68,6 +68,4 @@ public class QuickDocUtil {
     }
     return null;
   }
-
-  public static final Object CUT_AT_CMD = ObjectUtil.sentinel("CUT_AT_CMD");
 }

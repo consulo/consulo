@@ -36,6 +36,7 @@ import consulo.codeEditor.markup.RangeHighlighterEx;
 import consulo.colorScheme.EditorFontType;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.disposer.util.DisposerUtil;
 import consulo.document.Document;
 import consulo.document.util.ProperTextRange;
 import consulo.fileEditor.internal.EditorWindowHolder;
@@ -43,7 +44,6 @@ import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.codeInsight.hint.LineTooltipRenderer;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUIUtil;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
-import consulo.ide.impl.idea.openapi.util.DisposerUtil;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
 import consulo.ide.impl.idea.ui.BalloonImpl;
 import consulo.ide.impl.idea.ui.LightweightHint;
@@ -153,7 +153,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
     if (IJSwingUtilities.findParentByInterface(myEditor.getComponent(), EditorWindowHolder.class) == null || isVisible || !UISettings.getInstance().SHOW_EDITOR_TOOLTIP) {
       final Set<RangeHighlighter> highlighters = new HashSet<>();
       getNearestHighlighters(this, me.getY(), highlighters);
-      getNearestHighlighters((MarkupModelEx)DocumentMarkupModel.forDocument(myEditor.getDocument(), getEditor().getProject(), true), me.getY(), highlighters);
+      getNearestHighlighters(DocumentMarkupModel.forDocument(myEditor.getDocument(), getEditor().getProject(), true), me.getY(), highlighters);
       if (highlighters.isEmpty()) return false;
 
       int y = e.getY();
@@ -178,7 +178,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
       me = new MouseEvent(me.getComponent(), me.getID(), me.getWhen(), me.getModifiers(), me.getX(), y, me.getClickCount(), me.isPopupTrigger());
       final List<RangeHighlighterEx> highlighters = new ArrayList<>();
       collectRangeHighlighters(this, visualLine, highlighters);
-      collectRangeHighlighters((MarkupModelEx)DocumentMarkupModel.forDocument(myEditor.getDocument(), getEditor().getProject(), true), visualLine, highlighters);
+      collectRangeHighlighters(DocumentMarkupModel.forDocument(myEditor.getDocument(), getEditor().getProject(), true), visualLine, highlighters);
       myEditorFragmentRenderer.update(visualLine, highlighters, me.isAltDown());
       myEditorFragmentRenderer.show(myEditor, me.getPoint(), true, DesktopEditorErrorPanel.ERROR_STRIPE_TOOLTIP_GROUP, createHint(me));
       return true;
@@ -222,7 +222,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
   private RangeHighlighter getNearestRangeHighlighter(final MouseEvent e) {
     List<RangeHighlighter> highlighters = new ArrayList<>();
     getNearestHighlighters(this, e.getY(), highlighters);
-    getNearestHighlighters((MarkupModelEx)DocumentMarkupModel.forDocument(myEditor.getDocument(), myEditor.getProject(), true), e.getY(), highlighters);
+    getNearestHighlighters(DocumentMarkupModel.forDocument(myEditor.getDocument(), myEditor.getProject(), true), e.getY(), highlighters);
     RangeHighlighter nearestMarker = null;
     int yPos = 0;
     for (RangeHighlighter highlighter : highlighters) {
