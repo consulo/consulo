@@ -287,5 +287,7 @@ public interface CaretModel {
    */
   void runBatchCaretOperation(@Nonnull Runnable runnable);
 
-  boolean isIteratingOverCarets();
+  default boolean isIteratingOverCarets() {
+    return false;
+  }
 }
