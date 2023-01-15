@@ -18,7 +18,7 @@ package consulo.desktop.awt.ui.plaf.intellij;
 import consulo.application.AllIcons;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButtonImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButtonWithText;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionToolbarImpl;
+import consulo.desktop.awt.action.ActionToolbarImpl;
 import consulo.ui.ex.awt.GraphicsConfig;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.Gray;

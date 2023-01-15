@@ -1,45 +1,44 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.actionSystem.impl;
 
-import consulo.application.impl.internal.progress.SensitiveProgressWrapper;
-import consulo.dataContext.AsyncDataContext;
-import consulo.dataContext.DataManager;
-import consulo.ide.impl.idea.ide.IdeEventQueue;
-import consulo.ide.impl.idea.openapi.actionSystem.*;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.application.ApplicationManager;
-import consulo.application.progress.EmptyProgressIndicator;
-import consulo.component.ProcessCanceledException;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.ProgressManager;
 import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
 import consulo.application.impl.internal.progress.ProgressWrapper;
-import consulo.dataContext.DataContext;
-import consulo.language.editor.CommonDataKeys;
-import consulo.project.DumbService;
-import consulo.project.Project;
-import consulo.ui.ex.internal.XmlActionGroupStub;
-import consulo.util.lang.function.Conditions;
+import consulo.application.impl.internal.progress.SensitiveProgressWrapper;
+import consulo.application.progress.EmptyProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.registry.Registry;
+import consulo.component.ProcessCanceledException;
+import consulo.dataContext.AsyncDataContext;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.ide.IdeEventQueue;
+import consulo.ide.impl.idea.openapi.actionSystem.AlwaysPerformingActionGroup;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.NotNullFunction;
 import consulo.ide.impl.idea.util.NullableFunction;
-import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.editor.CommonDataKeys;
+import consulo.logging.Logger;
+import consulo.project.DumbService;
+import consulo.project.Project;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.internal.XmlActionGroupStub;
 import consulo.util.collection.JBIterable;
 import consulo.util.collection.JBTreeTraverser;
 import consulo.util.collection.TreeTraversal;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.logging.Logger;
-import javax.annotation.Nonnull;
-
-import consulo.ui.ex.action.*;
 import consulo.util.concurrent.AsyncPromise;
 import consulo.util.concurrent.CancellablePromise;
 import consulo.util.concurrent.Promise;
+import consulo.util.lang.function.Conditions;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -52,7 +51,7 @@ import java.util.concurrent.Executor;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-class ActionUpdater {
+public class ActionUpdater {
   private static final Logger LOG = Logger.getInstance(ActionUpdater.class);
   private static final Executor ourExecutor = AppExecutorUtil.createBoundedApplicationPoolExecutor("Action Updater", 2);
 
@@ -73,17 +72,17 @@ class ActionUpdater {
 
   private boolean myAllowPartialExpand = true;
 
-  ActionUpdater(boolean isInModalContext, PresentationFactory presentationFactory, DataContext dataContext, String place, boolean isContextMenuAction, boolean isToolbarAction) {
+  public ActionUpdater(boolean isInModalContext, PresentationFactory presentationFactory, DataContext dataContext, String place, boolean isContextMenuAction, boolean isToolbarAction) {
     this(isInModalContext, presentationFactory, dataContext, place, isContextMenuAction, isToolbarAction, null);
   }
 
-  ActionUpdater(boolean isInModalContext,
-                PresentationFactory presentationFactory,
-                DataContext dataContext,
-                String place,
-                boolean isContextMenuAction,
-                boolean isToolbarAction,
-                Utils.ActionGroupVisitor visitor) {
+  public ActionUpdater(boolean isInModalContext,
+                       PresentationFactory presentationFactory,
+                       DataContext dataContext,
+                       String place,
+                       boolean isContextMenuAction,
+                       boolean isToolbarAction,
+                       Utils.ActionGroupVisitor visitor) {
     myProject = dataContext.getData(Project.KEY);
     myModalContext = isInModalContext;
     myFactory = presentationFactory;
@@ -190,7 +189,7 @@ class ActionUpdater {
    * @return actions from the given and nested non-popup groups that are visible after updating
    */
   @Nonnull
-  List<AnAction> expandActionGroupWithTimeout(ActionGroup group, boolean hideDisabled) {
+  public List<AnAction> expandActionGroupWithTimeout(ActionGroup group, boolean hideDisabled) {
     return expandActionGroupWithTimeout(group, hideDisabled, Registry.intValue("actionSystem.update.timeout.ms"));
   }
 
@@ -198,7 +197,7 @@ class ActionUpdater {
    * @return actions from the given and nested non-popup groups that are visible after updating
    */
   @Nonnull
-  List<AnAction> expandActionGroupWithTimeout(ActionGroup group, boolean hideDisabled, int timeoutMs) {
+  public List<AnAction> expandActionGroupWithTimeout(ActionGroup group, boolean hideDisabled, int timeoutMs) {
     List<AnAction> result = ProgressIndicatorUtils.withTimeout(timeoutMs, () -> expandActionGroup(group, hideDisabled));
     try {
       return result != null ? result : expandActionGroup(group, hideDisabled, myCheapStrategy);
@@ -208,7 +207,7 @@ class ActionUpdater {
     }
   }
 
-  CancellablePromise<List<AnAction>> expandActionGroupAsync(ActionGroup group, boolean hideDisabled) {
+  public CancellablePromise<List<AnAction>> expandActionGroupAsync(ActionGroup group, boolean hideDisabled) {
     AsyncPromise<List<AnAction>> promise = new AsyncPromise<>();
     ProgressIndicator indicator = new EmptyProgressIndicator();
     promise.onError(__ -> {

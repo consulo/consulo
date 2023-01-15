@@ -26,7 +26,7 @@ import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.lang.documentation.DocumentationMarkup;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButtonImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionManagerImpl;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionToolbarImpl;
+import consulo.desktop.awt.action.ActionToolbarImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;

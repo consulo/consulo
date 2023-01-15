@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2020 consulo.io
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,28 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.awt.actionSystem;
+package consulo.desktop.awt.action;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.ActionToolbar;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionToolbarImpl;
-import consulo.ui.ex.action.ActionToolbarFactory;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButtonImpl;
+import consulo.ui.Size;
+import consulo.ui.ex.action.ActionButton;
+import consulo.ui.ex.action.ActionButtonFactory;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.Presentation;
 import jakarta.inject.Singleton;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 2020-05-11
+ * @since 22-Jul-22
  */
 @Singleton
 @ServiceImpl
-public class DesktopActionToolbarFactory implements ActionToolbarFactory {
+public class DesktopAWTActionButtonFactory implements ActionButtonFactory {
   @Nonnull
   @Override
-  public ActionToolbar createActionToolbar(@NonNls String place, ActionGroup group, boolean horizontal, boolean decorateButtons) {
-    return new ActionToolbarImpl(place, group, horizontal, decorateButtons);
+  public ActionButton create(@Nonnull AnAction action, Presentation presentation, String place, @Nonnull Size minimumSize) {
+    return new ActionButtonImpl(action, presentation, place, minimumSize);
   }
 }

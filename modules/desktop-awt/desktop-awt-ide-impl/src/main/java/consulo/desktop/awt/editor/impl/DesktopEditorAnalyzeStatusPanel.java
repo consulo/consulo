@@ -35,7 +35,7 @@ import consulo.ide.impl.actionSystem.impl.ActionButtonUI;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButtonImpl;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionToolbarImpl;
+import consulo.desktop.awt.action.ActionToolbarImpl;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.ui.AncestorListenerAdapter;
 import consulo.ide.impl.idea.ui.components.labels.DropDownLink;

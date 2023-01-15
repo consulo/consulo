@@ -1,5 +1,5 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.openapi.actionSystem.impl;
+package consulo.desktop.awt.action;
 
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
@@ -12,6 +12,7 @@ import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.actionSystem.RightAlignedToolbarAction;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.*;
 import consulo.ide.impl.idea.openapi.keymap.ex.KeymapManagerEx;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
