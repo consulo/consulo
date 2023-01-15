@@ -177,8 +177,6 @@ public final class DaemonListeners implements Disposable {
         }
       }
     }, this);
-    eventMulticaster.addEditorMouseMotionListener(new MyEditorMouseMotionListener(), this);
-    eventMulticaster.addEditorMouseListener(new MyEditorMouseListener(TooltipController.getInstance()), this);
 
     connection.subscribe(EditorTrackerListener.class, new EditorTrackerListener() {
       @Override
@@ -544,66 +542,6 @@ public final class DaemonListeners implements Disposable {
         return;
       }
       stopDaemon(true, "Editor typing");
-    }
-  }
-
-  private static class MyEditorMouseListener implements EditorMouseListener {
-    @Nonnull
-    private final TooltipController myTooltipController;
-
-    MyEditorMouseListener(@Nonnull TooltipController tooltipController) {
-      myTooltipController = tooltipController;
-    }
-
-    @Override
-    public void mouseExited(@Nonnull EditorMouseEvent e) {
-      if (Registry.is("editor.new.mouse.hover.popups")) return;
-      if (!myTooltipController.shouldSurvive(e.getMouseEvent())) {
-        DaemonTooltipUtil.cancelTooltips();
-      }
-    }
-  }
-
-  private class MyEditorMouseMotionListener implements EditorMouseMotionListener {
-    @Override
-    public void mouseMoved(@Nonnull EditorMouseEvent e) {
-      if (Registry.is("ide.disable.editor.tooltips") || Registry.is("editor.new.mouse.hover.popups")) {
-        return;
-      }
-      Editor editor = e.getEditor();
-      if (myProject != editor.getProject()) return;
-      if (EditorMouseHoverPopupControl.arePopupsDisabled(editor)) return;
-
-      boolean shown = false;
-      try {
-        if (e.getArea() == EditorMouseEventArea.EDITING_AREA &&
-            !UIUtil.isControlKeyDown(e.getMouseEvent()) &&
-            DocumentationManager.getInstance(myProject).getDocInfoHint() == null &&
-            EditorUtil.isPointOverText(editor, e.getMouseEvent().getPoint())) {
-          LogicalPosition logical = editor.xyToLogicalPosition(e.getMouseEvent().getPoint());
-          int offset = editor.logicalPositionToOffset(logical);
-          HighlightInfoImpl info = myDaemonCodeAnalyzer.findHighlightByOffset(editor.getDocument(), offset, false);
-          if (info == null || info.getDescription() == null || info.getHighlighter() != null && FoldingUtil.isHighlighterFolded(editor, info.getHighlighter())) {
-            IdeTooltipManagerImpl.getInstanceImpl().hideCurrent(e.getMouseEvent());
-            return;
-          }
-          DaemonTooltipUtil.showInfoTooltip(info, editor, offset);
-          shown = true;
-        }
-      }
-      finally {
-        if (!shown && !TooltipController.getInstance().shouldSurvive(e.getMouseEvent())) {
-          DaemonTooltipUtil.cancelTooltips();
-        }
-      }
-    }
-
-    @Override
-    public void mouseDragged(@Nonnull EditorMouseEvent e) {
-      if (Registry.is("editor.new.mouse.hover.popups")) {
-        return;
-      }
-      TooltipController.getInstance().cancelTooltips();
     }
   }
 

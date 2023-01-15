@@ -123,7 +123,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
 
   private static final int PREFERRED_HEIGHT_MAX_EM = 10;
   private static final JBDimension MAX_DEFAULT = new JBDimension(650, 500);
-  private static final JBDimension MIN_DEFAULT = new JBDimension(300, Registry.is("editor.new.mouse.hover.popups") ? 36 : 20);
+  private static final JBDimension MIN_DEFAULT = new JBDimension(300, 36);
   private final ExternalDocAction myExternalDocAction;
 
   private DocumentationManagerImpl myManager;
@@ -261,7 +261,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
         }
       }
     };
-    boolean newLayout = Registry.is("editor.new.mouse.hover.popups");
+    boolean newLayout = true;
     DataProvider helpDataProvider = dataId -> PlatformDataKeys.HELP_ID == dataId ? DOCUMENTATION_TOPIC_ID : null;
     myEditorPane.putClientProperty(DataManager.CLIENT_PROPERTY_DATA_PROVIDER, helpDataProvider);
     myText = "";
@@ -472,10 +472,8 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
   @Override
   public void setBackground(Color color) {
     super.setBackground(color);
-    if (Registry.is("editor.new.mouse.hover.popups")) {
-      if (myEditorPane != null) myEditorPane.setBackground(color);
-      if (myControlPanel != null) myControlPanel.setBackground(color);
-    }
+    if (myEditorPane != null) myEditorPane.setBackground(color);
+    if (myControlPanel != null) myControlPanel.setBackground(color);
   }
 
   public AnAction[] getActions() {
@@ -526,7 +524,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
   }
 
   private static void prepareCSS(HTMLEditorKit editorKit) {
-    boolean newLayout = Registry.is("editor.new.mouse.hover.popups");
+    boolean newLayout = true;
     Color borderColor = newLayout ? UIUtil.getTooltipSeparatorColor() : ColorUtil.mix(DOCUMENTATION_COLOR, BORDER_COLOR, 0.5);
     int leftPadding = newLayout ? 8 : 7;
     int definitionTopPadding = newLayout ? 4 : 3;
@@ -935,7 +933,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
         text = StringUtil.replaceIgnoreCase(text, DocumentationMarkup.DEFINITION_START, "<div class='definition-only'><pre>");
       }
     }
-    if (Registry.is("editor.new.mouse.hover.popups") && !text.contains(DocumentationMarkup.DEFINITION_START)) {
+    if (!text.contains(DocumentationMarkup.DEFINITION_START)) {
       text = text.replace("class='content'", "class='content-only'");
     }
     String location = getLocationText();
@@ -1508,7 +1506,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
           highlighter.changeHighlight(myHighlightingTag, startOffset, endOffset);
         }
         myEditorPane.setCaretPosition(startOffset);
-        if (Registry.is("editor.new.mouse.hover.popups") && !ScreenReader.isActive()) {
+        if (!ScreenReader.isActive()) {
           // scrolling to target location explicitly, as we've disabled auto-scrolling to caret
           myEditorPane.scrollRectToVisible(myEditorPane.modelToView(startOffset));
         }

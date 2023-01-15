@@ -170,7 +170,7 @@ public class LineTooltipRenderer extends ComparableObject.Impl implements Toolti
 
   @Override
   public LightweightHint show(@Nonnull final Editor editor, @Nonnull final Point p, final boolean alignToRight, @Nonnull final TooltipGroup group, @Nonnull final HintHint hintHint) {
-    LightweightHint hint = createHint(editor, p, alignToRight, group, hintHint, Registry.is("editor.new.mouse.hover.popups"), true, true, null);
+    LightweightHint hint = createHint(editor, p, alignToRight, group, hintHint, true, true, true, null);
     if (hint != null) {
       HintManagerImpl.getInstanceImpl()
               .showEditorHint(hint, editor, p, HintManager.HIDE_BY_ANY_KEY | HintManager.HIDE_BY_TEXT_CHANGE | HintManager.HIDE_BY_OTHER_HINT | HintManager.HIDE_BY_SCROLLING, 0, false, hintHint);
@@ -395,9 +395,6 @@ public class LineTooltipRenderer extends ComparableObject.Impl implements Toolti
 
     hintHint.setShowImmediately(true);
     Point point = new Point(p);
-    if (!Registry.is("editor.new.mouse.hover.popups")) {
-      point.translate(-3, -3);
-    }
     TooltipController.getInstance().showTooltip(editor, point, createRenderer(myText, expand ? pane.getWidth() : 0), alignToRight, group, hintHint);
   }
 

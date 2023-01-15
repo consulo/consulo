@@ -184,10 +184,6 @@ public class LightweightHint extends UserDataHolderBase implements Hint {
       JComponent actualComponent = new OpaquePanel(new BorderLayout());
       actualComponent.add(myComponent, BorderLayout.CENTER);
       if (isAwtTooltip()) {
-        if (!Registry.is("editor.new.mouse.hover.popups")) {
-          int inset = BalloonImpl.getNormalInset();
-          actualComponent.setBorder(new LineBorder(hintHint.getTextBackground(), inset));
-        }
         actualComponent.setBackground(hintHint.getTextBackground());
         actualComponent.validate();
       }

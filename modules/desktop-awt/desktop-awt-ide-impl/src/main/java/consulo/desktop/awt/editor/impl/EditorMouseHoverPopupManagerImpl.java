@@ -13,14 +13,12 @@ import consulo.codeEditor.*;
 import consulo.codeEditor.event.*;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.component.ProcessCanceledException;
-import consulo.dataContext.DataContext;
 import consulo.desktop.awt.language.editor.documentation.DocumentationComponent;
 import consulo.desktop.awt.language.editor.documentation.DocumentationManagerImpl;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.tooltips.TooltipActionProvider;
 import consulo.ide.impl.idea.codeInsight.documentation.QuickDocUtil;
-import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.codeInsight.hint.LineTooltipRenderer;
 import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
@@ -51,9 +49,6 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.event.AnActionListener;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.popup.JBPopup;
@@ -120,7 +115,6 @@ public final class EditorMouseHoverPopupManagerImpl implements EditorMouseHoverP
     });
 
     IdeEventQueue.getInstance().addActivityListener(this::onActivity, this);
-    application.getMessageBus().connect(this).subscribe(AnActionListener.class, new MyActionListener());
   }
 
   @Override
@@ -268,28 +262,6 @@ public final class EditorMouseHoverPopupManagerImpl implements EditorMouseHoverP
       return editor.logicalPositionToOffset(logicalPosition);
     }
     return -1;
-  }
-
-  private static Context createContext(Editor editor, int offset) {
-    Project project = Objects.requireNonNull(editor.getProject());
-
-    HighlightInfo info = null;
-    if (!Registry.is("ide.disable.editor.tooltips")) {
-      info = ((DaemonCodeAnalyzerImpl)DaemonCodeAnalyzer.getInstance(project)).findHighlightByOffset(editor.getDocument(), offset, false);
-    }
-
-    PsiElement elementForQuickDoc = null;
-    if (EditorSettingsExternalizable.getInstance().isShowQuickDocOnMouseOverElement()) {
-      PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
-      if (psiFile != null) {
-        elementForQuickDoc = psiFile.findElementAt(offset);
-        if (elementForQuickDoc instanceof PsiWhiteSpace || elementForQuickDoc instanceof PsiPlainText) {
-          elementForQuickDoc = null;
-        }
-      }
-    }
-
-    return info == null && elementForQuickDoc == null ? null : new Context(offset, info, elementForQuickDoc);
   }
 
   @Override
@@ -703,25 +675,6 @@ public final class EditorMouseHoverPopupManagerImpl implements EditorMouseHoverP
         highlightInfoComponent.setBounds(0, 0, width, h1);
         quickDocComponent.setBounds(0, h1, width, height - h1);
       }
-    }
-  }
-
-  private static class MyActionListener implements AnActionListener {
-    @Override
-    public void beforeActionPerformed(@Nonnull AnAction action, @Nonnull DataContext dataContext, @Nonnull AnActionEvent event) {
-      if (!Registry.is("editor.new.mouse.hover.popups")) {
-        return;
-      }
-      if (action instanceof HintManagerImpl.ActionToIgnore) return;
-      EditorMouseHoverPopupManager.getInstance().cancelProcessingAndCloseHint();
-    }
-
-    @Override
-    public void beforeEditorTyping(char c, @Nonnull DataContext dataContext) {
-      if (!Registry.is("editor.new.mouse.hover.popups")) {
-        return;
-      }
-      EditorMouseHoverPopupManager.getInstance().cancelProcessingAndCloseHint();
     }
   }
 }
