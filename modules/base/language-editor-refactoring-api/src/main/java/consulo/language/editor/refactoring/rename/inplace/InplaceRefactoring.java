@@ -20,7 +20,7 @@ import consulo.application.Result;
 import consulo.application.util.function.CommonProcessors;
 import consulo.application.util.query.Query;
 import consulo.codeEditor.*;
-import consulo.codeEditor.internal.RealEditor;
+import consulo.codeEditor.RealEditor;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributes;

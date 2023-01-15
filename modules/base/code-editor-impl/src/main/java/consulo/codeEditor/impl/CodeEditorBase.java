@@ -13,7 +13,7 @@ import consulo.codeEditor.*;
 import consulo.codeEditor.event.*;
 import consulo.codeEditor.impl.action.EditorAction;
 import consulo.codeEditor.internal.CodeEditorInternalHelper;
-import consulo.codeEditor.internal.RealEditor;
+import consulo.codeEditor.RealEditor;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.codeEditor.markup.MarkupModelListener;
 import consulo.codeEditor.markup.RangeHighlighter;

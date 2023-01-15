@@ -7,7 +7,7 @@ import consulo.application.ApplicationPropertiesComponent;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorBundle;
-import consulo.codeEditor.internal.RealEditor;
+import consulo.codeEditor.RealEditor;
 import consulo.fileEditor.*;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;

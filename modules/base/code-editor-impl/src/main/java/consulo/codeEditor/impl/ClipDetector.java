@@ -15,7 +15,7 @@
  */
 package consulo.codeEditor.impl;
 
-import consulo.codeEditor.internal.RealEditor;
+import consulo.codeEditor.RealEditor;
 import consulo.codeEditor.util.EditorUtil;
 
 import javax.annotation.Nonnull;

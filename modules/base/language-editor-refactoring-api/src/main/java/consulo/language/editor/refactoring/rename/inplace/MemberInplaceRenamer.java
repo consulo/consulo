@@ -16,7 +16,7 @@
 package consulo.language.editor.refactoring.rename.inplace;
 
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.internal.RealEditor;
+import consulo.codeEditor.RealEditor;
 import consulo.content.scope.SearchScope;
 import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;

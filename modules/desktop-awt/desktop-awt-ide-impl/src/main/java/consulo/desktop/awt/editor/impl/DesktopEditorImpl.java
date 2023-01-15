@@ -20,7 +20,7 @@ import consulo.codeEditor.event.*;
 import consulo.codeEditor.impl.FontInfo;
 import consulo.codeEditor.impl.*;
 import consulo.codeEditor.internal.EditorActionPlan;
-import consulo.codeEditor.internal.RealEditor;
+import consulo.codeEditor.RealEditor;
 import consulo.codeEditor.markup.GutterDraggableObject;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.codeEditor.markup.LineMarkerRenderer;

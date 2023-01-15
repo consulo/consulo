@@ -6,7 +6,7 @@ import consulo.application.ApplicationManager;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.TabOutScopesTracker;
-import consulo.codeEditor.internal.RealEditor;
+import consulo.codeEditor.RealEditor;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.document.RangeMarker;

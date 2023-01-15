@@ -20,7 +20,7 @@ import consulo.application.Result;
 import consulo.application.progress.ProgressManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.SelectionModel;
-import consulo.codeEditor.internal.RealEditor;
+import consulo.codeEditor.RealEditor;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
 import consulo.language.editor.WriteCommandAction;

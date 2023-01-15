@@ -9,7 +9,7 @@ import consulo.codeEditor.event.EditorEventMulticaster;
 import consulo.codeEditor.event.EditorFactoryEvent;
 import consulo.codeEditor.event.EditorFactoryListener;
 import consulo.codeEditor.internal.InternalEditorFactory;
-import consulo.codeEditor.internal.RealEditor;
+import consulo.codeEditor.RealEditor;
 import consulo.colorScheme.event.EditorColorsListener;
 import consulo.component.extension.ExtensionPointName;
 import consulo.component.messagebus.MessageBusConnection;

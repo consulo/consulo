@@ -17,7 +17,7 @@ package consulo.desktop.swt.editor.impl;
 
 import consulo.codeEditor.*;
 import consulo.codeEditor.impl.*;
-import consulo.codeEditor.internal.RealEditor;
+import consulo.codeEditor.RealEditor;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.document.Document;

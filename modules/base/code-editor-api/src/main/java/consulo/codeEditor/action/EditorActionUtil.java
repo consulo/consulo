@@ -26,7 +26,7 @@ package consulo.codeEditor.action;
 
 import consulo.codeEditor.*;
 import consulo.codeEditor.internal.CodeEditorInternalHelper;
-import consulo.codeEditor.internal.RealEditor;
+import consulo.codeEditor.RealEditor;
 import consulo.codeEditor.util.EditorModificationUtil;
 import consulo.codeEditor.util.EditorUtil;
 import consulo.document.Document;

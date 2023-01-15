@@ -286,4 +286,6 @@ public interface CaretModel {
    * Executes the given task, performing caret merging afterwards. Caret merging will not happen until the operation is finished.
    */
   void runBatchCaretOperation(@Nonnull Runnable runnable);
+
+  boolean isIteratingOverCarets();
 }

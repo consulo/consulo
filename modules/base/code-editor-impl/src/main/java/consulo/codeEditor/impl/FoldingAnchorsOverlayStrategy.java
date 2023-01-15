@@ -16,7 +16,7 @@
 package consulo.codeEditor.impl;
 
 import consulo.codeEditor.FoldRegion;
-import consulo.codeEditor.internal.RealEditor;
+import consulo.codeEditor.RealEditor;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;

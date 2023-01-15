@@ -17,7 +17,7 @@ package consulo.codeEditor.impl;
 
 import consulo.application.util.function.FilteringProcessor;
 import consulo.application.util.function.Processor;
-import consulo.codeEditor.internal.RealEditor;
+import consulo.codeEditor.RealEditor;
 import consulo.codeEditor.markup.*;
 import consulo.colorScheme.TextAttributes;
 import consulo.disposer.Disposable;

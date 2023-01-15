@@ -48,11 +48,8 @@ import java.util.function.IntFunction;
 public interface EditorEx extends Editor {
   Key<Boolean> DISABLE_CARET_SHIFT_ON_WHITESPACE_INSERTION = Key.create("editor.disable.caret.shift.on.whitespace.insertion");
 
-  @NonNls
   String PROP_INSERT_MODE = "insertMode";
-  @NonNls
   String PROP_COLUMN_MODE = "columnMode";
-  @NonNls
   String PROP_FONT_SIZE = "fontSize";
   Key<TextRange> LAST_PASTED_REGION = Key.create("LAST_PASTED_REGION");
 

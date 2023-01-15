@@ -592,6 +592,7 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
     myCaretListeners.getMulticaster().caretRemoved(new CaretEvent(caret, caret.getLogicalPosition(), caret.getLogicalPosition()));
   }
 
+  @Override
   public boolean isIteratingOverCarets() {
     return myCurrentCaret.get() != null;
   }

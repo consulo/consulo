@@ -7,7 +7,7 @@ import consulo.codeEditor.*;
 import consulo.codeEditor.event.*;
 import consulo.codeEditor.impl.MarkupModelWindow;
 import consulo.codeEditor.impl.util.EditorImplUtil;
-import consulo.codeEditor.internal.RealEditor;
+import consulo.codeEditor.RealEditor;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.codeEditor.util.EditorUtil;
 import consulo.colorScheme.EditorColorsManager;

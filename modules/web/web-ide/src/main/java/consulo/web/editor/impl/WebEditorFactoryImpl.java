@@ -18,7 +18,7 @@ package consulo.web.editor.impl;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.codeEditor.EditorKind;
-import consulo.codeEditor.internal.RealEditor;
+import consulo.codeEditor.RealEditor;
 import consulo.document.Document;
 import consulo.ide.impl.idea.openapi.editor.impl.EditorFactoryImpl;
 import consulo.project.Project;

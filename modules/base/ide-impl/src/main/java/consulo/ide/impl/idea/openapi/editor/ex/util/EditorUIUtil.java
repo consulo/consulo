@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.editor.ex.util;
 
 import consulo.application.util.SystemInfo;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.internal.RealEditor;
+import consulo.codeEditor.RealEditor;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.DesktopAntialiasingTypeUtil;
 import consulo.ui.ex.awt.util.MacUIUtil;

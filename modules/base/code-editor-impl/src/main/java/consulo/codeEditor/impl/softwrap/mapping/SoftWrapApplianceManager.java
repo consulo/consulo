@@ -9,7 +9,7 @@ import consulo.codeEditor.impl.softwrap.SoftWrapPainter;
 import consulo.codeEditor.impl.softwrap.SoftWrapsStorage;
 import consulo.codeEditor.impl.util.EditorImplUtil;
 import consulo.codeEditor.internal.CodeEditorInternalHelper;
-import consulo.codeEditor.internal.RealEditor;
+import consulo.codeEditor.RealEditor;
 import consulo.codeEditor.util.EditorUtil;
 import consulo.colorScheme.TextAttributes;
 import consulo.document.Document;

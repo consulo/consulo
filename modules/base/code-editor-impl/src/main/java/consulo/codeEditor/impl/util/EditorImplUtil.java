@@ -20,7 +20,7 @@ import consulo.application.util.logging.LoggerUtil;
 import consulo.codeEditor.*;
 import consulo.codeEditor.impl.ComplementaryFontsRegistry;
 import consulo.codeEditor.impl.FontInfo;
-import consulo.codeEditor.internal.RealEditor;
+import consulo.codeEditor.RealEditor;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.document.Document;
 import consulo.logging.Logger;

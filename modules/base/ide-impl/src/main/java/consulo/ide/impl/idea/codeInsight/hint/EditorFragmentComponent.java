@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.codeInsight.hint;
 
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.*;
-import consulo.codeEditor.internal.RealEditor;
+import consulo.codeEditor.RealEditor;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.document.Document;
 import consulo.document.util.TextRange;

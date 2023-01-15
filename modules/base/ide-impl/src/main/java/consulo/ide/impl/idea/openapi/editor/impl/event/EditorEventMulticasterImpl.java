@@ -7,7 +7,7 @@ import consulo.language.editor.impl.internal.markup.ErrorStripeListener;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.event.*;
-import consulo.codeEditor.internal.RealEditor;
+import consulo.codeEditor.RealEditor;
 import consulo.component.extension.ExtensionPointName;
 import consulo.disposer.Disposable;
 import consulo.document.Document;

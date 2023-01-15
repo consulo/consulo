@@ -8,7 +8,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.util.CachedValueProvider;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.internal.RealEditor;
+import consulo.codeEditor.RealEditor;
 import consulo.colorScheme.TextAttributes;
 import consulo.document.Document;
 import consulo.document.internal.DocumentEx;

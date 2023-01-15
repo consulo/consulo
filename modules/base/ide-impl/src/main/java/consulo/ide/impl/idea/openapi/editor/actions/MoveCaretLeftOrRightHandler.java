@@ -21,7 +21,7 @@ package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.codeEditor.*;
 import consulo.codeEditor.action.EditorActionHandler;
-import consulo.codeEditor.internal.RealEditor;
+import consulo.codeEditor.RealEditor;
 import consulo.dataContext.DataContext;
 
 class MoveCaretLeftOrRightHandler extends EditorActionHandler {

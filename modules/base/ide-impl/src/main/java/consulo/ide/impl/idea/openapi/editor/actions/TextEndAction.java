@@ -8,7 +8,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.ScrollingModel;
 import consulo.codeEditor.action.EditorActionHandler;
-import consulo.codeEditor.internal.RealEditor;
+import consulo.codeEditor.RealEditor;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
 

@@ -22,7 +22,7 @@ import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.VisualPosition;
 import consulo.codeEditor.impl.CodeEditorSoftWrapModelBase;
 import consulo.codeEditor.impl.softwrap.mapping.SoftWrapApplianceManager;
-import consulo.codeEditor.internal.RealEditor;
+import consulo.codeEditor.RealEditor;
 import consulo.codeEditor.markup.*;
 import consulo.desktop.awt.editor.impl.EditorComponentImpl;
 import consulo.document.Document;

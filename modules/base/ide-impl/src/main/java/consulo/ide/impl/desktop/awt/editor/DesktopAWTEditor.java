@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.desktop.awt.editor;
 
-import consulo.codeEditor.internal.RealEditor;
+import consulo.codeEditor.RealEditor;
 import org.intellij.lang.annotations.JdkConstants;
 
 import javax.annotation.Nonnull;

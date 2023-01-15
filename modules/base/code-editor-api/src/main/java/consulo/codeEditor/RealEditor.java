@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.codeEditor.internal;
+package consulo.codeEditor;
 
-import consulo.codeEditor.EditorEx;
-import consulo.codeEditor.VisualPosition;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
@@ -29,8 +27,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 06/12/2020
  * <p>
- * internal impl interface between desktop & web impl
- * there no sense of this interface, due all editors will implement CodeEditorBase
+ * Base interface for real implementation for editors (not editor windows)
  */
 public interface RealEditor extends EditorEx {
   Key<Boolean> DO_DOCUMENT_UPDATE_TEST = Key.create("DoDocumentUpdateTest");

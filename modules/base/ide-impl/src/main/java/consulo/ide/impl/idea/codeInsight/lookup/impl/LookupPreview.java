@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.codeInsight.lookup.impl;
 import consulo.application.util.matcher.MatcherTextRange;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.*;
-import consulo.codeEditor.internal.RealEditor;
+import consulo.codeEditor.RealEditor;
 import consulo.colorScheme.EditorFontType;
 import consulo.colorScheme.TextAttributes;
 import consulo.disposer.Disposer;

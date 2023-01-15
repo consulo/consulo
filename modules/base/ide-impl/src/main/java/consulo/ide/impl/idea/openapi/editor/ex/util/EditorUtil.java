@@ -24,7 +24,7 @@ import consulo.codeEditor.event.*;
 import consulo.codeEditor.impl.CodeEditorScrollingModelBase;
 import consulo.codeEditor.impl.FontInfo;
 import consulo.codeEditor.impl.util.EditorImplUtil;
-import consulo.codeEditor.internal.RealEditor;
+import consulo.codeEditor.RealEditor;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
 import consulo.component.messagebus.MessageBusConnection;
