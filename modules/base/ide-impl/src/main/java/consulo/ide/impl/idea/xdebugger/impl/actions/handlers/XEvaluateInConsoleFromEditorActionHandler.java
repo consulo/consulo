@@ -1,7 +1,7 @@
 package consulo.ide.impl.idea.xdebugger.impl.actions.handlers;
 
-import consulo.ide.impl.idea.execution.console.ConsoleExecuteAction;
-import consulo.ide.impl.idea.execution.console.LanguageConsoleView;
+import consulo.execution.internal.action.ConsoleExecuteAction;
+import consulo.execution.ui.console.language.LanguageConsoleView;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.ui.ex.action.AnAction;
 import consulo.language.editor.CommonDataKeys;

@@ -20,6 +20,7 @@ module consulo.code.editor.impl {
           consulo.language.inject.impl,
           consulo.desktop.ide.impl,
           consulo.util.xml.serializer,
+          consulo.desktop.awt.ide.impl,
           consulo.desktop.swt.ide.impl,
           consulo.language.editor.impl;
 
@@ -28,8 +29,10 @@ module consulo.code.editor.impl {
   exports consulo.codeEditor.impl.util to
           consulo.ide.impl,
           consulo.language.inject.impl,
-          consulo.desktop.ide.impl, consulo.desktop.swt.ide.impl;
+          consulo.desktop.ide.impl,
+          consulo.desktop.awt.ide.impl,
+          consulo.desktop.swt.ide.impl;
 
-  exports consulo.codeEditor.impl.softwrap.mapping to consulo.ide.impl, consulo.desktop.swt.ide.impl;
-  exports consulo.codeEditor.impl.softwrap to consulo.ide.impl, consulo.desktop.swt.ide.impl;
+  exports consulo.codeEditor.impl.softwrap.mapping to consulo.ide.impl, consulo.desktop.swt.ide.impl, consulo.desktop.awt.ide.impl;
+  exports consulo.codeEditor.impl.softwrap to consulo.ide.impl, consulo.desktop.swt.ide.impl, consulo.desktop.awt.ide.impl;
 }

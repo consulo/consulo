@@ -27,7 +27,6 @@ import consulo.ide.impl.idea.find.actions.ShowUsagesAction;
 import consulo.ide.impl.idea.find.replaceInProject.ReplaceInProjectManager;
 import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButtonImpl;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionToolbarImpl;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.project.DumbAwareToggleAction;
 import consulo.ide.impl.idea.openapi.ui.ComponentValidator;
@@ -35,7 +34,6 @@ import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.project.ui.internal.IdeFrameEx;
 import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
 import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.ide.impl.idea.ui.*;
@@ -46,16 +44,17 @@ import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.PathUtil;
 import consulo.ide.impl.idea.util.Producer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.psi.scope.GlobalSearchScopeUtil;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.scratch.ScratchUtil;
 import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.scope.GlobalSearchScopeUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.project.event.ProjectManagerListener;
+import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
@@ -152,7 +151,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
   private final AtomicBoolean myRegexState = new AtomicBoolean();
   private final List<AnAction> myExtraActions = new ArrayList<>();
   private StateRestoringCheckBox myCbFileFilter;
-  private ActionToolbarImpl myScopeSelectionToolbar;
+  private ActionToolbar myScopeSelectionToolbar;
   private ComboBox<String> myFileMaskField;
   private ActionButtonImpl myFilterContextButton;
   private JButton myOKButton;
@@ -1513,8 +1512,8 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
     return result;
   }
 
-  public static ActionToolbarImpl createToolbar(AnAction... actions) {
-    ActionToolbarImpl toolbar = (ActionToolbarImpl)ActionManager.getInstance().createActionToolbar(ActionPlaces.EDITOR_TOOLBAR, new DefaultActionGroup(actions), true);
+  public static ActionToolbar createToolbar(AnAction... actions) {
+    ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.EDITOR_TOOLBAR, new DefaultActionGroup(actions), true);
     toolbar.setForceMinimumSize(true);
     toolbar.setLayoutPolicy(ActionToolbar.NOWRAP_LAYOUT_POLICY);
     return toolbar;

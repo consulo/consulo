@@ -19,7 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
-import consulo.ide.impl.idea.openapi.editor.impl.DesktopAWTVisibleEditorsTracker;
+import consulo.codeEditor.impl.VisibleEditorsTracker;
 import consulo.undoRedo.event.CommandEvent;
 import consulo.undoRedo.event.CommandListener;
 import jakarta.inject.Inject;
@@ -31,18 +31,18 @@ import jakarta.inject.Provider;
  */
 @TopicImpl(ComponentScope.APPLICATION)
 public class DesktopAWTVisibleEditorsTrackerCommandListener implements CommandListener {
-  private final Provider<DesktopAWTVisibleEditorsTracker> myEditorsTrackerProvider;
+  private final Provider<VisibleEditorsTracker> myEditorsTrackerProvider;
   private final Provider<EditorFactory> myEditorFactoryProvider;
 
   @Inject
-  public DesktopAWTVisibleEditorsTrackerCommandListener(Provider<DesktopAWTVisibleEditorsTracker> editorsTrackerProvider, Provider<EditorFactory> editorFactoryProvider) {
+  public DesktopAWTVisibleEditorsTrackerCommandListener(Provider<VisibleEditorsTracker> editorsTrackerProvider, Provider<EditorFactory> editorFactoryProvider) {
     myEditorsTrackerProvider = editorsTrackerProvider;
     myEditorFactoryProvider = editorFactoryProvider;
   }
 
   @Override
   public void commandStarted(CommandEvent event) {
-    DesktopAWTVisibleEditorsTracker editorsTracker = myEditorsTrackerProvider.get();
+    VisibleEditorsTracker editorsTracker = myEditorsTrackerProvider.get();
     for (Editor editor : myEditorFactoryProvider.get().getAllEditors()) {
       editorsTracker.registerEditor(editor);
     }

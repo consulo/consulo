@@ -1,18 +1,9 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.actionSystem.impl;
 
-import consulo.ui.ex.action.ActionButtonComponent;
-import consulo.ide.impl.idea.openapi.actionSystem.RightAlignedToolbarAction;
-import consulo.ui.ex.internal.ActionManagerEx;
-import consulo.ui.ex.awt.action.CustomComponentAction;
-import consulo.application.impl.internal.LaterInvocator;
-import consulo.ide.impl.idea.openapi.keymap.ex.KeymapManagerEx;
-import consulo.project.ui.internal.WindowManagerEx;
-import consulo.ui.ex.awt.RelativeRectangle;
-import consulo.ui.ex.action.QuickActionProvider;
-import consulo.ui.ex.awt.IJSwingUtilities;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
+import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.ui.wm.ApplicationIdeFocusManager;
 import consulo.application.util.registry.Registry;
 import consulo.dataContext.DataContext;
@@ -20,10 +11,11 @@ import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ui.ex.popup.ComponentPopupBuilder;
-import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ide.impl.idea.openapi.actionSystem.RightAlignedToolbarAction;
+import consulo.ide.impl.idea.openapi.keymap.ex.KeymapManagerEx;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.Size;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -32,12 +24,19 @@ import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.event.AnActionListener;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.action.CustomComponentAction;
 import consulo.ui.ex.awt.paint.LinePainter2D;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.util.JBSwingUtilities;
 import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.internal.ActionButtonEx;
+import consulo.ui.ex.internal.ActionManagerEx;
+import consulo.ui.ex.internal.ActionToolbarEx;
+import consulo.ui.ex.internal.ActionToolbarsHolder;
+import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.event.JBPopupAdapter;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.ex.util.TextWithMnemonic;
@@ -53,36 +52,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
-public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickActionProvider {
+public class ActionToolbarImpl extends JPanel implements ActionToolbarEx, QuickActionProvider {
   private static final Logger LOG = Logger.getInstance(ActionToolbarImpl.class);
 
-  private static final Set<ActionToolbarImpl> ourToolbars = new LinkedHashSet<>();
   private static final String RIGHT_ALIGN_KEY = "RIGHT_ALIGN";
   private static final String SECONDARY_SHORTCUT = "SecondaryActions.shortcut";
-
-  //static {
-  //  JBUIScale.addUserScaleChangeListener(__ -> {
-  //    ((JBDimension)ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE).update();
-  //    ((JBDimension)ActionToolbar.NAVBAR_MINIMUM_BUTTON_SIZE).update();
-  //  });
-  //}
-
-  public static void updateAllToolbarsImmediately() {
-    for (ActionToolbarImpl toolbar : new ArrayList<>(ourToolbars)) {
-      toolbar.updateActionsImmediately();
-      for (Component c : toolbar.getComponents()) {
-        if (c instanceof ActionButtonImpl) {
-          ((ActionButtonImpl)c).updateToolTipText();
-          ((ActionButtonImpl)c).updateIcon();
-        }
-      }
-    }
-  }
 
   private static final String SUPPRESS_ACTION_COMPONENT_WARNING = "ActionToolbarImpl.suppressCustomComponentWarning";
   private static final String SUPPRESS_TARGET_COMPONENT_WARNING = "ActionToolbarImpl.suppressTargetComponentWarning";
@@ -131,6 +109,7 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
 
   private final Throwable myCreationTrace = new Throwable("toolbar creation trace");
 
+  @Override
   public ActionButtonImpl getSecondaryActionsButton() {
     return mySecondaryActionsButton;
   }
@@ -200,7 +179,7 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
   @Override
   public void addNotify() {
     super.addNotify();
-    ourToolbars.add(this);
+    ActionToolbarsHolder.add(this);
 
     // should update action right on the showing, otherwise toolbar may not be displayed at all,
     // since by default all updates are postponed until frame gets focused.
@@ -218,7 +197,7 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
   @Override
   public void removeNotify() {
     super.removeNotify();
-    ourToolbars.remove(this);
+    ActionToolbarsHolder.remove(this);
 
     if (myPopup != null) {
       myPopup.cancel();
@@ -284,6 +263,7 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
     }
   }
 
+  @Override
   public void setSecondaryButtonPopupStateModifier(@Nonnull PopupStateModifier popupStateModifier) {
     mySecondaryButtonPopupStateModifier = popupStateModifier;
   }
@@ -856,6 +836,7 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
    * Forces the minimum size of the toolbar to show all buttons, When set to {@code true}. By default ({@code false}) the
    * toolbar will shrink further and show the auto popup chevron button.
    */
+  @Override
   public void setForceMinimumSize(boolean force) {
     myForceMinimumSize = force;
   }
@@ -1032,7 +1013,7 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
 
   private void updateActionsImpl(boolean transparentOnly, boolean forced) {
     DataContext dataContext = getDataContext();
-    boolean async = myAlreadyUpdated && Registry.is("actionSystem.update.actions.asynchronously") && ourToolbars.contains(this) && isShowing();
+    boolean async = myAlreadyUpdated && Registry.is("actionSystem.update.actions.asynchronously") && ActionToolbarsHolder.contains(this) && isShowing();
     ActionUpdater updater =
             new ActionUpdater(LaterInvocator.isInModalContext(), myPresentationFactory, async ? DataManager.getInstance().createAsyncDataContext(dataContext) : dataContext, myPlace, false, true);
     if (async) {
@@ -1309,10 +1290,12 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
     presentation.putClientProperty(ActionButtonImpl.HIDE_DROPDOWN_ICON, hideDropdownIcon ? Boolean.TRUE : null);
   }
 
+  @Override
   public void setSecondaryActionsShortcut(@Nonnull String secondaryActionsShortcut) {
     mySecondaryActions.getTemplatePresentation().putClientProperty(SECONDARY_SHORTCUT, secondaryActionsShortcut);
   }
 
+  @Override
   public void setNoGapMode() {
     myNoGapMode = true;
   }
@@ -1374,10 +1357,12 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
     myPresentationFactory.reset();
   }
 
-  public interface PopupStateModifier {
-    @ActionButtonComponent.ButtonState
-    int getModifiedPopupState();
-
-    boolean willModify();
+  @Override
+  public void forEachButton(Consumer<ActionButton> buttonConsumer) {
+    for (Component component : getComponents()) {
+      if (component instanceof ActionButtonEx actionButtonEx) {
+        buttonConsumer.accept(actionButtonEx);
+      }
+    }
   }
 }

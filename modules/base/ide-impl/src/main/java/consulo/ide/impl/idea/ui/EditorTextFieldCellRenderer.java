@@ -15,30 +15,31 @@
  */
 package consulo.ide.impl.idea.ui;
 
-import consulo.codeEditor.EditorEx;
-import consulo.language.editor.ui.awt.EditorTextField;
-import consulo.ui.ex.awt.CellRendererPanel;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.disposer.Disposable;
-import consulo.codeEditor.SelectionModel;
+import consulo.application.util.LineTokenizer;
 import consulo.codeEditor.EditorColors;
-import consulo.colorScheme.EditorColorsManager;
-import consulo.colorScheme.EditorColorsScheme;
-import consulo.colorScheme.DelegateColorScheme;
-import consulo.ide.impl.idea.openapi.editor.impl.DesktopEditorImpl;
-import consulo.ide.impl.idea.openapi.editor.impl.EditorTextFieldRendererDocument;
+import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.SelectionModel;
 import consulo.codeEditor.markup.HighlighterLayer;
 import consulo.codeEditor.markup.HighlighterTargetArea;
+import consulo.colorScheme.DelegateColorScheme;
+import consulo.colorScheme.EditorColorsManager;
+import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.*;
-import consulo.application.util.LineTokenizer;
-import consulo.util.lang.ObjectUtil;
-import consulo.util.lang.CharSequenceSubSequence;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ide.impl.desktop.awt.editor.DesktopAWTEditor;
+import consulo.ide.impl.idea.openapi.editor.impl.EditorTextFieldRendererDocument;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.language.editor.ui.awt.EditorTextField;
+import consulo.project.Project;
+import consulo.ui.ex.awt.CellRendererPanel;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.CharSequenceSubSequence;
+import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.Pair;
+import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -140,7 +141,7 @@ public abstract class EditorTextFieldCellRenderer implements TableCellRenderer, 
     private boolean mySelected;
 
     public RendererComponent(Project project, @Nullable FileType fileType, boolean inheritFontFromLaF) {
-      consulo.util.lang.Pair<EditorTextField, EditorEx> pair = createEditor(project, fileType, inheritFontFromLaF);
+      Pair<EditorTextField, EditorEx> pair = createEditor(project, fileType, inheritFontFromLaF);
       myTextField = pair.first;
       myEditor = pair.second;
       add(myEditor.getContentComponent());
@@ -151,7 +152,7 @@ public abstract class EditorTextFieldCellRenderer implements TableCellRenderer, 
     }
 
     @Nonnull
-    private static consulo.util.lang.Pair<EditorTextField, EditorEx> createEditor(Project project, @Nullable FileType fileType, boolean inheritFontFromLaF) {
+    private static Pair<EditorTextField, EditorEx> createEditor(Project project, @Nullable FileType fileType, boolean inheritFontFromLaF) {
       EditorTextField field = new EditorTextField(new EditorTextFieldRendererDocument(), project, fileType, false, false);
       field.setSupplementary(true);
       field.setFontInheritedFromLAF(inheritFontFromLaF);
@@ -165,7 +166,7 @@ public abstract class EditorTextFieldCellRenderer implements TableCellRenderer, 
 
       editor.getScrollPane().setBorder(null);
 
-      return consulo.util.lang.Pair.create(field, editor);
+      return Pair.create(field, editor);
     }
 
     public void setText(String text, @Nullable TextAttributes textAttributes, boolean selected) {
@@ -194,13 +195,13 @@ public abstract class EditorTextFieldCellRenderer implements TableCellRenderer, 
     protected void setTextToEditor(String text) {
       myEditor.getMarkupModel().removeAllHighlighters();
       myEditor.getDocument().setText(text);
-      ((DesktopEditorImpl)myEditor).resetSizes();
+      ((EditorEx)myEditor).resetSizes();
       myEditor.getHighlighter().setText(text);
       if (myTextAttributes != null) {
         myEditor.getMarkupModel().addRangeHighlighter(0, myEditor.getDocument().getTextLength(), HighlighterLayer.ADDITIONAL_SYNTAX, myTextAttributes, HighlighterTargetArea.EXACT_RANGE);
       }
 
-      ((DesktopEditorImpl)myEditor).setPaintSelection(mySelected);
+      ((EditorEx)myEditor).setPaintSelection(mySelected);
       SelectionModel selectionModel = myEditor.getSelectionModel();
       selectionModel.setSelection(0, mySelected ? myEditor.getDocument().getTextLength() : 0);
     }
@@ -246,7 +247,7 @@ public abstract class EditorTextFieldCellRenderer implements TableCellRenderer, 
           linesCount++;
         }
 
-        FontMetrics fontMetrics = ((DesktopEditorImpl)getEditor()).getFontMetrics(myTextAttributes != null ? myTextAttributes.getFontType() : Font.PLAIN);
+        FontMetrics fontMetrics = ((DesktopAWTEditor)getEditor()).getFontMetrics(myTextAttributes != null ? myTextAttributes.getFontType() : Font.PLAIN);
         int preferredHeight = getEditor().getLineHeight() * Math.max(1, linesCount);
         int preferredWidth = fontMetrics.charWidth('m') * maxLineLength;
 
@@ -268,7 +269,7 @@ public abstract class EditorTextFieldCellRenderer implements TableCellRenderer, 
     }
 
     private void updateText(Rectangle clip) {
-      FontMetrics fontMetrics = ((DesktopEditorImpl)getEditor()).getFontMetrics(myTextAttributes != null ? myTextAttributes.getFontType() : Font.PLAIN);
+      FontMetrics fontMetrics = ((DesktopAWTEditor)getEditor()).getFontMetrics(myTextAttributes != null ? myTextAttributes.getFontType() : Font.PLAIN);
       Insets insets = getInsets();
       int maxLineWidth = getWidth() - (insets != null ? insets.left + insets.right : 0);
 

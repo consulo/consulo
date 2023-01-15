@@ -20,4 +20,7 @@ package consulo.codeEditor;
  */
 @Deprecated
 public interface FoldingModelEx extends FoldingModel {
+  default FoldRegion[] fetchVisible() {
+    return null;
+  }
 }

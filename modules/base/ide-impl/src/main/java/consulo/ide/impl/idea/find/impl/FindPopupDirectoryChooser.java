@@ -15,27 +15,23 @@
  */
 package consulo.ide.impl.idea.find.impl;
 
-import consulo.find.FindBundle;
-import consulo.find.FindInProjectSettings;
-import consulo.find.FindModel;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionToolbarImpl;
-import consulo.ui.ex.awt.ComboBox;
-import consulo.ui.ex.awt.FixedSizeButton;
-import consulo.ui.ex.awt.TextFieldWithBrowseButton;
-import consulo.ui.ex.awt.ValidationInfo;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import consulo.application.util.SystemInfo;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.IdeaFileChooser;
+import consulo.find.FindBundle;
+import consulo.find.FindInProjectSettings;
+import consulo.find.FindModel;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
+import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.ex.action.ToggleAction;
-import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.*;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
@@ -117,7 +113,7 @@ public class FindPopupDirectoryChooser extends JPanel {
     add(myDirectoryComboBox, BorderLayout.CENTER);
     JPanel buttonsPanel = new JPanel(new GridLayout(1, 2));
     buttonsPanel.add(mySelectDirectoryButton);
-    ActionToolbarImpl toolbar = FindPopupPanel.createToolbar(recursiveDirectoryAction);
+    ActionToolbar toolbar = FindPopupPanel.createToolbar(recursiveDirectoryAction);
     toolbar.setTargetComponent(this);
     buttonsPanel.add(toolbar.getComponent()); //check if toolbar updates the button with no delays
     add(buttonsPanel, BorderLayout.EAST);

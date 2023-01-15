@@ -1,31 +1,25 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.find;
 
-import consulo.ide.impl.idea.find.editorHeaderActions.*;
-import consulo.find.FindBundle;
-import consulo.find.FindInProjectSettings;
-import consulo.ui.ex.action.ActionButtonComponent;
-import consulo.ui.ex.action.ShortcutProvider;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionToolbarImpl;
-import consulo.ide.impl.idea.openapi.editor.impl.EditorHeaderComponent;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.util.BooleanGetter;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.awt.LightColors;
-import consulo.ide.impl.idea.ui.ListFocusTraversalPolicy;
-import consulo.ui.ex.awt.SearchTextField;
-import consulo.ui.ex.awt.JBTextArea;
-import consulo.ide.impl.idea.ui.mac.TouchbarDataKeys;
-import consulo.ide.impl.idea.util.BooleanFunction;
-import consulo.ide.impl.idea.util.EventDispatcher;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import consulo.application.util.SystemInfo;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
+import consulo.find.FindBundle;
+import consulo.find.FindInProjectSettings;
+import consulo.ide.impl.idea.find.editorHeaderActions.*;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.editor.impl.EditorHeaderComponent;
+import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.ide.impl.idea.openapi.util.BooleanGetter;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.ui.ListFocusTraversalPolicy;
+import consulo.ide.impl.idea.ui.mac.TouchbarDataKeys;
+import consulo.ide.impl.idea.util.BooleanFunction;
+import consulo.ide.impl.idea.util.EventDispatcher;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.JBColor;
@@ -33,6 +27,7 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
+import consulo.ui.ex.internal.ActionToolbarEx;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
 
@@ -63,14 +58,14 @@ public class SearchReplaceComponent extends EditorHeaderComponent implements Dat
   private final JPanel myRightPanel;
 
   private final DefaultActionGroup mySearchFieldActions;
-  private final ActionToolbarImpl mySearchActionsToolbar;
+  private final ActionToolbar mySearchActionsToolbar;
   private final List<AnAction> myEmbeddedSearchActions = new ArrayList<>();
   private final List<Component> myExtraSearchButtons = new ArrayList<>();
   @Nonnull
-  private final ActionToolbarImpl.PopupStateModifier mySearchToolbar1PopupStateModifier;
+  private final ActionToolbarEx.PopupStateModifier mySearchToolbar1PopupStateModifier;
 
   private final DefaultActionGroup myReplaceFieldActions;
-  private final ActionToolbarImpl myReplaceActionsToolbar;
+  private final ActionToolbar myReplaceActionsToolbar;
   private final List<AnAction> myEmbeddedReplaceActions = new ArrayList<>();
   private final List<Component> myExtraReplaceButtons = new ArrayList<>();
 
@@ -136,7 +131,7 @@ public class SearchReplaceComponent extends EditorHeaderComponent implements Dat
       replaceToolbar2Actions.remove(action);
     }
 
-    mySearchToolbar1PopupStateModifier = new ActionToolbarImpl.PopupStateModifier() {
+    mySearchToolbar1PopupStateModifier = new ActionToolbarEx.PopupStateModifier() {
       @Override
       public int getModifiedPopupState() {
         return ActionButtonComponent.PUSHED;
@@ -183,11 +178,11 @@ public class SearchReplaceComponent extends EditorHeaderComponent implements Dat
     mySearchActionsToolbar = createSearchToolbar1(searchToolbar1Actions);
     mySearchActionsToolbar.setForceShowFirstComponent(true);
     JPanel searchPair = new NonOpaquePanel(new BorderLayout());
-    searchPair.add(mySearchActionsToolbar, BorderLayout.CENTER);
+    searchPair.add(mySearchActionsToolbar.getComponent(), BorderLayout.CENTER);
 
     myReplaceActionsToolbar = createReplaceToolbar1(replaceToolbar1Actions);
-    myReplaceActionsToolbar.setBorder(JBUI.Borders.empty());
-    Wrapper replaceToolbarWrapper1 = new Wrapper(myReplaceActionsToolbar);
+    myReplaceActionsToolbar.getComponent().setBorder(JBUI.Borders.empty());
+    Wrapper replaceToolbarWrapper1 = new Wrapper(myReplaceActionsToolbar.getComponent());
     myReplaceToolbarWrapper = new NonOpaquePanel(new BorderLayout());
     myReplaceToolbarWrapper.add(replaceToolbarWrapper1, BorderLayout.WEST);
     myReplaceToolbarWrapper.setBorder(JBUI.Borders.emptyTop(3));
@@ -542,7 +537,7 @@ public class SearchReplaceComponent extends EditorHeaderComponent implements Dat
     updateBindings(ContainerUtil.immutableList(group.getChildActionsOrStubs()), shortcutHolder);
   }
 
-  private void updateBindings(@Nonnull ActionToolbarImpl toolbar, @Nonnull JComponent shortcutHolder) {
+  private void updateBindings(@Nonnull ActionToolbar toolbar, @Nonnull JComponent shortcutHolder) {
     updateBindings(toolbar.getActions(), shortcutHolder);
   }
 
@@ -564,8 +559,8 @@ public class SearchReplaceComponent extends EditorHeaderComponent implements Dat
 
 
   @Nonnull
-  private ActionToolbarImpl createSearchToolbar1(@Nonnull DefaultActionGroup group) {
-    ActionToolbarImpl toolbar = createToolbar(group);
+  private ActionToolbar createSearchToolbar1(@Nonnull DefaultActionGroup group) {
+    ActionToolbarEx toolbar = createToolbar(group);
     toolbar.setSecondaryButtonPopupStateModifier(mySearchToolbar1PopupStateModifier);
     toolbar.setSecondaryActionsTooltip(FindBundle.message("find.popup.show.filter.popup"));
     toolbar.setSecondaryActionsIcon(AllIcons.General.Filter);
@@ -581,19 +576,19 @@ public class SearchReplaceComponent extends EditorHeaderComponent implements Dat
   }
 
   @Nonnull
-  private ActionToolbarImpl createReplaceToolbar1(@Nonnull DefaultActionGroup group) {
-    ActionToolbarImpl toolbar = createToolbar(group);
+  private ActionToolbar createReplaceToolbar1(@Nonnull DefaultActionGroup group) {
+    ActionToolbar toolbar = createToolbar(group);
     toolbar.setForceMinimumSize(true);
     toolbar.setReservePlaceAutoPopupIcon(false);
     return toolbar;
   }
 
   @Nonnull
-  private ActionToolbarImpl createToolbar(@Nonnull ActionGroup group) {
-    ActionToolbarImpl toolbar = (ActionToolbarImpl)ActionManager.getInstance().createActionToolbar(ActionPlaces.EDITOR_TOOLBAR, group, true);
+  private ActionToolbarEx createToolbar(@Nonnull ActionGroup group) {
+    ActionToolbarEx toolbar = (ActionToolbarEx)ActionManager.getInstance().createActionToolbar(ActionPlaces.EDITOR_TOOLBAR, group, true);
     toolbar.setTargetComponent(this);
     toolbar.setLayoutPolicy(ActionToolbar.AUTO_LAYOUT_POLICY);
-    Utils.setSmallerFontForChildren(toolbar);
+    Utils.setSmallerFontForChildren(toolbar.getComponent());
     return toolbar;
   }
 

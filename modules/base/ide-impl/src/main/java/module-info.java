@@ -170,9 +170,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.desktop.awt.graphics;
   exports consulo.ide.impl.desktop.awt.laf;
   exports consulo.ide.impl.desktop.awt.migration;
-  exports consulo.ide.impl.desktop.editor;
-  exports consulo.ide.impl.desktop.editor.impl;
-  exports consulo.ide.impl.desktop.editor.impl.ui;
   exports consulo.ide.impl.diagram.actions;
   exports consulo.ide.impl.diagram.builder;
   exports consulo.ide.impl.diagram.builder.impl;
@@ -542,8 +539,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.openapi.editor.impl;
   exports consulo.ide.impl.idea.openapi.editor.impl.event;
   exports consulo.ide.impl.idea.openapi.editor.impl.softwrap;
-  exports consulo.ide.impl.idea.openapi.editor.impl.softwrap.mapping;
-  exports consulo.ide.impl.idea.openapi.editor.impl.view;
   exports consulo.ide.impl.idea.openapi.editor.markup;
   exports consulo.ide.impl.idea.openapi.editor.richcopy;
   exports consulo.ide.impl.idea.openapi.editor.richcopy.model;
@@ -1023,4 +1018,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.wm.impl.welcomeScreen;
   
   exports consulo.ide.impl.project.ui.impl;
+
+  exports consulo.ide.impl.desktop.awt.editor to consulo.desktop.awt.ide.impl;
 }

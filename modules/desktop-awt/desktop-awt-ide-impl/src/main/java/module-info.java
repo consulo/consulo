@@ -33,6 +33,11 @@ open module consulo.desktop.awt.ide.impl {
   requires consulo.file.editor.impl;
   requires consulo.desktop.bootstrap;
   requires consulo.application.ui.impl;
+  requires consulo.language.editor.impl;
+  requires consulo.code.editor.impl;
+
+  // TODO remove
+  requires gnu.trove;
 
   requires consulo.desktop.awt.bootstrap;
   requires consulo.desktop.awt.hacking;

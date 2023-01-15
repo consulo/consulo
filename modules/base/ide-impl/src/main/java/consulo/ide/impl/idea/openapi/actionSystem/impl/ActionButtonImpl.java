@@ -32,6 +32,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.accessibility.ScreenReader;
 import consulo.ui.ex.awt.action.CustomComponentAction;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.internal.ActionButtonEx;
 import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.util.TextWithMnemonic;
 import consulo.ui.image.Image;
@@ -51,7 +52,7 @@ import java.util.function.Function;
 
 import static java.awt.event.KeyEvent.VK_SPACE;
 
-public class ActionButtonImpl extends JComponent implements ActionButton, Accessible {
+public class ActionButtonImpl extends JComponent implements ActionButtonEx, Accessible {
   private static final String uiClassID = "ActionButtonUI";
   /**
    * By default button representing popup action group displays 'dropdown' icon.
@@ -309,7 +310,7 @@ public class ActionButtonImpl extends JComponent implements ActionButton, Access
     super.setToolTipText(tooltipText.length() > 0 ? tooltipText : null);
   }
 
-  protected void updateToolTipText() {
+  public void updateToolTipText() {
     LocalizeValue textValue = myPresentation.getTextValue();
     LocalizeValue descriptionValue = myPresentation.getDescriptionValue();
     if (Registry.is("ide.helptooltip.enabled")) {

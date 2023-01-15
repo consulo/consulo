@@ -22,43 +22,33 @@ package consulo.ide.impl.idea.codeInsight.daemon.impl;
 import consulo.application.dumb.DumbAware;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.codeEditor.*;
-import consulo.codeEditor.markup.CustomHighlighterRenderer;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.HighlighterIterator;
+import consulo.codeEditor.IndentGuideDescriptor;
 import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.codeEditor.markup.MarkupModel;
 import consulo.codeEditor.markup.RangeHighlighter;
-import consulo.colorScheme.EditorColorsScheme;
-import consulo.document.Document;
 import consulo.document.util.DocumentUtil;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
-import consulo.language.editor.impl.highlight.TextEditorHighlightingPass;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ide.impl.idea.openapi.editor.impl.DesktopEditorImpl;
-import consulo.ide.impl.idea.openapi.editor.impl.view.EditorPainter;
-import consulo.ide.impl.idea.openapi.editor.impl.view.VisualLinesIterator;
-import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.Language;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 import consulo.language.editor.action.BraceMatchingUtil;
+import consulo.language.editor.impl.highlight.TextEditorHighlightingPass;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.psi.PsiFile;
 import consulo.language.version.LanguageVersionUtil;
 import consulo.project.Project;
-import consulo.ui.ex.awt.paint.LinePainter2D;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.collection.primitive.ints.IntStack;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class IndentsPass extends TextEditorHighlightingPass implements DumbAware {
   private static final Key<List<RangeHighlighter>> INDENT_HIGHLIGHTERS_IN_EDITOR_KEY = Key.create("INDENT_HIGHLIGHTERS_IN_EDITOR_KEY");
@@ -70,121 +60,7 @@ public class IndentsPass extends TextEditorHighlightingPass implements DumbAware
   private volatile List<TextRange> myRanges = List.of();
   private volatile List<IndentGuideDescriptor> myDescriptors = List.of();
 
-  private static final CustomHighlighterRenderer RENDERER = (editor, highlighter, g) -> {
-    int startOffset = highlighter.getStartOffset();
-    final Document doc = highlighter.getDocument();
-    if (startOffset >= doc.getTextLength()) return;
-
-    final int endOffset = highlighter.getEndOffset();
-
-    int off;
-    int startLine = doc.getLineNumber(startOffset);
-
-    final CharSequence chars = doc.getCharsSequence();
-    do {
-      int start = doc.getLineStartOffset(startLine);
-      int end = doc.getLineEndOffset(startLine);
-      off = CharArrayUtil.shiftForward(chars, start, end, " \t");
-      startLine--;
-    }
-    while (startLine > 1 && off < doc.getTextLength() && chars.charAt(off) == '\n');
-
-    final VisualPosition startPosition = editor.offsetToVisualPosition(off);
-    int indentColumn = startPosition.column;
-    if (indentColumn <= 0) return;
-
-    final FoldingModel foldingModel = editor.getFoldingModel();
-    if (foldingModel.isOffsetCollapsed(off)) return;
-
-    final FoldRegion headerRegion = foldingModel.getCollapsedRegionAtOffset(doc.getLineEndOffset(doc.getLineNumber(off)));
-    final FoldRegion tailRegion = foldingModel.getCollapsedRegionAtOffset(doc.getLineStartOffset(doc.getLineNumber(endOffset)));
-
-    if (tailRegion != null && tailRegion == headerRegion) return;
-
-    final boolean selected;
-    final IndentGuideDescriptor guide = editor.getIndentsModel().getCaretIndentGuide();
-    if (guide != null) {
-      final CaretModel caretModel = editor.getCaretModel();
-      final int caretOffset = caretModel.getOffset();
-      selected = caretOffset >= off && caretOffset < endOffset && caretModel.getLogicalPosition().column == indentColumn;
-    }
-    else {
-      selected = false;
-    }
-
-    int lineHeight = editor.getLineHeight();
-    Point start = editor.visualPositionToXY(startPosition);
-    start.y += lineHeight;
-    final VisualPosition endPosition = editor.offsetToVisualPosition(endOffset);
-    Point end = editor.visualPositionToXY(endPosition);
-    int maxY = end.y;
-    if (endPosition.line == editor.offsetToVisualPosition(doc.getTextLength()).line) {
-      maxY += lineHeight;
-    }
-
-    Rectangle clip = g.getClipBounds();
-    if (clip != null) {
-      if (clip.y >= maxY || clip.y + clip.height <= start.y) {
-        return;
-      }
-      maxY = Math.min(maxY, clip.y + clip.height);
-    }
-
-    if (start.y >= maxY) return;
-
-    int targetX = Math.max(0, start.x + EditorPainter.getIndentGuideShift(editor));
-    final EditorColorsScheme scheme = editor.getColorsScheme();
-    g.setColor(TargetAWT.to(scheme.getColor(selected ? EditorColors.SELECTED_INDENT_GUIDE_COLOR : EditorColors.INDENT_GUIDE_COLOR)));
-
-    // There is a possible case that indent line intersects soft wrap-introduced text. Example:
-    //     this is a long line <soft-wrap>
-    // that| is soft-wrapped
-    //     |
-    //     | <- vertical indent
-    //
-    // Also it's possible that no additional intersections are added because of soft wrap:
-    //     this is a long line <soft-wrap>
-    //     |   that is soft-wrapped
-    //     |
-    //     | <- vertical indent
-    // We want to use the following approach then:
-    //     1. Show only active indent if it crosses soft wrap-introduced text;
-    //     2. Show indent as is if it doesn't intersect with soft wrap-introduced text;
-    List<? extends SoftWrap> softWraps = ((EditorEx)editor).getSoftWrapModel().getRegisteredSoftWraps();
-    if (selected || softWraps.isEmpty()) {
-      LinePainter2D.paint((Graphics2D)g, targetX, start.y, targetX, maxY - 1);
-    }
-    else {
-      int startY = start.y;
-      int startVisualLine = startPosition.line + 1;
-      if (clip != null && startY < clip.y) {
-        startY = clip.y;
-        startVisualLine = editor.yToVisualLine(clip.y);
-      }
-      VisualLinesIterator it = new VisualLinesIterator((DesktopEditorImpl)editor, startVisualLine);
-      while (!it.atEnd()) {
-        int currY = it.getY();
-        if (currY >= startY) {
-          if (currY >= maxY) break;
-          if (it.startsWithSoftWrap()) {
-            SoftWrap softWrap = softWraps.get(it.getStartOrPrevWrapIndex());
-            if (softWrap.getIndentInColumns() < indentColumn) {
-              if (startY < currY) {
-                LinePainter2D.paint((Graphics2D)g, targetX, startY, targetX, currY - 1);
-              }
-              startY = currY + lineHeight;
-            }
-          }
-        }
-        it.advance();
-      }
-      if (startY < maxY) {
-        LinePainter2D.paint((Graphics2D)g, targetX, startY, targetX, maxY - 1);
-      }
-    }
-  };
-
-  IndentsPass(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+  public IndentsPass(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
     super(project, editor.getDocument(), false);
     myEditor = (EditorEx)editor;
     myFile = file;
@@ -326,9 +202,9 @@ public class IndentsPass extends TextEditorHighlightingPass implements DumbAware
   }
 
   @Nonnull
-  private static RangeHighlighter createHighlighter(MarkupModel mm, TextRange range) {
+  protected RangeHighlighter createHighlighter(MarkupModel mm, TextRange range) {
     final RangeHighlighter highlighter = mm.addRangeHighlighter(range.getStartOffset(), range.getEndOffset(), 0, null, HighlighterTargetArea.EXACT_RANGE);
-    highlighter.setCustomRenderer(RENDERER);
+    //highlighter.setCustomRenderer(RENDERER);
     return highlighter;
   }
 
@@ -339,7 +215,7 @@ public class IndentsPass extends TextEditorHighlightingPass implements DumbAware
 
   private class IndentsCalculator {
     @Nonnull
-    final Map<Language, TokenSet> myComments = ContainerUtilRt.newHashMap();
+    final Map<Language, TokenSet> myComments = new HashMap<>();
     @Nonnull
     final int[] lineIndents; // negative value means the line is empty (or contains a comment) and indent
     // (denoted by absolute value) was deduced from enclosing non-empty lines

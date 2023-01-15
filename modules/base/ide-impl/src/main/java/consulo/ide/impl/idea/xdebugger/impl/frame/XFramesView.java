@@ -15,31 +15,20 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.frame;
 
-import consulo.ui.ex.action.CommonActionsManager;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionToolbarImpl;
 import consulo.application.ApplicationManager;
-import consulo.project.Project;
-import consulo.ui.ex.awt.ComboBox;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.awt.ComboboxSpeedSearch;
-import consulo.ui.ex.awt.PopupHandler;
-import consulo.ide.impl.idea.ui.PopupMenuListenerAdapter;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.awt.CustomLineBorder;
-import consulo.ui.ex.awt.Wrapper;
-import consulo.ui.ex.concurrent.EdtExecutorService;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.execution.debug.XDebugSession;
+import consulo.execution.debug.XDebuggerActions;
 import consulo.execution.debug.frame.XExecutionStack;
 import consulo.execution.debug.frame.XStackFrame;
 import consulo.execution.debug.frame.XSuspendContext;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.ui.PopupMenuListenerAdapter;
 import consulo.ide.impl.idea.xdebugger.impl.XDebugSessionImpl;
-import consulo.execution.debug.XDebuggerActions;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.concurrent.EdtExecutorService;
 import consulo.util.dataholder.Key;
 import gnu.trove.TObjectIntHashMap;
 
@@ -74,7 +63,7 @@ public class XFramesView extends XDebugView {
   private Rectangle myVisibleRect;
   private boolean myListenersEnabled;
   private final Map<XExecutionStack, StackFramesListBuilder> myBuilders = new HashMap<>();
-  private final ActionToolbarImpl myToolbar;
+  private final ActionToolbar myToolbar;
   private final Wrapper myThreadsPanel;
   private boolean myThreadsCalculated = false;
   private boolean myRefresh = false;
@@ -187,7 +176,7 @@ public class XFramesView extends XDebugView {
     EdtExecutorService.getInstance().execute(() -> myFramesList.setSelectedValue(frame, true));
   }
 
-  private ActionToolbarImpl createToolbar() {
+  private ActionToolbar createToolbar() {
     final DefaultActionGroup framesGroup = new DefaultActionGroup();
 
     CommonActionsManager actionsManager = CommonActionsManager.getInstance();
@@ -196,8 +185,7 @@ public class XFramesView extends XDebugView {
 
     framesGroup.addAll(ActionManager.getInstance().getAction(XDebuggerActions.FRAMES_TOP_TOOLBAR_GROUP));
 
-    final ActionToolbarImpl toolbar =
-            (ActionToolbarImpl)ActionManager.getInstance().createActionToolbar(ActionPlaces.DEBUGGER_TOOLBAR, framesGroup, true);
+    final ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.DEBUGGER_TOOLBAR, framesGroup, true);
     toolbar.setReservePlaceAutoPopupIcon(false);
     toolbar.setTargetComponent(myFramesList);
     return toolbar;

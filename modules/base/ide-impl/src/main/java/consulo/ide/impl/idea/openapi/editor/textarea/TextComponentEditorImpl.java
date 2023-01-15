@@ -20,7 +20,7 @@ import consulo.codeEditor.*;
 import consulo.codeEditor.event.EditorMouseEventArea;
 import consulo.codeEditor.event.EditorMouseListener;
 import consulo.codeEditor.event.EditorMouseMotionListener;
-import consulo.ide.impl.idea.openapi.editor.impl.EmptyIndentsModel;
+import consulo.codeEditor.impl.EmptyIndentsModel;
 import consulo.codeEditor.impl.SettingsImpl;
 import consulo.codeEditor.markup.MarkupModel;
 import consulo.dataContext.DataContext;

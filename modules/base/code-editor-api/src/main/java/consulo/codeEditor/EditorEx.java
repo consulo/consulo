@@ -364,4 +364,7 @@ public interface EditorEx extends Editor {
 
   default void setUseEditorAntialiasing(boolean value) {
   }
+
+  default void resetSizes() {
+  }
 }

@@ -32,7 +32,7 @@ import consulo.execution.debug.frame.XValuePlace;
 import consulo.execution.debug.frame.presentation.XValuePresentation;
 import consulo.execution.debug.ui.XDebuggerUIConstants;
 import consulo.execution.ui.console.ConsoleView;
-import consulo.ide.impl.idea.execution.console.LanguageConsoleView;
+import consulo.execution.ui.console.language.LanguageConsoleView;
 import consulo.ide.impl.idea.execution.impl.ConsoleViewImpl;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;

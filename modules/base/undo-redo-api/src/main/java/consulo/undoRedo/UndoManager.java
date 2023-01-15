@@ -73,4 +73,6 @@ public interface UndoManager {
    */
   @Nonnull
   Pair<String, String> getRedoActionNameAndDescription(Object editor);
+
+  void invalidateActionsFor(@Nonnull DocumentReference ref);
 }

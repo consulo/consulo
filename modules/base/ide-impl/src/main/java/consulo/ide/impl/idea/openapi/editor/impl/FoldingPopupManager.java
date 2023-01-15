@@ -43,7 +43,7 @@ public class FoldingPopupManager implements EditorMouseListener, EditorMouseMoti
     editor.putUserData(DISABLED, null);
   }
 
-  FoldingPopupManager(CodeEditorBase editor) {
+  public FoldingPopupManager(CodeEditorBase editor) {
     myAlarm = new Alarm(editor.getDisposable());
     editor.addEditorMouseListener(this);
     editor.addEditorMouseMotionListener(this);
@@ -95,25 +95,5 @@ public class FoldingPopupManager implements EditorMouseListener, EditorMouseMoti
     myAlarm.cancelAllRequests();
     if (e.getEditor().getUserData(DISABLED) != null) return;
     TooltipController.getInstance().cancelTooltip(FOLDING_TOOLTIP_GROUP, e.getMouseEvent(), true);
-  }
-
-  @Override
-  public void mouseDragged(@Nonnull EditorMouseEvent e) {
-  }
-
-  @Override
-  public void mousePressed(@Nonnull EditorMouseEvent e) {
-  }
-
-  @Override
-  public void mouseClicked(@Nonnull EditorMouseEvent e) {
-  }
-
-  @Override
-  public void mouseReleased(@Nonnull EditorMouseEvent e) {
-  }
-
-  @Override
-  public void mouseEntered(@Nonnull EditorMouseEvent e) {
   }
 }

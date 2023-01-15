@@ -2,28 +2,24 @@
 
 package consulo.ide.impl.idea.codeInsight.folding.impl;
 
+import consulo.application.dumb.IndexNotReadyException;
+import consulo.application.progress.ProgressManager;
+import consulo.codeEditor.*;
+import consulo.codeEditor.impl.CodeEditorFoldingModelBase;
+import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.language.editor.folding.FoldingDescriptor;
 import consulo.language.editor.internal.EditorFoldingInfoImpl;
 import consulo.language.inject.InjectedLanguageManager;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.FoldRegion;
-import consulo.codeEditor.FoldingGroup;
-import consulo.codeEditor.EditorEx;
-import consulo.codeEditor.FoldingModelEx;
-import consulo.ide.impl.idea.openapi.editor.impl.DesktopFoldingModelImpl;
-import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
-import consulo.application.progress.ProgressManager;
-import consulo.application.dumb.IndexNotReadyException;
-import consulo.project.Project;
-import consulo.util.lang.ref.Ref;
-import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.SmartPointerManager;
-import consulo.util.lang.ObjectUtil;
-import consulo.util.collection.MultiMap;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.util.collection.MultiMap;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.ref.Ref;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -134,7 +130,7 @@ class UpdateFoldRegionsOperation implements Runnable {
       FoldRegion region = foldingModel.createFoldRegion(range.getStartOffset(), range.getEndOffset(), placeholder == null ? "..." : placeholder, group, descriptor.isNonExpandable());
       if (region == null) continue;
 
-      if (descriptor.isNonExpandable()) region.putUserData(DesktopFoldingModelImpl.SELECT_REGION_ON_CARET_NEARBY, Boolean.TRUE);
+      if (descriptor.isNonExpandable()) region.putUserData(CodeEditorFoldingModelBase.SELECT_REGION_ON_CARET_NEARBY, Boolean.TRUE);
 
       PsiElement psi = descriptor.getElement().getPsi();
 

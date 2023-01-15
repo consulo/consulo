@@ -15,21 +15,21 @@
  */
 package consulo.ide.impl.idea.diff.tools.util;
 
-import consulo.diff.util.Side;
-import consulo.diff.util.ThreeSide;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.ScrollingModel;
 import consulo.codeEditor.event.VisibleAreaEvent;
 import consulo.codeEditor.event.VisibleAreaListener;
-import consulo.codeEditor.EditorEx;
-import consulo.ide.impl.idea.openapi.editor.impl.DesktopFoldingModelImpl;
+import consulo.codeEditor.impl.CodeEditorFoldingModelBase;
+import consulo.diff.util.Side;
+import consulo.diff.util.ThreeSide;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import consulo.ui.annotation.RequiredUIAccess;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -343,7 +343,7 @@ public class SyncScrollSupport {
 
     @Override
     public void visibleAreaChanged(VisibleAreaEvent e) {
-      if (((DesktopFoldingModelImpl)getSlave().getFoldingModel()).isInBatchFoldingOperation()) return;
+      if (((CodeEditorFoldingModelBase)getSlave().getFoldingModel()).isInBatchFoldingOperation()) return;
 
       Rectangle newRectangle = e.getNewRectangle();
       Rectangle oldRectangle = e.getOldRectangle();

@@ -52,7 +52,7 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
   public JComponent createCustomComponent(Presentation presentation, String place) {
     return new ActionButtonImpl(this, presentation, place, ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE) {
       @Override
-      protected void updateToolTipText() {
+      public void updateToolTipText() {
         String shortcutText = getShortcut();
 
         if (Registry.is("ide.helptooltip.enabled")) {

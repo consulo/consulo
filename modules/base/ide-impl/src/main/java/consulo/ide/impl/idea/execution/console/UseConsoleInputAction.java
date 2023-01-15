@@ -15,23 +15,25 @@
  */
 package consulo.ide.impl.idea.execution.console;
 
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.AllIcons;
+import consulo.application.ApplicationPropertiesComponent;
 import consulo.application.dumb.DumbAware;
-import consulo.execution.ExecutionDataKeys;
+import consulo.execution.internal.action.ConsoleExecuteAction;
+import consulo.execution.ui.console.ConsoleView;
+import consulo.execution.ui.console.language.LanguageConsoleView;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.psi.PsiFile;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
+import consulo.util.collection.ContainerUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-final class UseConsoleInputAction extends ToggleAction implements DumbAware {
+public final class UseConsoleInputAction extends ToggleAction implements DumbAware {
   private final String processInputStateKey;
   private boolean useProcessStdIn;
 
@@ -39,7 +41,7 @@ final class UseConsoleInputAction extends ToggleAction implements DumbAware {
     super("Use Console Input", null, AllIcons.Debugger.CommandLine);
 
     this.processInputStateKey = processInputStateKey;
-    useProcessStdIn = PropertiesComponent.getInstance().getBoolean(processInputStateKey);
+    useProcessStdIn = ApplicationPropertiesComponent.getInstance().getBoolean(processInputStateKey);
   }
 
   @Override
@@ -51,16 +53,16 @@ final class UseConsoleInputAction extends ToggleAction implements DumbAware {
   public void setSelected(AnActionEvent event, boolean state) {
     useProcessStdIn = !state;
 
-    LanguageConsoleView consoleView = (LanguageConsoleView)event.getData(ExecutionDataKeys.CONSOLE_VIEW);
+    LanguageConsoleView consoleView = (LanguageConsoleView)event.getData(ConsoleView.KEY);
     assert consoleView != null;
     DaemonCodeAnalyzer daemonCodeAnalyzer = DaemonCodeAnalyzer.getInstance(consoleView.getProject());
     PsiFile file = consoleView.getFile();
     daemonCodeAnalyzer.setHighlightingEnabled(file, state);
     daemonCodeAnalyzer.restart(file);
-    PropertiesComponent.getInstance().setValue(processInputStateKey, useProcessStdIn);
+    ApplicationPropertiesComponent.getInstance().setValue(processInputStateKey, useProcessStdIn);
 
     List<AnAction> actions = ActionUtil.getActions(consoleView.getConsoleEditor().getComponent());
     ConsoleExecuteAction action = ContainerUtil.findInstance(actions, ConsoleExecuteAction.class);
-    action.myExecuteActionHandler.myUseProcessStdIn = !state;
+    action.getExecuteActionHandler().setUseProcessStdIn(!state);
   }
 }

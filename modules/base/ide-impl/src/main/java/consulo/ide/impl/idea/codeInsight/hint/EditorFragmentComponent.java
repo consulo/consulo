@@ -2,32 +2,28 @@
 package consulo.ide.impl.idea.codeInsight.hint;
 
 import consulo.application.ApplicationManager;
-import consulo.language.editor.hint.HintManager;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.logging.Logger;
-import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.LogicalPosition;
-import consulo.codeEditor.EditorColors;
+import consulo.codeEditor.*;
+import consulo.codeEditor.internal.RealEditor;
 import consulo.colorScheme.EditorColorsScheme;
-import consulo.codeEditor.EditorEx;
-import consulo.codeEditor.FoldingModelEx;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUIUtil;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ide.impl.idea.openapi.editor.impl.DesktopEditorImpl;
-import consulo.ui.color.ColorValue;
-import consulo.util.dataholder.Key;
-import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.reference.SoftReference;
-import consulo.ui.ex.awt.HintHint;
 import consulo.ide.impl.idea.ui.LightweightHint;
-import consulo.ui.ex.awt.util.ScreenUtil;
-import consulo.ui.ex.awt.JBUIScale;
+import consulo.language.editor.hint.HintManager;
+import consulo.logging.Logger;
+import consulo.ui.color.ColorValue;
+import consulo.ui.ex.awt.HintHint;
 import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.JBUIScale;
 import consulo.ui.ex.awt.UIUtil;
-import javax.annotation.Nonnull;
+import consulo.ui.ex.awt.util.ScreenUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.util.dataholder.Key;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -53,7 +49,7 @@ public class EditorFragmentComponent extends JPanel {
   }
 
   private void doInit(Component anchorComponent, EditorEx editor, int startLine, int endLine, boolean showFolding, boolean showGutter) {
-    boolean newRendering = editor instanceof DesktopEditorImpl;
+    boolean newRendering = editor instanceof RealEditor;
     int savedScrollOffset = newRendering ? 0 : editor.getScrollingModel().getHorizontalScrollOffset();
 
     FoldingModelEx foldingModel = editor.getFoldingModel();

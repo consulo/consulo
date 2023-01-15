@@ -20,7 +20,6 @@ import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.DaemonTooltipRendererProvider;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.TrafficLightRenderer;
-import consulo.ide.impl.idea.openapi.editor.impl.DesktopEditorMarkupModelImpl;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.DaemonCodeAnalyzerSettings;
 import consulo.language.editor.impl.internal.daemon.DaemonEditorPopup;
@@ -78,9 +77,8 @@ public class ErrorStripeUpdateManagerImpl extends ErrorStripeUpdateManager {
     ErrorStripeRenderer renderer = editorMarkupModel.getErrorStripeRenderer();
     if (renderer instanceof TrafficLightRenderer) {
       TrafficLightRenderer tlr = (TrafficLightRenderer)renderer;
-      DesktopEditorMarkupModelImpl markupModelImpl = (DesktopEditorMarkupModelImpl)editorMarkupModel;
-      tlr.refresh(markupModelImpl);
-      markupModelImpl.repaintTrafficLightIcon();
+      tlr.refresh(editorMarkupModel);
+      editorMarkupModel.repaintTrafficLightIcon();
       if (tlr.isValid()) return;
     }
     Editor editor = editorMarkupModel.getEditor();

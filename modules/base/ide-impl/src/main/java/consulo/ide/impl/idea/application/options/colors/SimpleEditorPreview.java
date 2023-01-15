@@ -16,43 +16,38 @@
 
 package consulo.ide.impl.idea.application.options.colors;
 
-import consulo.ide.impl.idea.application.options.colors.highlighting.HighlightData;
-import consulo.ide.impl.idea.application.options.colors.highlighting.HighlightsExtractor;
-import consulo.codeEditor.DefaultLanguageHighlighterColors;
-import consulo.language.editor.rawHighlight.RainbowHighlighter;
-import consulo.language.editor.util.UsedColors;
-import consulo.language.editor.highlight.HighlighterFactory;
+import consulo.codeEditor.*;
+import consulo.codeEditor.event.CaretAdapter;
+import consulo.codeEditor.event.CaretEvent;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributesKey;
-import consulo.codeEditor.event.CaretAdapter;
-import consulo.codeEditor.*;
-import consulo.codeEditor.event.CaretEvent;
-import consulo.codeEditor.EditorEx;
-import consulo.codeEditor.EditorHighlighter;
-import consulo.codeEditor.HighlighterIterator;
-import consulo.ide.impl.idea.openapi.editor.impl.DesktopEditorImpl;
-import consulo.language.editor.highlight.SyntaxHighlighter;
+import consulo.disposer.Disposer;
+import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.application.options.colors.highlighting.HighlightData;
+import consulo.ide.impl.idea.application.options.colors.highlighting.HighlightsExtractor;
+import consulo.ide.impl.idea.util.EventDispatcher;
+import consulo.language.ast.IElementType;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
 import consulo.language.editor.colorScheme.setting.EditorHighlightingProvidingColorSettingsPage;
 import consulo.language.editor.colorScheme.setting.RainbowColorSettingsPage;
-import consulo.document.util.TextRange;
-import consulo.language.ast.IElementType;
-import consulo.ui.ex.awt.util.Alarm;
-import consulo.ide.impl.idea.util.EventDispatcher;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.disposer.Disposer;
+import consulo.language.editor.highlight.HighlighterFactory;
+import consulo.language.editor.highlight.SyntaxHighlighter;
+import consulo.language.editor.rawHighlight.RainbowHighlighter;
+import consulo.language.editor.util.UsedColors;
 import consulo.localize.LocalizeValue;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.util.Alarm;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.intellij.lang.annotations.JdkConstants;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 import static consulo.codeEditor.CodeInsightColors.BLINKING_HIGHLIGHTS_ATTRIBUTES;
 
@@ -414,7 +409,7 @@ public class SimpleEditorPreview implements PreviewPanel {
   private HighlightData getRainbowTemp(@Nonnull TextAttributesKey[] rainbowTempKeys,
                                        int startOffset, int endOffset) {
     String id = myEditor.getDocument().getText(TextRange.create(startOffset, endOffset));
-    int index = UsedColors.getOrAddColorIndex((DesktopEditorImpl)myEditor, id, rainbowTempKeys.length);
+    int index = UsedColors.getOrAddColorIndex(myEditor, id, rainbowTempKeys.length);
     return new HighlightData(startOffset, endOffset, rainbowTempKeys[index]);
   }
 }

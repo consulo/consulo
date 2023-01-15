@@ -1,20 +1,19 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.editor.impl;
 
-import consulo.language.editor.CommonDataKeys;
+import consulo.application.ApplicationManager;
+import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.*;
 import consulo.dataContext.DataContext;
-import consulo.application.ApplicationManager;
-import consulo.undoRedo.CommandProcessor;
-import consulo.ide.impl.idea.openapi.command.CommandProcessorEx;
-import consulo.ide.impl.idea.openapi.command.CommandToken;
-import consulo.undoRedo.UndoConfirmationPolicy;
-import consulo.ide.impl.idea.openapi.editor.*;
+import consulo.document.Document;
 import consulo.document.DocumentRunnable;
 import consulo.document.ReadOnlyFragmentModificationException;
-import consulo.codeEditor.Editor;
+import consulo.ide.impl.idea.openapi.command.CommandProcessorEx;
+import consulo.ide.impl.idea.openapi.command.CommandToken;
+import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.project.Project;
-import consulo.document.Document;
+import consulo.undoRedo.CommandProcessor;
+import consulo.undoRedo.UndoConfirmationPolicy;
 
 import javax.annotation.Nonnull;
 
@@ -41,7 +40,7 @@ public class DefaultRawTypedHandler implements TypedActionHandlerEx {
   @Override
   public void execute(@Nonnull final Editor editor, final char charTyped, @Nonnull final DataContext dataContext) {
     CommandProcessorEx commandProcessorEx = (CommandProcessorEx)CommandProcessor.getInstance();
-    Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    Project project = dataContext.getData(Project.KEY);
     if (myCurrentCommandToken != null) {
       throw new IllegalStateException("Unexpected reentrancy of DefaultRawTypedHandler");
     }

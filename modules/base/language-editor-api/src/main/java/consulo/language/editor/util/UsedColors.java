@@ -17,7 +17,7 @@ package consulo.language.editor.util;
 
 import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.Key;
-import consulo.util.dataholder.UserDataHolderEx;
+import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.StringHash;
 import org.jetbrains.annotations.Contract;
 
@@ -40,7 +40,7 @@ public class UsedColors {
     }
   }
 
-  public static int getOrAddColorIndex(@Nonnull final UserDataHolderEx context,
+  public static int getOrAddColorIndex(@Nonnull final UserDataHolder context,
                                        @Nonnull final String name,
                                        int colorsCount) {
     int colorIndex;

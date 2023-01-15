@@ -16,16 +16,16 @@
 package consulo.ide.impl.idea.openapi.editor.textarea;
 
 import consulo.codeEditor.*;
-import consulo.dataContext.DataManager;
-import consulo.ui.ex.action.IdeActions;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionManager;
 import consulo.codeEditor.event.SelectionListener;
-import consulo.ide.impl.idea.openapi.editor.impl.DesktopSelectionModelImpl;
+import consulo.codeEditor.impl.CodeEditorSelectionModelBase;
 import consulo.colorScheme.TextAttributes;
+import consulo.dataContext.DataManager;
+import consulo.ui.ex.action.IdeActions;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.text.JTextComponent;
 
 /**
@@ -143,7 +143,7 @@ public class TextComponentSelectionModel implements SelectionModel {
 
   @Override
   public void selectLineAtCaret() {
-    DesktopSelectionModelImpl.doSelectLineAtCaret(myEditor.getCaretModel().getPrimaryCaret());
+    CodeEditorSelectionModelBase.doSelectLineAtCaret(myEditor.getCaretModel().getPrimaryCaret());
   }
 
   @Override

@@ -37,4 +37,6 @@ public interface ActionButton extends AnActionHolder, ActionButtonComponent {
   Rectangle getBounds();
 
   void setIconOverrider(@Nullable Function<ActionButton, Image> imageCalculator);
+
+  void click();
 }

@@ -194,9 +194,26 @@ public interface ActionToolbar {
   default void setSecondaryActionsIcon(Image icon, boolean hideDropdownIcon) {
   }
 
+  default void setSecondaryActionsShortcut(@Nonnull String secondaryActionsShortcut) {
+  }
+
   /**
    * Enables showing titles of separators as labels in the toolbar (off by default).
    */
   default void setShowSeparatorTitles(boolean showSeparatorTitles) {
+  }
+
+  /**
+   * Forces the minimum size of the toolbar to show all buttons, When set to {@code true}. By default ({@code false}) the
+   * toolbar will shrink further and show the auto popup chevron button.
+   */
+  default void setForceMinimumSize(boolean force) {
+  }
+
+  /**
+   * By default minimum size is to show chevron only.
+   * If this option is {@code true} toolbar shows at least one (the first) component plus chevron (if need)
+   */
+  default void setForceShowFirstComponent(boolean showFirstComponent) {
   }
 }

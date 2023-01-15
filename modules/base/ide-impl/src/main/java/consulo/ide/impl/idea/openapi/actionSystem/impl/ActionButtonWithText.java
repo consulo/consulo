@@ -46,7 +46,7 @@ public class ActionButtonWithText extends ActionButtonImpl {
   }
 
   @Override
-  protected void updateToolTipText() {
+  public void updateToolTipText() {
     String description = myPresentation.getDescription();
     if (Registry.is("ide.helptooltip.enabled")) {
       HelpTooltip.dispose(this);

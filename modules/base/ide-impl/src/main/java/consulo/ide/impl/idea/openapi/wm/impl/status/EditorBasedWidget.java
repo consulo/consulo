@@ -1,13 +1,11 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.wm.impl.status;
 
-import consulo.ide.impl.idea.openapi.editor.impl.EditorComponentImpl;
-import consulo.language.editor.ui.awt.EditorTextField;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.application.Application;
 import consulo.application.ui.wm.FocusableFrame;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.internal.EditorHolder;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
@@ -16,13 +14,15 @@ import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.event.FileEditorManagerListener;
+import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.language.editor.ui.util.StatusBarUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.project.ui.wm.WindowManager;
-import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
@@ -112,7 +112,7 @@ public abstract class EditorBasedWidget implements StatusBarWidget, FileEditorMa
   @Nullable
   Editor getFocusedEditor() {
     Component component = getFocusedComponent();
-    Editor editor = component instanceof EditorComponentImpl ? ((EditorComponentImpl)component).getEditor() : getEditor();
+    Editor editor = component instanceof EditorHolder ? ((EditorHolder)component).getEditor() : getEditor();
     return editor != null && !editor.isDisposed() ? editor : null;
   }
 

@@ -95,4 +95,11 @@ public interface RealEditor extends EditorEx {
   default int findNearestDirectionBoundary(int offset, boolean lookForward) {
     return offset;
   }
+
+  default float getScale() {
+    return 1;
+  }
+
+  default void hideCursor() {
+  }
 }

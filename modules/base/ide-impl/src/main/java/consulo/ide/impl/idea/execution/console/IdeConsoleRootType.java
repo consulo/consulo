@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.execution.console;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.application.impl.internal.ApplicationNamesInfo;
+import consulo.execution.ui.console.ConsoleRootType;
 import consulo.fileEditor.FileEditorManager;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.file.FileTypeManager;

@@ -22,7 +22,7 @@ import consulo.ui.ex.TreeExpander;
 import consulo.ide.impl.idea.openapi.actionSystem.AbbreviationManager;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.QuickList;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.QuickListsManager;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionToolbarImpl;
+import consulo.ui.ex.internal.ActionToolbarsHolder;
 import consulo.ui.ex.keymap.KeyMapBundle;
 import consulo.ide.impl.idea.openapi.keymap.KeyboardSettingsExternalizable;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
@@ -849,7 +849,7 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
       }
     }
     keymapManager.setActiveKeymap(mySelectedKeymap);
-    ActionToolbarImpl.updateAllToolbarsImmediately();
+    ActionToolbarsHolder.updateAllToolbarsImmediately();
   }
 
   private void ensureNonEmptyKeymapNames() throws ConfigurationException {

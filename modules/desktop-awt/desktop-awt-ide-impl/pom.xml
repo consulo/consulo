@@ -87,6 +87,11 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-code-editor-impl</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-desktop-awt-bootstrap</artifactId>
       <version>${project.version}</version>
     </dependency>

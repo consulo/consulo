@@ -1,6 +1,6 @@
 package consulo.ide.impl.idea.xdebugger.impl.ui.tree.actions;
 
-import consulo.ide.impl.idea.execution.console.ConsoleExecuteAction;
+import consulo.execution.internal.action.ConsoleExecuteAction;
 import consulo.ide.impl.idea.xdebugger.impl.actions.handlers.XEvaluateInConsoleFromEditorActionHandler;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
 import consulo.execution.ExecutionDataKeys;

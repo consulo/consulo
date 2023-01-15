@@ -15,14 +15,14 @@
  */
 package consulo.ide.impl.idea.util.ui;
 
+import consulo.application.ui.UISettings;
+import consulo.codeEditor.internal.EditorHolder;
 import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupManager;
-import consulo.application.ui.UISettings;
+import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
-import consulo.ide.impl.idea.openapi.editor.impl.EditorComponentImpl;
-import consulo.language.editor.ui.awt.EditorTextField;
 
 import javax.swing.*;
 
@@ -120,8 +120,8 @@ public class UpDownHandler {
       final LookupEx lookup;
       if (myInput instanceof EditorTextField) {
         lookup = LookupManager.getActiveLookup(((EditorTextField)myInput).getEditor());
-      } else if (myInput instanceof EditorComponentImpl) {
-        lookup = LookupManager.getActiveLookup(((EditorComponentImpl)myInput).getEditor());
+      } else if (myInput instanceof EditorHolder) {
+        lookup = LookupManager.getActiveLookup(((EditorHolder)myInput).getEditor());
       } else {
         lookup = null;
       }

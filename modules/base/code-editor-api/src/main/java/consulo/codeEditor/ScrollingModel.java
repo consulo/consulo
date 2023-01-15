@@ -42,6 +42,10 @@ public interface ScrollingModel {
 
   void enableAnimation();
 
+  default boolean isAnimationEnabled() {
+    return true;
+  }
+  
   int getVerticalScrollOffset();
 
   int getHorizontalScrollOffset();

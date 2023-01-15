@@ -17,11 +17,15 @@ import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import consulo.document.impl.DocumentImpUtil;
 import consulo.document.util.TextRange;
+import consulo.execution.internal.LanguageConsoleViewEx;
+import consulo.execution.ui.console.ConsoleRootType;
 import consulo.execution.ui.console.ConsoleViewContentType;
+import consulo.execution.ui.console.ConsoleViewUtil;
+import consulo.execution.ui.console.language.LanguageConsoleBuilder;
+import consulo.execution.ui.console.language.LanguageConsoleView;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ide.impl.idea.execution.impl.ConsoleViewImpl;
-import consulo.execution.ui.console.ConsoleViewUtil;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.editor.impl.EditorFactoryImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
@@ -62,7 +66,7 @@ import java.util.Collections;
  * @author Gregory.Shrago
  * In case of REPL consider to use {@link LanguageConsoleBuilder}
  */
-public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageConsoleView, DataProvider {
+public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageConsoleViewEx, DataProvider {
   private final Helper myHelper;
 
   private final ConsoleExecutionEditor myConsoleExecutionEditor;
@@ -255,6 +259,16 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
     myHelper.setTitle(title);
   }
 
+  @Override
+  public void addToHistory(String text) {
+    ConsoleHistoryController.addToHistory(this, text);
+  }
+
+  @Override
+  public void installConsoleHistory(ConsoleRootType consoleRootType, String historyPersistenceId) {
+    new ConsoleHistoryController(consoleRootType, historyPersistenceId, this).install();
+  }
+
   public String addToHistory(@Nonnull TextRange textRange, @Nonnull EditorEx editor, boolean preserveMarkup) {
     return addToHistoryInner(textRange, editor, false, preserveMarkup);
   }
@@ -324,7 +338,7 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
   }
 
   @Nonnull
-  protected String addTextRangeToHistory(@Nonnull TextRange textRange, @Nonnull EditorEx inputEditor, boolean preserveMarkup) {
+  public String addTextRangeToHistory(@Nonnull TextRange textRange, @Nonnull EditorEx inputEditor, boolean preserveMarkup) {
     return printWithHighlighting(this, inputEditor, textRange);
 
 
@@ -335,7 +349,7 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
     //}
   }
 
-  protected void doAddPromptToHistory() {
+  public void doAddPromptToHistory() {
     String prompt = myConsoleExecutionEditor.getPrompt();
     if (prompt != null) {
       addPromptToHistoryImpl(prompt);
@@ -422,11 +436,11 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
     myConsoleExecutionEditor.setInputText(query);
   }
 
-  boolean isHistoryViewerForceAdditionalColumnsUsage() {
+  public boolean isHistoryViewerForceAdditionalColumnsUsage() {
     return true;
   }
 
-  int getMinHistoryLineCount() {
+  public int getMinHistoryLineCount() {
     return 2;
   }
 

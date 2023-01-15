@@ -15,30 +15,19 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.frame;
 
-import consulo.dataContext.DataManager;
-import consulo.ui.ex.awt.dnd.DnDEvent;
-import consulo.ui.ex.awt.dnd.DnDManager;
-import consulo.ui.ex.awt.dnd.DnDNativeTarget;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionToolbarImpl;
-import consulo.ui.ex.awt.*;
-import consulo.ui.ex.awt.event.DoubleClickListener;
-import consulo.util.lang.EmptyRunnable;
 import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
 import consulo.disposer.CompositeDisposable;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ui.ex.action.*;
-import consulo.util.dataholder.Key;
-import consulo.ide.impl.idea.ui.*;
-import consulo.ui.ex.awt.util.Alarm;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.execution.debug.XDebugSession;
+import consulo.execution.debug.XDebuggerActions;
 import consulo.execution.debug.XDebuggerBundle;
 import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.frame.XStackFrame;
+import consulo.ide.impl.idea.ui.ListenerUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.xdebugger.impl.XDebugSessionImpl;
-import consulo.execution.debug.XDebuggerActions;
 import consulo.ide.impl.idea.xdebugger.impl.ui.DebuggerSessionTabBase;
 import consulo.ide.impl.idea.xdebugger.impl.ui.DebuggerUIUtil;
 import consulo.ide.impl.idea.xdebugger.impl.ui.XDebugSessionData;
@@ -46,8 +35,18 @@ import consulo.ide.impl.idea.xdebugger.impl.ui.XDebugSessionTab;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.XDebuggerTree;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.actions.XWatchTransferable;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.*;
-import javax.annotation.Nonnull;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.dnd.DnDEvent;
+import consulo.ui.ex.awt.dnd.DnDManager;
+import consulo.ui.ex.awt.dnd.DnDNativeTarget;
+import consulo.ui.ex.awt.event.DoubleClickListener;
+import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.ui.ex.awt.util.Alarm;
+import consulo.util.dataholder.Key;
+import consulo.util.lang.EmptyRunnable;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -84,10 +83,8 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
     DebuggerUIUtil.registerActionOnComponent(XDebuggerActions.XCOPY_WATCH, tree, myDisposables);
     DebuggerUIUtil.registerActionOnComponent(XDebuggerActions.XEDIT_WATCH, tree, myDisposables);
 
-    EmptyAction.registerWithShortcutSet(XDebuggerActions.XNEW_WATCH,
-                                        CommonActionsPanel.getCommonShortcut(CommonActionsPanel.Buttons.ADD), tree);
-    EmptyAction.registerWithShortcutSet(XDebuggerActions.XREMOVE_WATCH,
-                                        CommonActionsPanel.getCommonShortcut(CommonActionsPanel.Buttons.REMOVE), tree);
+    EmptyAction.registerWithShortcutSet(XDebuggerActions.XNEW_WATCH, CommonActionsPanel.getCommonShortcut(CommonActionsPanel.Buttons.ADD), tree);
+    EmptyAction.registerWithShortcutSet(XDebuggerActions.XREMOVE_WATCH, CommonActionsPanel.getCommonShortcut(CommonActionsPanel.Buttons.REMOVE), tree);
 
     DnDManager.getInstance().registerTarget(this, tree);
 
@@ -96,7 +93,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
       public void actionPerformed(@Nonnull AnActionEvent e) {
         Object contents = CopyPasteManager.getInstance().getContents(XWatchTransferable.EXPRESSIONS_FLAVOR);
         if (contents instanceof List) {
-          for (Object item : ((List)contents)){
+          for (Object item : ((List)contents)) {
             if (item instanceof XExpression) {
               addWatchExpression(((XExpression)item), -1, true);
             }
@@ -105,19 +102,17 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
       }
     }.registerCustomShortcutSet(CommonShortcuts.getPaste(), tree, myDisposables);
 
-    ActionToolbarImpl toolbar = (ActionToolbarImpl)ActionManager.getInstance().createActionToolbar(
-            ActionPlaces.DEBUGGER_TOOLBAR,
-            DebuggerSessionTabBase.getCustomizedActionGroup(XDebuggerActions.WATCHES_TREE_TOOLBAR_GROUP),
-            !myWatchesInVariables);
-    toolbar.setBorder(new CustomLineBorder(UIUtil.getBorderColor(), 0, 0,
-                                           myWatchesInVariables ? 0 : 1,
-                                           myWatchesInVariables ? 1 : 0));
+    ActionToolbar toolbar = ActionManager.getInstance()
+            .createActionToolbar(ActionPlaces.DEBUGGER_TOOLBAR, DebuggerSessionTabBase.getCustomizedActionGroup(XDebuggerActions.WATCHES_TREE_TOOLBAR_GROUP), !myWatchesInVariables);
+    JComponent component = toolbar.getComponent();
+
+    component.setBorder(new CustomLineBorder(UIUtil.getBorderColor(), 0, 0, myWatchesInVariables ? 0 : 1, myWatchesInVariables ? 1 : 0));
     toolbar.setTargetComponent(tree);
 
     if (!myWatchesInVariables) {
       getTree().getEmptyText().setText(XDebuggerBundle.message("debugger.no.watches"));
     }
-    getPanel().add(toolbar.getComponent(), myWatchesInVariables ? BorderLayout.WEST : BorderLayout.NORTH);
+    getPanel().add(component, myWatchesInVariables ? BorderLayout.WEST : BorderLayout.NORTH);
 
     installEditListeners();
   }
@@ -129,8 +124,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
     final ClickListener mouseListener = new ClickListener() {
       @Override
       public boolean onClick(@Nonnull MouseEvent event, int clickCount) {
-        if (!SwingUtilities.isLeftMouseButton(event) ||
-            ((event.getModifiers() & (InputEvent.SHIFT_MASK | InputEvent.ALT_MASK | InputEvent.CTRL_MASK | InputEvent.META_MASK)) !=0) ) {
+        if (!SwingUtilities.isLeftMouseButton(event) || ((event.getModifiers() & (InputEvent.SHIFT_MASK | InputEvent.ALT_MASK | InputEvent.CTRL_MASK | InputEvent.META_MASK)) != 0)) {
           return false;
         }
         boolean sameRow = isAboveSelectedItem(event, watchTree);
@@ -145,7 +139,8 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
         Runnable runnable = () -> editWatchAction.actionPerformed(actionEvent);
         if (editAlarm.isEmpty() && quitePeriod.isEmpty()) {
           editAlarm.addRequest(runnable, UIUtil.getMultiClickInterval());
-        } else {
+        }
+        else {
           editAlarm.cancelAllRequests();
         }
         return false;
@@ -218,8 +213,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
     Presentation presentation = action.getTemplatePresentation().clone();
     DataContext context = DataManager.getInstance().getDataContext(getTree());
 
-    AnActionEvent actionEvent =
-            new AnActionEvent(null, context, ActionPlaces.DEBUGGER_TOOLBAR, presentation, ActionManager.getInstance(), 0);
+    AnActionEvent actionEvent = new AnActionEvent(null, context, ActionPlaces.DEBUGGER_TOOLBAR, presentation, ActionManager.getInstance(), 0);
     action.actionPerformed(actionEvent);
   }
 
@@ -262,8 +256,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
     }
     else {
       XDebuggerTreeNode root = tree.getRoot();
-      List<? extends WatchNode> current = root instanceof WatchesRootNode
-                                          ? ((WatchesRootNode)tree.getRoot()).getWatchChildren() : Collections.emptyList();
+      List<? extends WatchNode> current = root instanceof WatchesRootNode ? ((WatchesRootNode)tree.getRoot()).getWatchChildren() : Collections.emptyList();
       List<XExpression> list = ContainerUtil.newArrayList();
       for (WatchNode child : current) {
         list.add(child.getExpression());
@@ -288,8 +281,7 @@ public class XWatchesViewImpl extends XVariablesView implements DnDNativeTarget,
     int minIndex = Integer.MAX_VALUE;
     List<XDebuggerTreeNode> toRemove = new ArrayList<>();
     for (XDebuggerTreeNode node : nodes) {
-      @SuppressWarnings("SuspiciousMethodCalls")
-      int index = children.indexOf(node);
+      @SuppressWarnings("SuspiciousMethodCalls") int index = children.indexOf(node);
       if (index != -1) {
         toRemove.add(node);
         minIndex = Math.min(minIndex, index);

@@ -1,11 +1,19 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.runAnything;
 
+import consulo.application.AllIcons;
+import consulo.application.Application;
+import consulo.application.impl.internal.progress.ProgressIndicatorBase;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.ui.UISettings;
+import consulo.application.util.SystemInfo;
+import consulo.component.ProcessCanceledException;
+import consulo.dataContext.DataContext;
+import consulo.execution.executor.DefaultRunExecutor;
 import consulo.execution.executor.Executor;
 import consulo.execution.executor.ExecutorRegistry;
-import consulo.execution.executor.DefaultRunExecutor;
 import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.application.AllIcons;
+import consulo.fileEditor.FileEditorManager;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.actions.BigPopupUI;
 import consulo.ide.impl.idea.ide.actions.bigPopup.ShowFilterAction;
@@ -16,53 +24,37 @@ import consulo.ide.impl.idea.ide.actions.runAnything.groups.RunAnythingGroup;
 import consulo.ide.impl.idea.ide.actions.runAnything.groups.RunAnythingRecentGroup;
 import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItem;
 import consulo.ide.impl.idea.ide.actions.runAnything.ui.RunAnythingScrollingUtil;
-import consulo.application.ui.UISettings;
-import consulo.ui.ex.awt.ElementsChooser;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionToolbarImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
-import consulo.application.Application;
-import consulo.dataContext.DataContext;
+import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.ide.impl.idea.util.BooleanFunction;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
-import consulo.logging.Logger;
-import consulo.fileEditor.FileEditorManager;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.module.Module;
 import consulo.language.util.ModuleUtilCore;
-import consulo.component.ProcessCanceledException;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.impl.internal.progress.ProgressIndicatorBase;
-import consulo.project.event.DumbModeListener;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.logging.Logger;
+import consulo.module.Module;
+import consulo.module.content.ModuleRootManager;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.module.content.ModuleRootManager;
-import consulo.ui.ex.awt.util.Alarm;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.action.*;
-import consulo.util.concurrent.ActionCallback;
-import consulo.util.dataholder.Key;
-import consulo.application.util.SystemInfo;
-import consulo.util.lang.ObjectUtil;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.project.event.DumbModeListener;
 import consulo.project.ui.wm.ToolWindowId;
-import consulo.ui.ex.awt.ColoredListCellRenderer;
-import consulo.ui.ex.awt.ScrollingUtil;
-import consulo.ui.ex.awt.JBList;
-import consulo.ui.ex.awt.JBTextField;
-import consulo.ui.ex.awt.NonOpaquePanel;
-import consulo.ide.impl.idea.util.*;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.TextBox;
 import consulo.ui.TextBoxWithExtensions;
 import consulo.ui.event.FocusEvent;
 import consulo.ui.event.FocusListener;
 import consulo.ui.event.KeyListener;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.util.Alarm;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.internal.ActionToolbarsHolder;
 import consulo.ui.image.Image;
+import consulo.util.concurrent.ActionCallback;
+import consulo.util.dataholder.Key;
+import consulo.util.lang.ObjectUtil;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.accessibility.Accessible;
 import javax.annotation.Nonnull;
@@ -81,9 +73,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static consulo.application.ui.wm.IdeFocusManager.getGlobalInstance;
 import static consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingAction.ALT_IS_PRESSED;
 import static consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingAction.SHIFT_IS_PRESSED;
-import static consulo.application.ui.wm.IdeFocusManager.getGlobalInstance;
 import static java.awt.FlowLayout.RIGHT;
 
 public class RunAnythingPopupUI extends BigPopupUI {
@@ -186,7 +178,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
             }
             myAlarm.cancelAllRequests();
 
-            Application.get().invokeLater(() -> ActionToolbarImpl.updateAllToolbarsImmediately());
+            Application.get().invokeLater(() -> ActionToolbarsHolder.updateAllToolbarsImmediately());
 
             searchFinishedHandler.run();
           }

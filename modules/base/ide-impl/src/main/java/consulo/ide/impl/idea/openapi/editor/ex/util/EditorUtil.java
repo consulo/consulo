@@ -15,20 +15,16 @@
  */
 package consulo.ide.impl.idea.openapi.editor.ex.util;
 
-import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
-import consulo.ide.impl.idea.openapi.editor.impl.DesktopEditorImpl;
-import consulo.ide.impl.idea.openapi.editor.impl.DesktopScrollingModelImpl;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.text.TextEditorImpl;
-import consulo.util.lang.ObjectUtil;
-import consulo.util.lang.Pair;
 import consulo.application.ApplicationManager;
 import consulo.application.WriteAction;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.*;
+import consulo.codeEditor.impl.CodeEditorScrollingModelBase;
 import consulo.codeEditor.impl.FontInfo;
 import consulo.codeEditor.impl.util.EditorImplUtil;
+import consulo.codeEditor.internal.RealEditor;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
 import consulo.component.messagebus.MessageBusConnection;
@@ -43,6 +39,8 @@ import consulo.document.util.TextRange;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.text.TextEditorProvider;
+import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.text.TextEditorImpl;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.highlight.EmptyEditorHighlighter;
 import consulo.language.editor.inject.EditorWindow;
@@ -52,6 +50,8 @@ import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.Pair;
 import consulo.util.lang.ref.Ref;
 import org.intellij.lang.annotations.JdkConstants;
 
@@ -165,8 +165,8 @@ public final class EditorUtil {
   }
 
   public static Image scaleIconAccordingEditorFont(@Nonnull Image icon, Editor editor) {
-    if (Registry.is("editor.scale.gutter.icons") && editor instanceof DesktopEditorImpl) {
-      float scale = ((DesktopEditorImpl)editor).getScale();
+    if (Registry.is("editor.scale.gutter.icons") && editor instanceof RealEditor) {
+      float scale = ((RealEditor)editor).getScale();
       if (Math.abs(1f - scale) > 0.1f) {
         return ImageEffects.resize(icon, scale);
       }
@@ -403,7 +403,7 @@ public final class EditorUtil {
   }
 
   public static int yPositionToLogicalLine(@Nonnull Editor editor, int y) {
-    int line = editor instanceof DesktopEditorImpl ? editor.yToVisualLine(y) : y / editor.getLineHeight();
+    int line = editor instanceof RealEditor ? editor.yToVisualLine(y) : y / editor.getLineHeight();
     return line > 0 ? editor.visualToLogicalPosition(new VisualPosition(line, 0)).line : 0;
   }
 
@@ -506,11 +506,11 @@ public final class EditorUtil {
 
   public static void runWithAnimationDisabled(@Nonnull Editor editor, @Nonnull Runnable taskWithScrolling) {
     ScrollingModel scrollingModel = editor.getScrollingModel();
-    if (!(scrollingModel instanceof DesktopScrollingModelImpl)) {
+    if (!(scrollingModel instanceof CodeEditorScrollingModelBase)) {
       taskWithScrolling.run();
     }
     else {
-      boolean animationWasEnabled = ((DesktopScrollingModelImpl)scrollingModel).isAnimationEnabled();
+      boolean animationWasEnabled = ((CodeEditorScrollingModelBase)scrollingModel).isAnimationEnabled();
       scrollingModel.disableAnimation();
       try {
         taskWithScrolling.run();

@@ -36,4 +36,6 @@ public interface LookupEx extends Lookup {
   void setFocusDegree(LookupFocusDegree focusDegree);
 
   boolean performGuardedChange(Runnable change);
+
+  LookupFocusDegree getLookupFocusDegree();
 }

@@ -15,21 +15,10 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.evaluate.quick.common;
 
-import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
-import consulo.language.editor.ui.awt.HintUtil;
-import consulo.ide.impl.idea.codeInsight.navigation.NavigationImplUtil;
-import consulo.ide.impl.idea.ide.TooltipEvent;
-import consulo.ide.impl.idea.openapi.editor.impl.EditorComponentImpl;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ui.ex.awt.HintHint;
-import consulo.language.editor.impl.internal.hint.HintListener;
-import consulo.ide.impl.idea.ui.LightweightHint;
-import consulo.ui.ex.SimpleColoredText;
-import consulo.ide.impl.idea.util.IconUtil;
-import consulo.execution.debug.XDebuggerActions;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorColors;
 import consulo.codeEditor.event.EditorMouseEvent;
+import consulo.codeEditor.internal.EditorHolder;
 import consulo.codeEditor.markup.HighlighterLayer;
 import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.codeEditor.markup.RangeHighlighter;
@@ -37,11 +26,22 @@ import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
 import consulo.document.util.TextRange;
+import consulo.execution.debug.XDebuggerActions;
+import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
+import consulo.ide.impl.idea.codeInsight.navigation.NavigationImplUtil;
+import consulo.ide.impl.idea.ide.TooltipEvent;
+import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.ide.impl.idea.ui.LightweightHint;
+import consulo.ide.impl.idea.util.IconUtil;
 import consulo.language.editor.hint.HintManager;
+import consulo.language.editor.impl.internal.hint.HintListener;
+import consulo.language.editor.ui.awt.HintUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.SimpleColoredText;
 import consulo.ui.ex.awt.ClickListener;
+import consulo.ui.ex.awt.HintHint;
 import consulo.ui.ex.keymap.KeymapManager;
 import org.intellij.lang.annotations.JdkConstants;
 
@@ -205,8 +205,8 @@ public abstract class AbstractValueHint {
         InputEvent inputEvent = event.getInputEvent();
         if (inputEvent instanceof MouseEvent) {
           Component comp = inputEvent.getComponent();
-          if (comp instanceof EditorComponentImpl) {
-            Editor editor = ((EditorComponentImpl)comp).getEditor();
+          if (comp instanceof EditorHolder) {
+            Editor editor = ((EditorHolder)comp).getEditor();
             return !isInsideCurrentRange(editor, ((MouseEvent)inputEvent).getPoint());
           }
         }

@@ -15,17 +15,17 @@
  */
 package consulo.ide.impl.idea.codeInsight.lookup.impl;
 
-import consulo.ide.impl.idea.openapi.editor.impl.DesktopEditorImpl;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.language.editor.refactoring.rename.inplace.InplaceRefactoring;
 import consulo.application.util.matcher.MatcherTextRange;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.*;
+import consulo.codeEditor.internal.RealEditor;
 import consulo.colorScheme.EditorFontType;
 import consulo.colorScheme.TextAttributes;
 import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementPresentation;
+import consulo.language.editor.refactoring.rename.inplace.InplaceRefactoring;
 import consulo.ui.ex.JBColor;
 import consulo.util.collection.FList;
 
@@ -54,7 +54,7 @@ class LookupPreview {
 
     String suffix = getSuffixText(item);
     Editor editor = myLookup.getTopLevelEditor();
-    if (!suffix.isEmpty() && editor instanceof DesktopEditorImpl &&
+    if (!suffix.isEmpty() && editor instanceof RealEditor &&
         !editor.getSelectionModel().hasSelection() &&
         InplaceRefactoring.getActiveInplaceRenamer(editor) == null) {
       myLookup.performGuardedChange(() -> {

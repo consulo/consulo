@@ -15,53 +15,47 @@
  */
 package consulo.ide.impl.idea.execution.console;
 
-import consulo.document.event.FileDocumentManagerListener;
-import consulo.language.editor.completion.lookup.LookupManager;
-import consulo.language.editor.scratch.ScratchFileService;
-import consulo.ide.impl.idea.openapi.actionSystem.*;
-import consulo.language.editor.WriteCommandAction;
-import consulo.project.internal.ProjectExListener;
-import consulo.undoRedo.util.UndoConstants;
-import consulo.codeEditor.CaretModel;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorFactory;
-import consulo.codeEditor.ScrollType;
-import consulo.ide.impl.idea.openapi.editor.actions.ContentChooser;
-import consulo.codeEditor.EditorEx;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.language.editor.highlight.LexerEditorHighlighter;
-import consulo.language.editor.highlight.SyntaxHighlighter;
-import consulo.language.editor.highlight.SyntaxHighlighterFactory;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.JDOMUtil;
-import consulo.util.lang.ObjectUtil;
-import consulo.util.lang.StringHash;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.language.file.light.LightVirtualFile;
-import consulo.ide.impl.idea.util.ExceptionUtil;
-import consulo.ide.impl.idea.util.PathUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.util.collection.FactoryMap;
 import consulo.application.AccessToken;
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.codeEditor.*;
 import consulo.container.boot.ContainerPathManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
+import consulo.document.event.FileDocumentManagerListener;
 import consulo.document.util.TextRange;
+import consulo.execution.ui.console.ConsoleRootType;
+import consulo.execution.ui.console.language.LanguageConsoleView;
+import consulo.ide.impl.idea.openapi.actionSystem.CompositeShortcutSet;
+import consulo.ide.impl.idea.openapi.editor.actions.ContentChooser;
+import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
+import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.ide.impl.idea.util.PathUtil;
 import consulo.language.Language;
+import consulo.language.editor.WriteCommandAction;
+import consulo.language.editor.completion.lookup.LookupManager;
+import consulo.language.editor.highlight.LexerEditorHighlighter;
+import consulo.language.editor.highlight.SyntaxHighlighter;
+import consulo.language.editor.highlight.SyntaxHighlighterFactory;
+import consulo.language.editor.scratch.ScratchFileService;
+import consulo.language.file.light.LightVirtualFile;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileFactory;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.project.internal.ProjectExListener;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.Messages;
+import consulo.undoRedo.util.UndoConstants;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.FactoryMap;
 import consulo.util.dataholder.Key;
+import consulo.util.jdom.JDOMUtil;
+import consulo.util.lang.*;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jdom.Element;
 
@@ -510,24 +504,22 @@ public class ConsoleHistoryController {
     }
 
     private void saveHistory() {
-      try {
-        if (getModel().isEmpty()) return;
-        if (myRootType.isHidden()) {
-          saveHistoryOld();
-          return;
-        }
-        AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(getClass());
+      if (getModel().isEmpty()) return;
+      if (myRootType.isHidden()) {
+        saveHistoryOld();
+        return;
+      }
+
+      Application.get().runWriteAction(() -> {
         try {
           VirtualFile file = HistoryRootType.getInstance().findFile(null, getHistoryName(myRootType, myId), ScratchFileService.Option.create_if_missing);
           VfsUtil.saveText(file, StringUtil.join(getModel().getEntries(), myRootType.getEntrySeparator()));
         }
-        finally {
-          token.finish();
+        catch (IOException e) {
+          LOG.error(e);
         }
-      }
-      catch (Exception ex) {
-        LOG.error(ex);
-      }
+
+      });
     }
 
     @Nullable
@@ -535,7 +527,7 @@ public class ConsoleHistoryController {
       if (!rootElement.getName().equals("console-history")) return null;
       String id = rootElement.getAttributeValue("id");
       if (!expectedId.equals(id)) return null;
-      List<String> entries = ContainerUtil.newArrayList();
+      List<String> entries = new ArrayList<>();
       String consoleContent = null;
       for (Element childElement : rootElement.getChildren()) {
         String childName = childElement.getName();

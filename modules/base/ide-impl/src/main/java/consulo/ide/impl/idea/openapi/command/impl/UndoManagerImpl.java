@@ -347,6 +347,7 @@ public class UndoManagerImpl implements UndoManager, Disposable {
     myCurrentMerger.addAdditionalAffectedDocuments(refs);
   }
 
+  @Override
   public void invalidateActionsFor(@Nonnull DocumentReference ref) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     myMerger.invalidateActionsFor(ref);

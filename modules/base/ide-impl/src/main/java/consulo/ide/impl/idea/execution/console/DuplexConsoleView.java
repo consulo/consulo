@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.execution.console;
 import consulo.execution.ExecutionBundle;
 import consulo.execution.ui.console.Filter;
 import consulo.execution.ui.console.HyperlinkInfo;
+import consulo.execution.ui.console.language.LanguageConsoleView;
 import consulo.ide.impl.idea.execution.impl.ConsoleViewImpl;
 import consulo.process.ProcessHandler;
 import consulo.execution.ui.console.ConsoleView;

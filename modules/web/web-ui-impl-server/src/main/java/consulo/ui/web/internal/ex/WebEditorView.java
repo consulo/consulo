@@ -17,7 +17,7 @@ package consulo.ui.web.internal.ex;
 
 import consulo.codeEditor.LogicalPosition;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ide.impl.idea.openapi.editor.impl.view.LogicalPositionCache;
+import consulo.codeEditor.impl.LogicalPositionCache;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.codeEditor.impl.CodeEditorBase;

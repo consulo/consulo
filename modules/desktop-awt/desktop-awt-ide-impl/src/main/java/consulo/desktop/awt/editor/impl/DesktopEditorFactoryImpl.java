@@ -17,7 +17,6 @@ package consulo.desktop.awt.editor.impl;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.impl.internal.LaterInvocator;
-import consulo.ide.impl.idea.openapi.editor.impl.DesktopEditorImpl;
 import consulo.ide.impl.idea.openapi.editor.impl.EditorFactoryImpl;
 import consulo.application.Application;
 import consulo.codeEditor.Editor;
