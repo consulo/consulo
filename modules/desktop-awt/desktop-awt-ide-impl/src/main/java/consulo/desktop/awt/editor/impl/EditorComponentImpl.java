@@ -26,7 +26,7 @@ import consulo.codeEditor.action.EditorActionManager;
 import consulo.codeEditor.action.EditorActionUtil;
 import consulo.codeEditor.event.CaretEvent;
 import consulo.codeEditor.event.CaretListener;
-import consulo.codeEditor.internal.EditorHolder;
+import consulo.codeEditor.EditorHolder;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;

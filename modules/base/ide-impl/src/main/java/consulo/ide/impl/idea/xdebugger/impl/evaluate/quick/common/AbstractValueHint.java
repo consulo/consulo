@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.xdebugger.impl.evaluate.quick.common;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorColors;
 import consulo.codeEditor.event.EditorMouseEvent;
-import consulo.codeEditor.internal.EditorHolder;
+import consulo.codeEditor.EditorHolder;
 import consulo.codeEditor.markup.HighlighterLayer;
 import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.codeEditor.markup.RangeHighlighter;

@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.util.ui;
 
 import consulo.application.ui.UISettings;
-import consulo.codeEditor.internal.EditorHolder;
+import consulo.codeEditor.EditorHolder;
 import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.ui.awt.EditorTextField;

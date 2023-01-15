@@ -5,7 +5,7 @@ import consulo.application.Application;
 import consulo.application.ui.wm.FocusableFrame;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.internal.EditorHolder;
+import consulo.codeEditor.EditorHolder;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
