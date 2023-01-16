@@ -104,6 +104,17 @@ public interface Platform {
       String environmentVariable = getEnvironmentVariable(key);
       return environmentVariable == null ? defaultValue : environmentVariable;
     }
+
+    @Nonnull
+    default String getWindowsFileVersion(@Nonnull Path path) {
+      // 1.1 - 2
+      // 1.1.1 - 3
+      // 1.2.3.4 - 4
+      return getWindowsFileVersion(path, 4);
+    }
+
+    @Nonnull
+    String getWindowsFileVersion(@Nonnull Path path, int parts);
   }
 
   interface Jvm {

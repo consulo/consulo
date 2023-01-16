@@ -196,6 +196,15 @@ public abstract class PlatformBase implements Platform {
     public String arch() {
       return myOSArch;
     }
+
+    @Nonnull
+    @Override
+    public String getWindowsFileVersion(@Nonnull Path path, int parts) {
+      if (!isWindows()) {
+        throw new IllegalArgumentException("Windows OS required");
+      }
+      return WindowsVersionHelper.getVersion(path.toString(), parts);
+    }
   }
 
   protected static class JvmImpl implements Jvm {
