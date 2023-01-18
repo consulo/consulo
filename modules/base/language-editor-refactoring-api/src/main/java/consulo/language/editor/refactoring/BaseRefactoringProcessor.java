@@ -22,7 +22,7 @@ import consulo.language.editor.refactoring.internal.RefactoringInternalHelper;
 import consulo.language.editor.refactoring.internal.RefactoringListenerManagerEx;
 import consulo.language.editor.refactoring.ui.ConflictsDialog;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
-import consulo.language.editor.ui.util.StatusBarUtil;
+import consulo.fileEditor.util.StatusBarUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

@@ -13,24 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.vcsUtil;
+package consulo.versionControlSystem.util;
 
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.project.Project;
 import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.openapi.util.ThrowableNotNullFunction;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.project.Project;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.function.ThrowableConsumer;
+import consulo.util.lang.function.ThrowableFunction;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.VcsDirtyScopeManager;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.util.lang.function.ThrowableConsumer;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -57,7 +57,7 @@ public class VcsFileUtil {
    */
   @Nonnull
   public static <T> List<T> foreachChunk(@Nonnull List<String> arguments,
-                                         @Nonnull ThrowableNotNullFunction<List<String>, List<? extends T>, VcsException> processor)
+                                         @Nonnull ThrowableFunction<List<String>, List<? extends T>, VcsException> processor)
           throws VcsException {
     return foreachChunk(arguments, 1, processor);
   }
@@ -75,12 +75,12 @@ public class VcsFileUtil {
   @Nonnull
   public static <T> List<T> foreachChunk(@Nonnull List<String> arguments,
                                          int groupSize,
-                                         @Nonnull ThrowableNotNullFunction<List<String>, List<? extends T>, VcsException> processor)
+                                         @Nonnull ThrowableFunction<List<String>, List<? extends T>, VcsException> processor)
           throws VcsException {
     List<T> result = ContainerUtil.newArrayList();
 
     foreachChunk(arguments, groupSize, chunk -> {
-      result.addAll(processor.fun(chunk));
+      result.addAll(processor.apply(chunk));
     });
 
     return result;
@@ -218,7 +218,7 @@ public class VcsFileUtil {
    * @throws IllegalArgumentException if path is not under root.
    */
   public static String relativePath(final VirtualFile root, FilePath path) {
-    return relativePath(VfsUtil.virtualToIoFile(root), path.getIOFile());
+    return relativePath(VirtualFileUtil.virtualToIoFile(root), path.getIOFile());
   }
 
   /**
@@ -242,7 +242,7 @@ public class VcsFileUtil {
    * @throws IllegalArgumentException if path is not under root.
    */
   public static String relativePath(final File root, VirtualFile file) {
-    return relativePath(root, VfsUtil.virtualToIoFile(file));
+    return relativePath(root, VirtualFileUtil.virtualToIoFile(file));
   }
 
   /**
@@ -254,7 +254,7 @@ public class VcsFileUtil {
    * @throws IllegalArgumentException if path is not under root.
    */
   public static String relativePath(final VirtualFile root, VirtualFile file) {
-    return relativePath(VfsUtil.virtualToIoFile(root), VfsUtil.virtualToIoFile(file));
+    return relativePath(VirtualFileUtil.virtualToIoFile(root), VirtualFileUtil.virtualToIoFile(file));
   }
 
   /**
@@ -269,7 +269,7 @@ public class VcsFileUtil {
     if (root == null) {
       file.getPath();
     }
-    return relativePath(VfsUtil.virtualToIoFile(root), VfsUtil.virtualToIoFile(file));
+    return relativePath(VirtualFileUtil.virtualToIoFile(root), VirtualFileUtil.virtualToIoFile(file));
   }
 
   /**

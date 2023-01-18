@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.diff.util;
 
 import consulo.application.progress.ProgressIndicator;
-import consulo.ide.impl.idea.openapi.progress.util.BackgroundTaskUtil;
+import consulo.application.internal.BackgroundTaskUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

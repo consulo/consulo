@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.update;
+package consulo.versionControlSystem.update;
 
 import consulo.util.lang.Couple;
-import consulo.versionControlSystem.update.FileGroup;
-import consulo.versionControlSystem.update.UpdatedFiles;
 
 import java.util.List;
 import java.util.function.Consumer;

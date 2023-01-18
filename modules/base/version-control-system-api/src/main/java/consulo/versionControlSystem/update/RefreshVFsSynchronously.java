@@ -13,19 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.update;
+package consulo.versionControlSystem.update;
 
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.lang.Comparing;
 import consulo.versionControlSystem.change.Change;
-import consulo.versionControlSystem.update.FileGroup;
-import consulo.versionControlSystem.update.UpdatedFiles;
 import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.util.Collection;
 import java.util.HashSet;
@@ -45,19 +43,19 @@ public class RefreshVFsSynchronously {
 
   @Nonnull
   public static Collection<VirtualFile> refreshFiles(@Nonnull Collection<File> files) {
-    Collection<VirtualFile> filesToRefresh = ContainerUtil.newHashSet();
+    Collection<VirtualFile> filesToRefresh = new HashSet<>();
     for (File file : files) {
       VirtualFile vf = findFirstValidVirtualParent(file);
       if (vf != null) {
         filesToRefresh.add(vf);
       }
     }
-    VfsUtil.markDirtyAndRefresh(false, false, false, ArrayUtil.toObjectArray(filesToRefresh, VirtualFile.class));
+    VirtualFileUtil.markDirtyAndRefresh(false, false, false, ArrayUtil.toObjectArray(filesToRefresh, VirtualFile.class));
     return filesToRefresh;
   }
 
   private static void refreshDeletedOrReplaced(@Nonnull Collection<File> deletedOrReplaced) {
-    Collection<VirtualFile> filesToRefresh = ContainerUtil.newHashSet();
+    Collection<VirtualFile> filesToRefresh = new HashSet<>();
     for (File file : deletedOrReplaced) {
       File parent = file.getParentFile();
       VirtualFile vf = findFirstValidVirtualParent(parent);
@@ -65,11 +63,11 @@ public class RefreshVFsSynchronously {
         filesToRefresh.add(vf);
       }
     }
-    VfsUtil.markDirtyAndRefresh(false, true, false, ArrayUtil.toObjectArray(filesToRefresh, VirtualFile.class));
+    VirtualFileUtil.markDirtyAndRefresh(false, true, false, ArrayUtil.toObjectArray(filesToRefresh, VirtualFile.class));
   }
 
-  @javax.annotation.Nullable
-  private static VirtualFile findFirstValidVirtualParent(@javax.annotation.Nullable File file) {
+  @Nullable
+  private static VirtualFile findFirstValidVirtualParent(@Nullable File file) {
     LocalFileSystem lfs = LocalFileSystem.getInstance();
     VirtualFile vf = null;
     while (file != null && (vf == null || !vf.isValid())) {
@@ -88,8 +86,8 @@ public class RefreshVFsSynchronously {
   }
 
   private static void updateChangesImpl(final Collection<Change> changes, final ChangeWrapper wrapper) {
-    Collection<File> deletedOrReplaced = ContainerUtil.newHashSet();
-    Collection<File> toRefresh = ContainerUtil.newHashSet();
+    Collection<File> deletedOrReplaced = new HashSet<>();
+    Collection<File> toRefresh = new HashSet<>();
     for (Change change : changes) {
       if ((! wrapper.beforeNull(change)) && (wrapper.movedOrRenamedOrReplaced(change) || (wrapper.afterNull(change)))) {
         deletedOrReplaced.add(wrapper.getBeforeFile(change));
@@ -150,13 +148,13 @@ public class RefreshVFsSynchronously {
     }
 
     @Override
-    @javax.annotation.Nullable
+    @Nullable
     public File getBeforeFile(Change change) {
       return beforeNull(change) ? null : change.getBeforeRevision().getFile().getIOFile();
     }
 
     @Override
-    @javax.annotation.Nullable
+    @Nullable
     public File getAfterFile(Change change) {
       return afterNull(change) ? null : change.getAfterRevision().getFile().getIOFile();
     }
@@ -170,9 +168,9 @@ public class RefreshVFsSynchronously {
   private interface ChangeWrapper {
     boolean beforeNull(final Change change);
     boolean afterNull(final Change change);
-    @javax.annotation.Nullable
+    @Nullable
     File getBeforeFile(final Change change);
-    @javax.annotation.Nullable
+    @Nullable
     File getAfterFile(final Change change);
     boolean movedOrRenamedOrReplaced(final Change change);
   }

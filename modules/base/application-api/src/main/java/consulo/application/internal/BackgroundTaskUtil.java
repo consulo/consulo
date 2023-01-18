@@ -13,37 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.progress.util;
+package consulo.application.internal;
 
-import consulo.disposer.Disposable;
+import consulo.application.AccessRule;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.ide.ServiceManager;
 import consulo.application.progress.EmptyProgressIndicator;
-import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.project.Project;
-import consulo.application.util.function.Computable;
-import consulo.disposer.Disposer;
-import consulo.util.lang.Pair;
-
-import java.util.function.Consumer;
-import java.util.function.Function;
-import consulo.language.util.IncorrectOperationException;
-import consulo.util.lang.function.PairConsumer;
 import consulo.application.util.concurrent.AppExecutorUtil;
+import consulo.application.util.function.Computable;
+import consulo.component.ComponentManager;
+import consulo.component.ProcessCanceledException;
 import consulo.component.messagebus.MessageBus;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.logging.Logger;
+import consulo.ui.ModalityState;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.application.AccessRule;
+import consulo.util.lang.Pair;
+import consulo.util.lang.function.PairConsumer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class BackgroundTaskUtil {
   private static final Logger LOG = Logger.getInstance(BackgroundTaskUtil.class);
@@ -72,7 +70,7 @@ public class BackgroundTaskUtil {
   @Nonnull
   @RequiredUIAccess
   public static ProgressIndicator executeAndTryWait(@Nonnull Function<ProgressIndicator, /*@NotNull*/ Runnable> backgroundTask, @Nullable Runnable onSlowAction, long waitMillis, boolean forceEDT) {
-    IdeaModalityState modality = IdeaModalityState.current();
+    ModalityState modality = Application.get().getCurrentModalityState();
 
     if (forceEDT) {
       ProgressIndicator indicator = new EmptyProgressIndicator(modality);
@@ -122,7 +120,7 @@ public class BackgroundTaskUtil {
   @RequiredUIAccess
   public static <T> T tryComputeFast(@Nonnull Function<ProgressIndicator, T> backgroundTask, long waitMillis) {
     Pair<T, ProgressIndicator> pair = computeInBackgroundAndTryWait(backgroundTask, (result, indicator) -> {
-    }, IdeaModalityState.defaultModalityState(), waitMillis);
+    }, Application.get().getDefaultModalityState(), waitMillis);
 
     T result = pair.first;
     ProgressIndicator indicator = pair.second;
@@ -132,9 +130,9 @@ public class BackgroundTaskUtil {
   }
 
   @Nullable
-  public static <T> T computeInBackgroundAndTryWait(@Nonnull Computable<T> computable, @Nonnull Consumer<T> asyncCallback, long waitMillis) {
+  public static <T> T computeInBackgroundAndTryWait(@Nonnull Supplier<T> computable, @Nonnull Consumer<T> asyncCallback, long waitMillis) {
     Pair<T, ProgressIndicator> pair =
-            computeInBackgroundAndTryWait(indicator -> computable.compute(), (result, indicator) -> asyncCallback.accept(result), IdeaModalityState.defaultModalityState(), waitMillis);
+            computeInBackgroundAndTryWait(indicator -> computable.get(), (result, indicator) -> asyncCallback.accept(result), Application.get().getDefaultModalityState(), waitMillis);
     return pair.first;
   }
 
@@ -148,9 +146,9 @@ public class BackgroundTaskUtil {
    */
   @Nonnull
   private static <T> Pair<T, ProgressIndicator> computeInBackgroundAndTryWait(@Nonnull Function<ProgressIndicator, T> task,
-                                                                                                @Nonnull PairConsumer<T, ProgressIndicator> asyncCallback,
-                                                                                                @Nonnull IdeaModalityState modality,
-                                                                                                long waitMillis) {
+                                                                              @Nonnull BiConsumer<T, ProgressIndicator> asyncCallback,
+                                                                              @Nonnull ModalityState modality,
+                                                                              long waitMillis) {
     ProgressIndicator indicator = new EmptyProgressIndicator(modality);
 
     Helper<T> helper = new Helper<>();
@@ -160,7 +158,7 @@ public class BackgroundTaskUtil {
       try {
         T result = task.apply(indicator);
         if (!helper.setResult(result)) {
-          asyncCallback.consume(result, indicator);
+          asyncCallback.accept(result, indicator);
         }
       }
       finally {
@@ -229,7 +227,7 @@ public class BackgroundTaskUtil {
   }
 
   public static <T> T runUnderDisposeAwareIndicator(@Nonnull Disposable parent, @Nonnull Computable<T> task) {
-    ProgressIndicator indicator = new EmptyProgressIndicator(IdeaModalityState.defaultModalityState());
+    ProgressIndicator indicator = new EmptyProgressIndicator(Application.get().getDefaultModalityState());
     indicator.start();
 
     Disposable disposable = () -> {
@@ -256,7 +254,7 @@ public class BackgroundTaskUtil {
         Disposer.register(parent, disposable);
         return true;
       }
-      catch (IncorrectOperationException ioe) {
+      catch (IllegalArgumentException ioe) {
         LOG.error(ioe);
         return false;
       }
@@ -271,7 +269,7 @@ public class BackgroundTaskUtil {
    * @see #syncPublisher(Class)
    */
   @Nonnull
-  public static <L> L syncPublisher(@Nonnull Project project, @Nonnull Class<L> topic) throws ProcessCanceledException {
+  public static <L> L syncPublisher(@Nonnull ComponentManager project, @Nonnull Class<L> topic) throws ProcessCanceledException {
     return AccessRule.read(() -> {
       if (project.isDisposed()) throw new ProcessCanceledException();
       return project.getMessageBus().syncPublisher(topic);
@@ -283,7 +281,7 @@ public class BackgroundTaskUtil {
    * and throws a {@link ProcessCanceledException} if the application is disposed,
    * instead of throwing an assertion which would happen otherwise.
    *
-   * @see #syncPublisher(Project, Class)
+   * @see #syncPublisher(ComponentManager, Class)
    */
   @Nonnull
   public static <L> L syncPublisher(@Nonnull Class<L> topic) throws ProcessCanceledException {

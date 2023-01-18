@@ -8,7 +8,7 @@ import consulo.application.util.UserHomeFileUtil;
 import consulo.application.util.registry.Registry;
 import consulo.project.ui.notification.NotificationAction;
 import consulo.ide.impl.idea.openapi.diagnostic.Logger;
-import consulo.ide.impl.idea.openapi.progress.util.BackgroundTaskUtil;
+import consulo.application.internal.BackgroundTaskUtil;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.VcsNotifier;

@@ -23,7 +23,7 @@ import consulo.ide.impl.idea.util.textCompletion.ValuesCompletionProvider;
 import consulo.ide.impl.idea.vcs.log.VcsLogRefs;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogColorManager;
 import consulo.ide.impl.idea.vcs.log.ui.frame.VcsLogGraphTable;
-import consulo.ide.impl.idea.vcsUtil.VcsImplUtil;
+import consulo.versionControlSystem.util.VcsImplUtil;
 import consulo.language.editor.completion.CompletionParameters;
 import consulo.language.editor.completion.CompletionResultSet;
 import consulo.language.editor.completion.lookup.InsertHandler;

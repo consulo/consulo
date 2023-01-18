@@ -47,7 +47,7 @@ import consulo.logging.Logger;
 import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.openapi.localVcs.UpToDateLineNumberProvider;
 import consulo.application.progress.ProgressManager;
-import consulo.ide.impl.idea.openapi.progress.util.BackgroundTaskUtil;
+import consulo.application.internal.BackgroundTaskUtil;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.ui.ex.popup.Balloon;

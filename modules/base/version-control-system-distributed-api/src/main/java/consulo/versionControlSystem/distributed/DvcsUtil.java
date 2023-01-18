@@ -13,59 +13,59 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.dvcs;
+package consulo.versionControlSystem.distributed;
 
+import consulo.application.AccessToken;
+import consulo.application.internal.BackgroundTaskUtil;
+import consulo.application.util.DateFormatUtil;
+import consulo.codeEditor.Editor;
+import consulo.disposer.Disposer;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorManager;
+import consulo.fileEditor.TextEditor;
+import consulo.fileEditor.util.StatusBarUtil;
+import consulo.logging.Logger;
+import consulo.module.content.ProjectRootManager;
+import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
+import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
+import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.project.Project;
+import consulo.project.ui.wm.StatusBar;
+import consulo.project.ui.wm.WindowManager;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.StringUtil;
+import consulo.util.lang.function.Condition;
+import consulo.versionControlSystem.AbstractVcs;
+import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.distributed.push.PushSupport;
 import consulo.versionControlSystem.distributed.repository.AbstractRepositoryManager;
 import consulo.versionControlSystem.distributed.repository.RepoStateException;
 import consulo.versionControlSystem.distributed.repository.Repository;
 import consulo.versionControlSystem.distributed.repository.RepositoryManager;
-import consulo.ide.impl.idea.ide.file.BatchFileChangeListener;
-import consulo.application.AccessToken;
-import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.document.FileDocumentManager;
-import consulo.fileEditor.FileEditor;
-import consulo.fileEditor.FileEditorManager;
-import consulo.fileEditor.TextEditor;
-import consulo.ide.impl.idea.openapi.progress.util.BackgroundTaskUtil;
-import consulo.project.Project;
-import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
-import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
-import consulo.module.content.layer.orderEntry.OrderEntry;
-import consulo.module.content.ProjectRootManager;
-import consulo.util.lang.function.Condition;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.versionControlSystem.AbstractVcs;
-import consulo.versionControlSystem.ProjectLevelVcsManager;
-import consulo.ide.impl.idea.openapi.vcs.update.RefreshVFsSynchronously;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.project.ui.wm.StatusBar;
-import consulo.project.ui.wm.WindowManager;
-import consulo.language.editor.ui.util.StatusBarUtil;
-
-import java.util.function.Consumer;
-import java.util.function.Function;
-import consulo.application.util.function.Processor;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.application.util.DateFormatUtil;
 import consulo.versionControlSystem.log.TimedVcsCommit;
 import consulo.versionControlSystem.log.VcsFullCommitDetails;
-import consulo.ide.impl.idea.vcsUtil.VcsImplUtil;
+import consulo.versionControlSystem.update.RefreshVFsSynchronously;
+import consulo.versionControlSystem.util.VcsImplUtil;
 import consulo.versionControlSystem.util.VcsUtil;
-import consulo.disposer.Disposer;
-import consulo.logging.Logger;
+import consulo.virtualFileSystem.RawFileLoader;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
+import consulo.virtualFileSystem.event.BatchFileChangeListener;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.Callable;
+import java.util.function.Consumer;
 
 public class DvcsUtil {
 
@@ -79,7 +79,7 @@ public class DvcsUtil {
   /**
    * Comparator for virtual files by name
    */
-  public static final Comparator<VirtualFile> VIRTUAL_FILE_PRESENTATION_COMPARATOR = new Comparator<VirtualFile>() {
+  public static final Comparator<VirtualFile> VIRTUAL_FILE_PRESENTATION_COMPARATOR = new Comparator<>() {
     public int compare(final VirtualFile o1, final VirtualFile o2) {
       if (o1 == null && o2 == null) {
         return 0;
@@ -102,7 +102,7 @@ public class DvcsUtil {
   @Nonnull
   public static List<VirtualFile> findVirtualFilesWithRefresh(@Nonnull List<File> files) {
     RefreshVFsSynchronously.refreshFiles(files);
-    return ContainerUtil.mapNotNull(files, file -> VfsUtil.findFileByIoFile(file, false));
+    return ContainerUtil.mapNotNull(files, file -> VirtualFileUtil.findFileByIoFile(file, false));
   }
 
   /**
@@ -241,8 +241,8 @@ public class DvcsUtil {
   }
 
   @Nonnull
-  public static String tryLoadFile(@Nonnull final File file, @Nullable String encoding) throws RepoStateException {
-    return tryOrThrow(() -> consulo.util.lang.StringUtil.convertLineSeparators(FileUtil.loadFile(file, encoding)).trim(), file);
+  public static String tryLoadFile(@Nonnull final File file, @Nullable Charset encoding) throws RepoStateException {
+    return tryOrThrow(() -> StringUtil.convertLineSeparators(RawFileLoader.getInstance().loadFileText(file, encoding == null ? StandardCharsets.UTF_8 : encoding)).trim(), file);
   }
 
   @Nullable
@@ -253,7 +253,7 @@ public class DvcsUtil {
 
   @Nullable
   @Contract("_ , !null, _ -> !null")
-  public static String tryLoadFileOrReturn(@Nonnull final File file, @Nullable String defaultValue, @Nullable String encoding) {
+  public static String tryLoadFileOrReturn(@Nonnull final File file, @Nullable String defaultValue, @Nullable Charset encoding) {
     try {
       return tryLoadFile(file, encoding);
     }
@@ -298,7 +298,7 @@ public class DvcsUtil {
   public static void ensureAllChildrenInVfs(@Nullable VirtualFile dir) {
     if (dir != null) {
       //noinspection unchecked
-      VfsUtilCore.processFilesRecursively(dir, Processor.TRUE);
+      VirtualFileUtil.processFilesRecursively(dir, file -> true);
     }
   }
 
@@ -368,7 +368,7 @@ public class DvcsUtil {
     }
     VirtualFile rootCandidate;
     for (VirtualFile root : vcsRoots) {
-      if (root.equals(projectBaseDir) || VfsUtilCore.isAncestor(root, projectBaseDir, true)) {
+      if (root.equals(projectBaseDir) || VirtualFileUtil.isAncestor(root, projectBaseDir, true)) {
         LOG.debug("The best candidate: " + root);
         return root;
       }
@@ -394,7 +394,7 @@ public class DvcsUtil {
   }
 
   public static <T extends Repository> List<T> sortRepositories(@Nonnull Collection<T> repositories) {
-    List<T> validRepositories = ContainerUtil.filter(repositories, new Condition<T>() {
+    List<T> validRepositories = ContainerUtil.filter(repositories, new Condition<>() {
       @Override
       public boolean value(T t) {
         return t.getRoot().isValid();
@@ -408,7 +408,7 @@ public class DvcsUtil {
   private static VirtualFile getVcsRootForLibraryFile(@Nonnull Project project, @Nonnull VirtualFile file) {
     ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(project);
     // for a file inside .jar/.zip consider the .jar/.zip file itself
-    VirtualFile root = vcsManager.getVcsRootFor(VfsUtilCore.getVirtualFileForJar(file));
+    VirtualFile root = vcsManager.getVcsRootFor(ArchiveVfsUtil.getVirtualFileForJar(file));
     if (root != null) {
       LOGGER.debug("Found root for zip/jar file: " + root);
       return root;
@@ -437,7 +437,7 @@ public class DvcsUtil {
     VirtualFile topLibraryRoot = libIterator.next();
     while (libIterator.hasNext()) {
       VirtualFile libRoot = libIterator.next();
-      if (VfsUtilCore.isAncestor(libRoot, topLibraryRoot, true)) {
+      if (VirtualFileUtil.isAncestor(libRoot, topLibraryRoot, true)) {
         topLibraryRoot = libRoot;
       }
     }
@@ -461,7 +461,7 @@ public class DvcsUtil {
   @Nonnull
   public static <R extends Repository> Map<R, List<VcsFullCommitDetails>> groupCommitsByRoots(@Nonnull RepositoryManager<R> repoManager,
                                                                                               @Nonnull List<? extends VcsFullCommitDetails> commits) {
-    Map<R, List<VcsFullCommitDetails>> groupedCommits = ContainerUtil.newHashMap();
+    Map<R, List<VcsFullCommitDetails>> groupedCommits = new HashMap<>();
     for (VcsFullCommitDetails commit : commits) {
       R repository = repoManager.getRepositoryForRoot(commit.getRoot());
       if (repository == null) {

@@ -11,7 +11,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.application.util.concurrent.QueueProcessor;
-import consulo.ide.impl.idea.openapi.progress.util.BackgroundTaskUtil;
+import consulo.application.internal.BackgroundTaskUtil;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;

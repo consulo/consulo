@@ -7,7 +7,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.ReadAction;
 import consulo.application.util.registry.Registry;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.openapi.progress.util.BackgroundTaskUtil;
+import consulo.application.internal.BackgroundTaskUtil;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.ide.impl.idea.openapi.vcs.VcsRootChecker;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;

@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.file;
+package consulo.virtualFileSystem.event;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
+import consulo.component.ComponentManager;
 import consulo.component.messagebus.MessageBus;
-import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -34,9 +34,9 @@ public interface BatchFileChangeListener {
    * @param project      Project where many file changes are expected to happen
    * @param activityName the name of the activity (a noun phrase) causing this file change
    */
-  default void batchChangeStarted(@Nonnull Project project, @Nullable String activityName) {
+  default void batchChangeStarted(@Nonnull ComponentManager project, @Nullable String activityName) {
   }
 
-  default void batchChangeCompleted(@Nonnull Project project) {
+  default void batchChangeCompleted(@Nonnull ComponentManager project) {
   }
 }

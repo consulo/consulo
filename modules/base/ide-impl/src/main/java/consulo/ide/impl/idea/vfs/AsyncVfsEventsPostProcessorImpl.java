@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.vfs;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.component.ProcessCanceledException;
-import consulo.ide.impl.idea.openapi.progress.util.BackgroundTaskUtil;
+import consulo.application.internal.BackgroundTaskUtil;
 import consulo.virtualFileSystem.event.AsyncVfsEventsListener;
 import consulo.virtualFileSystem.event.AsyncVfsEventsPostProcessor;
 import consulo.virtualFileSystem.event.BulkFileListener;

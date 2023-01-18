@@ -24,7 +24,7 @@ import consulo.ide.impl.idea.diagnostic.Activity;
 import consulo.ide.impl.idea.diagnostic.ActivityCategory;
 import consulo.ide.impl.idea.diagnostic.StartUpMeasurer;
 import consulo.ide.impl.idea.diagnostic.StartUpMeasurer.Phases;
-import consulo.ide.impl.idea.openapi.progress.util.BackgroundTaskUtil;
+import consulo.application.internal.BackgroundTaskUtil;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.impl.local.FileWatcher;
 import consulo.ide.impl.idea.openapi.vfs.impl.local.LocalFileSystemImpl;

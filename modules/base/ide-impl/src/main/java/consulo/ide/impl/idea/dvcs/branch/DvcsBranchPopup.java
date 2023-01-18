@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.dvcs.branch;
 
-import consulo.ide.impl.idea.dvcs.DvcsUtil;
+import consulo.versionControlSystem.distributed.DvcsUtil;
 import consulo.versionControlSystem.distributed.repository.AbstractRepositoryManager;
 import consulo.versionControlSystem.distributed.repository.Repository;
 import consulo.ide.impl.idea.dvcs.ui.BranchActionGroupPopup;

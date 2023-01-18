@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.openapi.util;
 import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.ide.impl.idea.openapi.progress.util.BackgroundTaskUtil;
+import consulo.application.internal.BackgroundTaskUtil;
 import consulo.ui.ex.awt.util.Alarm;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;

@@ -27,7 +27,7 @@ import consulo.diff.request.SimpleDiffRequest;
 import consulo.ide.impl.idea.diff.util.IntPair;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
-import consulo.ide.impl.idea.openapi.progress.util.BackgroundTaskUtil;
+import consulo.application.internal.BackgroundTaskUtil;
 import consulo.ui.ex.awt.FrameWrapper;
 import consulo.ui.ex.awt.util.PopupUtil;
 import consulo.ide.impl.idea.openapi.vcs.*;

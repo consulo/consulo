@@ -32,6 +32,9 @@ public class Disposer {
     return ourInternal.get(key);
   }
 
+  /**
+   * @throws IllegalArgumentException if child already registered to parent
+   */
   public static void register(@Nonnull Disposable parent, @Nonnull Disposable child) {
     register(parent, child, null);
   }

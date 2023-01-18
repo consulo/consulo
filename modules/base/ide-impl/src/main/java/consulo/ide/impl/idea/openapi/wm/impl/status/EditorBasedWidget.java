@@ -16,7 +16,7 @@ import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.language.editor.ui.awt.EditorTextField;
-import consulo.language.editor.ui.util.StatusBarUtil;
+import consulo.fileEditor.util.StatusBarUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;

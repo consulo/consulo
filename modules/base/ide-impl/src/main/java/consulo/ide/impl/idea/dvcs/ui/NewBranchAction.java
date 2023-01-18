@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.dvcs.ui;
 
-import consulo.ide.impl.idea.dvcs.DvcsUtil;
+import consulo.versionControlSystem.distributed.DvcsUtil;
 import consulo.versionControlSystem.distributed.repository.Repository;
 import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnActionEvent;

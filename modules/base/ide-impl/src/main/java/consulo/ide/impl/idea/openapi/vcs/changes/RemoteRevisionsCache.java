@@ -27,7 +27,7 @@ import consulo.ide.impl.idea.openapi.util.Getter;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.PlusMinus;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.RemoteStatusChangeNodeDecorator;
 import consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
-import consulo.ide.impl.idea.openapi.vcs.update.UpdateFilesHelper;
+import consulo.versionControlSystem.update.UpdateFilesHelper;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.lang.Couple;

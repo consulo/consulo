@@ -31,7 +31,7 @@ import consulo.ide.impl.idea.openapi.vcs.changes.VetoSavingCommittingDocumentsAd
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.MoveChangesToAnotherListAction;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesCache;
 import consulo.ide.impl.idea.openapi.vcs.ui.VcsBalloonProblemNotifier;
-import consulo.ide.impl.idea.openapi.vcs.update.RefreshVFsSynchronously;
+import consulo.versionControlSystem.update.RefreshVFsSynchronously;
 import consulo.ide.impl.idea.util.NullableFunction;
 import consulo.ide.impl.idea.util.ui.ConfirmationDialog;
 import consulo.localHistory.LocalHistory;
@@ -53,7 +53,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.function.Function;
 
 public class CommitHelper {
   public static final Key<Object> DOCUMENT_BEING_COMMITTED_KEY = new Key<Object>("DOCUMENT_BEING_COMMITTED");

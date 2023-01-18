@@ -419,7 +419,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.ide.errorTreeView.impl;
   exports consulo.ide.impl.idea.ide.favoritesTreeView;
   exports consulo.ide.impl.idea.ide.favoritesTreeView.actions;
-  exports consulo.ide.impl.idea.ide.file;
   exports consulo.ide.impl.idea.ide.fileTemplates.actions;
   exports consulo.ide.impl.idea.ide.fileTemplates.impl;
   exports consulo.ide.impl.idea.ide.fileTemplates.ui;

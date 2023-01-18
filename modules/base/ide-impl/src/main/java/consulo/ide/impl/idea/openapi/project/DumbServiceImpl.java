@@ -13,13 +13,14 @@ import consulo.application.internal.ProgressIndicatorEx;
 import consulo.application.progress.*;
 import consulo.application.util.concurrent.ThreadDumper;
 import consulo.application.util.registry.Registry;
+import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
 import consulo.component.util.ModificationTracker;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.file.BatchFileChangeListener;
+import consulo.virtualFileSystem.event.BatchFileChangeListener;
 import consulo.ide.impl.idea.openapi.progress.impl.ProgressManagerImpl;
 import consulo.ide.impl.idea.openapi.progress.impl.ProgressSuspender;
 import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
@@ -95,14 +96,14 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
               java.util.Stack<AccessToken> stack = new Stack<>();
 
       @Override
-      public void batchChangeStarted(@Nonnull Project project, @Nullable String activityName) {
+      public void batchChangeStarted(@Nonnull ComponentManager project, @Nullable String activityName) {
         if (project == myProject) {
           stack.push(heavyActivityStarted(activityName != null ? UIUtil.removeMnemonic(activityName) : "file system changes"));
         }
       }
 
       @Override
-      public void batchChangeCompleted(@Nonnull Project project) {
+      public void batchChangeCompleted(@Nonnull ComponentManager project) {
         if (project != myProject) return;
 
         Stack<AccessToken> tokens = stack;

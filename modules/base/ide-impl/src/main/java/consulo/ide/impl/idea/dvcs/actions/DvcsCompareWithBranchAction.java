@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.dvcs.actions;
 
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
-import consulo.ide.impl.idea.dvcs.DvcsUtil;
+import consulo.versionControlSystem.distributed.DvcsUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
 import consulo.ide.impl.idea.openapi.vcs.VcsNotifier;

@@ -21,7 +21,7 @@ import consulo.application.progress.Task;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.ServiceManager;
-import consulo.ide.impl.idea.dvcs.DvcsUtil;
+import consulo.versionControlSystem.distributed.DvcsUtil;
 import consulo.ide.impl.idea.dvcs.push.ui.*;
 import consulo.ide.impl.idea.dvcs.ui.DvcsBundle;
 import consulo.ide.impl.idea.ui.CheckedTreeNode;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.editor.ui.util;
+package consulo.fileEditor.util;
 
 import consulo.codeEditor.Editor;
 import consulo.document.Document;

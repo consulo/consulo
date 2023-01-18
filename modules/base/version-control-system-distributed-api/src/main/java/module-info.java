@@ -5,6 +5,8 @@
 module consulo.version.control.system.distributed.api {
   requires transitive consulo.version.control.system.api;
   requires transitive consulo.version.control.system.log.api;
+  requires transitive consulo.file.editor.api;
+  requires transitive consulo.module.content.api;
 
   // TODO remove in future
   requires java.desktop;

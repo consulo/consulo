@@ -36,7 +36,7 @@ import consulo.document.FileDocumentManager;
 import consulo.document.Document;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.plain.PlainTextFileType;
-import consulo.ide.impl.idea.openapi.progress.util.BackgroundTaskUtil;
+import consulo.application.internal.BackgroundTaskUtil;
 import consulo.application.util.registry.Registry;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.HintHint;

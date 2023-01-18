@@ -30,7 +30,7 @@ import consulo.ide.impl.idea.openapi.vcs.rollback.DefaultRollbackEnvironment;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.rollback.RollbackEnvironment;
-import consulo.ide.impl.idea.openapi.vcs.update.RefreshVFsSynchronously;
+import consulo.versionControlSystem.update.RefreshVFsSynchronously;
 import consulo.project.util.WaitForProgressToShow;
 
 import javax.annotation.Nonnull;

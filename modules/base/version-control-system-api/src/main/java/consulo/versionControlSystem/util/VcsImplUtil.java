@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.vcsUtil;
+package consulo.versionControlSystem.util;
 
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.versionControlSystem.util.VcsUtil;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.util.WaitForProgressToShow;
-import javax.annotation.Nonnull;
+import consulo.ui.Alerts;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 
 /**
@@ -42,7 +42,7 @@ public class VcsImplUtil {
   public static void showErrorMessage(final Project project, final String message, final String title) {
     Runnable task = new Runnable() {
       public void run() {
-        Messages.showErrorDialog(project, message, title);
+        Alerts.okError(LocalizeValue.localizeTODO(message)).title(title).showAsync();
       }
     };
     WaitForProgressToShow.runOrInvokeLaterAboveProgress(task, null, project);
@@ -54,7 +54,7 @@ public class VcsImplUtil {
 
     String repositoryPath = root.getPresentableUrl();
     if (projectDir != null) {
-      String relativePath = VfsUtilCore.getRelativePath(root, projectDir, File.separatorChar);
+      String relativePath = VirtualFileUtil.getRelativePath(root, projectDir, File.separatorChar);
       if (relativePath != null) {
         repositoryPath = relativePath;
       }
