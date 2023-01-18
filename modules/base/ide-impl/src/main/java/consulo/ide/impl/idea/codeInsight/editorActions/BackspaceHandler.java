@@ -22,18 +22,14 @@ import consulo.codeEditor.*;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.ExtensionEditorActionHandler;
 import consulo.dataContext.DataContext;
-import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.language.ast.IElementType;
-import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.editor.action.BackspaceHandlerDelegate;
 import consulo.language.editor.action.BraceMatchingUtil;
+import consulo.language.editor.action.EditorBackspaceUtil;
 import consulo.language.editor.action.QuoteHandler;
 import consulo.language.editor.highlight.BraceMatcher;
-import consulo.language.editor.inject.EditorWindow;
 import consulo.language.editor.util.PsiUtilBase;
-import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
@@ -81,7 +77,7 @@ public class BackspaceHandler extends EditorWriteActionHandler implements Extens
     final Editor originalEditor = editor;
     if (injectedEditor != editor) {
       int injectedOffset = injectedEditor.getCaretModel().getOffset();
-      if (isOffsetInsideInjected(injectedEditor, injectedOffset)) {
+      if (EditorBackspaceUtil.isOffsetInsideInjected(injectedEditor, injectedOffset)) {
         file = PsiDocumentManager.getInstance(project).getPsiFile(injectedEditor.getDocument());
         editor = injectedEditor;
         offset = injectedOffset - 1;
@@ -116,7 +112,7 @@ public class BackspaceHandler extends EditorWriteActionHandler implements Extens
     chars = editor.getDocument().getCharsSequence();
     if (c == '(' || c == '[' || c == '{') {
       char c1 = chars.charAt(offset);
-      if (c1 != getRightChar(c)) return true;
+      if (c1 != EditorBackspaceUtil.getRightChar(c)) return true;
 
       HighlighterIterator iterator = ((EditorEx)editor).getHighlighter().createIterator(offset);
       BraceMatcher braceMatcher = BraceMatchingUtil.getBraceMatcher(fileType, iterator);
@@ -144,73 +140,6 @@ public class BackspaceHandler extends EditorWriteActionHandler implements Extens
       editor.getDocument().deleteString(offset, offset + 1);
     }
 
-    return true;
-  }
-
-  public static char getRightChar(final char c) {
-    if (c == '(') return ')';
-    if (c == '[') return ']';
-    if (c == '{') return '}';
-    assert false;
-    return c;
-  }
-
-  private static boolean isOffsetInsideInjected(Editor injectedEditor, int injectedOffset) {
-    if (injectedOffset == 0 || injectedOffset >= injectedEditor.getDocument().getTextLength()) {
-      return false;
-    }
-    PsiFile injectedFile = ((EditorWindow)injectedEditor).getInjectedFile();
-    InjectedLanguageManager ilm = InjectedLanguageManager.getInstance(injectedFile.getProject());
-    TextRange rangeToEdit = new TextRange(injectedOffset - 1, injectedOffset + 1);
-    List<TextRange> editables = ilm.intersectWithAllEditableFragments(injectedFile, rangeToEdit);
-
-    return editables.size() == 1 && editables.get(0).equals(rangeToEdit);
-  }
-
-  @Nullable
-  public static LogicalPosition getBackspaceUnindentPosition(final PsiFile file, final Editor editor) {
-    if (editor.getSelectionModel().hasSelection()) return null;
-
-    final LogicalPosition caretPos = editor.getCaretModel().getLogicalPosition();
-    if (caretPos.column == 0) {
-      return null;
-    }
-    if (!isWhitespaceBeforeCaret(editor)) {
-      return null;
-    }
-
-    // Decrease column down to indentation * n
-    final int indent = CodeStyleSettingsManager.getSettings(file.getProject()).getIndentOptionsByFile(file).INDENT_SIZE;
-    int column = (caretPos.column - 1) / indent * indent;
-    if (column < 0) {
-      column = 0;
-    }
-    return new LogicalPosition(caretPos.line, column);
-  }
-
-  public static void deleteToTargetPosition(@Nonnull Editor editor, @Nonnull LogicalPosition pos) {
-    final int offset = editor.getCaretModel().getOffset();
-    final int targetOffset = editor.logicalPositionToOffset(pos);
-    editor.getSelectionModel().setSelection(targetOffset, offset);
-    EditorModificationUtil.deleteSelectedText(editor);
-    editor.getCaretModel().moveToLogicalPosition(pos);
-  }
-
-  public static boolean isWhitespaceBeforeCaret(Editor editor) {
-    final LogicalPosition caretPos = editor.getCaretModel().getLogicalPosition();
-    final CharSequence charSeq = editor.getDocument().getCharsSequence();
-    // smart backspace is activated only if all characters in the check range are whitespace characters
-    for (int pos = 0; pos < caretPos.column; pos++) {
-      // use logicalPositionToOffset to make sure tabs are handled correctly
-      final LogicalPosition checkPos = new LogicalPosition(caretPos.line, pos);
-      final int offset = editor.logicalPositionToOffset(checkPos);
-      if (offset < charSeq.length()) {
-        final char c = charSeq.charAt(offset);
-        if (c != '\t' && c != ' ' && c != '\n') {
-          return false;
-        }
-      }
-    }
     return true;
   }
 
