@@ -76,6 +76,7 @@ import consulo.versionControlSystem.annotate.FileAnnotation;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.CommitResultHandler;
 import consulo.versionControlSystem.change.LocalChangeList;
+import consulo.versionControlSystem.history.ShortVcsRevisionNumber;
 import consulo.versionControlSystem.history.VcsFileRevision;
 import consulo.versionControlSystem.history.VcsHistoryProvider;
 import consulo.versionControlSystem.history.VcsRevisionNumber;

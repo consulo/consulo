@@ -21,7 +21,7 @@ import consulo.component.ProcessCanceledException;
 import consulo.ui.ex.awt.Messages;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsException;
-import consulo.ide.impl.idea.openapi.vcs.history.ShortVcsRevisionNumber;
+import consulo.versionControlSystem.history.ShortVcsRevisionNumber;
 import consulo.versionControlSystem.history.VcsFileRevision;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.util.io.CharsetToolkit;

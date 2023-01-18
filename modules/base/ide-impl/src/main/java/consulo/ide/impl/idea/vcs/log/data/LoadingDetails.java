@@ -2,6 +2,7 @@ package consulo.ide.impl.idea.vcs.log.data;
 
 import consulo.application.util.function.Computable;
 import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.log.base.VcsCommitMetadataImpl;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.versionControlSystem.log.CommitId;
@@ -16,7 +17,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Fake {@link consulo.ide.impl.idea.vcs.log.impl.VcsCommitMetadataImpl} implementation that is used to indicate that details are not ready for the moment,
+ * Fake {@link VcsCommitMetadataImpl} implementation that is used to indicate that details are not ready for the moment,
  * they are being retrieved from the VCS.
  *
  * @author Kirill Likhodedov

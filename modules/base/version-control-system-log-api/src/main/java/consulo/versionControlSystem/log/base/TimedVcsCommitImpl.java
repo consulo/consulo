@@ -1,11 +1,11 @@
-package consulo.ide.impl.idea.vcs.log.impl;
+package consulo.versionControlSystem.log.base;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.log.Hash;
 import consulo.versionControlSystem.log.TimedVcsCommit;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**

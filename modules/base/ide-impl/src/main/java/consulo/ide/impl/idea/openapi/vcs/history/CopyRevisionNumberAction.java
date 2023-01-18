@@ -21,6 +21,7 @@ import consulo.ui.ex.action.DumbAwareAction;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.versionControlSystem.history.ShortVcsRevisionNumber;
 import consulo.versionControlSystem.history.VcsFileRevision;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 

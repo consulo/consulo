@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.vcs.log.impl;
+package consulo.versionControlSystem.log.base;
 
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.versionControlSystem.log.Hash;
 import consulo.versionControlSystem.log.VcsCommitMetadata;
 import consulo.versionControlSystem.log.VcsUser;
-import javax.annotation.Nonnull;
+import consulo.virtualFileSystem.VirtualFile;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class VcsCommitMetadataImpl extends VcsShortCommitDetailsImpl implements VcsCommitMetadata {

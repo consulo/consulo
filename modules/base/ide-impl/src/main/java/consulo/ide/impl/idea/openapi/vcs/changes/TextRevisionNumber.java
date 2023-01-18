@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.vcs.history.ShortVcsRevisionNumber;
+import consulo.versionControlSystem.history.ShortVcsRevisionNumber;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import javax.annotation.Nonnull;
 

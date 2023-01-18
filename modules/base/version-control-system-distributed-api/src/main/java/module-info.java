@@ -15,4 +15,5 @@ module consulo.version.control.system.distributed.api {
   exports consulo.versionControlSystem.distributed;
   exports consulo.versionControlSystem.distributed.push;
   exports consulo.versionControlSystem.distributed.repository;
+  exports consulo.versionControlSystem.distributed.branch;
 }

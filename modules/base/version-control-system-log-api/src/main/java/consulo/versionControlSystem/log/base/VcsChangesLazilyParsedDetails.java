@@ -13,24 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.vcs.log.impl;
+package consulo.versionControlSystem.log.base;
 
+import consulo.application.util.function.ThrowableComputable;
 import consulo.logging.Logger;
 import consulo.util.lang.Couple;
-import consulo.application.util.function.ThrowableComputable;
-import consulo.ide.impl.idea.openapi.vcs.LocalFilePath;
 import consulo.versionControlSystem.change.Change;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.versionControlSystem.log.Hash;
 import consulo.versionControlSystem.log.VcsFullCommitDetails;
 import consulo.versionControlSystem.log.VcsUser;
-import javax.annotation.Nonnull;
+import consulo.virtualFileSystem.VirtualFile;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import javax.annotation.Nonnull;
+import java.util.*;
 
 /**
  * Allows to postpone changes parsing, which might take long for a large amount of commits,
@@ -65,7 +60,7 @@ public class VcsChangesLazilyParsedDetails extends VcsCommitMetadataImpl impleme
 
   @Nonnull
   public Collection<String> getModifiedPaths() {
-    Set<String> changedPaths = ContainerUtil.newHashSet();
+    Set<String> changedPaths = new HashSet<>();
     for (Change change : getChanges()) {
       if (change.getAfterRevision() != null) changedPaths.add(change.getAfterRevision().getFile().getPath());
       if (change.getBeforeRevision() != null) changedPaths.add(change.getBeforeRevision().getFile().getPath());
@@ -75,7 +70,7 @@ public class VcsChangesLazilyParsedDetails extends VcsCommitMetadataImpl impleme
 
   @Nonnull
   public Collection<Couple<String>> getRenamedPaths() {
-    Set<Couple<String>> renames = ContainerUtil.newHashSet();
+    Set<Couple<String>> renames = new HashSet<>();
     for (Change change : getChanges()) {
       if (change.getType().equals(Change.Type.MOVED)) {
         if (change.getAfterRevision() != null && change.getBeforeRevision() != null) {

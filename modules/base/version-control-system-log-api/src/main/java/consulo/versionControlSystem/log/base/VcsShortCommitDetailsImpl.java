@@ -1,11 +1,11 @@
-package consulo.ide.impl.idea.vcs.log.impl;
+package consulo.versionControlSystem.log.base;
 
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.versionControlSystem.log.Hash;
 import consulo.versionControlSystem.log.VcsShortCommitDetails;
 import consulo.versionControlSystem.log.VcsUser;
-import javax.annotation.Nonnull;
+import consulo.virtualFileSystem.VirtualFile;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class VcsShortCommitDetailsImpl extends TimedVcsCommitImpl implements VcsShortCommitDetails {

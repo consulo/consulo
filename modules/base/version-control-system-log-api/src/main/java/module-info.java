@@ -10,4 +10,5 @@ module consulo.version.control.system.log.api {
 
   exports consulo.versionControlSystem.log;
   exports consulo.versionControlSystem.log.graph;
+  exports consulo.versionControlSystem.log.base;
 }

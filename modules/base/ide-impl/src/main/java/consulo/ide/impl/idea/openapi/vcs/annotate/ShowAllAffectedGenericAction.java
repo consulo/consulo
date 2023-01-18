@@ -27,7 +27,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.vcs.*;
 import consulo.ide.impl.idea.openapi.vcs.changes.BackgroundFromStartOption;
-import consulo.ide.impl.idea.openapi.vcs.history.ShortVcsRevisionNumber;
+import consulo.versionControlSystem.history.ShortVcsRevisionNumber;
 import consulo.versionControlSystem.history.VcsFileRevision;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.history.VcsRevisionNumber;

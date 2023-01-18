@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.dvcs.branch;
+package consulo.versionControlSystem.distributed.branch;
 
 import consulo.application.ApplicationManager;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.NullableFunction;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.FactoryMap;
 import consulo.util.collection.MultiMap;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.Condition;
 import consulo.versionControlSystem.VcsTaskHandler;
 import consulo.versionControlSystem.distributed.repository.AbstractRepositoryManager;
@@ -160,13 +159,7 @@ public abstract class DvcsTaskHandler<R extends Repository> extends VcsTaskHandl
   @Nonnull
   private List<R> getRepositories(@Nonnull Collection<String> urls) {
     final List<R> repositories = myRepositoryManager.getRepositories();
-    return ContainerUtil.mapNotNull(urls, new NullableFunction<String, R>() {
-      @Nullable
-      @Override
-      public R apply(final String s) {
-        return ContainerUtil.find(repositories, repository -> s.equals(repository.getPresentableUrl()));
-      }
-    });
+    return ContainerUtil.mapNotNull(urls, s -> ContainerUtil.find(repositories, repository -> s.equals(repository.getPresentableUrl())));
   }
 
   protected abstract void checkout(@Nonnull String taskName, @Nonnull List<R> repos, @Nullable Runnable callInAwtLater);
