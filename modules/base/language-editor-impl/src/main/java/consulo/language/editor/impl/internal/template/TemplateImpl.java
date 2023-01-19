@@ -234,6 +234,7 @@ public class TemplateImpl extends TemplateEx implements SchemeElement {
     return myTemplateContext;
   }
 
+  @Override
   public int getEndSegmentNumber() {
     return getVariableSegmentNumber(END);
   }

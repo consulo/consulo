@@ -100,7 +100,13 @@ public abstract class Template {
 
   public abstract boolean isDeactivated();
 
+  public abstract int getEndSegmentNumber();
+
   public abstract boolean isSelectionTemplate();
+
+  public abstract int getSelectionStartSegmentNumber();
+
+  public abstract int getSelectionEndSegmentNumber();
 
   public abstract void setDeactivated(boolean isDeactivated);
 

@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs.impl;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.component.ComponentManager;
-import consulo.ide.impl.idea.openapi.keymap.KeymapGroupFactory;
+import consulo.ui.ex.keymap.KeymapGroupFactory;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.ActionsTreeUtil;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapGroupImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

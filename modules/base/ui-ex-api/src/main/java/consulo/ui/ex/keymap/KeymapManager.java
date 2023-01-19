@@ -37,9 +37,15 @@ public abstract class KeymapManager {
   private static final Supplier<KeymapManager> ourInstance = PerApplicationInstance.of(KeymapManager.class);
 
   @Nonnull
-  public static KeymapManager getInstance(){
+  public static KeymapManager getInstance() {
     return ourInstance.get();
   }
+
+  /**
+   * @return all available keymaps. The method return an empty array if no
+   * keymaps are available.
+   */
+  public abstract Keymap[] getAllKeymaps();
 
   public abstract Keymap getActiveKeymap();
 

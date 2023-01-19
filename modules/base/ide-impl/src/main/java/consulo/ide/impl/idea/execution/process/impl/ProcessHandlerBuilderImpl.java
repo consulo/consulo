@@ -37,6 +37,7 @@ public class ProcessHandlerBuilderImpl implements ProcessHandlerBuilder {
   private boolean myColored = false;
   private boolean myKillable = false;
   private boolean mySilentReader = false;
+  private Boolean myShouldDestroyProcessRecursively;
 
   private final GeneralCommandLine myCommandLine;
 
@@ -69,6 +70,13 @@ public class ProcessHandlerBuilderImpl implements ProcessHandlerBuilder {
   @Override
   public ProcessHandlerBuilder consoleType(@Nonnull ProcessConsoleType type) {
     myConsoleType = type;
+    return this;
+  }
+
+  @Nonnull
+  @Override
+  public ProcessHandlerBuilder shouldDestroyProcessRecursively(boolean destoryRecursive) {
+    myShouldDestroyProcessRecursively = destoryRecursive;
     return this;
   }
 
@@ -112,7 +120,7 @@ public class ProcessHandlerBuilderImpl implements ProcessHandlerBuilder {
   }
 
   private ProcessHandler createLocalProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
-    ProcessHandler processHandler = null;
+    OSProcessHandler processHandler = null;
 
     if (myKillable) {
       if (myColored) {
@@ -155,6 +163,9 @@ public class ProcessHandlerBuilderImpl implements ProcessHandlerBuilder {
       }
     }
 
+    if (myShouldDestroyProcessRecursively != null) {
+      processHandler.setShouldDestroyProcessRecursively(myShouldDestroyProcessRecursively);
+    }
     return processHandler;
   }
 }

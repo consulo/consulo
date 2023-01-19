@@ -47,5 +47,8 @@ public interface ProcessHandlerBuilder {
   ProcessHandlerBuilder consoleType(@Nonnull ProcessConsoleType type);
 
   @Nonnull
+  ProcessHandlerBuilder shouldDestroyProcessRecursively(boolean destroyRecursive);
+
+  @Nonnull
   ProcessHandler build() throws ExecutionException;
 }

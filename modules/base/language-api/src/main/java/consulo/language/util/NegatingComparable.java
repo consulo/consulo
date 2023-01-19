@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.completion.impl;
+package consulo.language.util;
 
 import consulo.language.ForceableComparable;
 

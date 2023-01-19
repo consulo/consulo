@@ -31,7 +31,7 @@ import consulo.versionControlSystem.root.VcsRoot;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import consulo.application.util.function.Processor;
-import consulo.ide.impl.idea.util.StringLenComparator;
+import consulo.util.lang.StringLenComparator;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

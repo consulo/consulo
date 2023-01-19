@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.keymap;
+package consulo.ui.ex.keymap;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.ide.ServiceManager;
-import consulo.ui.ex.keymap.KeymapGroup;
+import consulo.application.Application;
 import consulo.ui.image.Image;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
@@ -27,11 +28,13 @@ import consulo.ui.image.Image;
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class KeymapGroupFactory {
   public static KeymapGroupFactory getInstance() {
-    return ServiceManager.getService(KeymapGroupFactory.class);
+    return Application.get().getInstance(KeymapGroupFactory.class);
   }
 
+  @Nonnull
   public abstract KeymapGroup createGroup(String name);
 
+  @Nonnull
   public abstract KeymapGroup createGroup(String name, Image icon);
 
   /**
