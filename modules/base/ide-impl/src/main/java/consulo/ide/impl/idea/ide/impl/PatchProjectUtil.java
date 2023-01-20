@@ -20,27 +20,27 @@
 package consulo.ide.impl.idea.ide.impl;
 
 import consulo.application.ApplicationManager;
-import consulo.module.ModifiableModuleModel;
 import consulo.content.ContentIterator;
-import consulo.module.Module;
-import consulo.module.ModuleManager;
-import consulo.module.content.ModuleRootManager;
-import consulo.module.content.layer.ContentEntry;
-import consulo.module.content.layer.ModifiableRootModel;
-import consulo.project.Project;
-import consulo.module.impl.internal.layer.ModifiableModelCommitter;
+import consulo.content.base.ExcludedContentFolderTypeProvider;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.module.ModifiableModuleModel;
+import consulo.module.Module;
+import consulo.module.ModuleManager;
+import consulo.module.content.ModifiableModelCommitter;
+import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
+import consulo.module.content.layer.ContentEntry;
+import consulo.module.content.layer.ModifiableRootModel;
+import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import consulo.content.base.ExcludedContentFolderTypeProvider;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -105,7 +105,7 @@ public class PatchProjectUtil {
     ApplicationManager.getApplication().runWriteAction(new Runnable() {
       @Override
       public void run() {
-        ModifiableModelCommitter.multiCommit(models, modulesModel);
+        ModifiableModelCommitter.getInstance(project).multiCommit(models, modulesModel);
       }
     });
   }

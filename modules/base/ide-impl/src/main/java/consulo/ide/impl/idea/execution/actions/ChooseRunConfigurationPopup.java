@@ -235,7 +235,7 @@ public class ChooseRunConfigurationPopup implements ExecutorProvider {
   }
 
   private static void deleteConfiguration(final Project project, @Nonnull final RunnerAndConfigurationSettings configurationSettings) {
-    final RunManagerEx manager = RunManagerEx.getInstanceEx(project);
+    final RunManager manager = RunManager.getInstance(project);
     manager.removeConfiguration(configurationSettings);
   }
 

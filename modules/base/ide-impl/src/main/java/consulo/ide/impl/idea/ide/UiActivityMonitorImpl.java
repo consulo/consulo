@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.ide;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.impl.internal.ModalityStateListener;
+import consulo.ui.event.ModalityStateListener;
 import consulo.application.impl.internal.LaterInvocator;
 import consulo.util.collection.FactoryMap;
 import consulo.application.ApplicationManager;

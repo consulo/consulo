@@ -15,7 +15,9 @@
  */
 package consulo.ui;
 
+import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ModalityStateListener;
 import consulo.ui.internal.UIInternal;
 import consulo.util.concurrent.AsyncResult;
 
@@ -62,7 +64,7 @@ public interface UIAccess {
   }
 
   static void assetIsNotUIThread() {
-    if(isUIThread()) {
+    if (isUIThread()) {
       throw new IllegalArgumentException("Call must be wrapped outside UI thread. Current thread: " + Thread.currentThread().getName());
     }
   }
@@ -79,7 +81,8 @@ public interface UIAccess {
   @RequiredUIAccess
   default Runnable markEventCount() {
     assertIsUIThread();
-    return () -> {};
+    return () -> {
+    };
   }
 
   boolean isValid();
@@ -126,5 +129,12 @@ public interface UIAccess {
 
   default boolean isHeadless() {
     return false;
+  }
+
+  default boolean isInModalContext() {
+    return false;
+  }
+
+  default void addModalityStateListener(@Nonnull ModalityStateListener listener, @Nonnull Disposable parentDisposable) {
   }
 }

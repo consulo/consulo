@@ -15,49 +15,49 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration;
 
-import consulo.compiler.util.ModuleCompilerUtil;
-import consulo.ide.newModule.NewOrImportModuleUtil;
 import consulo.application.ApplicationManager;
 import consulo.application.WriteAction;
+import consulo.compiler.CompilerConfiguration;
+import consulo.compiler.artifact.Artifact;
+import consulo.compiler.util.ModuleCompilerUtil;
+import consulo.component.util.graph.GraphGenerator;
+import consulo.configurable.ConfigurationException;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.ide.impl.newProject.ui.NewProjectDialog;
+import consulo.ide.impl.newProject.ui.NewProjectPanel;
+import consulo.ide.moduleImport.ModuleImportContext;
+import consulo.ide.moduleImport.ModuleImportProcessor;
+import consulo.ide.moduleImport.ModuleImportProvider;
+import consulo.ide.newModule.NewOrImportModuleUtil;
+import consulo.ide.setting.ShowSettingsUtil;
+import consulo.ide.setting.module.LibrariesConfigurator;
+import consulo.ide.setting.module.ModulesConfigurator;
+import consulo.language.content.LanguageContentFolderScopes;
+import consulo.logging.Logger;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
-import consulo.configurable.ConfigurationException;
-import consulo.ide.setting.ShowSettingsUtil;
 import consulo.module.ModulesAlphaComparator;
-import consulo.project.Project;
-import consulo.project.ProjectBundle;
+import consulo.module.content.ModifiableModelCommitter;
 import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.ModuleRootModel;
-import consulo.module.impl.internal.layer.ModifiableModelCommitter;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
-import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.compiler.artifact.Artifact;
-import consulo.component.util.graph.GraphGenerator;
-import consulo.compiler.CompilerConfiguration;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.ide.impl.newProject.ui.NewProjectDialog;
-import consulo.ide.impl.newProject.ui.NewProjectPanel;
-import consulo.logging.Logger;
-import consulo.ide.moduleImport.ModuleImportContext;
-import consulo.ide.moduleImport.ModuleImportProvider;
-import consulo.ide.moduleImport.ModuleImportProcessor;
-import consulo.language.content.LanguageContentFolderScopes;
-import consulo.ide.setting.module.LibrariesConfigurator;
-import consulo.ide.setting.module.ModulesConfigurator;
+import consulo.project.Project;
+import consulo.project.ProjectBundle;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.fileChooser.FileChooser;
-import consulo.util.concurrent.AsyncResult;
-import consulo.util.lang.Pair;
+import consulo.ui.ex.awt.Messages;
 import consulo.util.concurrent.AsyncPromise;
+import consulo.util.concurrent.AsyncResult;
 import consulo.util.concurrent.Promise;
 import consulo.util.concurrent.Promises;
+import consulo.util.lang.Pair;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -264,7 +264,7 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
     ApplicationManager.getApplication().runWriteAction(() -> {
       try {
         final ModifiableRootModel[] rootModels = models.toArray(new ModifiableRootModel[models.size()]);
-        ModifiableModelCommitter.multiCommit(rootModels, myModuleModel);
+        ModifiableModelCommitter.getInstance(myProject).multiCommit(rootModels, myModuleModel);
         myModuleModelCommitted = true;
       }
       finally {

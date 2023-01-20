@@ -54,6 +54,7 @@ public abstract class ProjectRootManager extends SimpleModificationTracker {
   /**
    * Creates new enumerator instance to process dependencies of all modules in the project. Only first level dependencies of
    * modules are processed so {@link OrderEnumerator#recursively()} option is ignored and {@link OrderEnumerator#withoutDepModules()} option is forced
+   *
    * @return new enumerator instance
    */
   @Nonnull
@@ -61,6 +62,7 @@ public abstract class ProjectRootManager extends SimpleModificationTracker {
 
   /**
    * Creates new enumerator instance to process dependencies of several modules in the project. Caching is not supported for this enumerator
+   *
    * @param modules modules to process
    * @return new enumerator instance
    */
@@ -70,6 +72,7 @@ public abstract class ProjectRootManager extends SimpleModificationTracker {
   /**
    * Unlike getContentRoots(), this includes the project base dir. Is this really necessary?
    * TODO: remove this method?
+   *
    * @return
    */
   public abstract VirtualFile[] getContentRootsFromAllModules();
@@ -82,11 +85,11 @@ public abstract class ProjectRootManager extends SimpleModificationTracker {
   @Nonnull
   public abstract List<String> getContentRootUrls();
 
-    /**
-    * Returns the list of content roots for all modules in the project.
-    *
-    * @return the list of content roots.
-    */
+  /**
+   * Returns the list of content roots for all modules in the project.
+   *
+   * @return the list of content roots.
+   */
   @Nonnull
   public abstract VirtualFile[] getContentRoots();
 
@@ -96,4 +99,8 @@ public abstract class ProjectRootManager extends SimpleModificationTracker {
    * @return the list of content source roots.
    */
   public abstract VirtualFile[] getContentSourceRoots();
+
+  public void mergeRootsChangesDuring(@Nonnull Runnable runnable) {
+    runnable.run();
+  }
 }

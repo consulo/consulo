@@ -13,12 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.application.impl.internal;
+package consulo.ui.event;
+
+import consulo.disposer.Disposable;
+import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
-
 import java.util.EventListener;
 
-public interface ModalityStateListener extends EventListener{
+/**
+ * @see UIAccess#addModalityStateListener(ModalityStateListener, Disposable)
+ */
+public interface ModalityStateListener extends EventListener {
   void beforeModalityStateChanged(boolean entering, @Nonnull Object modalEntity);
 }

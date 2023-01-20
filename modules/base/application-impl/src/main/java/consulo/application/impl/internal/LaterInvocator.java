@@ -15,6 +15,7 @@ import consulo.project.Project;
 import consulo.proxy.EventDispatcher;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
+import consulo.ui.event.ModalityStateListener;
 import consulo.util.collection.*;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;

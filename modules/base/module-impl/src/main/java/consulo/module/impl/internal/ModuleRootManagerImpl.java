@@ -31,6 +31,7 @@ import consulo.logging.Logger;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
+import consulo.module.content.ModifiableModelCommitter;
 import consulo.module.content.ModuleFileIndex;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectRootManager;
@@ -40,7 +41,6 @@ import consulo.module.content.layer.*;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.layer.orderEntry.RootPolicy;
 import consulo.module.extension.ModuleExtension;
-import consulo.module.impl.internal.layer.ModifiableModelCommitter;
 import consulo.module.impl.internal.layer.RootModelImpl;
 import consulo.module.impl.internal.layer.orderEntry.ModuleOrderEnumerator;
 import consulo.module.impl.internal.layer.orderEntry.OrderRootsCache;
@@ -171,7 +171,7 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements Disposab
 
     final Project project = myModule.getProject();
     final ModifiableModuleModel moduleModel = ModuleManager.getInstance(project).getModifiableModel();
-    ModifiableModelCommitter.multiCommit(new ModifiableRootModel[]{rootModel}, moduleModel);
+    ModifiableModelCommitter.getInstance(getProject()).multiCommit(new ModifiableRootModel[]{rootModel}, moduleModel);
   }
 
   @Override

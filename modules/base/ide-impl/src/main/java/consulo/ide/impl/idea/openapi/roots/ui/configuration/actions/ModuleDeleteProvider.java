@@ -26,11 +26,11 @@ import consulo.language.editor.LangDataKeys;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
+import consulo.module.content.ModifiableModelCommitter;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.orderEntry.ModuleOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
-import consulo.module.impl.internal.layer.ModifiableModelCommitter;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.ui.ex.DeleteProvider;
@@ -80,7 +80,7 @@ public class ModuleDeleteProvider  implements DeleteProvider, TitledHandler  {
               removeModule(module, modifiableModel, otherModuleRootModels.values(), modifiableModuleModel);
             }
             final ModifiableRootModel[] modifiableRootModels = otherModuleRootModels.values().toArray(new ModifiableRootModel[otherModuleRootModels.size()]);
-            ModifiableModelCommitter.multiCommit(modifiableRootModels, modifiableModuleModel);
+            ModifiableModelCommitter.getInstance(project).multiCommit(modifiableRootModels, modifiableModuleModel);
           }
         };
         ApplicationManager.getApplication().runWriteAction(action);

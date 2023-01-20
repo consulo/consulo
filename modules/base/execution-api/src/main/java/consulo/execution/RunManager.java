@@ -305,6 +305,8 @@ public abstract class RunManager {
 
   public abstract boolean canRunConfiguration(@Nonnull ExecutionEnvironment environment);
 
+  public abstract void removeConfiguration(@Nullable RunnerAndConfigurationSettings settings);
+
   @Nullable
   public RunnerAndConfigurationSettings findConfigurationByTypeAndName(@Nonnull String typeId, @Nonnull String name) {
     for (RunnerAndConfigurationSettings settings : getSortedConfigurations()) {

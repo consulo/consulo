@@ -32,8 +32,6 @@ public abstract class ProjectRootManagerEx extends ProjectRootManager {
 
   public abstract void markRootsForRefresh();
 
-  public abstract void mergeRootsChangesDuring(@Nonnull Runnable runnable);
-
   public abstract void clearScopesCachesForModules();
 
   public abstract void addOrderWithTracking(@Nonnull OrderEntryWithTracking orderEntry);

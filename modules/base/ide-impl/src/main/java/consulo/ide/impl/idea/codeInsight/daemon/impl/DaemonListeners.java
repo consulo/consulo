@@ -10,11 +10,11 @@ import consulo.application.PowerSaveModeListener;
 import consulo.application.event.ApplicationListener;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.impl.internal.LaterInvocator;
-import consulo.application.impl.internal.ModalityStateListener;
+import consulo.ui.UIAccess;
+import consulo.ui.event.ModalityStateListener;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
-import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.event.*;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.colorScheme.event.EditorColorsListener;
@@ -30,21 +30,15 @@ import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
-import consulo.ide.impl.idea.codeInsight.folding.impl.FoldingUtil;
-import consulo.ide.impl.idea.codeInsight.hint.TooltipController;
 import consulo.ide.impl.idea.ide.AppLifecycleListener;
-import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
 import consulo.ide.impl.idea.ide.todo.TodoConfiguration;
 import consulo.ide.impl.idea.ide.todo.TodoConfigurationListener;
 import consulo.ide.impl.idea.openapi.editor.ex.EditorEventMulticasterEx;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ide.impl.idea.openapi.editor.impl.EditorMouseHoverPopupControl;
 import consulo.ide.impl.idea.openapi.project.ProjectUtil;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.DaemonListener;
 import consulo.language.editor.Pass;
-import consulo.language.editor.documentation.DocumentationManager;
 import consulo.language.editor.impl.highlight.UpdateHighlightersUtil;
 import consulo.language.editor.impl.internal.highlight.UpdateHighlightersUtilImpl;
 import consulo.language.editor.impl.internal.markup.ErrorStripeUpdateManager;
@@ -188,7 +182,7 @@ public final class DaemonListeners implements Disposable {
         myActiveEditors = activeEditors;
         // do not stop daemon if idea loses/gains focus
         DaemonListeners.this.stopDaemon(true, "Active editor change");
-        if (ApplicationManager.getApplication().isDispatchThread() && LaterInvocator.isInModalContext()) {
+        if (UIAccess.isUIThread() && UIAccess.current().isInModalContext()) {
           // editor appear in modal context, re-enable the daemon
           myDaemonCodeAnalyzer.setUpdateByTimerEnabled(true);
         }

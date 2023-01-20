@@ -77,10 +77,12 @@ public class ModuleOrderEntryImpl extends OrderEntryBaseImpl implements ModuleOr
     return getRootModel().getModule();
   }
 
+  @Override
   public boolean isProductionOnTestDependency() {
     return myProductionOnTestDependency;
   }
 
+  @Override
   public void setProductionOnTestDependency(boolean productionOnTestDependency) {
     myProductionOnTestDependency = productionOnTestDependency;
   }

@@ -15,11 +15,14 @@
  */
 package consulo.desktop.awt.ui.impl;
 
+import consulo.application.impl.internal.LaterInvocator;
+import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.component.store.impl.internal.ComponentStoreImpl;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ModalityStateListener;
 import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;
@@ -44,6 +47,16 @@ public class AWTUIAccessImpl implements UIAccess {
   @Override
   public boolean isHeadless() {
     return GraphicsEnvironment.isHeadless();
+  }
+
+  @Override
+  public boolean isInModalContext() {
+    return LaterInvocator.isInModalContext();
+  }
+
+  @Override
+  public void addModalityStateListener(@Nonnull ModalityStateListener listener, @Nonnull Disposable parentDisposable) {
+    LaterInvocator.addModalityStateListener(listener, parentDisposable);
   }
 
   @RequiredUIAccess

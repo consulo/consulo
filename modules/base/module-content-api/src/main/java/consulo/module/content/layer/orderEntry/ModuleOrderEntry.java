@@ -26,4 +26,8 @@ public interface ModuleOrderEntry extends ExportableOrderEntry {
   @Nullable Module getModule();
 
   String getModuleName();
+
+  void setProductionOnTestDependency(boolean productionOnTestDependency);
+
+  boolean isProductionOnTestDependency();
 }

@@ -36,11 +36,11 @@ import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.*;
+import consulo.module.content.ModifiableModelCommitter;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.internal.ProjectRootManagerEx;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.event.ModuleListener;
-import consulo.module.impl.internal.layer.ModifiableModelCommitter;
 import consulo.module.macro.ModulePathMacroManager;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
@@ -838,7 +838,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Persist
     @RequiredWriteAction
     public void commit() {
       ModifiableRootModel[] rootModels = new ModifiableRootModel[0];
-      ModifiableModelCommitter.multiCommit(rootModels, this);
+      ModifiableModelCommitter.getInstance(myProject).multiCommit(rootModels, this);
     }
 
     @RequiredWriteAction

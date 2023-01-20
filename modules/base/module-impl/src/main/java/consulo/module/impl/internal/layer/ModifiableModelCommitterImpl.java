@@ -16,6 +16,7 @@
 package consulo.module.impl.internal.layer;
 
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.component.util.graph.DFSTBuilder;
 import consulo.component.util.graph.GraphGenerator;
@@ -23,6 +24,7 @@ import consulo.component.util.graph.InboundSemiGraph;
 import consulo.logging.Logger;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
+import consulo.module.content.ModifiableModelCommitter;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.orderEntry.ModuleOrderEntry;
@@ -30,14 +32,18 @@ import consulo.module.content.layer.orderEntry.RootPolicy;
 import consulo.module.impl.internal.ModuleManagerImpl;
 import consulo.module.impl.internal.ModuleRootManagerImpl;
 import consulo.util.collection.ArrayUtil;
+import jakarta.inject.Singleton;
 
 import java.util.*;
 
-public class ModifiableModelCommitter {
-  private static final Logger LOG = Logger.getInstance(ModifiableModelCommitter.class);
+@Singleton
+@ServiceImpl
+public class ModifiableModelCommitterImpl implements ModifiableModelCommitter {
+  private static final Logger LOG = Logger.getInstance(ModifiableModelCommitterImpl.class);
 
+  @Override
   @RequiredWriteAction
-  public static void multiCommit(ModifiableRootModel[] rootModels, ModifiableModuleModel moduleModel) {
+  public void multiCommit(ModifiableRootModel[] rootModels, ModifiableModuleModel moduleModel) {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
 
     final List<RootModelImpl> modelsToCommit = getSortedChangedModels(rootModels, moduleModel);
