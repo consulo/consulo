@@ -47,7 +47,7 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.versionControlSystem.FilePath;
 import consulo.util.lang.Couple;
 import consulo.virtualFileSystem.status.FileStatus;
-import consulo.ide.impl.idea.openapi.vcs.ObjectsConvertor;
+import consulo.versionControlSystem.util.ObjectsConvertor;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeListManager;

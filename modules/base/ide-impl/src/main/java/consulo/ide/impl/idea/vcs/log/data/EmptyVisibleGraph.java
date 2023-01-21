@@ -15,13 +15,13 @@
  */
 package consulo.ide.impl.idea.vcs.log.data;
 
-import consulo.ide.impl.idea.vcs.log.graph.PrintElement;
-import consulo.ide.impl.idea.vcs.log.graph.RowInfo;
-import consulo.ide.impl.idea.vcs.log.graph.RowType;
-import consulo.ide.impl.idea.vcs.log.graph.VisibleGraph;
-import consulo.ide.impl.idea.vcs.log.graph.actions.ActionController;
-import consulo.ide.impl.idea.vcs.log.graph.actions.GraphAction;
-import consulo.ide.impl.idea.vcs.log.graph.actions.GraphAnswer;
+import consulo.versionControlSystem.log.graph.PrintElement;
+import consulo.versionControlSystem.log.graph.RowInfo;
+import consulo.versionControlSystem.log.graph.RowType;
+import consulo.versionControlSystem.log.graph.VisibleGraph;
+import consulo.versionControlSystem.log.graph.action.ActionController;
+import consulo.versionControlSystem.log.graph.action.GraphAction;
+import consulo.versionControlSystem.log.graph.action.GraphAnswer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

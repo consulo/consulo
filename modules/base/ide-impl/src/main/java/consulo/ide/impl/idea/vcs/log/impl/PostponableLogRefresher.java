@@ -23,7 +23,7 @@ import consulo.application.util.registry.Registry;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.versionControlSystem.log.VcsLogRefresher;
-import consulo.ide.impl.idea.vcs.log.data.VcsLogData;
+import consulo.ide.impl.idea.vcs.log.data.VcsLogDataImpl;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogFilterer;
 import javax.annotation.Nonnull;
 
@@ -33,13 +33,13 @@ import java.util.Set;
 
 public class PostponableLogRefresher implements VcsLogRefresher {
   @Nonnull
-  protected final VcsLogData myLogData;
+  protected final VcsLogDataImpl myLogData;
   @Nonnull
   private final Set<VirtualFile> myRootsToRefresh = ContainerUtil.newHashSet();
   @Nonnull
   private final Set<VcsLogWindow> myLogWindows = ContainerUtil.newHashSet();
 
-  public PostponableLogRefresher(@Nonnull VcsLogData logData) {
+  public PostponableLogRefresher(@Nonnull VcsLogDataImpl logData) {
     myLogData = logData;
     myLogData.addDataPackChangeListener(dataPack -> {
       for (VcsLogWindow window : myLogWindows) {

@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.vcs.log.graph.collapsing;
 
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.vcs.log.graph.actions.GraphAction;
+import consulo.versionControlSystem.log.graph.action.GraphAction;
 import consulo.ide.impl.idea.vcs.log.graph.api.EdgeFilter;
 import consulo.ide.impl.idea.vcs.log.graph.api.LinearGraph;
 import consulo.ide.impl.idea.vcs.log.graph.api.elements.GraphEdge;

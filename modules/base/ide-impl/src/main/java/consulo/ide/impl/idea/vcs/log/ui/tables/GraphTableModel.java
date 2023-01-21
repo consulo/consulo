@@ -8,7 +8,7 @@ import consulo.ide.impl.idea.util.NotNullFunction;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.util.DateFormatUtil;
 import consulo.ide.impl.idea.vcs.log.data.*;
-import consulo.ide.impl.idea.vcs.log.impl.VcsLogUtil;
+import consulo.versionControlSystem.log.util.VcsLogUtil;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl;
 import consulo.ide.impl.idea.vcs.log.ui.render.GraphCommitCell;
 import consulo.versionControlSystem.log.util.VcsUserUtil;
@@ -33,7 +33,7 @@ public class GraphTableModel extends AbstractTableModel {
   private static final int DOWN_PRELOAD_COUNT = 40;
 
   @Nonnull
-  private final VcsLogData myLogData;
+  private final VcsLogDataImpl myLogData;
   @Nonnull
   protected final VcsLogUiImpl myUi;
 
@@ -42,7 +42,7 @@ public class GraphTableModel extends AbstractTableModel {
 
   private boolean myMoreRequested;
 
-  public GraphTableModel(@Nonnull VisiblePack dataPack, @Nonnull VcsLogData logData, @Nonnull VcsLogUiImpl ui) {
+  public GraphTableModel(@Nonnull VisiblePack dataPack, @Nonnull VcsLogDataImpl logData, @Nonnull VcsLogUiImpl ui) {
     myLogData = logData;
     myUi = ui;
     myDataPack = dataPack;

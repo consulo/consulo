@@ -29,6 +29,7 @@ import consulo.language.editor.ui.awt.EditorComboBox;
 import consulo.project.Project;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DocumentAdapter;
+import consulo.versionControlSystem.distributed.DvcsBundle;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NonNls;
 

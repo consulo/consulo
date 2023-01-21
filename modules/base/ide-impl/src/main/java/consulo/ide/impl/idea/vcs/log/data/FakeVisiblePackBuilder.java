@@ -21,12 +21,12 @@ import consulo.versionControlSystem.log.VcsLogFilterCollection;
 import consulo.versionControlSystem.log.VcsLogProvider;
 import consulo.versionControlSystem.log.VcsRef;
 import consulo.ide.impl.idea.vcs.log.graph.GraphColorManagerImpl;
-import consulo.ide.impl.idea.vcs.log.graph.VisibleGraph;
+import consulo.versionControlSystem.log.graph.VisibleGraph;
 import consulo.ide.impl.idea.vcs.log.graph.api.permanent.PermanentGraphInfo;
 import consulo.ide.impl.idea.vcs.log.graph.collapsing.CollapsedController;
 import consulo.ide.impl.idea.vcs.log.graph.impl.facade.BaseController;
 import consulo.ide.impl.idea.vcs.log.graph.impl.facade.VisibleGraphImpl;
-import consulo.ide.impl.idea.vcs.log.impl.VcsLogUtil;
+import consulo.versionControlSystem.log.util.VcsLogUtil;
 import javax.annotation.Nonnull;
 
 import java.util.Map;

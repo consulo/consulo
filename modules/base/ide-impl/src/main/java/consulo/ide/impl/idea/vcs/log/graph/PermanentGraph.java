@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.vcs.log.graph;
 
 import consulo.util.lang.function.Condition;
 import consulo.versionControlSystem.log.graph.GraphCommit;
+import consulo.versionControlSystem.log.graph.VisibleGraph;
 
 import javax.annotation.Nonnull;
 

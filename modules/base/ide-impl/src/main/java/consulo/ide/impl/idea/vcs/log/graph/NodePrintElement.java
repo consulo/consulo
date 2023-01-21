@@ -15,5 +15,7 @@
  */
 package consulo.ide.impl.idea.vcs.log.graph;
 
+import consulo.versionControlSystem.log.graph.PrintElement;
+
 public interface NodePrintElement extends PrintElement {
 }

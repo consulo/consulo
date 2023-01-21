@@ -26,13 +26,13 @@ import consulo.versionControlSystem.log.CommitId;
 import consulo.versionControlSystem.log.VcsShortCommitDetails;
 import consulo.ide.impl.idea.vcs.log.data.LoadingDetails;
 import consulo.ide.impl.idea.vcs.log.data.MainVcsLogUiProperties;
-import consulo.ide.impl.idea.vcs.log.data.VcsLogData;
+import consulo.ide.impl.idea.vcs.log.data.VcsLogDataImpl;
 import consulo.ide.impl.idea.vcs.log.graph.EdgePrintElement;
 import consulo.ide.impl.idea.vcs.log.graph.NodePrintElement;
-import consulo.ide.impl.idea.vcs.log.graph.PrintElement;
-import consulo.ide.impl.idea.vcs.log.graph.actions.GraphAction;
-import consulo.ide.impl.idea.vcs.log.graph.actions.GraphAnswer;
-import consulo.ide.impl.idea.vcs.log.impl.VcsLogUtil;
+import consulo.versionControlSystem.log.graph.PrintElement;
+import consulo.versionControlSystem.log.graph.action.GraphAction;
+import consulo.versionControlSystem.log.graph.action.GraphAnswer;
+import consulo.versionControlSystem.log.util.VcsLogUtil;
 import consulo.ide.impl.idea.vcs.log.paint.GraphCellPainter;
 import consulo.ide.impl.idea.vcs.log.paint.PositionUtil;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl;
@@ -60,7 +60,7 @@ public class GraphTableController {
   @Nonnull
   private final VcsLogUiImpl myUi;
   @Nonnull
-  private final VcsLogData myLogData;
+  private final VcsLogDataImpl myLogData;
   @Nonnull
   private final GraphCellPainter myGraphCellPainter;
   @Nonnull
@@ -68,7 +68,7 @@ public class GraphTableController {
 
   public GraphTableController(@Nonnull VcsLogGraphTable table,
                               @Nonnull VcsLogUiImpl ui,
-                              @Nonnull VcsLogData logData,
+                              @Nonnull VcsLogDataImpl logData,
                               @Nonnull GraphCellPainter graphCellPainter,
                               @Nonnull GraphCommitCellRenderer commitRenderer) {
     myTable = table;

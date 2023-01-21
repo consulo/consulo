@@ -23,7 +23,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.ide.impl.idea.openapi.vcs.CalledInAwt;
 import consulo.ide.impl.idea.ui.components.JBLoadingPanel;
 import consulo.versionControlSystem.log.VcsFullCommitDetails;
-import consulo.ide.impl.idea.vcs.log.data.VcsLogData;
+import consulo.ide.impl.idea.vcs.log.data.VcsLogDataImpl;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -34,7 +34,7 @@ import java.util.List;
 public abstract class CommitSelectionListener implements ListSelectionListener {
   private final static Logger LOG = Logger.getInstance(CommitSelectionListener.class);
   @Nonnull
-  private final VcsLogData myLogData;
+  private final VcsLogDataImpl myLogData;
   @Nonnull
   protected final VcsLogGraphTable myGraphTable;
   @Nonnull
@@ -44,7 +44,7 @@ public abstract class CommitSelectionListener implements ListSelectionListener {
   @Nullable
   private ProgressIndicator myLastRequest;
 
-  protected CommitSelectionListener(@Nonnull VcsLogData data, @Nonnull VcsLogGraphTable table, @Nonnull JBLoadingPanel panel) {
+  protected CommitSelectionListener(@Nonnull VcsLogDataImpl data, @Nonnull VcsLogGraphTable table, @Nonnull JBLoadingPanel panel) {
     myLogData = data;
     myGraphTable = table;
     myLoadingPanel = panel;

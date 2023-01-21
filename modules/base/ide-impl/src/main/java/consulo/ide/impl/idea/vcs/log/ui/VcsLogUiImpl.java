@@ -11,8 +11,8 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.data.*;
 import consulo.ide.impl.idea.vcs.log.data.MainVcsLogUiProperties.VcsLogHighlighterProperty;
 import consulo.ide.impl.idea.vcs.log.graph.PermanentGraph;
-import consulo.ide.impl.idea.vcs.log.graph.actions.GraphAction;
-import consulo.ide.impl.idea.vcs.log.graph.actions.GraphAnswer;
+import consulo.versionControlSystem.log.graph.action.GraphAction;
+import consulo.versionControlSystem.log.graph.action.GraphAnswer;
 import consulo.ide.impl.idea.vcs.log.impl.VcsLogImpl;
 import consulo.ide.impl.idea.vcs.log.ui.frame.MainFrame;
 import consulo.ide.impl.idea.vcs.log.ui.frame.VcsLogGraphTable;
@@ -60,7 +60,7 @@ public class VcsLogUiImpl implements VcsLogUi, Disposable {
   @Nonnull
   private VisiblePack myVisiblePack;
 
-  public VcsLogUiImpl(@Nonnull VcsLogData logData, @Nonnull Project project, @Nonnull VcsLogColorManager manager, @Nonnull MainVcsLogUiProperties uiProperties, @Nonnull VcsLogFilterer filterer) {
+  public VcsLogUiImpl(@Nonnull VcsLogDataImpl logData, @Nonnull Project project, @Nonnull VcsLogColorManager manager, @Nonnull MainVcsLogUiProperties uiProperties, @Nonnull VcsLogFilterer filterer) {
     myProject = project;
     myColorManager = manager;
     myUiProperties = uiProperties;

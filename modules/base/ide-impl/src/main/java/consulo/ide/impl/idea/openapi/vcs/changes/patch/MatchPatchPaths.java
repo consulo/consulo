@@ -24,7 +24,7 @@ import consulo.application.util.function.Computable;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.vcs.ObjectsConvertor;
+import consulo.versionControlSystem.util.ObjectsConvertor;
 import consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelveChangesManager;
 import consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelvedBinaryFilePatch;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;

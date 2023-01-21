@@ -24,7 +24,7 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.JBUI;
 import consulo.versionControlSystem.log.VcsRef;
 import consulo.versionControlSystem.log.VcsRefType;
-import consulo.ide.impl.idea.vcs.log.data.VcsLogData;
+import consulo.ide.impl.idea.vcs.log.data.VcsLogDataImpl;
 import consulo.ide.impl.idea.vcs.log.ui.frame.ReferencesPanel;
 import consulo.ui.image.Image;
 
@@ -41,7 +41,7 @@ class TooltipReferencesPanel extends ReferencesPanel {
   private final LabelPainter myReferencePainter;
   private boolean myHasGroupWithMultipleRefs;
 
-  public TooltipReferencesPanel(@Nonnull VcsLogData logData,
+  public TooltipReferencesPanel(@Nonnull VcsLogDataImpl logData,
                                 @Nonnull LabelPainter referencePainter,
                                 @Nonnull Collection<VcsRef> refs) {
     super(new VerticalFlowLayout(JBUI.scale(H_GAP), JBUI.scale(V_GAP)), REFS_LIMIT);

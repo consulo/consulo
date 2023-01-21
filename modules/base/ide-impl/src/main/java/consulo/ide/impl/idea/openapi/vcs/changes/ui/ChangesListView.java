@@ -32,7 +32,7 @@ import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.change.*;
 import consulo.virtualFileSystem.status.FileStatus;
-import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
+import consulo.versionControlSystem.VcsDataKeys;
 import consulo.ide.impl.idea.openapi.vcs.changes.*;
 import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.TreeLinkMouseListener;
 import consulo.virtualFileSystem.VirtualFile;

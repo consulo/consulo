@@ -10,7 +10,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ui.ex.action.*;
 import consulo.util.dataholder.Key;
-import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
+import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.Change;
 import consulo.ide.impl.idea.openapi.vcs.changes.TextRevisionNumber;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesTreeBrowser;
@@ -24,10 +24,10 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.ui.table.ComponentsListFocusTraversalPolicy;
 import consulo.ide.impl.idea.vcs.CommittedChangeListForRevision;
 import consulo.ide.impl.idea.vcs.log.data.MainVcsLogUiProperties;
-import consulo.ide.impl.idea.vcs.log.data.VcsLogData;
+import consulo.ide.impl.idea.vcs.log.data.VcsLogDataImpl;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogProgress;
 import consulo.ide.impl.idea.vcs.log.data.VisiblePack;
-import consulo.ide.impl.idea.vcs.log.impl.VcsLogUtil;
+import consulo.versionControlSystem.log.util.VcsLogUtil;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogActionPlaces;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogInternalDataKeys;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl;
@@ -51,7 +51,7 @@ public class MainFrame extends JPanel implements DataProvider, Disposable {
   private static final String HELP_ID = "reference.changesToolWindow.log";
 
   @Nonnull
-  private final VcsLogData myLogData;
+  private final VcsLogDataImpl myLogData;
   @Nonnull
   private final VcsLogUiImpl myUi;
   @Nonnull
@@ -83,7 +83,7 @@ public class MainFrame extends JPanel implements DataProvider, Disposable {
   @Nonnull
   private Runnable myMiniDetailsLoadedListener;
 
-  public MainFrame(@Nonnull VcsLogData logData,
+  public MainFrame(@Nonnull VcsLogDataImpl logData,
                    @Nonnull VcsLogUiImpl ui,
                    @Nonnull Project project,
                    @Nonnull MainVcsLogUiProperties uiProperties,

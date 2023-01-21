@@ -17,14 +17,11 @@ package consulo.ide.impl.idea.vcs.log.ui;
 
 import consulo.ide.impl.idea.util.NotNullFunction;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.vcs.log.data.VcsLogData;
 import consulo.ide.impl.idea.vcs.log.impl.VcsLogUserFilterImpl;
 import consulo.versionControlSystem.log.*;
-import consulo.versionControlSystem.log.VcsLogDataPack;
 import consulo.versionControlSystem.log.util.VcsUserUtil;
 
 import javax.annotation.Nonnull;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
@@ -44,7 +41,7 @@ public class MyCommitsHighlighter implements VcsLogHighlighter {
   @Nonnull
   @Override
   public VcsCommitStyle getStyle(@Nonnull VcsShortCommitDetails details, boolean isSelected) {
-    if (!myLogUi.isHighlighterEnabled(Factory.ID)) return VcsCommitStyle.DEFAULT;
+    if (!myLogUi.isHighlighterEnabled(MyCommitsHighlighterFactory.ID)) return VcsCommitStyle.DEFAULT;
     if (myShouldHighlightUser) {
       VcsUser currentUser = myLogData.getCurrentUser().get(details.getRoot());
       if (currentUser != null && VcsUserUtil.isSamePerson(currentUser, details.getAuthor())) {
@@ -74,33 +71,5 @@ public class MyCommitsHighlighter implements VcsLogHighlighter {
     Collection<String> filterByName = ((VcsLogUserFilterImpl)userFilter).getUserNamesForPresentation();
     if (Collections.singleton(VcsLogUserFilterImpl.ME).containsAll(filterByName)) return true;
     return false;
-  }
-
-  public static class Factory implements VcsLogHighlighterFactory {
-    @Nonnull
-    private static final String ID = "MY_COMMITS";
-
-    @Nonnull
-    @Override
-    public VcsLogHighlighter createHighlighter(@Nonnull VcsLogData logData, @Nonnull VcsLogUi logUi) {
-      return new MyCommitsHighlighter(logData, logUi);
-    }
-
-    @Nonnull
-    @Override
-    public String getId() {
-      return ID;
-    }
-
-    @Nonnull
-    @Override
-    public String getTitle() {
-      return "My Commits";
-    }
-
-    @Override
-    public boolean showMenuItem() {
-      return true;
-    }
   }
 }

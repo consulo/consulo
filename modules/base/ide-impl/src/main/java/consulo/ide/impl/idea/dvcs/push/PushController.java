@@ -23,7 +23,7 @@ import consulo.disposer.Disposer;
 import consulo.ide.ServiceManager;
 import consulo.versionControlSystem.distributed.DvcsUtil;
 import consulo.ide.impl.idea.dvcs.push.ui.*;
-import consulo.ide.impl.idea.dvcs.ui.DvcsBundle;
+import consulo.versionControlSystem.distributed.DvcsBundle;
 import consulo.ide.impl.idea.ui.CheckedTreeNode;
 import consulo.ide.impl.idea.util.ConcurrencyUtil;
 import consulo.util.lang.ObjectUtil;

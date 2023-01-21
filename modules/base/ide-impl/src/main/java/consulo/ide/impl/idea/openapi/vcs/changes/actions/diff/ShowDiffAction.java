@@ -29,7 +29,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.util.lang.function.Condition;
 import consulo.util.dataholder.Key;
-import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
+import consulo.versionControlSystem.VcsDataKeys;
 import consulo.ide.impl.idea.openapi.vcs.changes.*;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.versionControlSystem.change.*;

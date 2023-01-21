@@ -19,6 +19,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
+import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.ide.impl.idea.openapi.vcs.ui.CommitMessage;

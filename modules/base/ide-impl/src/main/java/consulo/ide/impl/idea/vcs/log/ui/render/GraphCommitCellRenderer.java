@@ -10,9 +10,9 @@ import consulo.util.lang.ObjectUtil;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.versionControlSystem.log.VcsRef;
-import consulo.ide.impl.idea.vcs.log.data.VcsLogData;
+import consulo.ide.impl.idea.vcs.log.data.VcsLogDataImpl;
 import consulo.ide.impl.idea.vcs.log.graph.EdgePrintElement;
-import consulo.ide.impl.idea.vcs.log.graph.PrintElement;
+import consulo.versionControlSystem.log.graph.PrintElement;
 import consulo.ide.impl.idea.vcs.log.paint.GraphCellPainter;
 import consulo.ide.impl.idea.vcs.log.paint.PaintParameters;
 import consulo.ide.impl.idea.vcs.log.ui.frame.VcsLogGraphTable;
@@ -30,7 +30,7 @@ public class GraphCommitCellRenderer extends TypeSafeTableCellRenderer<GraphComm
   private static final int VERTICAL_PADDING = JBUI.scale(7);
 
   @Nonnull
-  private final VcsLogData myLogData;
+  private final VcsLogDataImpl myLogData;
   @Nonnull
   private final VcsLogGraphTable myGraphTable;
 
@@ -41,7 +41,7 @@ public class GraphCommitCellRenderer extends TypeSafeTableCellRenderer<GraphComm
   @Nonnull
   private final LabelPainter myTooltipPainter;
 
-  public GraphCommitCellRenderer(@Nonnull VcsLogData logData,
+  public GraphCommitCellRenderer(@Nonnull VcsLogDataImpl logData,
                                  @Nonnull GraphCellPainter painter,
                                  @Nonnull VcsLogGraphTable table,
                                  boolean compact,
@@ -137,7 +137,7 @@ public class GraphCommitCellRenderer extends TypeSafeTableCellRenderer<GraphComm
   private static class MyComponent extends SimpleColoredRenderer {
     private static final int FREE_SPACE = 20;
     @Nonnull
-    private final VcsLogData myLogData;
+    private final VcsLogDataImpl myLogData;
     @Nonnull
     private final VcsLogGraphTable myGraphTable;
     @Nonnull
@@ -153,7 +153,7 @@ public class GraphCommitCellRenderer extends TypeSafeTableCellRenderer<GraphComm
     private Font myFont;
     private int myHeight;
 
-    public MyComponent(@Nonnull VcsLogData data,
+    public MyComponent(@Nonnull VcsLogDataImpl data,
                        @Nonnull GraphCellPainter painter,
                        @Nonnull VcsLogGraphTable table,
                        boolean compact,

@@ -17,23 +17,23 @@ package consulo.ide.impl.idea.vcs.log.data;
 
 import consulo.application.ApplicationManager;
 import consulo.disposer.Disposable;
+import consulo.ide.impl.idea.openapi.vcs.CalledInAny;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.vcs.log.graph.PermanentGraph;
+import consulo.ide.impl.idea.vcs.log.util.SequentialLimitedLifoExecutor;
 import consulo.logging.Logger;
+import consulo.util.collection.SLRUMap;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
-import consulo.ide.impl.idea.openapi.vcs.CalledInAny;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.log.*;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.util.collection.SLRUMap;
-import consulo.ide.impl.idea.vcs.log.graph.PermanentGraph;
-import consulo.ide.impl.idea.vcs.log.util.SequentialLimitedLifoExecutor;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * Provides capabilities to asynchronously calculate "contained in branches" information.
@@ -45,7 +45,7 @@ public class ContainingBranchesGetter {
   @Nonnull
   private final SequentialLimitedLifoExecutor<Task> myTaskExecutor;
   @Nonnull
-  private final VcsLogData myLogData;
+  private final VcsLogDataImpl myLogData;
 
   // other fields accessed only from EDT
   @Nonnull
@@ -56,7 +56,7 @@ public class ContainingBranchesGetter {
   private Map<VirtualFile, ContainedInBranchCondition> myConditions = ContainerUtil.newHashMap();
   private int myCurrentBranchesChecksum;
 
-  ContainingBranchesGetter(@Nonnull VcsLogData logData, @Nonnull Disposable parentDisposable) {
+  ContainingBranchesGetter(@Nonnull VcsLogDataImpl logData, @Nonnull Disposable parentDisposable) {
     myLogData = logData;
     myTaskExecutor = new SequentialLimitedLifoExecutor<>(parentDisposable, 10, task -> {
       final List<String> branches = task.getContainingBranches(myLogData);
@@ -142,11 +142,9 @@ public class ContainingBranchesGetter {
 
     ContainedInBranchCondition condition = myConditions.get(root);
     if (condition == null || !condition.getBranch().equals(branchName)) {
-      VcsRef branchRef = ContainerUtil.find(refs.getBranches(),
-                                            vcsRef -> vcsRef.getRoot().equals(root) && vcsRef.getName().equals(branchName));
+      VcsRef branchRef = ContainerUtil.find(refs.getBranches(), vcsRef -> vcsRef.getRoot().equals(root) && vcsRef.getName().equals(branchName));
       if (branchRef == null) return Conditions.alwaysFalse();
-      condition = new ContainedInBranchCondition(graph.getContainedInBranchCondition(
-        Collections.singleton(myLogData.getCommitIndex(branchRef.getCommitHash(), branchRef.getRoot()))), branchName);
+      condition = new ContainedInBranchCondition(graph.getContainedInBranchCondition(Collections.singleton(myLogData.getCommitIndex(branchRef.getCommitHash(), branchRef.getRoot()))), branchName);
       myConditions.put(root, condition);
     }
     return condition;
@@ -174,13 +172,10 @@ public class ContainingBranchesGetter {
     private final SLRUMap<CommitId, List<String>> cache;
     @Nullable
     private final RefsModel refs;
-    @Nullable private final PermanentGraph<Integer> graph;
+    @Nullable
+    private final PermanentGraph<Integer> graph;
 
-    public Task(VirtualFile root,
-                Hash hash,
-                SLRUMap<CommitId, List<String>> cache,
-                @Nullable PermanentGraph<Integer> graph,
-                @Nullable RefsModel refs) {
+    public Task(VirtualFile root, Hash hash, SLRUMap<CommitId, List<String>> cache, @Nullable PermanentGraph<Integer> graph, @Nullable RefsModel refs) {
       this.root = root;
       this.hash = hash;
       this.cache = cache;
@@ -189,7 +184,7 @@ public class ContainingBranchesGetter {
     }
 
     @Nonnull
-    public List<String> getContainingBranches(@Nonnull VcsLogData logData) {
+    public List<String> getContainingBranches(@Nonnull VcsLogDataImpl logData) {
       try {
         VcsLogProvider provider = logData.getLogProvider(root);
         if (graph != null && refs != null && VcsLogProperties.get(provider, VcsLogProperties.LIGHTWEIGHT_BRANCHES)) {

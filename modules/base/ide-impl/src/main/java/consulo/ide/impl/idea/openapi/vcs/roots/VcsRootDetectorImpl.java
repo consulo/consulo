@@ -19,7 +19,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.root.VcsRoot;
-import consulo.ide.impl.idea.openapi.vcs.VcsRootChecker;
+import consulo.versionControlSystem.VcsRootChecker;
 import consulo.module.content.ProjectRootManager;
 import consulo.project.Project;
 import consulo.versionControlSystem.root.VcsRootDetector;

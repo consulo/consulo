@@ -19,7 +19,7 @@ import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.versionControlSystem.VcsBundle;
-import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
+import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 

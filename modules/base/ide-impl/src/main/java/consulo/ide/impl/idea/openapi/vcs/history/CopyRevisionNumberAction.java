@@ -19,7 +19,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.versionControlSystem.VcsBundle;
-import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
+import consulo.versionControlSystem.VcsDataKeys;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.versionControlSystem.history.ShortVcsRevisionNumber;
 import consulo.versionControlSystem.history.VcsFileRevision;

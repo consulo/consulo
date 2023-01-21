@@ -24,7 +24,7 @@ import consulo.dataContext.DataSink;
 import consulo.disposer.Disposable;
 import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.openapi.vcs.AbstractDataProviderPanel;
-import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
+import consulo.versionControlSystem.VcsDataKeys;
 import consulo.ide.impl.idea.ui.*;
 import consulo.language.editor.ui.EditorCustomization;
 import consulo.language.editor.ui.SpellCheckerCustomization;

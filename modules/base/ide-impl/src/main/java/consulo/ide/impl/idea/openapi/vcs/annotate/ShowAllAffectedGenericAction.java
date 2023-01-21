@@ -25,7 +25,6 @@ import consulo.application.progress.Task;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.openapi.vcs.*;
 import consulo.ide.impl.idea.openapi.vcs.changes.BackgroundFromStartOption;
 import consulo.versionControlSystem.history.ShortVcsRevisionNumber;
 import consulo.versionControlSystem.history.VcsFileRevision;

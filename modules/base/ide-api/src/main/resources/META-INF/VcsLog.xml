@@ -14,17 +14,6 @@
   - limitations under the License.
   -->
 <consulo-plugin>
-  <extensionPoints>
-    <extensionPoint name="logProvider" interface="consulo.ide.impl.idea.vcs.log.VcsLogProvider" area="PROJECT"/>
-    <extensionPoint name="logHighlighterFactory" interface="consulo.ide.impl.idea.vcs.log.ui.VcsLogHighlighterFactory" area="PROJECT"/>
-  </extensionPoints>
-
-  <extensions defaultExtensionNs="consulo">
-    <logHighlighterFactory implementation="consulo.ide.impl.idea.vcs.log.ui.MyCommitsHighlighter$Factory"/>
-    <logHighlighterFactory implementation="consulo.ide.impl.idea.vcs.log.ui.MergeCommitsHighlighter$Factory"/>
-    <logHighlighterFactory implementation="consulo.ide.impl.idea.vcs.log.ui.CurrentBranchHighlighter$Factory"/>
-  </extensions>
-
   <actions>
     <action class="consulo.ide.impl.idea.vcs.log.ui.actions.VcsLogCreatePatchAction" id="Vcs.Log.CreatePatch"
             use-shortcut-of="ChangesView.CreatePatch"/>

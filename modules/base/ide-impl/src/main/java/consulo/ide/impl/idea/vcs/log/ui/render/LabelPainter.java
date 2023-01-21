@@ -46,7 +46,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.versionControlSystem.log.RefGroup;
 import consulo.versionControlSystem.log.VcsLogRefManager;
 import consulo.versionControlSystem.log.VcsRef;
-import consulo.ide.impl.idea.vcs.log.data.VcsLogData;
+import consulo.ide.impl.idea.vcs.log.data.VcsLogDataImpl;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -76,7 +76,7 @@ public class LabelPainter {
   private static final JBColor TEXT_COLOR = new JBColor(new Color(0x7a7a7a), new Color(0x909090));
 
   @Nonnull
-  private final VcsLogData myLogData;
+  private final VcsLogDataImpl myLogData;
 
   @Nonnull
   private List<Pair<String, LabelIcon>> myLabels = ContainerUtil.newArrayList();
@@ -91,14 +91,14 @@ public class LabelPainter {
   private boolean myCompact;
   private boolean myShowTagNames;
 
-  public LabelPainter(@Nonnull VcsLogData data, boolean compact, boolean showTagNames) {
+  public LabelPainter(@Nonnull VcsLogDataImpl data, boolean compact, boolean showTagNames) {
     myLogData = data;
     myCompact = compact;
     myShowTagNames = showTagNames;
   }
 
   @Nullable
-  public static VcsLogRefManager getRefManager(@Nonnull VcsLogData logData, @Nonnull Collection<VcsRef> references) {
+  public static VcsLogRefManager getRefManager(@Nonnull VcsLogDataImpl logData, @Nonnull Collection<VcsRef> references) {
     if (!references.isEmpty()) {
       VirtualFile root = ObjectUtil.assertNotNull(ContainerUtil.getFirstItem(references)).getRoot();
       return logData.getLogProvider(root).getReferenceManager();

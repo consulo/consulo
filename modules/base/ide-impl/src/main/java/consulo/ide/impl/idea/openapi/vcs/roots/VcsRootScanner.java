@@ -9,7 +9,7 @@ import consulo.application.util.registry.Registry;
 import consulo.disposer.Disposable;
 import consulo.application.internal.BackgroundTaskUtil;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
-import consulo.ide.impl.idea.openapi.vcs.VcsRootChecker;
+import consulo.versionControlSystem.VcsRootChecker;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.logging.Logger;
 import consulo.module.content.ProjectFileIndex;

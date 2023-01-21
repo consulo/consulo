@@ -36,7 +36,7 @@ import consulo.ui.ex.awt.StatusText;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.versionControlSystem.log.VcsFullCommitDetails;
 import consulo.versionControlSystem.log.VcsRef;
-import consulo.ide.impl.idea.vcs.log.data.VcsLogData;
+import consulo.ide.impl.idea.vcs.log.data.VcsLogDataImpl;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogColorManager;
 import javax.annotation.Nonnull;
 
@@ -52,7 +52,7 @@ class DetailsPanel extends JPanel implements EditorColorsListener {
   private static final int MAX_ROWS = 50;
 
   @Nonnull
-  private final VcsLogData myLogData;
+  private final VcsLogDataImpl myLogData;
 
   @Nonnull
   private final JScrollPane myScrollPane;
@@ -71,7 +71,7 @@ class DetailsPanel extends JPanel implements EditorColorsListener {
   @Nonnull
   private Set<VcsFullCommitDetails> myCommitDetails = Collections.emptySet();
 
-  DetailsPanel(@Nonnull VcsLogData logData,
+  DetailsPanel(@Nonnull VcsLogDataImpl logData,
                @Nonnull VcsLogColorManager colorManager,
                @Nonnull Disposable parent) {
     myLogData = logData;

@@ -37,7 +37,7 @@ import consulo.versionControlSystem.log.VcsLogRootFilter;
 import consulo.ide.impl.idea.vcs.log.VcsLogRootFilterImpl;
 import consulo.versionControlSystem.log.VcsLogStructureFilter;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogStructureFilterImpl;
-import consulo.ide.impl.idea.vcs.log.impl.VcsLogUtil;
+import consulo.versionControlSystem.log.util.VcsLogUtil;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogColorManager;
 import consulo.ide.impl.idea.vcs.log.ui.frame.VcsLogGraphTable;
 import consulo.ui.ex.awtUnsafe.TargetAWT;

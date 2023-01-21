@@ -25,7 +25,7 @@ import consulo.ide.impl.idea.openapi.vcs.ui.FlatSpeedSearchPopup;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.versionControlSystem.log.VcsLogUserFilter;
 import consulo.ide.impl.idea.vcs.log.data.MainVcsLogUiProperties;
-import consulo.ide.impl.idea.vcs.log.data.VcsLogData;
+import consulo.ide.impl.idea.vcs.log.data.VcsLogDataImpl;
 import consulo.ide.impl.idea.vcs.log.impl.VcsLogUserFilterImpl;
 import consulo.versionControlSystem.log.util.VcsUserUtil;
 import consulo.dataContext.DataContext;
@@ -44,12 +44,12 @@ import java.util.TreeSet;
  */
 class UserFilterPopupComponent extends MultipleValueFilterPopupComponent<VcsLogUserFilter> {
   @Nonnull
-  private final VcsLogData myLogData;
+  private final VcsLogDataImpl myLogData;
   @Nonnull
   private final List<String> myAllUsers;
 
   UserFilterPopupComponent(@Nonnull MainVcsLogUiProperties uiProperties,
-                           @Nonnull VcsLogData logData,
+                           @Nonnull VcsLogDataImpl logData,
                            @Nonnull FilterModel<VcsLogUserFilter> filterModel) {
     super("User", uiProperties, filterModel);
     myLogData = logData;
@@ -118,7 +118,7 @@ class UserFilterPopupComponent extends MultipleValueFilterPopupComponent<VcsLogU
   }
 
   @Nonnull
-  private static List<String> collectUsers(@Nonnull VcsLogData logData) {
+  private static List<String> collectUsers(@Nonnull VcsLogDataImpl logData) {
     List<String> users = ContainerUtil.map(logData.getAllUsers(), user -> {
       String shortPresentation = VcsUserUtil.getShortPresentation(user);
       Couple<String> firstAndLastName = VcsUserUtil.getFirstAndLastName(shortPresentation);

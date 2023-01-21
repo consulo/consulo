@@ -22,7 +22,7 @@ import consulo.versionControlSystem.log.VcsLogUi;
 import consulo.ide.impl.idea.vcs.log.data.MainVcsLogUiProperties;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogUiProperties;
 import consulo.ide.impl.idea.vcs.log.graph.PermanentGraph;
-import consulo.ide.impl.idea.vcs.log.impl.VcsLogUtil;
+import consulo.versionControlSystem.log.util.VcsLogUtil;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogInternalDataKeys;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl;
 import consulo.ui.image.Image;

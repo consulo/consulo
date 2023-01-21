@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.vcs.log.ui;
 
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
-import consulo.ide.impl.idea.vcs.log.data.VcsLogData;
 import consulo.versionControlSystem.log.*;
 
 import javax.annotation.Nonnull;
@@ -34,40 +33,12 @@ public class MergeCommitsHighlighter implements VcsLogHighlighter {
   @Nonnull
   @Override
   public VcsCommitStyle getStyle(@Nonnull VcsShortCommitDetails details, boolean isSelected) {
-    if (isSelected || !myLogUi.isHighlighterEnabled(Factory.ID)) return VcsCommitStyle.DEFAULT;
+    if (isSelected || !myLogUi.isHighlighterEnabled(MergeCommitsHighlighterFactory.ID)) return VcsCommitStyle.DEFAULT;
     if (details.getParents().size() >= 2) return VcsCommitStyleFactory.foreground(MERGE_COMMIT_FOREGROUND);
     return VcsCommitStyle.DEFAULT;
   }
 
   @Override
   public void update(@Nonnull VcsLogDataPack dataPack, boolean refreshHappened) {
-  }
-
-  public static class Factory implements VcsLogHighlighterFactory {
-    @Nonnull
-    private static final String ID = "MERGE_COMMITS";
-
-    @Nonnull
-    @Override
-    public VcsLogHighlighter createHighlighter(@Nonnull VcsLogData logData, @Nonnull VcsLogUi logUi) {
-      return new MergeCommitsHighlighter(logUi);
-    }
-
-    @Nonnull
-    @Override
-    public String getId() {
-      return ID;
-    }
-
-    @Nonnull
-    @Override
-    public String getTitle() {
-      return "Merge Commits";
-    }
-
-    @Override
-    public boolean showMenuItem() {
-      return true;
-    }
   }
 }

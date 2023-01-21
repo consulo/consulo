@@ -20,7 +20,7 @@ import consulo.versionControlSystem.log.VcsLogDataPack;
 import consulo.versionControlSystem.log.VcsLogFilterCollection;
 import consulo.versionControlSystem.log.VcsLogProvider;
 import consulo.versionControlSystem.log.VcsLogRefs;
-import consulo.ide.impl.idea.vcs.log.graph.VisibleGraph;
+import consulo.versionControlSystem.log.graph.VisibleGraph;
 import consulo.ide.impl.idea.vcs.log.impl.VcsLogFilterCollectionImpl;
 import javax.annotation.Nonnull;
 

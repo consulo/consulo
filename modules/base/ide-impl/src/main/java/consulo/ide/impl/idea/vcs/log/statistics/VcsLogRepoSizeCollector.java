@@ -27,7 +27,7 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.MultiMap;
 import consulo.versionControlSystem.log.VcsLogProvider;
 import consulo.ide.impl.idea.vcs.log.data.DataPack;
-import consulo.ide.impl.idea.vcs.log.data.VcsLogData;
+import consulo.ide.impl.idea.vcs.log.data.VcsLogDataImpl;
 import consulo.ide.impl.idea.vcs.log.graph.PermanentGraph;
 import consulo.ide.impl.idea.vcs.log.impl.VcsProjectLog;
 
@@ -44,7 +44,7 @@ public class VcsLogRepoSizeCollector extends AbstractApplicationUsagesCollector 
   @Override
   public Set<UsageDescriptor> getProjectUsages(@Nonnull Project project) throws CollectUsagesException {
     VcsProjectLog projectLog = VcsProjectLog.getInstance(project);
-    VcsLogData logData = projectLog.getDataManager();
+    VcsLogDataImpl logData = projectLog.getDataManager();
     if (logData != null) {
       DataPack dataPack = logData.getDataPack();
       if (dataPack.isFull()) {

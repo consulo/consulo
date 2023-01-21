@@ -25,8 +25,8 @@ import consulo.versionControlSystem.log.VcsRef;
 import consulo.versionControlSystem.log.VcsLogDataPack;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.vcs.log.impl.SingletonRefGroup;
-import consulo.ide.impl.idea.vcs.log.impl.VcsLogUtil;
+import consulo.versionControlSystem.log.base.SingletonRefGroup;
+import consulo.versionControlSystem.log.util.VcsLogUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

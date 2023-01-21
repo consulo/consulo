@@ -34,7 +34,6 @@ import consulo.application.util.function.Processor;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.index.io.StorageException;
-import consulo.ide.impl.idea.vcs.log.*;
 import consulo.ide.impl.idea.vcs.log.data.*;
 import consulo.ide.impl.idea.vcs.log.impl.FatalErrorHandler;
 import consulo.ide.impl.idea.vcs.log.ui.filter.VcsLogTextFilterImpl;

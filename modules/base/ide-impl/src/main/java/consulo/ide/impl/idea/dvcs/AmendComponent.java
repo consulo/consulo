@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.dvcs;
 import consulo.versionControlSystem.distributed.DvcsUtil;
 import consulo.versionControlSystem.distributed.repository.Repository;
 import consulo.versionControlSystem.distributed.repository.RepositoryManager;
-import consulo.ide.impl.idea.dvcs.ui.DvcsBundle;
+import consulo.versionControlSystem.distributed.DvcsBundle;
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;

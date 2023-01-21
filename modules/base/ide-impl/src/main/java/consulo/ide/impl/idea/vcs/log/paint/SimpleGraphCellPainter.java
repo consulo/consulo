@@ -21,7 +21,7 @@ import consulo.ui.ex.JBColor;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.graph.EdgePrintElement;
 import consulo.ide.impl.idea.vcs.log.graph.NodePrintElement;
-import consulo.ide.impl.idea.vcs.log.graph.PrintElement;
+import consulo.versionControlSystem.log.graph.PrintElement;
 import consulo.ide.impl.idea.vcs.log.graph.impl.print.elements.TerminalEdgePrintElement;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

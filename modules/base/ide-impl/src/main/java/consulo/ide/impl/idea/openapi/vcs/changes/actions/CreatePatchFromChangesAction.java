@@ -25,7 +25,7 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.versionControlSystem.VcsBundle;
-import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
+import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.VcsException;
 import consulo.ide.impl.idea.openapi.vcs.changes.*;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.CreatePatchCommitExecutor;

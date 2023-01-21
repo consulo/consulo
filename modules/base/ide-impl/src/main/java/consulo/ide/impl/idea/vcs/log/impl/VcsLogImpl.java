@@ -21,7 +21,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.versionControlSystem.log.*;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.vcs.log.data.VcsLogData;
+import consulo.ide.impl.idea.vcs.log.data.VcsLogDataImpl;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl;
 import consulo.ide.impl.idea.vcs.log.ui.frame.VcsLogGraphTable;
 import consulo.ide.impl.idea.vcs.log.ui.tables.GraphTableModel;
@@ -36,11 +36,11 @@ import java.util.stream.Collectors;
 
 public class VcsLogImpl implements VcsLog {
   @Nonnull
-  private final VcsLogData myLogData;
+  private final VcsLogDataImpl myLogData;
   @Nonnull
   private final VcsLogUiImpl myUi;
 
-  public VcsLogImpl(@Nonnull VcsLogData manager, @Nonnull VcsLogUiImpl ui) {
+  public VcsLogImpl(@Nonnull VcsLogDataImpl manager, @Nonnull VcsLogUiImpl ui) {
     myLogData = manager;
     myUi = ui;
   }

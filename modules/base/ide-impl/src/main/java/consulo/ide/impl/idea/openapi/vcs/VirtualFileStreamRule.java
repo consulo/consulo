@@ -20,6 +20,7 @@ import consulo.dataContext.GetDataRule;
 import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataProvider;
 import consulo.util.dataholder.Key;
+import consulo.versionControlSystem.VcsDataKeys;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 

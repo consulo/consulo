@@ -24,7 +24,7 @@ import consulo.versionControlSystem.log.VcsLogDataKeys;
 import consulo.versionControlSystem.log.VcsLogUi;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.vcs.log.impl.VcsGoToRefComparator;
-import consulo.ide.impl.idea.vcs.log.impl.VcsLogUtil;
+import consulo.versionControlSystem.log.util.VcsLogUtil;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl;
 
 import java.util.Set;

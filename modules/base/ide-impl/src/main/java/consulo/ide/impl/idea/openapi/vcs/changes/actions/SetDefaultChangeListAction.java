@@ -27,7 +27,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.versionControlSystem.VcsBundle;
-import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
+import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.LocalChangeList;

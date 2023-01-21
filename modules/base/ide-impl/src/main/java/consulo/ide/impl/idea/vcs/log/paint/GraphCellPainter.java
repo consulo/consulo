@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.vcs.log.paint;
 
-import consulo.ide.impl.idea.vcs.log.graph.PrintElement;
+import consulo.versionControlSystem.log.graph.PrintElement;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

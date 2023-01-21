@@ -19,7 +19,7 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.versionControlSystem.log.VcsCommitMetadata;
 import consulo.versionControlSystem.log.VcsLogDetailsFilter;
 import consulo.versionControlSystem.log.VcsLogTextFilter;
-import consulo.ide.impl.idea.vcs.log.impl.VcsLogUtil;
+import consulo.versionControlSystem.log.util.VcsLogUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

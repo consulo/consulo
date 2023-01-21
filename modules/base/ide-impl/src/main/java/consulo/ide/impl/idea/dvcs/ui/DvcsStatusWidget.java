@@ -1,7 +1,8 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.dvcs.ui;
 
-import consulo.ide.impl.idea.dvcs.branch.DvcsBranchUtil;
+import consulo.versionControlSystem.distributed.branch.DvcsBranchUtil;
+import consulo.versionControlSystem.distributed.DvcsBundle;
 import consulo.versionControlSystem.distributed.repository.Repository;
 import consulo.versionControlSystem.distributed.repository.VcsRepositoryMappingListener;
 import consulo.application.AllIcons;

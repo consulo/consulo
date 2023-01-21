@@ -36,6 +36,7 @@ import consulo.project.ui.ProjectWindowStateService;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.function.Condition;
 import consulo.ide.impl.idea.dvcs.DvcsImplIcons;
+import consulo.versionControlSystem.distributed.DvcsBundle;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -19,7 +19,7 @@ import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
 import consulo.versionControlSystem.log.graph.GraphCommit;
 import consulo.ide.impl.idea.vcs.log.graph.PermanentGraph;
-import consulo.ide.impl.idea.vcs.log.graph.VisibleGraph;
+import consulo.versionControlSystem.log.graph.VisibleGraph;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

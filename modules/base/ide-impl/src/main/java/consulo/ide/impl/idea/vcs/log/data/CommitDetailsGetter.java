@@ -5,7 +5,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.versionControlSystem.log.VcsFullCommitDetails;
 import consulo.versionControlSystem.log.VcsLogProvider;
 import consulo.ide.impl.idea.vcs.log.data.index.VcsLogIndex;
-import consulo.ide.impl.idea.vcs.log.impl.VcsLogUtil;
+import consulo.versionControlSystem.log.util.VcsLogUtil;
 import consulo.disposer.Disposable;
 
 import javax.annotation.Nonnull;

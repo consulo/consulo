@@ -25,10 +25,10 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ide.impl.idea.vcs.log.data.index.VcsLogIndex;
 import consulo.versionControlSystem.log.graph.GraphCommit;
 import consulo.ide.impl.idea.vcs.log.graph.PermanentGraph;
-import consulo.ide.impl.idea.vcs.log.graph.VisibleGraph;
+import consulo.versionControlSystem.log.graph.VisibleGraph;
 import consulo.ide.impl.idea.vcs.log.impl.VcsLogFilterCollectionImpl.VcsLogFilterCollectionBuilder;
 import consulo.ide.impl.idea.vcs.log.impl.VcsLogHashFilterImpl;
-import consulo.ide.impl.idea.vcs.log.impl.VcsLogUtil;
+import consulo.versionControlSystem.log.util.VcsLogUtil;
 import consulo.ide.impl.idea.vcs.log.util.StopWatch;
 import consulo.logging.Logger;
 

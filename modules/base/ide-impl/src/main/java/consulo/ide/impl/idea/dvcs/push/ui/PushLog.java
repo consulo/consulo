@@ -24,7 +24,7 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.util.lang.function.Condition;
 import consulo.util.dataholder.Key;
-import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
+import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.Change;
 import consulo.ide.impl.idea.openapi.vcs.changes.TextRevisionNumber;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesTreeBrowser;

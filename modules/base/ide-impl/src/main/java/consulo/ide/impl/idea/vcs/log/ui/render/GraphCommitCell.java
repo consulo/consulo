@@ -1,7 +1,7 @@
 package consulo.ide.impl.idea.vcs.log.ui.render;
 
 import consulo.versionControlSystem.log.VcsRef;
-import consulo.ide.impl.idea.vcs.log.graph.PrintElement;
+import consulo.versionControlSystem.log.graph.PrintElement;
 import javax.annotation.Nonnull;
 
 import java.util.Collection;

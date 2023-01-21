@@ -21,7 +21,7 @@ import consulo.index.io.Page;
 import consulo.index.io.PersistentBTreeEnumerator;
 import consulo.index.io.PersistentEnumeratorBase;
 import consulo.versionControlSystem.log.VcsUser;
-import consulo.ide.impl.idea.vcs.log.VcsUserRegistry;
+import consulo.versionControlSystem.log.VcsUserRegistry;
 import consulo.ide.impl.idea.vcs.log.impl.VcsUserImpl;
 import consulo.container.boot.ContainerPathManager;
 import consulo.disposer.Disposable;

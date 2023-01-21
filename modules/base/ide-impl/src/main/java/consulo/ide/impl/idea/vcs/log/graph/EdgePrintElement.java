@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.vcs.log.graph;
 
+import consulo.versionControlSystem.log.graph.PrintElement;
+
 import javax.annotation.Nonnull;
 
 public interface EdgePrintElement extends PrintElement {

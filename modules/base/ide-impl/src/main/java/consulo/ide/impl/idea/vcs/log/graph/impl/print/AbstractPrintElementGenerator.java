@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.vcs.log.graph.impl.print;
 
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.graph.EdgePrintElement;
-import consulo.ide.impl.idea.vcs.log.graph.PrintElement;
+import consulo.versionControlSystem.log.graph.PrintElement;
 import consulo.ide.impl.idea.vcs.log.graph.api.LinearGraph;
 import consulo.ide.impl.idea.vcs.log.graph.api.elements.GraphEdge;
 import consulo.ide.impl.idea.vcs.log.graph.api.elements.GraphElement;

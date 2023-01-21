@@ -23,7 +23,7 @@ import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.document.FileDocumentManager;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
+import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.Change;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesBrowserBase;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.RollbackChangesDialog;

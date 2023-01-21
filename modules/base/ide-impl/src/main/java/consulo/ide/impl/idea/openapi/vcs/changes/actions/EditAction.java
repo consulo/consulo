@@ -26,14 +26,10 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.vcs.*;
+import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.versionControlSystem.change.VcsDirtyScopeManager;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.versionControlSystem.AbstractVcsHelper;
-import consulo.versionControlSystem.EditFileProvider;
-import consulo.versionControlSystem.VcsBundle;
-import consulo.versionControlSystem.VcsException;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatusManager;
 

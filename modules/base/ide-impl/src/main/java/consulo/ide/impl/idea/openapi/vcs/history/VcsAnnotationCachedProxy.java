@@ -25,7 +25,7 @@ import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.annotate.AnnotationProvider;
 import consulo.versionControlSystem.annotate.FileAnnotation;
 import consulo.versionControlSystem.annotate.VcsAnnotation;
-import consulo.ide.impl.idea.openapi.vcs.annotate.VcsCacheableAnnotationProvider;
+import consulo.versionControlSystem.annotate.VcsCacheableAnnotationProvider;
 import consulo.versionControlSystem.change.ContentRevision;
 import consulo.versionControlSystem.diff.DiffProvider;
 import consulo.versionControlSystem.history.*;

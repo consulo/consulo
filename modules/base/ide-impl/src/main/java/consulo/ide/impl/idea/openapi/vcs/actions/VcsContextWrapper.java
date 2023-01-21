@@ -21,7 +21,7 @@ import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.versionControlSystem.FilePath;
-import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
+import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.action.VcsContext;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeList;

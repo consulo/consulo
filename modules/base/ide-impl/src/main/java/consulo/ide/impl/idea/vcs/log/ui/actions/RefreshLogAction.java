@@ -22,7 +22,7 @@ import consulo.versionControlSystem.log.VcsLogDataKeys;
 import consulo.versionControlSystem.log.VcsLogUi;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogFilterer;
 import consulo.ide.impl.idea.vcs.log.impl.VcsLogManager;
-import consulo.ide.impl.idea.vcs.log.impl.VcsLogUtil;
+import consulo.versionControlSystem.log.util.VcsLogUtil;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogInternalDataKeys;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl;
 import consulo.logging.Logger;

@@ -851,7 +851,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.vcs.log.data;
   exports consulo.ide.impl.idea.vcs.log.data.index;
   exports consulo.ide.impl.idea.vcs.log.graph;
-  exports consulo.ide.impl.idea.vcs.log.graph.actions;
   exports consulo.ide.impl.idea.vcs.log.graph.api;
   exports consulo.ide.impl.idea.vcs.log.graph.api.elements;
   exports consulo.ide.impl.idea.vcs.log.graph.api.permanent;

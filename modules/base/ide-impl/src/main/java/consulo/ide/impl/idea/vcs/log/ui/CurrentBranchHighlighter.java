@@ -15,19 +15,18 @@
  */
 package consulo.ide.impl.idea.vcs.log.ui;
 
+import consulo.ide.impl.idea.vcs.log.data.VcsLogDataImpl;
+import consulo.ui.ex.JBColor;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
 import consulo.versionControlSystem.log.*;
-import consulo.versionControlSystem.log.VcsLogDataPack;
+import consulo.versionControlSystem.log.util.VcsLogUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.JBColor;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.vcs.log.data.VcsLogData;
-import consulo.ide.impl.idea.vcs.log.impl.VcsLogUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
+import java.util.HashMap;
 import java.util.Map;
 
 public class CurrentBranchHighlighter implements VcsLogHighlighter {
@@ -38,7 +37,7 @@ public class CurrentBranchHighlighter implements VcsLogHighlighter {
   @Nonnull
   private final VcsLogUi myLogUi;
   @Nonnull
-  private final Map<VirtualFile, Condition<CommitId>> myConditions = ContainerUtil.newHashMap();
+  private final Map<VirtualFile, Condition<CommitId>> myConditions = new HashMap<>();
   @Nullable private String mySingleFilteredBranch;
 
   public CurrentBranchHighlighter(@Nonnull VcsLogData logData, @Nonnull VcsLogUi logUi) {
@@ -49,13 +48,13 @@ public class CurrentBranchHighlighter implements VcsLogHighlighter {
   @Nonnull
   @Override
   public VcsCommitStyle getStyle(@Nonnull VcsShortCommitDetails details, boolean isSelected) {
-    if (isSelected || !myLogUi.isHighlighterEnabled(Factory.ID)) return VcsCommitStyle.DEFAULT;
+    if (isSelected || !myLogUi.isHighlighterEnabled(CurrentBranchHighlighterFactory.ID)) return VcsCommitStyle.DEFAULT;
     Condition<CommitId> condition = myConditions.get(details.getRoot());
     if (condition == null) {
       VcsLogProvider provider = myLogData.getLogProvider(details.getRoot());
       String currentBranch = provider.getCurrentBranch(details.getRoot());
       if (!HEAD.equals(mySingleFilteredBranch) && currentBranch != null && !(currentBranch.equals(mySingleFilteredBranch))) {
-        condition = myLogData.getContainingBranchesGetter().getContainedInBranchCondition(currentBranch, details.getRoot());
+        condition = ((VcsLogDataImpl)myLogData).getContainingBranchesGetter().getContainedInBranchCondition(currentBranch, details.getRoot());
         myConditions.put(details.getRoot(), condition);
       }
       else {
@@ -73,33 +72,5 @@ public class CurrentBranchHighlighter implements VcsLogHighlighter {
     VcsLogBranchFilter branchFilter = dataPack.getFilters().getBranchFilter();
     mySingleFilteredBranch = branchFilter == null ? null : VcsLogUtil.getSingleFilteredBranch(branchFilter, dataPack.getRefs());
     myConditions.clear();
-  }
-
-  public static class Factory implements VcsLogHighlighterFactory {
-    @Nonnull
-    private static final String ID = "CURRENT_BRANCH";
-
-    @Nonnull
-    @Override
-    public VcsLogHighlighter createHighlighter(@Nonnull VcsLogData logData, @Nonnull VcsLogUi logUi) {
-      return new CurrentBranchHighlighter(logData, logUi);
-    }
-
-    @Nonnull
-    @Override
-    public String getId() {
-      return ID;
-    }
-
-    @Nonnull
-    @Override
-    public String getTitle() {
-      return "Current Branch";
-    }
-
-    @Override
-    public boolean showMenuItem() {
-      return true;
-    }
   }
 }

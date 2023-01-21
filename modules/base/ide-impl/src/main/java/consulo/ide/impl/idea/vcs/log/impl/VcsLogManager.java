@@ -55,7 +55,7 @@ public class VcsLogManager implements Disposable {
   @Nullable private final Runnable myRecreateMainLogHandler;
 
   @Nonnull
-  private final VcsLogData myLogData;
+  private final VcsLogDataImpl myLogData;
   @Nonnull
   private final VcsLogColorManagerImpl myColorManager;
   @Nonnull
@@ -78,7 +78,7 @@ public class VcsLogManager implements Disposable {
     myRecreateMainLogHandler = recreateHandler;
 
     Map<VirtualFile, VcsLogProvider> logProviders = findLogProviders(roots, myProject);
-    myLogData = new VcsLogData(myProject, logProviders, new MyFatalErrorsHandler());
+    myLogData = new VcsLogDataImpl(myProject, logProviders, new MyFatalErrorsHandler());
     myPostponableRefresher = new PostponableLogRefresher(myLogData);
     myTabsLogRefresher = new VcsLogTabsWatcher(myProject, myPostponableRefresher, myLogData);
 
@@ -107,7 +107,7 @@ public class VcsLogManager implements Disposable {
   }
 
   @Nonnull
-  public VcsLogData getDataManager() {
+  public VcsLogDataImpl getDataManager() {
     return myLogData;
   }
 

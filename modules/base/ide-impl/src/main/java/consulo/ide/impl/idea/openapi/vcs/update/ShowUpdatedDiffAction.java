@@ -43,7 +43,7 @@ import consulo.util.dataholder.UserDataHolderBase;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.versionControlSystem.FilePath;
 import consulo.virtualFileSystem.status.FileStatus;
-import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
+import consulo.versionControlSystem.VcsDataKeys;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ChangeGoToChangePopupAction;
 import consulo.ui.annotation.RequiredUIAccess;
 import javax.annotation.Nonnull;

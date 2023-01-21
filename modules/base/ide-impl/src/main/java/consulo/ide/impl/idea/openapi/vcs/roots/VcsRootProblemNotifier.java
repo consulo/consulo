@@ -12,7 +12,7 @@ import consulo.application.internal.BackgroundTaskUtil;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.versionControlSystem.VcsNotifier;
-import consulo.ide.impl.idea.openapi.vcs.VcsRootError;
+import consulo.versionControlSystem.VcsRootError;
 import java.util.function.Function;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.module.content.ProjectFileIndex;
@@ -24,6 +24,7 @@ import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.VcsDirectoryMapping;
 import consulo.versionControlSystem.change.ChangeListManager;
+import consulo.versionControlSystem.internal.VcsRootErrorsFinder;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
@@ -37,7 +38,7 @@ import static consulo.ide.impl.idea.openapi.util.io.FileUtil.toSystemDependentNa
 import static consulo.ide.impl.idea.openapi.util.text.StringUtil.escapeXmlEntities;
 import static consulo.ide.impl.idea.openapi.vcs.VcsNotificationIdsHolder.ROOTS_INVALID;
 import static consulo.ide.impl.idea.openapi.vcs.VcsNotificationIdsHolder.ROOTS_REGISTERED;
-import static consulo.ide.impl.idea.openapi.vcs.VcsRootError.Type.UNREGISTERED_ROOT;
+import static consulo.versionControlSystem.VcsRootError.Type.UNREGISTERED_ROOT;
 import static consulo.ide.impl.idea.util.containers.ContainerUtil.*;
 import static consulo.ui.ex.awt.UIUtil.BR;
 

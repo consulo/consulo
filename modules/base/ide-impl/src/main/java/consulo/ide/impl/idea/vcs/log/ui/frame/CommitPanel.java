@@ -33,7 +33,7 @@ import consulo.versionControlSystem.log.VcsFullCommitDetails;
 import consulo.versionControlSystem.log.VcsRef;
 import consulo.versionControlSystem.log.VcsUser;
 import consulo.ide.impl.idea.vcs.log.data.LoadingDetails;
-import consulo.ide.impl.idea.vcs.log.data.VcsLogData;
+import consulo.ide.impl.idea.vcs.log.data.VcsLogDataImpl;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogColorManager;
 import consulo.ide.impl.idea.vcs.log.ui.render.RectanglePainter;
 import consulo.versionControlSystem.log.util.VcsUserUtil;
@@ -59,7 +59,7 @@ class CommitPanel extends JBPanel {
   private static final int TOP_BORDER = 4;
 
   @Nonnull
-  private final VcsLogData myLogData;
+  private final VcsLogDataImpl myLogData;
 
   @Nonnull
   private final ReferencesPanel myBranchesPanel;
@@ -76,7 +76,7 @@ class CommitPanel extends JBPanel {
 
   @Nullable private VcsFullCommitDetails myCommit;
 
-  public CommitPanel(@Nonnull VcsLogData logData, @Nonnull VcsLogColorManager colorManager) {
+  public CommitPanel(@Nonnull VcsLogDataImpl logData, @Nonnull VcsLogColorManager colorManager) {
     myLogData = logData;
     myColorManager = colorManager;
 

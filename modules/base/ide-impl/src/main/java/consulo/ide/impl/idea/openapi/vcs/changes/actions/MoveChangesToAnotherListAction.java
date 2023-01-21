@@ -22,7 +22,7 @@ import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.change.*;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
-import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
+import consulo.versionControlSystem.VcsDataKeys;
 import consulo.ide.impl.idea.openapi.vcs.changes.*;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangeListChooser;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesListView;

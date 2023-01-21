@@ -31,7 +31,7 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Splitter;
 import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.VcsBundle;
-import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
+import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.Change;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesBrowserUseCase;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.RepositoryChangesBrowser;

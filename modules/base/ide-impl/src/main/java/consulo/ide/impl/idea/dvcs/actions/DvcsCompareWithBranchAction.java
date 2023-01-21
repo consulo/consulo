@@ -19,7 +19,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.versionControlSystem.distributed.DvcsUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
+import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.VcsNotifier;
 import consulo.ide.impl.idea.openapi.vcs.history.VcsDiffUtil;
 import consulo.util.lang.ObjectUtil;

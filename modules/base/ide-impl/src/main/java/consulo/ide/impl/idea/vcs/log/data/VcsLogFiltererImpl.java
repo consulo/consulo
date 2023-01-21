@@ -42,7 +42,7 @@ public class VcsLogFiltererImpl implements VcsLogFilterer {
   @Nonnull
   private final VisiblePackBuilder myVisiblePackBuilder;
   @Nonnull
-  private final VcsLogData myLogData;
+  private final VcsLogDataImpl myLogData;
 
   @Nonnull
   private VcsLogFilterCollection myFilters;
@@ -59,7 +59,7 @@ public class VcsLogFiltererImpl implements VcsLogFilterer {
   private volatile boolean myIsValid = true;
 
   public VcsLogFiltererImpl(@Nonnull final Project project,
-                            @Nonnull VcsLogData logData,
+                            @Nonnull VcsLogDataImpl logData,
                             @Nonnull PermanentGraph.SortType initialSortType) {
     myLogData = logData;
     myVisiblePackBuilder = myLogData.createVisiblePackBuilder();

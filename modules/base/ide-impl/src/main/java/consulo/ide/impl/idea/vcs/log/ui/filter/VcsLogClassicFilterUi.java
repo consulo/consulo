@@ -32,6 +32,7 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.log.*;
 import consulo.versionControlSystem.log.VcsLogDataPack;
+import consulo.versionControlSystem.log.util.VcsLogUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.event.DocumentAdapter;
@@ -65,7 +66,7 @@ public class VcsLogClassicFilterUi implements VcsLogFilterUi {
   private final VcsLogUiImpl myUi;
 
   @Nonnull
-  private final VcsLogData myLogData;
+  private final VcsLogDataImpl myLogData;
   @Nonnull
   private final MainVcsLogUiProperties myUiProperties;
 
@@ -84,7 +85,7 @@ public class VcsLogClassicFilterUi implements VcsLogFilterUi {
   private final TextFilterModel myTextFilterModel;
 
   public VcsLogClassicFilterUi(@Nonnull VcsLogUiImpl ui,
-                               @Nonnull VcsLogData logData,
+                               @Nonnull VcsLogDataImpl logData,
                                @Nonnull MainVcsLogUiProperties uiProperties,
                                @Nonnull VcsLogDataPack initialDataPack) {
     myUi = ui;

@@ -36,7 +36,6 @@ import consulo.ui.ex.awt.Messages;
 import consulo.util.lang.ThreeState;
 import consulo.util.lang.function.Condition;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.vcs.*;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesListView;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.RollbackChangesDialog;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.RollbackProgressModifier;

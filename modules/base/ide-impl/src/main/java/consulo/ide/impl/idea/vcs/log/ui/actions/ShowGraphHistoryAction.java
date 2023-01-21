@@ -23,7 +23,7 @@ import consulo.project.Project;
 import consulo.application.util.registry.Registry;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.vcs.log.data.VcsLogData;
+import consulo.ide.impl.idea.vcs.log.data.VcsLogDataImpl;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogStructureFilterImpl;
 import consulo.ide.impl.idea.vcs.log.impl.VcsLogContentProvider;
 import consulo.ide.impl.idea.vcs.log.impl.VcsLogManager;
@@ -59,7 +59,7 @@ public class ShowGraphHistoryAction extends DumbAwareAction {
       }
       else {
         VirtualFile root = ProjectLevelVcsManager.getInstance(project).getVcsRootFor(file);
-        VcsLogData dataManager = VcsProjectLog.getInstance(project).getDataManager();
+        VcsLogDataImpl dataManager = VcsProjectLog.getInstance(project).getDataManager();
         if (root == null || dataManager == null) {
           presentation.setEnabledAndVisible(false);
         }

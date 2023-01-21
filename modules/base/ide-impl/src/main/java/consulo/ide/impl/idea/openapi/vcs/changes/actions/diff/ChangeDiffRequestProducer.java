@@ -41,7 +41,7 @@ import consulo.util.lang.ref.Ref;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
-import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
+import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.VcsException;
 import consulo.ide.impl.idea.openapi.vcs.changes.*;
 import consulo.versionControlSystem.change.*;

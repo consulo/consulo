@@ -22,10 +22,10 @@ import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.openapi.editor.actions.ContentChooser;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.vcs.*;
 import consulo.versionControlSystem.CommitMessageI;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsConfiguration;
+import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.checkin.CheckinProjectPanel;
 import consulo.versionControlSystem.ui.Refreshable;
 

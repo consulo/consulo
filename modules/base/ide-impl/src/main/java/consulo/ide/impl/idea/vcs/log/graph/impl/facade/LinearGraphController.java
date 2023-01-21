@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.vcs.log.graph.impl.facade;
 
-import consulo.ide.impl.idea.vcs.log.graph.actions.GraphAction;
+import consulo.versionControlSystem.log.graph.action.GraphAction;
 import consulo.ide.impl.idea.vcs.log.graph.api.LinearGraph;
 import consulo.ide.impl.idea.vcs.log.graph.impl.print.elements.PrintElementWithGraphElement;
 import javax.annotation.Nonnull;

@@ -16,9 +16,9 @@
 package consulo.ide.impl.idea.vcs.log.graph.impl.facade;
 
 import consulo.ide.impl.idea.vcs.log.graph.*;
-import consulo.ide.impl.idea.vcs.log.graph.actions.ActionController;
-import consulo.ide.impl.idea.vcs.log.graph.actions.GraphAction;
-import consulo.ide.impl.idea.vcs.log.graph.actions.GraphAnswer;
+import consulo.versionControlSystem.log.graph.action.ActionController;
+import consulo.versionControlSystem.log.graph.action.GraphAction;
+import consulo.versionControlSystem.log.graph.action.GraphAnswer;
 import consulo.ide.impl.idea.vcs.log.graph.api.elements.GraphEdge;
 import consulo.ide.impl.idea.vcs.log.graph.api.elements.GraphEdgeType;
 import consulo.ide.impl.idea.vcs.log.graph.api.elements.GraphElement;
@@ -27,6 +27,11 @@ import consulo.ide.impl.idea.vcs.log.graph.api.permanent.PermanentGraphInfo;
 import consulo.ide.impl.idea.vcs.log.graph.impl.facade.LinearGraphController.LinearGraphAction;
 import consulo.ide.impl.idea.vcs.log.graph.impl.print.PrintElementGeneratorImpl;
 import consulo.ide.impl.idea.vcs.log.graph.impl.print.elements.PrintElementWithGraphElement;
+import consulo.versionControlSystem.log.graph.PrintElement;
+import consulo.versionControlSystem.log.graph.RowInfo;
+import consulo.versionControlSystem.log.graph.RowType;
+import consulo.versionControlSystem.log.graph.VisibleGraph;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

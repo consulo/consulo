@@ -36,7 +36,7 @@ import consulo.dataContext.TypeSafeDataProvider;
 import consulo.ide.impl.idea.ide.actions.EditSourceAction;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.FilePatch;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.PatchSyntaxException;
-import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
+import consulo.versionControlSystem.VcsDataKeys;
 import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.IssueLinkRenderer;
 import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.TreeLinkMouseListener;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.PatchFileType;

@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.openapi.diff.impl.patch.IdeaTextPatchBuilder;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.formove.PatchApplier;
 import consulo.ui.ex.awt.Messages;
 import consulo.versionControlSystem.VcsBundle;
-import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
+import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.VcsException;
 import consulo.ide.impl.idea.openapi.vcs.changes.*;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangeListChooser;

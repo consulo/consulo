@@ -19,9 +19,10 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.GetDataRule;
 import consulo.dataContext.DataProvider;
 import consulo.util.dataholder.Key;
-import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
+import consulo.versionControlSystem.VcsDataKeys;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.change.ChangesSelection;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

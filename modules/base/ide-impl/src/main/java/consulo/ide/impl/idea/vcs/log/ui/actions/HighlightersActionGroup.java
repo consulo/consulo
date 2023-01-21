@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.vcs.log.ui.actions;
 import consulo.component.extension.Extensions;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogUiProperties;
-import consulo.ide.impl.idea.vcs.log.ui.VcsLogHighlighterFactory;
+import consulo.versionControlSystem.log.VcsLogHighlighterFactory;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogInternalDataKeys;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl;
 import consulo.language.editor.CommonDataKeys;

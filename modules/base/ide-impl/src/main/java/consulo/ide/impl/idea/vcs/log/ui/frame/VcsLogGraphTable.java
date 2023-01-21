@@ -37,15 +37,15 @@ import consulo.application.util.DateFormatUtil;
 import consulo.versionControlSystem.log.VcsCommitStyleFactory;
 import consulo.versionControlSystem.log.VcsLogHighlighter;
 import consulo.versionControlSystem.log.VcsShortCommitDetails;
-import consulo.ide.impl.idea.vcs.log.data.VcsLogData;
+import consulo.ide.impl.idea.vcs.log.data.VcsLogDataImpl;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogProgress;
 import consulo.ide.impl.idea.vcs.log.data.VisiblePack;
 import consulo.ide.impl.idea.vcs.log.graph.DefaultColorGenerator;
-import consulo.ide.impl.idea.vcs.log.graph.RowInfo;
-import consulo.ide.impl.idea.vcs.log.graph.RowType;
-import consulo.ide.impl.idea.vcs.log.graph.VisibleGraph;
-import consulo.ide.impl.idea.vcs.log.graph.actions.GraphAnswer;
-import consulo.ide.impl.idea.vcs.log.impl.VcsLogUtil;
+import consulo.versionControlSystem.log.graph.RowInfo;
+import consulo.versionControlSystem.log.graph.RowType;
+import consulo.versionControlSystem.log.graph.VisibleGraph;
+import consulo.versionControlSystem.log.graph.action.GraphAnswer;
+import consulo.versionControlSystem.log.util.VcsLogUtil;
 import consulo.ide.impl.idea.vcs.log.paint.GraphCellPainter;
 import consulo.ide.impl.idea.vcs.log.paint.SimpleGraphCellPainter;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogActionPlaces;
@@ -90,7 +90,7 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
   @Nonnull
   private final VcsLogUiImpl myUi;
   @Nonnull
-  private final VcsLogData myLogData;
+  private final VcsLogDataImpl myLogData;
   @Nonnull
   private final MyDummyTableCellEditor myDummyEditor = new MyDummyTableCellEditor();
   @Nonnull
@@ -108,7 +108,7 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
   @Nonnull
   private final Collection<VcsLogHighlighter> myHighlighters = ContainerUtil.newArrayList();
 
-  public VcsLogGraphTable(@Nonnull VcsLogUiImpl ui, @Nonnull VcsLogData logData, @Nonnull VisiblePack initialDataPack) {
+  public VcsLogGraphTable(@Nonnull VcsLogUiImpl ui, @Nonnull VcsLogDataImpl logData, @Nonnull VisiblePack initialDataPack) {
     super(new GraphTableModel(initialDataPack, logData, ui));
     getEmptyText().setText("Changes Log");
 

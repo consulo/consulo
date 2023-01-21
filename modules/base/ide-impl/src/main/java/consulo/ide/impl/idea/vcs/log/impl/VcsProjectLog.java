@@ -27,7 +27,7 @@ import consulo.ide.impl.idea.openapi.vcs.CalledInAny;
 import consulo.ide.impl.idea.openapi.vcs.CalledInAwt;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.root.VcsRoot;
-import consulo.ide.impl.idea.vcs.log.data.VcsLogData;
+import consulo.ide.impl.idea.vcs.log.data.VcsLogDataImpl;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogTabsProperties;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogPanel;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl;
@@ -64,7 +64,7 @@ public class VcsProjectLog {
   }
 
   @Nullable
-  public VcsLogData getDataManager() {
+  public VcsLogDataImpl getDataManager() {
     VcsLogManager cached = myLogManager.getCached();
     if (cached == null) return null;
     return cached.getDataManager();

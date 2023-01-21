@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.history;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.DataProvider;
 import consulo.dataContext.GetDataRule;
-import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
+import consulo.versionControlSystem.VcsDataKeys;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangeListByDateComparator;
 import consulo.ide.impl.idea.openapi.vcs.versionBrowser.VcsRevisionNumberAware;
 import consulo.ide.impl.idea.util.ArrayUtil;

@@ -21,7 +21,7 @@ import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.change.LocalChangeList;
-import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
+import consulo.versionControlSystem.VcsDataKeys;
 import consulo.project.Project;
 import consulo.application.dumb.DumbAware;
 import consulo.task.TaskManager;

@@ -24,7 +24,7 @@ import consulo.dataContext.DataProvider;
 import consulo.project.Project;
 import consulo.ui.ex.action.*;
 import consulo.util.dataholder.Key;
-import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
+import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.change.ChangesUtil;

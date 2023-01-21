@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.vcs.log.ui.actions;
 
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
+import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.Change;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.CreatePatchFromChangesAction;
 

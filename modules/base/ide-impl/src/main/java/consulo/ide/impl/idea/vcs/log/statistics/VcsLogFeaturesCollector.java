@@ -26,7 +26,7 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.data.MainVcsLogUiProperties;
 import consulo.ide.impl.idea.vcs.log.graph.PermanentGraph;
 import consulo.ide.impl.idea.vcs.log.impl.VcsProjectLog;
-import consulo.ide.impl.idea.vcs.log.ui.VcsLogHighlighterFactory;
+import consulo.versionControlSystem.log.VcsLogHighlighterFactory;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl;
 
 import javax.annotation.Nonnull;
