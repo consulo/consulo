@@ -54,11 +54,6 @@ public class AWTUIAccessImpl implements UIAccess {
     return LaterInvocator.isInModalContext();
   }
 
-  @Override
-  public void addModalityStateListener(@Nonnull ModalityStateListener listener, @Nonnull Disposable parentDisposable) {
-    LaterInvocator.addModalityStateListener(listener, parentDisposable);
-  }
-
   @RequiredUIAccess
   @Override
   public int getEventCount() {

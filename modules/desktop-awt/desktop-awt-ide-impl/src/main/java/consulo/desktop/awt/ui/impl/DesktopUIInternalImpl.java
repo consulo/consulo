@@ -15,6 +15,9 @@
  */
 package consulo.desktop.awt.ui.impl;
 
+import consulo.application.impl.internal.LaterInvocator;
+import consulo.disposer.Disposable;
+import consulo.ui.event.ModalityStateListener;
 import consulo.ui.ex.awt.JBUIScale;
 import consulo.ide.impl.idea.util.io.UnsyncByteArrayInputStream;
 import consulo.ui.ex.awt.internal.EDT;
@@ -80,6 +83,11 @@ import java.util.function.Supplier;
  * @since 09-Jun-16
  */
 public class DesktopUIInternalImpl extends UIInternal {
+  @Override
+  public void addModalityStateListener(@Nonnull ModalityStateListener listener, @Nonnull Disposable parentDisposable) {
+    LaterInvocator.addModalityStateListener(listener, parentDisposable);
+  }
+
   @Override
   public Image _Image_fromUrl(URL url) throws IOException {
 

@@ -16,10 +16,12 @@
 package consulo.ui.internal;
 
 import consulo.container.plugin.util.PlatformServiceLoader;
+import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
+import consulo.ui.event.ModalityStateListener;
 import consulo.ui.font.FontManager;
 import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.Image;
@@ -262,6 +264,10 @@ public abstract class UIInternal {
 
   @Nonnull
   public HtmlView _Components_htmlView() {
+    throw new UnsupportedOperationException();
+  }
+
+  public void addModalityStateListener(@Nonnull ModalityStateListener listener, @Nonnull Disposable parentDisposable) {
     throw new UnsupportedOperationException();
   }
 }

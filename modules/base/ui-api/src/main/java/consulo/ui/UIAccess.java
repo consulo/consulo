@@ -69,6 +69,11 @@ public interface UIAccess {
     }
   }
 
+
+  static void addModalityStateListener(@Nonnull ModalityStateListener listener, @Nonnull Disposable parentDisposable) {
+    UIInternal.get().addModalityStateListener(listener, parentDisposable);
+  }
+  
   @RequiredUIAccess
   default int getEventCount() {
     assertIsUIThread();
@@ -133,8 +138,5 @@ public interface UIAccess {
 
   default boolean isInModalContext() {
     return false;
-  }
-
-  default void addModalityStateListener(@Nonnull ModalityStateListener listener, @Nonnull Disposable parentDisposable) {
   }
 }
