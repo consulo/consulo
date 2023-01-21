@@ -15,12 +15,30 @@
  */
 package consulo.execution.internal;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.localize.LocalizeValue;
 import consulo.project.ui.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationGroupContributor;
+
+import javax.annotation.Nonnull;
+import java.util.function.Consumer;
+
+import static consulo.project.ui.notification.NotificationDisplayType.STICKY_BALLOON;
 
 /**
  * @author VISTALL
  * @since 08-Aug-22
  */
-public class ExecutionNotificationGroupHolder {
-  public static final NotificationGroup EXECUTION_GROUP = NotificationGroup.logOnlyGroup("Execution");
+@ExtensionImpl
+public class ExecutionNotificationGroupHolder implements NotificationGroupContributor {
+  public static final NotificationGroup BASE = NotificationGroup.logOnlyGroup("Execution");
+  public static final NotificationGroup EXTERNAL = new NotificationGroup("ExternalExecutableCriticalFailures",
+                                                                         LocalizeValue.localizeTODO("External Executable Critical Failures"), STICKY_BALLOON,
+                                                                         true);
+
+  @Override
+  public void contribute(@Nonnull Consumer<NotificationGroup> registrator) {
+    registrator.accept(BASE);
+    registrator.accept(EXTERNAL);
+  }
 }

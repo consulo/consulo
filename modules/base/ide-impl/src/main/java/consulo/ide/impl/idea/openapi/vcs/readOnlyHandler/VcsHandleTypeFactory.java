@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs.readOnlyHandler;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.versionControlSystem.AbstractVcs;
-import consulo.ide.impl.idea.openapi.vcs.FilePathImpl;
+import consulo.versionControlSystem.base.FilePathImpl;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;

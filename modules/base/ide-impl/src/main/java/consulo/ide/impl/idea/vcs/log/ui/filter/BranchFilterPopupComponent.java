@@ -24,7 +24,7 @@ import consulo.ui.ex.popup.ListPopup;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.versionControlSystem.log.VcsLogBranchFilter;
-import consulo.ide.impl.idea.vcs.log.VcsLogDataPack;
+import consulo.versionControlSystem.log.VcsLogDataPack;
 import consulo.versionControlSystem.log.VcsRef;
 import consulo.ide.impl.idea.vcs.log.data.MainVcsLogUiProperties;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl;

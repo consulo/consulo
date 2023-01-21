@@ -26,7 +26,6 @@ import consulo.versionControlSystem.log.*;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.SLRUMap;
-import consulo.ide.impl.idea.vcs.log.*;
 import consulo.ide.impl.idea.vcs.log.graph.PermanentGraph;
 import consulo.ide.impl.idea.vcs.log.util.SequentialLimitedLifoExecutor;
 import javax.annotation.Nonnull;

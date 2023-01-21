@@ -16,29 +16,29 @@
 
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
+import consulo.disposer.Disposer;
 import consulo.ide.ServiceManager;
-import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.UIBundle;
+import consulo.ui.ex.content.Content;
+import consulo.ui.ex.content.ContentFactory;
+import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.content.event.ContentManagerAdapter;
+import consulo.ui.ex.content.event.ContentManagerEvent;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.ui.image.Image;
+import consulo.util.dataholder.Key;
 import consulo.util.lang.Trinity;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
-import consulo.ui.ex.content.Content;
-import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.project.ui.wm.ToolWindowId;
-import consulo.ui.ex.UIBundle;
-import consulo.annotation.DeprecationInfo;
-import consulo.disposer.Disposer;
-import consulo.localize.LocalizeValue;
-import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ui.ex.content.ContentFactory;
-import consulo.ui.ex.content.ContentManager;
-import consulo.ui.ex.content.event.ContentManagerEvent;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.image.Image;
-import consulo.util.dataholder.Key;
+import consulo.versionControlSystem.VcsToolWindow;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -58,8 +58,8 @@ public class ChangesViewContentManager implements ChangesViewContentI {
   }
 
   @Deprecated
-  @DeprecationInfo(value = "Use ToolWindowId#VCS")
-  public static final String TOOLWINDOW_ID = ToolWindowId.VCS;
+  @DeprecationInfo(value = "Use VcsToolWindow#ID")
+  public static final String TOOLWINDOW_ID = VcsToolWindow.ID;
 
   private static final Key<ChangesViewContentFactory> ourEpKey = Key.create(ChangesViewContentFactory.class);
 

@@ -20,7 +20,7 @@ import consulo.application.progress.Task;
 import consulo.versionControlSystem.distributed.DvcsUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.VcsDataKeys;
-import consulo.ide.impl.idea.openapi.vcs.VcsNotifier;
+import consulo.versionControlSystem.VcsNotifier;
 import consulo.ide.impl.idea.openapi.vcs.history.VcsDiffUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;

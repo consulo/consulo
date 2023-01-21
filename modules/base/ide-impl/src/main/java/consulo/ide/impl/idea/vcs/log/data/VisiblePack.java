@@ -16,10 +16,10 @@
 package consulo.ide.impl.idea.vcs.log.data;
 
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.vcs.log.VcsLogDataPack;
+import consulo.versionControlSystem.log.VcsLogDataPack;
 import consulo.versionControlSystem.log.VcsLogFilterCollection;
 import consulo.versionControlSystem.log.VcsLogProvider;
-import consulo.ide.impl.idea.vcs.log.VcsLogRefs;
+import consulo.versionControlSystem.log.VcsLogRefs;
 import consulo.ide.impl.idea.vcs.log.graph.VisibleGraph;
 import consulo.ide.impl.idea.vcs.log.impl.VcsLogFilterCollectionImpl;
 import javax.annotation.Nonnull;

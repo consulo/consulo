@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.history.core.revisions;
 import consulo.ide.impl.idea.history.core.tree.Entry;
 import consulo.ide.impl.idea.history.integration.IdeaGateway;
 import consulo.versionControlSystem.FilePath;
-import consulo.ide.impl.idea.openapi.vcs.FilePathImpl;
+import consulo.versionControlSystem.base.FilePathImpl;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.ContentRevision;
 import consulo.versionControlSystem.history.VcsRevisionNumber;

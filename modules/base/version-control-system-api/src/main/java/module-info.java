@@ -20,6 +20,7 @@ module consulo.version.control.system.api {
   exports consulo.versionControlSystem.checkin;
   exports consulo.versionControlSystem.localize;
   exports consulo.versionControlSystem.change;
+  exports consulo.versionControlSystem.base;
   exports consulo.versionControlSystem.history;
   exports consulo.versionControlSystem.ui;
   exports consulo.versionControlSystem.action;

@@ -1378,4 +1378,17 @@ public class FileUtil {
       return parentFile;
     }
   }
+
+  @Nonnull
+  public static List<String> splitPath(@Nonnull String path) {
+    ArrayList<String> list = new ArrayList<>();
+    int index = 0;
+    int nextSeparator;
+    while ((nextSeparator = path.indexOf(File.separatorChar, index)) != -1) {
+      list.add(path.substring(index, nextSeparator));
+      index = nextSeparator + 1;
+    }
+    list.add(path.substring(index, path.length()));
+    return list;
+  }
 }

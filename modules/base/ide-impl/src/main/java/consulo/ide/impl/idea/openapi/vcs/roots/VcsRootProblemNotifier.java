@@ -11,7 +11,7 @@ import consulo.ide.impl.idea.openapi.diagnostic.Logger;
 import consulo.application.internal.BackgroundTaskUtil;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.vcs.VcsNotifier;
+import consulo.versionControlSystem.VcsNotifier;
 import consulo.ide.impl.idea.openapi.vcs.VcsRootError;
 import java.util.function.Function;
 import consulo.ide.setting.ShowSettingsUtil;

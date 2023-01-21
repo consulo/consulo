@@ -19,7 +19,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.ide.impl.idea.dvcs.ui.DvcsBundle;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.vcs.FilePathImpl;
+import consulo.versionControlSystem.base.FilePathImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;

@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.dvcs.branch;
 
 import consulo.versionControlSystem.distributed.DvcsUtil;
+import consulo.versionControlSystem.distributed.branch.DvcsSyncSettings;
 import consulo.versionControlSystem.distributed.repository.AbstractRepositoryManager;
 import consulo.versionControlSystem.distributed.repository.Repository;
 import consulo.ide.impl.idea.dvcs.ui.BranchActionGroupPopup;
@@ -29,7 +30,7 @@ import consulo.project.Project;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.util.lang.function.Condition;
 import consulo.versionControlSystem.AbstractVcs;
-import consulo.ide.impl.idea.openapi.vcs.VcsNotifier;
+import consulo.versionControlSystem.VcsNotifier;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 

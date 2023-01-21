@@ -32,7 +32,7 @@ import consulo.ide.impl.idea.util.NotNullFunction;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.ui.ColorIcon;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ide.impl.idea.vcs.log.VcsLogDataPack;
+import consulo.versionControlSystem.log.VcsLogDataPack;
 import consulo.versionControlSystem.log.VcsLogRootFilter;
 import consulo.ide.impl.idea.vcs.log.VcsLogRootFilterImpl;
 import consulo.versionControlSystem.log.VcsLogStructureFilter;

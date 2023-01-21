@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs.roots;
 
 import consulo.application.ApplicationManager;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.vcs.VcsNotifier;
+import consulo.versionControlSystem.VcsNotifier;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.project.Project;

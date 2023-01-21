@@ -25,7 +25,7 @@ import consulo.versionControlSystem.FilePath;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ContentRevision;
-import consulo.ide.impl.idea.openapi.vcs.changes.CurrentContentRevision;
+import consulo.versionControlSystem.change.CurrentContentRevision;
 import consulo.ide.impl.idea.util.PathUtil;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.project.Project;

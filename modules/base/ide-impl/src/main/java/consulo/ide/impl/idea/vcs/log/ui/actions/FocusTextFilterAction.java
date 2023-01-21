@@ -16,8 +16,8 @@
 package consulo.ide.impl.idea.vcs.log.ui.actions;
 
 import consulo.language.editor.CommonDataKeys;
-import consulo.ide.impl.idea.vcs.log.VcsLogDataKeys;
-import consulo.ide.impl.idea.vcs.log.VcsLogUi;
+import consulo.versionControlSystem.log.VcsLogDataKeys;
+import consulo.versionControlSystem.log.VcsLogUi;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl;
 import consulo.ide.impl.idea.vcs.log.ui.frame.MainFrame;
 import consulo.project.Project;

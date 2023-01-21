@@ -20,7 +20,7 @@ import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
-import consulo.ide.impl.idea.openapi.vcs.FilePathImpl;
+import consulo.versionControlSystem.base.FilePathImpl;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.*;

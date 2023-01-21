@@ -20,7 +20,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.textCompletion.DefaultTextCompletionValueDescriptor;
 import consulo.ide.impl.idea.util.textCompletion.ValuesCompletionProvider;
-import consulo.ide.impl.idea.vcs.log.VcsLogRefs;
+import consulo.versionControlSystem.log.VcsLogRefs;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogColorManager;
 import consulo.ide.impl.idea.vcs.log.ui.frame.VcsLogGraphTable;
 import consulo.versionControlSystem.util.VcsImplUtil;

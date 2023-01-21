@@ -30,7 +30,7 @@ import consulo.http.HttpRequests;
 import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListAdapter;
+import consulo.versionControlSystem.change.ChangeListAdapter;
 import consulo.ide.impl.idea.tasks.actions.TaskSearchSupport;
 import consulo.ide.impl.idea.tasks.config.TaskRepositoriesConfigurable;
 import consulo.ide.impl.idea.tasks.context.WorkingContextManager;

@@ -127,7 +127,7 @@ public class ExecutionUtil {
             finalListener.hyperlinkUpdate(event);
           }
         };
-        ExecutionNotificationGroupHolder.EXECUTION_GROUP.createNotification(title, finalDescription, NotificationType.ERROR, notificationListener).notify(project);
+        ExecutionNotificationGroupHolder.BASE.createNotification(title, finalDescription, NotificationType.ERROR, notificationListener).notify(project);
       }
     });
   }

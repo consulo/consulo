@@ -13,6 +13,7 @@ module consulo.version.control.system.distributed.api {
   requires consulo.ui.ex.awt.api;
   
   exports consulo.versionControlSystem.distributed;
+  exports consulo.versionControlSystem.distributed.action;
   exports consulo.versionControlSystem.distributed.push;
   exports consulo.versionControlSystem.distributed.repository;
   exports consulo.versionControlSystem.distributed.branch;

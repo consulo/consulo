@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs;
 
 import consulo.process.ProcessOutputTypes;
 import consulo.util.dataholder.Key;
+import consulo.versionControlSystem.ProcessEventListener;
 
 /**
  * Created with IntelliJ IDEA.

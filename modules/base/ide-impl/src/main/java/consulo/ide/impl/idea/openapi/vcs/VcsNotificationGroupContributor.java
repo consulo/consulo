@@ -19,6 +19,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.openapi.vcs.ui.VcsBalloonProblemNotifier;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationGroupContributor;
+import consulo.versionControlSystem.VcsNotifier;
 
 import javax.annotation.Nonnull;
 import java.util.function.Consumer;

@@ -22,26 +22,23 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.patch;
 
-import consulo.logging.Logger;
+import consulo.ide.impl.idea.openapi.vcs.history.VcsFileRevisionDvcsSpecific;
 import consulo.language.impl.internal.psi.LoadTextUtil;
+import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.lang.ref.Ref;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.change.ContentRevision;
 import consulo.versionControlSystem.diff.DiffProvider;
-import consulo.ide.impl.idea.openapi.vcs.history.*;
-import consulo.versionControlSystem.history.VcsFileRevision;
-import consulo.versionControlSystem.history.VcsHistoryProvider;
-import consulo.versionControlSystem.history.VcsHistorySession;
-import consulo.versionControlSystem.history.VcsRevisionNumber;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.application.util.function.Processor;
+import consulo.versionControlSystem.history.*;
 import consulo.versionControlSystem.util.VcsRunnable;
 import consulo.versionControlSystem.util.VcsUtil;
+import consulo.virtualFileSystem.VirtualFile;
 
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -71,9 +68,7 @@ public class DefaultPatchBaseVersionProvider {
     myRevisionPattern = null;
   }
 
-  public void getBaseVersionContent(final FilePath filePath,
-                                    final Processor<CharSequence> processor,
-                                    final List<String> warnings) throws VcsException {
+  public void getBaseVersionContent(final FilePath filePath, final Predicate<CharSequence> processor, final List<String> warnings) throws VcsException {
     if (myVcs == null) {
       return;
     }
@@ -95,8 +90,9 @@ public class DefaultPatchBaseVersionProvider {
             }
           }, VcsBundle.message("progress.text2.loading.revision", revision.asString()), true, myProject);
           // was cancelled
-          if (! success) return;
-        } else {
+          if (!success) return;
+        }
+        else {
           // use diff provider
           final DiffProvider diffProvider = myVcs.getDiffProvider();
           if (diffProvider != null && filePath.getVirtualFile() != null) {
@@ -104,11 +100,11 @@ public class DefaultPatchBaseVersionProvider {
 
             final boolean success = VcsUtil.runVcsProcessWithProgress(new VcsRunnable() {
               public void run() throws VcsException {
-                loadedExactRevision[0] = ! processor.process(fileContent.getContent());
+                loadedExactRevision[0] = !processor.test(fileContent.getContent());
               }
             }, VcsBundle.message("progress.text2.loading.revision", revision.asString()), true, myProject);
             // was cancelled
-            if (! success) return;
+            if (!success) return;
           }
         }
         if (Boolean.TRUE.equals(loadedExactRevision[0])) return;
@@ -123,7 +119,8 @@ public class DefaultPatchBaseVersionProvider {
           final Long fromTsPattern = getFromTsPattern();
           if (fromTsPattern == null) return;
           versionDate = new Date(fromTsPattern);
-        } else {
+        }
+        else {
           versionDate = new Date(myVersionId);
         }
       }
@@ -149,14 +146,13 @@ public class DefaultPatchBaseVersionProvider {
           found = fileRevision.getRevisionNumber().compareTo(revision) <= 0;
         }
         else {
-          final Date date = fileRevision instanceof VcsFileRevisionDvcsSpecific ?
-                            ((VcsFileRevisionDvcsSpecific) fileRevision).getDateForRevisionsOrdering() : fileRevision.getRevisionDate();
+          final Date date = fileRevision instanceof VcsFileRevisionDvcsSpecific ? ((VcsFileRevisionDvcsSpecific)fileRevision).getDateForRevisionsOrdering() : fileRevision.getRevisionDate();
           found = (date != null) && (date.before(versionDate) || date.equals(versionDate));
         }
 
         if (found) {
           fileRevision.loadContent();
-          processor.process(LoadTextUtil.getTextByBinaryPresentation(fileRevision.getContent(), myFile, false, false));
+          processor.test(LoadTextUtil.getTextByBinaryPresentation(fileRevision.getContent(), myFile, false, false));
           // TODO: try to download more than one version
           break;
         }

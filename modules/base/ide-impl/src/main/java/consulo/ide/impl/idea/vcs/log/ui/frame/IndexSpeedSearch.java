@@ -27,7 +27,7 @@ import consulo.ide.impl.idea.vcs.log.data.VisiblePack;
 import consulo.ide.impl.idea.vcs.log.data.index.IndexedDetails;
 import consulo.ide.impl.idea.vcs.log.data.index.VcsLogIndex;
 import consulo.ide.impl.idea.vcs.log.impl.VcsLogUtil;
-import consulo.ide.impl.idea.vcs.log.util.VcsUserUtil;
+import consulo.versionControlSystem.log.util.VcsUserUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

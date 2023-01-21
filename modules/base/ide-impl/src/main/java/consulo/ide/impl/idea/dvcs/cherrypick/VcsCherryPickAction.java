@@ -29,7 +29,7 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.versionControlSystem.log.CommitId;
 import consulo.versionControlSystem.log.Hash;
 import consulo.versionControlSystem.log.VcsLog;
-import consulo.ide.impl.idea.vcs.log.VcsLogDataKeys;
+import consulo.versionControlSystem.log.VcsLogDataKeys;
 import consulo.ide.impl.idea.vcs.log.impl.VcsLogUtil;
 import consulo.ide.impl.idea.dvcs.DvcsImplIcons;
 import javax.annotation.Nonnull;

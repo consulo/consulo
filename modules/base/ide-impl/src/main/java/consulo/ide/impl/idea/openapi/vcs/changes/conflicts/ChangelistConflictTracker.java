@@ -27,7 +27,7 @@ import consulo.fileEditor.EditorNotifications;
 import consulo.ide.impl.idea.openapi.project.ProjectUtil;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.ZipperUpdater;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListAdapter;
+import consulo.versionControlSystem.change.ChangeListAdapter;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.versionControlSystem.change.InvokeAfterUpdateMode;

@@ -17,12 +17,12 @@ package consulo.ide.impl.idea.openapi.vcs.actions;
 
 import consulo.ui.ex.action.Presentation;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.vcs.*;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.action.VcsContext;
+import consulo.versionControlSystem.base.FilePathImpl;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.ArrayList;

@@ -29,7 +29,7 @@ import consulo.index.io.data.IOUtil;
 import consulo.index.io.KeyDescriptor;
 import consulo.index.io.PersistentEnumeratorBase;
 import consulo.ide.impl.idea.vcs.log.impl.FatalErrorHandler;
-import consulo.ide.impl.idea.vcs.log.impl.HashImpl;
+import consulo.versionControlSystem.log.base.HashImpl;
 import consulo.ide.impl.idea.vcs.log.impl.VcsRefImpl;
 import consulo.ide.impl.idea.vcs.log.util.PersistentUtil;
 import consulo.util.collection.primitive.objects.ObjectIntMap;

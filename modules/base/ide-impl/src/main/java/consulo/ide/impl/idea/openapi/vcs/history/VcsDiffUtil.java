@@ -23,7 +23,7 @@ import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ContentRevision;
-import consulo.ide.impl.idea.openapi.vcs.changes.CurrentContentRevision;
+import consulo.versionControlSystem.change.CurrentContentRevision;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ShowDiffAction;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ShowDiffContext;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesBrowser;

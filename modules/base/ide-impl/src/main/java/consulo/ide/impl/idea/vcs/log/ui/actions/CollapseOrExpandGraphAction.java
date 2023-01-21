@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.vcs.log.ui.actions;
 
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ide.impl.idea.vcs.log.VcsLogDataKeys;
-import consulo.ide.impl.idea.vcs.log.VcsLogUi;
+import consulo.versionControlSystem.log.VcsLogDataKeys;
+import consulo.versionControlSystem.log.VcsLogUi;
 import consulo.ide.impl.idea.vcs.log.data.MainVcsLogUiProperties;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogUiProperties;
 import consulo.ide.impl.idea.vcs.log.graph.PermanentGraph;

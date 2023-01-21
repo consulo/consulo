@@ -31,6 +31,7 @@ import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.log.*;
+import consulo.versionControlSystem.log.VcsLogDataPack;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.event.DocumentAdapter;

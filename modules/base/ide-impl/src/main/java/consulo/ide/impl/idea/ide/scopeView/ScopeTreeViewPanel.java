@@ -41,7 +41,7 @@ import consulo.ide.impl.idea.ide.scopeView.nodes.BasePsiNode;
 import consulo.ide.impl.idea.ide.ui.customization.CustomizationUtil;
 import consulo.ide.impl.idea.ide.util.DeleteHandler;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListAdapter;
+import consulo.versionControlSystem.change.ChangeListAdapter;
 import consulo.ide.impl.idea.packageDependencies.DefaultScopesProvider;
 import consulo.language.editor.packageDependency.DependencyValidationManager;
 import consulo.ide.impl.idea.packageDependencies.ui.*;

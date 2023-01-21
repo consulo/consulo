@@ -17,14 +17,11 @@ package consulo.ide.impl.idea.vcs.log.ui;
 
 import consulo.ide.impl.idea.util.NotNullFunction;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.vcs.log.*;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogData;
 import consulo.ide.impl.idea.vcs.log.impl.VcsLogUserFilterImpl;
-import consulo.ide.impl.idea.vcs.log.util.VcsUserUtil;
-import consulo.versionControlSystem.log.VcsLogFilterCollection;
-import consulo.versionControlSystem.log.VcsLogUserFilter;
-import consulo.versionControlSystem.log.VcsShortCommitDetails;
-import consulo.versionControlSystem.log.VcsUser;
+import consulo.versionControlSystem.log.*;
+import consulo.versionControlSystem.log.VcsLogDataPack;
+import consulo.versionControlSystem.log.util.VcsUserUtil;
 
 import javax.annotation.Nonnull;
 

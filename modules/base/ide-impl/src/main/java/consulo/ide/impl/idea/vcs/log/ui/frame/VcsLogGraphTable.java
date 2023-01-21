@@ -34,8 +34,8 @@ import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.util.DateFormatUtil;
-import consulo.ide.impl.idea.vcs.log.VcsCommitStyleFactory;
-import consulo.ide.impl.idea.vcs.log.VcsLogHighlighter;
+import consulo.versionControlSystem.log.VcsCommitStyleFactory;
+import consulo.versionControlSystem.log.VcsLogHighlighter;
 import consulo.versionControlSystem.log.VcsShortCommitDetails;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogData;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogProgress;
@@ -75,8 +75,8 @@ import java.util.Date;
 import java.util.EventObject;
 import java.util.List;
 
-import static consulo.ide.impl.idea.vcs.log.VcsLogHighlighter.TextStyle.BOLD;
-import static consulo.ide.impl.idea.vcs.log.VcsLogHighlighter.TextStyle.ITALIC;
+import static consulo.versionControlSystem.log.VcsLogHighlighter.TextStyle.BOLD;
+import static consulo.versionControlSystem.log.VcsLogHighlighter.TextStyle.ITALIC;
 
 public class VcsLogGraphTable extends TableWithProgress implements DataProvider, CopyProvider {
   private static final Logger LOG = Logger.getInstance(VcsLogGraphTable.class);

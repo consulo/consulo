@@ -22,7 +22,7 @@ import consulo.util.collection.MultiMap;
 import consulo.versionControlSystem.log.VcsCommitMetadata;
 import consulo.versionControlSystem.log.VcsLogUserFilter;
 import consulo.versionControlSystem.log.VcsUser;
-import consulo.ide.impl.idea.vcs.log.util.VcsUserUtil;
+import consulo.versionControlSystem.log.util.VcsUserUtil;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

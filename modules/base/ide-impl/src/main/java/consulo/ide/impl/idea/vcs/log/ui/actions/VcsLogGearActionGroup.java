@@ -24,8 +24,8 @@ import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.popup.ListPopup;
-import consulo.ide.impl.idea.vcs.log.VcsLogDataKeys;
-import consulo.ide.impl.idea.vcs.log.VcsLogUi;
+import consulo.versionControlSystem.log.VcsLogDataKeys;
+import consulo.versionControlSystem.log.VcsLogUi;
 import consulo.ide.impl.wm.impl.ToolWindowContentUI;
 import javax.annotation.Nonnull;
 

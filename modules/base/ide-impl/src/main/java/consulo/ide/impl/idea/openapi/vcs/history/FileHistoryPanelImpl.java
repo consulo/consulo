@@ -65,15 +65,12 @@ import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.TableLinkMouseListen
 import consulo.ide.impl.idea.openapi.vcs.impl.AbstractVcsHelperImpl;
 import consulo.ide.impl.idea.openapi.vcs.ui.ReplaceFileConfirmationDialog;
 import consulo.versionControlSystem.*;
-import consulo.versionControlSystem.change.ChangeListManager;
-import consulo.versionControlSystem.change.VcsDirtyScopeManager;
+import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.history.*;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.ide.impl.idea.openapi.vcs.vfs.VcsFileSystem;
 import consulo.ide.impl.idea.openapi.vcs.vfs.VcsVirtualFile;
 import consulo.ide.impl.idea.openapi.vcs.vfs.VcsVirtualFolder;
-import consulo.versionControlSystem.change.Change;
-import consulo.versionControlSystem.change.ContentRevision;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.ui.ex.action.*;
 import consulo.virtualFileSystem.VirtualFile;

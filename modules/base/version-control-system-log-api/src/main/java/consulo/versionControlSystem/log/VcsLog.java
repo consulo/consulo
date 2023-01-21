@@ -16,6 +16,7 @@
 package consulo.versionControlSystem.log;
 
 import consulo.application.progress.ProgressIndicator;
+import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
@@ -30,6 +31,7 @@ import java.util.function.Consumer;
  * Use this interface to access information available in the VCS Log.
  */
 public interface VcsLog {
+  Key<VcsLog> KEY = Key.create(VcsLog.class);
 
   /**
    * Returns commits currently selected in the log.

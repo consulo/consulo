@@ -36,7 +36,7 @@ import consulo.ide.impl.idea.vcs.log.data.LoadingDetails;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogData;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogColorManager;
 import consulo.ide.impl.idea.vcs.log.ui.render.RectanglePainter;
-import consulo.ide.impl.idea.vcs.log.util.VcsUserUtil;
+import consulo.versionControlSystem.log.util.VcsUserUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

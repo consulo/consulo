@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.project.Project;
 import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.openapi.vcs.*;
 import consulo.versionControlSystem.*;
+import consulo.versionControlSystem.base.FilePathImpl;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.versionControlSystem.root.VcsRoot;

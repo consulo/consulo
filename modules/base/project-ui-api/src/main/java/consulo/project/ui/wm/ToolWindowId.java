@@ -30,6 +30,7 @@ public interface ToolWindowId {
   String INSPECTION = "Inspection";
   String TODO_VIEW = "TODO";
   String DEPENDENCIES = "Dependency Viewer";
+  @Deprecated
   String VCS = "Version Control";
   String MODULES_DEPENDENCIES = "Module Dependencies";
   String DUPLICATES = "Duplicates";

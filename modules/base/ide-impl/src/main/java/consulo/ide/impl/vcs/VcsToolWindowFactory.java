@@ -23,7 +23,6 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowFactory;
-import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
@@ -31,6 +30,7 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.image.Image;
 import consulo.util.lang.Trinity;
+import consulo.versionControlSystem.VcsToolWindow;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -45,7 +45,7 @@ public class VcsToolWindowFactory implements ToolWindowFactory, DumbAware {
   @Nonnull
   @Override
   public String getId() {
-    return ToolWindowId.VCS;
+    return VcsToolWindow.ID;
   }
 
   @RequiredUIAccess

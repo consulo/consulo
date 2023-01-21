@@ -15,24 +15,24 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.patch;
 
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.PatchHunk;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.TextFilePatch;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.GenericPatchApplier;
-import consulo.document.Document;
-import consulo.document.FileDocumentManager;
-import consulo.language.impl.internal.psi.LoadTextUtil;
-import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.Getter;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.language.impl.internal.psi.LoadTextUtil;
+import consulo.project.Project;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsException;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.application.util.function.Processor;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class ApplyPatchForBaseRevisionTexts {
   private final CharSequence myLocal;
@@ -74,8 +74,8 @@ public class ApplyPatchForBaseRevisionTexts {
 
     if (provider != null) {
       try {
-        provider.getBaseVersionContent(pathBeforeRename, new Processor<CharSequence>() {
-          public boolean process(final CharSequence text) {
+        provider.getBaseVersionContent(pathBeforeRename, new Predicate<CharSequence>() {
+          public boolean test(final CharSequence text) {
             final GenericPatchApplier applier = new GenericPatchApplier(text, hunks);
             if (! applier.execute()) {
               return true;

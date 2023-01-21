@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs;
 import consulo.ide.impl.idea.util.NotNullFunction;
 import consulo.ide.impl.idea.util.containers.Convertor;
 import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.base.FilePathImpl;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;

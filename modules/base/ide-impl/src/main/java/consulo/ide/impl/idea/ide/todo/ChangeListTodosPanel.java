@@ -25,7 +25,7 @@ import consulo.ide.IdeBundle;
 import consulo.project.Project;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeList;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListAdapter;
+import consulo.versionControlSystem.change.ChangeListAdapter;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.ide.impl.idea.ui.AppUIUtil;
 import consulo.ui.ex.content.Content;

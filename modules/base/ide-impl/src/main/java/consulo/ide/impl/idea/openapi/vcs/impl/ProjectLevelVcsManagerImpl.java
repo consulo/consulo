@@ -47,6 +47,7 @@ import consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman.*;
 import consulo.ide.impl.idea.openapi.vcs.update.ActionInfo;
 import consulo.ide.impl.idea.openapi.vcs.update.UpdateInfoTree;
 import consulo.versionControlSystem.internal.ContentRevisionCache;
+import consulo.versionControlSystem.internal.VcsFileListenerContextHelper;
 import consulo.versionControlSystem.root.VcsRoot;
 import consulo.versionControlSystem.root.VcsRootSettings;
 import consulo.versionControlSystem.update.UpdatedFiles;

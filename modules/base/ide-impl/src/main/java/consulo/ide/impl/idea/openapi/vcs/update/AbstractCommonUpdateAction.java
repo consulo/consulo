@@ -30,7 +30,6 @@ import consulo.configurable.Configurable;
 import consulo.project.Project;
 import consulo.project.internal.ProjectManagerEx;
 import consulo.util.lang.ref.Ref;
-import consulo.ide.impl.idea.openapi.vcs.*;
 import consulo.ide.impl.idea.openapi.vcs.actions.AbstractVcsAction;
 import consulo.ide.impl.idea.openapi.vcs.actions.DescindingFilesFilter;
 import consulo.versionControlSystem.*;
@@ -59,7 +58,7 @@ import java.util.*;
 
 import static consulo.ide.impl.idea.openapi.util.text.StringUtil.notNullize;
 import static consulo.ide.impl.idea.openapi.util.text.StringUtil.pluralize;
-import static consulo.ide.impl.idea.openapi.vcs.VcsNotifier.STANDARD_NOTIFICATION;
+import static consulo.versionControlSystem.VcsNotifier.STANDARD_NOTIFICATION;
 import static consulo.util.lang.ObjectUtil.notNull;
 
 public abstract class AbstractCommonUpdateAction extends AbstractVcsAction implements UpdateInBackground {

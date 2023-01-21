@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.vcs.log.ui;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.ide.impl.idea.vcs.log.VcsLogHighlighter;
-import consulo.ide.impl.idea.vcs.log.VcsLogUi;
+import consulo.versionControlSystem.log.VcsLogHighlighter;
+import consulo.versionControlSystem.log.VcsLogUi;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogData;
 import javax.annotation.Nonnull;
 

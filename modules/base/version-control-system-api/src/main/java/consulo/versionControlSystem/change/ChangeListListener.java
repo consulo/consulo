@@ -25,25 +25,36 @@ import java.util.EventListener;
  * @see ChangeListManager#removeChangeListListener(ChangeListListener)
  */
 public interface ChangeListListener extends EventListener {
-  void changeListAdded(ChangeList list);
+  default void changeListAdded(ChangeList list) {
+  }
 
-  void changesRemoved(Collection<Change> changes, ChangeList fromList);
+  default void changesRemoved(Collection<Change> changes, ChangeList fromList) {
+  }
 
-  void changesAdded(Collection<Change> changes, ChangeList toList);
+  default void changesAdded(Collection<Change> changes, ChangeList toList) {
+  }
 
-  void changeListRemoved(ChangeList list);
+  default void changeListRemoved(ChangeList list) {
+  }
 
-  void changeListChanged(ChangeList list);
+  default void changeListChanged(ChangeList list) {
+  }
 
-  void changeListRenamed(ChangeList list, String oldName);
+  default void changeListRenamed(ChangeList list, String oldName) {
+  }
 
-  void changeListCommentChanged(ChangeList list, String oldComment);
+  default void changeListCommentChanged(ChangeList list, String oldComment) {
+  }
 
-  void changesMoved(Collection<Change> changes, ChangeList fromList, ChangeList toList);
+  default void changesMoved(Collection<Change> changes, ChangeList fromList, ChangeList toList) {
+  }
 
-  void defaultListChanged(final ChangeList oldDefaultList, ChangeList newDefaultList);
+  default void defaultListChanged(final ChangeList oldDefaultList, ChangeList newDefaultList) {
+  }
 
-  void unchangedFileStatusChanged();
+  default void unchangedFileStatusChanged() {
+  }
 
-  void changeListUpdateDone();
+  default void changeListUpdateDone() {
+  }
 }
