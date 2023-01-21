@@ -19,13 +19,16 @@ import consulo.execution.ui.RunContentDescriptor;
 import consulo.process.ProcessHandler;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.ide.IdeBundle;
+import consulo.process.event.ProcessEvent;
 import consulo.ui.ex.OccurenceNavigator;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.dataContext.DataProvider;
 import consulo.project.Project;
-import java.util.function.Consumer;
+
+import java.util.function.*;
+
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.concurrent.EdtExecutorService;
@@ -41,9 +44,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 /**
  * @author Vladislav.Soroka
@@ -251,6 +251,17 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
   @Override
   public void setOutputPaused(boolean value) {
     delegateToConsoleView(view -> view.setOutputPaused(value));
+  }
+
+  @Override
+  public void setProcessTextFilter(@Nullable BiPredicate<ProcessEvent, Key> filter) {
+    delegateToConsoleView(view -> view.setProcessTextFilter(filter));
+  }
+
+  @Nullable
+  @Override
+  public BiPredicate<ProcessEvent, Key> getProcessTextFilter() {
+    return getConsoleViewValue(ConsoleView::getProcessTextFilter);
   }
 
   @Override

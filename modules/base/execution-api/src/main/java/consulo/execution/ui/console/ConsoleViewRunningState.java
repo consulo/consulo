@@ -29,6 +29,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
+import java.util.function.BiPredicate;
 
 public class ConsoleViewRunningState extends ConsoleState {
   private final ConsoleView myConsole;
@@ -39,6 +40,11 @@ public class ConsoleViewRunningState extends ConsoleState {
   private final ProcessAdapter myProcessListener = new ProcessAdapter() {
     @Override
     public void onTextAvailable(final ProcessEvent event, final Key outputType) {
+      BiPredicate<ProcessEvent, Key> processTextFilter = myConsole.getProcessTextFilter();
+      if (processTextFilter != null && processTextFilter.test(event, outputType)) {
+        return;
+      }
+      
       myConsole.print(event.getText(), ConsoleViewContentType.getConsoleViewType(outputType));
     }
   };

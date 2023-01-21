@@ -32,7 +32,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * @author: Roman Chernyatchik
+ * @author Roman Chernyatchik
  */
 public class SMTRunnerConsoleView extends BaseTestsOutputConsoleView {
   private SMTestRunnerResultsForm myResultsViewer;

@@ -54,6 +54,7 @@ import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.logging.Logger;
 import consulo.navigation.OpenFileDescriptor;
 import consulo.process.ProcessHandler;
+import consulo.process.event.ProcessEvent;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.event.DumbModeListener;
@@ -89,6 +90,7 @@ import java.util.List;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.BiPredicate;
 
 public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableConsoleView, DataProvider, OccurenceNavigator {
   @NonNls
@@ -153,6 +155,9 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
 
   @Nonnull
   private final InputFilter myInputMessageFilter;
+
+  @Nullable
+  private BiPredicate<ProcessEvent, Key> myProcessTextFilter;
 
   public ConsoleViewImpl(@Nonnull Project project, boolean viewer) {
     this(project, GlobalSearchScope.allScope(project), viewer, true);
@@ -234,6 +239,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     ourTypedHandlerInitialized = true;
   }
 
+  @Override
   public Editor getEditor() {
     return myEditor;
   }
@@ -268,6 +274,17 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
   @Override
   public void attachToProcess(ProcessHandler processHandler) {
     myState = myState.attachTo(this, processHandler);
+  }
+
+  @Override
+  public void setProcessTextFilter(@Nullable BiPredicate<ProcessEvent, Key> processTextFilter) {
+    myProcessTextFilter = processTextFilter;
+  }
+
+  @Override
+  @Nullable
+  public BiPredicate<ProcessEvent, Key> getProcessTextFilter() {
+    return myProcessTextFilter;
   }
 
   @Override
@@ -307,6 +324,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     addFlushRequest(0, new ScrollRunnable());
   }
 
+  @Override
   public void requestScrollingToEnd() {
     if (myEditor == null) {
       return;

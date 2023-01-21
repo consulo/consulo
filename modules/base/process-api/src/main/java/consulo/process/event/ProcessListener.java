@@ -20,11 +20,15 @@ import consulo.util.dataholder.Key;
 import java.util.EventListener;
 
 public interface ProcessListener extends EventListener {
-  void startNotified(ProcessEvent event);
+  default void startNotified(ProcessEvent event) {
+  }
 
-  void processTerminated(ProcessEvent event);
+  default void processTerminated(ProcessEvent event) {
+  }
 
-  void processWillTerminate(ProcessEvent event, boolean willBeDestroyed);
+  default void processWillTerminate(ProcessEvent event, boolean willBeDestroyed) {
+  }
 
-  void onTextAvailable(ProcessEvent event, Key outputType);
+  default void onTextAvailable(ProcessEvent event, Key outputType) {
+  }
 }

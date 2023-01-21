@@ -15,33 +15,30 @@
  */
 package consulo.ide.impl.idea.execution.console;
 
-import consulo.execution.ExecutionBundle;
-import consulo.execution.ui.console.Filter;
-import consulo.execution.ui.console.HyperlinkInfo;
-import consulo.execution.ui.console.language.LanguageConsoleView;
-import consulo.ide.impl.idea.execution.impl.ConsoleViewImpl;
-import consulo.process.ProcessHandler;
-import consulo.execution.ui.console.ConsoleView;
-import consulo.execution.ui.console.ConsoleViewContentType;
-import consulo.execution.ui.console.ObservableConsoleView;
 import consulo.application.AllIcons;
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.application.ApplicationManager;
-import consulo.ide.impl.idea.openapi.editor.actions.ScrollToTheEndToolbarAction;
-import consulo.ide.impl.idea.openapi.editor.actions.ToggleUseSoftWrapsToolbarAction;
-import consulo.dataContext.DataProvider;
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.execution.ExecutionBundle;
+import consulo.execution.ui.console.*;
+import consulo.execution.ui.console.language.LanguageConsoleView;
+import consulo.ide.impl.idea.execution.impl.ConsoleViewImpl;
+import consulo.ide.impl.idea.ide.util.PropertiesComponent;
+import consulo.ide.impl.idea.openapi.editor.actions.ScrollToTheEndToolbarAction;
+import consulo.ide.impl.idea.openapi.editor.actions.ToggleUseSoftWrapsToolbarAction;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.process.ProcessHandler;
+import consulo.process.event.ProcessEvent;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.ToggleAction;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -51,6 +48,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.BiPredicate;
 
 public class DuplexConsoleView<S extends ConsoleView, T extends ConsoleView> extends JPanel implements ConsoleView, ObservableConsoleView, DataProvider {
   private final static String PRIMARY_CONSOLE_PANEL = "PRIMARY_CONSOLE_PANEL";
@@ -213,10 +211,21 @@ public class DuplexConsoleView<S extends ConsoleView, T extends ConsoleView> ext
   }
 
   @Override
+  public void setProcessTextFilter(@Nullable BiPredicate<ProcessEvent, Key> filter) {
+    myPrimaryConsoleView.setProcessTextFilter(filter);
+    mySecondaryConsoleView.setProcessTextFilter(filter);
+  }
+
+  @Nullable
+  @Override
+  public BiPredicate<ProcessEvent, Key> getProcessTextFilter() {
+    return null;
+  }
+
+  @Override
   public boolean canPause() {
     return false;
   }
-
 
   @Nonnull
   @Override

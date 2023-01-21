@@ -18,11 +18,13 @@ package consulo.execution.ui.console;
 import consulo.codeEditor.Editor;
 import consulo.execution.ui.ExecutionConsole;
 import consulo.process.ProcessHandler;
+import consulo.process.event.ProcessEvent;
 import consulo.ui.ex.action.AnAction;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.BiPredicate;
 
 /**
  * @see TextConsoleBuilder
@@ -49,6 +51,15 @@ public interface ConsoleView extends ExecutionConsole {
   void setHelpId(String helpId);
 
   void addMessageFilter(Filter filter);
+
+  /**
+   * Set filter for console message consumer. If predicate return true - message will be not print to console
+   * @param filter
+   */
+  void setProcessTextFilter(@Nullable BiPredicate<ProcessEvent, Key> filter);
+
+  @Nullable
+  BiPredicate<ProcessEvent, Key> getProcessTextFilter();
 
   void printHyperlink(String hyperlinkText, HyperlinkInfo info);
 

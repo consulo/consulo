@@ -38,6 +38,7 @@ import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.ui.RelativeFont;
 import consulo.ide.impl.idea.util.EditSourceOnEnterKeyHandler;
+import consulo.process.event.ProcessEvent;
 import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.concurrency.InvokerImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -83,6 +84,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -680,6 +682,17 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
 
   @Override
   public void printHyperlink(@Nonnull String hyperlinkText, @Nullable HyperlinkInfo info) {
+  }
+
+  @Override
+  public void setProcessTextFilter(@Nullable BiPredicate<ProcessEvent, Key> filter) {
+
+  }
+
+  @Nullable
+  @Override
+  public BiPredicate<ProcessEvent, Key> getProcessTextFilter() {
+    return null;
   }
 
   @Override

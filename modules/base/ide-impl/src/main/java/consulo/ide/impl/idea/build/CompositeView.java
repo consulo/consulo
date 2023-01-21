@@ -1,17 +1,16 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.build;
 
+import consulo.application.ApplicationManager;
+import consulo.application.dumb.DumbAware;
+import consulo.application.ui.wm.IdeFocusManager;
+import consulo.dataContext.DataProvider;
+import consulo.disposer.Disposer;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.application.ApplicationManager;
-import consulo.dataContext.DataProvider;
-import consulo.application.dumb.DumbAware;
-import consulo.ui.ex.ComponentContainer;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.application.ui.wm.IdeFocusManager;
-import consulo.disposer.Disposer;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.ComponentContainer;
 import consulo.ui.ex.action.*;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
@@ -33,9 +32,7 @@ import java.util.concurrent.atomic.AtomicReference;
 //@ApiStatus.Experimental
 public class CompositeView<T extends ComponentContainer> extends JPanel implements ComponentContainer, DataProvider {
   private final Map<String, T> myViewMap = new ConcurrentHashMap<>();
-  private final
-  @NonNls
-  String mySelectionStateKey;
+  private final String mySelectionStateKey;
   private final AtomicReference<String> myVisibleViewRef = new AtomicReference<>();
   private final
   @Nonnull

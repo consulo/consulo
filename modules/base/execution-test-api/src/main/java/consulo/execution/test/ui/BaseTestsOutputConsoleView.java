@@ -21,11 +21,15 @@ import consulo.execution.test.*;
 import consulo.execution.ui.console.Filter;
 import consulo.execution.ui.console.*;
 import consulo.process.ProcessHandler;
+import consulo.process.event.ProcessEvent;
 import consulo.ui.ex.HelpIdProvider;
 import consulo.ui.ex.action.AnAction;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
+import java.util.function.BiPredicate;
 
 public abstract class BaseTestsOutputConsoleView implements ConsoleView, ObservableConsoleView, HelpIdProvider {
   private ConsoleView myConsole;
@@ -66,16 +70,22 @@ public abstract class BaseTestsOutputConsoleView implements ConsoleView, Observa
 
   @Override
   public void print(final String s, final ConsoleViewContentType contentType) {
-    printNew(new Printable() {
-      @Override
-      public void printOn(final Printer printer) {
-        printer.print(s, contentType);
-      }
-    });
+    printNew(printer -> printer.print(s, contentType));
   }
 
   @Override
   public void allowHeavyFilters() {
+  }
+
+  @Override
+  public void setProcessTextFilter(@Nullable BiPredicate<ProcessEvent, Key> filter) {
+    myConsole.setProcessTextFilter(filter);
+  }
+
+  @Nullable
+  @Override
+  public BiPredicate<ProcessEvent, Key> getProcessTextFilter() {
+    return myConsole.getProcessTextFilter();
   }
 
   @Override

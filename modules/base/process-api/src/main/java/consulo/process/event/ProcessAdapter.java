@@ -15,8 +15,11 @@
  */
 package consulo.process.event;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.util.dataholder.Key;
 
+@Deprecated
+@DeprecationInfo("Use ProcessListener")
 public abstract class ProcessAdapter implements ProcessListener {
   @Override
   public void startNotified(final ProcessEvent event) {
