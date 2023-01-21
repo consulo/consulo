@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2022 consulo.io
+ * Copyright 2013-2023 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,28 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.module.impl.internal.layer;
+package consulo.module.content.layer;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 import consulo.module.Module;
 import consulo.project.Project;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
-* @author VISTALL
-* @since 18-Jun-22
-*/
+ * @author VISTALL
+ * @since 21/01/2023
+ */
 @ExtensionAPI(ComponentScope.APPLICATION)
-public abstract class OrderEnumerationHandlerFactory {
-  public static final ExtensionPointName<OrderEnumerationHandlerFactory> EP_NAME = ExtensionPointName.create(OrderEnumerationHandlerFactory.class);
+public interface OrderEnumerationPolicy {
 
-  public abstract boolean isApplicable(@Nonnull Project project);
+  boolean isApplicable(@Nonnull Project project);
 
-  public abstract boolean isApplicable(@Nonnull Module module);
+  boolean isApplicable(@Nonnull Module module);
 
-  public abstract OrderEnumerationHandler createHandler(@Nullable Module module);
+  default boolean shouldAddRuntimeDependenciesToTestCompilationClasspath() {
+    return false;
+  }
+
+  default boolean shouldIncludeTestsFromDependentModulesToTestClasspath() {
+    return true;
+  }
+
+  default boolean shouldProcessDependenciesRecursively() {
+    return true;
+  }
 }

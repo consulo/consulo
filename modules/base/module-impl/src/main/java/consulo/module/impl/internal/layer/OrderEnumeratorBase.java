@@ -27,14 +27,13 @@ import consulo.module.content.layer.*;
 import consulo.module.content.layer.orderEntry.*;
 import consulo.module.impl.internal.layer.orderEntry.OrderRootsCache;
 import consulo.project.Project;
-import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -54,22 +53,22 @@ public  abstract class OrderEnumeratorBase extends OrderEnumerator implements Or
   protected boolean myRecursivelyExportedOnly;
   private boolean myExportedOnly;
   private Predicate<OrderEntry> myCondition;
-  private final List<OrderEnumerationHandler> myCustomHandlers;
+  private final List<OrderEnumerationPolicy> myPolicies;
   protected RootModelProvider myModulesProvider;
   private final OrderRootsCache myCache;
 
   public OrderEnumeratorBase(@Nullable Module module, @Nonnull Project project, @Nullable OrderRootsCache cache) {
     myCache = cache;
-    List<OrderEnumerationHandler> customHandlers = null;
-    for (OrderEnumerationHandlerFactory handlerFactory : OrderEnumerationHandlerFactory.EP_NAME.getExtensionList()) {
-      if (handlerFactory.isApplicable(project) && (module == null || handlerFactory.isApplicable(module))) {
+    List<OrderEnumerationPolicy> customHandlers = null;
+    for (OrderEnumerationPolicy policy : project.getApplication().getExtensionList(OrderEnumerationPolicy.class)) {
+      if (policy.isApplicable(project) && (module == null || policy.isApplicable(module))) {
         if (customHandlers == null) {
           customHandlers = new SmartList<>();
         }
-        customHandlers.add(handlerFactory.createHandler(module));
+        customHandlers.add(policy);
       }
     }
-    this.myCustomHandlers = customHandlers == null ? Collections.<OrderEnumerationHandler>emptyList() : customHandlers;
+    this.myPolicies = customHandlers == null ? Collections.<OrderEnumerationPolicy>emptyList() : customHandlers;
   }
 
   @Override
@@ -217,28 +216,19 @@ public  abstract class OrderEnumeratorBase extends OrderEnumerator implements Or
       }
       if (myWithoutModuleSourceEntries && entry instanceof ModuleSourceOrderEntry) continue;
 
-      OrderEnumerationHandler.AddDependencyType shouldAdd = OrderEnumerationHandler.AddDependencyType.DEFAULT;
-      for (OrderEnumerationHandler handler : myCustomHandlers) {
-        shouldAdd = handler.shouldAddDependency(entry, this);
-        if (shouldAdd != OrderEnumerationHandler.AddDependencyType.DEFAULT) break;
-      }
-      if (shouldAdd == OrderEnumerationHandler.AddDependencyType.DO_NOT_ADD) continue;
-
       boolean exported = !(entry instanceof ModuleExtensionWithSdkOrderEntry);
 
       if (entry instanceof ExportableOrderEntry) {
         ExportableOrderEntry exportableEntry = (ExportableOrderEntry)entry;
-        if (shouldAdd == OrderEnumerationHandler.AddDependencyType.DEFAULT) {
-          final DependencyScope scope = exportableEntry.getScope();
-          boolean forTestCompile = scope.isForTestCompile() || scope == DependencyScope.RUNTIME && shouldAddRuntimeDependenciesToTestCompilationClasspath();
-          if (myCompileOnly && !scope.isForProductionCompile() && !forTestCompile) continue;
-          if (myRuntimeOnly && !scope.isForProductionRuntime() && !scope.isForTestRuntime()) continue;
-          if (myProductionOnly) {
-            if (!scope.isForProductionCompile() && !scope.isForProductionRuntime()
-                || myCompileOnly && !scope.isForProductionCompile()
-                || myRuntimeOnly && !scope.isForProductionRuntime()) {
-              continue;
-            }
+        final DependencyScope scope = exportableEntry.getScope();
+        boolean forTestCompile = scope.isForTestCompile() || scope == DependencyScope.RUNTIME && shouldAddRuntimeDependenciesToTestCompilationClasspath();
+        if (myCompileOnly && !scope.isForProductionCompile() && !forTestCompile) continue;
+        if (myRuntimeOnly && !scope.isForProductionRuntime() && !scope.isForTestRuntime()) continue;
+        if (myProductionOnly) {
+          if (!scope.isForProductionCompile() && !scope.isForProductionRuntime()
+              || myCompileOnly && !scope.isForProductionCompile()
+              || myRuntimeOnly && !scope.isForProductionRuntime()) {
+            continue;
           }
         }
         exported = exportableEntry.isExported();
@@ -265,8 +255,8 @@ public  abstract class OrderEnumeratorBase extends OrderEnumerator implements Or
   }
 
   private boolean shouldAddRuntimeDependenciesToTestCompilationClasspath() {
-    for (OrderEnumerationHandler handler : myCustomHandlers) {
-      if (handler.shouldAddRuntimeDependenciesToTestCompilationClasspath()) {
+    for (OrderEnumerationPolicy policy : myPolicies) {
+      if (policy.shouldAddRuntimeDependenciesToTestCompilationClasspath()) {
         return true;
       }
     }
@@ -274,8 +264,8 @@ public  abstract class OrderEnumeratorBase extends OrderEnumerator implements Or
   }
 
   private boolean shouldProcessRecursively() {
-    for (OrderEnumerationHandler handler : myCustomHandlers) {
-      if (!handler.shouldProcessDependenciesRecursively()) {
+    for (OrderEnumerationPolicy policy : myPolicies) {
+      if (!policy.shouldProcessDependenciesRecursively()) {
         return false;
       }
     }
@@ -284,37 +274,31 @@ public  abstract class OrderEnumeratorBase extends OrderEnumerator implements Or
 
   @Override
   public void forEachLibrary(@Nonnull final Processor<Library> processor) {
-    forEach(new Processor<OrderEntry>() {
-      @Override
-      public boolean process(OrderEntry orderEntry) {
-        if (orderEntry instanceof LibraryOrderEntry) {
-          final Library library = ((LibraryOrderEntry)orderEntry).getLibrary();
-          if (library != null) {
-            return processor.process(library);
-          }
+    forEach(orderEntry -> {
+      if (orderEntry instanceof LibraryOrderEntry) {
+        final Library library = ((LibraryOrderEntry)orderEntry).getLibrary();
+        if (library != null) {
+          return processor.process(library);
         }
-        return true;
       }
+      return true;
     });
   }
 
   @Override
   public void forEachModule(@Nonnull final Processor<Module> processor) {
-    forEach(new Processor<OrderEntry>() {
-      @Override
-      public boolean process(OrderEntry orderEntry) {
-        if (myRecursively && orderEntry instanceof ModuleSourceOrderEntry) {
-          final Module module = ((ModuleSourceOrderEntry)orderEntry).getRootModel().getModule();
+    forEach(orderEntry -> {
+      if (myRecursively && orderEntry instanceof ModuleSourceOrderEntry) {
+        final Module module = ((ModuleSourceOrderEntry)orderEntry).getRootModel().getModule();
+        return processor.process(module);
+      }
+      else if (orderEntry instanceof ModuleOrderEntry && (!myRecursively || !shouldProcessRecursively())) {
+        final Module module = ((ModuleOrderEntry)orderEntry).getModule();
+        if (module != null) {
           return processor.process(module);
         }
-        else if (orderEntry instanceof ModuleOrderEntry && (!myRecursively || !shouldProcessRecursively())) {
-          final Module module = ((ModuleOrderEntry)orderEntry).getModule();
-          if (module != null) {
-            return processor.process(module);
-          }
-        }
-        return true;
       }
+      return true;
     });
   }
 
@@ -326,40 +310,12 @@ public  abstract class OrderEnumeratorBase extends OrderEnumerator implements Or
   }
 
   boolean shouldIncludeTestsFromDependentModulesToTestClasspath() {
-    for (OrderEnumerationHandler handler : myCustomHandlers) {
-      if (!handler.shouldIncludeTestsFromDependentModulesToTestClasspath()) {
+    for (OrderEnumerationPolicy policy : myPolicies) {
+      if (!policy.shouldIncludeTestsFromDependentModulesToTestClasspath()) {
         return false;
       }
     }
     return true;
-  }
-
-  boolean addCustomRootsForLibrary(OrderEntry forOrderEntry, OrderRootType type, Collection<VirtualFile> result) {
-    for (OrderEnumerationHandler handler : myCustomHandlers) {
-      final List<String> urls = new ArrayList<>();
-      final boolean added =
-        handler.addCustomRootsForLibrary(forOrderEntry, type, urls);
-      for (String url : urls) {
-        ContainerUtil.addIfNotNull(result, VirtualFileManager.getInstance().findFileByUrl(url));
-      }
-      if (added) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  boolean addCustomRootUrlsForLibrary(OrderEntry forOrderEntry, OrderRootType type, Collection<String> result) {
-    for (OrderEnumerationHandler handler : myCustomHandlers) {
-      final List<String> urls = new ArrayList<>();
-      final boolean added =
-        handler.addCustomRootsForLibrary(forOrderEntry, type, urls);
-      result.addAll(urls);
-      if (added) {
-        return true;
-      }
-    }
-    return false;
   }
 
   @Override

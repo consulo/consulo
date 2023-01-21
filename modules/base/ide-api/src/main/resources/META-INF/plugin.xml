@@ -497,7 +497,6 @@
     <extensionPoint name="orderRootType" interface="consulo.content.OrderRootType"/>
     <extensionPoint name="orderEntryType" interface="consulo.module.content.layer.orderEntry.OrderEntryType" internal="true"/>
 
-    <extensionPoint name="orderEnumerationHandlerFactory" interface="consulo.module.impl.internal.layer.OrderEnumerationHandler$Factory"/>
     <extensionPoint name="directoryIndexExcludePolicy" interface="consulo.module.content.layer.DirectoryIndexExcludePolicy"
                     area="PROJECT"/>
 

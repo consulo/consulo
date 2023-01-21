@@ -183,9 +183,6 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
           Collections.addAll(result, myCustomRootProvider.apply(orderEntry));
           return true;
         }
-        if (myOrderEnumerator.addCustomRootsForLibrary(orderEntry, type, result)) {
-          return true;
-        }
         Collections.addAll(result, orderEntry.getFiles(type));
       }
       return true;
@@ -213,9 +210,6 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
         }
       }
       else {
-        if (myOrderEnumerator.addCustomRootUrlsForLibrary(orderEntry, type, result)) {
-          return true;
-        }
         Collections.addAll(result, orderEntry.getUrls(type));
       }
       return true;
