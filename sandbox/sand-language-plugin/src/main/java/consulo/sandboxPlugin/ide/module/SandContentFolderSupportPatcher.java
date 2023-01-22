@@ -17,7 +17,7 @@ package consulo.sandboxPlugin.ide.module;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.content.ContentFolderTypeProvider;
-import consulo.ide.impl.roots.impl.WebResourcesFolderTypeProvider;
+import consulo.content.base.WebResourcesFolderTypeProvider;
 import consulo.language.content.ProductionContentFolderTypeProvider;
 import consulo.language.content.ProductionResourceContentFolderTypeProvider;
 import consulo.language.content.TestContentFolderTypeProvider;

@@ -14,20 +14,24 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.roots.impl;
+package consulo.content.base;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
-import consulo.language.content.ProductionResourceContentFolderTypeProvider;
-import consulo.project.ProjectBundle;
 import consulo.content.ContentFolderTypeProvider;
+import consulo.project.ProjectBundle;
+import consulo.ui.color.ColorValue;
+import consulo.ui.color.RGBColor;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 
 /**
+ * This content folder type allow select directories as web resources.
+ * By default modules not allow marking directories for this type. Use {@link consulo.module.content.layer.ContentFolderSupportPatcher}
+ *
  * @author VISTALL
- * @since 07.11.13.
+ * @since 07.11.13
  */
 @ExtensionImpl
 public class WebResourcesFolderTypeProvider extends ContentFolderTypeProvider {
@@ -51,6 +55,7 @@ public class WebResourcesFolderTypeProvider extends ContentFolderTypeProvider {
     return AllIcons.Modules.WebRoot;
   }
 
+  @Nonnull
   @Override
   public Image getChildDirectoryIcon() {
     return AllIcons.Nodes.WebFolder;
@@ -64,7 +69,7 @@ public class WebResourcesFolderTypeProvider extends ContentFolderTypeProvider {
 
   @Nonnull
   @Override
-  public consulo.ui.color.ColorValue getGroupColor() {
-    return ProductionResourceContentFolderTypeProvider.getInstance().getGroupColor();
+  public ColorValue getGroupColor() {
+    return new RGBColor(129, 45, 243);
   }
 }
