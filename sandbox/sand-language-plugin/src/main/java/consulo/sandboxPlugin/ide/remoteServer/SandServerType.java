@@ -18,18 +18,17 @@ package consulo.sandboxPlugin.ide.remoteServer;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.component.persist.PersistentStateComponent;
+import consulo.configurable.ConfigurationException;
+import consulo.configurable.UnnamedConfigurable;
+import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
-import consulo.module.ModulePointerManager;
-import consulo.configurable.ConfigurationException;
-import consulo.execution.configuration.ui.SettingsEditor;
-import consulo.configurable.UnnamedConfigurable;
 import consulo.project.Project;
 import consulo.remoteServer.ServerType;
 import consulo.remoteServer.configuration.deployment.DeploymentConfiguration;
 import consulo.remoteServer.configuration.deployment.DeploymentConfigurator;
 import consulo.remoteServer.configuration.deployment.DeploymentSource;
-import consulo.ide.impl.idea.remoteServer.impl.configuration.deploySource.impl.ModuleDeploymentSourceImpl;
+import consulo.remoteServer.configuration.deployment.DeploymentSourceFactory;
 import consulo.remoteServer.runtime.ServerConnector;
 import consulo.remoteServer.runtime.ServerTaskExecutor;
 import consulo.ui.Component;
@@ -111,8 +110,8 @@ public class SandServerType extends ServerType<SandServerConfiguration> {
       @Override
       public List<DeploymentSource> getAvailableDeploymentSources() {
         Module[] modules = ModuleManager.getInstance(project).getModules();
-        ModulePointerManager pointerManager = ModulePointerManager.getInstance(project);
-        return Arrays.stream(modules).map(module -> new ModuleDeploymentSourceImpl(pointerManager.create(module))).collect(Collectors.toList());
+        DeploymentSourceFactory deploymentSourceFactory = project.getInstance(DeploymentSourceFactory.class);
+        return Arrays.stream(modules).map(module -> deploymentSourceFactory.createModuleDeploymentSource(module)).collect(Collectors.toList());
       }
 
       @Nonnull

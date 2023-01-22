@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.remoteServer.impl.configuration.deploySource;
+package consulo.remoteServer.impl.internal.runtime.deployment;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.util.ModuleUtilCore;
 import consulo.project.Project;
 import consulo.remoteServer.configuration.deployment.DeploymentSourceType;
 import consulo.remoteServer.configuration.deployment.ModuleDeploymentSource;
-import consulo.ide.impl.idea.remoteServer.impl.configuration.deploySource.impl.ModuleDeploymentSourceImpl;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 
 /**

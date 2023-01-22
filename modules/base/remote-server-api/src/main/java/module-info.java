@@ -17,7 +17,4 @@ module consulo.remote.server.api {
   exports consulo.remoteServer.runtime.local;
   exports consulo.remoteServer.runtime.log;
   exports consulo.remoteServer.runtime.ui;
-
-  // TODO remove in future!
-  requires java.desktop;
 }

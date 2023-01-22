@@ -17,13 +17,13 @@ package consulo.remoteServer.configuration.deployment;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.execution.configuration.RunConfiguration;
 import consulo.component.extension.ExtensionPointName;
+import consulo.dataContext.DataContext;
+import consulo.execution.configuration.RunConfiguration;
 import consulo.project.Project;
 import org.jdom.Element;
-import javax.annotation.Nonnull;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -50,6 +50,6 @@ public abstract class DeploymentSourceType<S extends DeploymentSource> {
   public void setBuildBeforeRunTask(@Nonnull RunConfiguration configuration, @Nonnull S source) {
   }
 
-  public void updateBuildBeforeRunOption(@Nonnull JComponent runConfigurationEditorComponent, @Nonnull Project project, @Nonnull S source, boolean select) {
+  public void updateBuildBeforeRunOption(@Nonnull DataContext dataContext, @Nonnull Project project, @Nonnull S source, boolean select) {
   }
 }

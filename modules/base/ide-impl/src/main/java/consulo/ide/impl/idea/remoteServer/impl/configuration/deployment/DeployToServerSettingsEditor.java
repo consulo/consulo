@@ -16,6 +16,8 @@
 package consulo.ide.impl.idea.remoteServer.impl.configuration.deployment;
 
 import consulo.configurable.ConfigurationException;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
 import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
@@ -123,7 +125,7 @@ public class DeployToServerSettingsEditor<S extends ServerConfiguration, D exten
     myServerComboBox.getComboBox().setSelectedItem(newSelection != null ? newSelection.getName() : oldSelection);
   }
 
-  private void onDeploymentSourceChanged(@javax.annotation.Nullable D configuration) {
+  private void onDeploymentSourceChanged(@Nullable D configuration) {
     DeploymentSource selected = mySourceListModel.getSelectedItem();
     if (Comparing.equal(selected, myLastSelection)) {
       if (configuration != null && myDeploymentSettingsEditor != null) {
@@ -146,10 +148,11 @@ public class DeployToServerSettingsEditor<S extends ServerConfiguration, D exten
     myLastSelection = selected;
   }
 
-  private void updateBeforeRunOptions(@javax.annotation.Nullable DeploymentSource source, boolean selected) {
+  private void updateBeforeRunOptions(@Nullable DeploymentSource source, boolean selected) {
     if (source != null) {
       DeploymentSourceType type = source.getType();
-      type.updateBuildBeforeRunOption(myServerComboBox, myProject, source, selected);
+      DataContext dataContext = DataManager.getInstance().getDataContext(myServerComboBox);
+      type.updateBuildBeforeRunOption(dataContext, myProject, source, selected);
     }
   }
 

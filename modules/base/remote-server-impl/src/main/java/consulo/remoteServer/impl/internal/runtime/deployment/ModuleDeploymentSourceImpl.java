@@ -13,19 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.remoteServer.impl.configuration.deploySource.impl;
+package consulo.remoteServer.impl.internal.runtime.deployment;
 
 import consulo.application.AllIcons;
+import consulo.component.util.pointer.NamedPointer;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.remoteServer.configuration.deployment.DeploymentSourceType;
 import consulo.remoteServer.configuration.deployment.ModuleDeploymentSource;
-import consulo.ide.impl.idea.remoteServer.impl.configuration.deploySource.ModuleDeploymentSourceType;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ui.image.Image;
-import consulo.component.util.pointer.NamedPointer;
+import consulo.util.collection.ArrayUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -41,11 +40,13 @@ public class ModuleDeploymentSourceImpl implements ModuleDeploymentSource {
     myPointer = pointer;
   }
 
+  @Override
   @Nonnull
   public NamedPointer<Module> getModulePointer() {
     return myPointer;
   }
 
+  @Override
   @Nullable
   public Module getModule() {
     return myPointer.get();
@@ -61,14 +62,14 @@ public class ModuleDeploymentSourceImpl implements ModuleDeploymentSource {
     return ArrayUtil.getFirstElement(ModuleRootManager.getInstance(module).getContentRoots());
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public File getFile() {
     VirtualFile contentRoot = getContentRoot();
     if (contentRoot == null) {
       return null;
     }
-    return VfsUtilCore.virtualToIoFile(contentRoot);
+    return VirtualFileUtil.virtualToIoFile(contentRoot);
   }
 
   @Nullable
@@ -119,6 +120,6 @@ public class ModuleDeploymentSourceImpl implements ModuleDeploymentSource {
   @Nonnull
   @Override
   public DeploymentSourceType<?> getType() {
-    return DeploymentSourceType.EP_NAME.findExtension(ModuleDeploymentSourceType.class);
+    return DeploymentSourceType.EP_NAME.findExtensionOrFail(ModuleDeploymentSourceType.class);
   }
 }

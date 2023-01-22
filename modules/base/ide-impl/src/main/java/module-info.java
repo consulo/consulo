@@ -741,8 +741,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.remoteServer.agent.impl;
   exports consulo.ide.impl.idea.remoteServer.agent.impl.util;
   exports consulo.ide.impl.idea.remoteServer.impl.configuration;
-  exports consulo.ide.impl.idea.remoteServer.impl.configuration.deploySource;
-  exports consulo.ide.impl.idea.remoteServer.impl.configuration.deploySource.impl;
   exports consulo.ide.impl.idea.remoteServer.impl.configuration.deployment;
   exports consulo.ide.impl.idea.remoteServer.impl.configuration.localServer;
   exports consulo.ide.impl.idea.remoteServer.impl.runtime;

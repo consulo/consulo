@@ -13,21 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.remoteServer.impl.configuration.deploySource;
+package consulo.remoteServer.impl.internal.runtime.deployment;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.compiler.artifact.Artifact;
+import consulo.compiler.artifact.ArtifactPointerManager;
+import consulo.compiler.artifact.execution.BuildArtifactsBeforeRunTaskHelper;
+import consulo.dataContext.DataContext;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.project.Project;
-import consulo.compiler.artifact.Artifact;
-import consulo.compiler.artifact.ArtifactPointerUtil;
-import consulo.ide.impl.packaging.impl.run.BuildArtifactsBeforeRunTaskProvider;
 import consulo.remoteServer.configuration.deployment.ArtifactDeploymentSource;
 import consulo.remoteServer.configuration.deployment.DeploymentSourceType;
-import consulo.ide.impl.idea.remoteServer.impl.configuration.deploySource.impl.ArtifactDeploymentSourceImpl;
 import org.jdom.Element;
-import javax.annotation.Nonnull;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -43,7 +42,7 @@ public class ArtifactDeploymentSourceType extends DeploymentSourceType<ArtifactD
   @Nonnull
   @Override
   public ArtifactDeploymentSource load(@Nonnull Element tag, @Nonnull Project project) {
-    return new ArtifactDeploymentSourceImpl(ArtifactPointerUtil.getPointerManager(project).create(tag.getAttributeValue(NAME_ATTRIBUTE)));
+    return new ArtifactDeploymentSourceImpl(ArtifactPointerManager.getInstance(project).create(tag.getAttributeValue(NAME_ATTRIBUTE)));
   }
 
   @Override
@@ -52,20 +51,20 @@ public class ArtifactDeploymentSourceType extends DeploymentSourceType<ArtifactD
   }
 
   @Override
-  public void setBuildBeforeRunTask(@Nonnull RunConfiguration configuration,
-                                    @Nonnull ArtifactDeploymentSource source) {
+  public void setBuildBeforeRunTask(@Nonnull RunConfiguration configuration, @Nonnull ArtifactDeploymentSource source) {
     Artifact artifact = source.getArtifact();
     if (artifact != null) {
-      BuildArtifactsBeforeRunTaskProvider.setBuildArtifactBeforeRun(configuration.getProject(), configuration, artifact);
+      BuildArtifactsBeforeRunTaskHelper helper = configuration.getProject().getInstance(BuildArtifactsBeforeRunTaskHelper.class);
+      helper.setBuildArtifactBeforeRun(configuration, artifact);
     }
   }
 
   @Override
-  public void updateBuildBeforeRunOption(@Nonnull JComponent runConfigurationEditorComponent, @Nonnull Project project,
-                                         @Nonnull ArtifactDeploymentSource source, boolean select) {
+  public void updateBuildBeforeRunOption(@Nonnull DataContext dataContext, @Nonnull Project project, @Nonnull ArtifactDeploymentSource source, boolean select) {
     Artifact artifact = source.getArtifact();
     if (artifact != null) {
-      BuildArtifactsBeforeRunTaskProvider.setBuildArtifactBeforeRunOption(runConfigurationEditorComponent, project, artifact, select);
+      BuildArtifactsBeforeRunTaskHelper helper = project.getInstance(BuildArtifactsBeforeRunTaskHelper.class);
+      helper.setBuildArtifactBeforeRunOption(dataContext, artifact, select);
     }
   }
 }

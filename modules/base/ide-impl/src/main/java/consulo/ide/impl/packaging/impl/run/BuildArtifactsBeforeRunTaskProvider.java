@@ -16,36 +16,34 @@
 package consulo.ide.impl.packaging.impl.run;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.execution.BeforeRunTask;
-import consulo.execution.internal.RunManagerEx;
-import consulo.execution.configuration.RunConfiguration;
-import consulo.ide.impl.idea.execution.impl.ConfigurationSettingsEditorWrapper;
-import consulo.execution.runner.ExecutionEnvironment;
-import consulo.dataContext.DataManager;
-import consulo.dataContext.DataContext;
+import consulo.application.AccessRule;
 import consulo.compiler.CompileStatusNotification;
 import consulo.compiler.Compiler;
 import consulo.compiler.CompilerBundle;
 import consulo.compiler.CompilerManager;
-import consulo.project.Project;
-import consulo.util.lang.function.Condition;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactPointer;
+import consulo.dataContext.DataContext;
+import consulo.execution.BeforeRunTask;
+import consulo.execution.RunManager;
+import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.ide.impl.idea.execution.impl.ConfigurationSettingsEditorWrapper;
 import consulo.ide.impl.idea.packaging.impl.compiler.ArtifactAwareCompiler;
 import consulo.ide.impl.idea.packaging.impl.compiler.ArtifactCompileScope;
 import consulo.ide.impl.idea.packaging.impl.compiler.ArtifactsCompiler;
 import consulo.ide.impl.idea.packaging.impl.run.AbstractArtifactsBeforeRunTask;
 import consulo.ide.impl.idea.packaging.impl.run.AbstractArtifactsBeforeRunTaskProvider;
-import consulo.application.AccessRule;
+import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.function.Condition;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -122,8 +120,7 @@ public class BuildArtifactsBeforeRunTaskProvider extends AbstractArtifactsBefore
     return result;
   }
 
-  public static void setBuildArtifactBeforeRunOption(@Nonnull JComponent runConfigurationEditorComponent, Project project, @Nonnull Artifact artifact, final boolean enable) {
-    final DataContext dataContext = DataManager.getInstance().getDataContext(runConfigurationEditorComponent);
+  public static void setBuildArtifactBeforeRunOption(@Nonnull DataContext dataContext, Project project, @Nonnull Artifact artifact, final boolean enable) {
     final ConfigurationSettingsEditorWrapper editor = dataContext.getData(ConfigurationSettingsEditorWrapper.CONFIGURATION_EDITOR_KEY);
     if (editor != null) {
       List<BeforeRunTask> tasks = editor.getStepsBeforeLaunch();
@@ -157,7 +154,7 @@ public class BuildArtifactsBeforeRunTaskProvider extends AbstractArtifactsBefore
   }
 
   public static void setBuildArtifactBeforeRun(@Nonnull Project project, @Nonnull RunConfiguration configuration, @Nonnull Artifact artifact) {
-    RunManagerEx runManager = RunManagerEx.getInstanceEx(project);
+    RunManager runManager = RunManager.getInstance(project);
     final List<BuildArtifactsBeforeRunTask> buildArtifactsTasks = runManager.getBeforeRunTasks(configuration, ID);
     if (buildArtifactsTasks.isEmpty()) { //Add new task if absent
       BuildArtifactsBeforeRunTask task = new BuildArtifactsBeforeRunTask(project);

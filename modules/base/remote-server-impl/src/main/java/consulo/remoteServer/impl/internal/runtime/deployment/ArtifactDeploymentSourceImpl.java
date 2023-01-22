@@ -1,14 +1,13 @@
-package consulo.ide.impl.idea.remoteServer.impl.configuration.deploySource.impl;
+package consulo.remoteServer.impl.internal.runtime.deployment;
 
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactPointer;
 import consulo.compiler.artifact.element.ArtifactRootElement;
 import consulo.compiler.artifact.element.CompositePackagingElement;
 import consulo.remoteServer.configuration.deployment.ArtifactDeploymentSource;
 import consulo.remoteServer.configuration.deployment.DeploymentSourceType;
-import consulo.ide.impl.idea.remoteServer.impl.configuration.deploySource.ArtifactDeploymentSourceType;
 import consulo.ui.image.Image;
+import consulo.util.io.FileUtil;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -96,6 +95,6 @@ public class ArtifactDeploymentSourceImpl implements ArtifactDeploymentSource {
   @Nonnull
   @Override
   public DeploymentSourceType<?> getType() {
-    return DeploymentSourceType.EP_NAME.findExtension(ArtifactDeploymentSourceType.class);
+    return DeploymentSourceType.EP_NAME.findExtensionOrFail(ArtifactDeploymentSourceType.class);
   }
 }
