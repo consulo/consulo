@@ -146,6 +146,8 @@
     <module>modules/base/repository-ui-api</module>
     <module>modules/base/language-spellchecker-api</module>
     <module>modules/base/language-spellchecker-impl</module>
+    <module>modules/base/remote-server-api</module>
+    <module>modules/base/remote-server-impl</module>
 
     <module>modules/base/version-control-system-api</module>
     <module>modules/base/version-control-system-impl</module>

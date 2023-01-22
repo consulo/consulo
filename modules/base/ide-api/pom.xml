@@ -139,6 +139,11 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-remote-server-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-language-editor-api</artifactId>
       <version>${project.version}</version>
     </dependency>

@@ -1,8 +1,8 @@
 package consulo.ide.impl.idea.remoteServer.impl.runtime.ui;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.remoteServer.runtime.ServerConnection;
-import consulo.ide.impl.idea.remoteServer.runtime.ui.RemoteServersView;
+import consulo.remoteServer.runtime.ServerConnection;
+import consulo.remoteServer.runtime.ui.RemoteServersView;
 import consulo.ide.impl.remoteServer.ui.ServersToolWindowManager;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;

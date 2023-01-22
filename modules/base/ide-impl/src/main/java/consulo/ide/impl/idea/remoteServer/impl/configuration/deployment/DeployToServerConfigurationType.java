@@ -16,13 +16,13 @@
 package consulo.ide.impl.idea.remoteServer.impl.configuration.deployment;
 
 import consulo.execution.configuration.ConfigurationTypeBase;
-import consulo.ide.impl.idea.remoteServer.ServerType;
-import consulo.ide.impl.idea.remoteServer.configuration.RemoteServer;
-import consulo.ide.impl.idea.remoteServer.configuration.RemoteServersManager;
-import consulo.ide.impl.idea.remoteServer.configuration.deployment.DeploymentConfigurator;
-import consulo.ide.impl.idea.remoteServer.configuration.deployment.DeploymentSource;
-import consulo.ide.impl.idea.remoteServer.configuration.deployment.DeploymentSourceType;
-import consulo.ide.impl.idea.remoteServer.configuration.localServer.LocalRunner;
+import consulo.remoteServer.ServerType;
+import consulo.remoteServer.configuration.RemoteServer;
+import consulo.remoteServer.configuration.RemoteServersManager;
+import consulo.remoteServer.configuration.deployment.DeploymentConfigurator;
+import consulo.remoteServer.configuration.deployment.DeploymentSource;
+import consulo.remoteServer.configuration.deployment.DeploymentSourceType;
+import consulo.remoteServer.runtime.local.LocalRunner;
 import consulo.ide.impl.idea.remoteServer.impl.configuration.localServer.LocalServerRunConfiguration;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.execution.configuration.ConfigurationFactory;

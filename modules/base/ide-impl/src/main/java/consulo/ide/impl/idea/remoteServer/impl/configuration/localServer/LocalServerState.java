@@ -21,10 +21,10 @@ import consulo.execution.executor.Executor;
 import consulo.execution.configuration.RunProfileState;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.ProgramRunner;
-import consulo.ide.impl.idea.remoteServer.configuration.ServerConfiguration;
-import consulo.ide.impl.idea.remoteServer.configuration.deployment.DeploymentConfiguration;
-import consulo.ide.impl.idea.remoteServer.configuration.deployment.DeploymentSource;
-import consulo.ide.impl.idea.remoteServer.configuration.localServer.LocalRunner;
+import consulo.remoteServer.configuration.ServerConfiguration;
+import consulo.remoteServer.configuration.deployment.DeploymentConfiguration;
+import consulo.remoteServer.configuration.deployment.DeploymentSource;
+import consulo.remoteServer.runtime.local.LocalRunner;
 import javax.annotation.Nonnull;
 
 /**

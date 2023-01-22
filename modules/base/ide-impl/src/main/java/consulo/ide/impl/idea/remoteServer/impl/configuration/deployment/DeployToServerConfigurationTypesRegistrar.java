@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.remoteServer.impl.configuration.deployment;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.execution.configuration.ConfigurationType;
 import consulo.component.ComponentManager;
-import consulo.ide.impl.idea.remoteServer.ServerType;
+import consulo.remoteServer.ServerType;
 import consulo.component.extension.ExtensionExtender;
 import jakarta.inject.Singleton;
 

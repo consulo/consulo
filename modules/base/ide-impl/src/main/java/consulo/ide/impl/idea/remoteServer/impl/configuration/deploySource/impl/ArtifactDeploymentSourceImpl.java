@@ -5,8 +5,8 @@ import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactPointer;
 import consulo.compiler.artifact.element.ArtifactRootElement;
 import consulo.compiler.artifact.element.CompositePackagingElement;
-import consulo.ide.impl.idea.remoteServer.configuration.deployment.ArtifactDeploymentSource;
-import consulo.ide.impl.idea.remoteServer.configuration.deployment.DeploymentSourceType;
+import consulo.remoteServer.configuration.deployment.ArtifactDeploymentSource;
+import consulo.remoteServer.configuration.deployment.DeploymentSourceType;
 import consulo.ide.impl.idea.remoteServer.impl.configuration.deploySource.ArtifactDeploymentSourceType;
 import consulo.ui.image.Image;
 

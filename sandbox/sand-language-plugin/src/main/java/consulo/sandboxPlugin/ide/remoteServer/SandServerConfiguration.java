@@ -16,7 +16,7 @@
 package consulo.sandboxPlugin.ide.remoteServer;
 
 import consulo.component.persist.PersistentStateComponent;
-import consulo.ide.impl.idea.remoteServer.configuration.ServerConfiguration;
+import consulo.remoteServer.configuration.ServerConfiguration;
 import org.jdom.Element;
 
 import javax.annotation.Nullable;

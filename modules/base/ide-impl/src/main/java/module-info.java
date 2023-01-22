@@ -104,6 +104,7 @@ open module consulo.ide.impl {
   requires transitive consulo.util.rmi;
   requires transitive consulo.util.jna;
   requires transitive consulo.util.xml.serializer;
+  requires consulo.remote.server.impl;
 
   // TODO [VISTALL] remove this dependency
   requires gnu.trove;
@@ -736,29 +737,18 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.reference;
   exports consulo.ide.impl.idea.remote;
   exports consulo.ide.impl.idea.remote.ext;
-  exports consulo.ide.impl.idea.remoteServer;
   exports consulo.ide.impl.idea.remoteServer.agent;
   exports consulo.ide.impl.idea.remoteServer.agent.impl;
   exports consulo.ide.impl.idea.remoteServer.agent.impl.util;
-  exports consulo.ide.impl.idea.remoteServer.configuration;
-  exports consulo.ide.impl.idea.remoteServer.configuration.deployment;
-  exports consulo.ide.impl.idea.remoteServer.configuration.localServer;
   exports consulo.ide.impl.idea.remoteServer.impl.configuration;
   exports consulo.ide.impl.idea.remoteServer.impl.configuration.deploySource;
   exports consulo.ide.impl.idea.remoteServer.impl.configuration.deploySource.impl;
   exports consulo.ide.impl.idea.remoteServer.impl.configuration.deployment;
   exports consulo.ide.impl.idea.remoteServer.impl.configuration.localServer;
   exports consulo.ide.impl.idea.remoteServer.impl.runtime;
-  exports consulo.ide.impl.idea.remoteServer.impl.runtime.deployment;
-  exports consulo.ide.impl.idea.remoteServer.impl.runtime.log;
   exports consulo.ide.impl.idea.remoteServer.impl.runtime.ui;
   exports consulo.ide.impl.idea.remoteServer.impl.runtime.ui.tree;
   exports consulo.ide.impl.idea.remoteServer.impl.runtime.ui.tree.actions;
-  exports consulo.ide.impl.idea.remoteServer.runtime;
-  exports consulo.ide.impl.idea.remoteServer.runtime.deployment;
-  exports consulo.ide.impl.idea.remoteServer.runtime.deployment.debug;
-  exports consulo.ide.impl.idea.remoteServer.runtime.log;
-  exports consulo.ide.impl.idea.remoteServer.runtime.ui;
   exports consulo.ide.impl.idea.reporting;
   exports consulo.ide.impl.idea.ssh;
   exports consulo.ide.impl.idea.tasks.actions;
@@ -969,7 +959,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.psi.templateLanguages;
   exports consulo.ide.impl.psi.util;
   exports consulo.ide.impl.psi.util.proximity;
-  exports consulo.ide.impl.remoteServer.configuration.deployment;
   exports consulo.ide.impl.remoteServer.ui;
   exports consulo.ide.impl.roots;
   exports consulo.ide.impl.roots.impl.property;
