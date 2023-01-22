@@ -15,6 +15,7 @@
  */
 package consulo.versionControlSystem;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.configurable.Configurable;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.localize.LocalizeValue;
@@ -44,7 +45,6 @@ import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -102,12 +102,18 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
   protected void deactivate() {
   }
 
-  @NonNls
-  public final String getName() {
+  @Nonnull
+  public final String getId() {
     return myName;
   }
 
-  @NonNls
+  @Deprecated
+  @DeprecationInfo("Use #getId()")
+  public final String getName() {
+    return getId();
+  }
+
+  @Nonnull
   public abstract String getDisplayName();
 
   /**

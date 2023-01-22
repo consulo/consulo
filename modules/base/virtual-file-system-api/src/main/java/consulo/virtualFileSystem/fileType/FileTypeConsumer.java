@@ -15,6 +15,8 @@
  */
 package consulo.virtualFileSystem.fileType;
 
+import consulo.annotation.DeprecationInfo;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -31,5 +33,9 @@ public interface FileTypeConsumer {
   void consume(@Nonnull FileType fileType, final FileNameMatcher... matchers);
 
   @Nullable
-  FileType getStandardFileTypeByName(@Nonnull String name);
+  @Deprecated
+  @DeprecationInfo("This method sometimes can return null. Better use plugin optional dependency feature")
+  default FileType getStandardFileTypeByName(@Nonnull String name) {
+    return null;
+  }
 }

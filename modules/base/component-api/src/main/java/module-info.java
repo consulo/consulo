@@ -26,6 +26,7 @@ module consulo.component.api {
   exports consulo.component;
   exports consulo.component.bind;
   exports consulo.component.extension;
+  exports consulo.component.extension.preview;
   exports consulo.component.persist;
   exports consulo.component.persist.scheme;
   exports consulo.component.macro;

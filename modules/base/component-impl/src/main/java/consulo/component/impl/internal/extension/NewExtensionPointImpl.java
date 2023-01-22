@@ -25,6 +25,7 @@ import consulo.component.bind.InjectingBinding;
 import consulo.component.extension.ExtensionExtender;
 import consulo.component.extension.ExtensionPoint;
 import consulo.component.extension.ExtensionPointCacheKey;
+import consulo.component.extension.preview.ExtensionPreviewRecorder;
 import consulo.component.internal.inject.InjectingBindingHolder;
 import consulo.component.internal.inject.InjectingContainer;
 import consulo.container.plugin.PluginDescriptor;
@@ -258,7 +259,8 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
       }
     }
 
-    if (apiClass != ExtensionExtender.class) {
+    // do not allow extend extenders, and preview recorder
+    if (apiClass != ExtensionExtender.class && apiClass != ExtensionPreviewRecorder.class) {
       for (ExtensionExtender extender : Application.get().getExtensionPoint(ExtensionExtender.class).getExtensionList()) {
         if (extender.getExtensionClass() == apiClass) {
           PluginDescriptor descriptor = PluginManager.getPlugin(extender.getClass());
