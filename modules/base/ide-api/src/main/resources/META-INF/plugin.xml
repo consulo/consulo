@@ -49,7 +49,7 @@
     <extensionPoint name="referenceInjector" interface="consulo.language.inject.ReferenceInjector"/>
     <extensionPoint name="customPropertyScopeProvider" interface="consulo.ide.impl.psi.impl.search.CustomPropertyScopeProvider"/>
     <extensionPoint name="contentFolderTypeProvider" interface="consulo.content.ContentFolderTypeProvider"/>
-    <extensionPoint name="contentFolderPropertyProvider" interface="consulo.module.content.layer.ContentFolderPropertyProvider"/>
+    <extensionPoint name="contentFolderPropertyProvider" interface="consulo.content.ContentFolderPropertyProvider"/>
     <extensionPoint name="contentFolderSupportPatcher" interface="consulo.module.content.layer.ContentFolderSupportPatcher"/>
 
     <extensionPoint name="dateTimeFormatter" beanClass="consulo.ide.impl.idea.util.text.DateTimeFormatterBean"/>

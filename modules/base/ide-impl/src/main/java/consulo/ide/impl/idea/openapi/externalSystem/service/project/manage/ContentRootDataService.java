@@ -35,7 +35,7 @@ import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.language.content.LanguageContentFolderScopes;
 import consulo.content.ContentFolderTypeProvider;
-import consulo.ide.impl.roots.impl.property.GeneratedContentFolderPropertyProvider;
+import consulo.content.base.GeneratedContentFolderPropertyProvider;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;

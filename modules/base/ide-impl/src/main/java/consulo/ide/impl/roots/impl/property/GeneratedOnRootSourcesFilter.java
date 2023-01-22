@@ -16,6 +16,7 @@
 package consulo.ide.impl.roots.impl.property;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.content.base.GeneratedContentFolderPropertyProvider;
 import consulo.project.ui.view.tree.ProjectRootsUtil;
 import consulo.project.Project;
 import consulo.module.content.layer.ContentFolder;

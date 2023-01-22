@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.roots.impl.property;
+package consulo.content.base;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.util.dataholder.Key;
-import consulo.module.content.layer.ContentFolderPropertyProvider;
+import consulo.content.ContentFolderPropertyProvider;
 import consulo.ui.image.Image;
+import consulo.util.dataholder.Key;
+import consulo.util.lang.Comparing;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

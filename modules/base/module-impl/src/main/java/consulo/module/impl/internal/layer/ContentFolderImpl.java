@@ -20,7 +20,7 @@ import consulo.content.ContentFolderTypeProvider;
 import consulo.content.UnknownContentFolderTypeProvider;
 import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ContentFolder;
-import consulo.module.content.layer.ContentFolderPropertyProvider;
+import consulo.content.ContentFolderPropertyProvider;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import consulo.util.xml.serializer.InvalidDataException;
