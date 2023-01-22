@@ -28,6 +28,7 @@ import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.component.internal.inject.InjectingBindingHolder;
 import consulo.component.internal.inject.InjectingContainer;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
 import consulo.logging.Logger;
 import consulo.util.collection.ContainerUtil;
@@ -52,7 +53,8 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
   private static class ExtensionImplOrderable<K> implements LoadingOrder.Orderable {
     private final String myOrderId;
     private final Pair<K, PluginDescriptor> myValue;
-    private final LoadingOrder myLoadingOrder;
+
+    private LoadingOrder myLoadingOrder;
 
     private ExtensionImplOrderable(Pair<K, PluginDescriptor> value) {
       myValue = value;
@@ -68,7 +70,22 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
       }
       else {
         myOrderId = extensionImplClass.getSimpleName();
-        myLoadingOrder = LoadingOrder.LAST;
+        myLoadingOrder = LoadingOrder.ANY;
+      }
+    }
+
+    protected void reportFirstLastRestriction(@Nonnull PluginDescriptor apiPlugin) {
+      // we allow it in platform impl
+      if (PluginIds.isPlatformPlugin(myValue.getValue().getPluginId())) {
+        return;
+      }
+      
+      if (myLoadingOrder == LoadingOrder.FIRST || myLoadingOrder == LoadingOrder.LAST) {
+        if (apiPlugin.getPluginId() != myValue.getValue().getPluginId()) {
+          LOG.error("Usage order [first, last] is restricted for not owner plugin impl. Class: %s, Plugin: %s, Owner Plugin: %s"
+                            .formatted(myValue.getKey().toString(), myValue.getValue().getPluginId().getIdString(), apiPlugin.getPluginId().getIdString()));
+          myLoadingOrder = LoadingOrder.ANY;
+        }
       }
     }
 
@@ -128,11 +145,7 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
   private volatile Boolean myHasAnyExtension;
 
   @SuppressWarnings("unchecked")
-  public NewExtensionPointImpl(String apiClassName,
-                               List<InjectingBinding> bindings,
-                               ComponentManager componentManager,
-                               Runnable checkCanceled,
-                               ComponentScope componentScope) {
+  public NewExtensionPointImpl(String apiClassName, List<InjectingBinding> bindings, ComponentManager componentManager, Runnable checkCanceled, ComponentScope componentScope) {
     myApiClassName = apiClassName;
     myCheckCanceled = checkCanceled;
     myComponentManager = componentManager;
@@ -144,7 +157,7 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
     if (myApiClass != null) {
       return;
     }
-    
+
     myApiClass = apiClass;
   }
 
@@ -196,9 +209,9 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
       throw new IllegalArgumentException("cache dropped");
     }
 
-    Class<T> apiClassName = getExtensionClass();
+    Class<T> apiClass = getExtensionClass();
 
-    ExtensionAPI annotation = apiClassName.getAnnotation(ExtensionAPI.class);
+    ExtensionAPI annotation = apiClass.getAnnotation(ExtensionAPI.class);
     if (annotation == null) {
       throw new IllegalArgumentException(myApiClassName + " is not annotated by @ExtensionAPI");
     }
@@ -222,7 +235,7 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
 
         extension = (T)injectingContainer.getUnbindedInstance(binding.getImplClass(), binding.getParameterTypes(), binding::create);
 
-        if (!apiClassName.isInstance(extension)) {
+        if (!apiClass.isInstance(extension)) {
           LOG.error("Extension " + extension.getClass() + " does not implement " + myApiClass);
           continue;
         }
@@ -245,9 +258,9 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
       }
     }
 
-    if (apiClassName != ExtensionExtender.class) {
+    if (apiClass != ExtensionExtender.class) {
       for (ExtensionExtender extender : Application.get().getExtensionPoint(ExtensionExtender.class).getExtensionList()) {
-        if (extender.getExtensionClass() == apiClassName) {
+        if (extender.getExtensionClass() == apiClass) {
           PluginDescriptor descriptor = PluginManager.getPlugin(extender.getClass());
           assert descriptor != null;
 
@@ -258,10 +271,16 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
       }
     }
 
+    PluginDescriptor apiPlugin = PluginManager.getPlugin(apiClass);
+
     // prepare for sorting
     List<ExtensionImplOrderable<T>> orders = new ArrayList<>(extensions.size());
     for (Pair<T, PluginDescriptor> pair : extensions) {
-      orders.add(new ExtensionImplOrderable<>(pair));
+      ExtensionImplOrderable<T> orderable = new ExtensionImplOrderable<>(pair);
+
+      orderable.reportFirstLastRestriction(apiPlugin);
+      
+      orders.add(orderable);
     }
 
     LoadingOrder.sort(orders);
