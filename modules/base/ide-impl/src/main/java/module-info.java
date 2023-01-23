@@ -85,6 +85,7 @@ open module consulo.ide.impl {
   requires consulo.execution.debug.impl;
   requires consulo.execution.test.impl;
   requires consulo.builtin.web.server.impl;
+  requires consulo.credential.storage.impl;
 
   requires consulo.ui.impl;
   requires consulo.localize.impl;
@@ -433,15 +434,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.ide.macro;
   exports consulo.ide.impl.idea.ide.navigationToolbar;
   exports consulo.ide.impl.idea.ide.navigationToolbar.ui;
-  exports consulo.ide.impl.idea.ide.passwordSafe;
-  exports consulo.ide.impl.idea.ide.passwordSafe.config;
-  exports consulo.ide.impl.idea.ide.passwordSafe.impl;
-  exports consulo.ide.impl.idea.ide.passwordSafe.impl.providers;
-  exports consulo.ide.impl.idea.ide.passwordSafe.impl.providers.masterKey;
-  exports consulo.ide.impl.idea.ide.passwordSafe.impl.providers.masterKey.windows;
-  exports consulo.ide.impl.idea.ide.passwordSafe.impl.providers.memory;
-  exports consulo.ide.impl.idea.ide.passwordSafe.impl.providers.nil;
-  exports consulo.ide.impl.idea.ide.passwordSafe.ui;
   exports consulo.ide.impl.idea.ide.plugins;
   exports consulo.ide.impl.idea.ide.plugins.pluginsAdvertisement;
   exports consulo.ide.impl.idea.ide.plugins.sorters;

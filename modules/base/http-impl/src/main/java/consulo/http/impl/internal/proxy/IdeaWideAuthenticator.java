@@ -38,11 +38,11 @@ public class IdeaWideAuthenticator extends NonStaticAuthenticator {
     Application application = ApplicationManager.getApplication();
     if (isProxy) {
       // according to idea-wide settings
-      if (myHttpConfigurable.USE_HTTP_PROXY) {
+      if (myHttpConfigurable.isHttpProxyEnabled()) {
         LOG.debug("CommonAuthenticator.getPasswordAuthentication will return common defined proxy");
         return myHttpConfigurable.getPromptedAuthentication(host + ":" + getRequestingPort(), getRequestingPrompt());
       }
-      else if (myHttpConfigurable.USE_PROXY_PAC) {
+      else if (myHttpConfigurable.isPacProxyEnabled()) {
         LOG.debug("CommonAuthenticator.getPasswordAuthentication will return autodetected proxy");
         if (myHttpConfigurable.isGenericPasswordCanceled(host, getRequestingPort())) return null;
         // same but without remembering the results..

@@ -64,6 +64,8 @@ public interface HttpProxyManager {
 
   boolean isHttpProxyEnabled();
 
+  boolean isPacProxyEnabled();
+
   boolean isProxyAuthenticationEnabled();
 
   boolean isHttpProxyEnabledForUrl(@Nullable String url);

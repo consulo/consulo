@@ -25,24 +25,22 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.container.boot.ContainerPathManager;
+import consulo.credentialStorage.AuthenticationData;
+import consulo.credentialStorage.ui.AuthenticationDialog;
 import consulo.disposer.Disposable;
 import consulo.http.HttpProxyManager;
 import consulo.logging.Logger;
 import consulo.project.util.WaitForProgressToShow;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.util.PopupUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.lazy.LazyValue;
 import consulo.util.lang.ref.Ref;
 import consulo.util.lang.ref.SimpleReference;
-import consulo.util.xml.serializer.SkipDefaultsSerializationFilter;
-import consulo.util.xml.serializer.XmlSerializer;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.util.xml.serializer.annotation.Transient;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -60,27 +58,15 @@ import java.util.stream.Collectors;
 @State(name = "HttpConfigurable", storages = @Storage("proxy.settings.xml"))
 @Singleton
 @ServiceImpl
-public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyManagerImpl>, Disposable, HttpProxyManager {
+public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyManagerState>, Disposable, HttpProxyManager {
   private static final Logger LOG = Logger.getInstance(HttpProxyManagerImpl.class);
   private static final File PROXY_CREDENTIALS_FILE = new File(ContainerPathManager.get().getOptionsPath(), "proxy.settings.pwd");
 
-  public boolean PROXY_TYPE_IS_SOCKS;
-  public boolean USE_HTTP_PROXY;
-  public boolean USE_PROXY_PAC;
+  private final HttpProxyManagerState myState = new HttpProxyManagerState();
   public volatile transient boolean AUTHENTICATION_CANCELLED;
-  public String PROXY_HOST;
-  public int PROXY_PORT = 80;
-
-  public volatile boolean PROXY_AUTHENTICATION;
-  public boolean KEEP_PROXY_PASSWORD;
-  public transient String LAST_ERROR;
 
   private final Map<CommonProxy.HostInfo, ProxyInfo> myGenericPasswords = new HashMap<>();
   private final Set<CommonProxy.HostInfo> myGenericCancelled = new HashSet<>();
-
-  public String PROXY_EXCEPTIONS;
-  public boolean USE_PAC_URL;
-  public String PAC_URL;
 
   private transient IdeaWideProxySelector mySelector;
   private transient final Object myLock = new Object();
@@ -104,49 +90,47 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
   public transient SimpleReference<PasswordAuthentication> myTestAuthRunnable = new SimpleReference<>(null);
   public transient SimpleReference<PasswordAuthentication> myTestGenericAuthRunnable = new SimpleReference<>(null);
 
+  private final AuthenticationDialog myAuthenticationDialog;
+
+  @Inject
+  public HttpProxyManagerImpl(AuthenticationDialog authenticationDialog) {
+    myAuthenticationDialog = authenticationDialog;
+  }
+
   public static HttpProxyManagerImpl getInstance() {
     return (HttpProxyManagerImpl)ApplicationManager.getApplication().getInstance(HttpProxyManager.class);
   }
 
   @Override
-  public HttpProxyManagerImpl getState() {
+  public HttpProxyManagerState getState() {
     CommonProxy.isInstalledAssertion();
 
-    HttpProxyManagerImpl state = new HttpProxyManagerImpl();
-    XmlSerializerUtil.copyBean(this, state);
-    if (!KEEP_PROXY_PASSWORD) {
+    if (!myState.KEEP_PROXY_PASSWORD) {
       removeSecure("proxy.password");
     }
-    correctPasswords(state);
-    return state;
+    correctPasswords();
+    return myState;
   }
 
   @Override
   public void afterLoadState() {
-    final HttpProxyManagerImpl currentState = getState();
-    if (currentState != null) {
-      final Element serialized = XmlSerializer.serializeIfNotDefault(currentState, new SkipDefaultsSerializationFilter());
-      if (serialized == null) {
-        // all settings are defaults
-        // trying user's proxy configuration entered while obtaining the license
-        final SharedProxyConfig.ProxyParameters cfg = SharedProxyConfig.load();
-        if (cfg != null) {
-          SharedProxyConfig.clear();
-          if (cfg.host != null) {
-            USE_HTTP_PROXY = true;
-            PROXY_HOST = cfg.host;
-            PROXY_PORT = cfg.port;
-            if (cfg.login != null) {
-              setPlainProxyPassword(new String(cfg.password));
-              storeSecure("proxy.login", cfg.login);
-              PROXY_AUTHENTICATION = true;
-              KEEP_PROXY_PASSWORD = true;
-            }
-          }
+// all settings are defaults
+    // trying user's proxy configuration entered while obtaining the license
+    final SharedProxyConfig.ProxyParameters cfg = SharedProxyConfig.load();
+    if (cfg != null) {
+      SharedProxyConfig.clear();
+      if (cfg.host != null) {
+        myState.USE_HTTP_PROXY = true;
+        myState.PROXY_HOST = cfg.host;
+        myState.PROXY_PORT = cfg.port;
+        if (cfg.login != null) {
+          setPlainProxyPassword(new String(cfg.password));
+          storeSecure("proxy.login", cfg.login);
+          myState.PROXY_AUTHENTICATION = true;
+          myState.KEEP_PROXY_PASSWORD = true;
         }
       }
     }
-
 
     mySelector = new IdeaWideProxySelector(this);
     String name = getClass().getName();
@@ -166,9 +150,9 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
     CommonProxy.getInstance().removeCustomAuth(name);
   }
 
-  private void correctPasswords(@Nonnull HttpProxyManagerImpl to) {
+  private void correctPasswords() {
     synchronized (myLock) {
-      Iterator<ProxyInfo> iterator = to.myGenericPasswords.values().iterator();
+      Iterator<ProxyInfo> iterator = myGenericPasswords.values().iterator();
       while (iterator.hasNext()) {
         ProxyInfo next = iterator.next();
 
@@ -180,12 +164,13 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
   }
 
   @Override
-  public void loadState(@Nonnull HttpProxyManagerImpl state) {
-    XmlSerializerUtil.copyBean(state, this);
-    if (!KEEP_PROXY_PASSWORD) {
+  public void loadState(HttpProxyManagerState state) {
+    XmlSerializerUtil.copyBean(state, myState);
+
+    if (!myState.KEEP_PROXY_PASSWORD) {
       removeSecure("proxy.password");
     }
-    correctPasswords(this);
+    correctPasswords();
   }
 
   public boolean isGenericPasswordCanceled(@Nonnull String host, int port) {
@@ -218,6 +203,7 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
     }
   }
 
+  @Override
   @Transient
   @Nullable
   public String getProxyLogin() {
@@ -229,6 +215,7 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
     storeSecure("proxy.login", login);
   }
 
+  @Override
   @Transient
   @Nullable
   public String getPlainProxyPassword() {
@@ -266,12 +253,10 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
         return;
       }
 
-      AuthenticationDialog dialog = new AuthenticationDialog(PopupUtil.getActiveComponent(), prefix + host, "Please enter credentials for: " + prompt, "", "", remember);
-      dialog.show();
-      if (dialog.getExitCode() == DialogWrapper.OK_EXIT_CODE) {
-        AuthenticationPanel panel = dialog.getPanel();
-        PasswordAuthentication passwordAuthentication = new PasswordAuthentication(panel.getLogin(), panel.getPassword());
-        putGenericPassword(host, port, passwordAuthentication, remember && panel.isRememberPassword());
+      AuthenticationData dialog = myAuthenticationDialog.showNoSafe(prefix + host, "Please enter credentials for: " + prompt, "", "", remember);
+      if (dialog != null) {
+        PasswordAuthentication passwordAuthentication = new PasswordAuthentication(dialog.getLogin(), dialog.getPassword());
+        putGenericPassword(host, port, passwordAuthentication, remember && dialog.isRememberPassword());
         value.set(passwordAuthentication);
       }
       else {
@@ -285,8 +270,9 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
     if (AUTHENTICATION_CANCELLED) {
       return null;
     }
+
     final String password = getPlainProxyPassword();
-    if (PROXY_AUTHENTICATION) {
+    if (myState.PROXY_AUTHENTICATION) {
       final String login = getSecure("proxy.login");
       if (!StringUtil.isEmptyOrSpaces(login) && !StringUtil.isEmptyOrSpaces(password)) {
         return new PasswordAuthentication(login, password.toCharArray());
@@ -307,29 +293,28 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
 
       // password might have changed, and the check below is for that
       final String password1 = getPlainProxyPassword();
-      if (PROXY_AUTHENTICATION) {
+      if (myState.PROXY_AUTHENTICATION) {
         final String login = getSecure("proxy.login");
         if (!StringUtil.isEmptyOrSpaces(login) && !StringUtil.isEmptyOrSpaces(password1)) {
           value[0] = new PasswordAuthentication(login, password1.toCharArray());
           return;
         }
       }
-      AuthenticationDialog dialog =
-              new AuthenticationDialog(PopupUtil.getActiveComponent(), "Proxy authentication: " + host, "Please enter credentials for: " + prompt, getSecure("proxy.login"), "", KEEP_PROXY_PASSWORD);
-      dialog.show();
-      if (dialog.getExitCode() == DialogWrapper.OK_EXIT_CODE) {
-        PROXY_AUTHENTICATION = true;
-        AuthenticationPanel panel = dialog.getPanel();
-        final boolean keepPass = panel.isRememberPassword();
-        KEEP_PROXY_PASSWORD = keepPass;
-        storeSecure("proxy.login", StringUtil.nullize(panel.getLogin()));
+
+      AuthenticationData data =
+              myAuthenticationDialog.showNoSafe("Proxy authentication: " + host, "Please enter credentials for: " + prompt, getSecure("proxy.login"), "", myState.KEEP_PROXY_PASSWORD);
+      if (data != null) {
+        myState.PROXY_AUTHENTICATION = true;
+        final boolean keepPass = data.isRememberPassword();
+        myState.KEEP_PROXY_PASSWORD = keepPass;
+        storeSecure("proxy.login", StringUtil.nullize(data.getLogin()));
         if (keepPass) {
-          setPlainProxyPassword(String.valueOf(panel.getPassword()));
+          setPlainProxyPassword(String.valueOf(data.getPassword()));
         }
         else {
           removeSecure("proxy.password");
         }
-        value[0] = new PasswordAuthentication(panel.getLogin(), panel.getPassword());
+        value[0] = new PasswordAuthentication(data.getLogin(), data.getPassword());
       }
       else {
         AUTHENTICATION_CANCELLED = true;
@@ -401,27 +386,32 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
 
   @Override
   public boolean isHttpProxyEnabled() {
-    return USE_HTTP_PROXY;
+    return myState.USE_HTTP_PROXY;
+  }
+
+  @Override
+  public boolean isPacProxyEnabled() {
+    return myState.USE_PROXY_PAC;
   }
 
   @Override
   public boolean isProxyAuthenticationEnabled() {
-    return PROXY_AUTHENTICATION;
+    return myState.PROXY_AUTHENTICATION;
   }
 
   @Override
   public String getProxyHost() {
-    return PROXY_HOST;
+    return myState.PROXY_HOST;
   }
 
   @Override
   public int getProxyPort() {
-    return PROXY_PORT;
+    return myState.PROXY_PORT;
   }
 
   @Override
   public boolean isHttpProxyEnabledForUrl(@Nullable String url) {
-    if (!USE_HTTP_PROXY) return false;
+    if (!myState.USE_HTTP_PROXY) return false;
     URI uri = url != null ? toUri(url) : null;
     return uri == null || !mySelector.isProxyException(uri.getHost());
   }
@@ -476,33 +466,33 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
 
   @Nonnull
   public List<Pair<String, String>> getJvmProperties(boolean withAutodetection, @Nullable URI uri) {
-    if (!USE_HTTP_PROXY && !USE_PROXY_PAC) {
+    if (!myState.USE_HTTP_PROXY && !myState.USE_PROXY_PAC) {
       return Collections.emptyList();
     }
 
     List<Pair<String, String>> result = new ArrayList<>();
-    if (USE_HTTP_PROXY) {
-      boolean putCredentials = KEEP_PROXY_PASSWORD && StringUtil.isNotEmpty(getProxyLogin());
-      if (PROXY_TYPE_IS_SOCKS) {
-        result.add(Pair.pair(JavaProxyProperty.SOCKS_HOST, PROXY_HOST));
-        result.add(Pair.pair(JavaProxyProperty.SOCKS_PORT, String.valueOf(PROXY_PORT)));
+    if (myState.USE_HTTP_PROXY) {
+      boolean putCredentials = myState.KEEP_PROXY_PASSWORD && StringUtil.isNotEmpty(getProxyLogin());
+      if (myState.PROXY_TYPE_IS_SOCKS) {
+        result.add(Pair.pair(JavaProxyProperty.SOCKS_HOST, myState.PROXY_HOST));
+        result.add(Pair.pair(JavaProxyProperty.SOCKS_PORT, String.valueOf(myState.PROXY_PORT)));
         if (putCredentials) {
           result.add(Pair.pair(JavaProxyProperty.SOCKS_USERNAME, getProxyLogin()));
           result.add(Pair.pair(JavaProxyProperty.SOCKS_PASSWORD, getPlainProxyPassword()));
         }
       }
       else {
-        result.add(Pair.pair(JavaProxyProperty.HTTP_HOST, PROXY_HOST));
-        result.add(Pair.pair(JavaProxyProperty.HTTP_PORT, String.valueOf(PROXY_PORT)));
-        result.add(Pair.pair(JavaProxyProperty.HTTPS_HOST, PROXY_HOST));
-        result.add(Pair.pair(JavaProxyProperty.HTTPS_PORT, String.valueOf(PROXY_PORT)));
+        result.add(Pair.pair(JavaProxyProperty.HTTP_HOST, myState.PROXY_HOST));
+        result.add(Pair.pair(JavaProxyProperty.HTTP_PORT, String.valueOf(myState.PROXY_PORT)));
+        result.add(Pair.pair(JavaProxyProperty.HTTPS_HOST, myState.PROXY_HOST));
+        result.add(Pair.pair(JavaProxyProperty.HTTPS_PORT, String.valueOf(myState.PROXY_PORT)));
         if (putCredentials) {
           result.add(Pair.pair(JavaProxyProperty.HTTP_USERNAME, getProxyLogin()));
           result.add(Pair.pair(JavaProxyProperty.HTTP_PASSWORD, getPlainProxyPassword()));
         }
       }
     }
-    else if (USE_PROXY_PAC && withAutodetection && uri != null) {
+    else if (myState.USE_PROXY_PAC && withAutodetection && uri != null) {
       List<Proxy> proxies = CommonProxy.getInstance().select(uri);
       // we will just take the first returned proxy, but we have an option to test connection through each of them,
       // for instance, by calling prepareUrl()

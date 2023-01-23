@@ -57,28 +57,30 @@ public class IdeaWideProxySelector extends ProxySelector {
       return CommonProxy.NO_PROXY_LIST;
     }
 
-    if (myHttpConfigurable.USE_HTTP_PROXY) {
+    HttpProxyManagerState state = myHttpConfigurable.getState();
+
+    if (myHttpConfigurable.isHttpProxyEnabled()) {
       if (isProxyException(uri)) {
-        LOG.debug("No proxy: URI '", uri, "' matches proxy exceptions [", myHttpConfigurable.PROXY_EXCEPTIONS, "]");
+        LOG.debug("No proxy: URI '", uri, "' matches proxy exceptions [", state.PROXY_EXCEPTIONS, "]");
         return CommonProxy.NO_PROXY_LIST;
       }
 
-      if (myHttpConfigurable.PROXY_PORT < 0 || myHttpConfigurable.PROXY_PORT > 65535) {
-        LOG.debug("No proxy: invalid port: " + myHttpConfigurable.PROXY_PORT);
+      if (state.PROXY_PORT < 0 || state.PROXY_PORT > 65535) {
+        LOG.debug("No proxy: invalid port: " + state.PROXY_PORT);
         return CommonProxy.NO_PROXY_LIST;
       }
 
-      Proxy.Type type = myHttpConfigurable.PROXY_TYPE_IS_SOCKS ? Proxy.Type.SOCKS : Proxy.Type.HTTP;
-      Proxy proxy = new Proxy(type, new InetSocketAddress(myHttpConfigurable.PROXY_HOST, myHttpConfigurable.PROXY_PORT));
+      Proxy.Type type = state.PROXY_TYPE_IS_SOCKS ? Proxy.Type.SOCKS : Proxy.Type.HTTP;
+      Proxy proxy = new Proxy(type, new InetSocketAddress(state.PROXY_HOST, state.PROXY_PORT));
       LOG.debug("Defined proxy: ", proxy);
-      myHttpConfigurable.LAST_ERROR = null;
+      state.LAST_ERROR = null;
       return Collections.singletonList(proxy);
     }
 
-    if (myHttpConfigurable.USE_PROXY_PAC) {
+    if (myHttpConfigurable.isPacProxyEnabled()) {
       ProxySelector pacProxySelector = myPacProxySelector.get();
-      if (myHttpConfigurable.USE_PAC_URL && !StringUtil.isEmpty(myHttpConfigurable.PAC_URL)) {
-        myPacProxySelector.set(new PacProxySelector(new UrlPacScriptSource(myHttpConfigurable.PAC_URL)));
+      if (myHttpConfigurable.isPacProxyEnabled() && !StringUtil.isEmpty(state.PAC_URL)) {
+        myPacProxySelector.set(new PacProxySelector(new UrlPacScriptSource(state.PAC_URL)));
       }
       else if (pacProxySelector == null) {
         ProxySearch proxySearch = ProxySearch.getDefaultProxySearch();
@@ -107,11 +109,11 @@ public class IdeaWideProxySelector extends ProxySelector {
 
   @Contract("null -> false")
   public boolean isProxyException(@Nullable String uriHost) {
-    if (StringUtil.isEmptyOrSpaces(uriHost) || StringUtil.isEmptyOrSpaces(myHttpConfigurable.PROXY_EXCEPTIONS)) {
+    if (StringUtil.isEmptyOrSpaces(uriHost) || StringUtil.isEmptyOrSpaces(myHttpConfigurable.getState().PROXY_EXCEPTIONS)) {
       return false;
     }
 
-    List<String> hosts = StringUtil.split(myHttpConfigurable.PROXY_EXCEPTIONS, ",");
+    List<String> hosts = StringUtil.split(myHttpConfigurable.getState().PROXY_EXCEPTIONS, ",");
     for (String hostPattern : hosts) {
       String regexpPattern = StringUtil.escapeToRegexp(hostPattern.trim()).replace("\\*", ".*");
       if (Pattern.compile(regexpPattern).matcher(uriHost).matches()) {
@@ -124,16 +126,16 @@ public class IdeaWideProxySelector extends ProxySelector {
 
   @Override
   public void connectFailed(URI uri, SocketAddress sa, IOException ioe) {
-    if (myHttpConfigurable.USE_PROXY_PAC) {
+    if (myHttpConfigurable.isPacProxyEnabled()) {
       myHttpConfigurable.removeGeneric(new CommonProxy.HostInfo(uri.getScheme(), uri.getHost(), uri.getPort()));
       LOG.debug("generic proxy credentials (if were saved) removed");
       return;
     }
 
     final InetSocketAddress isa = sa instanceof InetSocketAddress ? (InetSocketAddress) sa : null;
-    if (myHttpConfigurable.USE_HTTP_PROXY && isa != null && Comparing.equal(myHttpConfigurable.PROXY_HOST, isa.getHostName())) {
+    if (myHttpConfigurable.isHttpProxyEnabled() && isa != null && Comparing.equal(myHttpConfigurable.getProxyHost(), isa.getHostName())) {
       LOG.debug("connection failed message passed to http configurable");
-      myHttpConfigurable.LAST_ERROR = ioe.getMessage();
+      myHttpConfigurable.getState().LAST_ERROR = ioe.getMessage();
     }
   }
 }

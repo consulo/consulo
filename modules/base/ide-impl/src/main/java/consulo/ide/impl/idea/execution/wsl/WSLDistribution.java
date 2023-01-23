@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.execution.wsl;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.cmd.ParametersList;
-import consulo.ide.impl.idea.ide.passwordSafe.ui.PasswordSafePromptDialog;
+import consulo.credentialStorage.impl.internal.ui.PasswordSafePromptDialogImpl;
 import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
 import consulo.process.ProcessHandler;
@@ -209,7 +209,7 @@ public class WSLDistribution {
           if (input == null) {
             return;
           }
-          String password = PasswordSafePromptDialog.askPassword("Enter Root Password", "Sudo password for " + getPresentableName() + " root:", WSLDistribution.class, "WSL", true);
+          String password = PasswordSafePromptDialogImpl.askPassword("Enter Root Password", "Sudo password for " + getPresentableName() + " root:", WSLDistribution.class, "WSL", true);
           //String password = CredentialPromptDialog
           //        .askPassword(project, "Enter Root Password", "Sudo password for " + getPresentableName() + " root:", new CredentialAttributes("WSL", "root", WSLDistribution.class), true);
           if (password != null) {

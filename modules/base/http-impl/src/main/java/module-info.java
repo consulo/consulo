@@ -7,6 +7,8 @@ module consulo.http.impl {
 
   requires consulo.project.api;
 
+  requires consulo.credential.storage.api;
+
   // TODO remove in future
   requires java.desktop;
   requires consulo.ui.ex.awt.api;

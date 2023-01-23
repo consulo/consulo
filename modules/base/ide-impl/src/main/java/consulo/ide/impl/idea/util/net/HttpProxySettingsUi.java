@@ -26,14 +26,15 @@ import consulo.execution.ui.awt.RawCommandLineEditor;
 import consulo.http.HttpRequests;
 import consulo.http.impl.internal.proxy.CommonProxy;
 import consulo.http.impl.internal.proxy.HttpProxyManagerImpl;
+import consulo.http.impl.internal.proxy.HttpProxyManagerState;
 import consulo.http.impl.internal.proxy.JavaProxyProperty;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.ui.PortField;
 import consulo.ide.impl.idea.ui.RelativeFont;
 import consulo.ui.ex.awt.JBRadioButton;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -81,18 +82,19 @@ class HttpProxySettingsUi implements IdeaConfigurableUi<HttpProxyManagerImpl> {
       return false;
     }
 
-    return !Comparing.strEqual(myProxyExceptions.getText().trim(), settings.PROXY_EXCEPTIONS) ||
-           settings.USE_PROXY_PAC != myAutoDetectProxyRb.isSelected() ||
-           settings.USE_PAC_URL != myPacUrlCheckBox.isSelected() ||
-           !Comparing.strEqual(settings.PAC_URL, myPacUrlTextField.getText()) ||
-           settings.USE_HTTP_PROXY != myUseHTTPProxyRb.isSelected() ||
-           settings.PROXY_AUTHENTICATION != myProxyAuthCheckBox.isSelected() ||
-           settings.KEEP_PROXY_PASSWORD != myRememberProxyPasswordCheckBox.isSelected() ||
-           settings.PROXY_TYPE_IS_SOCKS != mySocks.isSelected() ||
+    HttpProxyManagerState state = settings.getState();
+    return !Comparing.strEqual(myProxyExceptions.getText().trim(), state.PROXY_EXCEPTIONS) ||
+           state.USE_PROXY_PAC != myAutoDetectProxyRb.isSelected() ||
+           state.USE_PAC_URL != myPacUrlCheckBox.isSelected() ||
+           !Comparing.strEqual(state.PAC_URL, myPacUrlTextField.getText()) ||
+           state.USE_HTTP_PROXY != myUseHTTPProxyRb.isSelected() ||
+           state.PROXY_AUTHENTICATION != myProxyAuthCheckBox.isSelected() ||
+           state.KEEP_PROXY_PASSWORD != myRememberProxyPasswordCheckBox.isSelected() ||
+           state.PROXY_TYPE_IS_SOCKS != mySocks.isSelected() ||
            !Comparing.strEqual(settings.getProxyLogin(), myProxyLoginTextField.getText()) ||
            !Comparing.strEqual(settings.getPlainProxyPassword(), new String(myProxyPasswordTextField.getPassword())) ||
-           settings.PROXY_PORT != myProxyPortTextField.getNumber() ||
-           !Comparing.strEqual(settings.PROXY_HOST, myProxyHostTextField.getText());
+           state.PROXY_PORT != myProxyPortTextField.getNumber() ||
+           !Comparing.strEqual(state.PROXY_HOST, myProxyHostTextField.getText());
   }
 
   public HttpProxySettingsUi(@Nonnull final HttpProxyManagerImpl settings) {
@@ -207,8 +209,8 @@ class HttpProxySettingsUi implements IdeaConfigurableUi<HttpProxyManagerImpl> {
             }
             else {
               final String message = exception.getMessage();
-              if (settings.USE_HTTP_PROXY) {
-                settings.LAST_ERROR = message;
+              if (settings.getState().USE_HTTP_PROXY) {
+                settings.getState().LAST_ERROR = message;
               }
               Messages.showErrorDialog(parent, errorText(message));
             }
@@ -224,29 +226,31 @@ class HttpProxySettingsUi implements IdeaConfigurableUi<HttpProxyManagerImpl> {
 
   @Override
   public void reset(@Nonnull HttpProxyManagerImpl settings) {
-    myNoProxyRb.setSelected(true);  // default
-    myAutoDetectProxyRb.setSelected(settings.USE_PROXY_PAC);
-    myPacUrlCheckBox.setSelected(settings.USE_PAC_URL);
-    myPacUrlTextField.setText(settings.PAC_URL);
-    myUseHTTPProxyRb.setSelected(settings.USE_HTTP_PROXY);
-    myProxyAuthCheckBox.setSelected(settings.PROXY_AUTHENTICATION);
+    HttpProxyManagerState state = settings.getState();
 
-    enableProxy(settings.USE_HTTP_PROXY);
+    myNoProxyRb.setSelected(true);  // default
+    myAutoDetectProxyRb.setSelected(state.USE_PROXY_PAC);
+    myPacUrlCheckBox.setSelected(state.USE_PAC_URL);
+    myPacUrlTextField.setText(state.PAC_URL);
+    myUseHTTPProxyRb.setSelected(state.USE_HTTP_PROXY);
+    myProxyAuthCheckBox.setSelected(state.PROXY_AUTHENTICATION);
+
+    enableProxy(state.USE_HTTP_PROXY);
 
     myProxyLoginTextField.setText(settings.getProxyLogin());
     myProxyPasswordTextField.setText(settings.getPlainProxyPassword());
 
-    myProxyPortTextField.setNumber(settings.PROXY_PORT);
-    myProxyHostTextField.setText(settings.PROXY_HOST);
-    myProxyExceptions.setText(StringUtil.notNullize(settings.PROXY_EXCEPTIONS));
+    myProxyPortTextField.setNumber(state.PROXY_PORT);
+    myProxyHostTextField.setText(state.PROXY_HOST);
+    myProxyExceptions.setText(StringUtil.notNullize(state.PROXY_EXCEPTIONS));
 
-    myRememberProxyPasswordCheckBox.setSelected(settings.KEEP_PROXY_PASSWORD);
-    mySocks.setSelected(settings.PROXY_TYPE_IS_SOCKS);
-    myHTTP.setSelected(!settings.PROXY_TYPE_IS_SOCKS);
+    myRememberProxyPasswordCheckBox.setSelected(state.KEEP_PROXY_PASSWORD);
+    mySocks.setSelected(state.PROXY_TYPE_IS_SOCKS);
+    myHTTP.setSelected(!state.PROXY_TYPE_IS_SOCKS);
 
-    boolean showError = !StringUtil.isEmptyOrSpaces(settings.LAST_ERROR);
+    boolean showError = !StringUtil.isEmptyOrSpaces(state.LAST_ERROR);
     myErrorLabel.setVisible(showError);
-    myErrorLabel.setText(showError ? errorText(settings.LAST_ERROR) : null);
+    myErrorLabel.setText(showError ? errorText(state.LAST_ERROR) : null);
 
     final String oldStyleText = CommonProxy.getMessageFromProps(CommonProxy.getOldStyleProperties());
     myOtherWarning.setVisible(oldStyleText != null);
@@ -306,20 +310,21 @@ class HttpProxySettingsUi implements IdeaConfigurableUi<HttpProxyManagerImpl> {
       settings.AUTHENTICATION_CANCELLED = false;
     }
 
-    settings.USE_PROXY_PAC = myAutoDetectProxyRb.isSelected();
-    settings.USE_PAC_URL = myPacUrlCheckBox.isSelected();
-    settings.PAC_URL = getText(myPacUrlTextField);
-    settings.USE_HTTP_PROXY = myUseHTTPProxyRb.isSelected();
-    settings.PROXY_TYPE_IS_SOCKS = mySocks.isSelected();
-    settings.PROXY_AUTHENTICATION = myProxyAuthCheckBox.isSelected();
-    settings.KEEP_PROXY_PASSWORD = myRememberProxyPasswordCheckBox.isSelected();
+    HttpProxyManagerState state = settings.getState();
+    state.USE_PROXY_PAC = myAutoDetectProxyRb.isSelected();
+    state.USE_PAC_URL = myPacUrlCheckBox.isSelected();
+    state.PAC_URL = getText(myPacUrlTextField);
+    state.USE_HTTP_PROXY = myUseHTTPProxyRb.isSelected();
+    state.PROXY_TYPE_IS_SOCKS = mySocks.isSelected();
+    state.PROXY_AUTHENTICATION = myProxyAuthCheckBox.isSelected();
+    state.KEEP_PROXY_PASSWORD = myRememberProxyPasswordCheckBox.isSelected();
 
     settings.setProxyLogin(getText(myProxyLoginTextField));
     settings.setPlainProxyPassword(new String(myProxyPasswordTextField.getPassword()));
-    settings.PROXY_EXCEPTIONS = StringUtil.nullize(myProxyExceptions.getText(), true);
+    state.PROXY_EXCEPTIONS = StringUtil.nullize(myProxyExceptions.getText(), true);
 
-    settings.PROXY_PORT = myProxyPortTextField.getNumber();
-    settings.PROXY_HOST = getText(myProxyHostTextField);
+    state.PROXY_PORT = myProxyPortTextField.getNumber();
+    state.PROXY_HOST = getText(myProxyHostTextField);
   }
 
   @Nullable

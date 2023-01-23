@@ -17,46 +17,43 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
     <groupId>consulo</groupId>
-    <artifactId>arch.bind</artifactId>
+    <artifactId>arch.global</artifactId>
     <version>3-SNAPSHOT</version>
-    <relativePath>../../../arch/bind/pom.xml</relativePath>
+    <relativePath>../../../arch/global/pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>consulo-http-impl</artifactId>
+  <artifactId>consulo-credential-storage-api</artifactId>
   <version>3-SNAPSHOT</version>
   <packaging>jar</packaging>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>consulo.maven</groupId>
+        <artifactId>maven-consulo-plugin</artifactId>
+        <extensions>true</extensions>
+        <executions>
+          <execution>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>generate-localize</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-http-api</artifactId>
+      <artifactId>consulo-application-api</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-credential-storage-api</artifactId>
+      <artifactId>consulo-project-api</artifactId>
       <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-ui-ex-awt-api</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.httpcomponents</groupId>
-      <artifactId>httpclient</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.httpcomponents</groupId>
-      <artifactId>httpmime</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.github.markusbernhardt</groupId>
-      <artifactId>proxy-vole</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-compress</artifactId>
     </dependency>
   </dependencies>
 </project>

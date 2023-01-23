@@ -72,6 +72,7 @@ module consulo.ide.api {
   requires transitive consulo.repository.ui.api;
   requires transitive consulo.language.spellchecker.api;
   requires transitive consulo.remote.server.api;
+  requires transitive consulo.credential.storage.api;
 
   exports consulo.ide;
   exports consulo.ide.action;
