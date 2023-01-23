@@ -19,6 +19,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.Label;
 import consulo.ui.LabelOptions;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 import consulo.ui.web.internal.base.VaadinComponentDelegate;
 
@@ -33,6 +34,11 @@ public abstract class WebLabelBase<V extends VaadinLabelComponentBase> extends V
   public WebLabelBase(LocalizeValue text, LabelOptions options) {
     setText(text);
     getVaadinComponent().setHorizontalAlignment(options.getHorizontalAlignment());
+  }
+
+  @Override
+  public void setForegroundColor(@Nullable ColorValue foreground) {
+    getVaadinComponent().setForegroundColor(foreground);
   }
 
   @Nonnull

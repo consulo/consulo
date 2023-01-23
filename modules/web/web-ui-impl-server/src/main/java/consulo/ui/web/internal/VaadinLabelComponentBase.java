@@ -17,6 +17,7 @@ package consulo.ui.web.internal;
 
 import consulo.localize.LocalizeValue;
 import consulo.ui.HorizontalAlignment;
+import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 import consulo.ui.web.internal.base.VaadinComponent;
 import consulo.ui.web.internal.util.Mappers;
@@ -32,6 +33,7 @@ import javax.annotation.Nonnull;
 public abstract class VaadinLabelComponentBase extends VaadinComponent {
   private HorizontalAlignment myHorizontalAlignment = HorizontalAlignment.LEFT;
   private LocalizeValue myTextValue = LocalizeValue.empty();
+  private ColorValue myForegroundColor;
   private Image myImage;
 
   public void setTextValue(LocalizeValue textValue) {
@@ -61,12 +63,22 @@ public abstract class VaadinLabelComponentBase extends VaadinComponent {
     return myImage;
   }
 
+  public ColorValue getForegroundColor() {
+    return myForegroundColor;
+  }
+
+  public void setForegroundColor(ColorValue foregroundColor) {
+    myForegroundColor = foregroundColor;
+    markAsDirty();
+  }
+
   @Override
   public void beforeClientResponse(boolean initial) {
     super.beforeClientResponse(initial);
 
     LabelState state = getState();
-    
+
+    state.myForegroundColor = myForegroundColor == null ? null : Mappers.map(myForegroundColor.toRGB());
     state.caption = myTextValue.getValue();
     if(myImage != null) {
       state.myImageState = WebImageMapper.map(myImage).getState();

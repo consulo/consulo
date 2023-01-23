@@ -25,4 +25,5 @@ import consulo.web.gwt.shared.ui.state.image.MultiImageState;
 public class LabelState extends AbstractComponentState {
   public HorizontalAlignment myHorizontalAlignment = HorizontalAlignment.LEFT;
   public MultiImageState myImageState;
+  public RGBColorShared myForegroundColor;
 }

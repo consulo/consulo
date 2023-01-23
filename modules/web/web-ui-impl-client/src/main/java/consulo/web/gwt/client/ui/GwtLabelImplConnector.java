@@ -22,7 +22,9 @@ import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.ui.Connect;
 import consulo.web.gwt.client.ui.image.ImageConverter;
+import consulo.web.gwt.client.util.GwtStyleUtil;
 import consulo.web.gwt.shared.ui.state.LabelState;
+import consulo.web.gwt.shared.ui.state.RGBColorShared;
 import consulo.web.gwt.shared.ui.state.image.MultiImageState;
 
 /**
@@ -75,5 +77,10 @@ public class GwtLabelImplConnector extends AbstractComponentConnector {
 
     MultiImageState state = getState().myImageState;
     getWidget().setIcon(state == null ? null : ImageConverter.create(state));
+
+    RGBColorShared foregroundColor = getState().myForegroundColor;
+    if (foregroundColor != null) {
+      getWidget().getElement().getStyle().setColor(GwtStyleUtil.toString(foregroundColor));
+    }
   }
 }
