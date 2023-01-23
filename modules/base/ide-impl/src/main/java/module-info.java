@@ -973,7 +973,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.settings.impl;
   exports consulo.ide.impl.start;
   exports consulo.ide.impl.startup.customize;
-  exports consulo.ide.impl.store;
   exports consulo.ide.impl.task;
   exports consulo.ide.impl.tipOfDay;
   exports consulo.ide.impl.ui;

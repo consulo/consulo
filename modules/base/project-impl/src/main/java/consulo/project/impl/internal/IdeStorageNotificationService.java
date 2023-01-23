@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.store;
+package consulo.project.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
@@ -22,8 +22,6 @@ import consulo.component.store.impl.internal.StorageNotificationService;
 import consulo.component.store.impl.internal.TrackingPathMacroSubstitutor;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.project.impl.internal.ProjectNotificationGroups;
-import consulo.project.impl.internal.ProjectStorageUtil;
 import consulo.project.internal.ProjectEx;
 import consulo.project.ui.internal.UnknownMacroNotification;
 import consulo.project.ui.notification.Notification;
