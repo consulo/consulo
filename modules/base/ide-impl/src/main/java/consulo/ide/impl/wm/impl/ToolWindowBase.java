@@ -15,27 +15,23 @@
  */
 package consulo.ide.impl.wm.impl;
 
-import consulo.ui.ex.UiActivity;
-import consulo.ui.ex.UiActivityMonitor;
-import consulo.ui.ex.toolWindow.ContentManagerWatcher;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.AnAction;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.ui.ex.toolWindow.ToolWindowAnchor;
-import consulo.ui.ex.toolWindow.ToolWindowContentUiType;
-import consulo.project.ui.wm.ToolWindowFactory;
-import consulo.ui.ex.toolWindow.ToolWindowType;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
-import consulo.ui.ex.content.Content;
-import consulo.ui.ex.content.ContentManager;
 import consulo.ide.impl.idea.ui.content.impl.ContentImpl;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.project.ui.wm.ToolWindowFactory;
+import consulo.ui.Rectangle2D;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
+import consulo.ui.ex.UiActivity;
+import consulo.ui.ex.UiActivityMonitor;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.content.Content;
+import consulo.ui.ex.content.ContentManager;
+import consulo.ui.ex.toolWindow.*;
 import consulo.ui.image.Image;
-import consulo.ui.Rectangle2D;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
 
@@ -293,7 +289,7 @@ public abstract class ToolWindowBase implements ToolWindowEx {
 
   @Override
   public void installWatcher(@Nonnull ContentManager contentManager) {
-    new ContentManagerWatcher(this, contentManager);
+    ContentManagerWatcher.watchContentManager(this, contentManager);
   }
 
   /**

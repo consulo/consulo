@@ -21,6 +21,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.Rectangle2D;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.image.Image;
@@ -230,6 +231,9 @@ public interface ToolWindow extends BusyObject {
   }
 
   default void setTabDoubleClickActions(@Nonnull AnAction... actions) {
+  }
+
+  default void setAdditionalGearActions(@Nullable ActionGroup additionalGearActions) {
   }
 
   @Nonnull
