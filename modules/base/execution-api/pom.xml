@@ -108,5 +108,11 @@
       <version>${project.version}</version>
       <optional>true</optional>
     </dependency>
+
+    <dependency>
+      <groupId>consulo.internal</groupId>
+      <artifactId>forms_rt</artifactId>
+      <optional>true</optional>
+    </dependency>
   </dependencies>
 </project>

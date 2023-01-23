@@ -5,6 +5,7 @@
 module consulo.execution.api {
   // TODO obsolete dependency
   requires java.desktop;
+  requires forms.rt;
 
   requires transitive consulo.module.api;
   requires transitive consulo.module.content.api;
