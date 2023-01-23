@@ -17,7 +17,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
     <groupId>consulo</groupId>
-    <artifactId>arch.global</artifactId>
+    <artifactId>arch.bind</artifactId>
     <version>3-SNAPSHOT</version>
     <relativePath>../../../arch/global/pom.xml</relativePath>
   </parent>
@@ -36,6 +36,10 @@
       <groupId>${project.groupId}</groupId>
       <artifactId>consulo-ui-ex-awt-api</artifactId>
       <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>consulo.internal</groupId>
+      <artifactId>forms_rt</artifactId>
     </dependency>
     <dependency>
       <groupId>commons-codec</groupId>

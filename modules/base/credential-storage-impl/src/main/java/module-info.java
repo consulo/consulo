@@ -12,6 +12,7 @@ module consulo.credential.storage.impl {
   // TODO remove this dependencies in future
   requires java.desktop;
   requires consulo.ui.ex.awt.api;
+  requires forms.rt;
 
   exports consulo.credentialStorage.impl.internal to consulo.ide.impl;
   exports consulo.credentialStorage.impl.internal.provider.masterKey to consulo.ide.impl;

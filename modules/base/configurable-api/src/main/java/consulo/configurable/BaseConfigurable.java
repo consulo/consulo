@@ -15,9 +15,12 @@
  */
 package consulo.configurable;
 
+import consulo.annotation.DeprecationInfo;
+
 import javax.swing.*;
 
-
+@Deprecated
+@DeprecationInfo("Use own impl for #isModified()")
 public abstract class BaseConfigurable implements Configurable, Configurable.HoldPreferredFocusedComponent {
   protected boolean myModified;
 
