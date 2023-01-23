@@ -36,6 +36,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
 
 public class FileUtil {
   private static final Logger LOG = LoggerFactory.getLogger(FileUtil.class);
@@ -1390,5 +1391,51 @@ public class FileUtil {
     }
     list.add(path.substring(index, path.length()));
     return list;
+  }
+
+  @Nullable
+  public static File findFirstThatExist(@Nonnull String... paths) {
+    for (String path : paths) {
+      if (!StringUtil.isEmptyOrSpaces(path)) {
+        File file = new File(toSystemDependentName(path));
+        if (file.exists()) return file;
+      }
+    }
+
+    return null;
+  }
+
+  @Nonnull
+  public static List<File> findFilesByMask(@Nonnull Pattern pattern, @Nonnull File dir) {
+    final ArrayList<File> found = new ArrayList<>();
+    final File[] files = dir.listFiles();
+    if (files != null) {
+      for (File file : files) {
+        if (file.isDirectory()) {
+          found.addAll(findFilesByMask(pattern, file));
+        }
+        else if (pattern.matcher(file.getName()).matches()) {
+          found.add(file);
+        }
+      }
+    }
+    return found;
+  }
+
+  @Nonnull
+  public static List<File> findFilesOrDirsByMask(@Nonnull Pattern pattern, @Nonnull File dir) {
+    final ArrayList<File> found = new ArrayList<>();
+    final File[] files = dir.listFiles();
+    if (files != null) {
+      for (File file : files) {
+        if (pattern.matcher(file.getName()).matches()) {
+          found.add(file);
+        }
+        if (file.isDirectory()) {
+          found.addAll(findFilesOrDirsByMask(pattern, file));
+        }
+      }
+    }
+    return found;
   }
 }

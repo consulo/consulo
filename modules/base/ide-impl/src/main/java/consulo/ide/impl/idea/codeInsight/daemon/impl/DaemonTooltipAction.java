@@ -68,7 +68,7 @@ public class DaemonTooltipAction implements TooltipAction {
     for (HighlightInfoImpl.IntentionActionDescriptor descriptor : intentions) {
       IntentionAction action = descriptor.getAction();
 
-      if (myFixText.equals(action.getText())) {
+      if (myFixText.equals(action.`getText())) {
         //unfortunately it is very common case when quick fixes/refactorings use caret position
         editor.getCaretModel().moveToOffset(myActualOffset);
 
