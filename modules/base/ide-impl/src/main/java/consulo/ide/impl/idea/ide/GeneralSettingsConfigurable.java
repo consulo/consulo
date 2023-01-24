@@ -17,23 +17,22 @@ package consulo.ide.impl.idea.ide;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.*;
-import consulo.ide.impl.idea.openapi.util.NotNullComputable;
-import consulo.util.lang.ObjectUtil;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.fileChooser.FileOperateDialogSettings;
+import consulo.fileChooser.provider.FileChooseDialogProvider;
+import consulo.fileChooser.provider.FileOperateDialogProvider;
+import consulo.fileChooser.provider.FileSaveDialogProvider;
 import consulo.ide.IdeBundle;
+import consulo.ide.impl.fileChooser.FileOperateDialogSettings;
 import consulo.localize.LocalizeManager;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.IdeLocalize;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.fileChooser.provider.FileChooseDialogProvider;
-import consulo.fileChooser.provider.FileOperateDialogProvider;
-import consulo.fileChooser.provider.FileSaveDialogProvider;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.LabeledLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.LabeledBuilder;
+import consulo.util.lang.ObjectUtil;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -48,7 +47,7 @@ import java.util.function.Supplier;
 @ExtensionImpl
 public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSettingsConfigurable.MyComponent> implements SearchableConfigurable, ApplicationConfigurable {
 
-  protected static class MyComponent implements NotNullComputable<Component> {
+  protected static class MyComponent implements Supplier<Component> {
     private CheckBox myChkReopenLastProject;
     private CheckBox myConfirmExit;
 
@@ -151,7 +150,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
 
     @Nonnull
     @Override
-    public Component compute() {
+    public Component get() {
       return myRootLayout;
     }
   }

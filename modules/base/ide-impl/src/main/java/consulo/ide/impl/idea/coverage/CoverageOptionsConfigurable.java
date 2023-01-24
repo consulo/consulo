@@ -4,7 +4,6 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.*;
 import consulo.disposer.Disposable;
 import consulo.execution.coverage.CoverageOptionsProvider;
-import consulo.ide.impl.idea.openapi.util.NotNullComputable;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.CheckBox;
@@ -21,6 +20,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * User: anna
@@ -28,7 +28,7 @@ import java.util.List;
  */
 @ExtensionImpl
 public class CoverageOptionsConfigurable extends SimpleConfigurable<CoverageOptionsConfigurable.Panel> implements ProjectConfigurable, SearchableConfigurable, Configurable.NoScroll {
-  public static class Panel implements NotNullComputable<Component> {
+  public static class Panel implements Supplier<Component> {
     private final Disposable myUiDisposable;
 
     private RadioButton myShowOptionsRB;
@@ -88,7 +88,7 @@ public class CoverageOptionsConfigurable extends SimpleConfigurable<CoverageOpti
 
     @Nonnull
     @Override
-    public Component compute() {
+    public Component get() {
       return myWholePanel;
     }
   }

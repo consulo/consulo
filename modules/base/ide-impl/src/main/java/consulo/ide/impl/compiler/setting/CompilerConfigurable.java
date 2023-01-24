@@ -23,7 +23,6 @@ import consulo.configurable.SimpleConfigurable;
 import consulo.configurable.StandardConfigurableIds;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.compiler.CompilerWorkspaceConfiguration;
-import consulo.ide.impl.idea.openapi.util.NotNullComputable;
 import consulo.ui.CheckBox;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -32,10 +31,11 @@ import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
 import javax.annotation.Nonnull;
+import java.util.function.Supplier;
 
 @ExtensionImpl
 public class CompilerConfigurable extends SimpleConfigurable<CompilerConfigurable.Root> implements ProjectConfigurable {
-  protected static class Root implements NotNullComputable<Component> {
+  protected static class Root implements Supplier<Component> {
     private CheckBox myCbClearOutputDirectory;
     private CheckBox myCbAutoShowFirstError;
 
@@ -54,7 +54,7 @@ public class CompilerConfigurable extends SimpleConfigurable<CompilerConfigurabl
 
     @Nonnull
     @Override
-    public Component compute() {
+    public Component get() {
       return myLayout;
     }
   }

@@ -22,6 +22,7 @@ import javax.annotation.Nonnull;
 /**
  * @author Nikolay Matveev
  */
+@Deprecated
 public interface NotNullComputable<T> extends Computable<T> {
 
   @Nonnull

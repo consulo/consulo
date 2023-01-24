@@ -16,14 +16,16 @@
 package consulo.ide.impl.options;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.configurable.*;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ide.impl.idea.openapi.util.NotNullComputable;
 import consulo.application.ui.UIFontManager;
 import consulo.application.ui.UISettings;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
+import consulo.configurable.ApplicationConfigurable;
+import consulo.configurable.ConfigurationException;
+import consulo.configurable.SimpleConfigurable;
+import consulo.configurable.StandardConfigurableIds;
 import consulo.disposer.Disposable;
+import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.IdeLocalize;
 import consulo.platform.base.localize.KeyMapLocalize;
@@ -47,6 +49,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -54,7 +57,7 @@ import java.util.Set;
  */
 @ExtensionImpl
 public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigurable.LayoutImpl> implements ApplicationConfigurable {
-  public static class LayoutImpl implements NotNullComputable<Layout> {
+  public static class LayoutImpl implements Supplier<Layout> {
     private VerticalLayout myPanel;
 
     private ComboBox<String> myFontCombo;
@@ -208,7 +211,7 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
 
     @Nonnull
     @Override
-    public Layout compute() {
+    public Layout get() {
       return myPanel;
     }
   }

@@ -23,7 +23,6 @@ import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.configurable.*;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.NotNullComputable;
 import consulo.language.CodeDocumentationAwareCommenter;
 import consulo.language.Commenter;
 import consulo.language.Language;
@@ -42,6 +41,7 @@ import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.function.Supplier;
 
 /**
  * To provide additional options in Editor | Smart Keys section register implementation of {@link UnnamedConfigurable} in the plugin.xml:
@@ -56,7 +56,7 @@ import java.util.Collection;
  */
 @ExtensionImpl
 public class EditorSmartKeysConfigurable extends SimpleConfigurable<EditorSmartKeysConfigurable.Panel> implements Configurable, ApplicationConfigurable {
-  protected static class Panel implements NotNullComputable<Component> {
+  protected static class Panel implements Supplier<Component> {
     private CheckBox myCbSmartHome;
     private CheckBox myCbSmartEnd;
     private CheckBox myCbInsertPairBracket;
@@ -128,7 +128,7 @@ public class EditorSmartKeysConfigurable extends SimpleConfigurable<EditorSmartK
 
     @Nonnull
     @Override
-    public Component compute() {
+    public Component get() {
       return myWholeLayout;
     }
   }
@@ -136,6 +136,7 @@ public class EditorSmartKeysConfigurable extends SimpleConfigurable<EditorSmartK
   public EditorSmartKeysConfigurable() {
   }
 
+  @Nonnull
   @Override
   @Nls
   public String getDisplayName() {

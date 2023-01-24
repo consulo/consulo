@@ -16,37 +16,37 @@
 
 package consulo.ide.impl.idea.application.options;
 
-import consulo.language.editor.CodeInsightSettings;
-import consulo.language.editor.DaemonCodeAnalyzer;
-import consulo.dataContext.DataManager;
 import consulo.application.PowerSaveMode;
 import consulo.application.ui.UISettings;
-import consulo.ui.ex.action.ActionManager;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.action.IdeActions;
+import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.NotNullComputable;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.language.editor.CodeInsightSettings;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.ApplicationLocalize;
+import consulo.project.Project;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.border.BorderPosition;
+import consulo.ui.border.BorderStyle;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.IdeActions;
 import consulo.ui.image.Image;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.LabeledLayout;
 import consulo.ui.layout.Layout;
 import consulo.ui.layout.VerticalLayout;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
 import consulo.ui.util.LabeledBuilder;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.ThreeState;
 import org.intellij.lang.annotations.MagicConstant;
 
 import javax.annotation.Nonnull;
+import java.util.function.Supplier;
 
-public class CodeCompletionPanel implements NotNullComputable<Layout> {
+public class CodeCompletionPanel implements Supplier<Layout> {
   private final VerticalLayout myLayout;
   private final ComboBox<ThreeState> myCaseSensitiveCombo2;
   private final CheckBox myCbOnCodeCompletion2;
@@ -245,7 +245,7 @@ public class CodeCompletionPanel implements NotNullComputable<Layout> {
 
   @Nonnull
   @Override
-  public Layout compute() {
+  public Layout get() {
     return myLayout;
   }
 
