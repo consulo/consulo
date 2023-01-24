@@ -23,6 +23,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.ToIntFunction;
 
+import static consulo.util.collection.ContainerUtil.addIfNotNull;
 import static consulo.util.collection.ContainerUtil.swapElements;
 
 /**
@@ -149,6 +150,20 @@ public final class Lists {
     for (int i = 0; i < n; i++, a++, b++) {
       swapElements(x, a, b);
     }
+  }
+
+  /**
+   * @return read-only list consisting of the elements with nulls filtered out
+   */
+  @SafeVarargs
+  @Nonnull
+  @Contract(pure = true)
+  public static <T> List<T> packNullables(@Nonnull T... elements) {
+    List<T> list = new ArrayList<T>();
+    for (T element : elements) {
+      addIfNotNull(list, element);
+    }
+    return list.isEmpty() ? List.of() : list;
   }
 
   @Nonnull
