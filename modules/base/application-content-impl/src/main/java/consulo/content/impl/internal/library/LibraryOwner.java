@@ -36,11 +36,6 @@ public interface LibraryOwner {
     }
   };
 
-  //Project project = myLibraryTable instanceof ProjectLibraryTable ? ((ProjectLibraryTable)myLibraryTable).getProject() : null;
-  //return myLibraryOwner != null
-  //       ? myLibraryOwner.getRootsChangedListener()
-  //       : project != null ? ProjectRootManagerImpl.getInstanceImpl(project).getRootsValidityChangedListener() : SdkImpl.getGlobalVirtualFilePointerListener();
-
   @Nonnull
   VirtualFilePointerListener getListener();
 

@@ -22,10 +22,11 @@ import consulo.component.persist.StateSplitterEx;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.content.impl.internal.library.LibraryImpl;
+import consulo.content.impl.internal.library.LibraryOwner;
 import consulo.content.impl.internal.library.LibraryTableBase;
 import consulo.content.library.LibraryTable;
 import consulo.content.library.LibraryTablePresentation;
-import consulo.content.library.LibraryTablesRegistrar;
+import consulo.module.impl.internal.ProjectRootManagerImpl;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.project.content.library.ProjectLibraryTable;
@@ -61,26 +62,30 @@ public class ProjectLibraryTableImpl extends LibraryTableBase implements Project
     }
   };
 
+  @Deprecated
   public static LibraryTable getInstance(Project project) {
     return ProjectLibraryTable.getInstance(project);
   }
 
   private final Project myProject;
+  private final LibraryOwner myLibraryOwner;
 
   @Inject
   public ProjectLibraryTableImpl(Project project) {
     myProject = project;
+    myLibraryOwner = () -> ProjectRootManagerImpl.getInstanceImpl(project).getRootsValidityChangedListener();
+  }
+
+  @Nonnull
+  @Override
+  protected LibraryOwner getLibraryOwner() {
+    return myLibraryOwner;
   }
 
   @Override
   @Nonnull
   public Project getProject() {
     return myProject;
-  }
-
-  @Override
-  public String getTableLevel() {
-    return LibraryTablesRegistrar.PROJECT_LEVEL;
   }
 
   @Override

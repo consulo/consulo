@@ -20,7 +20,6 @@ import consulo.annotation.DeprecationInfo;
 import consulo.application.ApplicationManager;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.content.base.BinariesOrderRootType;
-import consulo.content.internal.LibraryEx;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
 import consulo.content.library.PersistentLibraryKind;
@@ -236,7 +235,7 @@ public abstract class LibraryTableBase implements PersistentStateComponent<Eleme
       final String libraryPrefix = "library.";
       final String libPath = System.getProperty(libraryPrefix + name);
       if (libPath != null) {
-        final LibraryImpl library = new LibraryImpl(name, null, LibraryTableBase.this, null);
+        final LibraryImpl library = new LibraryImpl(name, null, LibraryTableBase.this, getLibraryOwner());
         library.addRoot(libPath, BinariesOrderRootType.getInstance());
         return library;
       }
@@ -257,7 +256,7 @@ public abstract class LibraryTableBase implements PersistentStateComponent<Eleme
     @Override
     public Library createLibrary(String name, @Nullable PersistentLibraryKind kind) {
       assertWritable();
-      final LibraryImpl library = new LibraryImpl(name, kind, LibraryTableBase.this, null);
+      final LibraryImpl library = new LibraryImpl(name, kind, LibraryTableBase.this, getLibraryOwner());
       myLibraries.add(library);
       return library;
     }
@@ -285,7 +284,7 @@ public abstract class LibraryTableBase implements PersistentStateComponent<Eleme
       final List libraryElements = element.getChildren(LibraryImpl.ELEMENT);
       for (Object libraryElement1 : libraryElements) {
         Element libraryElement = (Element)libraryElement1;
-        final LibraryImpl library = new LibraryImpl(LibraryTableBase.this, libraryElement, null);
+        final LibraryImpl library = new LibraryImpl(LibraryTableBase.this, libraryElement, getLibraryOwner());
         if (library.getName() != null) {
           Library oldLibrary = libraries.get(library.getName());
           if (oldLibrary != null) {
@@ -302,7 +301,7 @@ public abstract class LibraryTableBase implements PersistentStateComponent<Eleme
     }
 
     public void writeExternal(Element element) throws WriteExternalException {
-      final List<Library> libraries = ContainerUtil.findAll(myLibraries, library -> !((LibraryEx)library).isDisposed());
+      final List<Library> libraries = ContainerUtil.findAll(myLibraries, library -> !library.isDisposed());
 
       // todo: do not sort if project is directory-based
       ContainerUtil.sort(libraries, (o1, o2) -> o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase()));
