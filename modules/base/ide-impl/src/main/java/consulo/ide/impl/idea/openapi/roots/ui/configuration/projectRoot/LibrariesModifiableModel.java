@@ -57,7 +57,7 @@ public class LibrariesModifiableModel implements LibraryTableBase.ModifiableMode
 
   @Override
   public Library createLibrary(String name, @Nullable PersistentLibraryKind type) {
-    final Library library = ((LibraryTableBase.ModifiableModelEx)getLibrariesModifiableModel()).createLibrary(name, type);
+    final Library library = getLibrariesModifiableModel().createLibrary(name, type);
     //createLibraryEditor(library);
     myLibraryEditorListener.libraryCreated(library);
     return library;

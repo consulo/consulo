@@ -43,7 +43,9 @@ public abstract class LibraryTablesRegistrar {
   }
 
   @Nonnull
-  public abstract LibraryTable getLibraryTable();
+  public LibraryTable getLibraryTable() {
+    throw new UnsupportedOperationException("dead method");
+  }
 
   @Nonnull
   public abstract LibraryTable getLibraryTable(@Nonnull Project project);

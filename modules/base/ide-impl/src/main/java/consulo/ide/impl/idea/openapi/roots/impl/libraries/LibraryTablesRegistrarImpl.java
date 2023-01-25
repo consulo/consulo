@@ -29,12 +29,6 @@ import javax.annotation.Nonnull;
 public class LibraryTablesRegistrarImpl extends LibraryTablesRegistrar implements Disposable {
   @Override
   @Nonnull
-  public LibraryTable getLibraryTable() {
-    return ApplicationLibraryTable.getApplicationTable();
-  }
-
-  @Override
-  @Nonnull
   public LibraryTable getLibraryTable(@Nonnull Project project) {
     return ProjectLibraryTableImpl.getInstance(project);
   }
@@ -42,7 +36,6 @@ public class LibraryTablesRegistrarImpl extends LibraryTablesRegistrar implement
   @Override
   public LibraryTable getLibraryTableByLevel(String level, @Nonnull Project project) {
     if (LibraryTablesRegistrar.PROJECT_LEVEL.equals(level)) return getLibraryTable(project);
-    if (LibraryTablesRegistrar.APPLICATION_LEVEL.equals(level)) return getLibraryTable();
     return null;
   }
 

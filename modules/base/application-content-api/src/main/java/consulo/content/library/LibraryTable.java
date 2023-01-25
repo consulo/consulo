@@ -16,7 +16,6 @@
 package consulo.content.library;
 
 import consulo.disposer.Disposable;
-import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -25,7 +24,7 @@ import java.util.Iterator;
 
 /**
  * @author dsl
- * @see LibraryTablesRegistrar#getLibraryTable(Project)
+ * @see consulo.project.content.library.ProjectLibraryTable
  */
 public interface LibraryTable {
   @Nonnull

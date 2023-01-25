@@ -29,6 +29,8 @@ import javax.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface ProjectLibraryTable extends LibraryTable {
+  public static final String PROJECT_LEVEL = "project";
+
   @Nonnull
   @Deprecated
   @DeprecationInfo("Better use constructor injecting")
@@ -38,4 +40,9 @@ public interface ProjectLibraryTable extends LibraryTable {
 
   @Nonnull
   Project getProject();
+
+  @Override
+  default String getTableLevel() {
+    return PROJECT_LEVEL;
+  }
 }

@@ -193,6 +193,9 @@ public abstract class LibraryTableBase implements PersistentStateComponent<Eleme
     myModel.writeExternal(element);
   }
 
+  @Nonnull
+  protected abstract LibraryOwner getLibraryOwner();
+
   @Deprecated
   @DeprecationInfo("Use ModifiableModel")
   public interface ModifiableModelEx extends ModifiableModel {
