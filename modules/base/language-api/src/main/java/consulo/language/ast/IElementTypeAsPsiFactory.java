@@ -21,6 +21,7 @@ import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
+ * @see ElementTypeAsPsiFactory
  * @since 24.08.14
  */
 public interface IElementTypeAsPsiFactory {
