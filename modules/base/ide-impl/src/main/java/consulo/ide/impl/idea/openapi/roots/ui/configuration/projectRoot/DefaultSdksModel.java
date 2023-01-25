@@ -17,14 +17,12 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot;
 
 import consulo.application.ApplicationManager;
-import consulo.application.progress.PerformInBackgroundOption;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.configurable.ConfigurationException;
 import consulo.content.bundle.*;
 import consulo.content.impl.internal.bundle.SdkImpl;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.openapi.projectRoots.impl.SdkConfigurationUtil;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.EventDispatcher;
@@ -312,7 +310,7 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
   private void setupSdk(Sdk newSdk, Consumer<Sdk> callback) {
     UIAccess uiAccess = UIAccess.current();
 
-    new Task.ConditionalModal(null, "Setuping SDK...", false, PerformInBackgroundOption.DEAF) {
+    new Task.Modal(null, "Setuping SDK...", false) {
       @Override
       public void run(@Nonnull ProgressIndicator indicator) {
         SdkType sdkType = (SdkType)newSdk.getSdkType();
