@@ -140,11 +140,11 @@ public abstract class AmendComponent {
   private void loadMessagesInModalTask(@Nonnull Project project) {
     try {
       myMessagesForRoots = ProgressManager.getInstance().runProcessWithProgressSynchronously(this::getLastCommitMessages,
-                                                                                             "Reading Commit Message...", true, project);
+                                                                                             "Reading Commit ReflectionMessage...", true, project);
     }
     catch (VcsException e) {
       Messages.showErrorDialog(project, "Couldn't load commit message of the commit to amend.\n" + e.getMessage(),
-                               "Commit Message not Loaded");
+                               "Commit ReflectionMessage not Loaded");
       LOG.info(e);
     }
   }

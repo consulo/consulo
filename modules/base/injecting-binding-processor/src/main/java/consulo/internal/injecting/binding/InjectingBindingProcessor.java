@@ -19,17 +19,17 @@ import com.squareup.javapoet.*;
 import consulo.annotation.component.*;
 import jakarta.inject.Inject;
 
-import javax.annotation.processing.*;
+import javax.annotation.processing.Filer;
+import javax.annotation.processing.RoundEnvironment;
+import javax.annotation.processing.SupportedAnnotationTypes;
+import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
-import javax.tools.FileObject;
 import javax.tools.JavaFileObject;
-import javax.tools.StandardLocation;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.Writer;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
@@ -42,7 +42,7 @@ import java.util.*;
  */
 @SupportedAnnotationTypes({InjectingBindingProcessor.SERVICE_IMPL, InjectingBindingProcessor.EXTENSION_IMPL, InjectingBindingProcessor.TOPIC_IMPL, InjectingBindingProcessor.ACTION_IMPL})
 @SupportedSourceVersion(SourceVersion.RELEASE_17)
-public class InjectingBindingProcessor extends AbstractProcessor {
+public class InjectingBindingProcessor extends BindingProcessor {
   private static record AnnotationResolveInfo(Annotation annotation, TypeElement typeElement) {
   }
 
@@ -62,6 +62,10 @@ public class InjectingBindingProcessor extends AbstractProcessor {
 
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+    if (annotations.isEmpty()) {
+      return true;
+    }
+
     AnnotationSpec suppressWarning = AnnotationSpec.builder(SuppressWarnings.class).addMember("value", CodeBlock.of("$S", "ALL")).build();
 
     Filer filer = processingEnv.getFiler();
@@ -189,49 +193,10 @@ public class InjectingBindingProcessor extends AbstractProcessor {
           List<TypeName> paramTypes = new ArrayList<>();
 
           if (!injectParameters.isEmpty()) {
-            for (VariableElement parameter : injectParameters) {
-              paramTypes.add(toTypeName(parameter.asType()));
-            }
-
-            List<TypeName> paramTypesForMethod = new ArrayList<>();
-            // array creation
-            paramTypesForMethod.add(TypeName.get(Type.class));
-
-            StringBuilder paramTypesBuilder = new StringBuilder();
-            paramTypesBuilder.append("return new $T[] {");
-            for (int i = 0; i < paramTypes.size(); i++) {
-              if (i != 0) {
-                paramTypesBuilder.append(", ");
-              }
-
-              TypeName injectType = paramTypes.get(i);
-              // simple type
-              if (injectType instanceof ClassName) {
-                paramTypesBuilder.append("$T.class");
-                paramTypesForMethod.add(injectType);
-              }
-              else if (injectType instanceof ParameterizedTypeName parType) {
-                paramTypesBuilder.append("new $T(");
-                paramTypesForMethod.add(ClassName.bestGuess("consulo.component.bind.ParameterizedTypeImpl"));
-                paramTypesBuilder.append("$T.class, ");
-                paramTypesForMethod.add(parType.rawType);
-
-                for (int j = 0; j < parType.typeArguments.size(); j++) {
-                  if (j != 0) {
-                    paramTypesBuilder.append(", ");
-                  }
-
-                  paramTypesBuilder.append("$T.class");
-                  paramTypesForMethod.add(parType.typeArguments.get(j));
-                }
-                paramTypesBuilder.append(")");
-              }
-            }
-            paramTypesBuilder.append("};");
+            AppendTypeResult types = appendTypes(injectParameters, paramTypes, "return ", ";", true);
 
             bindBuilder.addMethod(
-                    MethodSpec.methodBuilder("getParameterTypes").addModifiers(Modifier.PUBLIC).returns(Type[].class).addCode(CodeBlock.of(paramTypesBuilder.toString(), paramTypesForMethod.toArray()))
-                            .build());
+                    MethodSpec.methodBuilder("getParameterTypes").addModifiers(Modifier.PUBLIC).returns(Type[].class).addCode(CodeBlock.of(types.result(), types.types().toArray())).build());
           }
           else {
             bindBuilder.addMethod(MethodSpec.methodBuilder("getParameterTypes").addModifiers(Modifier.PUBLIC).returns(Type[].class).addCode(CodeBlock.of("return EMPTY_TYPES;")).build());
@@ -274,82 +239,6 @@ public class InjectingBindingProcessor extends AbstractProcessor {
     generateConfigFiles(providers);
 
     return true;
-  }
-
-  private void generateConfigFiles(Map<String, Set<String>> providers) {
-    Filer filer = processingEnv.getFiler();
-
-    for (String providerInterface : providers.keySet()) {
-      String resourceFile = "META-INF/services/" + providerInterface;
-      log("Working on resource file: " + resourceFile);
-      try {
-        SortedSet<String> allServices = new TreeSet<>();
-        try {
-          // would like to be able to print the full path
-          // before we attempt to get the resource in case the behavior
-          // of filer.getResource does change to match the spec, but there's
-          // no good way to resolve CLASS_OUTPUT without first getting a resource.
-          FileObject existingFile = filer.getResource(StandardLocation.CLASS_OUTPUT, "", resourceFile);
-          log("Looking for existing resource file at " + existingFile.toUri());
-          Set<String> oldServices = ServicesFiles.readServiceFile(existingFile.openInputStream());
-          log("Existing service entries: " + oldServices);
-          allServices.addAll(oldServices);
-        }
-        catch (IOException e) {
-          // According to the javadoc, Filer.getResource throws an exception
-          // if the file doesn't already exist.  In practice this doesn't
-          // appear to be the case.  Filer.getResource will happily return a
-          // FileObject that refers to a non-existent file but will throw
-          // IOException if you try to open an input stream for it.
-          log("Resource file did not already exist.");
-        }
-
-        Set<String> newServices = new HashSet<>(providers.get(providerInterface));
-        if (!allServices.addAll(newServices)) {
-          log("No new service entries being added.");
-          continue;
-        }
-
-        log("New service file contents: " + allServices);
-        FileObject fileObject = filer.createResource(StandardLocation.CLASS_OUTPUT, "", resourceFile);
-        try (OutputStream out = fileObject.openOutputStream()) {
-          ServicesFiles.writeServiceFile(allServices, out);
-        }
-        log("Wrote to: " + fileObject.toUri());
-      }
-      catch (IOException e) {
-        fatalError("Unable to create " + resourceFile + ", " + e);
-        return;
-      }
-    }
-  }
-
-  private void log(String msg) {
-    if (processingEnv.getOptions().containsKey("debug")) {
-      processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, msg);
-    }
-  }
-
-  private void warning(String msg, Element element, AnnotationMirror annotation) {
-    processingEnv.getMessager().printMessage(Diagnostic.Kind.WARNING, msg, element, annotation);
-  }
-
-  private void error(String msg, Element element, AnnotationMirror annotation) {
-    processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, msg, element, annotation);
-  }
-
-  private void fatalError(String msg) {
-    processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "FATAL ERROR: " + msg);
-  }
-
-  private TypeName toTypeName(TypeMirror typeMirror) {
-    return TypeName.get(typeMirror);
-  }
-
-  private TypeName toTypeName(TypeElement typeElement) {
-    PackageElement packageElement = processingEnv.getElementUtils().getPackageOf(typeElement);
-
-    return ClassName.get(packageElement.getQualifiedName().toString(), typeElement.getSimpleName().toString());
   }
 
   private static ComponentScope getScope(Annotation annotation) {
@@ -410,7 +299,8 @@ public class InjectingBindingProcessor extends AbstractProcessor {
         String qName = target.typeElement().getQualifiedName().toString();
         if (qName.equals("consulo.ui.ex.action.AnAction")) {
           actionInfo = target;
-        } else if (qName.equals("consulo.ui.ex.action.ActionGroup")) {
+        }
+        else if (qName.equals("consulo.ui.ex.action.ActionGroup")) {
           actionGroupInfo = target;
         }
       }

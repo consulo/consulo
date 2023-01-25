@@ -32,7 +32,7 @@ import java.awt.*;
 public class ShowGotItMessageAction extends AnAction {
   @Override
   public void actionPerformed(AnActionEvent e) {
-    GotItMessage.createMessage("Test", "Test Message")
+    GotItMessage.createMessage("Test", "Test ReflectionMessage")
             .setDisposable(e.getData(CommonDataKeys.PROJECT))
             .show(new RelativePoint(WindowManager.getInstance().getFrame(e.getData(CommonDataKeys.PROJECT)), new Point(0, 0)), Balloon.Position.above);
   }

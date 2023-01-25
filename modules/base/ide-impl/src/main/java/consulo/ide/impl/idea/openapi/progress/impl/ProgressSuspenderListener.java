@@ -13,20 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.component.impl.internal.messagebus;
+package consulo.ide.impl.idea.openapi.progress.impl;
+
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.TopicAPI;
 
 import javax.annotation.Nonnull;
 
-/**
- * @author VISTALL
- * @since 25/01/2023
- */
-public interface Message<T> {
-  @Nonnull
-  Class<T> getTopicClass();
+@TopicAPI(ComponentScope.APPLICATION)
+public interface ProgressSuspenderListener {
+  /**
+   * Called (on any thread) when a new progress is created with suspension capability
+   */
+  default void suspendableProgressAppeared(@Nonnull ProgressSuspender suspender) {
+  }
 
-  @Nonnull
-  String getMethodName();
-
-  void invoke(T handler) throws Throwable;
+  /**
+   * Called (on any thread) when a progress is suspended or resumed
+   */
+  default void suspendedStatusChanged(@Nonnull ProgressSuspender suspender) {
+  }
 }

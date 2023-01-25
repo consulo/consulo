@@ -57,7 +57,7 @@ public class ChangelistConflictNotificationPanel {
     builder.withAction(LocalizeValue.localizeTODO("Switch changelist"), LocalizeValue.localizeTODO("Set active changelist to '" + changeList.getName() + "'"), (i) -> {
       Change change = tracker.getChangeListManager().getChange(file);
       if (change == null) {
-        Messages.showInfoMessage("No changes for this file", "Message");
+        Messages.showInfoMessage("No changes for this file", "ReflectionMessage");
       }
       else {
         ChangelistConflictResolution.SWITCH.resolveConflict(tracker.getProject(), Collections.singletonList(change), null);

@@ -9,5 +9,7 @@ module consulo.injecting.binding.processor {
 
   requires com.squareup.javapoet;
 
-  provides javax.annotation.processing.Processor with consulo.internal.injecting.binding.InjectingBindingProcessor;
+  provides javax.annotation.processing.Processor with
+          consulo.internal.injecting.binding.InjectingBindingProcessor,
+          consulo.internal.injecting.binding.TopicBindingProcessor;
 }

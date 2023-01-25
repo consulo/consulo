@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.ide.impl.idea.codeInsight.breadcrumbs.FileBreadcrumbsCollector;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.RecentPlacesListener;
 import consulo.language.editor.impl.internal.daemon.DaemonCodeAnalyzerEx;
 import consulo.application.ui.UISettings;
 import consulo.language.editor.annotation.HighlightSeverity;
@@ -77,7 +78,7 @@ public class RecentLocationsDataModel {
     this.editorsToRelease = editorsToRelease;
     projectConnection = this.project.getMessageBus().connect();
 
-    projectConnection.subscribe(IdeDocumentHistoryImpl.RecentPlacesListener.class, new IdeDocumentHistoryImpl.RecentPlacesListener() {
+    projectConnection.subscribe(RecentPlacesListener.class, new RecentPlacesListener() {
       @Override
       public void recentPlaceAdded(@Nonnull IdeDocumentHistoryImpl.PlaceInfo changePlace, boolean isChanged) {
         resetPlaces(isChanged);

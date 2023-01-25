@@ -15,8 +15,6 @@
  */
 package consulo.ide.impl.idea.openapi.progress.impl;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.TopicAPI;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.progress.CoreProgressManager;
@@ -39,7 +37,6 @@ import java.util.Set;
  */
 public class ProgressSuspender implements AutoCloseable {
   private static final Key<ProgressSuspender> PROGRESS_SUSPENDER = Key.create("PROGRESS_SUSPENDER");
-  public static final Topic<SuspenderListener> TOPIC = Topic.create("ProgressSuspender", SuspenderListener.class);
 
   private final Object myLock = new Object();
   private static final Application ourApp = ApplicationManager.getApplication();
@@ -47,7 +44,7 @@ public class ProgressSuspender implements AutoCloseable {
   private final String mySuspendedText;
   @Nullable
   private String myTempReason;
-  private final SuspenderListener myPublisher;
+  private final ProgressSuspenderListener myPublisher;
   private volatile boolean mySuspended;
   private final CoreProgressManager.CheckCanceledHook myHook = this::freezeIfNeeded;
   private final Set<ProgressIndicator> myProgresses = ContainerUtil.newConcurrentSet();
@@ -57,7 +54,7 @@ public class ProgressSuspender implements AutoCloseable {
     mySuspendedText = suspendedText;
     assert progress.isRunning();
     assert ProgressIndicatorProvider.getGlobalProgressIndicator() == progress;
-    myPublisher = ApplicationManager.getApplication().getMessageBus().syncPublisher(TOPIC);
+    myPublisher = ApplicationManager.getApplication().getMessageBus().syncPublisher(ProgressSuspenderListener.class);
 
     attachToProgress(progress);
 
@@ -157,21 +154,6 @@ public class ProgressSuspender implements AutoCloseable {
       }
 
       return true;
-    }
-  }
-
-  @TopicAPI(ComponentScope.APPLICATION)
-  public interface SuspenderListener {
-    /**
-     * Called (on any thread) when a new progress is created with suspension capability
-     */
-    default void suspendableProgressAppeared(@Nonnull ProgressSuspender suspender) {
-    }
-
-    /**
-     * Called (on any thread) when a progress is suspended or resumed
-     */
-    default void suspendedStatusChanged(@Nonnull ProgressSuspender suspender) {
     }
   }
 

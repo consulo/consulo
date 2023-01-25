@@ -15,18 +15,39 @@
  */
 package consulo.component.impl.internal.messagebus;
 
+import consulo.component.bind.TopicMethod;
+
 import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 25/01/2023
  */
-public interface Message<T> {
-  @Nonnull
-  Class<T> getTopicClass();
+public class TopicMethodMessage<T> implements Message<T> {
+  private final Class<T> myTopicClass;
+  private final TopicMethod myTopicMethod;
+  private final Object[] myArguments;
+
+  public TopicMethodMessage(Class<T> topicClass, TopicMethod topicMethod, Object[] args) {
+    myTopicClass = topicClass;
+    myTopicMethod = topicMethod;
+    myArguments = args;
+  }
 
   @Nonnull
-  String getMethodName();
+  @Override
+  public Class<T> getTopicClass() {
+    return myTopicClass;
+  }
 
-  void invoke(T handler) throws Throwable;
+  @Nonnull
+  @Override
+  public String getMethodName() {
+    return myTopicMethod.getName();
+  }
+
+  @Override
+  public void invoke(T handler) throws Throwable {
+    myTopicMethod.getInvoker().accept(handler, myArguments);
+  }
 }

@@ -96,18 +96,16 @@ public class EventDispatcher<T extends EventListener> {
 
   @Nullable
   public static Object handleObjectMethod(Object proxy, Object[] args, String methodName) {
-    if (methodName.equals("toString")) {
-      return "Multicaster";
-    }
-    else if (methodName.equals("hashCode")) {
-      return System.identityHashCode(proxy);
-    }
-    else if (methodName.equals("equals")) {
-      return proxy == args[0] ? Boolean.TRUE : Boolean.FALSE;
-    }
-    else {
-      LOG.error("Incorrect Object's method invoked for proxy:" + methodName);
-      return null;
+    switch (methodName) {
+      case "toString":
+        return "Multicaster";
+      case "hashCode":
+        return System.identityHashCode(proxy);
+      case "equals":
+        return proxy == args[0] ? Boolean.TRUE : Boolean.FALSE;
+      default:
+        LOG.error("Incorrect Object's method invoked for proxy:" + methodName);
+        return null;
     }
   }
 

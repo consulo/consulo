@@ -13,20 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.component.impl.internal.messagebus;
+package consulo.component.bind;
 
-import javax.annotation.Nonnull;
+import java.lang.reflect.Type;
 
 /**
  * @author VISTALL
  * @since 25/01/2023
  */
-public interface Message<T> {
-  @Nonnull
-  Class<T> getTopicClass();
+public interface TopicBinding {
+  Type[] EMPTY_TYPES = new Type[0];
 
-  @Nonnull
-  String getMethodName();
+  String getApiClassName();
 
-  void invoke(T handler) throws Throwable;
+  TopicMethod[] methods();
 }

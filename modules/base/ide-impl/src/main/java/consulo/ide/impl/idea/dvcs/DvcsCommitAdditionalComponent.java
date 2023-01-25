@@ -139,7 +139,7 @@ public abstract class DvcsCommitAdditionalComponent implements RefreshableOnComp
     }
     catch (VcsException e) {
       Messages.showErrorDialog(getComponent(), "Couldn't load commit message of the commit to amend.\n" + e.getMessage(),
-                               "Commit Message not Loaded");
+                               "Commit ReflectionMessage not Loaded");
       log.info(e);
     }
   }

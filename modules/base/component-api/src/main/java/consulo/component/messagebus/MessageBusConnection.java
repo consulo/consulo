@@ -20,7 +20,6 @@
 package consulo.component.messagebus;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Aggregates multiple topic subscriptions for particular {@link MessageBus message bus}. I.e. every time a client wants to
@@ -34,10 +33,6 @@ public interface MessageBusConnection {
     subscribe(topic.getListenerClass(), handler);
   }
 
-  @Deprecated
-  default <L> void subscribe(@Nonnull Topic<L> topic) throws IllegalStateException {
-    subscribe(topic.getListenerClass());
-  }
 
   /**
    * Subscribes given handler to the target endpoint within the current connection.
@@ -50,24 +45,6 @@ public interface MessageBusConnection {
    * @see MessageBus#syncPublisher(Class)
    */
   <L> void subscribe(@Nonnull Class<L> topicClass, @Nonnull L handler) throws IllegalStateException;
-
-  /**
-   * Subscribes to the target topic within the current connection using {@link #setDefaultHandler(MessageHandler) default handler}.
-   *
-   * @param topicClass target endpoint
-   * @param <L>   interface for working with the target topic
-   * @throws IllegalStateException if {@link #setDefaultHandler(MessageHandler) default handler} hasn't been defined or
-   *                               has incompatible type with the {@link topicClass} topic's business interface}
-   *                               or if target topic is already subscribed within the current connection
-   */
-  <L> void subscribe(@Nonnull Class<L> topicClass) throws IllegalStateException;
-
-  /**
-   * Allows to specify default handler to use during {@link #subscribe(Class) anonymous subscriptions}.
-   *
-   * @param handler handler to use
-   */
-  void setDefaultHandler(@Nullable MessageHandler handler);
 
   /**
    * Forces to process any queued but not delivered events.

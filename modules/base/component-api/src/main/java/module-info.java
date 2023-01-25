@@ -51,5 +51,6 @@ module consulo.component.api {
           consulo.language.editor.api;
 
   uses consulo.component.bind.InjectingBinding;
+  uses consulo.component.bind.TopicBinding;
   uses consulo.component.internal.inject.RootInjectingContainerFactory;
 }

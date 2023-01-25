@@ -19,6 +19,7 @@ import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ide.impl.desktop.awt.migration.AWTComponentProviderUtil;
 import consulo.ide.impl.idea.notification.EventLog;
 import consulo.ide.impl.idea.openapi.progress.impl.ProgressSuspender;
+import consulo.ide.impl.idea.openapi.progress.impl.ProgressSuspenderListener;
 import consulo.ide.impl.idea.openapi.project.ProjectUtil;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
 import consulo.ide.impl.idea.openapi.util.Comparing;
@@ -163,7 +164,7 @@ public class InfoAndProgressPanel extends JPanel implements CustomStatusBarWidge
       if (!myDisposed) {
         MessageBusConnection connection = ApplicationManager.getApplication().getMessageBus().connect(parentDisposable);
         connection.subscribe(PowerSaveModeListener.class, () -> UIUtil.invokeLaterIfNeeded(runnable));
-        connection.subscribe(ProgressSuspender.TOPIC, new ProgressSuspender.SuspenderListener() {
+        connection.subscribe(ProgressSuspenderListener.class, new ProgressSuspenderListener() {
           @Override
           public void suspendableProgressAppeared(@Nonnull ProgressSuspender suspender) {
             UIUtil.invokeLaterIfNeeded(runnable);

@@ -23,6 +23,7 @@ import consulo.component.persist.Storage;
 import consulo.module.Module;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
+import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.module.impl.internal.ModuleEx;
 import consulo.module.impl.internal.ModuleImpl;
@@ -56,9 +57,18 @@ public class ModuleManagerComponent extends ModuleManagerImpl {
     super(project);
     myConnection = myMessageBus.connect(project);
     myProgressManager = progressManager;
-    myConnection.setDefaultHandler((event, params) -> cleanCachedStuff());
 
-    myConnection.subscribe(ModuleRootListener.class);
+    myConnection.subscribe(ModuleRootListener.class, new ModuleRootListener() {
+      @Override
+      public void beforeRootsChange(ModuleRootEvent event) {
+        cleanCachedStuff();
+      }
+
+      @Override
+      public void rootsChanged(ModuleRootEvent event) {
+        cleanCachedStuff();
+      }
+    });
 
     if(project.isDefault()) {
       myReady = true;

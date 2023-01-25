@@ -10,16 +10,12 @@ import consulo.component.messagebus.MessageBus;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
-import consulo.proxy.EventDispatcher;
 import consulo.util.collection.*;
 import consulo.util.lang.CompoundRuntimeException;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Queue;
 import java.util.*;
@@ -58,7 +54,6 @@ public class MessageBusImpl implements MessageBus, Disposable {
   @Nonnull
   private MultiMap<String, InjectingBinding> myTopicClassToListenerClass = MultiMap.empty();
 
-  private static final Object NA = new Object();
   private MessageBusImpl myParentBus;
 
   private final RootBus myRootBus;
@@ -67,7 +62,6 @@ public class MessageBusImpl implements MessageBus, Disposable {
   private final InjectingContainerOwner myOwner;
   private boolean myDisposed;
   private final Disposable myConnectionDisposable;
-  private MessageDeliveryListener myMessageDeliveryListener;
 
   private final MessageBusConnectionImpl myLazyConnection;
 
@@ -179,7 +173,7 @@ public class MessageBusImpl implements MessageBus, Disposable {
     }
 
     if (myTopicClassToListenerClass.isEmpty()) {
-      Object newInstance = Proxy.newProxyInstance(topicClass.getClassLoader(), new Class[]{topicClass}, createTopicHandler(topicClass));
+      Object newInstance = Proxy.newProxyInstance(topicClass.getClassLoader(), new Class[]{topicClass}, new TopicInvocationHandler<>(this, topicClass));
       Object prev = myPublishers.putIfAbsent(topicClass, newInstance);
       //noinspection unchecked
       return (L)(prev == null ? newInstance : prev);
@@ -224,20 +218,9 @@ public class MessageBusImpl implements MessageBus, Disposable {
     }
 
     //noinspection unchecked
-    publisher = (L)Proxy.newProxyInstance(listenerClass.getClassLoader(), new Class[]{listenerClass}, createTopicHandler(topic));
+    publisher = (L)Proxy.newProxyInstance(listenerClass.getClassLoader(), new Class[]{listenerClass}, new TopicInvocationHandler<>(this, topic));
     myPublishers.put(topic, publisher);
     return publisher;
-  }
-
-  @Nonnull
-  private <L> InvocationHandler createTopicHandler(@Nonnull Class<L> topicClass) {
-    return (proxy, method, args) -> {
-      if (method.getDeclaringClass().getName().equals("java.lang.Object")) {
-        return EventDispatcher.handleObjectMethod(proxy, args, method.getName());
-      }
-      sendMessage(new Message<>(topicClass, method, args));
-      return NA;
-    };
   }
 
   @Override
@@ -368,7 +351,7 @@ public class MessageBusImpl implements MessageBus, Disposable {
     }
   }
 
-  private void sendMessage(@Nonnull Message message) {
+  protected void sendMessage(@Nonnull Message message) {
     pumpMessages();
     postMessage(message);
     pumpMessages();
@@ -500,25 +483,8 @@ public class MessageBusImpl implements MessageBus, Disposable {
     return ThreadLocal.withInitial(ArrayDeque::new);
   }
 
-  //@ApiStatus.Internal
-  public void setMessageDeliveryListener(@Nullable MessageDeliveryListener listener) {
-    if (myMessageDeliveryListener != null && listener != null) {
-      throw new IllegalStateException("Already set: " + myMessageDeliveryListener);
-    }
-    myMessageDeliveryListener = listener;
-  }
-
-  void invokeListener(@Nonnull Message message, Object handler) throws IllegalAccessException, InvocationTargetException {
-    Method method = message.getListenerMethod();
-    MessageDeliveryListener listener = myMessageDeliveryListener;
-    if (listener == null) {
-      method.invoke(handler, message.getArgs());
-      return;
-    }
-
-    long startTime = System.nanoTime();
-    method.invoke(handler, message.getArgs());
-    listener.messageDelivered(message.getTopicClass(), method.getName(), handler, System.nanoTime() - startTime);
+  <T> void invokeListener(@Nonnull Message<T> message, T handler) throws Throwable {
+    message.invoke(handler);
   }
 
   static final class RootBus extends MessageBusImpl {

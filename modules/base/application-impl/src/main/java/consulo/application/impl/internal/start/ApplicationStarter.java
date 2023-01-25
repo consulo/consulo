@@ -24,6 +24,7 @@ import consulo.application.impl.internal.plugin.PluginsLoader;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.internal.TransactionGuardEx;
 import consulo.component.internal.inject.InjectingBindingLoader;
+import consulo.component.internal.inject.TopicBindingLoader;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.classloader.PluginClassLoader;
 import consulo.container.impl.classloader.PluginLoadStatistics;
@@ -112,9 +113,11 @@ public abstract class ApplicationStarter {
 
     Map<String, List<String>> filesWithMarkers = new HashMap<>();
 
-    InjectingBindingLoader bindingLoader = InjectingBindingLoader.INSTANCE;
+    InjectingBindingLoader injectingBindingLoader = InjectingBindingLoader.INSTANCE;
+    TopicBindingLoader topicBindingLoader = TopicBindingLoader.INSTANCE;
 
-    libraryStats.markWith("binding.analyze", () -> bindingLoader.analyzeBindings());
+    libraryStats.markWith("injecting.binding.analyze", injectingBindingLoader::analyzeBindings);
+    libraryStats.markWith("topic.binding.analyze", topicBindingLoader::analyzeBindings);
 
     libraryStats.markWith("library.analyze", () -> analyzeLibraries(filesWithMarkers));
 

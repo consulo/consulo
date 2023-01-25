@@ -1,9 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.fileEditor.impl;
 
-import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceImpl;
-import consulo.annotation.component.TopicAPI;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.UISettings;
 import consulo.application.util.DateFormatUtil;
@@ -706,27 +704,4 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
     return false;
   }
 
-  /**
-   * {@link RecentPlacesListener} listens recently viewed or changed place adding and removing events.
-   */
-  @TopicAPI(ComponentScope.PROJECT)
-  public interface RecentPlacesListener {
-    /**
-     * Fires on a new place info adding into {@link #myChangePlaces} or {@link #myBackPlaces} infos list
-     *
-     * @param changePlace new place info
-     * @param isChanged   true if place info was added into the changed infos list {@link #myChangePlaces};
-     *                    false if place info was added into the back infos list {@link #myBackPlaces}
-     */
-    void recentPlaceAdded(@Nonnull PlaceInfo changePlace, boolean isChanged);
-
-    /**
-     * Fires on a place info removing from the {@link #myChangePlaces} or the {@link #myBackPlaces} infos list
-     *
-     * @param changePlace place info that was removed
-     * @param isChanged   true if place info was removed from the changed infos list {@link #myChangePlaces};
-     *                    false if place info was removed from the back infos list {@link #myBackPlaces}
-     */
-    void recentPlaceRemoved(@Nonnull PlaceInfo changePlace, boolean isChanged);
-  }
 }

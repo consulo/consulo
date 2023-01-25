@@ -3,7 +3,6 @@ package consulo.component.impl.internal.messagebus;
 
 import consulo.component.ProcessCanceledException;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.component.messagebus.MessageHandler;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
@@ -22,7 +21,6 @@ final class MessageBusConnectionImpl implements MessageBusConnection, Disposable
   @SuppressWarnings("SSBasedInspection")
   private final ThreadLocal<Queue<Message>> myPendingMessages = MessageBusImpl.createThreadLocalQueue();
 
-  private MessageHandler myDefaultHandler;
   private volatile SmartFMap<Class<?>, Object> mySubscriptions = SmartFMap.emptyMap();
 
   MessageBusConnectionImpl(@Nonnull MessageBusImpl bus) {
@@ -82,26 +80,6 @@ final class MessageBusConnectionImpl implements MessageBusConnection, Disposable
   }
 
   @Override
-  public <L> void subscribe(@Nonnull Class<L> topicClass) throws IllegalStateException {
-    MessageHandler defaultHandler = myDefaultHandler;
-    if (defaultHandler == null) {
-      throw new IllegalStateException("Connection must have default handler installed prior to any anonymous subscriptions. " + "Target topic: " + topicClass);
-    }
-    if (topicClass.isInstance(defaultHandler)) {
-      throw new IllegalStateException(
-              "Can't subscribe to the topic '" + topicClass + "'. Default handler has incompatible type - expected: '" + topicClass + "', actual: '" + defaultHandler.getClass() + "'");
-    }
-
-    //noinspection unchecked
-    subscribe(topicClass, (L)defaultHandler);
-  }
-
-  @Override
-  public void setDefaultHandler(MessageHandler handler) {
-    myDefaultHandler = handler;
-  }
-
-  @Override
   public void dispose() {
     myPendingMessages.get();
     myPendingMessages.remove();
@@ -128,18 +106,13 @@ final class MessageBusConnectionImpl implements MessageBusConnection, Disposable
     Class<?> topic = message.getTopicClass();
     Object handler = mySubscriptions.get(topic);
     try {
-      if (handler == myDefaultHandler) {
-        myDefaultHandler.handle(message.getListenerMethod(), message.getArgs());
+      if (handler instanceof List<?>) {
+        for (Object o : (List<?>)handler) {
+          myBus.invokeListener(message, o);
+        }
       }
       else {
-        if (handler instanceof List<?>) {
-          for (Object o : (List<?>)handler) {
-            myBus.invokeListener(message, o);
-          }
-        }
-        else {
-          myBus.invokeListener(message, handler);
-        }
+        myBus.invokeListener(message, handler);
       }
     }
     catch (AbstractMethodError e) {

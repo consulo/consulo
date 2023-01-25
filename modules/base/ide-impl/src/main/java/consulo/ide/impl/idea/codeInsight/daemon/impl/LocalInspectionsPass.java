@@ -495,7 +495,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
                 "' (" +
                 tool.getClass() +
                 ") " +
-                "was invoked for. Message: '" +
+                "was invoked for. ReflectionMessage: '" +
                 descriptor +
                 "'.\n" +
                 "Element' containing file: " +

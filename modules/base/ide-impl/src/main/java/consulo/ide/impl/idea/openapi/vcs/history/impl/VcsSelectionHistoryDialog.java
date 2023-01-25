@@ -444,7 +444,7 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
 
   private JComponent createComments(final JComponent addComp) {
     JPanel panel = new JPanel(new BorderLayout(4, 4));
-    panel.add(new JLabel("Commit Message:"), BorderLayout.NORTH);
+    panel.add(new JLabel("Commit ReflectionMessage:"), BorderLayout.NORTH);
     panel.add(ScrollPaneFactory.createScrollPane(myComments), BorderLayout.CENTER);
 
     final Splitter splitter = new Splitter(false);
