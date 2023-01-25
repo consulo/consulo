@@ -368,7 +368,7 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
     }
   }
 
-  public void passCachedListsToListener(final VcsConfigurationChangeListener.DetailedNotification notification, final Project project, final VirtualFile root) {
+  public void passCachedListsToListener(final VcsBranchMappingChangedDetailedNotification notification, final Project project, final VirtualFile root) {
     final LinkedList<CommittedChangeList> resultList = new LinkedList<CommittedChangeList>();
     myBrowser.reportLoadedLists(new CommittedChangeListsListener() {
       @Override

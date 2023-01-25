@@ -20,8 +20,10 @@ import consulo.disposer.Disposer;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.util.lang.ObjectUtil;
+import consulo.versionControlSystem.PluginVcsMappingListener;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsListener;
+import consulo.versionControlSystem.VcsMappingListener;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
 import consulo.language.file.event.FileTypeEvent;
@@ -71,7 +73,8 @@ public class TodoView implements PersistentStateComponent<TodoView.State>, Dispo
     MessageBusConnection connection = project.getMessageBus().connect(this);
     connection.subscribe(TodoConfigurationListener.class, new MyTodoConfigurationListener());
     connection.subscribe(FileTypeListener.class, new MyFileTypeListener());
-    connection.subscribe(ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED, myVcsListener);
+    connection.subscribe(VcsMappingListener.class, myVcsListener);
+    connection.subscribe(PluginVcsMappingListener.class, myVcsListener);
   }
 
   static class State {

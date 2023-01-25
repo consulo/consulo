@@ -116,7 +116,6 @@ public class ShelveChangesManager implements JDOMExternalizable {
   @Nonnull
   private final CompoundShelfFileProcessor myFileProcessor;
 
-  public static final Topic<ChangeListener> SHELF_TOPIC = new Topic<>("shelf updates", ChangeListener.class);
   private boolean myShowRecycled;
   private final Project myProject;
 
@@ -517,7 +516,7 @@ public class ShelveChangesManager implements JDOMExternalizable {
 
   private void notifyStateChanged() {
     if (!myProject.isDisposed()) {
-      myBus.syncPublisher(SHELF_TOPIC).stateChanged(new ChangeEvent(this));
+      myBus.syncPublisher(ShelveChangesListener.class).changeChanged(this);
     }
   }
 

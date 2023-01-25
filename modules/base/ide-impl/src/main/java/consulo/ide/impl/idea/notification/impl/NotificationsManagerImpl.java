@@ -91,8 +91,8 @@ public class NotificationsManagerImpl extends NotificationsManager {
   private static final Logger LOG = Logger.getInstance(NotificationsManagerImpl.class);
 
   public static final Color DEFAULT_TEXT_COLOR = new JBColor(Gray._0, Gray._191);
-  public static final Color FILL_COLOR = JBColor.namedColor("Notification.background", new JBColor(Gray._242, new Color(0x4E5052)));
-  public static final Color BORDER_COLOR = JBColor.namedColor("Notification.borderColor", new JBColor(0xCDB2B2B2, 0xCD565A5C));
+  public static final Color FILL_COLOR = JBColor.namedColor("VcsBranchMappingChangedNotification.background", new JBColor(Gray._242, new Color(0x4E5052)));
+  public static final Color BORDER_COLOR = JBColor.namedColor("VcsBranchMappingChangedNotification.borderColor", new JBColor(0xCDB2B2B2, 0xCD565A5C));
 
   @Inject
   public NotificationsManagerImpl(Application application) {
@@ -335,7 +335,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
     layoutDataRef.set(layoutData);
 
     if (layoutData.textColor == null) {
-      layoutData.textColor = JBColor.namedColor("Notification.foreground", DEFAULT_TEXT_COLOR);
+      layoutData.textColor = JBColor.namedColor("VcsBranchMappingChangedNotification.foreground", DEFAULT_TEXT_COLOR);
     }
 
     if (layoutData.fillColor == null) {

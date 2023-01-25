@@ -468,7 +468,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
       ProjectFrameBounds.getInstance(project);   // make sure the service is initialized and its state will be saved
       if (myRootPane != null) {
         myRootPane.installNorthComponents(project);
-        project.getMessageBus().connect().subscribe(StatusBar.Info.TOPIC, myRootPane.getStatusBar());
+        project.getMessageBus().connect().subscribe(StatusBarInfo.class, myRootPane.getStatusBar());
       }
 
       installDefaultProjectStatusBarWidgets(myProject);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2023 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,10 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.changes.committed;
+package consulo.versionControlSystem;
 
-@Deprecated
-public interface VcsConfigurationChangeListener {
-  Class<VcsBranchMappingChangedNotification> BRANCHES_CHANGED = VcsBranchMappingChangedNotification.class;
-  Class<VcsBranchMappingChangedDetailedNotification> BRANCHES_CHANGED_RESPONSE = VcsBranchMappingChangedDetailedNotification.class;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.TopicAPI;
+
+import java.util.EventListener;
+
+/**
+ * Allows to receive notifications about changes in VCS configuration for the project.
+ */
+@TopicAPI(ComponentScope.PROJECT)
+public interface PluginVcsMappingListener extends EventListener {
+  /**
+   * Notifies that the per-directory VCS mapping has changed.
+   */
+  void directoryMappingChanged();
 }

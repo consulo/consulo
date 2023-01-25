@@ -172,8 +172,8 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
     };
     myExcludedIndex = excludedFileIndex;
     MessageBusConnection connection = myProject.getMessageBus().connect();
-    connection.subscribe(ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED, vcsListener);
-    connection.subscribe(ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED_IN_PLUGIN, vcsListener);
+    connection.subscribe(VcsMappingListener.class, vcsListener);
+    connection.subscribe(PluginVcsMappingListener.class, vcsListener);
     connection.subscribe(UpdatedFilesListener.class, myContentRevisionCache::clearCurrent);
     myAnnotationLocalChangesListener = new VcsAnnotationLocalChangesListenerImpl(myProject, this);
 
@@ -590,7 +590,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
   @Override
   public void addVcsListener(VcsListener listener) {
     MessageBusConnection connection = myProject.getMessageBus().connect();
-    connection.subscribe(VCS_CONFIGURATION_CHANGED, listener);
+    connection.subscribe(VcsMappingListener.class, listener);
     myAdapters.put(listener, connection);
   }
 
@@ -669,7 +669,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
 
   @Override
   public void notifyDirectoryMappingChanged() {
-    myProject.getMessageBus().syncPublisher(VCS_CONFIGURATION_CHANGED).directoryMappingChanged();
+    myProject.getMessageBus().syncPublisher(VcsMappingListener.class).directoryMappingChanged();
   }
 
   protected void activateActiveVcses() {

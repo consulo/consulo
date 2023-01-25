@@ -63,7 +63,7 @@ public class NotificationBalloonActionProvider implements BalloonImpl.ActionProv
     }
     else {
       mySettingButton =
-              myBalloon.new ActionButton(AllIcons.Ide.Notification.Gear, AllIcons.Ide.Notification.GearHover, "Configure Notification", event -> myBalloon.runWithSmartFadeoutPause(new Runnable() {
+              myBalloon.new ActionButton(AllIcons.Ide.Notification.Gear, AllIcons.Ide.Notification.GearHover, "Configure VcsBranchMappingChangedNotification", event -> myBalloon.runWithSmartFadeoutPause(new Runnable() {
                 @Override
                 @RequiredUIAccess
                 public void run() {
@@ -94,7 +94,7 @@ public class NotificationBalloonActionProvider implements BalloonImpl.ActionProv
       }
     }
 
-    myCloseButton = myBalloon.new ActionButton(AllIcons.Ide.Notification.Close, AllIcons.Ide.Notification.CloseHover, "Close Notification (Alt-Click close all notifications)", event -> {
+    myCloseButton = myBalloon.new ActionButton(AllIcons.Ide.Notification.Close, AllIcons.Ide.Notification.CloseHover, "Close VcsBranchMappingChangedNotification (Alt-Click close all notifications)", event -> {
       final int modifiers = event.getModifiers();
       //noinspection SSBasedInspection
       SwingUtilities.invokeLater(new Runnable() {

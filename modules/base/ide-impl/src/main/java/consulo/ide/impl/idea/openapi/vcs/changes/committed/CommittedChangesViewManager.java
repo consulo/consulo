@@ -22,22 +22,21 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
-import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentProvider;
-import consulo.ide.impl.idea.openapi.vcs.ui.VcsBalloonProblemNotifier;
-import consulo.versionControlSystem.*;
-import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.application.ApplicationManager;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentProvider;
+import consulo.ide.impl.idea.openapi.vcs.ui.VcsBalloonProblemNotifier;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationType;
+import consulo.versionControlSystem.*;
+import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.List;
-import java.util.function.BooleanSupplier;
 
 public class CommittedChangesViewManager implements ChangesViewContentProvider {
   private final ProjectLevelVcsManager myVcsManager;
@@ -59,7 +58,7 @@ public class CommittedChangesViewManager implements ChangesViewContentProvider {
 
     if (myComponent == null) {
       myComponent = new CommittedChangesPanel(myProject, provider, provider.createDefaultSettings(), null, null);
-      myConnection.subscribe(VcsConfigurationChangeListener.BRANCHES_CHANGED, new VcsConfigurationChangeListener.Notification() {
+      myConnection.subscribe(VcsBranchMappingChangedNotification.class, new VcsBranchMappingChangedNotification() {
         public void execute(final Project project, final VirtualFile vcsRoot) {
           sendUpdateCachedListsMessage(vcsRoot);
         }
@@ -75,15 +74,9 @@ public class CommittedChangesViewManager implements ChangesViewContentProvider {
   private void sendUpdateCachedListsMessage(final VirtualFile vcsRoot) {
     ApplicationManager.getApplication().invokeLater(new Runnable() {
       public void run() {
-        myComponent.passCachedListsToListener(myBus.syncPublisher(VcsConfigurationChangeListener.BRANCHES_CHANGED_RESPONSE),
-                                              myProject, vcsRoot);
+        myComponent.passCachedListsToListener(myBus.syncPublisher(VcsBranchMappingChangedDetailedNotification.class), myProject, vcsRoot);
       }
-    }, new BooleanSupplier() {
-      @Override
-      public boolean getAsBoolean() {
-        return (! myProject.isOpen()) || myProject.isDisposed() || myComponent == null;
-      }
-    });
+    }, () -> (!myProject.isOpen()) || myProject.isDisposed() || myComponent == null);
   }
 
   public JComponent initContent() {

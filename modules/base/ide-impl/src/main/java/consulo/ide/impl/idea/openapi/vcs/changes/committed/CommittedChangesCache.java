@@ -175,8 +175,8 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
             public void run() {
               if (myProject.isDisposed()) return;
               myTaskQueue.start();
-              myConnection.subscribe(ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED, vcsListener);
-              myConnection.subscribe(ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED_IN_PLUGIN, vcsListener);
+              myConnection.subscribe(VcsMappingListener.class, vcsListener);
+              myConnection.subscribe(PluginVcsMappingListener.class, vcsListener);
             }
           });
         }

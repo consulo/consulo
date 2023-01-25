@@ -25,7 +25,6 @@ package consulo.ide.impl.idea.openapi.vcs.changes.shelf;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.ApplicationManager;
 import consulo.application.CommonBundle;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.util.DateFormatUtil;
@@ -36,7 +35,6 @@ import consulo.dataContext.TypeSafeDataProvider;
 import consulo.ide.impl.idea.ide.actions.EditSourceAction;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.FilePatch;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.PatchSyntaxException;
-import consulo.versionControlSystem.VcsDataKeys;
 import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.IssueLinkRenderer;
 import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.TreeLinkMouseListener;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.PatchFileType;
@@ -75,6 +73,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.versionControlSystem.AbstractVcsHelper;
 import consulo.versionControlSystem.VcsBundle;
+import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.CommitContext;
@@ -86,8 +85,6 @@ import jakarta.inject.Singleton;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
@@ -127,11 +124,11 @@ public class ShelvedChangesViewManager {
     myProject = project;
     myContentManager = contentManager;
     myShelveChangesManager = shelveChangesManager;
-    myProject.getMessageBus().connect().subscribe(ShelveChangesManager.SHELF_TOPIC, new ChangeListener() {
+    myProject.getMessageBus().connect().subscribe(ShelveChangesListener.class, new ShelveChangesListener() {
       @Override
-      public void stateChanged(ChangeEvent e) {
+      public void changeChanged(ShelveChangesManager manager) {
         myUpdatePending = true;
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
+        myProject.getApplication().invokeLater(new Runnable() {
           @Override
           public void run() {
             updateChangesContent();

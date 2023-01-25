@@ -177,7 +177,7 @@ public class NewMappings implements Disposable {
 
   public void mappingsChanged() {
     if (myProject.isDisposed()) return;
-    myProject.getMessageBus().syncPublisher(ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED).directoryMappingChanged();
+    myProject.getMessageBus().syncPublisher(VcsMappingListener.class).directoryMappingChanged();
     myFileStatusManager.fileStatusesChanged();
     myFileWatchRequestsManager.ping();
 

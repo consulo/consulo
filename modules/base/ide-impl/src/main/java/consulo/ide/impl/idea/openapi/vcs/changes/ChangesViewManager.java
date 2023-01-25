@@ -163,15 +163,7 @@ public class ChangesViewManager implements ChangesViewI, Disposable, PersistentS
     myContentManager.addContent(myContent);
 
     scheduleRefresh();
-    myProject.getMessageBus().connect().subscribe(RemoteRevisionsCache.REMOTE_VERSION_CHANGED, new Runnable() {
-      public void run() {
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-          public void run() {
-            refreshView();
-          }
-        }, IdeaModalityState.NON_MODAL, myProject.getDisposed());
-      }
-    });
+    myProject.getMessageBus().connect().subscribe(RemoteRevisionChangeListener.class, () -> ApplicationManager.getApplication().invokeLater(() -> refreshView(), IdeaModalityState.NON_MODAL, myProject.getDisposed()));
 
     myDetailsOn = VcsConfiguration.getInstance(myProject).LOCAL_CHANGES_DETAILS_PREVIEW_SHOWN;
     changeDetails();

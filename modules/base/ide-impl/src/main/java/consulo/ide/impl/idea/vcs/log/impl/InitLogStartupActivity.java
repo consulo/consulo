@@ -16,13 +16,12 @@
 package consulo.ide.impl.idea.vcs.log.impl;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.project.Project;
 import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
+import consulo.versionControlSystem.VcsMappingListener;
 
 import javax.annotation.Nonnull;
 
@@ -36,10 +35,11 @@ public class InitLogStartupActivity implements PostStartupActivity, DumbAware {
   public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
     VcsProjectLog projectLog = VcsProjectLog.getInstance(project);
 
-    MessageBusConnection connection = project.getMessageBus().connect(project);
-    connection.subscribe(ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED, projectLog::recreateLog);
+    MessageBusConnection connection = project.getMessageBus().connect();
+    connection.subscribe(VcsMappingListener.class, projectLog::recreateLog);
+    
     if (projectLog.hasDvcsRoots()) {
-      ApplicationManager.getApplication().invokeLater(projectLog::createLog);
+      uiAccess.give(projectLog::createLog);
     }
   }
 }

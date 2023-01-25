@@ -18,7 +18,6 @@ package consulo.project.ui.wm;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.ApplicationManager;
 import consulo.component.messagebus.MessageBus;
-import consulo.component.messagebus.Topic;
 import consulo.disposer.Disposable;
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;
@@ -36,11 +35,7 @@ import java.awt.*;
  * @author spleaner
  */
 public interface StatusBar extends StatusBarInfo, Disposable {
-
-  @SuppressWarnings({"AbstractClassNeverImplemented"})
   abstract class Info implements StatusBarInfo {
-    public static final Topic<StatusBarInfo> TOPIC = Topic.create("IdeStatusBar.Text", StatusBarInfo.class);
-
     private Info() {
     }
 
@@ -52,13 +47,13 @@ public interface StatusBar extends StatusBarInfo, Disposable {
       if (project != null) {
         if (project.isDisposed()) return;
         if (!project.isInitialized()) {
-          StartupManager.getInstance(project).runWhenProjectIsInitialized((p, ui) -> p.getMessageBus().syncPublisher(TOPIC).setInfo(text, requestor));
+          StartupManager.getInstance(project).runWhenProjectIsInitialized((p, ui) -> p.getMessageBus().syncPublisher(StatusBarInfo.class).setInfo(text, requestor));
           return;
         }
       }
 
       final MessageBus bus = project == null ? ApplicationManager.getApplication().getMessageBus() : project.getMessageBus();
-      bus.syncPublisher(TOPIC).setInfo(text, requestor);
+      bus.syncPublisher(StatusBarInfo.class).setInfo(text, requestor);
     }
   }
 

@@ -71,8 +71,8 @@ public class IncomingChangesIndicator {
       }
     });
     final VcsListener listener = () -> UIUtil.invokeLaterIfNeeded(this::updateIndicatorVisibility);
-    connection.subscribe(ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED, listener);
-    connection.subscribe(ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED_IN_PLUGIN, listener);
+    connection.subscribe(VcsMappingListener.class, listener);
+    connection.subscribe(PluginVcsMappingListener.class, listener);
   }
 
   private void updateIndicatorVisibility() {

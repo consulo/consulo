@@ -21,13 +21,11 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.component.ProcessCanceledException;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.component.messagebus.Topic;
 import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.openapi.util.Getter;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.PlusMinus;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.RemoteStatusChangeNodeDecorator;
 import consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
-import consulo.versionControlSystem.update.UpdateFilesHelper;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.lang.Couple;
@@ -36,6 +34,7 @@ import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.versionControlSystem.root.VcsRoot;
+import consulo.versionControlSystem.update.UpdateFilesHelper;
 import consulo.versionControlSystem.update.UpdatedFiles;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -52,7 +51,6 @@ import java.util.function.Consumer;
 public class RemoteRevisionsCache implements PlusMinus<Pair<String, AbstractVcs>>, VcsListener {
   private static final Logger LOG = Logger.getInstance(RemoteRevisionsCache.class);
 
-  public static Topic<Runnable> REMOTE_VERSION_CHANGED = new Topic<>("REMOTE_VERSION_CHANGED", Runnable.class);
   public static final int DEFAULT_REFRESH_INTERVAL = 3 * 60 * 1000;
 
   private final RemoteRevisionsNumbersCache myRemoteRevisionsNumbersCache;
@@ -71,7 +69,7 @@ public class RemoteRevisionsCache implements PlusMinus<Pair<String, AbstractVcs>
   }
 
   @Inject
-  RemoteRevisionsCache(final Project project) {
+  RemoteRevisionsCache(final Project project, ProjectLevelVcsManager projectLevelVcsManager, VcsConfiguration vcsConfiguration) {
     myProject = project;
     myLock = new Object();
 
@@ -80,13 +78,12 @@ public class RemoteRevisionsCache implements PlusMinus<Pair<String, AbstractVcs>
 
     myChangeDecorator = new RemoteStatusChangeNodeDecorator(this);
 
-    myVcsManager = ProjectLevelVcsManager.getInstance(project);
+    myVcsManager = projectLevelVcsManager;
     MessageBusConnection connection = myProject.getMessageBus().connect();
-    connection.subscribe(ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED, this);
-    connection.subscribe(ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED_IN_PLUGIN, this);
+    connection.subscribe(VcsMappingListener.class, this);
+    connection.subscribe(PluginVcsMappingListener.class, this);
     myKinds = new HashMap<>();
 
-    final VcsConfiguration vcsConfiguration = VcsConfiguration.getInstance(myProject);
     myControlledCycle = new ControlledCycle(project, new Getter<Boolean>() {
       @Override
       public Boolean get() {
@@ -100,7 +97,7 @@ public class RemoteRevisionsCache implements PlusMinus<Pair<String, AbstractVcs>
               @Override
               public void run() {
                 if (!myProject.isDisposed()) {
-                  myProject.getMessageBus().syncPublisher(REMOTE_VERSION_CHANGED).run();
+                  myProject.getMessageBus().syncPublisher(RemoteRevisionChangeListener.class).versionChanged();
                 }
               }
             });

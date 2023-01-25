@@ -25,16 +25,10 @@ package consulo.versionControlSystem;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 
-import java.util.EventListener;
-
 /**
  * Allows to receive notifications about changes in VCS configuration for the project.
- *
- * @see ProjectLevelVcsManager#addVcsListener
- * @since 6.0
  */
-@TopicAPI(ComponentScope.PROJECT)
-public interface VcsListener extends EventListener {
+public interface VcsListener extends VcsMappingListener, PluginVcsMappingListener {
   /**
    * Notifies that the per-directory VCS mapping has changed.
    */

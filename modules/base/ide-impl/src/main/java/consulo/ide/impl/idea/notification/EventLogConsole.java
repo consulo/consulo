@@ -205,7 +205,7 @@ class EventLogConsole {
   }
 
   private static void addConfigureNotificationAction(@Nonnull DefaultActionGroup actions, @Nonnull String groupId) {
-    DefaultActionGroup displayTypeGroup = new DefaultActionGroup("Notification Display Type", true);
+    DefaultActionGroup displayTypeGroup = new DefaultActionGroup("VcsBranchMappingChangedNotification Display Type", true);
     NotificationSettings settings = NotificationsConfigurationImpl.getSettings(groupId);
     NotificationDisplayType current = settings.getDisplayType();
 

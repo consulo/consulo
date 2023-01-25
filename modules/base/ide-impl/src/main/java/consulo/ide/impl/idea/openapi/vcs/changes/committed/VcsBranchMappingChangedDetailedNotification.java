@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2023 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,15 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
-@Deprecated
-public interface VcsConfigurationChangeListener {
-  Class<VcsBranchMappingChangedNotification> BRANCHES_CHANGED = VcsBranchMappingChangedNotification.class;
-  Class<VcsBranchMappingChangedDetailedNotification> BRANCHES_CHANGED_RESPONSE = VcsBranchMappingChangedDetailedNotification.class;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.project.Project;
+import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
+import consulo.virtualFileSystem.VirtualFile;
+
+import java.util.List;
+
+@ExtensionAPI(ComponentScope.PROJECT)
+public interface VcsBranchMappingChangedDetailedNotification {
+  void execute(final Project project, final VirtualFile vcsRoot, final List<CommittedChangeList> cachedList);
 }

@@ -29,6 +29,7 @@ import consulo.util.io.FileUtil;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
+import consulo.versionControlSystem.VcsMappingListener;
 import consulo.versionControlSystem.root.VcsRoot;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
@@ -79,7 +80,7 @@ public class VcsRepositoryManager implements Disposable {
   public VcsRepositoryManager(@Nonnull Project project, @Nonnull ProjectLevelVcsManager vcsManager) {
     myProject = project;
     myVcsManager = vcsManager;
-    project.getMessageBus().connect(this).subscribe(ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED, this::scheduleUpdate);
+    project.getMessageBus().connect(this).subscribe(VcsMappingListener.class, this::scheduleUpdate);
   }
 
   @Override

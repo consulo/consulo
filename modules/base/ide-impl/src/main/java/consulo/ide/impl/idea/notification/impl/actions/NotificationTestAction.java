@@ -48,9 +48,9 @@ import java.util.List;
  * @author Sergey.Malenkov
  */
 public class NotificationTestAction extends AnAction implements DumbAware {
-  private static final NotificationGroup TEST_GROUP = NotificationGroup.balloonGroup("Test Notification");
-  private static final NotificationGroup TEST_STICKY_GROUP = new NotificationGroup("Test Sticky Notification", NotificationDisplayType.STICKY_BALLOON, true);
-  private static final NotificationGroup TEST_TOOLWINDOW_GROUP = NotificationGroup.toolWindowGroup("Test ToolWindow Notification", ToolWindowId.TODO_VIEW, true);
+  private static final NotificationGroup TEST_GROUP = NotificationGroup.balloonGroup("Test VcsBranchMappingChangedNotification");
+  private static final NotificationGroup TEST_STICKY_GROUP = new NotificationGroup("Test Sticky VcsBranchMappingChangedNotification", NotificationDisplayType.STICKY_BALLOON, true);
+  private static final NotificationGroup TEST_TOOLWINDOW_GROUP = NotificationGroup.toolWindowGroup("Test ToolWindow VcsBranchMappingChangedNotification", ToolWindowId.TODO_VIEW, true);
   private static final String MESSAGE_KEY = "NotificationTestAction_Message";
 
   @RequiredUIAccess
@@ -68,7 +68,7 @@ public class NotificationTestAction extends AnAction implements DumbAware {
       myMessageBus = project != null ? project.getMessageBus() : Application.get().getMessageBus();
       init();
       setOKButtonText("Notify");
-      setTitle("Test Notification");
+      setTitle("Test VcsBranchMappingChangedNotification");
       myMessage.setText(PropertiesComponent.getInstance().getValue(MESSAGE_KEY, "GroupID:\nTitle:\nSubtitle:\nContent:\nType:\nActions:\nSticky:\n"));
     }
 
@@ -259,7 +259,7 @@ public class NotificationTestAction extends AnAction implements DumbAware {
 
     @Override
     public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
-      if (MessageDialogBuilder.yesNo("Notification Listener", event.getDescription() + "      Expire?").isYes()) {
+      if (MessageDialogBuilder.yesNo("VcsBranchMappingChangedNotification Listener", event.getDescription() + "      Expire?").isYes()) {
         myNotification.expire();
         myNotification = null;
       }

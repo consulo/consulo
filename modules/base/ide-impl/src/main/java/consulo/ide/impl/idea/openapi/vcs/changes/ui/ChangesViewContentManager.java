@@ -38,6 +38,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.Trinity;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
+import consulo.versionControlSystem.VcsMappingListener;
 import consulo.versionControlSystem.VcsToolWindow;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -77,7 +78,7 @@ public class ChangesViewContentManager implements ChangesViewContentI {
   @Inject
   public ChangesViewContentManager(@Nonnull Project project) {
     myProject = project;
-    project.getMessageBus().connect().subscribe(ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED, () -> update());
+    project.getMessageBus().connect().subscribe(VcsMappingListener.class, () -> update());
   }
 
   @Nonnull

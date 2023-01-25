@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 import consulo.annotation.component.TopicBroadcastDirection;
 import consulo.component.messagebus.MessageBus;
-import consulo.component.messagebus.Topic;
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;
 import consulo.util.lang.function.PairProcessor;
@@ -29,16 +28,14 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
-* User: spLeaner
-*/
+ * User: spLeaner
+ */
 @TopicAPI(value = ComponentScope.PROJECT, direction = TopicBroadcastDirection.NONE)
 public interface ConfigurationErrors {
-  Topic<ConfigurationErrors> TOPIC = Topic.create("Configuration Error", ConfigurationErrors.class, TopicBroadcastDirection.NONE);
-
   void addError(@Nonnull ConfigurationError error);
+
   void removeError(@Nonnull ConfigurationError error);
 
-  @SuppressWarnings({"UtilityClassWithoutPrivateConstructor"})
   class Bus {
     public static void addError(@Nonnull final ConfigurationError error, @Nonnull final Project project) {
       _do(error, project, (configurationErrors, configurationError) -> {
@@ -54,19 +51,20 @@ public interface ConfigurationErrors {
       });
     }
 
-    public static void _do(@Nonnull final ConfigurationError error, @Nonnull final Project project,
-                           @Nonnull final PairProcessor<ConfigurationErrors, ConfigurationError> fun) {
+    public static void _do(@Nonnull final ConfigurationError error, @Nonnull final Project project, @Nonnull final PairProcessor<ConfigurationErrors, ConfigurationError> fun) {
       if (!project.isInitialized()) {
-        StartupManager.getInstance(project).runWhenProjectIsInitialized(() -> fun.process(project.getMessageBus().syncPublisher(TOPIC), error));
+        StartupManager.getInstance(project).runWhenProjectIsInitialized(() -> fun.process(project.getMessageBus().syncPublisher(ConfigurationErrors.class), error));
 
         return;
       }
 
       final MessageBus bus = project.getMessageBus();
-      if (EventQueue.isDispatchThread()) fun.process(bus.syncPublisher(TOPIC), error);
+      if (EventQueue.isDispatchThread()) {
+        fun.process(bus.syncPublisher(ConfigurationErrors.class), error);
+      }
       else {
         //noinspection SSBasedInspection
-        SwingUtilities.invokeLater(() -> fun.process(bus.syncPublisher(TOPIC), error));
+        SwingUtilities.invokeLater(() -> fun.process(bus.syncPublisher(ConfigurationErrors.class), error));
       }
     }
   }

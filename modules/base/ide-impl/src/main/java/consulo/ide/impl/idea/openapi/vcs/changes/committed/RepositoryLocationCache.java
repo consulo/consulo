@@ -36,14 +36,9 @@ public class RepositoryLocationCache {
     myProject = project;
     myMap = Collections.synchronizedMap(new HashMap<Pair<String, String>, RepositoryLocation>());
     final MessageBusConnection connection = myProject.getMessageBus().connect();
-    final VcsListener listener = new VcsListener() {
-      @Override
-      public void directoryMappingChanged() {
-        reset();
-      }
-    };
-    connection.subscribe(ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED, listener);
-    connection.subscribe(ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED_IN_PLUGIN, listener);
+    final VcsListener listener = () -> reset();
+    connection.subscribe(VcsMappingListener.class, listener);
+    connection.subscribe(PluginVcsMappingListener.class, listener);
   }
 
   public RepositoryLocation getLocation(final AbstractVcs vcs, final FilePath filePath, final boolean silent) {

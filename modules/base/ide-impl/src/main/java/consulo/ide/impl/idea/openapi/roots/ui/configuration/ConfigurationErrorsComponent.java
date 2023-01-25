@@ -51,7 +51,7 @@ public class ConfigurationErrorsComponent extends JPanel {
     final JLabel label = new JLabel("<html><body><b>Problems:</b></body></html>");
     label.setVisible(false);
     add(label, BorderLayout.NORTH);
-    project.getMessageBus().connect().subscribe(ConfigurationErrors.TOPIC, new ConfigurationErrors() {
+    project.getMessageBus().connect().subscribe(ConfigurationErrors.class, new ConfigurationErrors() {
       @Override
       public void addError(@Nonnull ConfigurationError error) {
         int elementIndex = myModel.getElementIndex(error);

@@ -15,6 +15,7 @@
  */
 package consulo.versionControlSystem;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.ApplicationManager;
@@ -22,7 +23,6 @@ import consulo.application.util.function.Computable;
 import consulo.application.util.function.Processor;
 import consulo.colorScheme.TextAttributes;
 import consulo.component.ProcessCanceledException;
-import consulo.component.messagebus.Topic;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
@@ -44,9 +44,12 @@ import java.util.List;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class ProjectLevelVcsManager {
-
-  public static final Topic<VcsListener> VCS_CONFIGURATION_CHANGED = Topic.create("VCS configuration changed", VcsListener.class);
-  public static final Topic<VcsListener> VCS_CONFIGURATION_CHANGED_IN_PLUGIN = Topic.create("VCS configuration changed in VCS plugin", VcsListener.class);
+  @Deprecated
+  @DeprecationInfo("Use class as is - inline value")
+  public static final Class<VcsMappingListener> VCS_CONFIGURATION_CHANGED = VcsMappingListener.class;
+  @Deprecated
+  @DeprecationInfo("Use class as is - inline value")
+  public static final Class<PluginVcsMappingListener> VCS_CONFIGURATION_CHANGED_IN_PLUGIN = PluginVcsMappingListener.class;
 
   public abstract void iterateVfUnderVcsRoot(VirtualFile file, Processor<VirtualFile> processor);
 
@@ -216,7 +219,7 @@ public abstract class ProjectLevelVcsManager {
    *
    * @param listener the listener instance.
    * @since 6.0
-   * @deprecated use {@link #VCS_CONFIGURATION_CHANGED} instead
+   * @deprecated use {@link VcsMappingListener} instead
    */
   public abstract void addVcsListener(VcsListener listener);
 
@@ -225,7 +228,7 @@ public abstract class ProjectLevelVcsManager {
    *
    * @param listener the listener instance.
    * @since 6.0
-   * @deprecated use {@link #VCS_CONFIGURATION_CHANGED} instead
+   * @deprecated use {@link VcsMappingListener} instead
    */
   public abstract void removeVcsListener(VcsListener listener);
 
