@@ -82,8 +82,8 @@ public class TopicInvocationHandler<L> implements InvocationHandler, Function<Me
 
   @Override
   public TopicMethod apply(Method method) {
-    for (TopicMethod topicMethod : myTopicMethods) {
-      if (!topicMethod.getName().equals(topicMethod.getName())) {
+    loop:for (TopicMethod topicMethod : myTopicMethods) {
+      if (!topicMethod.getName().equals(method.getName())) {
         continue;
       }
 
@@ -92,20 +92,17 @@ public class TopicInvocationHandler<L> implements InvocationHandler, Function<Me
         continue;
       }
 
-      // zero count method
-      if (argumentTypes.length == 0) {
-        return topicMethod;
-      }
-
       Class<?>[] parameterTypes = method.getParameterTypes();
 
       for (int i = 0; i < parameterTypes.length; i++) {
         Type argumentType = argumentTypes[i];
         Class<?> parameterType = parameterTypes[i];
-        if (argumentType == parameterType) {
-          return topicMethod;
+        if (argumentType != parameterType) {
+          continue loop;
         }
       }
+
+      return topicMethod;
     }
     LOG.error("Can't find TopicMethod for " + method + ", class: " + myTopicClass);
     return null;
