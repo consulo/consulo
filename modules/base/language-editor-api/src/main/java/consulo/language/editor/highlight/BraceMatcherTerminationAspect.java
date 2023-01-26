@@ -1,6 +1,7 @@
 package consulo.language.editor.highlight;
 
 import consulo.codeEditor.HighlighterIterator;
+import consulo.language.PairedBraceMatcher;
 import consulo.language.ast.IElementType;
 
 import javax.annotation.Nonnull;
@@ -17,7 +18,7 @@ import javax.annotation.Nonnull;
  *
  * @author Rustam Vishnyakov
  */
-public interface BraceMatcherTerminationAspect {
+public interface BraceMatcherTerminationAspect extends PairedBraceMatcher {
   /**
    * Checks if a search for matching brace should be stopped with negative result if an element having the given type
    * is encountered.

@@ -33,7 +33,7 @@ import consulo.language.custom.CustomSyntaxTableFileType;
 import consulo.ide.impl.idea.ui.LightweightHint;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.internal.custom.CustomHighlighterTokenType;
-import consulo.ide.impl.psi.templateLanguages.MultipleLangCommentProvider;
+import consulo.language.editor.MultipleLangCommentProvider;
 import consulo.language.ast.IElementType;
 import consulo.language.codeStyle.CodeStyle;
 import consulo.language.codeStyle.CodeStyleSettingsManager;

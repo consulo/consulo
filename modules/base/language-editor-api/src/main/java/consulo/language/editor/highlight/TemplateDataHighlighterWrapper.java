@@ -1,9 +1,9 @@
-package consulo.ide.impl.psi.templateLanguages;
+package consulo.language.editor.highlight;
 
-import consulo.language.lexer.Lexer;
 import consulo.colorScheme.TextAttributesKey;
-import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.ast.IElementType;
+import consulo.language.lexer.Lexer;
+
 import javax.annotation.Nonnull;
 
 import static consulo.language.ast.TokenType.BAD_CHARACTER;
